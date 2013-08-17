@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using UnityEngine;
+
+
+namespace kOS
+{
+    /// <summary>
+    /// My first part!
+    /// </summary>
+    public class Core : MonoBehaviour
+    {
+        public static Core Fetch; 
+        public TermWindow Window;
+        
+        public void Awake()
+        {
+            Fetch = this;
+
+            var gObj = new GameObject("kOSTermWindow", typeof(TermWindow));
+            UnityEngine.Object.DontDestroyOnLoad(gObj);
+            Window = (TermWindow)gObj.GetComponent(typeof(TermWindow));
+            Window.Core = this;
+        }
+
+        public static void Debug(String line)
+        {
+            //Fetch.Window.PrintLine(line);
+        }
+
+        public static void OpenWindow(CPU cpu)
+        {
+            Fetch.Window.AttachTo(cpu);
+            Fetch.Window.Open();
+        }
+
+        internal static void ToggleWindow(CPU cpu)
+        {
+            Fetch.Window.AttachTo(cpu);
+            Fetch.Window.Toggle();
+        }
+
+        void OnGUI()
+        {
+        }
+
+
+    }
+
+    public class CoreInitializer : KSP.Testing.UnitTest
+    {
+        public CoreInitializer()
+        {
+            var gameobject = new GameObject("kOSCore", typeof(Core));
+            UnityEngine.Object.DontDestroyOnLoad(gameobject);
+        }
+    }
+}

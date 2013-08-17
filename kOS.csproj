@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B972AB0D-D76B-4274-B41E-ED93CBEA1AD5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>kOS</RootNamespace>
+    <AssemblyName>kOS</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Package\Plugins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Games\KSP211\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\Lib\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Binding.cs" />
+    <Compile Include="BindingsFlightStats.cs" />
+    <Compile Include="BindingsTerminalSettings.cs" />
+    <Compile Include="BindingsTest.cs" />
+    <Compile Include="BindingsUniverse.cs" />
+    <Compile Include="Command.cs" />
+    <Compile Include="CommandBasicIO.cs" />
+    <Compile Include="CommandFileIO.cs" />
+    <Compile Include="CommandFlowControl.cs" />
+    <Compile Include="CommandTemporal.cs" />
+    <Compile Include="CommandVessel.cs" />
+    <Compile Include="ContextRunProgram.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="ExecutionContext.cs" />
+    <Compile Include="Expression.cs" />
+    <Compile Include="Harddisk.cs" />
+    <Compile Include="Interpreter.cs" />
+    <Compile Include="InterpreterBootup.cs" />
+    <Compile Include="InterpreterEdit.cs" />
+    <Compile Include="InterpreterImmediate.cs" />
+    <Compile Include="kOSException.cs" />
+    <Compile Include="kOSProcessor.cs" />
+    <Compile Include="BindingsFlightControl.cs" />
+    <Compile Include="File.cs" />
+    <Compile Include="Resource.cs" />
+    <Compile Include="SteeringHelper.cs" />
+    <Compile Include="TermWindow.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CPU.cs" />
+    <Compile Include="Core.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="Variable.cs" />
+    <Compile Include="Volume.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="VesselUtils.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>D:\kOS\installpackage.bat</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
