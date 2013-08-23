@@ -11,6 +11,15 @@ namespace kOS
     {
         public String Filename;
 
+        public File(File copy)
+        {
+            Filename = copy.Filename;
+            foreach (String line in copy)
+            {
+                Add(line);
+            }
+        }
+
         public File(String filename)
         {
             this.Filename = filename;

@@ -174,13 +174,13 @@ namespace kOS
                 case "FROM":
                     file = targetVolume.GetByName(targetFile);
                     if (file == null) throw new kOSException("File '" + targetFile + "' not found");
-                    SelectedVolume.SaveFile(file);
+                    SelectedVolume.SaveFile(new File(file));
                     break;
 
                 case "TO":
                     file = SelectedVolume.GetByName(targetFile);
                     if (file == null) throw new kOSException("File '" + targetFile + "' not found");
-                    targetVolume.SaveFile(file);
+                    targetVolume.SaveFile(new File(file));
                     break;
             }
 
