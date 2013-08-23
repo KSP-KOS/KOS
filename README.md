@@ -282,4 +282,4 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
 ### Controls that must be used with LOCK
 
     THROTTLE			// Lock to a decimal value between 0 and 1.
-    STEERING			// Lock to a vector.
+    STEERING			// Lock to a direction.
