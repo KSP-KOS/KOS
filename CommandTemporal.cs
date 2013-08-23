@@ -33,6 +33,29 @@ namespace kOS
             State = ExecutionState.WAIT;
         }
 
+        public override bool SpecialKey(kOSKeys key)
+        {
+            if (key == kOSKeys.BREAK)
+            {
+                StdOut("Break.");
+                State = ExecutionState.DONE;
+            }
+
+            return base.SpecialKey(key);
+        }
+
+        public override bool Type(char c)
+        {
+            if (State == ExecutionState.WAIT)
+            {
+                return true;
+            }
+            else
+            {
+                return base.Type(c);
+            }
+        }
+
         public override void Update(float time)
         {
             if (waitExpression != null)

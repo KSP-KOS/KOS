@@ -20,7 +20,7 @@ namespace kOS
 
         public ImmediateMode(ExecutionContext parent) : base(parent) 
         {
-            StdOut("KerbOS Operating System Build " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
+            StdOut("kOS Operating System Build " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
             StdOut("KerboScript v0.2");
             StdOut("");
             StdOut("Proceed.");
@@ -170,7 +170,6 @@ namespace kOS
 
         public override void Update(float time)
         {
-            // Disable input when there's something in progress
             if (Queue.Count == 0)
             {
                 WriteLine(inputBuffer);

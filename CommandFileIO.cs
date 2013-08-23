@@ -59,12 +59,27 @@ namespace kOS
             }
         }
 
+        public override bool Type(char c)
+        {
+            if (State == ExecutionState.WAIT)
+            {
+                return true;
+            }
+            else
+            {
+                return base.Type(c);
+            }
+        }
+
         public override bool SpecialKey(kOSKeys key)
         {
             if (key == kOSKeys.BREAK)
             {
                 StdOut("Program aborted.");
                 State = ExecutionState.DONE;
+
+                // Bypass child contexts
+                return true;
             }
 
             return base.SpecialKey(key);

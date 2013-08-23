@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Package\Plugins\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -62,7 +62,6 @@
     <Compile Include="ExecutionContext.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="Harddisk.cs" />
-    <Compile Include="Interpreter.cs" />
     <Compile Include="InterpreterBootup.cs" />
     <Compile Include="InterpreterEdit.cs" />
     <Compile Include="InterpreterImmediate.cs" />
@@ -85,7 +84,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>D:\kOS\installpackage.bat</PostBuildEvent>
+    <PostBuildEvent>echo $(TargetPath)
+copy $(TargetPath) $(SolutionDir)\Package\Plugins\kOS.dll
+D:\kOS\installpackage.bat
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
