@@ -218,3 +218,68 @@ Sets a variable to false. This is useful for the RCS and SAS bindings.
 Example
 
     RCS OFF			// Turns off the RCS
+
+Flight Statistics
+=================
+
+You can get several useful vessel stats for your ships
+
+    VESSELNAME			
+    ALTITUDE
+    BODY			// The current celestial body whose influence you are under
+    MISSIONTIME			// The current mission time
+    VELOCITY			// The current orbital velocity
+    VERTICALSPEED
+    LATITUDE
+    LONGITUDE
+    STATUS			// Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
+    MASS
+
+### Vectors
+
+These return a vector object, which can be used in conjuction with the LOCK command to set your vessel's steering.
+
+    PROGRADE
+    RETROGRADE
+    UP				// Directly away from current body
+
+
+### Orbit geometry values
+
+These values can be polled either for their altitude, or the vessel's ETA in reaching them. By default, altitude is returned.
+
+    APOAPSIS			// Altitude of apoapsis
+    ALT:APOAPSIS		// Altitude of apoapsis
+    PERIAPSIS			// Altitude of periapsis
+    ALT:PERIAPSIS		// Altitude of periapsis
+    ETA:APOAPSIS		// ETA to apoapsis
+    ETA:PERIAPSIS		// ETA to periapsis
+
+### Stage specific values
+
+    STAGE:LIQUIDFUEL
+    STAGE:OXIDIZER
+
+
+Flight Control
+==============
+
+These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and STEERING explicity require the use of lock.
+
+### Controls which use ON and OFF
+
+    SAS				// For these five, use ON and OFF, example: SAS ON. RCS OFF.
+    GEAR
+    RCS
+    LIGHTS
+    BRAKES
+    
+### Controls that can be used with TOGGLE
+
+    ABORT			// Where x = 1 through 10. Use toggle, example: TOGGLE AG1.
+    AGX                  	
+
+### Controls that must be used with LOCK
+
+    THROTTLE			// Lock to a decimal value between 0 and 1.
+    STEERING			// Lock to a direction.
