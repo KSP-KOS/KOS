@@ -69,6 +69,7 @@ namespace kOS
             manager.AddGetter("AV", delegate(CPU cpu) { return cpu.Vessel.transform.InverseTransformDirection(cpu.Vessel.rigidbody.angularVelocity); });
 
             manager.AddGetter("STAGE:LIQUIDFUEL",    delegate(CPU cpu) { return GetResourceOfCurrentStage("LiquidFuel", cpu.Vessel); });
+            manager.AddGetter("STAGE:SOLIDFUEL",     delegate(CPU cpu) { return GetResourceOfCurrentStage("SolidFuel", cpu.Vessel); });
             manager.AddGetter("STAGE:OXIDIZER",      delegate(CPU cpu) { return GetResourceOfCurrentStage("Oxidizer", cpu.Vessel); });
         }
 
