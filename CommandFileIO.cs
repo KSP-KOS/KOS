@@ -87,7 +87,16 @@ namespace kOS
 
         public override void Update(float time)
         {
-            base.Update(time);
+            try
+            {
+                base.Update(time);
+            }
+            catch (kOSException e)
+            {
+                StdOut("Error: " + e.Message);
+                StdOut("Program aborted.");
+                State = ExecutionState.DONE;
+            }
 
             if (ChildContext == null)
             {

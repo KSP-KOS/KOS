@@ -103,9 +103,11 @@ namespace kOS
             ChildContext = newChild;
         }
 
-        public virtual void Break()
+        public virtual bool Break()
         {
-            ChildContext = null;
+            if (ParentContext != null) return ParentContext.Break();
+
+            return false;
         }
 
         public Variable FindVariable(string varName)
@@ -270,6 +272,12 @@ namespace kOS
                 else if (c == "{")
                 {
                     i = Utils.BraceMatch(buffer, i);
+
+                    if (i == -1)
+                    {
+                        cmd = "";
+                        return false;
+                    }
                 }
             }
 
@@ -291,227 +299,6 @@ namespace kOS
         {
             return ChildContext != null ? ChildContext.GetCursorY() : -1;
         }
-
-        /*
-        internal void Add(string cmdString)
-        {
-            buffer += cmdString;
-            string nextCmd;
-
-            while (parseNext(out nextCmd))
-            {
-                try
-                {
-                    Command cmd = Command.Get(nextCmd, Cpu, this);
-                    Add(cmd);
-                }
-                catch (kOSException e)
-                {
-                    StdOut(e.ToString());
-                    Queue.Clear(); // HALT!!
-                }
-            }
-        }
-
-        internal void Add(Command cmd)
-        {
-            if (cmd != null)
-            {
-                Queue.Enqueue(cmd);
-            }
-            else
-            {
-                StdOut("Syntax error.");
-                Queue.Clear();
-            }
-        }
-
-        public bool parseNext(out string cmd)
-        {
-            for (int i = 0; i < buffer.Length; i++)
-            {
-                string c = buffer.Substring(i, 1);
-
-                if (c == "\"")
-                {
-                    i = Utils.FindEndOfString(buffer, i + 1);
-                }
-                else if (c == ".")
-                {
-                    int pTest;
-                    if (i == buffer.Length - 1 || int.TryParse(buffer.Substring(i + 1, 1), out pTest) == false)
-                    {
-                        cmd = buffer.Substring(0, i);
-                        buffer = buffer.Substring(i + 1).Trim();
-                        return true;
-                    }
-                }
-            }
-
-            cmd = ""; 
-            return false;
-        }
-
-        public void PushContext(ExecutionContext newContext)
-        {
-            if (newContext is Interpreter)
-            {
-                Cpu.PushInterpreter((Interpreter)newContext);
-            }
-            else
-            {
-                child = newContext;
-            }
-        }
-
-        internal Volume GetVolume(string identifier)
-        {
-            return Cpu.GetVolume(identifier);
-        }
-
-        public virtual void Update(float time)
-        {
-            if (child != null)
-            {
-                child.Update(time);
-                if (child.state == CommandState.OK)
-                {
-                    child = null;
-                }
-            }
-
-            while (Queue.Count > 0)
-            {
-                var currentCmd = Queue.Peek();
-
-                if (currentCmd != null)
-                {
-                    try
-                    {
-                        if (currentCmd.State == CommandState.NEW)
-                        {
-                            currentCmd.Evaluate();
-                        }
-                        else if (currentCmd.State == CommandState.WAIT)
-                        {
-                            currentCmd.Update(time);
-                            break;
-                        }
-                        else if (currentCmd.State == CommandState.OK)
-                        {
-                            Queue.Dequeue();
-                        }
-                    }
-                    catch (kOSException e)
-                    {
-                        StdOut(e.Message);
-                        Queue.Clear(); // Halt!
-                    }
-                }
-            }
-        }
-
-        public virtual void StdOut(string value)
-        {
-            if (parent != null)
-            {
-                parent.StdOut(value);
-            }
-        }
-
-        public virtual void ClearScreen()
-        {
-            parent.ClearScreen();
-        }
-
-        public virtual BindingManager getBindingManager()
-        {
-            return parent.getBindingManager();
-        }
-
-        public virtual Variable CreateVariable(string varName)
-        {
-            Variable variable = FindVariable(varName);
-            if (variable != null) throw new kOSException("Variable '" + varName + "' already exists.");
-
-            variables[varName.ToUpper()] = new Variable(Cpu, varName.ToUpper());
-            return variables[varName.ToUpper()];
-        }
-
-        public virtual Variable FindOrCreateVariable(string varName)
-        {
-            Variable variable = FindVariable(varName);
-            if (variable != null)
-            {
-                return variable;
-            }
-            else
-            {
-                variables[varName.ToUpper()] = new Variable(Cpu, varName.ToUpper());
-                return variables[varName.ToUpper()];
-            }
-        }
-
-        public virtual Variable FindVariable(string varName)
-        {
-            if (variables.ContainsKey(varName.ToUpper()))
-            {
-                return variables[varName.ToUpper()];
-            }
-            else if (parent != null)
-            {
-                return parent.FindVariable(varName);
-            }
-
-            return null;
-        }
-
-        internal bool SwitchToVolume(int volID)
-        {
-            return Cpu.SwitchToVolume(volID);
-
-        }
-
-        internal bool SwitchToVolume(string targetVolume)
-        {
-            return Cpu.SwitchToVolume(targetVolume);
-        }
-
-        internal void Lock(string InstanceName, Command cmd)
-        {
-            Cpu.Lock(InstanceName, cmd);
-        }
-
-        internal void Lock(Command cmd)
-        {
-            Cpu.Lock(cmd);
-        }
-        
-        internal void Unlock(string InstanceName)
-        {
-            Cpu.Unlock(InstanceName);
-        }
-
-        internal void Unlock(Command cmd)
-        {
-            Cpu.Unlock(cmd);
-        }
-
-        internal void UnlockAll()
-        {
-            Cpu.UnlockAll();
-        }
-
-        internal CPU GetCpu()
-        {
-            if (this.Cpu != null) return Cpu;
-
-            return parent.GetCpu();
-        }
-         * */
-
-
-
 
     }
 }

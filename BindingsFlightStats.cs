@@ -31,11 +31,11 @@ namespace kOS
             manager.AddGetter("ANGULARMOMENTUM",delegate(CPU cpu) { return new Direction(cpu.Vessel.angularMomentum, true); });
             manager.AddGetter("ANGULARVEL",     delegate(CPU cpu) { return new Direction(cpu.Vessel.angularVelocity, true); });
             manager.AddGetter("MASS",           delegate(CPU cpu) { return cpu.Vessel.GetTotalMass(); });
-            manager.AddGetter("VERTICALSPEED",  delegate(CPU cpu) { return cpu.Vessel.verticalSpeed; });
+            manager.AddGetter("VERTICALSPEED", delegate(CPU cpu)  { return (float)cpu.Vessel.verticalSpeed; });
 
             manager.AddGetter("BODY",           delegate(CPU cpu) { return cpu.Vessel.mainBody.bodyName; });
-            manager.AddGetter("LATITUDE",       delegate(CPU cpu) { return cpu.Vessel.latitude; });
-            manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return cpu.Vessel.longitude; });
+            manager.AddGetter("LATITUDE",       delegate(CPU cpu) { return (float)cpu.Vessel.latitude; });
+            manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return (float)cpu.Vessel.longitude; });
 
             manager.AddGetter("UP",             delegate(CPU cpu) { return new Direction(cpu.Vessel.upAxis, false); });
             

@@ -39,6 +39,12 @@ namespace kOS
             }
         }
 
+        public void Break()
+        {
+            commands.Clear();
+            State = ExecutionState.DONE;
+        }
+
         public override void Update(float time)
         {
             foreach (Command command in commands)
@@ -63,21 +69,41 @@ namespace kOS
     public class CommandIf : Command
     {
         List<Command> commands = new List<Command>();
-        Expression waitExpression;
-        String commandString;
+        Expression expression;
+        Command targetCommand;
 
         public CommandIf(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
-            waitExpression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
-            commandString = RegexMatch.Groups[2].Value;
+            expression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+            targetCommand = Command.Get(RegexMatch.Groups[2].Value, this);
 
-            State = ExecutionState.WAIT;
+            if (expression.IsTrue())
+            {
+                targetCommand.Evaluate();
+                Push(targetCommand);
+                State = ExecutionState.WAIT;
+            }
+            else
+            {
+                State = ExecutionState.DONE;
+            }
+        }
+
+        public override void Update(float time)
+        {
+            base.Update(time);
+
+            if (ChildContext.State == ExecutionState.DONE)
+            {
+                ChildContext = null;
+                State = ExecutionState.DONE;
+            }
         }
     }
 
-    [CommandAttribute(@"^UNTIL (.*)({.*})$")]
+    [CommandAttribute(@"^UNTIL (.*?)({.*})$")]
     public class CommandUntilLoop : Command
     {
         List<Command> commands = new List<Command>();
@@ -92,6 +118,24 @@ namespace kOS
             commandString = RegexMatch.Groups[2].Value;
 
             State = ExecutionState.WAIT;
+        }
+
+        public override bool Break()
+        {
+            StdOut("Break.");
+            State = ExecutionState.DONE;
+
+            return true;
+        }
+
+        public override bool SpecialKey(kOSKeys key)
+        {
+            if (key == kOSKeys.BREAK)
+            {
+                Break();
+            }
+
+            return base.SpecialKey(key);
         }
 
         public override void Update(float time)
@@ -117,6 +161,18 @@ namespace kOS
                     ChildContext = null;
                 }
             }
+        }
+    }
+
+    [CommandAttribute(@"^BREAK (.*)({.*})$")]
+    public class CommandBreak : Command
+    {
+        public CommandBreak(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            Break();
+            State = ExecutionState.DONE;
         }
     }
 }
