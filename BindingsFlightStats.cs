@@ -7,12 +7,12 @@ using UnityEngine;
 
 namespace kOS
 {
-    
+
     [kOSBinding("ksp")]
     public class BindingsFlightStats : Binding
     {
         public override void AddTo(BindingManager manager)
-        { 
+        {
             manager.AddGetter("VESSELNAME",     delegate(CPU cpu) { return cpu.Vessel.vesselName; });
             manager.AddSetter("VESSELNAME",     delegate(CPU cpu, object value ) { cpu.Vessel.vesselName = value.ToString(); });
 
@@ -38,15 +38,17 @@ namespace kOS
             manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return (float)cpu.Vessel.longitude; });
 
             manager.AddGetter("UP",             delegate(CPU cpu) { return new Direction(cpu.Vessel.upAxis, false); });
-            
-            manager.AddGetter("PROGRADE",       delegate(CPU cpu) 
+
+            manager.AddGetter("NODE",           delegate(CPU cpu) { return new Direction(cpu.Vessel.patchedConicSolver.maneuverNodes.First());});
+
+            manager.AddGetter("PROGRADE",       delegate(CPU cpu)
             {
                 var vessel = cpu.Vessel;
                 var up = (vessel.findLocalMOI(vessel.findWorldCenterOfMass()) - vessel.mainBody.position).normalized;
 
                 Direction d = new Direction();
                 d.Rotation = Quaternion.LookRotation(cpu.Vessel.orbit.GetVel().normalized, up);
-                return d; 
+                return d;
             });
 
             manager.AddGetter("RETROGRADE",     delegate(CPU cpu)
@@ -57,11 +59,11 @@ namespace kOS
                 Direction d = new Direction();
                 var vesselRoll = cpu.Vessel.GetTransform().eulerAngles.y;
                 d.Rotation = Quaternion.LookRotation(cpu.Vessel.orbit.GetVel().normalized * -1, up);
-                return d; 
+                return d;
             });
 
-            manager.AddGetter("FACING",         delegate(CPU cpu) 
-            { 
+            manager.AddGetter("FACING",         delegate(CPU cpu)
+            {
                 var facing = cpu.Vessel.transform.up;
                 return new Direction(new Vector3d(facing.x, facing.y, facing.z).normalized, false);
             });
