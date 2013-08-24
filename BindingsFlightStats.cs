@@ -63,7 +63,7 @@ namespace kOS
                 }
                 var mag = vessel.patchedConicSolver.maneuverNodes[0].GetBurnVector(orbit).magnitude;
 
-                return mag;
+                return (float)mag;
             });
 
             manager.AddGetter("ETA:NODE", delegate(CPU cpu) {
@@ -75,7 +75,7 @@ namespace kOS
                 var time = vessel.patchedConicSolver.maneuverNodes[0].UT;
                 var currTime = Planetarium.GetUniversalTime();
 
-                return time - currTime;
+                return (float)(time - currTime);
             });
 
             manager.AddGetter("PROGRADE",       delegate(CPU cpu)
