@@ -54,6 +54,30 @@ namespace kOS
                 return d;
             });
 
+            manager.AddGetter("MAG:NODE", delegate(CPU cpu) {
+                var vessel = cpu.Vessel;
+                var orbit = vessel.orbit;
+                if (!vessel.patchedConicSolver.maneuverNodes.Any())
+                {
+                    throw new kOSException("No maneuver nodes present!");
+                }
+                var mag = vessel.patchedConicSolver.maneuverNodes[0].GetBurnVector(orbit).magnitude;
+
+                return mag;
+            });
+
+            manager.AddGetter("ETA:NODE", delegate(CPU cpu) {
+                var vessel = cpu.Vessel;
+                if (!vessel.patchedConicSolver.maneuverNodes.Any())
+                {
+                    throw new kOSException("No maneuver nodes present!");
+                }
+                var time = vessel.patchedConicSolver.maneuverNodes[0].UT;
+                var currTime = Planetarium.GetUniversalTime();
+
+                return time - currTime;
+            });
+
             manager.AddGetter("PROGRADE",       delegate(CPU cpu)
             {
                 var vessel = cpu.Vessel;
