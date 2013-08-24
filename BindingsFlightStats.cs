@@ -39,7 +39,16 @@ namespace kOS
 
             manager.AddGetter("UP",             delegate(CPU cpu) { return new Direction(cpu.Vessel.upAxis, false); });
 
-            manager.AddGetter("NODE",           delegate(CPU cpu) { return new Direction(cpu.Vessel.patchedConicSolver.maneuverNodes.First());});
+            manager.AddGetter("NODE",           delegate(CPU cpu) {
+                var vessel = cpu.Vessel;
+                var up = (vessel.findLocalMOI(vessel.findWorldCenterOfMass()) - vessel.mainBody.position).normalized;
+                var fwd = vessel.patchedConicSolver.maneuverNodes[0].GetBurnVector(cpu.Vessel.orbit);
+                var rotRef = Quaternion.LookRotation(fwd, up);
+
+                Direction d = new Direction();
+                d.Rotation = rotRef;
+                return d;
+            });
 
             manager.AddGetter("PROGRADE",       delegate(CPU cpu)
             {
