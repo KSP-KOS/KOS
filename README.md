@@ -68,6 +68,17 @@ You can use math operations on Directions as well. The next example uses a rotat
 Command Reference
 -----------------
 
+### BREAK
+
+Breaks out of a loop.
+Example:
+
+    SET X TO 1.
+    UNTIL 0 {
+        SET X TO X + 1.
+        IF X > 10 { BREAK. }.       // Exits the loop when X is greater than 10
+    }.
+
 ### CLEARSCREEN
 
 Clears the screen and places the cursor at the top left.
@@ -97,6 +108,15 @@ Edits a program on the currently selected volume.
 Example:
 
     EDIT filename.
+
+### IF
+
+Checks if the expression supplied returns true. If it does, IF executes the following command block.
+Example:
+
+    SET X TO 1.
+    IF X = 1 { PRINT "X equals one.". }.            // Prints "X equals one."
+    IF X > 10 { PRINT "X is greater than ten.". }.  // Does nothing
 
 ### LIST
 
@@ -188,6 +208,17 @@ Examples:
 
     UNLOCK X.                // Releases a lock on variable X.
     UNLOCK ALL.              // Releases ALL locks.
+    
+### UNTIL
+
+Performs a loop until a certain condition is met.
+Example:
+
+    SET X to 1.
+    UNTIL X > 10 {          // Prints the numbers 1-10.
+        PRINT X.
+        SET X to X + 1.
+    }.
 
 ### WAIT
 
