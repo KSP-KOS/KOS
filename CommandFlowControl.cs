@@ -58,4 +58,65 @@ namespace kOS
             State = ExecutionState.DONE;
         }
     }
+
+    [CommandAttribute(@"^IF (.*)({.*})$")]
+    public class CommandIf : Command
+    {
+        List<Command> commands = new List<Command>();
+        Expression waitExpression;
+        String commandString;
+
+        public CommandIf(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            waitExpression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+            commandString = RegexMatch.Groups[2].Value;
+
+            State = ExecutionState.WAIT;
+        }
+    }
+
+    [CommandAttribute(@"^UNTIL (.*)({.*})$")]
+    public class CommandUntilLoop : Command
+    {
+        List<Command> commands = new List<Command>();
+        Expression waitExpression;
+        String commandString;
+
+        public CommandUntilLoop(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            waitExpression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+            commandString = RegexMatch.Groups[2].Value;
+
+            State = ExecutionState.WAIT;
+        }
+
+        public override void Update(float time)
+        {
+            base.Update(time);
+
+            if (ChildContext == null)
+            {
+                if (waitExpression.IsTrue())
+                {
+                    State = ExecutionState.DONE;
+                }
+                else
+                {
+                    ChildContext = Command.Get(commandString, this);
+                    ((Command)ChildContext).Evaluate();
+                }
+            }
+            else
+            {
+                if (ChildContext.State == ExecutionState.DONE)
+                {
+                    ChildContext = null;
+                }
+            }
+        }
+    }
 }
