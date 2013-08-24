@@ -41,6 +41,10 @@ namespace kOS
 
             manager.AddGetter("NODE",           delegate(CPU cpu) {
                 var vessel = cpu.Vessel;
+                if (!vessel.patchedConicSolver.maneuverNodes.Any())
+                {
+                    throw new kOSException("No maneuver nodes present!");
+                }
                 var up = (vessel.findLocalMOI(vessel.findWorldCenterOfMass()) - vessel.mainBody.position).normalized;
                 var fwd = vessel.patchedConicSolver.maneuverNodes[0].GetBurnVector(cpu.Vessel.orbit);
                 var rotRef = Quaternion.LookRotation(fwd, up);
