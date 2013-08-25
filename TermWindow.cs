@@ -90,13 +90,6 @@ namespace kOS
                 cameraModeWhenOpened = cameraManager.currentCameraMode;
                 cameraManager.enabled = false;
 
-                /*
-                foreach (ControlTypes c in Enum.GetValues(typeof(ControlTypes)))
-                {
-                    
-                    InputLockManager.SetControlLock(c, "kOSTerminal-" + c.ToString());
-                }*/
-
                 InputLockManager.SetControlLock("kOSTerminal");
 
                 // Prevent editor keys from being pressed while typing
@@ -122,6 +115,8 @@ namespace kOS
 
         void OnGUI()
         {
+            ProcessKeyStrokes();
+
             try
             {
                 if (PauseMenu.isOpen || FlightResultsDialog.isDisplaying) return;
@@ -136,15 +131,11 @@ namespace kOS
             GUI.color = isLocked ? COLOR : COLOR_ALPHA;
 
             windowRect = GUI.Window(0, windowRect, TerminalGui, "");
-
-
         }
 
         void Update()
         {
             if (!isOpen || !isLocked) return;
-
-            ProcessKeyStrokes();
 
             cursorBlinkTime += Time.deltaTime;
             if (cursorBlinkTime > 1) cursorBlinkTime -= 1;
@@ -157,36 +148,18 @@ namespace kOS
             public KeyCode code;
             public float duration = 0;
         }
-
+        
         void ProcessKeyStrokes()
         {
-            foreach (KeyEvent e in new List<KeyEvent>(KeyStates))
+            if (Event.current.type == EventType.KeyDown)
             {
-                if (!Input.GetKey(e.code))
+                if (Event.current.character != 0 && Event.current.character != 13 && Event.current.character != 10)
                 {
-                    KeyStates.Remove(e);
+                    Type(Event.current.character);
                 }
-                else
+                else if (Event.current.keyCode != KeyCode.None) 
                 {
-                    e.duration += Time.deltaTime;
-
-                    if (e.duration > 0.35f)
-                    {
-                        e.duration = 0.30f;
-                        Keydown(e.code);
-                    }
-                }
-            }
-
-            foreach (KeyCode code in Enum.GetValues(typeof(KeyCode)))
-            {
-                if (Input.GetKeyDown(code))
-                {
-                    KeyEvent e = new KeyEvent();
-                    e.code = code;
-                    KeyStates.Add(e);
-
-                    Keydown(code);
+                    Keydown(Event.current.keyCode);
                 }
             }
         }
@@ -198,44 +171,6 @@ namespace kOS
 
             if (code == (KeyCode.Break)) { SpecialKey(kOSKeys.BREAK); return; }
             if (code == (KeyCode.C) && control) { SpecialKey(kOSKeys.BREAK); return; }
-
-            if (code == KeyCode.A) { Type(shift ? 'A' : 'a'); return; }
-            if (code == KeyCode.B) { Type(shift ? 'B' : 'b'); return; }
-            if (code == KeyCode.C) { Type(shift ? 'C' : 'c'); return; }
-            if (code == KeyCode.D) { Type(shift ? 'D' : 'd'); return; }
-            if (code == KeyCode.E) { Type(shift ? 'E' : 'e'); return; }
-            if (code == KeyCode.F) { Type(shift ? 'F' : 'f'); return; }
-            if (code == KeyCode.G) { Type(shift ? 'G' : 'g'); return; }
-            if (code == KeyCode.H) { Type(shift ? 'H' : 'h'); return; }
-            if (code == KeyCode.I) { Type(shift ? 'I' : 'i'); return; }
-            if (code == KeyCode.J) { Type(shift ? 'J' : 'j'); return; }
-            if (code == KeyCode.K) { Type(shift ? 'K' : 'k'); return; }
-            if (code == KeyCode.L) { Type(shift ? 'L' : 'l'); return; }
-            if (code == KeyCode.M) { Type(shift ? 'M' : 'm'); return; }
-            if (code == KeyCode.N) { Type(shift ? 'N' : 'n'); return; }
-            if (code == KeyCode.O) { Type(shift ? 'O' : 'o'); return; }
-            if (code == KeyCode.P) { Type(shift ? 'P' : 'p'); return; }
-            if (code == KeyCode.Q) { Type(shift ? 'Q' : 'q'); return; }
-            if (code == KeyCode.R) { Type(shift ? 'R' : 'r'); return; }
-            if (code == KeyCode.S) { Type(shift ? 'S' : 's'); return; }
-            if (code == KeyCode.T) { Type(shift ? 'T' : 't'); return; }
-            if (code == KeyCode.U) { Type(shift ? 'U' : 'u'); return; }
-            if (code == KeyCode.V) { Type(shift ? 'V' : 'v'); return; }
-            if (code == KeyCode.W) { Type(shift ? 'W' : 'w'); return; }
-            if (code == KeyCode.X) { Type(shift ? 'X' : 'x'); return; }
-            if (code == KeyCode.Y) { Type(shift ? 'Y' : 'y'); return; }
-            if (code == KeyCode.Z) { Type(shift ? 'Z' : 'z'); return; }
-
-            if (code == (KeyCode.Alpha0) || code == (KeyCode.Keypad0)) { Type(shift ? ')' : '0'); return; }
-            if (code == (KeyCode.Alpha1) || code == (KeyCode.Keypad1)) { Type(shift ? '!' : '1'); return; }
-            if (code == (KeyCode.Alpha2) || code == (KeyCode.Keypad2)) { Type(shift ? '@' : '2'); return; }
-            if (code == (KeyCode.Alpha3) || code == (KeyCode.Keypad3)) { Type(shift ? '#' : '3'); return; }
-            if (code == (KeyCode.Alpha4) || code == (KeyCode.Keypad4)) { Type(shift ? '$' : '4'); return; }
-            if (code == (KeyCode.Alpha5) || code == (KeyCode.Keypad5)) { Type(shift ? '%' : '5'); return; }
-            if (code == (KeyCode.Alpha6) || code == (KeyCode.Keypad6)) { Type(shift ? '^' : '6'); return; }
-            if (code == (KeyCode.Alpha7) || code == (KeyCode.Keypad7)) { Type(shift ? '&' : '7'); return; }
-            if (code == (KeyCode.Alpha8) || code == (KeyCode.Keypad8)) { Type(shift ? '*' : '8'); return; }
-            if (code == (KeyCode.Alpha9) || code == (KeyCode.Keypad9)) { Type(shift ? '(' : '9'); return; }
 
             if (code == (KeyCode.F1)) { SpecialKey(kOSKeys.F1); return; }
             if (code == (KeyCode.F2)) { SpecialKey(kOSKeys.F2); return; }
@@ -250,16 +185,6 @@ namespace kOS
             if (code == (KeyCode.F11)) { SpecialKey(kOSKeys.F11); return; }
             if (code == (KeyCode.F12)) { SpecialKey(kOSKeys.F12); return; }
 
-            if (code == (KeyCode.LeftBracket)) { Type(shift ? '{' : '['); return; }
-            if (code == (KeyCode.RightBracket)) { Type(shift ? '}' : ']'); return; }
-
-            if ((code == (KeyCode.Minus) && !shift) || code == (KeyCode.KeypadMinus)) { Type('-'); return; }
-            if ((code == (KeyCode.Equals) && shift) || code == (KeyCode.KeypadPlus)) { Type('+'); return; }
-            if (code == (KeyCode.KeypadMultiply)) { Type('*'); return; }
-            if (code == (KeyCode.Slash) || code == (KeyCode.KeypadDivide)) { Type('/'); return; }
-            if ((code == (KeyCode.Equals) && !shift)) { Type('='); return; }
-            if (code == (KeyCode.Semicolon)) { Type(shift ? ':' : ';'); return; }
-
             if (code == (KeyCode.UpArrow)) { SpecialKey(kOSKeys.UP); return; }
             if (code == (KeyCode.DownArrow)) { SpecialKey(kOSKeys.DOWN); return; }
             if (code == (KeyCode.LeftArrow)) { SpecialKey(kOSKeys.LEFT); return; }
@@ -269,11 +194,7 @@ namespace kOS
             if (code == (KeyCode.Backspace)) { Type((char)8); return; }
             if (code == (KeyCode.Delete)) { SpecialKey(kOSKeys.DEL); return; }
 
-            if (code == (KeyCode.Quote)) { Type(shift ? '\"' : '\''); return; }
-            if (code == (KeyCode.Comma)) { Type(shift ? '<' : ','); return; }
-            if (code == (KeyCode.Period)) { Type(shift ? '>' : '.'); return; }
             if (code == (KeyCode.Return) || code == (KeyCode.KeypadEnter)) { Type((char)13); return; }
-            if (code == (KeyCode.Space)) { Type(' '); return; }
         }
         
         public void ClearScreen()

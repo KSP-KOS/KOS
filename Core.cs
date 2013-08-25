@@ -15,12 +15,15 @@ namespace kOS
         
         public void Awake()
         {
-            Fetch = this;
+            if (Fetch == null) // This thing gets instantiated 4 times by KSP for some reason
+            {
+                Fetch = this;
 
-            var gObj = new GameObject("kOSTermWindow", typeof(TermWindow));
-            UnityEngine.Object.DontDestroyOnLoad(gObj);
-            Window = (TermWindow)gObj.GetComponent(typeof(TermWindow));
-            Window.Core = this;
+                var gObj = new GameObject("kOSTermWindow", typeof(TermWindow));
+                UnityEngine.Object.DontDestroyOnLoad(gObj);
+                Window = (TermWindow)gObj.GetComponent(typeof(TermWindow));
+                Window.Core = this;
+            }
         }
 
         public static void Debug(String line)
