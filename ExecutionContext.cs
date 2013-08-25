@@ -179,11 +179,11 @@ namespace kOS
             }
             else if (volID is String)
             {
-                String volName = (String)volID;
+                String volName = volID.ToString().ToUpper();
 
                 foreach (Volume targetVolume in Volumes)
                 {
-                    if (targetVolume.Name == volName)
+                    if (targetVolume.Name.ToUpper() == volName)
                     {
                         return targetVolume;
                     }

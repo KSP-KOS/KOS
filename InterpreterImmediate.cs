@@ -21,7 +21,7 @@ namespace kOS
         public ImmediateMode(ExecutionContext parent) : base(parent) 
         {
             StdOut("kOS Operating System Build " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
-            StdOut("KerboScript v0.2");
+            StdOut("KerboScript v0.3");
             StdOut("");
             StdOut("Proceed.");
         }

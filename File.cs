@@ -60,7 +60,7 @@ namespace kOS
 
             foreach (String s in this)
             {
-                node.AddValue("line", s);
+                node.AddValue("line", EncodeLine(s));
             }
 
             return node;
@@ -72,10 +72,20 @@ namespace kOS
 
             foreach (String s in fileNode.GetValues("line"))
             {
-                Add(s);
+                Add(DecodeLine(s));
             }
         }
 
+        public static String EncodeLine(String input)
+        {
+            return input.Replace("{", "&#123;").Replace("}", "&#125;");     // Stops universe from imploding
+        }
+
+        public static String DecodeLine(String input)
+        {
+            return input.Replace("&#123;", "{").Replace("&#125;", "}");
+        }
+        
         public string Serialize()
         {
             string output = "";
