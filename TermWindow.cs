@@ -33,7 +33,9 @@ namespace kOS
         public static Color TEXTCOLOR = new Color(0.45f, 0.92f, 0.23f, 0.9f);
         public static Color TEXTCOLOR_ALPHA = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         public static Rect CLOSEBUTTON_RECT = new Rect(398, 359, 59, 30);
-        
+
+        public bool allTexturesFound = true;
+
         public enum SkinType
         {
             SMALL, MINIMAL
@@ -45,20 +47,16 @@ namespace kOS
 
         public void Awake()
         {
-            var statusbarImageLoader = new WWW("file://" + root + "Plugins/PluginData/kos/gfx/font_sml.png");
-            statusbarImageLoader.LoadImageIntoTexture(fontImage);
+            LoadTexture("Plugins/PluginData/kos/gfx/font_sml.png", ref fontImage);
+            LoadTexture("Plugins/PluginData/kos/gfx/monitor_minimal.png", ref terminalImage);
+        }
 
-            WWW terminalImageLoader;
-            if (skinType == SkinType.MINIMAL)
-            {
-                terminalImageLoader = new WWW("file://" + root + "Plugins/PluginData/kos/gfx/monitor_minimal.png");
-                terminalImageLoader.LoadImageIntoTexture(terminalImage);
-            }
-            else if (skinType == SkinType.SMALL)
-            {
-                terminalImageLoader = new WWW("file://" + root + "Plugins/PluginData/kos/gfx/monitor_small.png");
-                terminalImageLoader.LoadImageIntoTexture(terminalImage);
-            }
+        public void LoadTexture(String relativePath, ref Texture2D targetTexture)
+        {
+            var imageLoader = new WWW("file://" + root + relativePath);
+            imageLoader.LoadImageIntoTexture(targetTexture);
+
+            if (imageLoader.isDone && imageLoader.size == 0) allTexturesFound = false;
         }
 
         public void Open()
@@ -138,6 +136,8 @@ namespace kOS
             GUI.color = isLocked ? COLOR : COLOR_ALPHA;
 
             windowRect = GUI.Window(0, windowRect, TerminalGui, "");
+
+
         }
 
         void Update()
@@ -309,6 +309,16 @@ namespace kOS
                 {
                     Unlock();
                 }
+            }
+
+            if (!allTexturesFound)
+            {
+                GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
+                           "go to the following folder: \n\n<Your KSP Folder>\\Plugins\\PluginData\\kOS\\gfx \n\nand ensure that the png texture files are there.");
+
+                GUI.Label(CLOSEBUTTON_RECT, "Close");
+
+                return;
             }
 
             if (Cpu == null) return;

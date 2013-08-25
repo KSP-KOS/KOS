@@ -8,9 +8,6 @@ using UnityEngine;
 
 namespace kOS
 {
-    /// <summary>
-    /// My first part!
-    /// </summary>
     public class Core : MonoBehaviour
     {
         public static Core Fetch; 
@@ -28,7 +25,6 @@ namespace kOS
 
         public static void Debug(String line)
         {
-            //Fetch.Window.PrintLine(line);
         }
 
         public static void OpenWindow(CPU cpu)
