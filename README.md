@@ -285,6 +285,12 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
     ALT:PERIAPSIS		// Altitude of periapsis
     ETA:APOAPSIS		// ETA to apoapsis
     ETA:PERIAPSIS		// ETA to periapsis
+    
+### Maneuver nodes
+
+    NODE                // Direction of next maneuver node, can be used with LOCK STEERING
+    MAG:NODE            // Delta-v magnitude of maneuver node
+    MAG:ETA             // ETA to active maneuver node
 
 ### Stage specific values
 
