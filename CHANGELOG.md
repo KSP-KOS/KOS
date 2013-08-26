@@ -1,6 +1,13 @@
 kOS Mod Changelog
 =================
 
+### 0.35
+
+- Fix for the typing when not focussed bug
+- Fix for file renaming not checking for previous existing file
+- Resource tags re-enabled
+- Support for limited sub-expressions within R() expressions
+
 ### 0.34
 
 - Added non-qwerty keyboard support
