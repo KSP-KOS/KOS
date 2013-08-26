@@ -115,8 +115,8 @@ namespace kOS
 
         void OnGUI()
         {
-            ProcessKeyStrokes();
-
+            if (isOpen && isLocked) ProcessKeyStrokes();
+            
             try
             {
                 if (PauseMenu.isOpen || FlightResultsDialog.isDisplaying) return;
@@ -126,7 +126,7 @@ namespace kOS
             }
 
             if (!isOpen) return;
-
+            
             GUI.skin = HighLogic.Skin;
             GUI.color = isLocked ? COLOR : COLOR_ALPHA;
 
