@@ -8,6 +8,18 @@ using UnityEngine;
 
 namespace kOS
 {
+    [CommandAttribute(@"^#TERMINATOR (\S)$")]
+    public class CommandSetTerminator : Command
+    {
+        public CommandSetTerminator(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            ParentContext.StdOut("Terminator = " + RegexMatch.Groups[1].Value);
+            State = ExecutionState.DONE;
+        }
+    }
+
     [CommandAttribute(@"^TEST$")]
     public class CommandTest : Command
     {

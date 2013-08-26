@@ -33,7 +33,7 @@ namespace kOS
 
             UnwrapFullBrackets(ref text);
 
-            //if (TryParseResource(text)) return;
+            if (TryParseResource(text)) return;
 
             if (TryParseDirection(text)) return;
 
@@ -62,38 +62,38 @@ namespace kOS
             }
         }
 
-        /*private bool TryParseResource(string text)
+        private bool TryParseResource(string text)
         {
             Match match = Regex.Match(text, "^<(.+)>$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                Value = VesselUtils.GetResource(executionContext.GetCpu().GetVessel(), match.Groups[1].Value);
+                Value = VesselUtils.GetResource(executionContext.Vessel, match.Groups[1].Value);
                 return true;
             }
 
             return false;
-        }*/
-
+        }
+        
         private bool TryParseDirection(string text)
         {
-            Match match = Regex.Match(text, "^V\\(([0-9\\.\\-]+),([0-9\\.\\-]+),([0-9\\.\\-]+)\\)$", RegexOptions.IgnoreCase);
+            Match match = Regex.Match(text, "^V\\(([A-Za-z0-9\\.\\-\\+\\*/]+),([A-Za-z0-9\\.\\-\\+\\*/]+),([A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                double x = double.Parse(match.Groups[1].Value);
-                double y = double.Parse(match.Groups[2].Value);
-                double z = double.Parse(match.Groups[3].Value);
+                double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                double y = ParseSubExpressionAsDouble(match.Groups[2].Value); 
+                double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
 
                 Value = new Direction(new Vector3d(x, y, z), false);
 
                 return true;
             }
 
-            match = Regex.Match(text, "^R\\(([0-9\\.\\-]+),([0-9\\.\\-]+),([0-9\\.\\-]+)\\)$", RegexOptions.IgnoreCase);
+            match = Regex.Match(text, "^R\\(([A-Za-z0-9\\.\\-\\+\\*/]+),([A-Za-z0-9\\.\\-\\+\\*/]+),([A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                double x = double.Parse(match.Groups[1].Value);
-                double y = double.Parse(match.Groups[2].Value);
-                double z = double.Parse(match.Groups[3].Value);
+                double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
+                double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
 
                 Value = new Direction(new Vector3d(x, y, z), true);
 
@@ -101,6 +101,27 @@ namespace kOS
             }
 
             return false;
+        }
+
+        private double ParseSubExpressionAsDouble(String input)
+        {
+            double val = 0;
+            if (double.TryParse(input, out val))
+            {
+                return val;
+            }
+            else
+            {
+                var expValue = new Expression(input, executionContext).GetValue();
+                if (expValue is double)
+                {
+                    return (double)expValue;
+                }
+                else
+                {
+                    throw new kOSException("Non-numeric parameter used on a numeric function");
+                }
+            }
         }
 
         private bool TryParseFloat(String text)
