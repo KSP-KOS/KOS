@@ -76,7 +76,7 @@ namespace kOS
         
         private bool TryParseDirection(string text)
         {
-            Match match = Regex.Match(text, "^V\\(([A-Za-z0-9\\.\\-\\+\\*/]+),([A-Za-z0-9\\.\\-\\+\\*/]+),([A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            Match match = Regex.Match(text, "^V\\(([ A-Za-z0-9\\.\\-\\+\\*/]+),([ A-Za-z0-9\\.\\-\\+\\*/]+),([ A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
@@ -88,7 +88,7 @@ namespace kOS
                 return true;
             }
 
-            match = Regex.Match(text, "^R\\(([A-Za-z0-9\\.\\-\\+\\*/]+),([A-Za-z0-9\\.\\-\\+\\*/]+),([A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            match = Regex.Match(text, "^R\\(([ A-Za-z0-9\\.\\-\\+\\*/]+),([ A-Za-z0-9\\.\\-\\+\\*/]+),([ A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
@@ -116,6 +116,10 @@ namespace kOS
                 if (expValue is double)
                 {
                     return (double)expValue;
+                }
+                else if (double.TryParse(expValue.ToString(), out val))
+                {
+                    return val;
                 }
                 else
                 {
