@@ -49,5 +49,27 @@ namespace kOS
 
             return total;
         }
+
+        public static float GetMaxThrust(Vessel vessel)
+        {
+            var thrust = 0.0;
+            ModuleEngines e;
+
+            foreach (Part p in vessel.parts)
+            {
+                foreach (PartModule pm in p.Modules)
+                {
+                    if (!pm.isEnabled) continue;
+                    if (pm is ModuleEngines)
+                    {
+                        e = (pm as ModuleEngines);
+                        if (!e.EngineIgnited) continue;
+                        thrust += e.maxThrust;
+                    }
+                }
+            }
+
+            return (float)thrust;
+        }
     }
 }
