@@ -157,7 +157,9 @@ namespace kOS
                 int intTry;
                 if (int.TryParse(newName.Substring(0, 1), out intTry)) throw new kOSException("Volume name cannot start with numeral");
 
-                targetVolume.Name = newName;
+                if (targetVolume.Renameable) targetVolume.Name = newName;
+                else throw new kOSException("Volume cannot be renamed");
+
                 State = ExecutionState.DONE;
                 return;
             }
