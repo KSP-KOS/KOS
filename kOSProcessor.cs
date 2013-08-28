@@ -16,6 +16,7 @@ namespace kOS
         private int vesselPartCount = 0;
         private List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
 
+
         [KSPEvent(guiActive = true, guiName = "Open Terminal")]
         public void Activate()
         {
@@ -37,8 +38,24 @@ namespace kOS
             }
         }
 
+        [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
+        public void Activate(KSPActionParam param) {
+            Activate();
+        }
+
+        [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
+        public void TogglePower(KSPActionParam param) {
+            TogglePower();
+        }
+
         public override void OnStart(PartModule.StartState state)
         {
+            //Do not start from editor and at KSP first loading
+            if (state == StartState.Editor || state == StartState.None)
+            {
+                return;
+            }
+
             cpu = new CPU(this, "ksp");
 
             if (hardDisk == null) hardDisk = new Harddisk(MemSize);
