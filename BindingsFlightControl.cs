@@ -134,7 +134,7 @@ namespace kOS
             manager.AddSetter("AG3", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom03, (bool)val); });
             manager.AddSetter("AG4", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom04, (bool)val); });
             manager.AddSetter("AG5", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom05, (bool)val); });
-            manager.AddSetter("SA6", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom06, (bool)val); });
+            manager.AddSetter("AG6", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom06, (bool)val); });
             manager.AddSetter("AG7", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom07, (bool)val); });
             manager.AddSetter("AG8", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom08, (bool)val); });
             manager.AddSetter("AG9", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom09, (bool)val); });
