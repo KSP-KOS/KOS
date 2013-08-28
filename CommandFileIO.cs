@@ -218,6 +218,40 @@ namespace kOS
             State = ExecutionState.DONE;
         }
     }
+
+    [CommandAttribute(@"^DELETE (.+?)( (FROM)( VOLUME)? (.+?))?$")]
+    public class CommandDelete : Command
+    {
+        public CommandDelete(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            String targetFile = RegexMatch.Groups[1].Value.Trim();
+            String operation = RegexMatch.Groups[3].Value.Trim().ToUpper();
+            String volumeName = RegexMatch.Groups[5].Value.Trim();
+            File file = null;
+
+            Volume targetVolume = null;
+
+            switch (operation)
+            {
+                case "FROM":
+                    targetVolume = GetVolume(volumeName); // Will throw if not found
+                    file = targetVolume.GetByName(targetFile);
+                    if (file == null) throw new kOSException("File '" + targetFile + "' not found");
+                    targetVolume.DeleteByName(targetFile);
+                    break;
+
+                default:
+                    file = SelectedVolume.GetByName(targetFile);
+                    if (file == null) throw new kOSException("File '" + targetFile + "' not found");
+                    SelectedVolume.DeleteByName(targetFile);
+                    break;
+            }
+
+            State = ExecutionState.DONE;
+        }
+    }
     
     [CommandAttribute(@"^LIST( VOLUMES| FILES)?$")]
     public class CommandList : Command
