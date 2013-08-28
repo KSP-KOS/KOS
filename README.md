@@ -265,6 +265,7 @@ You can get several useful vessel stats for your ships
     LONGITUDE
     STATUS			// Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
     MASS
+    MAXTHRUST // Combined thrust of active engines at full throttle (kN)
 
 ### Vectors
 

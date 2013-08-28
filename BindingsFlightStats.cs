@@ -105,6 +105,27 @@ namespace kOS
                 return new Direction(new Vector3d(facing.x, facing.y, facing.z).normalized, false);
             });
 
+            manager.AddGetter("MAXTHRUST",      delegate(CPU cpu)
+            {
+                var thrust = 0.0;
+                var vessel = cpu.Vessel;
+                ModuleEngines e;
+                foreach (Part p in vessel.parts)
+                {
+                    foreach (PartModule pm in p.Modules)
+                    {
+                        if (!pm.isEnabled) continue;
+                        if (pm is ModuleEngines)
+                        {
+                            e = (pm as ModuleEngines);
+                            if (!e.EngineIgnited) continue;
+                            thrust += e.maxThrust;
+                        }
+                    }
+                }
+                return (float)thrust;
+            });
+
             manager.AddGetter("AV", delegate(CPU cpu) { return cpu.Vessel.transform.InverseTransformDirection(cpu.Vessel.rigidbody.angularVelocity); });
 
             manager.AddGetter("STAGE:LIQUIDFUEL",    delegate(CPU cpu) { return GetResourceOfCurrentStage("LiquidFuel", cpu.Vessel); });
