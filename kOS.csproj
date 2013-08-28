@@ -66,6 +66,7 @@
     <Compile Include="InterpreterEdit.cs" />
     <Compile Include="InterpreterImmediate.cs" />
     <Compile Include="kOSException.cs" />
+    <Compile Include="kOSIDModule.cs" />
     <Compile Include="kOSProcessor.cs" />
     <Compile Include="BindingsFlightControl.cs" />
     <Compile Include="File.cs" />

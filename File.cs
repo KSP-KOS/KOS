@@ -78,12 +78,12 @@ namespace kOS
 
         public static String EncodeLine(String input)
         {
-            return input.Replace("{", "&#123;").Replace("}", "&#125;");     // Stops universe from imploding
+            return input.Replace("{", "&#123;").Replace("}", "&#125;").Replace(" ", "&#32;");     // Stops universe from imploding
         }
 
         public static String DecodeLine(String input)
         {
-            return input.Replace("&#123;", "{").Replace("&#125;", "}");
+            return input.Replace("&#123;", "{").Replace("&#125;", "}").Replace("&#32;", " ");
         }
         
         public string Serialize()
@@ -104,8 +104,20 @@ namespace kOS
 
             foreach (String s in input.Split('\n'))
             {
-                Add(s.Trim());
+                Add(s);
             }
+        }
+    }
+
+    public struct FileInfo
+    {
+        public string Name;
+        public int Size;
+
+        public FileInfo(string Name, int Size)
+        {
+            this.Name = Name;
+            this.Size = Size;
         }
     }
 }

@@ -14,8 +14,8 @@ namespace kOS
         private static string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
 
         private Rect windowRect = new Rect(60, 50, 470, 395);
-        private Texture2D fontImage = new Texture2D(0, 0);
-        private Texture2D terminalImage = new Texture2D(0, 0);
+        private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool isOpen = false;
         private bool showPilcrows = false;
         private CameraManager cameraManager;
@@ -268,7 +268,9 @@ namespace kOS
                     for (var x = 0; x < buffer.GetLength(0); x++)
                         for (var y = 0; y < buffer.GetLength(1); y++)
                         {
-                            ShowCharacterByAscii(buffer[x, y], x, y, textColor);
+                            char c = buffer[x, y];
+
+                            if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(buffer[x, y], x, y, textColor);
                         }
 
                     bool blinkOn = cursorBlinkTime < 0.5f;

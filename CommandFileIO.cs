@@ -166,6 +166,11 @@ namespace kOS
                 File f = SelectedVolume.GetByName(identifier);
                 if (f == null) throw new kOSException("File '" + identifier + "' not found");
 
+                if (SelectedVolume.GetByName(newName) != null)
+                {
+                    throw new kOSException("File '" + newName + "' already exists.");
+                }
+
                 int intTry;
                 if (int.TryParse(newName.Substring(0, 1), out intTry)) throw new kOSException("Filename cannot start with numeral");
 
@@ -198,7 +203,9 @@ namespace kOS
                 case "FROM":
                     file = targetVolume.GetByName(targetFile);
                     if (file == null) throw new kOSException("File '" + targetFile + "' not found");
-                    SelectedVolume.SaveFile(new File(file));
+                    
+                    if (!SelectedVolume.SaveFile(new File(file))) throw new kOSException("File copy failed");
+                    
                     break;
 
                 case "TO":
@@ -227,9 +234,9 @@ namespace kOS
                 StdOut("Filename                      Size");
                 StdOut("-------------------------------------");
 
-                foreach (File File in SelectedVolume.Files)
+                foreach (FileInfo fileInfo in SelectedVolume.GetFileList())
                 {
-                    StdOut(File.Filename.PadRight(30, ' ') + File.GetSize().ToString());
+                    StdOut(fileInfo.Name.PadRight(30, ' ') + fileInfo.Size.ToString());
                 }
 
                 StdOut("");

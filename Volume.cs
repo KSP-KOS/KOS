@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,13 @@ namespace kOS
     {
         public int Capacity = -1;
         public String Name = "";
-        public List<File> Files = new List<File>();
+        protected List<File> files = new List<File>();
+
         public bool Renameable = true;
 
-        public File GetByName(String name)
+        public virtual File GetByName(String name)
         {
-            foreach (File p in Files)
+            foreach (File p in files)
             {
                 if (p.Filename.ToUpper() == name.ToUpper()) return p;
             }
@@ -26,11 +28,11 @@ namespace kOS
 
         public void DeleteByName(String name)
         {
-            foreach (File p in Files)
+            foreach (File p in files)
             {
                 if (p.Filename.ToUpper() == name.ToUpper())
                 {
-                    Files.Remove(p);
+                    files.Remove(p);
                     return;
                 }
             }
@@ -39,7 +41,7 @@ namespace kOS
         public virtual bool SaveFile(File file)
         {
             DeleteByName(file.Filename);
-            Files.Add(file);
+            files.Add(file);
 
             return true;
         }
@@ -48,10 +50,24 @@ namespace kOS
         public virtual bool IsRoomFor(File newFile) { return true; }
         public virtual void LoadPrograms(List<File> programsToLoad) { }
         public virtual ConfigNode Save(string nodeName) { return new ConfigNode(nodeName); }
+
+        public virtual List<FileInfo> GetFileList()
+        {
+            List<FileInfo> retList = new List<FileInfo>();
+
+            foreach (File file in files)
+            {
+                retList.Add(new FileInfo(file.Filename, file.GetSize()));
+            }
+
+            return retList;
+        }
     }
 
     public class Archive : Volume
     {
+        public string ArchiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
+
         public Archive()
         {
             Renameable = false;
@@ -67,17 +83,16 @@ namespace kOS
 
         private void loadAll()
         {
-            Files.Clear();
-
-            try
+            // Attempt to migrate files from old archive drive
+            if (KSP.IO.File.Exists<File>(HighLogic.fetch.GameSaveFolder + "/arc"))
             {
-                if (KSP.IO.File.Exists<File>(HighLogic.fetch.GameSaveFolder + "/arc"))
+                var reader = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/arc");
+
+                int fileCount = reader.ReadInt32();
+
+                for (int i = 0; i < fileCount; i++)
                 {
-                    var reader = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/arc");
-
-                    int fileCount = reader.ReadInt32();
-
-                    for (int i = 0; i < fileCount; i++)
+                    try
                     {
                         String filename = reader.ReadString();
                         String body = reader.ReadString();
@@ -85,44 +100,96 @@ namespace kOS
                         File file = new File(filename);
                         file.Deserialize(body);
 
-                        Files.Add(file);
+                        Debug.Log("**** " + filename);
+
+                        files.Add(file);
+                        SaveFile(file);
+                    }
+                    catch (EndOfStreamException e)
+                    {
+                        break;
                     }
                 }
+
+                reader.Close();
+
+                KSP.IO.File.Delete<File>(HighLogic.fetch.GameSaveFolder + "/arc");
             }
-            catch (Exception)
+        }
+
+        public override File GetByName(string name)
+        {
+            try
             {
+                using (StreamReader infile = new StreamReader(ArchiveFolder + name + ".txt", true))
+                {
+                    String fileBody = infile.ReadToEnd().Replace("\r\n", "\n") ;
+
+                    File retFile = new File(name);
+                    retFile.Deserialize(fileBody);
+                    
+                    base.DeleteByName(name);
+                    files.Add(retFile);
+
+                    return retFile;
+                }
             }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+            return null;
         }
 
         public override bool SaveFile(File file)
         {
             base.SaveFile(file);
 
+            Directory.CreateDirectory(ArchiveFolder);
+
             try
             {
-                if (HighLogic.fetch != null)
+                using (StreamWriter outfile = new StreamWriter(ArchiveFolder + file.Filename + ".txt", false))
                 {
-                    var writer = KSP.IO.BinaryWriter.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/arc");
+                    String fileBody = file.Serialize();
 
-                    writer.Write(Files.Count);
-
-                    foreach (File f in Files)
+                    if (Application.platform == RuntimePlatform.WindowsPlayer)
                     {
-                        writer.Write(f.Filename);
-                        writer.Write(f.Serialize());
+                        // Only evil windows gets evil windows line breaks
+                        fileBody = fileBody.Replace("\n", "\r\n");
                     }
 
-                    writer.Close();
-
-                    return true;
+                    outfile.Write(fileBody);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }
 
-            return false;
+            return true;
+        }
+
+        public override List<FileInfo> GetFileList()
+        {
+            var retList = new List<FileInfo>();
+
+            try
+            {
+                foreach (var file in Directory.GetFiles(ArchiveFolder, "*.txt"))
+                {
+                    var sysFileInfo = new System.IO.FileInfo(file);
+                    var fileInfo = new kOS.FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
+
+                    retList.Add(fileInfo);
+                }
+            }
+            catch (DirectoryNotFoundException e)
+            {
+            }
+
+            return retList;
         }
     }
 }
