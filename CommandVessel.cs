@@ -22,7 +22,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^LIST (RESOURCES|ENGINES)$")]
+    [CommandAttribute(@"^LIST (RESOURCES|ENGINES|TARGETS|BODIES)$")]
     class CommandVesselListings : Command
     {
         public CommandVesselListings(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -31,10 +31,36 @@ namespace kOS
         {
             switch (RegexMatch.Groups[1].Value.ToUpper())
             {
+                    
+                case "BODIES":
+                    StdOut("");
+                    StdOut("Vessel Name");
+                    StdOut("-------------------------------------");
+                    foreach (var body in FlightGlobals.fetch.bodies)
+                    {
+                        StdOut(body.bodyName);
+                    }
+                    StdOut("");
+
+                    break;
+                
+
+                case "TARGETS":
+                    StdOut("");
+                    StdOut("Vessel Name");
+                    StdOut("-------------------------------------");
+                    foreach (Vessel vessel in FlightGlobals.Vessels)
+                    {
+                         StdOut(vessel.vesselName);
+                    }
+                    StdOut("");
+
+                    break;
+
                 case "RESOURCES":
                     StdOut("");
                     StdOut("Stage      Resource Name               Amount");
-                    StdOut("----------------------------------------------------");
+                    StdOut("------------------------------------------------");
 
                     foreach (Part part in Vessel.Parts)
                     {
@@ -48,7 +74,7 @@ namespace kOS
                     break;
 
                 case "ENGINES":
-                    StdOut("----------------------------------------------------");
+                    StdOut("------------------------------------------------");
 
                     foreach (Part part in VesselUtils.GetListOfActivatedEngines(Vessel))
                     {

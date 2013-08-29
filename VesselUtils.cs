@@ -71,5 +71,42 @@ namespace kOS
 
             return (float)thrust;
         }
+
+        public static Vessel TryGetVesselByName(String name)
+        {
+            foreach (Vessel v in FlightGlobals.Vessels)
+            {
+                if (v.vesselName == name)
+                {
+                    return v;
+                }
+            }
+
+            return null;
+        }
+
+        public static Vessel GetVesselByName(String name)
+        {
+            Vessel vessel = TryGetVesselByName(name);
+
+            if (vessel == null)
+            {
+                throw new kOSException("Vessel '" + name + "' not found");
+            }
+            else
+            {
+                return vessel;
+            }
+        }
+
+        public static void SetTargetByName(String name)
+        {
+            SetTarget(GetVesselByName(name));
+        }
+
+        public static void SetTarget(ITargetable val)
+        {
+            FlightGlobals.fetch.SetVesselTarget(val);
+        }
     }
 }

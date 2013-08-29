@@ -17,6 +17,7 @@ namespace kOS
             manager.AddSetter("VESSELNAME",     delegate(CPU cpu, object value ) { cpu.Vessel.vesselName = value.ToString(); });
 
             manager.AddGetter("ALTITUDE",       delegate(CPU cpu) { return (float)cpu.Vessel.altitude; });
+            manager.AddGetter("ALT:RADAR",      delegate(CPU cpu) { return (float)cpu.Vessel.heightFromTerrain; });
             manager.AddGetter("MISSIONTIME",    delegate(CPU cpu) { return (float)cpu.Vessel.missionTime; });
             manager.AddGetter("STATUS",         delegate(CPU cpu) { return cpu.Vessel.situation.ToString().Replace("_", " "); });
             manager.AddGetter("APOAPSIS",       delegate(CPU cpu) { return (float)cpu.Vessel.orbit.ApA; });
@@ -32,7 +33,7 @@ namespace kOS
             manager.AddGetter("ANGULARVEL",     delegate(CPU cpu) { return new Direction(cpu.Vessel.angularVelocity, true); });
             manager.AddGetter("MASS",           delegate(CPU cpu) { return cpu.Vessel.GetTotalMass(); });
             manager.AddGetter("VERTICALSPEED", delegate(CPU cpu)  { return (float)cpu.Vessel.verticalSpeed; });
-
+           
             manager.AddGetter("BODY",           delegate(CPU cpu) { return cpu.Vessel.mainBody.bodyName; });
             manager.AddGetter("LATITUDE",       delegate(CPU cpu) { return (float)cpu.Vessel.latitude; });
             manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return (float)cpu.Vessel.longitude; });

@@ -26,7 +26,7 @@ namespace kOS
             return null;
         }
 
-        public void DeleteByName(String name)
+        public virtual void DeleteByName(String name)
         {
             foreach (File p in files)
             {
@@ -169,6 +169,11 @@ namespace kOS
             }
 
             return true;
+        }
+
+        public override void DeleteByName(string name)
+        {
+            System.IO.File.Delete(ArchiveFolder + name + ".txt");
         }
 
         public override List<FileInfo> GetFileList()

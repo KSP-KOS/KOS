@@ -17,7 +17,7 @@ namespace kOS
         public bool IsStatic = false;
         public ExecutionContext executionContext;
 
-        static String[] OperatorList = new String[] { "==", "=", "<=", ">=", "<", ">", "-", "+", "/", "*", "^", ":" };
+        static String[] OperatorList = new String[] { "==", "=", "<=", ">=", "<", ">", "-", "+", "/", "*", "^" };
 
         public static String Evaluate(String text, ExecutionContext context)
         {
@@ -36,6 +36,8 @@ namespace kOS
             if (TryParseResource(text)) return;
 
             if (TryParseDirection(text)) return;
+
+            if (TryParseVessel(text)) return;
 
             if (TryParseFloat(text)) return;
 
@@ -73,6 +75,20 @@ namespace kOS
 
             return false;
         }
+
+        private bool TryParseVessel(string text)
+        {
+            Match match = Regex.Match(text, "^VESSEL\\(([ A-Za-z0-9\"]+)\\)$");
+            if (match.Success)
+            {
+                var input = ParseSubExpressionAsString(match.Groups[1].Value.Trim());
+
+                Value = VesselUtils.GetVesselByName(input); // Will throw if not found
+                return true;
+            }
+
+            return false;
+        }
         
         private bool TryParseDirection(string text)
         {
@@ -101,6 +117,11 @@ namespace kOS
             }
 
             return false;
+        }
+
+        private String ParseSubExpressionAsString(String input)
+        {
+            return new Expression(input, executionContext).ToString();
         }
 
         private double ParseSubExpressionAsDouble(String input)
@@ -353,6 +374,11 @@ namespace kOS
         
         public override String ToString()
         {
+            if (GetValue() is Vessel)
+            {
+                return "VESSEL(\"" + ((Vessel)GetValue()).vesselName + "\")";
+            }
+
             return GetValue().ToString();
         }
 

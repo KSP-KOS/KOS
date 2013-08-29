@@ -158,4 +158,25 @@ namespace kOS
             manager.AddGetter("AG10", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom10]; });
         }
     }
+
+    [kOSBinding("ksp")]
+    public class BindingFlightSettings : Binding
+    {
+        public override void AddTo(BindingManager manager)
+        {
+            manager.AddSetter("TARGET", delegate(CPU cpu, object val) 
+            {
+                if (val is ITargetable)
+                {
+                    VesselUtils.SetTarget((ITargetable)val);
+                }
+                else
+                {
+                    VesselUtils.SetTargetByName(val.ToString());
+                }
+            });
+
+            manager.AddGetter("TARGET", delegate(CPU cpu) { return (Vessel)FlightGlobals.fetch.VesselTarget; });
+        }
+    }
 }

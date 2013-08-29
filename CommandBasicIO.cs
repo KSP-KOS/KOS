@@ -85,7 +85,7 @@ namespace kOS
             }
             else
             {
-                StdOut(e.GetValue().ToString());
+                StdOut(e.ToString());
                 State = ExecutionState.DONE;
             }
         }
