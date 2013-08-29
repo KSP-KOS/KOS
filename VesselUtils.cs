@@ -76,7 +76,7 @@ namespace kOS
         {
             foreach (Vessel v in FlightGlobals.Vessels)
             {
-                if (v.vesselName == name)
+                if (v.vesselName.ToUpper() == name.ToUpper())
                 {
                     return v;
                 }

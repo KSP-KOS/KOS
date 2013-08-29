@@ -38,8 +38,8 @@ namespace kOS
 
             bindingManager = new BindingManager(this, Context);
 
-            //archive = new Archive();
-            //Volumes.Add(archive);
+            archive = new Archive();
+            Volumes.Add(archive);
         }
 
         public void Boot()

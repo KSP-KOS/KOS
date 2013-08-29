@@ -16,6 +16,7 @@ namespace kOS
         public Variable Variable = null;
         public bool IsStatic = false;
         public ExecutionContext executionContext;
+        public String Suffix;
 
         static String[] OperatorList = new String[] { "==", "=", "<=", ">=", "<", ">", "-", "+", "/", "*", "^" };
 
