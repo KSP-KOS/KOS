@@ -99,11 +99,6 @@ namespace kOS
             }
         }
 
-        public static void SetTargetByName(String name)
-        {
-            SetTarget(GetVesselByName(name));
-        }
-
         public static void SetTarget(ITargetable val)
         {
             FlightGlobals.fetch.SetVesselTarget(val);

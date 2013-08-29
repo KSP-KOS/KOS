@@ -35,7 +35,11 @@ namespace kOS
 
             if (TryParseResource(text)) return;
 
+            if (TryParseVariable(text)) return;
+
             if (TryParseDirection(text)) return;
+
+            if (TryParseSuffix(text)) return;
 
             if (TryParseVessel(text)) return;
 
@@ -45,11 +49,26 @@ namespace kOS
 
             if (TryParseString(text)) return;
             
-            if (TryParseVariable(text)) return;
-
             if (Eval(ref text)) return;
 
             throw new kOSException("Unrecognized term: '" + text + "'.");
+        }
+
+        private bool TryParseSuffix(string text)
+        {
+            if (text.Contains(':'))
+            {
+                var parts = text.Split(':');
+
+                var obj = new Expression(parts[0], executionContext).GetValue();
+                if (obj is SpecialValue)
+                {
+                    Value = ((SpecialValue)obj).GetSuffix(parts[1]);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void UnwrapFullBrackets(ref String text)
@@ -83,7 +102,7 @@ namespace kOS
             {
                 var input = ParseSubExpressionAsString(match.Groups[1].Value.Trim());
 
-                Value = VesselUtils.GetVesselByName(input); // Will throw if not found
+                Value = new VesselTarget(VesselUtils.GetVesselByName(input), executionContext); // Will throw if not found
                 return true;
             }
 
@@ -374,9 +393,9 @@ namespace kOS
         
         public override String ToString()
         {
-            if (GetValue() is Vessel)
+            if (GetValue() is float)
             {
-                return "VESSEL(\"" + ((Vessel)GetValue()).vesselName + "\")";
+                return ((float)GetValue()).ToString("0.00");
             }
 
             return GetValue().ToString();

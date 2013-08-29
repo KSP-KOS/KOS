@@ -8,7 +8,6 @@ namespace kOS
 {
     public class ContextRunProgram : ExecutionContext
     {
-        private String inputBuffer = "";
         private int accumulator;
         private File file;
         private String commandBuffer;

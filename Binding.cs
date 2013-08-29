@@ -104,7 +104,7 @@ namespace kOS
     {
         public BindingManager.BindingSetDlg Set;
         public BindingManager.BindingGetDlg Get;
-        public new CPU cpu;
+        public CPU cpu;
 
         public override object Value
         {

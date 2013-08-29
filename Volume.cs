@@ -138,8 +138,6 @@ namespace kOS
             {
                 return null;
             }
-
-            return null;
         }
 
         public override bool SaveFile(File file)

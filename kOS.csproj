@@ -71,7 +71,9 @@
     <Compile Include="BindingsFlightControl.cs" />
     <Compile Include="File.cs" />
     <Compile Include="Resource.cs" />
+    <Compile Include="SpecialValue.cs" />
     <Compile Include="SteeringHelper.cs" />
+    <Compile Include="VesselTarget.cs" />
     <Compile Include="TermWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CPU.cs" />

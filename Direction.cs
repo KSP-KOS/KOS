@@ -7,10 +7,8 @@ using UnityEngine;
 
 namespace kOS
 {
-    public class Direction
+    public class Direction : SpecialValue
     {
-        private bool rollMatters;
-
         private Vector3d vector;
         public Vector3d Vector
         {
@@ -51,14 +49,21 @@ namespace kOS
         {
             if (isEuler)
             {
-                rollMatters = true;
                 Euler = v3d;
             }
             else
             {
-                rollMatters = false;
                 Vector = v3d; 
             }
+        }
+
+        public override object GetSuffix(string suffixName)
+        {
+            if (suffixName.ToUpper() == "PITCH") return euler.x;
+            if (suffixName.ToUpper() == "YAW") return euler.y;
+            if (suffixName.ToUpper() == "ROLL") return euler.z;
+
+            return base.GetSuffix(suffixName);
         }
 
         public void RedefineUp(Vector3d up)

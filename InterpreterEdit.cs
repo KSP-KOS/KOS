@@ -20,7 +20,7 @@ namespace kOS
         int CursorX = 0;
         int CursorY = 0;
 
-        private char[,] buffer = new char[COLUMNS, ROWS];
+        private new char[,] buffer = new char[COLUMNS, ROWS];
 
         String StatusAnimString = "";
         float StatusAnimProg = 0;

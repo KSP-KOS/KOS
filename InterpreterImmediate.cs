@@ -14,9 +14,9 @@ namespace kOS
         private String commandBuffer = "";
         private int CursorX = 0;
         private int CursorY = 0;
-        private Queue<Command> Queue = new Queue<Command>();
-        
-        private char[,] buffer = new char[COLUMNS, ROWS];
+        private new Queue<Command> Queue = new Queue<Command>();
+
+        private new char[,] buffer = new char[COLUMNS, ROWS];
 
         public ImmediateMode(ExecutionContext parent) : base(parent) 
         {

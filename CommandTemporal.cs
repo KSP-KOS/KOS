@@ -76,7 +76,6 @@ namespace kOS
     [CommandAttribute(@"^ON ([a-zA-Z][a-zA-Z0-9_]*?) (.*)$")]
     public class CommandOnEvent : Command
     {
-        private bool isOnChange;
         private Variable targetVariable;
         private Command targetCommand;
         private bool originalValue;

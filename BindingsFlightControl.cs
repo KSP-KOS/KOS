@@ -170,13 +170,18 @@ namespace kOS
                 {
                     VesselUtils.SetTarget((ITargetable)val);
                 }
+                else if (val is VesselTarget)
+                {
+                    VesselUtils.SetTarget(((VesselTarget)val).target);
+                }
                 else
                 {
-                    VesselUtils.SetTargetByName(val.ToString());
+                    var vessel = VesselUtils.GetVesselByName(val.ToString());
+                    VesselUtils.SetTarget(vessel);
                 }
             });
 
-            manager.AddGetter("TARGET", delegate(CPU cpu) { return (Vessel)FlightGlobals.fetch.VesselTarget; });
+            manager.AddGetter("TARGET", delegate(CPU cpu) { return new VesselTarget((Vessel)FlightGlobals.fetch.VesselTarget, cpu); });
         }
     }
 }

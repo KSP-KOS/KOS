@@ -14,13 +14,12 @@ namespace kOS
         public enum Modes { READY, STARVED, OFF };
         public Modes Mode = Modes.READY;
         public String Context;
-        public static Archive archive = new Archive();
+        public static Archive archive;
         public BindingManager bindingManager;
 
         private Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
         private Volume selectedVolume = null;
         private List<Volume> volumes = new List<Volume>();
-        private int vesselPartCount;
             
         public override Vessel Vessel { get { return ((kOSProcessor)Parent).vessel; } }
         public override Dictionary<String, Variable> Variables { get { return variables; } }
@@ -37,9 +36,10 @@ namespace kOS
             this.Parent = parent;
             this.Context = context;
 
-            Volumes.Add(archive);
-
             bindingManager = new BindingManager(this, Context);
+
+            //archive = new Archive();
+            //Volumes.Add(archive);
         }
 
         public void Boot()

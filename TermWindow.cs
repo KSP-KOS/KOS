@@ -36,12 +36,6 @@ namespace kOS
 
         public bool allTexturesFound = true;
 
-        public enum SkinType
-        {
-            SMALL, MINIMAL
-        }
-        private SkinType skinType = SkinType.MINIMAL;
-
         public Core Core;
         public CPU Cpu;
 
