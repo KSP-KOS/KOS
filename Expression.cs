@@ -63,7 +63,7 @@ namespace kOS
                 var obj = new Expression(parts[0], executionContext).GetValue();
                 if (obj is SpecialValue)
                 {
-                    Value = ((SpecialValue)obj).GetSuffix(parts[1]);
+                    Value = ((SpecialValue)obj).GetSuffix(parts[1].ToUpper());
                     return true;
                 }
             }

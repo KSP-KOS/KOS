@@ -59,9 +59,9 @@ namespace kOS
 
         public override object GetSuffix(string suffixName)
         {
-            if (suffixName.ToUpper() == "PITCH") return euler.x;
-            if (suffixName.ToUpper() == "YAW") return euler.y;
-            if (suffixName.ToUpper() == "ROLL") return euler.z;
+            if (suffixName == "PITCH") return euler.x;
+            if (suffixName == "YAW") return euler.y;
+            if (suffixName == "ROLL") return euler.z;
 
             return base.GetSuffix(suffixName);
         }
