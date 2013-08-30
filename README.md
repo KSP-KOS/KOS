@@ -99,6 +99,7 @@ Example:
 
 Deletes a file. You can delete a file from the current volume, or from a named volume.
 Example:
+
     DELETE file1.         // Deletes file1 from the active volume.
     DELETE file1 FROM 1.  // Deletes file1 from volume 1
 
@@ -264,16 +265,18 @@ You can get several useful vessel stats for your ships
 
     VESSELNAME			
     ALTITUDE
+    ALT:RADAR       // Your radar altitude
     BODY			// The current celestial body whose influence you are under
-    MISSIONTIME			// The current mission time
-    VELOCITY			// The current orbital velocity
+    MISSIONTIME     // The current mission time
+    VELOCITY		// The current orbital velocity
     VERTICALSPEED
+    SURFACESPEED
     LATITUDE
     LONGITUDE
     STATUS			// Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
     MASS
-    MAXTHRUST // Combined thrust of active engines at full throttle (kN)
-
+    MAXTHRUST       // Combined thrust of active engines at full throttle (kN)
+    
 ### Vectors
 
 These return a vector object, which can be used in conjuction with the LOCK command to set your vessel's steering.
@@ -328,3 +331,8 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
 
     THROTTLE			// Lock to a decimal value between 0 and 1.
     STEERING			// Lock to a direction.
+
+Other Bindings
+==============
+
+    TARGET          // Set a target using it's name in quotes
