@@ -103,7 +103,7 @@ namespace kOS
             {
                 var input = ParseSubExpressionAsString(match.Groups[1].Value.Trim());
 
-                Value = new VesselTarget(VesselUtils.GetVesselByName(input), executionContext); // Will throw if not found
+                Value = new VesselTarget(VesselUtils.GetVesselByName(input, executionContext.Vessel), executionContext); // Will throw if not found
                 return true;
             }
 

@@ -22,7 +22,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^LIST (RESOURCES|ENGINES|TARGETS|BODIES)$")]
+    [CommandAttribute(@"^LIST (PARTS|RESOURCES|ENGINES|TARGETS|BODIES)$")]
     class CommandVesselListings : Command
     {
         public CommandVesselListings(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -47,12 +47,23 @@ namespace kOS
 
                 case "TARGETS":
                     StdOut("");
-                    StdOut("Vessel Name");
+                    StdOut("Vessel Name              Distance");
                     StdOut("-------------------------------------");
+
+                    float commRange = VesselUtils.GetCommRange(Vessel);
+
                     foreach (Vessel vessel in FlightGlobals.Vessels)
                     {
-                         StdOut(vessel.vesselName);
+                        if (vessel != Vessel)
+                        {
+                            var vT = new VesselTarget(vessel, this);
+                            if (vT.IsInRange(commRange))
+                            {
+                                StdOut(vT.target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
+                            }
+                        }
                     }
+
                     StdOut("");
 
                     break;
@@ -71,6 +82,24 @@ namespace kOS
                             StdOut(part.inverseStage.ToString() + " " + resource.resourceName.PadRight(20) + " " + resource.amount.ToString("0.00").PadLeft(8));
                         }
                     }
+                    break;
+
+                case "PARTS":
+                    StdOut("------------------------------------------------");
+
+                    foreach (Part part in VesselUtils.GetListOfActivatedEngines(Vessel))
+                    {
+                        foreach (PartModule module in part.Modules)
+                        {
+                            if (module is ModuleEngines)
+                            {
+                                var engineMod = (ModuleEngines)module;
+
+                                StdOut(part.uid + "  " + part.inverseStage.ToString() + " " + engineMod.moduleName);
+                            }
+                        }
+                    }
+
                     break;
 
                 case "ENGINES":

@@ -176,7 +176,7 @@ namespace kOS
                 }
                 else
                 {
-                    var vessel = VesselUtils.GetVesselByName(val.ToString());
+                    var vessel = VesselUtils.GetVesselByName(val.ToString(), cpu.Vessel);
                     VesselUtils.SetTarget(vessel);
                 }
             });

@@ -72,11 +72,11 @@ namespace kOS
             return (float)thrust;
         }
 
-        public static Vessel TryGetVesselByName(String name)
+        public static Vessel TryGetVesselByName(String name, Vessel origin)
         {
             foreach (Vessel v in FlightGlobals.Vessels)
             {
-                if (v.vesselName.ToUpper() == name.ToUpper())
+                if (v != origin && v.vesselName.ToUpper() == name.ToUpper())
                 {
                     return v;
                 }
@@ -85,9 +85,9 @@ namespace kOS
             return null;
         }
 
-        public static Vessel GetVesselByName(String name)
+        public static Vessel GetVesselByName(String name, Vessel origin)
         {
-            Vessel vessel = TryGetVesselByName(name);
+            Vessel vessel = TryGetVesselByName(name, origin);
 
             if (vessel == null)
             {
@@ -102,6 +102,29 @@ namespace kOS
         public static void SetTarget(ITargetable val)
         {
             FlightGlobals.fetch.SetVesselTarget(val);
+        }
+
+        public static float GetCommRange(Vessel vessel)
+        {
+            float range = 75000;
+
+            foreach (Part part in vessel.parts)
+            {
+                if (part.partInfo.name == "longAntenna" && ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status == "Fixed")
+                {
+                    range += 75000;
+                }
+            }
+
+            foreach (Part part in vessel.parts)
+            {
+                if (part.partInfo.name == "commDish" && ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status == "Fixed")
+                {
+                    range *= 10;
+                }
+            }
+
+            return range;
         }
     }
 }
