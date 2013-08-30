@@ -1,6 +1,17 @@
 kOS Mod Changelog
 =================
 
+### 0.4
+
+- Bug fixes
+- Interact with subelements of R()
+- Targetting
+- Radar altitude
+- Plaintext editing
+- Toggle terminal & power from action group
+- Maximum thurst variable
+- Surface speed variable
+
 ### 0.35
 
 - Fix for the typing when not focussed bug
