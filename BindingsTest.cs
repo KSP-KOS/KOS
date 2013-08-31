@@ -13,7 +13,7 @@ namespace kOS
         {
             manager.AddGetter("TEST", delegate(CPU cpu)
             {
-                return 5;  // Chosen by fair die roll, guaranteed to be random.
+                return new SpecialValueTester();
             }); 
         }
 

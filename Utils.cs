@@ -123,7 +123,9 @@ namespace kOS
 
             foreach (PartResource resource in part.Resources)
             {
-                if (resource.resourceName == resourceName)
+                Debug.Log("*** " + resource.resourceName);
+
+                if (resource.resourceName.ToLower() == resourceName.ToLower())
                 {
                     ret += (float)resource.amount;
                 }

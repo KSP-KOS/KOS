@@ -83,6 +83,8 @@ namespace kOS
 
         private void loadAll()
         {
+            Directory.CreateDirectory(ArchiveFolder);
+
             // Attempt to migrate files from old archive drive
             if (KSP.IO.File.Exists<File>(HighLogic.fetch.GameSaveFolder + "/arc"))
             {

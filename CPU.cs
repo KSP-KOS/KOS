@@ -38,8 +38,11 @@ namespace kOS
 
             bindingManager = new BindingManager(this, Context);
 
-            archive = new Archive();
-            Volumes.Add(archive);
+            if (context == "ksp")
+            {
+                archive = new Archive();
+                Volumes.Add(archive);
+            }
         }
 
         public void Boot()

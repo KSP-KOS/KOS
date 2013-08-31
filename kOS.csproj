@@ -72,6 +72,8 @@
     <Compile Include="File.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="SpecialValue.cs" />
+    <Compile Include="SpecialValueTester.cs" />
+    <Compile Include="StageValues.cs" />
     <Compile Include="SteeringHelper.cs" />
     <Compile Include="VesselTarget.cs" />
     <Compile Include="TermWindow.cs" />

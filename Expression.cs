@@ -34,6 +34,12 @@ namespace kOS
 
             UnwrapFullBrackets(ref text);
 
+            if (TryParseFloat(text)) return;
+
+            if (TryParseBoolean(text)) return;
+
+            if (TryParseString(text)) return;
+
             if (TryParseResource(text)) return;
 
             if (TryParseVariable(text)) return;
@@ -43,12 +49,6 @@ namespace kOS
             if (TryParseSuffix(text)) return;
 
             if (TryParseVessel(text)) return;
-
-            if (TryParseFloat(text)) return;
-
-            if (TryParseBoolean(text)) return;
-
-            if (TryParseString(text)) return;
             
             if (Eval(ref text)) return;
 
@@ -57,14 +57,14 @@ namespace kOS
 
         private bool TryParseSuffix(string text)
         {
-            if (text.Contains(':'))
-            {
-                var parts = text.Split(':');
+            Match match = Regex.Match(text, "^([A-Z0-9_\\-]+?):([A-Z0-9_\\-]+?)$", RegexOptions.IgnoreCase);
 
-                var obj = new Expression(parts[0], executionContext).GetValue();
+            if (match.Success)
+            {
+                var obj = new Expression(match.Groups[1].Value, executionContext).GetValue();
                 if (obj is SpecialValue)
                 {
-                    Value = ((SpecialValue)obj).GetSuffix(parts[1].ToUpper());
+                    Value = ((SpecialValue)obj).GetSuffix(match.Groups[2].Value.ToUpper());
                     return true;
                 }
             }
@@ -98,7 +98,7 @@ namespace kOS
 
         private bool TryParseVessel(string text)
         {
-            Match match = Regex.Match(text, "^VESSEL\\(([ A-Za-z0-9\"]+)\\)$");
+            Match match = Regex.Match(text, "^VESSEL\\(([ @A-Za-z0-9\"]+)\\)$");
             if (match.Success)
             {
                 var input = ParseSubExpressionAsString(match.Groups[1].Value.Trim());
@@ -112,7 +112,7 @@ namespace kOS
         
         private bool TryParseDirection(string text)
         {
-            Match match = Regex.Match(text, "^V\\(([ A-Za-z0-9\\.\\-\\+\\*/]+),([ A-Za-z0-9\\.\\-\\+\\*/]+),([ A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            Match match = Regex.Match(text, "^V\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
@@ -124,7 +124,7 @@ namespace kOS
                 return true;
             }
 
-            match = Regex.Match(text, "^R\\(([ A-Za-z0-9\\.\\-\\+\\*/]+),([ A-Za-z0-9\\.\\-\\+\\*/]+),([ A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            match = Regex.Match(text, "^R\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
@@ -153,7 +153,10 @@ namespace kOS
             }
             else
             {
+                UnityEngine.Debug.Log("***** " + input);
+
                 var expValue = new Expression(input, executionContext).GetValue();
+                
                 if (expValue is double)
                 {
                     return (double)expValue;

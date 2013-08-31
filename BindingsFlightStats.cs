@@ -114,15 +114,10 @@ namespace kOS
 
             manager.AddGetter("AV", delegate(CPU cpu) { return cpu.Vessel.transform.InverseTransformDirection(cpu.Vessel.rigidbody.angularVelocity); });
 
-            manager.AddGetter("STAGE:LIQUIDFUEL",    delegate(CPU cpu) { return GetResourceOfCurrentStage("LiquidFuel", cpu.Vessel); });
-            manager.AddGetter("STAGE:SOLIDFUEL",     delegate(CPU cpu) { return GetResourceOfCurrentStage("SolidFuel", cpu.Vessel); });
-            manager.AddGetter("STAGE:OXIDIZER",      delegate(CPU cpu) { return GetResourceOfCurrentStage("Oxidizer", cpu.Vessel); });
+            manager.AddGetter("STAGE",          delegate(CPU cpu) { return new StageValues(cpu.Vessel); });
+
         }
 
-        private object GetResourceOfCurrentStage(String resourceName, Vessel vessel)
-        {
-            var activeEngines = VesselUtils.GetListOfActivatedEngines(vessel);
-            return Utils.ProspectForResource(resourceName, activeEngines);
-        }
+
     }
 }
