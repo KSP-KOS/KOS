@@ -1,6 +1,14 @@
 kOS Mod Changelog
 =================
 
+### 0.42
+
+- Fixes handling of compound values in certain circumstances
+
+### 0.41
+
+- Fixes a bug dealing with the Archive folder
+
 ### 0.4
 
 - Bug fixes
