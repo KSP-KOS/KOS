@@ -1,6 +1,10 @@
 kOS Mod Changelog
 =================
 
+### 0.45
+
+- Fix for the matching on boolean operators
+
 ### 0.44
 
 - Support for AND and OR in IF statements added
