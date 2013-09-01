@@ -418,9 +418,9 @@ namespace kOS
 
                 if (LeftSide.Value is Direction && RightSide.Value is Direction)
                 {
-                    if (Operator == "*") return (Direction)LeftSide.Value * (Direction)RightSide.Value;
-                    if (Operator == "+") return (Direction)LeftSide.Value + (Direction)RightSide.Value;
-                    if (Operator == "-") return (Direction)LeftSide.Value + (Direction)RightSide.Value;
+                    if (Operator == "*") return (Direction)LeftSide.GetValue() * (Direction)RightSide.GetValue();
+                    if (Operator == "+") return (Direction)LeftSide.GetValue() + (Direction)RightSide.GetValue();
+                    if (Operator == "-") return (Direction)LeftSide.GetValue() + (Direction)RightSide.GetValue();
                 }
             }
 
