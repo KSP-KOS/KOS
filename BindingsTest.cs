@@ -13,7 +13,7 @@ namespace kOS
         {
             manager.AddGetter("TEST", delegate(CPU cpu)
             {
-                return new SpecialValueTester();
+                return new SpecialValueTester(cpu);
             }); 
         }
 

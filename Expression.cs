@@ -12,13 +12,15 @@ namespace kOS
         public object Value;
         public Expression LeftSide;
         public Expression RightSide;
+        public SpecialValue SpecialValue;
+        public String SpecialValueSuffix;
         public String Operator;
         public Variable Variable = null;
         public bool IsStatic = false;
         public ExecutionContext executionContext;
         public String Suffix;
 
-        static String[] OperatorList = new String[] { "==", "=", "<=", ">=", "<", ">", "-", "+", "/", "*", "^" };
+        static String[] OperatorList = new String[] { "AND", "OR", "==", "=", "<=", ">=", "<", ">", "-", "+", "/", "*", "^" };
 
         public static String Evaluate(String text, ExecutionContext context)
         {
@@ -64,7 +66,10 @@ namespace kOS
                 var obj = new Expression(match.Groups[1].Value, executionContext).GetValue();
                 if (obj is SpecialValue)
                 {
-                    Value = ((SpecialValue)obj).GetSuffix(match.Groups[2].Value.ToUpper());
+                    SpecialValue = (SpecialValue)obj;
+                    Suffix = match.Groups[2].Value.ToUpper();
+
+                    Value = SpecialValue.GetSuffix(Suffix);
                     return true;
                 }
             }
@@ -314,7 +319,7 @@ namespace kOS
                     {
                         i = FindEndOfBracket(text, i);
                     }
-                    else if (i <= text.Length - op.Length && op == text.Substring(i, op.Length))
+                    else if (i <= text.Length - op.Length && op == text.Substring(i, op.Length).ToUpper())
                     {
                         Operator = op;
 
@@ -340,6 +345,22 @@ namespace kOS
             return (float)GetValue();
         }
 
+        public Boolean Bool()
+        {
+            object val = GetValue();
+            if (val is Boolean) return (Boolean)val;
+            if (val is float) return ((float)val) > 0;
+            if (val is String) return ((String)val) != "" && ((String)val) != "0" && ((String)val).ToUpper() != "FALSE";
+
+            float fParse;
+            if (float.TryParse(val.ToString(), out fParse))
+            {
+                return fParse > 0;
+            }
+
+            throw new kOSException("Unable to convert value to Boolean.");
+        }
+
         public double Double()
         {
             // By default numbers are stored as floats, and must be 'unboxed' before casting to double
@@ -349,6 +370,14 @@ namespace kOS
         // Evaluate and return the value of the part of an expression that this instance represents
         public object GetValue()
         {
+            if (SpecialValue != null)
+            {
+                if (string.IsNullOrEmpty(Suffix)) 
+                    return SpecialValue.ToString();
+                else
+                    return SpecialValue.GetSuffix(Suffix);
+            }
+
             if (LeftSide == null)
             {
                 if (Variable != null && !IsStatic)
@@ -362,6 +391,9 @@ namespace kOS
             }
             else
             {
+                if (Operator.ToUpper() == "AND") return LeftSide.Bool() && RightSide.Bool();
+                if (Operator.ToUpper() == "OR") return LeftSide.Bool() || RightSide.Bool();
+
                 if (LeftSide.Value is String || RightSide.Value is String)
                 {
                     if (Operator == "+") return LeftSide.Value.ToString() + RightSide.Value.ToString();

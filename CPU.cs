@@ -16,6 +16,7 @@ namespace kOS
         public String Context;
         public static Archive archive;
         public BindingManager bindingManager;
+        public float SessionTime;
 
         private Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
         private Volume selectedVolume = null;
@@ -136,6 +137,8 @@ namespace kOS
         public override void Update(float time)
         {
             bindingManager.Update(time);
+
+            SessionTime += time;
 
             base.Update(time);
 

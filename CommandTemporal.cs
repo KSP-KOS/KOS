@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace kOS
 {
-    
     [CommandAttribute(@"^WAIT( UNTIL)? (.+?)$")]
     public class CommandWait : Command
     {

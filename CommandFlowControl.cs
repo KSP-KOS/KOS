@@ -65,7 +65,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^IF (.*)({.*})$")]
+    [CommandAttribute(@"^IF (.+?)({.+})$")]
     public class CommandIf : Command
     {
         List<Command> commands = new List<Command>();
