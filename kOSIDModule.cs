@@ -7,9 +7,6 @@ using UnityEngine;
 
 namespace kOS
 {
-    /*
-     *  This was an attempt to place persisitent identifiers on ship parts, it did not work out.
-     * 
     public class kOSIDModule : PartModule
     {
         [KSPField(isPersistant=false, guiName = "kOS Part ID", guiActive = true)]
@@ -19,18 +16,7 @@ namespace kOS
         {
             this.ID = initID;
         }
-
-        public override void OnStart(PartModule.StartState state)
-        {
-            base.OnStart(state);
-        }
-
-        public override void OnUpdate()
-        {
-            base.OnUpdate();
-
-        }
-
+        
         public override void OnLoad(ConfigNode node)
         {
             Debug.Log("************ ONLOAD");
@@ -42,5 +28,5 @@ namespace kOS
             Debug.Log("************ ONSAVE");
             node.SetValue("kosID", ID);
         }
-    }*/
+    }
 }

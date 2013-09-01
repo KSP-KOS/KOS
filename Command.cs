@@ -64,7 +64,7 @@ namespace kOS
 
         public static Command Get(String input, ExecutionContext context)
         {
-            input = input.Trim();
+            input = input.Trim().Replace("\n", " ");
 
             foreach (var kvp in CommandRegistry.Bindings)
             {

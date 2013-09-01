@@ -206,7 +206,7 @@ namespace kOS
 
             while (baseLineY > buffer.GetLength(1) - 1) ShiftUp();
 
-            Add(inputBuffer);
+            Add(inputBuffer += "\n");
 
             inputBuffer = "";
             cursor = 0;

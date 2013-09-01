@@ -19,8 +19,10 @@ namespace kOS
         public bool IsStatic = false;
         public ExecutionContext executionContext;
         public String Suffix;
+        public String Text;
 
-        static String[] OperatorList = new String[] { "AND", "OR", "==", "=", "<=", ">=", "<", ">", "-", "+", "/", "*", "^" };
+        static String[] OperatorList = new String[] { "==", "=", "<=", ">=", "<", ">", "-", "+", "/", "*", "^" };
+        static String[] SpecialOperatorList = new String[] { "^\\sAND\\s", "^\\sOR\\s" };
 
         public static String Evaluate(String text, ExecutionContext context)
         {
@@ -33,6 +35,7 @@ namespace kOS
             this.executionContext = context;
 
             text = text.Trim();
+            Text = text;
 
             UnwrapFullBrackets(ref text);
 
@@ -51,6 +54,8 @@ namespace kOS
             if (TryParseSuffix(text)) return;
 
             if (TryParseVessel(text)) return;
+
+            if (EvalBoolean(ref text)) return;
             
             if (Eval(ref text)) return;
 
@@ -340,6 +345,37 @@ namespace kOS
             return false;
         }
 
+        private bool EvalBoolean(ref String text)
+        {
+            // Look for operators that need a regex
+            foreach (String op in SpecialOperatorList)
+            {
+                for (int i = 0; i < text.Length; i++)
+                {
+                    var regex = new Regex(op);
+                    Match match = Regex.Match(text.Substring(i), op);
+
+                    if (match.Success)
+                    {
+                        Operator = match.Groups[0].Value.Trim().ToUpper();
+
+                        String leftString = text.Substring(0, i);
+                        String rightString = text.Substring(i + match.Groups[0].Value.Length);
+
+                        LeftSide = new Expression(leftString, executionContext);
+                        RightSide = new Expression(rightString, executionContext);
+
+                        Value = GetValue();
+
+                        return true;
+                    }
+                }
+            }
+
+            // No boolean operator found
+            return false;
+        }
+
         public float Float()
         {
             return (float)GetValue();
@@ -391,8 +427,8 @@ namespace kOS
             }
             else
             {
-                if (Operator.ToUpper() == "AND") return LeftSide.Bool() && RightSide.Bool();
-                if (Operator.ToUpper() == "OR") return LeftSide.Bool() || RightSide.Bool();
+                if (Operator == "AND") return LeftSide.Bool() && RightSide.Bool();
+                if (Operator == "OR") return LeftSide.Bool() || RightSide.Bool();
 
                 if (LeftSide.Value is String || RightSide.Value is String)
                 {

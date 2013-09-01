@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Binding.cs" />
     <Compile Include="BindingsFlightStats.cs" />
+    <Compile Include="BindingsRoverStats.cs" />
     <Compile Include="BindingsTerminalSettings.cs" />
     <Compile Include="BindingsTest.cs" />
     <Compile Include="BindingsUniverse.cs" />

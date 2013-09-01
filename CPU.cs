@@ -43,6 +43,14 @@ namespace kOS
             {
                 archive = new Archive();
                 Volumes.Add(archive);
+
+                int i = 1;
+                foreach (Part part in Vessel.parts)
+                {
+                    part.AddModule("kOSIDModule");
+                    ((kOSIDModule)part.Modules["kOSIDModule"]).ID = i.ToString();
+                    i++;
+                }
             }
         }
 
