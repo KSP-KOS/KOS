@@ -125,6 +125,12 @@ Example:
     SET X TO 1.
     IF X = 1 { PRINT "X equals one.". }.            // Prints "X equals one."
     IF X > 10 { PRINT "X is greater than ten.". }.  // Does nothing
+    
+If statements can make use of boolean operators.
+Example:
+
+    IF X = 1 AND Y > 4 { PRINT "Both conditions are true". }.
+    IF X = 1 OR Y > 4 { PRINT "At least one condition is true". }.
 
 ### LIST
 
