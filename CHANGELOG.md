@@ -1,6 +1,15 @@
 kOS Mod Changelog
 =================
 
+### 0.44
+
+- Support for AND and OR in IF statements added
+- Fix for nested IF statements
+
+### 0.43
+
+- Fixes locking and waiting for compound values
+
 ### 0.42
 
 - Fixes handling of compound values in certain circumstances
