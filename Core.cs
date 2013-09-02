@@ -12,6 +12,8 @@ namespace kOS
     {
         public static Core Fetch; 
         public TermWindow Window;
+
+        private int CPUIdAccumulator;
         
         public void Awake()
         {
@@ -24,6 +26,11 @@ namespace kOS
                 Window = (TermWindow)gObj.GetComponent(typeof(TermWindow));
                 Window.Core = this;
             }
+        }
+
+        public void SaveSettings()
+        {
+            var writer = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/");
         }
 
         public static void Debug(String line)

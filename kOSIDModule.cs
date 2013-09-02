@@ -9,24 +9,7 @@ namespace kOS
 {
     public class kOSIDModule : PartModule
     {
-        [KSPField(isPersistant=false, guiName = "kOS Part ID", guiActive = true)]
+        [KSPField(isPersistant=true, guiName = "kOS Part ID", guiActive = true)]
         public string ID;
-
-        public kOSIDModule(string initID)
-        {
-            this.ID = initID;
-        }
-        
-        public override void OnLoad(ConfigNode node)
-        {
-            Debug.Log("************ ONLOAD");
-            ID = node.GetValue("kosID");
-        }
-
-        public override void OnSave(ConfigNode node)
-        {
-            Debug.Log("************ ONSAVE");
-            node.SetValue("kosID", ID);
-        }
     }
 }

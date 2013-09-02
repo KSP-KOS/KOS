@@ -38,19 +38,34 @@ namespace kOS
             this.Context = context;
 
             bindingManager = new BindingManager(this, Context);
-
+            
             if (context == "ksp")
             {
+                System.Random random = new System.Random();
+
                 archive = new Archive();
                 Volumes.Add(archive);
 
-                int i = 1;
-                foreach (Part part in Vessel.parts)
+                /*foreach (Part part in Vessel.parts)
                 {
-                    part.AddModule("kOSIDModule");
-                    ((kOSIDModule)part.Modules["kOSIDModule"]).ID = i.ToString();
-                    i++;
-                }
+                    Debug.Log("******************** " + DebugHelpers.DisplayObjectInfo(part));
+
+                    foreach (PartModule module in part.Modules)
+                    {
+                        Debug.Log("*** Partmodule: " + module.ClassName);
+                    }
+
+                    int i = random.Next(0, 900);
+                    if (!part.Modules.Contains("kOSIDModule"))
+                    {
+                        part.AddModule("kOSIDModule");
+                        var module = ((kOSIDModule)part.Modules["kOSIDModule"]);
+
+                        if (String.IsNullOrEmpty(module.ID)) module.ID = i.ToString();
+
+                        module.enabled = true;
+                    }
+                }*/
             }
         }
 

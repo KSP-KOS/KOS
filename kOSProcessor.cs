@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KSP.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,10 +13,11 @@ namespace kOS
     {
         public CPU cpu;
         public Harddisk hardDisk = null;
-        private static int MemSize = 10000;
         private int vesselPartCount = 0;
         private List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
 
+        private static int MemSize = 10000;
+        private static int cpuIdMax;
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal")]
         public void Activate()
@@ -48,6 +50,9 @@ namespace kOS
             TogglePower();
         }
 
+        [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true)]
+        public int ID = -1;
+
         public override void OnStart(PartModule.StartState state)
         {
             //Do not start from editor and at KSP first loading
@@ -62,6 +67,10 @@ namespace kOS
 
             cpu.AttachHardDisk(hardDisk);
             cpu.Boot();
+
+            //PluginConfiguration config = PluginConfiguration.CreateForType<kOSProcessor>();
+            //config.load();
+            //ID = config.GetValue<int>("CpuIDMax") + 1;
         }
         
         public void Update()
@@ -128,6 +137,10 @@ namespace kOS
 
         public override void OnLoad(ConfigNode node)
         {
+            //PluginConfiguration config = PluginConfiguration.CreateForType<kOSProcessor>();
+            //config.load();
+            //ID = config.GetValue<int>("CpuIDMax") + 1;
+
             foreach (ConfigNode hdNode in node.GetNodes("harddisk"))
             {
                 Harddisk newDisk = new Harddisk(hdNode);
@@ -139,6 +152,10 @@ namespace kOS
 
         public override void OnSave(ConfigNode node)
         {
+            //PluginConfiguration config = PluginConfiguration.CreateForType<kOSProcessor>();
+            //config.SetValue("CpuIDMax", ID);
+            //config.save();
+
             if (hardDisk != null)
             {
                 ConfigNode hdNode = hardDisk.Save("harddisk");

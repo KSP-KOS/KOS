@@ -353,7 +353,7 @@ namespace kOS
                 for (int i = 0; i < text.Length; i++)
                 {
                     var regex = new Regex(op);
-                    Match match = Regex.Match(text.Substring(i), op);
+                    Match match = Regex.Match(text.Substring(i), op, RegexOptions.IgnoreCase);
 
                     if (match.Success)
                     {

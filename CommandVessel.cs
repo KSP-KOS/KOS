@@ -87,17 +87,9 @@ namespace kOS
                 case "PARTS":
                     StdOut("------------------------------------------------");
 
-                    foreach (Part part in VesselUtils.GetListOfActivatedEngines(Vessel))
+                    foreach (Part part in Vessel.Parts)
                     {
-                        foreach (PartModule module in part.Modules)
-                        {
-                            if (module is ModuleEngines)
-                            {
-                                var engineMod = (ModuleEngines)module;
-
-                                StdOut(part.uid + "  " + part.inverseStage.ToString() + " " + engineMod.moduleName);
-                            }
-                        }
+                        StdOut(part.ConstructID + "  " + part.missionID + " " + part.partInfo.name);
                     }
 
                     break;
