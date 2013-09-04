@@ -99,8 +99,7 @@ namespace kOS
             Match match = Regex.Match(text, "^<(.+)>$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                //Value = VesselUtils.GetResource(executionContext.Vessel, match.Groups[1].Value);
-                Value = 4.0f;
+                Value = VesselUtils.GetResource(executionContext.Vessel, match.Groups[1].Value);
                 return true;
             }
 
