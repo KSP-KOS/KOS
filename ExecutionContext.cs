@@ -46,6 +46,11 @@ namespace kOS
             this.ParentContext = parent;
         }
 
+        public virtual void VerifyMount()
+        {
+            if (ParentContext != null) ParentContext.VerifyMount();
+        }
+
         public bool KeyInput(char c)
         {
             if (ChildContext != null) return ChildContext.Type(c);

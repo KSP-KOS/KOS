@@ -62,14 +62,23 @@ namespace kOS
 
             return retList;
         }
+
+        public virtual bool CheckRange()
+        {
+            return true;
+        }
     }
 
     public class Archive : Volume
     {
         public string ArchiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
 
-        public Archive()
+        private Vessel vessel;
+
+        public Archive(Vessel vessel)
         {
+            this.vessel = vessel;
+
             Renameable = false;
             Name = "Archive";
 
@@ -101,8 +110,6 @@ namespace kOS
 
                         File file = new File(filename);
                         file.Deserialize(body);
-
-                        Debug.Log("**** " + filename);
 
                         files.Add(file);
                         SaveFile(file);
@@ -195,6 +202,11 @@ namespace kOS
             }
 
             return retList;
+        }
+
+        public override bool CheckRange()
+        {
+            return true;// (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
         }
     }
 }

@@ -34,11 +34,11 @@ namespace kOS
                     
                 case "BODIES":
                     StdOut("");
-                    StdOut("Vessel Name");
+                    StdOut("Name           Distance");
                     StdOut("-------------------------------------");
                     foreach (var body in FlightGlobals.fetch.bodies)
                     {
-                        StdOut(body.bodyName);
+                        StdOut(body.bodyName.PadLeft(14) + " " + Vector3d.Distance(body.position, Vessel.GetWorldPos3D()));
                     }
                     StdOut("");
 
@@ -89,7 +89,7 @@ namespace kOS
 
                     foreach (Part part in Vessel.Parts)
                     {
-                        StdOut(part.ConstructID + "  " + part.missionID + " " + part.partInfo.name);
+                        StdOut(part.ConstructID + " " + part.partInfo.name);
                     }
 
                     break;

@@ -296,7 +296,7 @@ namespace kOS
                     String line = id.PadLeft(2).PadRight(6, ' ');
                     line += volume.Name.PadRight(24, ' ');
 
-                    String size = volume.Capacity > -1 ? volume.Capacity.ToString() : "Inf";
+                    String size = volume.CheckRange() ? (volume.Capacity > -1 ? volume.Capacity.ToString() : "Inf") : "Disc";
                     line += size;
 
                     StdOut(line);

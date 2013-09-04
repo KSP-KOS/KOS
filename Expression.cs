@@ -99,7 +99,8 @@ namespace kOS
             Match match = Regex.Match(text, "^<(.+)>$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                Value = VesselUtils.GetResource(executionContext.Vessel, match.Groups[1].Value);
+                //Value = VesselUtils.GetResource(executionContext.Vessel, match.Groups[1].Value);
+                Value = 4.0f;
                 return true;
             }
 
@@ -163,8 +164,6 @@ namespace kOS
             }
             else
             {
-                UnityEngine.Debug.Log("***** " + input);
-
                 var expValue = new Expression(input, executionContext).GetValue();
                 
                 if (expValue is double)
@@ -315,6 +314,19 @@ namespace kOS
             {
                 for (int i = 0; i < text.Length; i++)
                 {
+                    if (text.Substring(i, 1) == "<")
+                    {
+                        // Special case: is this less than or start of angle quote?
+                        var regex = new Regex("^<[A-Za-z0-9]+?>"); // Make sure that there are no math symbols between start and end brace
+                        var match = regex.Match(text.Substring(i));
+
+                        if (match.Success)
+                        {
+                            // This is angle brackets, move to end bracket
+                            i += match.Groups[0].Length;
+                        }
+                    }
+
                     if (text.Substring(i, 1) == "\"")
                     {
                         // String detected, jump to end
@@ -347,7 +359,6 @@ namespace kOS
 
         private bool EvalBoolean(ref String text)
         {
-            // Look for operators that need a regex
             foreach (String op in SpecialOperatorList)
             {
                 for (int i = 0; i < text.Length; i++)

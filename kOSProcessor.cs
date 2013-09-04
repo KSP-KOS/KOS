@@ -15,6 +15,7 @@ namespace kOS
         public Harddisk hardDisk = null;
         private int vesselPartCount = 0;
         private List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
+        private Dictionary<uint, uint> partIdentifiers;
 
         private static int MemSize = 10000;
         private static int cpuIdMax;
@@ -51,7 +52,10 @@ namespace kOS
         }
 
         [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true)]
-        public int ID = -1;
+        public int UnitID = -1;
+
+        [KSPField(isPersistant = true, guiActive = false)]
+        public int MaxPartID = 0;
 
         public override void OnStart(PartModule.StartState state)
         {
@@ -68,9 +72,31 @@ namespace kOS
             cpu.AttachHardDisk(hardDisk);
             cpu.Boot();
 
-            //PluginConfiguration config = PluginConfiguration.CreateForType<kOSProcessor>();
-            //config.load();
-            //ID = config.GetValue<int>("CpuIDMax") + 1;
+            if (UnitID == -1) UnitID = AssignNewID();
+        }
+
+        private void assignPartIdentifiers()
+        {
+            foreach (Part part in vessel.parts)
+            {
+                if (!partIdentifiers.ContainsKey(part.flightID))
+                {
+
+                }
+            }
+        }
+
+        public static int AssignNewID()
+        {
+            int id;
+
+            PluginConfiguration config = PluginConfiguration.CreateForType<kOSProcessor>();
+            config.load();
+            id = config.GetValue<int>("CpuIDMax") + 1;
+            config.SetValue("CpuIDMax", id);
+            config.save();
+
+            return id;
         }
         
         public void Update()
@@ -137,10 +163,6 @@ namespace kOS
 
         public override void OnLoad(ConfigNode node)
         {
-            //PluginConfiguration config = PluginConfiguration.CreateForType<kOSProcessor>();
-            //config.load();
-            //ID = config.GetValue<int>("CpuIDMax") + 1;
-
             foreach (ConfigNode hdNode in node.GetNodes("harddisk"))
             {
                 Harddisk newDisk = new Harddisk(hdNode);
@@ -152,10 +174,6 @@ namespace kOS
 
         public override void OnSave(ConfigNode node)
         {
-            //PluginConfiguration config = PluginConfiguration.CreateForType<kOSProcessor>();
-            //config.SetValue("CpuIDMax", ID);
-            //config.save();
-
             if (hardDisk != null)
             {
                 ConfigNode hdNode = hardDisk.Save("harddisk");

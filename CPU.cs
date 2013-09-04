@@ -14,7 +14,7 @@ namespace kOS
         public enum Modes { READY, STARVED, OFF };
         public Modes Mode = Modes.READY;
         public String Context;
-        public static Archive archive;
+        public static Archive archive = null;
         public BindingManager bindingManager;
         public float SessionTime;
 
@@ -41,31 +41,12 @@ namespace kOS
             
             if (context == "ksp")
             {
-                System.Random random = new System.Random();
-
-                archive = new Archive();
-                Volumes.Add(archive);
-
-                /*foreach (Part part in Vessel.parts)
+                if (archive == null)
                 {
-                    Debug.Log("******************** " + DebugHelpers.DisplayObjectInfo(part));
+                    archive = new Archive(Vessel);
+                }
 
-                    foreach (PartModule module in part.Modules)
-                    {
-                        Debug.Log("*** Partmodule: " + module.ClassName);
-                    }
-
-                    int i = random.Next(0, 900);
-                    if (!part.Modules.Contains("kOSIDModule"))
-                    {
-                        part.AddModule("kOSIDModule");
-                        var module = ((kOSIDModule)part.Modules["kOSIDModule"]);
-
-                        if (String.IsNullOrEmpty(module.ID)) module.ID = i.ToString();
-
-                        module.enabled = true;
-                    }
-                }*/
+                Volumes.Add(archive);
             }
         }
 
@@ -100,6 +81,11 @@ namespace kOS
             SelectedVolume = hardDisk;
         }
 
+        public override void VerifyMount()
+        {
+            selectedVolume.CheckRange();
+        }
+
         internal void ProcessElectricity(Part part, float time)
         {
             if (Mode == Modes.OFF) return;
@@ -121,8 +107,17 @@ namespace kOS
         {
             if (Volumes.Count > volID)
             {
-                SelectedVolume = Volumes[volID];
-                return true;
+                var newVolume = Volumes[volID];
+
+                if (newVolume.CheckRange())
+                {
+                    SelectedVolume = newVolume;
+                    return true;
+                }
+                else
+                {
+                    throw new kOSException("Volume disconnected - out of range");
+                }
             }
 
             return false;
@@ -134,8 +129,15 @@ namespace kOS
             {
                 if (volume.Name.ToUpper() == targetVolume.ToUpper())
                 {
-                    SelectedVolume = volume;
-                    return true;
+                    if (volume.CheckRange())
+                    {
+                        SelectedVolume = volume;
+                        return true;
+                    }
+                    else
+                    {
+                        throw new kOSException("Volume disconnected - out of range");
+                    }
                 }
             }
 
@@ -204,9 +206,9 @@ namespace kOS
         internal void UpdateVolumeMounts(List<Volume> attachedVolumes)
         {
             // Remove volumes that are no longer attached
-            foreach (Volume volume in volumes)
+            foreach (Volume volume in new List<Volume>(volumes))
             {
-                if (!attachedVolumes.Contains(volume))
+                if (!(volume is Archive) && !attachedVolumes.Contains(volume))
                 {
                     volumes.Remove(volume);
                 }

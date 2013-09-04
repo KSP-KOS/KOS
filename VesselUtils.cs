@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace kOS
 {
@@ -110,21 +111,49 @@ namespace kOS
 
             foreach (Part part in vessel.parts)
             {
-                if (part.partInfo.name == "longAntenna" && ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status == "Fixed")
+                Debug.Log("******" + part.partInfo.name);
+
+                if (part.partInfo.name == "longAntenna")
                 {
-                    range += 75000;
+                    String status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
+
+                    Debug.Log("***" + status);
+
+                    if (status == "Fixed" || status == "Locked")
+                    {
+                        range += 75000;
+                    }
+
+                    Debug.Log("Range " + range);
                 }
             }
 
             foreach (Part part in vessel.parts)
             {
-                if (part.partInfo.name == "commDish" && ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status == "Fixed")
+                if (part.partInfo.name == "commDish")
                 {
-                    range *= 10;
+                    String status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
+
+                    if (status == "Fixed" || status == "Locked")
+                    {
+                        range *= 10;
+                    }
                 }
             }
 
+            Debug.Log("Range " + range);
+
             return range;
+        }
+
+        public static float GetDistanceToKerbinSurface(Vessel vessel)
+        {
+            foreach (var body in FlightGlobals.fetch.bodies)
+            {
+                if (body.name.ToUpper() == "KERBIN") return (float)Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - 600000; // Kerbin radius = 600,000
+            }
+
+            throw new kOSException("Planet Kerbin not found!");
         }
     }
 }
