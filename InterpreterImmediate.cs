@@ -10,6 +10,9 @@ namespace kOS
     {
         private int cursor = 0;
         private int baseLineY = 0;
+        private static int CMD_BACKLOG = 20;
+        private List<String> previousCommands = new List<String>();
+        private int prevCmdIndex = -1;
         private String inputBuffer = "";
         private String commandBuffer = "";
         private int CursorX = 0;
@@ -206,6 +209,16 @@ namespace kOS
 
             while (baseLineY > buffer.GetLength(1) - 1) ShiftUp();
 
+            
+            previousCommands.Add(inputBuffer);
+            if (previousCommands.Count > CMD_BACKLOG)
+            {
+                int overflow = previousCommands.Count - CMD_BACKLOG;
+                previousCommands.RemoveRange(0, overflow);
+            }
+
+            prevCmdIndex = -1;
+
             Add(inputBuffer += "\n");
 
             inputBuffer = "";
@@ -231,6 +244,45 @@ namespace kOS
         internal void Edit(string fileName)
         {
             //Cpu.PushInterpreter(new InterpreterEdit(Cpu, fileName));
+        }
+
+        public void PreviousCommand(int direction)
+        {
+            inputBuffer = "";
+            cursor = 0;
+
+            prevCmdIndex += direction;
+            if (prevCmdIndex <= -1)
+            {
+                inputBuffer = "";
+                prevCmdIndex = -1;
+                cursor = 0;
+                UpdateCursorXY();
+                return;
+            }
+            if (prevCmdIndex > previousCommands.Count-1)
+            {
+                prevCmdIndex = previousCommands.Count - 1;
+            }
+            
+            inputBuffer = previousCommands[(previousCommands.Count-1) - prevCmdIndex];
+            cursor = inputBuffer.Length;
+            UpdateCursorXY();
+        }
+
+        public override bool SpecialKey(kOSKeys key)
+        {
+            switch (key)
+            {
+                case kOSKeys.UP:
+                    PreviousCommand(1);
+                    return true;
+
+                case kOSKeys.DOWN:
+                    PreviousCommand(-1);
+                    return true;
+            }
+            return false;
         }
     }
 }
