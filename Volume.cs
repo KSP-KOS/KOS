@@ -206,7 +206,7 @@ namespace kOS
 
         public override bool CheckRange()
         {
-            return true;// (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+            return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace kOS
         public enum Modes { READY, STARVED, OFF };
         public Modes Mode = Modes.READY;
         public String Context;
-        public static Archive archive = null;
+        public Archive archive;
         public BindingManager bindingManager;
         public float SessionTime;
 
@@ -41,10 +41,7 @@ namespace kOS
             
             if (context == "ksp")
             {
-                if (archive == null)
-                {
-                    archive = new Archive(Vessel);
-                }
+                archive = new Archive(Vessel);
 
                 Volumes.Add(archive);
             }
