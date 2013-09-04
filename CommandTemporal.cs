@@ -22,7 +22,7 @@ namespace kOS
 
             if (!untilClause)
             {
-                waitTime = float.Parse(RegexMatch.Groups[2].Value);
+                waitTime = e.Float();
             }
             else
             {
