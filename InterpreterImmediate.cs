@@ -272,6 +272,8 @@ namespace kOS
 
         public override bool SpecialKey(kOSKeys key)
         {
+            if (base.SpecialKey(key)) return true;
+
             switch (key)
             {
                 case kOSKeys.UP:
@@ -282,6 +284,7 @@ namespace kOS
                     PreviousCommand(-1);
                     return true;
             }
+
             return false;
         }
     }

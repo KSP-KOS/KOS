@@ -160,7 +160,14 @@ namespace kOS
         {
             String varname = RegexMatch.Groups[1].Value;
 
-            ParentContext.Unlock(varname);
+            if (varname.ToUpper() == "ALL")
+            {
+                ParentContext.UnlockAll();
+            }
+            else
+            {
+                ParentContext.Unlock(varname);
+            }
 
             State = ExecutionState.DONE;
         }

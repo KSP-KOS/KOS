@@ -254,6 +254,12 @@ namespace kOS
             }
         }
 
+        public virtual void UnlockAll()
+        {
+            Locks.Clear();
+            if (ParentContext != null) ParentContext.UnlockAll();
+        }
+
         public bool parseNext(ref string buffer, out string cmd)
         {
             for (int i = 0; i < buffer.Length; i++)
