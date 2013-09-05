@@ -269,6 +269,12 @@ namespace kOS
                 if (c == "\"")
                 {
                     i = Utils.FindEndOfString(buffer, i + 1);
+
+                    if (i == -1)
+                    {
+                        cmd = "";
+                        return false;
+                    }
                 }
                 else if (c == ".")
                 {
