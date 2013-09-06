@@ -155,5 +155,19 @@ namespace kOS
 
             throw new kOSException("Planet Kerbin not found!");
         }
+
+        public static float GetHeading(Vessel vessel)
+        {
+            var up = vessel.upAxis;
+            var north = GetNorthVector(vessel);
+            var headingQ = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vessel.GetTransform().rotation) * Quaternion.LookRotation(north, up));
+
+            return headingQ.eulerAngles.y;
+        }
+
+        public static Vector3d GetNorthVector(Vessel vessel)
+        {
+            return Vector3d.Exclude(vessel.upAxis, vessel.mainBody.transform.up);
+        }
     }
 }
