@@ -55,7 +55,7 @@ namespace kOS
             Vector3d act = 120.0f * err;
 
             float precision = Mathf.Clamp((float)torque.x * 20f / MoI.magnitude, 0.5f, 10f);
-            float drive_limit = Mathf.Clamp01((float)(err.magnitude * 450.0f / precision));
+            float drive_limit = Mathf.Clamp01((float)(err.magnitude * 380.0f / precision));
             
             act.x = Mathf.Clamp((float)act.x, -drive_limit, drive_limit);
             act.y = Mathf.Clamp((float)act.y, -drive_limit, drive_limit);

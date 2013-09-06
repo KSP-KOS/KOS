@@ -68,7 +68,7 @@ namespace kOS
 
         public void AddSetter(String name, BindingSetDlg dlg)
         {
-            Variable v = cpu.FindVariable(name);
+            Variable v = cpu.FindVariable(name.ToLower());
             if (v != null)
             {
                 if (v is BoundVariable)
@@ -78,7 +78,7 @@ namespace kOS
             }
             else
             {
-                var bv = cpu.CreateBoundVariable(name);
+                var bv = cpu.CreateBoundVariable(name.ToLower());
                 bv.Set = dlg;
                 bv.cpu = cpu;
             }

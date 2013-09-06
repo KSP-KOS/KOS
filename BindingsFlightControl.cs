@@ -22,6 +22,7 @@ namespace kOS
 
             controls.Add(new LockableControl("THROTTLE", "throttle", cpu, manager));
             controls.Add(new LockableControl("STEERING", "steering", cpu, manager));
+            controls.Add(new LockableControl("DRIVE", "drive", cpu, manager));
 
             vessel.OnFlyByWire += OnFlyByWire;
         }
@@ -91,7 +92,16 @@ namespace kOS
                 {
                     this.Value = e.GetValue();
 
-                    if (propertyName == "throttle") c.mainThrottle = (float)Value;
+                    if (propertyName == "throttle")
+                    {
+                        c.mainThrottle = (float)Value;
+                    }
+
+                    if (propertyName == "drive")
+                    {
+                        c.wheelThrottle = (float)Value;
+                    }
+
                     if (propertyName == "steering")
                     {
                         if (Value is String && ((string)Value).ToUpper() == "KILL")

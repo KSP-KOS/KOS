@@ -39,6 +39,22 @@ namespace kOS
             manager.AddGetter("LATITUDE",       delegate(CPU cpu) { return (float)cpu.Vessel.latitude; });
             manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return (float)cpu.Vessel.longitude; });
 
+            manager.AddGetter("HEADING", delegate(CPU cpu)
+            {
+                Debug.Log(cpu.Vessel.srfRelRotation.eulerAngles);
+
+
+                Direction facingDir = new Direction(cpu.Vessel.srfRelRotation);
+
+                return facingDir;
+            });
+
+            manager.AddGetter("NORTH",          delegate(CPU cpu) 
+            {
+                Direction northDir = new Direction(new Vector3d(0,0,0), true);
+                return northDir;
+            });
+
             manager.AddGetter("UP",             delegate(CPU cpu) { return new Direction(cpu.Vessel.upAxis, false); });
 
             manager.AddGetter("NODE",           delegate(CPU cpu) {

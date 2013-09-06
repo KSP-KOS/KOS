@@ -228,6 +228,8 @@ namespace kOS
 
         public virtual void Lock(String name, Expression expression)
         {
+            name = name.ToLower();
+
             FindOrCreateVariable(name);
 
             if (!Locks.ContainsKey(name))
@@ -244,6 +246,8 @@ namespace kOS
 
         public virtual void Unlock(String name)
         {
+            name = name.ToLower();
+
             if (Locks.ContainsKey(name))
             {
                 Locks.Remove(name);

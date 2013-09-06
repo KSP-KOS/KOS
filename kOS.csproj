@@ -59,6 +59,7 @@
     <Compile Include="CommandTemporal.cs" />
     <Compile Include="CommandVessel.cs" />
     <Compile Include="ContextRunProgram.cs" />
+    <Compile Include="DebugTools.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="ExecutionContext.cs" />
     <Compile Include="Expression.cs" />
