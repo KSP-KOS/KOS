@@ -10,7 +10,7 @@ namespace kOS
     public class BindingTimeWarp : Binding
     {
         public override void AddTo(BindingManager manager)
-        {/*
+        {
             manager.AddGetter("WARP", delegate(CPU cpu) { return TimeWarp.fetch.current_rate_index; });
             manager.AddSetter("WARP", delegate(CPU cpu, object val)
             {
@@ -19,7 +19,7 @@ namespace kOS
                 {
                     TimeWarp.SetRate(newRate, false);
                 }
-            });*/
+            });
         }
     }
 }

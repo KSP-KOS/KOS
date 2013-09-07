@@ -44,6 +44,16 @@ namespace kOS
                 return new Direction(vector, false);
             }
 
+            if (suffixName == "BEARING")
+            {
+                return VesselUtils.GetTargetBearing(context.Vessel, target);
+            }
+
+            if (suffixName == "HEADING")
+            {
+                return VesselUtils.GetTargetHeading(context.Vessel, target);
+            }
+
             return base.GetSuffix(suffixName);
         }
     }

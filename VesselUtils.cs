@@ -156,11 +156,45 @@ namespace kOS
             throw new kOSException("Planet Kerbin not found!");
         }
 
+        public static float AngleDelta(float a, float b)
+        {
+            var delta = b - a;
+
+            while (delta > 180) delta -= 360;
+            while (delta < -180) delta += 360;
+
+            return delta;
+        }
+
         public static float GetHeading(Vessel vessel)
         {
             var up = vessel.upAxis;
             var north = GetNorthVector(vessel);
             var headingQ = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vessel.GetTransform().rotation) * Quaternion.LookRotation(north, up));
+
+            return headingQ.eulerAngles.y;
+        }
+
+        public static float GetVelocityHeading(Vessel vessel)
+        {
+            var up = vessel.upAxis;
+            var north = GetNorthVector(vessel);
+            var headingQ = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(Quaternion.LookRotation(vessel.srf_velocity, up)) * Quaternion.LookRotation(north, up));
+
+            return headingQ.eulerAngles.y;
+        }
+
+        public static float GetTargetBearing(Vessel vessel, Vessel target)
+        {
+            return AngleDelta(GetHeading(vessel), GetTargetHeading(vessel, target));
+        }
+        
+        public static float GetTargetHeading(Vessel vessel, Vessel target)
+        {
+            var up = vessel.upAxis;
+            var north = GetNorthVector(vessel);
+            var vector = Vector3d.Exclude(vessel.upAxis, target.GetWorldPos3D() - vessel.GetWorldPos3D()).normalized;
+            var headingQ = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(Quaternion.LookRotation(vector, up)) * Quaternion.LookRotation(north, up));
 
             return headingQ.eulerAngles.y;
         }

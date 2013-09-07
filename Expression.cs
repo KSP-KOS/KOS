@@ -17,9 +17,12 @@ namespace kOS
         public String Operator;
         public Variable Variable = null;
         public bool IsStatic = false;
+        public ExpressionReEvalDlg EvalDlg = null;
         public ExecutionContext executionContext;
         public String Suffix;
         public String Text;
+
+        public delegate void ExpressionReEvalDlg();
 
         static String[] OperatorList = new String[] { "==", "=", "<=", ">=", "<", ">", "-", "+", "/", "*", "^" };
         static String[] SpecialOperatorList = new String[] { "^\\sAND\\s", "^\\sOR\\s" };
@@ -39,6 +42,11 @@ namespace kOS
 
             UnwrapFullBrackets(ref text);
 
+            Process(text);
+        }
+
+        private void Process(String text)
+        {
             if (TryParseFloat(text)) return;
 
             if (TryParseBoolean(text)) return;
@@ -49,14 +57,14 @@ namespace kOS
 
             if (TryParseVariable(text)) return;
 
-            if (TryParseDirection(text)) return;
+            if (TryParseFunction(text)) return;
 
             if (TryParseSuffix(text)) return;
 
             if (TryParseVessel(text)) return;
 
             if (EvalBoolean(ref text)) return;
-            
+
             if (Eval(ref text)) return;
 
             throw new kOSException("Unrecognized term: '" + text + "'.");
@@ -120,16 +128,85 @@ namespace kOS
             return false;
         }
         
-        private bool TryParseDirection(string text)
+        private bool TryParseFunction(string text)
         {
-            Match match = Regex.Match(text, "^V\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            Match match;
+
+            match = Regex.Match(text, "^SIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                double y = ParseSubExpressionAsDouble(match.Groups[2].Value); 
-                double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^SIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)Math.Sin(v * (Math.PI / 180));
+                };
 
-                Value = new Direction(new Vector3d(x, y, z), false);
+                EvalDlg();
+
+                return true;
+            }
+
+            match = Regex.Match(text, "^COS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^COS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)Math.Cos(v * (Math.PI / 180));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            match = Regex.Match(text, "^TAN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^TAN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)Math.Tan(v * (Math.PI / 180));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            match = Regex.Match(text, "^ABS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^ABS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)Math.Abs(v);
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            match = Regex.Match(text, "^V\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^V\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+
+                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
+                    double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
+
+                    Value = new Direction(new Vector3d(x, y, z), false);
+                };
+
+                EvalDlg();
 
                 return true;
             }
@@ -416,6 +493,11 @@ namespace kOS
         // Evaluate and return the value of the part of an expression that this instance represents
         public object GetValue()
         {
+            if (EvalDlg != null)
+            {
+                EvalDlg();
+            }
+
             if (SpecialValue != null)
             {
                 if (string.IsNullOrEmpty(Suffix)) 
@@ -443,6 +525,10 @@ namespace kOS
                 if (LeftSide.Value is String || RightSide.Value is String)
                 {
                     if (Operator == "+") return LeftSide.Value.ToString() + RightSide.Value.ToString();
+
+                    if (Operator == "==") return LeftSide.Value.ToString() == RightSide.Value.ToString();
+                    if (Operator == "=") return LeftSide.Value.ToString() == RightSide.Value.ToString();
+                    if (Operator == "!=") return LeftSide.Value.ToString() != RightSide.Value.ToString();
                 }
 
                 if (LeftSide.Value is float || RightSide.Value is float)

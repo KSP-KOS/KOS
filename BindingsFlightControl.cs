@@ -22,7 +22,9 @@ namespace kOS
 
             controls.Add(new LockableControl("THROTTLE", "throttle", cpu, manager));
             controls.Add(new LockableControl("STEERING", "steering", cpu, manager));
-            controls.Add(new LockableControl("DRIVE", "drive", cpu, manager));
+
+            controls.Add(new LockableControl("WHEELSTEERING", "wheelsteering", cpu, manager));
+            controls.Add(new LockableControl("WHEELTHROTTLE", "wheelthrottle", cpu, manager));
 
             vessel.OnFlyByWire += OnFlyByWire;
         }
@@ -97,7 +99,7 @@ namespace kOS
                         c.mainThrottle = (float)Value;
                     }
 
-                    if (propertyName == "drive")
+                    if (propertyName == "wheelthrottle")
                     {
                         c.wheelThrottle = (float)Value;
                     }
@@ -111,6 +113,26 @@ namespace kOS
                         else if (Value is Direction)
                         {
                             SteeringHelper.SteerShipToward((Direction)Value, c, vessel);
+                        }
+                    }
+
+                    if (propertyName == "wheelsteering")
+                    {
+                        if (Value is VesselTarget)
+                        {
+                            var bearing = VesselUtils.GetTargetBearing(vessel, ((VesselTarget)Value).target);
+
+                            if (vessel.horizontalSrfSpeed > 0.1f)
+                            {
+                                if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(vessel), VesselUtils.GetVelocityHeading(vessel))) <= 90)
+                                {
+                                    c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
+                                }
+                                else
+                                {
+                                    c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
+                                }
+                            }
                         }
                     }
 

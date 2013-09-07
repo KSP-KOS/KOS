@@ -127,6 +127,17 @@ namespace kOS
             UpdateCursorXY();
         }
 
+        public override void Put(string text, int x, int y)
+        {
+            foreach (char c in text)
+            {
+                buffer[x, y] = c;
+                x++;
+
+                if (x > buffer.GetLength(0)) break;
+            }
+        }
+
         public override void StdOut(string line)
         {
             int linesWritten = WriteLine(line);

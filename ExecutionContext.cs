@@ -58,6 +58,8 @@ namespace kOS
             return Type(c);
         }
 
+        
+
         public virtual bool Type(char c)
         {
             if (ChildContext != null) return ChildContext.Type(c);
@@ -80,6 +82,11 @@ namespace kOS
         public virtual void StdOut(String text)
         {
             if (ParentContext != null) ParentContext.StdOut(text);
+        }
+
+        public virtual void Put(String text, int x, int y)
+        {
+            if (ParentContext != null) ParentContext.Put(text, x, y);
         }
 
         public virtual void Update(float time)
