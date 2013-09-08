@@ -330,8 +330,8 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
     
 ### Controls that can be used with TOGGLE
 
-    ABORT			// Where x = 1 through 10. Use toggle, example: TOGGLE AG1.
-    AGX                  	
+    ABORT
+    AGX             // Where x = 1 through 10. Use toggle, example: TOGGLE AG1.             	
 
 ### Controls that must be used with LOCK
 
