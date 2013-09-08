@@ -330,15 +330,21 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
     
 ### Controls that can be used with TOGGLE
 
-    ABORT			// Where x = 1 through 10. Use toggle, example: TOGGLE AG1.
-    AGX                  	
+    ABORT
+    AGX             // Where x = 1 through 10. Use toggle, example: TOGGLE AG1.             	
 
 ### Controls that must be used with LOCK
 
     THROTTLE			// Lock to a decimal value between 0 and 1.
     STEERING			// Lock to a direction.
+    WHEELTHROTTLE       // Seperate throttle for wheels
+    WHEELSTEERING       // Seperate steering system for wheels
 
 Other Bindings
 ==============
 
     TARGET          // Set a target using it's name in quotes
+    TARGET:HEADING  // Gets the heading to the current target
+    TARGET:BEARING  // Gets the bearing to the current target
+    
+    

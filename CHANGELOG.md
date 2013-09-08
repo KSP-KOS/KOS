@@ -1,6 +1,14 @@
 kOS Mod Changelog
 =================
 
+### 0.5
+
+- Rover bindings
+- Range limits for archive drive
+- Bug fixes
+- Trig functions
+- ABS function
+
 ### 0.45
 
 - Fix for the matching on boolean operators
