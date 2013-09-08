@@ -69,7 +69,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^PRINT (.+?) AT \(([0-9]+),([0-9])+\)$")]
+    [CommandAttribute(@"^PRINT (.+?) AT \(([0-9]+),([0-9]+)\)$")]
     public class CommandPrintAt : Command
     {
         public CommandPrintAt(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }

@@ -24,7 +24,7 @@ namespace kOS
         public ImmediateMode(ExecutionContext parent) : base(parent) 
         {
             StdOut("kOS Operating System Build " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
-            StdOut("KerboScript v0.4");
+            StdOut("KerboScript v0.5");
             StdOut("");
             StdOut("Proceed.");
         }
@@ -149,6 +149,13 @@ namespace kOS
         {
             baseLineY = 0;
             cursor = 0;
+
+            for (int y = 0; y < buffer.GetLength(1); y++)
+            for (int x = 0; x < buffer.GetLength(0); x++)
+            {
+                buffer[x, y] = (char)0;
+            }
+
             UpdateCursorXY();
         }
 
@@ -184,30 +191,27 @@ namespace kOS
 
         public override void Update(float time)
         {
-            if (Queue.Count == 0)
+            if (ChildContext == null)
             {
-                WriteLine(inputBuffer);
-            }
-            else
-            {
-                if (ChildContext == null)
+                if (Queue.Count > 0)
                 {
-                    if (Queue.Count > 0)
+                    var currentCmd = Queue.Dequeue();
+
+                    try
                     {
-                        var currentCmd = Queue.Dequeue();
-                        
-                        try
-                        {
-                            Push(currentCmd);
-                            currentCmd.Evaluate();
-                        }
-                        catch (kOSException e)
-                        {
-                            StdOut(e.Message);
-                            Queue.Clear();          // Halt all pending instructions
-                            ChildContext = null;    //
-                        }
+                        Push(currentCmd);
+                        currentCmd.Evaluate();
                     }
+                    catch (kOSException e)
+                    {
+                        StdOut(e.Message);
+                        Queue.Clear();          // Halt all pending instructions
+                        ChildContext = null;    //
+                    }
+                }
+                else
+                {
+                    WriteLine(inputBuffer);
                 }
             }
 
