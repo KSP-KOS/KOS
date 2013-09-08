@@ -337,8 +337,14 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
 
     THROTTLE			// Lock to a decimal value between 0 and 1.
     STEERING			// Lock to a direction.
+    WHEELTHROTTLE       // Seperate throttle for wheels
+    WHEELSTEERING       // Seperate steering system for wheels
 
 Other Bindings
 ==============
 
     TARGET          // Set a target using it's name in quotes
+    TARGET:HEADING  // Gets the heading to the current target
+    TARGET:BEARING  // Gets the bearing to the current target
+    
+    
