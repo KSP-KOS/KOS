@@ -41,8 +41,8 @@ namespace kOS
 
         public void Awake()
         {
-            LoadTexture("Plugins/PluginData/kOS/gfx/font_sml.png", ref fontImage);
-            LoadTexture("Plugins/PluginData/kOS/gfx/monitor_minimal.png", ref terminalImage);
+            LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
+            LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
         }
 
         public void LoadTexture(String relativePath, ref Texture2D targetTexture)

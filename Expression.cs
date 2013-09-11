@@ -132,6 +132,7 @@ namespace kOS
         {
             Match match;
 
+            #region TRIG
             match = Regex.Match(text, "^SIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
@@ -145,8 +146,8 @@ namespace kOS
                 EvalDlg();
 
                 return true;
-            }
-
+            } 
+            
             match = Regex.Match(text, "^COS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
@@ -176,7 +177,9 @@ namespace kOS
 
                 return true;
             }
+            #endregion
 
+            #region ABS
             match = Regex.Match(text, "^ABS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
@@ -190,8 +193,10 @@ namespace kOS
                 EvalDlg();
 
                 return true;
-            }
+            } 
+            #endregion
 
+            #region Vectors & Rotations
             match = Regex.Match(text, "^V\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
@@ -214,11 +219,60 @@ namespace kOS
             match = Regex.Match(text, "^R\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
-                double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^R\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
 
-                Value = new Direction(new Vector3d(x, y, z), true);
+                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
+                    double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
+
+                    Value = new Direction(new Vector3d(x, y, z), true);
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            match = Regex.Match(text, "^Q\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^Q\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+
+                    float x = (float)ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    float y = (float)ParseSubExpressionAsDouble(match.Groups[2].Value);
+                    float z = (float)ParseSubExpressionAsDouble(match.Groups[3].Value);
+                    float w = (float)ParseSubExpressionAsDouble(match.Groups[4].Value);
+
+                    Value = x + " " + y + " " + z + " " + w;
+                };
+
+                EvalDlg();
+
+                return true;
+            } 
+            #endregion
+
+            match = Regex.Match(text, "^HEADING ([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^HEADING ([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
+
+                    float heading = (float)ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    float pitch = (float)ParseSubExpressionAsDouble(match.Groups[2].Value);
+
+                    var q = UnityEngine.Quaternion.LookRotation(VesselUtils.GetNorthVector(executionContext.Vessel), executionContext.Vessel.upAxis);
+                    q *= UnityEngine.Quaternion.Euler(new UnityEngine.Vector3(-pitch, heading, 0));
+
+                    Value = new Direction(q);
+                };
+
+                EvalDlg();
 
                 return true;
             }

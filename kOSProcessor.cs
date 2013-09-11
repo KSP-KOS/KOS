@@ -60,7 +60,7 @@ namespace kOS
         public override void OnStart(PartModule.StartState state)
         {
             //Do not start from editor and at KSP first loading
-            if (state == StartState.Editor || state == StartState.None)
+            if (/*state == StartState.Editor || */state == StartState.None)
             {
                 return;
             }
@@ -73,6 +73,8 @@ namespace kOS
             cpu.Boot();
 
             if (UnitID == -1) UnitID = AssignNewID();
+
+            //enumerateStockParts();
         }
 
         private void assignPartIdentifiers()
