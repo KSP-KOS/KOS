@@ -40,7 +40,7 @@ namespace kOS
                 cpu.Mode = CPU.Modes.STARVED;
             }
         }
-
+                
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
         public void Activate(KSPActionParam param) {
             Activate();
@@ -60,7 +60,7 @@ namespace kOS
         public override void OnStart(PartModule.StartState state)
         {
             //Do not start from editor and at KSP first loading
-            if (/*state == StartState.Editor || */state == StartState.None)
+            if (state == StartState.Editor || state == StartState.None)
             {
                 return;
             }
@@ -72,11 +72,20 @@ namespace kOS
             cpu.AttachHardDisk(hardDisk);
             cpu.Boot();
 
-            if (UnitID == -1) UnitID = AssignNewID();
-
-            //enumerateStockParts();
+            SendMessage("RegisterkOSExternalFunction", new object[] { "test", this, "testFunction", 1 });
+            this.RegisterkOSExternalFunction(new object[] { "testt", this, "testFunction", 1 });
         }
 
+        public void testFunction(String x)
+        {
+            Debug.Log("************ " + x);
+        }
+
+        public void RegisterkOSExternalFunction(object[] parameters)
+        {
+            cpu.RegisterkOSExternalFunction(parameters);
+        }
+        
         private void assignPartIdentifiers()
         {
             foreach (Part part in vessel.parts)
@@ -87,7 +96,7 @@ namespace kOS
                 }
             }
         }
-
+        
         public static int AssignNewID()
         {
             int id;

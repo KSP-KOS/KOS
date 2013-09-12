@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 
 namespace kOS
 {
+    
+
     public class CPU : ExecutionContext
     {
         public object Parent;
@@ -21,7 +24,8 @@ namespace kOS
         private Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
         private Volume selectedVolume = null;
         private List<Volume> volumes = new List<Volume>();
-            
+        private List<kOSExternalFunction> externalFunctions = new List<kOSExternalFunction>();
+
         public override Vessel Vessel { get { return ((kOSProcessor)Parent).vessel; } }
         public override Dictionary<String, Variable> Variables { get { return variables; } }
         public override List<Volume> Volumes { get  { return volumes;} }
@@ -36,7 +40,7 @@ namespace kOS
         {
             this.Parent = parent;
             this.Context = context;
-
+            
             bindingManager = new BindingManager(this, Context);
             
             if (context == "ksp")
@@ -44,9 +48,44 @@ namespace kOS
                 archive = new Archive(Vessel);
 
                 Volumes.Add(archive);
-
-                
             }
+        }
+
+        public void RegisterkOSExternalFunction(object[] parameters)
+        {
+            if (parameters.Count() == 4)
+            {
+                var name = (String)parameters[0];
+                var parent = parameters[1];
+                var methodName = (String)parameters[2];
+                var parameterCount = (int)parameters[3];
+
+                RegisterkOSExternalFunction(name, parent, methodName, parameterCount);
+            }
+        }
+
+        public void RegisterkOSExternalFunction(String name, object parent, String methodName, int parameterCount)
+        {
+            externalFunctions.Add(new kOSExternalFunction(name.ToUpper(), parent, methodName, parameterCount));
+        }
+
+        public override bool CallExternalFunction(string name, string[] parameters)
+        {
+            bool result = false;
+
+            foreach (var function in externalFunctions)
+            {
+                if (function.Name == name.ToUpper() && function.ParameterCount == parameters.Count())
+                {
+                    result = true;
+
+                    Type t = function.Parent.GetType();
+                    var method = t.GetMethod(function.MethodName);
+                    method.Invoke(function.Parent, parameters);
+                }
+            }
+
+            return result;
         }
 
         public void Boot()

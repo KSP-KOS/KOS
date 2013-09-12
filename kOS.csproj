@@ -56,6 +56,7 @@
     <Compile Include="CommandBasicIO.cs" />
     <Compile Include="CommandFileIO.cs" />
     <Compile Include="CommandFlowControl.cs" />
+    <Compile Include="CommandCallExternal.cs" />
     <Compile Include="CommandTemporal.cs" />
     <Compile Include="CommandVessel.cs" />
     <Compile Include="ContextRunProgram.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="InterpreterEdit.cs" />
     <Compile Include="InterpreterImmediate.cs" />
     <Compile Include="kOSException.cs" />
+    <Compile Include="kOSExternalCommand.cs" />
     <Compile Include="kOSIDModule.cs" />
     <Compile Include="kOSProcessor.cs" />
     <Compile Include="BindingsFlightControl.cs" />
