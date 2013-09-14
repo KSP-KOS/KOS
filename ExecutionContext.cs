@@ -328,11 +328,9 @@ namespace kOS
             return ChildContext != null ? ChildContext.GetCursorY() : -1;
         }
 
-        public virtual bool CallExternalFunction(String name, string[] parameters)
+        public virtual void CallExternalFunction(String name, string[] parameters)
         {
-            if (ParentContext != null) return ParentContext.CallExternalFunction(name, parameters);
-
-            return false;
+            if (ParentContext != null) ParentContext.CallExternalFunction(name, parameters);
         }
     }
 }

@@ -69,23 +69,31 @@ namespace kOS
             externalFunctions.Add(new kOSExternalFunction(name.ToUpper(), parent, methodName, parameterCount));
         }
 
-        public override bool CallExternalFunction(string name, string[] parameters)
+        public override void CallExternalFunction(string name, string[] parameters)
         {
-            bool result = false;
+            bool callFound = false;
+            bool callAndParamCountFound = false;
 
             foreach (var function in externalFunctions)
             {
-                if (function.Name == name.ToUpper() && function.ParameterCount == parameters.Count())
+                if (function.Name == name.ToUpper())
                 {
-                    result = true;
+                    callFound = true;
 
-                    Type t = function.Parent.GetType();
-                    var method = t.GetMethod(function.MethodName);
-                    method.Invoke(function.Parent, parameters);
+                    if (function.ParameterCount == parameters.Count())
+                    {
+                        callAndParamCountFound = true;
+
+                        Type t = function.Parent.GetType();
+                        var method = t.GetMethod(function.MethodName);
+                        method.Invoke(function.Parent, parameters);
+                    }
+
                 }
             }
 
-            return result;
+            if (!callFound) throw new kOSException("External function '" + name + "' not found");
+            else if (!callAndParamCountFound) throw new kOSException("Wrong number of arguments for '" + name + "'");
         }
 
         public void Boot()

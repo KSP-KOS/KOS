@@ -122,7 +122,6 @@ namespace kOS
 
         public override bool Break()
         {
-            StdOut("Break.");
             State = ExecutionState.DONE;
 
             return true;
@@ -132,6 +131,7 @@ namespace kOS
         {
             if (key == kOSKeys.BREAK)
             {
+                StdOut("Break.");
                 Break();
             }
 
@@ -164,7 +164,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^BREAK (.*)({.*})$")]
+    [CommandAttribute(@"^BREAK$")]
     public class CommandBreak : Command
     {
         public CommandBreak(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }

@@ -71,18 +71,12 @@ namespace kOS
 
             cpu.AttachHardDisk(hardDisk);
             cpu.Boot();
-
-            SendMessage("RegisterkOSExternalFunction", new object[] { "test", this, "testFunction", 1 });
-            this.RegisterkOSExternalFunction(new object[] { "testt", this, "testFunction", 1 });
-        }
-
-        public void testFunction(String x)
-        {
-            Debug.Log("************ " + x);
         }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
+            Debug.Log("************ Registration Succeeded");
+
             cpu.RegisterkOSExternalFunction(parameters);
         }
         

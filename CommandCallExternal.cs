@@ -19,13 +19,8 @@ namespace kOS
 
             string[] parameters = processParams(paramString);
 
-            bool result = CallExternalFunction(name, parameters);
-
-            if (!result)
-            {
-                StdOut("External function '" + name + "' not found");
-            }
-
+            CallExternalFunction(name, parameters);
+            
             State = ExecutionState.DONE;
         }
 

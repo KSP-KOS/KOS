@@ -47,15 +47,15 @@ namespace kOS
             Vector3d inertia = GetEffectiveInertia(vessel, torque);
 
             Vector3d err = deltaEuler * Math.PI / 180.0F;
-            err += new Vector3d(inertia.x, inertia.z, inertia.y);
-            //err.Scale(SwapYZ(Vector3d.Scale(MoI, Inverse(torque))));
+            err += SwapYZ(inertia * 8);
+            err.Scale(SwapYZ(Vector3d.Scale(MoI * 3, Inverse(torque))));
 
             prev_err = err;
 
-            Vector3d act = 120.0f * err;
+            Vector3d act = 400.0f * err;
 
             float precision = Mathf.Clamp((float)torque.x * 20f / MoI.magnitude, 0.5f, 10f);
-            float drive_limit = Mathf.Clamp01((float)(err.magnitude * 420.0f / precision));
+            float drive_limit = Mathf.Clamp01((float)(err.magnitude * 450.0f / precision));
             
             act.x = Mathf.Clamp((float)act.x, -drive_limit, drive_limit);
             act.y = Mathf.Clamp((float)act.y, -drive_limit, drive_limit);
@@ -66,6 +66,11 @@ namespace kOS
             c.roll = Mathf.Clamp((float)(c.roll + act.z), -drive_limit, drive_limit);
             c.pitch = Mathf.Clamp((float)(c.pitch + act.x), -drive_limit, drive_limit);
             c.yaw = Mathf.Clamp((float)(c.yaw + act.y), -drive_limit, drive_limit);
+        }
+
+        public static Vector3d SwapYZ(Vector3d input)
+        {
+            return new Vector3d(input.x, input.z, input.y);
         }
 
         public static Vector3d Pow(Vector3d v3d, float exponent)
@@ -86,7 +91,7 @@ namespace kOS
                 Vector3d.Scale(Pow(angularMomentum, 2), Inverse(Vector3d.Scale(torque, MoI)))
             );
 
-            retVar.y *= 100;
+            retVar.y *= 10;
 
             return retVar;
         }

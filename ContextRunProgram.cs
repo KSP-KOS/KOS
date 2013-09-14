@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace kOS
@@ -27,7 +28,7 @@ namespace kOS
             int lineNumber = 0;
             foreach (String line in file)
             {
-                commandBuffer += line;
+                commandBuffer += stripComment(line);
 
                 string cmd;
                 while (parseNext(ref commandBuffer, out cmd))
@@ -49,6 +50,30 @@ namespace kOS
                 lineNumber++;
                 accumulator++;
             }
+        }
+
+        public override bool Break()
+        {
+            State = ExecutionState.DONE;
+
+            return true;
+        }
+
+        public string stripComment(string line)
+        {
+            for (var i=0; i<line.Length; i++)
+            {
+                if (line[i] == '\"')
+                {
+                    i = Expression.FindEndOfString(line, i + 1);
+                }
+                else if (i < line.Length - 1 && line.Substring(i, 2) == "//")
+                {
+                    return line.Substring(0, i);
+                }
+            }
+
+            return line;
         }
         
         public override void Update(float time)
