@@ -17,9 +17,15 @@ namespace kOS
             String name = RegexMatch.Groups[1].Value;
             String paramString = RegexMatch.Groups[2].Value;
 
-            string[] parameters = processParams(paramString);
+            var parameters = new List<String>();
 
-            CallExternalFunction(name, parameters);
+            foreach (String param in processParams(paramString))
+            {
+                Expression subEx = new Expression(param, this);
+                parameters.Add(subEx.GetValue().ToString());
+            }
+
+            CallExternalFunction(name, parameters.ToArray());
             
             State = ExecutionState.DONE;
         }
@@ -33,7 +39,12 @@ namespace kOS
             {
                 char c = input[i];
 
-                if (c == '\"') i = Expression.FindEndOfString(input, i + 1);
+                if (c == '\"')
+                {
+                    var prevI = i;
+                    i = Expression.FindEndOfString(input, i + 1);
+                    buffer += input.Substring(prevI, i - prevI + 1);
+                }
                 else
                 {
                     if (c == ',')

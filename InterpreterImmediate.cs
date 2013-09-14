@@ -263,6 +263,8 @@ namespace kOS
 
         public void PreviousCommand(int direction)
         {
+            if (previousCommands.Count == 0) return;
+
             inputBuffer = "";
             cursor = 0;
 

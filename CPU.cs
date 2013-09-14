@@ -49,7 +49,11 @@ namespace kOS
 
                 Volumes.Add(archive);
             }
+
+            this.RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 1 });
         }
+
+        public void testFunction(int x) { }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
@@ -86,9 +90,52 @@ namespace kOS
 
                         Type t = function.Parent.GetType();
                         var method = t.GetMethod(function.MethodName);
-                        method.Invoke(function.Parent, parameters);
-                    }
 
+                        // Attempt to cast the strings to types that the target method is expecting
+                        var parameterInfoArray = method.GetParameters();
+                        object[] convertedParams = new object[parameters.Length];
+                        for (var i = 0; i < parameters.Length; i++)
+                        {
+                            Type paramType = parameterInfoArray[i].ParameterType;
+                            String value = parameters[i];
+                            object converted = null;
+                            
+                            if (paramType == typeof(String))
+                            {
+                                convertedParams[i] = parameters[i];
+                            }
+                            else if (paramType == typeof(float))
+                            {
+                                float flt;
+                                if (float.TryParse(value, out flt)) converted = flt;
+                            }
+                            else if (paramType == typeof(double))
+                            {
+                                double dbl;
+                                if (double.TryParse(value, out dbl)) converted = dbl;
+                            }
+                            else if (paramType == typeof(int))
+                            {
+                                int itgr;
+                                if (int.TryParse(value, out itgr)) converted = itgr;
+                            }
+                            else if (paramType == typeof(long))
+                            {
+                                long lng;
+                                if (long.TryParse(value, out lng)) converted = lng;
+                            }
+                            else if (paramType == typeof(bool))
+                            {
+                                bool bln;
+                                if (bool.TryParse(value, out bln)) converted = bln;
+                            }
+
+                            if (converted == null) throw new kOSException("Parameter types don't match");
+                            convertedParams[i] = converted;
+                        }
+
+                        method.Invoke(function.Parent, convertedParams);
+                    }
                 }
             }
 
