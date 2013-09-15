@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -127,7 +126,7 @@ namespace kOS
         public override void Evaluate()
         {
             String varName = RegexMatch.Groups[1].Value;
-            Variable v = CreateVariable(varName);
+            Variable v = FindOrCreateVariable(varName);
 
             if (v == null) throw new kOSException("Can't create variable '" + varName + "'");
             

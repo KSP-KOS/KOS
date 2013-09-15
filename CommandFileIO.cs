@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -205,15 +204,13 @@ namespace kOS
                 case "FROM":
                     file = targetVolume.GetByName(targetFile);
                     if (file == null) throw new kOSException("File '" + targetFile + "' not found");
-                    
                     if (!SelectedVolume.SaveFile(new File(file))) throw new kOSException("File copy failed");
-                    
                     break;
 
                 case "TO":
                     file = SelectedVolume.GetByName(targetFile);
                     if (file == null) throw new kOSException("File '" + targetFile + "' not found");
-                    targetVolume.SaveFile(new File(file));
+                    if (!targetVolume.SaveFile(new File(file))) throw new kOSException("File copy failed");
                     break;
             }
 

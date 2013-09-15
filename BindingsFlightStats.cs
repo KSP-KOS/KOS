@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using UnityEngine;
 
 namespace kOS
@@ -36,9 +36,10 @@ namespace kOS
             manager.AddGetter("SURFACESPEED",   delegate(CPU cpu) { return (float)cpu.Vessel.horizontalSrfSpeed; });
            
             manager.AddGetter("BODY",           delegate(CPU cpu) { return cpu.Vessel.mainBody.bodyName; });
-            manager.AddGetter("LATITUDE",       delegate(CPU cpu) { return (float)cpu.Vessel.latitude; });
-            manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return (float)cpu.Vessel.longitude; });
-
+            manager.AddGetter("LATITUDE",       delegate(CPU cpu) { return (float)getLattitude(cpu); });
+            manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return (float)getLongitude(cpu); });
+            manager.AddGetter("GEOPOSITION",    delegate(CPU cpu) { return new GeoCoordinates(getLattitude(cpu), getLongitude(cpu)); });
+            
             manager.AddGetter("HEADING",        delegate(CPU cpu) { return VesselUtils.GetHeading(cpu.Vessel); });
 
             manager.AddGetter("NORTH",          delegate(CPU cpu) { return new Direction(VesselUtils.GetNorthVector(cpu.Vessel), false); });
@@ -121,6 +122,24 @@ namespace kOS
 
         }
 
+        private static float getLattitude(CPU cpu)
+        {
+            float retVal = (float)cpu.Vessel.latitude;
 
+            if (retVal > 90) return 90;
+            if (retVal < -90) return -90;
+                
+            return retVal;
+        }
+
+        private static float getLongitude(CPU cpu)
+        {
+            float retVal = (float)cpu.Vessel.longitude;
+
+            while (retVal > 180) retVal -= 360;
+            while (retVal < -180) retVal += 360;
+
+            return retVal;
+        }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
+
 using UnityEngine;
 
 namespace kOS
@@ -118,20 +118,26 @@ namespace kOS
 
                     if (propertyName == "wheelsteering")
                     {
+                        float bearing = 0;
+
                         if (Value is VesselTarget)
                         {
-                            var bearing = VesselUtils.GetTargetBearing(vessel, ((VesselTarget)Value).target);
+                            bearing = VesselUtils.GetTargetBearing(vessel, ((VesselTarget)Value).target);
+                        }
+                        else if (Value is GeoCoordinates)
+                        {
+                            bearing = ((GeoCoordinates)Value).GetBearing(vessel);
+                        }
 
-                            if (vessel.horizontalSrfSpeed > 0.1f)
+                        if (vessel.horizontalSrfSpeed > 0.1f)
+                        {
+                            if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(vessel), VesselUtils.GetVelocityHeading(vessel))) <= 90)
                             {
-                                if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(vessel), VesselUtils.GetVelocityHeading(vessel))) <= 90)
-                                {
-                                    c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
-                                }
-                                else
-                                {
-                                    c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
-                                }
+                                c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
+                            }
+                            else
+                            {
+                                c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
                             }
                         }
                     }

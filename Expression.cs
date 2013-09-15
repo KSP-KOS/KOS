@@ -196,6 +196,26 @@ namespace kOS
             } 
             #endregion
 
+            #region Geospatial
+            match = Regex.Match(text, "^LATLNG ?\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^LATLNG ?\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+
+                    double lat = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    double lng = ParseSubExpressionAsDouble(match.Groups[2].Value);
+
+                    Value = new GeoCoordinates(lat, lng);
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+            #endregion
+
             #region Vectors & Rotations
             match = Regex.Match(text, "^V\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
@@ -256,12 +276,12 @@ namespace kOS
             } 
             #endregion
 
-            match = Regex.Match(text, "^HEADING ([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
+            match = Regex.Match(text, "^HEADING ?([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 EvalDlg = delegate()
                 {
-                    match = Regex.Match(text, "^HEADING ([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
+                    match = Regex.Match(text, "^HEADING ?([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
 
                     float heading = (float)ParseSubExpressionAsDouble(match.Groups[1].Value);
                     float pitch = (float)ParseSubExpressionAsDouble(match.Groups[2].Value);
@@ -615,11 +635,6 @@ namespace kOS
         
         public override String ToString()
         {
-            if (GetValue() is float)
-            {
-                return ((float)GetValue()).ToString("0.00");
-            }
-
             return GetValue().ToString();
         }
 

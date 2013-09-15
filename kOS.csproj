@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>kOS</RootNamespace>
     <AssemblyName>kOS</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,6 +65,7 @@
     <Compile Include="Direction.cs" />
     <Compile Include="ExecutionContext.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="GeoCoordinates.cs" />
     <Compile Include="Harddisk.cs" />
     <Compile Include="InterpreterBootup.cs" />
     <Compile Include="InterpreterEdit.cs" />

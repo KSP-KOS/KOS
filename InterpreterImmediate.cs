@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace kOS
 {
@@ -24,7 +23,7 @@ namespace kOS
         public ImmediateMode(ExecutionContext parent) : base(parent) 
         {
             StdOut("kOS Operating System Build " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
-            StdOut("KerboScript v0.5");
+            StdOut("KerboScript v0.6");
             StdOut("");
             StdOut("Proceed.");
         }
@@ -254,11 +253,6 @@ namespace kOS
                     base.SendMessage(message);
                     break;
             }
-        }
-
-        internal void Edit(string fileName)
-        {
-            //Cpu.PushInterpreter(new InterpreterEdit(Cpu, fileName));
         }
 
         public void PreviousCommand(int direction)
