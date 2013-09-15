@@ -102,7 +102,7 @@ namespace kOS
                             
                             if (paramType == typeof(String))
                             {
-                                convertedParams[i] = parameters[i];
+                                converted = parameters[i];
                             }
                             else if (paramType == typeof(float))
                             {
