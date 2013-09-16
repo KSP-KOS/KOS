@@ -1,6 +1,15 @@
 kOS Mod Changelog
 =================
 
+### 0.6
+
+- Simplified steering system
+- Support for driving your rover wheels to a specific location
+- Support for surface vectors
+- Rovers can be steered towards arbitrary geo coordinates
+- Preliminary support for 3rd party mod integration (Still testing)
+- Bug fixes
+
 ### 0.5
 
 - Rover bindings
