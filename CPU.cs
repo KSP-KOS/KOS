@@ -20,7 +20,7 @@ namespace kOS
         public Archive archive;
         public BindingManager bindingManager;
         public float SessionTime;
-        public int ClockSpeed = 1;
+        public int ClockSpeed = 5;
 
         private Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
         private Volume selectedVolume = null;
@@ -184,7 +184,7 @@ namespace kOS
         {
             if (Mode == Modes.OFF) return;
 
-            var electricReq = 0.01f * ClockSpeed * time;
+            var electricReq = 0.01f * time;
             var result = part.RequestResource("ElectricCharge", electricReq) / electricReq;
 
             var newMode = (result < 0.5f) ? Modes.STARVED : Modes.READY;
@@ -261,7 +261,7 @@ namespace kOS
 
             for (var i = 0; i < ClockSpeed; i++)
             {
-                base.Update(time);
+                base.Update(time / (float)ClockSpeed);
             }
 
             if (Mode == Modes.STARVED)

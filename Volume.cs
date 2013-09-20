@@ -26,8 +26,19 @@ namespace kOS
             return null;
         }
 
-        // Used by LOG command.  For now not allowing logging to volumes other than archive (if it is in range).
-        public virtual void AppendToName(string name, string str) { return; }
+        public virtual void AppendToFile(string name, string str) 
+        {
+            File file = GetByName(name);
+
+            if (file == null)
+            {
+                file = new File(name);
+            }
+
+            file.Add(str);
+
+            SaveFile(file);
+        }
 
         public virtual void DeleteByName(String name)
         {
@@ -184,25 +195,6 @@ namespace kOS
             }
 
             return true;
-        }
-
-        // Appends to a file on the archive volume if the archive is within range.
-        public override void AppendToName(string name, string str)
-        {
-            try
-            {
-                using (StreamWriter outfile = new StreamWriter(ArchiveFolder + name + ".txt", true))
-                {
-                    // Evil line break for windows
-                    str +=  Application.platform == RuntimePlatform.WindowsPlayer ? "\r\n" : "\n";
-
-                    outfile.Write(str);
-                }
-            }
-            catch (Exception e)
-            {
-                return;
-            }
         }
 
         public override void DeleteByName(string name)

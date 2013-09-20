@@ -195,26 +195,25 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^LOG (.+?) (.+?)$")]
+    [CommandAttribute(@"^LOG (.+?) TO (.+?)$")]
     public class CommandLog: Command
     {
         public CommandLog(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
-            // For now only log to the archive.
-            String volumeName = "Archive";
-            Volume targetVolume = GetVolume(volumeName);
+            // Todo: let the user specify a volume "LOG something TO file ON volume"
+            Volume targetVolume = SelectedVolume;
 
-            // If the archive is out of ranch, the signal is lost in space.
+            // If the archive is out of reach, the signal is lost in space.
             if (!targetVolume.CheckRange())
             {
                 State = ExecutionState.DONE;
                 return;
             }
 
-            String targetFile = RegexMatch.Groups[1].Value.Trim();
-            Expression e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
+            String targetFile = RegexMatch.Groups[2].Value.Trim();
+            Expression e = new Expression(RegexMatch.Groups[1].Value, ParentContext);
 
             if (e.IsNull())
             {
@@ -222,7 +221,7 @@ namespace kOS
             }
             else
             {
-                targetVolume.AppendToName(targetFile, e.ToString());
+                targetVolume.AppendToFile(targetFile, e.ToString());
                 State = ExecutionState.DONE;
             }
         }
