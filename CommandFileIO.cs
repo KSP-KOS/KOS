@@ -194,6 +194,39 @@ namespace kOS
             throw new kOSException("Unrecognized renamable object type '" + operation + "'");
         }
     }
+
+    [CommandAttribute(@"^LOG (.+?) (.+?)$")]
+    public class CommandLog: Command
+    {
+        public CommandLog(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            // For now only log to the archive.
+            String volumeName = "Archive";
+            Volume targetVolume = GetVolume(volumeName);
+
+            // If the archive is out of ranch, the signal is lost in space.
+            if (!targetVolume.CheckRange())
+            {
+                State = ExecutionState.DONE;
+                return;
+            }
+
+            String targetFile = RegexMatch.Groups[1].Value.Trim();
+            Expression e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
+
+            if (e.IsNull())
+            {
+                State = ExecutionState.DONE;
+            }
+            else
+            {
+                targetVolume.AppendToName(targetFile, e.ToString());
+                State = ExecutionState.DONE;
+            }
+        }
+    }
     
     [CommandAttribute(@"^COPY (.+?) (TO|FROM)( VOLUME)? (.+?)$")]
     public class CommandCopy : Command
