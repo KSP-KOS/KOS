@@ -20,6 +20,7 @@ namespace kOS
         public Archive archive;
         public BindingManager bindingManager;
         public float SessionTime;
+        public int ClockSpeed = 1;
 
         private Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
         private Volume selectedVolume = null;
@@ -183,7 +184,7 @@ namespace kOS
         {
             if (Mode == Modes.OFF) return;
 
-            var electricReq = 0.05f * time;
+            var electricReq = 0.01f * ClockSpeed * time;
             var result = part.RequestResource("ElectricCharge", electricReq) / electricReq;
 
             var newMode = (result < 0.5f) ? Modes.STARVED : Modes.READY;
@@ -258,7 +259,10 @@ namespace kOS
 
             SessionTime += time;
 
-            base.Update(time);
+            for (var i = 0; i < ClockSpeed; i++)
+            {
+                base.Update(time);
+            }
 
             if (Mode == Modes.STARVED)
             {
@@ -315,6 +319,57 @@ namespace kOS
                     volumes.Add(volume);
                 }
             }
+        }
+
+        public override void OnSave(ConfigNode node)
+        {
+            ConfigNode contextNode = new ConfigNode("context");
+
+            // Save variables
+            if (Variables.Count > 0)
+            {
+                ConfigNode varNode = new ConfigNode("variables");
+
+                foreach (var kvp in Variables)
+                {
+                    if (!(kvp.Value is BoundVariable))
+                    {
+                        varNode.AddValue(kvp.Key, File.EncodeLine(kvp.Value.Value.ToString()));
+                    }
+                }
+
+                contextNode.AddNode(varNode);
+            }
+
+            if (ChildContext != null)
+            {
+                ChildContext.OnSave(contextNode);
+            }
+
+            node.AddNode(contextNode);
+        }
+
+        public override void OnLoad(ConfigNode node)
+        {
+            foreach (ConfigNode contextNode in node.GetNodes("context"))
+            {
+                foreach (ConfigNode varNode in contextNode.GetNodes("variables"))
+                {
+                    foreach (ConfigNode.Value value in varNode.values)
+                    {
+                        var newVar = CreateVariable(value.name);
+                        newVar.Value = new Expression(File.DecodeLine(value.value), this).GetValue();
+                    }
+                }
+            }
+        }
+
+        public override string GetVolumeBestIdentifier(Volume SelectedVolume)
+        {
+            int localIndex = volumes.IndexOf(SelectedVolume);
+
+            if (!String.IsNullOrEmpty(SelectedVolume.Name)) return "#" + localIndex + ": \"" + SelectedVolume.Name + "\"";
+            else return "#" + localIndex;
         }
     }
 }

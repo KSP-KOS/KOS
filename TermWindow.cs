@@ -129,6 +129,12 @@ namespace kOS
 
         void Update()
         {
+            if (Cpu == null || Cpu.Vessel == null || Cpu.Vessel.parts.Count == 0)
+            {
+                // Holding onto a vessel instance that no longer exists?
+                Close();
+            }
+
             if (!isOpen || !isLocked) return;
 
             cursorBlinkTime += Time.deltaTime;

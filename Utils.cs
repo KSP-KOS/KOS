@@ -146,6 +146,40 @@ namespace kOS
 
             return ret;
         }
+
+        public static string[] ProcessParams(string input)
+        {
+            String buffer = "";
+            List<String> output = new List<string>();
+
+            for (var i = 0; i < input.Length; i++)
+            {
+                char c = input[i];
+
+                if (c == '\"')
+                {
+                    var prevI = i;
+                    i = Expression.FindEndOfString(input, i + 1);
+                    buffer += input.Substring(prevI, i - prevI + 1);
+                }
+                else
+                {
+                    if (c == ',')
+                    {
+                        output.Add(buffer.Trim());
+                        buffer = "";
+                    }
+                    else
+                    {
+                        buffer += c;
+                    }
+                }
+            }
+
+            if (buffer.Trim().Length > 0) output.Add(buffer.Trim());
+
+            return output.ToArray();
+        }
     }
 }
 

@@ -28,7 +28,8 @@ namespace kOS
             manager.AddGetter("ETA:APOAPSIS",   delegate(CPU cpu) { return (float)cpu.Vessel.orbit.timeToAp; });
             manager.AddGetter("ETA:PERIAPSIS",  delegate(CPU cpu) { return (float)cpu.Vessel.orbit.timeToPe; });
 
-            manager.AddGetter("VELOCITY",       delegate(CPU cpu) { return cpu.Vessel.obt_velocity; });
+            manager.AddGetter("VELOCITY",       delegate(CPU cpu) { return new VesselVelocity(cpu.Vessel); });
+
             manager.AddGetter("ANGULARMOMENTUM",delegate(CPU cpu) { return new Direction(cpu.Vessel.angularMomentum, true); });
             manager.AddGetter("ANGULARVEL",     delegate(CPU cpu) { return new Direction(cpu.Vessel.angularVelocity, true); });
             manager.AddGetter("MASS",           delegate(CPU cpu) { return cpu.Vessel.GetTotalMass(); });
@@ -38,7 +39,7 @@ namespace kOS
             manager.AddGetter("BODY",           delegate(CPU cpu) { return cpu.Vessel.mainBody.bodyName; });
             manager.AddGetter("LATITUDE",       delegate(CPU cpu) { return (float)getLattitude(cpu); });
             manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return (float)getLongitude(cpu); });
-            manager.AddGetter("GEOPOSITION",    delegate(CPU cpu) { return new GeoCoordinates(getLattitude(cpu), getLongitude(cpu)); });
+            manager.AddGetter("GEOPOSITION",    delegate(CPU cpu) { return new GeoCoordinates(cpu.Vessel, getLattitude(cpu), getLongitude(cpu)); });
             
             manager.AddGetter("HEADING",        delegate(CPU cpu) { return VesselUtils.GetHeading(cpu.Vessel); });
 

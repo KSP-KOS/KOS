@@ -13,10 +13,12 @@ namespace kOS
         private File file;
         private String commandBuffer;
         private List<Command> commands = new List<Command>();
+        private List<Expression> parameters = new List<Expression>();
         private int executionLine = 0;
 
-        public ContextRunProgram(ExecutionContext parent) : base(parent) 
+        public ContextRunProgram(ExecutionContext parent, List<Expression> parameters) : base(parent) 
         {
+            this.parameters = parameters;
         }
 
         public void Run(File file)
@@ -110,6 +112,19 @@ namespace kOS
                     State = ExecutionState.DONE;
                 }
             }
+        }
+
+        public object PopParameter()
+        {
+            if (parameters.Count > 0)
+            {
+                object retValue = parameters[0].GetValue();
+                parameters.RemoveAt(0);
+
+                return retValue;
+            }
+
+            throw new kOSException("Wrong number of parameters supplied");
         }
     }
 }

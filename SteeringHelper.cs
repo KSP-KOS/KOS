@@ -46,6 +46,47 @@ namespace kOS
             Vector3d inertia = GetEffectiveInertia(vessel, torque);
 
             Vector3d err = deltaEuler * Math.PI / 180.0F;
+            err += new Vector3d(inertia.x, inertia.z, inertia.y);
+            //err.Scale(SwapYZ(Vector3d.Scale(MoI, Inverse(torque))));
+
+            prev_err = err;
+
+            Vector3d act = 120.0f * err;
+
+            float precision = Mathf.Clamp((float)torque.x * 20f / MoI.magnitude, 0.5f, 10f);
+            float drive_limit = Mathf.Clamp01((float)(err.magnitude * 380.0f / precision));
+
+            act.x = Mathf.Clamp((float)act.x, -drive_limit, drive_limit);
+            act.y = Mathf.Clamp((float)act.y, -drive_limit, drive_limit);
+            act.z = Mathf.Clamp((float)act.z, -drive_limit, drive_limit);
+
+            //act = averageVector3d(averagedAct, act, 2);
+
+            c.roll = Mathf.Clamp((float)(c.roll + act.z), -drive_limit, drive_limit);
+            c.pitch = Mathf.Clamp((float)(c.pitch + act.x), -drive_limit, drive_limit);
+            c.yaw = Mathf.Clamp((float)(c.yaw + act.y), -drive_limit, drive_limit);
+
+            /*
+            // This revised version from 0.6 gave people problems with gravity turns. I've reverted but may try to make it work
+             
+            var CoM = vessel.findWorldCenterOfMass();
+            var MoI = vessel.findLocalMOI(CoM);
+            var mass = vessel.GetTotalMass();
+            var up = (CoM - vessel.mainBody.position).normalized;
+
+            var target = targetDir.Rotation;
+            var vesselR = vessel.transform.rotation;
+
+            Quaternion delta;
+            delta = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselR) * target);
+
+            Vector3d deltaEuler = ReduceAngles(delta.eulerAngles);
+            deltaEuler.y *= -1;
+
+            Vector3d torque = GetTorque(vessel, c.mainThrottle);
+            Vector3d inertia = GetEffectiveInertia(vessel, torque);
+
+            Vector3d err = deltaEuler * Math.PI / 180.0F;
             err += SwapYZ(inertia * 8);
             err.Scale(SwapYZ(Vector3d.Scale(MoI * 3, Inverse(torque))));
 
@@ -64,7 +105,7 @@ namespace kOS
 
             c.roll = Mathf.Clamp((float)(c.roll + act.z), -drive_limit, drive_limit);
             c.pitch = Mathf.Clamp((float)(c.pitch + act.x), -drive_limit, drive_limit);
-            c.yaw = Mathf.Clamp((float)(c.yaw + act.y), -drive_limit, drive_limit);
+            c.yaw = Mathf.Clamp((float)(c.yaw + act.y), -drive_limit, drive_limit);*/
         }
 
         public static Vector3d SwapYZ(Vector3d input)

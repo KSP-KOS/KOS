@@ -81,6 +81,7 @@
     <Compile Include="SpecialValueTester.cs" />
     <Compile Include="StageValues.cs" />
     <Compile Include="SteeringHelper.cs" />
+    <Compile Include="Vector.cs" />
     <Compile Include="VesselTarget.cs" />
     <Compile Include="TermWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Core.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Variable.cs" />
+    <Compile Include="VesselVelocity.cs" />
     <Compile Include="Volume.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +98,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>echo $(TargetPath)
-copy $(TargetPath) $(SolutionDir)\Package\Plugins\kOS.dll
+copy $(TargetPath) $(SolutionDir)\Package\kOS\Plugins\kOS.dll
 D:\kOS\installpackage.bat
 </PostBuildEvent>
   </PropertyGroup>

@@ -153,6 +153,11 @@ namespace kOS
         {
             base.SaveFile(file);
 
+            if (!CheckRange())
+            {
+                throw new kOSException("Volume is out of range.");
+            }
+
             Directory.CreateDirectory(ArchiveFolder);
 
             try

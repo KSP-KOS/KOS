@@ -26,8 +26,8 @@ namespace kOS
             }
         }
     }
-    
-    [CommandAttribute(@"^RUN (.+?)$")]
+
+    [CommandAttribute(@"^RUN ([a-zA-Z0-9\-_]+?)( ?\((.*?)\))?$")]
     public class CommandRunFile : Command
     {
         public CommandRunFile(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -36,10 +36,21 @@ namespace kOS
         {
             String fileName = RegexMatch.Groups[1].Value;
             File file = SelectedVolume.GetByName(fileName);
+            var parameters = new List<Expression>();
+
+            if (RegexMatch.Groups.Count > 1)
+            {
+                String paramString = RegexMatch.Groups[3].Value;
+                foreach (String param in Utils.ProcessParams(paramString))
+                {
+                    Expression subEx = new Expression(param, this);
+                    parameters.Add(subEx);
+                }
+            }
 
             if (file != null)
             {
-                ContextRunProgram runContext = new ContextRunProgram(this);
+                ContextRunProgram runContext = new ContextRunProgram(this, parameters);
                 Push(runContext);
 
                 if (file.Count > 0)
@@ -264,13 +275,17 @@ namespace kOS
             if (listType == "FILES" || String.IsNullOrEmpty(listType))
             {
                 StdOut("");
-                StdOut("Filename                      Size");
-                StdOut("-------------------------------------");
+
+                StdOut("Volume " + GetVolumeBestIdentifier(SelectedVolume));
+                StdOut("-------------------------------------");                
 
                 foreach (FileInfo fileInfo in SelectedVolume.GetFileList())
                 {
                     StdOut(fileInfo.Name.PadRight(30, ' ') + fileInfo.Size.ToString());
                 }
+                
+                int freeSpace = SelectedVolume.GetFreeSpace();
+                StdOut("Free space remaining: " + (freeSpace > 0 ? freeSpace.ToString() : " infinite"));
 
                 StdOut("");
 

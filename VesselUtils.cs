@@ -106,24 +106,18 @@ namespace kOS
 
         public static float GetCommRange(Vessel vessel)
         {
-            float range = 75000;
+            float range = 100000;
 
             foreach (Part part in vessel.parts)
             {
-                Debug.Log("******" + part.partInfo.name);
-
                 if (part.partInfo.name == "longAntenna")
                 {
                     String status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
 
-                    Debug.Log("***" + status);
-
                     if (status == "Fixed" || status == "Locked")
                     {
-                        range += 75000;
+                        range += 1000000;
                     }
-
-                    Debug.Log("Range " + range);
                 }
             }
 
@@ -135,12 +129,10 @@ namespace kOS
 
                     if (status == "Fixed" || status == "Locked")
                     {
-                        range *= 10;
+                        range *= 200;
                     }
                 }
             }
-
-            Debug.Log("Range " + range);
 
             return range;
         }
@@ -178,7 +170,7 @@ namespace kOS
         {
             var up = vessel.upAxis;
             var north = GetNorthVector(vessel);
-            var headingQ = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(Quaternion.LookRotation(vessel.srf_velocity, up)) * Quaternion.LookRotation(north, up));
+            var headingQ = Quaternion.Inverse(Quaternion.Inverse(Quaternion.LookRotation(vessel.srf_velocity, up)) * Quaternion.LookRotation(north, up));
 
             return headingQ.eulerAngles.y;
         }

@@ -65,17 +65,24 @@ namespace kOS
                 return;
             }
 
-            cpu = new CPU(this, "ksp");
+            initCpu();
 
             if (hardDisk == null) hardDisk = new Harddisk(MemSize);
+        }
 
-            cpu.AttachHardDisk(hardDisk);
-            cpu.Boot();
+        public void initCpu()
+        {
+            if (cpu == null)
+            {
+                cpu = new CPU(this, "ksp");
+                cpu.AttachHardDisk(hardDisk);
+                cpu.Boot();
+            }
         }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
-            Debug.Log("************ Registration Succeeded");
+            Debug.Log("*** External Function Registration Succeeded");
 
             cpu.RegisterkOSExternalFunction(parameters);
         }
@@ -106,6 +113,8 @@ namespace kOS
         
         public void Update()
         {
+            if (cpu == null) return;
+
             if (part.State == PartStates.DEAD)
             {
                 cpu.Mode = CPU.Modes.OFF;
@@ -168,11 +177,22 @@ namespace kOS
 
         public override void OnLoad(ConfigNode node)
         {
+            // KSP Seems to want to make an instance of my partModule during initial load
+            if (vessel == null) return;
+
             foreach (ConfigNode hdNode in node.GetNodes("harddisk"))
             {
                 Harddisk newDisk = new Harddisk(hdNode);
                 this.hardDisk = newDisk;
             }
+
+            Debug.Log("******************************* ON LOAD ");
+
+            initCpu();
+
+            Debug.Log("******************************* CPU Inited ");
+
+            if (cpu != null) cpu.OnLoad(node);
             
             base.OnLoad(node);
         }
@@ -183,6 +203,11 @@ namespace kOS
             {
                 ConfigNode hdNode = hardDisk.Save("harddisk");
                 node.AddNode(hdNode);
+            }
+
+            if (cpu != null)
+            {
+                cpu.OnSave(node);
             }
 
             base.OnSave(node);

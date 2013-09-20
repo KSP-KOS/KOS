@@ -127,7 +127,7 @@ namespace kOS
 
             return false;
         }
-        
+
         private bool TryParseFunction(string text)
         {
             Match match;
@@ -177,6 +177,67 @@ namespace kOS
 
                 return true;
             }
+
+            match = Regex.Match(text, "^ARCSIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^ARCSIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = ((float)Math.Asin(v) * (180 / Math.PI));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            match = Regex.Match(text, "^ARCCOS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^ARCCOS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = ((float)Math.Acos(v) * (180 / Math.PI));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            match = Regex.Match(text, "^ARCTAN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^ARCTAN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = ((float)Math.Atan(v) * (180 / Math.PI));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            match = Regex.Match(text, "^ARCTAN2\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, "^ARCTAN2\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
+                    Value = (float)(Math.Atan2(x, y) * (180 / Math.PI));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
             #endregion
 
             #region ABS
@@ -207,7 +268,7 @@ namespace kOS
                     double lat = ParseSubExpressionAsDouble(match.Groups[1].Value);
                     double lng = ParseSubExpressionAsDouble(match.Groups[2].Value);
 
-                    Value = new GeoCoordinates(lat, lng);
+                    Value = new GeoCoordinates(executionContext.Vessel, lat, lng);
                 };
 
                 EvalDlg();
@@ -228,7 +289,7 @@ namespace kOS
                     double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
                     double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
 
-                    Value = new Direction(new Vector3d(x, y, z), false);
+                    Value = new Vector(x,y,z);
                 };
 
                 EvalDlg();
@@ -627,6 +688,22 @@ namespace kOS
                     if (Operator == "*") return (Direction)LeftSide.GetValue() * (Direction)RightSide.GetValue();
                     if (Operator == "+") return (Direction)LeftSide.GetValue() + (Direction)RightSide.GetValue();
                     if (Operator == "-") return (Direction)LeftSide.GetValue() + (Direction)RightSide.GetValue();
+                }
+
+                if (LeftSide.Value is Direction && RightSide.Value is Vector)
+                {
+                    Vector RightVec = (Vector)RightSide.GetValue();
+
+                    if (Operator == "*") return (Direction)LeftSide.GetValue() * RightVec.ToDirection();
+                    if (Operator == "+") return (Direction)LeftSide.GetValue() + RightVec.ToDirection();
+                    if (Operator == "-") return (Direction)LeftSide.GetValue() + RightVec.ToDirection();
+                }
+
+                if (LeftSide.Value is Vector && RightSide.Value is Vector)
+                {
+                    if (Operator == "*") return (Vector)LeftSide.GetValue() * (Vector)RightSide.GetValue();
+                    if (Operator == "+") return (Vector)LeftSide.GetValue() + (Vector)RightSide.GetValue();
+                    if (Operator == "-") return (Vector)LeftSide.GetValue() + (Vector)RightSide.GetValue();
                 }
             }
 

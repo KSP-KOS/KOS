@@ -332,5 +332,30 @@ namespace kOS
         {
             if (ParentContext != null) ParentContext.CallExternalFunction(name, parameters);
         }
+
+        public virtual void OnSave(ConfigNode node)
+        {
+            ConfigNode contextNode = new ConfigNode("context");
+
+            contextNode.AddValue("context-type", this.GetType().ToString());
+
+            if (ChildContext != null)
+            {
+                ChildContext.OnSave(contextNode);
+            }
+
+            node.AddNode(contextNode);
+        }
+
+        public virtual void OnLoad(ConfigNode node)
+        {
+        }
+
+        public virtual string GetVolumeBestIdentifier(Volume SelectedVolume)
+        {
+            if (ParentContext != null) return ParentContext.GetVolumeBestIdentifier(SelectedVolume);
+
+            return "";
+        }
     }
 }

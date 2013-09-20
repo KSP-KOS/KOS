@@ -130,7 +130,7 @@ namespace kOS
                         }
 
                         if (vessel.horizontalSrfSpeed > 0.1f)
-                        {
+                        { 
                             if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(vessel), VesselUtils.GetVelocityHeading(vessel))) <= 90)
                             {
                                 c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
