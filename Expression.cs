@@ -39,11 +39,11 @@ namespace kOS
 
             text = text.Trim();
             Text = text;
-			if(!CheckForBrackets (text))
-			{
-				throw new kOSException ("Missing brackets.");
-			};
-            UnwrapFullBrackets(ref text);
+	    if(!CheckForBrackets (text))
+	    {
+	      throw new kOSException ("Missing brackets.");
+	    };
+	    UnwrapFullBrackets(ref text);
 
             Process(text);
         }
@@ -520,23 +520,23 @@ namespace kOS
             return -1;
         }
 
-		private static bool CheckForBrackets(string str)
-		{
-			var items = new Stack<int>(str.Length);
-			for (int i = 0; i < str.Length; i++)
-			{
-				char c = str[i];
-				if (c == '(' || c == ')') 
-				{
-					items.Push (i);
-				}
-			}
-			if (items.Count > 2 || items.Count == 1)
-			{
-				return false;
-			}
-			return true;
-		}
+        private static bool CheckForBrackets(string str)
+	{
+	  var items = new Stack<int>(str.Length);
+	  for (int i = 0; i < str.Length; i++)
+	  {
+	    char c = str[i];
+	    if (c == '(' || c == ')') 
+	    {
+	      items.Push (i);
+	    }
+	  }
+	  if ((items.Count % 2) == 1)
+	  {
+	    return false;
+	  }
+	  return true;
+	}
 
         // Evaluate a part of an expression
         private bool Eval(ref String text)
