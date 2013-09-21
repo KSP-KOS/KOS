@@ -145,7 +145,7 @@ namespace kOS
             return retVal;
         }
 
-		public bool CheckCommRange(Vessel vessel)
+		private static bool CheckCommRange(Vessel vessel)
 		{
 			return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
 		}
