@@ -40,7 +40,8 @@ namespace kOS
             manager.AddGetter("LATITUDE",       delegate(CPU cpu) { return (float)getLattitude(cpu); });
             manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return (float)getLongitude(cpu); });
             manager.AddGetter("GEOPOSITION",    delegate(CPU cpu) { return new GeoCoordinates(cpu.Vessel, getLattitude(cpu), getLongitude(cpu)); });
-            
+			manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return (float)VesselUtils.GetCommRange(cpu.Vessel); });
+
             manager.AddGetter("HEADING",        delegate(CPU cpu) { return VesselUtils.GetHeading(cpu.Vessel); });
 
             manager.AddGetter("NORTH",          delegate(CPU cpu) { return new Direction(VesselUtils.GetNorthVector(cpu.Vessel), false); });
