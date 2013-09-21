@@ -21,7 +21,7 @@ namespace kOS
             manager.AddGetter("MISSIONTIME",    delegate(CPU cpu) { return (float)cpu.Vessel.missionTime; });
             manager.AddGetter("STATUS",         delegate(CPU cpu) { return cpu.Vessel.situation.ToString().Replace("_", " "); });
 			manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return (float)VesselUtils.GetCommRange(cpu.Vessel); });
-			manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return CheckCommRange(cpu.Vessel); });
+			manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return Convert.ToSingle(CheckCommRange(cpu.Vessel)); });
             manager.AddGetter("APOAPSIS",       delegate(CPU cpu) { return (float)cpu.Vessel.orbit.ApA; });
             manager.AddGetter("PERIAPSIS",      delegate(CPU cpu) { return (float)cpu.Vessel.orbit.PeA; });
 
