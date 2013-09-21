@@ -68,33 +68,41 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^PRINT (.+?) AT \(([0-9]+),([0-9]+)\)$")]
-    public class CommandPrintAt : Command
-    {
-        public CommandPrintAt(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+	[CommandAttribute(@"^PRINT (.+?) AT \((.+),(.+)\)$")]
+	public class CommandPrintAt : Command
+	{
+		public CommandPrintAt(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
-        public override void Evaluate()
-        {
-            Expression e = new Expression(RegexMatch.Groups[1].Value, ParentContext);
-            Expression ex = new Expression(RegexMatch.Groups[2].Value, ParentContext);
-            Expression ey = new Expression(RegexMatch.Groups[3].Value, ParentContext);
+		public override void Evaluate()
+		{
+			Expression e = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+			Expression ex = new Expression(RegexMatch.Groups[2].Value, ParentContext);
+			Expression ey = new Expression(RegexMatch.Groups[3].Value, ParentContext);
 
-            if (e.IsNull()) throw new kOSException("Null value in print statement");
+			if (e.IsNull()) throw new kOSException("Null value in print statement");
 
-            int x, y;
+			int x, y;
 
-            if (Int32.TryParse(ex.GetValue().ToString(), out x) && Int32.TryParse(ey.GetValue().ToString(), out y))
-            {
-                Put(e.GetValue().ToString(), x, y);
-            }
-            else
-            {
-                throw new kOSException("Non-numeric value assigned to numeric function");
-            }
+			if (Int32.TryParse(ex.GetValue().ToString(), out x) && Int32.TryParse(ey.GetValue().ToString(), out y))
+			{
 
-            State = ExecutionState.DONE;
-        }
-    }
+				if (x < COLUMNS && y < ROWS - e.GetValue().ToString().Length) 
+				{
+					Put (e.GetValue ().ToString (), x, y);
+				}
+				else
+				{
+					throw new kOSException ("Printing off screen.");
+				}
+			}
+			else
+			{
+				throw new kOSException("Non-numeric value assigned to numeric function");
+			}
+
+			State = ExecutionState.DONE;
+		}
+	}
 
     [CommandAttribute(@"^PRINT (.+?)$")]
     public class CommandPrint : Command
