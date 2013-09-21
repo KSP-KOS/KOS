@@ -1,6 +1,15 @@
 kOS Mod Changelog
 =================
 
+### 0.65
+
+- Trigonometry Functions ARCSIN, ARCCOS, ARCTAN and ARCTAN2 are now implemented.
+- Programs can now contain parameters
+- You can now get the distance to an arbitrary latlng with :distance
+- Cpu clock speed has been raised from 1 to 5.
+- Variables now persist
+- Ranges have been increased
+
 ### 0.6
 
 - Simplified steering system
