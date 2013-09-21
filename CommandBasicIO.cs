@@ -86,7 +86,7 @@ namespace kOS
 			if (Int32.TryParse(ex.GetValue().ToString(), out x) && Int32.TryParse(ey.GetValue().ToString(), out y))
 			{
 
-				if (x < COLUMNS && y < ROWS - e.GetValue().ToString().Length) 
+				if (x < COLUMNS - e.GetValue().ToString().Length && y < ROWS)
 				{
 					Put (e.GetValue ().ToString (), x, y);
 				}
