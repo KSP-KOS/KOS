@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace kOS
 {
@@ -24,7 +25,7 @@ namespace kOS
 
         public delegate void ExpressionReEvalDlg();
 
-        static String[] OperatorList = new String[] { "==", "=", "<=", ">=", "<", ">", "-", "+", "/", "*", "^" };
+		static String[] OperatorList = new String[] { "<=", ">=", "==", "=", "<", ">", " - ", " + ", "/", "*", "^" };
         static String[] SpecialOperatorList = new String[] { "^\\sAND\\s", "^\\sOR\\s" };
 
         public static String Evaluate(String text, ExecutionContext context)
@@ -395,19 +396,20 @@ namespace kOS
             }
         }
 
-        private bool TryParseFloat(String text)
-        {
-            text = text.Trim();
-            float testFloat;
+		private bool TryParseFloat(String text)
+		{
+			text = text.Trim();
+			float testFloat;
+			NumberStyles styles = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowLeadingSign;
 
-            if (float.TryParse(text, out testFloat))
-            {
-                Value = testFloat;
-                return true;
-            }
+			if (float.TryParse (text, styles, CultureInfo.InvariantCulture, out testFloat))
+			{
+				Value = testFloat;
+				return true;
+			}
 
-            return false;
-        }
+			return false;
+		}
 
         private bool TryParseBoolean(String text)
         {
@@ -680,7 +682,7 @@ namespace kOS
 
                 if (LeftSide.Value is String || RightSide.Value is String)
                 {
-                    if (Operator == "+") return LeftSide.Value.ToString() + RightSide.Value.ToString();
+					if (Operator == " + ") return LeftSide.Value.ToString() + RightSide.Value.ToString();
 
                     if (Operator == "==") return LeftSide.Value.ToString() == RightSide.Value.ToString();
                     if (Operator == "=") return LeftSide.Value.ToString() == RightSide.Value.ToString();
@@ -689,8 +691,8 @@ namespace kOS
 
                 if (LeftSide.Value is float || RightSide.Value is float)
                 {
-                    if (Operator == "+") return LeftSide.Float() + RightSide.Float();
-                    if (Operator == "-") return LeftSide.Float() - RightSide.Float();
+                    if (Operator == " + ") return LeftSide.Float() + RightSide.Float();
+                    if (Operator == " - ") return LeftSide.Float() - RightSide.Float();
                     if (Operator == "/") return LeftSide.Float() / RightSide.Float();
                     if (Operator == "*") return LeftSide.Float() * RightSide.Float();
                     if (Operator == "^") return (float)Math.Pow(LeftSide.Double(), RightSide.Double());
