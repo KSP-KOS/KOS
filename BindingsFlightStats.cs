@@ -20,6 +20,8 @@ namespace kOS
             manager.AddGetter("ALT:RADAR",      delegate(CPU cpu) { return (float)cpu.Vessel.heightFromTerrain; });
             manager.AddGetter("MISSIONTIME",    delegate(CPU cpu) { return (float)cpu.Vessel.missionTime; });
             manager.AddGetter("STATUS",         delegate(CPU cpu) { return cpu.Vessel.situation.ToString().Replace("_", " "); });
+			manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return (float)VesselUtils.GetCommRange(cpu.Vessel); });
+			manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return Convert.ToSingle(CheckCommRange(cpu.Vessel)); });
             manager.AddGetter("APOAPSIS",       delegate(CPU cpu) { return (float)cpu.Vessel.orbit.ApA; });
             manager.AddGetter("PERIAPSIS",      delegate(CPU cpu) { return (float)cpu.Vessel.orbit.PeA; });
 
@@ -40,7 +42,7 @@ namespace kOS
             manager.AddGetter("LATITUDE",       delegate(CPU cpu) { return (float)getLattitude(cpu); });
             manager.AddGetter("LONGITUDE",      delegate(CPU cpu) { return (float)getLongitude(cpu); });
             manager.AddGetter("GEOPOSITION",    delegate(CPU cpu) { return new GeoCoordinates(cpu.Vessel, getLattitude(cpu), getLongitude(cpu)); });
-            
+
             manager.AddGetter("HEADING",        delegate(CPU cpu) { return VesselUtils.GetHeading(cpu.Vessel); });
 
             manager.AddGetter("NORTH",          delegate(CPU cpu) { return new Direction(VesselUtils.GetNorthVector(cpu.Vessel), false); });
@@ -142,5 +144,10 @@ namespace kOS
 
             return retVal;
         }
+
+		private static bool CheckCommRange(Vessel vessel)
+		{
+			return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+		}
     }
 }
