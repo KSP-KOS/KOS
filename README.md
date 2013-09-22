@@ -169,15 +169,24 @@ Example:
     PRINT 4+1.
     PRINT “4 times 8 is: “ + (4*8).
 
-### LOG
-
-Logs the selected text to a file on the archive volume. Can print strings, or the result of an expression.   Note: The archive volume must be within range of the ship or the messages are lost in space.  See antennas to increase communication range.
+### PRINT.. AT (COLUMN,LINE)
+    
+Prints the selected text to the screen at specified location. Can print strings, or the result of an expression.
 Example:
-
-    LOG mylog “Hello”.
-    LOG mylog 4+1.
-    LOG mylog “4 times 8 is: “ + (4*8).
-
+    
+    PRINT “Hello” at (0,10).
+    PRINT 4+1 at (0,10).
+    PRINT “4 times 8 is: “ + (4*8) at (0,10).
+    
+### LOG.. TO
+    
+Logs the selected text to a file on the local volume. Can print strings, or the result of an expression.
+Example:
+    
+    LOG “Hello” to mylog.
+    LOG 4+1 to mylog .
+    LOG “4 times 8 is: “ + (4*8) to mylog.
+    
 ### RENAME
 
 Renames a file or volume.
