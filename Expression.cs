@@ -596,7 +596,9 @@ namespace kOS
                     {
                         Operator = op;
 
-                        bool isSign = (op == "-" && EndsWithOperator(text.Substring(0, i)));
+                        // If this is a minus, and it comes right after an operator or is the beginning of the string, it's really a sign operator 
+                        string prev = text.Substring(0, i);
+                        bool isSign = (op == "-" && (EndsWithOperator(prev) || String.IsNullOrEmpty(prev.Trim())));
 
                         if (!isSign)
                         {
