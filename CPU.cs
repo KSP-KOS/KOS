@@ -9,8 +9,6 @@ using UnityEngine;
 
 namespace kOS
 {
-    
-
     public class CPU : ExecutionContext
     {
         public object Parent;

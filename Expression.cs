@@ -25,7 +25,7 @@ namespace kOS
 
         public delegate void ExpressionReEvalDlg();
 
-		static String[] OperatorList = new String[] { "<=", ">=", "==", "=", "<", ">", " - ", " + ", "/", "*", "^" };
+		static String[] OperatorList = new String[] { "<=", ">=", "==", "=", "<", ">", "-", "+", "/", "*", "^" };
         static String[] SpecialOperatorList = new String[] { "^\\sAND\\s", "^\\sOR\\s" };
 
         public static String Evaluate(String text, ExecutionContext context)
@@ -40,13 +40,35 @@ namespace kOS
 
             text = text.Trim();
             Text = text;
-	    if(!CheckForBrackets (text))
-	    {
-	      throw new kOSException ("Missing brackets.");
-	    };
-	    UnwrapFullBrackets(ref text);
 
-            Process(text);
+            if (!CheckForBrackets(text))
+            {
+                throw new kOSException("Bracket matching error.");
+            }
+
+	        UnwrapFullBrackets(ref text);
+
+            try
+            {
+                Process(text);
+            }
+            catch (kOSException e)
+            {
+                var x = dump();
+                executionContext.StdOut(x);
+
+                throw e;
+            }
+        }
+
+        private string dump()
+        {
+            if (Operator == null) return Value != null ? Value.ToString() : "null";
+
+            string left = LeftSide != null ? LeftSide.dump() : "null";
+            string right = RightSide != null ? RightSide.dump() : "null";
+
+            return "|" + left + "|" + Operator + "|" + right + "|";
         }
 
         private void Process(String text)
@@ -523,22 +545,22 @@ namespace kOS
         }
 
         private static bool CheckForBrackets(string str)
-	{
-	  var items = new Stack<int>(str.Length);
-	  for (int i = 0; i < str.Length; i++)
-	  {
-	    char c = str[i];
-	    if (c == '(' || c == ')') 
-	    {
-	      items.Push (i);
-	    }
-	  }
-	  if ((items.Count % 2) == 1)
-	  {
-	    return false;
-	  }
-	  return true;
-	}
+        {
+            var items = new Stack<int>(str.Length);
+            for (int i = 0; i < str.Length; i++)
+            {
+                char c = str[i];
+                if (c == '(' || c == ')')
+                {
+                    items.Push(i);
+                }
+            }
+            if ((items.Count % 2) == 1)
+            {
+                return false;
+            }
+            return true;
+        }
 
         // Evaluate a part of an expression
         private bool Eval(ref String text)
@@ -574,20 +596,37 @@ namespace kOS
                     {
                         Operator = op;
 
-                        String leftString = text.Substring(0, i);
-                        String rightString = text.Substring(i + op.Length);
+                        bool isSign = (op == "-" && EndsWithOperator(text.Substring(0, i)));
 
-                        LeftSide = new Expression(leftString, executionContext);
-                        RightSide = new Expression(rightString, executionContext);
+                        if (!isSign)
+                        {
+                            String leftString = text.Substring(0, i);
+                            String rightString = text.Substring(i + op.Length);
 
-                        Value = GetValue();
+                            LeftSide = new Expression(leftString, executionContext);
+                            RightSide = new Expression(rightString, executionContext);
 
-                        return true;
+                            Value = GetValue();
+
+                            return true;
+                        }
                     }
                 }
             }
 
             // No operator found!
+            return false;
+        }
+
+        private bool EndsWithOperator(String input)
+        {
+            input = input.Trim();
+
+            foreach (String op in OperatorList)
+            {
+                if (input.EndsWith(op)) return true;
+            }
+
             return false;
         }
 
@@ -682,7 +721,7 @@ namespace kOS
 
                 if (LeftSide.Value is String || RightSide.Value is String)
                 {
-					if (Operator == " + ") return LeftSide.Value.ToString() + RightSide.Value.ToString();
+					if (Operator == "+") return LeftSide.Value.ToString() + RightSide.Value.ToString();
 
                     if (Operator == "==") return LeftSide.Value.ToString() == RightSide.Value.ToString();
                     if (Operator == "=") return LeftSide.Value.ToString() == RightSide.Value.ToString();
@@ -691,8 +730,8 @@ namespace kOS
 
                 if (LeftSide.Value is float || RightSide.Value is float)
                 {
-                    if (Operator == " + ") return LeftSide.Float() + RightSide.Float();
-                    if (Operator == " - ") return LeftSide.Float() - RightSide.Float();
+                    if (Operator == "+") return LeftSide.Float() + RightSide.Float();
+                    if (Operator == "-") return LeftSide.Float() - RightSide.Float();
                     if (Operator == "/") return LeftSide.Float() / RightSide.Float();
                     if (Operator == "*") return LeftSide.Float() * RightSide.Float();
                     if (Operator == "^") return (float)Math.Pow(LeftSide.Double(), RightSide.Double());
