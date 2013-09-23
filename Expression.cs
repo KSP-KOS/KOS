@@ -48,17 +48,7 @@ namespace kOS
 
 	        UnwrapFullBrackets(ref text);
 
-            try
-            {
-                Process(text);
-            }
-            catch (kOSException e)
-            {
-                var x = dump();
-                executionContext.StdOut(x);
-
-                throw e;
-            }
+            Process(text);
         }
 
         private string dump()
