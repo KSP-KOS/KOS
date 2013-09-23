@@ -412,7 +412,7 @@ namespace kOS
 		{
 			text = text.Trim();
 			float testFloat;
-			NumberStyles styles = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowLeadingSign;
+			NumberStyles styles = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint;
 
 			if (float.TryParse (text, styles, CultureInfo.InvariantCulture, out testFloat))
 			{
