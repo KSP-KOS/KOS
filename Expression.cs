@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -201,7 +201,7 @@ namespace kOS
                 {
                     match = Regex.Match(text, "^ARCSIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
                     double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = ((float)Math.Asin(v) * (180 / Math.PI));
+                    Value = (float)(Math.Asin(v) * (180 / Math.PI));
                 };
 
                 EvalDlg();
@@ -216,7 +216,7 @@ namespace kOS
                 {
                     match = Regex.Match(text, "^ARCCOS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
                     double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = ((float)Math.Acos(v) * (180 / Math.PI));
+                    Value = (float)(Math.Acos(v) * (180 / Math.PI));
                 };
 
                 EvalDlg();
@@ -231,7 +231,7 @@ namespace kOS
                 {
                     match = Regex.Match(text, "^ARCTAN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
                     double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = ((float)Math.Atan(v) * (180 / Math.PI));
+                    Value = (float)(Math.Atan(v) * (180 / Math.PI));
                 };
 
                 EvalDlg();
