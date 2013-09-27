@@ -30,8 +30,12 @@ namespace kOS
             int lineNumber = 0;
             foreach (String line in file)
             {
-                commandBuffer += stripComment(line);
 
+                commandBuffer += stripComment(line);
+				if (!Utils.DelimterMatch (line)) 
+				{
+					throw new kOSException ("line" + lineNumber +": mismatching delimiter.");
+				}
                 string cmd;
                 while (parseNext(ref commandBuffer, out cmd))
                 {

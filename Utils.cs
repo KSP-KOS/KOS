@@ -90,6 +90,24 @@ namespace kOS
             return -1;
         }
 
+		public static bool DelimterMatch(string str)
+		{
+			var items = new Stack<int>(str.Length);
+			for (int i = 0; i < str.Length; i++)
+			{
+				char c = str[i];
+				if (c == '(' || c == ')' | c == '"')
+				{
+					items.Push(i);
+				}
+			}
+			if (items.Count != 0 && (items.Count % 2) == 1)
+			{
+				return false;
+			}
+			return true;
+		}
+
         public static float ProspectForResource(String resourceName, List<Part> engines)
         {
             List<Part> visited = new List<Part>();
