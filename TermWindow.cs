@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -235,7 +235,7 @@ namespace kOS
             if (!allTexturesFound)
             {
                 GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
-                           "go to the following folder: \n\n<Your KSP Folder>\\Plugins\\PluginData\\kOS\\gfx \n\nand ensure that the png texture files are there.");
+                           "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the png texture files are there.");
 
                 GUI.Label(CLOSEBUTTON_RECT, "Close");
 
