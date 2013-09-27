@@ -25,7 +25,7 @@ namespace kOS
 
         public delegate void ExpressionReEvalDlg();
 
-		static String[] OperatorList = new String[] { "<=", ">=", "==", "=", "<", ">", "-", "+", "/", "*", "^" };
+		static String[] OperatorList = new String[] { "<=", ">=", "==", "!=", "=", "<", ">", "-", "+", "/", "*", "^" };
         static String[] SpecialOperatorList = new String[] { "^\\sAND\\s", "^\\sOR\\s" };
 
         public static String Evaluate(String text, ExecutionContext context)
