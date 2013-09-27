@@ -94,7 +94,7 @@ namespace kOS
 
             State = ExecutionState.DONE;
         }
-    }z
+    }
 
     [CommandAttribute(@"^PRINT (.+?)$")]
     public class CommandPrint : Command
