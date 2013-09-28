@@ -206,28 +206,141 @@ namespace kOS
 
             result = TryParseNumericFunction("ARCSIN_(1)", text, delegate(double[] parameters)
             {
-                Value = (float)Math.Asin(parameters[0] * (Math.PI / 180));
+                Value = (float)(Math.Asin(parameters[0]) * (180 / Math.PI));
             });
             if (result) return true;
 
             result = TryParseNumericFunction("ARCCOS_(1)", text, delegate(double[] parameters)
             {
-                Value = (float)Math.Acos(parameters[0] * (Math.PI / 180));
+                Value = (float)(Math.Acos(parameters[0]) * (180 / Math.PI));
             });
             if (result) return true;
 
             result = TryParseNumericFunction("ARCTAN_(1)", text, delegate(double[] parameters)
             {
-                Value = (float)Math.Atan(parameters[0] * (Math.PI / 180));
+                Value = (float)Math.Atan(parameters[0] * (180 / Math.PI));
             });
             if (result) return true;
 
-            result = TryParseNumericFunction("ARCTAN_(2)", text, delegate(double[] parameters)
+            result = TryParseNumericFunction("ARCTAN2_(2)", text, delegate(double[] parameters)
             {
-                Value = (float)Math.Atan2(parameters[0] * (Math.PI / 180), parameters[1] * (Math.PI / 180));
+                Value = (float)Math.Atan2(parameters[0] * (180 / Math.PI), parameters[1] * (180 / Math.PI));
             });
             if (result) return true;
 
+            /*
+            string regexSin = Utils.BuildRegex("SIN_(1)");
+            match = Regex.Match(text, regexSin, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, regexSin, RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)Math.Sin(v * (Math.PI / 180));
+                };
+
+                EvalDlg();
+
+                return true;
+            }*/
+
+            string regexCos = Utils.BuildRegex("COS_(1)");
+            match = Regex.Match(text, regexCos, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, regexCos, RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)Math.Cos(v * (Math.PI / 180));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            string regexTan = Utils.BuildRegex("TAN_(1)");
+            match = Regex.Match(text, regexTan, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, regexTan, RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)Math.Tan(v * (Math.PI / 180));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            string regexASin = Utils.BuildRegex("ARCSIN_(1)");
+            match = Regex.Match(text, regexASin, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, regexASin, RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)(Math.Asin(v) * (180 / Math.PI));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            string regexACos = Utils.BuildRegex("ARCCOS_(1)");
+            match = Regex.Match(text, regexACos, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, regexACos, RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)(Math.Acos(v) * (180 / Math.PI));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            string regexATan = Utils.BuildRegex("ARCTAN_(1)");
+            match = Regex.Match(text, regexATan, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, regexATan, RegexOptions.IgnoreCase);
+                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    Value = (float)(Math.Atan(v) * (180 / Math.PI));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            string regexATan2 = Utils.BuildRegex("ARCTAN2_(2)");
+            match = Regex.Match(text, regexATan2, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, regexATan2, RegexOptions.IgnoreCase);
+                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
+                    Value = (float)(Math.Atan2(x, y) * (180 / Math.PI));
+                };
+
+                EvalDlg();
+
+                return true;
+            }
             #endregion
 
             #region ABS
