@@ -216,11 +216,17 @@ namespace kOS
                     case "(":
                         // Parameter declaration that accepts a sub-expression (which does not itself contain a function)
                         // example: SIN_(1) denotes a function that has one parameter
-                        var endIndex = kegex.IndexOf(')', i);
-                        int paramcount = Int32.Parse(kegex.Substring(i + 1, endIndex - i - 1));
+                        var endIndexBracket = kegex.IndexOf(')', i);
+                        int paramcount = Int32.Parse(kegex.Substring(i + 1, endIndexBracket - i - 1));
                         output += @"\(" + string.Join(",", Enumerable.Repeat("([ :@A-Za-z0-9\\.\\-\\+\\*/]+)", paramcount).ToArray()) + @"\)";
-                        i = endIndex;
+                        i = endIndexBracket;
                         break;
+
+                    case "{":
+                        var endIndexBrace = kegex.IndexOf('}', i);
+                        output += "({.+})";
+                        i = endIndexBrace;
+                        break;                  
 
                     default:
                         output += c;

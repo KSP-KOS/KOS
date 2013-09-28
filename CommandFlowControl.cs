@@ -71,7 +71,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^IF (.+?)({.+})$")]
+    [CommandAttribute("IF *_{}")]
     public class CommandIf : Command
     {
         List<Command> commands = new List<Command>();
@@ -109,7 +109,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^UNTIL (.*?)({.*})$")]
+    [CommandAttribute("UNTIL *_{}")]
     public class CommandUntilLoop : Command
     {
         List<Command> commands = new List<Command>();
@@ -170,7 +170,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^BREAK$")]
+    [CommandAttribute("BREAK")]
     public class CommandBreak : Command
     {
         public CommandBreak(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
