@@ -31,7 +31,7 @@ namespace kOS
                 {
                     foreach (String s in attr.Values)
                     {
-                        Bindings.Add(s.ToUpper(), t);
+                        Bindings.Add(Utils.BuildRegex(s.ToUpper()), t);
                     }
                 }
             }

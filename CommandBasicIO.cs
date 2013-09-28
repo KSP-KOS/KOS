@@ -6,33 +6,8 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace kOS
-{
-    [CommandAttribute(@"^#TERMINATOR (\S)$")]
-    public class CommandSetTerminator : Command
-    {
-        public CommandSetTerminator(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
-
-        public override void Evaluate()
-        {
-            ParentContext.StdOut("Terminator = " + RegexMatch.Groups[1].Value);
-            State = ExecutionState.DONE;
-        }
-    }
-
-    [CommandAttribute(@"^TEST$")]
-    public class CommandTest : Command
-    {
-        public CommandTest(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
-
-        public override void Evaluate()
-        {
-            ParentContext.StdOut("Test!");
-            State = ExecutionState.DONE;
-        }
-    }
-
-    
-    [CommandAttribute(@"^CLEARSCREEN$")]
+{    
+    [CommandAttribute("CLEARSCREEN")]
     public class CommandClearScreen : Command
     {
         public CommandClearScreen(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -44,7 +19,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^SHUTDOWN")]
+    [CommandAttribute("SHUTDOWN")]
     public class CommandShutdown : Command
     {
         public CommandShutdown(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -56,7 +31,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute(@"^REBOOT$")]
+    [CommandAttribute("REBOOT")]
     public class CommandReboot : Command
     {
         public CommandReboot(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -68,7 +43,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^PRINT (.+?) AT \((.+),(.+)\)$")]
+    [CommandAttribute("PRINT * AT_(2)")]
     public class CommandPrintAt : Command
     {
         public CommandPrintAt(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -96,7 +71,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^PRINT (.+?)$")]
+    [CommandAttribute("PRINT *")]
     public class CommandPrint : Command
     {
         public CommandPrint(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -118,7 +93,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^TEST (.+?)$")]
+    [CommandAttribute("TEST *")]
     public class CommandTestKegex : Command
     {
         public CommandTestKegex(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -140,7 +115,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^DECLARE ([a-zA-Z][a-zA-Z0-9_]*?)$")]
+    [CommandAttribute("DECLARE %")]
     public class CommandDeclareVar : Command
     {
         public CommandDeclareVar(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -156,7 +131,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^DECLARE PARAMETERS? ([,a-zA-Z0-9_]*?)$")]
+    [CommandAttribute("DECLARE PARAMETERS? *")]
     public class CommandDeclareParameter : Command
     {
         public CommandDeclareParameter(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -178,7 +153,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute(@"^SET ([a-zA-Z][a-zA-Z0-9_]*?)( TO |=)(.+?)$")]
+    [CommandAttribute("SET % TO *")]
     public class CommandSet : Command
     {
         public CommandSet(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -202,7 +177,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute(@"^TOGGLE (.+?)$")]
+    [CommandAttribute("TOGGLE %")]
     public class CommandToggle : Command
     {
         public CommandToggle(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -237,7 +212,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^(.+?) ON$")]
+    [CommandAttribute("% ON")]
     public class CommandSetOn : Command
     {
         public CommandSetOn(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -266,7 +241,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^(.+?) OFF$")]
+    [CommandAttribute("% OFF")]
     public class CommandSetOff : Command
     {
         public CommandSetOff(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }

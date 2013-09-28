@@ -148,13 +148,13 @@ namespace kOS
 
         private bool TryParseNumericFunction(String kegex, String text, NumericFunctionParseDelegate callback)
         {
-            string regexSin = Utils.BuildRegex(kegex);
-            var match = Regex.Match(text, regexSin, RegexOptions.IgnoreCase);
+            string regexStr = Utils.BuildRegex(kegex);
+            var match = Regex.Match(text, regexStr, RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 EvalDlg = delegate()
                 {
-                    match = Regex.Match(text, regexSin, RegexOptions.IgnoreCase);
+                    match = Regex.Match(text, regexStr, RegexOptions.IgnoreCase);
                     List<double> values = new List<double>();
 
                     for (int i = 1; i < match.Groups.Count; i++)

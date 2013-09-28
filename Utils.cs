@@ -183,7 +183,8 @@ namespace kOS
 
         public static String BuildRegex(String kegex)
         {
-            // "^SIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$"
+            if (kegex.StartsWith("^")) return kegex; // Input is already in regex format
+
             String output = "^";
 
             for (int i=0; i<kegex.Length; i++)
@@ -193,14 +194,28 @@ namespace kOS
                 switch (c)
                 {
                     case " ":
+                        // 1 or more whitespace
                         output += "[\\s ]+";
                         break;
 
                     case "_":
+                        // 0 or more whitespace
                         output += "[\\s ]*";
                         break;
 
+                    case "*":
+                        // Anything
+                        output += "(.+?)";
+                        break;
+
+                    case "%":
+                        // Alphanumeric with underscores, first character must be alpha
+                        output += "([a-zA-Z][a-zA-Z0-9_]*?)"; 
+                        break;
+
                     case "(":
+                        // Parameter declaration that accepts a sub-expression (which does not itself contain a function)
+                        // example: SIN_(1) denotes a function that has one parameter
                         var endIndex = kegex.IndexOf(')', i);
                         int paramcount = Int32.Parse(kegex.Substring(i + 1, endIndex - i - 1));
                         output += @"\(" + string.Join(",", Enumerable.Repeat("([ :@A-Za-z0-9\\.\\-\\+\\*/]+)", paramcount).ToArray()) + @"\)";

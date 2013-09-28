@@ -29,6 +29,11 @@ namespace kOS
             State = (commands.Count == 0) ? ExecutionState.DONE : ExecutionState.WAIT;
         }
 
+        public override bool SpecialKey(kOSKeys key)
+        {
+            return base.SpecialKey(key);
+        }
+
         public override void Refresh()
         {
             base.Refresh();
@@ -53,6 +58,7 @@ namespace kOS
                 {
                     case ExecutionState.NEW:
                         command.Evaluate();
+                        ChildContext = command;
                         return;
 
                     case ExecutionState.WAIT:
