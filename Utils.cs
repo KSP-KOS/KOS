@@ -217,6 +217,9 @@ namespace kOS
                         // Parameter declaration that accepts a sub-expression (which does not itself contain a function)
                         // example: SIN_(1) denotes a function that has one parameter
                         var endIndexBracket = kegex.IndexOf(')', i);
+
+                        if (endIndexBracket == -1) throw new FormatException("Round bracket not closed in '" + kegex + "'");
+
                         int paramcount = Int32.Parse(kegex.Substring(i + 1, endIndexBracket - i - 1));
                         output += @"\(" + string.Join(",", Enumerable.Repeat("([ :@A-Za-z0-9\\.\\-\\+\\*/\"]+)", paramcount).ToArray()) + @"\)";
                         i = endIndexBracket;
@@ -224,6 +227,9 @@ namespace kOS
 
                     case "{":
                         var endIndexBrace = kegex.IndexOf('}', i);
+
+                        if (endIndexBrace == -1) throw new FormatException("Curly brace not closed in '" + kegex + "'");
+
                         output += "({.+})";
                         i = endIndexBrace;
                         break;                  
