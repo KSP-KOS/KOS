@@ -144,116 +144,90 @@ namespace kOS
             return false;
         }
 
+        public delegate void NumericFunctionParseDelegate(double[] parameters);
+
+        private bool TryParseNumericFunction(String kegex, String text, NumericFunctionParseDelegate callback)
+        {
+            string regexSin = Utils.BuildRegex(kegex);
+            var match = Regex.Match(text, regexSin, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                EvalDlg = delegate()
+                {
+                    match = Regex.Match(text, regexSin, RegexOptions.IgnoreCase);
+                    List<double> values = new List<double>();
+
+                    for (int i = 1; i < match.Groups.Count; i++)
+                    {
+                        double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                        values.Add((double)v);
+                    }
+
+                    callback(values.ToArray());
+                };
+
+                EvalDlg();
+
+                return true;
+            }
+
+            return false;
+        }
+
         private bool TryParseFunction(string text)
         {
             Match match;
 
             #region TRIG
-            match = Regex.Match(text, "^SIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+
+            bool result;
+
+            // Basic
+
+            result = TryParseNumericFunction("SIN_(1)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^SIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)Math.Sin(v * (Math.PI / 180));
-                };
+                Value = (float)Math.Sin(parameters[0] * (Math.PI / 180));
+            });
+            if (result) return true;
 
-                EvalDlg();
-
-                return true;
-            } 
-            
-            match = Regex.Match(text, "^COS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+            result = TryParseNumericFunction("COS_(1)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^COS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)Math.Cos(v * (Math.PI / 180));
-                };
+                Value = (float)Math.Cos(parameters[0] * (Math.PI / 180));
+            });
+            if (result) return true;
 
-                EvalDlg();
-
-                return true;
-            }
-
-            match = Regex.Match(text, "^TAN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+            result = TryParseNumericFunction("TAN_(1)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^TAN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)Math.Tan(v * (Math.PI / 180));
-                };
+                Value = (float)Math.Tan(parameters[0] * (Math.PI / 180));
+            });
+            if (result) return true;
 
-                EvalDlg();
+            // Inverse
 
-                return true;
-            }
-
-            match = Regex.Match(text, "^ARCSIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+            result = TryParseNumericFunction("ARCSIN_(1)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^ARCSIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)(Math.Asin(v) * (180 / Math.PI));
-                };
+                Value = (float)Math.Asin(parameters[0] * (Math.PI / 180));
+            });
+            if (result) return true;
 
-                EvalDlg();
-
-                return true;
-            }
-
-            match = Regex.Match(text, "^ARCCOS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+            result = TryParseNumericFunction("ARCCOS_(1)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^ARCCOS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)(Math.Acos(v) * (180 / Math.PI));
-                };
+                Value = (float)Math.Acos(parameters[0] * (Math.PI / 180));
+            });
+            if (result) return true;
 
-                EvalDlg();
-
-                return true;
-            }
-
-            match = Regex.Match(text, "^ARCTAN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+            result = TryParseNumericFunction("ARCTAN_(1)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^ARCTAN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)(Math.Atan(v) * (180 / Math.PI));
-                };
+                Value = (float)Math.Atan(parameters[0] * (Math.PI / 180));
+            });
+            if (result) return true;
 
-                EvalDlg();
-
-                return true;
-            }
-
-            match = Regex.Match(text, "^ARCTAN2\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+            result = TryParseNumericFunction("ARCTAN_(2)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^ARCTAN2\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
-                    Value = (float)(Math.Atan2(x, y) * (180 / Math.PI));
-                };
+                Value = (float)Math.Atan2(parameters[0] * (Math.PI / 180), parameters[1] * (Math.PI / 180));
+            });
+            if (result) return true;
 
-                EvalDlg();
-
-                return true;
-            }
             #endregion
 
             #region ABS

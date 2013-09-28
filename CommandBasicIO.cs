@@ -118,6 +118,28 @@ namespace kOS
         }
     }
 
+    [CommandAttribute(@"^TEST (.+?)$")]
+    public class CommandTestKegex : Command
+    {
+        public CommandTestKegex(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            Expression e = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+
+            if (e.IsNull())
+            {
+                StdOut("NULL");
+                State = ExecutionState.DONE;
+            }
+            else
+            {
+                StdOut(Utils.BuildRegex(e.ToString()));
+                State = ExecutionState.DONE;
+            }
+        }
+    }
+
     [CommandAttribute(@"^DECLARE ([a-zA-Z][a-zA-Z0-9_]*?)$")]
     public class CommandDeclareVar : Command
     {

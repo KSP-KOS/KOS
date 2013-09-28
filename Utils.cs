@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace kOS
@@ -179,6 +179,42 @@ namespace kOS
             if (buffer.Trim().Length > 0) output.Add(buffer.Trim());
 
             return output.ToArray();
+        }
+
+        public static String BuildRegex(String kegex)
+        {
+            // "^SIN\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$"
+            String output = "^";
+
+            for (int i=0; i<kegex.Length; i++)
+            {
+                String c = kegex.Substring(i, 1);
+
+                switch (c)
+                {
+                    case " ":
+                        output += "[\\s ]+";
+                        break;
+
+                    case "_":
+                        output += "[\\s ]*";
+                        break;
+
+                    case "(":
+                        var endIndex = kegex.IndexOf(')', i);
+                        int paramcount = Int32.Parse(kegex.Substring(i + 1, endIndex - i - 1));
+                        output += @"\(" + string.Join(",", Enumerable.Repeat("([ :@A-Za-z0-9\\.\\-\\+\\*/]+)", paramcount).ToArray()) + @"\)";
+                        i = endIndex;
+                        break;
+
+                    default:
+                        output += c;
+                        break;
+                }
+            }
+
+
+            return output + "$";
         }
     }
 }

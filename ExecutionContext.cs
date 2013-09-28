@@ -308,6 +308,7 @@ namespace kOS
                     }
                     else
                     {
+                        // Do you see a period after this right brace? If not, let's just pretend there is one ok?
                         if (!buffer.Substring(i + 1).StartsWith("."))
                         {
                             cmd = buffer.Substring(0, i + 1);
