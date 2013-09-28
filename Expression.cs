@@ -243,7 +243,7 @@ namespace kOS
                 EvalDlg();
 
                 return true;
-            }*/
+            }
 
             string regexCos = Utils.BuildRegex("COS_(1)");
             match = Regex.Match(text, regexCos, RegexOptions.IgnoreCase);
@@ -340,7 +340,7 @@ namespace kOS
                 EvalDlg();
 
                 return true;
-            }
+            }*/
             #endregion
 
             #region ABS
