@@ -306,6 +306,15 @@ namespace kOS
                         cmd = "";
                         return false;
                     }
+                    else
+                    {
+                        if (!buffer.Substring(i + 1).StartsWith("."))
+                        {
+                            cmd = buffer.Substring(0, i + 1);
+                            buffer = buffer.Substring(i + 1).Trim();
+                            return true;
+                        }
+                    }
                 }
             }
 
