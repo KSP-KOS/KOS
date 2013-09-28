@@ -11,6 +11,7 @@ namespace kOS
         public object Parent;
         public String MethodName;
         public int ParameterCount;
+        public String regex;
 
         public kOSExternalFunction(String name, object parent, String methodName, int parameterCount)
         {
@@ -18,6 +19,8 @@ namespace kOS
             this.Parent = parent;
             this.ParameterCount = parameterCount;
             this.MethodName = methodName;
+
+            this.regex = Utils.BuildRegex(name + "_(" + parameterCount + ")");
         }
     }
 }

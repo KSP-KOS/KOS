@@ -177,10 +177,33 @@ namespace kOS
         private bool TryParseFunction(string text)
         {
             Match match;
+            bool result;
+
+            foreach(kOSExternalFunction f in executionContext.ExternalFunctions)
+            {
+                match = Regex.Match(text, f.regex, RegexOptions.IgnoreCase);
+                if (match.Success)
+                {
+                    EvalDlg = delegate()
+                    {
+                        match = Regex.Match(text, f.regex, RegexOptions.IgnoreCase);
+                        string[] pArr = new string[f.ParameterCount];
+
+                        for (var i = 0; i < f.ParameterCount; i++)
+                        {
+                            pArr[i] = ParseSubExpressionAsString(match.Groups[i + 1].Value);
+                        }
+
+                        Value = executionContext.CallExternalFunction(f.Name, pArr);
+                    };
+
+                    EvalDlg();
+
+                    return true;
+                }
+            }
 
             #region TRIG
-
-            bool result;
 
             // Basic
 
@@ -438,8 +461,7 @@ namespace kOS
 
                 return true;
             } 
-            #endregion
-
+            
             match = Regex.Match(text, "^HEADING ?([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
@@ -460,6 +482,8 @@ namespace kOS
 
                 return true;
             }
+
+            #endregion
 
             return false;
         }

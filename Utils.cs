@@ -218,7 +218,7 @@ namespace kOS
                         // example: SIN_(1) denotes a function that has one parameter
                         var endIndexBracket = kegex.IndexOf(')', i);
                         int paramcount = Int32.Parse(kegex.Substring(i + 1, endIndexBracket - i - 1));
-                        output += @"\(" + string.Join(",", Enumerable.Repeat("([ :@A-Za-z0-9\\.\\-\\+\\*/]+)", paramcount).ToArray()) + @"\)";
+                        output += @"\(" + string.Join(",", Enumerable.Repeat("([ :@A-Za-z0-9\\.\\-\\+\\*/\"]+)", paramcount).ToArray()) + @"\)";
                         i = endIndexBracket;
                         break;
 

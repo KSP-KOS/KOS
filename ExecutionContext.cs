@@ -23,7 +23,7 @@ namespace kOS
         public ExecutionContext ParentContext = null;
         public ExecutionContext ChildContext = null;
         public ExecutionState State = ExecutionState.NEW;
-
+        
         public virtual Volume SelectedVolume
         { 
             get { return ParentContext != null ? ParentContext.SelectedVolume : null; }
@@ -33,6 +33,7 @@ namespace kOS
         public virtual Vessel Vessel { get { return ParentContext != null ? ParentContext.Vessel : null; } }
         public virtual List<Volume> Volumes { get { return ParentContext != null ? ParentContext.Volumes : null; } }
         public virtual Dictionary<String, Variable> Variables { get { return ParentContext != null ? ParentContext.Variables : null; } }
+        public virtual List<kOSExternalFunction> ExternalFunctions { get { return ParentContext != null ? ParentContext.ExternalFunctions : null; } }
         public Dictionary<String, Expression> Locks = new Dictionary<string, Expression>();
         public List<Command> CommandLocks = new List<Command>();
 
@@ -338,9 +339,11 @@ namespace kOS
             return ChildContext != null ? ChildContext.GetCursorY() : -1;
         }
 
-        public virtual void CallExternalFunction(String name, string[] parameters)
+        public virtual object CallExternalFunction(String name, string[] parameters)
         {
-            if (ParentContext != null) ParentContext.CallExternalFunction(name, parameters);
+            if (ParentContext != null) return ParentContext.CallExternalFunction(name, parameters);
+
+            return null;
         }
 
         public virtual bool FindExternalFunction(String name)

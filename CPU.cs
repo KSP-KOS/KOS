@@ -19,16 +19,17 @@ namespace kOS
         public BindingManager bindingManager;
         public float SessionTime;
         public int ClockSpeed = 5;
-        public List<kOSExternalFunction> externalFunctions = new List<kOSExternalFunction>();
-
+        
         private Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
         private Volume selectedVolume = null;
         private List<Volume> volumes = new List<Volume>();
+        private List<kOSExternalFunction> externalFunctions = new List<kOSExternalFunction>();
         
         public override Vessel Vessel { get { return ((kOSProcessor)Parent).vessel; } }
         public override Dictionary<String, Variable> Variables { get { return variables; } }
-        public override List<Volume> Volumes { get  { return volumes;} }
-                
+        public override List<Volume> Volumes { get  { return volumes; } }
+        public override List<kOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
+        
         public override Volume SelectedVolume
         {
             get { return selectedVolume; }
@@ -52,7 +53,7 @@ namespace kOS
             this.RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 1 });
         }
 
-        public object testFunction(int x) { return "dawhuda"; }
+        public object testFunction(int x) { return x; }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
@@ -72,12 +73,12 @@ namespace kOS
             externalFunctions.Add(new kOSExternalFunction(name.ToUpper(), parent, methodName, parameterCount));
         }
 
-        public override void CallExternalFunction(string name, string[] parameters)
+        public override object CallExternalFunction(string name, string[] parameters)
         {
             bool callFound = false;
             bool callAndParamCountFound = false;
 
-            foreach (var function in externalFunctions)
+            foreach (var function in ExternalFunctions)
             {
                 if (function.Name == name.ToUpper())
                 {
@@ -133,18 +134,20 @@ namespace kOS
                             convertedParams[i] = converted;
                         }
 
-                        method.Invoke(function.Parent, convertedParams);
+                        return method.Invoke(function.Parent, convertedParams);
                     }
                 }
             }
 
             if (!callFound) throw new kOSException("External function '" + name + "' not found");
             else if (!callAndParamCountFound) throw new kOSException("Wrong number of arguments for '" + name + "'");
+
+            return null;
         }
 
         public override bool FindExternalFunction(string name)
         {
-            foreach (var function in externalFunctions)
+            foreach (var function in ExternalFunctions)
             {
                 if (function.Name == name.ToUpper())
                 {

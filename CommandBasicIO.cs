@@ -165,7 +165,7 @@ namespace kOS
 
             if (v != null)
             {
-                Expression e = new Expression(RegexMatch.Groups[3].Value, ParentContext);
+                Expression e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
                 v.Value = e.GetValue();
 
                 State = ExecutionState.DONE;
