@@ -17,8 +17,9 @@ namespace kOS
             manager.AddSetter("VESSELNAME",     delegate(CPU cpu, object value ) { cpu.Vessel.vesselName = value.ToString(); });
 
             manager.AddGetter("ALTITUDE",       delegate(CPU cpu) { return (float)cpu.Vessel.altitude; });
-            manager.AddGetter("ALT:RADAR",      delegate(CPU cpu) { return (float)cpu.Vessel.heightFromTerrain; });
+            manager.AddGetter("ALT:RADAR",      delegate(CPU cpu) { return cpu.Vessel.heightFromTerrain > 0 ? Mathf.Min(cpu.Vessel.heightFromTerrain, (float)cpu.Vessel.altitude) : (float)cpu.Vessel.altitude; });
             manager.AddGetter("MISSIONTIME",    delegate(CPU cpu) { return (float)cpu.Vessel.missionTime; });
+            manager.AddGetter("TIME",           delegate(CPU cpu) { return (float)HighLogic.fetch.currentGame.UniversalTime; });
             manager.AddGetter("STATUS",         delegate(CPU cpu) { return cpu.Vessel.situation.ToString().Replace("_", " "); });
 			manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return (float)VesselUtils.GetCommRange(cpu.Vessel); });
 			manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return Convert.ToSingle(CheckCommRange(cpu.Vessel)); });

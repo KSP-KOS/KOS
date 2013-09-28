@@ -19,12 +19,12 @@ namespace kOS
         public BindingManager bindingManager;
         public float SessionTime;
         public int ClockSpeed = 5;
+        public List<kOSExternalFunction> externalFunctions = new List<kOSExternalFunction>();
 
         private Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
         private Volume selectedVolume = null;
         private List<Volume> volumes = new List<Volume>();
-        private List<kOSExternalFunction> externalFunctions = new List<kOSExternalFunction>();
-
+        
         public override Vessel Vessel { get { return ((kOSProcessor)Parent).vessel; } }
         public override Dictionary<String, Variable> Variables { get { return variables; } }
         public override List<Volume> Volumes { get  { return volumes;} }
@@ -52,7 +52,7 @@ namespace kOS
             this.RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 1 });
         }
 
-        public void testFunction(int x) { }
+        public object testFunction(int x) { return "dawhuda"; }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
@@ -140,6 +140,19 @@ namespace kOS
 
             if (!callFound) throw new kOSException("External function '" + name + "' not found");
             else if (!callAndParamCountFound) throw new kOSException("Wrong number of arguments for '" + name + "'");
+        }
+
+        public override bool FindExternalFunction(string name)
+        {
+            foreach (var function in externalFunctions)
+            {
+                if (function.Name == name.ToUpper())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void Boot()

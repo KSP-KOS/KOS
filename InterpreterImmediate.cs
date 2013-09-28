@@ -214,7 +214,16 @@ namespace kOS
                 }
             }
 
-            base.Update(time);
+            try
+            {
+                base.Update(time);
+            }
+            catch (kOSException e)
+            {
+                StdOut(e.Message);
+                ChildContext = null;
+                Queue.Clear();          // Halt all pending instructions
+            }
         }
 
         private void Enter()

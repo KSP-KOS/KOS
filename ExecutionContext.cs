@@ -333,6 +333,13 @@ namespace kOS
             if (ParentContext != null) ParentContext.CallExternalFunction(name, parameters);
         }
 
+        public virtual bool FindExternalFunction(String name)
+        {
+            if (ParentContext != null) return ParentContext.FindExternalFunction(name);
+
+            return false;
+        }
+
         public virtual void OnSave(ConfigNode node)
         {
             ConfigNode contextNode = new ConfigNode("context");
