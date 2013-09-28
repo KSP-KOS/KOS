@@ -93,21 +93,24 @@ namespace kOS
 		public static bool DelimterMatch(string str)
 		{
 			Stack<string> items = new Stack<string>(str.Length);
-			items.Push (""); // we need to prime the stack?
 			for (int i = 0; i < str.Length; i++) 
 			{
 				char c = str[i];
 				if (c == '"') {
-					if (items.Peek() == "\"") {
+					if (items.Count > 0 && items.Peek() == "\"") {
 						items.Pop ();
 					} else
 						items.Push (c.ToString());
 				}
-				if (items.Peek() != "\"") { // meaning: in quotes
-					if (c == '(') {
+				if (items.Count > 0 && items.Peek() != "\"") { // meaning: in quotes
+					if (c == '(') 
+					{
 						items.Push ("(");
-					} else if (c == ')') {
-						if (items.Peek() =="(") {
+					} 
+					else if (c == ')') 
+					{
+						if (items.Peek() =="(") 
+						{
 							items.Pop ();
 						} 
 						else 
@@ -117,11 +120,7 @@ namespace kOS
 					}
 				}
 			}
-			if (items.Count > 0)
-			{
-				return true;
-			}
-			return false;
+			return items.Count == 0;
 		}
 
         public static float ProspectForResource(String resourceName, List<Part> engines)
