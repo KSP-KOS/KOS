@@ -50,10 +50,10 @@ namespace kOS
                 Volumes.Add(archive);
             }
 
-            this.RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 1 });
+            this.RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 2 });
         }
 
-        public object testFunction(int x) { return x; }
+        public int testFunction(int x, int y) { return x * y; }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
