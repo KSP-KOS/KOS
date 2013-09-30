@@ -831,6 +831,15 @@ namespace kOS
                     if (Operator == "!=") return LeftSide.Value.ToString() != RightSide.Value.ToString();
                 }
 
+                if (LeftSide.Value is float && RightSide.Value is Vector)
+                {
+                    if (Operator == "*") return (Vector)RightSide.GetValue() * (Vector)LeftSide.Float();
+                }
+                if (LeftSide.Value is Vector && RightSide.Value is float)
+                {
+                    if (Operator == "*") return (Vector)LeftSide.GetValue() * (Vector)RightSide.Float();
+                }
+
                 if (LeftSide.Value is float || RightSide.Value is float)
                 {
                     if (Operator == "+") return LeftSide.Float() + RightSide.Float();
