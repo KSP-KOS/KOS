@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace kOS
 {
-    [CommandAttribute(@"^EDIT (.+?)$")]
+    [CommandAttribute("EDIT %")]
     public class CommandEditFile : Command
     {
         public CommandEditFile(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -120,7 +120,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute(@"^SWITCH TO (.+?)$")]
+    [CommandAttribute("SWITCH TO %")]
     public class CommandSwitch : Command
     {
         public CommandSwitch(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -149,7 +149,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute(@"^RENAME( VOLUME| FILE)? (.+?) TO (.+?)$")]
+    [CommandAttribute("RENAME[VOLUME,FILE]? ^ TO %")]
     public class CommandRename : Command
     {
         public CommandRename(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -195,7 +195,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^LOG (.+?) TO (.+?)$")]
+    [CommandAttribute("LOG * TO %")]
     public class CommandLog: Command
     {
         public CommandLog(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -227,7 +227,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute(@"^COPY (.+?) (TO|FROM)( VOLUME)? (.+?)$")]
+    [CommandAttribute("COPY %[TO,FROM][VOLUME]? ^")]
     public class CommandCopy : Command
     {
         public CommandCopy(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -261,7 +261,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^DELETE (.+?)( (FROM)( VOLUME)? (.+?))?$")]
+    [CommandAttribute("DELETE %[FROM,FROM VOLUME]?_^?")]
     public class CommandDelete : Command
     {
         public CommandDelete(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -269,33 +269,30 @@ namespace kOS
         public override void Evaluate()
         {
             String targetFile = RegexMatch.Groups[1].Value.Trim();
-            String operation = RegexMatch.Groups[3].Value.Trim().ToUpper();
-            String volumeName = RegexMatch.Groups[5].Value.Trim();
-            File file = null;
+            String volumeName = RegexMatch.Groups[3].Value.Trim();
 
+            File file = null;
             Volume targetVolume = null;
 
-            switch (operation)
+            if (volumeName.Trim() != "")
             {
-                case "FROM":
-                    targetVolume = GetVolume(volumeName); // Will throw if not found
-                    file = targetVolume.GetByName(targetFile);
-                    if (file == null) throw new kOSException("File '" + targetFile + "' not found");
-                    targetVolume.DeleteByName(targetFile);
-                    break;
-
-                default:
-                    file = SelectedVolume.GetByName(targetFile);
-                    if (file == null) throw new kOSException("File '" + targetFile + "' not found");
-                    SelectedVolume.DeleteByName(targetFile);
-                    break;
+                targetVolume = GetVolume(volumeName); // Will throw if not found
+                file = targetVolume.GetByName(targetFile);
+                if (file == null) throw new kOSException("File '" + targetFile + "' not found");
+                targetVolume.DeleteByName(targetFile);
+            }
+            else
+            {
+                file = SelectedVolume.GetByName(targetFile);
+                if (file == null) throw new kOSException("File '" + targetFile + "' not found");
+                SelectedVolume.DeleteByName(targetFile);
             }
 
             State = ExecutionState.DONE;
         }
     }
     
-    [CommandAttribute(@"^LIST( VOLUMES| FILES)?$")]
+    [CommandAttribute("LIST[VOLUMES,FILES]?")]
     public class CommandList : Command
     {
         public CommandList(Match regexMatch, ExecutionContext context) : base(regexMatch,  context) { }
