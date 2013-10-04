@@ -49,7 +49,7 @@ namespace kOS
                     StdOut("Vessel Name              Distance");
                     StdOut("-------------------------------------");
 
-                    float commRange = VesselUtils.GetCommRange(Vessel);
+                    double commRange = VesselUtils.GetCommRange(Vessel);
 
                     foreach (Vessel vessel in FlightGlobals.Vessels)
                     {

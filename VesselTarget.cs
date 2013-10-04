@@ -17,9 +17,9 @@ namespace kOS
             this.target = target;
         }
 
-        public bool IsInRange(float range)
+        public bool IsInRange(double range)
         {
-            if ((float)GetDistance() <= range) return true;
+            if (GetDistance() <= range) return true;
 
             return false;
         }

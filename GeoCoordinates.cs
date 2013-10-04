@@ -8,15 +8,15 @@ namespace kOS
 {
     public class GeoCoordinates : SpecialValue
     {
-        public float Lat;
-        public float Lng;
+        public double Lat;
+        public double Lng;
         public Vessel Vessel;
         public CelestialBody Body;
 
         public GeoCoordinates(Vessel vessel, float lat, float lng)
         {
-            this.Lat = lat;
-            this.Lng = lng;
+            this.Lat = (double)lat;
+            this.Lng = (double)lng;
             this.Vessel = vessel;
 
             Body = vessel.mainBody;
@@ -24,8 +24,8 @@ namespace kOS
 
         public GeoCoordinates(Vessel vessel, double lat, double lng)
         {
-            this.Lat = (float)lat;
-            this.Lng = (float)lng;
+            this.Lat = lat;
+            this.Lng = lng;
             this.Vessel = vessel;
 
             Body = vessel.mainBody;
@@ -49,15 +49,15 @@ namespace kOS
             return headingQ.eulerAngles.y;
         }
 
-        public float DistanceFrom(Vessel Vessel)
+        public double DistanceFrom(Vessel Vessel)
         {
-            return (float)Vector3d.Distance(Vessel.GetWorldPos3D(), Body.GetWorldSurfacePosition(Lat, Lng, Vessel.altitude));
+            return Vector3d.Distance(Vessel.GetWorldPos3D(), Body.GetWorldSurfacePosition(Lat, Lng, Vessel.altitude));
         }
 
         public override object GetSuffix(string suffixName)
         {
-            if (suffixName == "LAT") return (float)Lat;
-            if (suffixName == "LNG") return (float)Lng;
+            if (suffixName == "LAT") return Lat;
+            if (suffixName == "LNG") return Lng;
             if (suffixName == "DISTANCE") return DistanceFrom(Vessel);
             if (suffixName == "HEADING") return GetHeadingFromVessel(Vessel);
             if (suffixName == "BEARING") return GetBearing(Vessel);

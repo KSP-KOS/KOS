@@ -58,9 +58,9 @@ namespace kOS
 
             int x, y;
 
-            if (Int32.TryParse(ex.GetValue().ToString(), out x) && Int32.TryParse(ey.GetValue().ToString(), out y))
+            if (Int32.TryParse(ex.ToString(), out x) && Int32.TryParse(ey.ToString(), out y))
             {
-                Put(e.GetValue().ToString(), x, y);
+                Put(e.ToString(), x, y);
             }
             else
             {

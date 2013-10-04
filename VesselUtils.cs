@@ -104,9 +104,9 @@ namespace kOS
             FlightGlobals.fetch.SetVesselTarget(val);
         }
 
-        public static float GetCommRange(Vessel vessel)
+        public static double GetCommRange(Vessel vessel)
         {
-            float range = 100000;
+            double range = 100000;
 
             foreach (Part part in vessel.parts)
             {

@@ -63,7 +63,7 @@ namespace kOS
 
         private void Process(String text)
         {
-            if (TryParseFloat(text)) return;
+            if (TryParseDouble(text)) return;
 
             if (TryParseBoolean(text)) return;
 
@@ -209,19 +209,19 @@ namespace kOS
 
             result = TryParseNumericFunction("SIN_(1)", text, delegate(double[] parameters)
             {
-                Value = (float)Math.Sin(parameters[0] * (Math.PI / 180));
+                Value = Math.Sin(parameters[0] * (Math.PI / 180));
             });
             if (result) return true;
 
             result = TryParseNumericFunction("COS_(1)", text, delegate(double[] parameters)
             {
-                Value = (float)Math.Cos(parameters[0] * (Math.PI / 180));
+                Value = Math.Cos(parameters[0] * (Math.PI / 180));
             });
             if (result) return true;
 
             result = TryParseNumericFunction("TAN_(1)", text, delegate(double[] parameters)
             {
-                Value = (float)Math.Tan(parameters[0] * (Math.PI / 180));
+                Value = Math.Tan(parameters[0] * (Math.PI / 180));
             });
             if (result) return true;
 
@@ -229,218 +229,64 @@ namespace kOS
 
             result = TryParseNumericFunction("ARCSIN_(1)", text, delegate(double[] parameters)
             {
-                Value = (float)(Math.Asin(parameters[0]) * (180 / Math.PI));
+                Value = (Math.Asin(parameters[0]) * (180 / Math.PI));
             });
             if (result) return true;
 
             result = TryParseNumericFunction("ARCCOS_(1)", text, delegate(double[] parameters)
             {
-                Value = (float)(Math.Acos(parameters[0]) * (180 / Math.PI));
+                Value = (Math.Acos(parameters[0]) * (180 / Math.PI));
             });
             if (result) return true;
 
             result = TryParseNumericFunction("ARCTAN_(1)", text, delegate(double[] parameters)
             {
-                Value = (float)Math.Atan(parameters[0] * (180 / Math.PI));
+                Value = Math.Atan(parameters[0] * (180 / Math.PI));
             });
             if (result) return true;
 
             result = TryParseNumericFunction("ARCTAN2_(2)", text, delegate(double[] parameters)
             {
-                Value = (float)Math.Atan2(parameters[0] * (180 / Math.PI), parameters[1] * (180 / Math.PI));
+                Value = Math.Atan2(parameters[0] * (180 / Math.PI), parameters[1] * (180 / Math.PI));
             });
             if (result) return true;
 
-            /*
-            string regexSin = Utils.BuildRegex("SIN_(1)");
-            match = Regex.Match(text, regexSin, RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, regexSin, RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)Math.Sin(v * (Math.PI / 180));
-                };
-
-                EvalDlg();
-
-                return true;
-            }
-
-            string regexCos = Utils.BuildRegex("COS_(1)");
-            match = Regex.Match(text, regexCos, RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, regexCos, RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)Math.Cos(v * (Math.PI / 180));
-                };
-
-                EvalDlg();
-
-                return true;
-            }
-
-            string regexTan = Utils.BuildRegex("TAN_(1)");
-            match = Regex.Match(text, regexTan, RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, regexTan, RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)Math.Tan(v * (Math.PI / 180));
-                };
-
-                EvalDlg();
-
-                return true;
-            }
-
-            string regexASin = Utils.BuildRegex("ARCSIN_(1)");
-            match = Regex.Match(text, regexASin, RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, regexASin, RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)(Math.Asin(v) * (180 / Math.PI));
-                };
-
-                EvalDlg();
-
-                return true;
-            }
-
-            string regexACos = Utils.BuildRegex("ARCCOS_(1)");
-            match = Regex.Match(text, regexACos, RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, regexACos, RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)(Math.Acos(v) * (180 / Math.PI));
-                };
-
-                EvalDlg();
-
-                return true;
-            }
-
-            string regexATan = Utils.BuildRegex("ARCTAN_(1)");
-            match = Regex.Match(text, regexATan, RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, regexATan, RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)(Math.Atan(v) * (180 / Math.PI));
-                };
-
-                EvalDlg();
-
-                return true;
-            }
-
-            string regexATan2 = Utils.BuildRegex("ARCTAN2_(2)");
-            match = Regex.Match(text, regexATan2, RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, regexATan2, RegexOptions.IgnoreCase);
-                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
-                    Value = (float)(Math.Atan2(x, y) * (180 / Math.PI));
-                };
-
-                EvalDlg();
-
-                return true;
-            }*/
             #endregion
 
             #region ABS
-            match = Regex.Match(text, "^ABS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+
+            result = TryParseNumericFunction("ABS_(1)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^ABS\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-                    double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    Value = (float)Math.Abs(v);
-                };
+                Value = Math.Abs(parameters[0]);
+            });
+            if (result) return true;
 
-                EvalDlg();
-
-                return true;
-            } 
             #endregion
 
             #region Geospatial
-            match = Regex.Match(text, "^LATLNG ?\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+
+            result = TryParseNumericFunction("LATLNG_(2)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^LATLNG ?\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                Value = new GeoCoordinates(executionContext.Vessel, parameters[0], parameters[1]);
+            });
+            if (result) return true;
 
-                    double lat = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    double lng = ParseSubExpressionAsDouble(match.Groups[2].Value);
-
-                    Value = new GeoCoordinates(executionContext.Vessel, lat, lng);
-                };
-
-                EvalDlg();
-
-                return true;
-            }
             #endregion
 
             #region Vectors & Rotations
-            match = Regex.Match(text, "^V\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+
+            result = TryParseNumericFunction("V_(3)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^V\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                Value = new Vector(parameters[0], parameters[1], parameters[2]);
+            });
+            if (result) return true;
 
-                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
-                    double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
-
-                    Value = new Vector(x,y,z);
-                };
-
-                EvalDlg();
-
-                return true;
-            }
-
-            match = Regex.Match(text, "^R\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+            result = TryParseNumericFunction("R_(3)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^R\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                Value = new Direction(new Vector3d(parameters[0], parameters[1], parameters[2]), true);
+            });
+            if (result) return true;
 
-                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
-                    double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
-
-                    Value = new Direction(new Vector3d(x, y, z), true);
-                };
-
-                EvalDlg();
-
-                return true;
-            }
 
             match = Regex.Match(text, "^Q\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
@@ -449,19 +295,20 @@ namespace kOS
                 {
                     match = Regex.Match(text, "^Q\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
 
-                    float x = (float)ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    float y = (float)ParseSubExpressionAsDouble(match.Groups[2].Value);
-                    float z = (float)ParseSubExpressionAsDouble(match.Groups[3].Value);
-                    float w = (float)ParseSubExpressionAsDouble(match.Groups[4].Value);
+                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
+                    double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
+                    double w = ParseSubExpressionAsDouble(match.Groups[4].Value);
 
+                    // eh? 
                     Value = x + " " + y + " " + z + " " + w;
                 };
 
                 EvalDlg();
 
                 return true;
-            } 
-            
+            }
+
             match = Regex.Match(text, "^HEADING ?([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
@@ -469,11 +316,11 @@ namespace kOS
                 {
                     match = Regex.Match(text, "^HEADING ?([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
 
-                    float heading = (float)ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    float pitch = (float)ParseSubExpressionAsDouble(match.Groups[2].Value);
+                    double heading = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                    double pitch = ParseSubExpressionAsDouble(match.Groups[2].Value);
 
                     var q = UnityEngine.Quaternion.LookRotation(VesselUtils.GetNorthVector(executionContext.Vessel), executionContext.Vessel.upAxis);
-                    q *= UnityEngine.Quaternion.Euler(new UnityEngine.Vector3(-pitch, heading, 0));
+                    q *= UnityEngine.Quaternion.Euler(new UnityEngine.Vector3((float)-pitch, (float)heading, 0));
 
                     Value = new Direction(q);
                 };
@@ -519,15 +366,15 @@ namespace kOS
             }
         }
 
-		private bool TryParseFloat(String text)
+		private bool TryParseDouble(String text)
 		{
 			text = text.Trim();
-			float testFloat;
+            double testDouble;
 			NumberStyles styles = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint;
 
-			if (float.TryParse (text, styles, CultureInfo.InvariantCulture, out testFloat))
+			if (double.TryParse (text, styles, CultureInfo.InvariantCulture, out testDouble))
 			{
-				Value = testFloat;
+				Value = testDouble;
 				return true;
 			}
 
@@ -765,7 +612,18 @@ namespace kOS
 
         public float Float()
         {
+            var value = GetValue();
+            if (value is double) return (float)((double)value);
+
             return (float)GetValue();
+        }
+
+        public double Double()
+        {
+            var value = GetValue();
+            if (value is float) return (double)((float)value);
+
+            return (double)GetValue();
         }
 
         public Boolean Bool()
@@ -783,13 +641,7 @@ namespace kOS
 
             throw new kOSException("Unable to convert value to Boolean.");
         }
-
-        public double Double()
-        {
-            // By default numbers are stored as floats, and must be 'unboxed' before casting to double
-            return (double)Float();
-        }
-
+        
         // Evaluate and return the value of the part of an expression that this instance represents
         public object GetValue()
         {
@@ -831,30 +683,30 @@ namespace kOS
                     if (Operator == "!=") return LeftSide.Value.ToString() != RightSide.Value.ToString();
                 }
 
-                if (LeftSide.Value is float && RightSide.Value is Vector)
+                if (LeftSide.Value is double && RightSide.Value is Vector)
                 {
-                    if (Operator == "*") return (Vector)RightSide.GetValue() * LeftSide.Float();
+                    if (Operator == "*") return (Vector)RightSide.GetValue() * LeftSide.Double();
                 }
-                if (LeftSide.Value is Vector && RightSide.Value is float)
+                if (LeftSide.Value is Vector && RightSide.Value is double)
                 {
-                    if (Operator == "*") return (Vector)LeftSide.GetValue() * RightSide.Float();
+                    if (Operator == "*") return (Vector)LeftSide.GetValue() * RightSide.Double();
                 }
 
-                if (LeftSide.Value is float || RightSide.Value is float)
+                if (LeftSide.Value is float || LeftSide is double || RightSide.Value is float || RightSide.Value is double)
                 {
-                    if (Operator == "+") return LeftSide.Float() + RightSide.Float();
-                    if (Operator == "-") return LeftSide.Float() - RightSide.Float();
-                    if (Operator == "/") return LeftSide.Float() / RightSide.Float();
-                    if (Operator == "*") return LeftSide.Float() * RightSide.Float();
-                    if (Operator == "^") return (float)Math.Pow(LeftSide.Double(), RightSide.Double());
+                    if (Operator == "+") return LeftSide.Double() + RightSide.Double();
+                    if (Operator == "-") return LeftSide.Double() - RightSide.Double();
+                    if (Operator == "/") return LeftSide.Double() / RightSide.Double();
+                    if (Operator == "*") return LeftSide.Double() * RightSide.Double();
+                    if (Operator == "^") return Math.Pow(LeftSide.Double(), RightSide.Double());
 
-                    if (Operator == "<") return LeftSide.Float() < RightSide.Float();
-                    if (Operator == ">") return LeftSide.Float() > RightSide.Float();
-                    if (Operator == "<=") return LeftSide.Float() <= RightSide.Float();
-                    if (Operator == ">=") return LeftSide.Float() >= RightSide.Float();
-                    if (Operator == "==") return LeftSide.Float() == RightSide.Float();
-                    if (Operator == "=") return LeftSide.Float() == RightSide.Float();
-                    if (Operator == "!=") return LeftSide.Float() != RightSide.Float();
+                    if (Operator == "<") return LeftSide.Double() < RightSide.Double();
+                    if (Operator == ">") return LeftSide.Double() > RightSide.Double();
+                    if (Operator == "<=") return LeftSide.Double() <= RightSide.Double();
+                    if (Operator == ">=") return LeftSide.Double() >= RightSide.Double();
+                    if (Operator == "==") return LeftSide.Double() == RightSide.Double();
+                    if (Operator == "=") return LeftSide.Double() == RightSide.Double();
+                    if (Operator == "!=") return LeftSide.Double() != RightSide.Double();
                 }
 
                 if (LeftSide.Value is Direction && RightSide.Value is Direction)
@@ -886,7 +738,10 @@ namespace kOS
         
         public override String ToString()
         {
-            return GetValue().ToString();
+            var value = GetValue();
+            if (value is float || value is double) return Double().ToString();
+
+            return value.ToString();
         }
 
         internal bool IsNull()
@@ -899,6 +754,7 @@ namespace kOS
             object val = GetValue();
             if (val is bool) return (bool)val;
             if (val is float) return ((float)val > 0);
+            if (val is double) return ((double)val > 0);
 
             return false;
         }
