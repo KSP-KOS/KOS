@@ -90,6 +90,39 @@ namespace kOS
             return -1;
         }
 
+		public static bool DelimterMatch(string str)
+		{
+			Stack<string> items = new Stack<string>(str.Length);
+			for (int i = 0; i < str.Length; i++) 
+			{
+				char c = str[i];
+				if (c == '"') {
+					if (items.Count > 0 && items.Peek() == "\"") {
+						items.Pop ();
+					} else
+						items.Push (c.ToString());
+				}
+				if (items.Count > 0 && items.Peek() != "\"") { // meaning: in quotes
+					if (c == '(') 
+					{
+						items.Push ("(");
+					} 
+					else if (c == ')') 
+					{
+						if (items.Peek() =="(") 
+						{
+							items.Pop ();
+						} 
+						else 
+						{
+							throw new kOSException ("Missing opening parens.");
+						}
+					}
+				}
+			}
+			return items.Count == 0;
+		}
+
         public static float ProspectForResource(String resourceName, List<Part> engines)
         {
             List<Part> visited = new List<Part>();

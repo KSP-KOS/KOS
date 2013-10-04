@@ -41,10 +41,10 @@ namespace kOS
             text = text.Trim();
             Text = text;
 
-            if (!CheckForBrackets(text))
-            {
-                throw new kOSException("Bracket matching error.");
-            }
+			if (!Utils.DelimterMatch (text)) 
+			{
+				throw new kOSException ("Error: mismatching delimiter.");
+			}
 
 	        UnwrapFullBrackets(ref text);
 
@@ -524,24 +524,6 @@ namespace kOS
             }
 
             return -1;
-        }
-
-        private static bool CheckForBrackets(string str)
-        {
-            var items = new Stack<int>(str.Length);
-            for (int i = 0; i < str.Length; i++)
-            {
-                char c = str[i];
-                if (c == '(' || c == ')')
-                {
-                    items.Push(i);
-                }
-            }
-            if ((items.Count % 2) == 1)
-            {
-                return false;
-            }
-            return true;
         }
 
         // Evaluate a part of an expression
