@@ -81,6 +81,7 @@
     <Compile Include="SpecialValueTester.cs" />
     <Compile Include="StageValues.cs" />
     <Compile Include="SteeringHelper.cs" />
+    <Compile Include="Timespan.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="VesselTarget.cs" />
     <Compile Include="TermWindow.cs" />

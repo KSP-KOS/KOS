@@ -273,6 +273,16 @@ namespace kOS
 
             #endregion
 
+            #region Time
+
+            result = TryParseNumericFunction("T_(1)", text, delegate(double[] parameters)
+            {
+                Value = new TimeSpan(parameters[0]);
+            });
+            if (result) return true;
+
+            #endregion
+
             #region Vectors & Rotations
 
             result = TryParseNumericFunction("V_(3)", text, delegate(double[] parameters)
