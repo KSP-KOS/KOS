@@ -48,7 +48,7 @@ namespace kOS
                 totalOccupied += p.GetSize();
             }
 
-            return Capacity - totalOccupied;
+            return Math.Max(Capacity - totalOccupied, 0);
         }
 
         public override bool IsRoomFor(File newFile)
@@ -64,7 +64,7 @@ namespace kOS
                 }
             }
 
-            return (Capacity - totalOccupied > 0);
+            return (Capacity - totalOccupied >= 0);
         }
 
         public override void LoadPrograms(List<File> programsToLoad)

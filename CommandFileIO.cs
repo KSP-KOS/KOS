@@ -314,7 +314,7 @@ namespace kOS
                 }
                 
                 int freeSpace = SelectedVolume.GetFreeSpace();
-                StdOut("Free space remaining: " + (freeSpace > 0 ? freeSpace.ToString() : " infinite"));
+                StdOut("Free space remaining: " + (freeSpace > -1 ? freeSpace.ToString() : " infinite"));
 
                 StdOut("");
 
