@@ -65,9 +65,10 @@ namespace kOS
                 return;
             }
 
+            if (hardDisk == null) hardDisk = new Harddisk(MemSize);
+
             initCpu();
 
-            if (hardDisk == null) hardDisk = new Harddisk(MemSize);
         }
 
         public void initCpu()
