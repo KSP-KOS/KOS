@@ -57,7 +57,7 @@ namespace kOS
             char[] input = text.ToCharArray();
             for (int i = start; i < input.Count(); i++)
             {
-                if (input[i] == '"' && input[i - 1] != '\\')
+                if (input[i] == '"' && (i == 0 || input[i - 1] != '\\'))
                 {
                     return i;
                 }
@@ -90,37 +90,39 @@ namespace kOS
             return -1;
         }
 
+        public static bool Balance(ref string str, ref int i, char closeChar)
+        {
+            i++;
+
+            while (i < str.Length)
+            {
+                char c = str[i];
+
+                if (c == closeChar) return true;
+                else if (c == '"')
+                {
+                    i = FindEndOfString(str, i + 1);
+                    if (i == -1) return false;
+                }
+                else if (c == '(' && !Balance(ref str, ref i, ')')) return false;
+                else if (c == '[' && !Balance(ref str, ref i, ']')) return false;
+                else if (c == '{' && !Balance(ref str, ref i, '}')) return false;
+                else if (c == ')' || c == ']' || c == '}')
+                {
+                    // If this wasn't detected by c == closeChar, then we have a closing delmiter without opening one
+                    return false;
+                }
+
+                i++;
+            }
+
+            return closeChar == (char)0;
+        }
+
 		public static bool DelimterMatch(string str)
 		{
-			Stack<string> items = new Stack<string>(str.Length);
-			for (int i = 0; i < str.Length; i++) 
-			{
-				char c = str[i];
-				if (c == '"') {
-					if (items.Count > 0 && items.Peek() == "\"") {
-						items.Pop ();
-					} else
-						items.Push (c.ToString());
-				}
-				if (items.Count > 0 && items.Peek() != "\"") { // meaning: in quotes
-					if (c == '(') 
-					{
-						items.Push ("(");
-					} 
-					else if (c == ')') 
-					{
-						if (items.Peek() =="(") 
-						{
-							items.Pop ();
-						} 
-						else 
-						{
-							throw new kOSException ("Missing opening parens.");
-						}
-					}
-				}
-			}
-			return items.Count == 0;
+            int i = -1;
+            return Balance(ref str, ref i, (char)0);
 		}
 
         public static float ProspectForResource(String resourceName, List<Part> engines)
