@@ -241,13 +241,13 @@ namespace kOS
 
             result = TryParseNumericFunction("ARCTAN_(1)", text, delegate(double[] parameters)
             {
-                Value = Math.Atan(parameters[0] * (180 / Math.PI));
+                Value = Math.Atan(parameters[0]) * (180 / Math.PI);                
             });
             if (result) return true;
 
             result = TryParseNumericFunction("ARCTAN2_(2)", text, delegate(double[] parameters)
             {
-                Value = Math.Atan2(parameters[0] * (180 / Math.PI), parameters[1] * (180 / Math.PI));
+                Value = Math.Atan2(parameters[0], parameters[1]) * (180 / Math.PI);    
             });
             if (result) return true;
 
