@@ -253,11 +253,35 @@ namespace kOS
 
             #endregion
 
-            #region ABS
+            #region Other Math
 
             result = TryParseNumericFunction("ABS_(1)", text, delegate(double[] parameters)
             {
                 Value = Math.Abs(parameters[0]);
+            });
+            if (result) return true;
+
+            result = TryParseNumericFunction("FLOOR_(1)", text, delegate(double[] parameters)
+            {
+                Value = Math.Floor(parameters[0]);
+            });
+            if (result) return true;
+
+            result = TryParseNumericFunction("CEILING_(1)", text, delegate(double[] parameters)
+            {
+                Value = Math.Ceiling(parameters[0]);
+            });
+            if (result) return true;
+
+            result = TryParseNumericFunction("ROUND_(1)", text, delegate(double[] parameters)
+            {
+                Value = Math.Round(parameters[0]);
+            });
+            if (result) return true;
+
+            result = TryParseNumericFunction("SQRT_(1)", text, delegate(double[] parameters)
+            {
+                Value = Math.Sqrt(parameters[0]);
             });
             if (result) return true;
 
