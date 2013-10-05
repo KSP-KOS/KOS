@@ -114,7 +114,11 @@ namespace kOS
             }
             else if (ChildContext.State == ExecutionState.DONE)
             {
-                StdOut("Program ended.");
+                if (ParentContext is ImmediateMode)
+                {
+                    StdOut("Program ended.");
+                }
+
                 State = ExecutionState.DONE;
             }
         }
