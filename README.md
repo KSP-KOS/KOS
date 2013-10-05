@@ -410,14 +410,14 @@ Represents a heading that's relative to the body of influence.
 
     SET X TO HEADING(45, 10).           // Create a rotation facing northeast, 10 degrees above horizon
 
-### R
+### R (pitch, yaw, roll)
 
 Represents a rotation.
 
     SET X TO PROGRADE + R(90,0,0).      // Initializes a direction to prograde plus a relative pitch of 90
     LOCK STEERING TO X.                 // Steer the vessel in the direction suggested by direction X.
     
-### V
+### V (x, y, z)
 
 Represents a vector.
 
