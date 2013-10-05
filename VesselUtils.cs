@@ -194,5 +194,18 @@ namespace kOS
         {
             return Vector3d.Exclude(vessel.upAxis, vessel.mainBody.transform.up);
         }
+
+        public static object TryGetEncounter(Vessel vessel)
+        {
+            foreach (Orbit patch in vessel.patchedConicSolver.flightPlan)
+            {
+                if (patch.patchStartTransition == Orbit.PatchTransitionType.ENCOUNTER)
+                {
+                    return new OrbitInfo(patch);
+                }
+            }
+
+            return "None";
+        }
     }
 }

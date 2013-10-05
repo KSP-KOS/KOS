@@ -88,17 +88,15 @@ namespace kOS
 
         private bool TryParseSuffix(string text)
         {
-            Match match = Regex.Match(text, "^([A-Z0-9_\\-]+?):([A-Z0-9_\\-]+?)$", RegexOptions.IgnoreCase);
+            Match match = Regex.Match(text, Utils.BuildRegex("*:%"), RegexOptions.IgnoreCase);
 
             if (match.Success)
             {
-                var obj = new Expression(match.Groups[1].Value, executionContext).GetValue();
-                if (obj is SpecialValue)
-                {
-                    SpecialValue = (SpecialValue)obj;
-                    Suffix = match.Groups[2].Value.ToUpper();
+                object leftSideResult = new Expression(match.Groups[1].Value, executionContext).GetValue();
 
-                    Value = SpecialValue.GetSuffix(Suffix);
+                if (leftSideResult is SpecialValue)
+                {
+                    Value = ((SpecialValue)leftSideResult).GetSuffix(match.Groups[2].Value.ToUpper());
                     return true;
                 }
             }
@@ -159,7 +157,7 @@ namespace kOS
 
                     for (int i = 1; i < match.Groups.Count; i++)
                     {
-                        double v = ParseSubExpressionAsDouble(match.Groups[1].Value);
+                        double v = ParseSubExpressionAsDouble(match.Groups[i].Value);
                         values.Add((double)v);
                     }
 
@@ -363,6 +361,18 @@ namespace kOS
 
                 return true;
             }
+
+
+
+            #endregion
+
+            #region Maneuver Nodes
+
+            result = TryParseNumericFunction("NODE_(4)", text, delegate(double[] parameters)
+            {
+                Value = new Node(parameters[0], parameters[1], parameters[2], parameters[3]);
+            });
+            if (result) return true;
 
             #endregion
 
@@ -689,6 +699,18 @@ namespace kOS
             {
                 if (Operator == "AND") return LeftSide.Bool() && RightSide.Bool();
                 if (Operator == "OR") return LeftSide.Bool() || RightSide.Bool();
+
+                if (LeftSide.Value is SpecialValue)
+                {
+                    object result = ((SpecialValue)LeftSide.Value).TryOperation(Operator, RightSide.Value, false);
+                    if (result != null) return result;
+                }
+
+                if (RightSide.Value is SpecialValue)
+                {
+                    object result = ((SpecialValue)RightSide.Value).TryOperation(Operator, LeftSide.Value, true);
+                    if (result != null) return result;
+                }
 
                 if (LeftSide.Value is String || RightSide.Value is String)
                 {

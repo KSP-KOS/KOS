@@ -11,5 +11,10 @@ namespace kOS
         {
             return null;
         }
+
+        public virtual object TryOperation(string op, object other, bool reverseOrder)
+        {
+            return null;
+        }
     }
 }

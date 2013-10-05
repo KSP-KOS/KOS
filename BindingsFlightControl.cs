@@ -114,6 +114,14 @@ namespace kOS
                         {
                             SteeringHelper.SteerShipToward((Direction)Value, c, vessel);
                         }
+                        else if (Value is Vector)
+                        {
+                            SteeringHelper.SteerShipToward(((Vector)Value).ToDirection(), c, vessel);
+                        }
+                        else if (Value is Node)
+                        {
+                            SteeringHelper.SteerShipToward(((Node)Value).GetBurnVector().ToDirection(), c, vessel);
+                        }
                     }
 
                     if (propertyName == "wheelsteering")

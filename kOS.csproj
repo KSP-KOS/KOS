@@ -76,6 +76,8 @@
     <Compile Include="kOSProcessor.cs" />
     <Compile Include="BindingsFlightControl.cs" />
     <Compile Include="File.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="Orbit.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="SpecialValueTester.cs" />

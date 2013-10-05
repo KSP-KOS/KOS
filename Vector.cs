@@ -42,6 +42,8 @@ namespace kOS
             if (suffixName == "X") return x;
             if (suffixName == "Y") return y;
             if (suffixName == "Z") return z;
+            if (suffixName == "MAG") return new Vector3d(x, y, z).magnitude;
+            if (suffixName == "VEC") return new Vector(x, y, z);
 
             return base.GetSuffix(suffixName);
         }

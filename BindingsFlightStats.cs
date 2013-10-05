@@ -51,21 +51,18 @@ namespace kOS
             manager.AddGetter("NORTH",          delegate(CPU cpu) { return new Direction(VesselUtils.GetNorthVector(cpu.Vessel), false); });
             manager.AddGetter("UP",             delegate(CPU cpu) { return new Direction(cpu.Vessel.upAxis, false); });
 
-            manager.AddGetter("NODE",           delegate(CPU cpu) {
-                var vessel = cpu.Vessel;
-                if (!vessel.patchedConicSolver.maneuverNodes.Any())
-                {
-                    throw new kOSException("No maneuver nodes present!");
-                }
-                var up = (vessel.findLocalMOI(vessel.findWorldCenterOfMass()) - vessel.mainBody.position).normalized;
-                var fwd = vessel.patchedConicSolver.maneuverNodes[0].GetBurnVector(cpu.Vessel.orbit);
-                var rotRef = Quaternion.LookRotation(fwd, up);
+            manager.AddGetter("ENCOUNTER",      delegate(CPU cpu) { return VesselUtils.TryGetEncounter(cpu.Vessel); });
 
-                Direction d = new Direction();
-                d.Rotation = rotRef;
-                return d;
+            manager.AddGetter("NEXTNODE",       delegate(CPU cpu) 
+            {
+                var vessel = cpu.Vessel;
+                if (!vessel.patchedConicSolver.maneuverNodes.Any()) { throw new kOSException("No maneuver nodes present!"); }
+
+                return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0]);
             });
 
+            /*
+            // This has been replaced by NODE:DELTAV
             manager.AddGetter("MAG:NODE", delegate(CPU cpu) {
                 var vessel = cpu.Vessel;
                 var orbit = vessel.orbit;
@@ -78,6 +75,7 @@ namespace kOS
                 return (float)mag;
             });
 
+            // This has been replaced by NODE:ETA
             manager.AddGetter("ETA:NODE", delegate(CPU cpu) {
                 var vessel = cpu.Vessel;
                 if (!vessel.patchedConicSolver.maneuverNodes.Any())
@@ -88,7 +86,7 @@ namespace kOS
                 var currTime = Planetarium.GetUniversalTime();
 
                 return (float)(time - currTime);
-            });
+            });*/
 
             manager.AddGetter("PROGRADE",       delegate(CPU cpu)
             {

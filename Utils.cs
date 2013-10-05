@@ -238,6 +238,11 @@ namespace kOS
                         output += "[\\s ]*";
                         break;
 
+                    case "#":
+                        // Numeric
+                        output += "([\\-0-9.]+)";
+                        break;
+
                     case "*":
                         // Anything
                         output += "(.+?)";

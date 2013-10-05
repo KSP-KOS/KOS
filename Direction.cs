@@ -61,6 +61,7 @@ namespace kOS
             if (suffixName == "PITCH") return euler.x;
             if (suffixName == "YAW") return euler.y;
             if (suffixName == "ROLL") return euler.z;
+            if (suffixName == "VECTOR") return new kOS.Vector(vector);
 
             return base.GetSuffix(suffixName);
         }

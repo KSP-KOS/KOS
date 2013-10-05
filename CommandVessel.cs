@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace kOS
 {
     
-    [CommandAttribute(@"^STAGE$")]
+    [CommandAttribute("STAGE")]
     class CommandVesselStage : Command
     {
         public CommandVesselStage(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -16,6 +16,52 @@ namespace kOS
         public override void Evaluate()
         {
             Staging.ActivateNextStage();
+
+            State = ExecutionState.DONE;
+        }
+    }
+
+    [CommandAttribute("ADD *")]
+    public class CommandAddObjectToVessel : Command
+    {
+        public CommandAddObjectToVessel(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            Expression ex = new Expression(RegexMatch.Groups[1].Value, this);
+            object obj = ex.GetValue();
+
+            if (obj is kOS.Node)
+            {
+                ((Node)obj).AddToVessel(Vessel);
+            }
+            else
+            {
+                throw new kOSException("Supplied object ineligible for adding");
+            }
+
+            State = ExecutionState.DONE;
+        }
+    }
+
+    [CommandAttribute("REMOVE *")]
+    public class CommandRemoveObjectFromVessel : Command
+    {
+        public CommandRemoveObjectFromVessel(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            Expression ex = new Expression(RegexMatch.Groups[1].Value, this);
+            object obj = ex.GetValue();
+
+            if (obj is kOS.Node)
+            {
+                ((Node)obj).Remove();
+            }
+            else
+            {
+                throw new kOSException("Supplied object ineligible for removal");
+            }
 
             State = ExecutionState.DONE;
         }
