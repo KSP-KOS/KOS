@@ -68,6 +68,15 @@ You can use math operations on Directions as well. The next example uses a rotat
 Command Reference
 -----------------
 
+### ADD
+
+Adds a maneuver node to the flight plan. 
+
+Example: 
+This statement adds a node that occurs 30 seconds from now, and has a delta-V of 100 m/s radial out, 0 m/s normal, and 200 m/s prograde.
+
+    ADD NODE(TIME + 30, 100, 0, 200).
+
 ### BREAK
 
 Breaks out of a loop.
@@ -194,6 +203,13 @@ Example:
 
     RENAME VOLUME 1 TO AwesomeDisk
     RENAME FILE MyFile TO AutoLaunch.
+    
+### REMOVE
+
+Removes a maneuver node.
+Example:
+
+    REMOVE NEXTNODE.        // Removes the first maneuver node in the flight plan.
 
 ### RUN
 
@@ -300,6 +316,7 @@ You can get several useful vessel stats for your ships
     STATUS			// Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
     MASS
     MAXTHRUST       // Combined thrust of active engines at full throttle (kN)
+    TIME            // Gets the current universal time
     
 ### Vectors
 
@@ -357,7 +374,68 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
     STEERING			// Lock to a direction.
     WHEELTHROTTLE       // Seperate throttle for wheels
     WHEELSTEERING       // Seperate steering system for wheels
+    
+Structures
+==========
 
+Structures are variables that can contain more than one piece of information. Structures can be used with SET.. TO just like any other variable.
+
+Their subelements can be accessed by using : along with the name of the subelement.
+
+### LATLNG (latitude, longitude)
+
+Represents a set of geo-coordinates.
+
+    SET X TO LATLNG(10, 20).            // Initialize point at lattitude 10, longitude 20
+    PRINT X:LAT.                        // Print 10.
+    PRINT X:LNG.                        // Print 20.
+    PRINT X:DISTANCE.                   // Print distance from vessel to x (same altitude is presumed)
+    PRINT LATLNG(10,20):HEADING.        // Print the heading to the point.
+    PRINT X:BEARING.                    // Print the heading to the point relative to vessel heading.
+
+### NODE (universalTime, radialOut, normal, prograde)
+
+Represents a maneuver node.
+
+    SET X TO NODE(TIME+60, 0, 0, 100).  // Creates a node 60 seconds from now with
+                                        // prograde=100 m/s
+    ADD X.                              // Adds the node to the flight plan.
+    PRINT X:PROGRADE.                   // Returns 100.
+    PRINT X:ETA.                        // Returns the ETA to the node.
+    REMOVE X.                           // Remove node  from the flight plan.
+    
+### HEADING (degreesFromNorth, pitchAboveHorizon)
+
+Represents a heading that's relative to the body of influence.
+
+    SET X TO HEADING(45, 10).           // Create a rotation facing northeast, 10 degrees above horizon
+
+### R (pitch, yaw, roll)
+
+Represents a rotation.
+
+    SET X TO PROGRADE + R(90,0,0).      // Initializes a direction to prograde plus a relative pitch of 90
+    LOCK STEERING TO X.                 // Steer the vessel in the direction suggested by direction X.
+    
+### V (x, y, z)
+
+Represents a vector.
+
+    SET varname TO V(100,5,0).          // initializes a vector with x=100, y=5, z=0
+    varname:X.                          // Returns 100.
+    V(100,5,0):Y.                       // Returns 5.
+    V(100,5,0):Z.                       // Returns 0.
+    varname:MAG.                        // Returns the magnitude of the vector, in this case
+    
+### VESSEL (vesselname)
+
+Represents a targetable vessel
+
+    SET X TO VESSEL("kerbRoller2").     // Initialize a reference to a vessel.
+    PRINT X:DISTANCE.                   // Print distance from current vessel to target.
+    PRINT X:HEADING.                    // Print the heading to the vessel.
+    PRINT X:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
+    
 Other Bindings
 ==============
 
