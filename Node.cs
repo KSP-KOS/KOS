@@ -86,40 +86,7 @@ namespace kOS
                 Pro = nodeRef.DeltaV.z;
             }
         }
-
-        public string GetClosestEncounter()
-        {
-            CheckNodeRef(); 
-            var cep = nodeRef.patch.closestEncounterPatch;
-
-            if (cep == null) return "NO PATCH";
-            else
-            {
-                return cep.closestEncounterBody.name;
-            }
-        }
-
-        public string debugStats(Orbit patch)
-        {
-            String patchtext = "\nPatch \n";
-
-            try { patchtext += "Start:" + patch.patchStartTransition.ToString() + " End:" + patch.patchEndTransition.ToString() + " \n"; }
-            catch (Exception e) { patchtext += "No start or end \n"; }
-
-            try { patchtext += "Ap:" + patch.ApA; }
-            catch (Exception e) { patchtext += "No apo \n"; }
-
-            try { patchtext += "Pe:" + patch.PeA; }
-            catch (Exception e) { patchtext += "No peri \n"; }
-
-            if (patch.referenceBody != null) patchtext += "Ref:" + patch.referenceBody.ToString() + " \n";
-            if (patch.closestEncounterBody != null) patchtext += "Body:" + patch.closestEncounterBody.ToString() + " \n";
-
-            //if (patch.nextPatch != null) patchtext += debugStats(patch.nextPatch, i);
-
-            return patchtext;
-        }
-        
+                
         public override object GetSuffix(string suffixName)
         {
             updateValues();
@@ -130,27 +97,7 @@ namespace kOS
             else if (suffixName == "PROGRADE") return Pro;
             else if (suffixName == "RADIALOUT") return RadOut;
             else if (suffixName == "NORMAL") return Norm;
-            else if (suffixName == "APOAPSIS") { CheckNodeRef(); return nodeRef.patch.ApA; }
-            else if (suffixName == "PERIAPSIS") { CheckNodeRef(); return nodeRef.patch.PeA; }
-            else if (suffixName == "ENCOUNTER") 
-            { 
-                return GetClosestEncounter(); 
-            }
-            else if (suffixName == "TRANSITION") { return nodeRef.patch.patchEndTransition.ToString(); }
-            else if (suffixName == "GOCRAZY")
-            {
-                String stats = "";
 
-                foreach (Orbit patch in nodeRef.solver.flightPlan)
-                {
-                    stats += debugStats(patch);
-                }
-
-                UnityEngine.Debug.Log(stats);
-
-                return stats;
-            }
-            
             return base.GetSuffix(suffixName);
         }
 

@@ -23,7 +23,7 @@ namespace kOS
         public ImmediateMode(ExecutionContext parent) : base(parent) 
         {
             StdOut("kOS Operating System Build " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
-            StdOut("KerboScript v0.7");
+            StdOut("KerboScript v0.8");
             StdOut("");
             StdOut("Proceed.");
         }
@@ -207,6 +207,15 @@ namespace kOS
                         Queue.Clear();          // Halt all pending instructions
                         ChildContext = null;    //
                     }
+                    catch (Exception e)
+                    {
+                        // Non-kos exception! This is a bug, but no reason to kill the OS
+                        StdOut("Flagrant error occured, logging");
+                        UnityEngine.Debug.Log("Immediate mode error");
+                        UnityEngine.Debug.Log(e);
+                        Queue.Clear();
+                        ChildContext = null;
+                    }
                 }
                 else
                 {
@@ -223,6 +232,15 @@ namespace kOS
                 StdOut(e.Message);
                 ChildContext = null;
                 Queue.Clear();          // Halt all pending instructions
+            }
+            catch (Exception e)
+            {
+                // Non-kos exception! This is a bug, but no reason to kill the OS
+                StdOut("Flagrant error occured, logging");
+                UnityEngine.Debug.Log("Immediate mode error");
+                UnityEngine.Debug.Log(e);
+                Queue.Clear();
+                ChildContext = null;
             }
         }
 

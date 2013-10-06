@@ -51,6 +51,15 @@ namespace kOS
                         State = ExecutionState.DONE;
                         return;
                     }
+                    catch (Exception e)
+                    {
+                        // Non-kos exception! This is a bug, but no reason to kill the OS
+                        StdOut("Flagrant error on line " + lineNumber);
+                        UnityEngine.Debug.Log("Program error");
+                        UnityEngine.Debug.Log(e);
+                        State = ExecutionState.DONE;
+                        return;
+                    }
                 }
 
                 lineNumber++;
@@ -93,6 +102,15 @@ namespace kOS
             catch (kOSException e)
             {
                 StdOut("Error on line " + executionLine + ": " + e.Message);
+                State = ExecutionState.DONE;
+                return;
+            }
+            catch (Exception e)
+            {
+                // Non-kos exception! This is a bug, but no reason to kill the OS
+                StdOut("Flagrant error on line " + executionLine);
+                UnityEngine.Debug.Log("Program error");
+                UnityEngine.Debug.Log(e);
                 State = ExecutionState.DONE;
                 return;
             }

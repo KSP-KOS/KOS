@@ -106,8 +106,7 @@ namespace kOS
                 }
                 else if (c == '(' && !Balance(ref str, ref i, ')')) return false;
                 else if (c == '[' && !Balance(ref str, ref i, ']')) return false;
-                else if (c == '{' && !Balance(ref str, ref i, '}')) return false;
-                else if (c == ')' || c == ']' || c == '}')
+                else if (c == ')' || c == ']')
                 {
                     // If this wasn't detected by c == closeChar, then we have a closing delmiter without opening one
                     return false;
