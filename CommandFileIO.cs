@@ -124,7 +124,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("SWITCH TO %")]
+    [CommandAttribute("SWITCH TO ^")]
     public class CommandSwitch : Command
     {
         public CommandSwitch(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
