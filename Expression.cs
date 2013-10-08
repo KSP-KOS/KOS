@@ -751,7 +751,7 @@ namespace kOS
                 {
                     if (Operator == "*") return (Direction)LeftSide.GetValue() * (Direction)RightSide.GetValue();
                     if (Operator == "+") return (Direction)LeftSide.GetValue() + (Direction)RightSide.GetValue();
-                    if (Operator == "-") return (Direction)LeftSide.GetValue() + (Direction)RightSide.GetValue();
+                    if (Operator == "-") return (Direction)LeftSide.GetValue() - (Direction)RightSide.GetValue();
                 }
 
                 if (LeftSide.Value is Direction && RightSide.Value is Vector)
@@ -760,14 +760,14 @@ namespace kOS
 
                     if (Operator == "*") return (Direction)LeftSide.GetValue() * RightVec.ToDirection();
                     if (Operator == "+") return (Direction)LeftSide.GetValue() + RightVec.ToDirection();
-                    if (Operator == "-") return (Direction)LeftSide.GetValue() + RightVec.ToDirection();
+                    if (Operator == "-") return (Direction)LeftSide.GetValue() - RightVec.ToDirection();
                 }
 
                 if (LeftSide.Value is Vector && RightSide.Value is Vector)
                 {
                     if (Operator == "*") return (Vector)LeftSide.GetValue() * (Vector)RightSide.GetValue();
                     if (Operator == "+") return (Vector)LeftSide.GetValue() + (Vector)RightSide.GetValue();
-                    if (Operator == "-") return (Vector)LeftSide.GetValue() + (Vector)RightSide.GetValue();
+                    if (Operator == "-") return (Vector)LeftSide.GetValue() - (Vector)RightSide.GetValue();
                 }
             }
 
