@@ -116,7 +116,7 @@ namespace kOS
 
         public override string ToString()
         {
-            return "NODE(" + UT + "," + Pro + "," + RadOut + "," + Norm + ")";
+            return "NODE(" + UT + "," + RadOut + "," + Norm + "," + Pro + ")";
         }
     }
 }
