@@ -99,7 +99,7 @@ namespace kOS
 
                     if (propertyName == "wheelthrottle")
                     {
-                        c.wheelThrottle = (float)e.Double();
+                        c.wheelThrottle = (float)Utils.Clamp(e.Double(), -1, 1);
                     }
 
                     if (propertyName == "steering")
