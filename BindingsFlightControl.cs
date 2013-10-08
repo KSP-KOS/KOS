@@ -92,16 +92,14 @@ namespace kOS
 
                 if (e != null)
                 {
-                    this.Value = e.GetValue();
-
                     if (propertyName == "throttle")
                     {
-                        c.mainThrottle = (float)Value;
+                        c.mainThrottle = (float)e.Double();
                     }
 
                     if (propertyName == "wheelthrottle")
                     {
-                        c.wheelThrottle = (float)Value;
+                        c.wheelThrottle = (float)e.Double();
                     }
 
                     if (propertyName == "steering")
