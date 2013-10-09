@@ -161,6 +161,8 @@ namespace kOS
                 {
                     Keydown(Event.current.keyCode);
                 }
+
+                cursorBlinkTime = 0.0f;
             }
         }
 
