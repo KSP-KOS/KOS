@@ -321,6 +321,22 @@ namespace kOS
                 case kOSKeys.DOWN:
                     PreviousCommand(-1);
                     return true;
+
+                case kOSKeys.LEFT:
+                    if (cursor > 0)
+                    {
+                        cursor--;
+                        UpdateCursorXY();
+                    }
+                    return true;
+
+                case kOSKeys.RIGHT:
+                    if (cursor < inputBuffer.Length)
+                    {
+                        cursor++;
+                        UpdateCursorXY();
+                    }
+                    return true;
             }
 
             return false;
