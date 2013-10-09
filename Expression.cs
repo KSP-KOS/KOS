@@ -93,10 +93,16 @@ namespace kOS
             if (match.Success)
             {
                 object leftSideResult = new Expression(match.Groups[1].Value, executionContext).GetValue();
+                String suffixName = match.Groups[2].Value.ToUpper();
 
                 if (leftSideResult is SpecialValue)
                 {
-                    Value = ((SpecialValue)leftSideResult).GetSuffix(match.Groups[2].Value.ToUpper());
+                    EvalDlg = delegate()
+                    {
+                        Value = ((SpecialValue)leftSideResult).GetSuffix(suffixName);
+                    };
+
+                    EvalDlg();
                     return true;
                 }
             }
@@ -121,7 +127,17 @@ namespace kOS
             Match match = Regex.Match(text, "^<(.+)>$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                Value = VesselUtils.GetResource(executionContext.Vessel, match.Groups[1].Value);
+                
+                EvalDlg = delegate()
+                {
+                    if (match.Groups[1].Value == "test") Value = 100.0;
+                    else
+                    {
+                        Value = VesselUtils.GetResource(executionContext.Vessel, match.Groups[1].Value);
+                    }
+                };
+
+                EvalDlg();
                 return true;
             }
 
@@ -467,14 +483,29 @@ namespace kOS
             else
             {
                 bool startsWithAtSign = text.StartsWith("@");
-                Variable variable = executionContext.FindVariable(startsWithAtSign ? text.Substring(1) : text);
+                String variableName = startsWithAtSign ? text.Substring(1) : text;
+                Variable variable = executionContext.FindVariable(variableName);
 
                 if (variable != null)
-                {
-                    IsStatic = startsWithAtSign;
-                    Value = variable.Value;
-                    Variable = variable;
-                    return true;
+                { 
+                    if (variable.Value is SpecialValue)
+                    {
+                        Variable = variable;
+                        Value = Variable.Value;
+                        IsStatic = !startsWithAtSign;
+                        return true;
+                    }
+                    else
+                    {
+                        EvalDlg = delegate()
+                        {
+                            executionContext.UpdateLock(variableName);
+                            Value = variable.Value;
+                        };
+
+                        EvalDlg();
+                        return true;
+                    }
                 }
 
                 return false;

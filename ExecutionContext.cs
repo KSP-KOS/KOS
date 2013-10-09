@@ -97,7 +97,7 @@ namespace kOS
             {
                 command.Update(time);
             }
-            
+
             if (ChildContext != null)
             {
                 if (ChildContext.State == ExecutionState.DONE)
@@ -215,6 +215,16 @@ namespace kOS
         public ExecutionContext GetDeepestChildContext()
         {
             return ChildContext == null ? this : ChildContext.GetDeepestChildContext();
+        }
+
+        public void UpdateLock(String name)
+        {
+            Expression e = GetLock(name);
+            if (e != null)
+            {
+                var v = FindVariable(name);
+                v.Value = e.GetValue();
+            }
         }
 
         public virtual Expression GetLock(String name)

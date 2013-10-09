@@ -11,7 +11,6 @@ namespace kOS
         public override void AddTo(BindingManager manager)
         {
             manager.AddGetter("SESSIONTIME", delegate(CPU cpu) { return cpu.SessionTime; });
-            manager.AddGetter("ETA:SESSIONTIME", delegate(CPU cpu) { return cpu.SessionTime; });
         }
     }
 }

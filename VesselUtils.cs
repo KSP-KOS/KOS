@@ -31,9 +31,9 @@ namespace kOS
             return retList;
         }
 
-        public static float GetResource(Vessel vessel, string resourceName)
+        public static double GetResource(Vessel vessel, string resourceName)
         {
-            float total = 0;
+            double total = 0;
             resourceName = resourceName.ToUpper();
 
             foreach (Part part in vessel.parts)
@@ -42,7 +42,7 @@ namespace kOS
                 {
                     if (resource.resourceName.ToUpper() == resourceName)
                     {
-                        total += (float)resource.amount;
+                        total += resource.amount;
                     }
                 }
             }
@@ -50,7 +50,7 @@ namespace kOS
             return total;
         }
 
-        public static float GetMaxThrust(Vessel vessel)
+        public static double GetMaxThrust(Vessel vessel)
         {
             var thrust = 0.0;
             ModuleEngines e;
@@ -64,12 +64,12 @@ namespace kOS
                     {
                         e = (pm as ModuleEngines);
                         if (!e.EngineIgnited) continue;
-                        thrust += e.maxThrust;
+                        thrust += (double)e.maxThrust;
                     }
                 }
             }
 
-            return (float)thrust;
+            return thrust;
         }
 
         public static Vessel TryGetVesselByName(String name, Vessel origin)
@@ -137,11 +137,11 @@ namespace kOS
             return range;
         }
 
-        public static float GetDistanceToKerbinSurface(Vessel vessel)
+        public static double GetDistanceToKerbinSurface(Vessel vessel)
         {
             foreach (var body in FlightGlobals.fetch.bodies)
             {
-                if (body.name.ToUpper() == "KERBIN") return (float)Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - 600000; // Kerbin radius = 600,000
+                if (body.name.ToUpper() == "KERBIN") return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - 600000; // Kerbin radius = 600,000
             }
 
             throw new kOSException("Planet Kerbin not found!");
