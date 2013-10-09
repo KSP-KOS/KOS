@@ -104,6 +104,8 @@ namespace kOS
 
                     if (propertyName == "steering")
                     {
+                        var Value = e.GetValue();
+
                         if (Value is String && ((string)Value).ToUpper() == "KILL")
                         {
                             SteeringHelper.KillRotation(c, vessel);
@@ -125,6 +127,7 @@ namespace kOS
                     if (propertyName == "wheelsteering")
                     {
                         float bearing = 0;
+                        var Value = e.GetValue();
 
                         if (Value is VesselTarget)
                         {
