@@ -224,8 +224,11 @@ namespace kOS
         {
             if (kegex.StartsWith("^")) return kegex; // Input is already in regex format
 
-            String output = "^";
+            return "^" + BuildInnerRegex(kegex) + "$";
+        }
 
+        public static String BuildInnerRegex(String kegex)
+        {
             for (int i=0; i<kegex.Length; i++)
             {
                 String c = kegex.Substring(i, 1);
@@ -254,7 +257,15 @@ namespace kOS
 
                     case "[":
                         int choiceEnd = kegex.IndexOf(']', i);
+
+                        if (choiceEnd == -1) throw new FormatException("Square bracket not closed in '" + kegex + "'");
+
+                        if (kegex[i + 1] == ':') i++;
                         var choices = kegex.Substring(i + 1, choiceEnd - i - 1).Split(',');
+                        if (kegex[i] == ':')
+                        {
+                            choices = BuildInnerRegex(choices);
+                        }
                         output += "(\\s+" + string.Join("|\\s+", choices) + ")";
                         i = choiceEnd;
                         break;
@@ -266,12 +277,12 @@ namespace kOS
 
                     case "&":
                         // Alphanumeric file name with underscores and dashes, first character must be alpha
-                        output += "([a-zA-Z][a-zA-Z0-9_\\-]*?)";
+                        output += "([a-zA-Z0-9_\\-]*?)";
                         break;
 
                     case "^":
                         // Volume identifer, numeric or variable-legal
-                        output += "([a-zA-Z][a-zA-Z0-9_\\-]*?|[0-9]+)";
+                        output += "([a-zA-Z0-9_\\-]*?|[0-9]+)";
                         break;
 
                     case "(":
@@ -300,9 +311,6 @@ namespace kOS
                         break;
                 }
             }
-
-
-            return output + "$";
         }
     }
 }

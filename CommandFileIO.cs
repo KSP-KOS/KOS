@@ -265,7 +265,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("DELETE &[FROM,FROM VOLUME]?_^?")]
+    [CommandAttribute("DELETE &[FROM,FROM VOLUME]?[:^]?")]
     public class CommandDelete : Command
     {
         public CommandDelete(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
