@@ -31,11 +31,12 @@ namespace kOS
             foreach (String line in file)
             {
 
-                commandBuffer += stripComment(line);
+                line = stripComment(line);
 				if (!Utils.DelimterMatch (line)) 
 				{
 					throw new kOSException ("line" + lineNumber +": mismatching delimiter.");
 				}
+                commandBuffer += line
                 string cmd;
                 while (parseNext(ref commandBuffer, out cmd))
                 {
