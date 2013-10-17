@@ -252,6 +252,11 @@ namespace kOS
                         output += "(.+?)";
                         break;
 
+                    case "&":
+                        // Anything other than mathematical operators, whitespace
+                        output += @"([^\+-/\*\s ]+)";
+                        break;
+
                     case "[":
                         int choiceEnd = kegex.IndexOf(']', i);
                         var choices = kegex.Substring(i + 1, choiceEnd - i - 1).Split(',');

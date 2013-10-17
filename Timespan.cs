@@ -54,6 +54,7 @@ namespace kOS
         public static TimeSpan operator -(double b, TimeSpan a) { return new TimeSpan(b - a.ToUnixStyleTime()); }
         public static TimeSpan operator *(double b, TimeSpan a) { return new TimeSpan(b * a.ToUnixStyleTime()); }
         public static TimeSpan operator /(double b, TimeSpan a) { return new TimeSpan(b / a.ToUnixStyleTime()); }
+        public static TimeSpan operator /(TimeSpan b, TimeSpan a) { return new TimeSpan(b.ToUnixStyleTime() / a.ToUnixStyleTime()); }
 
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
@@ -65,12 +66,14 @@ namespace kOS
             if (!reverseOrder)
             {
                 if (other is TimeSpan && op == "-") return this - (TimeSpan)other;
+                if (other is TimeSpan && op == "/") return this / (TimeSpan)other;
                 if (other is double && op == "-") return this - (double)other;
                 if (other is double && op == "/") return this / (double)other;
             }
             else
             {
                 if (other is TimeSpan && op == "-") return (TimeSpan)other - this;
+                if (other is TimeSpan && op == "/") return (TimeSpan)other / this;
                 if (other is double && op == "-") return (double)other - this;
                 if (other is double && op == "/") return (double)other / this; // Can't imagine why the heck you'd want to do this but here it is
             }
