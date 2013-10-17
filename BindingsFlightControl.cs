@@ -89,9 +89,11 @@ namespace kOS
             public void OnFlyByWire(ref FlightCtrlState c)
             {
                 Expression e = cpu.GetDeepestChildContext().GetLock(propertyName);
-
+                
                 if (e != null)
                 {
+                    Value = e.GetValue();
+
                     if (propertyName == "throttle")
                     {
                         c.mainThrottle = (float)e.Double();
@@ -104,8 +106,6 @@ namespace kOS
 
                     if (propertyName == "steering")
                     {
-                        var Value = e.GetValue();
-
                         if (Value is String && ((string)Value).ToUpper() == "KILL")
                         {
                             SteeringHelper.KillRotation(c, vessel);
@@ -127,7 +127,6 @@ namespace kOS
                     if (propertyName == "wheelsteering")
                     {
                         float bearing = 0;
-                        var Value = e.GetValue();
 
                         if (Value is VesselTarget)
                         {
