@@ -47,8 +47,6 @@ namespace kOS
             vesselRef = v;
             nodeRef = v.patchedConicSolver.AddManeuverNode(UT);
 
-            var progradeAtUT = v.orbit.getOrbitalVelocityAtUT(UT).normalized;
-
             Vector3d dv = new Vector3d(RadOut, Norm, Pro);
             nodeRef.DeltaV = dv;
 
@@ -71,7 +69,7 @@ namespace kOS
         {
             CheckNodeRef();
 
-            return new Vector(nodeRef.GetBurnVector(vesselRef.orbit));
+            return new Vector(nodeRef.GetBurnVector(vesselRef.GetOrbit()));
         }
 
         private void updateValues()
@@ -93,7 +91,7 @@ namespace kOS
             
             if (suffixName == "BURNVECTOR") return GetBurnVector();
             else if (suffixName == "ETA") return UT - Planetarium.GetUniversalTime();
-            else if (suffixName == "DELTAV") return new Vector(RadOut, Norm, Pro);
+            else if (suffixName == "DELTAV") return GetBurnVector();
             else if (suffixName == "PROGRADE") return Pro;
             else if (suffixName == "RADIALOUT") return RadOut;
             else if (suffixName == "NORMAL") return Norm;
