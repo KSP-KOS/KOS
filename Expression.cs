@@ -486,9 +486,24 @@ namespace kOS
                 { 
                     if (variable.Value is SpecialValue)
                     {
-                        Variable = variable;
-                        Value = Variable.Value;
-                        IsStatic = !startsWithAtSign;
+                        IsStatic = startsWithAtSign;
+
+                        if (IsStatic)
+                        {
+                            Variable = variable;
+                            Value = Variable.Value;
+                        }
+                        else
+                        {
+                            EvalDlg = delegate()
+                            {
+                                executionContext.UpdateLock(variableName);
+                                Value = variable.Value;
+                            };
+
+                            EvalDlg();
+                        }
+
                         return true;
                     }
                     else

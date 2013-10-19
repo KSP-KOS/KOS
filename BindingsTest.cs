@@ -14,7 +14,7 @@ namespace kOS
         {
             manager.AddGetter("TEST", delegate(CPU cpu)
             {
-                return new TimeSpan(55555555);
+                return new TimeSpan(cpu.SessionTime);
             }); 
         }
 
