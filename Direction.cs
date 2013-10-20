@@ -42,6 +42,7 @@ namespace kOS
         public Direction(Quaternion q)
         {
             rotation = q;
+            euler = q.eulerAngles;
         }
 
         public Direction(Vector3d v3d, bool isEuler)

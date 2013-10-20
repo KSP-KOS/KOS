@@ -331,27 +331,12 @@ namespace kOS
             });
             if (result) return true;
 
-
-            match = Regex.Match(text, "^Q\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
-            if (match.Success)
+            result = TryParseNumericFunction("Q_(4)", text, delegate(double[] parameters)
             {
-                EvalDlg = delegate()
-                {
-                    match = Regex.Match(text, "^Q\\(([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+),([ :@A-Za-z0-9\\.\\-\\+\\*/]+)\\)$", RegexOptions.IgnoreCase);
+                Value = new Direction(new UnityEngine.Quaternion((float)parameters[0], (float)parameters[1], (float)parameters[2], (float)parameters[3]));
+            });
+            if (result) return true;
 
-                    double x = ParseSubExpressionAsDouble(match.Groups[1].Value);
-                    double y = ParseSubExpressionAsDouble(match.Groups[2].Value);
-                    double z = ParseSubExpressionAsDouble(match.Groups[3].Value);
-                    double w = ParseSubExpressionAsDouble(match.Groups[4].Value);
-
-                    // eh? 
-                    Value = x + " " + y + " " + z + " " + w;
-                };
-
-                EvalDlg();
-
-                return true;
-            }
 
             match = Regex.Match(text, "^HEADING ?([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)$", RegexOptions.IgnoreCase);
             if (match.Success)
