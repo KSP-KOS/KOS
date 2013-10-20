@@ -49,6 +49,8 @@ namespace kOS
 
             CursorX = 0;
             CursorY = 2;
+
+            RecalcProgramSize();
         }
 
         public override void Update(float time)
