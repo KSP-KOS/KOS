@@ -229,6 +229,8 @@ namespace kOS
 
         public static String BuildInnerRegex(String kegex)
         {
+            String output = "";
+
             for (int i=0; i<kegex.Length; i++)
             {
                 String c = kegex.Substring(i, 1);
@@ -255,23 +257,15 @@ namespace kOS
                         output += "(.+?)";
                         break;
 
-                    case "&":
+                    /*case "&":
                         // Anything other than mathematical operators, whitespace
                         output += @"([^\+-/\*\s ]+)";
-                        break;
+                        break;*/
 
                     case "[":
                         int choiceEnd = kegex.IndexOf(']', i);
-
-                        if (choiceEnd == -1) throw new FormatException("Square bracket not closed in '" + kegex + "'");
-
-                        if (kegex[i + 1] == ':') i++;
                         var choices = kegex.Substring(i + 1, choiceEnd - i - 1).Split(',');
-                        if (kegex[i] == ':')
-                        {
-                            choices = BuildInnerRegex(choices);
-                        }
-                        output += "(\\s+" + string.Join("|\\s+", choices) + ")";
+                        output += "([\\s ]+" + string.Join("|[\\s ]+", choices) + ")";
                         i = choiceEnd;
                         break;
 
@@ -316,6 +310,8 @@ namespace kOS
                         break;
                 }
             }
+
+            return output;
         }
     }
 }
