@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace kOS
 {
-    [CommandAttribute("EDIT %")]
+    [CommandAttribute("EDIT &")]
     public class CommandEditFile : Command
     {
         public CommandEditFile(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -153,7 +153,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("RENAME[VOLUME,FILE]? ^ TO %")]
+    [CommandAttribute("RENAME[VOLUME,FILE]? ^ TO &")]
     public class CommandRename : Command
     {
         public CommandRename(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -199,7 +199,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("LOG * TO %")]
+    [CommandAttribute("LOG * TO &")]
     public class CommandLog: Command
     {
         public CommandLog(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -231,7 +231,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("COPY %[TO,FROM][VOLUME]? ^")]
+    [CommandAttribute("COPY &[TO,FROM][VOLUME]? ^")]
     public class CommandCopy : Command
     {
         public CommandCopy(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -265,7 +265,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("DELETE %[FROM,FROM VOLUME]?_^?")]
+    [CommandAttribute("DELETE &[FROM,FROM VOLUME]?[:^]?")]
     public class CommandDelete : Command
     {
         public CommandDelete(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
