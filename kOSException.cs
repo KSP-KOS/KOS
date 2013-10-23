@@ -12,6 +12,7 @@ namespace kOS
         public int LineNumber;
         public Command commandObj;
         public ExecutionContext Context;
+        public ContextRunProgram Program;
 
         public kOSException(String message)
         {
@@ -23,6 +24,7 @@ namespace kOS
         {
             this.LineNumber = context.Line;
             this.Context = context;
+            this.Program = context.FindClosestParentOfType<ContextRunProgram>();
         }
     }
 

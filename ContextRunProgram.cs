@@ -16,9 +16,12 @@ namespace kOS
         private List<Expression> parameters = new List<Expression>();
         private int executionLine = 0;
 
-        public ContextRunProgram(ExecutionContext parent, List<Expression> parameters) : base(parent) 
+        public string Filename;
+
+        public ContextRunProgram(ExecutionContext parent, List<Expression> parameters, String filename) : base(parent) 
         {
             this.parameters = parameters;
+            this.Filename = filename;
         }
 
         public void Run(File file)
@@ -51,9 +54,20 @@ namespace kOS
                 }
                 catch (kOSException e)
                 {
-                    StdOut("Error on line " + lineNumber + ": " + e.Message);
-                    State = ExecutionState.DONE;
-                    return;
+                    if (ParentContext.FindClosestParentOfType<ContextRunProgram>() != null)
+                    {
+                        // Error occurs in a child of another running program
+                        StdOut("Error in '" + e.Program.Filename + "' on line " + e.LineNumber + ": " + e.Message);
+                        State = ExecutionState.DONE;
+                        return;
+                    }
+                    else
+                    {
+                        // Error occurs in the top level program
+                        StdOut("Error on line " + e.LineNumber + ": " + e.Message);
+                        State = ExecutionState.DONE;
+                        return;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -65,51 +79,6 @@ namespace kOS
                     return;
                 }
             }
-
-            /*
-            Line = 0;
-            int lineNumber = 0;
-            foreach (String rawLine in block)
-            {
-                String line = stripComment(rawLine);
-
-                if (!Utils.DelimterMatch(line))
-                {
-                    throw new kOSException("line" + lineNumber + ": mismatching delimiter.");
-                }
-
-                commandBuffer += line + "\n";
-                 
-                string cmd;
-                int previousLineNumber = 0;
-                int commandLineStart = 0;
-                while (parseNext(ref commandBuffer, out cmd, ref lineNumber, out commandLineStart))
-                {
-                    try
-                    {
-                        Command cmdObj = Command.Get(cmd, this, commandLineStart);
-                        commands.Add(cmdObj);
-                    }
-                    catch (kOSException e)
-                    {
-                        StdOut("Error on line " + lineNumber + ": " + e.Message);
-                        State = ExecutionState.DONE;
-                        return;
-                    }
-                    catch (Exception e)
-                    {
-                        // Non-kos exception! This is a bug, but no reason to kill the OS
-                        StdOut("Flagrant error on line " + lineNumber);
-                        UnityEngine.Debug.Log("Program error");
-                        UnityEngine.Debug.Log(e);
-                        State = ExecutionState.DONE;
-                        return;
-                    }
-                }
-
-                previousLineNumber = lineNumber;
-                accumulator++;
-            }*/
         }
 
         public override bool Break()
@@ -145,9 +114,20 @@ namespace kOS
             }
             catch (kOSException e)
             {
-                StdOut("Error on line " + e.LineNumber + ": " + e.Message);
-                State = ExecutionState.DONE;
-                return;
+                if (ParentContext.FindClosestParentOfType<ContextRunProgram>() != null)
+                {
+                    // Error occurs in a child of another running program
+                    StdOut("Error in '" + e.Program.Filename + "' on line " + e.LineNumber + ": " + e.Message);
+                    State = ExecutionState.DONE;
+                    return;
+                }
+                else
+                {
+                    // Error occurs in the top level program
+                    StdOut("Error on line " + e.LineNumber + ": " + e.Message);
+                    State = ExecutionState.DONE;
+                    return;
+                }
             }
             catch (Exception e)
             {

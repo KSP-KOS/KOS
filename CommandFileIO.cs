@@ -50,7 +50,7 @@ namespace kOS
 
             if (file != null)
             {
-                ContextRunProgram runContext = new ContextRunProgram(this, parameters);
+                ContextRunProgram runContext = new ContextRunProgram(this, parameters, fileName);
                 Push(runContext);
 
                 if (file.Count > 0)

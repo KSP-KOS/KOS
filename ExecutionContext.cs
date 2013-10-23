@@ -218,6 +218,13 @@ namespace kOS
             return ChildContext == null ? this : ChildContext.GetDeepestChildContext();
         }
 
+        public T FindClosestParentOfType<T>() where T : ExecutionContext
+        {
+            if (this is T) return (T)this;
+            else if (ParentContext == null) return null;
+            else return ParentContext.FindClosestParentOfType<T>();
+        }
+        
         public void UpdateLock(String name)
         {
             Expression e = GetLock(name);
