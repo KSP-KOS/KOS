@@ -124,7 +124,10 @@ namespace kOS
 
                 if (row < File.Count())
                 {
-                    Print(0, y, File[row].Substring(ScrollX));
+                    if (ScrollX < File[row].Length)
+                    {
+                        Print(0, y, File[row].Substring(ScrollX));
+                    }
                 }
             }
         }
