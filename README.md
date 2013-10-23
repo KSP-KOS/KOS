@@ -362,6 +362,8 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
     RCS
     LIGHTS
     BRAKES
+    LEGS
+    CHUTES	// Cannot be un-deployed.
     
 ### Controls that can be used with TOGGLE
 

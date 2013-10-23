@@ -207,5 +207,72 @@ namespace kOS
 
             return "None";
         }
+    public static bool LandingLegStatus = false;
+    public static void LandingLegsCtrl(Vessel vessel, bool state)
+    {
+      //MechJeb2/MechJebModuleLandingAutopilot.cs
+      //new-style landing legs are activated by an event:
+      //vessel.rootPart.SendEvent("LowerLeg");
+
+      //old-style landings legs are activated on part activation:
+      foreach (Part p in vessel.parts)
+      {
+        if (p.Modules.OfType<ModuleLandingLeg>().Count() > 0)
+        {
+          if (state)
+          {
+            foreach (ModuleLandingLeg l in p.FindModulesImplementing<ModuleLandingLeg>())
+              l.LowerLeg();
+                  LandingLegStatus = true;
+          }
+          else if (!state)
+          {
+            foreach (ModuleLandingLeg l in p.FindModulesImplementing<ModuleLandingLeg>())
+              l.RaiseLeg();
+                  LandingLegStatus = false;
+          }
+        }
+        // there be dragons
+//        else if (p is HLandingLeg)
+//        {
+//          HLandingLeg l = (HLandingLeg)p;
+//          Debug.Log("LegState" + l.legState);
+//          if (l.legState == HLandingLeg.LegStates.RETRACTED && state)
+//          {
+//                  l.DeployOnActivate = true;
+//            l.force_activate();
+//            LandingLegStatus = true;
+//          }
+//          else if (l.legState == HLandingLeg.LegStates.DEPLOYED && !state)
+//          {
+//            l.DeployOnActivate = true;
+//            l.force_activate();
+//            LandingLegStatus = false;
+//          }
+//        }
+      }
+    }
+    public static bool ChutesStatus = false;
+    public static void DeployParachutes(Vessel vessel, bool state)
+    {
+      if (vessel.mainBody.atmosphere && state)
+        foreach (Part p in vessel.parts)
+          {
+            if (p.Modules.OfType<ModuleParachute>().Count() > 0)
+              {
+                if (state)
+                  {
+                    foreach (ModuleParachute c in p.FindModulesImplementing<ModuleParachute>())
+                      {
+                        if (c.deploymentState == ModuleParachute.deploymentStates.STOWED) //&& c.deployAltitude * 3 > vessel.heightFromTerrain)
+                          {
+                            c.DeployAction(null);
+                            ChutesStatus = true;
+                          }
+                      }
+                  }
+              }
+          }
+    }
     }
 }
