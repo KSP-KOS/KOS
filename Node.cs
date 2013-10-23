@@ -47,15 +47,21 @@ namespace kOS
             vesselRef = v;
             nodeRef = v.patchedConicSolver.AddManeuverNode(UT);
 
-            Vector3d dv = new Vector3d(RadOut, Norm, Pro);
-            nodeRef.DeltaV = dv;
+            UpdateNodeDeltaV();
 
             v.patchedConicSolver.UpdateFlightPlan();
 
             NodeLookup.Add(nodeRef, this);
         }
 
-
+        private void UpdateNodeDeltaV()
+        {
+            if (nodeRef != null)
+            {
+                Vector3d dv = new Vector3d(RadOut, Norm, Pro);
+                nodeRef.DeltaV = dv;
+            }
+        }
 
         public void CheckNodeRef()
         {
@@ -97,6 +103,17 @@ namespace kOS
             else if (suffixName == "NORMAL") return Norm;
 
             return base.GetSuffix(suffixName);
+        }
+
+        public override bool SetSuffix(string suffixName, object value)
+        {
+            if (suffixName == "BURNVECTOR" || suffixName == "ETA" || suffixName == "DELTAV") throw new kOSReadOnlyException(suffixName);
+
+            else if (suffixName == "PROGRADE") { Pro = (double)value; UpdateNodeDeltaV(); }
+            else if (suffixName == "RADIALOUT") { RadOut = (double)value; UpdateNodeDeltaV(); }
+            else if (suffixName == "NORMAL") { Norm = (double)value; UpdateNodeDeltaV(); }
+
+            return false;
         }
 
         public void Remove()

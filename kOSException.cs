@@ -18,4 +18,11 @@ namespace kOS
             //this.commandObj = commandObj;
         }
     }
+
+    public class kOSReadOnlyException : kOSException
+    {
+        public kOSReadOnlyException(String varName) : base (varName + " is read-only")
+        {
+        }
+    }
 }

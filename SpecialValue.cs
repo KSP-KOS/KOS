@@ -7,6 +7,11 @@ namespace kOS
 {
     public class SpecialValue
     {
+        public virtual bool SetSuffix(String suffixName, object value)
+        {
+            return false;
+        }
+
         public virtual object GetSuffix(String suffixName)
         {
             return null;
