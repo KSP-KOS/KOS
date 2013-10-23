@@ -190,8 +190,8 @@ namespace kOS
 
             manager.AddGetter("SAS", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.SAS]; });
             manager.AddGetter("GEAR", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Gear]; });
-            manager.AddGetter("LEGS", delegate(CPU cpu) { return VesselUtils.LandingLegStatus; });
-            manager.AddGetter("CHUTES", delegate(CPU cpu) { return VesselUtils.ChutesStatus; });
+            manager.AddGetter("LEGS", delegate(CPU cpu) { return VesselUtils.GetLandingLegStatus(cpu.Vessel); });
+            manager.AddGetter("CHUTES", delegate(CPU cpu) { return VesselUtils.GetChuteStatus(cpu.Vessel); });
             manager.AddGetter("LIGHTS", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Light]; });
             manager.AddGetter("BRAKES", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Brakes]; });
             manager.AddGetter("RCS", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.RCS]; });
