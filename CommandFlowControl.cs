@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace kOS
 {
-    [CommandAttribute(@"^{(.*)}$")]
+    [CommandAttribute("^{([\\S\\s]*)}$")]
     public class CommandBlock : Command
     {
         List<Command> commands = new List<Command>();
@@ -15,15 +15,19 @@ namespace kOS
 
         public CommandBlock(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
+        public CommandBlock(String directInput, ExecutionContext context) : base(Regex.Match(directInput, "^([\\S\\s]*)$"), context) {}
+
         public override void Evaluate()
         {
             String innerText = RegexMatch.Groups[1].Value;
             String cmd;
             commandBuffer = innerText;
+            int lineCount = Line;
+            int commandLineStart = 0;
 
-            while (parseNext(ref innerText, out cmd))
+            while (parseNext(ref innerText, out cmd, ref lineCount, out commandLineStart))
             {
-                commands.Add(Command.Get(cmd, this));
+                commands.Add(Command.Get(cmd, this, commandLineStart));
             }
 
             State = (commands.Count == 0) ? ExecutionState.DONE : ExecutionState.WAIT;
@@ -83,7 +87,9 @@ namespace kOS
         public override void Evaluate()
         {
             expression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
-            targetCommand = Command.Get(RegexMatch.Groups[2].Value, this);
+
+            int numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
+            targetCommand = Command.Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
 
             if (expression.IsTrue())
             {
@@ -114,14 +120,19 @@ namespace kOS
     {
         List<Command> commands = new List<Command>();
         Expression waitExpression;
-        String commandString;
+        // commandString;
+        Command targetCommand;
 
         public CommandUntilLoop(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
             waitExpression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
-            commandString = RegexMatch.Groups[2].Value;
+
+            int numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
+            targetCommand = Command.Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
+
+            //commandString = RegexMatch.Groups[2].Value;
 
             State = ExecutionState.WAIT;
         }
@@ -156,7 +167,8 @@ namespace kOS
                 }
                 else
                 {
-                    ChildContext = Command.Get(commandString, this);
+                    ChildContext = targetCommand;
+                    //ChildContext = Command.Get(commandString, this);
                     ((Command)ChildContext).Evaluate();
                 }
             }

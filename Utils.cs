@@ -227,6 +227,18 @@ namespace kOS
             return "^" + BuildInnerRegex(kegex) + "$";
         }
 
+        public static int NewLineCount(String input)
+        {
+            int retVal = 0;
+
+            foreach (char c in input)
+            {
+                if (c == '\n') retVal++;
+            }
+
+            return retVal;
+        }
+
         public static String BuildInnerRegex(String kegex)
         {
             String output = "";
@@ -256,11 +268,6 @@ namespace kOS
                         // Anything
                         output += "(.+?)";
                         break;
-
-                    /*case "&":
-                        // Anything other than mathematical operators, whitespace
-                        output += @"([^\+-/\*\s ]+)";
-                        break;*/
 
                     case "[":
                         int choiceEnd = kegex.IndexOf(']', i);
@@ -301,7 +308,7 @@ namespace kOS
 
                         if (endIndexBrace == -1) throw new FormatException("Curly brace not closed in '" + kegex + "'");
 
-                        output += "({.+})";
+                        output += "({[\\s\\S]*})";
                         i = endIndexBrace;
                         break;                  
 

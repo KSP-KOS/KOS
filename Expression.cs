@@ -142,7 +142,7 @@ namespace kOS
 
         private bool TryParseVessel(string text)
         {
-            Match match = Regex.Match(text, "^VESSEL\\(([ @A-Za-z0-9\"]+)\\)$");
+            Match match = Regex.Match(text, "^VESSEL\\(([ @A-Za-z0-9\"]+)\\)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 var input = ParseSubExpressionAsString(match.Groups[1].Value.Trim());

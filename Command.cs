@@ -31,7 +31,7 @@ namespace kOS
                 {
                     foreach (String s in attr.Values)
                     {
-                        Bindings.Add(Utils.BuildRegex(s.ToUpper()), t);
+                        Bindings.Add(Utils.BuildRegex(s), t);
                     }
                 }
             }
@@ -45,10 +45,10 @@ namespace kOS
         public String Input;
         public Match RegexMatch;
         public String InstanceName;
-        public int LineNumber = -1;
 
         public Command(Match regexMatch, ExecutionContext context) : base(context)
         {
+            Input = regexMatch.ToString();
             this.RegexMatch = regexMatch;
         }
 
@@ -57,13 +57,33 @@ namespace kOS
             this.Input = input;
         }
 
+        public virtual void Verify()
+        {
+        }
+
         public virtual void Evaluate()
         {
         }
 
+        public static Command Get(String input, ExecutionContext context, int line)
+        {
+            try
+            {
+                Command retCommand = Get(input, context);
+                retCommand.Line = line;
+
+                return retCommand;
+            }
+            catch (kOSException e)
+            {
+                e.LineNumber = line;
+                throw e;
+            }
+        }
+
         public static Command Get(String input, ExecutionContext context)
         {
-            input = input.Trim().Replace("\n", " ");
+            input = input.Trim();//.Replace("\n", " ");
 
             foreach (var kvp in CommandRegistry.Bindings)
             {
@@ -75,7 +95,7 @@ namespace kOS
                 }
             }
 
-            throw new kOSException("Syntax Error.");
+            throw new kOSException("Syntax Error.", context);
         }
 
         public virtual void Refresh()

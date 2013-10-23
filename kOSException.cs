@@ -11,11 +11,18 @@ namespace kOS
         public String Filename;
         public int LineNumber;
         public Command commandObj;
+        public ExecutionContext Context;
 
         public kOSException(String message)
         {
             this.Message = message;
             //this.commandObj = commandObj;
+        }
+
+        public kOSException(String message, ExecutionContext context) : this (message)
+        {
+            this.LineNumber = context.Line;
+            this.Context = context;
         }
     }
 

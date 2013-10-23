@@ -27,25 +27,67 @@ namespace kOS
 
             State = ExecutionState.WAIT;
 
+            RunBlock(file);
+        }
+
+        private void RunBlock(List<String> block)
+        {
+
+            foreach (String rawLine in block)
+            {
+                String line = stripComment(rawLine);
+                commandBuffer += line + "\n";
+            }
+
+            string cmd;
             int lineNumber = 0;
-            foreach (String rawLine in file)
+            int commandLineStart = 0;
+            while (parseNext(ref commandBuffer, out cmd, ref lineNumber, out commandLineStart))
+            {
+                try
+                {
+                    Command cmdObj = Command.Get(cmd, this, commandLineStart);
+                    commands.Add(cmdObj);
+                }
+                catch (kOSException e)
+                {
+                    StdOut("Error on line " + lineNumber + ": " + e.Message);
+                    State = ExecutionState.DONE;
+                    return;
+                }
+                catch (Exception e)
+                {
+                    // Non-kos exception! This is a bug, but no reason to kill the OS
+                    StdOut("Flagrant error on line " + lineNumber);
+                    UnityEngine.Debug.Log("Program error");
+                    UnityEngine.Debug.Log(e);
+                    State = ExecutionState.DONE;
+                    return;
+                }
+            }
+
+            /*
+            Line = 0;
+            int lineNumber = 0;
+            foreach (String rawLine in block)
             {
                 String line = stripComment(rawLine);
 
-				if (!Utils.DelimterMatch (line)) 
-				{
-					throw new kOSException ("line" + lineNumber +": mismatching delimiter.");
-				}
+                if (!Utils.DelimterMatch(line))
+                {
+                    throw new kOSException("line" + lineNumber + ": mismatching delimiter.");
+                }
 
-                commandBuffer += line;
-
+                commandBuffer += line + "\n";
+                 
                 string cmd;
-                while (parseNext(ref commandBuffer, out cmd))
+                int previousLineNumber = 0;
+                int commandLineStart = 0;
+                while (parseNext(ref commandBuffer, out cmd, ref lineNumber, out commandLineStart))
                 {
                     try
                     {
-                        Command cmdObj = Command.Get(cmd, this);
-                        cmdObj.LineNumber = lineNumber;
+                        Command cmdObj = Command.Get(cmd, this, commandLineStart);
                         commands.Add(cmdObj);
                     }
                     catch (kOSException e)
@@ -65,9 +107,9 @@ namespace kOS
                     }
                 }
 
-                lineNumber++;
+                previousLineNumber = lineNumber;
                 accumulator++;
-            }
+            }*/
         }
 
         public override bool Break()
@@ -96,15 +138,14 @@ namespace kOS
         
         public override void Update(float time)
         {
-            base.Update(time);
-
             try
             {
+                base.Update(time);
                 EvaluateNextCommand();
             }
             catch (kOSException e)
             {
-                StdOut("Error on line " + executionLine + ": " + e.Message);
+                StdOut("Error on line " + e.LineNumber + ": " + e.Message);
                 State = ExecutionState.DONE;
                 return;
             }
@@ -129,7 +170,6 @@ namespace kOS
                     commands.RemoveAt(0);
 
                     ChildContext = cmd;
-                    executionLine = cmd.LineNumber;
                     cmd.Evaluate();
                 }
                 else

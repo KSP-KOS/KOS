@@ -23,6 +23,7 @@ namespace kOS
         public ExecutionContext ParentContext = null;
         public ExecutionContext ChildContext = null;
         public ExecutionState State = ExecutionState.NEW;
+        public int Line = 0;
         
         public virtual Volume SelectedVolume
         { 
@@ -282,11 +283,16 @@ namespace kOS
             if (ParentContext != null) ParentContext.UnlockAll();
         }
 
-        public bool parseNext(ref string buffer, out string cmd)
+        public bool parseNext(ref string buffer, out string cmd, ref int lineCount, out int lineStart)
         {
+            lineStart = -1;
+
             for (int i = 0; i < buffer.Length; i++)
             {
                 string c = buffer.Substring(i, 1);
+
+                if (lineStart < 0 && Regex.Match(c, "\\S").Success) lineStart = lineCount;
+                else if (c == "\n") lineCount++;
 
                 if (c == "\"")
                 {
@@ -305,6 +311,7 @@ namespace kOS
                     {
                         cmd = buffer.Substring(0, i);
                         buffer = buffer.Substring(i + 1).Trim();
+
                         return true;
                     }
                 }
@@ -324,6 +331,7 @@ namespace kOS
                         {
                             cmd = buffer.Substring(0, i + 1);
                             buffer = buffer.Substring(i + 1).Trim();
+
                             return true;
                         }
                     }

@@ -33,11 +33,13 @@ namespace kOS
             commandBuffer += cmdString;
             string nextCmd;
 
-            while (parseNext(ref commandBuffer, out nextCmd))
+            int line = 0;
+            int comandLineStart = 0;
+            while (parseNext(ref commandBuffer, out nextCmd, ref line, out comandLineStart))
             {
                 try
                 {
-                    Command cmd = Command.Get(nextCmd, this);
+                    Command cmd = Command.Get(nextCmd, this, comandLineStart);
                     Queue.Enqueue(cmd);
                 }
                 catch (kOSException e)
