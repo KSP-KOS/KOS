@@ -364,6 +364,7 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
     BRAKES
     LEGS
     CHUTES	// Cannot be un-deployed.
+    PANELS
     
 ### Controls that can be used with TOGGLE
 

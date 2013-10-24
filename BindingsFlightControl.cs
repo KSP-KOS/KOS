@@ -174,6 +174,7 @@ namespace kOS
             manager.AddSetter("LEGS", delegate(CPU cpu, object val) {  VesselUtils.LandingLegsCtrl(cpu.Vessel, (bool)val); });
             manager.AddSetter("CHUTES", delegate(CPU cpu, object val) {  VesselUtils.DeployParachutes(cpu.Vessel, (bool)val); });
             manager.AddSetter("LIGHTS", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, (bool)val); });
+            manager.AddSetter("PANELS", delegate(CPU cpu, object val) {  VesselUtils.SolarPanelCtrl(cpu.Vessel, (bool)val); });
             manager.AddSetter("BRAKES", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, (bool)val); });
             manager.AddSetter("RCS", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, (bool)val); });
             manager.AddSetter("ABORT", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Abort, (bool)val); });
@@ -193,6 +194,7 @@ namespace kOS
             manager.AddGetter("LEGS", delegate(CPU cpu) { return VesselUtils.GetLandingLegStatus(cpu.Vessel); });
             manager.AddGetter("CHUTES", delegate(CPU cpu) { return VesselUtils.GetChuteStatus(cpu.Vessel); });
             manager.AddGetter("LIGHTS", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Light]; });
+            manager.AddGetter("PANELS", delegate(CPU cpu) { return VesselUtils.GetSolarPanelStatus(cpu.Vessel); });
             manager.AddGetter("BRAKES", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Brakes]; });
             manager.AddGetter("RCS", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.RCS]; });
             manager.AddGetter("ABORT", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Abort]; });
