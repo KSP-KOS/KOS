@@ -266,7 +266,7 @@ namespace kOS
 
                     case "*":
                         // Anything
-                        output += "(.+?)";
+                        output += "([\\s\\S]+?)";
                         break;
 
                     case "[":
