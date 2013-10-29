@@ -313,7 +313,8 @@ You can get several useful vessel stats for your ships
     SURFACESPEED
     LATITUDE
     LONGITUDE
-    STATUS			// Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
+    STATUS	// Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
+    INSUNLIGHT  // Returns true if not blocked by celestial body, always false without solar panel.
     MASS
     MAXTHRUST       // Combined thrust of active engines at full throttle (kN)
     TIME            // Gets the current universal time

@@ -28,6 +28,7 @@ namespace kOS
             manager.AddGetter("TIME",           delegate(CPU cpu) { return new kOS.TimeSpan(Planetarium.GetUniversalTime()); });
 
             manager.AddGetter("STATUS",         delegate(CPU cpu) { return cpu.Vessel.situation.ToString().Replace("_", " "); });
+            manager.AddGetter("INSUNLIGHT",     delegate(CPU cpu) { return VesselUtils.InDirectSunlight(cpu.Vessel); });
 			manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return VesselUtils.GetCommRange(cpu.Vessel); });
 			manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return Convert.ToDouble(CheckCommRange(cpu.Vessel)); });
             manager.AddGetter("APOAPSIS",       delegate(CPU cpu) { return cpu.Vessel.orbit.ApA; });
@@ -63,8 +64,6 @@ namespace kOS
 
             manager.AddGetter("PROGRADE",       delegate(CPU cpu)
             {
-                Debug.Log("********* Check PRO");
-                
                 var vessel = cpu.Vessel;
                 var up = (vessel.findLocalMOI(vessel.findWorldCenterOfMass()) - vessel.mainBody.position).normalized;
 
