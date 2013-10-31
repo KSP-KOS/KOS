@@ -158,6 +158,11 @@ Example:
     LIST.           // Lists files on the active volume
     LIST FILES.     // Lists files on the active volume
     LIST VOLUMES.   // Lists all volumes, with their numbers and names
+    LIST BODIES.    // Lists celestial bodies and their distance
+    LIST TARGETS.   // Lists target-able vessels in range
+    LIST RESOURCES. // List of resources by stage
+    LIST PARTS.     // Lists parts in vessel
+    LIST ENGINES.   // List of engines
 
 ### LOCK
 
