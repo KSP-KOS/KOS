@@ -74,6 +74,33 @@ namespace kOS
         public static Direction operator *(Direction a, Direction b) { return new Direction(a.Rotation * b.Rotation); }
         public static Direction operator +(Direction a, Direction b) { return new Direction(a.Euler + b.Euler, true); }
         public static Direction operator -(Direction a, Direction b) { return new Direction(a.Euler - b.Euler, true); }
+        
+        public override object TryOperation(string op, object other, bool reverseOrder)
+        {
+            if (other is Vector)
+            {
+                other = ((Vector)other).ToDirection();
+            }
+
+            if (op == "*" && other is Direction)
+            {
+                // If I remember correctly, order of multiplication DOES matter with quaternions
+                if (!reverseOrder)
+                    return this * (Direction)other;
+                else
+                    return (Direction)other * this;
+            }
+            else if (op == "+" && other is Direction) return this + (Direction)other;
+            else if (op == "-" && other is Direction)
+            {
+                if (!reverseOrder)
+                    return this - (Direction)other;
+                else
+                    return (Direction)other - this;
+            }
+
+            return null;
+        }
 
         public override string ToString()
         {
