@@ -173,7 +173,7 @@ namespace kOS
 
                 if (status == "Fixed" || status == "Locked")
                 {
-                    range += 500000;
+                    range *= 100;
                 }
                 }
             }
