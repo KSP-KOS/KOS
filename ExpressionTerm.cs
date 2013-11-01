@@ -126,6 +126,9 @@ namespace kOS
             // HEADING.. BY is now deprecated in favor of HEADING(x,y), but here it is if you're using it still
             Text = Regex.Replace(Text, "HEADING ([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)", "HEADING($2,$1)", RegexOptions.IgnoreCase);
 
+            // Resource tags are now deprecated in favor of SHIP:ResourceName
+            Text = Regex.Replace(Text, "(\\s|^)<([a-zA-Z]+)>(\\s|$)", " SHIP:$2 ", RegexOptions.IgnoreCase);
+
             // Is this JUST a matched symbol?                
             String s = matchAt(ref Text, 0, ref allSymbols);
             if (s != null && Text.Length == s.Length)

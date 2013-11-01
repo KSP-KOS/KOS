@@ -222,16 +222,24 @@ namespace kOS
         }
 
         private object TryProcessStructure(Term input)
-        {
+        {   
             Term baseTerm = input.SubTerms[0];
             Term suffixTerm = input.SubTerms[1];
+            object output;
 
             if (suffixTerm.Type == Term.TermTypes.SUFFIX)
             {
+                // First, see if this is just a variable with a comma in it (old-style structure)
+                if (Regex.Match(baseTerm.Text, "^[a-zA-Z]+$").Success)
+                {
+                    output = AttemptGetVariableValue(baseTerm.Text + ":" + suffixTerm.Text);
+                    if (output != null) return output;
+                }
+
                 object baseTermValue = GetValueOfTerm(baseTerm);
                 if (baseTermValue is SpecialValue)
                 {
-                    object output = ((SpecialValue)baseTermValue).GetSuffix(suffixTerm.Text.ToUpper());
+                    output = ((SpecialValue)baseTermValue).GetSuffix(suffixTerm.Text.ToUpper());
                     if (output != null) return output;
 
                     throw new kOSException("Suffix '" + suffixTerm.Text + "' not found on object");
