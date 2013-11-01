@@ -53,6 +53,7 @@
     <Compile Include="BindingsTerminalSettings.cs" />
     <Compile Include="BindingsTest.cs" />
     <Compile Include="BindingsUniverse.cs" />
+    <Compile Include="BodyTarget.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="CommandBasicIO.cs" />
     <Compile Include="CommandFileIO.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Direction.cs" />
     <Compile Include="ExecutionContext.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="ExpressionTerm.cs" />
     <Compile Include="GeoCoordinates.cs" />
     <Compile Include="Harddisk.cs" />
     <Compile Include="InterpreterBootup.cs" />

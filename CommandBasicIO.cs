@@ -102,16 +102,9 @@ namespace kOS
         {
             Expression e = new Expression(RegexMatch.Groups[1].Value, ParentContext);
 
-            if (e.IsNull())
-            {
-                StdOut("NULL");
-                State = ExecutionState.DONE;
-            }
-            else
-            {
-                StdOut(Utils.BuildRegex(e.ToString()));
-                State = ExecutionState.DONE;
-            }
+            StdOut(e.GetValue().ToString());
+
+            State = ExecutionState.DONE;
         }
     }
 

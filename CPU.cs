@@ -53,7 +53,7 @@ namespace kOS
             this.RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 2 });
         }
 
-        public int testFunction(int x, int y) { return x * y; }
+        public double testFunction(double x, double y) { return x * y; }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {

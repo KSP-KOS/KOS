@@ -73,5 +73,31 @@ namespace kOS
         public static Vector operator *(Vector a, double b) { return new Vector(a.x * b, a.y * b, a.z * b); }
         public static Vector operator +(Vector a, Vector b) { return new Vector(a.ToVector3D() + b.ToVector3D()); }
         public static Vector operator -(Vector a, Vector b) { return new Vector(a.ToVector3D() - b.ToVector3D()); }
+
+        public override object TryOperation(string op, object other, bool reverseOrder)
+        {
+            if (op == "+")
+            {
+                if (other is Vector) return this + (Vector)other;
+            }
+            else if (op == "*")
+            {
+                if (other is Vector) return this * (Vector)other;
+                if (other is double) return this * (double)other;
+            }
+            else if (op == "-")
+            {
+                if (!reverseOrder)
+                {
+                    if (other is Vector) return this - (Vector)other;
+                }
+                else
+                {
+                    if (other is Vector) return (Vector)other - this;
+                }
+            }
+
+            return null;
+        }
     }
 }
