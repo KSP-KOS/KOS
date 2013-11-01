@@ -393,8 +393,21 @@ namespace kOS
             if (name == "MOD") { double[] dp = GetParamsAsT<double>(p, 2); return dp[0] % dp[1]; }
             if (name == "FLOOR") { double[] dp = GetParamsAsT<double>(p, 1); return Math.Floor(dp[0]); }
             if (name == "CEILING") { double[] dp = GetParamsAsT<double>(p, 1); return Math.Ceiling(dp[0]); }
-            if (name == "ROUND") { double[] dp = GetParamsAsT<double>(p, 1); return Math.Round(dp[0]); }
             if (name == "SQRT") { double[] dp = GetParamsAsT<double>(p, 1); return Math.Sqrt(dp[0]); }
+
+            if (name == "ROUND")
+            {
+                if (p.Count() == 1)
+                {
+                    double[] dp = GetParamsAsT<double>(p, 1);
+                    return Math.Round(dp[0]);
+                }
+                else if (p.Count() == 2)
+                {
+                    double[] dp = GetParamsAsT<double>(p, 2);
+                    return Math.Round(dp[0], (int)dp[1]);
+                }
+            }
 
             return null;
         }
