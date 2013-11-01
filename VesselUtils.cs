@@ -335,7 +335,32 @@ namespace kOS
                 }
             }
         }
+        public static object GetSolarPanelStatus(Vessel vessel)
+        {
+          bool atLeastOneSolarPanel = false; // No panels at all? Always return false
 
+          foreach (Part p in vessel.parts)
+          {
+            foreach (ModuleDeployableSolarPanel c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
+            {
+              atLeastOneSolarPanel = true;
+
+              if (c.panelState == ModuleDeployableSolarPanel.panelStates.RETRACTED)
+              {
+                // If just one panel is not deployed return false
+                return false;
+              }
+            }
+          }
+
+          return atLeastOneSolarPanel;
+        }
+
+        public static void SolarPanelCtrl(Vessel vessel, bool state)
+        {
+            vessel.rootPart.SendEvent(state ? "Extend" : "Retract");
+        }
+        
         public static float GetVesselLattitude(Vessel vessel)
         {
             float retVal = (float)vessel.latitude;
