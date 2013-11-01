@@ -13,6 +13,15 @@ namespace kOS
         public Vessel Vessel;
         public CelestialBody Body;
 
+        public GeoCoordinates(Vessel vessel)
+        {
+            this.Lat = (double)VesselUtils.GetVesselLattitude(vessel);
+            this.Lng = (double)VesselUtils.GetVesselLongitude(vessel);
+            this.Vessel = vessel;
+
+            Body = vessel.mainBody;
+        }
+
         public GeoCoordinates(Vessel vessel, float lat, float lng)
         {
             this.Lat = (double)lat;

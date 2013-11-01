@@ -76,7 +76,6 @@ namespace kOS
         {
             switch (RegexMatch.Groups[1].Value.ToUpper())
             {
-                    
                 case "BODIES":
                     StdOut("");
                     StdOut("Name           Distance");

@@ -19,6 +19,11 @@ namespace kOS
                     TimeWarp.SetRate(newRate, false);
                 }
             });
+
+            foreach (CelestialBody body in FlightGlobals.fetch.bodies)
+            {
+                manager.AddGetter(body.name, delegate(CPU cpu) { return new BodyTarget(body, cpu); });
+            }
         }
     }
 }

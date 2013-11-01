@@ -94,7 +94,7 @@ namespace kOS
             {
                 if (line[i] == '\"')
                 {
-                    i = Expression.FindEndOfString(line, i + 1);
+                    i = Utils.FindEndOfString(line, i + 1);
                 }
                 else if (i < line.Length - 1 && line.Substring(i, 2) == "//")
                 {

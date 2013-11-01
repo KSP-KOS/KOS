@@ -31,6 +31,30 @@ namespace kOS
             return retList;
         }
 
+        public static bool TryGetResource(Vessel vessel, string resourceName, out double total)
+        {
+            bool resourceIsFound = false;
+            total = 0;
+            resourceName = resourceName.ToUpper();
+
+            // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
+            if (new[] { "LIQUIDFUEL", "ELECTRICCHARGE", "OXIDIZER", "INTAKEAIR" }.Contains(resourceName)) resourceIsFound = true;
+
+            foreach (Part part in vessel.parts)
+            {
+                foreach (PartResource resource in part.Resources)
+                {
+                    if (resource.resourceName.ToUpper() == resourceName)
+                    {
+                        resourceIsFound = true;
+                        total += resource.amount;
+                    }
+                }
+            }
+
+            return resourceIsFound;
+        }
+
         public static double GetResource(Vessel vessel, string resourceName)
         {
             double total = 0;
@@ -85,6 +109,19 @@ namespace kOS
             return null;
         }
 
+        public static CelestialBody GetBodyByName(String name)
+        {
+            foreach (var body in FlightGlobals.fetch.bodies)
+            {
+                if (name.ToUpper() == body.name.ToUpper())
+                {
+                    return body;
+                }
+            }
+
+            return null;
+        }
+
         public static Vessel GetVesselByName(String name, Vessel origin)
         {
             Vessel vessel = TryGetVesselByName(name, origin);
@@ -101,7 +138,14 @@ namespace kOS
 
         public static void SetTarget(ITargetable val)
         {
-            FlightGlobals.fetch.SetVesselTarget(val);
+            //if (val is Vessel)
+            //{
+                FlightGlobals.fetch.SetVesselTarget(val);
+            //}
+            //else if (val is CelestialBody)
+            //{/
+                
+           // }
         }
 
         public static double GetCommRange(Vessel vessel)
@@ -278,31 +322,50 @@ namespace kOS
                 }
             }
         }
-
-    public static object GetSolarPanelStatus(Vessel vessel)
-    {
-      bool atLeastOneSolarPanel = false; // No panels at all? Always return false
-
-      foreach (Part p in vessel.parts)
-      {
-        foreach (ModuleDeployableSolarPanel c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
+        public static object GetSolarPanelStatus(Vessel vessel)
         {
-          atLeastOneSolarPanel = true;
+          bool atLeastOneSolarPanel = false; // No panels at all? Always return false
 
-          if (c.panelState == ModuleDeployableSolarPanel.panelStates.RETRACTED)
+          foreach (Part p in vessel.parts)
           {
-            // If just one panel is not deployed return false
-            return false;
-          }
-        }
-      }
+            foreach (ModuleDeployableSolarPanel c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
+            {
+              atLeastOneSolarPanel = true;
 
-      return atLeastOneSolarPanel;
-    }
+              if (c.panelState == ModuleDeployableSolarPanel.panelStates.RETRACTED)
+              {
+                // If just one panel is not deployed return false
+                return false;
+              }
+            }
+          }
+
+          return atLeastOneSolarPanel;
+        }
 
         public static void SolarPanelCtrl(Vessel vessel, bool state)
         {
             vessel.rootPart.SendEvent(state ? "Extend" : "Retract");
+        }
+        
+        public static float GetVesselLattitude(Vessel vessel)
+        {
+            float retVal = (float)vessel.latitude;
+
+            if (retVal > 90) return 90;
+            if (retVal < -90) return -90;
+
+            return retVal;
+        }
+
+        public static float GetVesselLongitude(Vessel vessel)
+        {
+            float retVal = (float)vessel.longitude;
+
+            while (retVal > 180) retVal -= 360;
+            while (retVal < -180) retVal += 360;
+
+            return retVal;
         }
     }
 }

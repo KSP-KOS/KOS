@@ -129,10 +129,10 @@ namespace kOS
             return Balance(ref str, ref i, (char)0);
 		}
 
-        public static float ProspectForResource(String resourceName, List<Part> engines)
+        public static double ProspectForResource(String resourceName, List<Part> engines)
         {
             List<Part> visited = new List<Part>();
-            float total = 0;
+            double total = 0;
 
             foreach (var part in engines)
             {
@@ -142,16 +142,16 @@ namespace kOS
             return total;
         }
 
-        public static float ProspectForResource(String resourceName, Part engine)
+        public static double ProspectForResource(String resourceName, Part engine)
         {
             List<Part> visited = new List<Part>();
 
             return ProspectForResource(resourceName, engine, ref visited);
         }
 
-        public static float ProspectForResource(String resourceName, Part part, ref List<Part> visited)
+        public static double ProspectForResource(String resourceName, Part part, ref List<Part> visited)
         {
-            float ret = 0;
+            double ret = 0;
 
             if (visited.Contains(part))
             {
@@ -164,7 +164,7 @@ namespace kOS
             {
                 if (resource.resourceName.ToLower() == resourceName.ToLower())
                 {
-                    ret += (float)resource.amount;
+                    ret += resource.amount;
                 }
             }
 
@@ -198,7 +198,7 @@ namespace kOS
                 if (c == '\"')
                 {
                     var prevI = i;
-                    i = Expression.FindEndOfString(input, i + 1);
+                    i = Utils.FindEndOfString(input, i + 1);
                     buffer += input.Substring(prevI, i - prevI + 1);
                 }
                 else
@@ -266,7 +266,7 @@ namespace kOS
 
                     case "*":
                         // Anything
-                        output += "(.+?)";
+                        output += "([\\s\\S]+)";
                         break;
 
                     case "[":
