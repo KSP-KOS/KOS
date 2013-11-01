@@ -314,6 +314,8 @@ You can get several useful vessel stats for your ships
     LATITUDE
     LONGITUDE
     STATUS			// Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
+    INCOMMRANGE         // returns true if in range
+    COMMRANGE           // returns commrange
     MASS
     MAXTHRUST       // Combined thrust of active engines at full throttle (kN)
     TIME            // Gets the current universal time

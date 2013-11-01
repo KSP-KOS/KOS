@@ -167,6 +167,19 @@ namespace kOS
 
             foreach (Part part in vessel.parts)
             {
+                if (part.partInfo.name == "mediumDishAntenna")
+                {   
+                String status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
+
+                if (status == "Fixed" || status == "Locked")
+                {
+                    range *= 100;
+                }
+                }
+            }
+
+            foreach (Part part in vessel.parts)
+            {
                 if (part.partInfo.name == "commDish")
                 {
                     String status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
