@@ -101,6 +101,16 @@ namespace kOS
             else if (suffixName == "PROGRADE") return Pro;
             else if (suffixName == "RADIALOUT") return RadOut;
             else if (suffixName == "NORMAL") return Norm;
+            else if (suffixName == "APOAPSIS")
+            {
+                if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                return nodeRef.nextPatch.ApA;
+            }
+            else if (suffixName == "PERIAPSIS")
+            {
+                if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                return nodeRef.nextPatch.PeA;
+            }
 
             return base.GetSuffix(suffixName);
         }
