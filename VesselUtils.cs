@@ -336,7 +336,7 @@ namespace kOS
                 if (c.status.ToString().ToUpper() == "BLOCKED BY "+ body.name.ToUpper())
                 {
                   // if blocked celestial body return false.
-                  DirectSunlight = false;
+                  return false;
                 }
               }
             }
