@@ -118,6 +118,15 @@ Declares a variable at the current context level. Alternatively, a variable can 
 Example:
 
     DECLARE X.
+    
+### DECLARE PARAMETER
+    
+Declares variables to be used as a parameter.
+Example:
+    
+    DECLARE PARAMETER X.
+    DECLARE PARAMETER X,y.
+    RUN MYPROG(X).
 
 ### EDIT
 
@@ -149,6 +158,11 @@ Example:
     LIST.           // Lists files on the active volume
     LIST FILES.     // Lists files on the active volume
     LIST VOLUMES.   // Lists all volumes, with their numbers and names
+    LIST BODIES.    // Lists celestial bodies and their distance
+    LIST TARGETS.   // Lists target-able vessels in range
+    LIST RESOURCES. // List of resources by stage
+    LIST PARTS.     // Lists parts in vessel
+    LIST ENGINES.   // List of engines
 
 ### LOCK
 
@@ -237,9 +251,9 @@ Example:
 Switches to the specified volume. Volumes can be specified by number, or it’s name (if it has one). See LIST and RENAME.
 Example:
 
-    SWITCH TO 0.             // Switch to volume 0.
-    RENAME 1 TO AwesomeDisk. // Name volume 1 as AwesomeDisk.
-    SWITCH TO AwesomeDisk.   // Switch to volume 1.
+    SWITCH TO 0.                        // Switch to volume 0.
+    RENAME VOLUME 1 TO AwesomeDisk.     // Name volume 1 as AwesomeDisk.
+    SWITCH TO AwesomeDisk.              // Switch to volume 1.
 
 ### TOGGLE
 
@@ -318,7 +332,19 @@ You can get several useful vessel stats for your ships
     COMMRANGE           // returns commrange
     MASS
     MAXTHRUST       // Combined thrust of active engines at full throttle (kN)
-    TIME            // Gets the current universal time
+    
+### TIME
+
+Returns time in various formats.
+
+    TIME                // Gets the current universal time
+    TIME:CLOCK          // Universal time in H:M:S format(1:50:26)
+    TIME:CALENDAR       // Year 1, day 134
+    TIME:YEAR           // 1
+    TIME:DAY            // 134
+    TIME:HOUR           // 1
+    TIME:MINUTE         // 50
+    TIME:SECOND         // 26
     
 ### Vectors
 
@@ -345,6 +371,7 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
     NODE                // Direction of next maneuver node, can be used with LOCK STEERING
     MAG:NODE            // Delta-v magnitude of maneuver node
     ETA:NODE            // ETA to active maneuver node
+    ENCOUNTER           // Returns celestial body of encounter
 
 ### Stage specific values
 
@@ -407,6 +434,7 @@ Represents a maneuver node.
     ADD X.                              // Adds the node to the flight plan.
     PRINT X:PROGRADE.                   // Returns 100.
     PRINT X:ETA.                        // Returns the ETA to the node.
+    PRINT X:DELTAV                      // Returns delta-v vector.
     REMOVE X.                           // Remove node  from the flight plan.
     
 ### HEADING (degreesFromNorth, pitchAboveHorizon)
