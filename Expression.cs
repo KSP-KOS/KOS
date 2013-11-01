@@ -390,6 +390,7 @@ namespace kOS
             if (name == "ARCTAN2") { double[] dp = GetParamsAsT<double>(p, 2); return Math.Atan2(dp[0], dp[1]) * (180 / Math.PI); }
 
             if (name == "ABS") { double[] dp = GetParamsAsT<double>(p, 1); return Math.Abs(dp[0]); }
+            if (name == "MOD") { double[] dp = GetParamsAsT<double>(p, 2); return dp[0] % dp[1]; }
             if (name == "FLOOR") { double[] dp = GetParamsAsT<double>(p, 1); return Math.Floor(dp[0]); }
             if (name == "CEILING") { double[] dp = GetParamsAsT<double>(p, 1); return Math.Ceiling(dp[0]); }
             if (name == "ROUND") { double[] dp = GetParamsAsT<double>(p, 1); return Math.Round(dp[0]); }
