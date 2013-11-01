@@ -469,11 +469,22 @@ Represents a targetable vessel
     PRINT X:HEADING.                    // Print the heading to the vessel.
     PRINT X:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
     
-Other Bindings
-==============
+### SHIP
+    
+Represents currently selected ship
+    
+    PRINT SHIP.                            // returns VESSEL("kerbRoller2")
+    PRINT SHIP:DISTANCE.                   // Print distance from current vessel to target.
+    PRINT SHIP:HEADING.                    // Print the heading to the vessel.
+    PRINT SHIP:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
+    
+### TARGET
 
-    TARGET          // Set a target using it's name in quotes
-    TARGET:HEADING  // Gets the heading to the current target
-    TARGET:BEARING  // Gets the bearing to the current target
+Represents targeted vessel
+
+    SET TARGET TO "kerbRoller2".        // target kerbRoller2
+    PRINT TARGET:DISTANCE.              // Print distance from current vessel to target.
+    PRINT SHIP:HEADING.                 // Print the heading to the vessel.
+    PRINT SHIP:BEARING.                 // Print the heading to the target vessel relative to vessel heading.
     
     
