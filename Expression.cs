@@ -62,7 +62,7 @@ namespace kOS
                 if (output != null) return output;
             }
             
-            throw new kOSException("Unrecognized term: '" + term.Text + "'");
+            throw new kOSException("Unrecognized term: '" + term.Text + "'", executionContext);
 
             return null;
         }
@@ -113,7 +113,7 @@ namespace kOS
                     }
                     else
                     {
-                        throw new kOSException("Expression error processing statement '" + input.ToString() + "'");
+                        throw new kOSException("Expression error processing statement '" + input.ToString() + "'", executionContext);
                     }
                 }
                 else
@@ -132,7 +132,7 @@ namespace kOS
                 if (c1.Opr == "^")
                 {
                     var resultValue = AttemptPow(c1.Value, c2.Value);
-                    if (resultValue == null) throw new kOSException("Can't use exponents with " + GetFriendlyNameOfItem(c1.Value) + " and " + GetFriendlyNameOfItem(c2.Value));
+                    if (resultValue == null) throw new kOSException("Can't use exponents with " + GetFriendlyNameOfItem(c1.Value) + " and " + GetFriendlyNameOfItem(c2.Value), executionContext);
 
                     ReplaceChunkPairAt(ref chunks, i, new StatementChunk(resultValue, c2.Opr));
                     i--;
@@ -151,7 +151,7 @@ namespace kOS
                 if (c1.Opr == "*")
                 {
                     var resultValue = AttemptMultiply(c1.Value, c2.Value);
-                    if (resultValue == null) throw new kOSException("Can't multiply " + GetFriendlyNameOfItem(c1.Value) + " by " + GetFriendlyNameOfItem(c2.Value));
+                    if (resultValue == null) throw new kOSException("Can't multiply " + GetFriendlyNameOfItem(c1.Value) + " by " + GetFriendlyNameOfItem(c2.Value), executionContext);
 
                     ReplaceChunkPairAt(ref chunks, i, new StatementChunk(resultValue, c2.Opr));
                     i--;
@@ -159,7 +159,7 @@ namespace kOS
                 else if (c1.Opr == "/")
                 {
                     var resultValue = AttemptDivide(c1.Value, c2.Value);
-                    if (resultValue == null) throw new kOSException("Can't divide " + GetFriendlyNameOfItem(c1.Value) + " by " + GetFriendlyNameOfItem(c2.Value));
+                    if (resultValue == null) throw new kOSException("Can't divide " + GetFriendlyNameOfItem(c1.Value) + " by " + GetFriendlyNameOfItem(c2.Value), executionContext);
 
                     ReplaceChunkPairAt(ref chunks, i, new StatementChunk(resultValue, c2.Opr));
                     i--;
@@ -178,7 +178,7 @@ namespace kOS
                 if (c1.Opr == "+")
                 {
                     var resultValue = AttemptAdd(c1.Value, c2.Value);
-                    if (resultValue == null) throw new kOSException("Can't add " + GetFriendlyNameOfItem(c1.Value) + " and " + GetFriendlyNameOfItem(c2.Value));
+                    if (resultValue == null) throw new kOSException("Can't add " + GetFriendlyNameOfItem(c1.Value) + " and " + GetFriendlyNameOfItem(c2.Value), executionContext);
 
                     ReplaceChunkPairAt(ref chunks, i, new StatementChunk(resultValue, c2.Opr));
                     i--;
@@ -186,7 +186,7 @@ namespace kOS
                 else if (c1.Opr == "-")
                 {
                     var resultValue = AttemptSubtract(c1.Value, c2.Value);
-                    if (resultValue == null) throw new kOSException("Can't subtract " + GetFriendlyNameOfItem(c2.Value) + " from " + GetFriendlyNameOfItem(c1.Value));
+                    if (resultValue == null) throw new kOSException("Can't subtract " + GetFriendlyNameOfItem(c2.Value) + " from " + GetFriendlyNameOfItem(c1.Value), executionContext);
 
                     ReplaceChunkPairAt(ref chunks, i, new StatementChunk(resultValue, c2.Opr));
                     i--;
@@ -242,11 +242,11 @@ namespace kOS
                     output = ((SpecialValue)baseTermValue).GetSuffix(suffixTerm.Text.ToUpper());
                     if (output != null) return output;
 
-                    throw new kOSException("Suffix '" + suffixTerm.Text + "' not found on object");
+                    throw new kOSException("Suffix '" + suffixTerm.Text + "' not found on object", executionContext);
                 }
                 else
                 {
-                    throw new kOSException("Values of type " + GetFriendlyNameOfItem(baseTermValue) + " cannot have suffixes");
+                    throw new kOSException("Values of type " + GetFriendlyNameOfItem(baseTermValue) + " cannot have suffixes", executionContext);
                 }
             }
 
@@ -270,7 +270,7 @@ namespace kOS
                     }
                     else
                     {
-                        throw new kOSException("Expression error processing comparison '" + input.ToString() + "'");
+                        throw new kOSException("Expression error processing comparison '" + input.ToString() + "'", executionContext);
                     }
                 }
                 else
@@ -292,7 +292,7 @@ namespace kOS
                 else if (c1.Opr == "<=") resultValue = AttemptLTE(c1.Value, c2.Value);
                 else if (c1.Opr == ">=") resultValue = AttemptGTE(c1.Value, c2.Value);
 
-                if (resultValue == null) throw new kOSException("Can't compare " + GetFriendlyNameOfItem(c1.Value) + " to " + GetFriendlyNameOfItem(c2.Value) + " using " + c1.Opr);
+                if (resultValue == null) throw new kOSException("Can't compare " + GetFriendlyNameOfItem(c1.Value) + " to " + GetFriendlyNameOfItem(c2.Value) + " using " + c1.Opr, executionContext);
 
                 ReplaceChunkPairAt(ref chunks, i, new StatementChunk(resultValue, c2.Opr));
                 i--;
@@ -323,7 +323,7 @@ namespace kOS
                     }
                     else
                     {
-                        throw new kOSException("Expression error processing boolean operation '" + input.ToString() + "'");
+                        throw new kOSException("Expression error processing boolean operation '" + input.ToString() + "'", executionContext);
                     }
                 }
                 else
@@ -341,7 +341,7 @@ namespace kOS
                 if (c1.Opr == "AND") resultValue = AttemptAnd(c1.Value, c2.Value);
                 else if (c1.Opr == "OR") resultValue = AttemptOr(c1.Value, c2.Value);
 
-                if (resultValue == null) throw new kOSException("Can't compare " + GetFriendlyNameOfItem(c1.Value) + " to " + GetFriendlyNameOfItem(c2.Value) + " using " + c1.Opr);
+                if (resultValue == null) throw new kOSException("Can't compare " + GetFriendlyNameOfItem(c1.Value) + " to " + GetFriendlyNameOfItem(c2.Value) + " using " + c1.Opr, executionContext);
 
                 ReplaceChunkPairAt(ref chunks, i, new StatementChunk(resultValue, c2.Opr));
                 i--;
@@ -414,7 +414,7 @@ namespace kOS
             if (name == "HEADING")
             {
                 int pCount = p.Count();
-                if (pCount < 2 || pCount > 3) throw new kOSException("Wrong number of arguments supplied, expected 2 or 3");
+                if (pCount < 2 || pCount > 3) throw new kOSException("Wrong number of arguments supplied, expected 2 or 3", executionContext);
 
                 double[] dp = GetParamsAsT<double>(p, pCount);
                 var q = UnityEngine.Quaternion.LookRotation(VesselUtils.GetNorthVector(executionContext.Vessel), executionContext.Vessel.upAxis);
@@ -431,18 +431,18 @@ namespace kOS
             object value = GetValueOfTerm(input);
             if (value is T) return (T)value;
 
-            if (typeof(T) == typeof(double)) throw new kOSException("Supplied parameter '" + input.Text + "' is not a number");
-            if (typeof(T) == typeof(String)) throw new kOSException("Supplied parameter '" + input.Text + "' is not a string");
-            if (typeof(T) == typeof(bool)) throw new kOSException("Supplied parameter '" + input.Text + "' is not a boolean");
+            if (typeof(T) == typeof(double)) throw new kOSException("Supplied parameter '" + input.Text + "' is not a number", executionContext);
+            if (typeof(T) == typeof(String)) throw new kOSException("Supplied parameter '" + input.Text + "' is not a string", executionContext);
+            if (typeof(T) == typeof(bool)) throw new kOSException("Supplied parameter '" + input.Text + "' is not a boolean", executionContext);
 
-            throw new kOSException("Supplied parameter '" + input.Text + "' is not of the correct type");
+            throw new kOSException("Supplied parameter '" + input.Text + "' is not of the correct type", executionContext);
         }
 
         private T[] GetParamsAsT<T>(Term[] input, int size)
         {
             if (input.Count() != size)
             {
-                throw new kOSException("Wrong number of arguments supplied, expected " + size);
+                throw new kOSException("Wrong number of arguments supplied, expected " + size, executionContext);
             }
 
             T[] retVal = new T[size];

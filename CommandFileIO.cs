@@ -22,7 +22,7 @@ namespace kOS
             }
             else
             {
-                throw new kOSException("Edit can only be used when in immediate mode.");
+                throw new kOSException("Edit can only be used when in immediate mode.", this);
             }
         }
     }
@@ -65,7 +65,7 @@ namespace kOS
             }
             else
             {
-                throw new kOSException("File not found '" + fileName + "'.");
+                throw new kOSException("File not found '" + fileName + "'.", this);
             }
         }
 
@@ -129,14 +129,14 @@ namespace kOS
             {
                 if (!ParentContext.SwitchToVolume(volID))
                 {
-                    throw new kOSException("Volume " + volID + " not found");
+                    throw new kOSException("Volume " + volID + " not found", this);
                 }
             }
             else
             {
                 if (!ParentContext.SwitchToVolume(targetVolume))
                 {
-                    throw new kOSException("Volume '" + targetVolume + "' not found");
+                    throw new kOSException("Volume '" + targetVolume + "' not found", this);
                 }
             }
 
@@ -160,10 +160,10 @@ namespace kOS
                 Volume targetVolume = GetVolume(identifier); // Will throw if not found
 
                 int intTry;
-                if (int.TryParse(newName.Substring(0, 1), out intTry)) throw new kOSException("Volume name cannot start with numeral");
+                if (int.TryParse(newName.Substring(0, 1), out intTry)) throw new kOSException("Volume name cannot start with numeral", this);
 
                 if (targetVolume.Renameable) targetVolume.Name = newName;
-                else throw new kOSException("Volume cannot be renamed");
+                else throw new kOSException("Volume cannot be renamed", this);
 
                 State = ExecutionState.DONE;
                 return;
@@ -171,22 +171,22 @@ namespace kOS
             else if (operation.ToUpper() == "FILE" || String.IsNullOrEmpty(operation))
             {
                 File f = SelectedVolume.GetByName(identifier);
-                if (f == null) throw new kOSException("File '" + identifier + "' not found");
+                if (f == null) throw new kOSException("File '" + identifier + "' not found", this);
 
                 if (SelectedVolume.GetByName(newName) != null)
                 {
-                    throw new kOSException("File '" + newName + "' already exists.");
+                    throw new kOSException("File '" + newName + "' already exists.", this);
                 }
 
                 int intTry;
-                if (int.TryParse(newName.Substring(0, 1), out intTry)) throw new kOSException("Filename cannot start with numeral");
+                if (int.TryParse(newName.Substring(0, 1), out intTry)) throw new kOSException("Filename cannot start with numeral", this);
 
                 f.Filename = newName;
                 State = ExecutionState.DONE;
                 return;
             }
 
-            throw new kOSException("Unrecognized renamable object type '" + operation + "'");
+            throw new kOSException("Unrecognized renamable object type '" + operation + "'", this);
         }
     }
 
@@ -241,14 +241,14 @@ namespace kOS
             {
                 case "FROM":
                     file = targetVolume.GetByName(targetFile);
-                    if (file == null) throw new kOSException("File '" + targetFile + "' not found");
-                    if (!SelectedVolume.SaveFile(new File(file))) throw new kOSException("File copy failed");
+                    if (file == null) throw new kOSException("File '" + targetFile + "' not found", this);
+                    if (!SelectedVolume.SaveFile(new File(file))) throw new kOSException("File copy failed", this);
                     break;
 
                 case "TO":
                     file = SelectedVolume.GetByName(targetFile);
-                    if (file == null) throw new kOSException("File '" + targetFile + "' not found");
-                    if (!targetVolume.SaveFile(new File(file))) throw new kOSException("File copy failed");
+                    if (file == null) throw new kOSException("File '" + targetFile + "' not found", this);
+                    if (!targetVolume.SaveFile(new File(file))) throw new kOSException("File copy failed", this);
                     break;
             }
 
@@ -273,13 +273,13 @@ namespace kOS
             {
                 targetVolume = GetVolume(volumeName); // Will throw if not found
                 file = targetVolume.GetByName(targetFile);
-                if (file == null) throw new kOSException("File '" + targetFile + "' not found");
+                if (file == null) throw new kOSException("File '" + targetFile + "' not found", this);
                 targetVolume.DeleteByName(targetFile);
             }
             else
             {
                 file = SelectedVolume.GetByName(targetFile);
-                if (file == null) throw new kOSException("File '" + targetFile + "' not found");
+                if (file == null) throw new kOSException("File '" + targetFile + "' not found", this);
                 SelectedVolume.DeleteByName(targetFile);
             }
 
@@ -346,7 +346,7 @@ namespace kOS
                 return;
             }
 
-            throw new kOSException("List type '" + listType + "' not recognized.");
+            throw new kOSException("List type '" + listType + "' not recognized.", this);
         }
     }
 }
