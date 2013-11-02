@@ -94,6 +94,16 @@ Example:
 This statement adds a node that occurs 30 seconds from now, and has a delta-V of 100 m/s radial out, 0 m/s normal, and 200 m/s prograde.
 
     ADD NODE(TIME + 30, 100, 0, 200).
+    
+### REMOVE
+    
+Removes maneuver node from flight plan. Cannot remove bare nodes e.g. ADD NODE().
+    SET X TO NODE(0,0,0,0).
+    ADD X.
+    REMOVE X.
+    
+    ADD NODE(0,0,0,0).
+    REMOVE.             // Does not remove node.
 
 ### BREAK
 
