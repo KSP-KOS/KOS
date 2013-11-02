@@ -47,9 +47,9 @@ Resource tags allow you to quickly look up the amount of a resource your ship ha
 ### Mathematical Functions
     
 ### Basic Functions
-    
+
     ABS(1).             // Returns absolute value of input. e.g. 1
-    MOD(6/5).           // Returns remainder of division. e.g. 2
+    MOD(21,6).          // Returns remainder of an integer division. e.g. 3
     FLOOR(1.887).       // Rounds down to the nearest whole number. e.g. 1
     CEILING(1.887).     // Rounds up to the nearest whole number. e.g. 2
     ROUND(1.887).       // Rounds to the nearest whole number. e.g. 2
@@ -57,6 +57,7 @@ Resource tags allow you to quickly look up the amount of a resource your ship ha
     SQRT(7.89).         // Returns square root. e.g. 2.80891438103763
     
 ### Trigonometric Functions
+
     SIN(6).                 // Returns sine of input. e.g. 0.10452846326
     COS(6).                 // Returns cosine. e.g. 0.99452189536
     TAN(6).                 // Returns tangent. e.g. 0.10510423526
