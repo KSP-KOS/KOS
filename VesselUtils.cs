@@ -38,7 +38,7 @@ namespace kOS
             resourceName = resourceName.ToUpper();
 
             // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
-            if (new[] { "LIQUIDFUEL", "ELECTRICCHARGE", "OXIDIZER", "INTAKEAIR" }.Contains(resourceName)) resourceIsFound = true;
+            if (new[] { "LIQUIDFUEL", "ELECTRICCHARGE", "OXIDIZER", "INTAKEAIR", "SOLIDFUEL", "MONOPROPELLANT" }.Contains(resourceName)) resourceIsFound = true;
 
             foreach (Part part in vessel.parts)
             {
