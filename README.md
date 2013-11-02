@@ -339,6 +339,13 @@ Sets a variable to false. This is useful for the RCS and SAS bindings.
 Example
 
     RCS OFF			// Turns off the RCS
+    
+### WARP
+
+Sets game warp to provided value(0-7).
+
+    SET WARP TO 5.      // Sets warp to 1000x.
+    SET WARP TO 0.      // Sets warp to 0x aka real time.
 
 Flight Statistics
 =================
@@ -550,3 +557,4 @@ Returns values about kOS and hardware
     PRINT VERSION.            // Returns operating system version number. 0.8.6
     PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
     PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
+    PRINT SESSIONTIME.        // Returns amount of time, in seconds, from vessel load.
