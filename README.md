@@ -44,8 +44,8 @@ Resource tags allow you to quickly look up the amount of a resource your ship ha
 
     PRINT <LiquidFuel>. // Print the total liquid fuel in all tanks.
     
-Mathematical Functions
-======================
+## Mathematical Functions
+
     
 ## Basic Functions
     
