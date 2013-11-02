@@ -40,10 +40,6 @@ You can use mathematical operations on numbers, like this:
 
 The system follows the order of operations, but currently the implementation is imperfect. For example, multiplication will always be performed before division, regardless of the order they come in. This will be fixed in a future release.
 
-Resource tags allow you to quickly look up the amount of a resource your ship has. Any resource that appears at the top right resource panel can be queried.
-
-    PRINT <LiquidFuel>. // Print the total liquid fuel in all tanks.
-    
 ### Mathematical Functions
     
 ### Basic Functions
@@ -339,21 +335,21 @@ Flight Statistics
 
 You can get several useful vessel stats for your ships
 
-    VESSELNAME			
+    VESSELNAME
     ALTITUDE
-    ALT:RADAR       // Your radar altitude
-    BODY			// The current celestial body whose influence you are under
-    MISSIONTIME     // The current mission time
-    VELOCITY		// The current orbital velocity
+    ALT:RADAR           // Your radar altitude
+    BODY                // The current celestial body whose influence you are under
+    MISSIONTIME         // The current mission time
+    VELOCITY            // The current orbital velocity
     VERTICALSPEED
     SURFACESPEED
     LATITUDE
     LONGITUDE
-    STATUS			// Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
+    STATUS              // Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
     INCOMMRANGE         // returns true if in range
     COMMRANGE           // returns commrange
     MASS
-    MAXTHRUST       // Combined thrust of active engines at full throttle (kN)
+    MAXTHRUST           // Combined thrust of active engines at full throttle (kN)
     
 ### TIME
 
@@ -394,11 +390,27 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
     MAG:NODE            // Delta-v magnitude of maneuver node
     ETA:NODE            // ETA to active maneuver node
     ENCOUNTER           // Returns celestial body of encounter
+    NEXTNODE            // Next node in flight plan.
+
+### Resources
+
+### Resource Types
+
+    LIQUIDFUEL
+    OXIDIZER
+    ELECTRICALCHARGE
+    MONOPROPELLANT
 
 ### Stage specific values
 
-    STAGE:LIQUIDFUEL
+    STAGE:LIQUIDFUEL            // Prints per stage liquid fuel.
     STAGE:OXIDIZER
+    
+### Global values
+
+    PRINT <LiquidFuel>.                         // Print the total liquid fuel in all tanks. DEPRECATED
+    PRINT SHIP:LIQUIDFUEL.                      // Print the total liquid fuel in all tanks.
+    PRINT VESSEL("kerbRoller2"):LIQUIDFUEL.     // Print the total liquid fuel on kerbRoller2.
 
 
 Flight Control
@@ -459,6 +471,13 @@ Represents a maneuver node.
     PRINT X:DELTAV                      // Returns delta-v vector.
     REMOVE X.                           // Remove node  from the flight plan.
     
+    SET X TO NODE(0, 0, 0, 0).          // Create a blank node.
+    ADD X.                              // Add Node to flight plan.
+    SET X:PROGRADE to 500.              // Set nodes prograde to 500m/s deltav.
+    PRINT X:APOAPSIS.                   // Returns nodes apoapsis.
+    PRINT X:PERIAPSIS.                  // Returns nodes periapsis.
+    
+    
 ### HEADING (degreesFromNorth, pitchAboveHorizon)
 
 Represents a heading that's relative to the body of influence.
@@ -502,7 +521,7 @@ Represents currently selected ship
     
 ### TARGET
 
-Represents targeted vessel
+Represents targeted vessel or celestial body
 
     SET TARGET TO "kerbRoller2".        // target kerbRoller2
     PRINT TARGET:DISTANCE.              // Print distance from current vessel to target.
@@ -514,3 +533,5 @@ System Variables
 Returns values about kOS and hardware
 
     PRINT VERSION.            // Returns operating system version number. 0.8.6
+    PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
+    PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
