@@ -400,6 +400,8 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
     OXIDIZER
     ELECTRICALCHARGE
     MONOPROPELLANT
+    INTAKEAIR
+    SOLIDFUEL
 
 ### Stage specific values
 
@@ -444,7 +446,7 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
 Structures
 ==========
 
-Structures are variables that can contain more than one piece of information. Structures can be used with SET.. TO just like any other variable.
+Structures are variables that can contain more than one piece of information. Structures can be used with SET.. TO just like any other variable. Changing valves works only with V() and NODE() at this time, cannot be used with lock.
 
 Their subelements can be accessed by using : along with the name of the subelement.
 
@@ -500,6 +502,8 @@ Represents a vector.
     V(100,5,0):Y.                       // Returns 5.
     V(100,5,0):Z.                       // Returns 0.
     varname:MAG.                        // Returns the magnitude of the vector, in this case
+    SET varname:X TO 111.               // Changes vector x value to 111.
+    SET varname:MAG to 10.              // Changes magnitude of vector. e.g. V(9.98987,0.44999,0)
     
 ### VESSEL (vesselname)
 
