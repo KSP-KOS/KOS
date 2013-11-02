@@ -413,6 +413,7 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
     PRINT <LiquidFuel>.                         // Print the total liquid fuel in all tanks. DEPRECATED
     PRINT SHIP:LIQUIDFUEL.                      // Print the total liquid fuel in all tanks.
     PRINT VESSEL("kerbRoller2"):LIQUIDFUEL.     // Print the total liquid fuel on kerbRoller2.
+    PRINT TARGET:LIQUIDFUEL.                    // Print the total liquid fuel on target.
 
 
 Flight Control
