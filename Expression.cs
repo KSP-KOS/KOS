@@ -13,6 +13,12 @@ namespace kOS
         Term rootTerm;
         ExecutionContext executionContext;
 
+        public Expression(Term term, ExecutionContext context)
+        {
+            rootTerm = term;
+            this.executionContext = context;
+        }
+
         public Expression(String text, ExecutionContext context)
         {
             rootTerm = new Term(text);
@@ -469,7 +475,7 @@ namespace kOS
             return retVal;
         }
 
-        private String GetFriendlyNameOfItem(object input)
+        public static String GetFriendlyNameOfItem(object input)
         {
             if (input is String) return "string";
             if (input is double) return "number";

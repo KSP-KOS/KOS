@@ -18,6 +18,11 @@ namespace kOS
             this.target = target;
         }
 
+        public double GetDistance()
+        {
+            return Vector3d.Distance(context.Vessel.GetWorldPos3D(), target.position) - target.Radius;
+        }
+
         public override object GetSuffix(string suffixName)
         {
             if (target == null) throw new kOSException("BODY structure appears to be empty!");
@@ -30,6 +35,8 @@ namespace kOS
             if (suffixName == "APOAPSIS") return target.orbit.ApA;
             if (suffixName == "PERIAPSIS") return target.orbit.PeA;
             if (suffixName == "VELOCITY") return new Vector(target.orbit.GetVel());
+            if (suffixName == "DISTANCE") return (float)GetDistance();
+            if (suffixName == "BODY") return new BodyTarget(target.orbit.referenceBody, context);
 
             return base.GetSuffix(suffixName);
         }

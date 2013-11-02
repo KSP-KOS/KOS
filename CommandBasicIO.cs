@@ -146,26 +146,47 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("SET % TO *")]
+    [CommandAttribute("SET * TO *")]
     public class CommandSet : Command
     {
         public CommandSet(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
-            String varName = RegexMatch.Groups[1].Value;
-            Variable v = FindOrCreateVariable(varName);
+            Term targetTerm = new Term(RegexMatch.Groups[1].Value);
+            Expression e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
 
-            if (v != null)
+            if (targetTerm.Type == Term.TermTypes.STRUCTURE)
             {
-                Expression e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
-                v.Value = e.GetValue();
+                object baseObj = new Expression(targetTerm.SubTerms[0], ParentContext).GetValue();
 
-                State = ExecutionState.DONE;
+                if (baseObj is SpecialValue)
+                {
+                    if (((SpecialValue)baseObj).SetSuffix(targetTerm.SubTerms[1].Text.ToUpper(), e.GetValue()))
+                    {
+                        State = ExecutionState.DONE;
+                        return;
+                    }
+                    else
+                    {
+                        throw new kOSException("Suffix '" + targetTerm.SubTerms[1].Text + "' doesn't exist or is read only", this);
+                    }
+                }
+                else
+                {
+                    throw new kOSException("Can't set subvalues on a " + Expression.GetFriendlyNameOfItem(baseObj), this);
+                }
             }
             else
             {
-                throw new kOSException("Can't find or create variable '" + varName + "'", this);
+                Variable v = FindOrCreateVariable(targetTerm.Text);
+
+                if (v != null)
+                {
+                    v.Value = e.GetValue();
+                    State = ExecutionState.DONE;
+                    return;
+                }
             }
         }
     }
