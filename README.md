@@ -43,6 +43,28 @@ The system follows the order of operations, but currently the implementation is 
 Resource tags allow you to quickly look up the amount of a resource your ship has. Any resource that appears at the top right resource panel can be queried.
 
     PRINT <LiquidFuel>. // Print the total liquid fuel in all tanks.
+    
+### Mathematical Functions
+    
+### Basic Functions
+
+    ABS(1).             // Returns absolute value of input. e.g. 1
+    MOD(21,6).          // Returns remainder of an integer division. e.g. 3
+    FLOOR(1.887).       // Rounds down to the nearest whole number. e.g. 1
+    CEILING(1.887).     // Rounds up to the nearest whole number. e.g. 2
+    ROUND(1.887).       // Rounds to the nearest whole number. e.g. 2
+    ROUND(1.887, 2).    // Rounds to the nearest place value. e.g. 1.89
+    SQRT(7.89).         // Returns square root. e.g. 2.80891438103763
+    
+### Trigonometric Functions
+
+    SIN(6).                 // Returns sine of input. e.g. 0.10452846326
+    COS(6).                 // Returns cosine. e.g. 0.99452189536
+    TAN(6).                 // Returns tangent. e.g. 0.10510423526
+    ARCSIN(0.67).           // Returns angle whose sine is input in degrees. e.g. 42.0670648
+    ARCCOS(0.67).           // Returns angle whose cosine is input in degrees. e.g. 47.9329352
+    ARCTAN(0.67).           // Returns angle whose tangent is input in degrees. e.g. 33.8220852
+    ARCTAN2(0.67, 0.89).    // Returns the angle whose tangent is the quotient of two specified numbers in degrees. e.g. 36.9727625
 
 ### Strings
 
@@ -469,11 +491,26 @@ Represents a targetable vessel
     PRINT X:HEADING.                    // Print the heading to the vessel.
     PRINT X:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
     
-Other Bindings
-==============
+### SHIP
+    
+Represents currently selected ship
+    
+    PRINT SHIP.                            // returns VESSEL("kerbRoller2")
+    PRINT SHIP:DISTANCE.                   // Print distance from current vessel to target.
+    PRINT SHIP:HEADING.                    // Print the heading to the vessel.
+    PRINT SHIP:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
+    
+### TARGET
 
-    TARGET          // Set a target using it's name in quotes
-    TARGET:HEADING  // Gets the heading to the current target
-    TARGET:BEARING  // Gets the bearing to the current target
+Represents targeted vessel
+
+    SET TARGET TO "kerbRoller2".        // target kerbRoller2
+    PRINT TARGET:DISTANCE.              // Print distance from current vessel to target.
+    PRINT SHIP:HEADING.                 // Print the heading to the vessel.
+    PRINT SHIP:BEARING.                 // Print the heading to the target vessel relative to vessel heading.
     
-    
+System Variables
+==========================
+Returns values about kOS and hardware
+
+    PRINT VERSION.            // Returns operating system version number. 0.8.6
