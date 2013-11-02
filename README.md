@@ -416,7 +416,7 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
 
     LIQUIDFUEL
     OXIDIZER
-    ELECTRICALCHARGE
+    ELECTRICCHARGE
     MONOPROPELLANT
     INTAKEAIR
     SOLIDFUEL
