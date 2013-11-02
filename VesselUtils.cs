@@ -371,13 +371,11 @@ namespace kOS
         foreach (ModuleDeployableSolarPanel c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
         {
           DirectSunlight = true;
-          foreach (var body in FlightGlobals.fetch.bodies)
+
+          if (c.sunAOA <= 0.0)
           {
-            if (c.status.ToString().ToUpper() == "BLOCKED BY "+ body.name.ToUpper())
-            {
               // if blocked celestial body return false.
               return false;
-            }
           }
         }
       }
