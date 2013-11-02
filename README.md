@@ -506,8 +506,8 @@ Represents targeted vessel
 
     SET TARGET TO "kerbRoller2".        // target kerbRoller2
     PRINT TARGET:DISTANCE.              // Print distance from current vessel to target.
-    PRINT SHIP:HEADING.                 // Print the heading to the vessel.
-    PRINT SHIP:BEARING.                 // Print the heading to the target vessel relative to vessel heading.
+    PRINT TARGET:HEADING.               // Print the heading to the target vessel.
+    PRINT TARGET:BEARING.               // Print the bearing to the target vessel relative to vessel heading.
     
 System Variables
 ==========================
