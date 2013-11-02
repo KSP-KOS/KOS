@@ -504,7 +504,7 @@ Mathematical Functions
     CEILING(1.887).     // Rounds up to the nearest whole number. e.g. 2
     ROUND(1.887).       // Rounds to the nearest whole number. e.g. 2
     ROUND(1.887, 2).    // Rounds to the nearest place value. e.g. 1.89
-    SQRT(7.89).         // Returns square root.
+    SQRT(7.89).         // Returns square root. e.g. 2.80891438103763
     
 ## Trigonometric Functions
     SIN(6).                 // Returns sine of input. e.g. 0.10452846326
