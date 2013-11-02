@@ -98,6 +98,7 @@ This statement adds a node that occurs 30 seconds from now, and has a delta-V of
 ### REMOVE
     
 Removes maneuver node from flight plan. Cannot remove bare nodes e.g. ADD NODE().
+
     SET X TO NODE(0,0,0,0).
     ADD X.
     REMOVE X.
