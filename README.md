@@ -44,10 +44,7 @@ Resource tags allow you to quickly look up the amount of a resource your ship ha
 
     PRINT <LiquidFuel>. // Print the total liquid fuel in all tanks.
     
-## Mathematical Functions
-
-    
-## Basic Functions
+## Basic Mathematical Functions
     
     ABS(1).             // Returns absolute value of input. e.g. 1
     MOD(6/5).           // Returns remainder of division. e.g. 2
