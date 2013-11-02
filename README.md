@@ -44,7 +44,9 @@ Resource tags allow you to quickly look up the amount of a resource your ship ha
 
     PRINT <LiquidFuel>. // Print the total liquid fuel in all tanks.
     
-## Basic Mathematical Functions
+### Mathematical Functions
+    
+### Basic Functions
     
     ABS(1).             // Returns absolute value of input. e.g. 1
     MOD(6/5).           // Returns remainder of division. e.g. 2
@@ -54,7 +56,7 @@ Resource tags allow you to quickly look up the amount of a resource your ship ha
     ROUND(1.887, 2).    // Rounds to the nearest place value. e.g. 1.89
     SQRT(7.89).         // Returns square root. e.g. 2.80891438103763
     
-## Trigonometric Functions
+### Trigonometric Functions
     SIN(6).                 // Returns sine of input. e.g. 0.10452846326
     COS(6).                 // Returns cosine. e.g. 0.99452189536
     TAN(6).                 // Returns tangent. e.g. 0.10510423526
