@@ -64,7 +64,7 @@ namespace kOS
             }
             else
             {
-                throw new kOSException("Non-numeric value assigned to numeric function");
+                throw new kOSException("Non-numeric value assigned to numeric function", this);
             }
 
             State = ExecutionState.DONE;
@@ -118,7 +118,7 @@ namespace kOS
             String varName = RegexMatch.Groups[1].Value;
             Variable v = FindOrCreateVariable(varName);
 
-            if (v == null) throw new kOSException("Can't create variable '" + varName + "'");
+            if (v == null) throw new kOSException("Can't create variable '" + varName + "'", this);
             
             State = ExecutionState.DONE;
         }
@@ -131,12 +131,12 @@ namespace kOS
 
         public override void Evaluate()
         {
-            if (!(ParentContext is ContextRunProgram)) throw new kOSException("DECLARE PARAMETERS can only be used within a program.");
+            if (!(ParentContext is ContextRunProgram)) throw new kOSException("DECLARE PARAMETERS can only be used within a program.", this);
 
             foreach (String varName in RegexMatch.Groups[1].Value.Split(','))
             {
                 Variable v = FindOrCreateVariable(varName);
-                if (v == null) throw new kOSException("Can't create variable '" + varName + "'");
+                if (v == null) throw new kOSException("Can't create variable '" + varName + "'", this);
 
                 var program = (ContextRunProgram)ParentContext;
                 v.Value = program.PopParameter();
@@ -146,26 +146,47 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("SET % TO *")]
+    [CommandAttribute("SET * TO *")]
     public class CommandSet : Command
     {
         public CommandSet(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
-            String varName = RegexMatch.Groups[1].Value;
-            Variable v = FindOrCreateVariable(varName);
+            Term targetTerm = new Term(RegexMatch.Groups[1].Value);
+            Expression e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
 
-            if (v != null)
+            if (targetTerm.Type == Term.TermTypes.STRUCTURE)
             {
-                Expression e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
-                v.Value = e.GetValue();
+                object baseObj = new Expression(targetTerm.SubTerms[0], ParentContext).GetValue();
 
-                State = ExecutionState.DONE;
+                if (baseObj is SpecialValue)
+                {
+                    if (((SpecialValue)baseObj).SetSuffix(targetTerm.SubTerms[1].Text.ToUpper(), e.GetValue()))
+                    {
+                        State = ExecutionState.DONE;
+                        return;
+                    }
+                    else
+                    {
+                        throw new kOSException("Suffix '" + targetTerm.SubTerms[1].Text + "' doesn't exist or is read only", this);
+                    }
+                }
+                else
+                {
+                    throw new kOSException("Can't set subvalues on a " + Expression.GetFriendlyNameOfItem(baseObj), this);
+                }
             }
             else
             {
-                throw new kOSException("Can't find or create variable '" + varName + "'");
+                Variable v = FindOrCreateVariable(targetTerm.Text);
+
+                if (v != null)
+                {
+                    v.Value = e.GetValue();
+                    State = ExecutionState.DONE;
+                    return;
+                }
             }
         }
     }
@@ -195,12 +216,12 @@ namespace kOS
                 }
                 else
                 {
-                    throw new kOSException("That variable can't be toggled.");
+                    throw new kOSException("That variable can't be toggled.", this);
                 }
             }
             else
             {
-                throw new kOSException("Can't find or create variable '" + varName + "'");
+                throw new kOSException("Can't find or create variable '" + varName + "'", this);
             }
         }
     }
@@ -224,12 +245,12 @@ namespace kOS
                 }
                 else
                 {
-                    throw new kOSException("That variable can't be set to 'ON'.");
+                    throw new kOSException("That variable can't be set to 'ON'.", this);
                 }
             }
             else
             {
-                throw new kOSException("Can't find or create variable '" + varName + "'");
+                throw new kOSException("Can't find or create variable '" + varName + "'", this);
             }
         }
     }
@@ -253,12 +274,12 @@ namespace kOS
                 }
                 else
                 {
-                    throw new kOSException("That variable can't be set to 'OFF'.");
+                    throw new kOSException("That variable can't be set to 'OFF'.", this);
                 }
             }
             else
             {
-                throw new kOSException("Can't find or create variable '" + varName + "'");
+                throw new kOSException("Can't find or create variable '" + varName + "'", this);
             }
         }
     }

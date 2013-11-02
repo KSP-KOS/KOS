@@ -37,7 +37,7 @@ namespace kOS
             }
             else
             {
-                throw new kOSException("Supplied object ineligible for adding");
+                throw new kOSException("Supplied object ineligible for adding", this);
             }
 
             State = ExecutionState.DONE;
@@ -60,7 +60,7 @@ namespace kOS
             }
             else
             {
-                throw new kOSException("Supplied object ineligible for removal");
+                throw new kOSException("Supplied object ineligible for removal", this);
             }
 
             State = ExecutionState.DONE;

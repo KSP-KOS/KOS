@@ -54,6 +54,12 @@ namespace kOS
             NodeLookup.Add(nodeRef, this);
         }
 
+        public void UpdateAll()
+        {
+            UpdateNodeDeltaV();
+            if (vesselRef != null) vesselRef.patchedConicSolver.UpdateFlightPlan();
+        }
+
         private void UpdateNodeDeltaV()
         {
             if (nodeRef != null)
@@ -101,6 +107,16 @@ namespace kOS
             else if (suffixName == "PROGRADE") return Pro;
             else if (suffixName == "RADIALOUT") return RadOut;
             else if (suffixName == "NORMAL") return Norm;
+            else if (suffixName == "APOAPSIS")
+            {
+                if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                return nodeRef.nextPatch.ApA;
+            }
+            else if (suffixName == "PERIAPSIS")
+            {
+                if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                return nodeRef.nextPatch.PeA;
+            }
 
             return base.GetSuffix(suffixName);
         }
@@ -109,9 +125,9 @@ namespace kOS
         {
             if (suffixName == "BURNVECTOR" || suffixName == "ETA" || suffixName == "DELTAV") throw new kOSReadOnlyException(suffixName);
 
-            else if (suffixName == "PROGRADE") { Pro = (double)value; UpdateNodeDeltaV(); }
-            else if (suffixName == "RADIALOUT") { RadOut = (double)value; UpdateNodeDeltaV(); }
-            else if (suffixName == "NORMAL") { Norm = (double)value; UpdateNodeDeltaV(); }
+            else if (suffixName == "PROGRADE") { Pro = (double)value; UpdateAll(); return true; }
+            else if (suffixName == "RADIALOUT") { RadOut = (double)value; UpdateAll(); return true; }
+            else if (suffixName == "NORMAL") { Norm = (double)value; UpdateAll(); return true; }
 
             return false;
         }

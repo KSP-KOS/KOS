@@ -40,9 +40,27 @@ You can use mathematical operations on numbers, like this:
 
 The system follows the order of operations, but currently the implementation is imperfect. For example, multiplication will always be performed before division, regardless of the order they come in. This will be fixed in a future release.
 
-Resource tags allow you to quickly look up the amount of a resource your ship has. Any resource that appears at the top right resource panel can be queried.
+### Mathematical Functions
+    
+### Basic Functions
 
-    PRINT <LiquidFuel>. // Print the total liquid fuel in all tanks.
+    ABS(1).             // Returns absolute value of input. e.g. 1
+    MOD(21,6).          // Returns remainder of an integer division. e.g. 3
+    FLOOR(1.887).       // Rounds down to the nearest whole number. e.g. 1
+    CEILING(1.887).     // Rounds up to the nearest whole number. e.g. 2
+    ROUND(1.887).       // Rounds to the nearest whole number. e.g. 2
+    ROUND(1.887, 2).    // Rounds to the nearest place value. e.g. 1.89
+    SQRT(7.89).         // Returns square root. e.g. 2.80891438103763
+    
+### Trigonometric Functions
+
+    SIN(6).                 // Returns sine of input. e.g. 0.10452846326
+    COS(6).                 // Returns cosine. e.g. 0.99452189536
+    TAN(6).                 // Returns tangent. e.g. 0.10510423526
+    ARCSIN(0.67).           // Returns angle whose sine is input in degrees. e.g. 42.0670648
+    ARCCOS(0.67).           // Returns angle whose cosine is input in degrees. e.g. 47.9329352
+    ARCTAN(0.67).           // Returns angle whose tangent is input in degrees. e.g. 33.8220852
+    ARCTAN2(0.67, 0.89).    // Returns the angle whose tangent is the quotient of two specified numbers in degrees. e.g. 36.9727625
 
 ### Strings
 
@@ -118,6 +136,15 @@ Declares a variable at the current context level. Alternatively, a variable can 
 Example:
 
     DECLARE X.
+    
+### DECLARE PARAMETER
+    
+Declares variables to be used as a parameter.
+Example:
+    
+    DECLARE PARAMETER X.
+    DECLARE PARAMETER X,y.
+    RUN MYPROG(X).
 
 ### EDIT
 
@@ -149,6 +176,11 @@ Example:
     LIST.           // Lists files on the active volume
     LIST FILES.     // Lists files on the active volume
     LIST VOLUMES.   // Lists all volumes, with their numbers and names
+    LIST BODIES.    // Lists celestial bodies and their distance
+    LIST TARGETS.   // Lists target-able vessels in range
+    LIST RESOURCES. // List of resources by stage
+    LIST PARTS.     // Lists parts in vessel
+    LIST ENGINES.   // List of engines
 
 ### LOCK
 
@@ -237,9 +269,9 @@ Example:
 Switches to the specified volume. Volumes can be specified by number, or it’s name (if it has one). See LIST and RENAME.
 Example:
 
-    SWITCH TO 0.             // Switch to volume 0.
-    RENAME 1 TO AwesomeDisk. // Name volume 1 as AwesomeDisk.
-    SWITCH TO AwesomeDisk.   // Switch to volume 1.
+    SWITCH TO 0.                        // Switch to volume 0.
+    RENAME VOLUME 1 TO AwesomeDisk.     // Name volume 1 as AwesomeDisk.
+    SWITCH TO AwesomeDisk.              // Switch to volume 1.
 
 ### TOGGLE
 
@@ -303,21 +335,35 @@ Flight Statistics
 
 You can get several useful vessel stats for your ships
 
-    VESSELNAME			
+    VESSELNAME
     ALTITUDE
-    ALT:RADAR       // Your radar altitude
-    BODY			// The current celestial body whose influence you are under
-    MISSIONTIME     // The current mission time
-    VELOCITY		// The current orbital velocity
+    ALT:RADAR           // Your radar altitude
+    BODY                // The current celestial body whose influence you are under
+    MISSIONTIME         // The current mission time
+    VELOCITY            // The current orbital velocity
     VERTICALSPEED
     SURFACESPEED
     LATITUDE
     LONGITUDE
-    STATUS	// Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
-    INSUNLIGHT  // Returns true if not blocked by celestial body, always false without solar panel.
+    STATUS              // Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
+    INLIGHT          // Returns true if not blocked by celestial body, always false without solar panel.
+    INCOMMRANGE         // returns true if in range
+    COMMRANGE           // returns commrange
     MASS
-    MAXTHRUST       // Combined thrust of active engines at full throttle (kN)
-    TIME            // Gets the current universal time
+    MAXTHRUST           // Combined thrust of active engines at full throttle (kN)
+    
+### TIME
+
+Returns time in various formats.
+
+    TIME                // Gets the current universal time
+    TIME:CLOCK          // Universal time in H:M:S format(1:50:26)
+    TIME:CALENDAR       // Year 1, day 134
+    TIME:YEAR           // 1
+    TIME:DAY            // 134
+    TIME:HOUR           // 1
+    TIME:MINUTE         // 50
+    TIME:SECOND         // 26
     
 ### Vectors
 
@@ -344,11 +390,31 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
     NODE                // Direction of next maneuver node, can be used with LOCK STEERING
     MAG:NODE            // Delta-v magnitude of maneuver node
     ETA:NODE            // ETA to active maneuver node
+    ENCOUNTER           // Returns celestial body of encounter
+    NEXTNODE            // Next node in flight plan.
+
+### Resources
+
+### Resource Types
+
+    LIQUIDFUEL
+    OXIDIZER
+    ELECTRICALCHARGE
+    MONOPROPELLANT
+    INTAKEAIR
+    SOLIDFUEL
 
 ### Stage specific values
 
-    STAGE:LIQUIDFUEL
+    STAGE:LIQUIDFUEL            // Prints per stage liquid fuel.
     STAGE:OXIDIZER
+    
+### Global values
+
+    PRINT <LiquidFuel>.                         // Print the total liquid fuel in all tanks. DEPRECATED
+    PRINT SHIP:LIQUIDFUEL.                      // Print the total liquid fuel in all tanks.
+    PRINT VESSEL("kerbRoller2"):LIQUIDFUEL.     // Print the total liquid fuel on kerbRoller2.
+    PRINT TARGET:LIQUIDFUEL.                    // Print the total liquid fuel on target.
 
 
 Flight Control
@@ -365,6 +431,7 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
     BRAKES
     LEGS
     CHUTES	// Cannot be un-deployed.
+    PANELS
     
 ### Controls that can be used with TOGGLE
 
@@ -381,7 +448,7 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
 Structures
 ==========
 
-Structures are variables that can contain more than one piece of information. Structures can be used with SET.. TO just like any other variable.
+Structures are variables that can contain more than one piece of information. Structures can be used with SET.. TO just like any other variable. Changing valves works only with V() and NODE() at this time, cannot be used with lock.
 
 Their subelements can be accessed by using : along with the name of the subelement.
 
@@ -405,7 +472,15 @@ Represents a maneuver node.
     ADD X.                              // Adds the node to the flight plan.
     PRINT X:PROGRADE.                   // Returns 100.
     PRINT X:ETA.                        // Returns the ETA to the node.
+    PRINT X:DELTAV                      // Returns delta-v vector.
     REMOVE X.                           // Remove node  from the flight plan.
+    
+    SET X TO NODE(0, 0, 0, 0).          // Create a blank node.
+    ADD X.                              // Add Node to flight plan.
+    SET X:PROGRADE to 500.              // Set nodes prograde to 500m/s deltav.
+    PRINT X:APOAPSIS.                   // Returns nodes apoapsis.
+    PRINT X:PERIAPSIS.                  // Returns nodes periapsis.
+    
     
 ### HEADING (degreesFromNorth, pitchAboveHorizon)
 
@@ -429,6 +504,8 @@ Represents a vector.
     V(100,5,0):Y.                       // Returns 5.
     V(100,5,0):Z.                       // Returns 0.
     varname:MAG.                        // Returns the magnitude of the vector, in this case
+    SET varname:X TO 111.               // Changes vector x value to 111.
+    SET varname:MAG to 10.              // Changes magnitude of vector. e.g. V(9.98987,0.44999,0)
     
 ### VESSEL (vesselname)
 
@@ -439,11 +516,28 @@ Represents a targetable vessel
     PRINT X:HEADING.                    // Print the heading to the vessel.
     PRINT X:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
     
-Other Bindings
-==============
+### SHIP
+    
+Represents currently selected ship
+    
+    PRINT SHIP.                            // returns VESSEL("kerbRoller2")
+    PRINT SHIP:DISTANCE.                   // Print distance from current vessel to target.
+    PRINT SHIP:HEADING.                    // Print the heading to the vessel.
+    PRINT SHIP:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
+    
+### TARGET
 
-    TARGET          // Set a target using it's name in quotes
-    TARGET:HEADING  // Gets the heading to the current target
-    TARGET:BEARING  // Gets the bearing to the current target
+Represents targeted vessel or celestial body
+
+    SET TARGET TO "kerbRoller2".        // target kerbRoller2
+    PRINT TARGET:DISTANCE.              // Print distance from current vessel to target.
+    PRINT TARGET:HEADING.               // Print the heading to the target vessel.
+    PRINT TARGET:BEARING.               // Print the bearing to the target vessel relative to vessel heading.
     
-    
+System Variables
+==========================
+Returns values about kOS and hardware
+
+    PRINT VERSION.            // Returns operating system version number. 0.8.6
+    PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
+    PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8

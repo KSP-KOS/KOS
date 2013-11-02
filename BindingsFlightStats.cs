@@ -13,8 +13,6 @@ namespace kOS
     {
         public override void AddTo(BindingManager manager)
         {
-
-
             manager.AddGetter("ALT:RADAR",      delegate(CPU cpu) { return cpu.Vessel.heightFromTerrain > 0 ? Mathf.Min(cpu.Vessel.heightFromTerrain, (float)cpu.Vessel.altitude) : (float)cpu.Vessel.altitude; });
             manager.AddGetter("ALT:APOAPSIS",   delegate(CPU cpu) { return cpu.Vessel.orbit.ApA; });
             manager.AddGetter("ALT:PERIAPSIS",  delegate(CPU cpu) { return cpu.Vessel.orbit.PeA; });
@@ -25,19 +23,12 @@ namespace kOS
             manager.AddGetter("TIME",           delegate(CPU cpu) { return new kOS.TimeSpan(Planetarium.GetUniversalTime()); });
 
             manager.AddGetter("STATUS",         delegate(CPU cpu) { return cpu.Vessel.situation.ToString().Replace("_", " "); });
-            manager.AddGetter("INSUNLIGHT",     delegate(CPU cpu) { return VesselUtils.InDirectSunlight(cpu.Vessel); });
-			manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return VesselUtils.GetCommRange(cpu.Vessel); });
-			manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return Convert.ToDouble(CheckCommRange(cpu.Vessel)); });
-      
-
-
-
-            manager.AddGetter("SHIP",           delegate(CPU cpu) { return new VesselTarget(cpu.Vessel, cpu); });
-
+            manager.AddGetter("INLIGHT",        delegate(CPU cpu) { return VesselUtils.InDirectSunlight(cpu.Vessel); });
+            manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return VesselUtils.GetCommRange(cpu.Vessel); });
+            manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return Convert.ToDouble(CheckCommRange(cpu.Vessel)); });
 
             manager.AddGetter("AV", delegate(CPU cpu) { return cpu.Vessel.transform.InverseTransformDirection(cpu.Vessel.rigidbody.angularVelocity); });
             manager.AddGetter("STAGE", delegate(CPU cpu) { return new StageValues(cpu.Vessel); });
-
 
             manager.AddGetter("ENCOUNTER",      delegate(CPU cpu) { return VesselUtils.TryGetEncounter(cpu.Vessel); });
 
@@ -49,6 +40,9 @@ namespace kOS
                 return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0]);
             });
 
+            // Things like altitude, mass, maxthrust are now handled the same for other ships as the current ship
+            manager.AddGetter("SHIP", delegate(CPU cpu) { return new VesselTarget(cpu.Vessel, cpu); });
+
             // These are now considered shortcuts to SHIP:suffix
             foreach (String scName in VesselTarget.ShortCuttableShipSuffixes)
             {
@@ -56,31 +50,31 @@ namespace kOS
             }
 
             manager.AddSetter("VESSELNAME", delegate(CPU cpu, object value) { cpu.Vessel.vesselName = value.ToString(); });
-    }
+            }
 
-    private static float getLattitude(CPU cpu)
-    {
-      float retVal = (float)cpu.Vessel.latitude;
+            private static float getLattitude(CPU cpu)
+            {
+                float retVal = (float)cpu.Vessel.latitude;
 
-      if (retVal > 90) return 90;
-      if (retVal < -90) return -90;
+                if (retVal > 90) return 90;
+                if (retVal < -90) return -90;
 
-      return retVal;
-    }
+                return retVal;
+            }
 
-    private static float getLongitude(CPU cpu)
-    {
-      float retVal = (float)cpu.Vessel.longitude;
+            private static float getLongitude(CPU cpu)
+            {
+                float retVal = (float)cpu.Vessel.longitude;
 
-      while (retVal > 180) retVal -= 360;
-      while (retVal < -180) retVal += 360;
+                while (retVal > 180) retVal -= 360;
+                while (retVal < -180) retVal += 360;
 
-      return retVal;
-    }
+                return retVal;
+            }
 
-    private static bool CheckCommRange(Vessel vessel)
-    {
-      return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
-    }
+            private static bool CheckCommRange(Vessel vessel)
+            {
+                return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+            }
   }
 }

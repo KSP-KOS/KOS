@@ -10,9 +10,10 @@ namespace kOS
 {
     public class Core : MonoBehaviour
     {
+        public static VersionInfo VersionInfo = new VersionInfo(0, 9);
+
         public static Core Fetch; 
         public TermWindow Window;
-
         private int CPUIdAccumulator;
         
         public void Awake()

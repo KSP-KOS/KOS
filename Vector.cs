@@ -7,29 +7,29 @@ namespace kOS
 {
     public class Vector : SpecialValue
     {
-        float x;
-        float y;
-        float z;
+        double x;
+        double y;
+        double z;
 
         public Vector(Vector3d init)
         {
-            x = (float)init.x;
-            y = (float)init.y;
-            z = (float)init.z;
+            x = init.x;
+            y = init.y;
+            z = init.z;
         }
 
         public Vector(double x, double y, double z)
         {
-            this.x = (float)x;
-            this.y = (float)y;
-            this.z = (float)z;
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         public Vector(float x, float y, float z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.x = (double)x;
+            this.y = (double)y;
+            this.z = (double)z;
         }
 
         public Direction ToDirection()
@@ -46,6 +46,38 @@ namespace kOS
             if (suffixName == "VEC") return new Vector(x, y, z);
 
             return base.GetSuffix(suffixName);
+        }
+
+        public override bool SetSuffix(string suffixName, object value)
+        {
+            double dblValue;
+            if (value is double)
+            {
+                dblValue = (double)value;
+            }
+            else if (!double.TryParse(value.ToString(), out dblValue))
+            {
+                return false;
+            }
+
+            if (suffixName == "X") { x = dblValue; return true; }
+            if (suffixName == "Y") { y = dblValue; return true; }
+            if (suffixName == "Z") { z = dblValue; return true; }
+
+            if (suffixName == "MAG")
+            {
+                double oldMag = new Vector3d(x, y, z).magnitude;
+
+                if (oldMag == 0) return true; // Avoid division by zero
+
+                x = x / oldMag * dblValue;
+                y = y / oldMag * dblValue;
+                z = z / oldMag * dblValue;
+
+                return true;
+            }
+
+            return base.SetSuffix(suffixName, value);
         }
 
         public Vector3d ToVector3D()
