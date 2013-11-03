@@ -347,6 +347,14 @@ Sets game warp to provided value(0-7).
 
     SET WARP TO 5.      // Sets warp to 1000x.
     SET WARP TO 0.      // Sets warp to 0x aka real time.
+    
+### REBOOT
+
+Reboots the kOS module.
+
+### SHUTDOWN
+
+Causes kOS module to shutdown.
 
 Flight Statistics
 =================
