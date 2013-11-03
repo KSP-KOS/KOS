@@ -18,7 +18,7 @@ namespace kOS
             {
                 "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE", "LONGITUDE", 
                 "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "VESSELNAME", 
-                "ALTITUDE", "APOAPSIS", "PERIAPSIS"
+                "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR"
             };
         }
 
@@ -100,6 +100,7 @@ namespace kOS
             if (suffixName == "ALTITUDE") return target.altitude;
             if (suffixName == "APOAPSIS") return  target.orbit.ApA;
             if (suffixName == "PERIAPSIS") return  target.orbit.PeA; 
+            if (suffixName == "SENSOR") return new VesselSensors(target);
 
             // Is this a resource?
             double dblValue;
