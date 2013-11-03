@@ -1,6 +1,10 @@
 kOS Mod Changelog
 =================
 
+### 0.9.2
+
+- Fixed a bug where you couldn't have an IF or WHEN inside an UNTIL
+
 ### 0.9.1
 
 - Fixed a bug where AND and OR wouldn't work on boolean values
