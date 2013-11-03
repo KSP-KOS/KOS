@@ -23,12 +23,13 @@ namespace kOS
             manager.AddGetter("TIME",           delegate(CPU cpu) { return new kOS.TimeSpan(Planetarium.GetUniversalTime()); });
 
             manager.AddGetter("STATUS",         delegate(CPU cpu) { return cpu.Vessel.situation.ToString().Replace("_", " "); });
-			manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return VesselUtils.GetCommRange(cpu.Vessel); });
-			manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return Convert.ToDouble(CheckCommRange(cpu.Vessel)); });
+            manager.AddGetter("INLIGHT",        delegate(CPU cpu) { return VesselUtils.InDirectSunlight(cpu.Vessel); });
+            manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return VesselUtils.GetCommRange(cpu.Vessel); });
+            manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return Convert.ToDouble(CheckCommRange(cpu.Vessel)); });
 
             manager.AddGetter("AV", delegate(CPU cpu) { return cpu.Vessel.transform.InverseTransformDirection(cpu.Vessel.rigidbody.angularVelocity); });
             manager.AddGetter("STAGE", delegate(CPU cpu) { return new StageValues(cpu.Vessel); });
-            
+
             manager.AddGetter("ENCOUNTER",      delegate(CPU cpu) { return VesselUtils.TryGetEncounter(cpu.Vessel); });
 
             manager.AddGetter("NEXTNODE",       delegate(CPU cpu)
@@ -47,33 +48,33 @@ namespace kOS
             {
                 manager.AddGetter(scName, delegate(CPU cpu) { return new VesselTarget(cpu.Vessel, cpu).GetSuffix(scName); });
             }
-            
+
             manager.AddSetter("VESSELNAME", delegate(CPU cpu, object value) { cpu.Vessel.vesselName = value.ToString(); });
-        }
+            }
 
-        private static float getLattitude(CPU cpu)
-        {
-            float retVal = (float)cpu.Vessel.latitude;
+            private static float getLattitude(CPU cpu)
+            {
+                float retVal = (float)cpu.Vessel.latitude;
 
-            if (retVal > 90) return 90;
-            if (retVal < -90) return -90;
-                
-            return retVal;
-        }
+                if (retVal > 90) return 90;
+                if (retVal < -90) return -90;
 
-        private static float getLongitude(CPU cpu)
-        {
-            float retVal = (float)cpu.Vessel.longitude;
+                return retVal;
+            }
 
-            while (retVal > 180) retVal -= 360;
-            while (retVal < -180) retVal += 360;
+            private static float getLongitude(CPU cpu)
+            {
+                float retVal = (float)cpu.Vessel.longitude;
 
-            return retVal;
-        }
+                while (retVal > 180) retVal -= 360;
+                while (retVal < -180) retVal += 360;
 
-		private static bool CheckCommRange(Vessel vessel)
-		{
-			return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
-		}
-    }
+                return retVal;
+            }
+
+            private static bool CheckCommRange(Vessel vessel)
+            {
+                return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+            }
+  }
 }
