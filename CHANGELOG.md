@@ -3,7 +3,7 @@ kOS Mod Changelog
 
 ### 0.9.2
 
-- Fixed a bug where you couldn't have an IF or WHEN inside an UNTIL\
+- Fixed a bug where you couldn't have an IF or WHEN inside an UNTIL
 - Added INLIGHT
 
 ### 0.9.1
