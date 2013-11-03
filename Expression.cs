@@ -594,26 +594,50 @@ namespace kOS
             return null;
         }
 
+        private bool ObjectToBool(object input, out bool result)
+        {
+            if (input is bool) { result = (bool)input; return true; }
+            else if (input is double) { result = (bool)((double)input > 0); return true; }
+            else if (input is String)
+            {
+                if (bool.TryParse((String)input, out result)) return true;
+                else
+                {
+                    double dblVal;
+                    if (double.TryParse((String)input, out dblVal))
+                    {
+                        result = dblVal > 0;
+                        return true;
+                    }
+                }
+            }
+
+            result = false;
+            return false;
+        }
+
         private object AttemptAnd(object val1, object val2)
         {
-            double v1 = (val1 is double) ? (double)val1 : 0;
-            if (val1 is String && !double.TryParse((String)val1, out v1)) return null;
+            bool v1, v2;
 
-            double v2 = (val2 is double) ? (double)val2 : 0;
-            if (val2 is String && !double.TryParse((String)val2, out v2)) return null;
+            if (!ObjectToBool(val1, out v1)) return null;
+            if (!ObjectToBool(val2, out v2)) return null;
 
-            return (v1 > 0 && v2 > 0);
+            if (val1 is bool && val2 is bool) return (bool)val1 && (bool)val2;
+
+            return (v1 && v2);
         }
 
         private object AttemptOr(object val1, object val2)
         {
-            double v1 = (val1 is double) ? (double)val1 : 0;
-            if (val1 is String && !double.TryParse((String)val1, out v1)) return null;
+            bool v1, v2;
 
-            double v2 = (val2 is double) ? (double)val2 : 0;
-            if (val2 is String && !double.TryParse((String)val2, out v2)) return null;
+            if (!ObjectToBool(val1, out v1)) return null;
+            if (!ObjectToBool(val2, out v2)) return null;
 
-            return (v1 > 0 || v2 > 0);
+            if (val1 is bool && val2 is bool) return (bool)val1 && (bool)val2;
+
+            return (v1 || v2);
         }
 
         public bool IsNull()
