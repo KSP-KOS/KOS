@@ -271,8 +271,8 @@ namespace kOS
                         break;
 
                     case "~":
-                        // Anything but braces
-                        output += "([^{}]+)";
+                        // Anything but braces or quotes
+                        output += "([^{}\"]+)";
                         break;
 
                     case "[":
