@@ -29,6 +29,9 @@ namespace kOS
         public override Dictionary<String, Variable> Variables { get { return variables; } }
         public override List<Volume> Volumes { get  { return volumes; } }
         public override List<kOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
+
+        public static kOSRunType RunType = kOSRunType.KSP;
+        public enum kOSRunType { KSP, WINFORMS };
         
         public override Volume SelectedVolume
         {
@@ -42,12 +45,17 @@ namespace kOS
             this.Context = context;
             
             bindingManager = new BindingManager(this, Context);
-            
+
             if (context == "ksp")
             {
-                archive = new Archive(Vessel);
+                RunType = kOSRunType.KSP;
 
+                archive = new Archive(Vessel);
                 Volumes.Add(archive);
+            }
+            else
+            {
+                RunType = kOSRunType.WINFORMS;
             }
 
             this.RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 2 });

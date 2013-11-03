@@ -239,8 +239,13 @@ namespace kOS
             {
                 // Non-kos exception! This is a bug, but no reason to kill the OS
                 StdOut("Flagrant error occured, logging");
-                UnityEngine.Debug.Log("Immediate mode error");
-                UnityEngine.Debug.Log(e);
+
+                if (CPU.RunType == CPU.kOSRunType.KSP)
+                {
+                    UnityEngine.Debug.Log("Immediate mode error");
+                    UnityEngine.Debug.Log(e);
+                }
+
                 Queue.Clear();
                 ChildContext = null;
             }

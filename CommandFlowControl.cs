@@ -107,7 +107,7 @@ namespace kOS
         {
             base.Update(time);
 
-            if (ChildContext.State == ExecutionState.DONE)
+            if (ChildContext == null || ChildContext.State == ExecutionState.DONE)
             {
                 ChildContext = null;
                 State = ExecutionState.DONE;
@@ -174,7 +174,7 @@ namespace kOS
             }
             else
             {
-                if (ChildContext.State == ExecutionState.DONE)
+                if (ChildContext != null || ChildContext.State == ExecutionState.DONE)
                 {
                     ChildContext = null;
                 }

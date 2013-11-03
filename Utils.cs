@@ -89,6 +89,7 @@ namespace kOS
                 else if (input[i] == '"')
                 {
                     i = FindEndOfString(text, i + 1);
+                    if (i == -1) return -1;
                 }
             }
 
