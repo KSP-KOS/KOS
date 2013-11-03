@@ -72,7 +72,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("ON % *")]
+    [CommandAttribute("ON % ~")]
     public class CommandOnEvent : Command
     {
         private Variable targetVariable;
@@ -173,7 +173,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("WHEN * THEN *")]
+    [CommandAttribute("WHEN ~ THEN ~")]
     public class CommandWhen : Command
     {
         private Command targetCommand;
