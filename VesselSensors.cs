@@ -25,16 +25,16 @@ namespace kOS
                             switch (module.Fields.GetValue("sensorType").ToString())
                             {
                                 case "ACC":
-                                    acceleration = new Vector(FlightGlobals.ship_acceleration);
+                                    acceleration = new Vector(target.acceleration);
                                     break;
                                 case "PRES":
                                     pressure = (Single)FlightGlobals.getStaticPressure();
                                     break;
                                 case "TEMP":
-                                    temperature = FlightGlobals.getExternalTemperature(target.GetWorldPos3D());
+                                    temperature = part.temperature;
                                     break;
                                 case "GRAV":
-                                    geeForce = new Vector(FlightGlobals.getGeeForceAtPosition(target.GetWorldPos3D()));
+                                    geeForce = new Vector(FlightGlobals.getGeeForceAtPosition(part.transform.position));
                                     break;
                             }
                         }
