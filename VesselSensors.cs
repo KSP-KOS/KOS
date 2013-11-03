@@ -25,7 +25,7 @@ namespace kOS
                             switch (module.Fields.GetValue("sensorType").ToString())
                             {
                                 case "ACC":
-                                    acceleration = new Vector(target.acceleration + FlightGlobals.getGeeForceAtPosition(part.transform.position));
+                                    acceleration = new Vector(FlightGlobals.getGeeForceAtPosition(part.transform.position) - target.acceleration);
                                     break;
                                 case "PRES":
                                     pressure = (Single)FlightGlobals.getStaticPressure();
