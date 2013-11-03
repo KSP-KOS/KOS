@@ -94,6 +94,17 @@ Example:
 This statement adds a node that occurs 30 seconds from now, and has a delta-V of 100 m/s radial out, 0 m/s normal, and 200 m/s prograde.
 
     ADD NODE(TIME + 30, 100, 0, 200).
+    
+### REMOVE
+    
+Removes maneuver node from flight plan. Cannot remove bare nodes e.g. ADD NODE().
+
+    SET X TO NODE(0,0,0,0).
+    ADD X.
+    REMOVE X.
+    
+    ADD NODE(0,0,0,0).
+    REMOVE.             // Does not remove node.
 
 ### BREAK
 
@@ -329,6 +340,21 @@ Sets a variable to false. This is useful for the RCS and SAS bindings.
 Example
 
     RCS OFF			// Turns off the RCS
+    
+### WARP
+
+Sets game warp to provided value(0-7).
+
+    SET WARP TO 5.      // Sets warp to 1000x.
+    SET WARP TO 0.      // Sets warp to 0x aka real time.
+    
+### REBOOT
+
+Reboots the kOS module.
+
+### SHUTDOWN
+
+Causes kOS module to shutdown.
 
 Flight Statistics
 =================
@@ -398,7 +424,7 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
 
     LIQUIDFUEL
     OXIDIZER
-    ELECTRICALCHARGE
+    ELECTRICCHARGE
     MONOPROPELLANT
     INTAKEAIR
     SOLIDFUEL
@@ -540,3 +566,4 @@ Returns values about kOS and hardware
     PRINT VERSION.            // Returns operating system version number. 0.8.6
     PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
     PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
+    PRINT SESSIONTIME.        // Returns amount of time, in seconds, from vessel load.
