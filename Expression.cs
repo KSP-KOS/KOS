@@ -623,8 +623,6 @@ namespace kOS
             if (!ObjectToBool(val1, out v1)) return null;
             if (!ObjectToBool(val2, out v2)) return null;
 
-            if (val1 is bool && val2 is bool) return (bool)val1 && (bool)val2;
-
             return (v1 && v2);
         }
 
@@ -634,8 +632,6 @@ namespace kOS
 
             if (!ObjectToBool(val1, out v1)) return null;
             if (!ObjectToBool(val2, out v2)) return null;
-
-            if (val1 is bool && val2 is bool) return (bool)val1 && (bool)val2;
 
             return (v1 || v2);
         }
