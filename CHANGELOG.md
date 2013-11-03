@@ -1,6 +1,52 @@
 kOS Mod Changelog
 =================
 
+### 0.9.1
+
+- Fixed a bug where AND and OR wouldn't work on boolean values
+
+### 0.9
+
+- New expression system added
+- Version Info can be grabbed programatically
+- Targeting of bodies, getting stats
+- Get values from other ships, just like current ship
+- Send commands to chutes, legs and solar panels individually
+- Round function to x decimals, modulo
+- Setting values on structures
+- Vectors now use double precision
+- Get apoapsis and periapsis of a node
+
+### 0.85
+
+- Problems adding R() structures to headings
+- Some commands wouldn't allow dashes in filenames
+- Editor X-scrolling bug fixed
+- Delimeter matcher would cause error inside comments
+- Editor was crashing when you hit end
+- Error messages wouldn't have line numbers if the error occurred inside curly braces.
+- For nodes, :DELTAV:MAG now works correctly. Note that :DELTAV is now effectively the same as :BURNVECTOR
+- You can now use right & left arrows to edit lines in immediate mode
+- There is now a LEGS binding for landing legs, use it just like SAS or GEAR
+- Same with CHUTES for parachutes
+
+### 0.82
+
+- Couldn't switch to a volume using it's number
+- All curly braces were horribly horribly broken
+
+### 0.8
+
+- Maneuver node support added
+- Time structure added
+- Programs that call other programs no longer give multiple "Program ended" messages
+
+### 0.7
+
+- Official release of mod interoperability
+- New altitude radar system
+- Improved whitespace support
+
 ### 0.65
 
 - Trigonometry Functions ARCSIN, ARCCOS, ARCTAN and ARCTAN2 are now implemented.
