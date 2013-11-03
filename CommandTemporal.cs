@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace kOS
 {
-    [CommandAttribute("WAIT[UNTIL]? *")]
+    [CommandAttribute("WAIT[UNTIL]? ~")]
     public class CommandWait : Command
     {
         public CommandWait(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -72,7 +72,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("ON % ~")]
+    [CommandAttribute("ON % *")]
     public class CommandOnEvent : Command
     {
         private Variable targetVariable;
@@ -134,7 +134,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("LOCK % TO *")]
+    [CommandAttribute("LOCK % TO ~")]
     public class CommandLock : Command
     {
         public CommandLock(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -173,7 +173,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("WHEN ~ THEN ~")]
+    [CommandAttribute("WHEN ~ THEN *")]
     public class CommandWhen : Command
     {
         private Command targetCommand;
