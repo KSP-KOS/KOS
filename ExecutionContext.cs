@@ -135,9 +135,9 @@ namespace kOS
                 v = ParentContext.FindVariable(varName);
             }
 
-            if (v != null && Locks.ContainsKey(varName))
+            if (v != null && Locks.ContainsKey(varName.ToUpper()))
             {
-                v.Value = Locks[varName].GetValue();
+                v.Value = Locks[varName.ToUpper()].GetValue();
             }
 
             return v;
@@ -237,9 +237,9 @@ namespace kOS
 
         public virtual Expression GetLock(String name)
         {
-            if (Locks.ContainsKey(name))
+            if (Locks.ContainsKey(name.ToUpper()))
             {
-                return Locks[name];
+                return Locks[name.ToUpper()];
             }
             else
             {
@@ -258,9 +258,9 @@ namespace kOS
 
             FindOrCreateVariable(name);
 
-            if (!Locks.ContainsKey(name))
+            if (!Locks.ContainsKey(name.ToUpper()))
             {
-                Locks.Add(name, expression);
+                Locks.Add(name.ToUpper(), expression);
             }
         }
 
@@ -274,9 +274,9 @@ namespace kOS
         {
             name = name.ToLower();
 
-            if (Locks.ContainsKey(name))
+            if (Locks.ContainsKey(name.ToUpper()))
             {
-                Locks.Remove(name);
+                Locks.Remove(name.ToUpper());
             }
             else if (ParentContext != null)
             {
