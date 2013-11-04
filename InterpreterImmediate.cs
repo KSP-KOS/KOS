@@ -132,10 +132,10 @@ namespace kOS
         {
             foreach (char c in text)
             {
+                if (x >= buffer.GetLength(0) || y >= buffer.GetLength(1)) return;
+
                 buffer[x, y] = c;
                 x++;
-
-                if (x > buffer.GetLength(0)) break;
             }
         }
 
