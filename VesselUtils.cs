@@ -362,27 +362,6 @@ namespace kOS
       vessel.rootPart.SendEvent(state ? "Extend" : "Retract");
     }
 
-    public static object InDirectSunlight(Vessel vessel)
-    {
-      bool DirectSunlight = false; // No panels at all? Always return false
-
-      foreach (Part p in vessel.parts)
-      {
-        foreach (ModuleDeployableSolarPanel c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
-        {
-          DirectSunlight = true;
-
-          if (c.sunAOA <= 0.0)
-          {
-              // if blocked celestial body return false.
-              return false;
-          }
-        }
-      }
-
-      return DirectSunlight;
-    }
-
     public static float GetVesselLattitude(Vessel vessel)
     {
       float retVal = (float)vessel.latitude;
