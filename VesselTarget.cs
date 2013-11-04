@@ -17,7 +17,7 @@ namespace kOS
             ShortCuttableShipSuffixes = new String[] 
             {
                 "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE", "LONGITUDE", 
-                "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "VESSELNAME", 
+                "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "AIRSPEED", "VESSELNAME", 
                 "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR"
             };
         }
@@ -96,6 +96,7 @@ namespace kOS
             if (suffixName == "MASS") return  target.GetTotalMass();
             if (suffixName == "VERTICALSPEED") return  target.verticalSpeed;
             if (suffixName == "SURFACESPEED") return  target.horizontalSrfSpeed;
+            if (suffixName == "AIRSPEED") return (target.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(target.GetWorldPos3D())).magnitude; //the velocity of the vessel relative to the air);
             if (suffixName == "VESSELNAME") return  target.vesselName;
             if (suffixName == "ALTITUDE") return target.altitude;
             if (suffixName == "APOAPSIS") return  target.orbit.ApA;
