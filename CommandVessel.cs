@@ -168,10 +168,10 @@ namespace kOS
                             ModuleEnviroSensor sensor = module as ModuleEnviroSensor;
                             if (sensor != null)
                             {
-                                if (part.partInfo.name.Length > 36)
-                                    StdOut(part.partInfo.name.PadRight(33) + "... " + sensor.sensorType);
+                                if (part.partInfo.name.Length > 37)
+                                    StdOut(part.partInfo.title.PadRight(34) + "... " + sensor.sensorType);
                                 else
-                                    StdOut(part.partInfo.name.PadRight(36) + " " + sensor.sensorType);
+                                    StdOut(part.partInfo.title.PadRight(37) + " " + sensor.sensorType);
                             }
                         }
                     }
