@@ -68,8 +68,8 @@ namespace kOS
             if (suffixName == "LAT") return Lat;
             if (suffixName == "LNG") return Lng;
             if (suffixName == "DISTANCE") return DistanceFrom(Vessel);
-            if (suffixName == "HEADING") return GetHeadingFromVessel(Vessel);
-            if (suffixName == "BEARING") return GetBearing(Vessel);
+            if (suffixName == "HEADING") return (double)GetHeadingFromVessel(Vessel);
+            if (suffixName == "BEARING") return (double)GetBearing(Vessel);
             
             return base.GetSuffix(suffixName);
         }
