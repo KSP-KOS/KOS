@@ -489,7 +489,7 @@ namespace kOS
 
         private object AttemptMultiply(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return (double)val1 * (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 * (double)val2; }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("*", val2, false); }
             if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("*", val1, true); }
 
@@ -498,7 +498,7 @@ namespace kOS
 
         private object AttemptDivide(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return (double)val1 / (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 / (double)val2; }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("/", val2, false); }
             if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("/", val1, true); }
 
@@ -509,7 +509,7 @@ namespace kOS
         {
             if (val1 is String || val2 is String) { return val1.ToString() + val2.ToString(); }
 
-            if (val1 is double && val2 is double) { return (double)val1 + (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 + (double)val2; }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("+", val2, false); }
             if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("+", val1, true); }
 
@@ -518,7 +518,7 @@ namespace kOS
 
         private object AttemptSubtract(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return (double)val1 - (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 - (double)val2; }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("-", val2, false); }
             if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("-", val1, true); }
 
@@ -527,7 +527,7 @@ namespace kOS
 
         private object AttemptPow(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return Math.Pow((double)val1, (double)val2); }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return Math.Pow((double)val1, (double)val2); }
 
             return null;
         }
@@ -542,7 +542,7 @@ namespace kOS
 
         private object AttemptEq(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return (double)val1 == (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 == (double)val2; }
             if (val1 is String || val2 is String) { return val1.ToString() == val2.ToString(); }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("=", val2, false); }
 
@@ -551,7 +551,7 @@ namespace kOS
 
         private object AttemptNotEq(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return (double)val1 != (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 != (double)val2; }
             if (val1 is String || val2 is String) { return val1.ToString() != val2.ToString(); }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("!=", val2, false); }
 
@@ -560,7 +560,7 @@ namespace kOS
 
         private object AttemptGT(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return (double)val1 > (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 > (double)val2; }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation(">", val2, false); }
             if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation(">", val1, true); }
 
@@ -569,7 +569,7 @@ namespace kOS
 
         private object AttemptLT(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return (double)val1 < (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 < (double)val2; }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("<", val2, false); }
             if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("<", val1, true); }
 
@@ -578,7 +578,7 @@ namespace kOS
 
         private object AttemptGTE(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return (double)val1 >= (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 >= (double)val2; }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation(">=", val2, false); }
             if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation(">=", val1, true); }
 
@@ -587,7 +587,7 @@ namespace kOS
 
         private object AttemptLTE(object val1, object val2)
         {
-            if (val1 is double && val2 is double) { return (double)val1 <= (double)val2; }
+            if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 <= (double)val2; }
             if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("<=", val2, false); }
             if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("<=", val1, true); }
 
