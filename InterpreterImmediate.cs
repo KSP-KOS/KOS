@@ -132,10 +132,10 @@ namespace kOS
         {
             foreach (char c in text)
             {
+                if (x >= buffer.GetLength(0) || y >= buffer.GetLength(1)) return;
+
                 buffer[x, y] = c;
                 x++;
-
-                if (x > buffer.GetLength(0)) break;
             }
         }
 
@@ -213,8 +213,13 @@ namespace kOS
                     {
                         // Non-kos exception! This is a bug, but no reason to kill the OS
                         StdOut("Flagrant error occured, logging");
-                        UnityEngine.Debug.Log("Immediate mode error");
-                        UnityEngine.Debug.Log(e);
+
+                        if (CPU.RunType == CPU.kOSRunType.KSP)
+                        {
+                            UnityEngine.Debug.Log("Immediate mode error");
+                            UnityEngine.Debug.Log(e);
+                        }
+
                         Queue.Clear();
                         ChildContext = null;
                     }
@@ -239,8 +244,13 @@ namespace kOS
             {
                 // Non-kos exception! This is a bug, but no reason to kill the OS
                 StdOut("Flagrant error occured, logging");
-                UnityEngine.Debug.Log("Immediate mode error");
-                UnityEngine.Debug.Log(e);
+
+                if (CPU.RunType == CPU.kOSRunType.KSP)
+                {
+                    UnityEngine.Debug.Log("Immediate mode error");
+                    UnityEngine.Debug.Log(e);
+                }
+
                 Queue.Clear();
                 ChildContext = null;
             }

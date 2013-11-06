@@ -37,7 +37,6 @@ namespace kOS
 
         private void RunBlock(List<String> block)
         {
-
             foreach (String rawLine in block)
             {
                 String line = stripComment(rawLine);
@@ -82,6 +81,12 @@ namespace kOS
                     return;
                 }
             }
+
+            if (commandBuffer.Trim() != "")
+            {
+                StdOut("End of file reached inside unterminated statement");
+                State = ExecutionState.DONE;
+            }
         }
 
         public override bool Break()
@@ -98,6 +103,7 @@ namespace kOS
                 if (line[i] == '\"')
                 {
                     i = Utils.FindEndOfString(line, i + 1);
+                    if (i == -1) break;
                 }
                 else if (i < line.Length - 1 && line.Substring(i, 2) == "//")
                 {

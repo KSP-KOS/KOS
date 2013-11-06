@@ -89,6 +89,7 @@ namespace kOS
                 else if (input[i] == '"')
                 {
                     i = FindEndOfString(text, i + 1);
+                    if (i == -1) return -1;
                 }
             }
 
@@ -270,8 +271,8 @@ namespace kOS
                         break;
 
                     case "~":
-                        // Anything but braces
-                        output += "([^{}]+)";
+                        // Anything but braces or quotes
+                        output += "([^{}\"]+)";
                         break;
 
                     case "[":

@@ -146,9 +146,9 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("SET * TO *")]
+    [CommandAttribute("SET ~ TO *")]
     public class CommandSet : Command
-    {
+    { 
         public CommandSet(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()

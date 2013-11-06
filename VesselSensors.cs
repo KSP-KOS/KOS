@@ -11,6 +11,7 @@ namespace kOS
         Single pressure = 0;
         Single temperature = 0;
         Vector geeForce = new Vector(0, 0, 0);
+        Single KerbolExposure = 0;
 
         public VesselSensors(Vessel target)
         {
@@ -38,6 +39,10 @@ namespace kOS
                                     break;
                             }
                         }
+                        foreach (ModuleDeployableSolarPanel c in part.FindModulesImplementing<ModuleDeployableSolarPanel>())
+                        {
+                            KerbolExposure += (Single)c.sunAOA;
+                        }
                     }
                 }
             }
@@ -48,6 +53,7 @@ namespace kOS
             if (suffixName == "PRES") return pressure;
             if (suffixName == "TEMP") return temperature;
             if (suffixName == "GRAV") return geeForce;
+            if (suffixName == "LIGHT") return KerbolExposure;
 
 
 
