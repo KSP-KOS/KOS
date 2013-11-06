@@ -67,7 +67,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^LIST (PARTS|RESOURCES|ENGINES|TARGETS|BODIES)$")]
+    [CommandAttribute(@"^LIST (PARTS|RESOURCES|ENGINES|TARGETS|BODIES|SENSORS)$")]
     class CommandVesselListings : Command
     {
         public CommandVesselListings(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -150,6 +150,28 @@ namespace kOS
                                 var engineMod = (ModuleEngines)module;
                                 
                                 StdOut(part.uid + "  " + part.inverseStage.ToString() + " " + engineMod.moduleName);
+                            }
+                        }
+                    }
+
+                    break;
+
+                case "SENSORS":
+                    StdOut("");
+                    StdOut("Part Name                             Sensor Type");
+                    StdOut("------------------------------------------------");
+
+                    foreach (Part part in Vessel.Parts)
+                    {
+                        foreach (PartModule module in part.Modules)
+                        {
+                            ModuleEnviroSensor sensor = module as ModuleEnviroSensor;
+                            if (sensor != null)
+                            {
+                                if (part.partInfo.name.Length > 37)
+                                    StdOut(part.partInfo.title.PadRight(34) + "... " + sensor.sensorType);
+                                else
+                                    StdOut(part.partInfo.title.PadRight(37) + " " + sensor.sensorType);
                             }
                         }
                     }
