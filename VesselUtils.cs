@@ -362,6 +362,22 @@ namespace kOS
       vessel.rootPart.SendEvent(state ? "Extend" : "Retract");
     }
 
+
+    public static double GetMassDrag(Vessel vessel)
+    {
+      double massDrag = 0;
+      foreach (Part p in vessel.parts)
+      {
+        massDrag += (p.mass + p.GetResourceMass()) * p.maximum_drag;
+      }
+      return massDrag;
+    }
+
+    public static double GetTerminalVelocity(Vessel vessel)
+    {
+      double DensityOfAir = FlightGlobals.getAtmDensity(FlightGlobals.getStaticPressure(vessel.findWorldCenterOfMass(), vessel.mainBody));
+      return Math.Sqrt(2 * (double)FlightGlobals.getGeeForceAtPosition(vessel.findWorldCenterOfMass()).magnitude * vessel.GetTotalMass() / ( GetMassDrag(vessel) * FlightGlobals.DragMultiplier * DensityOfAir ));
+    }
     public static float GetVesselLattitude(Vessel vessel)
     {
       float retVal = (float)vessel.latitude;
