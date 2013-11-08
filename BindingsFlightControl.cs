@@ -136,6 +136,10 @@ namespace kOS
                         {
                             bearing = ((GeoCoordinates)Value).GetBearing(vessel);
                         }
+                        else if (Value is double)
+                        {
+                            bearing = (float)(Math.Round((double)Value) - Mathf.Round(FlightGlobals.ship_heading));
+                        }
 
                         if (vessel.horizontalSrfSpeed > 0.1f)
                         { 
