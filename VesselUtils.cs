@@ -33,26 +33,26 @@ namespace kOS
 
     public static bool TryGetResource(Vessel vessel, string resourceName, out double total)
     {
-      bool resourceIsFound = false;
-      total = 0;
-      resourceName = resourceName.ToUpper();
-
-      // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
-      if (new[] { "LIQUIDFUEL", "ELECTRICCHARGE", "OXIDIZER", "INTAKEAIR", "SOLIDFUEL", "MONOPROPELLANT" }.Contains(resourceName)) resourceIsFound = true;
-
-      foreach (Part part in vessel.parts)
-      {
-        foreach (PartResource resource in part.Resources)
+        bool resourceIsFound = false;
+        total = 0;
+        PartResourceDefinition resourceDefinition = PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(rd => rd.name.Equals(resourceName, StringComparison.OrdinalIgnoreCase));
+        // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
+        if (resourceDefinition == null)
+            return resourceIsFound;
+        resourceName = resourceName.ToUpper();
+        foreach (Part part in vessel.parts)
         {
-          if (resource.resourceName.ToUpper() == resourceName)
-          {
-            resourceIsFound = true;
-            total += resource.amount;
-          }
+            foreach (PartResource resource in part.Resources)
+            {
+                if (resource.resourceName.ToUpper() == resourceName)
+                {
+                    resourceIsFound = true;
+                    total += resource.amount;
+                }
+            }
         }
-      }
-
-      return resourceIsFound;
+    
+        return resourceIsFound;
     }
 
     public static double GetResource(Vessel vessel, string resourceName)
