@@ -26,7 +26,7 @@ namespace kOS
             controls.Add(new LockableControl("WHEELSTEERING", "wheelsteering", cpu, manager));
             controls.Add(new LockableControl("WHEELTHROTTLE", "wheelthrottle", cpu, manager));
 
-            if (RemoteTech2.RTHook.Instance == null)
+            if (RTHook.Instance == null)
             {
                 vessel.OnFlyByWire += OnFlyByWire;
             }
@@ -43,18 +43,18 @@ namespace kOS
         public override void Update(float time)
         {
             // Do it each frame because the dominant signal processor may be added/removed without kOS knowing.
-            if (RemoteTech2.RTHook.Instance != null)
+            if (RTHook.Instance != null)
             {
-                RemoteTech2.RTHook.Instance.AddSanctionedPilot(vessel.id, OnFlyByWire);
+                RTHook.Instance.AddSanctionedPilot(vessel.id, OnFlyByWire);
             }
             if (vessel != cpu.Vessel)
             {
                 // Try to re-establish connection to vessel
                 if (vessel != null)
                 {
-                    if (RemoteTech2.RTHook.Instance != null)
+                    if (RTHook.Instance != null)
                     {
-                        RemoteTech2.RTHook.Instance.RemoveSanctionedPilot(vessel.id, OnFlyByWire);
+                        RTHook.Instance.RemoveSanctionedPilot(vessel.id, OnFlyByWire);
                     }
                     else
                     {
@@ -66,7 +66,7 @@ namespace kOS
                 if (cpu.Vessel != null)
                 {
                     vessel = cpu.Vessel;
-                    if (RemoteTech2.RTHook.Instance == null)
+                    if (RTHook.Instance == null)
                     {
                         vessel.OnFlyByWire += OnFlyByWire;
                     }
