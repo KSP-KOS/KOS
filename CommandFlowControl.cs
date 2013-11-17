@@ -75,7 +75,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("IF ~_{}")]
+    [CommandAttribute("IF /_{}")]
     public class CommandIf : Command
     {
         List<Command> commands = new List<Command>();
@@ -115,7 +115,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("UNTIL ~_{}")]
+    [CommandAttribute("UNTIL /_{}")]
     public class CommandUntilLoop : Command
     {
         List<Command> commands = new List<Command>();
