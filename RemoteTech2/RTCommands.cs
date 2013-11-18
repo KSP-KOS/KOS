@@ -43,6 +43,7 @@ namespace kOS
             if (RTHook.Instance != null)
             {
                 waitTotal = RTHook.Instance.GetShortestSignalDelay(Vessel.id);
+                if (waitTotal == Double.PositiveInfinity) throw new kOSException("No connection available.");
             }
 
             State = ExecutionState.WAIT;

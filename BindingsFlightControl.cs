@@ -26,7 +26,7 @@ namespace kOS
             controls.Add(new LockableControl("WHEELSTEERING", "wheelsteering", cpu, manager));
             controls.Add(new LockableControl("WHEELTHROTTLE", "wheelthrottle", cpu, manager));
 
-            if (RTHook.Instance == null)
+            if (RTHook.Instance == null || !RTHook.Instance.HasFlightComputer(vessel.id))
             {
                 vessel.OnFlyByWire += OnFlyByWire;
             }
@@ -66,7 +66,7 @@ namespace kOS
                 if (cpu.Vessel != null)
                 {
                     vessel = cpu.Vessel;
-                    if (RTHook.Instance == null)
+                    if (RTHook.Instance == null || !RTHook.Instance.HasFlightComputer(vessel.id))
                     {
                         vessel.OnFlyByWire += OnFlyByWire;
                     }

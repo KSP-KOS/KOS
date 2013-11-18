@@ -20,7 +20,7 @@ namespace kOS
         private static int MemSize = 10000;
         private static int cpuIdMax;
 
-        [KSPEvent(guiActive = true, guiName = "Open Terminal")]
+        [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
             Core.OpenWindow(cpu);

@@ -265,15 +265,24 @@ namespace kOS
                         batchQueue.Clear();
                         ChildContext = null;
                     }
-                }
-                else if (waitElapsed < waitTotal)
-                {
-                    waitElapsed += Math.Min(time, waitTotal - waitElapsed);
-                    this.DrawProgressBar(waitElapsed, waitTotal, "Deploying command.");
-                }
+                } 
                 else
                 {
                     WriteLine(inputBuffer);
+                }
+
+                if (waitElapsed < waitTotal)
+                {
+                    if (RTHook.Instance != null && !RTHook.Instance.HasAnyConnection(Vessel.id))
+                    {
+                        StdOut("Signal interruption. Transmission lost.");
+                        Queue.Clear();
+                    }
+                    else
+                    {
+                        waitElapsed += Math.Min(time, waitTotal - waitElapsed);
+                        this.DrawProgressBar(waitElapsed, waitTotal, "Deploying command.");
+                    }
                 }
             }
 
