@@ -18,6 +18,13 @@ namespace kOS
             manager.AddGetter("ALT:PERIAPSIS",  delegate(CPU cpu) { return cpu.Vessel.orbit.PeA; });
             manager.AddGetter("ETA:APOAPSIS",   delegate(CPU cpu) { return cpu.Vessel.orbit.timeToAp; });
             manager.AddGetter("ETA:PERIAPSIS",  delegate(CPU cpu) { return cpu.Vessel.orbit.timeToPe; });
+            manager.AddGetter("ETA:TRANSITION", cpu => cpu.Vessel.orbit.EndUT);
+            manager.AddGetter("OBT:PERIOD", cpu => cpu.Vessel.orbit.period);
+            manager.AddGetter("OBT:INCLINATION", cpu => cpu.Vessel.orbit.inclination);
+            manager.AddGetter("OBT:ECCENTRICITY", cpu => cpu.Vessel.orbit.eccentricity);
+            manager.AddGetter("OBT:SEMIMAJORAXIS", cpu => cpu.Vessel.orbit.semiMajorAxis);
+            manager.AddGetter("OBT:SEMIMINORAXIS", cpu => cpu.Vessel.orbit.semiMinorAxis);
+            manager.AddGetter("OBT:TRANSITION", cpu => cpu.Vessel.orbit.patchEndTransition);
 
             manager.AddGetter("MISSIONTIME",    delegate(CPU cpu) { return cpu.Vessel.missionTime; });
             manager.AddGetter("TIME",           delegate(CPU cpu) { return new kOS.TimeSpan(Planetarium.GetUniversalTime()); });
