@@ -88,7 +88,7 @@ namespace kOS
 
                 // Prevent editor keys from being pressed while typing
                 EditorLogic editor = EditorLogic.fetch;
-                if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true);
+                if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true, "kOSTerminal");
             }
         }
 
@@ -103,7 +103,7 @@ namespace kOS
                 cameraManager.enabled = true;
 
                 EditorLogic editor = EditorLogic.fetch;
-                if (editor != null) editor.Unlock();
+                if (editor != null) editor.Unlock("kOSTerminal");
             }
         }
 
