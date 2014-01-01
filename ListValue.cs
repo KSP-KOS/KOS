@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace kOS
 {
@@ -10,6 +9,11 @@ namespace kOS
         public ListValue()
         {
            list = new List<object>(); 
+        }
+
+        public override object GetIndex(int index)
+        {
+            return list[index];
         }
 
         public override bool SetSuffix(string suffixName, object value)
@@ -30,14 +34,6 @@ namespace kOS
 
         public override object GetSuffix(string suffixName)
         {
-            UnityEngine.Debug.Log("ListObject: " + suffixName);
-            if (suffixName.StartsWith("FETCH"))
-            {
-                var selectedIndex = Convert.ToInt32(suffixName.Split(':')[1]);
-                UnityEngine.Debug.Log("ListObject: FETCH:" + selectedIndex);
-                return list[selectedIndex];
-            }
-
             switch (suffixName)
             {
                 case "CLEAR":
@@ -54,7 +50,6 @@ namespace kOS
                 default:
                     return string.Format("Suffix {0} Not Found", suffixName);
             }
-
         }
 
         public override string ToString()

@@ -67,10 +67,68 @@ namespace kOS
                 output = TryProcessBoolean(term);
                 if (output != null) return output;
             }
+            else if (term.Type == Term.TermTypes.INDEX)
+            {
+                output = TryProcessIndex(term);
+                if (output != null) return output;
+            }
             
-            throw new kOSException("Unrecognized term: '" + term.Text + "'", executionContext);
+            throw new kOSException("Unrecognized term: '" + term.Text + "', Type:" + term.Type, executionContext);
+        }
 
-            return null;
+        private object TryProcessIndex(Term input)
+        {
+            var chunks = new List<StatementChunk>();
+
+            for (var i = 0; i < input.SubTerms.Count; i += 2)
+            {
+                var termValue = GetValueOfTerm(input.SubTerms[i]);
+
+                if (i + 1 < input.SubTerms.Count)
+                {
+                    var opTerm = input.SubTerms[i + 1];
+                    if (opTerm.Type == Term.TermTypes.INDEX_OPERATOR)
+                    {
+                        chunks.Add(new StatementChunk(termValue, opTerm.Text));
+                    }
+                    else
+                    {
+                        throw new kOSException("Expression error processing boolean operation '" + input.ToString() + "'", executionContext);
+                    }
+                }
+                else
+                {
+                    chunks.Add(new StatementChunk(termValue, ""));
+                }
+            }
+
+            for (var i = 0; i < chunks.Count - 1; i++)
+            {
+                var c1 = chunks[i];
+                var c2 = chunks[i + 1];
+                object resultValue = null;
+
+                if (c1.Opr == "#")
+                {
+                    resultValue = AttemptAnd(c1.Value, c2.Value);
+                    var baseTermValue = c1.Value as ListValue;
+
+                    int suffixIntValue;
+                    var secondChunkIsInt = int.TryParse(c2.Value.ToString(), out suffixIntValue);
+
+                    if (baseTermValue != null && secondChunkIsInt)
+                    {
+                        resultValue = baseTermValue.GetIndex(suffixIntValue);
+                    }
+                }
+
+                if (resultValue == null) throw new kOSException("Can't Get Index " + GetFriendlyNameOfItem(c2.Value) + " from " + GetFriendlyNameOfItem(c1.Value));
+
+                ReplaceChunkPairAt(ref chunks, i, new StatementChunk(resultValue, c2.Opr));
+                i--;
+            }
+
+            return chunks.Count == 1 ? chunks[0].Value : null;
         }
 
         private object RecognizeConstant(String text)
@@ -430,6 +488,7 @@ namespace kOS
             if (name == "LATLNG") { double[] dp = GetParamsAsT<double>(p, 2); return new GeoCoordinates(executionContext.Vessel, dp[0], dp[1]); }
             if (name == "VESSEL") { String[] sp = GetParamsAsT<String>(p, 1); return new VesselTarget(VesselUtils.GetVesselByName(sp[0], executionContext.Vessel), executionContext); }
             if (name == "BODY") { String[] sp = GetParamsAsT<String>(p, 1); return new BodyTarget(sp[0], executionContext); }
+            if (name == "LIST") { return new ListValue();}
 
             if (name == "HEADING")
             {
