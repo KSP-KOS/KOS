@@ -127,7 +127,92 @@ namespace kOS
 
         public override void Evaluate()
         {
+            UnityEngine.Debug.Log("For UNTIL: " + RegexMatch );
+
+            for (int i = 0; i < RegexMatch.Groups.Count; i++)
+            {
+                var group = RegexMatch.Groups[1];
+                UnityEngine.Debug.Log("Until Match Group V: " + group.Value + " I: " + group.Index);
+            }
             waitExpression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+
+            int numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
+            targetCommand = Command.Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
+
+            //commandString = RegexMatch.Groups[2].Value;
+
+            State = ExecutionState.WAIT;
+        }
+
+        public override bool Break()
+        {
+            State = ExecutionState.DONE;
+
+            return true;
+        }
+
+        public override bool SpecialKey(kOSKeys key)
+        {
+            if (key == kOSKeys.BREAK)
+            {
+                StdOut("Break.");
+                Break();
+            }
+
+            return base.SpecialKey(key);
+        }
+
+        public override void Update(float time)
+        {
+            base.Update(time);
+
+            if (ChildContext == null)
+            {
+                if (waitExpression.IsTrue())
+                {
+                    State = ExecutionState.DONE;
+                }
+                else
+                {
+                    ChildContext = targetCommand;
+                    //ChildContext = Command.Get(commandString, this);
+                    ((Command)ChildContext).Evaluate();
+                }
+            }
+            else
+            {
+                if (ChildContext != null || ChildContext.State == ExecutionState.DONE)
+                {
+                    ChildContext = null;
+                }
+            }
+        }
+    }
+    [CommandAttribute("FOR ~ IN ~ {}")]
+    public class CommandForLoop : Command
+    {
+        List<Command> commands = new List<Command>();
+        List<string> scopeVariables = new List<string>();
+        Expression waitExpression;
+        // commandString;
+        Command targetCommand;
+
+        public CommandForLoop(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            UnityEngine.Debug.Log("For MATCH: " + RegexMatch );
+
+            for (int i = 0; i < RegexMatch.Groups.Count; i++)
+            {
+                var group = RegexMatch.Groups[i];
+                UnityEngine.Debug.Log("For Match Group V: " + group.Value + " I: " + group.Index);
+            }
+                
+            var listName = RegexMatch.Groups[1].Value;
+            var scopeValue = RegexMatch.Groups[0].Value;
+            //var listValue = new Expression(, ParentContext);
+
 
             int numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
             targetCommand = Command.Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
