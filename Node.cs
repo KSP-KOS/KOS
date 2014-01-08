@@ -99,7 +99,7 @@ namespace kOS
                 case "ETA":
                     return Time - Planetarium.GetUniversalTime();
                 case "DELTAV":
-                    return GetBurnVector();
+                    return nodeRef.DeltaV;
                 case "PROGRADE":
                     return Pro;
                 case "RADIALOUT":
@@ -161,6 +161,7 @@ namespace kOS
 
         public override string ToString()
         {
+            UpdateValues();
             return "NODE(" + Time + "," + RadOut + "," + Norm + "," + Pro + ")";
         }
     }
