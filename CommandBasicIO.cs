@@ -191,6 +191,27 @@ namespace kOS
         }
     }
     
+    [CommandAttribute("UNSET %")]
+    public class CommandUnset : Command
+    {
+        public CommandUnset(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+
+        public override void Evaluate()
+        {
+            String varname = RegexMatch.Groups[1].Value;
+
+            if (varname.ToUpper() == "ALL")
+            {
+                ParentContext.UnsetAll();
+            }
+            else
+            {
+                ParentContext.Unset(varname);
+            }
+
+            State = ExecutionState.DONE;
+            }
+    }
     [CommandAttribute("TOGGLE %")]
     public class CommandToggle : Command
     {
