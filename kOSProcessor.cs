@@ -46,6 +46,11 @@ namespace kOS
             Activate();
         }
 
+        [KSPAction("Close Terminal", actionGroup = KSPActionGroup.None)]
+        public void Deactivate(KSPActionParam param) {
+            Core.CloseWindow(cpu);
+        }
+
         [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
         public void TogglePower(KSPActionParam param) {
             TogglePower();

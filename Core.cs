@@ -54,7 +54,11 @@ namespace kOS
         {
         }
 
-
+        public static void CloseWindow(CPU cpu)
+        {
+            Fetch.Window.AttachTo(cpu);
+            Fetch.Window.Close();
+        }
     }
 
     public class CoreInitializer : KSP.Testing.UnitTest
