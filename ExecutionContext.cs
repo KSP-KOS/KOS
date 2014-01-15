@@ -380,7 +380,7 @@ namespace kOS
 
         public virtual void OnSave(ConfigNode node)
         {
-            ConfigNode contextNode = new ConfigNode("context");
+            var contextNode = new ConfigNode("context");
 
             contextNode.AddValue("context-type", this.GetType().ToString());
 
@@ -401,6 +401,27 @@ namespace kOS
             if (ParentContext != null) return ParentContext.GetVolumeBestIdentifier(SelectedVolume);
 
             return "";
+        }
+
+        public void RemoveVariable(IEnumerable<string> variables)
+        {
+            foreach (var variable in variables)
+            {
+                RemoveVariable(variable);
+            }
+        }
+
+        public void RemoveVariable(string variable)
+        {
+            if (Variables.ContainsKey(variable.ToLower()))
+             {
+                 Variables.Remove(variable.ToLower());
+             }
+            else if (ParentContext != null)
+            {
+                ParentContext.RemoveVariable(variable);
+            }
+
         }
     }
 }

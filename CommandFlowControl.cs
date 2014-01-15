@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 
@@ -10,7 +8,7 @@ namespace kOS
     [CommandAttribute("^{([\\S\\s]*)}$")]
     public class CommandBlock : Command
     {
-        List<Command> commands = new List<Command>();
+        readonly List<Command> commands = new List<Command>();
         String commandBuffer = "";
 
         public CommandBlock(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -27,15 +25,10 @@ namespace kOS
 
             while (parseNext(ref innerText, out cmd, ref lineCount, out commandLineStart))
             {
-                commands.Add(Command.Get(cmd, this, commandLineStart));
+                commands.Add(Get(cmd, this, commandLineStart));
             }
 
             State = (commands.Count == 0) ? ExecutionState.DONE : ExecutionState.WAIT;
-        }
-
-        public override bool SpecialKey(kOSKeys key)
-        {
-            return base.SpecialKey(key);
         }
 
         public override void Refresh()
@@ -56,7 +49,7 @@ namespace kOS
 
         public override void Update(float time)
         {
-            foreach (Command command in commands)
+            foreach (var command in commands)
             {
                 switch (command.State)
                 {
@@ -78,7 +71,6 @@ namespace kOS
     [CommandAttribute("IF /_{}")]
     public class CommandIf : Command
     {
-        List<Command> commands = new List<Command>();
         Expression expression;
         Command targetCommand;
 
@@ -89,7 +81,7 @@ namespace kOS
             expression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
 
             int numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
-            targetCommand = Command.Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
+            targetCommand = Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
 
             if (expression.IsTrue())
             {
@@ -107,18 +99,16 @@ namespace kOS
         {
             base.Update(time);
 
-            if (ChildContext == null || ChildContext.State == ExecutionState.DONE)
-            {
-                ChildContext = null;
-                State = ExecutionState.DONE;
-            }
+            if (ChildContext != null && ChildContext.State != ExecutionState.DONE) return;
+
+            ChildContext = null;
+            State = ExecutionState.DONE;
         }
     }
 
     [CommandAttribute("UNTIL /_{}")]
     public class CommandUntilLoop : Command
     {
-        List<Command> commands = new List<Command>();
         Expression waitExpression;
         // commandString;
         Command targetCommand;
@@ -129,15 +119,15 @@ namespace kOS
         {
             UnityEngine.Debug.Log("For UNTIL: " + RegexMatch );
 
-            for (int i = 0; i < RegexMatch.Groups.Count; i++)
+            for (var i = 0; i < RegexMatch.Groups.Count; i++)
             {
                 var group = RegexMatch.Groups[1];
-                UnityEngine.Debug.Log("Until Match Group V: " + group.Value + " I: " + group.Index);
+                UnityEngine.Debug.Log("Until Match Group V: " + group.Value + " I: " + group.Index + "-" + i);
             }
             waitExpression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
 
-            int numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
-            targetCommand = Command.Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
+            var numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
+            targetCommand = Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
 
             //commandString = RegexMatch.Groups[2].Value;
 
@@ -188,36 +178,27 @@ namespace kOS
             }
         }
     }
-    [CommandAttribute("FOR ~ IN ~ {}")]
+    [CommandAttribute("FOR /_ IN /_ {}")]
     public class CommandForLoop : Command
     {
-        List<Command> commands = new List<Command>();
-        List<string> scopeVariables = new List<string>();
-        Expression waitExpression;
         // commandString;
         Command targetCommand;
+        private Enumerator iterator;
+        private string iteratorString;
 
         public CommandForLoop(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
-            UnityEngine.Debug.Log("For MATCH: " + RegexMatch );
+            var listName = RegexMatch.Groups[2].Value;
+            iteratorString = RegexMatch.Groups[1].Value;
 
-            for (int i = 0; i < RegexMatch.Groups.Count; i++)
-            {
-                var group = RegexMatch.Groups[i];
-                UnityEngine.Debug.Log("For Match Group V: " + group.Value + " I: " + group.Index);
-            }
-                
-            var listName = RegexMatch.Groups[1].Value;
-            var scopeValue = RegexMatch.Groups[0].Value;
-            //var listValue = new Expression(, ParentContext);
-
+            var expression = new Expression(listName, ParentContext).GetValue();
+            var list = expression as ListValue;
+            iterator = list.GetSuffix("ITERATOR") as Enumerator;
 
             int numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
-            targetCommand = Command.Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
-
-            //commandString = RegexMatch.Groups[2].Value;
+            targetCommand = Get(RegexMatch.Groups[3].Value, this, Line + numLinesChild);
 
             State = ExecutionState.WAIT;
         }
@@ -246,12 +227,15 @@ namespace kOS
 
             if (ChildContext == null)
             {
-                if (waitExpression.IsTrue())
+                if ((bool)iterator.GetSuffix("END"))
                 {
                     State = ExecutionState.DONE;
+                    ParentContext.RemoveVariable(iteratorString);
                 }
                 else
                 {
+                    var iteratorVariable = ParentContext.FindOrCreateVariable(iteratorString);
+                    iteratorVariable.Value = iterator.GetSuffix("VALUE");
                     ChildContext = targetCommand;
                     //ChildContext = Command.Get(commandString, this);
                     ((Command)ChildContext).Evaluate();
