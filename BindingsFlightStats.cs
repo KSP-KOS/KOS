@@ -18,7 +18,7 @@ namespace kOS
             manager.AddGetter("ALT:PERIAPSIS",  delegate(CPU cpu) { return cpu.Vessel.orbit.PeA; });
             manager.AddGetter("ETA:APOAPSIS",   delegate(CPU cpu) { return cpu.Vessel.orbit.timeToAp; });
             manager.AddGetter("ETA:PERIAPSIS",  delegate(CPU cpu) { return cpu.Vessel.orbit.timeToPe; });
-            manager.AddGetter("ETA:TRANSITION", cpu => cpu.Vessel.orbit.EndUT);
+            manager.AddGetter("ETA:TRANSITION", cpu => cpu.Vessel.orbit.EndUT - cpu.Vessel.missionTime);
             manager.AddGetter("OBT:PERIOD", cpu => cpu.Vessel.orbit.period);
             manager.AddGetter("OBT:INCLINATION", cpu => cpu.Vessel.orbit.inclination);
             manager.AddGetter("OBT:ECCENTRICITY", cpu => cpu.Vessel.orbit.eccentricity);

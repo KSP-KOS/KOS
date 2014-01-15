@@ -428,26 +428,5 @@ namespace kOS
 
             return "";
         }
-
-        public void RemoveVariable(IEnumerable<string> variables)
-        {
-            foreach (var variable in variables)
-            {
-                RemoveVariable(variable);
-            }
-        }
-
-        public void RemoveVariable(string variable)
-        {
-            if (Variables.ContainsKey(variable.ToLower()))
-             {
-                 Variables.Remove(variable.ToLower());
-             }
-            else if (ParentContext != null)
-            {
-                ParentContext.RemoveVariable(variable);
-            }
-
-        }
     }
 }

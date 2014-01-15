@@ -39,8 +39,6 @@ namespace kOS
                 case "CLEAR":
                     list.Clear();
                     return true;
-                case "RESETINDEX":
-                    return true;
                 case "LENGTH":
                     return list.Count;
                 case "ITERATOR":
@@ -73,29 +71,22 @@ namespace kOS
         {
             lock (lockObject)
             {
-                UnityEngine.Debug.Log("ListObject: SUFFIX:" + suffixName);
                 switch (suffixName)
                 {
                     case "RESET":
                         index = 0;
                         enumerator.Reset();
-                        UnityEngine.Debug.Log("ListObject: RESET");
                         return true;
                     case "END":
-                        UnityEngine.Debug.Log("ListObject: Advance:" + enumerator.Current);
                         var status = enumerator.MoveNext();
                         index++;
-                        UnityEngine.Debug.Log("ListObject: Advance:" + enumerator.Current);
                         return !status;
                     case "INDEX":
-                        UnityEngine.Debug.Log("ListObject: Index:" + index);
                         return index;
                     case "VALUE":
-                        UnityEngine.Debug.Log("ListObject: Current:" + enumerator.Current);
                         return enumerator.Current;
                     default:
                         return string.Format("Suffix {0} Not Found", suffixName);
-
                 }
             }
         }

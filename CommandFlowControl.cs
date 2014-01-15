@@ -117,13 +117,6 @@ namespace kOS
 
         public override void Evaluate()
         {
-            UnityEngine.Debug.Log("For UNTIL: " + RegexMatch );
-
-            for (var i = 0; i < RegexMatch.Groups.Count; i++)
-            {
-                var group = RegexMatch.Groups[1];
-                UnityEngine.Debug.Log("Until Match Group V: " + group.Value + " I: " + group.Index + "-" + i);
-            }
             waitExpression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
 
             var numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
@@ -230,7 +223,7 @@ namespace kOS
                 if ((bool)iterator.GetSuffix("END"))
                 {
                     State = ExecutionState.DONE;
-                    ParentContext.RemoveVariable(iteratorString);
+                    ParentContext.Unset(iteratorString);
                 }
                 else
                 {
