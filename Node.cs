@@ -94,12 +94,11 @@ namespace kOS
             
             switch (suffixName)
             {
+                case "DELTAV":
                 case "BURNVECTOR":
                     return GetBurnVector();
                 case "ETA":
                     return Time - Planetarium.GetUniversalTime();
-                case "DELTAV":
-                    return nodeRef.DeltaV;
                 case "PROGRADE":
                     return Pro;
                 case "RADIALOUT":
