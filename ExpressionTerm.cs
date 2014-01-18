@@ -144,7 +144,8 @@ namespace kOS
             Text = Regex.Replace(Text, "HEADING ([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)", "HEADING($2,$1)", RegexOptions.IgnoreCase);
 
             //enables scientific notation eg 6.6E-11 -> 6.6*10^-11
-            Text = Regex.Replace(Text, "\\dE", "*10^", RegexOptions.IgnoreCase);
+            Text = Regex.Replace(Text, "(\\d)E([-+]{1}[0-9]+)", "$1*10^$2");
+           
             // Resource tags are now deprecated in favor of SHIP:ResourceName
             Text = Regex.Replace(Text, "(\\s|^)<([a-zA-Z]+)>(\\s|$)", " SHIP:$2 ", RegexOptions.IgnoreCase);
 
