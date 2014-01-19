@@ -13,8 +13,8 @@ namespace kOS
 
         public override void AddTo(BindingManager manager)
         {
-            cpu = manager.cpu;
-            vessel = manager.cpu.Vessel;
+            cpu = manager.Cpu;
+            vessel = manager.Cpu.Vessel;
 
             controls.Add(new LockableControl("THROTTLE", "throttle", cpu, manager));
             controls.Add(new LockableControl("STEERING", "steering", cpu, manager));

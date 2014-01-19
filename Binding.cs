@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 
 namespace kOS
@@ -15,78 +14,73 @@ namespace kOS
     
     public class BindingManager
     {
-        public CPU cpu;
-
-        public Dictionary<String, BindingSetDlg> Setters = new Dictionary<String, BindingSetDlg>();
-        public Dictionary<String, BindingGetDlg> Getters = new Dictionary<String, BindingGetDlg>();
-        public List<Binding> Bindings = new List<Binding>();
+        private readonly List<Binding> bindings = new List<Binding>();
         
         public delegate void BindingSetDlg      (CPU cpu, object val);
         public delegate object BindingGetDlg    (CPU cpu);
 
         public BindingManager(CPU cpu, String context)
         {
-            this.cpu = cpu;
+            Cpu = cpu;
 
             var contexts = new string[1];
             contexts[0] = context;
 
-            foreach (Type t in Assembly.GetExecutingAssembly().GetTypes())
+            foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                kOSBinding attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
-                if (attr != null)
-                {
-                    if (attr.Contexts.Count() == 0 || attr.Contexts.Intersect(contexts).Any())
-                    {
-                        Binding b = (Binding)Activator.CreateInstance(t);
-                        b.AddTo(this);
-                        Bindings.Add(b);
-                    }
-                }
+                var attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
+
+                if (attr == null || attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
+                var b = (Binding)Activator.CreateInstance(t);
+                b.AddTo(this);
+                bindings.Add(b);
             }
         }
 
+        public CPU Cpu { get; set; }
+
         public void AddGetter(String name, BindingGetDlg dlg)
         {
-            Variable v = cpu.FindVariable(name);
-            if (v == null) v = cpu.FindVariable(name.Split(":".ToCharArray())[0]);
-            
+            var v = Cpu.FindVariable(name) ?? Cpu.FindVariable(name.Split(":".ToCharArray())[0]);
+
             if (v != null)
             {
-                if (v is BoundVariable)
+                var variable = v as BoundVariable;
+                if (variable != null)
                 {
-                    ((BoundVariable)v).Get = dlg;
+                    variable.Get = dlg;
                 }
             }
             else
             {
-                var bv = cpu.CreateBoundVariable(name);
+                var bv = Cpu.CreateBoundVariable(name);
                 bv.Get = dlg;
-                bv.cpu = cpu;
+                bv.Cpu = Cpu;
             }
         }
 
         public void AddSetter(String name, BindingSetDlg dlg)
         {
-            Variable v = cpu.FindVariable(name.ToLower());
+            var v = Cpu.FindVariable(name.ToLower());
             if (v != null)
             {
-                if (v is BoundVariable)
+                var variable = v as BoundVariable;
+                if (variable != null)
                 {
-                    ((BoundVariable)v).Set = dlg;
+                    variable.Set = dlg;
                 }
             }
             else
             {
-                var bv = cpu.CreateBoundVariable(name.ToLower());
+                var bv = Cpu.CreateBoundVariable(name.ToLower());
                 bv.Set = dlg;
-                bv.cpu = cpu;
+                bv.Cpu = Cpu;
             }
         }
 
         public void Update(float time)
         {
-            foreach (Binding b in Bindings)
+            foreach (var b in bindings)
             {
                 b.Update(time);
             }
@@ -104,19 +98,20 @@ namespace kOS
     {
         public BindingManager.BindingSetDlg Set;
         public BindingManager.BindingGetDlg Get;
-        public CPU cpu;
 
         public override object Value
         {
             get
             {
-                return Get(cpu);
+                return Get(Cpu);
             }
             set
             {
-                Set(cpu, value);
+                Set(Cpu, value);
             }
         }
+
+        public CPU Cpu { get; set; }
     }
 
     [kOSBinding]
