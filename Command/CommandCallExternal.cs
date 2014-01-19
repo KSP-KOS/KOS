@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
-
-namespace kOS
+namespace kOS.Command
 {
-    [CommandAttribute("CALL *")]
+    [Command("CALL *")]
     public class CommandCallExternal : Command
     {
         public CommandCallExternal(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }

@@ -16,7 +16,7 @@ namespace kOS
         private String commandBuffer = "";
         private int CursorX = 0;
         private int CursorY = 0;
-        private new Queue<Command> Queue = new Queue<Command>();
+        private new Queue<Command.Command> Queue = new Queue<Command.Command>();
 
         private new char[,] buffer = new char[COLUMNS, ROWS];
 
@@ -39,7 +39,7 @@ namespace kOS
             {
                 try
                 {
-                    Command cmd = Command.Get(nextCmd, this, comandLineStart);
+                    Command.Command cmd = Command.Command.Get(nextCmd, this, comandLineStart);
                     Queue.Enqueue(cmd);
                 }
                 catch (kOSException e)

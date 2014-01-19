@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
-
-namespace kOS
+namespace kOS.Command
 {
-    [CommandAttribute("WAIT[UNTIL]? *")]
+    [Command("WAIT[UNTIL]? *")]
     public class CommandWait : Command
     {
         public CommandWait(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -72,7 +68,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("ON % *")]
+    [Command("ON % *")]
     public class CommandOnEvent : Command
     {
         private Variable targetVariable;
@@ -134,7 +130,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("LOCK % TO *")]
+    [Command("LOCK % TO *")]
     public class CommandLock : Command
     {
         public CommandLock(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -151,7 +147,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("UNLOCK %")]
+    [Command("UNLOCK %")]
     public class CommandUnlock : Command
     {
         public CommandUnlock(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -173,7 +169,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("WHEN / THEN *")]
+    [Command("WHEN / THEN *")]
     public class CommandWhen : Command
     {
         private Command targetCommand;

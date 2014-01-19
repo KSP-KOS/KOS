@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using UnityEngine;
 
-namespace kOS
+namespace kOS.Command
 {    
-    [CommandAttribute("CLEARSCREEN")]
+    [Command("CLEARSCREEN")]
     public class CommandClearScreen : Command
     {
         public CommandClearScreen(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -19,7 +15,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("SHUTDOWN")]
+    [Command("SHUTDOWN")]
     public class CommandShutdown : Command
     {
         public CommandShutdown(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -31,7 +27,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("REBOOT")]
+    [Command("REBOOT")]
     public class CommandReboot : Command
     {
         public CommandReboot(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -43,7 +39,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("PRINT * AT_(2)")]
+    [Command("PRINT * AT_(2)")]
     public class CommandPrintAt : Command
     {
         public CommandPrintAt(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -71,7 +67,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("PRINT *")]
+    [Command("PRINT *")]
     public class CommandPrint : Command
     {
         public CommandPrint(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -93,7 +89,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("TEST *")]
+    [Command("TEST *")]
     public class CommandTestKegex : Command
     {
         public CommandTestKegex(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -108,7 +104,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("DECLARE %")]
+    [Command("DECLARE %")]
     public class CommandDeclareVar : Command
     {
         public CommandDeclareVar(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -124,7 +120,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("DECLARE PARAMETERS? *")]
+    [Command("DECLARE PARAMETERS? *")]
     public class CommandDeclareParameter : Command
     {
         public CommandDeclareParameter(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -146,7 +142,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("SET ~ TO *")]
+    [Command("SET ~ TO *")]
     public class CommandSet : Command
     { 
         public CommandSet(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -191,7 +187,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("UNSET %")]
+    [Command("UNSET %")]
     public class CommandUnset : Command
     {
         public CommandUnset(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -212,7 +208,7 @@ namespace kOS
             State = ExecutionState.DONE;
             }
     }
-    [CommandAttribute("TOGGLE %")]
+    [Command("TOGGLE %")]
     public class CommandToggle : Command
     {
         public CommandToggle(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -247,7 +243,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("% ON")]
+    [Command("% ON")]
     public class CommandSetOn : Command
     {
         public CommandSetOn(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -276,7 +272,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("% OFF")]
+    [Command("% OFF")]
     public class CommandSetOff : Command
     {
         public CommandSetOff(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }

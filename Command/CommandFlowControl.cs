@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-
-namespace kOS
+namespace kOS.Command
 {
-    [CommandAttribute("^{([\\S\\s]*)}$")]
+    [Command("^{([\\S\\s]*)}$")]
     public class CommandBlock : Command
     {
         readonly List<Command> commands = new List<Command>();
@@ -73,7 +72,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("IF /_{}")]
+    [Command("IF /_{}")]
     public class CommandIf : Command
     {
         Expression expression;
@@ -111,7 +110,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("UNTIL /_{}")]
+    [Command("UNTIL /_{}")]
     public class CommandUntilLoop : Command
     {
         Expression waitExpression;
@@ -176,7 +175,7 @@ namespace kOS
             }
         }
     }
-    [CommandAttribute("FOR /_ IN /_ {}")]
+    [Command("FOR /_ IN /_ {}")]
     public class CommandForLoop : Command
     {
         // commandString;
@@ -249,7 +248,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("BREAK")]
+    [Command("BREAK")]
     public class CommandBreak : Command
     {
         public CommandBreak(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }

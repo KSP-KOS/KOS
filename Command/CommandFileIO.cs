@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using UnityEngine;
 
-namespace kOS
+namespace kOS.Command
 {
-    [CommandAttribute("EDIT &")]
+    [Command("EDIT &")]
     public class CommandEditFile : Command
     {
         public CommandEditFile(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -27,7 +24,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^RUN ([a-zA-Z0-9\-_]+?)( ?\((.*?)\))?$")]
+    [Command(@"^RUN ([a-zA-Z0-9\-_]+?)( ?\((.*?)\))?$")]
     public class CommandRunFile : Command
     {
         public CommandRunFile(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -115,7 +112,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("SWITCH TO ^")]
+    [Command("SWITCH TO ^")]
     public class CommandSwitch : Command
     {
         public CommandSwitch(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -144,7 +141,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("RENAME[VOLUME,FILE]? ^ TO &")]
+    [Command("RENAME[VOLUME,FILE]? ^ TO &")]
     public class CommandRename : Command
     {
         public CommandRename(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -190,7 +187,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("LOG * TO &")]
+    [Command("LOG * TO &")]
     public class CommandLog: Command
     {
         public CommandLog(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -222,7 +219,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("COPY &[TO,FROM][VOLUME]? ^")]
+    [Command("COPY &[TO,FROM][VOLUME]? ^")]
     public class CommandCopy : Command
     {
         public CommandCopy(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -256,7 +253,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("DELETE &[FROM,FROM VOLUME]?[:^]?")]
+    [Command("DELETE &[FROM,FROM VOLUME]?[:^]?")]
     public class CommandDelete : Command
     {
         public CommandDelete(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -287,7 +284,7 @@ namespace kOS
         }
     }
     
-    [CommandAttribute("LIST[VOLUMES,FILES]?")]
+    [Command("LIST[VOLUMES,FILES]?")]
     public class CommandList : Command
     {
         public CommandList(Match regexMatch, ExecutionContext context) : base(regexMatch,  context) { }

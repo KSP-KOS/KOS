@@ -10,7 +10,7 @@ namespace kOS
         public new String Message;
         public String Filename;
         public int LineNumber;
-        public Command commandObj;
+        public Command.Command commandObj;
         public ExecutionContext Context;
         public ContextRunProgram Program;
 

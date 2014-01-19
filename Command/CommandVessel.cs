@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
 using System.Text.RegularExpressions;
 
-namespace kOS
+namespace kOS.Command
 {
     
-    [CommandAttribute("STAGE")]
+    [Command("STAGE")]
     class CommandVesselStage : Command
     {
         public CommandVesselStage(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -21,7 +17,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("ADD *")]
+    [Command("ADD *")]
     public class CommandAddObjectToVessel : Command
     {
         public CommandAddObjectToVessel(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -44,7 +40,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute("REMOVE *")]
+    [Command("REMOVE *")]
     public class CommandRemoveObjectFromVessel : Command
     {
         public CommandRemoveObjectFromVessel(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
@@ -67,7 +63,7 @@ namespace kOS
         }
     }
 
-    [CommandAttribute(@"^LIST (PARTS|RESOURCES|ENGINES|TARGETS|BODIES|SENSORS)$")]
+    [Command(@"^LIST (PARTS|RESOURCES|ENGINES|TARGETS|BODIES|SENSORS)$")]
     class CommandVesselListings : Command
     {
         public CommandVesselListings(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }

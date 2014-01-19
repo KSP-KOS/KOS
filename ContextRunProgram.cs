@@ -12,7 +12,7 @@ namespace kOS
         private int accumulator;
         private File file;
         private String commandBuffer;
-        private List<Command> commands = new List<Command>();
+        private List<Command.Command> commands = new List<Command.Command>();
         private List<Expression> parameters = new List<Expression>();
         private int executionLine = 0;
 
@@ -51,7 +51,7 @@ namespace kOS
                 try
                 {
                     Line = commandLineStart;
-                    Command cmdObj = Command.Get(cmd, this, commandLineStart);
+                    Command.Command cmdObj = Command.Command.Get(cmd, this, commandLineStart);
                     commands.Add(cmdObj);
                 }
                 catch (kOSException e)
@@ -155,7 +155,7 @@ namespace kOS
             {
                 if (commands.Count > 0)
                 {
-                    Command cmd = commands[0];
+                    Command.Command cmd = commands[0];
                     commands.RemoveAt(0);
 
                     ChildContext = cmd;
