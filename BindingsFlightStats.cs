@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using UnityEngine;
 
 namespace kOS
@@ -13,24 +10,24 @@ namespace kOS
     {
         public override void AddTo(BindingManager manager)
         {
-            manager.AddGetter("ALT:RADAR",      delegate(CPU cpu) { return cpu.Vessel.heightFromTerrain > 0 ? Mathf.Min(cpu.Vessel.heightFromTerrain, (float)cpu.Vessel.altitude) : (float)cpu.Vessel.altitude; });
-            manager.AddGetter("ALT:APOAPSIS",   delegate(CPU cpu) { return cpu.Vessel.orbit.ApA; });
-            manager.AddGetter("ALT:PERIAPSIS",  delegate(CPU cpu) { return cpu.Vessel.orbit.PeA; });
-            manager.AddGetter("ETA:APOAPSIS",   delegate(CPU cpu) { return cpu.Vessel.orbit.timeToAp; });
-            manager.AddGetter("ETA:PERIAPSIS",  delegate(CPU cpu) { return cpu.Vessel.orbit.timeToPe; });
+            manager.AddGetter("ALT:RADAR", cpu => cpu.Vessel.heightFromTerrain > 0 ? Mathf.Min(cpu.Vessel.heightFromTerrain, (float) cpu.Vessel.altitude) : (float) cpu.Vessel.altitude);
+            manager.AddGetter("ALT:APOAPSIS", cpu => cpu.Vessel.orbit.ApA);
+            manager.AddGetter("ALT:PERIAPSIS", cpu => cpu.Vessel.orbit.PeA);
+            manager.AddGetter("ETA:APOAPSIS", cpu => cpu.Vessel.orbit.timeToAp);
+            manager.AddGetter("ETA:PERIAPSIS", cpu => cpu.Vessel.orbit.timeToPe);
             manager.AddGetter("ETA:TRANSITION", cpu => cpu.Vessel.orbit.EndUT - cpu.Vessel.missionTime);
 
-            manager.AddGetter("MISSIONTIME",    delegate(CPU cpu) { return cpu.Vessel.missionTime; });
-            manager.AddGetter("TIME",           delegate(CPU cpu) { return new kOS.TimeSpan(Planetarium.GetUniversalTime()); });
+            manager.AddGetter("MISSIONTIME", cpu => cpu.Vessel.missionTime);
+            manager.AddGetter("TIME", cpu => new TimeSpan(Planetarium.GetUniversalTime()));
 
-            manager.AddGetter("STATUS",         delegate(CPU cpu) { return cpu.Vessel.situation.ToString().Replace("_", " "); });
-            manager.AddGetter("COMMRANGE",      delegate(CPU cpu) { return VesselUtils.GetCommRange(cpu.Vessel); });
-            manager.AddGetter("INCOMMRANGE",    delegate(CPU cpu) { return Convert.ToDouble(CheckCommRange(cpu.Vessel)); });
+            manager.AddGetter("STATUS", cpu => cpu.Vessel.situation.ToString().Replace("_", " "));
+            manager.AddGetter("COMMRANGE", cpu => VesselUtils.GetCommRange(cpu.Vessel));
+            manager.AddGetter("INCOMMRANGE", cpu => Convert.ToDouble(CheckCommRange(cpu.Vessel)));
 
-            manager.AddGetter("AV", delegate(CPU cpu) { return cpu.Vessel.transform.InverseTransformDirection(cpu.Vessel.rigidbody.angularVelocity); });
-            manager.AddGetter("STAGE", delegate(CPU cpu) { return new StageValues(cpu.Vessel); });
+            manager.AddGetter("AV", cpu => cpu.Vessel.transform.InverseTransformDirection(cpu.Vessel.rigidbody.angularVelocity));
+            manager.AddGetter("STAGE", cpu => new StageValues(cpu.Vessel));
 
-            manager.AddGetter("ENCOUNTER",      delegate(CPU cpu) { return VesselUtils.TryGetEncounter(cpu.Vessel); });
+            manager.AddGetter("ENCOUNTER", cpu => VesselUtils.TryGetEncounter(cpu.Vessel));
 
             manager.AddGetter("NEXTNODE",       delegate(CPU cpu)
             {
@@ -41,12 +38,13 @@ namespace kOS
             });
 
             // Things like altitude, mass, maxthrust are now handled the same for other ships as the current ship
-            manager.AddGetter("SHIP", delegate(CPU cpu) { return new VesselTarget(cpu.Vessel, cpu); });
+            manager.AddGetter("SHIP", cpu => new VesselTarget(cpu.Vessel, cpu));
 
             // These are now considered shortcuts to SHIP:suffix
-            foreach (String scName in VesselTarget.ShortCuttableShipSuffixes)
+            foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
             {
-                manager.AddGetter(scName, delegate(CPU cpu) { return new VesselTarget(cpu.Vessel, cpu).GetSuffix(scName); });
+                var cName = scName;
+                manager.AddGetter(scName, cpu => new VesselTarget(cpu.Vessel, cpu).GetSuffix(cName));
             }
 
             manager.AddSetter("VESSELNAME", delegate(CPU cpu, object value) { cpu.Vessel.vesselName = value.ToString(); });
@@ -54,7 +52,7 @@ namespace kOS
 
             private static float getLattitude(CPU cpu)
             {
-                float retVal = (float)cpu.Vessel.latitude;
+                var retVal = (float)cpu.Vessel.latitude;
 
                 if (retVal > 90) return 90;
                 if (retVal < -90) return -90;
@@ -64,7 +62,7 @@ namespace kOS
 
             private static float getLongitude(CPU cpu)
             {
-                float retVal = (float)cpu.Vessel.longitude;
+                var retVal = (float)cpu.Vessel.longitude;
 
                 while (retVal > 180) retVal -= 360;
                 while (retVal < -180) retVal += 360;

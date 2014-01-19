@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace kOS
+﻿namespace kOS
 {
     public class Vector : SpecialValue
     {
-        double x;
-        double y;
-        double z;
+        private double x;
+        private double y;
+        private double z;
 
         public Vector(Vector3d init)
         {
@@ -27,9 +22,9 @@ namespace kOS
 
         public Vector(float x, float y, float z)
         {
-            this.x = (double)x;
-            this.y = (double)y;
-            this.z = (double)z;
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         public Direction ToDirection()
@@ -39,11 +34,19 @@ namespace kOS
 
         public override object GetSuffix(string suffixName)
         {
-            if (suffixName == "X") return x;
-            if (suffixName == "Y") return y;
-            if (suffixName == "Z") return z;
-            if (suffixName == "MAG") return new Vector3d(x, y, z).magnitude;
-            if (suffixName == "VEC") return new Vector(x, y, z);
+            switch (suffixName)
+            {
+                case "X":
+                    return x;
+                case "Y":
+                    return y;
+                case "Z":
+                    return z;
+                case "MAG":
+                    return new Vector3d(x, y, z).magnitude;
+                case "VEC":
+                    return new Vector(x, y, z);
+            }
 
             return base.GetSuffix(suffixName);
         }
@@ -60,21 +63,27 @@ namespace kOS
                 return false;
             }
 
-            if (suffixName == "X") { x = dblValue; return true; }
-            if (suffixName == "Y") { y = dblValue; return true; }
-            if (suffixName == "Z") { z = dblValue; return true; }
-
-            if (suffixName == "MAG")
+            switch (suffixName)
             {
-                double oldMag = new Vector3d(x, y, z).magnitude;
+                case "X":
+                    x = dblValue;
+                    return true;
+                case "Y":
+                    y = dblValue;
+                    return true;
+                case "Z":
+                    z = dblValue;
+                    return true;
+                case "MAG":
+                        double oldMag = new Vector3d(x, y, z).magnitude;
 
-                if (oldMag == 0) return true; // Avoid division by zero
+                        if (oldMag == 0) return true; // Avoid division by zero
 
-                x = x / oldMag * dblValue;
-                y = y / oldMag * dblValue;
-                z = z / oldMag * dblValue;
+                        x = x / oldMag * dblValue;
+                        y = y / oldMag * dblValue;
+                        z = z / oldMag * dblValue;
 
-                return true;
+                        return true;
             }
 
             return base.SetSuffix(suffixName, value);
@@ -108,25 +117,25 @@ namespace kOS
 
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
-            if (op == "+")
+            switch (op)
             {
-                if (other is Vector) return this + (Vector)other;
-            }
-            else if (op == "*")
-            {
-                if (other is Vector) return this * (Vector)other;
-                if (other is double) return this * (double)other;
-            }
-            else if (op == "-")
-            {
-                if (!reverseOrder)
-                {
-                    if (other is Vector) return this - (Vector)other;
-                }
-                else
-                {
-                    if (other is Vector) return (Vector)other - this;
-                }
+                case "+":
+                    if (other is Vector) return this + (Vector)other;
+                    break;
+                case "*":
+                    if (other is Vector) return this * (Vector)other;
+                    if (other is double) return this * (double)other;
+                    break;
+                case "-":
+                    if (!reverseOrder)
+                    {
+                        if (other is Vector) return this - (Vector)other;
+                    }
+                    else
+                    {
+                        if (other is Vector) return (Vector)other - this;
+                    }
+                    break;
             }
 
             return null;

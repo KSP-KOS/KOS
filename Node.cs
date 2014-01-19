@@ -127,6 +127,7 @@ namespace kOS
             {
                 case "DELTAV":
                 case "BURNVECTOR":
+                case "ORBIT":
                     throw new kOSReadOnlyException(suffixName);
                 case "ETA":
                     Time = ((double)value) + Planetarium.GetUniversalTime();
