@@ -111,6 +111,9 @@ namespace kOS
                 case "PERIAPSIS":
                     if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
                     return nodeRef.nextPatch.PeA;
+                case "ORBIT":
+                    if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                    return new OrbitInfo(nodeRef.nextPatch);
             }
 
             return base.GetSuffix(suffixName);
