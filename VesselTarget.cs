@@ -103,6 +103,7 @@ namespace kOS
             if (suffixName == "PERIAPSIS") return  target.orbit.PeA; 
             if (suffixName == "SENSOR") return new VesselSensors(target);
             if (suffixName == "TERMVELOCITY") return VesselUtils.GetTerminalVelocity(target);
+            if (suffixName == "OBT") return new OrbitInfo(target.orbit);
 
             // Is this a resource?
             double dblValue;

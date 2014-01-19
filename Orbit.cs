@@ -17,8 +17,14 @@ namespace kOS
         public override object GetSuffix(string suffixName)
         {
             if (suffixName == "APOAPSIS") return orbitRef.ApA;
-            else if (suffixName == "PERIAPSIS") return orbitRef.PeA;
-            else if (suffixName == "BODY") return orbitRef.referenceBody.name;
+            if (suffixName == "PERIAPSIS") return orbitRef.PeA;
+            if (suffixName == "BODY") return orbitRef.referenceBody.name;
+            if (suffixName == "PERIOD") return orbitRef.period;
+            if (suffixName == "INCLINATION") return orbitRef.inclination;
+            if (suffixName == "ECCENTRICITY") return orbitRef.eccentricity;
+            if (suffixName == "SEMIMAJORAXIS") return orbitRef.semiMajorAxis;
+            if (suffixName == "SEMIMINORAXIS") return orbitRef.semiMinorAxis;
+            if (suffixName == "TRANSITION") return orbitRef.patchEndTransition;
 
             return base.GetSuffix(suffixName);
         }

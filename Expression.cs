@@ -488,6 +488,7 @@ namespace kOS
             if (name == "LATLNG") { double[] dp = GetParamsAsT<double>(p, 2); return new GeoCoordinates(executionContext.Vessel, dp[0], dp[1]); }
             if (name == "VESSEL") { String[] sp = GetParamsAsT<String>(p, 1); return new VesselTarget(VesselUtils.GetVesselByName(sp[0], executionContext.Vessel), executionContext); }
             if (name == "BODY") { String[] sp = GetParamsAsT<String>(p, 1); return new BodyTarget(sp[0], executionContext); }
+            if (name == "BODYATMOSPHERE") { String[] sp = GetParamsAsT<String>(p, 1); return new BodyAtmosphere(VesselUtils.GetBodyByName(sp[0])); }
             if (name == "LIST") { return new ListValue();}
 
             if (name == "HEADING")
