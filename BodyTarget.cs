@@ -34,6 +34,10 @@ namespace kOS
             if (suffixName == "ALTITUDE") return target.orbit.altitude;
             if (suffixName == "APOAPSIS") return target.orbit.ApA;
             if (suffixName == "PERIAPSIS") return target.orbit.PeA;
+            if (suffixName == "RADIUS") return target.Radius;
+            if (suffixName == "G") return target.GeeASL;
+            if (suffixName == "MU") return target.gravParameter;
+            if (suffixName == "ATM") return new BodyAtmosphere(target);
             if (suffixName == "VELOCITY") return new Vector(target.orbit.GetVel());
             if (suffixName == "DISTANCE") return (float)GetDistance();
             if (suffixName == "BODY") return new BodyTarget(target.orbit.referenceBody, context);
