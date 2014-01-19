@@ -54,6 +54,7 @@
     <Compile Include="BindingsTerminalSettings.cs" />
     <Compile Include="BindingsTest.cs" />
     <Compile Include="BindingsUniverse.cs" />
+    <Compile Include="BodyAtmosphere.cs" />
     <Compile Include="BodyTarget.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="CommandBasicIO.cs" />
@@ -107,7 +108,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
