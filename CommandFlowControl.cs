@@ -23,10 +23,15 @@ namespace kOS
             int lineCount = Line;
             int commandLineStart = 0;
 
-            while (parseNext(ref innerText, out cmd, ref lineCount, out commandLineStart))
+            if (commands.Count == 0)
             {
-                commands.Add(Get(cmd, this, commandLineStart));
+                while (parseNext(ref innerText, out cmd, ref lineCount, out commandLineStart))
+                {
+                    commands.Add(Get(cmd, this, commandLineStart));
+                }
             }
+            else
+                Refresh();
 
             State = (commands.Count == 0) ? ExecutionState.DONE : ExecutionState.WAIT;
         }
@@ -171,7 +176,7 @@ namespace kOS
             }
             else
             {
-                if (ChildContext != null || ChildContext.State == ExecutionState.DONE)
+                if (ChildContext != null && ChildContext.State == ExecutionState.DONE)
                 {
                     ChildContext = null;
                 }
@@ -243,7 +248,7 @@ namespace kOS
             }
             else
             {
-                if (ChildContext != null || ChildContext.State == ExecutionState.DONE)
+                if (ChildContext != null && ChildContext.State == ExecutionState.DONE)
                 {
                     ChildContext = null;
                 }
