@@ -9,7 +9,7 @@ namespace kOS.Command
     public class CommandAttribute : Attribute
     {
         public string[] Values { get; set; }
-        public CommandAttribute(params string[] values) { this.Values = values; }
+        public CommandAttribute(params string[] values) { Values = values; }
 
         public override String ToString()
         {
@@ -23,21 +23,19 @@ namespace kOS.Command
 
         static CommandRegistry()
         {
-            foreach (Type t in Assembly.GetExecutingAssembly().GetTypes())
+            foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                CommandAttribute attr = (CommandAttribute)t.GetCustomAttributes(typeof(CommandAttribute), true).FirstOrDefault();
-                if (attr != null)
+                var attr = (CommandAttribute)t.GetCustomAttributes(typeof(CommandAttribute), true).FirstOrDefault();
+                if (attr == null) continue;
+                foreach (var s in attr.Values)
                 {
-                    foreach (String s in attr.Values)
-                    {
-                        Bindings.Add(Utils.BuildRegex(s), t);
-                    }
+                    Bindings.Add(Utils.BuildRegex(s), t);
                 }
             }
         }
     }
 
-    public class Command : ExecutionContext
+    public abstract class Command : ExecutionContext
     {
         public float Time;
         public float WaitTime = 0;
@@ -45,30 +43,24 @@ namespace kOS.Command
         public Match RegexMatch;
         public String InstanceName;
 
-        public Command(Match regexMatch, ExecutionContext context) : base(context)
+        protected Command(Match regexMatch, ExecutionContext context) : base(context)
         {
             Input = regexMatch.ToString();
-            this.RegexMatch = regexMatch;
+            RegexMatch = regexMatch;
         }
 
-        public Command(String input, ExecutionContext context) : base(context)
+        protected Command(String input, ExecutionContext context) : base(context)
         {
-            this.Input = input;
+            Input = input;
         }
 
-        public virtual void Verify()
-        {
-        }
-
-        public virtual void Evaluate()
-        {
-        }
+        public abstract void Evaluate();
 
         public static Command Get(String input, ExecutionContext context, int line)
         {
             try
             {
-                Command retCommand = Get(input, context);
+                var retCommand = Get(input, context);
                 retCommand.Line = line;
 
                 return retCommand;
@@ -76,7 +68,7 @@ namespace kOS.Command
             catch (kOSException e)
             {
                 e.LineNumber = line;
-                throw e;
+                throw;
             }
         }
 
@@ -86,12 +78,10 @@ namespace kOS.Command
 
             foreach (var kvp in CommandRegistry.Bindings)
             {
-                Match match = Regex.Match(input, kvp.Key, RegexOptions.IgnoreCase);
-                if (match.Success)
-                {
-                    var command = (Command)Activator.CreateInstance(kvp.Value, match, context);
-                    return command;
-                }
+                var match = Regex.Match(input, kvp.Key, RegexOptions.IgnoreCase);
+                if (!match.Success) continue;
+                var command = (Command)Activator.CreateInstance(kvp.Value, match, context);
+                return command;
             }
 
             throw new kOSException("Syntax Error.", context);
@@ -99,7 +89,7 @@ namespace kOS.Command
 
         public virtual void Refresh()
         {
-            this.State = ExecutionState.NEW;
+            State = ExecutionState.NEW;
         }
 
         public override void Lock(Command command)
