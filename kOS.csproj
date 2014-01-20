@@ -48,12 +48,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binding\Binding.cs" />
-    <Compile Include="Binding\BindingsFlightStats.cs" />
-    <Compile Include="Binding\BindingsRoverStats.cs" />
-    <Compile Include="Binding\BindingsTerminalSettings.cs" />
-    <Compile Include="Binding\BindingsTest.cs" />
+    <Compile Include="Binding\ActionGroups.cs" />
+    <Compile Include="Binding\BindingManager.cs" />
+    <Compile Include="Binding\BoundVariable.cs" />
+    <Compile Include="Binding\MissionSettings.cs" />
+    <Compile Include="Binding\FlightStats.cs" />
+    <Compile Include="Binding\RoverStats.cs" />
+    <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="Binding\KOSBinding.cs" />
+    <Compile Include="Binding\TestBindings.cs" />
     <Compile Include="Persistance\Archive.cs" />
     <Compile Include="Value\BodyAtmosphere.cs" />
     <Compile Include="Value\BodyTarget.cs" />
@@ -112,7 +116,7 @@
     <Compile Include="Expression\kOSExternalCommand.cs" />
     <Compile Include="kOSIDModule.cs" />
     <Compile Include="kOSProcessor.cs" />
-    <Compile Include="Binding\BindingsFlightControl.cs" />
+    <Compile Include="Binding\FlightControl.cs" />
     <Compile Include="Persistance\File.cs" />
     <Compile Include="Value\ListValue.cs" />
     <Compile Include="Value\Node.cs" />

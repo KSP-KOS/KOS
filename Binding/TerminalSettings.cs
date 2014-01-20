@@ -1,7 +1,7 @@
 ﻿namespace kOS.Binding
 {
     [KOSBinding]
-    public class BindingsTerminalSettings : Binding
+    public class TerminalSettings : Binding
     {
         public override void AddTo(BindingManager manager)
         {
