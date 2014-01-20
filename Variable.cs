@@ -1,27 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace kOS
+﻿namespace kOS
 {
     public class Variable
     {
-        private object value = 0.0f;
-        public virtual object Value
-        {
-            get 
-            { 
-                return this.value; 
-            }
-            set 
-            { 
-                this.value = value; 
-            }
-        }
+        public virtual object Value { get; set; }
 
         public Variable()
         {
+            Value = 0.0f;
         }
 
         public virtual object GetSubValue(string svName)

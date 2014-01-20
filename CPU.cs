@@ -1,39 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-
-using UnityEngine;
 using kOS.Binding;
 using kOS.Debug;
 
 namespace kOS
 {
-    public class CPU : ExecutionContext
+    public sealed class CPU : ExecutionContext
     {
-        public object Parent;
         public enum Modes { READY, STARVED, OFF };
-        public Modes Mode = Modes.READY;
-        public String Context;
-        public Archive archive;
-        public BindingManager bindingManager;
-        public float SessionTime;
-        public int ClockSpeed = 5;
-        
-        private Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
-        private Volume selectedVolume = null;
-        private List<Volume> volumes = new List<Volume>();
-        private List<kOSExternalFunction> externalFunctions = new List<kOSExternalFunction>();
-        
-        public override Vessel Vessel { get { return ((kOSProcessor)Parent).vessel; } }
+        public enum KOSRunType { KSP, WINFORMS };
+
+        public Archive Archive { get; private set; }
+        public float SessionTime { get; private set; }
+        public override Vessel Vessel { get { return ((kOSProcessor)parent).vessel; } }
         public override Dictionary<String, Variable> Variables { get { return variables; } }
         public override List<Volume> Volumes { get  { return volumes; } }
         public override List<kOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
 
-        public static kOSRunType RunType = kOSRunType.KSP;
-        public enum kOSRunType { KSP, WINFORMS };
+
+        private const int CLOCK_SPEED = 5;
+        private readonly string context;
+        private readonly BindingManager bindingManager;
+        private readonly object parent;
+        private readonly Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
+        private Volume selectedVolume;
+        private readonly List<Volume> volumes = new List<Volume>();
+        private readonly List<kOSExternalFunction> externalFunctions = new List<kOSExternalFunction>();
+        
+        public static KOSRunType RunType = KOSRunType.KSP;
         
         public override Volume SelectedVolume
         {
@@ -41,112 +36,112 @@ namespace kOS
             set { selectedVolume = value; }
         }
 
+        public Modes Mode { get; set; }
+
         public CPU(object parent, string context)
         {
-            this.Parent = parent;
-            this.Context = context;
+            Mode = Modes.READY;
+            this.parent = parent;
+            this.context = context;
             
-            bindingManager = new BindingManager(this, Context);
+            bindingManager = new BindingManager(this, this.context);
 
             if (context == "ksp")
             {
-                RunType = kOSRunType.KSP;
+                RunType = KOSRunType.KSP;
 
-                archive = new Archive(Vessel);
-                Volumes.Add(archive);
+                if (Vessel != null) Archive = new Archive(Vessel);
+                Volumes.Add(Archive);
             }
             else
             {
-                RunType = kOSRunType.WINFORMS;
+                RunType = KOSRunType.WINFORMS;
             }
 
-            this.RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 2 });
+            RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 2 });
         }
 
-        public double testFunction(double x, double y) { return x * y; }
+        public double TestFunction(double x, double y) { return x * y; }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
-            if (parameters.Count() == 4)
-            {
-                var name = (String)parameters[0];
-                var parent = parameters[1];
-                var methodName = (String)parameters[2];
-                var parameterCount = (int)parameters[3];
+            if (parameters.Count() != 4) return;
 
-                RegisterkOSExternalFunction(name, parent, methodName, parameterCount);
-            }
+            var name = (String)parameters[0];
+            var externalParent = parameters[1];
+            var methodName = (String)parameters[2];
+            var parameterCount = (int)parameters[3];
+
+            RegisterkOSExternalFunction(name, externalParent, methodName, parameterCount);
         }
 
-        public void RegisterkOSExternalFunction(String name, object parent, String methodName, int parameterCount)
+        public void RegisterkOSExternalFunction(String name, object externalParent, String methodName, int parameterCount)
         {
-            externalFunctions.Add(new kOSExternalFunction(name.ToUpper(), parent, methodName, parameterCount));
+            externalFunctions.Add(new kOSExternalFunction(name.ToUpper(), externalParent, methodName, parameterCount));
         }
 
         public override object CallExternalFunction(string name, string[] parameters)
         {
-            bool callFound = false;
-            bool callAndParamCountFound = false;
+            var callFound = false;
+            var callAndParamCountFound = false;
 
             foreach (var function in ExternalFunctions)
             {
-                if (function.Name == name.ToUpper())
+                if (function.Name != name.ToUpper()) continue;
+
+                callFound = true;
+
+                if (function.ParameterCount != parameters.Count()) continue;
+
+                callAndParamCountFound = true;
+
+                var t = function.Parent.GetType();
+                var method = t.GetMethod(function.MethodName);
+
+                // Attempt to cast the strings to types that the target method is expecting
+                var parameterInfoArray = method.GetParameters();
+                var convertedParams = new object[parameters.Length];
+                for (var i = 0; i < parameters.Length; i++)
                 {
-                    callFound = true;
-
-                    if (function.ParameterCount == parameters.Count())
-                    {
-                        callAndParamCountFound = true;
-
-                        Type t = function.Parent.GetType();
-                        var method = t.GetMethod(function.MethodName);
-
-                        // Attempt to cast the strings to types that the target method is expecting
-                        var parameterInfoArray = method.GetParameters();
-                        object[] convertedParams = new object[parameters.Length];
-                        for (var i = 0; i < parameters.Length; i++)
-                        {
-                            Type paramType = parameterInfoArray[i].ParameterType;
-                            String value = parameters[i];
-                            object converted = null;
+                    var paramType = parameterInfoArray[i].ParameterType;
+                    var value = parameters[i];
+                    object converted = null;
                             
-                            if (paramType == typeof(String))
-                            {
-                                converted = parameters[i];
-                            }
-                            else if (paramType == typeof(float))
-                            {
-                                float flt;
-                                if (float.TryParse(value, out flt)) converted = flt;
-                            }
-                            else if (paramType == typeof(double))
-                            {
-                                double dbl;
-                                if (double.TryParse(value, out dbl)) converted = dbl;
-                            }
-                            else if (paramType == typeof(int))
-                            {
-                                int itgr;
-                                if (int.TryParse(value, out itgr)) converted = itgr;
-                            }
-                            else if (paramType == typeof(long))
-                            {
-                                long lng;
-                                if (long.TryParse(value, out lng)) converted = lng;
-                            }
-                            else if (paramType == typeof(bool))
-                            {
-                                bool bln;
-                                if (bool.TryParse(value, out bln)) converted = bln;
-                            }
-
-                            if (converted == null) throw new KOSException("Parameter types don't match");
-                            convertedParams[i] = converted;
-                        }
-
-                        return method.Invoke(function.Parent, convertedParams);
+                    if (paramType == typeof(String))
+                    {
+                        converted = parameters[i];
                     }
+                    else if (paramType == typeof(float))
+                    {
+                        float flt;
+                        if (float.TryParse(value, out flt)) converted = flt;
+                    }
+                    else if (paramType == typeof(double))
+                    {
+                        double dbl;
+                        if (double.TryParse(value, out dbl)) converted = dbl;
+                    }
+                    else if (paramType == typeof(int))
+                    {
+                        int itgr;
+                        if (int.TryParse(value, out itgr)) converted = itgr;
+                    }
+                    else if (paramType == typeof(long))
+                    {
+                        long lng;
+                        if (long.TryParse(value, out lng)) converted = lng;
+                    }
+                    else if (paramType == typeof(bool))
+                    {
+                        bool bln;
+                        if (bool.TryParse(value, out bln)) converted = bln;
+                    }
+
+                    if (converted == null) throw new KOSException("Parameter types don't match");
+                    convertedParams[i] = converted;
                 }
+
+                return method.Invoke(function.Parent, convertedParams);
             }
 
             if (!callFound) throw new KOSException("External function '" + name + "' not found");
@@ -157,15 +152,7 @@ namespace kOS
 
         public override bool FindExternalFunction(string name)
         {
-            foreach (var function in ExternalFunctions)
-            {
-                if (function.Name == name.ToUpper())
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return ExternalFunctions.Any(function => function.Name == name.ToUpper());
         }
 
         public void Boot()
@@ -174,15 +161,12 @@ namespace kOS
 
             Push(new InterpreterBootup(this));
 
-            if (Volumes.Count > 1) 
-                SelectedVolume = Volumes[1];
-            else
-                SelectedVolume = Volumes[0];
+            SelectedVolume = Volumes.Count > 1 ? Volumes[1] : Volumes[0];
         }
 
         public bool IsAlive()
         {
-            var partState = ((kOSProcessor)this.Parent).part.State;
+            var partState = ((kOSProcessor)this.parent).part.State;
 
             if (partState == PartStates.DEAD)
             {
@@ -232,10 +216,7 @@ namespace kOS
                     SelectedVolume = newVolume;
                     return true;
                 }
-                else
-                {
-                    throw new KOSException("Volume disconnected - out of range");
-                }
+                throw new KOSException("Volume disconnected - out of range");
             }
 
             return false;
@@ -243,20 +224,14 @@ namespace kOS
 
         public override bool SwitchToVolume(string targetVolume)
         {
-            foreach (Volume volume in Volumes)
+            foreach (var volume in Volumes.Where(volume => volume.Name.ToUpper() == targetVolume.ToUpper()))
             {
-                if (volume.Name.ToUpper() == targetVolume.ToUpper())
+                if (volume.CheckRange())
                 {
-                    if (volume.CheckRange())
-                    {
-                        SelectedVolume = volume;
-                        return true;
-                    }
-                    else
-                    {
-                        throw new KOSException("Volume disconnected - out of range");
-                    }
+                    SelectedVolume = volume;
+                    return true;
                 }
+                throw new KOSException("Volume disconnected - out of range");
             }
 
             return false;
@@ -271,10 +246,7 @@ namespace kOS
                 variables.Add(varName, new BoundVariable());
                 return (BoundVariable)variables[varName];
             }
-            else
-            {
-                throw new KOSException("Cannot bind " + varName + "; name already taken.");
-            }
+            throw new KOSException("Cannot bind " + varName + "; name already taken.");
         }
 
         public override void Update(float time)
@@ -283,18 +255,19 @@ namespace kOS
 
             SessionTime += time;
 
-            for (var i = 0; i < ClockSpeed; i++)
+            for (var i = 0; i < CLOCK_SPEED; i++)
             {
-                base.Update(time / (float)ClockSpeed);
+                base.Update(time / CLOCK_SPEED);
             }
 
-            if (Mode == Modes.STARVED)
+            switch (Mode)
             {
-                ChildContext = null;
-            }
-            else if (Mode == Modes.OFF)
-            {
-                ChildContext = null;
+                case Modes.STARVED:
+                    ChildContext = null;
+                    break;
+                case Modes.OFF:
+                    ChildContext = null;
+                    break;
             }
 
             // After booting
@@ -347,19 +320,16 @@ namespace kOS
 
         public override void OnSave(ConfigNode node)
         {
-            ConfigNode contextNode = new ConfigNode("context");
+            var contextNode = new ConfigNode("context");
 
             // Save variables
             if (Variables.Count > 0)
             {
-                ConfigNode varNode = new ConfigNode("variables");
+                var varNode = new ConfigNode("variables");
 
-                foreach (var kvp in Variables)
+                foreach (var kvp in Variables.Where(kvp => !(kvp.Value is BoundVariable)))
                 {
-                    if (!(kvp.Value is BoundVariable))
-                    {
-                        varNode.AddValue(kvp.Key, File.EncodeLine(kvp.Value.Value.ToString()));
-                    }
+                    varNode.AddValue(kvp.Key, File.EncodeLine(kvp.Value.Value.ToString()));
                 }
 
                 contextNode.AddNode(varNode);
@@ -375,9 +345,9 @@ namespace kOS
 
         public override void OnLoad(ConfigNode node)
         {
-            foreach (ConfigNode contextNode in node.GetNodes("context"))
+            foreach (var contextNode in node.GetNodes("context"))
             {
-                foreach (ConfigNode varNode in contextNode.GetNodes("variables"))
+                foreach (var varNode in contextNode.GetNodes("variables"))
                 {
                     foreach (ConfigNode.Value value in varNode.values)
                     {
@@ -386,21 +356,21 @@ namespace kOS
                             var newVar = CreateVariable(value.name);
                             newVar.Value = new Expression(File.DecodeLine(value.value), this).GetValue();
                         }
-                        catch (KOSException kEX)
+                        catch (KOSException ex)
                         {
-                            UnityEngine.Debug.Log("kOS Exception Onload: " + kEX.Message);
+                            UnityEngine.Debug.Log("kOS Exception Onload: " + ex.Message);
                         }
                     }
                 }
             }
         }
 
-        public override string GetVolumeBestIdentifier(Volume SelectedVolume)
+        public override string GetVolumeBestIdentifier(Volume selected)
         {
-            int localIndex = volumes.IndexOf(SelectedVolume);
+            var localIndex = volumes.IndexOf(selected);
 
-            if (!String.IsNullOrEmpty(SelectedVolume.Name)) return "#" + localIndex + ": \"" + SelectedVolume.Name + "\"";
-            else return "#" + localIndex;
+            if (!String.IsNullOrEmpty(selected.Name)) return "#" + localIndex + ": \"" + selected.Name + "\"";
+            return "#" + localIndex;
         }
     }
 }

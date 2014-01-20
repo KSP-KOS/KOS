@@ -140,7 +140,7 @@ namespace kOS
             if (vessel.parts.Count != vesselPartCount)
             {
                 List<Volume> attachedVolumes = new List<Volume>();
-                attachedVolumes.Add(cpu.archive);
+                attachedVolumes.Add(cpu.Archive);
                 attachedVolumes.Add(this.hardDisk);
 
                 // Look for sister units that have newly been added to the vessel
