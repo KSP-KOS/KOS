@@ -36,7 +36,7 @@ namespace kOS
 
             int line = 0;
             int comandLineStart = 0;
-            while (parseNext(ref commandBuffer, out nextCmd, ref line, out comandLineStart))
+            while (ParseNext(ref commandBuffer, out nextCmd, ref line, out comandLineStart))
             {
                 try
                 {

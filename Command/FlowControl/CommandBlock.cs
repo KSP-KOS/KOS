@@ -24,7 +24,7 @@ namespace kOS.Command.FlowControl
             {
                 int commandLineStart;
                 String cmd;
-                while (parseNext(ref innerText, out cmd, ref lineCount, out commandLineStart))
+                while (ParseNext(ref innerText, out cmd, ref lineCount, out commandLineStart))
                 {
                     commands.Add(Get(cmd, this, commandLineStart));
                 }

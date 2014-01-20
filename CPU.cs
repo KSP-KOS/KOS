@@ -166,7 +166,7 @@ namespace kOS
 
         public bool IsAlive()
         {
-            var partState = ((kOSProcessor)this.parent).part.State;
+            var partState = ((kOSProcessor)parent).part.State;
 
             if (partState == PartStates.DEAD)
             {

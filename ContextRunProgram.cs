@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using kOS.Debug;
 
 
@@ -19,35 +20,34 @@ namespace kOS
         public ContextRunProgram(ExecutionContext parent, List<Expression> parameters, String filename) : base(parent) 
         {
             this.parameters = parameters;
-            this.Filename = filename;
+            Filename = filename;
         }
 
-        public void Run(File file)
+        public void Run(File fileObj)
         {
-            this.file = file;
+            file = fileObj;
 
             State = ExecutionState.WAIT;
 
-            RunBlock(file);
+            RunBlock(fileObj);
         }
 
         private void RunBlock(IEnumerable<string> block)
         {
-            foreach (String rawLine in block)
+            foreach (var line in block.Select(StripComment))
             {
-                String line = stripComment(rawLine);
                 commandBuffer += line + "\n";
             }
 
             string cmd;
-            int lineNumber = 0;
-            int commandLineStart = 0;
-            while (parseNext(ref commandBuffer, out cmd, ref lineNumber, out commandLineStart))
+            var lineNumber = 0;
+            int commandLineStart;
+            while (ParseNext(ref commandBuffer, out cmd, ref lineNumber, out commandLineStart))
             {
                 try
                 {
                     Line = commandLineStart;
-                    Command.Command cmdObj = Command.Command.Get(cmd, this, commandLineStart);
+                    var cmdObj = Command.Command.Get(cmd, this, commandLineStart);
                     commands.Add(cmdObj);
                 }
                 catch (KOSException e)
@@ -59,13 +59,10 @@ namespace kOS
                         State = ExecutionState.DONE;
                         return;
                     }
-                    else
-                    {
-                        // Error occurs in the top level program
-                        StdOut("Error on line " + e.LineNumber + ": " + e.Message);
-                        State = ExecutionState.DONE;
-                        return;
-                    }
+                    // Error occurs in the top level program
+                    StdOut("Error on line " + e.LineNumber + ": " + e.Message);
+                    State = ExecutionState.DONE;
+                    return;
                 }
                 catch (Exception e)
                 {
@@ -92,7 +89,7 @@ namespace kOS
             return true;
         }
 
-        public string stripComment(string line)
+        public string StripComment(string line)
         {
             for (var i=0; i<line.Length; i++)
             {
@@ -124,14 +121,12 @@ namespace kOS
                     // Error occurs in a child of another running program
                     StdOut("Error in '" + e.Program.Filename + "' on line " + e.LineNumber + ": " + e.Message);
                     State = ExecutionState.DONE;
-                    return;
                 }
                 else
                 {
                     // Error occurs in the top level program
                     StdOut("Error on line " + e.LineNumber + ": " + e.Message);
                     State = ExecutionState.DONE;
-                    return;
                 }
             }
             catch (Exception e)
@@ -141,26 +136,23 @@ namespace kOS
                 UnityEngine.Debug.Log("Program error");
                 UnityEngine.Debug.Log(e);
                 State = ExecutionState.DONE;
-                return;
             }
         }
 
         private void EvaluateNextCommand()
         {
-            if (this.ChildContext == null)
+            if (ChildContext != null) return;
+            if (commands.Count > 0)
             {
-                if (commands.Count > 0)
-                {
-                    Command.Command cmd = commands[0];
-                    commands.RemoveAt(0);
+                var cmd = commands[0];
+                commands.RemoveAt(0);
 
-                    ChildContext = cmd;
-                    cmd.Evaluate();
-                }
-                else
-                {
-                    State = ExecutionState.DONE;
-                }
+                ChildContext = cmd;
+                cmd.Evaluate();
+            }
+            else
+            {
+                State = ExecutionState.DONE;
             }
         }
 
@@ -168,7 +160,7 @@ namespace kOS
         {
             if (parameters.Count > 0)
             {
-                object retValue = parameters[0].GetValue();
+                var retValue = parameters[0].GetValue();
                 parameters.RemoveAt(0);
 
                 return retValue;
