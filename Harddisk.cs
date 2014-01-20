@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using UnityEngine;
 
 namespace kOS
 {
@@ -10,24 +8,24 @@ namespace kOS
     {
         public Harddisk(int size)
         {
-            this.Capacity = size;
+            Capacity = size;
         }
 
         public Harddisk(ConfigNode node)
         {
             Capacity = 10000;
 
-            foreach (String s in node.GetValues("capacity"))
+            foreach (var s in node.GetValues("capacity"))
             {
                 Capacity = Int32.Parse(s);
             }
 
-            foreach (String s in node.GetValues("volumeName"))
+            foreach (var s in node.GetValues("volumeName"))
             {
                 Name = s;
             }
 
-            foreach (ConfigNode fileNode in node.GetNodes("file"))
+            foreach (var fileNode in node.GetNodes("file"))
             {
                 files.Add(new File(fileNode));
             }
@@ -35,41 +33,30 @@ namespace kOS
 
         public override bool SaveFile(File file)
         {
-            if (!IsRoomFor(file)) return false;
-
-            return base.SaveFile(file);
+            return IsRoomFor(file) && base.SaveFile(file);
         }
 
         public override int GetFreeSpace()
         {
-            int totalOccupied = 0;
-            foreach (File p in files)
-            {
-                totalOccupied += p.GetSize();
-            }
+            var totalOccupied = files.Sum(p => p.GetSize());
 
             return Math.Max(Capacity - totalOccupied, 0);
         }
 
         public override bool IsRoomFor(File newFile)
         {
-            int totalOccupied = newFile.GetSize();
-            foreach (File existingFile in files)
-            {
-                // Consider only existing files that don't share a name with the proposed new file
-                // Because this could be an overwrite situation
-                if (existingFile.Filename != newFile.Filename)
-                {
-                    totalOccupied += existingFile.GetSize();
-                }
-            }
+            // Consider only existing files that don't share a name with the proposed new file
+            // Because this could be an overwrite situation
+            var totalOccupied = newFile.GetSize() + files.
+                Where(existingFile => existingFile.Filename != newFile.Filename).
+                Sum(existingFile => existingFile.GetSize());
 
             return (Capacity - totalOccupied >= 0);
         }
 
         public override void LoadPrograms(List<File> programsToLoad)
         {
-            foreach (File p in programsToLoad)
+            foreach (var p in programsToLoad)
             {
                 files.Add(p);
             }
@@ -77,11 +64,11 @@ namespace kOS
 
         public override ConfigNode Save(string nodeName)
         {
-            ConfigNode node = new ConfigNode(nodeName);
+            var node = new ConfigNode(nodeName);
             node.AddValue("capacity", Capacity);
             node.AddValue("volumeName", Name);
 
-            foreach (File file in files)
+            foreach (var file in files)
             {
                 node.AddNode(file.Save("file"));
             }

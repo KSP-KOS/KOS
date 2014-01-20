@@ -16,7 +16,7 @@ namespace kOS
         public override Vessel Vessel { get { return ((kOSProcessor)parent).vessel; } }
         public override Dictionary<String, Variable> Variables { get { return variables; } }
         public override List<Volume> Volumes { get  { return volumes; } }
-        public override List<kOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
+        public override List<KOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
 
 
         private const int CLOCK_SPEED = 5;
@@ -26,7 +26,7 @@ namespace kOS
         private readonly Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
         private Volume selectedVolume;
         private readonly List<Volume> volumes = new List<Volume>();
-        private readonly List<kOSExternalFunction> externalFunctions = new List<kOSExternalFunction>();
+        private readonly List<KOSExternalFunction> externalFunctions = new List<KOSExternalFunction>();
         
         public static KOSRunType RunType = KOSRunType.KSP;
         
@@ -77,7 +77,7 @@ namespace kOS
 
         public void RegisterkOSExternalFunction(String name, object externalParent, String methodName, int parameterCount)
         {
-            externalFunctions.Add(new kOSExternalFunction(name.ToUpper(), externalParent, methodName, parameterCount));
+            externalFunctions.Add(new KOSExternalFunction(name.ToUpper(), externalParent, methodName, parameterCount));
         }
 
         public override object CallExternalFunction(string name, string[] parameters)

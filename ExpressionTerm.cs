@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace kOS
@@ -15,37 +14,37 @@ namespace kOS
         public enum TermTypes { REGULAR, FINAL, FUNCTION, PARAMETER_LIST, COMPARISON, BOOLEAN, SUFFIX, STRUCTURE, MATH_OPERATOR, COMPARISON_OPERATOR, BOOLEAN_OPERATOR, INDEX, INDEX_OPERATOR }
         public TermTypes Type;
 
-        private static List<String> mathSymbols;
         private static List<String> comparisonSymbols;
         private static List<String> booleanSymbols;
-        private static List<String> allSymbols;
         private static List<String> parameterSeperatorSymbols;
-        private static List<String> subaccessSymbols;
         private static List<String> listaccessSymbols;
-        private static List<String> delimeterSymbols;
+        private static readonly List<String> mathSymbols;
+        private static readonly List<String> allSymbols;
+        private static readonly List<String> delimeterSymbols;
+        private static readonly List<String> subaccessSymbols;
 
         static Term()
         {
             mathSymbols = new List<string>();
-            mathSymbols.AddRange(new string[] { "+", "-", "*", "/", "^" });
+            mathSymbols.AddRange(new[] { "+", "-", "*", "/", "^" });
 
             comparisonSymbols = new List<string>();
-            comparisonSymbols.AddRange(new string[] { "<=", ">=", "!=", "==", "=", "<", ">" });
+            comparisonSymbols.AddRange(new[] { "<=", ">=", "!=", "==", "=", "<", ">" });
 
             booleanSymbols = new List<string>();
-            booleanSymbols.AddRange(new string[] { " AND ", " OR " });
+            booleanSymbols.AddRange(new[] { " AND ", " OR " });
 
             parameterSeperatorSymbols = new List<string>();
-            parameterSeperatorSymbols.AddRange(new string[] { "," });
+            parameterSeperatorSymbols.AddRange(new[] { "," });
 
             subaccessSymbols = new List<string>();
-            subaccessSymbols.AddRange(new string[] { ":" });
+            subaccessSymbols.AddRange(new[] { ":" });
 
             listaccessSymbols = new List<string>();
             listaccessSymbols.AddRange(new[] { "#" });
 
             delimeterSymbols = new List<string>();
-            delimeterSymbols.AddRange(new string[] { "(", ")", "\"" });
+            delimeterSymbols.AddRange(new[] { "(", ")", "\"" });
 
             allSymbols = new List<string>();
             allSymbols.AddRange(mathSymbols.ToArray());
@@ -354,16 +353,16 @@ namespace kOS
             return input.Length - 1;
         }
 
-        private List<String> splitByListIgnoreBracket(String input, ref List<String> operators)
+        private IEnumerable<string> splitByListIgnoreBracket(String input, ref List<String> operators)
         {
             return splitByListIgnoreBracket(input, ref operators, false);
         }
 
-        private List<String> splitByListIgnoreBracket(String input, ref List<String> operators, bool returnIfOneElement)
+        private IEnumerable<string> splitByListIgnoreBracket(String input, ref List<String> operators, bool returnIfOneElement)
         {
-            String buffer = "";
+            var buffer = "";
             String s;
-            List<String> retList = new List<string>();
+            var retList = new List<string>();
 
             for (int i = 0; i < input.Length; i++)
             {

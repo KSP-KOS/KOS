@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Debug;
 
 namespace kOS
 {
     public class ImmediateMode : ExecutionContext
     {
-        private int cursor = 0;
-        private int baseLineY = 0;
-        private static int CMD_BACKLOG = 20;
-        private List<String> previousCommands = new List<String>();
+        private int cursor;
+        private int baseLineY;
+        private const int CMD_BACKLOG = 20;
+        private readonly List<String> previousCommands = new List<String>();
         private int prevCmdIndex = -1;
         private String inputBuffer = "";
         private String commandBuffer = "";
-        private int CursorX = 0;
-        private int CursorY = 0;
-        private new Queue<Command.Command> Queue = new Queue<Command.Command>();
-
-        private new char[,] buffer = new char[COLUMNS, ROWS];
+        private int cursorX;
+        private int cursorY;
+        private readonly Queue<Command.Command> queue = new Queue<Command.Command>();
+        private readonly char[,] buffer = new char[COLUMNS, ROWS];
 
         public ImmediateMode(ExecutionContext parent) : base(parent) 
         {
@@ -34,31 +31,31 @@ namespace kOS
             commandBuffer += cmdString;
             string nextCmd;
 
-            int line = 0;
-            int comandLineStart = 0;
+            var line = 0;
+            int comandLineStart;
             while (ParseNext(ref commandBuffer, out nextCmd, ref line, out comandLineStart))
             {
                 try
                 {
-                    Command.Command cmd = Command.Command.Get(nextCmd, this, comandLineStart);
-                    Queue.Enqueue(cmd);
+                    var cmd = Command.Command.Get(nextCmd, this, comandLineStart);
+                    queue.Enqueue(cmd);
                 }
                 catch (KOSException e)
                 {
                     StdOut(e.Message);
-                    Queue.Clear(); // HALT!!
+                    queue.Clear(); // HALT!!
                 }
             }
         }
 
         public override int GetCursorX()
         {
-            return ChildContext != null ? ChildContext.GetCursorX() : CursorX;
+            return ChildContext != null ? ChildContext.GetCursorX() : cursorX;
         }
 
         public override int GetCursorY()
         {
-            return ChildContext != null ? ChildContext.GetCursorY() : CursorY;
+            return ChildContext != null ? ChildContext.GetCursorY() : cursorY;
         }
 
         public override bool Type(char ch)
@@ -93,20 +90,20 @@ namespace kOS
         {
             var childBuffer = (ChildContext != null) ? ChildContext.GetBuffer() : null;
 
-            return childBuffer != null ? childBuffer : buffer;
+            return childBuffer ?? buffer;
         }
 
         public void UpdateCursorXY()
         {
-            CursorX = cursor % buffer.GetLength(0);
-            CursorY = (cursor / buffer.GetLength(0)) + baseLineY;
+            cursorX = cursor % buffer.GetLength(0);
+            cursorY = (cursor / buffer.GetLength(0)) + baseLineY;
         }
 
         public void ShiftUp()
         {
-            for (int y = 0; y < buffer.GetLength(1); y++)
+            for (var y = 0; y < buffer.GetLength(1); y++)
             {
-                for (int x = 0; x < buffer.GetLength(0); x++)
+                for (var x = 0; x < buffer.GetLength(0); x++)
                 {
                     if (y + 1 < buffer.GetLength(1))
                     {
@@ -119,7 +116,7 @@ namespace kOS
                 }
             }
 
-            for (int x = 0; x < buffer.GetLength(0); x++)
+            for (var x = 0; x < buffer.GetLength(0); x++)
             {
                 buffer[x, buffer.GetLength(1) - 1] = (char)0;
             }
@@ -131,7 +128,7 @@ namespace kOS
 
         public override void Put(string text, int x, int y)
         {
-            foreach (char c in text)
+            foreach (var c in text)
             {
                 if (x >= buffer.GetLength(0) || y >= buffer.GetLength(1)) return;
 
@@ -142,7 +139,7 @@ namespace kOS
 
         public override void StdOut(string line)
         {
-            int linesWritten = WriteLine(line);
+            var linesWritten = WriteLine(line);
             baseLineY += linesWritten;
             UpdateCursorXY();
         }
@@ -152,8 +149,8 @@ namespace kOS
             baseLineY = 0;
             cursor = 0;
 
-            for (int y = 0; y < buffer.GetLength(1); y++)
-            for (int x = 0; x < buffer.GetLength(0); x++)
+            for (var y = 0; y < buffer.GetLength(1); y++)
+            for (var x = 0; x < buffer.GetLength(0); x++)
             {
                 buffer[x, y] = (char)0;
             }
@@ -163,29 +160,30 @@ namespace kOS
 
         public int WriteLine(string line)
         {
-            int lineCount = (line.Length / buffer.GetLength(0)) + 1;
+            var lineCount = (line.Length / buffer.GetLength(0)) + 1;
 
             while (baseLineY + lineCount > buffer.GetLength(1))
             {
                 ShiftUp();
             }
 
-            for (int y = baseLineY; y < buffer.GetLength(1); y++)
-            for (int x = 0; x < buffer.GetLength(0); x++)
+            for (var y = baseLineY; y < buffer.GetLength(1); y++)
+            for (var x = 0; x < buffer.GetLength(0); x++)
             {
                 buffer[x, y] = (char)0;
             }
 
-            char[] inputChars = line.ToCharArray();
+            var inputChars = line.ToCharArray();
 
-            int writeX = 0;
-            int writeY = baseLineY;
-            foreach (char c in inputChars)
+            var writeX = 0;
+            var writeY = baseLineY;
+            foreach (var c in inputChars)
             {
                 buffer[writeX, writeY] = c;
 
                 writeX++;
-                if (writeX >= buffer.GetLength(0)) { writeX = 0; writeY++; }
+                if (writeX < buffer.GetLength(0)) continue;
+                writeX = 0; writeY++;
             }
 
             return lineCount;
@@ -195,9 +193,9 @@ namespace kOS
         {
             if (ChildContext == null)
             {
-                if (Queue.Count > 0)
+                if (queue.Count > 0)
                 {
-                    var currentCmd = Queue.Dequeue();
+                    var currentCmd = queue.Dequeue();
 
                     try
                     {
@@ -207,7 +205,7 @@ namespace kOS
                     catch (KOSException e)
                     {
                         StdOut(e.Message);
-                        Queue.Clear();          // Halt all pending instructions
+                        queue.Clear();          // Halt all pending instructions
                         ChildContext = null;    //
                     }
                     catch (Exception e)
@@ -221,7 +219,7 @@ namespace kOS
                             UnityEngine.Debug.Log(e);
                         }
 
-                        Queue.Clear();
+                        queue.Clear();
                         ChildContext = null;
                     }
                 }
@@ -239,7 +237,7 @@ namespace kOS
             {
                 StdOut(e.Message);
                 ChildContext = null;
-                Queue.Clear();          // Halt all pending instructions
+                queue.Clear();          // Halt all pending instructions
             }
             catch (Exception e)
             {
@@ -252,7 +250,7 @@ namespace kOS
                     UnityEngine.Debug.Log(e);
                 }
 
-                Queue.Clear();
+                queue.Clear();
                 ChildContext = null;
             }
         }
@@ -267,7 +265,7 @@ namespace kOS
             previousCommands.Add(inputBuffer);
             if (previousCommands.Count > CMD_BACKLOG)
             {
-                int overflow = previousCommands.Count - CMD_BACKLOG;
+                var overflow = previousCommands.Count - CMD_BACKLOG;
                 previousCommands.RemoveRange(0, overflow);
             }
 

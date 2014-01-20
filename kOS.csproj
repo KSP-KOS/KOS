@@ -117,7 +117,6 @@
     <Compile Include="Value\ListValue.cs" />
     <Compile Include="Value\Node.cs" />
     <Compile Include="Value\Orbit.cs" />
-    <Compile Include="Resource.cs" />
     <Compile Include="Value\SpecialValue.cs" />
     <Compile Include="Value\SpecialValueTester.cs" />
     <Compile Include="Value\StageValues.cs" />

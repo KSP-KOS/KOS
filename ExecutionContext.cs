@@ -27,7 +27,7 @@ namespace kOS
         public virtual Vessel Vessel { get { return ParentContext != null ? ParentContext.Vessel : null; } }
         public virtual List<Volume> Volumes { get { return ParentContext != null ? ParentContext.Volumes : null; } }
         public virtual Dictionary<String, Variable> Variables { get { return ParentContext != null ? ParentContext.Variables : null; } }
-        public virtual List<kOSExternalFunction> ExternalFunctions { get { return ParentContext != null ? ParentContext.ExternalFunctions : null; } }
+        public virtual List<KOSExternalFunction> ExternalFunctions { get { return ParentContext != null ? ParentContext.ExternalFunctions : null; } }
 
         public ExecutionContext ParentContext { get; set; }
         public ExecutionContext ChildContext { get; set; }

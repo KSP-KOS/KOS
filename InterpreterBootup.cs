@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS
 {
     public class InterpreterBootup : ExecutionContext
     {
-        private float bootTime = 0;
-        private float animationTime = 0;
-        private new char[,] buffer = new char[COLUMNS, ROWS];
+        private float bootTime;
+        private float animationTime;
+        private readonly char[,] buffer = new char[COLUMNS, ROWS];
 
         public InterpreterBootup(ExecutionContext parent)
             : base(parent) 
@@ -29,9 +26,9 @@ namespace kOS
         {
             var cA = text.ToCharArray();
 
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
-                char c = cA[i];
+                var c = cA[i];
 
                 if (x + i >= buffer.GetLength(0)) return;
 
@@ -56,8 +53,8 @@ namespace kOS
         
         public void ShowAnimationFrame(int frame)
         {
-            var tX = 25;
-            var tY = 14;
+            const int tX = 25;
+            const int tY = 14;
 
             for (var y = 0; y < 6; y++)
             {
@@ -66,7 +63,7 @@ namespace kOS
                     var sY = y + 11;
                     var sX = x + (frame * 4);
 
-                    char c = (char)(sY * 16 + sX);
+                    var c = (char)(sY * 16 + sX);
 
                     buffer[tX + x, tY + y] = c;
                 }

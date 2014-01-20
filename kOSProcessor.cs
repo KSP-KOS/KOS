@@ -1,24 +1,16 @@
 ﻿using KSP.IO;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using UnityEngine;
-
 
 namespace kOS
 {
     public class kOSProcessor : PartModule
     {
-        public CPU cpu;
-        public Harddisk hardDisk = null;
-        private int vesselPartCount = 0;
-        private List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
-        private Dictionary<uint, uint> partIdentifiers;
-
-        private static int MemSize = 10000;
-        private static int cpuIdMax;
+        private CPU cpu;
+        private Harddisk hardDisk;
+        private int vesselPartCount;
+        private readonly List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
+        private const int MEM_SIZE = 10000;
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal")]
         public void Activate()
@@ -31,16 +23,9 @@ namespace kOS
         {
             if (cpu == null) return;
 
-            if (cpu.Mode != CPU.Modes.OFF)
-            {
-                cpu.Mode = CPU.Modes.OFF;
-            }
-            else
-            {
-                cpu.Mode = CPU.Modes.STARVED;
-            }
+            cpu.Mode = cpu.Mode != CPU.Modes.OFF ? CPU.Modes.OFF : CPU.Modes.STARVED;
         }
-                
+
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
         public void Activate(KSPActionParam param) {
             Activate();
@@ -62,7 +47,7 @@ namespace kOS
         [KSPField(isPersistant = true, guiActive = false)]
         public int MaxPartID = 0;
 
-        public override void OnStart(PartModule.StartState state)
+        public override void OnStart(StartState state)
         {
             //Do not start from editor and at KSP first loading
             if (state == StartState.Editor || state == StartState.None)
@@ -70,20 +55,18 @@ namespace kOS
                 return;
             }
 
-            if (hardDisk == null) hardDisk = new Harddisk(MemSize);
+            if (hardDisk == null) hardDisk = new Harddisk(MEM_SIZE);
 
-            initCpu();
+            InitCpu();
 
         }
 
-        public void initCpu()
+        public void InitCpu()
         {
-            if (cpu == null)
-            {
-                cpu = new CPU(this, "ksp");
-                cpu.AttachHardDisk(hardDisk);
-                cpu.Boot();
-            }
+            if (cpu != null) return;
+            cpu = new CPU(this, "ksp");
+            cpu.AttachHardDisk(hardDisk);
+            cpu.Boot();
         }
 
         public void RegisterkOSExternalFunction(object[] parameters)
@@ -93,24 +76,11 @@ namespace kOS
             cpu.RegisterkOSExternalFunction(parameters);
         }
         
-        private void assignPartIdentifiers()
-        {
-            foreach (Part part in vessel.parts)
-            {
-                if (!partIdentifiers.ContainsKey(part.flightID))
-                {
-
-                }
-            }
-        }
-        
         public static int AssignNewID()
         {
-            int id;
-
-            PluginConfiguration config = PluginConfiguration.CreateForType<kOSProcessor>();
+            var config = PluginConfiguration.CreateForType<kOSProcessor>();
             config.load();
-            id = config.GetValue<int>("CpuIDMax") + 1;
+            var id = config.GetValue<int>("CpuIDMax") + 1;
             config.SetValue("CpuIDMax", id);
             config.save();
 
@@ -129,7 +99,7 @@ namespace kOS
 
             cpu.Update(Time.deltaTime);
 
-            cpu.ProcessElectricity(this.part, TimeWarp.fixedDeltaTime);
+            cpu.ProcessElectricity(part, TimeWarp.fixedDeltaTime);
 
             UpdateParts();
         }
@@ -137,39 +107,34 @@ namespace kOS
         public void UpdateParts()
         {
             // Trigger whenever the number of parts in the vessel changes (like when staging, docking or undocking)
-            if (vessel.parts.Count != vesselPartCount)
+            if (vessel.parts.Count == vesselPartCount) return;
+
+            var attachedVolumes = new List<Volume> {cpu.Archive, hardDisk};
+
+            // Look for sister units that have newly been added to the vessel
+            sisterProcs.Clear();
+            foreach (var item in vessel.parts)
             {
-                List<Volume> attachedVolumes = new List<Volume>();
-                attachedVolumes.Add(cpu.Archive);
-                attachedVolumes.Add(this.hardDisk);
+                kOSProcessor sisterProc;
+                if (item == part || !PartIsKosProc(item, out sisterProc)) continue;
 
-                // Look for sister units that have newly been added to the vessel
-                sisterProcs.Clear();
-                foreach (Part part in vessel.parts)
-                {
-                    kOSProcessor sisterProc;
-                    if (part != this.part && PartIsKosProc(part, out sisterProc))
-                    {
-                        sisterProcs.Add(sisterProc);
-                        attachedVolumes.Add(sisterProc.hardDisk);
-                    }
-                }
-
-                cpu.UpdateVolumeMounts(attachedVolumes);
-
-                vesselPartCount = vessel.parts.Count;
+                sisterProcs.Add(sisterProc);
+                attachedVolumes.Add(sisterProc.hardDisk);
             }
+
+            cpu.UpdateVolumeMounts(attachedVolumes);
+
+            vesselPartCount = vessel.parts.Count;
         }
 
         public bool PartIsKosProc(Part input, out kOSProcessor proc)
         {
             foreach (PartModule module in input.Modules)
             {
-                if (module is kOSProcessor)
-                {
-                    proc = (kOSProcessor)module;
-                    return true;
-                }
+                var processor = module as kOSProcessor;
+                if (processor == null) continue;
+                proc = processor;
+                return true;
             }
 
             proc = null;
@@ -194,7 +159,7 @@ namespace kOS
 
             UnityEngine.Debug.Log("******************************* ON LOAD ");
 
-            initCpu();
+            InitCpu();
 
             UnityEngine.Debug.Log("******************************* CPU Inited ");
 

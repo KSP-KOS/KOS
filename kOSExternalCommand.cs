@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS
 {
-    public struct kOSExternalFunction
+    public struct KOSExternalFunction
     {
-        public String Name;
-        public object Parent;
-        public String MethodName;
-        public int ParameterCount;
-        public String regex;
-
-        public kOSExternalFunction(String name, object parent, String methodName, int parameterCount)
+        public KOSExternalFunction(String name, object parent, String methodName, int parameterCount) : this()
         {
-            this.Name = name;
-            this.Parent = parent;
-            this.ParameterCount = parameterCount;
-            this.MethodName = methodName;
+            Name = name;
+            Parent = parent;
+            ParameterCount = parameterCount;
+            MethodName = methodName;
 
-            this.regex = Utils.BuildRegex(name + "_(" + parameterCount + ")");
+            Regex = Utils.BuildRegex(name + "_(" + parameterCount + ")");
         }
+
+        public string Name { get; private set; }
+        public object Parent { get; private set; }
+        public string MethodName { get; private set; }
+        public int ParameterCount { get; private set; }
+        public string Regex { get; private set; }
     }
 }

@@ -7,11 +7,11 @@ namespace kOS.Debug
         public ExecutionContext Context;
         public ContextRunProgram Program;
 
-        public KOSException(String message) : base(message)
+        public KOSException(string message) : base(message)
         {
         }
 
-        public KOSException(String message, ExecutionContext context) : this (message)
+        public KOSException(string message, ExecutionContext context) : this (message)
         {
             LineNumber = context.Line;
             Context = context;
