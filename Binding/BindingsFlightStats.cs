@@ -8,7 +8,7 @@ using TimeSpan = kOS.Value.TimeSpan;
 namespace kOS.Binding
 {
 
-    [kOSBinding("ksp")]
+    [KOSBinding("ksp")]
     public class BindingsFlightStats : Binding
     {
         public override void AddTo(BindingManager manager)

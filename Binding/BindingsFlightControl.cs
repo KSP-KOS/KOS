@@ -5,7 +5,7 @@ using kOS.Value;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [KOSBinding("ksp")]
     public class BindingFlightControls : Binding
     {
         private Vessel vessel;
@@ -170,7 +170,7 @@ namespace kOS.Binding
         }
     }
     
-    [kOSBinding("ksp")]
+    [KOSBinding("ksp")]
     public class BindingActionGroups : Binding
     {
         public override void AddTo(BindingManager manager)
@@ -217,7 +217,7 @@ namespace kOS.Binding
         }
     }
 
-    [kOSBinding("ksp")]
+    [KOSBinding("ksp")]
     public class BindingFlightSettings : Binding
     {
         public override void AddTo(BindingManager manager)

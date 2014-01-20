@@ -1,6 +1,6 @@
 ﻿namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [KOSBinding("ksp")]
     public class BindingsRoverStats : Binding
     {
         public override void AddTo(BindingManager manager)

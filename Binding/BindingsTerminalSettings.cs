@@ -1,6 +1,6 @@
 ﻿namespace kOS.Binding
 {
-    [kOSBinding]
+    [KOSBinding]
     public class BindingsTerminalSettings : Binding
     {
         public override void AddTo(BindingManager manager)

@@ -54,6 +54,7 @@
     <Compile Include="Binding\BindingsTerminalSettings.cs" />
     <Compile Include="Binding\BindingsTest.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
+    <Compile Include="Binding\KOSBinding.cs" />
     <Compile Include="Value\BodyAtmosphere.cs" />
     <Compile Include="Value\BodyTarget.cs" />
     <Compile Include="Command\BasicIO\CommandClearScreen.cs" />

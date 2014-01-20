@@ -5,12 +5,6 @@ using System.Reflection;
 
 namespace kOS.Binding
 {
-    public class kOSBinding : Attribute
-    {
-        public string[] Contexts;
-        public kOSBinding(params string[] contexts) { Contexts = contexts; }
-    }
-    
     public class BindingManager
     {
         private readonly List<Binding> bindings = new List<Binding>();
@@ -27,7 +21,7 @@ namespace kOS.Binding
 
             foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                var attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
+                var attr = (KOSBinding)t.GetCustomAttributes(typeof(KOSBinding), true).FirstOrDefault();
 
                 if (attr == null || attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
                 var b = (Binding)Activator.CreateInstance(t);
@@ -113,7 +107,7 @@ namespace kOS.Binding
         public CPU Cpu { get; set; }
     }
 
-    [kOSBinding]
+    [KOSBinding]
     public class TestBindings : Binding
     {
         public override void AddTo(BindingManager manager)
