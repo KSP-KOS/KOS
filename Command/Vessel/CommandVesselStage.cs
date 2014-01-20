@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace kOS.Command
+namespace kOS.Command.Vessel
 {
     [Command("STAGE")]
     class CommandVesselStage : Command

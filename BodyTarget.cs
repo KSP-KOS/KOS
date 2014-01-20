@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Debug;
 
 namespace kOS
 {
@@ -23,7 +24,7 @@ namespace kOS
 
         public override object GetSuffix(string suffixName)
         {
-            if (Target == null) throw new kOSException("BODY structure appears to be empty!");
+            if (Target == null) throw new KOSException("BODY structure appears to be empty!");
 
             switch (suffixName)
             {

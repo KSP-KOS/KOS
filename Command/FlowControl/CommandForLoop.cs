@@ -1,5 +1,5 @@
-using System;
 using System.Text.RegularExpressions;
+using kOS.Debug;
 
 namespace kOS.Command.FlowControl
 {
@@ -26,7 +26,7 @@ namespace kOS.Command.FlowControl
             }
             else
             {
-                throw new kOSException(string.Format("List {0} Not Found.", listName));
+                throw new KOSException(string.Format("List {0} Not Found.", listName));
             }
 
             var numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));

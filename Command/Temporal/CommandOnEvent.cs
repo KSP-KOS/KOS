@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace kOS.Command
+namespace kOS.Command.Temporal
 {
     [Command("ON % *")]
     public class CommandOnEvent : Command
@@ -15,9 +15,9 @@ namespace kOS.Command
         public override void Evaluate()
         {
             targetVariable = ParentContext.FindOrCreateVariable(RegexMatch.Groups[1].Value);
-            targetCommand = Command.Get(RegexMatch.Groups[2].Value, ParentContext);
+            targetCommand = Get(RegexMatch.Groups[2].Value, ParentContext);
 
-            if (!objToBool(targetVariable.Value, out originalValue))
+            if (!ObjToBool(targetVariable.Value, out originalValue))
             {
                 throw new Exception("Value type error");
             }
@@ -30,35 +30,30 @@ namespace kOS.Command
         public override void Update(float time)
         {
             bool newValue;
-            if (!objToBool(targetVariable.Value, out newValue))
+            if (!ObjToBool(targetVariable.Value, out newValue))
             {
                 ParentContext.Unlock(this);
 
                 throw new Exception("Value type error");
             }
 
-            if (originalValue != newValue)
-            {
-                ParentContext.Unlock(this);
+            if (originalValue == newValue) return;
+            ParentContext.Unlock(this);
 
-                targetCommand.Evaluate();
-                ParentContext.Push(targetCommand);
-            }
+            targetCommand.Evaluate();
+            ParentContext.Push(targetCommand);
         }
 
-        public bool objToBool(object obj, out bool result)
+        public bool ObjToBool(object obj, out bool result)
         {
             if (bool.TryParse(targetVariable.Value.ToString(), out result))
             {
                 return true;
             }
-            else
+            if (obj is float)
             {
-                if (obj is float)
-                {
-                    result = ((float)obj) > 0;
-                    return true;
-                }
+                result = ((float)obj) > 0;
+                return true;
             }
 
             return false;

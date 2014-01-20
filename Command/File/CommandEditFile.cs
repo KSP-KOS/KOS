@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Debug;
 
 namespace kOS.Command.File
 {
@@ -17,7 +18,7 @@ namespace kOS.Command.File
             }
             else
             {
-                throw new kOSException("Edit can only be used when in immediate mode.", this);
+                throw new KOSException("Edit can only be used when in immediate mode.", this);
             }
         }
     }

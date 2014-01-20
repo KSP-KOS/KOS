@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace kOS.Command
+namespace kOS.Command.FlowControl
 {
     [Command("IF /_{}")]
     public class CommandIf : Command
@@ -14,7 +14,7 @@ namespace kOS.Command
         {
             expression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
 
-            int numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
+            var numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
             targetCommand = Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
 
             if (expression.IsTrue())

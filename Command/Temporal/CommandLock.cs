@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace kOS.Command
+namespace kOS.Command.Temporal
 {
     [Command("LOCK % TO *")]
     public class CommandLock : Command
@@ -9,8 +9,8 @@ namespace kOS.Command
 
         public override void Evaluate()
         {
-            string varname = RegexMatch.Groups[1].Value;
-            Expression expression = new Expression(RegexMatch.Groups[2].Value, ParentContext);
+            var varname = RegexMatch.Groups[1].Value;
+            var expression = new Expression(RegexMatch.Groups[2].Value, ParentContext);
 
             ParentContext.Unlock(varname);
             ParentContext.Lock(varname, expression);

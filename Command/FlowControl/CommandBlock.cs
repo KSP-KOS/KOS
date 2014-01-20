@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace kOS.Command
+namespace kOS.Command.FlowControl
 {
     [Command("^{([\\S\\s]*)}$")]
     public class CommandBlock : Command
@@ -16,14 +16,14 @@ namespace kOS.Command
 
         public override void Evaluate()
         {
-            String innerText = RegexMatch.Groups[1].Value;
-            String cmd;
+            var innerText = RegexMatch.Groups[1].Value;
             commandBuffer = innerText;
-            int lineCount = Line;
-            int commandLineStart = 0;
+            var lineCount = Line;
 
             if (commands.Count == 0)
             {
+                int commandLineStart;
+                String cmd;
                 while (parseNext(ref innerText, out cmd, ref lineCount, out commandLineStart))
                 {
                     commands.Add(Get(cmd, this, commandLineStart));

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using kOS.Debug;
 
 namespace kOS
 {
@@ -38,7 +39,7 @@ namespace kOS
 
         public void AddToVessel(Vessel v)
         {
-            if (nodeRef != null) throw new kOSException("Node has already been added");
+            if (nodeRef != null) throw new KOSException("Node has already been added");
 
             vesselRef = v;
             nodeRef = v.patchedConicSolver.AddManeuverNode(Time);
@@ -66,7 +67,7 @@ namespace kOS
         {
             if (nodeRef == null)
             {
-                throw new kOSException("Must attach node first");
+                throw new KOSException("Must attach node first");
             }
         }
 
@@ -106,13 +107,13 @@ namespace kOS
                 case "NORMAL":
                     return Norm;
                 case "APOAPSIS":
-                    if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                    if (nodeRef == null) throw new KOSException("Node must be added to flight plan first");
                     return nodeRef.nextPatch.ApA;
                 case "PERIAPSIS":
-                    if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                    if (nodeRef == null) throw new KOSException("Node must be added to flight plan first");
                     return nodeRef.nextPatch.PeA;
                 case "ORBIT":
-                    if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                    if (nodeRef == null) throw new KOSException("Node must be added to flight plan first");
                     return new OrbitInfo(nodeRef.nextPatch);
             }
 
@@ -128,7 +129,7 @@ namespace kOS
                 case "DELTAV":
                 case "BURNVECTOR":
                 case "ORBIT":
-                    throw new kOSReadOnlyException(suffixName);
+                    throw new KOSReadOnlyException(suffixName);
                 case "ETA":
                     Time = ((double)value) + Planetarium.GetUniversalTime();
                     UpdateAll();

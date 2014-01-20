@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using kOS.Debug;
 
 namespace kOS.Command.BasicIO
 {
@@ -14,7 +15,7 @@ namespace kOS.Command.BasicIO
             var ex = new Expression(RegexMatch.Groups[2].Value, ParentContext);
             var ey = new Expression(RegexMatch.Groups[3].Value, ParentContext);
 
-            if (e.IsNull()) throw new kOSException("Null value in print statement");
+            if (e.IsNull()) throw new KOSException("Null value in print statement");
 
             int x, y;
 
@@ -24,7 +25,7 @@ namespace kOS.Command.BasicIO
             }
             else
             {
-                throw new kOSException("Non-numeric value assigned to numeric function", this);
+                throw new KOSException("Non-numeric value assigned to numeric function", this);
             }
 
             State = ExecutionState.DONE;

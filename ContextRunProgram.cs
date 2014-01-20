@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+using kOS.Debug;
 
 
 namespace kOS
 {
     public class ContextRunProgram : ExecutionContext
     {
-        private int accumulator;
         private File file;
         private String commandBuffer;
-        private List<Command.Command> commands = new List<Command.Command>();
-        private List<Expression> parameters = new List<Expression>();
-        private int executionLine = 0;
+        private readonly List<Command.Command> commands = new List<Command.Command>();
+        private readonly List<Expression> parameters = new List<Expression>();
+        private const int EXECUTION_LINE = 0;
 
-        
-        
+
         public string Filename;
 
         public ContextRunProgram(ExecutionContext parent, List<Expression> parameters, String filename) : base(parent) 
@@ -35,7 +31,7 @@ namespace kOS
             RunBlock(file);
         }
 
-        private void RunBlock(List<String> block)
+        private void RunBlock(IEnumerable<string> block)
         {
             foreach (String rawLine in block)
             {
@@ -54,7 +50,7 @@ namespace kOS
                     Command.Command cmdObj = Command.Command.Get(cmd, this, commandLineStart);
                     commands.Add(cmdObj);
                 }
-                catch (kOSException e)
+                catch (KOSException e)
                 {
                     if (ParentContext.FindClosestParentOfType<ContextRunProgram>() != null)
                     {
@@ -121,7 +117,7 @@ namespace kOS
                 base.Update(time);
                 EvaluateNextCommand();
             }
-            catch (kOSException e)
+            catch (KOSException e)
             {
                 if (ParentContext.FindClosestParentOfType<ContextRunProgram>() != null)
                 {
@@ -141,7 +137,7 @@ namespace kOS
             catch (Exception e)
             {
                 // Non-kos exception! This is a bug, but no reason to kill the OS
-                StdOut("Flagrant error on line " + executionLine);
+                StdOut("Flagrant error on line " + EXECUTION_LINE);
                 UnityEngine.Debug.Log("Program error");
                 UnityEngine.Debug.Log(e);
                 State = ExecutionState.DONE;
@@ -178,7 +174,7 @@ namespace kOS
                 return retValue;
             }
 
-            throw new kOSException("Wrong number of parameters supplied");
+            throw new KOSException("Wrong number of parameters supplied");
         }
     }
 }

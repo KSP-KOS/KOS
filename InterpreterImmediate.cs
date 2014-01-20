@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using kOS.Debug;
 
 namespace kOS
 {
@@ -42,7 +43,7 @@ namespace kOS
                     Command.Command cmd = Command.Command.Get(nextCmd, this, comandLineStart);
                     Queue.Enqueue(cmd);
                 }
-                catch (kOSException e)
+                catch (KOSException e)
                 {
                     StdOut(e.Message);
                     Queue.Clear(); // HALT!!
@@ -203,7 +204,7 @@ namespace kOS
                         Push(currentCmd);
                         currentCmd.Evaluate();
                     }
-                    catch (kOSException e)
+                    catch (KOSException e)
                     {
                         StdOut(e.Message);
                         Queue.Clear();          // Halt all pending instructions
@@ -234,7 +235,7 @@ namespace kOS
             {
                 base.Update(time);
             }
-            catch (kOSException e)
+            catch (KOSException e)
             {
                 StdOut(e.Message);
                 ChildContext = null;

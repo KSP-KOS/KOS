@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Debug;
 
 namespace kOS.Command.BasicIO
 {
@@ -24,9 +25,9 @@ namespace kOS.Command.BasicIO
                         State = ExecutionState.DONE;
                         return;
                     }
-                    throw new kOSException("Suffix '" + targetTerm.SubTerms[1].Text + "' doesn't exist or is read only", this);
+                    throw new KOSException("Suffix '" + targetTerm.SubTerms[1].Text + "' doesn't exist or is read only", this);
                 }
-                throw new kOSException("Can't set subvalues on a " + Expression.GetFriendlyNameOfItem(baseObj), this);
+                throw new KOSException("Can't set subvalues on a " + Expression.GetFriendlyNameOfItem(baseObj), this);
             }
             var v = FindOrCreateVariable(targetTerm.Text);
 

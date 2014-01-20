@@ -70,20 +70,34 @@
     <Compile Include="Command\BasicIO\CommandUnset.cs" />
     <Compile Include="Command\Command.cs" />
     <Compile Include="Command\BasicIO\CommandSetOff.cs" />
+    <Compile Include="Command\CommandAttribute.cs" />
+    <Compile Include="Command\CommandRegistry.cs" />
     <Compile Include="Command\File\CommandCopy.cs" />
     <Compile Include="Command\File\CommandDelete.cs" />
     <Compile Include="Command\File\CommandEditFile.cs" />
     <Compile Include="Command\File\CommandList.cs" />
-    <Compile Include="Command\CommandFlowControl.cs" />
-    <Compile Include="Command\CommandCallExternal.cs" />
-    <Compile Include="Command\CommandTemporal.cs" />
-    <Compile Include="Command\CommandVessel.cs" />
+    <Compile Include="Command\FlowControl\CommandBlock.cs" />
+    <Compile Include="Command\FlowControl\CommandBreak.cs" />
+    <Compile Include="Command\BasicIO\CommandCallExternal.cs" />
+    <Compile Include="Command\Temporal\CommandLock.cs" />
+    <Compile Include="Command\Temporal\CommandOnEvent.cs" />
+    <Compile Include="Command\Temporal\CommandWhen.cs" />
+    <Compile Include="Command\Temporal\CommandUnlock.cs" />
+    <Compile Include="Command\Temporal\CommandWait.cs" />
+    <Compile Include="Command\Vessel\CommandAddObjectToVessel.cs" />
+    <Compile Include="Command\Vessel\CommandRemoveObjectFromVessel.cs" />
+    <Compile Include="Command\Vessel\CommandVesselListings.cs" />
     <Compile Include="Command\File\CommandLog.cs" />
     <Compile Include="Command\File\CommandRename.cs" />
     <Compile Include="Command\File\CommandRunFile.cs" />
     <Compile Include="Command\File\CommandSwitch.cs" />
+    <Compile Include="Command\FlowControl\CommandForLoop.cs" />
+    <Compile Include="Command\FlowControl\CommandIf.cs" />
+    <Compile Include="Command\FlowControl\CommandUntilLoop.cs" />
+    <Compile Include="Command\Vessel\CommandVesselStage.cs" />
     <Compile Include="ContextRunProgram.cs" />
     <Compile Include="DebugTools.cs" />
+    <Compile Include="Debug\KOSReadOnlyException.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="ExecutionContext.cs" />
     <Compile Include="Expression.cs" />
@@ -93,7 +107,7 @@
     <Compile Include="InterpreterBootup.cs" />
     <Compile Include="InterpreterEdit.cs" />
     <Compile Include="InterpreterImmediate.cs" />
-    <Compile Include="kOSException.cs" />
+    <Compile Include="Debug\KOSException.cs" />
     <Compile Include="kOSExternalCommand.cs" />
     <Compile Include="kOSIDModule.cs" />
     <Compile Include="kOSProcessor.cs" />
@@ -124,6 +138,7 @@
   <ItemGroup>
     <Compile Include="VesselUtils.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

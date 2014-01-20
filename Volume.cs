@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using UnityEngine;
+using kOS.Debug;
 
 namespace kOS
 {
@@ -169,7 +170,7 @@ namespace kOS
 
             if (!CheckRange())
             {
-                throw new kOSException("Volume is out of range.");
+                throw new KOSException("Volume is out of range.");
             }
 
             Directory.CreateDirectory(ArchiveFolder);

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using kOS.Debug;
 
 namespace kOS.Command.File
 {
@@ -23,7 +24,7 @@ namespace kOS.Command.File
 
             if (file == null)
             {
-                throw new kOSException("File not found '" + fileName + "'.", this);
+                throw new KOSException("File not found '" + fileName + "'.", this);
             }
 
             var runContext = new ContextRunProgram(this, parameters, fileName);

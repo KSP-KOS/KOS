@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using kOS.Debug;
 
 namespace kOS.Command.BasicIO
 {
@@ -10,25 +11,20 @@ namespace kOS.Command.BasicIO
 
         public override void Evaluate()
         {
-            String varName = RegexMatch.Groups[1].Value;
-            Variable v = FindOrCreateVariable(varName);
+            var varName = RegexMatch.Groups[1].Value;
+            var v = FindOrCreateVariable(varName);
 
-            if (v != null)
+            if (v == null)
             {
-                if (v.Value is bool || v.Value is float)
-                {
-                    v.Value = true;
-                    State = ExecutionState.DONE;
-                }
-                else
-                {
-                    throw new kOSException("That variable can't be set to 'ON'.", this);
-                }
+                throw new KOSException("Can't find or create variable '" + varName + "'", this);
             }
-            else
+            if (!(v.Value is bool) && !(v.Value is float))
             {
-                throw new kOSException("Can't find or create variable '" + varName + "'", this);
+                throw new KOSException("That variable can't be set to 'ON'.", this);
             }
+
+            v.Value = true;
+            State = ExecutionState.DONE;
         }
     }
 }

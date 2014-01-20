@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using UnityEngine;
+using kOS.Debug;
 
 namespace kOS
 {
@@ -138,7 +139,7 @@ namespace kOS
                                 if (bool.TryParse(value, out bln)) converted = bln;
                             }
 
-                            if (converted == null) throw new kOSException("Parameter types don't match");
+                            if (converted == null) throw new KOSException("Parameter types don't match");
                             convertedParams[i] = converted;
                         }
 
@@ -147,8 +148,8 @@ namespace kOS
                 }
             }
 
-            if (!callFound) throw new kOSException("External function '" + name + "' not found");
-            else if (!callAndParamCountFound) throw new kOSException("Wrong number of arguments for '" + name + "'");
+            if (!callFound) throw new KOSException("External function '" + name + "' not found");
+            else if (!callAndParamCountFound) throw new KOSException("Wrong number of arguments for '" + name + "'");
 
             return null;
         }
@@ -232,7 +233,7 @@ namespace kOS
                 }
                 else
                 {
-                    throw new kOSException("Volume disconnected - out of range");
+                    throw new KOSException("Volume disconnected - out of range");
                 }
             }
 
@@ -252,7 +253,7 @@ namespace kOS
                     }
                     else
                     {
-                        throw new kOSException("Volume disconnected - out of range");
+                        throw new KOSException("Volume disconnected - out of range");
                     }
                 }
             }
@@ -271,7 +272,7 @@ namespace kOS
             }
             else
             {
-                throw new kOSException("Cannot bind " + varName + "; name already taken.");
+                throw new KOSException("Cannot bind " + varName + "; name already taken.");
             }
         }
 
@@ -384,7 +385,7 @@ namespace kOS
                             var newVar = CreateVariable(value.name);
                             newVar.Value = new Expression(File.DecodeLine(value.value), this).GetValue();
                         }
-                        catch (kOSException kEX)
+                        catch (KOSException kEX)
                         {
                             Debug.Log("kOS Exception Onload: " + kEX.Message);
                         }

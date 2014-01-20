@@ -1,7 +1,6 @@
-using System;
 using System.Text.RegularExpressions;
 
-namespace kOS.Command
+namespace kOS.Command.Temporal
 {
     [Command("UNLOCK %")]
     public class CommandUnlock : Command
@@ -10,7 +9,7 @@ namespace kOS.Command
 
         public override void Evaluate()
         {
-            String varname = RegexMatch.Groups[1].Value;
+            var varname = RegexMatch.Groups[1].Value;
 
             if (varname.ToUpper() == "ALL")
             {

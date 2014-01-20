@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Debug;
 
 namespace kOS.Command.File
 {
@@ -21,14 +22,14 @@ namespace kOS.Command.File
             {
                 case "FROM":
                     file = targetVolume.GetByName(targetFile);
-                    if (file == null) throw new kOSException("File '" + targetFile + "' not found", this);
-                    if (!SelectedVolume.SaveFile(new kOS.File(file))) throw new kOSException("File copy failed", this);
+                    if (file == null) throw new KOSException("File '" + targetFile + "' not found", this);
+                    if (!SelectedVolume.SaveFile(new kOS.File(file))) throw new KOSException("File copy failed", this);
                     break;
 
                 case "TO":
                     file = SelectedVolume.GetByName(targetFile);
-                    if (file == null) throw new kOSException("File '" + targetFile + "' not found", this);
-                    if (!targetVolume.SaveFile(new kOS.File(file))) throw new kOSException("File copy failed", this);
+                    if (file == null) throw new KOSException("File '" + targetFile + "' not found", this);
+                    if (!targetVolume.SaveFile(new kOS.File(file))) throw new KOSException("File copy failed", this);
                     break;
             }
 

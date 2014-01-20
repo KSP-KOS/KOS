@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Debug;
 
-namespace kOS.Command
+namespace kOS.Command.Vessel
 {
     [Command("ADD *")]
     public class CommandAddObjectToVessel : Command
@@ -9,16 +10,17 @@ namespace kOS.Command
 
         public override void Evaluate()
         {
-            Expression ex = new Expression(RegexMatch.Groups[1].Value, this);
-            object obj = ex.GetValue();
+            var ex = new Expression(RegexMatch.Groups[1].Value, this);
+            var obj = ex.GetValue();
 
-            if (obj is kOS.Node)
+            var node = obj as Node;
+            if (node != null)
             {
-                ((Node)obj).AddToVessel(Vessel);
+                node.AddToVessel(Vessel);
             }
             else
             {
-                throw new kOSException("Supplied object ineligible for adding", this);
+                throw new KOSException("Supplied object ineligible for adding", this);
             }
 
             State = ExecutionState.DONE;

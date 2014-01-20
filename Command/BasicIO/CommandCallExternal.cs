@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace kOS.Command
+namespace kOS.Command.BasicIO
 {
     [Command("CALL *")]
     public class CommandCallExternal : Command

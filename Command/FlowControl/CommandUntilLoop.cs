@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace kOS.Command
+namespace kOS.Command.FlowControl
 {
     [Command("UNTIL /_{}")]
     public class CommandUntilLoop : Command

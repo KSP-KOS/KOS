@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using UnityEngine;
+using kOS.Debug;
 
 namespace kOS
 {
@@ -210,7 +211,7 @@ namespace kOS
                 }
             }
 
-            throw new kOSException("Volume '" + volID.ToString() + "' not found");
+            throw new KOSException("Volume '" + volID.ToString() + "' not found");
         }
 
         public ExecutionContext GetDeepestChildContext()

@@ -9,7 +9,7 @@ namespace kOS.Command.BasicIO
 
         public override void Evaluate()
         {
-            Expression e = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+            var e = new Expression(RegexMatch.Groups[1].Value, ParentContext);
 
             StdOut(e.GetValue().ToString());
 

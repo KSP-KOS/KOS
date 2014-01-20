@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using kOS.Debug;
 
 namespace kOS.Command.File
 {
@@ -64,7 +65,7 @@ namespace kOS.Command.File
                 return;
             }
 
-            throw new kOSException("List type '" + listType + "' not recognized.", this);
+            throw new KOSException("List type '" + listType + "' not recognized.", this);
         }
     }
 }

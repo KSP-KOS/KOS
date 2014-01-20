@@ -1,19 +1,19 @@
 using System.Text.RegularExpressions;
 
-namespace kOS.Command
+namespace kOS.Command.Temporal
 {
     [Command("WAIT[UNTIL]? *")]
     public class CommandWait : Command
     {
         public CommandWait(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
-        private float waitTime = 0;
-        private Expression waitExpression = null;
+        private float waitTime;
+        private Expression waitExpression;
 
         public override void Evaluate()
         {
-            Expression e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
-            bool untilClause = (RegexMatch.Groups[1].Value.Trim().ToUpper() == "UNTIL");
+            var e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
+            var untilClause = (RegexMatch.Groups[1].Value.Trim().ToUpper() == "UNTIL");
 
             if (!untilClause)
             {
@@ -40,14 +40,7 @@ namespace kOS.Command
 
         public override bool Type(char c)
         {
-            if (State == ExecutionState.WAIT)
-            {
-                return true;
-            }
-            else
-            {
-                return base.Type(c);
-            }
+            return State == ExecutionState.WAIT || base.Type(c);
         }
 
         public override void Update(float time)

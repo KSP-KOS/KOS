@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using kOS.Debug;
 
 namespace kOS
 {
@@ -128,7 +129,7 @@ namespace kOS
 
       if (vessel == null)
       {
-        throw new kOSException("Vessel '" + name + "' not found");
+        throw new KOSException("Vessel '" + name + "' not found");
       }
       else
       {
@@ -201,7 +202,7 @@ namespace kOS
         if (body.name.ToUpper() == "KERBIN") return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - 600000; // Kerbin radius = 600,000
       }
 
-      throw new kOSException("Planet Kerbin not found!");
+      throw new KOSException("Planet Kerbin not found!");
     }
 
     public static float AngleDelta(float a, float b)

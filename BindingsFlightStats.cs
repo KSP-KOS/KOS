@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UnityEngine;
+using kOS.Debug;
 
 namespace kOS
 {
@@ -32,7 +33,7 @@ namespace kOS
             manager.AddGetter("NEXTNODE",       delegate(CPU cpu)
             {
                 var vessel = cpu.Vessel;
-                if (!vessel.patchedConicSolver.maneuverNodes.Any()) { throw new kOSException("No maneuver nodes present!"); }
+                if (!vessel.patchedConicSolver.maneuverNodes.Any()) { throw new KOSException("No maneuver nodes present!"); }
 
                 return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0]);
             });
