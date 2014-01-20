@@ -1,4 +1,4 @@
-﻿namespace kOS
+﻿namespace kOS.Binding
 {
     public class Variable
     {

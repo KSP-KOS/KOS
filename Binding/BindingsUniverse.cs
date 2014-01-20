@@ -1,4 +1,5 @@
-﻿using kOS.Value;
+﻿using kOS.Context;
+using kOS.Value;
 
 namespace kOS.Binding
 {

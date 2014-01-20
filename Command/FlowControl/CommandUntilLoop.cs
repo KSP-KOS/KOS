@@ -1,11 +1,13 @@
 using System.Text.RegularExpressions;
+using kOS.Context;
+using kOS.Utilities;
 
 namespace kOS.Command.FlowControl
 {
     [Command("UNTIL /_{}")]
     public class CommandUntilLoop : Command
     {
-        Expression waitExpression;
+        Expression.Expression waitExpression;
         // commandString;
         Command targetCommand;
 
@@ -13,7 +15,7 @@ namespace kOS.Command.FlowControl
 
         public override void Evaluate()
         {
-            waitExpression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+            waitExpression = new Expression.Expression(RegexMatch.Groups[1].Value, ParentContext);
 
             var numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
             targetCommand = Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);

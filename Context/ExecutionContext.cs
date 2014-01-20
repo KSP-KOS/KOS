@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using kOS.Binding;
 using kOS.Debug;
+using kOS.Expression;
+using kOS.Persistance;
+using kOS.Utilities;
 
-namespace kOS
+namespace kOS.Context
 {
     public enum ExecutionState { NEW, DONE, WAIT };
     public enum SpecialKey { HOME, END, DELETE };
@@ -33,7 +36,7 @@ namespace kOS
         public ExecutionContext ChildContext { get; set; }
         public ExecutionState State { get; set; }
 
-        public Dictionary<String, Expression> Locks = new Dictionary<string, Expression>();
+        public Dictionary<String, Expression.Expression> Locks = new Dictionary<string, Expression.Expression>();
         public List<Command.Command> CommandLocks = new List<Command.Command>();
 
         public ExecutionContext()
@@ -214,7 +217,7 @@ namespace kOS
             v.Value = e.GetValue();
         }
 
-        public virtual Expression GetLock(String name)
+        public virtual Expression.Expression GetLock(String name)
         {
             if (Locks.ContainsKey(name.ToUpper()))
             {
@@ -228,7 +231,7 @@ namespace kOS
             CommandLocks.Add(command);
         }
 
-        public virtual void Lock(String name, Expression expression)
+        public virtual void Lock(String name, Expression.Expression expression)
         {
             name = name.ToLower();
 

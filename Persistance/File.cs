@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace kOS
+namespace kOS.Persistance
 {
     public class File : List<string>
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using kOS.Context;
 using kOS.Debug;
 
 namespace kOS.Command.BasicIO
@@ -11,9 +12,9 @@ namespace kOS.Command.BasicIO
 
         public override void Evaluate()
         {
-            var e = new Expression(RegexMatch.Groups[1].Value, ParentContext);
-            var ex = new Expression(RegexMatch.Groups[2].Value, ParentContext);
-            var ey = new Expression(RegexMatch.Groups[3].Value, ParentContext);
+            var e = new Expression.Expression(RegexMatch.Groups[1].Value, ParentContext);
+            var ex = new Expression.Expression(RegexMatch.Groups[2].Value, ParentContext);
+            var ey = new Expression.Expression(RegexMatch.Groups[3].Value, ParentContext);
 
             if (e.IsNull()) throw new KOSException("Null value in print statement");
 

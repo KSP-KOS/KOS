@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using kOS.Utilities;
 
-namespace kOS
+namespace kOS.Expression
 {
     public class Term
     {
@@ -112,17 +113,38 @@ namespace kOS
 
         public String Demo(int tabIndent)
         {
-            String retString = new String(' ', tabIndent * 4);
+            var retString = new String(' ', tabIndent * 4);
 
-            if (Type == TermTypes.FUNCTION) retString += "FUNCTION->";
-            else if (Type == TermTypes.PARAMETER_LIST) retString += "PARAMS->";
-            else if (Type == TermTypes.COMPARISON) retString += "COMPARISON->";
-            else if (Type == TermTypes.BOOLEAN) retString += "BOOLEAN->";
-            else if (Type == TermTypes.STRUCTURE) retString += "STRUCTURE->";
-            else if (Type == TermTypes.MATH_OPERATOR) retString += "MATH ";
-            else if (Type == TermTypes.COMPARISON_OPERATOR) retString += "COMP ";
-            else if (Type == TermTypes.BOOLEAN_OPERATOR) retString += "BOOL ";
-            else if (Type == TermTypes.SUFFIX) retString += ":";
+            switch (Type)
+            {
+                case TermTypes.FUNCTION:
+                    retString += "FUNCTION->";
+                    break;
+                case TermTypes.PARAMETER_LIST:
+                    retString += "PARAMS->";
+                    break;
+                case TermTypes.COMPARISON:
+                    retString += "COMPARISON->";
+                    break;
+                case TermTypes.BOOLEAN:
+                    retString += "BOOLEAN->";
+                    break;
+                case TermTypes.STRUCTURE:
+                    retString += "STRUCTURE->";
+                    break;
+                case TermTypes.MATH_OPERATOR:
+                    retString += "MATH ";
+                    break;
+                case TermTypes.COMPARISON_OPERATOR:
+                    retString += "COMP ";
+                    break;
+                case TermTypes.BOOLEAN_OPERATOR:
+                    retString += "BOOL ";
+                    break;
+                case TermTypes.SUFFIX:
+                    retString += ":";
+                    break;
+            }
 
             retString += Text + Environment.NewLine;
 

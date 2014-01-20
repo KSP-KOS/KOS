@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using kOS.Context;
 using kOS.Debug;
 
 namespace kOS.Command.File
@@ -14,7 +15,7 @@ namespace kOS.Command.File
             var targetFile = RegexMatch.Groups[1].Value.Trim();
             var volumeName = RegexMatch.Groups[3].Value.Trim();
 
-            kOS.File file;
+            Persistance.File file;
 
             if (volumeName.Trim() != "")
             {

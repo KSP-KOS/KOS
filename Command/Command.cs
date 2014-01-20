@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using kOS.Context;
 using kOS.Debug;
 
 namespace kOS.Command
@@ -66,7 +67,7 @@ namespace kOS.Command
             if (ParentContext != null) ParentContext.Lock(command);
         }
 
-        public override void Lock(string name, Expression expression)
+        public override void Lock(string name, Expression.Expression expression)
         {
             if (ParentContext != null) ParentContext.Lock(name, expression);
         }

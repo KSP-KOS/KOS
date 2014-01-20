@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using kOS.Context;
+using kOS.Utilities;
 using kOS.Value;
 
 namespace kOS.Binding

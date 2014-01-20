@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Context;
 using kOS.Debug;
+using kOS.Utilities;
 
-namespace kOS
+namespace kOS.Interpreter
 {
     public class ImmediateMode : ExecutionContext
     {

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Context;
 using kOS.Debug;
 
 namespace kOS.Command.File
@@ -16,20 +17,20 @@ namespace kOS.Command.File
 
             var targetVolume = GetVolume(volumeName); // Will throw if not found
 
-            kOS.File file;
+            Persistance.File file;
 
             switch (operation)
             {
                 case "FROM":
                     file = targetVolume.GetByName(targetFile);
                     if (file == null) throw new KOSException("File '" + targetFile + "' not found", this);
-                    if (!SelectedVolume.SaveFile(new kOS.File(file))) throw new KOSException("File copy failed", this);
+                    if (!SelectedVolume.SaveFile(new Persistance.File(file))) throw new KOSException("File copy failed", this);
                     break;
 
                 case "TO":
                     file = SelectedVolume.GetByName(targetFile);
                     if (file == null) throw new KOSException("File '" + targetFile + "' not found", this);
-                    if (!targetVolume.SaveFile(new kOS.File(file))) throw new KOSException("File copy failed", this);
+                    if (!targetVolume.SaveFile(new Persistance.File(file))) throw new KOSException("File copy failed", this);
                     break;
             }
 

@@ -1,5 +1,7 @@
 using System.Text.RegularExpressions;
+using kOS.Context;
 using kOS.Debug;
+using kOS.Utilities;
 using kOS.Value;
 
 namespace kOS.Command.FlowControl
@@ -19,7 +21,7 @@ namespace kOS.Command.FlowControl
             var listName = RegexMatch.Groups[2].Value;
             iteratorString = RegexMatch.Groups[1].Value;
 
-            var expression = new Expression(listName, ParentContext).GetValue();
+            var expression = new Expression.Expression(listName, ParentContext).GetValue();
             var list = expression as ListValue;
             if (list != null)
             {

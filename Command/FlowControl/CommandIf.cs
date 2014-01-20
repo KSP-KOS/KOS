@@ -1,18 +1,20 @@
 using System.Text.RegularExpressions;
+using kOS.Context;
+using kOS.Utilities;
 
 namespace kOS.Command.FlowControl
 {
     [Command("IF /_{}")]
     public class CommandIf : Command
     {
-        Expression expression;
+        Expression.Expression expression;
         Command targetCommand;
 
         public CommandIf(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
-            expression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+            expression = new Expression.Expression(RegexMatch.Groups[1].Value, ParentContext);
 
             var numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
             targetCommand = Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);

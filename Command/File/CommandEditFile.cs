@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Context;
 using kOS.Debug;
+using kOS.Interpreter;
 
 namespace kOS.Command.File
 {

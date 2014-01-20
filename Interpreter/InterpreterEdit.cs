@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Linq;
+using kOS.Context;
+using kOS.Persistance;
+using kOS.Utilities;
 
-namespace kOS
+namespace kOS.Interpreter
 {
     public class InterpreterEdit : ExecutionContext
     {

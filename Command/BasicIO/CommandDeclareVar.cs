@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using kOS.Binding;
+using kOS.Context;
 using kOS.Debug;
 
 namespace kOS.Command.BasicIO

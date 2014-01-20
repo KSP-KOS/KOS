@@ -1,5 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
+using kOS.Binding;
+using kOS.Context;
 
 namespace kOS.Command.Temporal
 {

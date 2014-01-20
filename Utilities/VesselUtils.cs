@@ -5,7 +5,7 @@ using UnityEngine;
 using kOS.Debug;
 using kOS.Value;
 
-namespace kOS
+namespace kOS.Utilities
 {
   public class VesselUtils
   {

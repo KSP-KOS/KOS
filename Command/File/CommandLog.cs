@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Context;
 
 namespace kOS.Command.File
 {
@@ -20,7 +21,7 @@ namespace kOS.Command.File
             }
 
             var targetFile = RegexMatch.Groups[2].Value.Trim();
-            var e = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+            var e = new Expression.Expression(RegexMatch.Groups[1].Value, ParentContext);
 
             if (e.IsNull())
             {

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Context;
 using kOS.Debug;
 using kOS.Value;
 
@@ -11,7 +12,7 @@ namespace kOS.Command.Vessel
 
         public override void Evaluate()
         {
-            var ex = new Expression(RegexMatch.Groups[1].Value, this);
+            var ex = new Expression.Expression(RegexMatch.Groups[1].Value, this);
             var obj = ex.GetValue();
 
             var node = obj as Node;

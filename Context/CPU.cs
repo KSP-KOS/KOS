@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Binding;
 using kOS.Debug;
+using kOS.Expression;
+using kOS.Interpreter;
+using kOS.Persistance;
 
-namespace kOS
+namespace kOS.Context
 {
     public sealed class CPU : ExecutionContext
     {
@@ -354,7 +357,7 @@ namespace kOS
                         try
                         {
                             var newVar = CreateVariable(value.name);
-                            newVar.Value = new Expression(File.DecodeLine(value.value), this).GetValue();
+                            newVar.Value = new Expression.Expression(File.DecodeLine(value.value), this).GetValue();
                         }
                         catch (KOSException ex)
                         {

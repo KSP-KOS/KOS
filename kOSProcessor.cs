@@ -1,6 +1,8 @@
 ﻿using KSP.IO;
 using System.Collections.Generic;
 using UnityEngine;
+using kOS.Context;
+using kOS.Persistance;
 
 namespace kOS
 {

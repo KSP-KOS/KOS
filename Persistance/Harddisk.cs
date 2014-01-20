@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace kOS
+namespace kOS.Persistance
 {
     public class Harddisk : Volume
     {
@@ -27,7 +27,7 @@ namespace kOS
 
             foreach (var fileNode in node.GetNodes("file"))
             {
-                files.Add(new File(fileNode));
+                Files.Add(new File(fileNode));
             }
         }
 
@@ -38,7 +38,7 @@ namespace kOS
 
         public override int GetFreeSpace()
         {
-            var totalOccupied = files.Sum(p => p.GetSize());
+            var totalOccupied = Files.Sum(p => p.GetSize());
 
             return Math.Max(Capacity - totalOccupied, 0);
         }
@@ -47,7 +47,7 @@ namespace kOS
         {
             // Consider only existing files that don't share a name with the proposed new file
             // Because this could be an overwrite situation
-            var totalOccupied = newFile.GetSize() + files.
+            var totalOccupied = newFile.GetSize() + Files.
                 Where(existingFile => existingFile.Filename != newFile.Filename).
                 Sum(existingFile => existingFile.GetSize());
 
@@ -58,7 +58,7 @@ namespace kOS
         {
             foreach (var p in programsToLoad)
             {
-                files.Add(p);
+                Files.Add(p);
             }
         }
 
@@ -68,7 +68,7 @@ namespace kOS
             node.AddValue("capacity", Capacity);
             node.AddValue("volumeName", Name);
 
-            foreach (var file in files)
+            foreach (var file in Files)
             {
                 node.AddNode(file.Save("file"));
             }

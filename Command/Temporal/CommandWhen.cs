@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Context;
 
 namespace kOS.Command.Temporal
 {
@@ -6,14 +7,14 @@ namespace kOS.Command.Temporal
     public class CommandWhen : Command
     {
         private Command targetCommand;
-        private Expression expression;
+        private Expression.Expression expression;
         private bool triggered;
 
         public CommandWhen(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
-            expression = new Expression(RegexMatch.Groups[1].Value, ParentContext);
+            expression = new Expression.Expression(RegexMatch.Groups[1].Value, ParentContext);
             targetCommand = Get(RegexMatch.Groups[2].Value, ParentContext);
 
             ParentContext.Lock(this);

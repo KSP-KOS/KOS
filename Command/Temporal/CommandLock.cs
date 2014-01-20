@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using kOS.Context;
 
 namespace kOS.Command.Temporal
 {
@@ -10,7 +11,7 @@ namespace kOS.Command.Temporal
         public override void Evaluate()
         {
             var varname = RegexMatch.Groups[1].Value;
-            var expression = new Expression(RegexMatch.Groups[2].Value, ParentContext);
+            var expression = new Expression.Expression(RegexMatch.Groups[2].Value, ParentContext);
 
             ParentContext.Unlock(varname);
             ParentContext.Lock(varname, expression);

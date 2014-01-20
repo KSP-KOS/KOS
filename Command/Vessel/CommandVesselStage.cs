@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Context;
 
 namespace kOS.Command.Vessel
 {

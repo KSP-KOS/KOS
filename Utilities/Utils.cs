@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace kOS
+namespace kOS.Utilities
 {
     public enum kOSKeys
     {

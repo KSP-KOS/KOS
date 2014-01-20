@@ -1,4 +1,6 @@
 using System.Text.RegularExpressions;
+using kOS.Context;
+using kOS.Utilities;
 
 namespace kOS.Command.Temporal
 {
@@ -8,11 +10,11 @@ namespace kOS.Command.Temporal
         public CommandWait(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
 
         private float waitTime;
-        private Expression waitExpression;
+        private Expression.Expression waitExpression;
 
         public override void Evaluate()
         {
-            var e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
+            var e = new Expression.Expression(RegexMatch.Groups[2].Value, ParentContext);
             var untilClause = (RegexMatch.Groups[1].Value.Trim().ToUpper() == "UNTIL");
 
             if (!untilClause)

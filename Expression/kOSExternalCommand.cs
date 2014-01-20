@@ -1,6 +1,7 @@
 ﻿using System;
+using kOS.Utilities;
 
-namespace kOS
+namespace kOS.Expression
 {
     public struct KOSExternalFunction
     {

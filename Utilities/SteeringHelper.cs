@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using kOS.Value;
 
-namespace kOS
+namespace kOS.Utilities
 {
     
     public static class SteeringHelper

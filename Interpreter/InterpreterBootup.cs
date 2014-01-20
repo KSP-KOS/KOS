@@ -1,6 +1,7 @@
 ﻿using System;
+using kOS.Context;
 
-namespace kOS
+namespace kOS.Interpreter
 {
     public class InterpreterBootup : ExecutionContext
     {

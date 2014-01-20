@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
+using kOS.Context;
 using kOS.Debug;
+using kOS.Expression;
 using kOS.Value;
 
 namespace kOS.Command.BasicIO
@@ -12,11 +14,11 @@ namespace kOS.Command.BasicIO
         public override void Evaluate()
         {
             var targetTerm = new Term(RegexMatch.Groups[1].Value);
-            var e = new Expression(RegexMatch.Groups[2].Value, ParentContext);
+            var e = new Expression.Expression(RegexMatch.Groups[2].Value, ParentContext);
 
             if (targetTerm.Type == Term.TermTypes.STRUCTURE)
             {
-                var baseObj = new Expression(targetTerm.SubTerms[0], ParentContext).GetValue();
+                var baseObj = new Expression.Expression(targetTerm.SubTerms[0], ParentContext).GetValue();
 
                 var obj = baseObj as SpecialValue;
                 if (obj != null)
@@ -28,7 +30,7 @@ namespace kOS.Command.BasicIO
                     }
                     throw new KOSException("Suffix '" + targetTerm.SubTerms[1].Text + "' doesn't exist or is read only", this);
                 }
-                throw new KOSException("Can't set subvalues on a " + Expression.GetFriendlyNameOfItem(baseObj), this);
+                throw new KOSException("Can't set subvalues on a " + Expression.Expression.GetFriendlyNameOfItem(baseObj), this);
             }
             var v = FindOrCreateVariable(targetTerm.Text);
 

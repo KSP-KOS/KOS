@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Context;
 
 namespace kOS.Debug
 {
