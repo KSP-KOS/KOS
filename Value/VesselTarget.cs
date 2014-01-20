@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace kOS
+namespace kOS.Value
 {
     public class VesselTarget : SpecialValue
     {

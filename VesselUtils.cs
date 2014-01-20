@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using kOS.Debug;
+using kOS.Value;
 
 namespace kOS
 {

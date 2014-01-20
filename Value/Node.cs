@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using kOS.Debug;
 
-namespace kOS
+namespace kOS.Value
 {
     public class Node : SpecialValue
     {

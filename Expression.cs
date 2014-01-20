@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using kOS.Debug;
+using kOS.Value;
+using TimeSpan = kOS.Value.TimeSpan;
 
 namespace kOS
 {

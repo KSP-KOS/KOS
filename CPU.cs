@@ -387,7 +387,7 @@ namespace kOS
                         }
                         catch (KOSException kEX)
                         {
-                            Debug.Log("kOS Exception Onload: " + kEX.Message);
+                            UnityEngine.Debug.Log("kOS Exception Onload: " + kEX.Message);
                         }
                     }
                 }

@@ -2,6 +2,8 @@
 using System.Linq;
 using UnityEngine;
 using kOS.Debug;
+using kOS.Value;
+using TimeSpan = kOS.Value.TimeSpan;
 
 namespace kOS
 {

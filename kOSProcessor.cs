@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
 using UnityEngine;
+
 
 namespace kOS
 {
@@ -88,7 +88,7 @@ namespace kOS
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
-            Debug.Log("*** External Function Registration Succeeded");
+            UnityEngine.Debug.Log("*** External Function Registration Succeeded");
 
             cpu.RegisterkOSExternalFunction(parameters);
         }
@@ -186,17 +186,17 @@ namespace kOS
             // KSP Seems to want to make an instance of my partModule during initial load
             if (vessel == null) return;
 
-            foreach (ConfigNode hdNode in node.GetNodes("harddisk"))
+            foreach (var hdNode in node.GetNodes("harddisk"))
             {
-                Harddisk newDisk = new Harddisk(hdNode);
-                this.hardDisk = newDisk;
+                var newDisk = new Harddisk(hdNode);
+                hardDisk = newDisk;
             }
 
-            Debug.Log("******************************* ON LOAD ");
+            UnityEngine.Debug.Log("******************************* ON LOAD ");
 
             initCpu();
 
-            Debug.Log("******************************* CPU Inited ");
+            UnityEngine.Debug.Log("******************************* CPU Inited ");
 
             if (cpu != null) cpu.OnLoad(node);
             
@@ -207,7 +207,7 @@ namespace kOS
         {
             if (hardDisk != null)
             {
-                ConfigNode hdNode = hardDisk.Save("harddisk");
+                var hdNode = hardDisk.Save("harddisk");
                 node.AddNode(hdNode);
             }
 

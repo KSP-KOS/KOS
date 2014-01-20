@@ -1,4 +1,6 @@
-﻿namespace kOS
+﻿using kOS.Value;
+
+namespace kOS
 {
     public class VesselVelocity : SpecialValue
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using kOS.Value;
 
 namespace kOS
 {

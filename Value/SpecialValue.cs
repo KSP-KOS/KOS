@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace kOS
+namespace kOS.Value
 {
     public abstract class SpecialValue
     {

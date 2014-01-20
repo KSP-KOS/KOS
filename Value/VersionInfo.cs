@@ -1,4 +1,4 @@
-﻿namespace kOS
+﻿namespace kOS.Value
 {
     public class VersionInfo : SpecialValue
     {

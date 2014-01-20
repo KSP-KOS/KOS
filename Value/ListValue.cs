@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace kOS
+namespace kOS.Value
 {
     public class ListValue : SpecialValue
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using kOS.Debug;
 
-namespace kOS
+namespace kOS.Value
 {
     public class BodyTarget : SpecialValue
     {
