@@ -132,23 +132,21 @@ namespace kOS.Value
                     throw new KOSReadOnlyException(suffixName);
                 case "ETA":
                     Time = ((double)value) + Planetarium.GetUniversalTime();
-                    UpdateAll();
-                    return true;
+                    break;
                 case "PROGRADE":
                     Pro = (double)value;
-                    UpdateAll();
-                    return true;
+                    break;
                 case "RADIALOUT":
                     RadOut = (double)value;
-                    UpdateAll();
-                    return true;
+                    break;
                 case "NORMAL":
                     Norm = (double)value;
-                    UpdateAll();
-                    return true;
+                    break;
+                default:
+                    return false;
             }
-
-            return false;
+            UpdateAll();
+            return true;
         }
 
         public void Remove()
