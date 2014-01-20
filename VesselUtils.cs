@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using kOS.Debug;
 using kOS.Value;
@@ -14,19 +13,18 @@ namespace kOS
     {
       var retList = new List<Part>();
 
-      foreach (Part part in vessel.Parts)
+      foreach (var part in vessel.Parts)
       {
         foreach (PartModule module in part.Modules)
         {
-          if (module is ModuleEngines)
-          {
-            var engineMod = (ModuleEngines)module;
+            var engineModule = module as ModuleEngines;
+            if (engineModule == null) continue;
+            var engineMod = engineModule;
 
             if (engineMod.getIgnitionState)
             {
-              retList.Add(part);
+                retList.Add(part);
             }
-          }
         }
       }
 
@@ -35,22 +33,20 @@ namespace kOS
 
     public static bool TryGetResource(Vessel vessel, string resourceName, out double total)
     {
-        bool resourceIsFound = false;
+        var resourceIsFound = false;
         total = 0;
         PartResourceDefinition resourceDefinition = PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(rd => rd.name.Equals(resourceName, StringComparison.OrdinalIgnoreCase));
         // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
         if (resourceDefinition == null)
             return resourceIsFound;
         resourceName = resourceName.ToUpper();
-        foreach (Part part in vessel.parts)
+        foreach (var part in vessel.parts)
         {
             foreach (PartResource resource in part.Resources)
             {
-                if (resource.resourceName.ToUpper() == resourceName)
-                {
-                    resourceIsFound = true;
-                    total += resource.amount;
-                }
+                if (resource.resourceName.ToUpper() != resourceName) continue;
+                resourceIsFound = true;
+                total += resource.amount;
             }
         }
     
@@ -62,7 +58,7 @@ namespace kOS
       double total = 0;
       resourceName = resourceName.ToUpper();
 
-      foreach (Part part in vessel.parts)
+      foreach (var part in vessel.parts)
       {
         foreach (PartResource resource in part.Resources)
         {
@@ -79,19 +75,16 @@ namespace kOS
     public static double GetMaxThrust(Vessel vessel)
     {
       var thrust = 0.0;
-      ModuleEngines e;
 
-      foreach (Part p in vessel.parts)
+        foreach (var p in vessel.parts)
       {
         foreach (PartModule pm in p.Modules)
         {
           if (!pm.isEnabled) continue;
-          if (pm is ModuleEngines)
-          {
-            e = (pm as ModuleEngines);
+            if (!(pm is ModuleEngines)) continue;
+            var e = (pm as ModuleEngines);
             if (!e.EngineIgnited) continue;
-            thrust += (double)e.maxThrust;
-          }
+            thrust += e.maxThrust;
         }
       }
 
@@ -113,84 +106,60 @@ namespace kOS
 
     public static CelestialBody GetBodyByName(String name)
     {
-      foreach (var body in FlightGlobals.fetch.bodies)
-      {
-        if (name.ToUpper() == body.name.ToUpper())
-        {
-          return body;
-        }
-      }
-
-      return null;
+        return FlightGlobals.fetch.bodies.FirstOrDefault<CelestialBody>(body => name.ToUpper() == body.name.ToUpper());
     }
 
-    public static Vessel GetVesselByName(String name, Vessel origin)
+      public static Vessel GetVesselByName(String name, Vessel origin)
     {
-      Vessel vessel = TryGetVesselByName(name, origin);
+        var vessel = TryGetVesselByName(name, origin);
 
-      if (vessel == null)
-      {
-        throw new KOSException("Vessel '" + name + "' not found");
-      }
-      else
-      {
+        if (vessel == null)
+        {
+            throw new KOSException("Vessel '" + name + "' not found");
+        }
         return vessel;
-      }
     }
 
     public static void SetTarget(ITargetable val)
     {
-      //if (val is Vessel)
-      //{
       FlightGlobals.fetch.SetVesselTarget(val);
-      //}
-      //else if (val is CelestialBody)
-      //{/
-
-      // }
     }
 
     public static double GetCommRange(Vessel vessel)
     {
       double range = 100000;
 
-      foreach (Part part in vessel.parts)
+      foreach (var part in vessel.parts)
       {
-        if (part.partInfo.name == "longAntenna")
-        {
-          String status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
+          if (part.partInfo.name != "longAntenna") continue;
+          var status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
 
           if (status == "Fixed" || status == "Locked")
           {
-            range += 1000000;
+              range += 1000000;
           }
-        }
       }
 
-      foreach (Part part in vessel.parts)
+      foreach (var part in vessel.parts)
       {
-        if (part.partInfo.name == "mediumDishAntenna")
-        {   
-          String status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
+          if (part.partInfo.name != "mediumDishAntenna") continue;
+          var status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
 
           if (status == "Fixed" || status == "Locked")
           {
-            range *= 100;
+              range *= 100;
           }
-        }
       }
 
-      foreach (Part part in vessel.parts)
+      foreach (var part in vessel.parts)
       {
-        if (part.partInfo.name == "commDish")
-        {
-          String status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
+          if (part.partInfo.name != "commDish") continue;
+          var status = ((ModuleAnimateGeneric)part.Modules["ModuleAnimateGeneric"]).status;
 
           if (status == "Fixed" || status == "Locked")
           {
-            range *= 200;
+              range *= 200;
           }
-        }
       }
 
       return range;
@@ -198,15 +167,15 @@ namespace kOS
 
     public static double GetDistanceToKerbinSurface(Vessel vessel)
     {
-      foreach (var body in FlightGlobals.fetch.bodies)
-      {
-        if (body.name.ToUpper() == "KERBIN") return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - 600000; // Kerbin radius = 600,000
-      }
+        foreach (var body in FlightGlobals.fetch.bodies.Where(body => body.name.ToUpper() == "KERBIN"))
+        {
+            return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - 600000; // Kerbin radius = 600,000
+        }
 
-      throw new KOSException("Planet Kerbin not found!");
+        throw new KOSException("Planet Kerbin not found!");
     }
 
-    public static float AngleDelta(float a, float b)
+      public static float AngleDelta(float a, float b)
     {
       var delta = b - a;
 
@@ -275,23 +244,21 @@ namespace kOS
 
     internal static object GetLandingLegStatus(Vessel vessel)
     {
-      bool atLeastOneLeg = false; // No legs at all? Always return false
+      var atLeastOneLeg = false; // No legs at all? Always return false
 
-      foreach (Part p in vessel.parts)
+      foreach (var p in vessel.parts)
       {
-        if (p.Modules.OfType<ModuleLandingLeg>().Count() > 0)
-        {
+          if (!p.Modules.OfType<ModuleLandingLeg>().Any()) continue;
           atLeastOneLeg = true;
 
-          foreach (ModuleLandingLeg l in p.FindModulesImplementing<ModuleLandingLeg>())
+          foreach (var l in p.FindModulesImplementing<ModuleLandingLeg>())
           {
-            if (l.savedLegState != (int)(ModuleLandingLeg.LegStates.DEPLOYED))
-            {
-              // If just one leg is retracted, still moving, or broken return false.
-              return false;
-            }
+              if (l.savedLegState != (int)(ModuleLandingLeg.LegStates.DEPLOYED))
+              {
+                  // If just one leg is retracted, still moving, or broken return false.
+                  return false;
+              }
           }
-        }
       }
 
       return atLeastOneLeg;
@@ -299,11 +266,11 @@ namespace kOS
 
     public static object GetChuteStatus(Vessel vessel)
     {
-      bool atLeastOneChute = false; // No chutes at all? Always return false
+      var atLeastOneChute = false; // No chutes at all? Always return false
 
-      foreach (Part p in vessel.parts)
+      foreach (var p in vessel.parts)
       {
-        foreach (ModuleParachute c in p.FindModulesImplementing<ModuleParachute>())
+        foreach (var c in p.FindModulesImplementing<ModuleParachute>())
         {
           atLeastOneChute = true;
 
@@ -320,31 +287,27 @@ namespace kOS
 
     public static void DeployParachutes(Vessel vessel, bool state)
     {
-      if (vessel.mainBody.atmosphere && state)
-      {
-        foreach (Part p in vessel.parts)
+        if (!vessel.mainBody.atmosphere || !state) return;
+        foreach (var p in vessel.parts)
         {
-          if (p.Modules.OfType<ModuleParachute>().Count() > 0 && state)
-          {
-            foreach (ModuleParachute c in p.FindModulesImplementing<ModuleParachute>())
+            if (!p.Modules.OfType<ModuleParachute>().Any() || !state) continue;
+            foreach (var c in p.FindModulesImplementing<ModuleParachute>())
             {
-              if (c.deploymentState == ModuleParachute.deploymentStates.STOWED) //&& c.deployAltitude * 3 > vessel.heightFromTerrain)
-              {
-                c.DeployAction(null);
-              }
+                if (c.deploymentState == ModuleParachute.deploymentStates.STOWED) //&& c.deployAltitude * 3 > vessel.heightFromTerrain)
+                {
+                    c.DeployAction(null);
+                }
             }
-          }
         }
-      }
     }
 
-    public static object GetSolarPanelStatus(Vessel vessel)
+      public static object GetSolarPanelStatus(Vessel vessel)
     {
-      bool atLeastOneSolarPanel = false; // No panels at all? Always return false
+      var atLeastOneSolarPanel = false; // No panels at all? Always return false
 
-      foreach (Part p in vessel.parts)
+      foreach (var p in vessel.parts)
       {
-        foreach (ModuleDeployableSolarPanel c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
+        foreach (var c in p.FindModulesImplementing<ModuleDeployableSolarPanel>())
         {
           atLeastOneSolarPanel = true;
 
@@ -367,15 +330,10 @@ namespace kOS
 
     public static double GetMassDrag(Vessel vessel)
     {
-      double massDrag = 0;
-      foreach (Part p in vessel.parts)
-      {
-        massDrag += (p.mass + p.GetResourceMass()) * p.maximum_drag;
-      }
-      return massDrag;
+        return vessel.parts.Aggregate<Part, double>(0, (current, p) => current + (p.mass + p.GetResourceMass())*p.maximum_drag);
     }
 
-    public static double RealMaxAtmosphereAltitude(CelestialBody body)
+      public static double RealMaxAtmosphereAltitude(CelestialBody body)
     {
       // This comes from MechJeb CelestialBodyExtensions.cs
       if (!body.atmosphere) return 0;
@@ -386,12 +344,12 @@ namespace kOS
     public static double GetTerminalVelocity(Vessel vessel)
     {
       if(vessel.mainBody.GetAltitude(vessel.findWorldCenterOfMass()) > RealMaxAtmosphereAltitude(vessel.mainBody)) return double.PositiveInfinity;
-      double DensityOfAir = FlightGlobals.getAtmDensity(FlightGlobals.getStaticPressure(vessel.findWorldCenterOfMass(), vessel.mainBody));
-      return Math.Sqrt(2 * (double)FlightGlobals.getGeeForceAtPosition(vessel.findWorldCenterOfMass()).magnitude * vessel.GetTotalMass() / ( GetMassDrag(vessel) * FlightGlobals.DragMultiplier * DensityOfAir ));
+      double densityOfAir = FlightGlobals.getAtmDensity(FlightGlobals.getStaticPressure(vessel.findWorldCenterOfMass(), vessel.mainBody));
+      return Math.Sqrt(2 * FlightGlobals.getGeeForceAtPosition(vessel.findWorldCenterOfMass()).magnitude * vessel.GetTotalMass() / ( GetMassDrag(vessel) * FlightGlobals.DragMultiplier * densityOfAir ));
     }
     public static float GetVesselLattitude(Vessel vessel)
     {
-      float retVal = (float)vessel.latitude;
+      var retVal = (float)vessel.latitude;
 
       if (retVal > 90) return 90;
       if (retVal < -90) return -90;
@@ -401,7 +359,7 @@ namespace kOS
 
     public static float GetVesselLongitude(Vessel vessel)
     {
-      float retVal = (float)vessel.longitude;
+      var retVal = (float)vessel.longitude;
 
       while (retVal > 180) retVal -= 360;
       while (retVal < -180) retVal += 360;

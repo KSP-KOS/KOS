@@ -60,9 +60,9 @@ namespace kOS
             return new Vector3d(input.x, input.z, input.y);
         }
 
-        public static Vector3d Pow(Vector3d v3d, float exponent)
+        public static Vector3d Pow(Vector3d v3D, float exponent)
         {
-            return new Vector3d(Math.Pow(v3d.x, exponent), Math.Pow(v3d.y, exponent), Math.Pow(v3d.z, exponent));
+            return new Vector3d(Math.Pow(v3D.x, exponent), Math.Pow(v3D.y, exponent), Math.Pow(v3D.z, exponent));
         }
 
         public static Vector3d GetEffectiveInertia(Vessel vessel, Vector3d torque)

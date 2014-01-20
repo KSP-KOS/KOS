@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using UnityEngine;
 
 namespace kOS
 {
@@ -24,12 +19,12 @@ namespace kOS
         {
             input = input.Trim();
 
-            List<String> retList = new List<string>();
+            var retList = new List<string>();
 
-            char[] inputChars = input.ToCharArray();
+            var inputChars = input.ToCharArray();
 
-            int start = 0;
-            for (int i = 0; i < input.Length; i++)
+            var start = 0;
+            for (var i = 0; i < input.Length; i++)
             {
                 if (ignoreString && inputChars[i] == '"')
                 {
@@ -50,12 +45,12 @@ namespace kOS
 
             return retList;
         }
-        
+
         // Find the next unescaped double quote
         public static int FindEndOfString(String text, int start)
         {
-            char[] input = text.ToCharArray();
-            for (int i = start; i < input.Count(); i++)
+            var input = text.ToCharArray();
+            for (var i = start; i < input.Count(); i++)
             {
                 if (input[i] == '"' && (i == 0 || input[i - 1] != '\\'))
                 {
@@ -73,23 +68,23 @@ namespace kOS
 
         public static int BraceMatch(String text, int start)
         {
-            char[] input = text.ToCharArray();
-            int braceLevel = 0;
-            for (int i = start; i < input.Count(); i++)
+            var input = text.ToCharArray();
+            var braceLevel = 0;
+            for (var i = start; i < input.Count(); i++)
             {
-                if (input[i] == '{')
+                switch (input[i])
                 {
-                    braceLevel++;
-                }
-                else if (input[i] == '}')
-                {
-                    braceLevel--;
-                    if (braceLevel == 0) return i;
-                }
-                else if (input[i] == '"')
-                {
-                    i = FindEndOfString(text, i + 1);
-                    if (i == -1) return -1;
+                    case '{':
+                        braceLevel++;
+                        break;
+                    case '}':
+                        braceLevel--;
+                        if (braceLevel == 0) return i;
+                        break;
+                    case '"':
+                        i = FindEndOfString(text, i + 1);
+                        if (i == -1) return -1;
+                        break;
                 }
             }
 
@@ -102,10 +97,10 @@ namespace kOS
 
             while (i < str.Length)
             {
-                char c = str[i];
+                var c = str[i];
 
                 if (c == closeChar) return true;
-                else if (c == '"')
+                if (c == '"')
                 {
                     i = FindEndOfString(str, i + 1);
                     if (i == -1) return false;
@@ -124,28 +119,22 @@ namespace kOS
             return closeChar == (char)0;
         }
 
-		public static bool DelimterMatch(string str)
-		{
-            int i = -1;
+        public static bool DelimterMatch(string str)
+        {
+            var i = -1;
             return Balance(ref str, ref i, (char)0);
-		}
+        }
 
         public static double ProspectForResource(String resourceName, List<Part> engines)
         {
-            List<Part> visited = new List<Part>();
-            double total = 0;
+            var visited = new List<Part>();
 
-            foreach (var part in engines)
-            {
-                total += ProspectForResource(resourceName, part, ref visited);
-            }
-
-            return total;
+            return engines.Sum(part => ProspectForResource(resourceName, part, ref visited));
         }
 
         public static double ProspectForResource(String resourceName, Part engine)
         {
-            List<Part> visited = new List<Part>();
+            var visited = new List<Part>();
 
             return ProspectForResource(resourceName, engine, ref visited);
         }
@@ -169,7 +158,7 @@ namespace kOS
                 }
             }
 
-            foreach (AttachNode attachNode in part.attachNodes)
+            foreach (var attachNode in part.attachNodes)
             {
                 if (attachNode.attachedPart != null                                 //if there is a part attached here            
                         && attachNode.nodeType == AttachNode.NodeType.Stack             //and the attached part is stacked (rather than surface mounted)
@@ -189,30 +178,29 @@ namespace kOS
 
         public static string[] ProcessParams(string input)
         {
-            String buffer = "";
-            List<String> output = new List<string>();
+            var buffer = "";
+            var output = new List<string>();
 
             for (var i = 0; i < input.Length; i++)
             {
-                char c = input[i];
+                var c = input[i];
 
-                if (c == '\"')
+                switch (c)
                 {
-                    var prevI = i;
-                    i = Utils.FindEndOfString(input, i + 1);
-                    buffer += input.Substring(prevI, i - prevI + 1);
-                }
-                else
-                {
-                    if (c == ',')
-                    {
+                    case '\"':
+                        {
+                            var prevI = i;
+                            i = FindEndOfString(input, i + 1);
+                            buffer += input.Substring(prevI, i - prevI + 1);
+                        }
+                        break;
+                    case ',':
                         output.Add(buffer.Trim());
                         buffer = "";
-                    }
-                    else
-                    {
+                        break;
+                    default:
                         buffer += c;
-                    }
+                        break;
                 }
             }
 
@@ -221,32 +209,25 @@ namespace kOS
             return output.ToArray();
         }
 
-        public static String BuildRegex(String kegex)
+        public static string BuildRegex(string kegex)
         {
             if (kegex.StartsWith("^")) return kegex; // Input is already in regex format
 
             return "^" + BuildInnerRegex(kegex) + "$";
         }
 
-        public static int NewLineCount(String input)
+        public static int NewLineCount(string input)
         {
-            int retVal = 0;
-
-            foreach (char c in input)
-            {
-                if (c == '\n') retVal++;
-            }
-
-            return retVal;
+            return input.Count(c => c == '\n');
         }
 
-        public static String BuildInnerRegex(String kegex)
+        public static string BuildInnerRegex(string kegex)
         {
-            String output = "";
+            var output = "";
 
-            for (int i=0; i<kegex.Length; i++)
+            for (var i = 0; i < kegex.Length; i++)
             {
-                String c = kegex.Substring(i, 1);
+                var c = kegex.Substring(i, 1);
 
                 switch (c)
                 {
@@ -309,7 +290,7 @@ namespace kOS
 
                         if (endIndexBracket == -1) throw new FormatException("Round bracket not closed in '" + kegex + "'");
 
-                        int paramcount = Int32.Parse(kegex.Substring(i + 1, endIndexBracket - i - 1));
+                        var paramcount = Int32.Parse(kegex.Substring(i + 1, endIndexBracket - i - 1));
                         output += @"\(" + string.Join(",", Enumerable.Repeat("([ :@A-Za-z0-9\\.\\-\\+\\*/\"]+)", paramcount).ToArray()) + @"\)";
                         i = endIndexBracket;
                         break;
@@ -321,7 +302,7 @@ namespace kOS
 
                         output += "({[\\s\\S]*})";
                         i = endIndexBrace;
-                        break;                  
+                        break;
 
                     default:
                         output += c;
