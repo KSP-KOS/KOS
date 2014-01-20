@@ -5,7 +5,7 @@ using kOS.Debug;
 using kOS.Value;
 using TimeSpan = kOS.Value.TimeSpan;
 
-namespace kOS
+namespace kOS.Binding
 {
 
     [kOSBinding("ksp")]

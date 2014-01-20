@@ -1,7 +1,6 @@
 ﻿using System;
-using kOS.Value;
 
-namespace kOS
+namespace kOS.Value
 {
     public class StageValues : SpecialValue
     {

@@ -1,8 +1,7 @@
 ﻿using System;
 using UnityEngine;
-using kOS.Value;
 
-namespace kOS
+namespace kOS.Value
 {
     public class Direction : SpecialValue
     {

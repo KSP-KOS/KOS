@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using TimeSpan = kOS.Value.TimeSpan;
+﻿using TimeSpan = kOS.Value.TimeSpan;
 
-
-namespace kOS
+namespace kOS.Binding
 {
     [kOSBinding("ksp", "testTerm")]
     public class BindingsTest : Binding

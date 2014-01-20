@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using kOS.Value;
 
-namespace kOS
+namespace kOS.Value
 {
     public class GeoCoordinates : SpecialValue
     {

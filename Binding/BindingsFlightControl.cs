@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using kOS.Value;
 
-namespace kOS
+namespace kOS.Binding
 {
     [kOSBinding("ksp")]
     public class BindingFlightControls : Binding

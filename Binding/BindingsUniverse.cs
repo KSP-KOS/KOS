@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using kOS.Value;
+﻿using kOS.Value;
 
-namespace kOS
+namespace kOS.Binding
 {
     [kOSBinding("ksp")]
     public class BindingTimeWarp : Binding
