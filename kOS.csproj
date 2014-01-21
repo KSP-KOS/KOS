@@ -47,10 +47,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binding\Binding.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\BindingManager.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
+    <Compile Include="Binding\IBinding.cs" />
+    <Compile Include="Binding\IBindingManager.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\RoverStats.cs" />

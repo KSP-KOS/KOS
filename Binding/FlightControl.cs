@@ -8,13 +8,13 @@ using kOS.Value;
 namespace kOS.Binding
 {
     [KOSBinding("ksp")]
-    public class FlightControl : Binding
+    public class FlightControl : IBinding
     {
         private Vessel vessel;
         private ICPU cpu;
         private readonly List<LockableControl> controls = new List<LockableControl>();
 
-        public override void AddTo(BindingManager manager)
+        public  void BindTo(IBindingManager manager)
         {
             cpu = manager.Cpu;
             vessel = manager.Cpu.Vessel;
@@ -36,7 +36,7 @@ namespace kOS.Binding
             }
         }
 
-        public override void Update(float time)
+        public  void Update(float time)
         {
             if (vessel != cpu.Vessel)
             {
@@ -58,15 +58,13 @@ namespace kOS.Binding
                     }
                 }
             }
-
-            base.Update(time);
         }
 
         public class LockableControl
         {
             private readonly string propertyName;
 
-            public LockableControl(string name, string propertyName, ICPU cpu, BindingManager manager)
+            public LockableControl(string name, string propertyName, ICPU cpu, IBindingManager manager)
             {
                 Name = name;
                 Cpu = cpu;

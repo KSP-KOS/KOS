@@ -18,14 +18,14 @@ namespace kOS.Context
         public IVolume Archive { get; private set; }
         public float SessionTime { get; private set; }
         public override Vessel Vessel { get { return ((IProcessorModule)parent).vessel; } }
-        public override Dictionary<string, Variable> Variables { get { return variables; } }
+        public override IDictionary<string, Variable> Variables { get { return variables; } }
         public override List<IVolume> Volumes { get { return volumes; } }
         public override List<KOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
 
 
         private const int CLOCK_SPEED = 5;
         private readonly string context;
-        private readonly BindingManager bindingManager;
+        private readonly IBindingManager bindingManager;
         private readonly object parent;
         private readonly Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
         private IVolume selectedVolume;

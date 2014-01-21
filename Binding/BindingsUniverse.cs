@@ -4,9 +4,9 @@ using kOS.Value;
 namespace kOS.Binding
 {
     [KOSBinding("ksp")]
-    public class BindingTimeWarp : Binding
+    public class BindingTimeWarp : IBinding
     {
-        public override void AddTo(BindingManager manager)
+        public void BindTo(IBindingManager manager)
         {
             manager.AddGetter("WARP", cpu => TimeWarp.fetch.current_rate_index);
             manager.AddSetter("WARP", delegate(ICPU cpu, object val)
@@ -23,6 +23,10 @@ namespace kOS.Binding
                 var cBody = body;
                 manager.AddGetter(body.name, cpu => new BodyTarget(cBody, cpu));
             }
+        }
+
+        public void Update(float time)
+        {
         }
     }
 }

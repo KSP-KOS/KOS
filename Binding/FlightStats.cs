@@ -11,11 +11,11 @@ namespace kOS.Binding
 {
 
     [KOSBinding("ksp")]
-    public class FlightStats : Binding
+    public class FlightStats : IBinding
     {
-        public override void AddTo(BindingManager manager)
+        public void BindTo(IBindingManager manager)
         {
-            manager.AddGetter("ALT:RADAR", cpu => cpu.Vessel.heightFromTerrain > 0 ? Mathf.Min(cpu.Vessel.heightFromTerrain, (float) cpu.Vessel.altitude) : (float) cpu.Vessel.altitude);
+            manager.AddGetter("ALT:RADAR", cpu => cpu.Vessel.heightFromTerrain > 0 ? Mathf.Min(cpu.Vessel.heightFromTerrain, (float)cpu.Vessel.altitude) : (float)cpu.Vessel.altitude);
             manager.AddGetter("ALT:APOAPSIS", cpu => cpu.Vessel.orbit.ApA);
             manager.AddGetter("ALT:PERIAPSIS", cpu => cpu.Vessel.orbit.PeA);
             manager.AddGetter("ETA:APOAPSIS", cpu => cpu.Vessel.orbit.timeToAp);
@@ -34,7 +34,7 @@ namespace kOS.Binding
 
             manager.AddGetter("ENCOUNTER", cpu => VesselUtils.TryGetEncounter(cpu.Vessel));
 
-            manager.AddGetter("NEXTNODE",       delegate(ICPU cpu)
+            manager.AddGetter("NEXTNODE", delegate(ICPU cpu)
             {
                 var vessel = cpu.Vessel;
                 if (!vessel.patchedConicSolver.maneuverNodes.Any()) { throw new KOSException("No maneuver nodes present!"); }
@@ -53,31 +53,35 @@ namespace kOS.Binding
             }
 
             manager.AddSetter("VESSELNAME", delegate(ICPU cpu, object value) { cpu.Vessel.vesselName = value.ToString(); });
-            }
+        }
 
-            private static float getLattitude(ICPU cpu)
-            {
-                var retVal = (float)cpu.Vessel.latitude;
+        public void Update(float time)
+        {
+        }
 
-                if (retVal > 90) return 90;
-                if (retVal < -90) return -90;
+        private static float GetLattitude(IExecutionContext cpu)
+        {
+            var retVal = (float)cpu.Vessel.latitude;
 
-                return retVal;
-            }
+            if (retVal > 90) return 90;
+            if (retVal < -90) return -90;
 
-            private static float getLongitude(ICPU cpu)
-            {
-                var retVal = (float)cpu.Vessel.longitude;
+            return retVal;
+        }
 
-                while (retVal > 180) retVal -= 360;
-                while (retVal < -180) retVal += 360;
+        private static float getLongitude(IExecutionContext cpu)
+        {
+            var retVal = (float)cpu.Vessel.longitude;
 
-                return retVal;
-            }
+            while (retVal > 180) retVal -= 360;
+            while (retVal < -180) retVal += 360;
 
-            private static bool CheckCommRange(Vessel vessel)
-            {
-                return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
-            }
-  }
+            return retVal;
+        }
+
+        private static bool CheckCommRange(Vessel vessel)
+        {
+            return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+        }
+    }
 }

@@ -1,13 +1,17 @@
 ﻿namespace kOS.Binding
 {
     [KOSBinding("ksp")]
-    public class RoverStats : Binding
+    public class RoverStats : IBinding
     {
-        public override void AddTo(BindingManager manager)
+        public  void BindTo(IBindingManager manager)
         {
             //manager.AddGetter("HEADING", delegate(CPU cpu) { return cpu.Vessel.vesselName; });
 
             //manager.AddSetter("VESSELNAME", delegate(CPU cpu, object value) { cpu.Vessel.vesselName = value.ToString(); });
+        }
+
+        public void Update(float time)
+        {
         }
     }
 }

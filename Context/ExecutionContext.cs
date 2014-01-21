@@ -30,7 +30,7 @@ namespace kOS.Context
 
         public virtual Vessel Vessel { get { return ParentContext != null ? ParentContext.Vessel : null; } }
         public virtual List<IVolume> Volumes { get { return ParentContext != null ? ParentContext.Volumes : null; } }
-        public virtual Dictionary<string, Variable> Variables { get { return ParentContext != null ? ParentContext.Variables : null; } }
+        public virtual IDictionary<string, Variable> Variables { get { return ParentContext != null ? ParentContext.Variables : null; } }
         public virtual List<KOSExternalFunction> ExternalFunctions { get { return ParentContext != null ? ParentContext.ExternalFunctions : null; } }
 
         public IExecutionContext ParentContext { get; set; }

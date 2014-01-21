@@ -6,12 +6,12 @@ using kOS.Context;
 
 namespace kOS.Binding
 {
-    public class BindingManager
+    public delegate void BindingSetDlg(ICPU cpu, object val);
+    public delegate object BindingGetDlg(ICPU cpu);
+    public class BindingManager : IBindingManager
     {
-        private readonly List<Binding> bindings = new List<Binding>();
-        
-        public delegate void BindingSetDlg      (ICPU cpu, object val);
-        public delegate object BindingGetDlg    (ICPU cpu);
+        private readonly List<IBinding> bindings = new List<IBinding>();
+
 
         public BindingManager(ICPU cpu, string context)
         {
@@ -25,8 +25,8 @@ namespace kOS.Binding
                 var attr = (KOSBinding)t.GetCustomAttributes(typeof(KOSBinding), true).FirstOrDefault();
 
                 if (attr == null || attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
-                var b = (Binding)Activator.CreateInstance(t);
-                b.AddTo(this);
+                var b = (IBinding)Activator.CreateInstance(t);
+                b.BindTo(this);
                 bindings.Add(b);
             }
         }

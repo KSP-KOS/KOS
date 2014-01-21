@@ -4,8 +4,8 @@ namespace kOS.Binding
 {
     public class BoundVariable : Variable
     {
-        public BindingManager.BindingSetDlg Set;
-        public BindingManager.BindingGetDlg Get;
+        public BindingSetDlg Set;
+        public BindingGetDlg Get;
 
         public override object Value
         {

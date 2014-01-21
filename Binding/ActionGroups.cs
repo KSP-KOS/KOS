@@ -3,9 +3,9 @@ using kOS.Utilities;
 namespace kOS.Binding
 {
     [KOSBinding("ksp")]
-    public class ActionGroups : Binding
+    public class ActionGroups : IBinding
     {
-        public override void AddTo(BindingManager manager)
+        public void BindTo(IBindingManager manager)
         {
             manager.AddSetter("SAS", (cpu, val) => cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, (bool) val));
             manager.AddSetter("GEAR", (cpu, val) => cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, (bool) val));
@@ -46,6 +46,10 @@ namespace kOS.Binding
             manager.AddGetter("AG8", cpu => cpu.Vessel.ActionGroups[KSPActionGroup.Custom08]);
             manager.AddGetter("AG9", cpu => cpu.Vessel.ActionGroups[KSPActionGroup.Custom09]);
             manager.AddGetter("AG10", cpu => cpu.Vessel.ActionGroups[KSPActionGroup.Custom10]);
+        }
+
+        public void Update(float time)
+        {
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using kOS.Binding;
 using kOS.Command;
 using kOS.Expression;
@@ -13,7 +12,7 @@ namespace kOS.Context
         IVolume SelectedVolume { get; set; }
         Vessel Vessel { get; }
         List<IVolume> Volumes { get; }
-        Dictionary<string, Variable> Variables { get; }
+        IDictionary<string, Variable> Variables { get; }
         List<KOSExternalFunction> ExternalFunctions { get; }
         IExecutionContext ParentContext { get; set; }
         IExecutionContext ChildContext { get; set; }

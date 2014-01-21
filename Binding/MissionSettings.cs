@@ -5,9 +5,9 @@ using kOS.Value;
 namespace kOS.Binding
 {
     [KOSBinding("ksp")]
-    public class MissionSettings : Binding
+    public class MissionSettings : IBinding
     {
-        public override void AddTo(BindingManager manager)
+        public void BindTo(IBindingManager manager)
         {
             manager.AddSetter("TARGET", delegate(ICPU cpu, object val) 
                 {
@@ -36,7 +36,6 @@ namespace kOS.Binding
                         if (vessel != null)
                         {
                             VesselUtils.SetTarget(vessel);
-                            return;
                         }
                     }
                 });
@@ -56,6 +55,10 @@ namespace kOS.Binding
 
                     return null;
                 });
+        }
+
+        public void Update(float time)
+        {
         }
     }
 }
