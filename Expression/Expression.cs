@@ -514,6 +514,8 @@ namespace kOS.Expression
                     { var sp = GetParamsAsT<string>(p, 1); return new BodyAtmosphere(VesselUtils.GetBodyByName(sp[0])); }
                 case "LIST":
                     return new ListValue();
+                case "CONSTANT":
+                    return new ConstantValue();
                 case "HEADING":
                     {
                         var pCount = p.Count();

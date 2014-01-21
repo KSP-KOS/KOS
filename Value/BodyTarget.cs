@@ -46,8 +46,6 @@ namespace kOS.Value
                     return Target.orbit.PeA;
                 case "RADIUS":
                     return Target.Radius;
-                case "G":
-                    return Target.GeeASL;
                 case "MU":
                     return Target.gravParameter;
                 case "ATM":
