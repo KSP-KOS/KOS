@@ -61,6 +61,7 @@
     <Compile Include="Context\IContextRunProgram.cs" />
     <Compile Include="Context\ICPU.cs" />
     <Compile Include="Context\IExecutionContext.cs" />
+    <Compile Include="Module\IProcessorModule.cs" />
     <Compile Include="Value\ConstantValue.cs" />
     <Compile Include="Persistance\Archive.cs" />
     <Compile Include="Value\BodyAtmosphere.cs" />

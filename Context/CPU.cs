@@ -17,7 +17,7 @@ namespace kOS.Context
 
         public Archive Archive { get; private set; }
         public float SessionTime { get; private set; }
-        public override Vessel Vessel { get { return ((kOSProcessor)parent).vessel; } }
+        public override Vessel Vessel { get { return ((IProcessorModule)parent).vessel; } }
         public override Dictionary<String, Variable> Variables { get { return variables; } }
         public override List<Volume> Volumes { get { return volumes; } }
         public override List<KOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
@@ -175,7 +175,7 @@ namespace kOS.Context
 
         public bool IsAlive()
         {
-            var partState = ((kOSProcessor)parent).part.State;
+            var partState = ((IProcessorModule)parent).part.State;
 
             if (partState == PartStates.DEAD)
             {

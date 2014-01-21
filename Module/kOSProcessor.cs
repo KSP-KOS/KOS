@@ -1,4 +1,6 @@
-﻿using KSP.IO;
+﻿using System;
+using System.Collections;
+using KSP.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using kOS.Context;
@@ -6,13 +8,14 @@ using kOS.Persistance;
 
 namespace kOS.Module
 {
-    public class kOSProcessor : PartModule
+    public class kOSProcessor : PartModule, IProcessorModule
     {
         private ICPU cpu;
-        private Harddisk hardDisk;
         private int vesselPartCount;
-        private readonly List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
+        private readonly List<IProcessorModule> sisterProcs = new List<IProcessorModule>();
         private const int MEM_SIZE = 10000;
+
+        public Harddisk HardDisk { get; private set; }
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal")]
         public void Activate()
@@ -64,7 +67,7 @@ namespace kOS.Module
                 return;
             }
 
-            if (hardDisk == null) hardDisk = new Harddisk(MEM_SIZE);
+            if (HardDisk == null) HardDisk = new Harddisk(MEM_SIZE);
 
             InitCpu();
 
@@ -74,7 +77,7 @@ namespace kOS.Module
         {
             if (cpu != null) return;
             cpu = new CPU(this, "ksp");
-            cpu.AttachHardDisk(hardDisk);
+            cpu.AttachHardDisk(HardDisk);
             cpu.Boot();
         }
 
@@ -87,7 +90,7 @@ namespace kOS.Module
         
         public static int AssignNewID()
         {
-            var config = PluginConfiguration.CreateForType<kOSProcessor>();
+            var config = PluginConfiguration.CreateForType<IProcessorModule>();
             config.load();
             var id = config.GetValue<int>("CpuIDMax") + 1;
             config.SetValue("CpuIDMax", id);
@@ -118,17 +121,17 @@ namespace kOS.Module
             // Trigger whenever the number of parts in the vessel changes (like when staging, docking or undocking)
             if (vessel.parts.Count == vesselPartCount) return;
 
-            var attachedVolumes = new List<Volume> {cpu.Archive, hardDisk};
+            var attachedVolumes = new List<Volume> {cpu.Archive, HardDisk};
 
             // Look for sister units that have newly been added to the vessel
             sisterProcs.Clear();
             foreach (var item in vessel.parts)
             {
-                kOSProcessor sisterProc;
+                IProcessorModule sisterProc;
                 if (item == part || !PartIsKosProc(item, out sisterProc)) continue;
 
                 sisterProcs.Add(sisterProc);
-                attachedVolumes.Add(sisterProc.hardDisk);
+                attachedVolumes.Add(sisterProc.HardDisk);
             }
 
             cpu.UpdateVolumeMounts(attachedVolumes);
@@ -136,11 +139,11 @@ namespace kOS.Module
             vesselPartCount = vessel.parts.Count;
         }
 
-        public bool PartIsKosProc(Part input, out kOSProcessor proc)
+        public bool PartIsKosProc(Part input, out IProcessorModule proc)
         {
             foreach (PartModule module in input.Modules)
             {
-                var processor = module as kOSProcessor;
+                var processor = module as IProcessorModule;
                 if (processor == null) continue;
                 proc = processor;
                 return true;
@@ -163,7 +166,7 @@ namespace kOS.Module
             foreach (var hdNode in node.GetNodes("harddisk"))
             {
                 var newDisk = new Harddisk(hdNode);
-                hardDisk = newDisk;
+                HardDisk = newDisk;
             }
 
             UnityEngine.Debug.Log("******************************* ON LOAD ");
@@ -179,9 +182,9 @@ namespace kOS.Module
 
         public override void OnSave(ConfigNode node)
         {
-            if (hardDisk != null)
+            if (HardDisk != null)
             {
-                var hdNode = hardDisk.Save("harddisk");
+                var hdNode = HardDisk.Save("harddisk");
                 node.AddNode(hdNode);
             }
 
