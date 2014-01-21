@@ -134,7 +134,7 @@
     <Compile Include="Value\VersionInfo.cs" />
     <Compile Include="Value\VesselSensors.cs" />
     <Compile Include="Value\VesselTarget.cs" />
-    <Compile Include="TermWindow.cs" />
+    <Compile Include="TerminalWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Context\CPU.cs" />
     <Compile Include="Core.cs" />

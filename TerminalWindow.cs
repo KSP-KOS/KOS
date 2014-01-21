@@ -6,7 +6,7 @@ using kOS.Utilities;
 namespace kOS
 {
     // Blockotronix 550 Computor Monitor
-    public class TermWindow : MonoBehaviour
+    public class TerminalWindow : MonoBehaviour
     {
         private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
 

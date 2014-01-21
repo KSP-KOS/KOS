@@ -12,7 +12,7 @@ namespace kOS
         public static VersionInfo VersionInfo = new VersionInfo(0, 10.0);
 
         public static Core Fetch; 
-        public TermWindow Window;
+        public TerminalWindow Window;
         
         public void Awake()
         {
@@ -20,9 +20,9 @@ namespace kOS
             if (Fetch != null) return;
             Fetch = this;
 
-            var gObj = new GameObject("kOSTermWindow", typeof(TermWindow));
+            var gObj = new GameObject("kOSTermWindow", typeof(TerminalWindow));
             DontDestroyOnLoad(gObj);
-            Window = (TermWindow)gObj.GetComponent(typeof(TermWindow));
+            Window = (TerminalWindow)gObj.GetComponent(typeof(TerminalWindow));
             Window.Core = this;
         }
 
