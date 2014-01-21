@@ -11,7 +11,7 @@ namespace kOS.Context
         CPUMode Mode { get; set; }
         double TestFunction(double x, double y);
         void RegisterkOSExternalFunction(object[] parameters);
-        void RegisterkOSExternalFunction(String name, object externalParent, String methodName, int parameterCount);
+        void RegisterkOSExternalFunction(string name, object externalParent, string methodName, int parameterCount);
         void Boot();
         bool IsAlive();
         void AttachVolume(IVolume hardDisk);

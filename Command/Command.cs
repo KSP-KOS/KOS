@@ -9,9 +9,9 @@ namespace kOS.Command
     {
         public float Time;
         public float WaitTime = 0;
-        public String Input;
+        public string Input;
         public Match RegexMatch;
-        public String InstanceName;
+        public string InstanceName;
 
         protected Command(Match regexMatch, IExecutionContext context) : base(context)
         {
@@ -19,14 +19,14 @@ namespace kOS.Command
             RegexMatch = regexMatch;
         }
 
-        protected Command(String input, IExecutionContext context) : base(context)
+        protected Command(string input, IExecutionContext context) : base(context)
         {
             Input = input;
         }
 
         public abstract void Evaluate();
 
-        public static ICommand Get(String input, IExecutionContext context, int line)
+        public static ICommand Get(string input, IExecutionContext context, int line)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace kOS.Command
             }
         }
 
-        public static ICommand Get(String input, IExecutionContext context)
+        public static ICommand Get(string input, IExecutionContext context)
         {
             input = input.Trim();//.Replace("\n", " ");
 

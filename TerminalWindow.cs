@@ -35,7 +35,7 @@ namespace kOS
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
         }
 
-        public void LoadTexture(String relativePath, ref Texture2D targetTexture)
+        public void LoadTexture(string relativePath, ref Texture2D targetTexture)
         {
             var imageLoader = new WWW("file://" + root + relativePath);
             imageLoader.LoadImageIntoTexture(targetTexture);

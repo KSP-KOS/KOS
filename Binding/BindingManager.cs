@@ -13,7 +13,7 @@ namespace kOS.Binding
         public delegate void BindingSetDlg      (ICPU cpu, object val);
         public delegate object BindingGetDlg    (ICPU cpu);
 
-        public BindingManager(ICPU cpu, String context)
+        public BindingManager(ICPU cpu, string context)
         {
             Cpu = cpu;
 
@@ -33,7 +33,7 @@ namespace kOS.Binding
 
         public ICPU Cpu { get; set; }
 
-        public void AddGetter(String name, BindingGetDlg dlg)
+        public void AddGetter(string name, BindingGetDlg dlg)
         {
             var v = Cpu.FindVariable(name) ?? Cpu.FindVariable(name.Split(":".ToCharArray())[0]);
 
@@ -53,7 +53,7 @@ namespace kOS.Binding
             }
         }
 
-        public void AddSetter(String name, BindingSetDlg dlg)
+        public void AddSetter(string name, BindingSetDlg dlg)
         {
             var v = Cpu.FindVariable(name.ToLower());
             if (v != null)

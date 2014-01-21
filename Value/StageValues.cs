@@ -17,7 +17,7 @@ namespace kOS.Value
             return GetResourceOfCurrentStage(suffixName);
         }
 
-        private object GetResourceOfCurrentStage(String resourceName)
+        private object GetResourceOfCurrentStage(string resourceName)
         {
             var activeEngines = VesselUtils.GetListOfActivatedEngines(vessel);
             return Utils.ProspectForResource(resourceName, activeEngines);

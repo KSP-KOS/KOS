@@ -43,7 +43,7 @@ namespace kOS.Value
                 case "SECONDS":
                     return span.TotalSeconds;
                 case "CLOCK":
-                    return span.Hours + ":" + String.Format(span.Minutes.ToString("00") + ":" + String.Format(span.Seconds.ToString("00")));
+                    return span.Hours + ":" + string.Format(span.Minutes.ToString("00") + ":" + string.Format(span.Seconds.ToString("00")));
                 case "CALENDAR":
                     return "Year " + Year() + ", day " + Day();
             }

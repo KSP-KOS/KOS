@@ -15,7 +15,7 @@ namespace kOS.Utilities
 
     public static class Utils
     {
-        public static List<String> Split(String input, char delimiter, bool ignoreString)
+        public static List<string> Split(string input, char delimiter, bool ignorestring)
         {
             input = input.Trim();
 
@@ -26,10 +26,10 @@ namespace kOS.Utilities
             var start = 0;
             for (var i = 0; i < input.Length; i++)
             {
-                if (ignoreString && inputChars[i] == '"')
+                if (ignorestring && inputChars[i] == '"')
                 {
                     // Skip over strings
-                    i = FindEndOfString(input, i + 1);
+                    i = FindEndOfstring(input, i + 1);
                 }
                 else if (inputChars[i] == delimiter)
                 {
@@ -47,7 +47,7 @@ namespace kOS.Utilities
         }
 
         // Find the next unescaped double quote
-        public static int FindEndOfString(String text, int start)
+        public static int FindEndOfstring(string text, int start)
         {
             var input = text.ToCharArray();
             for (var i = start; i < input.Count(); i++)
@@ -66,7 +66,7 @@ namespace kOS.Utilities
             return (input > high ? high : (input < low ? low : input));
         }
 
-        public static int BraceMatch(String text, int start)
+        public static int BraceMatch(string text, int start)
         {
             var input = text.ToCharArray();
             var braceLevel = 0;
@@ -82,7 +82,7 @@ namespace kOS.Utilities
                         if (braceLevel == 0) return i;
                         break;
                     case '"':
-                        i = FindEndOfString(text, i + 1);
+                        i = FindEndOfstring(text, i + 1);
                         if (i == -1) return -1;
                         break;
                 }
@@ -102,7 +102,7 @@ namespace kOS.Utilities
                 if (c == closeChar) return true;
                 if (c == '"')
                 {
-                    i = FindEndOfString(str, i + 1);
+                    i = FindEndOfstring(str, i + 1);
                     if (i == -1) return false;
                 }
                 else if (c == '(' && !Balance(ref str, ref i, ')')) return false;
@@ -125,21 +125,21 @@ namespace kOS.Utilities
             return Balance(ref str, ref i, (char)0);
         }
 
-        public static double ProspectForResource(String resourceName, List<Part> engines)
+        public static double ProspectForResource(string resourceName, List<Part> engines)
         {
             var visited = new List<Part>();
 
             return engines.Sum(part => ProspectForResource(resourceName, part, ref visited));
         }
 
-        public static double ProspectForResource(String resourceName, Part engine)
+        public static double ProspectForResource(string resourceName, Part engine)
         {
             var visited = new List<Part>();
 
             return ProspectForResource(resourceName, engine, ref visited);
         }
 
-        public static double ProspectForResource(String resourceName, Part part, ref List<Part> visited)
+        public static double ProspectForResource(string resourceName, Part part, ref List<Part> visited)
         {
             double ret = 0;
 
@@ -190,7 +190,7 @@ namespace kOS.Utilities
                     case '\"':
                         {
                             var prevI = i;
-                            i = FindEndOfString(input, i + 1);
+                            i = FindEndOfstring(input, i + 1);
                             buffer += input.Substring(prevI, i - prevI + 1);
                         }
                         break;

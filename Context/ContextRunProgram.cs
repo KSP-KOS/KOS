@@ -11,7 +11,7 @@ namespace kOS.Context
     public class ContextRunProgram : ExecutionContext, IContextRunProgram
     {
         private File file;
-        private String commandBuffer;
+        private string commandBuffer;
         private readonly List<ICommand> commands = new List<ICommand>();
         private readonly List<Expression.Expression> parameters = new List<Expression.Expression>();
         private const int EXECUTION_LINE = 0;
@@ -19,7 +19,7 @@ namespace kOS.Context
 
         public string Filename { get; private set; }
 
-        public ContextRunProgram(IExecutionContext parent, List<Expression.Expression> parameters, String filename) : base(parent) 
+        public ContextRunProgram(IExecutionContext parent, List<Expression.Expression> parameters, string filename) : base(parent) 
         {
             this.parameters = parameters;
             Filename = filename;
@@ -97,7 +97,7 @@ namespace kOS.Context
             {
                 if (line[i] == '\"')
                 {
-                    i = Utils.FindEndOfString(line, i + 1);
+                    i = Utils.FindEndOfstring(line, i + 1);
                     if (i == -1) break;
                 }
                 else if (i < line.Length - 1 && line.Substring(i, 2) == "//")

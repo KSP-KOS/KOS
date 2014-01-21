@@ -13,7 +13,7 @@ namespace kOS.Command.BasicIO
 
         public override void Evaluate()
         {
-            String varName = RegexMatch.Groups[1].Value;
+            string varName = RegexMatch.Groups[1].Value;
             Variable v = FindOrCreateVariable(varName);
 
             if (v == null) throw new KOSException("Can't create variable '" + varName + "'", this);

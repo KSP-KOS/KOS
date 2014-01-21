@@ -16,7 +16,7 @@ namespace kOS.Command.File
         {
             var listType = RegexMatch.Groups[1].Value.Trim().ToUpper();
 
-            if (listType == "FILES" || String.IsNullOrEmpty(listType))
+            if (listType == "FILES" || string.IsNullOrEmpty(listType))
             {
                 StdOut("");
 
@@ -47,13 +47,13 @@ namespace kOS.Command.File
 
                 foreach (var volume in Volumes)
                 {
-                    String id = i.ToString(CultureInfo.InvariantCulture);
+                    string id = i.ToString(CultureInfo.InvariantCulture);
                     if (volume == SelectedVolume) id = "*" + id;
 
-                    String line = id.PadLeft(2).PadRight(6, ' ');
+                    string line = id.PadLeft(2).PadRight(6, ' ');
                     line += volume.Name.PadRight(24, ' ');
 
-                    String size = volume.CheckRange() ? (volume.Capacity > -1 ? volume.Capacity.ToString(CultureInfo.InvariantCulture) : "Inf") : "Disc";
+                    string size = volume.CheckRange() ? (volume.Capacity > -1 ? volume.Capacity.ToString(CultureInfo.InvariantCulture) : "Inf") : "Disc";
                     line += size;
 
                     StdOut(line);

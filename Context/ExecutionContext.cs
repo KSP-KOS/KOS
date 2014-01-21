@@ -30,14 +30,14 @@ namespace kOS.Context
 
         public virtual Vessel Vessel { get { return ParentContext != null ? ParentContext.Vessel : null; } }
         public virtual List<IVolume> Volumes { get { return ParentContext != null ? ParentContext.Volumes : null; } }
-        public virtual Dictionary<String, Variable> Variables { get { return ParentContext != null ? ParentContext.Variables : null; } }
+        public virtual Dictionary<string, Variable> Variables { get { return ParentContext != null ? ParentContext.Variables : null; } }
         public virtual List<KOSExternalFunction> ExternalFunctions { get { return ParentContext != null ? ParentContext.ExternalFunctions : null; } }
 
         public IExecutionContext ParentContext { get; set; }
         public IExecutionContext ChildContext { get; set; }
         public ExecutionState State { get; set; }
 
-        public Dictionary<String, Expression.Expression> Locks = new Dictionary<string, Expression.Expression>();
+        public Dictionary<string, Expression.Expression> Locks = new Dictionary<string, Expression.Expression>();
         public List<ICommand> CommandLocks = new List<ICommand>();
 
         public ExecutionContext()
@@ -81,12 +81,12 @@ namespace kOS.Context
             return (ChildContext != null) ? ChildContext.GetBuffer() : null;
         }
 
-        public virtual void StdOut(String text)
+        public virtual void StdOut(string text)
         {
             if (ParentContext != null) ParentContext.StdOut(text);
         }
 
-        public virtual void Put(String text, int x, int y)
+        public virtual void Put(string text, int x, int y)
         {
             if (ParentContext != null) ParentContext.Put(text, x, y);
         }
@@ -169,7 +169,7 @@ namespace kOS.Context
             return ParentContext != null && ParentContext.SwitchToVolume(volID);
         }
 
-        public virtual bool SwitchToVolume(String volName)
+        public virtual bool SwitchToVolume(string volName)
         {
             return ParentContext != null && ParentContext.SwitchToVolume(volName);
         }
@@ -180,7 +180,7 @@ namespace kOS.Context
             {
                 if (Volumes.Count > (int)volID) return Volumes[(int)volID];
             }
-            else if (volID is String)
+            else if (volID is string)
             {
                 var volName = volID.ToString().ToUpper();
 
@@ -190,7 +190,7 @@ namespace kOS.Context
                 }
 
                 int outVal;
-                if (int.TryParse((String)volID, out outVal))
+                if (int.TryParse((string)volID, out outVal))
                 {
                     if (Volumes.Count > outVal) return Volumes[outVal];
                 }
@@ -215,7 +215,7 @@ namespace kOS.Context
             return ParentContext == null ? null : ParentContext.FindClosestParentOfType<T>();
         }
 
-        public void UpdateLock(String name)
+        public void UpdateLock(string name)
         {
             var e = GetLock(name);
             if (e == null) return;
@@ -223,7 +223,7 @@ namespace kOS.Context
             v.Value = e.GetValue();
         }
 
-        public virtual Expression.Expression GetLock(String name)
+        public virtual Expression.Expression GetLock(string name)
         {
             if (Locks.ContainsKey(name.ToUpper()))
             {
@@ -237,7 +237,7 @@ namespace kOS.Context
             CommandLocks.Add(command);
         }
 
-        public virtual void Lock(String name, Expression.Expression expression)
+        public virtual void Lock(string name, Expression.Expression expression)
         {
             name = name.ToLower();
 
@@ -255,7 +255,7 @@ namespace kOS.Context
             if (ParentContext != null) ParentContext.Unlock(command);
         }
 
-        public virtual void Unlock(String name)
+        public virtual void Unlock(string name)
         {
             name = name.ToLower();
 
@@ -275,7 +275,7 @@ namespace kOS.Context
             if (ParentContext != null) ParentContext.UnlockAll();
         }
 
-        public virtual void Unset(String name)
+        public virtual void Unset(string name)
         {
             if (Variables.ContainsKey(name.ToLower()))
             {
@@ -315,7 +315,7 @@ namespace kOS.Context
                 switch (c)
                 {
                     case "\"":
-                        i = Utils.FindEndOfString(buffer, i + 1);
+                        i = Utils.FindEndOfstring(buffer, i + 1);
                         if (i == -1)
                         {
                             cmd = "";
@@ -372,12 +372,12 @@ namespace kOS.Context
             return ChildContext != null ? ChildContext.GetCursorY() : -1;
         }
 
-        public virtual object CallExternalFunction(String name, string[] parameters)
+        public virtual object CallExternalFunction(string name, string[] parameters)
         {
             return ParentContext != null ? ParentContext.CallExternalFunction(name, parameters) : null;
         }
 
-        public virtual bool FindExternalFunction(String name)
+        public virtual bool FindExternalFunction(string name)
         {
             return ParentContext != null && ParentContext.FindExternalFunction(name);
         }

@@ -66,7 +66,7 @@ namespace kOS.Binding
         {
             private readonly string propertyName;
 
-            public LockableControl(String name, String propertyName, ICPU cpu, BindingManager manager)
+            public LockableControl(string name, string propertyName, ICPU cpu, BindingManager manager)
             {
                 Name = name;
                 Cpu = cpu;
@@ -147,7 +147,7 @@ namespace kOS.Binding
 
             private void SteerByWire(FlightCtrlState c)
             {
-                if (Value is String && ((string) Value).ToUpper() == "KILL")
+                if (Value is string && ((string) Value).ToUpper() == "KILL")
                 {
                     SteeringHelper.KillRotation(c, Vessel);
                 }

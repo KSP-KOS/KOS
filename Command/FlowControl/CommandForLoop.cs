@@ -9,17 +9,17 @@ namespace kOS.Command.FlowControl
     [Command("FOR /_ IN /_ {}")]
     public class CommandForLoop : Command
     {
-        // commandString;
+        // commandstring;
         ICommand targetCommand;
         private Enumerator iterator;
-        private string iteratorString;
+        private string iteratorstring;
 
         public CommandForLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
             var listName = RegexMatch.Groups[2].Value;
-            iteratorString = RegexMatch.Groups[1].Value;
+            iteratorstring = RegexMatch.Groups[1].Value;
 
             var expression = new Expression.Expression(listName, ParentContext).GetValue();
             var list = expression as ListValue;
@@ -65,14 +65,14 @@ namespace kOS.Command.FlowControl
                 if ((bool)iterator.GetSuffix("END"))
                 {
                     State = ExecutionState.DONE;
-                    ParentContext.Unset(iteratorString);
+                    ParentContext.Unset(iteratorstring);
                 }
                 else
                 {
-                    var iteratorVariable = ParentContext.FindOrCreateVariable(iteratorString);
+                    var iteratorVariable = ParentContext.FindOrCreateVariable(iteratorstring);
                     iteratorVariable.Value = iterator.GetSuffix("VALUE");
                     ChildContext = targetCommand;
-                    //ChildContext = Command.Get(commandString, this);
+                    //ChildContext = Command.Get(commandstring, this);
                     ((ICommand)ChildContext).Evaluate();
                 }
             }

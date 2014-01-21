@@ -30,7 +30,7 @@ namespace kOS.Command.File
                 return;
             }
 
-            if (operation.ToUpper() == "FILE" || String.IsNullOrEmpty(operation))
+            if (operation.ToUpper() == "FILE" || string.IsNullOrEmpty(operation))
             {
                 var f = SelectedVolume.GetByName(identifier);
                 if (f == null) throw new KOSException("File '" + identifier + "' not found", this);

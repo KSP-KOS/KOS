@@ -9,7 +9,7 @@ namespace kOS.Value
     {
         private readonly IExecutionContext context;
 
-        public BodyTarget(String name, IExecutionContext context) : this(VesselUtils.GetBodyByName(name), context) { }
+        public BodyTarget(string name, IExecutionContext context) : this(VesselUtils.GetBodyByName(name), context) { }
 
         public BodyTarget(CelestialBody target, IExecutionContext context)
         {

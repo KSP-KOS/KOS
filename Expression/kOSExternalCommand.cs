@@ -5,7 +5,7 @@ namespace kOS.Expression
 {
     public struct KOSExternalFunction
     {
-        public KOSExternalFunction(String name, object parent, String methodName, int parameterCount) : this()
+        public KOSExternalFunction(string name, object parent, string methodName, int parameterCount) : this()
         {
             Name = name;
             Parent = parent;

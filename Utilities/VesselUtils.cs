@@ -91,7 +91,7 @@ namespace kOS.Utilities
       return thrust;
     }
 
-    public static Vessel TryGetVesselByName(String name, Vessel origin)
+    public static Vessel TryGetVesselByName(string name, Vessel origin)
     {
       foreach (Vessel v in FlightGlobals.Vessels)
       {
@@ -104,12 +104,12 @@ namespace kOS.Utilities
       return null;
     }
 
-    public static CelestialBody GetBodyByName(String name)
+    public static CelestialBody GetBodyByName(string name)
     {
         return FlightGlobals.fetch.bodies.FirstOrDefault<CelestialBody>(body => name.ToUpper() == body.name.ToUpper());
     }
 
-      public static Vessel GetVesselByName(String name, Vessel origin)
+      public static Vessel GetVesselByName(string name, Vessel origin)
     {
         var vessel = TryGetVesselByName(name, origin);
 

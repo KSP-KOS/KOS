@@ -31,7 +31,7 @@ namespace kOS
             KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/");
         }
 
-        public static void Debug(String line)
+        public static void Debug(string line)
         {
         }
 

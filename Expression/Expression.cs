@@ -22,7 +22,7 @@ namespace kOS.Expression
             executionContext = context;
         }
 
-        public Expression(String text, IExecutionContext context)
+        public Expression(string text, IExecutionContext context)
         {
             rootTerm = new Term(text);
             executionContext = context;
@@ -129,7 +129,7 @@ namespace kOS.Expression
             return chunks.Count == 1 ? chunks[0].Value : null;
         }
 
-        private object RecognizeConstant(String text)
+        private object RecognizeConstant(string text)
         {
             text = text.Trim();
 
@@ -142,10 +142,10 @@ namespace kOS.Expression
             bool testBool;
             if (bool.TryParse(text, out testBool)) return testBool;
 
-            // Strings
+            // strings
             if (text.StartsWith("\""))
             {
-                var end = Utils.FindEndOfString(text, 1);
+                var end = Utils.FindEndOfstring(text, 1);
                 if (end == text.Length - 1) return text.Substring(1, text.Length - 2);
             }
 
@@ -420,13 +420,13 @@ namespace kOS.Expression
             return chunks.Count == 1 ? chunks[0].Value : null;
         }
 
-        private object TryExternalFunction(String name, IList<Term> p)
+        private object TryExternalFunction(string name, IList<Term> p)
         {
             foreach (var f in executionContext.ExternalFunctions.Where(f => f.Name.ToUpper() == name.ToUpper()))
             {
                 if (p.Count() != f.ParameterCount) throw new Exception("Wrong number of arguments, expected " + f.ParameterCount);
 
-                var sp = new String[f.ParameterCount];
+                var sp = new string[f.ParameterCount];
                 for (var i = 0; i < f.ParameterCount; i++)
                 {
                     sp[i] = GetValueOfTerm(p[i]).ToString();
@@ -439,7 +439,7 @@ namespace kOS.Expression
             return null;
         }
 
-        private object TryMathFunction(String name, Term[] p)
+        private object TryMathFunction(string name, Term[] p)
         {
             name = name.ToUpper();
 
@@ -492,7 +492,7 @@ namespace kOS.Expression
             return null;
         }
 
-        private SpecialValue TryCreateSpecialValue(String name, Term[] p)
+        private SpecialValue TryCreateSpecialValue(string name, Term[] p)
         {
             name = name.ToUpper();
 
@@ -542,7 +542,7 @@ namespace kOS.Expression
             if (value is T) return (T)value;
 
             if (typeof(T) == typeof(double)) throw new KOSException("Supplied parameter '" + input.Text + "' is not a number", executionContext);
-            if (typeof(T) == typeof(String)) throw new KOSException("Supplied parameter '" + input.Text + "' is not a string", executionContext);
+            if (typeof(T) == typeof(string)) throw new KOSException("Supplied parameter '" + input.Text + "' is not a string", executionContext);
             if (typeof(T) == typeof(bool)) throw new KOSException("Supplied parameter '" + input.Text + "' is not a boolean", executionContext);
 
             throw new KOSException("Supplied parameter '" + input.Text + "' is not of the correct type", executionContext);
@@ -565,9 +565,9 @@ namespace kOS.Expression
             return retVal;
         }
 
-        public static String GetFriendlyNameOfItem(object input)
+        public static string GetFriendlyNameOfItem(object input)
         {
-            if (input is String) return "string";
+            if (input is string) return "string";
             if (input is double) return "number";
             if (input is float) return "number";
             if (input is int) return "number";
@@ -597,7 +597,7 @@ namespace kOS.Expression
 
         private object AttemptAdd(object val1, object val2)
         {
-            if (val1 is String || val2 is String) { return val1.ToString() + val2.ToString(); }
+            if (val1 is string || val2 is string) { return val1.ToString() + val2.ToString(); }
 
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 + (double)val2; }
             if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("+", val2, false); }
@@ -633,7 +633,7 @@ namespace kOS.Expression
         private object AttemptEqual(object val1, object val2)
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return Math.Abs((double)val1 - (double)val2) < 0.0001; }
-            if (val1 is String || val2 is String) { return val1.ToString() == val2.ToString(); }
+            if (val1 is string || val2 is string) { return val1.ToString() == val2.ToString(); }
             if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("=", val2, false); }
 
             return null;
@@ -642,7 +642,7 @@ namespace kOS.Expression
         private object AttemptNotEqual(object val1, object val2)
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return Math.Abs((double)val1 - (double)val2) > 0.0001; }
-            if (val1 is String || val2 is String) { return val1.ToString() != val2.ToString(); }
+            if (val1 is string || val2 is string) { return val1.ToString() != val2.ToString(); }
             if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("!=", val2, false); }
 
             return null;
@@ -788,7 +788,7 @@ namespace kOS.Expression
             }
 
             public readonly object Value;
-            public readonly String Operator;
+            public readonly string Operator;
         }
     }
 }

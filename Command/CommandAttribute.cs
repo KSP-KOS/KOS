@@ -7,9 +7,9 @@ namespace kOS.Command
         public string[] Values { get; set; }
         public CommandAttribute(params string[] values) { Values = values; }
 
-        public override String ToString()
+        public override string ToString()
         {
-            return String.Join(",", Values);
+            return string.Join(",", Values);
         }
     }
 }

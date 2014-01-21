@@ -8,15 +8,15 @@ namespace kOS.Debug
     {
         public static string DisplayObjectInfo(Object o)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             // Include the type of the object
-            System.Type type = o.GetType();
+            var type = o.GetType();
             sb.Append("Type: " + type.Name);
 
             // Include information for each Field
             sb.Append("\r\n\r\nFields:");
-            System.Reflection.FieldInfo[] fi = type.GetFields();
+            FieldInfo[] fi = type.GetFields();
             if (fi.Length > 0)
             {
                 foreach (FieldInfo f in fi)
@@ -30,7 +30,7 @@ namespace kOS.Debug
 
             // Include information for each Property
             sb.Append("\r\n\r\nProperties:");
-            System.Reflection.PropertyInfo[] pi = type.GetProperties();
+            PropertyInfo[] pi = type.GetProperties();
             if (pi.Length > 0)
             {
                 foreach (PropertyInfo p in pi)

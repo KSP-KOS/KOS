@@ -13,14 +13,14 @@ namespace kOS.Interpreter
         private int cursorLine;
         private int cursorCol;
         private int programSize;
-        private String CurrentLine { get { return file[cursorLine]; } set { file[cursorLine] = value; } }
+        private string CurrentLine { get { return file[cursorLine]; } set { file[cursorLine] = value; } }
         private int LocalCursorCol { get { return cursorCol < CurrentLine.Length ? cursorCol : CurrentLine.Length; } }
         private int scrollY;
         private int scrollX;
         private int cursorX;
         private int cursorY;
         private readonly char[,] buffer = new char[COLUMNS, ROWS];
-        private string statusAnimString = "";
+        private string statusAnimstring = "";
         private float statusAnimProg;
         private bool statusAnimActive;
         private readonly File file;
@@ -36,7 +36,7 @@ namespace kOS.Interpreter
             return ChildContext != null ? ChildContext.GetCursorX() : cursorY;
         }
 
-        public InterpreterEdit(String fileName, IExecutionContext parent) : base(parent) 
+        public InterpreterEdit(string fileName, IExecutionContext parent) : base(parent) 
         {
             cursorX = 0;
             file = SelectedVolume.GetByName(fileName) ?? new File(fileName) {""};
@@ -80,7 +80,7 @@ namespace kOS.Interpreter
 
                 var charsToDisp = (int)(statusAnimProg * 20);
 
-                Print(0, BufferHeight - 1, statusAnimString, charsToDisp);
+                Print(0, BufferHeight - 1, statusAnimstring, charsToDisp);
             }
             else
             {
@@ -136,7 +136,7 @@ namespace kOS.Interpreter
                     break;
 
                 default:
-                    file[cursorLine] = file[cursorLine].Insert(LocalCursorCol, new String(ch, 1));
+                    file[cursorLine] = file[cursorLine].Insert(LocalCursorCol, new string(ch, 1));
                     cursorCol = LocalCursorCol + 1;
                     break;
             }
@@ -220,7 +220,7 @@ namespace kOS.Interpreter
         
         private void Enter()
         {
-            String fragment = CurrentLine.Substring(LocalCursorCol);
+            string fragment = CurrentLine.Substring(LocalCursorCol);
             CurrentLine = CurrentLine.Substring(0, LocalCursorCol);
 
             file.Insert(cursorLine + 1, fragment);
@@ -239,7 +239,7 @@ namespace kOS.Interpreter
             {
                 if (cursorLine > 0)
                 {
-                    String fragment = CurrentLine.Trim();
+                    string fragment = CurrentLine.Trim();
                     cursorLine--;
                     file.RemoveAt(cursorLine + 1);
                     cursorCol = CurrentLine.Length;
@@ -256,18 +256,18 @@ namespace kOS.Interpreter
             }
             else if (file.Count() > cursorLine + 1)
             {
-                String otherLine = file[cursorLine + 1];
+                string otherLine = file[cursorLine + 1];
                 file.RemoveAt(cursorLine + 1);
                 CurrentLine += otherLine;
             }
         }
 
-        public void Print(int sx, int sy, String value)
+        public void Print(int sx, int sy, string value)
         {
             Print(sx, sy, value, value.Length);
         }
 
-        public void Print(int sx, int sy, String value, int max)
+        public void Print(int sx, int sy, string value, int max)
         {
             char[] chars = value.ToCharArray();
             int i = 0;
@@ -293,7 +293,7 @@ namespace kOS.Interpreter
 
         private void Save()
         {
-            statusAnimString = SelectedVolume.SaveFile(file) ? "SAVED." : "CAN'T SAVE - DISK FULL.";
+            statusAnimstring = SelectedVolume.SaveFile(file) ? "SAVED." : "CAN'T SAVE - DISK FULL.";
 
             statusAnimActive = true;
             statusAnimProg = 0;

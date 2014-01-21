@@ -23,7 +23,7 @@ namespace kOS.Interpreter
             return buffer;
         }
 
-        public void PrintAt(String text, int x, int y)
+        public void PrintAt(string text, int x, int y)
         {
             var cA = text.ToCharArray();
 

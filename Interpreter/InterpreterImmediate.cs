@@ -11,10 +11,10 @@ namespace kOS.Interpreter
         private int cursor;
         private int baseLineY;
         private const int CMD_BACKLOG = 20;
-        private readonly List<String> previousCommands = new List<String>();
+        private readonly List<string> previousCommands = new List<string>();
         private int prevCmdIndex = -1;
-        private String inputBuffer = "";
-        private String commandBuffer = "";
+        private string inputBuffer = "";
+        private string commandBuffer = "";
         private int cursorX;
         private int cursorY;
         private readonly Queue<Command.ICommand> queue = new Queue<Command.ICommand>();
@@ -28,9 +28,9 @@ namespace kOS.Interpreter
             StdOut("Proceed.");
         }
 
-        public void Add(string cmdString)
+        public void Add(string cmdstring)
         {
-            commandBuffer += cmdString;
+            commandBuffer += cmdstring;
             string nextCmd;
 
             var line = 0;
@@ -79,7 +79,7 @@ namespace kOS.Interpreter
                     break;
 
                 default:
-                    inputBuffer = inputBuffer.Insert(cursor, new String(ch, 1));
+                    inputBuffer = inputBuffer.Insert(cursor, new string(ch, 1));
                     cursor++;
                     break;
             }

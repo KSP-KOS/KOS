@@ -9,11 +9,11 @@ namespace kOS.Command.FlowControl
     public class CommandBlock : Command
     {
         readonly List<ICommand> commands = new List<ICommand>();
-        String commandBuffer = "";
+        string commandBuffer = "";
 
         public CommandBlock(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
-        public CommandBlock(String directInput, IExecutionContext context) : base(Regex.Match(directInput, "^([\\S\\s]*)$"), context) {}
+        public CommandBlock(string directInput, IExecutionContext context) : base(Regex.Match(directInput, "^([\\S\\s]*)$"), context) {}
 
         public override void Evaluate()
         {
@@ -24,7 +24,7 @@ namespace kOS.Command.FlowControl
             if (commands.Count == 0)
             {
                 int commandLineStart;
-                String cmd;
+                string cmd;
                 while (ParseNext(ref innerText, out cmd, ref lineCount, out commandLineStart))
                 {
                     commands.Add(Get(cmd, this, commandLineStart));

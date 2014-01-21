@@ -8,7 +8,7 @@ namespace kOS.Command.FlowControl
     public class CommandUntilLoop : Command
     {
         Expression.Expression waitExpression;
-        // commandString;
+        // commandstring;
         ICommand targetCommand;
 
         public CommandUntilLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
@@ -20,7 +20,7 @@ namespace kOS.Command.FlowControl
             var numLinesChild = Utils.NewLineCount(Input.Substring(0, RegexMatch.Groups[2].Index));
             targetCommand = Get(RegexMatch.Groups[2].Value, this, Line + numLinesChild);
 
-            //commandString = RegexMatch.Groups[2].Value;
+            //commandstring = RegexMatch.Groups[2].Value;
 
             State = ExecutionState.WAIT;
         }
@@ -56,7 +56,7 @@ namespace kOS.Command.FlowControl
                 else
                 {
                     ChildContext = targetCommand;
-                    //ChildContext = Command.Get(commandString, this);
+                    //ChildContext = Command.Get(commandstring, this);
                     ((ICommand)ChildContext).Evaluate();
                 }
             }

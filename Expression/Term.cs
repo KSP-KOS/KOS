@@ -8,21 +8,21 @@ namespace kOS.Expression
 {
     public class Term
     {
-        public String Text;
+        public string Text;
         public List<Term> SubTerms;
         public bool TermsAreParameters;
 
         public enum TermTypes { REGULAR, FINAL, FUNCTION, PARAMETER_LIST, COMPARISON, BOOLEAN, SUFFIX, STRUCTURE, MATH_OPERATOR, COMPARISON_OPERATOR, BOOLEAN_OPERATOR, INDEX, INDEX_OPERATOR }
         public TermTypes Type;
 
-        private static List<String> comparisonSymbols;
-        private static List<String> booleanSymbols;
-        private static List<String> parameterSeperatorSymbols;
-        private static List<String> listaccessSymbols;
-        private static readonly List<String> mathSymbols;
-        private static readonly List<String> allSymbols;
-        private static readonly List<String> delimeterSymbols;
-        private static readonly List<String> subaccessSymbols;
+        private static List<string> comparisonSymbols;
+        private static List<string> booleanSymbols;
+        private static List<string> parameterSeperatorSymbols;
+        private static List<string> listaccessSymbols;
+        private static readonly List<string> mathSymbols;
+        private static readonly List<string> allSymbols;
+        private static readonly List<string> delimeterSymbols;
+        private static readonly List<string> subaccessSymbols;
 
         static Term()
         {
@@ -57,11 +57,11 @@ namespace kOS.Expression
             allSymbols.AddRange(delimeterSymbols.ToArray());
         }
 
-        public Term(String input) : this (input, TermTypes.REGULAR, true) {}
+        public Term(string input) : this (input, TermTypes.REGULAR, true) {}
         
-        public Term(String input, TermTypes type) : this(input, type, true) { }
+        public Term(string input, TermTypes type) : this(input, type, true) { }
 
-        public Term(String input, TermTypes type, bool autoTrim)
+        public Term(string input, TermTypes type, bool autoTrim)
         {
             TermsAreParameters = false;
             Text = autoTrim ? input.Trim() : input;
@@ -106,60 +106,60 @@ namespace kOS.Expression
             return output;
         }
 
-        public String Demo()
+        public string Demo()
         {
             return Demo(0);
         }
 
-        public String Demo(int tabIndent)
+        public string Demo(int tabIndent)
         {
-            var retString = new String(' ', tabIndent * 4);
+            var retstring = new string(' ', tabIndent * 4);
 
             switch (Type)
             {
                 case TermTypes.FUNCTION:
-                    retString += "FUNCTION->";
+                    retstring += "FUNCTION->";
                     break;
                 case TermTypes.PARAMETER_LIST:
-                    retString += "PARAMS->";
+                    retstring += "PARAMS->";
                     break;
                 case TermTypes.COMPARISON:
-                    retString += "COMPARISON->";
+                    retstring += "COMPARISON->";
                     break;
                 case TermTypes.BOOLEAN:
-                    retString += "BOOLEAN->";
+                    retstring += "BOOLEAN->";
                     break;
                 case TermTypes.STRUCTURE:
-                    retString += "STRUCTURE->";
+                    retstring += "STRUCTURE->";
                     break;
                 case TermTypes.MATH_OPERATOR:
-                    retString += "MATH ";
+                    retstring += "MATH ";
                     break;
                 case TermTypes.COMPARISON_OPERATOR:
-                    retString += "COMP ";
+                    retstring += "COMP ";
                     break;
                 case TermTypes.BOOLEAN_OPERATOR:
-                    retString += "BOOL ";
+                    retstring += "BOOL ";
                     break;
                 case TermTypes.SUFFIX:
-                    retString += ":";
+                    retstring += ":";
                     break;
             }
 
-            retString += Text + Environment.NewLine;
+            retstring += Text + Environment.NewLine;
 
             foreach (Term t in SubTerms)
             {
-                retString += t.Demo(tabIndent + 1);
+                retstring += t.Demo(tabIndent + 1);
             }
 
-            return retString;
+            return retstring;
         }
 
         private void processSymbols()
         {
             // Is the input empty?
-            if (String.IsNullOrEmpty(Text)) return;
+            if (string.IsNullOrEmpty(Text)) return;
             
             // HEADING.. BY is now deprecated in favor of HEADING(x,y), but here it is if you're using it still
             Text = Regex.Replace(Text, "HEADING ([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)", "HEADING($2,$1)", RegexOptions.IgnoreCase);
@@ -171,7 +171,7 @@ namespace kOS.Expression
             Text = Regex.Replace(Text, "(\\s|^)<([a-zA-Z]+)>(\\s|$)", " SHIP:$2 ", RegexOptions.IgnoreCase);
 
             // Is this JUST a matched symbol?                
-            String s = MatchAt(ref Text, 0, allSymbols);
+            string s = MatchAt(ref Text, 0, allSymbols);
             if (s != null && Text.Length == s.Length)
             {
                 if (mathSymbols.Contains(s)) Type = TermTypes.MATH_OPERATOR;
@@ -189,7 +189,7 @@ namespace kOS.Expression
                 var parameterList = parseParameters(Text);
                 if (parameterList != null)
                 {
-                    foreach (String param in parameterList)
+                    foreach (string param in parameterList)
                     {
                         SubTerms.Add(new Term(param));
                     }
@@ -204,7 +204,7 @@ namespace kOS.Expression
             {
                 Type = TermTypes.BOOLEAN;
 
-                foreach (String element in booleanElements)
+                foreach (string element in booleanElements)
                 {
                     if (booleanSymbols.Contains(element))
                     {
@@ -225,7 +225,7 @@ namespace kOS.Expression
             {
                 Type = TermTypes.COMPARISON;
 
-                foreach (String element in comparisonElements)
+                foreach (string element in comparisonElements)
                 {
                     SubTerms.Add(new Term(element));
                 }
@@ -256,7 +256,7 @@ namespace kOS.Expression
 
 
             // Parse this as a normal term
-            String buffer = "";
+            string buffer = "";
             for (int i = 0; i < Text.Length; i++)
             {
                 s = MatchAt(ref Text, i, allSymbols);
@@ -289,13 +289,13 @@ namespace kOS.Expression
                 else if (s == "\"")
                 {
                     int startI = i;
-                    i = Utils.FindEndOfString(Text, i + 1);
+                    i = Utils.FindEndOfstring(Text, i + 1);
                     buffer += Text.Substring(startI, i - startI + 1); 
                 }
                 else if (s == ":")
                 {
                     int end = findEndOfSuffix(Text, i + 1);
-                    String suffixName = Text.Substring(i + 1, end - i);
+                    string suffixName = Text.Substring(i + 1, end - i);
                     i += end - i;
 
                     if (buffer.Trim() != "")
@@ -361,7 +361,7 @@ namespace kOS.Expression
             }
         }
 
-        private int findEndOfSuffix(String input, int start)
+        private int findEndOfSuffix(string input, int start)
         {
             for (int i = start; i < input.Length; i++)
             {
@@ -375,15 +375,15 @@ namespace kOS.Expression
             return input.Length - 1;
         }
 
-        private IEnumerable<string> splitByListIgnoreBracket(String input, ref List<String> operators)
+        private IEnumerable<string> splitByListIgnoreBracket(string input, ref List<string> operators)
         {
             return splitByListIgnoreBracket(input, ref operators, false);
         }
 
-        private IEnumerable<string> splitByListIgnoreBracket(String input, ref List<String> operators, bool returnIfOneElement)
+        private IEnumerable<string> splitByListIgnoreBracket(string input, ref List<string> operators, bool returnIfOneElement)
         {
             var buffer = "";
-            String s;
+            string s;
             var retList = new List<string>();
 
             for (int i = 0; i < input.Length; i++)
@@ -397,7 +397,7 @@ namespace kOS.Expression
                 else if (input[i] == '"')
                 {
                     int startI = i;
-                    i = Utils.FindEndOfString(Text, i + 1);
+                    i = Utils.FindEndOfstring(Text, i + 1);
                     buffer += Text.Substring(startI, i - startI + 1);
                 }
                 else
@@ -433,13 +433,13 @@ namespace kOS.Expression
             }
         }
 
-        private List<String> parseParameters(String input)
+        private List<string> parseParameters(string input)
         {
             var splitList = splitByListIgnoreBracket(input, ref parameterSeperatorSymbols, true);
 
             if (splitList != null)
             {
-                List<String> retList = new List<string>();
+                List<string> retList = new List<string>();
 
                 foreach (var listItem in splitList)
                 {
@@ -452,7 +452,7 @@ namespace kOS.Expression
             return null;
         }
 
-        private string MatchAt(ref String input, int i, IEnumerable<string> matchables)
+        private string MatchAt(ref string input, int i, IEnumerable<string> matchables)
         {
             foreach (var s in matchables)
             {

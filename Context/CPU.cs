@@ -18,7 +18,7 @@ namespace kOS.Context
         public IVolume Archive { get; private set; }
         public float SessionTime { get; private set; }
         public override Vessel Vessel { get { return ((IProcessorModule)parent).vessel; } }
-        public override Dictionary<String, Variable> Variables { get { return variables; } }
+        public override Dictionary<string, Variable> Variables { get { return variables; } }
         public override List<IVolume> Volumes { get { return volumes; } }
         public override List<KOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
 
@@ -27,7 +27,7 @@ namespace kOS.Context
         private readonly string context;
         private readonly BindingManager bindingManager;
         private readonly object parent;
-        private readonly Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
+        private readonly Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
         private IVolume selectedVolume;
         private readonly List<IVolume> volumes = new List<IVolume>();
         private readonly List<KOSExternalFunction> externalFunctions = new List<KOSExternalFunction>();
@@ -76,15 +76,15 @@ namespace kOS.Context
         {
             if (parameters.Count() != 4) return;
 
-            var name = (String)parameters[0];
+            var name = (string)parameters[0];
             var externalParent = parameters[1];
-            var methodName = (String)parameters[2];
+            var methodName = (string)parameters[2];
             var parameterCount = (int)parameters[3];
 
             RegisterkOSExternalFunction(name, externalParent, methodName, parameterCount);
         }
 
-        public void RegisterkOSExternalFunction(String name, object externalParent, String methodName, int parameterCount)
+        public void RegisterkOSExternalFunction(string name, object externalParent, string methodName, int parameterCount)
         {
             externalFunctions.Add(new KOSExternalFunction(name.ToUpper(), externalParent, methodName, parameterCount));
         }
@@ -116,7 +116,7 @@ namespace kOS.Context
                     var value = parameters[i];
                     object converted = null;
 
-                    if (paramType == typeof(String))
+                    if (paramType == typeof(string))
                     {
                         converted = parameters[i];
                     }
@@ -378,7 +378,7 @@ namespace kOS.Context
         {
             var localIndex = volumes.IndexOf(selected);
 
-            if (!String.IsNullOrEmpty(selected.Name)) return "#" + localIndex + ": \"" + selected.Name + "\"";
+            if (!string.IsNullOrEmpty(selected.Name)) return "#" + localIndex + ": \"" + selected.Name + "\"";
             return "#" + localIndex;
         }
 

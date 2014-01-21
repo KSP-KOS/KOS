@@ -4,7 +4,7 @@ namespace kOS.Value
 {
     public interface ISuffixed
     {
-        bool SetSuffix(String suffixName, object value);
-        object GetSuffix(String suffixName);
+        bool SetSuffix(string suffixName, object value);
+        object GetSuffix(string suffixName);
     }
 }

@@ -21,8 +21,8 @@ namespace kOS.Command.File
 
             if (RegexMatch.Groups.Count > 1)
             {
-                var paramString = RegexMatch.Groups[3].Value;
-                parameters.AddRange(Utils.ProcessParams(paramString).Select(param => new Expression.Expression(param, this)));
+                var paramstring = RegexMatch.Groups[3].Value;
+                parameters.AddRange(Utils.ProcessParams(paramstring).Select(param => new Expression.Expression(param, this)));
             }
 
             if (file == null)
