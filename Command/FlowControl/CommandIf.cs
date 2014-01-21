@@ -8,7 +8,7 @@ namespace kOS.Command.FlowControl
     public class CommandIf : Command
     {
         Expression.Expression expression;
-        Command targetCommand;
+        ICommand targetCommand;
 
         public CommandIf(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 

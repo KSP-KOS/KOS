@@ -17,7 +17,7 @@ namespace kOS.Interpreter
         private String commandBuffer = "";
         private int cursorX;
         private int cursorY;
-        private readonly Queue<Command.Command> queue = new Queue<Command.Command>();
+        private readonly Queue<Command.ICommand> queue = new Queue<Command.ICommand>();
         private readonly char[,] buffer = new char[COLUMNS, ROWS];
 
         public ImmediateMode(IExecutionContext parent) : base(parent) 

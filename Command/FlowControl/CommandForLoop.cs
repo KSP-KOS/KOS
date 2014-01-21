@@ -10,7 +10,7 @@ namespace kOS.Command.FlowControl
     public class CommandForLoop : Command
     {
         // commandString;
-        Command targetCommand;
+        ICommand targetCommand;
         private Enumerator iterator;
         private string iteratorString;
 
@@ -73,7 +73,7 @@ namespace kOS.Command.FlowControl
                     iteratorVariable.Value = iterator.GetSuffix("VALUE");
                     ChildContext = targetCommand;
                     //ChildContext = Command.Get(commandString, this);
-                    ((Command)ChildContext).Evaluate();
+                    ((ICommand)ChildContext).Evaluate();
                 }
             }
             else

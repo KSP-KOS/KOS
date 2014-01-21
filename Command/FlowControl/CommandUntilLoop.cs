@@ -9,7 +9,7 @@ namespace kOS.Command.FlowControl
     {
         Expression.Expression waitExpression;
         // commandString;
-        Command targetCommand;
+        ICommand targetCommand;
 
         public CommandUntilLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
@@ -57,7 +57,7 @@ namespace kOS.Command.FlowControl
                 {
                     ChildContext = targetCommand;
                     //ChildContext = Command.Get(commandString, this);
-                    ((Command)ChildContext).Evaluate();
+                    ((ICommand)ChildContext).Evaluate();
                 }
             }
             else

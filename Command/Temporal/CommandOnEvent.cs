@@ -9,7 +9,7 @@ namespace kOS.Command.Temporal
     public class CommandOnEvent : Command
     {
         private Variable targetVariable;
-        private Command targetCommand;
+        private ICommand targetCommand;
         private bool originalValue;
 
         public CommandOnEvent(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }

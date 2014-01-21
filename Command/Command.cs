@@ -5,7 +5,7 @@ using kOS.Debug;
 
 namespace kOS.Command
 {
-    public abstract class Command : ExecutionContext
+    public abstract class Command : ExecutionContext, ICommand
     {
         public float Time;
         public float WaitTime = 0;
@@ -26,12 +26,12 @@ namespace kOS.Command
 
         public abstract void Evaluate();
 
-        public static Command Get(String input, IExecutionContext context, int line)
+        public static ICommand Get(String input, IExecutionContext context, int line)
         {
             try
             {
                 var retCommand = Get(input, context);
-                retCommand.Line = line;
+                //retCommand.Line = line;
 
                 return retCommand;
             }
@@ -42,7 +42,7 @@ namespace kOS.Command
             }
         }
 
-        public static Command Get(String input, IExecutionContext context)
+        public static ICommand Get(String input, IExecutionContext context)
         {
             input = input.Trim();//.Replace("\n", " ");
 
@@ -50,7 +50,7 @@ namespace kOS.Command
             {
                 var match = Regex.Match(input, kvp.Key, RegexOptions.IgnoreCase);
                 if (!match.Success) continue;
-                var command = (Command)Activator.CreateInstance(kvp.Value, match, context);
+                var command = (ICommand)Activator.CreateInstance(kvp.Value, match, context);
                 return command;
             }
 
@@ -62,7 +62,7 @@ namespace kOS.Command
             State = ExecutionState.NEW;
         }
 
-        public override void Lock(Command command)
+        public override void Lock(ICommand command)
         {
             if (ParentContext != null) ParentContext.Lock(command);
         }
@@ -72,7 +72,7 @@ namespace kOS.Command
             if (ParentContext != null) ParentContext.Lock(name, expression);
         }
 
-        public override void Unlock(Command command)
+        public override void Unlock(ICommand command)
         {
             if (ParentContext != null) ParentContext.Unlock(command);
         }

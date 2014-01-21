@@ -6,7 +6,7 @@ namespace kOS.Command.Temporal
     [Command("WHEN / THEN *")]
     public class CommandWhen : Command
     {
-        private Command targetCommand;
+        private ICommand targetCommand;
         private Expression.Expression expression;
         private bool triggered;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Command;
 using kOS.Debug;
 using kOS.Persistance;
 using kOS.Utilities;
@@ -11,7 +12,7 @@ namespace kOS.Context
     {
         private File file;
         private String commandBuffer;
-        private readonly List<Command.Command> commands = new List<Command.Command>();
+        private readonly List<ICommand> commands = new List<ICommand>();
         private readonly List<Expression.Expression> parameters = new List<Expression.Expression>();
         private const int EXECUTION_LINE = 0;
 

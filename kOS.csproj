@@ -58,6 +58,7 @@
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="Binding\KOSBinding.cs" />
     <Compile Include="Binding\TestBindings.cs" />
+    <Compile Include="Command\ICommand.cs" />
     <Compile Include="Context\IContextRunProgram.cs" />
     <Compile Include="Context\ICPU.cs" />
     <Compile Include="Context\IExecutionContext.cs" />

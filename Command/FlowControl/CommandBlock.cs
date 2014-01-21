@@ -8,7 +8,7 @@ namespace kOS.Command.FlowControl
     [Command("^{([\\S\\s]*)}$")]
     public class CommandBlock : Command
     {
-        readonly List<Command> commands = new List<Command>();
+        readonly List<ICommand> commands = new List<ICommand>();
         String commandBuffer = "";
 
         public CommandBlock(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
@@ -40,7 +40,7 @@ namespace kOS.Command.FlowControl
         {
             base.Refresh();
 
-            foreach (Command c in commands)
+            foreach (var c in commands)
             {
                 c.Refresh();
             }

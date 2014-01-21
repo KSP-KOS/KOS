@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using kOS.Binding;
+using kOS.Command;
 using kOS.Debug;
 using kOS.Expression;
 using kOS.Persistance;
@@ -19,7 +20,7 @@ namespace kOS.Context
         public const int COLUMNS = 50;
         public const int ROWS = 36;
 
-        public int Line { get; protected set; }
+        public int Line { get; set; }
         
         public virtual IVolume SelectedVolume
         { 
@@ -37,7 +38,7 @@ namespace kOS.Context
         public ExecutionState State { get; set; }
 
         public Dictionary<String, Expression.Expression> Locks = new Dictionary<string, Expression.Expression>();
-        public List<Command.Command> CommandLocks = new List<Command.Command>();
+        public List<ICommand> CommandLocks = new List<ICommand>();
 
         public ExecutionContext()
         {
@@ -93,7 +94,7 @@ namespace kOS.Context
         public virtual void Update(float time)
         {
             // Process Command locks
-            foreach (Command.Command command in new List<Command.Command>(CommandLocks))
+            foreach (var command in new List<ICommand>(CommandLocks))
             {
                 command.Update(time);
             }
@@ -231,7 +232,7 @@ namespace kOS.Context
             return ParentContext == null ? null : ParentContext.GetLock(name);
         }
 
-        public virtual void Lock(Command.Command command)
+        public virtual void Lock(ICommand command)
         {
             CommandLocks.Add(command);
         }
@@ -248,7 +249,7 @@ namespace kOS.Context
             }
         }
 
-        public virtual void Unlock(Command.Command command)
+        public virtual void Unlock(ICommand command)
         {
             CommandLocks.Remove(command);
             if (ParentContext != null) ParentContext.Unlock(command);

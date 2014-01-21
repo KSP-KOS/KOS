@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using kOS.Binding;
+using kOS.Command;
 using kOS.Expression;
 using kOS.Persistance;
 using kOS.Utilities;
@@ -17,7 +18,7 @@ namespace kOS.Context
         IExecutionContext ParentContext { get; set; }
         IExecutionContext ChildContext { get; set; }
         ExecutionState State { get; set; }
-        int Line { get; }
+        int Line { get; set; }
         void VerifyMount();
         bool KeyInput(char c);
         bool Type(char c);
@@ -39,9 +40,9 @@ namespace kOS.Context
         T FindClosestParentOfType<T>() where T : class, IExecutionContext;
         void UpdateLock(String name);
         Expression.Expression GetLock(String name);
-        void Lock(Command.Command command);
+        void Lock(ICommand command);
         void Lock(String name, Expression.Expression expression);
-        void Unlock(Command.Command command);
+        void Unlock(ICommand command);
         void Unlock(String name);
         void UnlockAll();
         void Unset(String name);
