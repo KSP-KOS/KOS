@@ -43,11 +43,18 @@ namespace kOS
             TogglePower();
         }
 
-        [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true)]
-        public int UnitID = -1;
+        [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true, guiActiveEditor = true)]
+        private int unitID = -1;
+
+        [KSPEvent(guiName = "Unit +", guiActive = false, guiActiveEditor = true)]
+        public void IncrementUnitId() { unitID++; }
+
+        [KSPEvent(guiName = "Unit -", guiActive = false, guiActiveEditor = true)]
+        public void DecrementUnitId() { unitID--; }
+
 
         [KSPField(isPersistant = true, guiActive = false)]
-        public int MaxPartID = 0;
+        public int MaxPartID = 100;
 
         public override void OnStart(StartState state)
         {
