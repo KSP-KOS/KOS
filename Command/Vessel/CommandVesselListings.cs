@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using kOS.Context;
+using kOS.Suffixed;
 using kOS.Utilities;
-using kOS.Value;
 
 namespace kOS.Command.Vessel
 {

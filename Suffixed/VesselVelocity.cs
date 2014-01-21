@@ -1,6 +1,6 @@
 ﻿using kOS.Utilities;
 
-namespace kOS.Value
+namespace kOS.Suffixed
 {
     public class VesselVelocity : SpecialValue
     {

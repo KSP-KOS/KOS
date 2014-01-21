@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using kOS.Context;
 using kOS.Debug;
+using kOS.Suffixed;
 using kOS.Utilities;
-using kOS.Value;
-using TimeSpan = kOS.Value.TimeSpan;
+using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Expression
 {
@@ -265,7 +265,7 @@ namespace kOS.Expression
         {
             var p = input.SubTerms[1].SubTerms.ToArray();
 
-            object output = TryCreateSpecialValue(input.SubTerms[0].Text, p);
+            object output = TryCreateSuffixed(input.SubTerms[0].Text, p);
             if (output != null) return output;
 
             output = TryMathFunction(input.SubTerms[0].Text, p);
@@ -492,7 +492,7 @@ namespace kOS.Expression
             return null;
         }
 
-        private SpecialValue TryCreateSpecialValue(string name, Term[] p)
+        private ISuffixed TryCreateSuffixed(string name, Term[] p)
         {
             name = name.ToUpper();
 

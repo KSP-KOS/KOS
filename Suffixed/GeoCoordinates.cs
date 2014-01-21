@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using kOS.Utilities;
 
-namespace kOS.Value
+namespace kOS.Suffixed
 {
     public class GeoCoordinates : SpecialValue
     {

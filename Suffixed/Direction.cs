@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace kOS.Value
+namespace kOS.Suffixed
 {
     public class Direction : SpecialValue
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using kOS.Debug;
-using kOS.Value;
+using kOS.Suffixed;
 
 namespace kOS.Utilities
 {

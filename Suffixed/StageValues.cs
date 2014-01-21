@@ -1,7 +1,6 @@
-﻿using System;
-using kOS.Utilities;
+﻿using kOS.Utilities;
 
-namespace kOS.Value
+namespace kOS.Suffixed
 {
     public class StageValues : SpecialValue
     {

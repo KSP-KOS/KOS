@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using kOS.Context;
 using kOS.Debug;
-using kOS.Value;
+using kOS.Suffixed;
 
 namespace kOS.Command.Vessel
 {

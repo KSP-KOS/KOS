@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace kOS.Value
+﻿namespace kOS.Suffixed
 {
     public abstract class SpecialValue : ISuffixed
     {

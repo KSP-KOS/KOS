@@ -1,4 +1,4 @@
-﻿namespace kOS.Value
+﻿namespace kOS.Suffixed
 {
     public class OrbitInfo : SpecialValue
     {

@@ -3,9 +3,9 @@ using System.Linq;
 using UnityEngine;
 using kOS.Context;
 using kOS.Debug;
+using kOS.Suffixed;
 using kOS.Utilities;
-using kOS.Value;
-using TimeSpan = kOS.Value.TimeSpan;
+using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Binding
 {

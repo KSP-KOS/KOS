@@ -1,7 +1,6 @@
 ﻿using System;
-using kOS.Value;
 
-namespace kOS.Expression
+namespace kOS.Suffixed
 {
     public class ConstantValue : SpecialValue
     {

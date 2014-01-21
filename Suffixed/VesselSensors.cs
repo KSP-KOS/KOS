@@ -1,6 +1,6 @@
 using System;
 
-namespace kOS.Value
+namespace kOS.Suffixed
 {
     public class VesselSensors : SpecialValue
     {

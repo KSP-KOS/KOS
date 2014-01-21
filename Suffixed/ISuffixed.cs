@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace kOS.Value
+﻿namespace kOS.Suffixed
 {
     public interface ISuffixed
     {

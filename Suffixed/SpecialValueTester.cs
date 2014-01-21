@@ -1,6 +1,6 @@
 ﻿using kOS.Context;
 
-namespace kOS.Value
+namespace kOS.Suffixed
 {
     public class SpecialValueTester : SpecialValue
     {

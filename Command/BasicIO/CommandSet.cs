@@ -2,7 +2,7 @@
 using kOS.Context;
 using kOS.Debug;
 using kOS.Expression;
-using kOS.Value;
+using kOS.Suffixed;
 
 namespace kOS.Command.BasicIO
 {

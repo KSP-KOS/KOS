@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using kOS.Value;
+using kOS.Suffixed;
 
 namespace kOS.Utilities
 {

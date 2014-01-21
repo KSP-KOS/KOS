@@ -2,7 +2,7 @@
 using kOS.Context;
 using kOS.Utilities;
 
-namespace kOS.Value
+namespace kOS.Suffixed
 {
     public class VesselTarget : SpecialValue
     {
