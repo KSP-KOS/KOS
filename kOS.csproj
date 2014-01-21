@@ -114,8 +114,8 @@
     <Compile Include="Interpreter\InterpreterImmediate.cs" />
     <Compile Include="Debug\KOSException.cs" />
     <Compile Include="Expression\kOSExternalCommand.cs" />
-    <Compile Include="kOSIDModule.cs" />
-    <Compile Include="kOSProcessor.cs" />
+    <Compile Include="Module\kOSIDModule.cs" />
+    <Compile Include="Module\kOSProcessor.cs" />
     <Compile Include="Binding\FlightControl.cs" />
     <Compile Include="Persistance\File.cs" />
     <Compile Include="Value\ListValue.cs" />

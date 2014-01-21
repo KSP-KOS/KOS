@@ -5,6 +5,7 @@ using kOS.Binding;
 using kOS.Debug;
 using kOS.Expression;
 using kOS.Interpreter;
+using kOS.Module;
 using kOS.Persistance;
 
 namespace kOS.Context
@@ -374,6 +375,11 @@ namespace kOS.Context
 
             if (!String.IsNullOrEmpty(selected.Name)) return "#" + localIndex + ": \"" + selected.Name + "\"";
             return "#" + localIndex;
+        }
+
+        public void UpdateUnitId(int unitID)
+        {
+            throw new NotImplementedException();
         }
     }
 }

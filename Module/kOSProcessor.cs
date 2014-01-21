@@ -4,7 +4,7 @@ using UnityEngine;
 using kOS.Context;
 using kOS.Persistance;
 
-namespace kOS
+namespace kOS.Module
 {
     public class kOSProcessor : PartModule
     {
@@ -47,10 +47,10 @@ namespace kOS
         private int unitID = -1;
 
         [KSPEvent(guiName = "Unit +", guiActive = false, guiActiveEditor = true)]
-        public void IncrementUnitId() { unitID++; }
+        public void IncrementUnitId() { unitID++; cpu.UpdateUnitId(unitID); }
 
         [KSPEvent(guiName = "Unit -", guiActive = false, guiActiveEditor = true)]
-        public void DecrementUnitId() { unitID--; }
+        public void DecrementUnitId() { unitID--; cpu.UpdateUnitId(unitID);}
 
 
         [KSPField(isPersistant = true, guiActive = false)]

@@ -1,4 +1,4 @@
-﻿namespace kOS
+﻿namespace kOS.Module
 {
     public class kOSIDModule : PartModule
     {
