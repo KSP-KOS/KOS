@@ -5,14 +5,14 @@ namespace kOS.Debug
 {
     public class KOSException : Exception
     {
-        public ExecutionContext Context;
+        public IExecutionContext Context;
         public ContextRunProgram Program;
 
         public KOSException(string message) : base(message)
         {
         }
 
-        public KOSException(string message, ExecutionContext context) : this (message)
+        public KOSException(string message, IExecutionContext context) : this (message)
         {
             LineNumber = context.Line;
             Context = context;

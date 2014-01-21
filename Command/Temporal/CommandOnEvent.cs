@@ -12,7 +12,7 @@ namespace kOS.Command.Temporal
         private Command targetCommand;
         private bool originalValue;
 
-        public CommandOnEvent(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandOnEvent(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

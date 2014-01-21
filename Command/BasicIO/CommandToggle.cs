@@ -7,7 +7,7 @@ namespace kOS.Command.BasicIO
     [Command("TOGGLE %")]
     public class CommandToggle : Command
     {
-        public CommandToggle(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandToggle(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

@@ -14,15 +14,15 @@ namespace kOS.Expression
     public class Expression
     {
         readonly Term rootTerm;
-        readonly ExecutionContext executionContext;
+        readonly IExecutionContext executionContext;
 
-        public Expression(Term term, ExecutionContext context)
+        public Expression(Term term, IExecutionContext context)
         {
             rootTerm = term;
             executionContext = context;
         }
 
-        public Expression(String text, ExecutionContext context)
+        public Expression(String text, IExecutionContext context)
         {
             rootTerm = new Term(text);
             executionContext = context;

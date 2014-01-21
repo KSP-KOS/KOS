@@ -10,7 +10,7 @@ namespace kOS.Command.File
     [Command("LIST[VOLUMES,FILES]?")]
     public class CommandList : Command
     {
-        public CommandList(Match regexMatch, ExecutionContext context) : base(regexMatch,  context) { }
+        public CommandList(Match regexMatch, IExecutionContext context) : base(regexMatch,  context) { }
 
         public override void Evaluate()
         {

@@ -6,7 +6,7 @@ namespace kOS.Command.Temporal
     [Command("UNLOCK %")]
     public class CommandUnlock : Command
     {
-        public CommandUnlock(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandUnlock(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

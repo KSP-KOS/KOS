@@ -9,7 +9,7 @@ namespace kOS.Command.BasicIO
     [Command("DECLARE PARAMETERS? *")]
     public class CommandDeclareParameter : Command
     {
-        public CommandDeclareParameter(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandDeclareParameter(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

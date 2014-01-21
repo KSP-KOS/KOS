@@ -11,9 +11,9 @@ namespace kOS.Command.FlowControl
         readonly List<Command> commands = new List<Command>();
         String commandBuffer = "";
 
-        public CommandBlock(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandBlock(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
-        public CommandBlock(String directInput, ExecutionContext context) : base(Regex.Match(directInput, "^([\\S\\s]*)$"), context) {}
+        public CommandBlock(String directInput, IExecutionContext context) : base(Regex.Match(directInput, "^([\\S\\s]*)$"), context) {}
 
         public override void Evaluate()
         {

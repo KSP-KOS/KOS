@@ -10,7 +10,7 @@ namespace kOS.Command.FlowControl
         Expression.Expression expression;
         Command targetCommand;
 
-        public CommandIf(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandIf(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

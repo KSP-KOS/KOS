@@ -11,7 +11,7 @@ namespace kOS.Command.File
     [Command(@"^RUN ([a-zA-Z0-9\-_]+?)( ?\((.*?)\))?$")]
     public class CommandRunFile : Command
     {
-        public CommandRunFile(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandRunFile(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
           
         public override void Evaluate()
         {

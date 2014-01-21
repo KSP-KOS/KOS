@@ -17,7 +17,7 @@ namespace kOS.Expression
                 case "PI":
                     return Math.PI;
             }
-            base.GetSuffix(suffixName);
+            return base.GetSuffix(suffixName);
         }
     }
 }

@@ -7,11 +7,11 @@ namespace kOS.Value
 {
     public class BodyTarget : SpecialValue
     {
-        private readonly ExecutionContext context;
+        private readonly IExecutionContext context;
 
-        public BodyTarget(String name, ExecutionContext context) : this(VesselUtils.GetBodyByName(name), context) { }
+        public BodyTarget(String name, IExecutionContext context) : this(VesselUtils.GetBodyByName(name), context) { }
 
-        public BodyTarget(CelestialBody target, ExecutionContext context)
+        public BodyTarget(CelestialBody target, IExecutionContext context)
         {
             this.context = context;
             Target = target;

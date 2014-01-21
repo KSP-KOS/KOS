@@ -58,6 +58,7 @@
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="Binding\KOSBinding.cs" />
     <Compile Include="Binding\TestBindings.cs" />
+    <Compile Include="Context\IExecutionContext.cs" />
     <Compile Include="Value\ConstantValue.cs" />
     <Compile Include="Persistance\Archive.cs" />
     <Compile Include="Value\BodyAtmosphere.cs" />

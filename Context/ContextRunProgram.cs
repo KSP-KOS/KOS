@@ -18,7 +18,7 @@ namespace kOS.Context
 
         public string Filename;
 
-        public ContextRunProgram(ExecutionContext parent, List<Expression.Expression> parameters, String filename) : base(parent) 
+        public ContextRunProgram(IExecutionContext parent, List<Expression.Expression> parameters, String filename) : base(parent) 
         {
             this.parameters = parameters;
             Filename = filename;

@@ -8,7 +8,7 @@ namespace kOS.Command.BasicIO
     [Command("% ON")]
     public class CommandSetOn : Command
     {
-        public CommandSetOn(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandSetOn(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

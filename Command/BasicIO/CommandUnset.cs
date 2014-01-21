@@ -7,7 +7,7 @@ namespace kOS.Command.BasicIO
     [Command("UNSET %")]
     public class CommandUnset : Command
     {
-        public CommandUnset(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandUnset(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

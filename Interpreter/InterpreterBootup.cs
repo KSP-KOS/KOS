@@ -9,7 +9,7 @@ namespace kOS.Interpreter
         private float animationTime;
         private readonly char[,] buffer = new char[COLUMNS, ROWS];
 
-        public InterpreterBootup(ExecutionContext parent)
+        public InterpreterBootup(IExecutionContext parent)
             : base(parent) 
         {
             //ShowAnimationFrame(0);

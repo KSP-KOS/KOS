@@ -10,7 +10,7 @@ namespace kOS.Command.Temporal
         private Expression.Expression expression;
         private bool triggered;
 
-        public CommandWhen(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandWhen(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

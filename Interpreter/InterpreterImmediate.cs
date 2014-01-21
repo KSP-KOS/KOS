@@ -20,7 +20,7 @@ namespace kOS.Interpreter
         private readonly Queue<Command.Command> queue = new Queue<Command.Command>();
         private readonly char[,] buffer = new char[COLUMNS, ROWS];
 
-        public ImmediateMode(ExecutionContext parent) : base(parent) 
+        public ImmediateMode(IExecutionContext parent) : base(parent) 
         {
             StdOut("kOS Operating System");
             StdOut("KerboScript v" + Core.VersionInfo.ToString());

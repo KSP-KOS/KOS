@@ -13,20 +13,20 @@ namespace kOS.Command
         public Match RegexMatch;
         public String InstanceName;
 
-        protected Command(Match regexMatch, ExecutionContext context) : base(context)
+        protected Command(Match regexMatch, IExecutionContext context) : base(context)
         {
             Input = regexMatch.ToString();
             RegexMatch = regexMatch;
         }
 
-        protected Command(String input, ExecutionContext context) : base(context)
+        protected Command(String input, IExecutionContext context) : base(context)
         {
             Input = input;
         }
 
         public abstract void Evaluate();
 
-        public static Command Get(String input, ExecutionContext context, int line)
+        public static Command Get(String input, IExecutionContext context, int line)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace kOS.Command
             }
         }
 
-        public static Command Get(String input, ExecutionContext context)
+        public static Command Get(String input, IExecutionContext context)
         {
             input = input.Trim();//.Replace("\n", " ");
 

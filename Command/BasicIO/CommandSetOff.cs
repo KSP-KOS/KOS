@@ -7,7 +7,7 @@ namespace kOS.Command.BasicIO
     [Command("% OFF")]
     public class CommandSetOff : Command
     {
-        public CommandSetOff(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandSetOff(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

@@ -9,7 +9,7 @@ namespace kOS.Command.BasicIO
     [Command("SET ~ TO *")]
     public class CommandSet : Command
     { 
-        public CommandSet(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandSet(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

@@ -6,7 +6,7 @@ namespace kOS.Command.BasicIO
     [Command("REBOOT")]
     public class CommandReboot : Command
     {
-        public CommandReboot(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandReboot(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

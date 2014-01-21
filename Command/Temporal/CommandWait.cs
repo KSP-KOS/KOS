@@ -7,7 +7,7 @@ namespace kOS.Command.Temporal
     [Command("WAIT[UNTIL]? *")]
     public class CommandWait : Command
     {
-        public CommandWait(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandWait(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         private float waitTime;
         private Expression.Expression waitExpression;

@@ -14,7 +14,7 @@ namespace kOS.Command.FlowControl
         private Enumerator iterator;
         private string iteratorString;
 
-        public CommandForLoop(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandForLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

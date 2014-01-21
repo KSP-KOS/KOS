@@ -36,7 +36,7 @@ namespace kOS.Interpreter
             return ChildContext != null ? ChildContext.GetCursorX() : cursorY;
         }
 
-        public InterpreterEdit(String fileName, ExecutionContext parent) : base(parent) 
+        public InterpreterEdit(String fileName, IExecutionContext parent) : base(parent) 
         {
             cursorX = 0;
             file = SelectedVolume.GetByName(fileName) ?? new File(fileName) {""};

@@ -6,7 +6,7 @@ namespace kOS.Value
 {
     public class VesselTarget : SpecialValue
     {
-        private readonly ExecutionContext context;
+        private readonly IExecutionContext context;
 
         static VesselTarget()
         {
@@ -18,7 +18,7 @@ namespace kOS.Value
             };
         }
 
-        public VesselTarget(Vessel target, ExecutionContext context)
+        public VesselTarget(Vessel target, IExecutionContext context)
         {
             this.context = context;
             Target = target;

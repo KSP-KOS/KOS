@@ -14,12 +14,12 @@ namespace kOS.Context
     public enum SpecialKey { HOME, END, DELETE };
     public enum SystemMessage { CLEARSCREEN, SHUTDOWN, RESTART };
 
-    public class ExecutionContext
+    public class ExecutionContext : IExecutionContext
     {
         public const int COLUMNS = 50;
         public const int ROWS = 36;
 
-        public int Line = 0;
+        public int Line { get; protected set; }
         
         public virtual Volume SelectedVolume
         { 
@@ -32,8 +32,8 @@ namespace kOS.Context
         public virtual Dictionary<String, Variable> Variables { get { return ParentContext != null ? ParentContext.Variables : null; } }
         public virtual List<KOSExternalFunction> ExternalFunctions { get { return ParentContext != null ? ParentContext.ExternalFunctions : null; } }
 
-        public ExecutionContext ParentContext { get; set; }
-        public ExecutionContext ChildContext { get; set; }
+        public IExecutionContext ParentContext { get; set; }
+        public IExecutionContext ChildContext { get; set; }
         public ExecutionState State { get; set; }
 
         public Dictionary<String, Expression.Expression> Locks = new Dictionary<string, Expression.Expression>();
@@ -44,7 +44,7 @@ namespace kOS.Context
             State = ExecutionState.NEW;
         }
 
-        public ExecutionContext(ExecutionContext parent)
+        public ExecutionContext(IExecutionContext parent)
         {
             State = ExecutionState.NEW;
             ParentContext = parent;
@@ -111,7 +111,7 @@ namespace kOS.Context
             }
         }
 
-        public virtual void Push(ExecutionContext newChild)
+        public virtual void Push(IExecutionContext newChild)
         {
             ChildContext = newChild;
         }
@@ -198,14 +198,19 @@ namespace kOS.Context
             throw new KOSException("Volume '" + volID + "' not found");
         }
 
-        public ExecutionContext GetDeepestChildContext()
+        public IExecutionContext GetDeepestChildContext()
         {
             return ChildContext == null ? this : ChildContext.GetDeepestChildContext();
         }
 
-        public T FindClosestParentOfType<T>() where T : ExecutionContext
+        public T FindClosestParentOfType<T>() where T : class, IExecutionContext
         {
-            if (this is T) return (T)this;
+            var casted = this as T;
+            if (casted != null)
+            {
+                return casted;
+            }
+
             return ParentContext == null ? null : ParentContext.FindClosestParentOfType<T>();
         }
 

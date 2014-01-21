@@ -8,7 +8,7 @@ namespace kOS.Command.File
     [Command("RENAME[VOLUME,FILE]? ^ TO &")]
     public class CommandRename : Command
     {
-        public CommandRename(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandRename(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

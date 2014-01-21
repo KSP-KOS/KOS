@@ -6,7 +6,7 @@ namespace kOS.Command.BasicIO
     [Command("CLEARSCREEN")]
     public class CommandClearScreen : Command
     {
-        public CommandClearScreen(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandClearScreen(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

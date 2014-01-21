@@ -7,7 +7,7 @@ namespace kOS.Command.File
     [Command("COPY &[TO,FROM][VOLUME]? ^")]
     public class CommandCopy : Command
     {
-        public CommandCopy(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandCopy(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

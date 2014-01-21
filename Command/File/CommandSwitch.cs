@@ -7,7 +7,7 @@ namespace kOS.Command.File
     [Command("SWITCH TO ^")]
     public class CommandSwitch : Command
     {
-        public CommandSwitch(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandSwitch(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

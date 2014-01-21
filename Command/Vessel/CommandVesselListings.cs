@@ -9,7 +9,7 @@ namespace kOS.Command.Vessel
     [Command(@"^LIST (PARTS|RESOURCES|ENGINES|TARGETS|BODIES|SENSORS)$")]
     class CommandVesselListings : Command
     {
-        public CommandVesselListings(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandVesselListings(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

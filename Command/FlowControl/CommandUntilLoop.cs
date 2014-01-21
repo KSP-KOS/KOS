@@ -11,7 +11,7 @@ namespace kOS.Command.FlowControl
         // commandString;
         Command targetCommand;
 
-        public CommandUntilLoop(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandUntilLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {

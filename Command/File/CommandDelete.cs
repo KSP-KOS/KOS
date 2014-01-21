@@ -8,7 +8,7 @@ namespace kOS.Command.File
     [Command("DELETE &[FROM,FROM VOLUME]?[:^]?")]
     public class CommandDelete : Command
     {
-        public CommandDelete(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandDelete(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
