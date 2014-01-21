@@ -8,7 +8,7 @@ namespace kOS.Module
 {
     public class kOSProcessor : PartModule
     {
-        private CPU cpu;
+        private ICPU cpu;
         private Harddisk hardDisk;
         private int vesselPartCount;
         private readonly List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
@@ -25,7 +25,7 @@ namespace kOS.Module
         {
             if (cpu == null) return;
 
-            cpu.Mode = cpu.Mode != CPU.Modes.OFF ? CPU.Modes.OFF : CPU.Modes.STARVED;
+            cpu.Mode = cpu.Mode != CPUMode.OFF ? CPUMode.OFF : CPUMode.STARVED;
         }
 
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
@@ -102,7 +102,7 @@ namespace kOS.Module
 
             if (part.State == PartStates.DEAD)
             {
-                cpu.Mode = CPU.Modes.OFF;
+                cpu.Mode = CPUMode.OFF;
                 return;
             }
 

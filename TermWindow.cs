@@ -27,7 +27,7 @@ namespace kOS
         private bool allTexturesFound = true;
 
         public Core Core;
-        public CPU Cpu;
+        public ICPU Cpu;
 
         public void Awake()
         {
@@ -286,7 +286,7 @@ namespace kOS
 
             GUI.DragWindow(new Rect(0, 0, 10000, 500));
 
-            if (Cpu != null && Cpu.Mode == CPU.Modes.READY && Cpu.IsAlive())
+            if (Cpu != null && Cpu.Mode == CPUMode.READY && Cpu.IsAlive())
             {
                 Color textColor = isLocked ? textcolor : textcolorAlpha;
 
@@ -335,7 +335,7 @@ namespace kOS
         {
         }
 
-        internal void AttachTo(CPU cpu)
+        internal void AttachTo(ICPU cpu)
         {
             Cpu = cpu;
         }

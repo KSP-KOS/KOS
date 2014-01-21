@@ -9,7 +9,7 @@ namespace kOS.Binding
         public override void AddTo(BindingManager manager)
         {
             manager.AddGetter("WARP", cpu => TimeWarp.fetch.current_rate_index);
-            manager.AddSetter("WARP", delegate(CPU cpu, object val)
+            manager.AddSetter("WARP", delegate(ICPU cpu, object val)
             {
                 int newRate;
                 if (int.TryParse(val.ToString(), out newRate))

@@ -4,9 +4,9 @@ namespace kOS.Value
 {
     public class SpecialValueTester : SpecialValue
     {
-        readonly CPU cpu;
+        readonly ICPU cpu;
 
-        public SpecialValueTester(CPU cpu)
+        public SpecialValueTester(ICPU cpu)
         {
             this.cpu = cpu;
         }

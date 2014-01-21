@@ -19,6 +19,6 @@ namespace kOS.Binding
             }
         }
 
-        public CPU Cpu { get; set; }
+        public ICPU Cpu { get; set; }
     }
 }

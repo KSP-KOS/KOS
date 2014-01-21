@@ -9,7 +9,7 @@ namespace kOS.Binding
     {
         public override void AddTo(BindingManager manager)
         {
-            manager.AddSetter("TARGET", delegate(CPU cpu, object val) 
+            manager.AddSetter("TARGET", delegate(ICPU cpu, object val) 
                 {
                     if (val is ITargetable)
                     {
@@ -41,7 +41,7 @@ namespace kOS.Binding
                     }
                 });
 
-            manager.AddGetter("TARGET", delegate(CPU cpu) 
+            manager.AddGetter("TARGET", delegate(ICPU cpu) 
                 {
                     var currentTarget = FlightGlobals.fetch.VesselTarget;
 

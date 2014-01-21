@@ -10,10 +10,10 @@ namespace kOS.Binding
     {
         private readonly List<Binding> bindings = new List<Binding>();
         
-        public delegate void BindingSetDlg      (CPU cpu, object val);
-        public delegate object BindingGetDlg    (CPU cpu);
+        public delegate void BindingSetDlg      (ICPU cpu, object val);
+        public delegate object BindingGetDlg    (ICPU cpu);
 
-        public BindingManager(CPU cpu, String context)
+        public BindingManager(ICPU cpu, String context)
         {
             Cpu = cpu;
 
@@ -31,7 +31,7 @@ namespace kOS.Binding
             }
         }
 
-        public CPU Cpu { get; set; }
+        public ICPU Cpu { get; set; }
 
         public void AddGetter(String name, BindingGetDlg dlg)
         {

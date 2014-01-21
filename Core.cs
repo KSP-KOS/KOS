@@ -35,19 +35,19 @@ namespace kOS
         {
         }
 
-        public static void OpenWindow(CPU cpu)
+        public static void OpenWindow(ICPU cpu)
         {
             Fetch.Window.AttachTo(cpu);
             Fetch.Window.Open();
         }
 
-        internal static void ToggleWindow(CPU cpu)
+        internal static void ToggleWindow(ICPU cpu)
         {
             Fetch.Window.AttachTo(cpu);
             Fetch.Window.Toggle();
         }
 
-        public static void CloseWindow(CPU cpu)
+        public static void CloseWindow(ICPU cpu)
         {
             Fetch.Window.AttachTo(cpu);
             Fetch.Window.Close();

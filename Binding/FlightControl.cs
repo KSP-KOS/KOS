@@ -11,7 +11,7 @@ namespace kOS.Binding
     public class FlightControl : Binding
     {
         private Vessel vessel;
-        private CPU cpu;
+        private ICPU cpu;
         private readonly List<LockableControl> controls = new List<LockableControl>();
 
         public override void AddTo(BindingManager manager)
@@ -66,7 +66,7 @@ namespace kOS.Binding
         {
             private readonly string propertyName;
 
-            public LockableControl(String name, String propertyName, CPU cpu, BindingManager manager)
+            public LockableControl(String name, String propertyName, ICPU cpu, BindingManager manager)
             {
                 Name = name;
                 Cpu = cpu;
@@ -80,7 +80,7 @@ namespace kOS.Binding
                 this.propertyName = propertyName;
             }
 
-            public CPU Cpu { get; private set; }
+            public ICPU Cpu { get; private set; }
             public Vessel Vessel { get; private set; }
             public bool Locked { get; private set; }
             public object Value { get; private set; }

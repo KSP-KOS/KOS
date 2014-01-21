@@ -34,7 +34,7 @@ namespace kOS.Binding
 
             manager.AddGetter("ENCOUNTER", cpu => VesselUtils.TryGetEncounter(cpu.Vessel));
 
-            manager.AddGetter("NEXTNODE",       delegate(CPU cpu)
+            manager.AddGetter("NEXTNODE",       delegate(ICPU cpu)
             {
                 var vessel = cpu.Vessel;
                 if (!vessel.patchedConicSolver.maneuverNodes.Any()) { throw new KOSException("No maneuver nodes present!"); }
@@ -52,10 +52,10 @@ namespace kOS.Binding
                 manager.AddGetter(scName, cpu => new VesselTarget(cpu.Vessel, cpu).GetSuffix(cName));
             }
 
-            manager.AddSetter("VESSELNAME", delegate(CPU cpu, object value) { cpu.Vessel.vesselName = value.ToString(); });
+            manager.AddSetter("VESSELNAME", delegate(ICPU cpu, object value) { cpu.Vessel.vesselName = value.ToString(); });
             }
 
-            private static float getLattitude(CPU cpu)
+            private static float getLattitude(ICPU cpu)
             {
                 var retVal = (float)cpu.Vessel.latitude;
 
@@ -65,7 +65,7 @@ namespace kOS.Binding
                 return retVal;
             }
 
-            private static float getLongitude(CPU cpu)
+            private static float getLongitude(ICPU cpu)
             {
                 var retVal = (float)cpu.Vessel.longitude;
 

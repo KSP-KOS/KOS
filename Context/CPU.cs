@@ -10,16 +10,16 @@ using kOS.Persistance;
 
 namespace kOS.Context
 {
-    public sealed class CPU : ExecutionContext
+    public enum CPUMode { READY, STARVED, OFF };
+    public enum KOSRunType { KSP, WINFORMS };
+    public sealed class CPU : ExecutionContext, ICPU
     {
-        public enum Modes { READY, STARVED, OFF };
-        public enum KOSRunType { KSP, WINFORMS };
 
         public Archive Archive { get; private set; }
         public float SessionTime { get; private set; }
         public override Vessel Vessel { get { return ((kOSProcessor)parent).vessel; } }
         public override Dictionary<String, Variable> Variables { get { return variables; } }
-        public override List<Volume> Volumes { get  { return volumes; } }
+        public override List<Volume> Volumes { get { return volumes; } }
         public override List<KOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
 
 
@@ -31,23 +31,23 @@ namespace kOS.Context
         private Volume selectedVolume;
         private readonly List<Volume> volumes = new List<Volume>();
         private readonly List<KOSExternalFunction> externalFunctions = new List<KOSExternalFunction>();
-        
-        public static KOSRunType RunType = KOSRunType.KSP;
-        
+
         public override Volume SelectedVolume
         {
             get { return selectedVolume; }
             set { selectedVolume = value; }
         }
 
-        public Modes Mode { get; set; }
+        public CPUMode Mode { get; set; }
+
+        public static KOSRunType RunType { get; private set; }
 
         public CPU(object parent, string context)
         {
-            Mode = Modes.READY;
+            Mode = CPUMode.READY;
             this.parent = parent;
             this.context = context;
-            
+
             bindingManager = new BindingManager(this, this.context);
 
             if (context == "ksp")
@@ -63,6 +63,11 @@ namespace kOS.Context
             }
 
             RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 2 });
+        }
+
+        static CPU()
+        {
+            RunType = KOSRunType.KSP;
         }
 
         public double TestFunction(double x, double y) { return x * y; }
@@ -110,7 +115,7 @@ namespace kOS.Context
                     var paramType = parameterInfoArray[i].ParameterType;
                     var value = parameters[i];
                     object converted = null;
-                            
+
                     if (paramType == typeof(String))
                     {
                         converted = parameters[i];
@@ -161,7 +166,7 @@ namespace kOS.Context
 
         public void Boot()
         {
-            Mode = Modes.READY;
+            Mode = CPUMode.READY;
 
             Push(new InterpreterBootup(this));
 
@@ -174,7 +179,7 @@ namespace kOS.Context
 
             if (partState == PartStates.DEAD)
             {
-                Mode = Modes.OFF;
+                Mode = CPUMode.OFF;
                 return false;
             }
 
@@ -192,16 +197,16 @@ namespace kOS.Context
             selectedVolume.CheckRange();
         }
 
-        internal void ProcessElectricity(Part part, float time)
+        public void ProcessElectricity(Part part, float time)
         {
-            if (Mode == Modes.OFF) return;
+            if (Mode == CPUMode.OFF) return;
 
             var electricReq = 0.01f * time;
             var result = part.RequestResource("ElectricCharge", electricReq) / electricReq;
 
-            var newMode = (result < 0.5f) ? Modes.STARVED : Modes.READY;
+            var newMode = (result < 0.5f) ? CPUMode.STARVED : CPUMode.READY;
 
-            if (newMode == Modes.READY && Mode == Modes.STARVED)
+            if (newMode == CPUMode.READY && Mode == CPUMode.STARVED)
             {
                 Boot();
             }
@@ -266,10 +271,10 @@ namespace kOS.Context
 
             switch (Mode)
             {
-                case Modes.STARVED:
+                case CPUMode.STARVED:
                     ChildContext = null;
                     break;
-                case Modes.OFF:
+                case CPUMode.OFF:
                     ChildContext = null;
                     break;
             }
@@ -287,7 +292,7 @@ namespace kOS.Context
             {
                 case SystemMessage.SHUTDOWN:
                     ChildContext = null;
-                    Mode = Modes.OFF;
+                    Mode = CPUMode.OFF;
                     break;
 
                 case SystemMessage.RESTART:
@@ -301,7 +306,7 @@ namespace kOS.Context
             }
         }
 
-        internal void UpdateVolumeMounts(List<Volume> attachedVolumes)
+        public void UpdateVolumeMounts(List<Volume> attachedVolumes)
         {
             // Remove volumes that are no longer attached
             foreach (Volume volume in new List<Volume>(volumes))
