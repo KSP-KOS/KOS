@@ -50,6 +50,11 @@ namespace kOS.Value
             }
         }
 
+        public void Add(object toAdd)
+        {
+            list.Add(toAdd);
+        }
+
         public override string ToString()
         {
             return "LIST("+ list.Count +")";

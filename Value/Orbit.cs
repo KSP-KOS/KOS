@@ -31,19 +31,27 @@
                     return orbitRef.semiMinorAxis;
                 case "TRANSITION":
                     return orbitRef.patchEndTransition;
+                case "PATCHES":
+                    return BuildPatchList();
             }
 
             return base.GetSuffix(suffixName);
         }
 
+        private object BuildPatchList()
+        {
+            var list = new ListValue();
+            var orbit = orbitRef;
+            while (orbit.nextPatch != null)
+            {
+                list.Add(new OrbitInfo(orbit));
+            }
+            return list;
+        }
+
         public override string ToString()
         {
-            if (orbitRef != null)
-            {
-                return orbitRef.referenceBody.name;
-            }
-
-            return "";
+            return orbitRef != null ? orbitRef.referenceBody.name : "";
         }
     }
 }
