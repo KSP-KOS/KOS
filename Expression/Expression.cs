@@ -469,6 +469,10 @@ namespace kOS.Expression
                     { var dp = GetParamsAsT<double>(p, 1); return Math.Ceiling(dp[0]); }
                 case "SQRT":
                     { var dp = GetParamsAsT<double>(p, 1); return Math.Sqrt(dp[0]); }
+                case "LN":
+                    { var dp = GetParamsAsT<double>(p, 1); return Math.Log(dp[0]); }
+                case "LOG10":
+                    { var dp = GetParamsAsT<double>(p, 1); return Math.Log10(dp[0]); }
             }
 
             if (name == "ROUND")
