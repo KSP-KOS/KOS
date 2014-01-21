@@ -13,14 +13,14 @@ namespace kOS.Command.BasicIO
 
         public override void Evaluate()
         {
-            if (!(ParentContext is ContextRunProgram)) throw new KOSException("DECLARE PARAMETERS can only be used within a program.", this);
+            if (!(ParentContext is IContextRunProgram)) throw new KOSException("DECLARE PARAMETERS can only be used within a program.", this);
 
             foreach (String varName in RegexMatch.Groups[1].Value.Split(','))
             {
                 Variable v = FindOrCreateVariable(varName);
                 if (v == null) throw new KOSException("Can't create variable '" + varName + "'", this);
 
-                var program = (ContextRunProgram)ParentContext;
+                var program = (IContextRunProgram)ParentContext;
                 v.Value = program.PopParameter();
             }
 

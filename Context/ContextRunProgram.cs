@@ -7,7 +7,7 @@ using kOS.Utilities;
 
 namespace kOS.Context
 {
-    public class ContextRunProgram : ExecutionContext
+    public class ContextRunProgram : ExecutionContext, IContextRunProgram
     {
         private File file;
         private String commandBuffer;
@@ -16,7 +16,7 @@ namespace kOS.Context
         private const int EXECUTION_LINE = 0;
 
 
-        public string Filename;
+        public string Filename { get; private set; }
 
         public ContextRunProgram(IExecutionContext parent, List<Expression.Expression> parameters, String filename) : base(parent) 
         {
@@ -53,7 +53,7 @@ namespace kOS.Context
                 }
                 catch (KOSException e)
                 {
-                    if (ParentContext.FindClosestParentOfType<ContextRunProgram>() != null)
+                    if (ParentContext.FindClosestParentOfType<IContextRunProgram>() != null)
                     {
                         // Error occurs in a child of another running program
                         StdOut("Error in '" + e.Program.Filename + "' on line " + e.LineNumber + ": " + e.Message);
@@ -117,7 +117,7 @@ namespace kOS.Context
             }
             catch (KOSException e)
             {
-                if (ParentContext.FindClosestParentOfType<ContextRunProgram>() != null)
+                if (ParentContext.FindClosestParentOfType<IContextRunProgram>() != null)
                 {
                     // Error occurs in a child of another running program
                     StdOut("Error in '" + e.Program.Filename + "' on line " + e.LineNumber + ": " + e.Message);

@@ -6,7 +6,7 @@ namespace kOS.Debug
     public class KOSException : Exception
     {
         public IExecutionContext Context;
-        public ContextRunProgram Program;
+        public IContextRunProgram Program;
 
         public KOSException(string message) : base(message)
         {
@@ -16,7 +16,7 @@ namespace kOS.Debug
         {
             LineNumber = context.Line;
             Context = context;
-            Program = context.FindClosestParentOfType<ContextRunProgram>();
+            Program = context.FindClosestParentOfType<IContextRunProgram>();
         }
 
         public int LineNumber { get; set; }
