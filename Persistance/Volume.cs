@@ -4,21 +4,22 @@ using System.Linq;
 
 namespace kOS.Persistance
 {
-    public class Volume
+    public abstract class Volume : IVolume
     {
-        public int Capacity = -1;
-        public String Name = "";
-
-        public bool Renameable = true;
-
-        public Volume()
+        protected Volume()
         {
+            Renameable = true;
+            Capacity = -1;
+            Name = "";
             Files = new List<File>();
         }
 
-        public List<File> Files { get; set; }
+        public IList<File> Files { get; set; }
+        public string Name { get; set; }
+        public int Capacity { get; set; }
+        public bool Renameable { get; set; }
 
-        public virtual File GetByName(String name)
+        public virtual File GetByName(string name)
         {
             return Files.FirstOrDefault(p => p.Filename.ToUpper() == name.ToUpper());
         }
@@ -32,7 +33,7 @@ namespace kOS.Persistance
             SaveFile(file);
         }
 
-        public virtual void DeleteByName(String name)
+        public virtual void DeleteByName(string name)
         {
             foreach (var p in Files.Where(p => p.Filename.ToUpper() == name.ToUpper()))
             {
@@ -51,10 +52,10 @@ namespace kOS.Persistance
 
         public virtual int GetFreeSpace() { return -1; }
         public virtual bool IsRoomFor(File newFile) { return true; }
-        public virtual void LoadPrograms(List<File> programsToLoad) { }
+        public virtual void LoadPrograms(IList<File> programsToLoad) { }
         public virtual ConfigNode Save(string nodeName) { return new ConfigNode(nodeName); }
 
-        public virtual List<FileInfo> GetFileList()
+        public virtual IList<FileInfo> GetFileList()
         {
             return Files.Select(file => new FileInfo(file.Filename, file.GetSize())).ToList();
         }

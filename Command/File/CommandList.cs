@@ -45,7 +45,7 @@ namespace kOS.Command.File
 
                 int i = 0;
 
-                foreach (Volume volume in Volumes)
+                foreach (var volume in Volumes)
                 {
                     String id = i.ToString(CultureInfo.InvariantCulture);
                     if (volume == SelectedVolume) id = "*" + id;

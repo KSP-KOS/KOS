@@ -124,7 +124,7 @@ namespace kOS.Persistance
             System.IO.File.Delete(ArchiveFolder + name + ".txt");
         }
 
-        public override List<FileInfo> GetFileList()
+        public override IList<FileInfo> GetFileList()
         {
             var retList = new List<FileInfo>();
 

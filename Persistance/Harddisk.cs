@@ -54,7 +54,7 @@ namespace kOS.Persistance
             return (Capacity - totalOccupied >= 0);
         }
 
-        public override void LoadPrograms(List<File> programsToLoad)
+        public override void LoadPrograms(IList<File> programsToLoad)
         {
             foreach (var p in programsToLoad)
             {

@@ -9,9 +9,9 @@ namespace kOS.Context
 {
     public interface IExecutionContext
     {
-        Volume SelectedVolume { get; set; }
+        IVolume SelectedVolume { get; set; }
         Vessel Vessel { get; }
-        List<Volume> Volumes { get; }
+        List<IVolume> Volumes { get; }
         Dictionary<String, Variable> Variables { get; }
         List<KOSExternalFunction> ExternalFunctions { get; }
         IExecutionContext ParentContext { get; set; }
@@ -34,7 +34,7 @@ namespace kOS.Context
         BoundVariable CreateBoundVariable(string varName);
         bool SwitchToVolume(int volID);
         bool SwitchToVolume(String volName);
-        Volume GetVolume(object volID);
+        IVolume GetVolume(object volID);
         IExecutionContext GetDeepestChildContext();
         T FindClosestParentOfType<T>() where T : class, IExecutionContext;
         void UpdateLock(String name);
@@ -54,6 +54,6 @@ namespace kOS.Context
         bool FindExternalFunction(String name);
         void OnSave(ConfigNode node);
         void OnLoad(ConfigNode node);
-        string GetVolumeBestIdentifier(Volume selectedVolume);
+        string GetVolumeBestIdentifier(IVolume selectedVolume);
     }
 }

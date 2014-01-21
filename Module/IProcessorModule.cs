@@ -27,6 +27,6 @@ namespace kOS.Module
 
         Part part { get; set; }
         Vessel vessel { get; }
-        Harddisk HardDisk { get; }
+        IVolume HardDisk { get; }
     }
 }

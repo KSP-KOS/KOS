@@ -21,14 +21,14 @@ namespace kOS.Context
 
         public int Line { get; protected set; }
         
-        public virtual Volume SelectedVolume
+        public virtual IVolume SelectedVolume
         { 
             get { return ParentContext != null ? ParentContext.SelectedVolume : null; }
             set { if (ParentContext != null) ParentContext.SelectedVolume = value; } 
         }
 
         public virtual Vessel Vessel { get { return ParentContext != null ? ParentContext.Vessel : null; } }
-        public virtual List<Volume> Volumes { get { return ParentContext != null ? ParentContext.Volumes : null; } }
+        public virtual List<IVolume> Volumes { get { return ParentContext != null ? ParentContext.Volumes : null; } }
         public virtual Dictionary<String, Variable> Variables { get { return ParentContext != null ? ParentContext.Variables : null; } }
         public virtual List<KOSExternalFunction> ExternalFunctions { get { return ParentContext != null ? ParentContext.ExternalFunctions : null; } }
 
@@ -173,7 +173,7 @@ namespace kOS.Context
             return ParentContext != null && ParentContext.SwitchToVolume(volName);
         }
 
-        public virtual Volume GetVolume(object volID)
+        public virtual IVolume GetVolume(object volID)
         {
             if (volID is int)
             {
@@ -399,7 +399,7 @@ namespace kOS.Context
         {
         }
 
-        public virtual string GetVolumeBestIdentifier(Volume selectedVolume)
+        public virtual string GetVolumeBestIdentifier(IVolume selectedVolume)
         {
             return ParentContext != null ? ParentContext.GetVolumeBestIdentifier(selectedVolume) : "";
         }

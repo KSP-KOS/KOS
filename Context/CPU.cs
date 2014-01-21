@@ -15,11 +15,11 @@ namespace kOS.Context
     public sealed class CPU : ExecutionContext, ICPU
     {
 
-        public Archive Archive { get; private set; }
+        public IVolume Archive { get; private set; }
         public float SessionTime { get; private set; }
         public override Vessel Vessel { get { return ((IProcessorModule)parent).vessel; } }
         public override Dictionary<String, Variable> Variables { get { return variables; } }
-        public override List<Volume> Volumes { get { return volumes; } }
+        public override List<IVolume> Volumes { get { return volumes; } }
         public override List<KOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
 
 
@@ -28,11 +28,11 @@ namespace kOS.Context
         private readonly BindingManager bindingManager;
         private readonly object parent;
         private readonly Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
-        private Volume selectedVolume;
-        private readonly List<Volume> volumes = new List<Volume>();
+        private IVolume selectedVolume;
+        private readonly List<IVolume> volumes = new List<IVolume>();
         private readonly List<KOSExternalFunction> externalFunctions = new List<KOSExternalFunction>();
 
-        public override Volume SelectedVolume
+        public override IVolume SelectedVolume
         {
             get { return selectedVolume; }
             set { selectedVolume = value; }
@@ -186,7 +186,7 @@ namespace kOS.Context
             return true;
         }
 
-        public void AttachHardDisk(Harddisk hardDisk)
+        public void AttachVolume(IVolume hardDisk)
         {
             Volumes.Add(hardDisk);
             SelectedVolume = hardDisk;
@@ -306,10 +306,10 @@ namespace kOS.Context
             }
         }
 
-        public void UpdateVolumeMounts(List<Volume> attachedVolumes)
+        public void UpdateVolumeMounts(IList<IVolume> attachedVolumes)
         {
             // Remove volumes that are no longer attached
-            foreach (Volume volume in new List<Volume>(volumes))
+            foreach (var volume in new List<IVolume>(volumes))
             {
                 if (!(volume is Archive) && !attachedVolumes.Contains(volume))
                 {
@@ -318,7 +318,7 @@ namespace kOS.Context
             }
 
             // Add volumes that have become attached
-            foreach (Volume volume in attachedVolumes)
+            foreach (var volume in attachedVolumes)
             {
                 if (!volumes.Contains(volume))
                 {
@@ -374,7 +374,7 @@ namespace kOS.Context
             }
         }
 
-        public override string GetVolumeBestIdentifier(Volume selected)
+        public override string GetVolumeBestIdentifier(IVolume selected)
         {
             var localIndex = volumes.IndexOf(selected);
 

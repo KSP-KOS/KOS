@@ -15,7 +15,7 @@ namespace kOS.Module
         private readonly List<IProcessorModule> sisterProcs = new List<IProcessorModule>();
         private const int MEM_SIZE = 10000;
 
-        public Harddisk HardDisk { get; private set; }
+        public IVolume HardDisk { get; private set; }
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal")]
         public void Activate()
@@ -77,7 +77,7 @@ namespace kOS.Module
         {
             if (cpu != null) return;
             cpu = new CPU(this, "ksp");
-            cpu.AttachHardDisk(HardDisk);
+            cpu.AttachVolume(HardDisk);
             cpu.Boot();
         }
 
@@ -121,7 +121,7 @@ namespace kOS.Module
             // Trigger whenever the number of parts in the vessel changes (like when staging, docking or undocking)
             if (vessel.parts.Count == vesselPartCount) return;
 
-            var attachedVolumes = new List<Volume> {cpu.Archive, HardDisk};
+            var attachedVolumes = new List<IVolume> {cpu.Archive, HardDisk};
 
             // Look for sister units that have newly been added to the vessel
             sisterProcs.Clear();
