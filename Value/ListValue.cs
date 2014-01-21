@@ -11,7 +11,7 @@ namespace kOS.Value
            list = new List<object>(); 
         }
 
-        public override object GetIndex(int index)
+        public object GetIndex(int index)
         {
             return list[index];
         }

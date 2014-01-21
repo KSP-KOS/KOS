@@ -20,7 +20,7 @@ namespace kOS.Command.BasicIO
             {
                 var baseObj = new Expression.Expression(targetTerm.SubTerms[0], ParentContext).GetValue();
 
-                var obj = baseObj as SpecialValue;
+                var obj = baseObj as ISuffixed;
                 if (obj != null)
                 {
                     if (obj.SetSuffix(targetTerm.SubTerms[1].Text.ToUpper(), e.GetValue()))

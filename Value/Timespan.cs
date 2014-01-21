@@ -2,7 +2,7 @@
 
 namespace kOS.Value
 {
-    public class TimeSpan : SpecialValue
+    public class TimeSpan : SpecialValue , IOperatable
     {
         System.TimeSpan span;
 
@@ -74,7 +74,7 @@ namespace kOS.Value
         public static bool operator >=(double a, TimeSpan b) { return a >= b.ToUnixStyleTime(); }
         public static bool operator <=(double a, TimeSpan b) { return a <= b.ToUnixStyleTime(); }
 
-        public override object TryOperation(string op, object other, bool reverseOrder)
+        public object TryOperation(string op, object other, bool reverseOrder)
         {
             // Order shouldn't matter here
             if (other is TimeSpan && op == "+") return this + (TimeSpan)other;
@@ -112,8 +112,7 @@ namespace kOS.Value
                if (other is double && op == "<=") return (double)other <= this;
 
             }
-
-            return base.TryOperation(op, other, reverseOrder);
+            return null;
         }
 
         public override string ToString()

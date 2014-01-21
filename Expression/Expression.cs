@@ -291,7 +291,7 @@ namespace kOS.Expression
                 }
 
                 var baseTermValue = GetValueOfTerm(baseTerm);
-                var value = baseTermValue as SpecialValue;
+                var value = baseTermValue as ISuffixed;
                 if (value != null)
                 {
                     output = value.GetSuffix(suffixTerm.Text.ToUpper());
@@ -572,7 +572,7 @@ namespace kOS.Expression
             if (input is float) return "number";
             if (input is int) return "number";
             if (input is VesselTarget) return "vessel";
-            if (input is SpecialValue) return input.GetType().ToString().Replace("kOS.", "").ToLower();
+            if (input is ISuffixed) return input.GetType().ToString().Replace("kOS.", "").ToLower();
 
             return "";
         }
@@ -580,8 +580,8 @@ namespace kOS.Expression
         private object AttemptMultiply(object val1, object val2)
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 * (double)val2; }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("*", val2, false); }
-            if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("*", val1, true); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("*", val2, false); }
+            if (val2 is IOperatable) { return ((IOperatable)val2).TryOperation("*", val1, true); }
 
             return null;
         }
@@ -589,8 +589,8 @@ namespace kOS.Expression
         private object AttemptDivide(object val1, object val2)
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 / (double)val2; }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("/", val2, false); }
-            if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("/", val1, true); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("/", val2, false); }
+            if (val2 is IOperatable) { return ((IOperatable)val2).TryOperation("/", val1, true); }
 
             return null;
         }
@@ -600,8 +600,8 @@ namespace kOS.Expression
             if (val1 is String || val2 is String) { return val1.ToString() + val2.ToString(); }
 
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 + (double)val2; }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("+", val2, false); }
-            if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("+", val1, true); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("+", val2, false); }
+            if (val2 is IOperatable) { return ((IOperatable)val2).TryOperation("+", val1, true); }
 
             return null;
         }
@@ -609,8 +609,8 @@ namespace kOS.Expression
         private object AttemptSubtract(object val1, object val2)
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 - (double)val2; }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("-", val2, false); }
-            if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("-", val1, true); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("-", val2, false); }
+            if (val2 is IOperatable) { return ((IOperatable)val2).TryOperation("-", val1, true); }
 
             return null;
         }
@@ -634,7 +634,7 @@ namespace kOS.Expression
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return Math.Abs((double)val1 - (double)val2) < 0.0001; }
             if (val1 is String || val2 is String) { return val1.ToString() == val2.ToString(); }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("=", val2, false); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("=", val2, false); }
 
             return null;
         }
@@ -643,7 +643,7 @@ namespace kOS.Expression
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return Math.Abs((double)val1 - (double)val2) > 0.0001; }
             if (val1 is String || val2 is String) { return val1.ToString() != val2.ToString(); }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("!=", val2, false); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("!=", val2, false); }
 
             return null;
         }
@@ -651,8 +651,8 @@ namespace kOS.Expression
         private object AttemptGreaterThan(object val1, object val2)
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 > (double)val2; }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation(">", val2, false); }
-            if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation(">", val1, true); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation(">", val2, false); }
+            if (val2 is IOperatable) { return ((IOperatable)val2).TryOperation(">", val1, true); }
 
             return null;
         }
@@ -660,8 +660,8 @@ namespace kOS.Expression
         private object AttemptLessThan(object val1, object val2)
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 < (double)val2; }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("<", val2, false); }
-            if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("<", val1, true); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("<", val2, false); }
+            if (val2 is IOperatable) { return ((IOperatable)val2).TryOperation("<", val1, true); }
 
             return null;
         }
@@ -669,8 +669,8 @@ namespace kOS.Expression
         private object AttemptGTE(object val1, object val2)
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 >= (double)val2; }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation(">=", val2, false); }
-            if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation(">=", val1, true); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation(">=", val2, false); }
+            if (val2 is IOperatable) { return ((IOperatable)val2).TryOperation(">=", val1, true); }
 
             return null;
         }
@@ -678,8 +678,8 @@ namespace kOS.Expression
         private object AttemptLTE(object val1, object val2)
         {
             if ((val1 is double || val1 is float || val1 is int) && (val2 is double || val2 is float || val2 is int)) { return (double)val1 <= (double)val2; }
-            if (val1 is SpecialValue) { return ((SpecialValue)val1).TryOperation("<=", val2, false); }
-            if (val2 is SpecialValue) { return ((SpecialValue)val2).TryOperation("<=", val1, true); }
+            if (val1 is IOperatable) { return ((IOperatable)val1).TryOperation("<=", val2, false); }
+            if (val2 is IOperatable) { return ((IOperatable)val2).TryOperation("<=", val1, true); }
 
             return null;
         }
@@ -749,7 +749,7 @@ namespace kOS.Expression
 
                 return strValue.Trim() != "";
             }
-            return value is SpecialValue;
+            return value is ISuffixed;
         }
 
         public double Double()

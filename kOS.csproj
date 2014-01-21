@@ -124,6 +124,8 @@
     <Compile Include="Module\kOSProcessor.cs" />
     <Compile Include="Binding\FlightControl.cs" />
     <Compile Include="Persistance\File.cs" />
+    <Compile Include="Value\IOperatable.cs" />
+    <Compile Include="Value\ISuffixed.cs" />
     <Compile Include="Value\ListValue.cs" />
     <Compile Include="Value\Node.cs" />
     <Compile Include="Value\Orbit.cs" />

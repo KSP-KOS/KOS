@@ -1,6 +1,6 @@
 ﻿namespace kOS.Value
 {
-    public class Vector : SpecialValue
+    public class Vector : SpecialValue, IOperatable
     {
         private double x;
         private double y;
@@ -115,7 +115,7 @@
         public static Vector operator +(Vector a, Vector b) { return new Vector(a.ToVector3D() + b.ToVector3D()); }
         public static Vector operator -(Vector a, Vector b) { return new Vector(a.ToVector3D() - b.ToVector3D()); }
 
-        public override object TryOperation(string op, object other, bool reverseOrder)
+        public object TryOperation(string op, object other, bool reverseOrder)
         {
             switch (op)
             {

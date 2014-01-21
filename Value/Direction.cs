@@ -75,7 +75,7 @@ namespace kOS.Value
         public static Direction operator +(Direction a, Direction b) { return new Direction(a.Euler + b.Euler, true); }
         public static Direction operator -(Direction a, Direction b) { return new Direction(a.Euler - b.Euler, true); }
         
-        public override object TryOperation(string op, object other, bool reverseOrder)
+        public object TryOperation(string op, object other, bool reverseOrder)
         {
             if (other is Vector)
             {
