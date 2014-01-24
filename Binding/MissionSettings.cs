@@ -48,9 +48,9 @@ namespace kOS.Binding
                     {
                         return new VesselTarget((Vessel)currentTarget, cpu);
                     }
-                    else if (currentTarget is CelestialBody)
+                    if (currentTarget is CelestialBody)
                     {
-                        return new BodyTarget((CelestialBody)currentTarget, cpu);
+                        return new BodyTarget((CelestialBody)currentTarget, cpu.Vessel);
                     }
 
                     return null;

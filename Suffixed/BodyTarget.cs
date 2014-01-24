@@ -1,18 +1,17 @@
-﻿using kOS.Context;
-using kOS.Debug;
+﻿using kOS.Debug;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
     public class BodyTarget : SpecialValue
     {
-        private readonly IExecutionContext context;
+        private readonly Vessel vessel;
 
-        public BodyTarget(string name, IExecutionContext context) : this(VesselUtils.GetBodyByName(name), context) { }
+        public BodyTarget(string name, Vessel vessel) : this(VesselUtils.GetBodyByName(name), vessel) { }
 
-        public BodyTarget(CelestialBody target, IExecutionContext context)
+        public BodyTarget(CelestialBody target, Vessel vessel)
         {
-            this.context = context;
+            this.vessel = vessel;
             Target = target;
         }
 
@@ -20,7 +19,7 @@ namespace kOS.Suffixed
 
         public double GetDistance()
         {
-            return Vector3d.Distance(context.Vessel.GetWorldPos3D(), Target.position) - Target.Radius;
+            return Vector3d.Distance(vessel.GetWorldPos3D(), Target.position) - Target.Radius;
         }
 
         public override object GetSuffix(string suffixName)
@@ -54,7 +53,7 @@ namespace kOS.Suffixed
                 case "DISTANCE":
                     return (float)GetDistance();
                 case "BODY":
-                    return new BodyTarget(Target.orbit.referenceBody, context);
+                    return new BodyTarget(Target.orbit.referenceBody, vessel);
             }
 
             return base.GetSuffix(suffixName);

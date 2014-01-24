@@ -2,11 +2,13 @@
 {
     public class OrbitInfo : SpecialValue
     {
-        readonly Orbit orbitRef;
+        private readonly Orbit orbitRef;
+        private readonly Vessel vesselRef;
 
-        public OrbitInfo(Orbit init)
+        public OrbitInfo(Orbit init, Vessel vesselRef)
         {
             orbitRef = init;
+            this.vesselRef = vesselRef;
         }
 
         public override object GetSuffix(string suffixName)
@@ -18,7 +20,7 @@
                 case "PERIAPSIS":
                     return orbitRef.PeA;
                 case "BODY":
-                    return orbitRef.referenceBody.name;
+                    return new BodyTarget(orbitRef.referenceBody, vesselRef);
                 case "PERIOD":
                     return orbitRef.period;
                 case "INCLINATION":
@@ -44,7 +46,7 @@
             var orbit = orbitRef;
             while (orbit.nextPatch != null)
             {
-                list.Add(new OrbitInfo(orbit));
+                list.Add(new OrbitInfo(orbit, vesselRef));
             }
             return list;
         }

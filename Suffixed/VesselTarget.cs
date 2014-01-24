@@ -124,7 +124,7 @@ namespace kOS.Suffixed
                 case "TERMVELOCITY":
                     return VesselUtils.GetTerminalVelocity(Target);
                 case "OBT":
-                    return new OrbitInfo(Target.orbit);
+                    return new OrbitInfo(Target.orbit,Target);
             }
 
             // Is this a resource?

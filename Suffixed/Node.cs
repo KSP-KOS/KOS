@@ -114,7 +114,7 @@ namespace kOS.Suffixed
                     return nodeRef.nextPatch.PeA;
                 case "ORBIT":
                     if (nodeRef == null) throw new KOSException("Node must be added to flight plan first");
-                    return new OrbitInfo(nodeRef.nextPatch);
+                    return new OrbitInfo(nodeRef.nextPatch, vesselRef);
             }
 
             return base.GetSuffix(suffixName);

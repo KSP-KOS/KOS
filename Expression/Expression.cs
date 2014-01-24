@@ -513,7 +513,7 @@ namespace kOS.Expression
                 case "VESSEL":
                     { var sp = GetParamsAsT<string>(p, 1); return new VesselTarget(VesselUtils.GetVesselByName(sp[0], executionContext.Vessel), executionContext); }
                 case "BODY":
-                    { var sp = GetParamsAsT<string>(p, 1); return new BodyTarget(sp[0], executionContext); }
+                    { var sp = GetParamsAsT<string>(p, 1); return new BodyTarget(sp[0], executionContext.Vessel); }
                 case "BODYATMOSPHERE":
                     { var sp = GetParamsAsT<string>(p, 1); return new BodyAtmosphere(VesselUtils.GetBodyByName(sp[0])); }
                 case "LIST":

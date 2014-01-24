@@ -21,7 +21,7 @@ namespace kOS.Binding
             foreach (var body in FlightGlobals.fetch.bodies)
             {
                 var cBody = body;
-                manager.AddGetter(body.name, cpu => new BodyTarget(cBody, cpu));
+                manager.AddGetter(body.name, cpu => new BodyTarget(cBody, cpu.Vessel));
             }
         }
 

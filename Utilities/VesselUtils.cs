@@ -229,7 +229,7 @@ namespace kOS.Utilities
       {
         if (patch.patchStartTransition == Orbit.PatchTransitionType.ENCOUNTER)
         {
-          return new OrbitInfo(patch);
+          return new OrbitInfo(patch, vessel);
         }
       }
 
