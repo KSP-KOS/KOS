@@ -60,6 +60,7 @@
     <Compile Include="Binding\KOSBinding.cs" />
     <Compile Include="Binding\TestBindings.cs" />
     <Compile Include="Command\ICommand.cs" />
+    <Compile Include="Command\Vessel\CommandVesselListValue.cs" />
     <Compile Include="Context\IContextRunProgram.cs" />
     <Compile Include="Context\ICPU.cs" />
     <Compile Include="Context\IExecutionContext.cs" />

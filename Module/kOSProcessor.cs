@@ -20,6 +20,8 @@ namespace kOS.Module
         [KSPEvent(guiActive = true, guiName = "Open Terminal")]
         public void Activate()
         {
+            UnityEngine.Debug.Log("kOS: Activate");
+
             Core.OpenWindow(cpu);
         }
 
@@ -27,22 +29,26 @@ namespace kOS.Module
         public void TogglePower()
         {
             if (cpu == null) return;
+            UnityEngine.Debug.Log("kOS: Toggle Power");
 
             cpu.Mode = cpu.Mode != CPUMode.OFF ? CPUMode.OFF : CPUMode.STARVED;
         }
 
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
         public void Activate(KSPActionParam param) {
+            UnityEngine.Debug.Log("kOS: Open Terminal from Dialog");
             Activate();
         }
 
         [KSPAction("Close Terminal", actionGroup = KSPActionGroup.None)]
         public void Deactivate(KSPActionParam param) {
+            UnityEngine.Debug.Log("kOS: Close Terminal from ActionGroup");
             Core.CloseWindow(cpu);
         }
 
         [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
         public void TogglePower(KSPActionParam param) {
+            UnityEngine.Debug.Log("kOS: Toggle Power from ActionGroup");
             TogglePower();
         }
 
