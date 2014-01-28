@@ -41,9 +41,9 @@ namespace kOS.Suffixed
             }
             return base.SetSuffix(suffixName, value);
         }
-        public new static MixedListValue PartsToList(IEnumerable<Part> parts)
+        public new static ListValue PartsToList(IEnumerable<Part> parts)
         {
-            var toReturn = new MixedListValue();
+            var toReturn = new ListValue();
             foreach (var part in parts)
             {
                 foreach (PartModule module in part.Modules)
@@ -78,9 +78,9 @@ namespace kOS.Suffixed
             return base.GetSuffix(suffixName);
         }
 
-        public new static MixedListValue PartsToList(IEnumerable<Part> parts)
+        public new static ListValue PartsToList(IEnumerable<Part> parts)
         {
-            var toReturn = new MixedListValue();
+            var toReturn = new ListValue();
             foreach (var part in parts)
             {
                 foreach (PartModule module in part.Modules)

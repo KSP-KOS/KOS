@@ -109,7 +109,7 @@ namespace kOS.Expression
                 if (c1.Operator == "#")
                 {
                     resultValue = AttemptAnd(c1.Value, c2.Value);
-                    var baseTermValue = c1.Value as MixedListValue;
+                    var baseTermValue = c1.Value as ListValue;
 
                     int suffixIntValue;
                     var secondChunkIsInt = int.TryParse(c2.Value.ToString(), out suffixIntValue);
@@ -517,7 +517,7 @@ namespace kOS.Expression
                 case "BODYATMOSPHERE":
                     { var sp = GetParamsAsT<string>(p, 1); return new BodyAtmosphere(VesselUtils.GetBodyByName(sp[0])); }
                 case "LIST":
-                    return new MixedListValue();
+                    return new ListValue();
                 case "CONSTANT":
                     return new ConstantValue();
                 case "HEADING":

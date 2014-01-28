@@ -15,7 +15,7 @@ namespace kOS.Command.Vessel
         {
             var name = RegexMatch.Groups[2].Value; 
             var type = new Term(RegexMatch.Groups[1].Value);
-            var list = new MixedListValue();
+            var list = new ListValue();
 
             var partList = new List<Part>();
             foreach (var part in Vessel.Parts)

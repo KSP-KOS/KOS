@@ -33,9 +33,9 @@ namespace kOS.Suffixed
             return base.GetSuffix(suffixName);
         }
 
-        public static MixedListValue PartsToList(IEnumerable<Part> parts)
+        public static ListValue PartsToList(IEnumerable<Part> parts)
         {
-            var toReturn = new MixedListValue();
+            var toReturn = new ListValue();
 
             foreach (var flightParts in parts.GroupBy(p=>p.flightID))
             {

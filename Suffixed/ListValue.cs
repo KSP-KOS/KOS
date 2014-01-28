@@ -1,27 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace kOS.Suffixed
 {
-    public class MixedListValue : ListValue<object>
+    public class ListValue : SpecialValue
     {
-        
-    }
-
-    public class ListValue<T> : SpecialValue
-    {
-        private readonly IList<T> list;
+        private readonly IList list;
 
         public ListValue()
         {
-           list = new List<T>(); 
+           list = new List(); 
         }
 
-        public T GetIndex(int index)
+        public object GetIndex(int index)
         {
             return list[index];
         }
 
-        public bool SetSuffix(string suffixName, T value)
+        public override bool SetSuffix(string suffixName, object value)
         {
             switch (suffixName)
             {
@@ -47,15 +43,15 @@ namespace kOS.Suffixed
                 case "LENGTH":
                     return list.Count;
                 case "ITERATOR":
-                    return new Enumerator<T>(list.GetEnumerator());
+                    return new Enumerator(list.GetEnumerator());
                 case "COPY":
-                    return new List<T>(list);
+                    return new List(list);
                 default:
                     return string.Format("Suffix {0} Not Found", suffixName);
             }
         }
 
-        public void Add(T toAdd)
+        public void Add(object toAdd)
         {
             list.Add(toAdd);
         }
@@ -66,13 +62,13 @@ namespace kOS.Suffixed
         }
     }
 
-    public class Enumerator<T> : SpecialValue
+    public class Enumerator : SpecialValue
     {
-        private readonly IEnumerator<T> enumerator;
+        private readonly IEnumerator enumerator;
         private int index;
         private readonly object lockObject = new object();
 
-        public Enumerator(IEnumerator<T> enumerator)
+        public Enumerator(IEnumerator enumerator)
         {
             this.enumerator = enumerator;
         }

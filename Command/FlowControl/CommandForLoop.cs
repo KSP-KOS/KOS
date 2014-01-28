@@ -11,7 +11,7 @@ namespace kOS.Command.FlowControl
     {
         // commandstring;
         ICommand targetCommand;
-        private Enumerator<object> iterator;
+        private Enumerator iterator;
         private string iteratorstring;
 
         public CommandForLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
@@ -22,10 +22,10 @@ namespace kOS.Command.FlowControl
             iteratorstring = RegexMatch.Groups[1].Value;
 
             var expression = new Expression.Expression(listName, ParentContext).GetValue();
-            var list = expression as MixedListValue;
+            var list = expression as ListValue;
             if (list != null)
             {
-                iterator = list.GetSuffix("ITERATOR") as Enumerator<object>;
+                iterator = list.GetSuffix("ITERATOR") as Enumerator;
             }
             else
             {
