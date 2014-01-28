@@ -54,7 +54,7 @@ namespace kOS.Command
                 return command;
             }
 
-            throw new KOSException("Syntax Error.", context);
+            throw new KOSException("Syntax Error. " + "\"" + input + "\"", context);
         }
 
         public virtual void Refresh()

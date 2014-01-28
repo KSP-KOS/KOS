@@ -5,11 +5,16 @@ namespace kOS.Suffixed
 {
     public class ListValue : SpecialValue
     {
-        private readonly IList list;
+        private readonly IList<object> list;
 
         public ListValue()
         {
-           list = new List(); 
+           list = new List<object>(); 
+        }
+
+        public int Count
+        {
+            get { return list.Count; }
         }
 
         public object GetIndex(int index)
@@ -45,7 +50,7 @@ namespace kOS.Suffixed
                 case "ITERATOR":
                     return new Enumerator(list.GetEnumerator());
                 case "COPY":
-                    return new List(list);
+                    return new List<object>(list);
                 default:
                     return string.Format("Suffix {0} Not Found", suffixName);
             }

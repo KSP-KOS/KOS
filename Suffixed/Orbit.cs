@@ -42,7 +42,7 @@
 
         private object BuildPatchList()
         {
-            var list = new MixedListValue();
+            var list = new ListValue();
             var orbit = orbitRef;
             while (orbit.nextPatch != null)
             {
