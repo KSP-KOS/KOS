@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS
 {
-    public class SpecialValue
+    public abstract class SpecialValue
     {
         public virtual bool SetSuffix(String suffixName, object value)
         {
             return false;
+        }
+
+        public virtual object GetIndex(int index)
+        {
+            return null;
         }
 
         public virtual object GetSuffix(String suffixName)

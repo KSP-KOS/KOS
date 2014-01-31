@@ -290,6 +290,32 @@ namespace kOS
             if (ParentContext != null) ParentContext.UnlockAll();
         }
 
+        public virtual void Unset(String name)
+        {
+            if (Variables.ContainsKey(name.ToLower()))
+            {
+                Variables.Remove(name.ToLower());
+            }
+            else if (ParentContext != null)
+            {
+                ParentContext.Unset(name.ToLower());
+            }
+        }
+
+        public virtual void UnsetAll()
+        {
+            for( int i = 0; i < Variables.Count; i++)
+            {
+                var currvar = Variables.ElementAt(i);
+
+                if(!(currvar.Value is BoundVariable))
+                {
+                    Variables.Remove(currvar.Key);
+                }
+            }
+                if (ParentContext != null) ParentContext.UnsetAll();
+        }
+
         public bool parseNext(ref string buffer, out string cmd, ref int lineCount, out int lineStart)
         {
             lineStart = -1;
@@ -380,7 +406,7 @@ namespace kOS
 
         public virtual void OnSave(ConfigNode node)
         {
-            ConfigNode contextNode = new ConfigNode("context");
+            var contextNode = new ConfigNode("context");
 
             contextNode.AddValue("context-type", this.GetType().ToString());
 

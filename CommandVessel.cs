@@ -103,7 +103,7 @@ namespace kOS
                             var vT = new VesselTarget(vessel, this);
                             if (vT.IsInRange(commRange))
                             {
-                                StdOut(vT.target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
+                                StdOut(vT.Target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
                             }
                         }
                     }

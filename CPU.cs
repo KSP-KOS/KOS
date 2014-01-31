@@ -379,8 +379,15 @@ namespace kOS
                 {
                     foreach (ConfigNode.Value value in varNode.values)
                     {
-                        var newVar = CreateVariable(value.name);
-                        newVar.Value = new Expression(File.DecodeLine(value.value), this).GetValue();
+                        try
+                        {
+                            var newVar = CreateVariable(value.name);
+                            newVar.Value = new Expression(File.DecodeLine(value.value), this).GetValue();
+                        }
+                        catch (kOSException kEX)
+                        {
+                            Debug.Log("kOS Exception Onload: " + kEX.Message);
+                        }
                     }
                 }
             }

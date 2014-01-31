@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace kOS
+﻿namespace kOS
 {
     public class SpecialValueTester : SpecialValue
     {
-        CPU cpu;
+        readonly CPU cpu;
 
         public SpecialValueTester(CPU cpu)
         {
@@ -21,7 +16,11 @@ namespace kOS
 
         public override object GetSuffix(string suffixName)
         {
-            if (suffixName == "A") return cpu.SessionTime;
+            switch (suffixName)
+            {
+                case "A":
+                    return cpu.SessionTime;
+            }
 
             return base.GetSuffix(suffixName);
         }

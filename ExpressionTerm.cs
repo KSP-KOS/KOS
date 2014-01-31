@@ -12,7 +12,7 @@ namespace kOS
         public List<Term> SubTerms;
         public bool TermsAreParameters;
 
-        public enum TermTypes { REGULAR, FINAL, FUNCTION, PARAMETER_LIST, COMPARISON, BOOLEAN, SUFFIX, STRUCTURE, MATH_OPERATOR, COMPARISON_OPERATOR, BOOLEAN_OPERATOR }
+        public enum TermTypes { REGULAR, FINAL, FUNCTION, PARAMETER_LIST, COMPARISON, BOOLEAN, SUFFIX, STRUCTURE, MATH_OPERATOR, COMPARISON_OPERATOR, BOOLEAN_OPERATOR, INDEX, INDEX_OPERATOR }
         public TermTypes Type;
 
         private static List<String> mathSymbols;
@@ -21,6 +21,7 @@ namespace kOS
         private static List<String> allSymbols;
         private static List<String> parameterSeperatorSymbols;
         private static List<String> subaccessSymbols;
+        private static List<String> listaccessSymbols;
         private static List<String> delimeterSymbols;
 
         static Term()
@@ -40,6 +41,9 @@ namespace kOS
             subaccessSymbols = new List<string>();
             subaccessSymbols.AddRange(new string[] { ":" });
 
+            listaccessSymbols = new List<string>();
+            listaccessSymbols.AddRange(new[] { "#" });
+
             delimeterSymbols = new List<string>();
             delimeterSymbols.AddRange(new string[] { "(", ")", "\"" });
 
@@ -49,6 +53,7 @@ namespace kOS
             allSymbols.AddRange(booleanSymbols.ToArray());
             allSymbols.AddRange(parameterSeperatorSymbols.ToArray());
             allSymbols.AddRange(subaccessSymbols.ToArray());
+            allSymbols.AddRange(listaccessSymbols.ToArray());
             allSymbols.AddRange(delimeterSymbols.ToArray());
         }
 
@@ -79,9 +84,21 @@ namespace kOS
 
             foreach (Term t in terms)
             {
-                output.Text += t.Type == TermTypes.PARAMETER_LIST ? "(" + t.Text + ")" :
-                                t.Type == TermTypes.SUFFIX ? ":" + t.Text :
-                                t.Text;
+                switch (t.Type)
+                {
+                    case TermTypes.PARAMETER_LIST:
+                        output.Text += "(" + t.Text + ")";
+                        break;
+                    case TermTypes.SUFFIX:
+                        output.Text += ":" + t.Text;
+                        break;
+                    case TermTypes.INDEX:
+                        output.Text += "#" + t.Text;
+                        break;
+                    default:
+                        output.Text += t.Text;
+                        break;
+                }
 
                 output.SubTerms.Add(t);
             }
@@ -126,11 +143,14 @@ namespace kOS
             // HEADING.. BY is now deprecated in favor of HEADING(x,y), but here it is if you're using it still
             Text = Regex.Replace(Text, "HEADING ([ :@A-Za-z0-9\\.\\-\\+\\*/]+) BY ([ :@A-Za-z0-9\\.\\-\\+\\*/]+)", "HEADING($2,$1)", RegexOptions.IgnoreCase);
 
+            //enables scientific notation eg 6.6E-11 -> 6.6*10^-11
+            Text = Regex.Replace(Text, "(\\d)E([-+]{1}[0-9]+)", "$1*10^$2");
+           
             // Resource tags are now deprecated in favor of SHIP:ResourceName
             Text = Regex.Replace(Text, "(\\s|^)<([a-zA-Z]+)>(\\s|$)", " SHIP:$2 ", RegexOptions.IgnoreCase);
 
             // Is this JUST a matched symbol?                
-            String s = matchAt(ref Text, 0, ref allSymbols);
+            String s = MatchAt(ref Text, 0, allSymbols);
             if (s != null && Text.Length == s.Length)
             {
                 if (mathSymbols.Contains(s)) Type = TermTypes.MATH_OPERATOR;
@@ -192,11 +212,33 @@ namespace kOS
                 return;
             }
 
+            // Does this thing contain an Index?
+            var listElements = splitByListIgnoreBracket(Text, ref listaccessSymbols);
+            if (listElements != null)
+            {
+                Type = TermTypes.INDEX;
+
+                foreach (var element in listElements)
+                {
+                    if (listaccessSymbols.Contains(element))
+                    {
+                        SubTerms.Add(new Term(element, TermTypes.INDEX_OPERATOR));
+                    }
+                    else
+                    {
+                        SubTerms.Add(new Term(element));
+                    }
+                }
+
+                return;
+            }
+
+
             // Parse this as a normal term
             String buffer = "";
             for (int i = 0; i < Text.Length; i++)
             {
-                s = matchAt(ref Text, i, ref allSymbols);
+                s = MatchAt(ref Text, i, allSymbols);
 
                 if (s == null)
                 {
@@ -339,7 +381,7 @@ namespace kOS
                 }
                 else
                 {
-                    s = matchAt(ref input, i, ref operators);
+                    s = MatchAt(ref input, i, operators);
 
                     if (s != null)
                     {
@@ -389,14 +431,14 @@ namespace kOS
             return null;
         }
 
-        private String matchAt(ref String input, int i, ref List<String> matchables)
+        private string MatchAt(ref String input, int i, IEnumerable<string> matchables)
         {
-            foreach (String s in matchables)
+            foreach (var s in matchables)
             {
                 if (s.StartsWith(" "))
                 {
-                    Regex r = new Regex("^" + s.Replace(" ", "\\s"), RegexOptions.IgnoreCase);
-                    Match m = r.Match(input.Substring(i));
+                    var r = new Regex("^" + s.Replace(" ", "\\s"), RegexOptions.IgnoreCase);
+                    var m = r.Match(input.Substring(i));
 
                     if (m.Success)
                     {

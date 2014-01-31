@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS
 {
     public class StageValues : SpecialValue
     {
-        Vessel vessel;
+        readonly Vessel vessel;
 
         public StageValues(Vessel vessel)
         {

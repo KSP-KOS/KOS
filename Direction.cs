@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace kOS
@@ -45,30 +42,33 @@ namespace kOS
             euler = q.eulerAngles;
         }
 
-        public Direction(Vector3d v3d, bool isEuler)
+        public Direction(Vector3d v3D, bool isEuler)
         {
             if (isEuler)
             {
-                Euler = v3d;
+                Euler = v3D;
             }
             else
             {
-                Vector = v3d; 
+                Vector = v3D; 
             }
         }
 
         public override object GetSuffix(string suffixName)
         {
-            if (suffixName == "PITCH") return euler.x;
-            if (suffixName == "YAW") return euler.y;
-            if (suffixName == "ROLL") return euler.z;
-            if (suffixName == "VECTOR") return new kOS.Vector(vector);
+            switch (suffixName)
+            {
+                case "PITCH":
+                    return euler.x;
+                case "YAW":
+                    return euler.y;
+                case "ROLL":
+                    return euler.z;
+                case "VECTOR":
+                    return new Vector(vector);
+            }
 
             return base.GetSuffix(suffixName);
-        }
-
-        public void RedefineUp(Vector3d up)
-        {
         }
 
         public static Direction operator *(Direction a, Direction b) { return new Direction(a.Rotation * b.Rotation); }
@@ -85,18 +85,17 @@ namespace kOS
             if (op == "*" && other is Direction)
             {
                 // If I remember correctly, order of multiplication DOES matter with quaternions
-                if (!reverseOrder)
-                    return this * (Direction)other;
-                else
-                    return (Direction)other * this;
+                return !reverseOrder ? this*(Direction) other : (Direction) other*this;
             }
-            else if (op == "+" && other is Direction) return this + (Direction)other;
-            else if (op == "-" && other is Direction)
+            
+            if (op == "+" && other is Direction)
             {
-                if (!reverseOrder)
-                    return this - (Direction)other;
-                else
-                    return (Direction)other - this;
+                return this + (Direction)other;
+            }
+            
+            if (op == "-" && other is Direction)
+            {
+                return !reverseOrder ? this - (Direction) other : (Direction) other - this;
             }
 
             return null;

@@ -275,6 +275,11 @@ namespace kOS
                         output += "([^{}\"]+)";
                         break;
 
+                    case "/":
+                        // Anything but braces
+                        output += "([^{}]+)";
+                        break;
+
                     case "[":
                         int choiceEnd = kegex.IndexOf(']', i);
                         var choices = kegex.Substring(i + 1, choiceEnd - i - 1).Split(',');

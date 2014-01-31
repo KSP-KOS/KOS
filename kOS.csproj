@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Games\KSP220\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\KSP_LIB\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -41,8 +41,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\Lib\UnityEngine.dll</HintPath>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\KSP_LIB\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +53,7 @@
     <Compile Include="BindingsTerminalSettings.cs" />
     <Compile Include="BindingsTest.cs" />
     <Compile Include="BindingsUniverse.cs" />
+    <Compile Include="BodyAtmosphere.cs" />
     <Compile Include="BodyTarget.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="CommandBasicIO.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="kOSProcessor.cs" />
     <Compile Include="BindingsFlightControl.cs" />
     <Compile Include="File.cs" />
+    <Compile Include="ListValue.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Orbit.cs" />
     <Compile Include="Resource.cs" />
