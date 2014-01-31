@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace kOS
 {
+    // Cilph: Added command batching
     public class ImmediateMode : ExecutionContext
     {
         private int cursor = 0;
@@ -17,6 +19,10 @@ namespace kOS
         private int CursorX = 0;
         private int CursorY = 0;
         private new Queue<Command> Queue = new Queue<Command>();
+
+        public bool BatchMode { get; set; }
+        private LinkedList<Command> batchQueue = new LinkedList<Command>();
+        private double waitTotal, waitElapsed;
 
         private new char[,] buffer = new char[COLUMNS, ROWS];
 
@@ -40,7 +46,14 @@ namespace kOS
                 try
                 {
                     Command cmd = Command.Get(nextCmd, this, comandLineStart);
-                    Queue.Enqueue(cmd);
+                    if (BatchMode)
+                    {
+                        batchQueue.AddLast(cmd);
+                    }
+                    else
+                    {
+                        Queue.Enqueue(cmd);
+                    }
                 }
                 catch (kOSException e)
                 {
@@ -194,9 +207,36 @@ namespace kOS
         {
             if (ChildContext == null)
             {
-                if (Queue.Count > 0)
+                if (RTHook.Instance != null && waitTotal == 0.0 && !BatchMode && Queue.Count > 0)
                 {
-                    var currentCmd = Queue.Dequeue();
+                    waitElapsed = 0.0;
+                    if (!(Queue.Count > 0 && Queue.Peek() is CommandBatch))
+                    {
+                        waitTotal = RTHook.Instance.GetShortestSignalDelay(Vessel.id);
+                    };
+                }
+
+                bool deploying = !BatchMode && batchQueue.Count > 0;
+                bool endbatch = batchQueue.Last != null && batchQueue.Last.Value is CommandDeploy;
+
+                if ((waitElapsed == waitTotal && Queue.Count > 0) || deploying || endbatch)
+                {
+                    Command currentCmd;
+                    if (endbatch)
+                    {
+                        currentCmd = batchQueue.Last.Value;
+                        batchQueue.RemoveLast();
+                    }
+                    else if (deploying)
+                    {
+                        currentCmd = batchQueue.First.Value;
+                        batchQueue.RemoveFirst();
+                    }
+                    else
+                    {
+                        currentCmd = Queue.Dequeue();
+                        waitTotal = 0.0;
+                    }
 
                     try
                     {
@@ -207,6 +247,7 @@ namespace kOS
                     {
                         StdOut(e.Message);
                         Queue.Clear();          // Halt all pending instructions
+                        batchQueue.Clear();
                         ChildContext = null;    //
                     }
                     catch (Exception e)
@@ -221,12 +262,27 @@ namespace kOS
                         }
 
                         Queue.Clear();
+                        batchQueue.Clear();
                         ChildContext = null;
                     }
-                }
+                } 
                 else
                 {
                     WriteLine(inputBuffer);
+                }
+
+                if (waitElapsed < waitTotal)
+                {
+                    if (RTHook.Instance != null && !RTHook.Instance.HasAnyConnection(Vessel.id))
+                    {
+                        StdOut("Signal interruption. Transmission lost.");
+                        Queue.Clear();
+                    }
+                    else
+                    {
+                        waitElapsed += Math.Min(time, waitTotal - waitElapsed);
+                        this.DrawProgressBar(waitElapsed, waitTotal, "Deploying command.");
+                    }
                 }
             }
 
