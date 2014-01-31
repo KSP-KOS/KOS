@@ -196,13 +196,14 @@ namespace kOS
 
     public static double GetDistanceToKerbinSurface(Vessel vessel)
     {
-      foreach (var body in FlightGlobals.fetch.bodies)
-      {
-        if (body.name.ToUpper() == "KERBIN") return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - 6731000; // RSS Kerbin radius = 6,731,000
-        if (body.name.ToUpper() == "EARTH") return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - 6731000; // Earth radius = 6,731,000
-      }
+        foreach (var body in FlightGlobals.fetch.bodies)
+        {
+            if (body.name.ToUpper() == "KERBIN") return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - body.Radius;
+            // We check for Earth to provide future compatability with RSS if/when it changes the names of the planets
+            if (body.name.ToUpper() == "EARTH") return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - body.Radius;
+        }
 
-      throw new kOSException("Planet Kerbin not found!");
+        throw new kOSException("Planet Kerbin not found!");
     }
 
     public static float AngleDelta(float a, float b)
