@@ -82,6 +82,10 @@
     <Compile Include="ListValue.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Orbit.cs" />
+    <Compile Include="RemoteTech2\IRemoteTechAPIv1.cs" />
+    <Compile Include="RemoteTech2\RTCommands.cs" />
+    <Compile Include="RemoteTech2\RTHook.cs" />
+    <Compile Include="RemoteTech2\RTUtil.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="SpecialValueTester.cs" />
