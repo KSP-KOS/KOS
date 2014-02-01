@@ -273,7 +273,7 @@ namespace kOS
 
                 if (waitElapsed < waitTotal)
                 {
-                    if (RTHook.Instance != null && !RTHook.Instance.HasAnyConnection(Vessel.id))
+                    if (RTHook.Instance != null && !RTHook.Instance.HasAnyConnection(Vessel.id) && Queue.Count > 0)
                     {
                         StdOut("Signal interruption. Transmission lost.");
                         Queue.Clear();
