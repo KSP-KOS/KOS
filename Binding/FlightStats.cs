@@ -19,6 +19,7 @@ namespace kOS.Binding
             manager.AddGetter("ETA:APOAPSIS", cpu => cpu.Vessel.orbit.timeToAp);
             manager.AddGetter("ETA:PERIAPSIS", cpu => cpu.Vessel.orbit.timeToPe);
             manager.AddGetter("ETA:TRANSITION", cpu => cpu.Vessel.orbit.EndUT - cpu.Vessel.missionTime);
+            manager.AddGetter("OBT", cpu => new OrbitInfo(cpu.Vessel.orbit, cpu.Vessel));
 
             manager.AddGetter("MISSIONTIME", cpu => cpu.Vessel.missionTime);
             manager.AddGetter("TIME", cpu => new TimeSpan(Planetarium.GetUniversalTime()));
