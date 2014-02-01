@@ -225,7 +225,10 @@ namespace kOS
 
         public override bool CheckRange()
         {
-            return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+            if (RTHook.Instance != null)
+                return RTHook.Instance.HasConnectionToKSC(vessel.id);
+            else
+                return false;
         }
     }
 }
