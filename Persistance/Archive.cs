@@ -147,7 +147,7 @@ namespace kOS.Persistance
 
         public override bool CheckRange()
         {
-            return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+            return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
         }
     }
 }

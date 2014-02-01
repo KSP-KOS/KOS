@@ -165,14 +165,14 @@ namespace kOS.Utilities
       return range;
     }
 
-    public static double GetDistanceToKerbinSurface(Vessel vessel)
+    public static double GetDistanceToHome(Vessel vessel)
     {
-        foreach (var body in FlightGlobals.fetch.bodies.Where(body => body.name.ToUpper() == "KERBIN"))
+        foreach (var body in FlightGlobals.fetch.bodies.Where(body => body.name.ToUpper() == "KERBIN" || body.name.ToUpper() == "EARTH"))
         {
-            return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - 600000; // Kerbin radius = 600,000
+            return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - body.Radius; // Kerbin radius = 600,000
         }
 
-        throw new KOSException("Planet Kerbin not found!");
+        throw new KOSException("Planet Kerbin or Earth not found!");
     }
 
       public static float AngleDelta(float a, float b)
