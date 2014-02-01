@@ -101,7 +101,7 @@ namespace kOS
                         if (vessel != Vessel)
                         {
                             var vT = new VesselTarget(vessel, this);
-                            if (vT.IsInRange(commRange))
+                            if (RTHook.Instance != null && RTHook.Instance.GetSignalDelayToSatellite(Vessel.id, vessel.id) != Double.PositiveInfinity)
                             {
                                 StdOut(vT.Target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
                             }
