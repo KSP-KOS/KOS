@@ -6,7 +6,7 @@ using kOS.Suffixed;
 
 namespace kOS.Command.Vessel
 {
-    [Command(@"^LIST (PARTS|RESOURCES|ENGINES|TARGETS|BODIES|SENSORS|ELEMENTS) IN *")]
+    [Command("LIST /_ IN /_")]
     internal class CommandVesselListValue : Command
     {
         public CommandVesselListValue(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
@@ -15,7 +15,7 @@ namespace kOS.Command.Vessel
 
         public override void Evaluate()
         {
-            var name = RegexMatch.Groups[2].Value;
+            var name = new Term(RegexMatch.Groups[2].Value);
             var type = new Term(RegexMatch.Groups[1].Value);
             var list = new ListValue();
 
@@ -48,7 +48,6 @@ namespace kOS.Command.Vessel
                     break;
                 case "ENGINES":
                     list = EngineValue.PartsToList(partList);
-                    UnityEngine.Debug.Log("kOS: " + partList.Count + " " + list.Count);
                     break;
                 case "SENSORS":
                     list = SensorValue.PartsToList(partList);
@@ -58,7 +57,7 @@ namespace kOS.Command.Vessel
                     break;
             }
 
-            FindOrCreateVariable(name).Value = list;
+            FindOrCreateVariable(name.Text).Value = list;
 
             State = ExecutionState.DONE;
         }
