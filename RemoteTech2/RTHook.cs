@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEngine;
 
 namespace kOS
 {
@@ -40,7 +39,7 @@ namespace kOS
             {
                 foreach (var property in api.GetType().GetProperties())
                 {
-                    var method = methods.FirstOrDefault(m => { Debug.Log(m.Name); return m.Name.Equals(property.Name); });
+                    var method = methods.FirstOrDefault(m => { UnityEngine.Debug.Log(m.Name); return m.Name.Equals(property.Name); });
                     if (method == null) throw new ArgumentNullException(property.Name);
                     var del = Delegate.CreateDelegate(property.PropertyType, type, method.Name);
                     property.SetValue(api, del, null);
@@ -48,11 +47,11 @@ namespace kOS
             }
             catch (Exception e)
             {
-                Debug.Log("kOS: Error creating RemoteTech2 interface: " + e);
+                UnityEngine.Debug.Log("kOS: Error creating RemoteTech2 interface: " + e);
                 return null;
             }
 
-            Debug.Log("kOS: RemoteTech2 interface successfully created.");
+            UnityEngine.Debug.Log("kOS: RemoteTech2 interface successfully created.");
             return api;
         }
     }

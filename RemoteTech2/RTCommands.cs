@@ -4,24 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Reflection;
-using UnityEngine;
+using kOS.Context;
+using kOS.Interpreter;
 
-namespace kOS
+namespace kOS.Command
 {
     // Cilph: RemoteTech-exclusive command that combines copy and execute.
     [CommandAttribute("BATCH")]
     public class CommandBatch : Command
     {
-        public CommandBatch(Match regexMatch, ExecutionContext context) : base(regexMatch, context) { }
+        public CommandBatch(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
 
         public override void Evaluate()
         {
-            var parent = ParentContext as ImmediateMode;
-            if (parent == null) throw new kOSException("Batch mode can only be used when in immediate mode.", this);
-            if (parent.BatchMode) throw new kOSException("Batch mode is already active.", this);
+            var parent = ParentContext as kOS.Interpreter.ImmediateMode;
+            if (parent == null) throw new kOS.Debug.KOSException("Batch mode can only be used when in immediate mode.", this);
+            if (parent.BatchMode) throw new kOS.Debug.KOSException("Batch mode is already active.", this);
             parent.BatchMode = true;
             StdOut("Starting new batch.");
-
             State = ExecutionState.DONE;
         }
     }
@@ -36,14 +36,14 @@ namespace kOS
         public override void Evaluate()
         {
             var parent = ParentContext as ImmediateMode;
-            if (parent == null) throw new kOSException("Batch mode can only be used when in immediate mode.", this);
-            if (!parent.BatchMode) throw new kOSException("Batch mode is not active.", this);
+            if (parent == null) throw new kOS.Debug.KOSException("Batch mode can only be used when in immediate mode.", this);
+            if (!parent.BatchMode) throw new kOS.Debug.KOSException("Batch mode is not active.", this);
             StdOut("Deploying...");
 
             if (RTHook.Instance != null)
             {
                 waitTotal = RTHook.Instance.GetShortestSignalDelay(Vessel.id);
-                if (waitTotal == Double.PositiveInfinity) throw new kOSException("No connection available.");
+                if (waitTotal == Double.PositiveInfinity) throw new kOS.Debug.KOSException("No connection available.");
             }
 
             State = ExecutionState.WAIT;
@@ -59,7 +59,7 @@ namespace kOS
             }
 
             if (RTHook.Instance != null && !RTHook.Instance.HasAnyConnection(Vessel.id))
-                throw new kOSException("Signal interruption. Transmission lost.");
+                throw new kOS.Debug.KOSException("Signal interruption. Transmission lost.");
 
             if (waitElapsed < waitTotal)
             {

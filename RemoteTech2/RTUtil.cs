@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using kOS.Context;
 
 namespace kOS
 {
     public static class RTUtil
     {
-        public static void DrawProgressBar(this ExecutionContext context, double elapsed, double total, String text)
+        public static void DrawProgressBar(this IExecutionContext context, double elapsed, double total, String text)
         {
             int bars = (int)((ExecutionContext.COLUMNS) * elapsed / total);
             int spaces = (ExecutionContext.COLUMNS) - bars;
