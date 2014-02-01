@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using kOS.Context;
 using kOS.Debug;
 
@@ -8,7 +7,9 @@ namespace kOS.Command.File
     [Command("RENAME[VOLUME,FILE]? ^ TO &")]
     public class CommandRename : Command
     {
-        public CommandRename(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandRename(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {
@@ -21,7 +22,8 @@ namespace kOS.Command.File
                 var targetVolume = GetVolume(identifier); // Will throw if not found
 
                 int intTry;
-                if (int.TryParse(newName.Substring(0, 1), out intTry)) throw new KOSException("Volume name cannot start with numeral", this);
+                if (int.TryParse(newName.Substring(0, 1), out intTry))
+                    throw new KOSException("Volume name cannot start with numeral", this);
 
                 if (targetVolume.Renameable) targetVolume.Name = newName;
                 else throw new KOSException("Volume cannot be renamed", this);
@@ -41,7 +43,8 @@ namespace kOS.Command.File
                 }
 
                 int intTry;
-                if (int.TryParse(newName.Substring(0, 1), out intTry)) throw new KOSException("Filename cannot start with numeral", this);
+                if (int.TryParse(newName.Substring(0, 1), out intTry))
+                    throw new KOSException("Filename cannot start with numeral", this);
 
                 f.Filename = newName;
                 State = ExecutionState.DONE;

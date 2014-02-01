@@ -27,6 +27,32 @@
             this.z = z;
         }
 
+        public object TryOperation(string op, object other, bool reverseOrder)
+        {
+            switch (op)
+            {
+                case "+":
+                    if (other is Vector) return this + (Vector) other;
+                    break;
+                case "*":
+                    if (other is Vector) return this*(Vector) other;
+                    if (other is double) return this*(double) other;
+                    break;
+                case "-":
+                    if (!reverseOrder)
+                    {
+                        if (other is Vector) return this - (Vector) other;
+                    }
+                    else
+                    {
+                        if (other is Vector) return (Vector) other - this;
+                    }
+                    break;
+            }
+
+            return null;
+        }
+
         public Direction ToDirection()
         {
             return new Direction(ToVector3D(), false);
@@ -56,7 +82,7 @@
             double dblValue;
             if (value is double)
             {
-                dblValue = (double)value;
+                dblValue = (double) value;
             }
             else if (!double.TryParse(value.ToString(), out dblValue))
             {
@@ -75,15 +101,15 @@
                     z = dblValue;
                     return true;
                 case "MAG":
-                        double oldMag = new Vector3d(x, y, z).magnitude;
+                    double oldMag = new Vector3d(x, y, z).magnitude;
 
-                        if (oldMag == 0) return true; // Avoid division by zero
+                    if (oldMag == 0) return true; // Avoid division by zero
 
-                        x = x / oldMag * dblValue;
-                        y = y / oldMag * dblValue;
-                        z = z / oldMag * dblValue;
+                    x = x/oldMag*dblValue;
+                    y = y/oldMag*dblValue;
+                    z = z/oldMag*dblValue;
 
-                        return true;
+                    return true;
             }
 
             return base.SetSuffix(suffixName, value);
@@ -91,7 +117,7 @@
 
         public Vector3d ToVector3D()
         {
-            return new Vector3d(x,y,z); 
+            return new Vector3d(x, y, z);
         }
 
         public override string ToString()
@@ -109,36 +135,29 @@
             return new Direction(d.ToVector3D(), false);
         }
 
-        public static Vector operator *(Vector a, Vector b) { return new Vector(a.x * b.x, a.y * b.y, a.z * b.z); }
-        public static Vector operator *(Vector a, float b) { return new Vector(a.x * b, a.y * b, a.z * b); }
-        public static Vector operator *(Vector a, double b) { return new Vector(a.x * b, a.y * b, a.z * b); }
-        public static Vector operator +(Vector a, Vector b) { return new Vector(a.ToVector3D() + b.ToVector3D()); }
-        public static Vector operator -(Vector a, Vector b) { return new Vector(a.ToVector3D() - b.ToVector3D()); }
-
-        public object TryOperation(string op, object other, bool reverseOrder)
+        public static Vector operator *(Vector a, Vector b)
         {
-            switch (op)
-            {
-                case "+":
-                    if (other is Vector) return this + (Vector)other;
-                    break;
-                case "*":
-                    if (other is Vector) return this * (Vector)other;
-                    if (other is double) return this * (double)other;
-                    break;
-                case "-":
-                    if (!reverseOrder)
-                    {
-                        if (other is Vector) return this - (Vector)other;
-                    }
-                    else
-                    {
-                        if (other is Vector) return (Vector)other - this;
-                    }
-                    break;
-            }
+            return new Vector(a.x*b.x, a.y*b.y, a.z*b.z);
+        }
 
-            return null;
+        public static Vector operator *(Vector a, float b)
+        {
+            return new Vector(a.x*b, a.y*b, a.z*b);
+        }
+
+        public static Vector operator *(Vector a, double b)
+        {
+            return new Vector(a.x*b, a.y*b, a.z*b);
+        }
+
+        public static Vector operator +(Vector a, Vector b)
+        {
+            return new Vector(a.ToVector3D() + b.ToVector3D());
+        }
+
+        public static Vector operator -(Vector a, Vector b)
+        {
+            return new Vector(a.ToVector3D() - b.ToVector3D());
         }
     }
 }

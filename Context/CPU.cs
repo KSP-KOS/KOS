@@ -10,37 +10,34 @@ using kOS.Persistance;
 
 namespace kOS.Context
 {
-    public enum CPUMode { READY, STARVED, OFF };
-    public enum KOSRunType { KSP, WINFORMS };
+    public enum CPUMode
+    {
+        READY,
+        STARVED,
+        OFF
+    };
+
+    public enum KOSRunType
+    {
+        KSP,
+        WINFORMS
+    };
+
     public sealed class CPU : ExecutionContext, ICPU
     {
-
-        public IVolume Archive { get; private set; }
-        public float SessionTime { get; private set; }
-        public override Vessel Vessel { get { return ((IProcessorModule)parent).vessel; } }
-        public override IDictionary<string, Variable> Variables { get { return variables; } }
-        public override List<IVolume> Volumes { get { return volumes; } }
-        public override List<KOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
-
-
         private const int CLOCK_SPEED = 5;
-        private readonly string context;
         private readonly IBindingManager bindingManager;
+        private readonly string context;
+        private readonly List<KOSExternalFunction> externalFunctions = new List<KOSExternalFunction>();
         private readonly object parent;
         private readonly Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
-        private IVolume selectedVolume;
         private readonly List<IVolume> volumes = new List<IVolume>();
-        private readonly List<KOSExternalFunction> externalFunctions = new List<KOSExternalFunction>();
+        private IVolume selectedVolume;
 
-        public override IVolume SelectedVolume
+        static CPU()
         {
-            get { return selectedVolume; }
-            set { selectedVolume = value; }
+            RunType = KOSRunType.KSP;
         }
-
-        public CPUMode Mode { get; set; }
-
-        public static KOSRunType RunType { get; private set; }
 
         public CPU(object parent, string context)
         {
@@ -62,29 +59,62 @@ namespace kOS.Context
                 RunType = KOSRunType.WINFORMS;
             }
 
-            RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 2 });
+            RegisterkOSExternalFunction(new object[] {"test2", this, "testFunction", 2});
         }
 
-        static CPU()
+        public static KOSRunType RunType { get; private set; }
+
+        public IVolume Archive { get; private set; }
+        public float SessionTime { get; private set; }
+
+        public override Vessel Vessel
         {
-            RunType = KOSRunType.KSP;
+            get { return ((IProcessorModule) parent).vessel; }
         }
 
-        public double TestFunction(double x, double y) { return x * y; }
+        public override IDictionary<string, Variable> Variables
+        {
+            get { return variables; }
+        }
+
+        public override List<IVolume> Volumes
+        {
+            get { return volumes; }
+        }
+
+        public override List<KOSExternalFunction> ExternalFunctions
+        {
+            get { return externalFunctions; }
+        }
+
+
+        public override IVolume SelectedVolume
+        {
+            get { return selectedVolume; }
+            set { selectedVolume = value; }
+        }
+
+        public CPUMode Mode { get; set; }
+
+        public double TestFunction(double x, double y)
+        {
+            return x*y;
+        }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
             if (parameters.Count() != 4) return;
 
-            var name = (string)parameters[0];
+            var name = (string) parameters[0];
             var externalParent = parameters[1];
-            var methodName = (string)parameters[2];
-            var parameterCount = (int)parameters[3];
+            var methodName = (string) parameters[2];
+            var parameterCount = (int) parameters[3];
 
             RegisterkOSExternalFunction(name, externalParent, methodName, parameterCount);
         }
 
-        public void RegisterkOSExternalFunction(string name, object externalParent, string methodName, int parameterCount)
+        public void RegisterkOSExternalFunction(string name, object externalParent, string methodName,
+                                                int parameterCount)
         {
             externalFunctions.Add(new KOSExternalFunction(name.ToUpper(), externalParent, methodName, parameterCount));
         }
@@ -116,31 +146,31 @@ namespace kOS.Context
                     var value = parameters[i];
                     object converted = null;
 
-                    if (paramType == typeof(string))
+                    if (paramType == typeof (string))
                     {
                         converted = parameters[i];
                     }
-                    else if (paramType == typeof(float))
+                    else if (paramType == typeof (float))
                     {
                         float flt;
                         if (float.TryParse(value, out flt)) converted = flt;
                     }
-                    else if (paramType == typeof(double))
+                    else if (paramType == typeof (double))
                     {
                         double dbl;
                         if (double.TryParse(value, out dbl)) converted = dbl;
                     }
-                    else if (paramType == typeof(int))
+                    else if (paramType == typeof (int))
                     {
                         int itgr;
                         if (int.TryParse(value, out itgr)) converted = itgr;
                     }
-                    else if (paramType == typeof(long))
+                    else if (paramType == typeof (long))
                     {
                         long lng;
                         if (long.TryParse(value, out lng)) converted = lng;
                     }
-                    else if (paramType == typeof(bool))
+                    else if (paramType == typeof (bool))
                     {
                         bool bln;
                         if (bool.TryParse(value, out bln)) converted = bln;
@@ -175,7 +205,7 @@ namespace kOS.Context
 
         public bool IsAlive()
         {
-            var partState = ((IProcessorModule)parent).part.State;
+            var partState = ((IProcessorModule) parent).part.State;
 
             if (partState == PartStates.DEAD)
             {
@@ -201,8 +231,8 @@ namespace kOS.Context
         {
             if (Mode == CPUMode.OFF) return;
 
-            var electricReq = 0.01f * time;
-            var result = part.RequestResource("ElectricCharge", electricReq) / electricReq;
+            var electricReq = 0.01f*time;
+            var result = part.RequestResource("ElectricCharge", electricReq)/electricReq;
 
             var newMode = (result < 0.5f) ? CPUMode.STARVED : CPUMode.READY;
 
@@ -253,7 +283,7 @@ namespace kOS.Context
             if (FindVariable(varName) == null)
             {
                 variables.Add(varName, new BoundVariable());
-                return (BoundVariable)variables[varName];
+                return (BoundVariable) variables[varName];
             }
             throw new KOSException("Cannot bind " + varName + "; name already taken.");
         }
@@ -266,7 +296,7 @@ namespace kOS.Context
 
             for (var i = 0; i < CLOCK_SPEED; i++)
             {
-                base.Update(time / CLOCK_SPEED);
+                base.Update(time/CLOCK_SPEED);
             }
 
             switch (Mode)

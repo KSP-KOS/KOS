@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using kOS.Context;
 using kOS.Debug;
 
@@ -8,7 +7,9 @@ namespace kOS.Command.BasicIO
     [Command("% ON")]
     public class CommandSetOn : Command
     {
-        public CommandSetOn(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandSetOn(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

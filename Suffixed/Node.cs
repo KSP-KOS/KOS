@@ -5,15 +5,9 @@ namespace kOS.Suffixed
 {
     public class Node : SpecialValue
     {
+        public static Dictionary<ManeuverNode, Node> NodeLookup = new Dictionary<ManeuverNode, Node>();
         private ManeuverNode nodeRef;
         private Vessel vesselRef;
-
-        public static Dictionary<ManeuverNode, Node> NodeLookup = new Dictionary<ManeuverNode, Node>();
-        public double Time { get; set; }
-        public double Pro { get; set; }
-        public double RadOut { get; set; }
-        public double Norm { get; set; }
-
 
         public Node(double time, double radialOut, double normal, double prograde)
         {
@@ -31,6 +25,12 @@ namespace kOS.Suffixed
 
             UpdateValues();
         }
+
+        public double Time { get; set; }
+        public double Pro { get; set; }
+        public double RadOut { get; set; }
+        public double Norm { get; set; }
+
 
         public static Node FromExisting(Vessel v, ManeuverNode existingNode)
         {
@@ -88,11 +88,11 @@ namespace kOS.Suffixed
             Norm = nodeRef.DeltaV.y;
             Pro = nodeRef.DeltaV.z;
         }
-                
+
         public override object GetSuffix(string suffixName)
         {
             UpdateValues();
-            
+
             switch (suffixName)
             {
                 case "DELTAV":
@@ -131,16 +131,16 @@ namespace kOS.Suffixed
                 case "ORBIT":
                     throw new KOSReadOnlyException(suffixName);
                 case "ETA":
-                    Time = ((double)value) + Planetarium.GetUniversalTime();
+                    Time = ((double) value) + Planetarium.GetUniversalTime();
                     break;
                 case "PROGRADE":
-                    Pro = (double)value;
+                    Pro = (double) value;
                     break;
                 case "RADIALOUT":
-                    RadOut = (double)value;
+                    RadOut = (double) value;
                     break;
                 case "NORMAL":
-                    Norm = (double)value;
+                    Norm = (double) value;
                     break;
                 default:
                     return false;

@@ -12,7 +12,7 @@ namespace kOS.Debug
         {
         }
 
-        public KOSException(string message, IExecutionContext context) : this (message)
+        public KOSException(string message, IExecutionContext context) : this(message)
         {
             LineNumber = context.Line;
             Context = context;

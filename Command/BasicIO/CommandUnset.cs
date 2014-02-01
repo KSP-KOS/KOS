@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using kOS.Context;
 
 namespace kOS.Command.BasicIO
@@ -7,7 +6,9 @@ namespace kOS.Command.BasicIO
     [Command("UNSET %")]
     public class CommandUnset : Command
     {
-        public CommandUnset(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandUnset(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

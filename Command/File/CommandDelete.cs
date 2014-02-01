@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using kOS.Context;
 using kOS.Debug;
 
@@ -8,7 +7,9 @@ namespace kOS.Command.File
     [Command("DELETE &[FROM,FROM VOLUME]?[:^]?")]
     public class CommandDelete : Command
     {
-        public CommandDelete(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandDelete(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections.Generic;
 using KSP.IO;
-using System.Collections.Generic;
 using UnityEngine;
 using kOS.Context;
 using kOS.Persistance;
@@ -10,10 +8,15 @@ namespace kOS.Module
 {
     public class kOSProcessor : PartModule, IProcessorModule
     {
-        private ICPU cpu;
-        private int vesselPartCount;
-        private readonly List<IProcessorModule> sisterProcs = new List<IProcessorModule>();
         private const int MEM_SIZE = 10000;
+        private readonly List<IProcessorModule> sisterProcs = new List<IProcessorModule>();
+        [KSPField(isPersistant = true, guiActive = false)] public int MaxPartID = 100;
+        private ICPU cpu;
+
+        [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true, guiActiveEditor = true)] private int
+            unitID = -1;
+
+        private int vesselPartCount;
 
         public IVolume HardDisk { get; private set; }
 
@@ -35,35 +38,40 @@ namespace kOS.Module
         }
 
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
-        public void Activate(KSPActionParam param) {
+        public void Activate(KSPActionParam param)
+        {
             UnityEngine.Debug.Log("kOS: Open Terminal from Dialog");
             Activate();
         }
 
         [KSPAction("Close Terminal", actionGroup = KSPActionGroup.None)]
-        public void Deactivate(KSPActionParam param) {
+        public void Deactivate(KSPActionParam param)
+        {
             UnityEngine.Debug.Log("kOS: Close Terminal from ActionGroup");
             Core.CloseWindow(cpu);
         }
 
         [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
-        public void TogglePower(KSPActionParam param) {
+        public void TogglePower(KSPActionParam param)
+        {
             UnityEngine.Debug.Log("kOS: Toggle Power from ActionGroup");
             TogglePower();
         }
 
-        [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true, guiActiveEditor = true)]
-        private int unitID = -1;
-
         [KSPEvent(guiName = "Unit +", guiActive = false, guiActiveEditor = true)]
-        public void IncrementUnitId() { unitID++; cpu.UpdateUnitId(unitID); }
+        public void IncrementUnitId()
+        {
+            unitID++;
+            cpu.UpdateUnitId(unitID);
+        }
 
         [KSPEvent(guiName = "Unit -", guiActive = false, guiActiveEditor = true)]
-        public void DecrementUnitId() { unitID--; cpu.UpdateUnitId(unitID);}
+        public void DecrementUnitId()
+        {
+            unitID--;
+            cpu.UpdateUnitId(unitID);
+        }
 
-
-        [KSPField(isPersistant = true, guiActive = false)]
-        public int MaxPartID = 100;
 
         public override void OnStart(StartState state)
         {
@@ -76,7 +84,6 @@ namespace kOS.Module
             if (HardDisk == null) HardDisk = new Harddisk(MEM_SIZE);
 
             InitCpu();
-
         }
 
         public void InitCpu()
@@ -93,7 +100,7 @@ namespace kOS.Module
 
             cpu.RegisterkOSExternalFunction(parameters);
         }
-        
+
         public static int AssignNewID()
         {
             var config = PluginConfiguration.CreateForType<IProcessorModule>();
@@ -104,7 +111,7 @@ namespace kOS.Module
 
             return id;
         }
-        
+
         public void Update()
         {
             if (cpu == null) return;
@@ -161,7 +168,6 @@ namespace kOS.Module
 
         public override void OnFixedUpdate()
         {
-            
         }
 
         public override void OnLoad(ConfigNode node)
@@ -182,7 +188,7 @@ namespace kOS.Module
             UnityEngine.Debug.Log("******************************* CPU Inited ");
 
             if (cpu != null) cpu.OnLoad(node);
-            
+
             base.OnLoad(node);
         }
 

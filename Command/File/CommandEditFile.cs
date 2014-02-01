@@ -8,7 +8,9 @@ namespace kOS.Command.File
     [Command("EDIT &")]
     public class CommandEditFile : Command
     {
-        public CommandEditFile(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandEditFile(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

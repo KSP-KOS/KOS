@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Text;
 
 namespace kOS.Debug
@@ -16,13 +15,13 @@ namespace kOS.Debug
 
             // Include information for each Field
             sb.Append("\r\n\r\nFields:");
-            FieldInfo[] fi = type.GetFields();
+            var fi = type.GetFields();
             if (fi.Length > 0)
             {
-                foreach (FieldInfo f in fi)
+                foreach (var f in fi)
                 {
-                    sb.Append("\r\n " + f.ToString() + " = " +
-                                f.GetValue(o));
+                    sb.Append("\r\n " + f + " = " +
+                              f.GetValue(o));
                 }
             }
             else
@@ -30,13 +29,13 @@ namespace kOS.Debug
 
             // Include information for each Property
             sb.Append("\r\n\r\nProperties:");
-            PropertyInfo[] pi = type.GetProperties();
+            var pi = type.GetProperties();
             if (pi.Length > 0)
             {
-                foreach (PropertyInfo p in pi)
+                foreach (var p in pi)
                 {
-                    sb.Append("\r\n " + p.ToString() + " = " +
-                                p.GetValue(o, null));
+                    sb.Append("\r\n " + p + " = " +
+                              p.GetValue(o, null));
                 }
             }
             else

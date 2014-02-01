@@ -8,7 +8,9 @@ namespace kOS.Command.BasicIO
     [Command("PRINT * AT_(2)")]
     public class CommandPrintAt : Command
     {
-        public CommandPrintAt(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandPrintAt(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

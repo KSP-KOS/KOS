@@ -4,7 +4,7 @@ namespace kOS.Suffixed
 {
     public class SpecialValueTester : SpecialValue
     {
-        readonly ICPU cpu;
+        private readonly ICPU cpu;
 
         public SpecialValueTester(ICPU cpu)
         {

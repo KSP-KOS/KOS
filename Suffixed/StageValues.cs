@@ -4,7 +4,7 @@ namespace kOS.Suffixed
 {
     public class StageValues : SpecialValue
     {
-        readonly Vessel vessel;
+        private readonly Vessel vessel;
 
         public StageValues(Vessel vessel)
         {

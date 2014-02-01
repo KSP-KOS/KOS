@@ -8,7 +8,9 @@ namespace kOS.Command.Vessel
     [Command("REMOVE *")]
     public class CommandRemoveObjectFromVessel : Command
     {
-        public CommandRemoveObjectFromVessel(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandRemoveObjectFromVessel(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

@@ -9,7 +9,7 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "G":
-                    return 6.67384 * (10^-11);
+                    return 6.67384*(10 ^ -11);
                 case "E":
                 case "e":
                     return Math.E;

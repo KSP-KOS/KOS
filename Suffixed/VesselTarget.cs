@@ -10,12 +10,14 @@ namespace kOS.Suffixed
 
         static VesselTarget()
         {
-            ShortCuttableShipSuffixes = new[] 
-            {
-                "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE", "LONGITUDE", 
-                "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "AIRSPEED", "VESSELNAME", 
-                "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR"
-            };
+            ShortCuttableShipSuffixes = new[]
+                {
+                    "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
+                    "LONGITUDE",
+                    "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED",
+                    "AIRSPEED", "VESSELNAME",
+                    "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR"
+                };
         }
 
         public VesselTarget(Vessel target, IExecutionContext context)
@@ -69,10 +71,10 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "DIRECTION":
-                        var vector = (Target.GetWorldPos3D() - context.Vessel.GetWorldPos3D());
-                        return new Direction(vector, false);
+                    var vector = (Target.GetWorldPos3D() - context.Vessel.GetWorldPos3D());
+                    return new Direction(vector, false);
                 case "DISTANCE":
-                    return (float)GetDistance();
+                    return (float) GetDistance();
                 case "BEARING":
                     return VesselUtils.GetTargetBearing(context.Vessel, Target);
                 case "HEADING":
@@ -100,31 +102,33 @@ namespace kOS.Suffixed
                 case "BODY":
                     return Target.mainBody.bodyName;
                 case "ANGULARMOMENTUM":
-                    return  new Direction(Target.angularMomentum, true);
+                    return new Direction(Target.angularMomentum, true);
                 case "ANGULARVEL":
                     return new Direction(Target.angularVelocity, true);
                 case "MASS":
-                    return  Target.GetTotalMass();
+                    return Target.GetTotalMass();
                 case "VERTICALSPEED":
-                    return  Target.verticalSpeed;
+                    return Target.verticalSpeed;
                 case "SURFACESPEED":
-                    return  Target.horizontalSrfSpeed;
+                    return Target.horizontalSrfSpeed;
                 case "AIRSPEED":
-                    return (Target.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Target.GetWorldPos3D())).magnitude; //the velocity of the vessel relative to the air);
+                    return
+                        (Target.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Target.GetWorldPos3D()))
+                            .magnitude; //the velocity of the vessel relative to the air);
                 case "VESSELNAME":
-                    return  Target.vesselName;
+                    return Target.vesselName;
                 case "ALTITUDE":
                     return Target.altitude;
                 case "APOAPSIS":
-                    return  Target.orbit.ApA;
+                    return Target.orbit.ApA;
                 case "PERIAPSIS":
-                    return  Target.orbit.PeA;
+                    return Target.orbit.PeA;
                 case "SENSOR":
                     return new VesselSensors(Target);
                 case "TERMVELOCITY":
                     return VesselUtils.GetTerminalVelocity(Target);
                 case "OBT":
-                    return new OrbitInfo(Target.orbit,Target);
+                    return new OrbitInfo(Target.orbit, Target);
             }
 
             // Is this a resource?

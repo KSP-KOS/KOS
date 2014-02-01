@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using kOS.Binding;
@@ -11,34 +10,33 @@ using kOS.Utilities;
 
 namespace kOS.Context
 {
-    public enum ExecutionState { NEW, DONE, WAIT };
-    public enum SpecialKey { HOME, END, DELETE };
-    public enum SystemMessage { CLEARSCREEN, SHUTDOWN, RESTART };
+    public enum ExecutionState
+    {
+        NEW,
+        DONE,
+        WAIT
+    };
+
+    public enum SpecialKey
+    {
+        HOME,
+        END,
+        DELETE
+    };
+
+    public enum SystemMessage
+    {
+        CLEARSCREEN,
+        SHUTDOWN,
+        RESTART
+    };
 
     public class ExecutionContext : IExecutionContext
     {
         public const int COLUMNS = 50;
         public const int ROWS = 36;
-
-        public int Line { get; set; }
-        
-        public virtual IVolume SelectedVolume
-        { 
-            get { return ParentContext != null ? ParentContext.SelectedVolume : null; }
-            set { if (ParentContext != null) ParentContext.SelectedVolume = value; } 
-        }
-
-        public virtual Vessel Vessel { get { return ParentContext != null ? ParentContext.Vessel : null; } }
-        public virtual List<IVolume> Volumes { get { return ParentContext != null ? ParentContext.Volumes : null; } }
-        public virtual IDictionary<string, Variable> Variables { get { return ParentContext != null ? ParentContext.Variables : null; } }
-        public virtual List<KOSExternalFunction> ExternalFunctions { get { return ParentContext != null ? ParentContext.ExternalFunctions : null; } }
-
-        public IExecutionContext ParentContext { get; set; }
-        public IExecutionContext ChildContext { get; set; }
-        public ExecutionState State { get; set; }
-
-        public Dictionary<string, Expression.Expression> Locks = new Dictionary<string, Expression.Expression>();
         public List<ICommand> CommandLocks = new List<ICommand>();
+        public Dictionary<string, Expression.Expression> Locks = new Dictionary<string, Expression.Expression>();
 
         public ExecutionContext()
         {
@@ -50,6 +48,38 @@ namespace kOS.Context
             State = ExecutionState.NEW;
             ParentContext = parent;
         }
+
+        public int Line { get; set; }
+
+        public virtual IVolume SelectedVolume
+        {
+            get { return ParentContext != null ? ParentContext.SelectedVolume : null; }
+            set { if (ParentContext != null) ParentContext.SelectedVolume = value; }
+        }
+
+        public virtual Vessel Vessel
+        {
+            get { return ParentContext != null ? ParentContext.Vessel : null; }
+        }
+
+        public virtual List<IVolume> Volumes
+        {
+            get { return ParentContext != null ? ParentContext.Volumes : null; }
+        }
+
+        public virtual IDictionary<string, Variable> Variables
+        {
+            get { return ParentContext != null ? ParentContext.Variables : null; }
+        }
+
+        public virtual List<KOSExternalFunction> ExternalFunctions
+        {
+            get { return ParentContext != null ? ParentContext.ExternalFunctions : null; }
+        }
+
+        public IExecutionContext ParentContext { get; set; }
+        public IExecutionContext ChildContext { get; set; }
+        public ExecutionState State { get; set; }
 
         public virtual void VerifyMount()
         {
@@ -128,7 +158,7 @@ namespace kOS.Context
         {
             varName = varName.ToLower();
 
-            Variable v = Variables.ContainsKey(varName) ? Variables[varName] : null;
+            var v = Variables.ContainsKey(varName) ? Variables[varName] : null;
 
             if (v == null && ParentContext != null)
             {
@@ -178,7 +208,7 @@ namespace kOS.Context
         {
             if (volID is int)
             {
-                if (Volumes.Count > (int)volID) return Volumes[(int)volID];
+                if (Volumes.Count > (int) volID) return Volumes[(int) volID];
             }
             else if (volID is string)
             {
@@ -190,7 +220,7 @@ namespace kOS.Context
                 }
 
                 int outVal;
-                if (int.TryParse((string)volID, out outVal))
+                if (int.TryParse((string) volID, out outVal))
                 {
                     if (Volumes.Count > outVal) return Volumes[outVal];
                 }
@@ -289,16 +319,16 @@ namespace kOS.Context
 
         public virtual void UnsetAll()
         {
-            for( int i = 0; i < Variables.Count; i++)
+            for (var i = 0; i < Variables.Count; i++)
             {
                 var currvar = Variables.ElementAt(i);
 
-                if(!(currvar.Value is BoundVariable))
+                if (!(currvar.Value is BoundVariable))
                 {
                     Variables.Remove(currvar.Key);
                 }
             }
-                if (ParentContext != null) ParentContext.UnsetAll();
+            if (ParentContext != null) ParentContext.UnsetAll();
         }
 
         public bool ParseNext(ref string buffer, out string cmd, ref int lineCount, out int lineStart)

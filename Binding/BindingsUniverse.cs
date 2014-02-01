@@ -10,13 +10,13 @@ namespace kOS.Binding
         {
             manager.AddGetter("WARP", cpu => TimeWarp.fetch.current_rate_index);
             manager.AddSetter("WARP", delegate(ICPU cpu, object val)
-            {
-                int newRate;
-                if (int.TryParse(val.ToString(), out newRate))
                 {
-                    TimeWarp.SetRate(newRate, false);
-                }
-            });
+                    int newRate;
+                    if (int.TryParse(val.ToString(), out newRate))
+                    {
+                        TimeWarp.SetRate(newRate, false);
+                    }
+                });
 
             foreach (var body in FlightGlobals.fetch.bodies)
             {

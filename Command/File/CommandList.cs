@@ -1,16 +1,16 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using kOS.Context;
 using kOS.Debug;
-using kOS.Persistance;
 
 namespace kOS.Command.File
 {
     [Command("LIST[VOLUMES,FILES]?")]
     public class CommandList : Command
     {
-        public CommandList(Match regexMatch, IExecutionContext context) : base(regexMatch,  context) { }
+        public CommandList(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {
@@ -21,15 +21,16 @@ namespace kOS.Command.File
                 StdOut("");
 
                 StdOut("Volume " + GetVolumeBestIdentifier(SelectedVolume));
-                StdOut("-------------------------------------");                
+                StdOut("-------------------------------------");
 
                 foreach (var fileInfo in SelectedVolume.GetFileList())
                 {
                     StdOut(fileInfo.Name.PadRight(30, ' ') + fileInfo.Size.ToString(CultureInfo.InvariantCulture));
                 }
-                
-                int freeSpace = SelectedVolume.GetFreeSpace();
-                StdOut("Free space remaining: " + (freeSpace > -1 ? freeSpace.ToString(CultureInfo.InvariantCulture) : " infinite"));
+
+                var freeSpace = SelectedVolume.GetFreeSpace();
+                StdOut("Free space remaining: " +
+                       (freeSpace > -1 ? freeSpace.ToString(CultureInfo.InvariantCulture) : " infinite"));
 
                 StdOut("");
 
@@ -43,17 +44,21 @@ namespace kOS.Command.File
                 StdOut("ID    Name                    Size");
                 StdOut("-------------------------------------");
 
-                int i = 0;
+                var i = 0;
 
                 foreach (var volume in Volumes)
                 {
-                    string id = i.ToString(CultureInfo.InvariantCulture);
+                    var id = i.ToString(CultureInfo.InvariantCulture);
                     if (volume == SelectedVolume) id = "*" + id;
 
-                    string line = id.PadLeft(2).PadRight(6, ' ');
+                    var line = id.PadLeft(2).PadRight(6, ' ');
                     line += volume.Name.PadRight(24, ' ');
 
-                    string size = volume.CheckRange() ? (volume.Capacity > -1 ? volume.Capacity.ToString(CultureInfo.InvariantCulture) : "Inf") : "Disc";
+                    var size = volume.CheckRange()
+                                   ? (volume.Capacity > -1
+                                          ? volume.Capacity.ToString(CultureInfo.InvariantCulture)
+                                          : "Inf")
+                                   : "Disc";
                     line += size;
 
                     StdOut(line);

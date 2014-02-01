@@ -15,12 +15,12 @@ namespace kOS.Persistance
         {
             Capacity = 10000;
 
-            foreach (var s in node.GetValues("capacity"))
+            foreach (string s in node.GetValues("capacity"))
             {
                 Capacity = Int32.Parse(s);
             }
 
-            foreach (var s in node.GetValues("volumeName"))
+            foreach (string s in node.GetValues("volumeName"))
             {
                 Name = s;
             }
@@ -48,8 +48,9 @@ namespace kOS.Persistance
             // Consider only existing files that don't share a name with the proposed new file
             // Because this could be an overwrite situation
             var totalOccupied = newFile.GetSize() + Files.
-                Where(existingFile => existingFile.Filename != newFile.Filename).
-                Sum(existingFile => existingFile.GetSize());
+                                                        Where(existingFile => existingFile.Filename != newFile.Filename)
+                                                         .
+                                                        Sum(existingFile => existingFile.GetSize());
 
             return (Capacity - totalOccupied >= 0);
         }
@@ -72,7 +73,7 @@ namespace kOS.Persistance
             {
                 node.AddNode(file.Save("file"));
             }
-            
+
             return node;
         }
     }

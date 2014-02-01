@@ -4,9 +4,11 @@ using kOS.Context;
 namespace kOS.Command.Vessel
 {
     [Command("STAGE")]
-    class CommandVesselStage : Command
+    internal class CommandVesselStage : Command
     {
-        public CommandVesselStage(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandVesselStage(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

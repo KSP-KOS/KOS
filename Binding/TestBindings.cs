@@ -8,7 +8,7 @@ namespace kOS.Binding
 #if DEBUG
             manager.AddGetter("TEST1", cpu => 4);
             manager.AddSetter("TEST1", (cpu, val) => cpu.StdOut(val.ToString()));
-#endif                  
+#endif
         }
 
         public void Update(float time)

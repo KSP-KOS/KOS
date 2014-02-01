@@ -4,9 +4,11 @@ using kOS.Context;
 namespace kOS.Command.File
 {
     [Command("LOG * TO &")]
-    public class CommandLog: Command
+    public class CommandLog : Command
     {
-        public CommandLog(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandLog(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

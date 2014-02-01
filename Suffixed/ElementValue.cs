@@ -6,8 +6,8 @@ namespace kOS.Suffixed
     public class ElementValue : SpecialValue
     {
         private readonly string name;
-        private readonly uint uid;
         private readonly IList<Part> parts;
+        private readonly uint uid;
 
         public ElementValue(IEnumerable<Part> parts)
         {
@@ -37,7 +37,7 @@ namespace kOS.Suffixed
         {
             var toReturn = new ListValue();
 
-            foreach (var flightParts in parts.GroupBy(p=>p.flightID))
+            foreach (var flightParts in parts.GroupBy(p => p.flightID))
             {
                 var element = new ElementValue(flightParts);
             }

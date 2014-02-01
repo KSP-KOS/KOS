@@ -1,9 +1,9 @@
-﻿using System;
+﻿using KSP.IO;
+using KSP.Testing;
 using UnityEngine;
 using kOS.Context;
-using kOS.Persistance;
 using kOS.Suffixed;
-
+using File = kOS.Persistance.File;
 
 namespace kOS
 {
@@ -11,24 +11,24 @@ namespace kOS
     {
         public static VersionInfo VersionInfo = new VersionInfo(0, 10.0);
 
-        public static Core Fetch; 
+        public static Core Fetch;
         public TerminalWindow Window;
-        
+
         public void Awake()
         {
             // This thing gets instantiated 4 times by KSP for some reason
             if (Fetch != null) return;
             Fetch = this;
 
-            var gObj = new GameObject("kOSTermWindow", typeof(TerminalWindow));
+            var gObj = new GameObject("kOSTermWindow", typeof (TerminalWindow));
             DontDestroyOnLoad(gObj);
-            Window = (TerminalWindow)gObj.GetComponent(typeof(TerminalWindow));
+            Window = (TerminalWindow) gObj.GetComponent(typeof (TerminalWindow));
             Window.Core = this;
         }
 
         public void SaveSettings()
         {
-            KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/");
+            BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/");
         }
 
         public static void Debug(string line)
@@ -54,12 +54,12 @@ namespace kOS
         }
     }
 
-    public class CoreInitializer : KSP.Testing.UnitTest
+    public class CoreInitializer : UnitTest
     {
         public CoreInitializer()
         {
-            var gameobject = new GameObject("kOSCore", typeof(Core));
-            UnityEngine.Object.DontDestroyOnLoad(gameobject);
+            var gameobject = new GameObject("kOSCore", typeof (Core));
+            Object.DontDestroyOnLoad(gameobject);
         }
     }
 }

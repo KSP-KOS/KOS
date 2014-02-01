@@ -10,11 +10,11 @@ namespace kOS.Binding
     [KOSBinding("ksp")]
     public class FlightControl : IBinding
     {
-        private Vessel vessel;
-        private ICPU cpu;
         private readonly List<LockableControl> controls = new List<LockableControl>();
+        private ICPU cpu;
+        private Vessel vessel;
 
-        public  void BindTo(IBindingManager manager)
+        public void BindTo(IBindingManager manager)
         {
             cpu = manager.Cpu;
             vessel = manager.Cpu.Vessel;
@@ -27,16 +27,8 @@ namespace kOS.Binding
 
             vessel.OnFlyByWire += OnFlyByWire;
         }
-        
-        public void OnFlyByWire(FlightCtrlState c)
-        {
-            foreach (LockableControl control in controls)
-            {
-                control.OnFlyByWire(ref c);
-            }
-        }
 
-        public  void Update(float time)
+        public void Update(float time)
         {
             if (vessel != cpu.Vessel)
             {
@@ -52,11 +44,19 @@ namespace kOS.Binding
                     vessel = cpu.Vessel;
                     vessel.OnFlyByWire += OnFlyByWire;
 
-                    foreach (LockableControl c in controls)
+                    foreach (var c in controls)
                     {
                         c.UpdateVessel(vessel);
                     }
                 }
+            }
+        }
+
+        public void OnFlyByWire(FlightCtrlState c)
+        {
+            foreach (var control in controls)
+            {
+                control.OnFlyByWire(ref c);
             }
         }
 
@@ -71,7 +71,7 @@ namespace kOS.Binding
                 Vessel = cpu.Vessel;
                 Locked = false;
                 Value = 0;
-                
+
                 manager.AddGetter(name, c => Value);
                 manager.AddSetter(name, delegate { });
 
@@ -94,10 +94,10 @@ namespace kOS.Binding
                 switch (propertyName)
                 {
                     case "throttle":
-                        c.mainThrottle = (float)e.Double();
+                        c.mainThrottle = (float) e.Double();
                         break;
                     case "wheelthrottle":
-                        c.wheelThrottle = (float)Utils.Clamp(e.Double(), -1, 1);
+                        c.wheelThrottle = (float) Utils.Clamp(e.Double(), -1, 1);
                         break;
                     case "steering":
                         SteerByWire(c);
@@ -132,7 +132,9 @@ namespace kOS.Binding
 
                 if (!(Vessel.horizontalSrfSpeed > 0.1f)) return;
 
-                if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(Vessel), VesselUtils.GetVelocityHeading(Vessel))) <=
+                if (
+                    Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(Vessel),
+                                                     VesselUtils.GetVelocityHeading(Vessel))) <=
                     90)
                 {
                     c.wheelSteer = Mathf.Clamp(bearing/-10, -1, 1);
@@ -165,7 +167,7 @@ namespace kOS.Binding
 
             internal void UpdateVessel(Vessel vessel)
             {
-                this.Vessel = vessel;
+                Vessel = vessel;
             }
         }
     }

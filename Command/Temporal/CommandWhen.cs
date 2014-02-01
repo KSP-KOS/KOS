@@ -6,11 +6,13 @@ namespace kOS.Command.Temporal
     [Command("WHEN / THEN *")]
     public class CommandWhen : Command
     {
-        private ICommand targetCommand;
         private Expression.Expression expression;
+        private ICommand targetCommand;
         private bool triggered;
 
-        public CommandWhen(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandWhen(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

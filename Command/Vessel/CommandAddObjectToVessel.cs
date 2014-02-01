@@ -8,7 +8,9 @@ namespace kOS.Command.Vessel
     [Command("ADD *")]
     public class CommandAddObjectToVessel : Command
     {
-        public CommandAddObjectToVessel(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandAddObjectToVessel(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

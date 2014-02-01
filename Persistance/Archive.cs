@@ -4,14 +4,14 @@ using System.IO;
 using UnityEngine;
 using kOS.Debug;
 using kOS.Utilities;
+using BinaryReader = KSP.IO.BinaryReader;
 
 namespace kOS.Persistance
 {
     public class Archive : Volume
     {
-        public string ArchiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
-
         private readonly Vessel vessel;
+        public string ArchiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
 
         public Archive(Vessel vessel)
         {
@@ -34,7 +34,7 @@ namespace kOS.Persistance
 
             // Attempt to migrate files from old archive drive
             if (!KSP.IO.File.Exists<File>(HighLogic.fetch.GameSaveFolder + "/arc")) return;
-            var reader = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/arc");
+            var reader = BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/arc");
 
             int fileCount = reader.ReadInt32();
 
@@ -42,8 +42,8 @@ namespace kOS.Persistance
             {
                 try
                 {
-                    var filename = reader.ReadString();
-                    var body = reader.ReadString();
+                    string filename = reader.ReadString();
+                    string body = reader.ReadString();
 
                     var file = new File(filename);
                     file.Deserialize(body);
@@ -68,11 +68,11 @@ namespace kOS.Persistance
             {
                 using (var infile = new StreamReader(ArchiveFolder + name + ".txt", true))
                 {
-                    var fileBody = infile.ReadToEnd().Replace("\r\n", "\n") ;
+                    var fileBody = infile.ReadToEnd().Replace("\r\n", "\n");
 
                     var retFile = new File(name);
                     retFile.Deserialize(fileBody);
-                    
+
                     base.DeleteByName(name);
                     Files.Add(retFile);
 
@@ -133,7 +133,8 @@ namespace kOS.Persistance
                 foreach (var file in Directory.GetFiles(ArchiveFolder, "*.txt"))
                 {
                     var sysFileInfo = new System.IO.FileInfo(file);
-                    var fileInfo = new FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
+                    var fileInfo = new FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4),
+                                                (int) sysFileInfo.Length);
 
                     retList.Add(fileInfo);
                 }

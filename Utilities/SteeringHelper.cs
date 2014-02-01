@@ -6,13 +6,12 @@ using kOS.Suffixed;
 
 namespace kOS.Utilities
 {
-    
     public static class SteeringHelper
     {
         public static void KillRotation(FlightCtrlState c, Vessel vessel)
         {
             var act = vessel.transform.InverseTransformDirection(vessel.rigidbody.angularVelocity).normalized;
-            
+
             c.pitch = act.x;
             c.roll = act.y;
             c.yaw = act.z;
@@ -28,7 +27,7 @@ namespace kOS.Utilities
             var momentOfInertia = vessel.findLocalMOI(centerOfMass);
             var target = targetDir.Rotation;
             var vesselR = vessel.transform.rotation;
-            var delta = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselR) * target);
+            var delta = Quaternion.Inverse(Quaternion.Euler(90, 0, 0)*Quaternion.Inverse(vesselR)*target);
 
             var deltaEuler = ReduceAngles(delta.eulerAngles);
             deltaEuler.y *= -1;
@@ -36,23 +35,22 @@ namespace kOS.Utilities
             var torque = GetTorque(vessel, c.mainThrottle);
             var inertia = GetEffectiveInertia(vessel, torque);
 
-            var err = deltaEuler * Math.PI / 180.0F;
+            var err = deltaEuler*Math.PI/180.0F;
             err += new Vector3d(inertia.x, inertia.z, inertia.y);
 
-            var act = 120.0f * err;
+            var act = 120.0f*err;
 
-            var precision = Mathf.Clamp((float)torque.x * 20f / momentOfInertia.magnitude, 0.5f, 10f);
-            var driveLimit = Mathf.Clamp01((float)(err.magnitude * 380.0f / precision));
+            var precision = Mathf.Clamp((float) torque.x*20f/momentOfInertia.magnitude, 0.5f, 10f);
+            var driveLimit = Mathf.Clamp01((float) (err.magnitude*380.0f/precision));
 
-            act.x = Mathf.Clamp((float)act.x, -driveLimit, driveLimit);
-            act.y = Mathf.Clamp((float)act.y, -driveLimit, driveLimit);
-            act.z = Mathf.Clamp((float)act.z, -driveLimit, driveLimit);
+            act.x = Mathf.Clamp((float) act.x, -driveLimit, driveLimit);
+            act.y = Mathf.Clamp((float) act.y, -driveLimit, driveLimit);
+            act.z = Mathf.Clamp((float) act.z, -driveLimit, driveLimit);
 
 
-            c.roll = Mathf.Clamp((float)(c.roll + act.z), -driveLimit, driveLimit);
-            c.pitch = Mathf.Clamp((float)(c.pitch + act.x), -driveLimit, driveLimit);
-            c.yaw = Mathf.Clamp((float)(c.yaw + act.y), -driveLimit, driveLimit);
-
+            c.roll = Mathf.Clamp((float) (c.roll + act.z), -driveLimit, driveLimit);
+            c.pitch = Mathf.Clamp((float) (c.pitch + act.x), -driveLimit, driveLimit);
+            c.yaw = Mathf.Clamp((float) (c.yaw + act.y), -driveLimit, driveLimit);
         }
 
         public static Vector3d SwapYZ(Vector3d input)
@@ -69,14 +67,15 @@ namespace kOS.Utilities
         {
             var centerOfMass = vessel.findWorldCenterOfMass();
             var momentOfInertia = vessel.findLocalMOI(centerOfMass);
-            var angularVelocity = Quaternion.Inverse(vessel.transform.rotation) * vessel.rigidbody.angularVelocity;
-            var angularMomentum = new Vector3d(angularVelocity.x * momentOfInertia.x, angularVelocity.y * momentOfInertia.y, angularVelocity.z * momentOfInertia.z);
+            var angularVelocity = Quaternion.Inverse(vessel.transform.rotation)*vessel.rigidbody.angularVelocity;
+            var angularMomentum = new Vector3d(angularVelocity.x*momentOfInertia.x, angularVelocity.y*momentOfInertia.y,
+                                               angularVelocity.z*momentOfInertia.z);
 
             var retVar = Vector3d.Scale
-            (
-                Sign(angularMomentum) * 2.0f,
-                Vector3d.Scale(Pow(angularMomentum, 2), Inverse(Vector3d.Scale(torque, momentOfInertia)))
-            );
+                (
+                    Sign(angularMomentum)*2.0f,
+                    Vector3d.Scale(Pow(angularMomentum, 2), Inverse(Vector3d.Scale(torque, momentOfInertia)))
+                );
 
             retVar.y *= 10;
 
@@ -86,7 +85,7 @@ namespace kOS.Utilities
         public static Vector3d GetTorque(Vessel vessel, float thrust)
         {
             var centerOfMass = vessel.findWorldCenterOfMass();
-            
+
             float pitchYaw = 0;
             float roll = 0;
 
@@ -106,19 +105,19 @@ namespace kOS.Utilities
                 {
                     var max = rcsModule.thrusterPowers.Cast<float>().Aggregate<float, float>(0, Mathf.Max);
 
-                    pitchYaw += max * relCoM.magnitude;
+                    pitchYaw += max*relCoM.magnitude;
                 }
 
                 foreach (PartModule module in part.Modules)
                 {
                     if (!(module is ModuleReactionWheel)) continue;
-                    pitchYaw += ((ModuleReactionWheel)module).PitchTorque;
-                    roll += ((ModuleReactionWheel)module).RollTorque;
+                    pitchYaw += ((ModuleReactionWheel) module).PitchTorque;
+                    roll += ((ModuleReactionWheel) module).RollTorque;
                 }
 
-                pitchYaw += (float)GetThrustTorque(part, vessel) * thrust;
+                pitchYaw += (float) GetThrustTorque(part, vessel)*thrust;
             }
-            
+
             return new Vector3d(pitchYaw, roll, pitchYaw);
         }
 
@@ -130,23 +129,27 @@ namespace kOS.Utilities
             {
                 if (p is LiquidEngine)
                 {
-                    if (((LiquidEngine)p).thrustVectoringCapable)
+                    if (((LiquidEngine) p).thrustVectoringCapable)
                     {
-                        return Math.Sin(Math.Abs(((LiquidEngine)p).gimbalRange) * Math.PI / 180) * ((LiquidEngine)p).maxThrust * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
+                        return Math.Sin(Math.Abs(((LiquidEngine) p).gimbalRange)*Math.PI/180)*
+                               ((LiquidEngine) p).maxThrust*(p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
                     }
                 }
                 else if (p is LiquidFuelEngine)
                 {
-                    if (((LiquidFuelEngine)p).thrustVectoringCapable)
+                    if (((LiquidFuelEngine) p).thrustVectoringCapable)
                     {
-                        return Math.Sin(Math.Abs(((LiquidFuelEngine)p).gimbalRange) * Math.PI / 180) * ((LiquidFuelEngine)p).maxThrust * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
+                        return Math.Sin(Math.Abs(((LiquidFuelEngine) p).gimbalRange)*Math.PI/180)*
+                               ((LiquidFuelEngine) p).maxThrust*(p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
                     }
                 }
                 else if (p is AtmosphericEngine)
                 {
-                    if (((AtmosphericEngine)p).thrustVectoringCapable)
+                    if (((AtmosphericEngine) p).thrustVectoringCapable)
                     {
-                        return Math.Sin(Math.Abs(((AtmosphericEngine)p).gimbalRange) * Math.PI / 180) * ((AtmosphericEngine)p).maximumEnginePower * ((AtmosphericEngine)p).totalEfficiency * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
+                        return Math.Sin(Math.Abs(((AtmosphericEngine) p).gimbalRange)*Math.PI/180)*
+                               ((AtmosphericEngine) p).maximumEnginePower*((AtmosphericEngine) p).totalEfficiency*
+                               (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
                     }
                 }
             }
@@ -157,15 +160,15 @@ namespace kOS.Utilities
         private static Vector3d ReduceAngles(Vector3d input)
         {
             return new Vector3d(
-                      (input.x > 180f) ? (input.x - 360f) : input.x,
-                      (input.y > 180f) ? (input.y - 360f) : input.y,
-                      (input.z > 180f) ? (input.z - 360f) : input.z
-                  );
+                (input.x > 180f) ? (input.x - 360f) : input.x,
+                (input.y > 180f) ? (input.y - 360f) : input.y,
+                (input.z > 180f) ? (input.z - 360f) : input.z
+                );
         }
-        
+
         public static Vector3d Inverse(Vector3d input)
         {
-            return new Vector3d(1 / input.x, 1 / input.y, 1 / input.z);
+            return new Vector3d(1/input.x, 1/input.y, 1/input.z);
         }
 
         public static Vector3d Sign(Vector3d vector)
@@ -183,13 +186,19 @@ namespace kOS.Utilities
             for (var i = 0; i < n; i++)
             {
                 k += i + 1;
-                if (i < n - 1) { vectorArray[i] = vectorArray[i + 1]; }
-                else { vectorArray[i] = newVector; }
-                x += vectorArray[i].x * (i + 1);
-                y += vectorArray[i].y * (i + 1);
-                z += vectorArray[i].z * (i + 1);
+                if (i < n - 1)
+                {
+                    vectorArray[i] = vectorArray[i + 1];
+                }
+                else
+                {
+                    vectorArray[i] = newVector;
+                }
+                x += vectorArray[i].x*(i + 1);
+                y += vectorArray[i].y*(i + 1);
+                z += vectorArray[i].z*(i + 1);
             }
-            return new Vector3d(x / k, y / k, z / k);
+            return new Vector3d(x/k, y/k, z/k);
         }
     }
 }

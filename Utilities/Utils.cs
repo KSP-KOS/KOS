@@ -6,10 +6,29 @@ namespace kOS.Utilities
 {
     public enum kOSKeys
     {
-        LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40,
+        LEFT = 37,
+        UP = 38,
+        RIGHT = 39,
+        DOWN = 40,
         DEL = 46,
-        F1 = 112, F2 = 113, F3 = 114, F4 = 115, F5 = 116, F6 = 117, F7 = 118, F8 = 119, F9 = 120, F10 = 121, F11 = 122, F12 = 123,
-        PGUP = 33, PGDN = 34, END = 35, HOME = 36, DELETE = 44, INSERT = 45,
+        F1 = 112,
+        F2 = 113,
+        F3 = 114,
+        F4 = 115,
+        F5 = 116,
+        F6 = 117,
+        F7 = 118,
+        F8 = 119,
+        F9 = 120,
+        F10 = 121,
+        F11 = 122,
+        F12 = 123,
+        PGUP = 33,
+        PGDN = 34,
+        END = 35,
+        HOME = 36,
+        DELETE = 44,
+        INSERT = 45,
         BREAK = 19
     }
 
@@ -116,13 +135,13 @@ namespace kOS.Utilities
                 i++;
             }
 
-            return closeChar == (char)0;
+            return closeChar == (char) 0;
         }
 
         public static bool DelimterMatch(string str)
         {
             var i = -1;
-            return Balance(ref str, ref i, (char)0);
+            return Balance(ref str, ref i, (char) 0);
         }
 
         public static double ProspectForResource(string resourceName, List<Part> engines)
@@ -160,15 +179,14 @@ namespace kOS.Utilities
 
             foreach (var attachNode in part.attachNodes)
             {
-                if (attachNode.attachedPart != null                                 //if there is a part attached here            
-                        && attachNode.nodeType == AttachNode.NodeType.Stack             //and the attached part is stacked (rather than surface mounted)
-                        && (attachNode.attachedPart.fuelCrossFeed                       //and the attached part allows fuel flow
-                            )
-                        && !(part.NoCrossFeedNodeKey.Length > 0                       //and this part does not forbid fuel flow
-                                && attachNode.id.Contains(part.NoCrossFeedNodeKey)))     //    through this particular node
+                if (attachNode.attachedPart != null //if there is a part attached here            
+                    && attachNode.nodeType == AttachNode.NodeType.Stack
+                    //and the attached part is stacked (rather than surface mounted)
+                    && (attachNode.attachedPart.fuelCrossFeed //and the attached part allows fuel flow
+                       )
+                    && !(part.NoCrossFeedNodeKey.Length > 0 //and this part does not forbid fuel flow
+                         && attachNode.id.Contains(part.NoCrossFeedNodeKey))) //    through this particular node
                 {
-
-
                     ret += ProspectForResource(resourceName, attachNode.attachedPart, ref visited);
                 }
             }
@@ -262,7 +280,7 @@ namespace kOS.Utilities
                         break;
 
                     case "[":
-                        int choiceEnd = kegex.IndexOf(']', i);
+                        var choiceEnd = kegex.IndexOf(']', i);
                         var choices = kegex.Substring(i + 1, choiceEnd - i - 1).Split(',');
                         output += "([\\s ]+" + string.Join("|[\\s ]+", choices) + ")";
                         i = choiceEnd;
@@ -288,10 +306,14 @@ namespace kOS.Utilities
                         // example: SIN_(1) denotes a function that has one parameter
                         var endIndexBracket = kegex.IndexOf(')', i);
 
-                        if (endIndexBracket == -1) throw new FormatException("Round bracket not closed in '" + kegex + "'");
+                        if (endIndexBracket == -1)
+                            throw new FormatException("Round bracket not closed in '" + kegex + "'");
 
                         var paramcount = Int32.Parse(kegex.Substring(i + 1, endIndexBracket - i - 1));
-                        output += @"\(" + string.Join(",", Enumerable.Repeat("([ :@A-Za-z0-9\\.\\-\\+\\*/\"]+)", paramcount).ToArray()) + @"\)";
+                        output += @"\(" +
+                                  string.Join(",",
+                                              Enumerable.Repeat("([ :@A-Za-z0-9\\.\\-\\+\\*/\"]+)", paramcount)
+                                                        .ToArray()) + @"\)";
                         i = endIndexBracket;
                         break;
 
@@ -314,5 +336,3 @@ namespace kOS.Utilities
         }
     }
 }
-
- 

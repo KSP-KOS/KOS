@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using UnityEngine;
 using kOS.Context;
 using kOS.Debug;
@@ -9,13 +8,12 @@ using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Binding
 {
-
     [KOSBinding("ksp")]
     public class FlightStats : IBinding
     {
         public void BindTo(IBindingManager manager)
         {
-            manager.AddGetter("ALT:RADAR", cpu => cpu.Vessel.heightFromTerrain > 0 ? Mathf.Min(cpu.Vessel.heightFromTerrain, (float)cpu.Vessel.altitude) : (float)cpu.Vessel.altitude);
+            manager.AddGetter("ALT:RADAR", cpu => cpu.Vessel.heightFromTerrain > 0 ? Mathf.Min(cpu.Vessel.heightFromTerrain, (float) cpu.Vessel.altitude) : (float) cpu.Vessel.altitude);
             manager.AddGetter("ALT:APOAPSIS", cpu => cpu.Vessel.orbit.ApA);
             manager.AddGetter("ALT:PERIAPSIS", cpu => cpu.Vessel.orbit.PeA);
             manager.AddGetter("ETA:APOAPSIS", cpu => cpu.Vessel.orbit.timeToAp);
@@ -35,12 +33,15 @@ namespace kOS.Binding
             manager.AddGetter("ENCOUNTER", cpu => VesselUtils.TryGetEncounter(cpu.Vessel));
 
             manager.AddGetter("NEXTNODE", delegate(ICPU cpu)
-            {
-                var vessel = cpu.Vessel;
-                if (!vessel.patchedConicSolver.maneuverNodes.Any()) { throw new KOSException("No maneuver nodes present!"); }
+                {
+                    var vessel = cpu.Vessel;
+                    if (vessel.patchedConicSolver.maneuverNodes.Count == 0)
+                    {
+                        throw new KOSException("No maneuver nodes present!");
+                    }
 
-                return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0]);
-            });
+                    return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0]);
+                });
 
             // Things like altitude, mass, maxthrust are now handled the same for other ships as the current ship
             manager.AddGetter("SHIP", cpu => new VesselTarget(cpu.Vessel, cpu));
@@ -52,7 +53,8 @@ namespace kOS.Binding
                 manager.AddGetter(scName, cpu => new VesselTarget(cpu.Vessel, cpu).GetSuffix(cName));
             }
 
-            manager.AddSetter("VESSELNAME", delegate(ICPU cpu, object value) { cpu.Vessel.vesselName = value.ToString(); });
+            manager.AddSetter("VESSELNAME",
+                              delegate(ICPU cpu, object value) { cpu.Vessel.vesselName = value.ToString(); });
         }
 
         public void Update(float time)
@@ -61,7 +63,7 @@ namespace kOS.Binding
 
         private static float GetLattitude(IExecutionContext cpu)
         {
-            var retVal = (float)cpu.Vessel.latitude;
+            var retVal = (float) cpu.Vessel.latitude;
 
             if (retVal > 90) return 90;
             if (retVal < -90) return -90;
@@ -71,7 +73,7 @@ namespace kOS.Binding
 
         private static float getLongitude(IExecutionContext cpu)
         {
-            var retVal = (float)cpu.Vessel.longitude;
+            var retVal = (float) cpu.Vessel.longitude;
 
             while (retVal > 180) retVal -= 360;
             while (retVal < -180) retVal += 360;

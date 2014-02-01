@@ -5,32 +5,10 @@ namespace kOS.Suffixed
 {
     public class Direction : SpecialValue
     {
-        private Vector3d vector;
-        public Vector3d Vector
-        {
-            get { return vector; }
-            set 
-            { 
-                vector = value; rotation = Quaternion.LookRotation(value); euler = rotation.eulerAngles; 
-            }
-        }
-
         private Vector3d euler;
-        public Vector3d Euler
-        {
-            get { return euler; }
-            set 
-            { 
-                euler = value; rotation = Quaternion.Euler(value);
-            }
-        }
 
         private Quaternion rotation;
-        public Quaternion Rotation
-        {
-            get { return rotation; }
-            set { rotation = value; euler = value.eulerAngles; }
-        }
+        private Vector3d vector;
 
         public Direction()
         {
@@ -50,7 +28,38 @@ namespace kOS.Suffixed
             }
             else
             {
-                Vector = v3D; 
+                Vector = v3D;
+            }
+        }
+
+        public Vector3d Vector
+        {
+            get { return vector; }
+            set
+            {
+                vector = value;
+                rotation = Quaternion.LookRotation(value);
+                euler = rotation.eulerAngles;
+            }
+        }
+
+        public Vector3d Euler
+        {
+            get { return euler; }
+            set
+            {
+                euler = value;
+                rotation = Quaternion.Euler(value);
+            }
+        }
+
+        public Quaternion Rotation
+        {
+            get { return rotation; }
+            set
+            {
+                rotation = value;
+                euler = value.eulerAngles;
             }
         }
 
@@ -71,15 +80,26 @@ namespace kOS.Suffixed
             return base.GetSuffix(suffixName);
         }
 
-        public static Direction operator *(Direction a, Direction b) { return new Direction(a.Rotation * b.Rotation); }
-        public static Direction operator +(Direction a, Direction b) { return new Direction(a.Euler + b.Euler, true); }
-        public static Direction operator -(Direction a, Direction b) { return new Direction(a.Euler - b.Euler, true); }
-        
+        public static Direction operator *(Direction a, Direction b)
+        {
+            return new Direction(a.Rotation*b.Rotation);
+        }
+
+        public static Direction operator +(Direction a, Direction b)
+        {
+            return new Direction(a.Euler + b.Euler, true);
+        }
+
+        public static Direction operator -(Direction a, Direction b)
+        {
+            return new Direction(a.Euler - b.Euler, true);
+        }
+
         public object TryOperation(string op, object other, bool reverseOrder)
         {
             if (other is Vector)
             {
-                other = ((Vector)other).ToDirection();
+                other = ((Vector) other).ToDirection();
             }
 
             if (op == "*" && other is Direction)
@@ -87,12 +107,12 @@ namespace kOS.Suffixed
                 // If I remember correctly, order of multiplication DOES matter with quaternions
                 return !reverseOrder ? this*(Direction) other : (Direction) other*this;
             }
-            
+
             if (op == "+" && other is Direction)
             {
-                return this + (Direction)other;
+                return this + (Direction) other;
             }
-            
+
             if (op == "-" && other is Direction)
             {
                 return !reverseOrder ? this - (Direction) other : (Direction) other - this;

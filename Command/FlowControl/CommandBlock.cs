@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using kOS.Context;
@@ -8,12 +7,17 @@ namespace kOS.Command.FlowControl
     [Command("^{([\\S\\s]*)}$")]
     public class CommandBlock : Command
     {
-        readonly List<ICommand> commands = new List<ICommand>();
-        string commandBuffer = "";
+        private readonly List<ICommand> commands = new List<ICommand>();
+        private string commandBuffer = "";
 
-        public CommandBlock(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandBlock(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
-        public CommandBlock(string directInput, IExecutionContext context) : base(Regex.Match(directInput, "^([\\S\\s]*)$"), context) {}
+        public CommandBlock(string directInput, IExecutionContext context)
+            : base(Regex.Match(directInput, "^([\\S\\s]*)$"), context)
+        {
+        }
 
         public override void Evaluate()
         {

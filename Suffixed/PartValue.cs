@@ -4,12 +4,12 @@ namespace kOS.Suffixed
 {
     public class PartValue : SpecialValue
     {
-        protected Part Part { get; private set; }
-
         public PartValue(Part part)
         {
             Part = part;
         }
+
+        protected Part Part { get; private set; }
 
         public override object GetSuffix(string suffixName)
         {
@@ -31,6 +31,7 @@ namespace kOS.Suffixed
             }
             return base.GetSuffix(suffixName);
         }
+
         public override string ToString()
         {
             return string.Format("PART({0},{1})", Part.name, Part.uid);

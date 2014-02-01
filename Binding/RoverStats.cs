@@ -3,7 +3,7 @@
     [KOSBinding("ksp")]
     public class RoverStats : IBinding
     {
-        public  void BindTo(IBindingManager manager)
+        public void BindTo(IBindingManager manager)
         {
             //manager.AddGetter("HEADING", delegate(CPU cpu) { return cpu.Vessel.vesselName; });
 

@@ -9,7 +9,7 @@ namespace kOS.Suffixed
 
         public ListValue()
         {
-           list = new List<object>(); 
+            list = new List<object>();
         }
 
         public int Count
@@ -63,15 +63,15 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "LIST("+ list.Count +")";
+            return "LIST(" + list.Count + ")";
         }
     }
 
     public class Enumerator : SpecialValue
     {
         private readonly IEnumerator enumerator;
-        private int index;
         private readonly object lockObject = new object();
+        private int index;
 
         public Enumerator(IEnumerator enumerator)
         {

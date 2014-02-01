@@ -7,7 +7,9 @@ namespace kOS.Suffixed
     {
         private readonly Vessel vessel;
 
-        public BodyTarget(string name, Vessel vessel) : this(VesselUtils.GetBodyByName(name), vessel) { }
+        public BodyTarget(string name, Vessel vessel) : this(VesselUtils.GetBodyByName(name), vessel)
+        {
+        }
 
         public BodyTarget(CelestialBody target, Vessel vessel)
         {
@@ -51,7 +53,7 @@ namespace kOS.Suffixed
                 case "VELOCITY":
                     return new Vector(Target.orbit.GetVel());
                 case "DISTANCE":
-                    return (float)GetDistance();
+                    return (float) GetDistance();
                 case "BODY":
                     return new BodyTarget(Target.orbit.referenceBody, vessel);
             }
@@ -61,7 +63,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
- 	        if (Target != null)
+            if (Target != null)
             {
                 return "BODY(\"" + Target.name + "\")";
             }
@@ -69,6 +71,4 @@ namespace kOS.Suffixed
             return base.ToString();
         }
     }
-
-
 }

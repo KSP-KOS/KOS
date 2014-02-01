@@ -4,6 +4,10 @@ namespace kOS.Module
 {
     public interface IProcessorModule
     {
+        Part part { get; set; }
+        Vessel vessel { get; }
+        IVolume HardDisk { get; }
+
         [KSPEvent(guiActive = true, guiName = "Open Terminal")]
         void Activate();
 
@@ -24,9 +28,5 @@ namespace kOS.Module
 
         [KSPEvent(guiName = "Unit -", guiActive = false, guiActiveEditor = true)]
         void DecrementUnitId();
-
-        Part part { get; set; }
-        Vessel vessel { get; }
-        IVolume HardDisk { get; }
     }
 }

@@ -7,7 +7,9 @@ using kOS.Context;
 namespace kOS.Binding
 {
     public delegate void BindingSetDlg(ICPU cpu, object val);
+
     public delegate object BindingGetDlg(ICPU cpu);
+
     public class BindingManager : IBindingManager
     {
         private readonly List<IBinding> bindings = new List<IBinding>();
@@ -22,10 +24,10 @@ namespace kOS.Binding
 
             foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                var attr = (KOSBinding)t.GetCustomAttributes(typeof(KOSBinding), true).FirstOrDefault();
+                var attr = (KOSBinding) t.GetCustomAttributes(typeof (KOSBinding), true).FirstOrDefault();
 
                 if (attr == null || attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
-                var b = (IBinding)Activator.CreateInstance(t);
+                var b = (IBinding) Activator.CreateInstance(t);
                 b.BindTo(this);
                 bindings.Add(b);
             }

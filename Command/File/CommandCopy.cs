@@ -7,7 +7,9 @@ namespace kOS.Command.File
     [Command("COPY &[TO,FROM][VOLUME]? ^")]
     public class CommandCopy : Command
     {
-        public CommandCopy(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandCopy(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {
@@ -24,13 +26,15 @@ namespace kOS.Command.File
                 case "FROM":
                     file = targetVolume.GetByName(targetFile);
                     if (file == null) throw new KOSException("File '" + targetFile + "' not found", this);
-                    if (!SelectedVolume.SaveFile(new Persistance.File(file))) throw new KOSException("File copy failed", this);
+                    if (!SelectedVolume.SaveFile(new Persistance.File(file)))
+                        throw new KOSException("File copy failed", this);
                     break;
 
                 case "TO":
                     file = SelectedVolume.GetByName(targetFile);
                     if (file == null) throw new KOSException("File '" + targetFile + "' not found", this);
-                    if (!targetVolume.SaveFile(new Persistance.File(file))) throw new KOSException("File copy failed", this);
+                    if (!targetVolume.SaveFile(new Persistance.File(file)))
+                        throw new KOSException("File copy failed", this);
                     break;
             }
 

@@ -10,11 +10,13 @@ namespace kOS.Command.FlowControl
     public class CommandForLoop : Command
     {
         // commandstring;
-        ICommand targetCommand;
         private Enumerator iterator;
         private string iteratorstring;
+        private ICommand targetCommand;
 
-        public CommandForLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandForLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {
@@ -62,7 +64,7 @@ namespace kOS.Command.FlowControl
 
             if (ChildContext == null)
             {
-                if ((bool)iterator.GetSuffix("END"))
+                if ((bool) iterator.GetSuffix("END"))
                 {
                     State = ExecutionState.DONE;
                     ParentContext.Unset(iteratorstring);
@@ -73,7 +75,7 @@ namespace kOS.Command.FlowControl
                     iteratorVariable.Value = iterator.GetSuffix("VALUE");
                     ChildContext = targetCommand;
                     //ChildContext = Command.Get(commandstring, this);
-                    ((ICommand)ChildContext).Evaluate();
+                    ((ICommand) ChildContext).Evaluate();
                 }
             }
             else

@@ -5,10 +5,10 @@ namespace kOS.Suffixed
 {
     public class GeoCoordinates : SpecialValue
     {
+        public CelestialBody Body;
         public double Lat;
         public double Lng;
         public Vessel Vessel;
-        public CelestialBody Body;
 
         public GeoCoordinates(Vessel vessel)
         {
@@ -41,16 +41,18 @@ namespace kOS.Suffixed
         {
             return VesselUtils.AngleDelta(VesselUtils.GetHeading(vessel), GetHeadingFromVessel(vessel));
         }
-    
+
         public float GetHeadingFromVessel(Vessel vessel)
         {
             var up = vessel.upAxis;
             var north = VesselUtils.GetNorthVector(vessel);
 
             var targetWorldCoords = vessel.mainBody.GetWorldSurfacePosition(Lat, Lng, vessel.altitude);
-            
+
             var vector = Vector3d.Exclude(vessel.upAxis, targetWorldCoords - vessel.GetWorldPos3D()).normalized;
-            var headingQ = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(Quaternion.LookRotation(vector, up)) * Quaternion.LookRotation(north, up));
+            var headingQ =
+                Quaternion.Inverse(Quaternion.Euler(90, 0, 0)*Quaternion.Inverse(Quaternion.LookRotation(vector, up))*
+                                   Quaternion.LookRotation(north, up));
 
             return headingQ.eulerAngles.y;
         }
@@ -71,9 +73,9 @@ namespace kOS.Suffixed
                 case "DISTANCE":
                     return DistanceFrom(Vessel);
                 case "HEADING":
-                    return (double)GetHeadingFromVessel(Vessel);
+                    return (double) GetHeadingFromVessel(Vessel);
                 case "BEARING":
-                    return (double)GetBearing(Vessel);
+                    return (double) GetBearing(Vessel);
             }
 
             return base.GetSuffix(suffixName);

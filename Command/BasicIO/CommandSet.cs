@@ -8,8 +8,10 @@ namespace kOS.Command.BasicIO
 {
     [Command("SET ~ TO *")]
     public class CommandSet : Command
-    { 
-        public CommandSet(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+    {
+        public CommandSet(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {
@@ -28,9 +30,11 @@ namespace kOS.Command.BasicIO
                         State = ExecutionState.DONE;
                         return;
                     }
-                    throw new KOSException("Suffix '" + targetTerm.SubTerms[1].Text + "' doesn't exist or is read only", this);
+                    throw new KOSException(
+                        "Suffix '" + targetTerm.SubTerms[1].Text + "' doesn't exist or is read only", this);
                 }
-                throw new KOSException("Can't set subvalues on a " + Expression.Expression.GetFriendlyNameOfItem(baseObj), this);
+                throw new KOSException(
+                    "Can't set subvalues on a " + Expression.Expression.GetFriendlyNameOfItem(baseObj), this);
             }
             var v = FindOrCreateVariable(targetTerm.Text);
 

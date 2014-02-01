@@ -9,19 +9,19 @@ namespace kOS.Binding
     {
         public void BindTo(IBindingManager manager)
         {
-            manager.AddSetter("TARGET", delegate(ICPU cpu, object val) 
+            manager.AddSetter("TARGET", delegate(ICPU cpu, object val)
                 {
                     if (val is ITargetable)
                     {
-                        VesselUtils.SetTarget((ITargetable)val);
+                        VesselUtils.SetTarget((ITargetable) val);
                     }
                     else if (val is VesselTarget)
                     {
-                        VesselUtils.SetTarget(((VesselTarget)val).Target);
+                        VesselUtils.SetTarget(((VesselTarget) val).Target);
                     }
                     else if (val is BodyTarget)
                     {
-                        VesselUtils.SetTarget(((BodyTarget)val).Target);
+                        VesselUtils.SetTarget(((BodyTarget) val).Target);
                     }
                     else
                     {
@@ -40,17 +40,17 @@ namespace kOS.Binding
                     }
                 });
 
-            manager.AddGetter("TARGET", delegate(ICPU cpu) 
+            manager.AddGetter("TARGET", delegate(ICPU cpu)
                 {
                     var currentTarget = FlightGlobals.fetch.VesselTarget;
 
                     if (currentTarget is Vessel)
                     {
-                        return new VesselTarget((Vessel)currentTarget, cpu);
+                        return new VesselTarget((Vessel) currentTarget, cpu);
                     }
                     if (currentTarget is CelestialBody)
                     {
-                        return new BodyTarget((CelestialBody)currentTarget, cpu.Vessel);
+                        return new BodyTarget((CelestialBody) currentTarget, cpu.Vessel);
                     }
 
                     return null;

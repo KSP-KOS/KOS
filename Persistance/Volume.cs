@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace kOS.Persistance
@@ -24,7 +23,7 @@ namespace kOS.Persistance
             return Files.FirstOrDefault(p => p.Filename.ToUpper() == name.ToUpper());
         }
 
-        public virtual void AppendToFile(string name, string str) 
+        public virtual void AppendToFile(string name, string str)
         {
             var file = GetByName(name) ?? new File(name);
 
@@ -50,10 +49,24 @@ namespace kOS.Persistance
             return true;
         }
 
-        public virtual int GetFreeSpace() { return -1; }
-        public virtual bool IsRoomFor(File newFile) { return true; }
-        public virtual void LoadPrograms(IList<File> programsToLoad) { }
-        public virtual ConfigNode Save(string nodeName) { return new ConfigNode(nodeName); }
+        public virtual int GetFreeSpace()
+        {
+            return -1;
+        }
+
+        public virtual bool IsRoomFor(File newFile)
+        {
+            return true;
+        }
+
+        public virtual void LoadPrograms(IList<File> programsToLoad)
+        {
+        }
+
+        public virtual ConfigNode Save(string nodeName)
+        {
+            return new ConfigNode(nodeName);
+        }
 
         public virtual IList<FileInfo> GetFileList()
         {

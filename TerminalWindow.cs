@@ -8,26 +8,25 @@ namespace kOS
     // Blockotronix 550 Computor Monitor
     public class TerminalWindow : MonoBehaviour
     {
-        private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
-
-        private Rect windowRect = new Rect(60, 50, 470, 395);
-        private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private bool isOpen;
-        private CameraManager cameraManager;
-        private bool isLocked;
-        private float cursorBlinkTime;
         private const int CHARSIZE = 8;
         private const int CHARS_PER_ROW = 16;
+        private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private static readonly Color color = new Color(1, 1, 1, 1);
         private static readonly Color colorAlpha = new Color(0.9f, 0.9f, 0.9f, 0.2f);
         private static readonly Color textcolor = new Color(0.45f, 0.92f, 0.23f, 0.9f);
         private static readonly Color textcolorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         private static Rect closebuttonRect = new Rect(398, 359, 59, 30);
-        private bool allTexturesFound = true;
 
         public Core Core;
         public ICPU Cpu;
+        private bool allTexturesFound = true;
+        private CameraManager cameraManager;
+        private float cursorBlinkTime;
+        private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private bool isLocked;
+        private bool isOpen;
+        private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Rect windowRect = new Rect(60, 50, 470, 395);
 
         public void Awake()
         {
@@ -92,7 +91,7 @@ namespace kOS
             if (editor != null) editor.Unlock("kOSTerminal");
         }
 
-        void OnGUI()
+        private void OnGUI()
         {
             if (isOpen && isLocked) ProcessKeyStrokes();
 
@@ -112,7 +111,7 @@ namespace kOS
             windowRect = GUI.Window(0, windowRect, TerminalGui, "");
         }
 
-        void Update()
+        private void Update()
         {
             if (Cpu == null || Cpu.Vessel == null || Cpu.Vessel.parts.Count == 0)
             {
@@ -126,13 +125,7 @@ namespace kOS
             if (cursorBlinkTime > 1) cursorBlinkTime -= 1;
         }
 
-        public class KeyEvent
-        {
-            public KeyCode Code;
-            public float Duration = 0;
-        }
-
-        void ProcessKeyStrokes()
+        private void ProcessKeyStrokes()
         {
             if (Event.current.type == EventType.KeyDown)
             {
@@ -154,12 +147,16 @@ namespace kOS
             var shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             var control = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
 
-            if (code == (KeyCode.C) && control) { SpecialKey(kOSKeys.BREAK); return; }
+            if (code == (KeyCode.C) && control)
+            {
+                SpecialKey(kOSKeys.BREAK);
+                return;
+            }
 
             switch (code)
             {
                 case (KeyCode.Break):
-                    SpecialKey(kOSKeys.BREAK );
+                    SpecialKey(kOSKeys.BREAK);
                     return;
                 case (KeyCode.F1):
                     SpecialKey(kOSKeys.F1);
@@ -216,34 +213,33 @@ namespace kOS
                     SpecialKey(kOSKeys.END);
                     return;
                 case (KeyCode.Backspace):
-                    Type((char)8);
+                    Type((char) 8);
                     return;
                 case (KeyCode.Delete):
                     SpecialKey(kOSKeys.DEL);
                     return;
                 case (KeyCode.KeypadEnter):
                 case (KeyCode.Return):
-                    Type((char)13);
+                    Type((char) 13);
                     return;
             }
         }
 
         public void ClearScreen()
         {
-
         }
 
-        void Type(char ch)
+        private void Type(char ch)
         {
             if (Cpu != null) Cpu.KeyInput(ch);
         }
 
-        void SpecialKey(kOSKeys key)
+        private void SpecialKey(kOSKeys key)
         {
             if (Cpu != null) Cpu.SpecialKey(key);
         }
 
-        void TerminalGui(int windowID)
+        private void TerminalGui(int windowID)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -266,7 +262,7 @@ namespace kOS
             if (!allTexturesFound)
             {
                 GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
-                           "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the png texture files are there.");
+                                                      "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the png texture files are there.");
 
                 GUI.Label(closebuttonRect, "Close");
 
@@ -288,26 +284,26 @@ namespace kOS
 
             if (Cpu != null && Cpu.Mode == CPUMode.READY && Cpu.IsAlive())
             {
-                Color textColor = isLocked ? textcolor : textcolorAlpha;
+                var textColor = isLocked ? textcolor : textcolorAlpha;
 
                 GUI.BeginGroup(new Rect(31, 38, 420, 340));
 
                 if (Cpu != null)
                 {
-                    char[,] buffer = Cpu.GetBuffer();
+                    var buffer = Cpu.GetBuffer();
 
                     for (var x = 0; x < buffer.GetLength(0); x++)
                         for (var y = 0; y < buffer.GetLength(1); y++)
                         {
-                            char c = buffer[x, y];
+                            var c = buffer[x, y];
 
                             if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(buffer[x, y], x, y, textColor);
                         }
 
-                    bool blinkOn = cursorBlinkTime < 0.5f;
+                    var blinkOn = cursorBlinkTime < 0.5f;
                     if (blinkOn && Cpu.GetCursorX() > -1)
                     {
-                        ShowCharacterByAscii((char)1, Cpu.GetCursorX(), Cpu.GetCursorY(), textColor);
+                        ShowCharacterByAscii((char) 1, Cpu.GetCursorX(), Cpu.GetCursorY(), textColor);
                     }
                 }
 
@@ -315,19 +311,19 @@ namespace kOS
             }
         }
 
-        void ShowCharacterByAscii(char ch, int x, int y, Color textColor)
+        private void ShowCharacterByAscii(char ch, int x, int y, Color textColor)
         {
-            int tx = ch % CHARS_PER_ROW;
-            int ty = ch / CHARS_PER_ROW;
+            var tx = ch%CHARS_PER_ROW;
+            var ty = ch/CHARS_PER_ROW;
 
             ShowCharacterByXY(x, y, tx, ty, textColor);
         }
 
-        void ShowCharacterByXY(int x, int y, int tx, int ty, Color textColor)
+        private void ShowCharacterByXY(int x, int y, int tx, int ty, Color textColor)
         {
-            GUI.BeginGroup(new Rect((x * CHARSIZE), (y * CHARSIZE), CHARSIZE, CHARSIZE));
+            GUI.BeginGroup(new Rect((x*CHARSIZE), (y*CHARSIZE), CHARSIZE, CHARSIZE));
             GUI.color = textColor;
-            GUI.DrawTexture(new Rect(tx * -CHARSIZE, ty * -CHARSIZE, fontImage.width, fontImage.height), fontImage);
+            GUI.DrawTexture(new Rect(tx*-CHARSIZE, ty*-CHARSIZE, fontImage.width, fontImage.height), fontImage);
             GUI.EndGroup();
         }
 
@@ -343,6 +339,12 @@ namespace kOS
         internal void PrintLine(string line)
         {
             //if (Cpu != null) Cpu.PrintLine(line);
+        }
+
+        public class KeyEvent
+        {
+            public KeyCode Code;
+            public float Duration = 0;
         }
     }
 }

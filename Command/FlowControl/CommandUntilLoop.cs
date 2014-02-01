@@ -7,11 +7,13 @@ namespace kOS.Command.FlowControl
     [Command("UNTIL /_{}")]
     public class CommandUntilLoop : Command
     {
-        Expression.Expression waitExpression;
         // commandstring;
-        ICommand targetCommand;
+        private ICommand targetCommand;
+        private Expression.Expression waitExpression;
 
-        public CommandUntilLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandUntilLoop(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {
@@ -57,7 +59,7 @@ namespace kOS.Command.FlowControl
                 {
                     ChildContext = targetCommand;
                     //ChildContext = Command.Get(commandstring, this);
-                    ((ICommand)ChildContext).Evaluate();
+                    ((ICommand) ChildContext).Evaluate();
                 }
             }
             else

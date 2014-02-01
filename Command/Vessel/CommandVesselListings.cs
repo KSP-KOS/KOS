@@ -7,9 +7,11 @@ using kOS.Utilities;
 namespace kOS.Command.Vessel
 {
     [Command(@"^LIST (PARTS|RESOURCES|ENGINES|TARGETS|BODIES|SENSORS)$")]
-    class CommandVesselListings : Command
+    internal class CommandVesselListings : Command
     {
-        public CommandVesselListings(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandVesselListings(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {
@@ -21,12 +23,13 @@ namespace kOS.Command.Vessel
                     StdOut("-------------------------------------");
                     foreach (var body in FlightGlobals.fetch.bodies)
                     {
-                        StdOut(body.bodyName.PadLeft(14) + " " + Vector3d.Distance(body.position, Vessel.GetWorldPos3D()));
+                        StdOut(body.bodyName.PadLeft(14) + " " +
+                               Vector3d.Distance(body.position, Vessel.GetWorldPos3D()));
                     }
                     StdOut("");
 
                     break;
-                
+
 
                 case "TARGETS":
                     StdOut("");
@@ -58,7 +61,9 @@ namespace kOS.Command.Vessel
                     {
                         foreach (PartResource resource in part.Resources)
                         {
-                            StdOut(part.inverseStage.ToString(CultureInfo.InvariantCulture) + " " + resource.resourceName.PadRight(20) + " " + resource.amount.ToString("0.00").PadLeft(8));
+                            StdOut(part.inverseStage.ToString(CultureInfo.InvariantCulture) + " " +
+                                   resource.resourceName.PadRight(20) + " " +
+                                   resource.amount.ToString("0.00").PadLeft(8));
                         }
                     }
                     break;
@@ -81,9 +86,10 @@ namespace kOS.Command.Vessel
                         foreach (PartModule module in part.Modules)
                         {
                             if (!(module is ModuleEngines)) continue;
-                            var engineMod = (ModuleEngines)module;
-                                
-                            StdOut(part.uid + "  " + part.inverseStage.ToString(CultureInfo.InvariantCulture) + " " + engineMod.moduleName);
+                            var engineMod = (ModuleEngines) module;
+
+                            StdOut(part.uid + "  " + part.inverseStage.ToString(CultureInfo.InvariantCulture) + " " +
+                                   engineMod.moduleName);
                         }
                     }
 

@@ -4,9 +4,9 @@ namespace kOS.Suffixed
 {
     public class VesselVelocity : SpecialValue
     {
-        readonly Vector orbitVelocity;
-        readonly Vector surfaceVelocity;
-        readonly float velocityHeading;
+        private readonly Vector orbitVelocity;
+        private readonly Vector surfaceVelocity;
+        private readonly float velocityHeading;
 
         public VesselVelocity(Vessel v)
         {

@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace kOS.Suffixed
 {
@@ -9,7 +8,7 @@ namespace kOS.Suffixed
         private double amount;
         private double capacity;
 
-        public ResourceValue(PartResource partResource) :this(partResource.name)
+        public ResourceValue(PartResource partResource) : this(partResource.name)
         {
             amount = partResource.amount;
             capacity = partResource.maxAmount;
@@ -35,12 +34,13 @@ namespace kOS.Suffixed
             }
             return base.GetSuffix(suffixName);
         }
-        
+
         public void AddResource(PartResource resource)
         {
             amount += resource.amount;
             capacity += resource.maxAmount;
         }
+
         public override string ToString()
         {
             return string.Format("RESOURCE({0},{1},{2}", name, amount, capacity);

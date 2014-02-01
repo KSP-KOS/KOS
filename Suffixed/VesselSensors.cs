@@ -23,10 +23,12 @@ namespace kOS.Suffixed
                         switch (module.Fields.GetValue("sensorType").ToString())
                         {
                             case "ACC":
-                                acceleration = new Vector(FlightGlobals.getGeeForceAtPosition(part.transform.position) - target.acceleration);
+                                acceleration =
+                                    new Vector(FlightGlobals.getGeeForceAtPosition(part.transform.position) -
+                                               target.acceleration);
                                 break;
                             case "PRES":
-                                pressure = (Single)FlightGlobals.getStaticPressure();
+                                pressure = (Single) FlightGlobals.getStaticPressure();
                                 break;
                             case "TEMP":
                                 temperature = part.temperature;
@@ -43,6 +45,7 @@ namespace kOS.Suffixed
                 }
             }
         }
+
         public override object GetSuffix(string suffixName)
         {
             switch (suffixName)

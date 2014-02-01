@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
@@ -23,7 +22,7 @@ namespace kOS.Suffixed
                 case "READOUT":
                     return sensor.readoutInfo;
             }
-                return base.GetSuffix(suffixName);
+            return base.GetSuffix(suffixName);
         }
 
         public override bool SetSuffix(string suffixName, object value)
@@ -41,6 +40,7 @@ namespace kOS.Suffixed
             }
             return base.SetSuffix(suffixName, value);
         }
+
         public new static ListValue PartsToList(IEnumerable<Part> parts)
         {
             var toReturn = new ListValue();
@@ -61,7 +61,7 @@ namespace kOS.Suffixed
     {
         private readonly ModuleEngines engines;
 
-        public EngineValue(Part part, ModuleEngines engines):base(part)
+        public EngineValue(Part part, ModuleEngines engines) : base(part)
         {
             this.engines = engines;
         }

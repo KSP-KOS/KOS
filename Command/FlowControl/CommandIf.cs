@@ -7,10 +7,12 @@ namespace kOS.Command.FlowControl
     [Command("IF /_{}")]
     public class CommandIf : Command
     {
-        Expression.Expression expression;
-        ICommand targetCommand;
+        private Expression.Expression expression;
+        private ICommand targetCommand;
 
-        public CommandIf(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandIf(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

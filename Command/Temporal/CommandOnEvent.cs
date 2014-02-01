@@ -8,11 +8,13 @@ namespace kOS.Command.Temporal
     [Command("ON % *")]
     public class CommandOnEvent : Command
     {
-        private Variable targetVariable;
-        private ICommand targetCommand;
         private bool originalValue;
+        private ICommand targetCommand;
+        private Variable targetVariable;
 
-        public CommandOnEvent(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandOnEvent(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {
@@ -54,7 +56,7 @@ namespace kOS.Command.Temporal
             }
             if (obj is float)
             {
-                result = ((float)obj) > 0;
+                result = ((float) obj) > 0;
                 return true;
             }
 

@@ -14,7 +14,7 @@ namespace kOS.Command
         {
             foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                var attr = (CommandAttribute)t.GetCustomAttributes(typeof(CommandAttribute), true).FirstOrDefault();
+                var attr = (CommandAttribute) t.GetCustomAttributes(typeof (CommandAttribute), true).FirstOrDefault();
                 if (attr == null) continue;
                 foreach (var s in attr.Values)
                 {

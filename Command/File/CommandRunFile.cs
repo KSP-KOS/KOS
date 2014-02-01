@@ -11,8 +11,10 @@ namespace kOS.Command.File
     [Command(@"^RUN ([a-zA-Z0-9\-_]+?)( ?\((.*?)\))?$")]
     public class CommandRunFile : Command
     {
-        public CommandRunFile(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
-          
+        public CommandRunFile(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
+
         public override void Evaluate()
         {
             var fileName = RegexMatch.Groups[1].Value;
@@ -22,7 +24,8 @@ namespace kOS.Command.File
             if (RegexMatch.Groups.Count > 1)
             {
                 var paramstring = RegexMatch.Groups[3].Value;
-                parameters.AddRange(Utils.ProcessParams(paramstring).Select(param => new Expression.Expression(param, this)));
+                parameters.AddRange(
+                    Utils.ProcessParams(paramstring).Select(param => new Expression.Expression(param, this)));
             }
 
             if (file == null)

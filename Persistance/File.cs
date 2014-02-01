@@ -57,7 +57,7 @@ namespace kOS.Persistance
         {
             Filename = fileNode.GetValue("filename");
 
-            foreach (var s in fileNode.GetValues("line"))
+            foreach (string s in fileNode.GetValues("line"))
             {
                 Add(DecodeLine(s));
             }
@@ -65,14 +65,15 @@ namespace kOS.Persistance
 
         public static string EncodeLine(string input)
         {
-            return input.Replace("{", "&#123;").Replace("}", "&#125;").Replace(" ", "&#32;");     // Stops universe from imploding
+            return input.Replace("{", "&#123;").Replace("}", "&#125;").Replace(" ", "&#32;");
+            // Stops universe from imploding
         }
 
         public static string DecodeLine(string input)
         {
             return input.Replace("&#123;", "{").Replace("&#125;", "}").Replace("&#32;", " ");
         }
-        
+
         public string Serialize()
         {
             return this.Aggregate("", (current, s) => current + (s + "\n"));

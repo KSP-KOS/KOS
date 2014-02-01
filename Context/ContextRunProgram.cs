@@ -10,20 +10,20 @@ namespace kOS.Context
 {
     public class ContextRunProgram : ExecutionContext, IContextRunProgram
     {
-        private File file;
-        private string commandBuffer;
+        private const int EXECUTION_LINE = 0;
         private readonly List<ICommand> commands = new List<ICommand>();
         private readonly List<Expression.Expression> parameters = new List<Expression.Expression>();
-        private const int EXECUTION_LINE = 0;
+        private string commandBuffer;
+        private File file;
 
-
-        public string Filename { get; private set; }
-
-        public ContextRunProgram(IExecutionContext parent, List<Expression.Expression> parameters, string filename) : base(parent) 
+        public ContextRunProgram(IExecutionContext parent, List<Expression.Expression> parameters, string filename)
+            : base(parent)
         {
             this.parameters = parameters;
             Filename = filename;
         }
+
+        public string Filename { get; private set; }
 
         public void Run(File fileObj)
         {
@@ -32,6 +32,76 @@ namespace kOS.Context
             State = ExecutionState.WAIT;
 
             RunBlock(fileObj);
+        }
+
+        public override bool Break()
+        {
+            State = ExecutionState.DONE;
+
+            return true;
+        }
+
+        public string StripComment(string line)
+        {
+            for (var i = 0; i < line.Length; i++)
+            {
+                if (line[i] == '\"')
+                {
+                    i = Utils.FindEndOfstring(line, i + 1);
+                    if (i == -1) break;
+                }
+                else if (i < line.Length - 1 && line.Substring(i, 2) == "//")
+                {
+                    return line.Substring(0, i);
+                }
+            }
+
+            return line;
+        }
+
+        public override void Update(float time)
+        {
+            try
+            {
+                base.Update(time);
+                EvaluateNextCommand();
+            }
+            catch (KOSException e)
+            {
+                if (ParentContext.FindClosestParentOfType<IContextRunProgram>() != null)
+                {
+                    // Error occurs in a child of another running program
+                    StdOut("Error in '" + e.Program.Filename + "' on line " + e.LineNumber + ": " + e.Message);
+                    State = ExecutionState.DONE;
+                }
+                else
+                {
+                    // Error occurs in the top level program
+                    StdOut("Error on line " + e.LineNumber + ": " + e.Message);
+                    State = ExecutionState.DONE;
+                }
+            }
+            catch (Exception e)
+            {
+                // Non-kos exception! This is a bug, but no reason to kill the OS
+                StdOut("Flagrant error on line " + EXECUTION_LINE);
+                UnityEngine.Debug.Log("Program error");
+                UnityEngine.Debug.Log(e);
+                State = ExecutionState.DONE;
+            }
+        }
+
+        public object PopParameter()
+        {
+            if (parameters.Count > 0)
+            {
+                var retValue = parameters[0].GetValue();
+                parameters.RemoveAt(0);
+
+                return retValue;
+            }
+
+            throw new KOSException("Wrong number of parameters supplied");
         }
 
         private void RunBlock(IEnumerable<string> block)
@@ -84,63 +154,6 @@ namespace kOS.Context
             }
         }
 
-        public override bool Break()
-        {
-            State = ExecutionState.DONE;
-
-            return true;
-        }
-
-        public string StripComment(string line)
-        {
-            for (var i=0; i<line.Length; i++)
-            {
-                if (line[i] == '\"')
-                {
-                    i = Utils.FindEndOfstring(line, i + 1);
-                    if (i == -1) break;
-                }
-                else if (i < line.Length - 1 && line.Substring(i, 2) == "//")
-                {
-                    return line.Substring(0, i);
-                }
-            }
-
-            return line;
-        }
-        
-        public override void Update(float time)
-        {
-            try
-            {
-                base.Update(time);
-                EvaluateNextCommand();
-            }
-            catch (KOSException e)
-            {
-                if (ParentContext.FindClosestParentOfType<IContextRunProgram>() != null)
-                {
-                    // Error occurs in a child of another running program
-                    StdOut("Error in '" + e.Program.Filename + "' on line " + e.LineNumber + ": " + e.Message);
-                    State = ExecutionState.DONE;
-                }
-                else
-                {
-                    // Error occurs in the top level program
-                    StdOut("Error on line " + e.LineNumber + ": " + e.Message);
-                    State = ExecutionState.DONE;
-                }
-            }
-            catch (Exception e)
-            {
-                // Non-kos exception! This is a bug, but no reason to kill the OS
-                StdOut("Flagrant error on line " + EXECUTION_LINE);
-                UnityEngine.Debug.Log("Program error");
-                UnityEngine.Debug.Log(e);
-                State = ExecutionState.DONE;
-            }
-        }
-
         private void EvaluateNextCommand()
         {
             if (ChildContext != null) return;
@@ -156,19 +169,6 @@ namespace kOS.Context
             {
                 State = ExecutionState.DONE;
             }
-        }
-
-        public object PopParameter()
-        {
-            if (parameters.Count > 0)
-            {
-                var retValue = parameters[0].GetValue();
-                parameters.RemoveAt(0);
-
-                return retValue;
-            }
-
-            throw new KOSException("Wrong number of parameters supplied");
         }
     }
 }

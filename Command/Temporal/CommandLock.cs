@@ -6,7 +6,9 @@ namespace kOS.Command.Temporal
     [Command("LOCK % TO *")]
     public class CommandLock : Command
     {
-        public CommandLock(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandLock(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

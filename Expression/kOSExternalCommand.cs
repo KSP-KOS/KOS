@@ -1,5 +1,4 @@
-﻿using System;
-using kOS.Utilities;
+﻿using kOS.Utilities;
 
 namespace kOS.Expression
 {

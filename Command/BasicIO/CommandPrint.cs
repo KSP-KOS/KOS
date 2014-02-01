@@ -6,7 +6,9 @@ namespace kOS.Command.BasicIO
     [Command("PRINT *")]
     public class CommandPrint : Command
     {
-        public CommandPrint(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandPrint(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

@@ -1,16 +1,15 @@
-﻿using System;
-using kOS.Context;
+﻿using kOS.Context;
 
 namespace kOS.Interpreter
 {
     public class InterpreterBootup : ExecutionContext
     {
-        private float bootTime;
+        private readonly char[,] buffer = new char[COLUMNS,ROWS];
         private float animationTime;
-        private readonly char[,] buffer = new char[COLUMNS, ROWS];
+        private float bootTime;
 
         public InterpreterBootup(IExecutionContext parent)
-            : base(parent) 
+            : base(parent)
         {
             //ShowAnimationFrame(0);
             PrintAt("BOOTING UP...", 22, 20);
@@ -51,7 +50,7 @@ namespace kOS.Interpreter
             }
         }
 
-        
+
         public void ShowAnimationFrame(int frame)
         {
             const int tX = 25;
@@ -62,9 +61,9 @@ namespace kOS.Interpreter
                 for (var x = 0; x < 4; x++)
                 {
                     var sY = y + 11;
-                    var sX = x + (frame * 4);
+                    var sX = x + (frame*4);
 
-                    var c = (char)(sY * 16 + sX);
+                    var c = (char) (sY*16 + sX);
 
                     buffer[tX + x, tY + y] = c;
                 }

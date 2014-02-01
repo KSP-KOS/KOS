@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Command;
 using kOS.Context;
 using kOS.Debug;
 using kOS.Utilities;
@@ -8,22 +9,22 @@ namespace kOS.Interpreter
 {
     public class ImmediateMode : ExecutionContext
     {
-        private int cursor;
-        private int baseLineY;
         private const int CMD_BACKLOG = 20;
+        private readonly char[,] buffer = new char[COLUMNS,ROWS];
         private readonly List<string> previousCommands = new List<string>();
-        private int prevCmdIndex = -1;
-        private string inputBuffer = "";
+        private readonly Queue<ICommand> queue = new Queue<ICommand>();
+        private int baseLineY;
         private string commandBuffer = "";
+        private int cursor;
         private int cursorX;
         private int cursorY;
-        private readonly Queue<Command.ICommand> queue = new Queue<Command.ICommand>();
-        private readonly char[,] buffer = new char[COLUMNS, ROWS];
+        private string inputBuffer = "";
+        private int prevCmdIndex = -1;
 
-        public ImmediateMode(IExecutionContext parent) : base(parent) 
+        public ImmediateMode(IExecutionContext parent) : base(parent)
         {
             StdOut("kOS Operating System");
-            StdOut("KerboScript v" + Core.VersionInfo.ToString());
+            StdOut("KerboScript v" + Core.VersionInfo);
             StdOut("");
             StdOut("Proceed.");
         }
@@ -66,7 +67,7 @@ namespace kOS.Interpreter
 
             switch (ch)
             {
-                case (char)8:
+                case (char) 8:
                     if (cursor > 0)
                     {
                         inputBuffer = inputBuffer.Remove(cursor - 1, 1);
@@ -74,7 +75,7 @@ namespace kOS.Interpreter
                     }
                     break;
 
-                case (char)13:
+                case (char) 13:
                     Enter();
                     break;
 
@@ -97,8 +98,8 @@ namespace kOS.Interpreter
 
         public void UpdateCursorXY()
         {
-            cursorX = cursor % buffer.GetLength(0);
-            cursorY = (cursor / buffer.GetLength(0)) + baseLineY;
+            cursorX = cursor%buffer.GetLength(0);
+            cursorY = (cursor/buffer.GetLength(0)) + baseLineY;
         }
 
         public void ShiftUp()
@@ -113,14 +114,14 @@ namespace kOS.Interpreter
                     }
                     else
                     {
-                        buffer[x, y] = (char)0;
+                        buffer[x, y] = (char) 0;
                     }
                 }
             }
 
             for (var x = 0; x < buffer.GetLength(0); x++)
             {
-                buffer[x, buffer.GetLength(1) - 1] = (char)0;
+                buffer[x, buffer.GetLength(1) - 1] = (char) 0;
             }
 
             if (baseLineY > 0) baseLineY--;
@@ -152,17 +153,17 @@ namespace kOS.Interpreter
             cursor = 0;
 
             for (var y = 0; y < buffer.GetLength(1); y++)
-            for (var x = 0; x < buffer.GetLength(0); x++)
-            {
-                buffer[x, y] = (char)0;
-            }
+                for (var x = 0; x < buffer.GetLength(0); x++)
+                {
+                    buffer[x, y] = (char) 0;
+                }
 
             UpdateCursorXY();
         }
 
         public int WriteLine(string line)
         {
-            var lineCount = (line.Length / buffer.GetLength(0)) + 1;
+            var lineCount = (line.Length/buffer.GetLength(0)) + 1;
 
             while (baseLineY + lineCount > buffer.GetLength(1))
             {
@@ -170,10 +171,10 @@ namespace kOS.Interpreter
             }
 
             for (var y = baseLineY; y < buffer.GetLength(1); y++)
-            for (var x = 0; x < buffer.GetLength(0); x++)
-            {
-                buffer[x, y] = (char)0;
-            }
+                for (var x = 0; x < buffer.GetLength(0); x++)
+                {
+                    buffer[x, y] = (char) 0;
+                }
 
             var inputChars = line.ToCharArray();
 
@@ -185,7 +186,8 @@ namespace kOS.Interpreter
 
                 writeX++;
                 if (writeX < buffer.GetLength(0)) continue;
-                writeX = 0; writeY++;
+                writeX = 0;
+                writeY++;
             }
 
             return lineCount;
@@ -207,8 +209,8 @@ namespace kOS.Interpreter
                     catch (KOSException e)
                     {
                         StdOut(e.Message);
-                        queue.Clear();          // Halt all pending instructions
-                        ChildContext = null;    //
+                        queue.Clear(); // Halt all pending instructions
+                        ChildContext = null; //
                     }
                     catch (Exception e)
                     {
@@ -239,7 +241,7 @@ namespace kOS.Interpreter
             {
                 StdOut(e.Message);
                 ChildContext = null;
-                queue.Clear();          // Halt all pending instructions
+                queue.Clear(); // Halt all pending instructions
             }
             catch (Exception e)
             {
@@ -263,7 +265,7 @@ namespace kOS.Interpreter
 
             while (baseLineY > buffer.GetLength(1) - 1) ShiftUp();
 
-            
+
             previousCommands.Add(inputBuffer);
             if (previousCommands.Count > CMD_BACKLOG)
             {
@@ -311,12 +313,12 @@ namespace kOS.Interpreter
                 UpdateCursorXY();
                 return;
             }
-            if (prevCmdIndex > previousCommands.Count-1)
+            if (prevCmdIndex > previousCommands.Count - 1)
             {
                 prevCmdIndex = previousCommands.Count - 1;
             }
-            
-            inputBuffer = previousCommands[(previousCommands.Count-1) - prevCmdIndex];
+
+            inputBuffer = previousCommands[(previousCommands.Count - 1) - prevCmdIndex];
             cursor = inputBuffer.Length;
             UpdateCursorXY();
         }

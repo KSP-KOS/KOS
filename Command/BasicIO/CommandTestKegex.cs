@@ -6,7 +6,9 @@ namespace kOS.Command.BasicIO
     [Command("TEST *")]
     public class CommandTestKegex : Command
     {
-        public CommandTestKegex(Match regexMatch, IExecutionContext context) : base(regexMatch, context) { }
+        public CommandTestKegex(Match regexMatch, IExecutionContext context) : base(regexMatch, context)
+        {
+        }
 
         public override void Evaluate()
         {

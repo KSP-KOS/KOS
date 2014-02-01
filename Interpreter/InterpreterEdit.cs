@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using kOS.Context;
 using kOS.Persistance;
 using kOS.Utilities;
@@ -8,23 +7,51 @@ namespace kOS.Interpreter
 {
     public class InterpreterEdit : ExecutionContext
     {
-        private int BufferWidth { get { return buffer.GetLength(0); } }
-        private int BufferHeight { get { return buffer.GetLength(1); } }
-        private int cursorLine;
+        private const string MENU_OPTIONS = "[F5:Save] [F10:Exit]";
+        private readonly char[,] buffer = new char[COLUMNS,ROWS];
+        private readonly File file;
         private int cursorCol;
-        private int programSize;
-        private string CurrentLine { get { return file[cursorLine]; } set { file[cursorLine] = value; } }
-        private int LocalCursorCol { get { return cursorCol < CurrentLine.Length ? cursorCol : CurrentLine.Length; } }
-        private int scrollY;
-        private int scrollX;
+        private int cursorLine;
         private int cursorX;
         private int cursorY;
-        private readonly char[,] buffer = new char[COLUMNS, ROWS];
-        private string statusAnimstring = "";
-        private float statusAnimProg;
+        private int programSize;
+        private int scrollX;
+        private int scrollY;
         private bool statusAnimActive;
-        private readonly File file;
-        const string MENU_OPTIONS = "[F5:Save] [F10:Exit]";
+        private float statusAnimProg;
+        private string statusAnimstring = "";
+
+        public InterpreterEdit(string fileName, IExecutionContext parent) : base(parent)
+        {
+            cursorX = 0;
+            file = SelectedVolume.GetByName(fileName) ?? new File(fileName) {""};
+
+            cursorX = 0;
+            cursorY = 2;
+
+            RecalcProgramSize();
+        }
+
+        private int BufferWidth
+        {
+            get { return buffer.GetLength(0); }
+        }
+
+        private int BufferHeight
+        {
+            get { return buffer.GetLength(1); }
+        }
+
+        private string CurrentLine
+        {
+            get { return file[cursorLine]; }
+            set { file[cursorLine] = value; }
+        }
+
+        private int LocalCursorCol
+        {
+            get { return cursorCol < CurrentLine.Length ? cursorCol : CurrentLine.Length; }
+        }
 
         public override int GetCursorX()
         {
@@ -34,17 +61,6 @@ namespace kOS.Interpreter
         public override int GetCursorY()
         {
             return ChildContext != null ? ChildContext.GetCursorX() : cursorY;
-        }
-
-        public InterpreterEdit(string fileName, IExecutionContext parent) : base(parent) 
-        {
-            cursorX = 0;
-            file = SelectedVolume.GetByName(fileName) ?? new File(fileName) {""};
-
-            cursorX = 0;
-            cursorY = 2;
-
-            RecalcProgramSize();
         }
 
         public override void Update(float time)
@@ -57,7 +73,7 @@ namespace kOS.Interpreter
 
             var lineColReadout = "Ln " + cursorLine + " Col " + LocalCursorCol;
             Print(BufferWidth - lineColReadout.Length, 0, lineColReadout);
-             
+
             var programSizeStr = programSize + "B";
             Print(BufferWidth - programSizeStr.Length, BufferHeight - 1, programSizeStr);
 
@@ -78,7 +94,7 @@ namespace kOS.Interpreter
                 statusAnimProg += time;
                 if (statusAnimProg > 3) statusAnimActive = false;
 
-                var charsToDisp = (int)(statusAnimProg * 20);
+                var charsToDisp = (int) (statusAnimProg*20);
 
                 Print(0, BufferHeight - 1, statusAnimstring, charsToDisp);
             }
@@ -99,7 +115,7 @@ namespace kOS.Interpreter
             {
                 for (var x = 0; x < buffer.GetLength(0); x++)
                 {
-                    buffer[x, y] = (char)0;
+                    buffer[x, y] = (char) 0;
                 }
             }
         }
@@ -127,11 +143,11 @@ namespace kOS.Interpreter
         {
             switch (ch)
             {
-                case (char)8:
+                case (char) 8:
                     Backspace();
                     break;
 
-                case (char)13:
+                case (char) 13:
                     Enter();
                     break;
 
@@ -144,13 +160,13 @@ namespace kOS.Interpreter
             RecalcProgramSize();
 
             return true;
-        }        
+        }
 
         public void ArrowKey(kOSKeys key)
         {
             if (key == kOSKeys.UP && cursorLine > 0) cursorLine--;
             if (key == kOSKeys.DOWN && cursorLine < file.Count - 1) cursorLine++;
-            if (key == kOSKeys.RIGHT) 
+            if (key == kOSKeys.RIGHT)
             {
                 if (cursorCol < CurrentLine.Length)
                 {
@@ -202,7 +218,7 @@ namespace kOS.Interpreter
                 case kOSKeys.END:
                     cursorCol = CurrentLine.Length;
                     return true;
-                    
+
                 case kOSKeys.DEL:
                     Delete();
                     return true;
@@ -217,10 +233,10 @@ namespace kOS.Interpreter
 
             return false;
         }
-        
+
         private void Enter()
         {
-            string fragment = CurrentLine.Substring(LocalCursorCol);
+            var fragment = CurrentLine.Substring(LocalCursorCol);
             CurrentLine = CurrentLine.Substring(0, LocalCursorCol);
 
             file.Insert(cursorLine + 1, fragment);
@@ -239,7 +255,7 @@ namespace kOS.Interpreter
             {
                 if (cursorLine > 0)
                 {
-                    string fragment = CurrentLine.Trim();
+                    var fragment = CurrentLine.Trim();
                     cursorLine--;
                     file.RemoveAt(cursorLine + 1);
                     cursorCol = CurrentLine.Length;
@@ -248,7 +264,7 @@ namespace kOS.Interpreter
             }
         }
 
-        public  void Delete()
+        public void Delete()
         {
             if (cursorCol < CurrentLine.Length)
             {
@@ -256,7 +272,7 @@ namespace kOS.Interpreter
             }
             else if (file.Count() > cursorLine + 1)
             {
-                string otherLine = file[cursorLine + 1];
+                var otherLine = file[cursorLine + 1];
                 file.RemoveAt(cursorLine + 1);
                 CurrentLine += otherLine;
             }
@@ -269,9 +285,9 @@ namespace kOS.Interpreter
 
         public void Print(int sx, int sy, string value, int max)
         {
-            char[] chars = value.ToCharArray();
-            int i = 0;
-            for (int x = sx; (x < BufferWidth && i < chars.Count() && i < max); x++)
+            var chars = value.ToCharArray();
+            var i = 0;
+            for (var x = sx; (x < BufferWidth && i < chars.Count() && i < max); x++)
             {
                 buffer[x, sy] = chars[i];
                 i++;
@@ -280,7 +296,7 @@ namespace kOS.Interpreter
 
         public void PrintBorder(int y)
         {
-            for (int x = 0; x < BufferWidth; x++)
+            for (var x = 0; x < BufferWidth; x++)
             {
                 buffer[x, y] = '-';
             }
