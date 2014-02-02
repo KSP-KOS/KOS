@@ -8,7 +8,7 @@ namespace kOS.Command
 {
     public static class CommandRegistry
     {
-        public static Dictionary<string, Type> Bindings = new Dictionary<string, Type>();
+        public static List<KeyValuePair<string, Type>> Bindings = new List<KeyValuePair<string, Type>>();
 
         static CommandRegistry()
         {
@@ -18,9 +18,11 @@ namespace kOS.Command
                 if (attr == null) continue;
                 foreach (var s in attr.Values)
                 {
-                    Bindings.Add(Utils.BuildRegex(s), t);
+                    Bindings.Add(new KeyValuePair<string, Type>(Utils.BuildRegex(s), t));
                 }
             }
+            //Sorting commands longest to shortest to assure that the more specific commands match first.
+            Bindings.Sort((p1, p2) => p2.Key.Length.CompareTo(p1.Key.Length));
         }
     }
 }
