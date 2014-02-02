@@ -70,10 +70,18 @@ namespace kOS.Suffixed
         {
             switch (suffixName)
             {
+                case "MAXTHRUST":
+                    return engines.finalThrust;
                 case "THRUST":
-                    return engines.maxThrust;
+                    return engines.finalThrust;
+                case "FUELFLOW":
+                    return engines.fuelFlowGui;
                 case "ISP":
                     return engines.realIsp;
+                case "FLAMEOUT":
+                    return engines.getFlameoutState;
+                case "IGNITION":
+                    return engines.getIgnitionState;
             }
             return base.GetSuffix(suffixName);
         }
