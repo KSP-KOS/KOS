@@ -25,41 +25,53 @@ namespace kOS.Binding
             controls.Add(new LockableControl("WHEELSTEERING", "wheelsteering", cpu, manager));
             controls.Add(new LockableControl("WHEELTHROTTLE", "wheelthrottle", cpu, manager));
 
-            if (RTHook.Instance == null || !RTHook.Instance.HasFlightComputer(vessel.id))
-            {
-                vessel.OnFlyByWire += OnFlyByWire;
-            }
+            // Temporarily removing the ability of RT2 to take over
+            // the on-rails autpilot as it seems to be buggy
+
+            //if (RTHook.Instance == null || !RTHook.Instance.HasFlightComputer(vessel.id))
+            //{
+            //    vessel.OnFlyByWire += OnFlyByWire;
+            //}
+            vessel.OnFlyByWire += OnFlyByWire;
         }
 
         public void Update(float time)
         {
-            if (RTHook.Instance != null)
-            {
-                RTHook.Instance.AddSanctionedPilot(vessel.id, OnFlyByWire);
-            } 
+            // Temporarily removing the ability of RT2 to take over
+            // the on-rails autpilot as it seems to be buggy
+            //if (RTHook.Instance != null)
+            //{
+            //    RTHook.Instance.AddSanctionedPilot(vessel.id, OnFlyByWire);
+            //} 
             if (vessel != cpu.Vessel)
             {
                 // Try to re-establish connection to vessel
                 if (vessel != null)
                 {
-                    if (RTHook.Instance != null)
-                    {
-                        RTHook.Instance.RemoveSanctionedPilot(vessel.id, OnFlyByWire);
-                    } 
-                    else
-                    {
-                        vessel.OnFlyByWire -= OnFlyByWire;
-                    }
+                    // Temporarily removing the ability of RT2 to take over
+                    // the on-rails autpilot as it seems to be buggy
+                    //if (RTHook.Instance != null)
+                    //{
+                    //    RTHook.Instance.RemoveSanctionedPilot(vessel.id, OnFlyByWire);
+                    //} 
+                    //else
+                    //{
+                    //    vessel.OnFlyByWire -= OnFlyByWire;
+                    //}
+                    vessel.OnFlyByWire -= OnFlyByWire;
                     vessel = null;
                 }
 
                 if (cpu.Vessel != null)
                 {
                     vessel = cpu.Vessel;
-                    if (RTHook.Instance == null || !RTHook.Instance.HasFlightComputer(vessel.id))
-                    {
-                        vessel.OnFlyByWire += OnFlyByWire;
-                    } 
+                    // Temporarily removing the ability of RT2 to take over
+                    // the on-rails autpilot as it seems to be buggy
+                    //if (RTHook.Instance == null || !RTHook.Instance.HasFlightComputer(vessel.id))
+                    //{
+                    //    vessel.OnFlyByWire += OnFlyByWire;
+                    //}
+                    vessel.OnFlyByWire -= OnFlyByWire;
                     foreach (var c in controls)
                     {
                         c.UpdateVessel(vessel);
