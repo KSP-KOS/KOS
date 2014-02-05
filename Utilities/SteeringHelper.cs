@@ -86,9 +86,6 @@ namespace kOS.Utilities
         {
             var centerOfMass = vessel.findWorldCenterOfMass();
 
-            // apply minimum thresholds on torque ability to prevent understeering
-            float minimumPitchYaw = 20;
-            float minimumRoll = 20;
             float pitchYaw = 0;
             float roll = 0;
 
@@ -121,14 +118,6 @@ namespace kOS.Utilities
                 pitchYaw += (float) GetThrustTorque(part, vessel)*thrust;
             }
 
-            if (pitchYaw < minimumPitchYaw)
-            {
-                pitchYaw = minimumPitchYaw;
-            }
-            if (roll < minimumRoll)
-            {
-                roll = minimumRoll;
-            }
             return new Vector3d(pitchYaw, roll, pitchYaw);
         }
 
