@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace kOS.Suffixed
 {
-    public class Direction : SpecialValue
+    public class Direction : SpecialValue, IOperatable
     {
         private Vector3d euler;
 
