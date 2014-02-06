@@ -32,7 +32,7 @@ namespace kOS.Utilities
             var deltaEuler = ReduceAngles(delta.eulerAngles);
             deltaEuler.y *= -1;
 
-            var torque = GetTorque(vessel, c.mainThrottle);
+            var torque = GetTorque(vessel);
             var inertia = GetEffectiveInertia(vessel, torque);
 
             var err = deltaEuler*Math.PI/180.0F;
@@ -82,7 +82,7 @@ namespace kOS.Utilities
             return retVar;
         }
 
-        public static Vector3d GetTorque(Vessel vessel, float thrust)
+        public static Vector3d GetTorque(Vessel vessel)
         {
             var centerOfMass = vessel.findWorldCenterOfMass();
 
@@ -114,8 +114,8 @@ namespace kOS.Utilities
                     pitchYaw += ((ModuleReactionWheel) module).PitchTorque;
                     roll += ((ModuleReactionWheel) module).RollTorque;
                 }
-
-                pitchYaw += (float) GetThrustTorque(part, vessel)*thrust;
+                float vectorThrust = (float) GetThrustTorque(part, vessel);
+                pitchYaw += vectorThrust;
             }
 
             return new Vector3d(pitchYaw, roll, pitchYaw);
@@ -124,36 +124,20 @@ namespace kOS.Utilities
         public static double GetThrustTorque(Part p, Vessel vessel)
         {
             var centerOfMass = vessel.CoM;
-
             if (p.State == PartStates.ACTIVE)
             {
-                if (p is LiquidEngine)
+                ModuleEngines engine = p.Modules.OfType<ModuleEngines>().FirstOrDefault();
+                if (engine != null && engine.isOperational)
                 {
-                    if (((LiquidEngine) p).thrustVectoringCapable)
+                    float thrust = engine.CalculateThrust();
+                    ModuleGimbal gimbal = p.Modules.OfType<ModuleGimbal>().FirstOrDefault();
+                    if (gimbal != null && !gimbal.gimbalLock)
                     {
-                        return Math.Sin(Math.Abs(((LiquidEngine) p).gimbalRange)*Math.PI/180)*
-                               ((LiquidEngine) p).maxThrust*(p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
-                    }
-                }
-                else if (p is LiquidFuelEngine)
-                {
-                    if (((LiquidFuelEngine) p).thrustVectoringCapable)
-                    {
-                        return Math.Sin(Math.Abs(((LiquidFuelEngine) p).gimbalRange)*Math.PI/180)*
-                               ((LiquidFuelEngine) p).maxThrust*(p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
-                    }
-                }
-                else if (p is AtmosphericEngine)
-                {
-                    if (((AtmosphericEngine) p).thrustVectoringCapable)
-                    {
-                        return Math.Sin(Math.Abs(((AtmosphericEngine) p).gimbalRange)*Math.PI/180)*
-                               ((AtmosphericEngine) p).maximumEnginePower*((AtmosphericEngine) p).totalEfficiency*
-                               (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
+                        return Math.Sin(Math.Abs(gimbal.gimbalRange) * Math.PI / 180) *
+                               thrust * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
                     }
                 }
             }
-
             return 0;
         }
 
