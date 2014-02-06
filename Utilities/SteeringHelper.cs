@@ -125,17 +125,26 @@ namespace kOS.Utilities
         {
             if (p.State == PartStates.ACTIVE)
             {
-                var engine = p.Modules.OfType<ModuleEngines>().FirstOrDefault();
-                if (engine != null && engine.isOperational)
-                {
-                    var gimbal = p.Modules.OfType<ModuleGimbal>().FirstOrDefault();
-                    if (gimbal != null && !gimbal.gimbalLock)
-                    {
-                        var gimbalRange = Math.Sin(Math.Abs(gimbal.gimbalRange));
-                        var maxTrust = engine.maxThrust;
-                        var magnitude = (p.Rigidbody.worldCenterOfMass - vessel.CoM).magnitude;
+                var gimbal = p.Modules.OfType<ModuleGimbal>().FirstOrDefault();
 
-                        return gimbalRange * maxTrust * magnitude;
+                if (gimbal != null && !gimbal.gimbalLock)
+                {
+                    var engine = p.Modules.OfType<ModuleEngines>().FirstOrDefault();
+                    var fxengine = p.Modules.OfType<ModuleEnginesFX>().FirstOrDefault();
+
+                    var magnitude = (p.Rigidbody.worldCenterOfMass - vessel.CoM).magnitude;
+                    var gimbalRange = Math.Sin(Math.Abs(gimbal.gimbalRange));
+
+                    var engineActive = engine != null && engine.isOperational;
+                    var enginefxActive = fxengine != null && fxengine.isOperational;
+
+                    if (engineActive)
+                    {
+                        return gimbalRange * engine.finalThrust * magnitude;
+                    }
+                    if (enginefxActive)
+                    {
+                        return gimbalRange * fxengine.finalThrust * magnitude;
                     }
                 }
             }
