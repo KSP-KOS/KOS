@@ -1,4 +1,5 @@
 bin/Debug/
 bin/Release/
 obj/
+kOS.sln
 *.suo

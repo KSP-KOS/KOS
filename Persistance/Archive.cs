@@ -148,7 +148,10 @@ namespace kOS.Persistance
 
         public override bool CheckRange()
         {
-            return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
+            if (RTHook.Instance != null)
+                return RTHook.Instance.HasConnectionToKSC(vessel.id);
+            else
+                return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
         }
     }
 }

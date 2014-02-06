@@ -20,7 +20,7 @@ namespace kOS.Module
 
         public IVolume HardDisk { get; private set; }
 
-        [KSPEvent(guiActive = true, guiName = "Open Terminal")]
+        [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
             UnityEngine.Debug.Log("kOS: Activate");

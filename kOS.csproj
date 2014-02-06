@@ -47,6 +47,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RemoteTech2\IRemoteTechAPIv1.cs" />
+    <Compile Include="RemoteTech2\RTCommands.cs" />
+    <Compile Include="RemoteTech2\RTHook.cs" />
+    <Compile Include="RemoteTech2\RTUtil.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\BindingManager.cs" />
     <Compile Include="Binding\BoundVariable.cs" />

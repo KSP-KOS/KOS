@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using kOS.Context;
 using kOS.Suffixed;
@@ -42,9 +43,19 @@ namespace kOS.Command.Vessel
                     {
                         if (vessel == Vessel) continue;
                         var vT = new VesselTarget(vessel, this);
-                        if (vT.IsInRange(commRange))
+                        if (RTHook.Instance != null)
                         {
-                            StdOut(vT.Target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
+                            if (RTHook.Instance.GetSignalDelayToSatellite(Vessel.id, vessel.id) != Double.PositiveInfinity)
+                            {
+                                StdOut(vT.Target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
+                            }
+                        }
+                        else
+                        {
+                            if (vT.IsInRange(commRange))
+                            {
+                                StdOut(vT.Target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
+                            }
                         }
                     }
 

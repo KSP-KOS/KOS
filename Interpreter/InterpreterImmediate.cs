@@ -7,6 +7,7 @@ using kOS.Utilities;
 
 namespace kOS.Interpreter
 {
+    // Cilph: Added command batching
     public class ImmediateMode : ExecutionContext
     {
         private const int CMD_BACKLOG = 20;
@@ -21,7 +22,11 @@ namespace kOS.Interpreter
         private string inputBuffer = "";
         private int prevCmdIndex = -1;
 
-        public ImmediateMode(IExecutionContext parent) : base(parent)
+        public bool BatchMode { get; set; }
+        private LinkedList<ICommand> batchQueue = new LinkedList<ICommand>();
+        private double waitTotal, waitElapsed;
+
+        public ImmediateMode(IExecutionContext parent) : base(parent) 
         {
             StdOut("kOS Operating System");
             StdOut("KerboScript v" + Core.VersionInfo);
@@ -41,7 +46,14 @@ namespace kOS.Interpreter
                 try
                 {
                     var cmd = Command.Command.Get(nextCmd, this, comandLineStart);
-                    queue.Enqueue(cmd);
+                    if (BatchMode)
+                    {
+                        batchQueue.AddLast(cmd);
+                    }
+                    else
+                    {
+                        queue.Enqueue(cmd);
+                    }
                 }
                 catch (KOSException e)
                 {
@@ -197,9 +209,36 @@ namespace kOS.Interpreter
         {
             if (ChildContext == null)
             {
-                if (queue.Count > 0)
+                if (RTHook.Instance != null && waitTotal == 0.0 && !BatchMode && queue.Count > 0)
                 {
-                    var currentCmd = queue.Dequeue();
+                    waitElapsed = 0.0;
+                    if (!(queue.Count > 0 && queue.Peek() is CommandBatch))
+                    {
+                        waitTotal = RTHook.Instance.GetShortestSignalDelay(Vessel.id);
+                    };
+                }
+
+                bool deploying = !BatchMode && batchQueue.Count > 0;
+                bool endbatch = batchQueue.Last != null && batchQueue.Last.Value is CommandDeploy;
+
+                if ((waitElapsed == waitTotal && queue.Count > 0) || deploying || endbatch)
+                {
+                    ICommand currentCmd;
+                    if (endbatch)
+                    {
+                        currentCmd = batchQueue.Last.Value;
+                        batchQueue.RemoveLast();
+                    }
+                    else if (deploying)
+                    {
+                        currentCmd = batchQueue.First.Value;
+                        batchQueue.RemoveFirst();
+                    }
+                    else
+                    {
+                        currentCmd = queue.Dequeue();
+                        waitTotal = 0.0;
+                    }
 
                     try
                     {
@@ -209,8 +248,9 @@ namespace kOS.Interpreter
                     catch (KOSException e)
                     {
                         StdOut(e.Message);
-                        queue.Clear(); // Halt all pending instructions
-                        ChildContext = null; //
+                        queue.Clear();          // Halt all pending instructions
+                        batchQueue.Clear();
+                        ChildContext = null;    //
                     }
                     catch (Exception e)
                     {
@@ -224,12 +264,27 @@ namespace kOS.Interpreter
                         }
 
                         queue.Clear();
+                        batchQueue.Clear();
                         ChildContext = null;
                     }
-                }
+                } 
                 else
                 {
                     WriteLine(inputBuffer);
+                }
+
+                if (waitElapsed < waitTotal)
+                {
+                    if (RTHook.Instance != null && !RTHook.Instance.HasAnyConnection(Vessel.id) && queue.Count > 0)
+                    {
+                        StdOut("Signal interruption. Transmission lost.");
+                        queue.Clear();
+                    }
+                    else
+                    {
+                        waitElapsed += Math.Min(time, waitTotal - waitElapsed);
+                        this.DrawProgressBar(waitElapsed, waitTotal, "Deploying command.");
+                    }
                 }
             }
 
