@@ -123,18 +123,19 @@ namespace kOS.Utilities
 
         public static double GetThrustTorque(Part p, Vessel vessel)
         {
-            var centerOfMass = vessel.CoM;
             if (p.State == PartStates.ACTIVE)
             {
-                ModuleEngines engine = p.Modules.OfType<ModuleEngines>().FirstOrDefault();
+                var engine = p.Modules.OfType<ModuleEngines>().FirstOrDefault();
                 if (engine != null && engine.isOperational)
                 {
-                    float thrust = engine.CalculateThrust();
-                    ModuleGimbal gimbal = p.Modules.OfType<ModuleGimbal>().FirstOrDefault();
+                    var gimbal = p.Modules.OfType<ModuleGimbal>().FirstOrDefault();
                     if (gimbal != null && !gimbal.gimbalLock)
                     {
-                        return Math.Sin(Math.Abs(gimbal.gimbalRange) * Math.PI / 180) *
-                               thrust * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
+                        var gimbalRange = gimbal.gimbalLock ? 0 : Math.Sin(Math.Abs(gimbal.gimbalRange));
+                        var maxTrust = engine.maxThrust;
+                        var magnitude = (p.Rigidbody.worldCenterOfMass - vessel.CoM).magnitude;
+
+                        return gimbalRange * maxTrust * magnitude;
                     }
                 }
             }
