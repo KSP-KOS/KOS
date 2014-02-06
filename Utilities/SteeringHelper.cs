@@ -131,7 +131,7 @@ namespace kOS.Utilities
                     var gimbal = p.Modules.OfType<ModuleGimbal>().FirstOrDefault();
                     if (gimbal != null && !gimbal.gimbalLock)
                     {
-                        var gimbalRange = gimbal.gimbalLock ? 0 : Math.Sin(Math.Abs(gimbal.gimbalRange));
+                        var gimbalRange = Math.Sin(Math.Abs(gimbal.gimbalRange));
                         var maxTrust = engine.maxThrust;
                         var magnitude = (p.Rigidbody.worldCenterOfMass - vessel.CoM).magnitude;
 
