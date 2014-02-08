@@ -100,7 +100,7 @@ namespace kOS.Suffixed
                 case "NORTH":
                     return new Direction(VesselUtils.GetNorthVector(Target), false);
                 case "BODY":
-                    return Target.mainBody.bodyName;
+                    return new BodyTarget(Target.mainBody, Target);
                 case "ANGULARMOMENTUM":
                     return new Direction(Target.angularMomentum, true);
                 case "ANGULARVEL":
@@ -123,7 +123,7 @@ namespace kOS.Suffixed
                     return Target.orbit.ApA;
                 case "PERIAPSIS":
                     return Target.orbit.PeA;
-                case "SENSOR":
+                case "SENSORS":
                     return new VesselSensors(Target);
                 case "TERMVELOCITY":
                     return VesselUtils.GetTerminalVelocity(Target);

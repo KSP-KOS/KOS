@@ -388,7 +388,6 @@ Flight Statistics
 
 You can get several useful vessel stats for your ships
 
-    VESSELNAME
     ALTITUDE
     ALT:RADAR           // Your radar altitude
     BODY                // The current celestial body whose influence you are under
@@ -396,14 +395,13 @@ You can get several useful vessel stats for your ships
     VELOCITY            // The current orbital velocity
     VERTICALSPEED
     SURFACESPEED
-    LATITUDE
-    LONGITUDE
     STATUS              // Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
     INLIGHT          // Returns true if not blocked by celestial body, always false without solar panel.
     INCOMMRANGE         // returns true if in range
     COMMRANGE           // returns commrange
     MASS
     MAXTHRUST           // Combined thrust of active engines at full throttle (kN)
+    VESSELNAME
     
 ### TIME
 
@@ -442,7 +440,6 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
 ### Maneuver nodes
 
     NODE                // Direction of next maneuver node, can be used with LOCK STEERING
-    MAG:NODE            // Delta-v magnitude of maneuver node
     ETA:NODE            // ETA to active maneuver node
     ENCOUNTER           // Returns celestial body of encounter
     NEXTNODE            // Next node in flight plan.
@@ -460,7 +457,7 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
 
 ### Stage specific values
 
-    STAGE:LIQUIDFUEL            // Prints per stage liquid fuel.
+    STAGE:LIQUIDFUEL            // Prints the available fuel for all active engines.
     STAGE:OXIDIZER
     
 ### Global values
@@ -532,6 +529,7 @@ Represents a maneuver node.
     SET X TO NODE(0, 0, 0, 0).          // Create a blank node.
     ADD X.                              // Add Node to flight plan.
     SET X:PROGRADE to 500.              // Set nodes prograde to 500m/s deltav.
+    SET X:ETA to 30.              // Set nodes time to 30 seconds from now.
     PRINT X:APOAPSIS.                   // Returns nodes apoapsis.
     PRINT X:PERIAPSIS.                  // Returns nodes periapsis.
     
@@ -561,7 +559,12 @@ Represents a vector.
     SET varname:X TO 111.               // Changes vector x value to 111.
     SET varname:MAG to 10.              // Changes magnitude of vector. e.g. V(9.98987,0.44999,0)
     
-### VESSEL (vesselname)
+### VESSELS
+
+All craft share a datastructure [Full Documentation](/wiki/Vessel)
+                    
+
+#### VESSEL (vesselname)
 
 Represents a targetable vessel
 
@@ -570,7 +573,7 @@ Represents a targetable vessel
     PRINT X:HEADING.                    // Print the heading to the vessel.
     PRINT X:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
     
-### SHIP
+#### SHIP
     
 Represents currently selected ship
     
@@ -579,7 +582,7 @@ Represents currently selected ship
     PRINT SHIP:HEADING.                    // Print the heading to the vessel.
     PRINT SHIP:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
     
-### TARGET
+#### TARGET
 
 Represents targeted vessel or celestial body
 

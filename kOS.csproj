@@ -166,7 +166,11 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="CHANGELOG.md" />
-    <None Include="Docs\Lists.MD" />
+    <None Include="Docs\Body.md" />
+    <None Include="Docs\Lists.md" />
+    <None Include="Docs\Node.md" />
+    <None Include="Docs\Orbit.md" />
+    <None Include="Docs\Vessel.md" />
     <None Include="LICENSE.md" />
     <None Include="README.md" />
   </ItemGroup>
