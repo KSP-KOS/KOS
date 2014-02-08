@@ -45,13 +45,15 @@ The system follows the order of operations, but currently the implementation is 
 ### Basic Functions
 
     ABS(1).             // Returns absolute value of input. e.g. 1
-    MOD(21,6).          // Returns remainder of an integer division. e.g. 3
-    FLOOR(1.887).       // Rounds down to the nearest whole number. e.g. 1
     CEILING(1.887).     // Rounds up to the nearest whole number. e.g. 2
-    ROUND(1.887).       // Rounds to the nearest whole number. e.g. 2
-    ROUND(1.887, 2).    // Rounds to the nearest place value. e.g. 1.89
+    FLOOR(1.887).       // Rounds down to the nearest whole number. e.g. 1
     LN(5)               // Gives the natural log of the provided number
     LOG10(5)            // Gives the log base 10 of the provided number
+    MOD(21,6).          // Returns remainder of an integer division. e.g. 3
+    MIN(0,100).         // Returns The lower of the two e.g. 0
+    MAX(0,100).         // Returns The higher of the two e.g. 100
+    ROUND(1.887).       // Rounds to the nearest whole number. e.g. 2
+    ROUND(1.887, 2).    // Rounds to the nearest place value. e.g. 1.89
     SQRT(7.89).         // Returns square root. e.g. 2.80891438103763
     
 ### Trigonometric Functions
@@ -183,7 +185,7 @@ Example:
 
 ## LISTS
 
-If you want to make a collection of values, this is for you. [Full Documentation](\Doc\Lists.MD)
+If you want to make a collection of values, this is for you. [Full Documentation](/Doc/Lists.MD)
     
     SET FOO TO LIST().   // Creates a new list in FOO variable
     SET FOO:ADD TO 5.    // Adds a new element to the end of the list

@@ -27,7 +27,89 @@ Lists need to be iterated over sometimes, to help with this we have FOR.
 
 Builds a list of various resources and saves them to a variable.
 
+* Bodies
+* Targets
+* Resources
+* Parts
+* Engines
+* Sensors 
+* Elements
+
+    EXAMPLE USAGE:
     LIST ENGINES IN FOO // Creats a list of the currently active engines and puts it in the FOO variable
+
+    FOR BAR IN FOO {
+        PRINT BAR:THRUST.
+    }.
+
+
+
+#### Bodies
+
+All bodies in the system
+
+* NAME
+* DESCRIPTION
+* MASS - Double
+* POSITION - Vector
+* ALTITUDE - Double
+* APOAPSIS - Double
+* PERIAPSIS - Double
+* RADIUS - In Meters
+* MU - Gravatational Parameter
+* ATM
+    * EXISTS - Bool
+    * HASOXYGEN - bool
+    * SCALE - double
+    * HEIGHT - float
+* VELOCITY  - Vector
+* DISTANCE - From active vessel
+* BODY - Parent Body
+
+#### Engines
+
+Each active engine holds the following data.
+    
+* MAXTHRUST
+* THRUST - Current Trust
+* FUELFLOW 
+* ISP - Specific impulse
+* FLAMEOUT - bool
+* IGNITION - bool
+
+#### Targets
+
+* Many Properties, Left side, Handel it! TODO
+
+#### Resources
+
+Aggregate Resources of all parts
+
+* NAME
+* AMOUNT
+* CAPACITY
+
+#### Parts
+
+This list can be long, use carefully 
+
+* NAME
+* STAGE
+* UID 
+* RESOURCES - List
+
+#### Sensors
+
+* TYPE
+* ACTIVE - bool, can be set to activate/deactivate
+* READOUT
+
+#### Elements
+
+* NAME
+* ID
+* PARTCOUNT
+* RESOURCES - List
 
 ### printout Lists
 
