@@ -32,7 +32,9 @@ namespace kOS.Suffixed
                 case "CONTAINS":
                     return list.Contains(value);
                 case "REMOVE":
-                    return list.Remove(value);
+                    var index = int.Parse(value.ToString());
+                    list.RemoveAt(index);
+                    return true;
                 default:
                     return false;
             }

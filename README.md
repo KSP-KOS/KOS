@@ -40,7 +40,7 @@ You can use mathematical operations on numbers, like this:
 
 The system follows the order of operations, but currently the implementation is imperfect. For example, multiplication will always be performed before division, regardless of the order they come in. This will be fixed in a future release.
 
-### Mathematical Functions
+## Mathematical Functions
     
 ### Basic Functions
 
@@ -50,6 +50,8 @@ The system follows the order of operations, but currently the implementation is 
     CEILING(1.887).     // Rounds up to the nearest whole number. e.g. 2
     ROUND(1.887).       // Rounds to the nearest whole number. e.g. 2
     ROUND(1.887, 2).    // Rounds to the nearest place value. e.g. 1.89
+    LN(5)               // Gives the natural log of the provided number
+    LOG10(5)            // Gives the log base 10 of the provided number
     SQRT(7.89).         // Returns square root. e.g. 2.80891438103763
     
 ### Trigonometric Functions
@@ -179,18 +181,39 @@ Example:
     IF X = 1 AND Y > 4 { PRINT "Both conditions are true". }.
     IF X = 1 OR Y > 4 { PRINT "At least one condition is true". }.
 
-### LIST
+## LISTS
 
-Lists the files on the current volume, or lists the currently available volumes. Lists files by default.
+If you want to make a collection of values, this is for you. [Full Documentation](\Doc\Lists.MD)
+    
+    SET FOO TO LIST().   // Creates a new list in FOO variable
+    SET FOO:ADD TO 5.    // Adds a new element to the end of the list
+    PRINT FOO:LENGTH.    // Prints 3
+    FOO:CLEAR.           // Removes all elements from the FOO list.
+
+### FOR
+
+Lists need to be iterated over sometimes, to help with this we have FOR.
+
+    SET FOO TO LIST().   // Creates a new list in FOO variable
+    SET FOO:ADD TO 5.    // Adds a new element to the end of the list
+    SET FOO:ADD TO ALTITUDE. // eg 10000
+    SET FOO:ADD TO ETA:APOAPSIS. // eg 30 
+
+    FOR BAR IN FOO { PRINT BAR. }. // Prints 5, then 10000, then 30
+    PRINT BAR. // ERROR, BAR doesn't exist outside the for statement
+
+### Built-in Lists
+
+Builds a list of various resources and saves them to a variable.
+
+    LIST ENGINES IN FOO // Creats a list of the currently active engines and puts it in the FOO variable
+
+### printout Lists
+
+Outputs data to the console. Lists files by default.
 Example:
 
     LIST.           // Lists files on the active volume
-    LIST FILES.     // Lists files on the active volume
-    LIST VOLUMES.   // Lists all volumes, with their numbers and names
-    LIST BODIES.    // Lists celestial bodies and their distance
-    LIST TARGETS.   // Lists target-able vessels in range
-    LIST RESOURCES. // List of resources by stage
-    LIST PARTS.     // Lists parts in vessel
     LIST ENGINES.   // List of engines
 
 ### LOCK

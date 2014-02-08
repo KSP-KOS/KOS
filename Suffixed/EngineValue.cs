@@ -71,7 +71,7 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "MAXTHRUST":
-                    return engines.finalThrust;
+                    return engines.maxThrust;
                 case "THRUST":
                     return engines.finalThrust;
                 case "FUELFLOW":

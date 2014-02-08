@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -162,6 +163,12 @@
     <Compile Include="Utilities\VesselUtils.cs" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="CHANGELOG.md" />
+    <None Include="Docs\Lists.MD" />
+    <None Include="LICENSE.md" />
+    <None Include="README.md" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
