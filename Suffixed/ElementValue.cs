@@ -23,7 +23,7 @@ namespace kOS.Suffixed
             {
                 case "NAME":
                     return name;
-                case "ID":
+                case "UID":
                     return uid;
                 case "PARTCOUNT":
                     return parts.Count;
@@ -39,7 +39,7 @@ namespace kOS.Suffixed
 
             foreach (var flightParts in parts.GroupBy(p => p.flightID))
             {
-                var element = new ElementValue(flightParts);
+                toReturn.Add(new ElementValue(flightParts));
             }
             return toReturn;
         }

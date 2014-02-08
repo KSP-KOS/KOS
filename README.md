@@ -183,16 +183,16 @@ Example:
     IF X = 1 AND Y > 4 { PRINT "Both conditions are true". }.
     IF X = 1 OR Y > 4 { PRINT "At least one condition is true". }.
 
-## LISTS
+### LISTS
 
-If you want to make a collection of values, this is for you. [Full Documentation](/Doc/Lists.MD)
+If you want to make a collection of values, this is for you. [Full Documentation](/wiki/List)
     
     SET FOO TO LIST().   // Creates a new list in FOO variable
     SET FOO:ADD TO 5.    // Adds a new element to the end of the list
     PRINT FOO:LENGTH.    // Prints 3
     FOO:CLEAR.           // Removes all elements from the FOO list.
 
-### FOR
+#### FOR
 
 Lists need to be iterated over sometimes, to help with this we have FOR.
 
@@ -204,17 +204,19 @@ Lists need to be iterated over sometimes, to help with this we have FOR.
     FOR BAR IN FOO { PRINT BAR. }. // Prints 5, then 10000, then 30
     PRINT BAR. // ERROR, BAR doesn't exist outside the for statement
 
-### Built-in Lists
+#### Built-in Lists
 
 Builds a list of various resources and saves them to a variable.
 
+    EXAMPLE:
     LIST ENGINES IN FOO // Creats a list of the currently active engines and puts it in the FOO variable
 
-### printout Lists
+#### printout Lists
 
 Outputs data to the console. Lists files by default.
 Example:
 
+    EXAMPLE:
     LIST.           // Lists files on the active volume
     LIST ENGINES.   // List of engines
 
@@ -415,6 +417,7 @@ Returns time in various formats.
     TIME:HOUR           // 1
     TIME:MINUTE         // 50
     TIME:SECOND         // 26
+    TIME:SECONDS          // Total Seconds
     
 ### Vectors
 

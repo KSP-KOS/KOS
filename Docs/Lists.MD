@@ -1,6 +1,4 @@
-﻿## LISTS
-
-If you want to make a collection of values, this is for you. Example
+﻿If you want to make a collection of values, this is for you. Example
     
     SET FOO TO LIST().   // Creates a new list in FOO variable
     SET FOO:ADD TO 5.    // Adds a new element to the end of the list
@@ -33,7 +31,7 @@ Builds a list of various resources and saves them to a variable.
 * Parts
 * Engines
 * Sensors 
-* Elements
+* Nodes
 
     EXAMPLE USAGE:
     LIST ENGINES IN FOO // Creats a list of the currently active engines and puts it in the FOO variable
@@ -41,8 +39,6 @@ Builds a list of various resources and saves them to a variable.
     FOR BAR IN FOO {
         PRINT BAR:THRUST.
     }.
-
-
 
 #### Bodies
 
@@ -100,11 +96,15 @@ This list can be long, use carefully
 
 #### Sensors
 
+All Sensors on the craft (eg Pressure, Gravity, ect)
+
 * TYPE
 * ACTIVE - bool, can be set to activate/deactivate
 * READOUT
 
-#### Elements
+#### Nodes
+
+All docked flights for the current vessel. 
 
 * NAME
 * ID
