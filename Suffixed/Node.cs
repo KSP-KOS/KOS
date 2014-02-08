@@ -106,12 +106,6 @@ namespace kOS.Suffixed
                     return RadOut;
                 case "NORMAL":
                     return Norm;
-                case "APOAPSIS":
-                    if (nodeRef == null) throw new KOSException("Node must be added to flight plan first");
-                    return nodeRef.nextPatch.ApA;
-                case "PERIAPSIS":
-                    if (nodeRef == null) throw new KOSException("Node must be added to flight plan first");
-                    return nodeRef.nextPatch.PeA;
                 case "ORBIT":
                     if (nodeRef == null) throw new KOSException("Node must be added to flight plan first");
                     return new OrbitInfo(nodeRef.nextPatch, vesselRef);
