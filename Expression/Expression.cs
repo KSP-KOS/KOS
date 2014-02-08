@@ -548,6 +548,16 @@ namespace kOS.Expression
                         var dp = GetParamsAsT<double>(p, 1);
                         return Math.Log10(dp[0]);
                     }
+                case "MIN":
+                    {
+                        var dp = GetParamsAsT<double>(p, 2);
+                        return Math.Min(dp[0], dp[1]);
+                    }
+                case "MAX":
+                    {
+                        var dp = GetParamsAsT<double>(p, 2);
+                        return Math.Max(dp[0], dp[1]);
+                    }
             }
 
             if (name == "ROUND")
@@ -794,6 +804,10 @@ namespace kOS.Expression
             {
                 return val1.ToString() == val2.ToString();
             }
+            if (val1 is bool && val2 is bool)
+            {
+                return ((bool) val1) == ((bool) val2);
+            }
             if (val1 is IOperatable)
             {
                 return ((IOperatable) val1).TryOperation("=", val2, false);
@@ -811,6 +825,10 @@ namespace kOS.Expression
             if (val1 is string || val2 is string)
             {
                 return val1.ToString() != val2.ToString();
+            }
+            if (val1 is bool && val2 is bool)
+            {
+                return ((bool) val1) != ((bool) val2);
             }
             if (val1 is IOperatable)
             {
