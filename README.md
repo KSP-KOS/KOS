@@ -386,7 +386,7 @@ Causes kOS module to shutdown.
 Flight Statistics
 =================
 
-You can get several useful vessel stats for your ships
+You can get several useful vessel stats for your ships 
 
     ALTITUDE
     ALT:RADAR           // Your radar altitude
@@ -428,7 +428,7 @@ These return a vector object, which can be used in conjuction with the LOCK comm
 
 ### Orbit geometry values
 
-These values can be polled either for their altitude, or the vessel's ETA in reaching them. By default, altitude is returned.
+These values can be polled either for their altitude, or the vessel's ETA in reaching them. By default, altitude is returned. 
 
     APOAPSIS			// Altitude of apoapsis
     ALT:APOAPSIS		// Altitude of apoapsis
@@ -516,7 +516,7 @@ Represents a set of geo-coordinates.
 
 ### NODE (universalTime, radialOut, normal, prograde)
 
-Represents a maneuver node.
+Represents a maneuver node.[Full Documentation](/wiki/Node)
 
     SET X TO NODE(TIME+60, 0, 0, 100).  // Creates a node 60 seconds from now with
                                         // prograde=100 m/s
@@ -530,8 +530,8 @@ Represents a maneuver node.
     ADD X.                              // Add Node to flight plan.
     SET X:PROGRADE to 500.              // Set nodes prograde to 500m/s deltav.
     SET X:ETA to 30.              // Set nodes time to 30 seconds from now.
-    PRINT X:APOAPSIS.                   // Returns nodes apoapsis.
-    PRINT X:PERIAPSIS.                  // Returns nodes periapsis.
+    PRINT X:OBT:APOAPSIS.                   // Returns nodes apoapsis.
+    PRINT X:OBT:PERIAPSIS.                  // Returns nodes periapsis.
     
     
 ### HEADING (degreesFromNorth, pitchAboveHorizon)
