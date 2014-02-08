@@ -36,7 +36,9 @@ namespace kOS.Utilities
             var inertia = GetEffectiveInertia(vessel, torque);
 
             var err = deltaEuler*Math.PI/180.0F;
-            err += new Vector3d(inertia.x, inertia.z, inertia.y);
+            //err += new Vector3d(inertia.x, inertia.z, inertia.y);
+            const int discount = 2;
+            err += new Vector3d(inertia.x/discount, inertia.z/discount, inertia.y/discount);
 
             var act = 120.0f*err;
 
