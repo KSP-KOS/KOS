@@ -310,6 +310,7 @@ Example:
     SWITCH TO 0.                        // Switch to volume 0.
     RENAME VOLUME 1 TO AwesomeDisk.     // Name volume 1 as AwesomeDisk.
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
+    PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
 ### TOGGLE
 
