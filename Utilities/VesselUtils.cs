@@ -83,10 +83,22 @@ namespace kOS.Utilities
                 foreach (PartModule pm in p.Modules)
                 {
                     if (!pm.isEnabled) continue;
-                    if (!(pm is ModuleEngines)) continue;
-                    var e = (pm as ModuleEngines);
-                    if (!e.EngineIgnited) continue;
-                    thrust += e.maxThrust;
+                    if (!(pm is ModuleEngines || pm is ModuleEnginesFX)) continue;
+
+                    var engine = pm as ModuleEngines;
+                    var enginefx = pm as ModuleEnginesFX;
+
+                    if (enginefx != null)
+                    {
+                        if (!enginefx.EngineIgnited) continue;
+                        thrust += enginefx.maxThrust;
+                    }
+
+                    if (engine != null)
+                    {
+                        if (!engine.EngineIgnited) continue;
+                        thrust += engine.maxThrust;
+                    }
                 }
             }
 
