@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using kOS.Suffixed;
 
-namespace kOS
+namespace kOS.Utilities
 {
     
     public static class SteeringHelper
@@ -23,8 +23,8 @@ namespace kOS
         {
             // I take no credit for this, this is a stripped down, rearranged version of MechJeb's attitude control system
 
-            var CoM = vessel.findWorldCenterOfMass();
-            var MoI = vessel.findLocalMOI(CoM);
+            var centerOfMass = vessel.findWorldCenterOfMass();
+            var moi = vessel.findLocalMOI(centerOfMass);
 
             var target = targetDir.Rotation;
             var vesselR = vessel.transform.rotation;
@@ -42,7 +42,7 @@ namespace kOS
 
             Vector3d act = 120.0f * err;
 
-            float precision = Mathf.Clamp((float)torque.x * 20f / MoI.magnitude, 0.5f, 10f);
+            float precision = Mathf.Clamp((float)torque.x * 20f / moi.magnitude, 0.5f, 10f);
             float driveLimit = Mathf.Clamp01((float)(err.magnitude * 380.0f / precision));
 
             act.x = Mathf.Clamp((float)act.x, -driveLimit, driveLimit);
@@ -59,22 +59,22 @@ namespace kOS
             UnityEngine.Debug.Log("kOS Steer Yaw: " + c.yaw);
         }
 
-        public static Vector3d Pow(Vector3d v3d, float exponent)
+        public static Vector3d Pow(Vector3d v3D, float exponent)
         {
-            return new Vector3d(Math.Pow(v3d.x, exponent), Math.Pow(v3d.y, exponent), Math.Pow(v3d.z, exponent));
+            return new Vector3d(Math.Pow(v3D.x, exponent), Math.Pow(v3D.y, exponent), Math.Pow(v3D.z, exponent));
         }
 
         public static Vector3d GetEffectiveInertia(Vessel vessel, Vector3d torque)
         {
-            var CoM = vessel.findWorldCenterOfMass();
-            var MoI = vessel.findLocalMOI(CoM);
+            var centerOfMass = vessel.findWorldCenterOfMass();
+            var moi = vessel.findLocalMOI(centerOfMass);
             var angularVelocity = Quaternion.Inverse(vessel.transform.rotation) * vessel.rigidbody.angularVelocity;
-            var angularMomentum = new Vector3d(angularVelocity.x * MoI.x, angularVelocity.y * MoI.y, angularVelocity.z * MoI.z);
+            var angularMomentum = new Vector3d(angularVelocity.x * moi.x, angularVelocity.y * moi.y, angularVelocity.z * moi.z);
 
             var retVar = Vector3d.Scale
             (
                 Sign(angularMomentum) * 2.0f,
-                Vector3d.Scale(Pow(angularMomentum, 2), Inverse(Vector3d.Scale(torque, MoI)))
+                Vector3d.Scale(Pow(angularMomentum, 2), Inverse(Vector3d.Scale(torque, moi)))
             );
 
             retVar.y *= 10;
@@ -84,39 +84,36 @@ namespace kOS
 
         public static Vector3d GetTorque(Vessel vessel, float thrust)
         {
-            var CoM = vessel.findWorldCenterOfMass();
+            var centerOfMass = vessel.findWorldCenterOfMass();
             
             float pitchYaw = 0;
             float roll = 0;
 
             foreach (Part part in vessel.parts)
             {
-                var relCoM = part.Rigidbody.worldCenterOfMass - CoM;
+                var relCoM = part.Rigidbody.worldCenterOfMass - centerOfMass;
 
-                if (part is CommandPod)
+                var pod = part as CommandPod;
+                if (pod != null)
                 {
-                    pitchYaw += Math.Abs(((CommandPod)part).rotPower);
-                    roll += Math.Abs(((CommandPod)part).rotPower);
+                    pitchYaw += Math.Abs(pod.rotPower);
+                    roll += Math.Abs(pod.rotPower);
                 }
 
-                if (part is RCSModule)
+                var rcsModule = part as RCSModule;
+                if (rcsModule != null)
                 {
-                    float max = 0;
-                    foreach (float power in ((RCSModule)part).thrusterPowers)
-                    {
-                        max = Mathf.Max(max, power);
-                    }
+                    float max = rcsModule.thrusterPowers.Cast<float>().Aggregate<float, float>(0, Mathf.Max);
 
                     pitchYaw += max * relCoM.magnitude;
                 }
 
                 foreach (PartModule module in part.Modules)
                 {
-                    if (module is ModuleReactionWheel)
-                    {
-                        pitchYaw += ((ModuleReactionWheel)module).PitchTorque;
-                        roll += ((ModuleReactionWheel)module).RollTorque;
-                    }
+                    var wheel = module as ModuleReactionWheel;
+                    if (wheel == null) continue;
+                    pitchYaw += wheel.PitchTorque;
+                    roll += wheel.RollTorque;
                 }
                 //TODO:This causes crazy steering, but should be figured out.
                 //pitchYaw += (float)GetThrustTorque(part, vessel) * thrust;
