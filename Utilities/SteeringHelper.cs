@@ -53,10 +53,6 @@ namespace kOS.Utilities
             c.roll = Mathf.Clamp((float)(c.roll + act.z), -driveLimit, driveLimit);
             c.pitch = Mathf.Clamp((float)(c.pitch + act.x), -driveLimit, driveLimit);
             c.yaw = Mathf.Clamp((float)(c.yaw + act.y), -driveLimit, driveLimit);
-            UnityEngine.Debug.Log("kOS Steer Throttle: " + c.mainThrottle);
-            UnityEngine.Debug.Log("kOS Steer Pitch: " + c.pitch);
-            UnityEngine.Debug.Log("kOS Steer Roll: " + c.roll);
-            UnityEngine.Debug.Log("kOS Steer Yaw: " + c.yaw);
         }
 
         public static Vector3d Pow(Vector3d v3D, float exponent)
