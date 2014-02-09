@@ -2,6 +2,11 @@ kOS Mod Changelog
 =================
 
 ### 0.11.0
+
+- Thanks to enkido and jwvanderbeck for your help. 
+
+- Basic RemoveTech Intergration 
+- Added VOLUME:NAME to getting the current volume
 - Lists can now be populated with basic data that you can loop over or index [Full Info](/wiki/List/)
     - Bodies (eg Kerbin, Mun, Duna)
     - Targets - All Vessels other than current
@@ -13,7 +18,8 @@ kOS Mod Changelog
 - A Lot of bug fixes and refactoring
 - Constants (eg G, E, PI) are now retrieved using CONSTANT() rather than spreadout.
 - Commands resolve in order of descending specificity, rather than in the pseudorandom order they were in before
-
+- Added Math operators LN, LOG10, MIN, MAX.
+- Removed NODE:APOAPSIS and NODE:PERIAPSIS. They are now available in NODE:ORBIT:APOAPSIS
 ### 0.10.0
 
 - Compatible with KSP 0.23 Thanks to Logris and MaHuJa for Commits
