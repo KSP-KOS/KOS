@@ -8,12 +8,14 @@ using kOS.Context;
 using kOS.Debug;
 using kOS.Suffixed;
 using kOS.Utilities;
+using Random = System.Random;
 using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Expression
 {
     public class Expression
     {
+        private readonly Random random = new Random(); 
         private readonly IExecutionContext executionContext;
         private readonly Term rootTerm;
 
@@ -557,6 +559,10 @@ namespace kOS.Expression
                     {
                         var dp = GetParamsAsT<double>(p, 2);
                         return Math.Max(dp[0], dp[1]);
+                    }
+                case "RANDOM":
+                    {
+                        return random.NextDouble();
                     }
             }
 
