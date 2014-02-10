@@ -185,7 +185,7 @@ Example:
 
 ### LISTS
 
-If you want to make a collection of values, this is for you. [Full Documentation](/wiki/List)
+If you want to make a collection of values, this is for you. [Full Documentation](http://github.com/erendrake/KOS/wiki/List)
     
     SET FOO TO LIST().   // Creates a new list in FOO variable
     SET FOO:ADD TO 5.    // Adds a new element to the end of the list
