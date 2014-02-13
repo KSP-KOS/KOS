@@ -10,7 +10,7 @@ kOS Mod Changelog
 - Lists can now be populated with basic data that you can loop over or index [Full Info](/wiki/List/)
     - Bodies (eg Kerbin, Mun, Duna)
     - Targets - All Vessels other than current
-    - Engines - Active engines on the craft
+    - Engines - Engines on the craft
     - Resources - All Ship Resources
     - Parts - All Ship Parts (slow)
     - Sensors - (eg Pres, Grav, Accel)
