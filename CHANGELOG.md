@@ -8,6 +8,7 @@ kOS Mod Changelog
 
 - BREAKING: BODY, SHIP:BODY, TARGET:BODY now all return a Body structure rather than the name of the body
 - BREAKING: Removed NODE:APOAPSIS and NODE:PERIAPSIS. They are now available in NODE:ORBIT:APOAPSIS
+
 - Basic RemoveTech Intergration 
 - Added VOLUME:NAME to getting the current volume
 - Lists can now be populated with basic data that you can loop over or index [Full Info](/wiki/List/)
