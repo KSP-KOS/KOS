@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using kOS.Binding;
 using kOS.Context;
 using kOS.Utilities;
 
@@ -84,6 +86,8 @@ namespace kOS.Suffixed
         {
             switch (suffixName)
             {
+                case "CONTROL":
+                    return FlightControlManager.GetControllerByVessel(Target);
                 case "DIRECTION":
                     var vector = (Target.GetWorldPos3D() - context.Vessel.GetWorldPos3D());
                     return new Direction(vector, false);

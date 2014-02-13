@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Suffixed\FlightControl.cs" />
     <Compile Include="RemoteTech2\IRemoteTechAPIv1.cs" />
     <Compile Include="RemoteTech2\RTCommands.cs" />
     <Compile Include="RemoteTech2\RTHook.cs" />
@@ -132,7 +133,7 @@
     <Compile Include="Expression\kOSExternalCommand.cs" />
     <Compile Include="Module\kOSIDModule.cs" />
     <Compile Include="Module\kOSProcessor.cs" />
-    <Compile Include="Binding\FlightControl.cs" />
+    <Compile Include="Binding\FlightControlManager.cs" />
     <Compile Include="Persistance\File.cs" />
     <Compile Include="Suffixed\IOperatable.cs" />
     <Compile Include="Suffixed\ISuffixed.cs" />

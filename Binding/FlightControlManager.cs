@@ -8,11 +8,25 @@ using kOS.Utilities;
 namespace kOS.Binding
 {
     [KOSBinding("ksp")]
-    public class FlightControl : IBinding
+    public class FlightControlManager : IBinding
     {
         private readonly List<LockableControl> controls = new List<LockableControl>();
         private ICPU cpu;
         private Vessel vessel;
+        readonly static Dictionary<uint,FlightControl> flightControls = new Dictionary<uint, FlightControl>();
+
+        public static FlightControl GetControllerByVessel(Vessel target)
+        {
+            FlightControl found;
+            if (flightControls.TryGetValue(target.rootPart.flightID, out found))
+            {
+                return found;
+            }
+
+            flightControls.Add(target.rootPart.flightID, new FlightControl(target));
+
+
+        }
 
         public void BindTo(IBindingManager manager)
         {

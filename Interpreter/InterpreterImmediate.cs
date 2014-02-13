@@ -209,7 +209,10 @@ namespace kOS.Interpreter
         {
             if (ChildContext == null)
             {
-                if (RTHook.Instance != null && waitTotal == 0.0 && !BatchMode && queue.Count > 0)
+                var hasRemoteTech = RTHook.Instance != null;
+                var hasRTConnection = !RTHook.Instance.HasAnyConnection(Vessel.id);
+
+                if (hasRemoteTech && waitTotal == 0.0 && !BatchMode && queue.Count > 0)
                 {
                     waitElapsed = 0.0;
                     if (!(queue.Count > 0 && queue.Peek() is CommandBatch))
@@ -275,7 +278,7 @@ namespace kOS.Interpreter
 
                 if (waitElapsed < waitTotal)
                 {
-                    if (RTHook.Instance != null && !RTHook.Instance.HasAnyConnection(Vessel.id) && queue.Count > 0)
+                    if (hasRemoteTech && hasRTConnection && queue.Count > 0)
                     {
                         StdOut("Signal interruption. Transmission lost.");
                         queue.Clear();
