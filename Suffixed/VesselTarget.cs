@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using kOS.Binding;
 using kOS.Context;
 using kOS.Utilities;
 
@@ -66,10 +68,26 @@ namespace kOS.Suffixed
             return new Direction(new Vector3d(facing.x, facing.y, facing.z).normalized, false);
         }
 
+        public override bool SetSuffix(string suffixName, object value)
+        {
+            switch (suffixName)
+            {
+                case "PACKDISTANCE":
+                    var distance = (float) value;
+                    Target.distanceLandedPackThreshold = distance;
+                    Target.distancePackThreshold = distance;
+                    return true;
+            }
+
+            return base.SetSuffix(suffixName, value);
+        }
+
         public override object GetSuffix(string suffixName)
         {
             switch (suffixName)
             {
+                case "CONTROL":
+                    return FlightControlManager.GetControllerByVessel(Target);
                 case "DIRECTION":
                     var vector = (Target.GetWorldPos3D() - context.Vessel.GetWorldPos3D());
                     return new Direction(vector, false);
@@ -127,6 +145,8 @@ namespace kOS.Suffixed
                     return new VesselSensors(Target);
                 case "TERMVELOCITY":
                     return VesselUtils.GetTerminalVelocity(Target);
+                case "LOADED":
+                    return Target.loaded;
                 case "OBT":
                     return new OrbitInfo(Target.orbit, Target);
             }
