@@ -40,11 +40,7 @@ namespace kOS.Suffixed
                 {
                     var engineModule = module as ModuleEngines;
                     if (engineModule == null) continue;
-
-                    if (engineModule.getIgnitionState)
-                    {
-                        toReturn.Add(new EngineValue(part, engineModule));
-                    }
+                    toReturn.Add(new EngineValue(part, engineModule));
                 }
             }
             return toReturn;
