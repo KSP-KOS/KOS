@@ -5,6 +5,9 @@ kOS Mod Changelog
 
 - Thanks to enkido and jwvanderbeck for your help. 
 
+
+- BREAKING: BODY, SHIP:BODY, TARGET:BODY now all return a Body structure rather than the name of the body
+- BREAKING: Removed NODE:APOAPSIS and NODE:PERIAPSIS. They are now available in NODE:ORBIT:APOAPSIS
 - Basic RemoveTech Intergration 
 - Added VOLUME:NAME to getting the current volume
 - Lists can now be populated with basic data that you can loop over or index [Full Info](/wiki/List/)
@@ -19,7 +22,6 @@ kOS Mod Changelog
 - Constants (eg G, E, PI) are now retrieved using CONSTANT() rather than spreadout.
 - Commands resolve in order of descending specificity, rather than in the pseudorandom order they were in before
 - Added Math operators LN, LOG10, MIN, MAX.
-- Removed NODE:APOAPSIS and NODE:PERIAPSIS. They are now available in NODE:ORBIT:APOAPSIS
 ### 0.10.0
 
 - Compatible with KSP 0.23 Thanks to Logris and MaHuJa for Commits
