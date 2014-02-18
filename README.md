@@ -505,11 +505,12 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
     WHEELTHROTTLE       // Seperate throttle for wheels
     WHEELSTEERING       // Seperate steering system for wheels
 
-Examples: 
-lock throttle to 1.  //sets throttle to 100%
-lock throttle to 0.5.  //sets throttle to 50%
-lock wheelsteering to 180.  //turns wheeleld vessel to point south
-lock steering to heading 45 by 0.  //turns the vessel to face north-east and lowers the nose to pitch 0 (horizon)
+Examples:
+
+    lock throttle to 1.  //sets throttle to 100%
+    lock throttle to 0.5.  //sets throttle to 50%
+    lock wheelsteering to 180.  //turns wheeleld vessel to point south
+    lock steering to heading 45 by 0.  //turns the vessel to face north-east and lowers the nose to pitch 0 (horizon)
 
     
 Structures
