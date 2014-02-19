@@ -2,29 +2,29 @@
 {
     public class Vector : SpecialValue, IOperatable
     {
-        private double x;
-        private double y;
-        private double z;
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
 
         public Vector(Vector3d init)
         {
-            x = init.x;
-            y = init.y;
-            z = init.z;
+            X = init.x;
+            Y = init.y;
+            Z = init.z;
         }
 
         public Vector(double x, double y, double z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
         }
 
         public Vector(float x, float y, float z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
         }
 
         public object TryOperation(string op, object other, bool reverseOrder)
@@ -63,15 +63,15 @@
             switch (suffixName)
             {
                 case "X":
-                    return x;
+                    return X;
                 case "Y":
-                    return y;
+                    return Y;
                 case "Z":
-                    return z;
+                    return Z;
                 case "MAG":
-                    return new Vector3d(x, y, z).magnitude;
+                    return new Vector3d(X, Y, Z).magnitude;
                 case "VEC":
-                    return new Vector(x, y, z);
+                    return new Vector(X, Y, Z);
             }
 
             return base.GetSuffix(suffixName);
@@ -92,22 +92,22 @@
             switch (suffixName)
             {
                 case "X":
-                    x = dblValue;
+                    X = dblValue;
                     return true;
                 case "Y":
-                    y = dblValue;
+                    Y = dblValue;
                     return true;
                 case "Z":
-                    z = dblValue;
+                    Z = dblValue;
                     return true;
                 case "MAG":
-                    double oldMag = new Vector3d(x, y, z).magnitude;
+                    double oldMag = new Vector3d(X, Y, Z).magnitude;
 
                     if (oldMag == 0) return true; // Avoid division by zero
 
-                    x = x/oldMag*dblValue;
-                    y = y/oldMag*dblValue;
-                    z = z/oldMag*dblValue;
+                    X = X/oldMag*dblValue;
+                    Y = Y/oldMag*dblValue;
+                    Z = Z/oldMag*dblValue;
 
                     return true;
             }
@@ -117,12 +117,12 @@
 
         public Vector3d ToVector3D()
         {
-            return new Vector3d(x, y, z);
+            return new Vector3d(X, Y, Z);
         }
 
         public override string ToString()
         {
-            return "V(" + x + ", " + y + ", " + z + ")";
+            return "V(" + X + ", " + Y + ", " + Z + ")";
         }
 
         public static implicit operator Vector3d(Vector d)
@@ -137,17 +137,17 @@
 
         public static Vector operator *(Vector a, Vector b)
         {
-            return new Vector(a.x*b.x, a.y*b.y, a.z*b.z);
+            return new Vector(a.X*b.X, a.Y*b.Y, a.Z*b.Z);
         }
 
         public static Vector operator *(Vector a, float b)
         {
-            return new Vector(a.x*b, a.y*b, a.z*b);
+            return new Vector(a.X*b, a.Y*b, a.Z*b);
         }
 
         public static Vector operator *(Vector a, double b)
         {
-            return new Vector(a.x*b, a.y*b, a.z*b);
+            return new Vector(a.X*b, a.Y*b, a.Z*b);
         }
 
         public static Vector operator +(Vector a, Vector b)

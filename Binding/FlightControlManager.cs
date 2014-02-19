@@ -17,15 +17,13 @@ namespace kOS.Binding
 
         public static FlightControl GetControllerByVessel(Vessel target)
         {
-            FlightControl found;
-            if (flightControls.TryGetValue(target.rootPart.flightID, out found))
+            FlightControl flightControl;
+            if (!flightControls.TryGetValue(target.rootPart.flightID, out flightControl))
             {
-                return found;
+                flightControl = new FlightControl(target);
+                flightControls.Add(target.rootPart.flightID, flightControl);
             }
-
-            flightControls.Add(target.rootPart.flightID, new FlightControl(target));
-
-
+            return flightControl;
         }
 
         public void BindTo(IBindingManager manager)
@@ -174,10 +172,7 @@ namespace kOS.Binding
 
                 if (!(Vessel.horizontalSrfSpeed > 0.1f)) return;
 
-                if (
-                    Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(Vessel),
-                                                     VesselUtils.GetVelocityHeading(Vessel))) <=
-                    90)
+                if ( Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(Vessel), VesselUtils.GetVelocityHeading(Vessel))) <= 90)
                 {
                     c.wheelSteer = Mathf.Clamp(bearing/-10, -1, 1);
                 }

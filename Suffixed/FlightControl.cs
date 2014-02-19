@@ -1,22 +1,27 @@
 ﻿using System;
-using LibNoise.Unity.Operator;
 
 namespace kOS.Suffixed
 {
-    public class FlightControl : SpecialValue , IDisposable 
+    public class FlightControl : SpecialValue , IDisposable
     {
-        private int yaw = 0;
-        private int pitch = 0;
-        private int roll = 0;
-        private int xTranslate = 0;
-        private int yTranslate = 0;
-        private int zTranslate = 0;
+        // For rotation x = yaw, y = pitch, and z = roll
+        private Vector rotation;
+        private Vector translation;
+        private bool neutral;
+        private float wheelSteer;
+        private float wheelThrottle;
+        private float mainThrottle;
+        private bool killRotation;
+        private FlightCtrlState flightStats;
         public Vessel Target { get; private set; }
 
         public FlightControl(Vessel target)
         {
+            rotation = new Vector(0, 0, 0);
+            translation = new Vector(0, 0, 0);
             Target = target;
             Target.OnFlyByWire += OnFlyByWire;
+            
         }
 
         public override object GetSuffix(string suffixName)
@@ -24,17 +29,25 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "YAW":
-                    return yaw;
+                    return rotation.X;
                 case "PITCH":
-                    return pitch;
+                    return rotation.Y;
                 case "ROLL":
-                    return roll;
-                case "XTRANSLATE":
-                    return xTranslate;
-                case "YTRANSLATE":
-                    return yTranslate;
-                case "ZTRANSLATE":
-                    return zTranslate;
+                    return rotation.Z;
+                case "FORE":
+                    return translation.Z;
+                case "STARBOARD":
+                    return translation.X;
+                case "TOP":
+                    return translation.Y;
+                case "NEUTRAL":
+                    return neutral;
+                case "MAINTHROTTLE":
+                    return mainThrottle;
+                case "WHEELTHROTTLE":
+                    return wheelThrottle;
+                case "WHEELSTEER":
+                    return wheelSteer;
                 default:
                     return null;
             }
@@ -42,25 +55,50 @@ namespace kOS.Suffixed
 
         public override bool SetSuffix(string suffixName, object value)
         {
+            if (CheckNeutral(suffixName, value))
+            {
+                return true;
+            }
+
+            if (CheckKillRotation(suffixName, value))
+            {
+                return true;
+            }
+
             switch (suffixName)
             {
                 case "YAW":
-                    yaw = (int)value;
+                    rotation.X = Convert.ToSingle(value);
                     break;
                 case "PITCH":
-                    pitch = (int)value;
+                    rotation.Y = Convert.ToSingle(value);
                     break;
                 case "ROLL":
-                    roll = (int)value;
+                    rotation.Z = Convert.ToSingle(value);
                     break;
-                case "XTRANSLATE":
-                    xTranslate = (int)value;
+                case "STARBOARD":
+                    translation.X = Convert.ToSingle(value);
                     break;
-                case "YTRANSLATE":
-                    yTranslate = (int)value;
+                case "TOP":
+                    translation.Y = Convert.ToSingle(value);
                     break;
-                case "ZTRANSLATE":
-                    zTranslate = (int)value;
+                case "FORE":
+                    translation.Z = Convert.ToSingle(value);
+                    break;
+                case "ROTATION":
+                    rotation = (Vector) value;
+                    break;
+                case "TRANSLATION":
+                    translation = (Vector) value;
+                    break;
+                case "MAINTHROTTLE":
+                    mainThrottle = Convert.ToSingle(value);
+                    break;
+                case "WHEELTHROTTLE":
+                    wheelThrottle = Convert.ToSingle(value);
+                    break;
+                case "WHEELSTEER":
+                    wheelSteer = Convert.ToSingle(value);
                     break;
                 default:
                     return false;
@@ -68,9 +106,56 @@ namespace kOS.Suffixed
             return true;
         }
 
+        private bool CheckKillRotation(string suffixName, object value)
+        {
+            if (suffixName == "KILLROTATION")
+            {
+                killRotation = bool.Parse(value.ToString());
+                if (killRotation)
+                {
+                    rotation.X = 0;
+                    rotation.Y = 0;
+                    rotation.Z = 0;
+                    translation.X = 0;
+                    translation.Y = 0;
+                    translation.Z = 0;
+                    wheelSteer = 0;
+                    wheelThrottle = 0;
+                    neutral = false;
+                }
+                return true;
+            }
+            killRotation = false;
+            return false;
+        }
+
+        private bool CheckNeutral(string suffix, object value)
+        {
+            if (suffix == "NEUTRALIZE")
+            {
+                neutral = bool.Parse(value.ToString());
+                if (neutral)
+                {
+                    rotation.X = 0;
+                    rotation.Y = 0;
+                    rotation.Z = 0;
+                    translation.X = 0;
+                    translation.Y = 0;
+                    translation.Z = 0;
+                    wheelSteer = 0;
+                    wheelThrottle = 0;
+                    killRotation = false;
+                }
+                return true;
+            }
+            neutral = false;
+            return false;
+        }
+
         private void OnFlyByWire(FlightCtrlState st)
         {
-            st.
+            st.CopyFrom(flightStats);
+            flightStats = st;
         }
 
         public void Dispose()
