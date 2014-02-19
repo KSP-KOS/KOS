@@ -145,6 +145,8 @@ Example:
     DELETE file1.         // Deletes file1 from the active volume.
     DELETE file1 FROM 1.  // Deletes file1 from volume 1
 
+Deleting files from ARCHIVE will delete your scripts from your hard drive.  Be sure to have back ups.
+
 ### DECLARE
 
 Declares a variable at the current context level. Alternatively, a variable can be implicitly declared by a SET or LOCK statement.
@@ -396,6 +398,8 @@ You can get several useful vessel stats for your ships
     VELOCITY            // The current orbital velocity
     VERTICALSPEED
     SURFACESPEED
+    LATITUDE
+    LONGITUDE
     STATUS              // Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
     INLIGHT          // Returns true if not blocked by celestial body, always false without solar panel.
     INCOMMRANGE         // returns true if in range
@@ -403,6 +407,10 @@ You can get several useful vessel stats for your ships
     MASS
     MAXTHRUST           // Combined thrust of active engines at full throttle (kN)
     VESSELNAME
+
+Examples:
+set mylatitude to LATITUDE.
+
     
 ### TIME
 
@@ -496,6 +504,14 @@ These values can be SET, TOGGLED, or LOCKED. Some values such as THROTTLE and ST
     STEERING			// Lock to a direction.
     WHEELTHROTTLE       // Seperate throttle for wheels
     WHEELSTEERING       // Seperate steering system for wheels
+
+Examples:
+
+    lock throttle to 1.  //sets throttle to 100%
+    lock throttle to 0.5.  //sets throttle to 50%
+    lock wheelsteering to 180.  //turns wheeleld vessel to point south
+    lock steering to heading 45 by 0.  //turns the vessel to face north-east and lowers the nose to pitch 0 (horizon)
+
     
 Structures
 ==========
