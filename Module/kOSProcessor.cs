@@ -8,8 +8,7 @@ namespace kOS.Module
 {
     public class kOSProcessor : PartModule, IProcessorModule
     {
-        [KSPField(isPersistant = true, guiName = "kOSUnitCapacity", guiActive = true)]
-        public float kOSUnitCapacity = 50f;
+        private const int MEM_SIZE = 10000;
         private readonly List<IProcessorModule> sisterProcs = new List<IProcessorModule>();
         [KSPField(isPersistant = true, guiActive = false)] public int MaxPartID = 100;
         private ICPU cpu;
@@ -82,7 +81,7 @@ namespace kOS.Module
                 return;
             }
 
-            if (HardDisk == null) HardDisk = new Harddisk(kOSUnitCapacity);
+            if (HardDisk == null) HardDisk = new Harddisk(MEM_SIZE);
 
             InitCpu();
         }

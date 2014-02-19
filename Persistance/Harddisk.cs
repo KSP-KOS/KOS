@@ -6,9 +6,9 @@ namespace kOS.Persistance
 {
     public class Harddisk : Volume
     {
-        public Harddisk(float size)
+        public Harddisk(int size)
         {
-            Capacity = (int)size;
+            Capacity = size;
         }
 
         public Harddisk(ConfigNode node)
