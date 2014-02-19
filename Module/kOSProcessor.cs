@@ -8,8 +8,10 @@ namespace kOS.Module
 {
     public class kOSProcessor : PartModule, IProcessorModule
     {
+        //640K ought to be enough for anybody -sic
+        public int PROCESSOR_HARD_CAP = 640000;
         [KSPField(isPersistant = true, guiName = "kOSUnitCapacity", guiActive = true)]
-        public float kOSUnitCapacity = 50f;
+        public int kOSUnitCapacity = 50;
         private readonly List<IProcessorModule> sisterProcs = new List<IProcessorModule>();
         [KSPField(isPersistant = true, guiActive = false)] public int MaxPartID = 100;
         private ICPU cpu;
@@ -82,7 +84,7 @@ namespace kOS.Module
                 return;
             }
 
-            if (HardDisk == null) HardDisk = new Harddisk(kOSUnitCapacity);
+            if (HardDisk == null) HardDisk = new Harddisk(Mathf.Min(kOSUnitCapacity, PROCESSOR_HARD_CAP));
 
             InitCpu();
         }
