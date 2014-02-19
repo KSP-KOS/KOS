@@ -9,7 +9,7 @@ namespace kOS.Module
     public class kOSProcessor : PartModule, IProcessorModule
     {
         //640K ought to be enough for anybody -sic
-        public int PROCESSOR_HARD_CAP = 640000;
+        public int PROCESSOR_HARD_CAP = 655360;
         [KSPField(isPersistant = true, guiName = "kOSUnitCapacity", guiActive = true)]
         public int kOSUnitCapacity = 50;
         private readonly List<IProcessorModule> sisterProcs = new List<IProcessorModule>();
