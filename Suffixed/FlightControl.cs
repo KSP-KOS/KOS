@@ -12,7 +12,7 @@ namespace kOS.Suffixed
         private float wheelThrottle;
         private float mainThrottle;
         private bool killRotation;
-        private FlightCtrlState flightStats;
+        private bool flushing;
         public Vessel Target { get; private set; }
 
         public FlightControl(Vessel target)
@@ -40,6 +40,10 @@ namespace kOS.Suffixed
                     return translation.X;
                 case "TOP":
                     return translation.Y;
+                case "ROTATION":
+                    return rotation;
+                case "TRANSLATION":
+                    return translation;
                 case "NEUTRAL":
                     return neutral;
                 case "MAINTHROTTLE":
@@ -133,7 +137,7 @@ namespace kOS.Suffixed
         {
             if (suffix == "NEUTRALIZE")
             {
-                neutral = bool.Parse(value.ToString());
+                flushing = neutral = bool.Parse(value.ToString());
                 if (neutral)
                 {
                     rotation.X = 0;
@@ -154,8 +158,24 @@ namespace kOS.Suffixed
 
         private void OnFlyByWire(FlightCtrlState st)
         {
-            st.CopyFrom(flightStats);
-            flightStats = st;
+            if (neutral && flushing)
+            {
+                st.Neutralize();
+                flushing = false;
+            }
+            else if(!neutral)
+            {
+                st.X = (float)translation.X;
+                st.Y = (float)translation.Y;
+                st.Z = (float)translation.Z;
+                st.pitch = (float)rotation.Y;
+                st.yaw = (float)translation.X;
+                st.roll = (float)translation.Z;
+                st.wheelSteer = wheelSteer;
+                st.wheelThrottle = wheelThrottle;
+                st.mainThrottle = mainThrottle;
+            }
+
         }
 
         public void Dispose()
