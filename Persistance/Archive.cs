@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using kOS.Debug;
+using kOS.RemoteTech2;
 using kOS.Utilities;
 using BinaryReader = KSP.IO.BinaryReader;
 
@@ -148,8 +149,8 @@ namespace kOS.Persistance
 
         public override bool CheckRange()
         {
-            if (RTHook.Instance != null)
-                return RTHook.Instance.HasConnectionToKSC(vessel.id);
+            if (RemoteTechHook.Instance != null)
+                return RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
             else
                 return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
         }

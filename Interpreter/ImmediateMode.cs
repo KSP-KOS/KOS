@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using kOS.Command;
 using kOS.Context;
 using kOS.Debug;
+using kOS.RemoteTech2;
 using kOS.Utilities;
 
 namespace kOS.Interpreter
@@ -11,7 +12,7 @@ namespace kOS.Interpreter
     public class ImmediateMode : ExecutionContext
     {
         private const int CMD_BACKLOG = 20;
-        private readonly char[,] buffer = new char[COLUMNS,ROWS];
+        private readonly char[,] buffer = new char[COLUMNS, ROWS];
         private readonly List<string> previousCommands = new List<string>();
         private readonly Queue<ICommand> queue = new Queue<ICommand>();
         private int baseLineY;
@@ -26,7 +27,8 @@ namespace kOS.Interpreter
         private LinkedList<ICommand> batchQueue = new LinkedList<ICommand>();
         private double waitTotal, waitElapsed;
 
-        public ImmediateMode(IExecutionContext parent) : base(parent) 
+        public ImmediateMode(IExecutionContext parent)
+            : base(parent)
         {
             StdOut("kOS Operating System");
             StdOut("KerboScript v" + Core.VersionInfo);
@@ -79,7 +81,7 @@ namespace kOS.Interpreter
 
             switch (ch)
             {
-                case (char) 8:
+                case (char)8:
                     if (cursor > 0)
                     {
                         inputBuffer = inputBuffer.Remove(cursor - 1, 1);
@@ -87,7 +89,7 @@ namespace kOS.Interpreter
                     }
                     break;
 
-                case (char) 13:
+                case (char)13:
                     Enter();
                     break;
 
@@ -110,8 +112,8 @@ namespace kOS.Interpreter
 
         public void UpdateCursorXY()
         {
-            cursorX = cursor%buffer.GetLength(0);
-            cursorY = (cursor/buffer.GetLength(0)) + baseLineY;
+            cursorX = cursor % buffer.GetLength(0);
+            cursorY = (cursor / buffer.GetLength(0)) + baseLineY;
         }
 
         public void ShiftUp()
@@ -126,14 +128,14 @@ namespace kOS.Interpreter
                     }
                     else
                     {
-                        buffer[x, y] = (char) 0;
+                        buffer[x, y] = (char)0;
                     }
                 }
             }
 
             for (var x = 0; x < buffer.GetLength(0); x++)
             {
-                buffer[x, buffer.GetLength(1) - 1] = (char) 0;
+                buffer[x, buffer.GetLength(1) - 1] = (char)0;
             }
 
             if (baseLineY > 0) baseLineY--;
@@ -167,7 +169,7 @@ namespace kOS.Interpreter
             for (var y = 0; y < buffer.GetLength(1); y++)
                 for (var x = 0; x < buffer.GetLength(0); x++)
                 {
-                    buffer[x, y] = (char) 0;
+                    buffer[x, y] = (char)0;
                 }
 
             UpdateCursorXY();
@@ -175,7 +177,7 @@ namespace kOS.Interpreter
 
         public int WriteLine(string line)
         {
-            var lineCount = (line.Length/buffer.GetLength(0)) + 1;
+            var lineCount = (line.Length / buffer.GetLength(0)) + 1;
 
             while (baseLineY + lineCount > buffer.GetLength(1))
             {
@@ -185,7 +187,7 @@ namespace kOS.Interpreter
             for (var y = baseLineY; y < buffer.GetLength(1); y++)
                 for (var x = 0; x < buffer.GetLength(0); x++)
                 {
-                    buffer[x, y] = (char) 0;
+                    buffer[x, y] = (char)0;
                 }
 
             var inputChars = line.ToCharArray();
@@ -209,15 +211,12 @@ namespace kOS.Interpreter
         {
             if (ChildContext == null)
             {
-                var hasRemoteTech = RTHook.Instance != null;
-                var hasRTConnection = !RTHook.Instance.HasAnyConnection(Vessel.id);
-
-                if (hasRemoteTech && waitTotal == 0.0 && !BatchMode && queue.Count > 0)
+                if (RemoteTechHook.Instance != null && waitTotal == 0.0 && !BatchMode && queue.Count > 0)
                 {
                     waitElapsed = 0.0;
                     if (!(queue.Count > 0 && queue.Peek() is CommandBatch))
                     {
-                        waitTotal = RTHook.Instance.GetShortestSignalDelay(Vessel.id);
+                        waitTotal = RemoteTechHook.Instance.GetShortestSignalDelay(Vessel.id);
                     };
                 }
 
@@ -270,7 +269,7 @@ namespace kOS.Interpreter
                         batchQueue.Clear();
                         ChildContext = null;
                     }
-                } 
+                }
                 else
                 {
                     WriteLine(inputBuffer);
@@ -278,7 +277,7 @@ namespace kOS.Interpreter
 
                 if (waitElapsed < waitTotal)
                 {
-                    if (hasRemoteTech && hasRTConnection && queue.Count > 0)
+                    if (RemoteTechHook.Instance != null && !RemoteTechHook.Instance.HasAnyConnection(Vessel.id) && queue.Count > 0)
                     {
                         StdOut("Signal interruption. Transmission lost.");
                         queue.Clear();

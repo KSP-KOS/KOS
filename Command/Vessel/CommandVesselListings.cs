@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using kOS.Context;
+using kOS.RemoteTech2;
 using kOS.Suffixed;
 using kOS.Utilities;
 
@@ -43,9 +44,9 @@ namespace kOS.Command.Vessel
                     {
                         if (vessel == Vessel) continue;
                         var vT = new VesselTarget(vessel, this);
-                        if (RTHook.Instance != null)
+                        if (RemoteTechHook.Instance != null)
                         {
-                            if (RTHook.Instance.GetSignalDelayToSatellite(Vessel.id, vessel.id) != Double.PositiveInfinity)
+                            if (RemoteTechHook.Instance.GetSignalDelayToSatellite(Vessel.id, vessel.id) != Double.PositiveInfinity)
                             {
                                 StdOut(vT.Target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
                             }

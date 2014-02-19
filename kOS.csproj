@@ -48,11 +48,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RemoteTech2\CommandBatch.cs" />
+    <Compile Include="RemoteTech2\RemoteTechAPI.cs" />
     <Compile Include="Suffixed\FlightControl.cs" />
     <Compile Include="RemoteTech2\IRemoteTechAPIv1.cs" />
-    <Compile Include="RemoteTech2\RTCommands.cs" />
-    <Compile Include="RemoteTech2\RTHook.cs" />
-    <Compile Include="RemoteTech2\RTUtil.cs" />
+    <Compile Include="RemoteTech2\CommandDeploy.cs" />
+    <Compile Include="RemoteTech2\RemoteTechHook.cs" />
+    <Compile Include="RemoteTech2\RemoteTechUtility.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\BindingManager.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
@@ -128,7 +130,7 @@
     <Compile Include="Persistance\Harddisk.cs" />
     <Compile Include="Interpreter\InterpreterBootup.cs" />
     <Compile Include="Interpreter\InterpreterEdit.cs" />
-    <Compile Include="Interpreter\InterpreterImmediate.cs" />
+    <Compile Include="Interpreter\ImmediateMode.cs" />
     <Compile Include="Debug\KOSException.cs" />
     <Compile Include="Expression\kOSExternalCommand.cs" />
     <Compile Include="Module\kOSIDModule.cs" />
