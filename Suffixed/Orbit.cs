@@ -45,9 +45,10 @@
         {
             var list = new ListValue();
             var orbit = orbitRef;
-            while (orbit.nextPatch != null && list.Count >= PATCHES_LIMIT)
+            while (orbit.nextPatch != null && list.Count <= PATCHES_LIMIT)
             {
                 list.Add(new OrbitInfo(orbit, vesselRef));
+                orbit = orbit.nextPatch;
             }
             return list;
         }
