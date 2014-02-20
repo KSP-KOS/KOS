@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using UnityEngine;
-
 
 namespace kOS
 {
@@ -15,6 +13,7 @@ namespace kOS
         public static Core Fetch; 
         public TermWindow Window;
         private int CPUIdAccumulator;
+        private SharedObjects _shared;
         
         public void Awake()
         {
@@ -25,28 +24,27 @@ namespace kOS
                 var gObj = new GameObject("kOSTermWindow", typeof(TermWindow));
                 UnityEngine.Object.DontDestroyOnLoad(gObj);
                 Window = (TermWindow)gObj.GetComponent(typeof(TermWindow));
-                Window.Core = this;
             }
         }
 
         public void SaveSettings()
         {
-            var writer = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/");
+            //var writer = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/");
         }
 
         public static void Debug(String line)
         {
         }
 
-        public static void OpenWindow(CPU cpu)
+        public static void OpenWindow(SharedObjects shared)
         {
-            Fetch.Window.AttachTo(cpu);
+            Fetch.Window.AttachTo(shared);
             Fetch.Window.Open();
         }
 
-        internal static void ToggleWindow(CPU cpu)
+        internal static void ToggleWindow(SharedObjects shared)
         {
-            Fetch.Window.AttachTo(cpu);
+            Fetch.Window.AttachTo(shared);
             Fetch.Window.Toggle();
         }
 

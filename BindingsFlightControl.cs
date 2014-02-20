@@ -3,224 +3,255 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
 using UnityEngine;
 
 namespace kOS
 {
-    [kOSBinding("ksp")]
+    [kRISCBinding("ksp")]
     public class BindingFlightControls : Binding
     {
-        private Vessel vessel;
-        private CPU cpu;
-        private List<LockableControl> controls = new List<LockableControl>();
-
-        public override void AddTo(BindingManager manager)
-        {
-            cpu = manager.cpu;
-            vessel = manager.cpu.Vessel;
-
-            controls.Add(new LockableControl("THROTTLE", "throttle", cpu, manager));
-            controls.Add(new LockableControl("STEERING", "steering", cpu, manager));
-
-            controls.Add(new LockableControl("WHEELSTEERING", "wheelsteering", cpu, manager));
-            controls.Add(new LockableControl("WHEELTHROTTLE", "wheelthrottle", cpu, manager));
-
-            vessel.OnFlyByWire += OnFlyByWire;
-        }
+        private Vessel _currentVessel;
+        private Dictionary<string, FlightCtrlParam> _flightParams = new Dictionary<string, FlightCtrlParam>();
         
+        public override void AddTo(SharedObjects shared)
+        {
+            _shared = shared;
+          
+            AddNewFlightParam("throttle", shared);
+            AddNewFlightParam("steering", shared);
+            AddNewFlightParam("wheelthrottle", shared);
+            AddNewFlightParam("wheelsteering", shared);
+
+            if (shared.Vessel != null)
+            {
+                _currentVessel = shared.Vessel;
+                _currentVessel.OnFlyByWire += OnFlyByWire;
+            }
+        }
+
+        private void AddNewFlightParam(string name, SharedObjects shared)
+        {
+            _flightParams.Add(name, new FlightCtrlParam(name, shared));
+        }
+
         public void OnFlyByWire(FlightCtrlState c)
         {
-            foreach (LockableControl control in controls)
+            foreach (FlightCtrlParam param in _flightParams.Values)
             {
-                control.OnFlyByWire(ref c);
+                if (param.enabled)
+                {                    
+                    param.OnFlyByWire(ref c);
+                }
             }
         }
 
-        public override void Update(float time)
+        public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            if (vessel != cpu.Vessel)
+            if (_flightParams.ContainsKey(paramName))
+            {
+                _flightParams[paramName].enabled = enabled;
+                if (!enabled)
+                {
+                    _flightParams[paramName].ClearValue();
+                }
+            }
+        }
+
+        public override void Update()
+        {
+            if (_currentVessel != _shared.Vessel)
             {
                 // Try to re-establish connection to vessel
-                if (vessel != null)
+                if (_currentVessel != null)
                 {
-                    vessel.OnFlyByWire -= OnFlyByWire;
-                    vessel = null;
+                    _currentVessel.OnFlyByWire -= OnFlyByWire;
+                    _currentVessel = null;
                 }
 
-                if (cpu.Vessel != null)
+                if (_shared.Vessel != null)
                 {
-                    vessel = cpu.Vessel;
-                    vessel.OnFlyByWire += OnFlyByWire;
+                    _currentVessel = _shared.Vessel;
+                    _currentVessel.OnFlyByWire += OnFlyByWire;
 
-                    foreach (LockableControl c in controls)
-                    {
-                        c.UpdateVessel(vessel);
-                    }
+                    //foreach (FlightCtrlParam param in _flightParams.Values)
+                    //{
+                    //    param.UpdateVessel(vessel);
+                    //}
                 }
             }
-
-            base.Update(time);
         }
 
-        public class LockableControl
+        public class FlightCtrlParam
         {
-            public String name;
-            public bool locked;
-            public object Value;
-            public Vessel vessel;
-            String propertyName;
-            public CPU cpu;
-
-            public LockableControl(String name, String propertyName, CPU cpu, BindingManager manager)
+            public string name;
+            public bool enabled;
+            private SharedObjects _shared;
+            private object _value;
+            
+            public FlightCtrlParam(string name, SharedObjects shared)
             {
                 this.name = name;
-                this.cpu = cpu;
-                this.vessel = cpu.Vessel;
-                locked = false;
-                Value = 0;
-                
-                manager.AddGetter(name, delegate(CPU c) { return Value; });
-                manager.AddSetter(name, delegate(CPU c, object val)  { });
+                enabled = false;
+                _shared = shared;
+                _value = null;
 
-                this.propertyName = propertyName;
+                shared.BindingMgr.AddGetter(name, delegate(CPU c) { return _value; });
+                shared.BindingMgr.AddSetter(name, delegate(CPU c, object val) { _value = val; });
+            }
+
+            public void ClearValue()
+            {
+                _value = null;
             }
 
             public void OnFlyByWire(ref FlightCtrlState c)
             {
-                Expression e = cpu.GetDeepestChildContext().GetLock(propertyName);
-                
-                if (e != null)
+                if (_value != null)
                 {
-                    Value = e.GetValue();
-
-                    if (propertyName == "throttle")
+                    switch (name)
                     {
-                        c.mainThrottle = (float)e.Double();
+                        case "throttle":
+                            UpdateThrottle(ref c);
+                            break;
+                        case "wheelthrottle":
+                            UpdateWheelThrottle(ref c);
+                            break;
+                        case "steering":
+                            UpdateSteering(ref c);
+                            break;
+                        case "wheelsteering":
+                            UpdateWheelSteering(ref c);
+                            break;
+                        default:
+                            break;
                     }
+                }
+            }
 
-                    if (propertyName == "wheelthrottle")
+            private void UpdateThrottle(ref FlightCtrlState c)
+            {
+                c.mainThrottle = (float)Convert.ToDouble(_value);
+            }
+
+            private void UpdateWheelThrottle(ref FlightCtrlState c)
+            {
+                c.wheelThrottle = (float)Utils.Clamp(Convert.ToDouble(_value), -1, 1);                
+            }
+
+            private void UpdateSteering(ref FlightCtrlState c)
+            {
+                if (_value is string && ((string)_value).ToUpper() == "KILL")
+                {
+                    SteeringHelper.KillRotation(c, _shared.Vessel);
+                }
+                else if (_value is Direction)
+                {
+                    SteeringHelper.SteerShipToward((Direction)_value, c, _shared.Vessel);
+                }
+                else if (_value is Vector)
+                {
+                    SteeringHelper.SteerShipToward(((Vector)_value).ToDirection(), c, _shared.Vessel);
+                }
+                else if (_value is Node)
+                {
+                    SteeringHelper.SteerShipToward(((Node)_value).GetBurnVector().ToDirection(), c, _shared.Vessel);
+                }
+            }
+
+            private void UpdateWheelSteering(ref FlightCtrlState c)
+            {
+                float bearing = 0;
+
+                if (_value is VesselTarget)
+                {
+                    bearing = VesselUtils.GetTargetBearing(_shared.Vessel, ((VesselTarget)_value).target);
+                }
+                else if (_value is GeoCoordinates)
+                {
+                    bearing = ((GeoCoordinates)_value).GetBearing(_shared.Vessel);
+                }
+                else if (_value is double)
+                {
+                    bearing = (float)(Math.Round((double)_value) - Mathf.Round(FlightGlobals.ship_heading));
+                }
+
+                if (_shared.Vessel.horizontalSrfSpeed > 0.1f)
+                {
+                    if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(_shared.Vessel), VesselUtils.GetVelocityHeading(_shared.Vessel))) <= 90)
                     {
-                        c.wheelThrottle = (float)Utils.Clamp(e.Double(), -1, 1);
+                        c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
                     }
-
-                    if (propertyName == "steering")
+                    else
                     {
-                        if (Value is String && ((string)Value).ToUpper() == "KILL")
-                        {
-                            SteeringHelper.KillRotation(c, vessel);
-                        }
-                        else if (Value is Direction)
-                        {
-                            SteeringHelper.SteerShipToward((Direction)Value, c, vessel);
-                        }
-                        else if (Value is Vector)
-                        {
-                            SteeringHelper.SteerShipToward(((Vector)Value).ToDirection(), c, vessel);
-                        }
-                        else if (Value is Node)
-                        {
-                            SteeringHelper.SteerShipToward(((Node)Value).GetBurnVector().ToDirection(), c, vessel);
-                        }
-                    }
-
-                    if (propertyName == "wheelsteering")
-                    {
-                        float bearing = 0;
-
-                        if (Value is VesselTarget)
-                        {
-                            bearing = VesselUtils.GetTargetBearing(vessel, ((VesselTarget)Value).target);
-                        }
-                        else if (Value is GeoCoordinates)
-                        {
-                            bearing = ((GeoCoordinates)Value).GetBearing(vessel);
-                        }
-                        else if (Value is double)
-                        {
-                            bearing = (float)(Math.Round((double)Value) - Mathf.Round(FlightGlobals.ship_heading));
-                        }
-
-                        if (vessel.horizontalSrfSpeed > 0.1f)
-                        { 
-                            if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(vessel), VesselUtils.GetVelocityHeading(vessel))) <= 90)
-                            {
-                                c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
-                            }
-                            else
-                            {
-                                c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
-                            }
-                        }
-                    }
-
-                    if (cpu.GetLock(name) == null)
-                    {
-                        locked = false;
+                        c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
                     }
                 }
             }
 
             internal void UpdateVessel(Vessel vessel)
             {
-                this.vessel = vessel;
+                _shared.Vessel = vessel;
             }
         }
     }
-    
-    [kOSBinding("ksp")]
+
+    [kRISCBinding("ksp")]
     public class BindingActionGroups : Binding
     {
-        public override void AddTo(BindingManager manager)
+        public override void AddTo(SharedObjects shared)
         {
-            manager.AddSetter("SAS", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, (bool)val); });
-            manager.AddSetter("GEAR", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, (bool)val); });
-            manager.AddSetter("LEGS", delegate(CPU cpu, object val) {  VesselUtils.LandingLegsCtrl(cpu.Vessel, (bool)val); });
-            manager.AddSetter("CHUTES", delegate(CPU cpu, object val) {  VesselUtils.DeployParachutes(cpu.Vessel, (bool)val); });
-            manager.AddSetter("LIGHTS", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, (bool)val); });
-            manager.AddSetter("PANELS", delegate(CPU cpu, object val) {  VesselUtils.SolarPanelCtrl(cpu.Vessel, (bool)val); });
-            manager.AddSetter("BRAKES", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, (bool)val); });
-            manager.AddSetter("RCS", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, (bool)val); });
-            manager.AddSetter("ABORT", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Abort, (bool)val); });
-            manager.AddSetter("AG1", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom01, (bool)val); });
-            manager.AddSetter("AG2", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom02, (bool)val); });
-            manager.AddSetter("AG3", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom03, (bool)val); });
-            manager.AddSetter("AG4", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom04, (bool)val); });
-            manager.AddSetter("AG5", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom05, (bool)val); });
-            manager.AddSetter("AG6", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom06, (bool)val); });
-            manager.AddSetter("AG7", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom07, (bool)val); });
-            manager.AddSetter("AG8", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom08, (bool)val); });
-            manager.AddSetter("AG9", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom09, (bool)val); });
-            manager.AddSetter("AG10", delegate(CPU cpu, object val) { cpu.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom10, (bool)val); });
+            _shared = shared;
 
-            manager.AddGetter("SAS", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.SAS]; });
-            manager.AddGetter("GEAR", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Gear]; });
-            manager.AddGetter("LEGS", delegate(CPU cpu) { return VesselUtils.GetLandingLegStatus(cpu.Vessel); });
-            manager.AddGetter("CHUTES", delegate(CPU cpu) { return VesselUtils.GetChuteStatus(cpu.Vessel); });
-            manager.AddGetter("LIGHTS", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Light]; });
-            manager.AddGetter("PANELS", delegate(CPU cpu) { return VesselUtils.GetSolarPanelStatus(cpu.Vessel); });
-            manager.AddGetter("BRAKES", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Brakes]; });
-            manager.AddGetter("RCS", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.RCS]; });
-            manager.AddGetter("ABORT", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Abort]; });
-            manager.AddGetter("AG1", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom01]; });
-            manager.AddGetter("AG2", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom02]; });
-            manager.AddGetter("AG3", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom03]; });
-            manager.AddGetter("AG4", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom04]; });
-            manager.AddGetter("AG5", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom05]; });
-            manager.AddGetter("AG6", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom06]; });
-            manager.AddGetter("AG7", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom07]; });
-            manager.AddGetter("AG8", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom08]; });
-            manager.AddGetter("AG9", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom09]; });
-            manager.AddGetter("AG10", delegate(CPU cpu) { return cpu.Vessel.ActionGroups[KSPActionGroup.Custom10]; });
+            _shared.BindingMgr.AddSetter("SAS", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, (bool)val); });
+            _shared.BindingMgr.AddSetter("GEAR", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, (bool)val); });
+            _shared.BindingMgr.AddSetter("LEGS", delegate(CPU cpu, object val) { VesselUtils.LandingLegsCtrl(_shared.Vessel, (bool)val); });
+            _shared.BindingMgr.AddSetter("CHUTES", delegate(CPU cpu, object val) { VesselUtils.DeployParachutes(_shared.Vessel, (bool)val); });
+            _shared.BindingMgr.AddSetter("LIGHTS", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, (bool)val); });
+            _shared.BindingMgr.AddSetter("PANELS", delegate(CPU cpu, object val) { VesselUtils.SolarPanelCtrl(_shared.Vessel, (bool)val); });
+            _shared.BindingMgr.AddSetter("BRAKES", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, (bool)val); });
+            _shared.BindingMgr.AddSetter("RCS", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, (bool)val); });
+            _shared.BindingMgr.AddSetter("ABORT", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Abort, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG1", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom01, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG2", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom02, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG3", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom03, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG4", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom04, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG5", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom05, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG6", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom06, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG7", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom07, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG8", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom08, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG9", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom09, (bool)val); });
+            _shared.BindingMgr.AddSetter("AG10", delegate(CPU cpu, object val) { _shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.Custom10, (bool)val); });
+
+            _shared.BindingMgr.AddGetter("SAS", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.SAS]; });
+            _shared.BindingMgr.AddGetter("GEAR", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Gear]; });
+            _shared.BindingMgr.AddGetter("LEGS", delegate(CPU cpu) { return VesselUtils.GetLandingLegStatus(_shared.Vessel); });
+            _shared.BindingMgr.AddGetter("CHUTES", delegate(CPU cpu) { return VesselUtils.GetChuteStatus(_shared.Vessel); });
+            _shared.BindingMgr.AddGetter("LIGHTS", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Light]; });
+            _shared.BindingMgr.AddGetter("PANELS", delegate(CPU cpu) { return VesselUtils.GetSolarPanelStatus(_shared.Vessel); });
+            _shared.BindingMgr.AddGetter("BRAKES", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Brakes]; });
+            _shared.BindingMgr.AddGetter("RCS", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.RCS]; });
+            _shared.BindingMgr.AddGetter("ABORT", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Abort]; });
+            _shared.BindingMgr.AddGetter("AG1", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom01]; });
+            _shared.BindingMgr.AddGetter("AG2", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom02]; });
+            _shared.BindingMgr.AddGetter("AG3", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom03]; });
+            _shared.BindingMgr.AddGetter("AG4", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom04]; });
+            _shared.BindingMgr.AddGetter("AG5", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom05]; });
+            _shared.BindingMgr.AddGetter("AG6", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom06]; });
+            _shared.BindingMgr.AddGetter("AG7", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom07]; });
+            _shared.BindingMgr.AddGetter("AG8", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom08]; });
+            _shared.BindingMgr.AddGetter("AG9", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom09]; });
+            _shared.BindingMgr.AddGetter("AG10", delegate(CPU cpu) { return _shared.Vessel.ActionGroups[KSPActionGroup.Custom10]; });
         }
     }
 
-    [kOSBinding("ksp")]
+    [kRISCBinding("ksp")]
     public class BindingFlightSettings : Binding
     {
-        public override void AddTo(BindingManager manager)
+        public override void AddTo(SharedObjects shared)
         {
-            manager.AddSetter("TARGET", delegate(CPU cpu, object val) 
+            _shared = shared;
+            
+            _shared.BindingMgr.AddSetter("TARGET", delegate(CPU cpu, object val) 
             {
                 if (val is ITargetable)
                 {
@@ -243,7 +274,7 @@ namespace kOS
                         return;
                     }
 
-                    var vessel = VesselUtils.GetVesselByName(val.ToString(), cpu.Vessel);
+                    var vessel = VesselUtils.GetVesselByName(val.ToString(), _shared.Vessel);
                     if (vessel != null)
                     {
                         VesselUtils.SetTarget(vessel);
@@ -252,17 +283,17 @@ namespace kOS
                 }
             });
 
-            manager.AddGetter("TARGET", delegate(CPU cpu) 
+            _shared.BindingMgr.AddGetter("TARGET", delegate(CPU cpu) 
             {
                 var currentTarget = FlightGlobals.fetch.VesselTarget;
 
                 if (currentTarget is Vessel)
                 {
-                    return new VesselTarget((Vessel)currentTarget, cpu);
+                    return new VesselTarget((Vessel)currentTarget, _shared.Vessel);
                 }
                 else if (currentTarget is CelestialBody)
                 {
-                    return new BodyTarget((CelestialBody)currentTarget, cpu);
+                    return new BodyTarget((CelestialBody)currentTarget, _shared.Vessel);
                 }
 
                 return null;

@@ -7,26 +7,12 @@ namespace kOS
 {
     public class Variable
     {
-        private object value = 0.0f;
-        public virtual object Value
-        {
-            get 
-            { 
-                return this.value; 
-            }
-            set 
-            { 
-                this.value = value; 
-            }
-        }
+        public string Name;
+        public virtual object Value { get; set; }
 
-        public Variable()
+        public override string ToString()
         {
-        }
-
-        public virtual object GetSubValue(string svName)
-        {
-            return 0.0f;
+            return Name;
         }
     }
 }

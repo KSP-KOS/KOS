@@ -7,25 +7,25 @@ namespace kOS
 {
     public class BodyTarget : SpecialValue
     {
-        public ExecutionContext context;
+        public Vessel currentVessel;
         public CelestialBody target;
 
-        public BodyTarget(String name, ExecutionContext context) : this(VesselUtils.GetBodyByName(name), context) { }
+        public BodyTarget(String name, Vessel currentVessel) : this(VesselUtils.GetBodyByName(name), currentVessel) { }
 
-        public BodyTarget(CelestialBody target, ExecutionContext context)
+        public BodyTarget(CelestialBody target, Vessel currentVessel)
         {
-            this.context = context;
+            this.currentVessel = currentVessel;
             this.target = target;
         }
 
         public double GetDistance()
         {
-            return Vector3d.Distance(context.Vessel.GetWorldPos3D(), target.position) - target.Radius;
+            return Vector3d.Distance(currentVessel.GetWorldPos3D(), target.position) - target.Radius;
         }
 
         public override object GetSuffix(string suffixName)
         {
-            if (target == null) throw new kOSException("BODY structure appears to be empty!");
+            if (target == null) throw new Exception("BODY structure appears to be empty!");
 
             if (suffixName == "NAME") return target.name;
             if (suffixName == "DESCRIPTION") return target.bodyDescription;
@@ -36,7 +36,7 @@ namespace kOS
             if (suffixName == "PERIAPSIS") return target.orbit.PeA;
             if (suffixName == "VELOCITY") return new Vector(target.orbit.GetVel());
             if (suffixName == "DISTANCE") return (float)GetDistance();
-            if (suffixName == "BODY") return new BodyTarget(target.orbit.referenceBody, context);
+            if (suffixName == "BODY") return new BodyTarget(target.orbit.referenceBody, currentVessel);
 
             return base.GetSuffix(suffixName);
         }

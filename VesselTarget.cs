@@ -8,7 +8,7 @@ namespace kOS
 {
     public class VesselTarget : SpecialValue
     {
-        public ExecutionContext context;
+        public Vessel currentVessel;
         public Vessel target;
         public static String[] ShortCuttableShipSuffixes;
 
@@ -22,9 +22,9 @@ namespace kOS
             };
         }
 
-        public VesselTarget(Vessel target, ExecutionContext context)
+        public VesselTarget(Vessel target, Vessel currentVessel)
         {
-            this.context = context;
+            this.currentVessel = currentVessel;
             this.target = target;
         }
 
@@ -37,7 +37,7 @@ namespace kOS
 
         public double GetDistance()
         {
-            return Vector3d.Distance(context.Vessel.GetWorldPos3D(), target.GetWorldPos3D());
+            return Vector3d.Distance(currentVessel.GetWorldPos3D(), target.GetWorldPos3D());
         }
 
         public override string ToString()
@@ -65,21 +65,22 @@ namespace kOS
 
         public Direction GetFacing()
         {
-            var facing = target.transform.up;
-            return new Direction(new Vector3d(facing.x, facing.y, facing.z).normalized, false);
+            var vesselRotation = target.transform.rotation;
+            Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
+            return new Direction(vesselFacing);
         }
 
         public override object GetSuffix(string suffixName)
         {
             if (suffixName == "DIRECTION")
             {
-                var vector = (target.GetWorldPos3D() - context.Vessel.GetWorldPos3D());
+                var vector = (target.GetWorldPos3D() - currentVessel.GetWorldPos3D());
                 return new Direction(vector, false);
             }
 
             if (suffixName == "DISTANCE") return (float)GetDistance();
-            if (suffixName == "BEARING") return VesselUtils.GetTargetBearing(context.Vessel, target);
-            if (suffixName == "HEADING") return VesselUtils.GetTargetHeading(context.Vessel, target);
+            if (suffixName == "BEARING") return VesselUtils.GetTargetBearing(currentVessel, target);
+            if (suffixName == "HEADING") return VesselUtils.GetTargetHeading(currentVessel, target);
             if (suffixName == "PROGRADE") return GetPrograde();
             if (suffixName == "RETROGRADE") return GetRetrograde();
             if (suffixName == "MAXTHRUST") return VesselUtils.GetMaxThrust(target);

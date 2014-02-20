@@ -42,7 +42,7 @@ namespace kOS
         
         public void AddToVessel(Vessel v)
         {
-            if (nodeRef != null) throw new kOSException("Node has already been added");
+            if (nodeRef != null) throw new Exception("Node has already been added");
 
             vesselRef = v;
             nodeRef = v.patchedConicSolver.AddManeuverNode(UT);
@@ -73,7 +73,7 @@ namespace kOS
         {
             if (nodeRef == null)
             {
-                throw new kOSException("Must attach node first");
+                throw new Exception("Must attach node first");
             }
         }
 
@@ -109,12 +109,12 @@ namespace kOS
             else if (suffixName == "NORMAL") return Norm;
             else if (suffixName == "APOAPSIS")
             {
-                if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                if (nodeRef == null) throw new Exception("Node must be added to flight plan first");
                 return nodeRef.nextPatch.ApA;
             }
             else if (suffixName == "PERIAPSIS")
             {
-                if (nodeRef == null) throw new kOSException("Node must be added to flight plan first");
+                if (nodeRef == null) throw new Exception("Node must be added to flight plan first");
                 return nodeRef.nextPatch.PeA;
             }
 
@@ -123,7 +123,9 @@ namespace kOS
 
         public override bool SetSuffix(string suffixName, object value)
         {
-            if (suffixName == "BURNVECTOR" || suffixName == "ETA" || suffixName == "DELTAV") throw new kOSReadOnlyException(suffixName);
+            if (!(value is double)) value = Convert.ToDouble(value);
+
+            if (suffixName == "BURNVECTOR" || suffixName == "ETA" || suffixName == "DELTAV") throw new Exception(string.Format("Suffix {0} is read only!", suffixName));
 
             else if (suffixName == "PROGRADE") { Pro = (double)value; UpdateAll(); return true; }
             else if (suffixName == "RADIALOUT") { RadOut = (double)value; UpdateAll(); return true; }

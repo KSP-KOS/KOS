@@ -63,7 +63,6 @@ namespace kOS
             if (suffixName == "X") { x = dblValue; return true; }
             if (suffixName == "Y") { y = dblValue; return true; }
             if (suffixName == "Z") { z = dblValue; return true; }
-
             if (suffixName == "MAG")
             {
                 double oldMag = new Vector3d(x, y, z).magnitude;
@@ -82,7 +81,7 @@ namespace kOS
 
         public Vector3d ToVector3D()
         {
-            return new Vector3d(x,y,z); 
+            return new Vector3d(x, y, z);
         }
 
         public override string ToString()
@@ -108,6 +107,8 @@ namespace kOS
 
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
+            if (!(other is double)) other = Convert.ToDouble(other);
+
             if (op == "+")
             {
                 if (other is Vector) return this + (Vector)other;

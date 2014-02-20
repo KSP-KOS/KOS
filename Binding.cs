@@ -7,97 +7,129 @@ using System.Text;
 
 namespace kOS
 {
-    public class kOSBinding : Attribute
+    public class kRISCBinding : Attribute
     {
         public string[] Contexts;
-        public kOSBinding(params string[] contexts) { Contexts = contexts; }
+        public kRISCBinding(params string[] contexts) { Contexts = contexts; }
     }
     
     public class BindingManager
     {
-        public CPU cpu;
+        private SharedObjects _shared;
+        private List<Binding> _bindings = new List<Binding>();
+        private Dictionary<string, BoundVariable> _vars = new Dictionary<string, BoundVariable>();
+        private BindingFlightControls _flightControl = null;
 
-        public Dictionary<String, BindingSetDlg> Setters = new Dictionary<String, BindingSetDlg>();
-        public Dictionary<String, BindingGetDlg> Getters = new Dictionary<String, BindingGetDlg>();
-        public List<Binding> Bindings = new List<Binding>();
+        public delegate void BindingSetDlg(CPU cpu, object val);
+        public delegate object BindingGetDlg(CPU cpu);
         
-        public delegate void BindingSetDlg      (CPU cpu, object val);
-        public delegate object BindingGetDlg    (CPU cpu);
-
-        public BindingManager(CPU cpu, String context)
+        public BindingManager(SharedObjects shared)
         {
-            this.cpu = cpu;
+            _shared = shared;
+            _shared.BindingMgr = this;
+        }
 
+        public void LoadBindings()
+        {
             var contexts = new string[1];
-            contexts[0] = context;
+            contexts[0] = "ksp";
+
+            _bindings.Clear();
+            _vars.Clear();
+            _flightControl = null;
 
             foreach (Type t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                kOSBinding attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
+                kRISCBinding attr = (kRISCBinding)t.GetCustomAttributes(typeof(kRISCBinding), true).FirstOrDefault();
                 if (attr != null)
                 {
                     if (attr.Contexts.Count() == 0 || attr.Contexts.Intersect(contexts).Any())
                     {
                         Binding b = (Binding)Activator.CreateInstance(t);
-                        b.AddTo(this);
-                        Bindings.Add(b);
+                        b.AddTo(_shared);
+                        _bindings.Add(b);
+
+                        if (b is BindingFlightControls)
+                        {
+                            _flightControl = (BindingFlightControls)b;
+                        }
                     }
                 }
             }
         }
 
-        public void AddGetter(String name, BindingGetDlg dlg)
+        public void AddBoundVariable(string name, BindingGetDlg getDelegate, BindingSetDlg setDelegate)
         {
-            Variable v = cpu.FindVariable(name);
-            if (v == null) v = cpu.FindVariable(name.Split(":".ToCharArray())[0]);
-            
-            if (v != null)
+            BoundVariable variable;
+            if (_vars.ContainsKey(name))
             {
-                if (v is BoundVariable)
-                {
-                    ((BoundVariable)v).Get = dlg;
-                }
+                variable = _vars[name];
             }
             else
             {
-                var bv = cpu.CreateBoundVariable(name);
-                bv.Get = dlg;
-                bv.cpu = cpu;
+                variable = new BoundVariable();
+                variable.Name = name;
+                variable.cpu = _shared.Cpu;
+                _vars.Add(name, variable);
+                _shared.Cpu.AddVariable(variable, name);
+            }
+
+            if (getDelegate != null)
+                variable.Get = getDelegate;
+
+            if (setDelegate != null)
+                variable.Set = setDelegate;
+        }
+
+        public void AddGetter(string name, BindingGetDlg dlg)
+        {
+            AddBoundVariable(name, dlg, null);
+        }
+
+        public void AddSetter(string name, BindingSetDlg dlg)
+        {
+            AddBoundVariable(name, null, dlg);
+        }
+
+        public void PreUpdate(double time)
+        {
+            // update the bindings
+            foreach (Binding b in _bindings)
+            {
+                b.Update();
+            }
+
+            // clear bound variables values
+            foreach (BoundVariable variable in _vars.Values)
+            {
+                variable.ClearValue();
             }
         }
 
-        public void AddSetter(String name, BindingSetDlg dlg)
+        public void PostUpdate()
         {
-            Variable v = cpu.FindVariable(name.ToLower());
-            if (v != null)
+            // save bound variables values
+            foreach (BoundVariable variable in _vars.Values)
             {
-                if (v is BoundVariable)
-                {
-                    ((BoundVariable)v).Set = dlg;
-                }
-            }
-            else
-            {
-                var bv = cpu.CreateBoundVariable(name.ToLower());
-                bv.Set = dlg;
-                bv.cpu = cpu;
+                variable.SaveValue();
             }
         }
 
-        public void Update(float time)
+        public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            foreach (Binding b in Bindings)
+            if (_flightControl != null)
             {
-                b.Update(time);
+                _flightControl.ToggleFlyByWire(paramName, enabled);
             }
         }
     }
 
     public class Binding
     {
-        public virtual void AddTo(BindingManager manager) { }
+        protected SharedObjects _shared;
 
-        public virtual void Update(float time) { }
+        public virtual void AddTo(SharedObjects shared) { }
+        public virtual void Update() { }
     }
 
     public class BoundVariable : Variable
@@ -106,26 +138,44 @@ namespace kOS
         public BindingManager.BindingGetDlg Get;
         public CPU cpu;
 
+        private object _currentValue = null;
+        private bool _wasUpdated = false;
+
         public override object Value
         {
             get
             {
-                return Get(cpu);
+                if (Get != null)
+                {
+                    if (_currentValue == null)
+                        _currentValue = Get(cpu);
+                    return _currentValue;
+                }
+                else
+                    return null;
             }
             set
             {
-                Set(cpu, value);
+                if (Set != null)
+                {
+                    _currentValue = value;
+                    _wasUpdated = true;
+                }
             }
         }
-    }
 
-    [kOSBinding]
-    public class TestBindings : Binding
-    {
-        public override void AddTo(BindingManager manager)
+        public void ClearValue()
         {
-            //manager.AddGetter("TEST1", delegate(CPU cpu) { return 4; });
-            //manager.AddSetter("TEST1", delegate(CPU cpu, object val) { cpu.PrintLine(val.ToString()); });
+            _currentValue = null;
+            _wasUpdated = false;
         }
-    }
+
+        public void SaveValue()
+        {
+            if (_wasUpdated && _currentValue != null)
+            {
+                Set(cpu, _currentValue);
+            }
+        }
+    } 
 }

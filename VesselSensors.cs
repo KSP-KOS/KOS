@@ -47,6 +47,7 @@ namespace kOS
                 }
             }
         }
+
         public override object GetSuffix(string suffixName)
         {
             if (suffixName == "ACC") return acceleration;
@@ -54,8 +55,6 @@ namespace kOS
             if (suffixName == "TEMP") return temperature;
             if (suffixName == "GRAV") return geeForce;
             if (suffixName == "LIGHT") return KerbolExposure;
-
-
 
             return base.GetSuffix(suffixName);
         }

@@ -16,62 +16,51 @@ namespace kOS
         public Harddisk(ConfigNode node)
         {
             Capacity = 10000;
-
-            foreach (String s in node.GetValues("capacity"))
-            {
-                Capacity = Int32.Parse(s);
-            }
-
-            foreach (String s in node.GetValues("volumeName"))
-            {
-                Name = s;
-            }
-
+            
+            if (node.HasValue("capacity")) Capacity = int.Parse(node.GetValue("capacity"));
+            if (node.HasValue("volumeName")) Name = node.GetValue("volumeName");
+            
             foreach (ConfigNode fileNode in node.GetNodes("file"))
             {
-                files.Add(new File(fileNode));
+                Add(new ProgramFile(fileNode));
             }
         }
 
-        public override bool SaveFile(File file)
+        public override bool SaveFile(ProgramFile file)
         {
-            if (!IsRoomFor(file)) return false;
-
-            return base.SaveFile(file);
+            if (IsRoomFor(file))
+            {
+                return base.SaveFile(file);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public override int GetFreeSpace()
         {
-            int totalOccupied = 0;
-            foreach (File p in files)
-            {
-                totalOccupied += p.GetSize();
-            }
-
-            return Math.Max(Capacity - totalOccupied, 0);
+            return Math.Max(Capacity - GetUsedSpace(), 0);
         }
 
-        public override bool IsRoomFor(File newFile)
+        public override bool IsRoomFor(ProgramFile newFile)
         {
-            int totalOccupied = newFile.GetSize();
-            foreach (File existingFile in files)
+            int usedSpace = GetUsedSpace();
+            ProgramFile existingFile = GetByName(newFile.Filename);
+
+            if (existingFile != null)
             {
-                // Consider only existing files that don't share a name with the proposed new file
-                // Because this could be an overwrite situation
-                if (existingFile.Filename != newFile.Filename)
-                {
-                    totalOccupied += existingFile.GetSize();
-                }
+                usedSpace -= existingFile.GetSize();
             }
 
-            return (Capacity - totalOccupied >= 0);
+            return ((Capacity - usedSpace) >= newFile.GetSize());
         }
 
-        public override void LoadPrograms(List<File> programsToLoad)
+        public override void LoadPrograms(List<ProgramFile> programsToLoad)
         {
-            foreach (File p in programsToLoad)
+            foreach (ProgramFile p in programsToLoad)
             {
-                files.Add(p);
+                Add(p);
             }
         }
 
@@ -81,7 +70,7 @@ namespace kOS
             node.AddValue("capacity", Capacity);
             node.AddValue("volumeName", Name);
 
-            foreach (File file in files)
+            foreach (ProgramFile file in _files.Values)
             {
                 node.AddNode(file.Save("file"));
             }

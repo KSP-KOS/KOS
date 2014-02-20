@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace kOS
 {
-    
     public static class SteeringHelper
     {
         public static Vector3d prev_err;

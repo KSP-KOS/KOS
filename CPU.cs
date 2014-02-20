@@ -1,397 +1,628 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-
-using UnityEngine;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace kOS
 {
-    public class CPU : ExecutionContext
+    public class CPU
     {
-        public object Parent;
-        public enum Modes { READY, STARVED, OFF };
-        public Modes Mode = Modes.READY;
-        public String Context;
-        public Archive archive;
-        public BindingManager bindingManager;
-        public float SessionTime;
-        public int ClockSpeed = 5;
+        private enum Status
+        {
+            Running = 1,
+            Waiting = 2
+        }
+
+        private Stack _stack;
+        private Dictionary<string, Variable> _vars;
+        private Status _currentStatus;
+        private double _currentTime;
+        private double _timeWaitUntil;
+        private Dictionary<string, Function> _functions;
+        private SharedObjects _shared;
+        private List<ProgramContext> _contexts;
+        private ProgramContext _currentContext;
         
-        private Dictionary<String, Variable> variables = new Dictionary<String, Variable>();
-        private Volume selectedVolume = null;
-        private List<Volume> volumes = new List<Volume>();
-        private List<kOSExternalFunction> externalFunctions = new List<kOSExternalFunction>();
-        
-        public override Vessel Vessel { get { return ((kOSProcessor)Parent).vessel; } }
-        public override Dictionary<String, Variable> Variables { get { return variables; } }
-        public override List<Volume> Volumes { get  { return volumes; } }
-        public override List<kOSExternalFunction> ExternalFunctions { get { return externalFunctions; } }
+        // statistics
+        private double _totalUpdateTime = 0D;
+        private double _totalTriggersTime = 0D;
+        private double _totalExecutionTime = 0D;
 
-        public static kOSRunType RunType = kOSRunType.KSP;
-        public enum kOSRunType { KSP, WINFORMS };
-        
-        public override Volume SelectedVolume
+        public int InstructionPointer
         {
-            get { return selectedVolume; }
-            set { selectedVolume = value; }
+            get { return _currentContext.InstructionPointer; }
+            set { _currentContext.InstructionPointer = value; }
         }
 
-        public CPU(object parent, string context)
+
+        public CPU(SharedObjects shared)
         {
-            this.Parent = parent;
-            this.Context = context;
-            
-            bindingManager = new BindingManager(this, Context);
-
-            if (context == "ksp")
-            {
-                RunType = kOSRunType.KSP;
-
-                archive = new Archive(Vessel);
-                Volumes.Add(archive);
-            }
-            else
-            {
-                RunType = kOSRunType.WINFORMS;
-            }
-
-            this.RegisterkOSExternalFunction(new object[] { "test2", this, "testFunction", 2 });
+            _shared = shared;
+            _shared.Cpu = this;
+            _stack = new Stack();
+            _vars = new Dictionary<string, Variable>();
+            _contexts = new List<ProgramContext>();
+            Boot();
         }
 
-        public double testFunction(double x, double y) { return x * y; }
-
-        public void RegisterkOSExternalFunction(object[] parameters)
+        private void LoadFunctions()
         {
-            if (parameters.Count() == 4)
+            _functions = new Dictionary<string, Function>();
+
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                var name = (String)parameters[0];
-                var parent = parameters[1];
-                var methodName = (String)parameters[2];
-                var parameterCount = (int)parameters[3];
-
-                RegisterkOSExternalFunction(name, parent, methodName, parameterCount);
-            }
-        }
-
-        public void RegisterkOSExternalFunction(String name, object parent, String methodName, int parameterCount)
-        {
-            externalFunctions.Add(new kOSExternalFunction(name.ToUpper(), parent, methodName, parameterCount));
-        }
-
-        public override object CallExternalFunction(string name, string[] parameters)
-        {
-            bool callFound = false;
-            bool callAndParamCountFound = false;
-
-            foreach (var function in ExternalFunctions)
-            {
-                if (function.Name == name.ToUpper())
+                FunctionAttribute attr = (FunctionAttribute)type.GetCustomAttributes(typeof(FunctionAttribute), true).FirstOrDefault();
+                if (attr != null)
                 {
-                    callFound = true;
-
-                    if (function.ParameterCount == parameters.Count())
+                    if (attr.functionName != string.Empty)
                     {
-                        callAndParamCountFound = true;
-
-                        Type t = function.Parent.GetType();
-                        var method = t.GetMethod(function.MethodName);
-
-                        // Attempt to cast the strings to types that the target method is expecting
-                        var parameterInfoArray = method.GetParameters();
-                        object[] convertedParams = new object[parameters.Length];
-                        for (var i = 0; i < parameters.Length; i++)
-                        {
-                            Type paramType = parameterInfoArray[i].ParameterType;
-                            String value = parameters[i];
-                            object converted = null;
-                            
-                            if (paramType == typeof(String))
-                            {
-                                converted = parameters[i];
-                            }
-                            else if (paramType == typeof(float))
-                            {
-                                float flt;
-                                if (float.TryParse(value, out flt)) converted = flt;
-                            }
-                            else if (paramType == typeof(double))
-                            {
-                                double dbl;
-                                if (double.TryParse(value, out dbl)) converted = dbl;
-                            }
-                            else if (paramType == typeof(int))
-                            {
-                                int itgr;
-                                if (int.TryParse(value, out itgr)) converted = itgr;
-                            }
-                            else if (paramType == typeof(long))
-                            {
-                                long lng;
-                                if (long.TryParse(value, out lng)) converted = lng;
-                            }
-                            else if (paramType == typeof(bool))
-                            {
-                                bool bln;
-                                if (bool.TryParse(value, out bln)) converted = bln;
-                            }
-
-                            if (converted == null) throw new kOSException("Parameter types don't match");
-                            convertedParams[i] = converted;
-                        }
-
-                        return method.Invoke(function.Parent, convertedParams);
+                        _functions.Add(attr.functionName, (Function)Activator.CreateInstance(type));
                     }
                 }
             }
-
-            if (!callFound) throw new kOSException("External function '" + name + "' not found");
-            else if (!callAndParamCountFound) throw new kOSException("Wrong number of arguments for '" + name + "'");
-
-            return null;
-        }
-
-        public override bool FindExternalFunction(string name)
-        {
-            foreach (var function in ExternalFunctions)
-            {
-                if (function.Name == name.ToUpper())
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         public void Boot()
         {
-            Mode = Modes.READY;
-
-            Push(new InterpreterBootup(this));
-
-            if (Volumes.Count > 1) 
-                SelectedVolume = Volumes[1];
-            else
-                SelectedVolume = Volumes[0];
-        }
-
-        public bool IsAlive()
-        {
-            var partState = ((kOSProcessor)this.Parent).part.State;
-
-            if (partState == PartStates.DEAD)
+            // break all running programs
+            _currentContext = null;
+            _contexts.Clear();
+            PushInterpreterContext();
+            _currentStatus = Status.Running;
+            _currentTime = 0;
+            _timeWaitUntil = 0;
+            // clear stack
+            _stack.Clear();
+            // clear variables
+            _vars.Clear();
+            // clear interpreter
+            if (_shared.Interpreter != null) _shared.Interpreter.Reset();
+            // load functions
+            LoadFunctions();
+            // load bindings
+            if (_shared.BindingMgr != null) _shared.BindingMgr.LoadBindings();
+            // Booting message
+            if (_shared.Screen != null)
             {
-                Mode = Modes.OFF;
-                return false;
+                _shared.Screen.ClearScreen();
+                string bootMessage = "kRISC Operating System\n" +
+                                     "KerboScript v" + Core.VersionInfo.ToString() + "\n \n" +
+                                     "Proceed.\n ";
+                _shared.Screen.Print(bootMessage);
             }
-
-            return true;
         }
 
-        public void AttachHardDisk(Harddisk hardDisk)
+        private void PushInterpreterContext()
         {
-            Volumes.Add(hardDisk);
-            SelectedVolume = hardDisk;
+            ProgramBuilder builder = new ProgramBuilder();
+            List<Opcode> emptyProgram = builder.BuildProgram(true);
+            PushContext(new ProgramContext(emptyProgram));
         }
 
-        public override void VerifyMount()
+        private void PushContext(ProgramContext context)
         {
-            selectedVolume.CheckRange();
-        }
+            _contexts.Add(context);
+            _currentContext = _contexts[_contexts.Count - 1];
 
-        internal void ProcessElectricity(Part part, float time)
-        {
-            if (Mode == Modes.OFF) return;
-
-            var electricReq = 0.01f * time;
-            var result = part.RequestResource("ElectricCharge", electricReq) / electricReq;
-
-            var newMode = (result < 0.5f) ? Modes.STARVED : Modes.READY;
-
-            if (newMode == Modes.READY && Mode == Modes.STARVED)
+            if (_contexts.Count > 1)
             {
-                Boot();
+                _shared.Interpreter.SetInputLock(true);
             }
-
-            Mode = newMode;
         }
 
-        public override bool SwitchToVolume(int volID)
+        private void PopContext()
         {
-            if (Volumes.Count > volID)
+            if (_contexts.Count > 0)
             {
-                var newVolume = Volumes[volID];
+                // remove the last context
+                ProgramContext contextRemove = _contexts[_contexts.Count - 1];
+                _contexts.Remove(contextRemove);
+                contextRemove.DisableActiveFlyByWire(_shared.BindingMgr);
 
-                if (newVolume.CheckRange())
+                if (_contexts.Count > 0)
                 {
-                    SelectedVolume = newVolume;
-                    return true;
+                    _currentContext = _contexts[_contexts.Count - 1];
                 }
                 else
                 {
-                    throw new kOSException("Volume disconnected - out of range");
+                    _currentContext = null;
                 }
-            }
 
-            return false;
-        }
-
-        public override bool SwitchToVolume(string targetVolume)
-        {
-            foreach (Volume volume in Volumes)
-            {
-                if (volume.Name.ToUpper() == targetVolume.ToUpper())
+                if (_contexts.Count == 1)
                 {
-                    if (volume.CheckRange())
-                    {
-                        SelectedVolume = volume;
-                        return true;
-                    }
-                    else
-                    {
-                        throw new kOSException("Volume disconnected - out of range");
-                    }
+                    _shared.Interpreter.SetInputLock(false);
                 }
             }
-
-            return false;
         }
 
-        public override BoundVariable CreateBoundVariable(string varName)
+        private void PopFirstContext()
         {
-            varName = varName.ToLower();
-
-            if (FindVariable(varName) == null)
+            while (_contexts.Count > 1)
             {
-                variables.Add(varName, new BoundVariable());
-                return (BoundVariable)variables[varName];
+                PopContext();
+            }
+        }
+
+        public void RunProgram(List<Opcode> program)
+        {
+            RunProgram(program, false);
+        }
+
+        public void RunProgram(List<Opcode> program, bool silent)
+        {
+            if (program.Count > 0)
+            {
+                ProgramContext newContext = new ProgramContext(program);
+                newContext.Silent = silent;
+                PushContext(newContext);
+
+                // only reset the statistics for the first executed program
+                // all subprogram calls sum in the parent statistics
+                if (_contexts.Count == 2)
+                {
+                    _totalUpdateTime = 0D;
+                    _totalTriggersTime = 0D;
+                    _totalExecutionTime = 0D;
+                }
+            }
+        }
+
+        public void UpdateProgram(List<Opcode> program)
+        {
+            if (program.Count > 0)
+            {
+                if (_currentContext != null && _currentContext.Program != null)
+                {
+                    _currentContext.UpdateProgram(program);
+                }
+                else
+                {
+                    RunProgram(program);
+                }
+            }
+        }
+
+        public void BreakExecution(bool manual)
+        {
+            if (_contexts.Count > 1)
+            {
+                EndWait();
+
+                if (manual)
+                {
+                    PopFirstContext();
+                    _shared.Screen.Print("Program aborted.");
+                    PrintStatistics();
+                }
+                else
+	            {
+                    bool silent = _currentContext.Silent;
+                    PopContext();
+                    if (_contexts.Count == 1 && !silent)
+                    {
+                        _shared.Screen.Print("Program ended.");
+                        PrintStatistics();
+                    }
+	            }
+            }
+        }
+
+        public void PushStack(object item)
+        {
+            _stack.Push(item);
+        }
+
+        public object PopStack()
+        {
+            return _stack.Pop();
+        }
+
+        public void MoveStackPointer(int delta)
+        {
+            _stack.MoveStackPointer(delta);
+        }
+
+        private Variable GetOrCreateVariable(string identifier)
+        {
+            Variable variable;
+
+            if (_vars.ContainsKey(identifier))
+            {
+                variable = GetVariable(identifier);
             }
             else
             {
-                throw new kOSException("Cannot bind " + varName + "; name already taken.");
+                variable = new Variable();
+                variable.Name = identifier;
+                AddVariable(variable, identifier);
+            }
+            return variable;
+        }
+
+        private Variable GetVariable(string identifier)
+        {
+            identifier = identifier.ToLower();
+            if (_vars.ContainsKey(identifier))
+            {
+                return _vars[identifier];
+            }
+            else
+            {
+                throw new Exception(string.Format("Variable {0} is not defined", identifier.TrimStart('$')));
             }
         }
 
-        public override void Update(float time)
+        public void AddVariable(Variable variable, string identifier)
         {
-            bindingManager.Update(time);
-
-            SessionTime += time;
-
-            for (var i = 0; i < ClockSpeed; i++)
+            identifier = identifier.ToLower();
+            
+            if (!identifier.StartsWith("$"))
             {
-                base.Update(time / (float)ClockSpeed);
+                identifier = "$" + identifier;
             }
 
-            if (Mode == Modes.STARVED)
+            if (_vars.ContainsKey(identifier))
             {
-                ChildContext = null;
-            }
-            else if (Mode == Modes.OFF)
-            {
-                ChildContext = null;
+                _vars.Remove(identifier);
             }
 
-            // After booting
-            if (ChildContext == null)
-            {
-                Push(new ImmediateMode(this));
-            }
+            _vars.Add(identifier, variable);
         }
 
-        public override void SendMessage(SystemMessage message)
+        public object GetValue(object testValue)
         {
-            switch (message)
+            // $cos     cos named variable
+            // cos()    cos trigonometric function
+            // cos      string literal "cos"
+
+            if (testValue is string &&
+                ((string)testValue).StartsWith("$"))
             {
-                case SystemMessage.SHUTDOWN:
-                    ChildContext = null;
-                    Mode = Modes.OFF;
-                    break;
+                // value is a variable
+                string identifier = (string)testValue;
+                string[] suffixes = identifier.Split(':');
 
-                case SystemMessage.RESTART:
-                    ChildContext = null;
-                    Boot();
-                    break;
+                Variable variable = GetVariable(suffixes[0]);
+                object value = variable.Value;
 
-                default:
-                    base.SendMessage(message);
-                    break;
-            }
-        }
-
-        internal void UpdateVolumeMounts(List<Volume> attachedVolumes)
-        {
-            // Remove volumes that are no longer attached
-            foreach (Volume volume in new List<Volume>(volumes))
-            {
-                if (!(volume is Archive) && !attachedVolumes.Contains(volume))
+                if (value is SpecialValue && suffixes.Length > 1)
                 {
-                    volumes.Remove(volume);
+                    for (int suffixIndex = 1; suffixIndex < suffixes.Length; suffixIndex++)
+                    {
+                        string suffixName = suffixes[suffixIndex].ToUpper();
+                        value = ((SpecialValue)value).GetSuffix(suffixName);
+                        if (value == null)
+                        {
+                            throw new Exception(string.Format("Suffix {0} not found on object {1}", suffixName, variable.Name));
+                        }
+                    }
+                }
+                
+                return value;
+            }
+            else
+            {
+                return testValue;
+            }
+        }
+
+        public void SetValue(string identifier, object value)
+        {
+            string[] suffixes = identifier.Split(':');
+            Variable variable = GetOrCreateVariable(suffixes[0]);
+
+            if (suffixes.Length > 1 && variable.Value is SpecialValue)
+            {
+                SpecialValue specialValue = (SpecialValue)variable.Value;
+                string suffixName;
+
+                if (suffixes.Length > 2)
+                {
+                    for (int suffixIndex = 1; suffixIndex < (suffixes.Length-1); suffixIndex++)
+                    {
+                        suffixName = suffixes[suffixIndex].ToUpper();
+                        specialValue = (SpecialValue)specialValue.GetSuffix(suffixName);
+                        if (specialValue == null)
+                        {
+                            throw new Exception(string.Format("Suffix {0} not found on object {1}", suffixName, variable.Name));
+                        }
+                    }
+                }
+
+                suffixName = suffixes[suffixes.Length - 1].ToUpper();
+                if (!specialValue.SetSuffix(suffixName, value))
+                {
+                    throw new Exception(string.Format("Suffix {0} not found on object {1}", suffixName, variable.Name));
+                }
+            }
+            else
+            {
+                variable.Value = value;
+            }
+        }
+
+        public object PopValue()
+        {
+            return GetValue(PopStack());
+        }
+
+        public void AddTrigger(int triggerFunctionPointer)
+        {
+            if (!_currentContext.Triggers.Contains(triggerFunctionPointer))
+            {
+                _currentContext.Triggers.Add(triggerFunctionPointer);
+            }
+        }
+
+        public void RemoveTrigger(int triggerFunctionPointer)
+        {
+            if (_currentContext.Triggers.Contains(triggerFunctionPointer))
+            {
+                _currentContext.Triggers.Remove(triggerFunctionPointer);
+            }
+            //else
+            //{
+            //    if (_shared.Logger != null)
+            //    {
+            //        _shared.Logger.Log(string.Format("Can't remove trigger: {0}    IP: {1}", triggerFunctionPointer, _currentContext.InstructionPointer));
+            //    }
+            //}
+        }
+
+        public void StartWait(double waitTime)
+        {
+            if (waitTime > 0)
+            {
+                _timeWaitUntil = _currentTime + waitTime;
+            }
+            _currentStatus = Status.Waiting;
+        }
+
+        public void EndWait()
+        {
+            _timeWaitUntil = 0;
+            _currentStatus = Status.Running;
+        }
+
+        public void Update(double deltaTime)
+        {
+            bool showStatistics = Config.GetInstance().ShowStatistics;
+            Stopwatch updateWatch = null;
+            Stopwatch triggerWatch = null;
+            Stopwatch executionWatch = null;
+
+            if (showStatistics) updateWatch = Stopwatch.StartNew();
+            
+            _currentTime += deltaTime;
+
+            try
+            {
+                PreUpdateBindings(deltaTime);
+
+                if (_currentContext != null && _currentContext.Program != null)
+                {
+                    if (showStatistics) triggerWatch = Stopwatch.StartNew();
+                    ProcessTriggers();
+                    if (showStatistics)
+                    {
+                        triggerWatch.Stop();
+                        _totalTriggersTime += triggerWatch.ElapsedMilliseconds;
+                    }
+
+                    ProcessWait();
+
+                    if (_currentStatus == Status.Running)
+                    {
+                        if (showStatistics) executionWatch = Stopwatch.StartNew();
+                        ContinueExecution();
+                        if (showStatistics)
+                        {
+                            executionWatch.Stop();
+                            _totalExecutionTime += executionWatch.ElapsedMilliseconds;
+                        }
+                    }
+                }
+
+                PostUpdateBindings();
+            }
+            catch (Exception e)
+            {
+                if (_contexts.Count == 1)
+                {
+                    // interpreter context
+                    SkipCurrentInstructionId();
+                }
+                else
+                {
+                    // break execution of all programs and pop interpreter context
+                    PopFirstContext();
+                }
+
+                if (_shared.Logger != null)
+                {
+                    _shared.Logger.Log(e.Message);
                 }
             }
 
-            // Add volumes that have become attached
-            foreach (Volume volume in attachedVolumes)
+            if (showStatistics)
             {
-                if (!volumes.Contains(volume))
+                updateWatch.Stop();
+                _totalUpdateTime += updateWatch.ElapsedMilliseconds;
+            }
+        }
+
+        private void PreUpdateBindings(double deltaTime)
+        {
+            if (_shared.BindingMgr != null)
+            {
+                _shared.BindingMgr.PreUpdate(deltaTime);
+            }
+        }
+
+        private void PostUpdateBindings()
+        {
+            if (_shared.BindingMgr != null)
+            {
+                _shared.BindingMgr.PostUpdate();
+            }
+        }
+
+        private void ProcessWait()
+        {
+            if (_currentStatus == Status.Waiting && _timeWaitUntil > 0)
+            {
+                if (_currentTime >= _timeWaitUntil)
                 {
-                    volumes.Add(volume);
+                    EndWait();
                 }
             }
         }
 
-        public override void OnSave(ConfigNode node)
+        private void ProcessTriggers()
+        {
+            if (_currentContext.Triggers.Count > 0)
+            {
+                int currentInstructionPointer = _currentContext.InstructionPointer;
+                List<int> triggerList = new List<int>(_currentContext.Triggers);
+
+                foreach (int triggerPointer in triggerList)
+                {
+                    _currentContext.InstructionPointer = triggerPointer;
+
+                    bool executeNext = true;
+                    while (executeNext)
+                    {
+                        executeNext = ExecuteInstruction(_currentContext);
+                    }
+                }
+
+                _currentContext.InstructionPointer = currentInstructionPointer;
+            }
+        }
+
+        private void ContinueExecution()
+        {
+            int instructionCounter = 0;
+            bool executeNext = true;
+            int instructionsPerUpdate = Config.GetInstance().InstructionsPerUpdate;
+            
+            while (_currentStatus == Status.Running && 
+                   instructionCounter < instructionsPerUpdate &&
+                   executeNext &&
+                   _currentContext != null)
+            {
+                executeNext = ExecuteInstruction(_currentContext);
+                instructionCounter++;
+            }
+        }
+
+        private bool ExecuteInstruction(ProgramContext context)
+        {
+            Opcode opcode = context.Program[context.InstructionPointer];
+            if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
+            {
+                opcode.Execute(this);
+                context.InstructionPointer += opcode.DeltaInstructionPointer;
+                return true;
+            }
+            else
+            {
+                if (opcode is OpcodeEOP)
+                {
+                    BreakExecution(false);
+                }
+                return false;
+            }
+        }
+
+        private void SkipCurrentInstructionId()
+        {
+            int currentInstructionId = _currentContext.Program[_currentContext.InstructionPointer].InstructionId;
+
+            while (_currentContext.InstructionPointer < _currentContext.Program.Count &&
+                   _currentContext.Program[_currentContext.InstructionPointer].InstructionId == currentInstructionId)
+            {
+                _currentContext.InstructionPointer++;
+            }
+        }
+
+        public void CallBuiltinFunction(string functionName)
+        {
+            if (_functions.ContainsKey(functionName))
+            {
+                Function function = _functions[functionName];
+                function.Execute(_shared);
+            }
+        }
+
+        public void ToggleFlyByWire(string paramName, bool enabled)
+        {
+            if (_shared.BindingMgr != null)
+            {
+                _shared.BindingMgr.ToggleFlyByWire(paramName, enabled);
+                _currentContext.ToggleFlyByWire(paramName, enabled);
+            }
+        }
+
+        public void PrintStatistics()
+        {
+            if (Config.GetInstance().ShowStatistics)
+            {
+                _shared.Screen.Print(string.Format("Total update time: {0:F3}ms", _totalUpdateTime));
+                _shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", _totalTriggersTime));
+                _shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", _totalExecutionTime));
+                _shared.Screen.Print(" ");
+            }
+        }
+
+        public void OnSave(ConfigNode node)
         {
             ConfigNode contextNode = new ConfigNode("context");
 
             // Save variables
-            if (Variables.Count > 0)
+            if (_vars.Count > 0)
             {
                 ConfigNode varNode = new ConfigNode("variables");
 
-                foreach (var kvp in Variables)
+                foreach (var kvp in _vars)
                 {
                     if (!(kvp.Value is BoundVariable))
                     {
-                        varNode.AddValue(kvp.Key, File.EncodeLine(kvp.Value.Value.ToString()));
+                        varNode.AddValue(kvp.Key.TrimStart('$'), ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
                     }
                 }
 
                 contextNode.AddNode(varNode);
             }
 
-            if (ChildContext != null)
-            {
-                ChildContext.OnSave(contextNode);
-            }
-
             node.AddNode(contextNode);
         }
 
-        public override void OnLoad(ConfigNode node)
+        public void OnLoad(ConfigNode node)
         {
+            StringBuilder scriptBuilder = new StringBuilder();
+            
             foreach (ConfigNode contextNode in node.GetNodes("context"))
             {
                 foreach (ConfigNode varNode in contextNode.GetNodes("variables"))
                 {
                     foreach (ConfigNode.Value value in varNode.values)
                     {
-                        var newVar = CreateVariable(value.name);
-                        newVar.Value = new Expression(File.DecodeLine(value.value), this).GetValue();
+                        string varValue = ProgramFile.DecodeLine(value.value);
+                        scriptBuilder.AppendLine(string.Format("set {0} to {1}.", value.name, varValue));
                     }
                 }
             }
-        }
 
-        public override string GetVolumeBestIdentifier(Volume SelectedVolume)
-        {
-            int localIndex = volumes.IndexOf(SelectedVolume);
-
-            if (!String.IsNullOrEmpty(SelectedVolume.Name)) return "#" + localIndex + ": \"" + SelectedVolume.Name + "\"";
-            else return "#" + localIndex;
+            if (_shared.ScriptHandler != null && scriptBuilder.Length > 0)
+            {
+                ProgramBuilder programBuilder = new ProgramBuilder();
+                programBuilder.AddRange(_shared.ScriptHandler.Compile(scriptBuilder.ToString()));
+                List<Opcode> program = programBuilder.BuildProgram(false);
+                RunProgram(program, true);
+            }
         }
     }
 }

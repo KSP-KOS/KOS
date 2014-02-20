@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
+using System.IO;
 using UnityEngine;
 
 namespace kOS
@@ -32,17 +32,38 @@ namespace kOS
         public static Color COLOR_ALPHA = new Color(0.9f, 0.9f, 0.9f, 0.2f);
         public static Color TEXTCOLOR = new Color(0.45f, 0.92f, 0.23f, 0.9f);
         public static Color TEXTCOLOR_ALPHA = new Color(0.45f, 0.92f, 0.23f, 0.5f);
+        public static Color TEXTCOLOROFF = new Color(0.8f, 0.8f, 0.8f, 0.7f);
+        public static Color TEXTCOLOROFF_ALPHA = new Color(0.8f, 0.8f, 0.8f, 0.3f);
         public static Rect CLOSEBUTTON_RECT = new Rect(398, 359, 59, 30);
 
         public bool allTexturesFound = true;
 
-        public Core Core;
-        public CPU Cpu;
+        private SharedObjects _shared;
+        private bool _isPowered = true;
 
         public void Awake()
         {
-            LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
-            LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
+            string pluginFolder = string.Empty;
+            string gameDataFolder = Path.Combine(root, "GameData");
+            
+            if (Directory.Exists(Path.Combine(gameDataFolder, "kOS")))
+            {
+                pluginFolder = "GameData/kOS/";
+            }
+            else if (Directory.Exists(Path.Combine(gameDataFolder, "kRISC")))
+            {
+                pluginFolder = "GameData/kRISC/";
+            }
+
+            if (pluginFolder != string.Empty)
+            {
+                LoadTexture(pluginFolder + "GFX/font_sml.png", ref fontImage);
+                LoadTexture(pluginFolder + "GFX/monitor_minimal.png", ref terminalImage);
+            }
+            else
+            {
+                allTexturesFound = false;
+            }
         }
 
         public void LoadTexture(String relativePath, ref Texture2D targetTexture)
@@ -88,7 +109,7 @@ namespace kOS
 
                 // Prevent editor keys from being pressed while typing
                 EditorLogic editor = EditorLogic.fetch;
-                if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true);
+                if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true, "kOSTerminal");
             }
         }
 
@@ -103,7 +124,7 @@ namespace kOS
                 cameraManager.enabled = true;
 
                 EditorLogic editor = EditorLogic.fetch;
-                if (editor != null) editor.Unlock();
+                if (editor != null) editor.Unlock("kOSTerminal");
             }
         }
 
@@ -129,7 +150,7 @@ namespace kOS
 
         void Update()
         {
-            if (Cpu == null || Cpu.Vessel == null || Cpu.Vessel.parts.Count == 0)
+            if (_shared == null || _shared.Vessel == null || _shared.Vessel.parts.Count == 0)
             {
                 // Holding onto a vessel instance that no longer exists?
                 Close();
@@ -195,23 +216,31 @@ namespace kOS
             if (code == (KeyCode.End)) { SpecialKey(kOSKeys.END); return; }
             if (code == (KeyCode.Backspace)) { Type((char)8); return; }
             if (code == (KeyCode.Delete)) { SpecialKey(kOSKeys.DEL); return; }
+            if (code == (KeyCode.PageUp)) { SpecialKey(kOSKeys.PGUP); return; }
+            if (code == (KeyCode.PageDown)) { SpecialKey(kOSKeys.PGDN); return; }
 
             if (code == (KeyCode.Return) || code == (KeyCode.KeypadEnter)) { Type((char)13); return; }
         }
-        
-        public void ClearScreen()
-        {
-            
-        }
-        
+
         void Type(char ch)
         {
-            if (Cpu != null) Cpu.KeyInput(ch);
+            if (_shared != null && _shared.Interpreter != null)
+            {
+                _shared.Interpreter.Type(ch);
+            }
         }
 
         void SpecialKey(kOSKeys key)
         {
-            if (Cpu != null) Cpu.SpecialKey(key);
+            if (key == kOSKeys.BREAK)
+            {
+                _shared.Cpu.BreakExecution(true);
+            }
+
+            if (_shared != null && _shared.Interpreter != null)
+            {
+                _shared.Interpreter.SpecialKey(key);
+            }
         }
 
         void TerminalGui(int windowID)
@@ -244,7 +273,10 @@ namespace kOS
                 return;
             }
 
-            if (Cpu == null) return;
+            if (_shared == null || _shared.Screen == null)
+            {
+                return;
+            }
 
             GUI.color = isLocked ? COLOR : COLOR_ALPHA;
             GUI.DrawTexture(new Rect(10, 10, terminalImage.width, terminalImage.height), terminalImage);
@@ -257,33 +289,41 @@ namespace kOS
 
             GUI.DragWindow(new Rect(0, 0, 10000, 500));
 
-            if (Cpu != null && Cpu.Mode == CPU.Modes.READY && Cpu.IsAlive())
+            Color textColor;
+            if (_isPowered)
             {
-                Color textColor = isLocked ? TEXTCOLOR : TEXTCOLOR_ALPHA;
-
-                GUI.BeginGroup(new Rect(31, 38, 420, 340));
-
-                if (Cpu != null)
-                {
-                    char[,] buffer = Cpu.GetBuffer();
-
-                    for (var x = 0; x < buffer.GetLength(0); x++)
-                        for (var y = 0; y < buffer.GetLength(1); y++)
-                        {
-                            char c = buffer[x, y];
-
-                            if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(buffer[x, y], x, y, textColor);
-                        }
-
-                    bool blinkOn = cursorBlinkTime < 0.5f;
-                    if (blinkOn && Cpu.GetCursorX() > -1)
-                    {
-                        ShowCharacterByAscii((char)1, Cpu.GetCursorX(), Cpu.GetCursorY(), textColor);
-                    }
-                }
-
-                GUI.EndGroup();
+                textColor = isLocked ? TEXTCOLOR : TEXTCOLOR_ALPHA;
             }
+            else
+            {
+                textColor = isLocked ? TEXTCOLOROFF : TEXTCOLOROFF_ALPHA;
+            }
+
+            GUI.BeginGroup(new Rect(31, 38, 420, 340));
+
+            ScreenBuffer screen = _shared.Screen;
+            List<char[]> buffer = screen.Buffer;
+
+            for (int row = 0; row < screen.RowCount; row++)
+            {
+                char[] lineBuffer = buffer[row];
+                for (int column = 0; column < screen.ColumnCount; column++)
+                {
+                    char c = lineBuffer[column];
+                    if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(c, column, row, textColor);
+                }
+            }
+
+            bool blinkOn = cursorBlinkTime < 0.5f &&
+                           screen.CursorColumn > -1 &&
+                           screen.CursorRow < screen.RowCount &&
+                           _isPowered;
+            if (blinkOn)
+            {
+                ShowCharacterByAscii((char)1, screen.CursorColumn, screen.CursorRow, textColor);
+            }
+
+            GUI.EndGroup();
         }
 
         void ShowCharacterByAscii(char ch, int x, int y, Color textColor)
@@ -307,14 +347,20 @@ namespace kOS
             showPilcrows = val;
         }
 
-        internal void AttachTo(CPU cpu)
+        internal void AttachTo(SharedObjects shared)
         {
-            this.Cpu = cpu;
+            _shared = shared;
+            _shared.Window = this;
         }
 
-        internal void PrintLine(string line)
+        public void SetPowered(bool isPowered)
         {
-            //if (Cpu != null) Cpu.PrintLine(line);
+            _isPowered = isPowered;
         }
+
+        //internal void PrintLine(string line)
+        //{
+        //    //if (Cpu != null) Cpu.PrintLine(line);
+        //}
     }
 }

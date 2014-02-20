@@ -5,13 +5,15 @@ using System.Text;
 
 namespace kOS
 {
-    [kOSBinding("ksp")]
+    [kRISCBinding("ksp")]
     public class BindingTimeWarp : Binding
     {
-        public override void AddTo(BindingManager manager)
+        public override void AddTo(SharedObjects shared)
         {
-            manager.AddGetter("WARP", delegate(CPU cpu) { return TimeWarp.fetch.current_rate_index; });
-            manager.AddSetter("WARP", delegate(CPU cpu, object val)
+            _shared = shared;
+
+            _shared.BindingMgr.AddGetter("WARP", delegate(CPU cpu) { return TimeWarp.fetch.current_rate_index; });
+            _shared.BindingMgr.AddSetter("WARP", delegate(CPU cpu, object val)
             {
                 int newRate;
                 if (int.TryParse(val.ToString(), out newRate))
@@ -22,7 +24,7 @@ namespace kOS
 
             foreach (CelestialBody body in FlightGlobals.fetch.bodies)
             {
-                manager.AddGetter(body.name, delegate(CPU cpu) { return new BodyTarget(body, cpu); });
+                _shared.BindingMgr.AddGetter(body.name, delegate(CPU cpu) { return new BodyTarget(body, _shared.Vessel); });
             }
         }
     }

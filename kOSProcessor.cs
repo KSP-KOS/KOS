@@ -1,46 +1,44 @@
-﻿using KSP.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
 using UnityEngine;
 
 namespace kOS
 {
     public class kOSProcessor : PartModule
     {
-        public CPU cpu;
+        public enum Modes { READY, STARVED, OFF };
+        public Modes Mode = Modes.READY;
         public Harddisk hardDisk = null;
         private int vesselPartCount = 0;
-        private List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
-        private Dictionary<uint, uint> partIdentifiers;
-
+        private SharedObjects _shared;
         private static int MemSize = 10000;
-        private static int cpuIdMax;
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal")]
         public void Activate()
         {
-            Core.OpenWindow(cpu);
+            Core.OpenWindow(_shared);
         }
 
         [KSPEvent(guiActive = true, guiName = "Toggle Power")]
         public void TogglePower()
         {
-            if (cpu == null) return;
+            Modes newMode;
 
-            if (cpu.Mode != CPU.Modes.OFF)
+            if (Mode != Modes.OFF)
             {
-                cpu.Mode = CPU.Modes.OFF;
+                newMode = Modes.OFF;
             }
             else
             {
-                cpu.Mode = CPU.Modes.STARVED;
+                newMode = Modes.STARVED;
             }
+
+            SetMode(newMode);
         }
-                
+        
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
         public void Activate(KSPActionParam param) {
             Activate();
@@ -65,68 +63,58 @@ namespace kOS
                 return;
             }
 
-            if (hardDisk == null) hardDisk = new Harddisk(MemSize);
-
-            initCpu();
-
+            InitObjects();
         }
 
-        public void initCpu()
+        public void InitObjects()
         {
-            if (cpu == null)
+            if (_shared == null)
             {
-                cpu = new CPU(this, "ksp");
-                cpu.AttachHardDisk(hardDisk);
-                cpu.Boot();
+                _shared = new SharedObjects();
+                _shared.Vessel = this.vessel;
+                _shared.Processor = this;
+                _shared.BindingMgr = new BindingManager(_shared);
+                _shared.Interpreter = new Interpreter(_shared);
+                _shared.Screen = _shared.Interpreter;
+                _shared.ScriptHandler = new KS.KSScript();
+                _shared.Logger = new Logger(_shared);
+                _shared.VolumeMgr = new VolumeManager(_shared);
+                _shared.Cpu = new CPU(_shared);
+
+                // initialize the file system
+                _shared.VolumeMgr.Add(new Archive());
+                if (hardDisk == null) hardDisk = new Harddisk(MemSize);
+                _shared.VolumeMgr.Add(hardDisk);
+                _shared.VolumeMgr.SwitchTo(hardDisk);
             }
         }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
-            Debug.Log("*** External Function Registration Succeeded");
-
-            cpu.RegisterkOSExternalFunction(parameters);
-        }
-        
-        private void assignPartIdentifiers()
-        {
-            foreach (Part part in vessel.parts)
-            {
-                if (!partIdentifiers.ContainsKey(part.flightID))
-                {
-
-                }
-            }
-        }
-        
-        public static int AssignNewID()
-        {
-            int id;
-
-            PluginConfiguration config = PluginConfiguration.CreateForType<kOSProcessor>();
-            config.load();
-            id = config.GetValue<int>("CpuIDMax") + 1;
-            config.SetValue("CpuIDMax", id);
-            config.save();
-
-            return id;
+            //Debug.Log("*** External Function Registration Succeeded");
+            //cpu.RegisterkOSExternalFunction(parameters);
         }
         
         public void Update()
         {
-            if (cpu == null) return;
-
             if (part.State == PartStates.DEAD)
             {
-                cpu.Mode = CPU.Modes.OFF;
+                Mode = Modes.OFF;
                 return;
             }
 
-            cpu.Update(Time.deltaTime);
+            if (_shared != null && _shared.Vessel != this.vessel)
+            {
+                _shared.Vessel = this.vessel;
+            }
 
-            cpu.ProcessElectricity(this.part, TimeWarp.fixedDeltaTime);
-
-            UpdateParts();
+            if (Mode == Modes.READY)
+            {
+                if (_shared.Cpu != null) _shared.Cpu.Update(Time.deltaTime);
+                UpdateParts();
+            }
+            
+            ProcessElectricity(this.part, TimeWarp.fixedDeltaTime);
         }
 
         public void UpdateParts()
@@ -135,11 +123,10 @@ namespace kOS
             if (vessel.parts.Count != vesselPartCount)
             {
                 List<Volume> attachedVolumes = new List<Volume>();
-                attachedVolumes.Add(cpu.archive);
-                attachedVolumes.Add(this.hardDisk);
+                attachedVolumes.Add(hardDisk);
 
                 // Look for sister units that have newly been added to the vessel
-                sisterProcs.Clear();
+                List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
                 foreach (Part part in vessel.parts)
                 {
                     kOSProcessor sisterProc;
@@ -150,8 +137,7 @@ namespace kOS
                     }
                 }
 
-                cpu.UpdateVolumeMounts(attachedVolumes);
-
+                _shared.VolumeMgr.UpdateVolumes(attachedVolumes);
                 vesselPartCount = vessel.parts.Count;
             }
         }
@@ -181,19 +167,18 @@ namespace kOS
             // KSP Seems to want to make an instance of my partModule during initial load
             if (vessel == null) return;
 
-            foreach (ConfigNode hdNode in node.GetNodes("harddisk"))
+            if (node.HasNode("harddisk"))
             {
-                Harddisk newDisk = new Harddisk(hdNode);
-                this.hardDisk = newDisk;
+                Harddisk newDisk = new Harddisk(node.GetNode("harddisk"));
+                hardDisk = newDisk;
             }
 
-            Debug.Log("******************************* ON LOAD ");
+            InitObjects();
 
-            initCpu();
-
-            Debug.Log("******************************* CPU Inited ");
-
-            if (cpu != null) cpu.OnLoad(node);
+            if (_shared.Cpu != null)
+            {
+                _shared.Cpu.OnLoad(node);
+            }
             
             base.OnLoad(node);
         }
@@ -206,12 +191,48 @@ namespace kOS
                 node.AddNode(hdNode);
             }
 
-            if (cpu != null)
+            if (_shared.Cpu != null)
             {
-                cpu.OnSave(node);
+                _shared.Cpu.OnSave(node);
             }
 
+            Config.GetInstance().SaveConfig();
+
             base.OnSave(node);
+        }
+        
+        private void ProcessElectricity(Part part, float time)
+        {
+            if (Mode == Modes.OFF) return;
+
+            var electricReq = 0.01f * time;
+            var result = part.RequestResource("ElectricCharge", electricReq) / electricReq;
+
+            var newMode = (result < 0.5f) ? Modes.STARVED : Modes.READY;
+            SetMode(newMode);
+        }
+
+        public void SetMode(Modes newMode)
+        {
+            if (newMode != Mode)
+            {
+                switch (newMode)
+                {
+                    case Modes.READY:
+                        if (Mode == Modes.STARVED && _shared.Cpu != null) _shared.Cpu.Boot();
+                        if (_shared.Interpreter != null) _shared.Interpreter.SetInputLock(false);
+                        if (_shared.Window != null) _shared.Window.SetPowered(true);
+                        break;
+
+                    case Modes.OFF:
+                    case Modes.STARVED:
+                        if (_shared.Interpreter != null) _shared.Interpreter.SetInputLock(true);
+                        if (_shared.Window != null) _shared.Window.SetPowered(false);
+                        break;
+                }
+
+                Mode = newMode;
+            }
         }
     }
 }

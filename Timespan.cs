@@ -70,6 +70,8 @@ namespace kOS
 
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
+            if (!(other is double)) other = Convert.ToDouble(other);
+
             // Order shouldn't matter here
             if (other is TimeSpan && op == "+") return this + (TimeSpan)other;
             if (other is double && op == "+") return this + (double)other;

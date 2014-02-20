@@ -10,66 +10,108 @@ namespace kOS
 {
     public class Volume
     {
-        public int Capacity = -1;
-        public String Name = "";
-        protected List<File> files = new List<File>();
+        protected Dictionary<string, ProgramFile> _files = new Dictionary<string, ProgramFile>();
 
+        public int Id = 0;
+        public int Capacity = -1;
+        public string Name = "";
         public bool Renameable = true;
 
-        public virtual File GetByName(String name)
-        {
-            foreach (File p in files)
-            {
-                if (p.Filename.ToUpper() == name.ToUpper()) return p;
-            }
 
-            return null;
+        public virtual ProgramFile GetByName(string name)
+        {
+            name = name.ToLower();
+            if (_files.ContainsKey(name))
+            {
+                return _files[name];
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        public virtual void AppendToFile(string name, string str) 
+        public virtual bool DeleteByName(string name)
         {
-            File file = GetByName(name);
+            name = name.ToLower();
+            if (_files.ContainsKey(name))
+            {
+                _files.Remove(name);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
+        public virtual bool RenameFile(string name, string newName)
+        {
+            ProgramFile file = GetByName(name);
+            if (file != null)
+            {
+                DeleteByName(name);
+                file.Filename = newName;
+                Add(file);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public virtual void AppendToFile(string name, string textToAppend)
+        {
+            ProgramFile file = GetByName(name);
             if (file == null)
             {
-                file = new File(name);
+                file = new ProgramFile(name);
             }
 
-            file.Add(str);
+            if (file.Content.Length > 0 && !file.Content.EndsWith("\n"))
+            {
+                textToAppend = "\n" + textToAppend;
+            }
 
+            file.Content += textToAppend;
             SaveFile(file);
         }
 
-        public virtual void DeleteByName(String name)
+        public virtual void Add(ProgramFile file)
         {
-            foreach (File p in files)
-            {
-                if (p.Filename.ToUpper() == name.ToUpper())
-                {
-                    files.Remove(p);
-                    return;
-                }
-            }
+            _files.Add(file.Filename.ToLower(), file);
         }
 
-        public virtual bool SaveFile(File file)
+        public virtual bool SaveFile(ProgramFile file)
         {
             DeleteByName(file.Filename);
-            files.Add(file);
-
+            Add(file);
             return true;
         }
 
+        public virtual int GetUsedSpace()
+        {
+            int usedSpace = 0;
+
+            foreach (ProgramFile file in _files.Values)
+            {
+                usedSpace += file.GetSize();
+            }
+
+            return usedSpace;
+        }
+
         public virtual int GetFreeSpace() { return -1; }
-        public virtual bool IsRoomFor(File newFile) { return true; }
-        public virtual void LoadPrograms(List<File> programsToLoad) { }
+        public virtual bool IsRoomFor(ProgramFile newFile) { return true; }
+        public virtual void LoadPrograms(List<ProgramFile> programsToLoad) { }
         public virtual ConfigNode Save(string nodeName) { return new ConfigNode(nodeName); }
 
         public virtual List<FileInfo> GetFileList()
         {
             List<FileInfo> retList = new List<FileInfo>();
 
-            foreach (File file in files)
+            foreach (ProgramFile file in _files.Values)
             {
                 retList.Add(new FileInfo(file.Filename, file.GetSize()));
             }
@@ -77,108 +119,67 @@ namespace kOS
             return retList;
         }
 
-        public virtual bool CheckRange()
+        public virtual bool CheckRange(Vessel vessel)
         {
             return true;
+        }
+
+        public string GetBestIdentifier()
+        {
+            if (!string.IsNullOrEmpty(Name)) return string.Format("#{0}: \"{1}\"", Id, Name);
+            else return "#" + Id;
         }
     }
-
+    
     public class Archive : Volume
     {
-        public string ArchiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
+        private string _archiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
 
-        private Vessel vessel;
-
-        public Archive(Vessel vessel)
+        public Archive()
         {
-            this.vessel = vessel;
-
             Renameable = false;
             Name = "Archive";
-
-            loadAll();
         }
 
-        public override bool IsRoomFor(File newFile)
+        public override bool IsRoomFor(ProgramFile newFile)
         {
             return true;
         }
 
-        private void loadAll()
-        {
-            Directory.CreateDirectory(ArchiveFolder);
-
-            // Attempt to migrate files from old archive drive
-            if (KSP.IO.File.Exists<File>(HighLogic.fetch.GameSaveFolder + "/arc"))
-            {
-                var reader = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/arc");
-
-                int fileCount = reader.ReadInt32();
-
-                for (int i = 0; i < fileCount; i++)
-                {
-                    try
-                    {
-                        String filename = reader.ReadString();
-                        String body = reader.ReadString();
-
-                        File file = new File(filename);
-                        file.Deserialize(body);
-
-                        files.Add(file);
-                        SaveFile(file);
-                    }
-                    catch (EndOfStreamException e)
-                    {
-                        break;
-                    }
-                }
-
-                reader.Close();
-
-                KSP.IO.File.Delete<File>(HighLogic.fetch.GameSaveFolder + "/arc");
-            }
-        }
-
-        public override File GetByName(string name)
+        public override ProgramFile GetByName(string name)
         {
             try
             {
-                using (StreamReader infile = new StreamReader(ArchiveFolder + name + ".txt", true))
+                using (StreamReader infile = new StreamReader(_archiveFolder + name + ".txt", true))
                 {
-                    String fileBody = infile.ReadToEnd().Replace("\r\n", "\n") ;
+                    string fileBody = infile.ReadToEnd().Replace("\r\n", "\n") ;
 
-                    File retFile = new File(name);
-                    retFile.Deserialize(fileBody);
-                    
+                    ProgramFile retFile = new ProgramFile(name);
+                    retFile.Content = fileBody;
                     base.DeleteByName(name);
-                    files.Add(retFile);
-
+                    base.Add(retFile);
+                    
                     return retFile;
                 }
             }
             catch (Exception e)
             {
+                Debug.LogException(e);
                 return null;
             }
         }
 
-        public override bool SaveFile(File file)
+        public override bool SaveFile(ProgramFile file)
         {
             base.SaveFile(file);
 
-            if (!CheckRange())
-            {
-                throw new kOSException("Volume is out of range.");
-            }
-
-            Directory.CreateDirectory(ArchiveFolder);
+            Directory.CreateDirectory(_archiveFolder);
 
             try
             {
-                using (StreamWriter outfile = new StreamWriter(ArchiveFolder + file.Filename + ".txt", false))
+                using (StreamWriter outfile = new StreamWriter(_archiveFolder + file.Filename + ".txt", false))
                 {
-                    String fileBody = file.Serialize();
+                    string fileBody = file.Content;
 
                     if (Application.platform == RuntimePlatform.WindowsPlayer)
                     {
@@ -191,15 +192,25 @@ namespace kOS
             }
             catch (Exception e)
             {
+                Debug.LogException(e);
                 return false;
             }
 
             return true;
         }
 
-        public override void DeleteByName(string name)
+        public override bool DeleteByName(string name)
         {
-            System.IO.File.Delete(ArchiveFolder + name + ".txt");
+            try
+            {
+                base.DeleteByName(name);
+                System.IO.File.Delete(_archiveFolder + name + ".txt");
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public override List<FileInfo> GetFileList()
@@ -208,24 +219,31 @@ namespace kOS
 
             try
             {
-                foreach (var file in Directory.GetFiles(ArchiveFolder, "*.txt"))
+                foreach (var file in Directory.GetFiles(_archiveFolder, "*.txt"))
                 {
                     var sysFileInfo = new System.IO.FileInfo(file);
-                    var fileInfo = new kOS.FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
+                    var fileInfo = new FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
 
                     retList.Add(fileInfo);
                 }
             }
-            catch (DirectoryNotFoundException e)
+            catch (DirectoryNotFoundException)
             {
             }
 
             return retList;
         }
 
-        public override bool CheckRange()
+        public override bool CheckRange(Vessel vessel)
         {
-            return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+            if (vessel != null)
+            {
+                return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
