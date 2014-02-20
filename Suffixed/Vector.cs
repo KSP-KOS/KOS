@@ -71,11 +71,11 @@
                 case "MAG":
                     return new Vector3d(X, Y, Z).magnitude;
                 case "VEC":
-                    return new Vector(x, y, z);
+                    return new Vector(X, Y, Z);
                 case "NORMALIZED":
-                    return new Vector(new Vector3d(x, y, z).normalized);
+                    return new Vector(new Vector3d(X, Y, Z).normalized);
                 case "SQRMAGNITUDE":
-                    return new Vector3d(x, y, z).sqrMagnitude;
+                    return new Vector3d(X, Y, Z).sqrMagnitude;
             }
 
             return base.GetSuffix(suffixName);
