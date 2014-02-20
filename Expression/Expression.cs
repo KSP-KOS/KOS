@@ -561,9 +561,33 @@ namespace kOS.Expression
                         return Math.Max(dp[0], dp[1]);
                     }
                 case "RANDOM":
+                    return random.NextDouble();
+                case "VCRS":
+                case "VECTORCROSSPRODUCT":
                     {
-                        return random.NextDouble();
+                        var dp = GetParamsAsT<Vector>(p, 2);
+                        return new Vector(Vector3d.Cross(dp[0].ToVector3D(),dp[1].ToVector3D()));  
                     }
+                case "VDOT":
+                case "VECTORDOTPRODUCT":
+                    {
+                        var dp = GetParamsAsT<Vector>(p, 2);
+                        return Vector3d.Dot(dp[0].ToVector3D(), dp[1].ToVector3D()); 
+                    }
+                case "VXCL":
+                case "VECTOREXCLUDE":
+                    {
+                        var dp = GetParamsAsT<Vector>(p, 2);
+                        return new Vector(Vector3d.Exclude(dp[0].ToVector3D(), dp[1].ToVector3D())); 
+                    }
+                case "VANG":
+                case "VECTORANGLE":
+                    {
+                        var dp = GetParamsAsT<Vector>(p, 2);
+                        return Vector3d.Angle(dp[0].ToVector3D(), dp[1].ToVector3D()); 
+                    }
+
+
             }
 
             if (name == "ROUND")

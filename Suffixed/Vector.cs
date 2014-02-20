@@ -71,7 +71,11 @@
                 case "MAG":
                     return new Vector3d(X, Y, Z).magnitude;
                 case "VEC":
-                    return new Vector(X, Y, Z);
+                    return new Vector(x, y, z);
+                case "NORMALIZED":
+                    return new Vector(new Vector3d(x, y, z).normalized);
+                case "SQRMAGNITUDE":
+                    return new Vector3d(x, y, z).sqrMagnitude;
             }
 
             return base.GetSuffix(suffixName);
@@ -135,10 +139,11 @@
             return new Direction(d.ToVector3D(), false);
         }
 
-        public static Vector operator *(Vector a, Vector b)
+        public static double operator *(Vector a, Vector b)
         {
-            return new Vector(a.X*b.X, a.Y*b.Y, a.Z*b.Z);
+            return (Vector3d.Dot(a.ToVector3D(), b.ToVector3D()));
         }
+
 
         public static Vector operator *(Vector a, float b)
         {
