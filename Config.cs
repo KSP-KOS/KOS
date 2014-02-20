@@ -194,7 +194,7 @@ namespace kOS
         }
     }
 
-    [kRISCBinding("ksp")]
+    [kOSBinding("ksp")]
     public class BindingConfig : Binding
     {
         public override void AddTo(SharedObjects shared)

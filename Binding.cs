@@ -7,10 +7,10 @@ using System.Text;
 
 namespace kOS
 {
-    public class kRISCBinding : Attribute
+    public class kOSBinding : Attribute
     {
         public string[] Contexts;
-        public kRISCBinding(params string[] contexts) { Contexts = contexts; }
+        public kOSBinding(params string[] contexts) { Contexts = contexts; }
     }
     
     public class BindingManager
@@ -40,7 +40,7 @@ namespace kOS
 
             foreach (Type t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                kRISCBinding attr = (kRISCBinding)t.GetCustomAttributes(typeof(kRISCBinding), true).FirstOrDefault();
+                kOSBinding attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
                 if (attr != null)
                 {
                     if (attr.Contexts.Count() == 0 || attr.Contexts.Intersect(contexts).Any())

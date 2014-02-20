@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace kOS
 {
-    [kRISCBinding("ksp")]
+    [kOSBinding("ksp")]
     public class BindingFlightControls : Binding
     {
         private Vessel _currentVessel;
@@ -195,7 +195,7 @@ namespace kOS
         }
     }
 
-    [kRISCBinding("ksp")]
+    [kOSBinding("ksp")]
     public class BindingActionGroups : Binding
     {
         public override void AddTo(SharedObjects shared)
@@ -244,7 +244,7 @@ namespace kOS
         }
     }
 
-    [kRISCBinding("ksp")]
+    [kOSBinding("ksp")]
     public class BindingFlightSettings : Binding
     {
         public override void AddTo(SharedObjects shared)

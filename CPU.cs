@@ -36,6 +36,8 @@ namespace kOS
             set { _currentContext.InstructionPointer = value; }
         }
 
+        public double SessionTime { get { return _currentTime; } }
+
 
         public CPU(SharedObjects shared)
         {
@@ -82,7 +84,9 @@ namespace kOS
             // load functions
             LoadFunctions();
             // load bindings
+            UnityEngine.Debug.Log("Loading bindings");
             if (_shared.BindingMgr != null) _shared.BindingMgr.LoadBindings();
+            UnityEngine.Debug.Log("Bindings loaded");
             // Booting message
             if (_shared.Screen != null)
             {

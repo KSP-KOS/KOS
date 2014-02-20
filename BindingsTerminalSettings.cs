@@ -8,10 +8,10 @@ namespace kOS
     [kOSBinding]
     public class BindingsTerminalSettings : Binding
     {
-        public override void AddTo(BindingManager manager)
+        public override void AddTo(SharedObjects shared)
         {
-            manager.AddGetter("SESSIONTIME", delegate(CPU cpu) { return cpu.SessionTime; });
-            manager.AddGetter("VERSION", delegate(CPU cpu) { return Core.VersionInfo; });
+            _shared.BindingMgr.AddGetter("SESSIONTIME", delegate(CPU cpu) { return cpu.SessionTime; });
+            _shared.BindingMgr.AddGetter("VERSION", delegate(CPU cpu) { return Core.VersionInfo; });
         }
     }
 }
