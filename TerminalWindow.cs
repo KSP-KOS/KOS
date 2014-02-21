@@ -153,6 +153,13 @@ namespace kOS
                 return;
             }
 
+            if (code == (KeyCode.X) && control && shift)
+            {
+                SpecialKey(kOSKeys.BREAK);
+                Close();
+                return;
+            }
+
             switch (code)
             {
                 case (KeyCode.Break):
