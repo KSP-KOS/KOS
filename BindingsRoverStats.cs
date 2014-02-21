@@ -9,7 +9,7 @@ namespace kOS
     [kOSBinding("ksp")]
     public class BindingsRoverStats : Binding
     {
-        public override void AddTo(BindingManager manager)
+        public override void AddTo(SharedObjects shared)
         {
             //manager.AddGetter("HEADING", delegate(CPU cpu) { return cpu.Vessel.vesselName; });
 

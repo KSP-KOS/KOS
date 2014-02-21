@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace kOS
 {
-    [kRISCBinding("ksp")]
+    [kOSBinding("ksp")]
     public class BindingsFlightStats : Binding
     {
         public override void AddTo(SharedObjects shared)

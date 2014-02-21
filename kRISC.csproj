@@ -51,6 +51,8 @@
     <Compile Include="Binding.cs" />
     <Compile Include="BindingsFlightControl.cs" />
     <Compile Include="BindingsFlightStats.cs" />
+    <Compile Include="BindingsRoverStats.cs" />
+    <Compile Include="BindingsTerminalSettings.cs" />
     <Compile Include="BindingsUniverse.cs" />
     <Compile Include="BodyTarget.cs" />
     <Compile Include="Config.cs" />

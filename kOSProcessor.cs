@@ -79,7 +79,7 @@ namespace kOS
                 _shared.ScriptHandler = new KS.KSScript();
                 _shared.Logger = new Logger(_shared);
                 _shared.VolumeMgr = new VolumeManager(_shared);
-                _shared.Cpu = new CPU(_shared);
+                //_shared.Cpu = new CPU(_shared);
 
                 // initialize the file system
                 _shared.VolumeMgr.Add(new Archive());

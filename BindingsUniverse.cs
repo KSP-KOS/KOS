@@ -5,7 +5,7 @@ using System.Text;
 
 namespace kOS
 {
-    [kRISCBinding("ksp")]
+    [kOSBinding("ksp")]
     public class BindingTimeWarp : Binding
     {
         public override void AddTo(SharedObjects shared)
