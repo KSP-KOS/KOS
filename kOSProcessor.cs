@@ -13,7 +13,7 @@ namespace kOS
         public Modes Mode = Modes.READY;
         public Harddisk hardDisk = null;
         private int vesselPartCount = 0;
-        private SharedObjects _shared;
+        private SharedObjects _shared = null;
         private static int MemSize = 10000;
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal")]
@@ -97,6 +97,8 @@ namespace kOS
         
         public void Update()
         {
+            if (_shared == null) return;
+            
             if (part.State == PartStates.DEAD)
             {
                 Mode = Modes.OFF;
@@ -175,7 +177,7 @@ namespace kOS
 
             InitObjects();
 
-            if (_shared.Cpu != null)
+            if (_shared != null && _shared.Cpu != null)
             {
                 _shared.Cpu.OnLoad(node);
             }
@@ -191,12 +193,11 @@ namespace kOS
                 node.AddNode(hdNode);
             }
 
-            if (_shared.Cpu != null)
+            if (_shared != null && _shared.Cpu != null)
             {
                 _shared.Cpu.OnSave(node);
+                Config.GetInstance().SaveConfig();
             }
-
-            Config.GetInstance().SaveConfig();
 
             base.OnSave(node);
         }

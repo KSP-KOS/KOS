@@ -56,6 +56,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="FunctionList.cs" />
     <Compile Include="Harddisk.cs" />
+    <Compile Include="kOSIDModule.cs" />
     <Compile Include="KS\Helpers.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="GeoCoordinates.cs" />
