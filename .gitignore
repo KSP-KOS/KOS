@@ -3,3 +3,4 @@ bin/Release/
 obj/
 kOS.sln
 *.suo
+*.user

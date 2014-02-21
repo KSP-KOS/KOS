@@ -8,11 +8,23 @@ using kOS.Utilities;
 namespace kOS.Binding
 {
     [KOSBinding("ksp")]
-    public class FlightControl : IBinding
+    public class FlightControlManager : IBinding
     {
         private readonly List<LockableControl> controls = new List<LockableControl>();
         private ICPU cpu;
         private Vessel vessel;
+        readonly static Dictionary<uint,FlightControl> flightControls = new Dictionary<uint, FlightControl>();
+
+        public static FlightControl GetControllerByVessel(Vessel target)
+        {
+            FlightControl flightControl;
+            if (!flightControls.TryGetValue(target.rootPart.flightID, out flightControl))
+            {
+                flightControl = new FlightControl(target);
+                flightControls.Add(target.rootPart.flightID, flightControl);
+            }
+            return flightControl;
+        }
 
         public void BindTo(IBindingManager manager)
         {
@@ -160,10 +172,7 @@ namespace kOS.Binding
 
                 if (!(Vessel.horizontalSrfSpeed > 0.1f)) return;
 
-                if (
-                    Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(Vessel),
-                                                     VesselUtils.GetVelocityHeading(Vessel))) <=
-                    90)
+                if ( Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(Vessel), VesselUtils.GetVelocityHeading(Vessel))) <= 90)
                 {
                     c.wheelSteer = Mathf.Clamp(bearing/-10, -1, 1);
                 }

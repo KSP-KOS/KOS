@@ -8,7 +8,7 @@ namespace kOS.Suffixed
         private double amount;
         private double capacity;
 
-        public ResourceValue(PartResource partResource) : this(partResource.name)
+        public ResourceValue(PartResource partResource) : this(partResource.resourceName)
         {
             amount = partResource.amount;
             capacity = partResource.maxAmount;
@@ -52,14 +52,15 @@ namespace kOS.Suffixed
             var resources = new Dictionary<string, ResourceValue>();
             foreach (var part in parts)
             {
-                foreach (PartResource resource in part.Resources)
+                foreach (PartResource module in part.Resources)
                 {
                     ResourceValue resourceAmount;
-                    if (!resources.TryGetValue(resource.name, out resourceAmount))
+                    if (!resources.TryGetValue(module.resourceName, out resourceAmount))
                     {
-                        resourceAmount = new ResourceValue(resource.name);
+                        resourceAmount = new ResourceValue(module.resourceName);
                     }
-                    resourceAmount.AddResource(resource);
+                    resourceAmount.AddResource(module);
+                    resources[module.resourceName] = resourceAmount;
                 }
             }
             foreach (var resource in resources)

@@ -24,7 +24,7 @@ namespace kOS.Suffixed
                 case "SURFACE":
                     return surfaceVelocity;
                 case "SURFACEHEADING":
-                    // I created this one for debugging purposes only, at some point I'll make a function to transform vectors to headings in a more eloquent way
+                    //TODO: I created this one for debugging purposes only, at some point I'll make a function to transform vectors to headings in a more eloquent way
                     return velocityHeading;
             }
 

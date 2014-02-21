@@ -2,6 +2,7 @@
 {
     public class OrbitInfo : SpecialValue
     {
+        private const int PATCHES_LIMIT = 16;
         private readonly Orbit orbitRef;
         private readonly Vessel vesselRef;
 
@@ -44,9 +45,10 @@
         {
             var list = new ListValue();
             var orbit = orbitRef;
-            while (orbit.nextPatch != null)
+            while (orbit.nextPatch != null && list.Count <= PATCHES_LIMIT)
             {
                 list.Add(new OrbitInfo(orbit, vesselRef));
+                orbit = orbit.nextPatch;
             }
             return list;
         }

@@ -86,7 +86,7 @@ namespace kOS.Expression
             Type = type;
             SubTerms = new List<Term>();
 
-            if (Type != TermTypes.SUFFIX && type != TermTypes.BOOLEAN_OPERATOR) processSymbols();
+            if (Type != TermTypes.SUFFIX && type != TermTypes.BOOLEAN_OPERATOR) ProcessSymbols();
         }
 
         public void CopyFrom(ref Term from)
@@ -174,7 +174,7 @@ namespace kOS.Expression
             return retstring;
         }
 
-        private void processSymbols()
+        private void ProcessSymbols()
         {
             // Is the input empty?
             if (string.IsNullOrEmpty(Text)) return;
@@ -205,7 +205,7 @@ namespace kOS.Expression
             // If this is a parameter list, grab the parameters
             if (Type == TermTypes.PARAMETER_LIST)
             {
-                var parameterList = parseParameters(Text);
+                var parameterList = ParseParameters(Text);
                 if (parameterList != null)
                 {
                     foreach (var param in parameterList)
@@ -218,7 +218,7 @@ namespace kOS.Expression
             }
 
             // Does this thing contain a boolean operation?
-            var booleanElements = splitByListIgnoreBracket(Text, ref booleanSymbols);
+            var booleanElements = SplitByListIgnoreBracket(Text, ref booleanSymbols);
             if (booleanElements != null)
             {
                 Type = TermTypes.BOOLEAN;
@@ -239,7 +239,7 @@ namespace kOS.Expression
             }
 
             // Does this thing contain a comparison?
-            var comparisonElements = splitByListIgnoreBracket(Text, ref comparisonSymbols);
+            var comparisonElements = SplitByListIgnoreBracket(Text, ref comparisonSymbols);
             if (comparisonElements != null)
             {
                 Type = TermTypes.COMPARISON;
@@ -253,7 +253,7 @@ namespace kOS.Expression
             }
 
             // Does this thing contain an Index?
-            var listElements = splitByListIgnoreBracket(Text, ref listaccessSymbols);
+            var listElements = SplitByListIgnoreBracket(Text, ref listaccessSymbols);
             if (listElements != null)
             {
                 Type = TermTypes.INDEX;
@@ -313,7 +313,7 @@ namespace kOS.Expression
                 }
                 else if (s == ":")
                 {
-                    var end = findEndOfSuffix(Text, i + 1);
+                    var end = FindEndOfSuffix(Text, i + 1);
                     var suffixName = Text.Substring(i + 1, end - i);
                     i += end - i;
 
@@ -380,7 +380,7 @@ namespace kOS.Expression
             }
         }
 
-        private int findEndOfSuffix(string input, int start)
+        private int FindEndOfSuffix(string input, int start)
         {
             for (var i = start; i < input.Length; i++)
             {
@@ -394,12 +394,12 @@ namespace kOS.Expression
             return input.Length - 1;
         }
 
-        private IEnumerable<string> splitByListIgnoreBracket(string input, ref List<string> operators)
+        private IEnumerable<string> SplitByListIgnoreBracket(string input, ref List<string> operators)
         {
-            return splitByListIgnoreBracket(input, ref operators, false);
+            return SplitByListIgnoreBracket(input, ref operators, false);
         }
 
-        private IEnumerable<string> splitByListIgnoreBracket(string input, ref List<string> operators,
+        private IEnumerable<string> SplitByListIgnoreBracket(string input, ref List<string> operators,
                                                              bool returnIfOneElement)
         {
             var buffer = "";
@@ -453,9 +453,9 @@ namespace kOS.Expression
             }
         }
 
-        private List<string> parseParameters(string input)
+        private List<string> ParseParameters(string input)
         {
-            var splitList = splitByListIgnoreBracket(input, ref parameterSeperatorSymbols, true);
+            var splitList = SplitByListIgnoreBracket(input, ref parameterSeperatorSymbols, true);
 
             if (splitList != null)
             {

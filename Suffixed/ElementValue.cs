@@ -13,7 +13,7 @@ namespace kOS.Suffixed
         {
             this.parts = parts.ToList();
             var vessel = this.parts.First().vessel;
-            name = vessel.name;
+            name = vessel.vesselName;
             uid = vessel.rootPart.uid;
         }
 
@@ -23,7 +23,7 @@ namespace kOS.Suffixed
             {
                 case "NAME":
                     return name;
-                case "ID":
+                case "UID":
                     return uid;
                 case "PARTCOUNT":
                     return parts.Count;
@@ -37,11 +37,16 @@ namespace kOS.Suffixed
         {
             var toReturn = new ListValue();
 
-            foreach (var flightParts in parts.GroupBy(p => p.flightID))
+            foreach (var flightParts in parts.GroupBy(p => p.missionID))
             {
-                var element = new ElementValue(flightParts);
+                toReturn.Add(new ElementValue(flightParts));
             }
             return toReturn;
+        }
+
+        public override string ToString()
+        {
+            return "ELEMENT(" + name + ", " + parts.Count + ")";
         }
     }
 }

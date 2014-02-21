@@ -8,12 +8,14 @@ using kOS.Context;
 using kOS.Debug;
 using kOS.Suffixed;
 using kOS.Utilities;
+using Random = System.Random;
 using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Expression
 {
     public class Expression
     {
+        private readonly Random random = new Random(); 
         private readonly IExecutionContext executionContext;
         private readonly Term rootTerm;
 
@@ -548,6 +550,44 @@ namespace kOS.Expression
                         var dp = GetParamsAsT<double>(p, 1);
                         return Math.Log10(dp[0]);
                     }
+                case "MIN":
+                    {
+                        var dp = GetParamsAsT<double>(p, 2);
+                        return Math.Min(dp[0], dp[1]);
+                    }
+                case "MAX":
+                    {
+                        var dp = GetParamsAsT<double>(p, 2);
+                        return Math.Max(dp[0], dp[1]);
+                    }
+                case "RANDOM":
+                    return random.NextDouble();
+                case "VCRS":
+                case "VECTORCROSSPRODUCT":
+                    {
+                        var dp = GetParamsAsT<Vector>(p, 2);
+                        return new Vector(Vector3d.Cross(dp[0].ToVector3D(),dp[1].ToVector3D()));  
+                    }
+                case "VDOT":
+                case "VECTORDOTPRODUCT":
+                    {
+                        var dp = GetParamsAsT<Vector>(p, 2);
+                        return Vector3d.Dot(dp[0].ToVector3D(), dp[1].ToVector3D()); 
+                    }
+                case "VXCL":
+                case "VECTOREXCLUDE":
+                    {
+                        var dp = GetParamsAsT<Vector>(p, 2);
+                        return new Vector(Vector3d.Exclude(dp[0].ToVector3D(), dp[1].ToVector3D())); 
+                    }
+                case "VANG":
+                case "VECTORANGLE":
+                    {
+                        var dp = GetParamsAsT<Vector>(p, 2);
+                        return Vector3d.Angle(dp[0].ToVector3D(), dp[1].ToVector3D()); 
+                    }
+
+
             }
 
             if (name == "ROUND")
@@ -794,6 +834,10 @@ namespace kOS.Expression
             {
                 return val1.ToString() == val2.ToString();
             }
+            if (val1 is bool && val2 is bool)
+            {
+                return ((bool) val1) == ((bool) val2);
+            }
             if (val1 is IOperatable)
             {
                 return ((IOperatable) val1).TryOperation("=", val2, false);
@@ -811,6 +855,10 @@ namespace kOS.Expression
             if (val1 is string || val2 is string)
             {
                 return val1.ToString() != val2.ToString();
+            }
+            if (val1 is bool && val2 is bool)
+            {
+                return ((bool) val1) != ((bool) val2);
             }
             if (val1 is IOperatable)
             {

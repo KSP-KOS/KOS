@@ -28,6 +28,13 @@ namespace kOS.Suffixed
                         resources.Add(new ResourceValue(resource));
                     }
                     return resources;
+                case "MODULES":
+                    var modules = new ListValue();
+                    foreach (var module in Part.Modules)
+                    {
+                        modules.Add(module.GetType());
+                    }
+                    return modules;
             }
             return base.GetSuffix(suffixName);
         }

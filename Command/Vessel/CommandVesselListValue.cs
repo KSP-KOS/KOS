@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using kOS.Context;
 using kOS.Expression;
@@ -19,13 +19,9 @@ namespace kOS.Command.Vessel
             var type = new Term(RegexMatch.Groups[1].Value);
             var list = new ListValue();
 
-            var partList = new List<Part>();
-            foreach (var part in Vessel.Parts)
-            {
-                partList.Add(part);
-            }
+            var partList = Vessel.Parts.ToList();
 
-            switch (type.Text)
+            switch (type.Text.ToUpper())
             {
                 case "BODIES":
                     foreach (var body in FlightGlobals.fetch.bodies)

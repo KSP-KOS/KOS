@@ -42,7 +42,7 @@ namespace kOS.Suffixed
             return VesselUtils.AngleDelta(VesselUtils.GetHeading(vessel), GetHeadingFromVessel(vessel));
         }
 
-        public float GetHeadingFromVessel(Vessel vessel)
+        private float GetHeadingFromVessel(Vessel vessel)
         {
             var up = vessel.upAxis;
             var north = VesselUtils.GetNorthVector(vessel);
@@ -57,7 +57,7 @@ namespace kOS.Suffixed
             return headingQ.eulerAngles.y;
         }
 
-        public double DistanceFrom(Vessel vessel)
+        private double DistanceFrom(Vessel vessel)
         {
             return Vector3d.Distance(vessel.GetWorldPos3D(), Body.GetWorldSurfacePosition(Lat, Lng, vessel.altitude));
         }
