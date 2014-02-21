@@ -107,7 +107,7 @@ namespace kOS
 
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
-            if (!(other is double)) other = Convert.ToDouble(other);
+            other = ConvertToDoubleIfNeeded(other);
 
             if (op == "+")
             {

@@ -123,7 +123,7 @@ namespace kOS
 
         public override bool SetSuffix(string suffixName, object value)
         {
-            if (!(value is double)) value = Convert.ToDouble(value);
+            value = ConvertToDoubleIfNeeded(value);
 
             if (suffixName == "BURNVECTOR" || suffixName == "ETA" || suffixName == "DELTAV") throw new Exception(string.Format("Suffix {0} is read only!", suffixName));
 

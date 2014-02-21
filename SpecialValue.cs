@@ -21,5 +21,15 @@ namespace kOS
         {
             return null;
         }
+
+        protected object ConvertToDoubleIfNeeded(object value)
+        {
+            if (!(value is SpecialValue) && !(value is double))
+            {
+                value = Convert.ToDouble(value);
+            }
+
+            return value;
+        }
     }
 }
