@@ -223,6 +223,11 @@ namespace kOS.Interpreter
                 bool deploying = !BatchMode && batchQueue.Count > 0;
                 bool endbatch = batchQueue.Last != null && batchQueue.Last.Value is CommandDeploy;
 
+                if (Vessel.GetVesselCrew().Count >= 1)
+                {
+                    waitTotal = 0.0;
+                }
+
                 if ((waitElapsed == waitTotal && queue.Count > 0) || deploying || endbatch)
                 {
                     ICommand currentCmd;
