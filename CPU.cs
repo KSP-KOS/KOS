@@ -26,6 +26,7 @@ namespace kOS
         private ProgramContext _currentContext;
         
         // statistics
+        public double TotalCompileTime = 0D;
         private double _totalUpdateTime = 0D;
         private double _totalTriggersTime = 0D;
         private double _totalExecutionTime = 0D;
@@ -159,15 +160,6 @@ namespace kOS
                 ProgramContext newContext = new ProgramContext(program);
                 newContext.Silent = silent;
                 PushContext(newContext);
-
-                // only reset the statistics for the first executed program
-                // all subprogram calls sum in the parent statistics
-                if (_contexts.Count == 2)
-                {
-                    _totalUpdateTime = 0D;
-                    _totalTriggersTime = 0D;
-                    _totalExecutionTime = 0D;
-                }
             }
         }
 
@@ -199,7 +191,7 @@ namespace kOS
                     PrintStatistics();
                 }
                 else
-	            {
+                {
                     bool silent = _currentContext.Silent;
                     PopContext();
                     if (_contexts.Count == 1 && !silent)
@@ -207,7 +199,7 @@ namespace kOS
                         _shared.Screen.Print("Program ended.");
                         PrintStatistics();
                     }
-	            }
+                }
             }
         }
 
@@ -572,10 +564,16 @@ namespace kOS
         {
             if (Config.GetInstance().ShowStatistics)
             {
+                _shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", TotalCompileTime));
                 _shared.Screen.Print(string.Format("Total update time: {0:F3}ms", _totalUpdateTime));
                 _shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", _totalTriggersTime));
                 _shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", _totalExecutionTime));
                 _shared.Screen.Print(" ");
+
+                TotalCompileTime = 0D;
+                _totalUpdateTime = 0D;
+                _totalTriggersTime = 0D;
+                _totalExecutionTime = 0D;
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace kOS
 {
@@ -402,10 +403,21 @@ namespace kOS
                     {
                         if (shared.ScriptHandler != null)
                         {
+                            Stopwatch compileWatch = null;
+                            bool showStatistics = Config.GetInstance().ShowStatistics;
+                            if (showStatistics) compileWatch = Stopwatch.StartNew();
+
                             List<CodePart> parts = shared.ScriptHandler.Compile(file.Content);
                             ProgramBuilder builder = new ProgramBuilder();
                             builder.AddRange(parts);
                             List<Opcode> program = builder.BuildProgram(false);
+
+                            if (showStatistics)
+                            {
+                                compileWatch.Stop();
+                                shared.Cpu.TotalCompileTime += compileWatch.ElapsedMilliseconds;
+                            }
+                            
                             shared.Cpu.RunProgram(program);
                         }
                     }
