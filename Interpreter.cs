@@ -131,6 +131,7 @@ namespace kOS
         public void SetInputLock(bool locked)
         {
             _locked = locked;
+            if (_shared.Window != null) _shared.Window.SetShowCursor(!locked);
         }
 
         public override void Reset()

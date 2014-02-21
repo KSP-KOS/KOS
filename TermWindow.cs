@@ -40,6 +40,7 @@ namespace kOS
 
         private SharedObjects _shared;
         private bool _isPowered = true;
+        private bool _showCursor = true;
 
         public void Awake()
         {
@@ -317,7 +318,8 @@ namespace kOS
             bool blinkOn = cursorBlinkTime < 0.5f &&
                            screen.CursorColumn > -1 &&
                            screen.CursorRow < screen.RowCount &&
-                           _isPowered;
+                           _isPowered &&
+                           _showCursor;
             if (blinkOn)
             {
                 ShowCharacterByAscii((char)1, screen.CursorColumn, screen.CursorRow, textColor);
@@ -358,9 +360,9 @@ namespace kOS
             _isPowered = isPowered;
         }
 
-        //internal void PrintLine(string line)
-        //{
-        //    //if (Cpu != null) Cpu.PrintLine(line);
-        //}
+        public void SetShowCursor(bool showCursor)
+        {
+            _showCursor = showCursor;
+        }
     }
 }
