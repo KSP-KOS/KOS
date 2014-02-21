@@ -360,8 +360,8 @@ namespace kOS
     {
         public override void Execute(SharedObjects shared)
         {
-            int column = Convert.ToInt32(shared.Cpu.PopValue());
             int row = Convert.ToInt32(shared.Cpu.PopValue());
+            int column = Convert.ToInt32(shared.Cpu.PopValue());
             string textToPrint = shared.Cpu.PopValue().ToString();
             shared.Screen.PrintAt(textToPrint, row, column);
         }
