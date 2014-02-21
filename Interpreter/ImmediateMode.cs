@@ -275,12 +275,14 @@ namespace kOS.Interpreter
                     WriteLine(inputBuffer);
                 }
 
-                if (waitElapsed < waitTotal)
+                if (waitElapsed < waitTotal && queue.Count > 0)
                 {
-                    if (RemoteTechHook.Instance != null && !RemoteTechHook.Instance.HasAnyConnection(Vessel.id) && queue.Count > 0)
+                    if (RemoteTechHook.Instance != null && !RemoteTechHook.Instance.HasAnyConnection(Vessel.id))
                     {
                         StdOut("Signal interruption. Transmission lost.");
                         queue.Clear();
+                        batchQueue.Clear();
+                        ChildContext = null;
                     }
                     else
                     {
