@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace kOS.Suffixed
+namespace kOS.Suffixed.Part
 {
     public class PartValue : SpecialValue
     {
-        public PartValue(Part part)
+        public PartValue(global::Part part)
         {
             Part = part;
         }
 
-        protected Part Part { get; private set; }
+        protected global::Part Part { get; private set; }
 
         public override object GetSuffix(string suffixName)
         {
@@ -44,7 +44,7 @@ namespace kOS.Suffixed
             return string.Format("PART({0},{1})", Part.name, Part.uid);
         }
 
-        public static ListValue PartsToList(IEnumerable<Part> parts)
+        public static ListValue PartsToList(IEnumerable<global::Part> parts)
         {
             var toReturn = new ListValue();
             foreach (var part in parts)

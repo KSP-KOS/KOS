@@ -125,7 +125,8 @@
     <Compile Include="Expression\Expression.cs" />
     <Compile Include="Expression\Term.cs" />
     <Compile Include="Suffixed\ElementValue.cs" />
-    <Compile Include="Suffixed\EngineValue.cs" />
+    <Compile Include="Suffixed\Part\DockingPortValue.cs" />
+    <Compile Include="Suffixed\Part\EngineValue.cs" />
     <Compile Include="Suffixed\GeoCoordinates.cs" />
     <Compile Include="Persistance\Harddisk.cs" />
     <Compile Include="Interpreter\InterpreterBootup.cs" />
@@ -142,9 +143,9 @@
     <Compile Include="Suffixed\ListValue.cs" />
     <Compile Include="Suffixed\Node.cs" />
     <Compile Include="Suffixed\Orbit.cs" />
-    <Compile Include="Suffixed\PartValue.cs" />
+    <Compile Include="Suffixed\Part\PartValue.cs" />
     <Compile Include="Suffixed\ResourceValue.cs" />
-    <Compile Include="Suffixed\SensorValue.cs" />
+    <Compile Include="Suffixed\Part\SensorValue.cs" />
     <Compile Include="Suffixed\SpecialValue.cs" />
     <Compile Include="Suffixed\SpecialValueTester.cs" />
     <Compile Include="Suffixed\StageValues.cs" />

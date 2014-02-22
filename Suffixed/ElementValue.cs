@@ -6,10 +6,10 @@ namespace kOS.Suffixed
     public class ElementValue : SpecialValue
     {
         private readonly string name;
-        private readonly IList<Part> parts;
+        private readonly IList<global::Part> parts;
         private readonly uint uid;
 
-        public ElementValue(IEnumerable<Part> parts)
+        public ElementValue(IEnumerable<global::Part> parts)
         {
             this.parts = parts.ToList();
             var vessel = this.parts.First().vessel;
@@ -33,7 +33,7 @@ namespace kOS.Suffixed
             return base.GetSuffix(suffixName);
         }
 
-        public static ListValue PartsToList(IEnumerable<Part> parts)
+        public static ListValue PartsToList(IEnumerable<global::Part> parts)
         {
             var toReturn = new ListValue();
 

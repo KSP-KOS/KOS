@@ -48,14 +48,14 @@ namespace kOS.Command.Vessel
                         {
                             if (RemoteTechHook.Instance.GetSignalDelayToSatellite(Vessel.id, vessel.id) != Double.PositiveInfinity)
                             {
-                                StdOut(vT.Target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
+                                StdOut(vT.Vessel.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
                             }
                         }
                         else
                         {
                             if (vT.IsInRange(commRange))
                             {
-                                StdOut(vT.Target.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
+                                StdOut(vT.Vessel.vesselName.PadRight(24) + " " + vT.GetDistance().ToString("0.0").PadLeft(8));
                             }
                         }
                     }

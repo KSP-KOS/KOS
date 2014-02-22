@@ -5,7 +5,7 @@ using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
-    public class VesselTarget : SpecialValue
+    public class VesselTarget : SpecialValue, IKOSTargetable
     {
         private readonly IExecutionContext context;
 
@@ -24,10 +24,15 @@ namespace kOS.Suffixed
         public VesselTarget(Vessel target, IExecutionContext context)
         {
             this.context = context;
-            Target = target;
+            Vessel = target;
         }
 
-        public Vessel Target { get; private set; }
+        public ITargetable Target
+        {
+            get { return Vessel; }
+        }
+
+        public Vessel Vessel { get; private set; }
         public static string[] ShortCuttableShipSuffixes { get; private set; }
 
         public bool IsInRange(double range)
@@ -37,33 +42,33 @@ namespace kOS.Suffixed
 
         public double GetDistance()
         {
-            return Vector3d.Distance(context.Vessel.GetWorldPos3D(), Target.GetWorldPos3D());
+            return Vector3d.Distance(context.Vessel.GetWorldPos3D(), Vessel.GetWorldPos3D());
         }
 
         public override string ToString()
         {
-            return "VESSEL(\"" + Target.vesselName + "\")";
+            return "VESSEL(\"" + Vessel.vesselName + "\")";
         }
 
         public Direction GetPrograde()
         {
-            var up = (Target.findLocalMOI(Target.findWorldCenterOfMass()) - Target.mainBody.position).normalized;
+            var up = (Vessel.findLocalMOI(Vessel.findWorldCenterOfMass()) - Vessel.mainBody.position).normalized;
 
-            var d = new Direction {Rotation = Quaternion.LookRotation(Target.orbit.GetVel().normalized, up)};
+            var d = new Direction {Rotation = Quaternion.LookRotation(Vessel.orbit.GetVel().normalized, up)};
             return d;
         }
 
         public Direction GetRetrograde()
         {
-            var up = (Target.findLocalMOI(Target.findWorldCenterOfMass()) - Target.mainBody.position).normalized;
+            var up = (Vessel.findLocalMOI(Vessel.findWorldCenterOfMass()) - Vessel.mainBody.position).normalized;
 
-            var d = new Direction {Rotation = Quaternion.LookRotation(Target.orbit.GetVel().normalized*-1, up)};
+            var d = new Direction {Rotation = Quaternion.LookRotation(Vessel.orbit.GetVel().normalized*-1, up)};
             return d;
         }
 
         public Direction GetFacing()
         {
-            var facing = Target.transform.up;
+            var facing = Vessel.transform.up;
             return new Direction(new Vector3d(facing.x, facing.y, facing.z).normalized, false);
         }
 
@@ -73,8 +78,8 @@ namespace kOS.Suffixed
             {
                 case "PACKDISTANCE":
                     var distance = (float) value;
-                    Target.distanceLandedPackThreshold = distance;
-                    Target.distancePackThreshold = distance;
+                    Vessel.distanceLandedPackThreshold = distance;
+                    Vessel.distancePackThreshold = distance;
                     return true;
             }
 
@@ -86,78 +91,84 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "CONTROL":
-                    return FlightControlManager.GetControllerByVessel(Target);
+                    return FlightControlManager.GetControllerByVessel(Vessel);
                 case "DIRECTION":
-                    var vector = (Target.GetWorldPos3D() - context.Vessel.GetWorldPos3D());
+                    var vector = (Vessel.GetWorldPos3D() - context.Vessel.GetWorldPos3D());
                     return new Direction(vector, false);
                 case "DISTANCE":
                     return (float) GetDistance();
                 case "BEARING":
-                    return VesselUtils.GetTargetBearing(context.Vessel, Target);
+                    return VesselUtils.GetTargetBearing(context.Vessel, Vessel);
                 case "HEADING":
-                    return VesselUtils.GetTargetHeading(context.Vessel, Target);
+                    return VesselUtils.GetTargetHeading(context.Vessel, Vessel);
                 case "PROGRADE":
                     return GetPrograde();
                 case "RETROGRADE":
                     return GetRetrograde();
                 case "MAXTHRUST":
-                    return VesselUtils.GetMaxThrust(Target);
+                    return VesselUtils.GetMaxThrust(Vessel);
                 case "VELOCITY":
-                    return new VesselVelocity(Target);
+                    return new VesselVelocity(Vessel);
                 case "GEOPOSITION":
-                    return new GeoCoordinates(Target);
+                    return new GeoCoordinates(Vessel);
                 case "LATITUDE":
-                    return VesselUtils.GetVesselLattitude(Target);
+                    return VesselUtils.GetVesselLattitude(Vessel);
                 case "LONGITUDE":
-                    return VesselUtils.GetVesselLongitude(Target);
+                    return VesselUtils.GetVesselLongitude(Vessel);
                 case "FACING":
                     return GetFacing();
                 case "UP":
-                    return new Direction(Target.upAxis, false);
+                    return new Direction(Vessel.upAxis, false);
                 case "NORTH":
-                    return new Direction(VesselUtils.GetNorthVector(Target), false);
+                    return new Direction(VesselUtils.GetNorthVector(Vessel), false);
                 case "BODY":
-                    return new BodyTarget(Target.mainBody, Target);
+                    return new BodyTarget(Vessel.mainBody, Vessel);
                 case "ANGULARMOMENTUM":
-                    return new Direction(Target.angularMomentum, true);
+                    return new Direction(Vessel.angularMomentum, true);
                 case "ANGULARVEL":
-                    return new Direction(Target.angularVelocity, true);
+                    return new Direction(Vessel.angularVelocity, true);
                 case "MASS":
-                    return Target.GetTotalMass();
+                    return Vessel.GetTotalMass();
                 case "VERTICALSPEED":
-                    return Target.verticalSpeed;
+                    return Vessel.verticalSpeed;
                 case "SURFACESPEED":
-                    return Target.horizontalSrfSpeed;
+                    return Vessel.horizontalSrfSpeed;
                 case "AIRSPEED":
                     return
-                        (Target.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Target.GetWorldPos3D()))
+                        (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.GetWorldPos3D()))
                             .magnitude; //the velocity of the vessel relative to the air);
                 case "VESSELNAME":
-                    return Target.vesselName;
+                    return Vessel.vesselName;
                 case "ALTITUDE":
-                    return Target.altitude;
+                    return Vessel.altitude;
                 case "APOAPSIS":
-                    return Target.orbit.ApA;
+                    return Vessel.orbit.ApA;
                 case "PERIAPSIS":
-                    return Target.orbit.PeA;
+                    return Vessel.orbit.PeA;
                 case "SENSORS":
-                    return new VesselSensors(Target);
+                    return new VesselSensors(Vessel);
                 case "TERMVELOCITY":
-                    return VesselUtils.GetTerminalVelocity(Target);
+                    return VesselUtils.GetTerminalVelocity(Vessel);
                 case "LOADED":
-                    return Target.loaded;
+                    return Vessel.loaded;
                 case "OBT":
-                    return new OrbitInfo(Target.orbit, Target);
+                    return new OrbitInfo(Vessel.orbit, Vessel);
             }
 
             // Is this a resource?
             double dblValue;
-            if (VesselUtils.TryGetResource(Target, suffixName, out dblValue))
+            if (VesselUtils.TryGetResource(Vessel, suffixName, out dblValue))
             {
                 return dblValue;
             }
 
             return base.GetSuffix(suffixName);
         }
+
+    }
+
+    public interface IKOSTargetable
+    {
+        ITargetable Target { get; }
     }
 }

@@ -17,7 +17,7 @@ namespace kOS.Binding
                     }
                     else if (val is VesselTarget)
                     {
-                        VesselUtils.SetTarget(((VesselTarget) val).Target);
+                        VesselUtils.SetTarget(((VesselTarget) val).Vessel);
                     }
                     else if (val is BodyTarget)
                     {
@@ -44,13 +44,15 @@ namespace kOS.Binding
                 {
                     var currentTarget = FlightGlobals.fetch.VesselTarget;
 
-                    if (currentTarget is Vessel)
+                    var vessel = currentTarget as Vessel;
+                    if (vessel != null)
                     {
-                        return new VesselTarget((Vessel) currentTarget, cpu);
+                        return new VesselTarget(vessel, cpu);
                     }
-                    if (currentTarget is CelestialBody)
+                    var body = currentTarget as CelestialBody;
+                    if (body != null)
                     {
-                        return new BodyTarget((CelestialBody) currentTarget, cpu.Vessel);
+                        return new BodyTarget(body, cpu.Vessel);
                     }
 
                     return null;

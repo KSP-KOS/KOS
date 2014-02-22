@@ -159,7 +159,7 @@ namespace kOS.Binding
 
                 if (Value is VesselTarget)
                 {
-                    bearing = VesselUtils.GetTargetBearing(Vessel, ((VesselTarget) Value).Target);
+                    bearing = VesselUtils.GetTargetBearing(Vessel, ((VesselTarget) Value).Vessel);
                 }
                 else if (Value is GeoCoordinates)
                 {

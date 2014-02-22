@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using kOS.Context;
 using kOS.Expression;
 using kOS.Suffixed;
+using kOS.Suffixed.Part;
 
 namespace kOS.Command.Vessel
 {
@@ -50,6 +51,9 @@ namespace kOS.Command.Vessel
                     break;
                 case "ELEMENTS":
                     list = ElementValue.PartsToList(partList);
+                    break;
+                case "DOCKINGPORTS":
+                    list = DockingPortValue.PartsToList(partList);
                     break;
             }
 
