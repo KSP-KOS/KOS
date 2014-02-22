@@ -169,7 +169,7 @@ namespace kOS
             // Add volumes that have become attached
             foreach (Volume volume in attachedVolumes)
             {
-                if (!_volumes.ContainsValue(volume))
+                if (volume != null && !_volumes.ContainsValue(volume))
                 {
                     Add(volume);
                 }

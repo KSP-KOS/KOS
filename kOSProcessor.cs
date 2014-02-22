@@ -124,23 +124,35 @@ namespace kOS
             // Trigger whenever the number of parts in the vessel changes (like when staging, docking or undocking)
             if (vessel.parts.Count != vesselPartCount)
             {
+                bool missingHardDisks = false;
                 List<Volume> attachedVolumes = new List<Volume>();
                 attachedVolumes.Add(hardDisk);
 
                 // Look for sister units that have newly been added to the vessel
-                List<kOSProcessor> sisterProcs = new List<kOSProcessor>();
                 foreach (Part part in vessel.parts)
                 {
                     kOSProcessor sisterProc;
                     if (part != this.part && PartIsKosProc(part, out sisterProc))
                     {
-                        sisterProcs.Add(sisterProc);
-                        attachedVolumes.Add(sisterProc.hardDisk);
+                        // A harddisk may be null because the kOS part haven't been initialized yet
+                        // Wait until the next update and everything should be fine
+                        if (sisterProc.hardDisk != null)
+                        {
+                            attachedVolumes.Add(sisterProc.hardDisk);
+                        }
+                        else
+                        {
+                            missingHardDisks = true;
+                            break;
+                        }
                     }
                 }
 
-                _shared.VolumeMgr.UpdateVolumes(attachedVolumes);
-                vesselPartCount = vessel.parts.Count;
+                if (!missingHardDisks)
+                {
+                    _shared.VolumeMgr.UpdateVolumes(attachedVolumes);
+                    vesselPartCount = vessel.parts.Count;
+                }
             }
         }
 
