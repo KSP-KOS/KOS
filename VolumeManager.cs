@@ -7,17 +7,17 @@ namespace kOS
 {
     public class VolumeManager
     {
-        private List<Volume> _volumes;
+        private Dictionary<int, Volume> _volumes;
         private Volume _currentVolume;
         private SharedObjects _shared;
         private int _lastId = 0;
 
-        public List<Volume> Volumes { get { return _volumes; } }
+        public Dictionary<int, Volume> Volumes { get { return _volumes; } }
         public Volume CurrentVolume { get { return GetVolumeWithRangeCheck(_currentVolume); } }
 
         public VolumeManager(SharedObjects shared)
         {
-            _volumes = new List<Volume>();
+            _volumes = new Dictionary<int, Volume>();
             _currentVolume = null;
             _shared = shared;
         }
@@ -44,11 +44,28 @@ namespace kOS
             int volumeId = -1;
             
             name = name.ToLower();
-            foreach (Volume volume in _volumes)
+            foreach (KeyValuePair<int, Volume> kvp in _volumes)
             {
-                if (volume.Name.ToLower() == name)
+                if (kvp.Value.Name.ToLower() == name)
                 {
-                    volumeId = _volumes.IndexOf(volume);
+                    volumeId = kvp.Key;
+                    break;
+                }
+            }
+
+            return volumeId;
+        }
+
+        private int GetVolumeId(Volume volume)
+        {
+            int volumeId = -1;
+
+            foreach (KeyValuePair<int, Volume> kvp in _volumes)
+            {
+                if (kvp.Value == volume)
+                {
+                    volumeId = kvp.Key;
+                    break;
                 }
             }
 
@@ -86,10 +103,9 @@ namespace kOS
 
         public void Add(Volume volume)
         {
-            if (!_volumes.Contains(volume))
+            if (!_volumes.ContainsValue(volume))
             {
-                volume.Id = _lastId++;
-                _volumes.Add(volume);
+                _volumes.Add(_lastId++, volume);
 
                 if (_currentVolume == null)
                 {
@@ -109,7 +125,7 @@ namespace kOS
 
             if (volume != null)
             {
-                _volumes.Remove(volume);
+                _volumes.Remove(id);
 
                 if (_currentVolume == volume)
                 {
@@ -136,22 +152,35 @@ namespace kOS
         public void UpdateVolumes(List<Volume> attachedVolumes)
         {
             // Remove volumes that are no longer attached
-            foreach (Volume volume in new List<Volume>(_volumes))
+            List<int> removals = new List<int>();
+            foreach (KeyValuePair<int, Volume> kvp in _volumes)
             {
-                if (!(volume is Archive) && !attachedVolumes.Contains(volume))
+                if (!(kvp.Value is Archive) && !attachedVolumes.Contains(kvp.Value))
                 {
-                    _volumes.Remove(volume);
+                    removals.Add(kvp.Key);
                 }
+            }
+
+            foreach (int id in removals)
+            {
+                _volumes.Remove(id);
             }
 
             // Add volumes that have become attached
             foreach (Volume volume in attachedVolumes)
             {
-                if (!_volumes.Contains(volume))
+                if (!_volumes.ContainsValue(volume))
                 {
-                    _volumes.Add(volume);
+                    Add(volume);
                 }
             }
+        }
+
+        public string GetVolumeBestIdentifier(Volume volume)
+        {
+            int id = GetVolumeId(volume);
+            if (!string.IsNullOrEmpty(volume.Name)) return string.Format("#{0}: \"{1}\"", id, volume.Name);
+            else return "#" + id;
         }
 
     }

@@ -69,7 +69,7 @@ namespace kOS
                 Volume volume = shared.VolumeMgr.CurrentVolume;
                 if (volume != null)
                 {
-                    list.Title = "Volume " + volume.GetBestIdentifier();
+                    list.Title = "Volume " + shared.VolumeMgr.GetVolumeBestIdentifier(volume);
                     
                     foreach (FileInfo info in volume.GetFileList())
                     {
@@ -94,9 +94,10 @@ namespace kOS
 
             if (shared.VolumeMgr != null)
             {
-                foreach (Volume volume in shared.VolumeMgr.Volumes)
+                foreach (KeyValuePair<int, Volume> kvp in shared.VolumeMgr.Volumes)
                 {
-                    string id = volume.Id.ToString() + (shared.VolumeMgr.VolumeIsCurrent(volume) ? "*" : "");
+                    Volume volume = kvp.Value;
+                    string id = kvp.Key.ToString() + (shared.VolumeMgr.VolumeIsCurrent(volume) ? "*" : "");
                     string size = volume.CheckRange(shared.Vessel) ? (volume.Capacity > -1 ? volume.Capacity.ToString() : "Inf") : "Disc";
                     list.AddItem(id, volume.Name, size);
                 }

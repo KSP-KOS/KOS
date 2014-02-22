@@ -12,7 +12,6 @@ namespace kOS
     {
         protected Dictionary<string, ProgramFile> _files = new Dictionary<string, ProgramFile>();
 
-        public int Id = 0;
         public int Capacity = -1;
         public string Name = "";
         public bool Renameable = true;
@@ -122,12 +121,6 @@ namespace kOS
         public virtual bool CheckRange(Vessel vessel)
         {
             return true;
-        }
-
-        public string GetBestIdentifier()
-        {
-            if (!string.IsNullOrEmpty(Name)) return string.Format("#{0}: \"{1}\"", Id, Name);
-            else return "#" + Id;
         }
     }
     
