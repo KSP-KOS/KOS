@@ -55,7 +55,7 @@ namespace kOS
             {
                 if (match.Success)
                 {
-                    string token = string.Format("s|{0}", ++stringIndex);
+                    string token = string.Format("[s{0}]", ++stringIndex);
                     stringsLiterals.Add(token, match.Value);
                 }
             }
