@@ -24,7 +24,7 @@ namespace kOS.Suffixed
             wheelThrottle = new Flushable<float>();
             mainThrottle = new Flushable<float>();
             killRotation = new Flushable<bool>();
-
+            
             this.target = target;
             this.target.OnFlyByWire += OnFlyByWire;
         }
@@ -148,7 +148,7 @@ namespace kOS.Suffixed
                 PushNewSetting(st);
             }
             SynchronizeWithFlightCtrl(st);
-        }
+            }
 
         private void PushNewSetting(FlightCtrlState st)
         {
