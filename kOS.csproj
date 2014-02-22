@@ -149,6 +149,7 @@
     <Compile Include="Suffixed\SpecialValue.cs" />
     <Compile Include="Suffixed\SpecialValueTester.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
+    <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Suffixed\Timespan.cs" />
     <Compile Include="Suffixed\Vector.cs" />
