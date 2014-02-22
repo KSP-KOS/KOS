@@ -5,6 +5,13 @@ namespace kOS.Utilities
         private T value;
         private bool stale;
 
+        public Flushable(T value)
+        {
+            this.value = value;
+        }
+
+        public Flushable() { }
+
         public T Value
         {
             get
@@ -31,7 +38,7 @@ namespace kOS.Utilities
 
         public static explicit operator Flushable<T>(T value)
         {
-          return new Flushable<T> {Value = value};
+          return new Flushable<T>(value);
         }
         public static explicit operator T(Flushable<T> value)
         {

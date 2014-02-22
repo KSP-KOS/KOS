@@ -17,8 +17,8 @@ namespace kOS.Suffixed
 
         public FlightControl(Vessel target)
         {
-            rotation = new Flushable<Vector> {Value = new Vector(0, 0, 0)};
-            translation = new Flushable<Vector> {Value = new Vector(0, 0, 0)};
+            rotation = new Flushable<Vector> ( new Vector(0, 0, 0));
+            translation = new Flushable<Vector> ( new Vector(0, 0, 0));
             neutral = new Flushable<bool>();
             wheelSteer = new Flushable<float>();
             wheelThrottle = new Flushable<float>();
@@ -148,7 +148,7 @@ namespace kOS.Suffixed
                 PushNewSetting(st);
             }
             SynchronizeWithFlightCtrl(st);
-            }
+        }
 
         private void PushNewSetting(FlightCtrlState st)
         {
