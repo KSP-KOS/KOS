@@ -142,13 +142,13 @@ namespace kOS
             PrintAt(textToPrint, relativeRow, column);
         }
 
-        public void PrintAt(string textToPrint, int row, int column)
+        public virtual void PrintAt(string textToPrint, int row, int column)
         {
             MoveCursor(row, column);
             Print(textToPrint, false);
         }
 
-        public void PrintAt(char character, int row, int column)
+        public virtual void PrintAt(char character, int row, int column)
         {
             MoveCursor(row, column);
             PrintChar(character);

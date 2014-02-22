@@ -142,5 +142,19 @@ namespace kOS
             _commandHistoryIndex = 0;
             base.Reset();
         }
+
+        public override void PrintAt(char character, int row, int column)
+        {
+            SaveCursorPos();
+            base.PrintAt(character, row, column);
+            RestoreCursorPos();
+        }
+
+        public override void PrintAt(string textToPrint, int row, int column)
+        {
+            SaveCursorPos();
+            base.PrintAt(textToPrint, row, column);
+            RestoreCursorPos();
+        }
     }
 }

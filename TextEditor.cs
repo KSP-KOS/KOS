@@ -75,13 +75,13 @@ namespace kOS
             return ((AbsoluteCursorRow - referenceRow) * _columnCount) + _cursorColumn;
         }
 
-        private void SaveCursorPos()
+        protected void SaveCursorPos()
         {
             _savedCursorRow = AbsoluteCursorRow;
             _savedCursorColumn = AbsoluteCursorColumn;
         }
 
-        private void RestoreCursosPos()
+        protected void RestoreCursorPos()
         {
             AbsoluteCursorRow = _savedCursorRow;
             AbsoluteCursorColumn = _savedCursorColumn;
@@ -97,7 +97,7 @@ namespace kOS
 
             SaveCursorPos();
             OverflowLast(lastChar);
-            RestoreCursosPos();
+            RestoreCursorPos();
         }
 
         protected virtual void OverflowLast(char overflowChar)
@@ -131,7 +131,7 @@ namespace kOS
 
                     SaveCursorPos();
                     OverflowFirst();
-                    RestoreCursosPos();
+                    RestoreCursorPos();
                 }
             }
         }
