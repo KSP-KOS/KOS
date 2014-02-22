@@ -448,7 +448,6 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
     
 ### Maneuver nodes
 
-    NODE                // Direction of next maneuver node, can be used with LOCK STEERING
     ETA:NODE            // ETA to active maneuver node
     ENCOUNTER           // Returns celestial body of encounter
     NEXTNODE            // Next node in flight plan.
