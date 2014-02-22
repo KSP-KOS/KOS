@@ -436,7 +436,7 @@ namespace kOS
 
                 if (_shared.Logger != null)
                 {
-                    _shared.Logger.Log(e.Message);
+                    _shared.Logger.Log(e);
                 }
             }
 
