@@ -22,6 +22,7 @@ namespace kOS.Interpreter
         private int cursorY;
         private string inputBuffer = "";
         private int prevCmdIndex = -1;
+        private bool signalLossWarning = false;
 
         public bool BatchMode { get; set; }
         private LinkedList<ICommand> batchQueue = new LinkedList<ICommand>();
@@ -284,13 +285,13 @@ namespace kOS.Interpreter
                 {
                     if (RemoteTechHook.Instance != null && !RemoteTechHook.Instance.HasAnyConnection(Vessel.id))
                     {
-                        StdOut("Signal interruption. Transmission lost.");
-                        queue.Clear();
-                        batchQueue.Clear();
-                        ChildContext = null;
+                        if (!signalLossWarning)
+                            StdOut("Signal lost.  Waiting to re-acquire signal.");
+                        signalLossWarning = true;
                     }
                     else
                     {
+                        signalLossWarning = false;
                         waitElapsed += Math.Min(time, waitTotal - waitElapsed);
                         this.DrawProgressBar(waitElapsed, waitTotal, "Deploying command.");
                     }

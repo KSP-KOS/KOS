@@ -15,6 +15,7 @@ namespace kOS.Context
         private readonly List<Expression.Expression> parameters = new List<Expression.Expression>();
         private string commandBuffer;
         private File file;
+        private bool signalLossWarning;
 
         public ContextRunProgram(IExecutionContext parent, List<Expression.Expression> parameters, string filename)
             : base(parent)
@@ -27,11 +28,18 @@ namespace kOS.Context
 
         public void Run(File fileObj)
         {
-            file = fileObj;
+            if (!SelectedVolume.CheckRange())
+            {
+                StdOut("Selected volume is out of range.  Can;t run program.");
+            }
+            else
+            {
+                file = fileObj;
 
-            State = ExecutionState.WAIT;
+                State = ExecutionState.WAIT;
 
-            RunBlock(fileObj);
+                RunBlock(fileObj);
+            }
         }
 
         public override bool Break()
@@ -64,7 +72,17 @@ namespace kOS.Context
             try
             {
                 base.Update(time);
-                EvaluateNextCommand();
+                if (SelectedVolume.CheckRange())
+                {
+                    EvaluateNextCommand();
+                    signalLossWarning = false;
+                }
+                else
+                    if (!signalLossWarning)
+                    {
+                        StdOut("Selected Volume has gone out of range.");
+                        signalLossWarning = true;
+                    }
             }
             catch (KOSException e)
             {
