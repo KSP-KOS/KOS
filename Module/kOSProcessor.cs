@@ -9,7 +9,7 @@ namespace kOS.Module
     public class kOSProcessor : PartModule, IProcessorModule
     {
         //640K ought to be enough for anybody -sic
-        public int PROCESSOR_HARD_CAP = 655360;
+        public const int PROCESSOR_HARD_CAP = 655360;
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
         public int diskSpace = 500;
         private readonly List<IProcessorModule> sisterProcs = new List<IProcessorModule>();
@@ -17,7 +17,7 @@ namespace kOS.Module
         private ICPU cpu;
 
         [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true, guiActiveEditor = true)] private int
-            unitID = -1;
+        unitID = -1;
 
         private int vesselPartCount;
 
@@ -30,6 +30,9 @@ namespace kOS.Module
 
             Core.OpenWindow(cpu);
         }
+
+        [KSPField(isPersistant = true, guiName = "Required Power", guiActive = true)] 
+        public float RequiredPower;
 
         [KSPEvent(guiActive = true, guiName = "Toggle Power")]
         public void TogglePower()
@@ -60,6 +63,7 @@ namespace kOS.Module
             UnityEngine.Debug.Log("kOS: Toggle Power from ActionGroup");
             TogglePower();
         }
+
 
         [KSPEvent(guiName = "Unit +", guiActive = false, guiActiveEditor = true)]
         public void IncrementUnitId()
@@ -127,6 +131,7 @@ namespace kOS.Module
 
             cpu.Update(Time.deltaTime);
 
+            RequiredPower = cpu.SelectedVolume.RequiredPower();
             cpu.ProcessElectricity(part, TimeWarp.fixedDeltaTime);
 
             UpdateParts();

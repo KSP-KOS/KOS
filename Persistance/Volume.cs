@@ -5,6 +5,9 @@ namespace kOS.Persistance
 {
     public abstract class Volume : IVolume
     {
+        protected const int BASE_CAPACITY = 10000;
+        protected const float BASE_POWER = 0.01f;
+
         protected Volume()
         {
             Renameable = true;
@@ -76,6 +79,14 @@ namespace kOS.Persistance
         public virtual bool CheckRange()
         {
             return true;
+        }
+
+        public virtual float RequiredPower()
+        {
+            var multiplier = ((float)Capacity) / BASE_CAPACITY;
+            var powerRequired = BASE_POWER * multiplier;
+
+            return powerRequired;
         }
     }
 }

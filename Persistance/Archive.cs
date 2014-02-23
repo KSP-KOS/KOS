@@ -154,5 +154,13 @@ namespace kOS.Persistance
             else
                 return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
         }
+
+        public override float RequiredPower()
+        {
+            const int multiplier = 5;
+            const float powerRequired = BASE_POWER * multiplier;
+
+            return powerRequired;
+        }
     }
 }

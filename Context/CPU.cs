@@ -231,7 +231,7 @@ namespace kOS.Context
         {
             if (Mode == CPUMode.OFF) return;
 
-            var electricReq = 0.01f*time;
+            var electricReq = time*selectedVolume.RequiredPower();
             var result = part.RequestResource("ElectricCharge", electricReq)/electricReq;
 
             var newMode = (result < 0.5f) ? CPUMode.STARVED : CPUMode.READY;

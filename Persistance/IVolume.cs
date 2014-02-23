@@ -18,5 +18,6 @@ namespace kOS.Persistance
         ConfigNode Save(string nodeName);
         IList<FileInfo> GetFileList();
         bool CheckRange();
+        float RequiredPower();
     }
 }
