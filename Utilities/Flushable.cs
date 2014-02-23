@@ -24,7 +24,7 @@ namespace kOS.Utilities
                 this.value = value;
             }
         }
-
+        public void SetStale() { stale = true; }
         public bool IsStale { get { return stale; } }
 
         public T FlushValue

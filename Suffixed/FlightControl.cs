@@ -6,25 +6,21 @@ namespace kOS.Suffixed
     public class FlightControl : SpecialValue , IDisposable
     {
         // For rotation x = yaw, y = pitch, and z = roll
-        private readonly Flushable<Vector> rotation;
-        private readonly Flushable<Vector> translation;
+        private Vector rotation;
+        private Vector translation;
+        private float wheelSteer;
+        private float wheelThrottle;
+        private float mainThrottle;
         private readonly Flushable<bool> neutral;
-        private readonly Flushable<float> wheelSteer;
-        private readonly Flushable<float> wheelThrottle;
-        private readonly Flushable<float> mainThrottle;
         private readonly Flushable<bool> killRotation;
         private readonly Vessel target;
 
         public FlightControl(Vessel target)
         {
-            rotation = new Flushable<Vector> ( new Vector(0, 0, 0));
-            translation = new Flushable<Vector> ( new Vector(0, 0, 0));
-            neutral = new Flushable<bool>();
-            wheelSteer = new Flushable<float>();
-            wheelThrottle = new Flushable<float>();
-            mainThrottle = new Flushable<float>();
-            killRotation = new Flushable<bool>();
-            
+            rotation = new Vector(0, 0, 0);
+            translation = new Vector(0, 0, 0);
+            neutral = new Flushable<bool>(); 
+            killRotation = new Flushable<bool>(); 
             this.target = target;
             this.target.OnFlyByWire += OnFlyByWire;
         }
@@ -34,29 +30,29 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "YAW":
-                    return rotation.Value.X;
+                    return rotation.X;
                 case "PITCH":
-                    return rotation.Value.Y;
+                    return rotation.Y;
                 case "ROLL":
-                    return rotation.Value.Z;
+                    return rotation.Z;
                 case "FORE":
-                    return translation.Value.Z;
+                    return translation.Z;
                 case "STARBOARD":
-                    return translation.Value.X;
+                    return translation.X;
                 case "TOP":
-                    return translation.Value.Y;
+                    return translation.Y;
                 case "ROTATION":
-                    return rotation.Value;
+                    return rotation;
                 case "TRANSLATION":
-                    return translation.Value;
+                    return translation;
                 case "NEUTRAL":
-                    return neutral.Value;
+                    return neutral;
                 case "MAINTHROTTLE":
-                    return mainThrottle.Value;
+                    return mainThrottle;
                 case "WHEELTHROTTLE":
-                    return wheelThrottle.Value;
+                    return wheelThrottle;
                 case "WHEELSTEER":
-                    return wheelSteer.Value;
+                    return wheelSteer;
                 default:
                     return null;
             }
@@ -64,50 +60,53 @@ namespace kOS.Suffixed
 
         public override bool SetSuffix(string suffixName, object value)
         {
+            UnityEngine.Debug.Log("FlightControl Set: " + suffixName + " Value: " + value);
             if (CheckNeutral(suffixName, value))
             {
+                UnityEngine.Debug.Log("FlightControl KillRotation");
                 return true;
             }
 
             if (CheckKillRotation(suffixName, value))
             {
+                UnityEngine.Debug.Log("FlightControl KillRotation");
                 return true;
             }
 
             switch (suffixName)
             {
                 case "YAW":
-                    rotation.Value.X = Convert.ToSingle(value);
+                    rotation.X = Convert.ToSingle(value);
                     break;
                 case "PITCH":
-                    rotation.Value.Y = Convert.ToSingle(value);
+                    rotation.Y = Convert.ToSingle(value);
                     break;
                 case "ROLL":
-                    rotation.Value.Z = Convert.ToSingle(value);
+                    rotation.Z = Convert.ToSingle(value);
                     break;
                 case "STARBOARD":
-                    translation.Value.X = Convert.ToSingle(value);
+                    translation.X = Convert.ToSingle(value);
                     break;
                 case "TOP":
-                    translation.Value.Y = Convert.ToSingle(value);
+                    translation.Y = Convert.ToSingle(value);
                     break;
                 case "FORE":
-                    translation.Value.Z = Convert.ToSingle(value);
+                    translation.Z = Convert.ToSingle(value);
                     break;
                 case "ROTATION":
-                    rotation.Value = (Vector) value;
+                    rotation = (Vector) value;
                     break;
                 case "TRANSLATION":
-                    translation.Value = (Vector) value;
+                    translation = (Vector) value;
                     break;
                 case "MAINTHROTTLE":
-                    mainThrottle.Value = Convert.ToSingle(value);
+                    mainThrottle = Convert.ToSingle(value);
                     break;
                 case "WHEELTHROTTLE":
-                    wheelThrottle.Value = Convert.ToSingle(value);
+                    wheelThrottle = Convert.ToSingle(value);
                     break;
                 case "WHEELSTEER":
-                    wheelSteer.Value = Convert.ToSingle(value);
+                    wheelSteer = Convert.ToSingle(value);
                     break;
                 default:
                     return false;
@@ -141,45 +140,28 @@ namespace kOS.Suffixed
         {
             if (neutral.IsStale)
             {
-                st.Neutralize();
+                if (neutral.FlushValue)
+                {
+                    st.Neutralize();
+                }
             }
-            else
-            {
-                PushNewSetting(st);
-            }
-            SynchronizeWithFlightCtrl(st);
+
+            PushNewSetting(ref st);
         }
 
-        private void PushNewSetting(FlightCtrlState st)
+        private void PushNewSetting(ref FlightCtrlState st)
         {
-            if (translation.IsStale)
-            {
-                st.X = (float) translation.FlushValue.X;
-                st.Y = (float) translation.FlushValue.Y;
-                st.Z = (float) translation.FlushValue.Z;
-            }
-            if (rotation.IsStale)
-            {
-                st.pitch = (float) rotation.FlushValue.Y;
-                st.yaw = (float) translation.FlushValue.X;
-                st.roll = (float) translation.FlushValue.Z;
-            }
-            if (wheelSteer.IsStale) st.wheelSteer = wheelSteer.FlushValue;
-            if (wheelThrottle.IsStale) st.wheelThrottle = wheelThrottle.FlushValue;
-            if (mainThrottle.IsStale) st.mainThrottle = mainThrottle.FlushValue;
-        }
+            st.X = (float)translation.X;
+            st.Y = (float)translation.Y;
+            st.Z = (float)translation.Z;
 
-        private void SynchronizeWithFlightCtrl(FlightCtrlState st)
-        {
-            rotation.Value.X = st.yaw;
-            rotation.Value.Y = st.pitch;
-            rotation.Value.Z = st.roll;
-            translation.Value.X = st.X;
-            translation.Value.Y = st.Y;
-            translation.Value.Z = st.Z;
-            wheelSteer.Value = st.wheelSteer;
-            wheelThrottle.Value = st.wheelThrottle;
-            mainThrottle.Value = st.mainThrottle;
+            st.pitch = (float)rotation.Y;
+            st.yaw = (float)translation.X;
+            st.roll = (float)translation.Z;
+
+            st.wheelSteer = wheelSteer;
+            st.wheelThrottle = wheelThrottle;
+            st.mainThrottle = mainThrottle;
         }
 
         public void Dispose()
