@@ -2,7 +2,7 @@
 
 namespace kOS.Suffixed.Part
 {
-    public class DockingPortValue: PartValue, IKOSTargetable
+    public class DockingPortValue: PartValue
     {
         private readonly ModuleDockingNode module;
 
@@ -15,13 +15,41 @@ namespace kOS.Suffixed.Part
         {
             switch (suffixName)
             {
-                case "DockingState":
+                case "STATE":
                     return module.state;
+                case "ORIENTATION":
+                    return new Vector( module.GetFwdVector() );
+                case "DOCKEDVESSELNAME":
+                    return module.vesselInfo.name;
+                case "TARGETABLE":
+                    return true;
             }
             return base.GetSuffix(suffixName);
         }
 
-        public ITargetable Target
+        public override bool SetSuffix(string suffixName, object value)
+        {
+            switch (suffixName)
+            {
+                case "CONTROLFROM":
+                    {
+                        var control = (bool) value;
+                        if (control)
+                        {
+                            module.MakeReferenceTransform();
+                        }
+                        else
+                        {
+                            module.vessel.SetReferenceTransform(module.vessel.rootPart);
+                        }
+                        break;
+                    }
+                    
+            }
+            return base.SetSuffix(suffixName, value);
+        }
+
+        public override ITargetable Target
         {
             get { return module; }
         }
