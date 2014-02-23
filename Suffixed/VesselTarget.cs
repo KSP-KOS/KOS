@@ -164,11 +164,5 @@ namespace kOS.Suffixed
 
             return base.GetSuffix(suffixName);
         }
-
-    }
-
-    public interface IKOSTargetable
-    {
-        ITargetable Target { get; }
     }
 }

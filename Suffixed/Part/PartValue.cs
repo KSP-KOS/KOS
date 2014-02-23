@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace kOS.Suffixed.Part
 {
-    public class PartValue : SpecialValue
+    public class PartValue : SpecialValue, IKOSTargetable
     {
         public PartValue(global::Part part)
         {
@@ -35,6 +36,8 @@ namespace kOS.Suffixed.Part
                         modules.Add(module.GetType());
                     }
                     return modules;
+                case "TARGETABLE":
+                    return Part.Modules.OfType<ITargetable>().Any();
             }
             return base.GetSuffix(suffixName);
         }
@@ -52,6 +55,14 @@ namespace kOS.Suffixed.Part
                 toReturn.Add(new PartValue(part));
             }
             return toReturn;
+        }
+
+        public virtual ITargetable Target
+        {
+            get
+            {
+                return Part.Modules.OfType<ITargetable>().FirstOrDefault();
+            }
         }
     }
 }

@@ -32,8 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\KSP_LIB\Assembly-CSharp.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\KSP_LIB\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,7 +43,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-          <HintPath>..\..\KSP_LIB\UnityEngine.dll</HintPath>
+      <HintPath>..\..\KSP_LIB\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +124,7 @@
     <Compile Include="Expression\Expression.cs" />
     <Compile Include="Expression\Term.cs" />
     <Compile Include="Suffixed\ElementValue.cs" />
+    <Compile Include="Suffixed\IKOSTargetable.cs" />
     <Compile Include="Suffixed\Part\DockingPortValue.cs" />
     <Compile Include="Suffixed\Part\EngineValue.cs" />
     <Compile Include="Suffixed\GeoCoordinates.cs" />

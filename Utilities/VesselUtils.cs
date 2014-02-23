@@ -135,10 +135,21 @@ namespace kOS.Utilities
             return vessel;
         }
 
+        public static void SetTarget(IKOSTargetable val)
+        {
+            if (val.Target != null)
+            {
+                SetTarget(val.Target);
+            }
+            else
+            {
+                throw new KOSException("Error on targeting " + val);
+            }
+        }
         public static void SetTarget(ITargetable val)
         {
-            FlightGlobals.fetch.SetVesselTarget(val);
-        }
+           FlightGlobals.fetch.SetVesselTarget(val);
+        } 
 
         public static double GetCommRange(Vessel vessel)
         {

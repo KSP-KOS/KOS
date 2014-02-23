@@ -11,17 +11,10 @@ namespace kOS.Binding
         {
             manager.AddSetter("TARGET", delegate(ICPU cpu, object val)
                 {
-                    if (val is ITargetable)
+                    var targetable = val as IKOSTargetable;
+                    if (targetable != null)
                     {
-                        VesselUtils.SetTarget((ITargetable) val);
-                    }
-                    else if (val is VesselTarget)
-                    {
-                        VesselUtils.SetTarget(((VesselTarget) val).Vessel);
-                    }
-                    else if (val is BodyTarget)
-                    {
-                        VesselUtils.SetTarget(((BodyTarget) val).Target);
+                        VesselUtils.SetTarget(targetable);
                     }
                     else
                     {
