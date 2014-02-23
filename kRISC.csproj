@@ -59,6 +59,9 @@
     <Compile Include="Config.cs" />
     <Compile Include="FunctionList.cs" />
     <Compile Include="Harddisk.cs" />
+    <Compile Include="InterProcessor\InterProcCommand.cs" />
+    <Compile Include="InterProcessor\ProcessorManager.cs" />
+    <Compile Include="InterProcessor\RunCommand.cs" />
     <Compile Include="kOSIDModule.cs" />
     <Compile Include="KS\Helpers.cs" />
     <Compile Include="Core.cs" />

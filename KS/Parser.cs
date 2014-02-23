@@ -1547,6 +1547,25 @@ namespace kOS.KS
             }
 
             
+            tok = scanner.LookAhead(TokenType.ON);
+            if (tok.Type == TokenType.ON)
+            {
+
+                
+                tok = scanner.Scan(TokenType.ON);
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.ON) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ON.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                
+                Parsefilevol_name(node);
+            }
+
+            
             tok = scanner.Scan(TokenType.EOI);
             n = node.CreateNode(tok, tok.ToString() );
             node.Token.UpdateRange(tok);

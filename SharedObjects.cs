@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using kOS.InterProcessor;
 
 namespace kOS
 {
@@ -17,5 +18,6 @@ namespace kOS
         public VolumeManager VolumeMgr;
         public TermWindow Window;
         public kOSProcessor Processor;
+        public ProcessorManager ProcessorMgr;
     }
 }
