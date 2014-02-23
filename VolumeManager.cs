@@ -91,7 +91,7 @@ namespace kOS
 
         public Volume GetVolume(int id)
         {
-            if (id >= 0 && id < _volumes.Count)
+            if (_volumes.ContainsKey(id))
             {
                 return GetVolumeWithRangeCheck(_volumes[id]);
             }
