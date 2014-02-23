@@ -14,6 +14,7 @@ namespace kOS.Suffixed
         private readonly Flushable<bool> neutral;
         private readonly Flushable<bool> killRotation;
         private readonly Vessel target;
+        private bool bound;
 
         public FlightControl(Vessel target)
         {
@@ -21,6 +22,7 @@ namespace kOS.Suffixed
             translation = new Vector(0, 0, 0);
             neutral = new Flushable<bool>(); 
             killRotation = new Flushable<bool>(); 
+            bound = true;
             this.target = target;
             this.target.OnFlyByWire += OnFlyByWire;
         }
@@ -53,6 +55,8 @@ namespace kOS.Suffixed
                     return wheelThrottle;
                 case "WHEELSTEER":
                     return wheelSteer;
+                case "BOUND":
+                    return bound;
                 default:
                     return null;
             }
@@ -61,15 +65,15 @@ namespace kOS.Suffixed
         public override bool SetSuffix(string suffixName, object value)
         {
             UnityEngine.Debug.Log("FlightControl Set: " + suffixName + " Value: " + value);
+            Bind();
+
             if (CheckNeutral(suffixName, value))
             {
-                UnityEngine.Debug.Log("FlightControl KillRotation");
                 return true;
             }
 
             if (CheckKillRotation(suffixName, value))
             {
-                UnityEngine.Debug.Log("FlightControl KillRotation");
                 return true;
             }
 
@@ -114,6 +118,22 @@ namespace kOS.Suffixed
             return true;
         }
 
+        private void Bind()
+        {
+            if (!bound) return;
+            UnityEngine.Debug.Log("FlightControl Bound");
+            target.OnFlyByWire += OnFlyByWire;
+            bound = true;
+        }
+
+        private void Unbind()
+        {
+            if (bound) return;
+            UnityEngine.Debug.Log("FlightControl Unbound");
+            target.OnFlyByWire -= OnFlyByWire;
+            bound = false;
+        }
+
         private bool CheckKillRotation(string suffixName, object value)
         {
             if (suffixName == "KILLROTATION")
@@ -130,6 +150,7 @@ namespace kOS.Suffixed
             if (suffix == "NEUTRALIZE")
             {
                 neutral.Value = bool.Parse(value.ToString());
+                Unbind();
                 return true;
             }
             neutral.Value = false;
@@ -156,8 +177,8 @@ namespace kOS.Suffixed
             st.Z = (float)translation.Z;
 
             st.pitch = (float)rotation.Y;
-            st.yaw = (float)translation.X;
-            st.roll = (float)translation.Z;
+            st.yaw = (float)rotation.X;
+            st.roll = (float)rotation.Z;
 
             st.wheelSteer = wheelSteer;
             st.wheelThrottle = wheelThrottle;
@@ -166,7 +187,7 @@ namespace kOS.Suffixed
 
         public void Dispose()
         {
-            target.OnFlyByWire -= OnFlyByWire;
+            Unbind();
         }
     }
 }
