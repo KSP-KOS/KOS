@@ -26,32 +26,43 @@ namespace kOS.KS
 
         public override List<CodePart> Compile(string scriptText, string contextId)
         {
-            List<CodePart> parts = new List<CodePart>();
-
+            List<CodePart> parts = null;
+            
             // make the code lowercase
             scriptText = MakeLowerCase(scriptText);
             
-            ParseTree parseTree = _parser.Parse(scriptText);
-            if (parseTree.Errors.Count == 0)
+            // TODO: I don't like that the compiler has to know about the interpreter
+            if (contextId != "interpreter") parts = _cache.GetFromCache(scriptText);
+
+            // if parts is null means the code doesn't exists in the cache
+            if (parts == null)
             {
-                Compiler compiler = new Compiler();
-                LoadContext(contextId);
+                parts = new List<CodePart>();
+                ParseTree parseTree = _parser.Parse(scriptText);
+                if (parseTree.Errors.Count == 0)
+                {
+                    Compiler compiler = new Compiler();
+                    LoadContext(contextId);
 
-                // handle compile errors (e.g. wrong run parameter count)
-                CodePart mainPart = compiler.Compile(parseTree, _currentContext);
+                    // TODO: handle compile errors (e.g. wrong run parameter count)
+                    CodePart mainPart = compiler.Compile(parseTree, _currentContext);
 
-                // add locks and triggers
-                parts.AddRange(_currentContext.Locks.GetNewParts());
-                parts.AddRange(_currentContext.Triggers.GetNewParts());
+                    // add locks and triggers
+                    parts.AddRange(_currentContext.Locks.GetNewParts());
+                    parts.AddRange(_currentContext.Triggers.GetNewParts());
 
-                parts.Add(mainPart);
+                    parts.Add(mainPart);
 
-                AssignInstructionId(parts);
-            }
-            else
-            {
-                ParseError error = parseTree.Errors[0];
-                RaiseParseException(scriptText, error.Line, error.Position);
+                    AssignInstructionId(parts);
+
+                    // TODO: I don't like that the compiler has to know about the interpreter
+                    if (contextId != "interpreter") _cache.AddToCache(scriptText, parts);
+                }
+                else
+                {
+                    ParseError error = parseTree.Errors[0];
+                    RaiseParseException(scriptText, error.Line, error.Position);
+                } 
             }
 
             return parts;

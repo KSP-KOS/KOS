@@ -55,6 +55,7 @@
     <Compile Include="BindingsTerminalSettings.cs" />
     <Compile Include="BindingsUniverse.cs" />
     <Compile Include="BodyTarget.cs" />
+    <Compile Include="CompileCache.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="FunctionList.cs" />
     <Compile Include="Harddisk.cs" />

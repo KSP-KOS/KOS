@@ -8,6 +8,13 @@ namespace kOS
 {
     public class Script
     {
+        protected CompileCache _cache;
+
+        public Script()
+        {
+            _cache = CompileCache.GetInstance();
+        }
+
         public virtual List<CodePart> Compile(string scriptText) { return new List<CodePart>(); }
         public virtual List<CodePart> Compile(string scriptText, string contextId) { return new List<CodePart>(); }
         public virtual void ClearContext(string contextId) { }
