@@ -392,6 +392,7 @@ namespace kOS
     {
         public override void Execute(SharedObjects shared)
         {
+            object volumeId = shared.Cpu.PopValue();
             string fileName = shared.Cpu.PopValue().ToString();
 
             if (shared.VolumeMgr != null)
@@ -417,8 +418,26 @@ namespace kOS
                                 compileWatch.Stop();
                                 shared.Cpu.TotalCompileTime += compileWatch.ElapsedMilliseconds;
                             }
-                            
-                            shared.Cpu.RunProgram(program);
+
+                            if (volumeId != null)
+                            {
+                                Volume targetVolume = shared.VolumeMgr.GetVolume(volumeId);
+                                if (targetVolume != null)
+                                {
+                                    if (shared.ProcessorMgr != null)
+                                    {
+                                        shared.ProcessorMgr.RunProgramOn(program, targetVolume);
+                                    }
+                                }
+                                else
+                                {
+                                    throw new Exception("Volume not found");
+                                }
+                            }
+                            else
+                            {
+                                shared.Cpu.RunProgram(program);
+                            }
                         }
                     }
                     else

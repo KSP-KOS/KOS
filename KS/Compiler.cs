@@ -931,12 +931,24 @@ namespace kOS.KS
 
         private void VisitRunStatement(ParseNode node)
         {
-            if (node.Nodes.Count > 3)
+            int volumeIndex = 3;
+
+            // process program arguments
+            if (node.Nodes.Count > 3 && node.Nodes[3].Token.Type == TokenType.arglist)
             {
                 VisitNode(node.Nodes[3]);
+                volumeIndex += 3;
             }
 
+            // program name
             VisitNode(node.Nodes[1]);
+
+            // volume where program should be executed (null means local)
+            if (volumeIndex < node.Nodes.Count)
+                VisitNode(node.Nodes[volumeIndex]);
+            else
+                AddOpcode(new OpcodePush(null));
+
             AddOpcode(new OpcodeCall("run()"));
         }
 

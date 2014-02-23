@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using kOS.InterProcessor;
 
 namespace kOS
 {
@@ -79,6 +80,7 @@ namespace kOS
                 _shared.ScriptHandler = new KS.KSScript();
                 _shared.Logger = new Logger(_shared);
                 _shared.VolumeMgr = new VolumeManager(_shared);
+                _shared.ProcessorMgr = new ProcessorManager(_shared);
                 _shared.Cpu = new CPU(_shared);
 
                 // initialize the file system
@@ -126,19 +128,21 @@ namespace kOS
             {
                 bool missingHardDisks = false;
                 List<Volume> attachedVolumes = new List<Volume>();
-                attachedVolumes.Add(hardDisk);
+                List<kOSProcessor> processors = new List<kOSProcessor>();
 
-                // Look for sister units that have newly been added to the vessel
+                // Look for all the processors that exists in the vessel
                 foreach (Part part in vessel.parts)
                 {
-                    kOSProcessor sisterProc;
-                    if (part != this.part && PartIsKosProc(part, out sisterProc))
+                    kOSProcessor processorPart;
+                    if (PartIsKosProc(part, out processorPart))
                     {
+                        processors.Add(processorPart);
+
                         // A harddisk may be null because the kOS part haven't been initialized yet
                         // Wait until the next update and everything should be fine
-                        if (sisterProc.hardDisk != null)
+                        if (processorPart.hardDisk != null)
                         {
-                            attachedVolumes.Add(sisterProc.hardDisk);
+                            attachedVolumes.Add(processorPart.hardDisk);
                         }
                         else
                         {
@@ -151,6 +155,7 @@ namespace kOS
                 if (!missingHardDisks)
                 {
                     _shared.VolumeMgr.UpdateVolumes(attachedVolumes);
+                    _shared.ProcessorMgr.UpdateProcessors(processors);
                     vesselPartCount = vessel.parts.Count;
                 }
             }
@@ -245,6 +250,14 @@ namespace kOS
                 }
 
                 Mode = newMode;
+            }
+        }
+
+        public void ExecuteInterProcCommand(InterProcCommand command)
+        {
+            if (command != null)
+            {
+                command.Execute(_shared);
             }
         }
     }

@@ -100,7 +100,7 @@ copy_stmt -> COPY IDENTIFIER (FROM | TO) filevol_name EOI;
 rename_stmt -> RENAME (VOLUME | FILE)? filevol_name TO IDENTIFIER EOI;
 delete_stmt -> DELETE IDENTIFIER (FROM filevol_name)? EOI;
 edit_stmt -> EDIT VARIDENTIFIER EOI;
-run_stmt -> RUN IDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? EOI;
+run_stmt -> RUN IDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? (ON filevol_name)? EOI;
 filevol_name -> INTEGER | IDENTIFIER;
 list_stmt -> LIST IDENTIFIER? EOI;
 reboot_stmt -> REBOOT EOI;
