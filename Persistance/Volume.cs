@@ -6,7 +6,7 @@ namespace kOS.Persistance
     public abstract class Volume : IVolume
     {
         protected const int BASE_CAPACITY = 10000;
-        protected const float BASE_POWER = 0.01f;
+        protected const float BASE_POWER = 0.02f;
 
         protected Volume()
         {

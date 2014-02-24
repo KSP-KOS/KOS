@@ -20,8 +20,8 @@ namespace kOS.Suffixed.Part
                         var control = (bool) value;
                         if (control)
                         {
-                            var dockingModule = Part.Modules.First<ModuleDockingNode>();
-                            var commandModule = Part.Modules.First<ModuleCommand>();
+                            var dockingModule = Part.Modules.OfType<ModuleDockingNode>().First();
+                            var commandModule = Part.Modules.OfType<ModuleCommand>().First();
 
                             if (commandModule != null)
                             {
