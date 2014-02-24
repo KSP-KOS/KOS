@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using kOS.Module;
+using kOS.Persistence;
+using kOS.Suffixed;
+using kOS.Utilities;
 
 namespace kOS
 {

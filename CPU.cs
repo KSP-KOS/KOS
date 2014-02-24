@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Diagnostics;
+using kOS.Suffixed;
 
 namespace kOS
 {
@@ -588,7 +589,7 @@ namespace kOS
 
                 foreach (var kvp in _vars)
                 {
-                    if (!(kvp.Value is BoundVariable))
+                    if (!(kvp.Value is Bindings.BoundVariable))
                     {
                         varNode.AddValue(kvp.Key.TrimStart('$'), ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
                     }

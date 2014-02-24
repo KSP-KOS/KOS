@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.IO;
 using UnityEngine;
+using kOS.Utilities;
 
 namespace kOS
 {

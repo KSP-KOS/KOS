@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using UnityEngine;
 using ICSharpCode.SharpZipLib.GZip;
+using kOS.Suffixed;
 
 namespace kOS
 {

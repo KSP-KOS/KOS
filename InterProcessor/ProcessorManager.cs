@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using kOS.Module;
+using kOS.Persistence;
 
 namespace kOS.InterProcessor
 {

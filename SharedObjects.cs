@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using kOS.InterProcessor;
+using kOS.Bindings;
+using kOS.Module;
+using kOS.Persistence;
 
 namespace kOS
 {
