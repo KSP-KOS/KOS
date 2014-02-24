@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace kOS.Suffixed
 {
@@ -66,6 +67,11 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return "LIST(" + list.Count + ")";
+        }
+
+        public bool Empty()
+        {
+            return !list.Any();
         }
     }
 

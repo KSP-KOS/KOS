@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using kOS.Context;
 using kOS.Expression;
 using kOS.Suffixed;
-using kOS.Suffixed.Part;
+using kOS.Utilities;
 
 namespace kOS.Command.Vessel
 {
@@ -20,8 +19,6 @@ namespace kOS.Command.Vessel
             var type = new Term(RegexMatch.Groups[1].Value);
             var list = new ListValue();
 
-            var partList = Vessel.Parts.ToList();
-
             switch (type.Text.ToUpper())
             {
                 case "BODIES":
@@ -37,29 +34,17 @@ namespace kOS.Command.Vessel
                         list.Add(new VesselTarget(vessel, ParentContext));
                     }
                     break;
-                case "RESOURCES":
-                    list = ResourceValue.PartsToList(partList);
-                    break;
-                case "PARTS":
-                    list = PartValue.PartsToList(partList);
-                    break;
-                case "ENGINES":
-                    list = EngineValue.PartsToList(partList);
-                    break;
-                case "SENSORS":
-                    list = SensorValue.PartsToList(partList);
-                    break;
-                case "ELEMENTS":
-                    list = ElementValue.PartsToList(partList);
-                    break;
-                case "DOCKINGPORTS":
-                    list = DockingPortValue.PartsToList(partList);
-                    break;
+            }
+
+            if (list.Empty())
+            {
+                list = Vessel.PartList(type.Text);
             }
 
             FindOrCreateVariable(name.Text).Value = list;
 
             State = ExecutionState.DONE;
         }
+
     }
 }

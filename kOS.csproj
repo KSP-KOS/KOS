@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="AddOns\RemoteTech2\CommandBatch.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechAPI.cs" />
+    <Compile Include="Command\Vessel\CommandVesselListFromValue.cs" />
     <Compile Include="Suffixed\FlightControl.cs" />
     <Compile Include="AddOns\RemoteTech2\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech2\CommandDeploy.cs" />

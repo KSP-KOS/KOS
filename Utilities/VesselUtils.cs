@@ -4,10 +4,11 @@ using System.Linq;
 using UnityEngine;
 using kOS.Debug;
 using kOS.Suffixed;
+using kOS.Suffixed.Part;
 
 namespace kOS.Utilities
 {
-    public class VesselUtils
+    public static class VesselUtils
     {
         public static List<Part> GetListOfActivatedEngines(Vessel vessel)
         {
@@ -74,6 +75,35 @@ namespace kOS.Utilities
             return total;
         }
 
+        public static ListValue PartList(this IShipconstruct vessel, string partType)
+        {
+            var list = new ListValue();
+            var partList = vessel.Parts.ToList();
+
+            switch (partType.ToUpper())
+            {
+                case "RESOURCES":
+                    list = ResourceValue.PartsToList(partList);
+                    break;
+                case "PARTS":
+                    list = PartValue.PartsToList(partList);
+                    break;
+                case "ENGINES":
+                    list = EngineValue.PartsToList(partList);
+                    break;
+                case "SENSORS":
+                    list = SensorValue.PartsToList(partList);
+                    break;
+                case "ELEMENTS":
+                    list = ElementValue.PartsToList(partList);
+                    break;
+                case "DOCKINGPORTS":
+                    list = DockingPortValue.PartsToList(partList);
+                    break;
+            }
+            return list;
+        }
+
         public static double GetMaxThrust(Vessel vessel)
         {
             var thrust = 0.0;
@@ -107,21 +137,12 @@ namespace kOS.Utilities
 
         public static Vessel TryGetVesselByName(string name, Vessel origin)
         {
-            foreach (var v in FlightGlobals.Vessels)
-            {
-                if (v != origin && v.vesselName.ToUpper() == name.ToUpper())
-                {
-                    return v;
-                }
-            }
-
-            return null;
+            return FlightGlobals.Vessels.FirstOrDefault<Vessel>(v => v != origin && v.vesselName.ToUpper() == name.ToUpper());
         }
 
         public static CelestialBody GetBodyByName(string name)
         {
-            return
-                FlightGlobals.fetch.bodies.FirstOrDefault<CelestialBody>(body => name.ToUpper() == body.name.ToUpper());
+            return FlightGlobals.fetch.bodies.FirstOrDefault<CelestialBody>(body => name.ToUpper() == body.name.ToUpper());
         }
 
         public static Vessel GetVesselByName(string name, Vessel origin)
