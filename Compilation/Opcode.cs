@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using kOS.Suffixed;
+using kOS.Execution;
 
-namespace kOS
+namespace kOS.Compilation
 {
     #region Base classes
 
@@ -239,6 +240,7 @@ namespace kOS
         protected override object ExecuteCalculation(Calculator calc)
         {
             object result = calc.Add(argument1, argument2);
+            // TODO: complete message
             if (result == null) throw new ArgumentException("Can't add ....");
             return result;
         }

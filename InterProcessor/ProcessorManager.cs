@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using kOS.Module;
 using kOS.Persistence;
+using kOS.Compilation;
 
 namespace kOS.InterProcessor
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace kOS.KS
+namespace kOS.Compilation.KS
 {
     public class KSScript : Script
     {

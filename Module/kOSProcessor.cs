@@ -78,13 +78,13 @@ namespace kOS.Module
                 _shared.Vessel = this.vessel;
                 _shared.Processor = this;
                 _shared.BindingMgr = new BindingManager(_shared);
-                _shared.Interpreter = new Interpreter(_shared);
+                _shared.Interpreter = new kOS.Screen.Interpreter(_shared);
                 _shared.Screen = _shared.Interpreter;
-                _shared.ScriptHandler = new KS.KSScript();
+                _shared.ScriptHandler = new Compilation.KS.KSScript();
                 _shared.Logger = new Logger(_shared);
                 _shared.VolumeMgr = new VolumeManager(_shared);
                 _shared.ProcessorMgr = new ProcessorManager(_shared);
-                _shared.Cpu = new CPU(_shared);
+                _shared.Cpu = new kOS.Execution.CPU(_shared);
 
                 // initialize the file system
                 _shared.VolumeMgr.Add(new Archive());

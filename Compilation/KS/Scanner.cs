@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
-namespace kOS.KS
+namespace kOS.Compilation.KS
 {
     #region Scanner
 

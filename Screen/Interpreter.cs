@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using kOS.Utilities;
+using kOS.Compilation;
 
-namespace kOS
+namespace kOS.Screen
 {
     public class Interpreter : TextEditor
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using kOS.Utilities;
 
-namespace kOS
+namespace kOS.Screen
 {
     public class TextEditor : ScreenBuffer
     {

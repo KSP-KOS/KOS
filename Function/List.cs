@@ -6,10 +6,10 @@ using kOS.Persistence;
 using kOS.Suffixed;
 using kOS.Utilities;
 
-namespace kOS
+namespace kOS.Function
 {
     [FunctionAttribute("list")]
-    public class FunctionList : Function
+    public class FunctionList : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {

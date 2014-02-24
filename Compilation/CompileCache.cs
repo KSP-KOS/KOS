@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace kOS
+namespace kOS.Compilation
 {
     public class CompileCache
     {

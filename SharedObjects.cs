@@ -6,6 +6,9 @@ using kOS.InterProcessor;
 using kOS.Bindings;
 using kOS.Module;
 using kOS.Persistence;
+using kOS.Compilation;
+using kOS.Execution;
+using kOS.Screen;
 
 namespace kOS
 {

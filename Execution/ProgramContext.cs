@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using kOS.Bindings;
+using kOS.Compilation;
 
-namespace kOS
+namespace kOS.Execution
 {
     public class ProgramContext
     {

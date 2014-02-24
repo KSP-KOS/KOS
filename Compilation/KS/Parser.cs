@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace kOS.KS
+namespace kOS.Compilation.KS
 {
     #region Parser
 

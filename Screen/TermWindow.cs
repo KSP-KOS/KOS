@@ -7,7 +7,7 @@ using System.IO;
 using UnityEngine;
 using kOS.Utilities;
 
-namespace kOS
+namespace kOS.Screen
 {
     // Blockotronix 550 Computor Monitor
     public class TermWindow : MonoBehaviour

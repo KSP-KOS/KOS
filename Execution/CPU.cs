@@ -5,8 +5,10 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 using kOS.Suffixed;
+using kOS.Function;
+using kOS.Compilation;
 
-namespace kOS
+namespace kOS.Execution
 {
     public class CPU
     {
@@ -21,7 +23,7 @@ namespace kOS
         private Status _currentStatus;
         private double _currentTime;
         private double _timeWaitUntil;
-        private Dictionary<string, Function> _functions;
+        private Dictionary<string, FunctionBase> _functions;
         private SharedObjects _shared;
         private List<ProgramContext> _contexts;
         private ProgramContext _currentContext;
@@ -53,7 +55,7 @@ namespace kOS
 
         private void LoadFunctions()
         {
-            _functions = new Dictionary<string, Function>();
+            _functions = new Dictionary<string, FunctionBase>();
 
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
@@ -62,7 +64,7 @@ namespace kOS
                 {
                     if (attr.functionName != string.Empty)
                     {
-                        _functions.Add(attr.functionName, (Function)Activator.CreateInstance(type));
+                        _functions.Add(attr.functionName, (FunctionBase)Activator.CreateInstance(type));
                     }
                 }
             }
@@ -547,7 +549,7 @@ namespace kOS
         {
             if (_functions.ContainsKey(functionName))
             {
-                Function function = _functions[functionName];
+                FunctionBase function = _functions[functionName];
                 function.Execute(_shared);
             }
         }
@@ -591,7 +593,7 @@ namespace kOS
                 {
                     if (!(kvp.Value is Bindings.BoundVariable))
                     {
-                        varNode.AddValue(kvp.Key.TrimStart('$'), ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
+                        varNode.AddValue(kvp.Key.TrimStart('$'), Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
                     }
                 }
 
@@ -611,7 +613,7 @@ namespace kOS
                 {
                     foreach (ConfigNode.Value value in varNode.values)
                     {
-                        string varValue = ProgramFile.DecodeLine(value.value);
+                        string varValue = Persistence.ProgramFile.DecodeLine(value.value);
                         scriptBuilder.AppendLine(string.Format("set {0} to {1}.", value.name, varValue));
                     }
                 }

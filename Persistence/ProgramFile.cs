@@ -7,7 +7,7 @@ using UnityEngine;
 using ICSharpCode.SharpZipLib.GZip;
 using kOS.Suffixed;
 
-namespace kOS
+namespace kOS.Persistence
 {
     public class ProgramFile
     {

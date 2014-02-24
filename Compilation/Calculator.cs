@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using kOS.Suffixed;
 
-namespace kOS
+namespace kOS.Compilation
 {
     public abstract class Calculator
     {
