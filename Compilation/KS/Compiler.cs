@@ -13,6 +13,7 @@ namespace kOS.Compilation.KS
         private bool _addBranchDestination = false;
         private ParseNode _lastNode = null;
         private List<List<Opcode>> _breakList = new List<List<Opcode>>();
+        private bool _compilingSetDestination = false;
 
         private readonly Dictionary<string, string> _identifierReplacements = new Dictionary<string, string>() { { "alt:radar", "alt|radar" },
                                                                                                                  { "alt:apoapsis", "alt|apoapsis" },
@@ -130,7 +131,7 @@ namespace kOS.Compilation.KS
         {
             string triggerIdentifier = "on-" + node.Token.StartPos.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
-            triggerObject.SetTriggerVariable(node.Nodes[1].Token.Text.ToLower());
+            triggerObject.SetTriggerVariable(node.Nodes[1].Nodes[0].Token.Text);
 
             _currentCodeSection = triggerObject.Code;
             AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
@@ -196,7 +197,7 @@ namespace kOS.Compilation.KS
 
         private void PreProcessLockStatement(ParseNode node)
         {
-            string lockIdentifier = node.Nodes[1].Token.Text.ToLower();
+            string lockIdentifier = node.Nodes[1].Token.Text;
             Lock lockObject = _context.Locks.GetLock(lockIdentifier);
             int expressionHash = ConcatenateNodes(node.Nodes[3]).GetHashCode();
 
@@ -397,7 +398,7 @@ namespace kOS.Compilation.KS
                 case TokenType.POWER:
                     VisitPower(node);
                     break;
-                case TokenType.VARIDENTIFIER:
+                case TokenType.varidentifier:
                     VisitVarIdentifier(node);
                     break;
                 case TokenType.IDENTIFIER:
@@ -466,33 +467,22 @@ namespace kOS.Compilation.KS
                 bool addNegation = false;
                 int nodeIndex = 0;
 
-                if ((node.Nodes[0].Token.Type == TokenType.PLUSMINUS) &&
-                    (node.Nodes[0].Token.Text == "-"))
+                if (node.Nodes[0].Token.Type == TokenType.PLUSMINUS)
                 {
-                    addNegation = true;
                     nodeIndex++;
+                    if (node.Nodes[0].Token.Text == "-")
+                    {
+                        addNegation = true;
+                    }
                 }
 
-                switch (node.Nodes[nodeIndex].Token.Type)
+                if (node.Nodes[nodeIndex].Token.Type == TokenType.BRACKETOPEN)
                 {
-                    case TokenType.VARIDENTIFIER:
-                        // if a bracket follows an identifier then its a function call
-                        if ((node.Nodes.Count > (nodeIndex + 1)) &&
-                            (node.Nodes[nodeIndex + 1].Token.Type == TokenType.BRACKETOPEN))
-                        {
-                            VisitFunction(node);
-                        }
-                        else
-                        {
-                            VisitNode(node.Nodes[nodeIndex]);
-                        }
-                        break;
-                    case TokenType.BRACKETOPEN:
-                        VisitNode(node.Nodes[nodeIndex + 1]);
-                        break;
-                    default:
-                        VisitNode(node.Nodes[nodeIndex]);
-                        break;
+                    VisitNode(node.Nodes[nodeIndex + 1]);
+                }
+                else
+                {
+                    VisitNode(node.Nodes[nodeIndex]);
                 }
 
                 if (addNegation)
@@ -569,7 +559,7 @@ namespace kOS.Compilation.KS
         private void VisitFunction(ParseNode node)
         {
             int parameterCount = (node.Nodes[2].Nodes.Count / 2) + 1;
-            string functionName = node.Nodes[0].Token.Text.ToLower();
+            string functionName = node.Nodes[0].Token.Text;
             string overloadedFunctionName = GetFunctionOverload(functionName, parameterCount) + "()";
             VisitNode(node.Nodes[2]);
             AddOpcode(new OpcodeCall(overloadedFunctionName));
@@ -605,34 +595,53 @@ namespace kOS.Compilation.KS
 
         private void VisitVarIdentifier(ParseNode node)
         {
-            string identifier = node.Token.Text.ToLower();
-            int suffixIndex = identifier.IndexOf(':');
-
-            if (_identifierReplacements.ContainsKey(identifier))
+            string identifier = node.Nodes[0].Token.Text;
+            string concatenatedIdentifier = ConcatenateNodes(node);
+            bool ignoreSuffixs = false;
+            int suffixIndex = 1;
+            
+            // replace identifiers that look like special values but they are not
+            if (_identifierReplacements.ContainsKey(concatenatedIdentifier))
             {
-                identifier = _identifierReplacements[identifier];
+                identifier = _identifierReplacements[concatenatedIdentifier];
+                ignoreSuffixs = true;
             }
 
-            string lockIdentifier = suffixIndex > -1 ? identifier.Substring(0, suffixIndex) : identifier;
-            if (_context.Locks.Contains(lockIdentifier))
+            if (_context.Locks.Contains(identifier))
             {
-                Lock lockObject = _context.Locks.GetLock(lockIdentifier);
-                if (suffixIndex > -1)
-                {
-                    string suffix = identifier.Substring(suffixIndex);
-                    AddOpcode(new OpcodePush("$_w"));
-                    AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
-                    AddOpcode(new OpcodeStore());
-                    AddOpcode(new OpcodePush("$_w" + suffix));
-                }
-                else
-                {
-                    AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
-                }
+                Lock lockObject = _context.Locks.GetLock(identifier);
+                AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
+            }
+            else if (node.Nodes.Count > 1 &&
+                     node.Nodes[1].Token.Type == TokenType.BRACKETOPEN)
+            {
+                // if a bracket follows an identifier then its a function call
+                VisitFunction(node);
+                suffixIndex += 3;
             }
             else
             {
                 AddOpcode(new OpcodePush("$" + identifier));
+            }
+
+            if (!ignoreSuffixs && (suffixIndex < node.Nodes.Count))
+            {
+                // has suffixes
+                int nodeIndex = suffixIndex + 1;
+                while (nodeIndex < node.Nodes.Count)
+                {
+                    VisitNode(node.Nodes[nodeIndex]);
+
+                    // when we are setting a member value we need to leave
+                    // the last object and the last suffix in the stack
+                    if (!(_compilingSetDestination &&
+                          nodeIndex == (node.Nodes.Count - 1)))
+                    {
+                        AddOpcode(new OpcodeGetMember());
+                    }
+                                        
+                    nodeIndex += 2;
+                }
             }
         }
 
@@ -646,11 +655,35 @@ namespace kOS.Compilation.KS
             AddOpcode(new OpcodePush(node.Token.Text.Trim('"')));
         }
 
+        private bool VarIdentifierHasSuffixes(ParseNode node)
+        {
+            string concatenatedIdentifier = ConcatenateNodes(node);
+            if (!_identifierReplacements.ContainsKey(concatenatedIdentifier))
+            {
+                foreach (ParseNode child in node.Nodes)
+                {
+                    if (child.Token.Type == TokenType.COLON)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         private void VisitSetStatement(ParseNode node)
         {
+            bool settingMember = VarIdentifierHasSuffixes(node.Nodes[1]);
+            // destination
+            _compilingSetDestination = true;
             VisitVarIdentifier(node.Nodes[1]);
+            _compilingSetDestination = false;
+            // expression
             VisitNode(node.Nodes[3]);
-            AddOpcode(new OpcodeStore());
+
+            if (settingMember) AddOpcode(new OpcodeSetMember());
+            else AddOpcode(new OpcodeStore());
         }
 
         private void VisitIfStatement(ParseNode node)
@@ -740,7 +773,7 @@ namespace kOS.Compilation.KS
 
         private void VisitLockStatement(ParseNode node)
         {
-            string lockIdentifier = node.Nodes[1].Token.Text.ToLower();
+            string lockIdentifier = node.Nodes[1].Token.Text;
             int expressionHash = ConcatenateNodes(node.Nodes[3]).GetHashCode();
             Lock lockObject = _context.Locks.GetLock(lockIdentifier);
 
@@ -773,7 +806,7 @@ namespace kOS.Compilation.KS
 
         private void VisitUnlockStatement(ParseNode node)
         {
-            string lockIdentifier = node.Nodes[1].Token.Text.ToLower();
+            string lockIdentifier = node.Nodes[1].Token.Text;
             Lock lockObject = _context.Locks.GetLock(lockIdentifier);
 
             if (lockObject.IsInitialized())
@@ -856,7 +889,7 @@ namespace kOS.Compilation.KS
             if (node.Nodes.Count == 3)
             {
                 // standard declare
-                VisitVarIdentifier(node.Nodes[1]);
+                VisitNode(node.Nodes[1]);
                 AddOpcode(new OpcodePush(0));
                 AddOpcode(new OpcodeStore());
             }
@@ -865,7 +898,7 @@ namespace kOS.Compilation.KS
                 // declare parameters
                 for (int index = node.Nodes.Count - 2; index > 1; index -= 2)
                 {
-                    VisitVarIdentifier(node.Nodes[index]);
+                    VisitNode(node.Nodes[index]);
                     AddOpcode(new OpcodeSwap());
                     AddOpcode(new OpcodeStore());
                 }

@@ -304,6 +304,9 @@ namespace kOS.Compilation.KS
                 case TokenType.number:
                     Value = Evalnumber(tree, paramlist);
                     break;
+                case TokenType.varidentifier:
+                    Value = Evalvaridentifier(tree, paramlist);
+                    break;
 
                 default:
                     Value = Token.Text;
@@ -598,6 +601,13 @@ namespace kOS.Compilation.KS
         }
 
         protected virtual object Evalnumber(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalvaridentifier(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

@@ -279,25 +279,8 @@ namespace kOS.Execution
             {
                 // value is a variable
                 string identifier = (string)testValue;
-                string[] suffixes = identifier.Split(':');
-
-                Variable variable = GetVariable(suffixes[0]);
-                object value = variable.Value;
-
-                if (value is SpecialValue && suffixes.Length > 1)
-                {
-                    for (int suffixIndex = 1; suffixIndex < suffixes.Length; suffixIndex++)
-                    {
-                        string suffixName = suffixes[suffixIndex].ToUpper();
-                        value = ((SpecialValue)value).GetSuffix(suffixName);
-                        if (value == null)
-                        {
-                            throw new Exception(string.Format("Suffix {0} not found on object {1}", suffixName, variable.Name));
-                        }
-                    }
-                }
-                
-                return value;
+                Variable variable = GetVariable(identifier);
+                return variable.Value;
             }
             else
             {
@@ -307,37 +290,8 @@ namespace kOS.Execution
 
         public void SetValue(string identifier, object value)
         {
-            string[] suffixes = identifier.Split(':');
-            Variable variable = GetOrCreateVariable(suffixes[0]);
-
-            if (suffixes.Length > 1 && variable.Value is SpecialValue)
-            {
-                SpecialValue specialValue = (SpecialValue)variable.Value;
-                string suffixName;
-
-                if (suffixes.Length > 2)
-                {
-                    for (int suffixIndex = 1; suffixIndex < (suffixes.Length-1); suffixIndex++)
-                    {
-                        suffixName = suffixes[suffixIndex].ToUpper();
-                        specialValue = (SpecialValue)specialValue.GetSuffix(suffixName);
-                        if (specialValue == null)
-                        {
-                            throw new Exception(string.Format("Suffix {0} not found on object {1}", suffixName, variable.Name));
-                        }
-                    }
-                }
-
-                suffixName = suffixes[suffixes.Length - 1].ToUpper();
-                if (!specialValue.SetSuffix(suffixName, value))
-                {
-                    throw new Exception(string.Format("Suffix {0} not found on object {1}", suffixName, variable.Name));
-                }
-            }
-            else
-            {
-                variable.Value = value;
-            }
+            Variable variable = GetOrCreateVariable(identifier);
+            variable.Value = value;
         }
 
         public object PopValue()

@@ -124,6 +124,58 @@ namespace kOS.Compilation
         }
     }
 
+    public class OpcodeGetMember : Opcode
+    {
+        public override string Name { get { return "getmember"; } }
+
+        public override void Execute(CPU cpu)
+        {
+            string suffixName = cpu.PopStack().ToString().ToUpper();
+            object specialValue = cpu.PopValue();
+
+            if (specialValue is SpecialValue)
+            {
+                object value = ((SpecialValue)specialValue).GetSuffix(suffixName);
+                if (value != null)
+                {
+                    cpu.PushStack(value);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
+                }
+            }
+            else
+            {
+                throw new Exception(string.Format("Values of type {0} cannot have suffixes", specialValue.GetType().ToString()));
+            }
+        }
+    }
+
+    public class OpcodeSetMember : Opcode
+    {
+        public override string Name { get { return "setmember"; } }
+
+        public override void Execute(CPU cpu)
+        {
+            object value = cpu.PopValue();
+            string suffixName = cpu.PopStack().ToString().ToUpper();
+            object specialValue = cpu.PopValue();
+
+            if (specialValue is SpecialValue)
+            {
+                if (!((SpecialValue)specialValue).SetSuffix(suffixName, value))
+                {
+                    throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
+                }
+            }
+            else
+            {
+                throw new Exception(string.Format("Values of type {0} cannot have suffixes", specialValue.GetType().ToString()));
+            }
+        }
+    }
+
     public class OpcodeEOF : Opcode
     {
         public override string Name { get { return "EOF"; } }

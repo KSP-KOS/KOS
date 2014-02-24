@@ -1,4 +1,4 @@
-<% @TinyPG Namespace="kOS.KS" Language="C#"%>
+<% @TinyPG Namespace="kOS.Compilation.KS" Language="C#"%>
 
 // Terminals
 // ===================================================
@@ -54,7 +54,7 @@ BRACKETCLOSE -> @"\)";
 CURLYOPEN -> @"\{";
 CURLYCLOSE -> @"\}";
 COMMA -> @",";
-VARIDENTIFIER -> @"[a-z_]([a-z0-9_:]*[a-z0-9_])?";
+COLON -> @":";
 IDENTIFIER -> @"[a-z_][a-z0-9_]*";
 INTEGER -> @"[0-9]+";
 DOUBLE -> @"[0-9]*\.[0-9]+";
@@ -77,29 +77,29 @@ instruction -> set_stmt | if_stmt | until_stmt | lock_stmt | unlock_stmt | print
                switch_stmt | copy_stmt | rename_stmt | delete_stmt | edit_stmt | run_stmt |
                list_stmt | reboot_stmt | shutdown_stmt;
 // statements
-set_stmt -> SET VARIDENTIFIER TO expr EOI;
+set_stmt -> SET varidentifier TO expr EOI;
 if_stmt -> IF expr instruction_block EOI?;
 until_stmt -> UNTIL expr instruction_block EOI?;
-lock_stmt -> LOCK VARIDENTIFIER TO expr EOI;
-unlock_stmt -> UNLOCK VARIDENTIFIER EOI;
+lock_stmt -> LOCK IDENTIFIER TO expr EOI;
+unlock_stmt -> UNLOCK IDENTIFIER EOI;
 print_stmt -> PRINT expr (AT BRACKETOPEN INTEGER COMMA INTEGER BRACKETCLOSE)? EOI;
-on_stmt -> ON VARIDENTIFIER instruction_block EOI?;
-toggle_stmt -> TOGGLE VARIDENTIFIER EOI;
+on_stmt -> ON varidentifier instruction_block EOI?;
+toggle_stmt -> TOGGLE varidentifier EOI;
 wait_stmt -> WAIT UNTIL? expr EOI;
 when_stmt -> WHEN expr THEN instruction_block EOI?;
-onoff_stmt -> VARIDENTIFIER (ON | OFF) EOI;
+onoff_stmt -> varidentifier (ON | OFF) EOI;
 stage_stmt -> STAGE EOI;
 clear_stmt -> CLEARSCREEN EOI;
 add_stmt -> ADD expr EOI;
 remove_stmt -> REMOVE expr EOI;
 log_stmt -> LOG expr TO IDENTIFIER EOI;
 break_stmt -> BREAK EOI;
-declare_stmt -> DECLARE PARAMETER? VARIDENTIFIER (COMMA VARIDENTIFIER)* EOI;
+declare_stmt -> DECLARE PARAMETER? IDENTIFIER (COMMA IDENTIFIER)* EOI;
 switch_stmt -> SWITCH TO filevol_name EOI;
 copy_stmt -> COPY IDENTIFIER (FROM | TO) filevol_name EOI;
 rename_stmt -> RENAME (VOLUME | FILE)? filevol_name TO IDENTIFIER EOI;
 delete_stmt -> DELETE IDENTIFIER (FROM filevol_name)? EOI;
-edit_stmt -> EDIT VARIDENTIFIER EOI;
+edit_stmt -> EDIT IDENTIFIER EOI;
 run_stmt -> RUN IDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? (ON filevol_name)? EOI;
 filevol_name -> INTEGER | IDENTIFIER;
 list_stmt -> LIST IDENTIFIER? EOI;
@@ -116,8 +116,9 @@ mult_expr -> factor (MULT factor)*;
 factor -> atom (POWER atom)*;
 atom -> PLUSMINUS? ( sci_number | 
                      TRUEFALSE |
-                     VARIDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? |
+                     varidentifier |
                      BRACKETOPEN expr BRACKETCLOSE ) |
         STRING;
 sci_number -> number (E INTEGER)?;
 number -> (INTEGER | DOUBLE);
+varidentifier -> IDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? (COLON IDENTIFIER)*;
