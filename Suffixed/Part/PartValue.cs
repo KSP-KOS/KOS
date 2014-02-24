@@ -11,7 +11,40 @@ namespace kOS.Suffixed.Part
         }
 
         protected global::Part Part { get; private set; }
+        public override bool SetSuffix(string suffixName, object value)
+        {
+            switch (suffixName)
+            {
+                case "CONTROLFROM":
+                    {
+                        var control = (bool) value;
+                        if (control)
+                        {
+                            var dockingModule = Part.Modules.First<ModuleDockingNode>();
+                            var commandModule = Part.Modules.First<ModuleCommand>();
 
+                            if (commandModule != null)
+                            {
+                                commandModule.MakeReference();
+                                return true;
+                            }
+                            if (dockingModule != null)
+                            {
+                                dockingModule.MakeReferenceTransform();
+                                return true;
+                            }
+                            Part.vessel.SetReferenceTransform(Part);
+                        }
+                        else
+                        {
+                            Part.vessel.SetReferenceTransform(Part.vessel.rootPart);
+                        }
+                        break;
+                    }
+                    
+            }
+            return base.SetSuffix(suffixName, value);
+        }
         public override object GetSuffix(string suffixName)
         {
             switch (suffixName)

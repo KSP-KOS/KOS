@@ -29,23 +29,6 @@ namespace kOS.Suffixed.Part
 
         public override bool SetSuffix(string suffixName, object value)
         {
-            switch (suffixName)
-            {
-                case "CONTROLFROM":
-                    {
-                        var control = (bool) value;
-                        if (control)
-                        {
-                            module.MakeReferenceTransform();
-                        }
-                        else
-                        {
-                            module.vessel.SetReferenceTransform(module.vessel.rootPart);
-                        }
-                        break;
-                    }
-                    
-            }
             return base.SetSuffix(suffixName, value);
         }
 
