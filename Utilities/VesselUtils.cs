@@ -140,6 +140,11 @@ namespace kOS.Utilities
             return FlightGlobals.Vessels.FirstOrDefault<Vessel>(v => v != origin && v.vesselName.ToUpper() == name.ToUpper());
         }
 
+        public static Vessel TryGetVesselByName(string name)
+        {
+            return FlightGlobals.Vessels.FirstOrDefault<Vessel>(v => v.vesselName.ToUpper() == name.ToUpper());
+        }
+
         public static CelestialBody GetBodyByName(string name)
         {
             return FlightGlobals.fetch.bodies.FirstOrDefault<CelestialBody>(body => name.ToUpper() == body.name.ToUpper());
@@ -148,6 +153,17 @@ namespace kOS.Utilities
         public static Vessel GetVesselByName(string name, Vessel origin)
         {
             var vessel = TryGetVesselByName(name, origin);
+
+            if (vessel == null)
+            {
+                throw new KOSException("Vessel '" + name + "' not found");
+            }
+            return vessel;
+        }
+
+        public static Vessel GetVesselByName(string name)
+        {
+            var vessel = TryGetVesselByName(name);
 
             if (vessel == null)
             {
@@ -167,6 +183,7 @@ namespace kOS.Utilities
                 throw new KOSException("Error on targeting " + val);
             }
         }
+
         public static void SetTarget(ITargetable val)
         {
            FlightGlobals.fetch.SetVesselTarget(val);

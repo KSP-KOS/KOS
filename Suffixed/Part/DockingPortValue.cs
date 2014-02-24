@@ -27,11 +27,6 @@ namespace kOS.Suffixed.Part
             return base.GetSuffix(suffixName);
         }
 
-        public override bool SetSuffix(string suffixName, object value)
-        {
-            return base.SetSuffix(suffixName, value);
-        }
-
         public override ITargetable Target
         {
             get { return module; }
@@ -44,6 +39,7 @@ namespace kOS.Suffixed.Part
             {
                 foreach (PartModule module in part.Modules)
                 {
+                    UnityEngine.Debug.Log("Module Found: "+ module);
                     var dockingNode = module as ModuleDockingNode;
                     if (dockingNode != null)
                     {
