@@ -26,6 +26,18 @@ namespace kOS.Binding
             return flightControl;
         }
 
+        public static void UnbindUnloaded()
+        {
+            var keys = flightControls.Keys;
+            foreach (var key in keys)
+            {
+                var value = flightControls[key];
+                if (value.Vessel.loaded) continue;
+                flightControls.Remove(key);
+                value.Dispose();
+            }
+        }
+
         public void BindTo(IBindingManager manager)
         {
             cpu = manager.Cpu;
@@ -49,6 +61,7 @@ namespace kOS.Binding
 
         public void Update(float time)
         {
+            UnbindUnloaded();
             // Temporarily removing the ability of RT2 to take over
             // the on-rails autpilot as it seems to be buggy
             //if (RTHook.Instance != null)

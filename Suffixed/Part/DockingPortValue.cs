@@ -20,7 +20,7 @@ namespace kOS.Suffixed.Part
                 case "ORIENTATION":
                     return new Vector( module.GetFwdVector() );
                 case "DOCKEDVESSELNAME":
-                    return module.vesselInfo.name;
+                    return module.vesselInfo != null ? module.vesselInfo.name : string.Empty;
                 case "TARGETABLE":
                     return true;
             }

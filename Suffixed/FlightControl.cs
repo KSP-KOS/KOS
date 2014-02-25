@@ -13,18 +13,23 @@ namespace kOS.Suffixed
         private float mainThrottle;
         private readonly Flushable<bool> neutral;
         private readonly Flushable<bool> killRotation;
-        private readonly Vessel target;
+        private readonly Vessel vessel;
         private bool bound;
 
-        public FlightControl(Vessel target)
+        public FlightControl(Vessel vessel)
         {
             rotation = new Vector(0, 0, 0);
             translation = new Vector(0, 0, 0);
             neutral = new Flushable<bool>(); 
             killRotation = new Flushable<bool>(); 
             bound = true;
-            this.target = target;
-            this.target.OnFlyByWire += OnFlyByWire;
+            this.vessel = vessel;
+            Vessel.OnFlyByWire += OnFlyByWire;
+        }
+
+        public Vessel Vessel
+        {
+            get { return vessel; }
         }
 
         public override object GetSuffix(string suffixName)
@@ -120,17 +125,17 @@ namespace kOS.Suffixed
 
         private void Bind()
         {
-            if (!bound) return;
+            if (bound) return;
             UnityEngine.Debug.Log("FlightControl Bound");
-            target.OnFlyByWire += OnFlyByWire;
+            Vessel.OnFlyByWire += OnFlyByWire;
             bound = true;
         }
 
         private void Unbind()
         {
-            if (bound) return;
+            if (!bound) return;
             UnityEngine.Debug.Log("FlightControl Unbound");
-            target.OnFlyByWire -= OnFlyByWire;
+            Vessel.OnFlyByWire -= OnFlyByWire;
             bound = false;
         }
 
