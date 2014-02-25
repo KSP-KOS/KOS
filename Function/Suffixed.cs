@@ -116,4 +116,14 @@ namespace kOS.Function
             shared.Cpu.PushStack(result);
         }
     }
+
+    [FunctionAttribute("list")]
+    public class FunctionList : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            ListValue listValue = new ListValue();
+            shared.Cpu.PushStack(listValue);
+        }
+    }
 }

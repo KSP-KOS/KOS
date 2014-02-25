@@ -48,18 +48,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bindings\ActionGroups.cs" />
-    <Compile Include="Bindings\Binding.cs" />
-    <Compile Include="Bindings\BindingConfig.cs" />
-    <Compile Include="Bindings\BindingManager.cs" />
-    <Compile Include="Bindings\FlightControl.cs" />
-    <Compile Include="Bindings\FlightStats.cs" />
-    <Compile Include="Bindings\MissionSettings.cs" />
-    <Compile Include="Bindings\RoverStats.cs" />
-    <Compile Include="Bindings\TerminalSettings.cs" />
-    <Compile Include="Bindings\BindingsUniverse.cs" />
-    <Compile Include="Bindings\BoundVariable.cs" />
-    <Compile Include="Bindings\KOSBinding.cs" />
+    <Compile Include="Binding\ActionGroups.cs" />
+    <Compile Include="Binding\Binding.cs" />
+    <Compile Include="Binding\BindingConfig.cs" />
+    <Compile Include="Binding\BindingManager.cs" />
+    <Compile Include="Binding\FlightControl.cs" />
+    <Compile Include="Binding\FlightStats.cs" />
+    <Compile Include="Binding\MissionSettings.cs" />
+    <Compile Include="Binding\RoverStats.cs" />
+    <Compile Include="Binding\TerminalSettings.cs" />
+    <Compile Include="Binding\BindingsUniverse.cs" />
+    <Compile Include="Binding\BoundVariable.cs" />
+    <Compile Include="Binding\KOSBinding.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
     <Compile Include="Function\Math.cs" />
     <Compile Include="Function\Misc.cs" />
@@ -83,6 +83,7 @@
     <Compile Include="Compilation\KS\Context.cs" />
     <Compile Include="Compilation\KS\KSScript.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Suffixed\ListValue.cs" />
     <Compile Include="Suffixed\Node.cs" />
     <Compile Include="Suffixed\Orbit.cs" />
     <Compile Include="Compilation\CodePart.cs" />

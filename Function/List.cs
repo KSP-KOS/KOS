@@ -8,8 +8,8 @@ using kOS.Utilities;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("list")]
-    public class FunctionList : FunctionBase
+    [FunctionAttribute("printlist")]
+    public class FunctionPrintList : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {

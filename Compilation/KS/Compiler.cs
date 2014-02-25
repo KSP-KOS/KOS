@@ -14,6 +14,7 @@ namespace kOS.Compilation.KS
         private ParseNode _lastNode = null;
         private List<List<Opcode>> _breakList = new List<List<Opcode>>();
         private bool _compilingSetDestination = false;
+        private bool _identifierIsVariable = false;
 
         private readonly Dictionary<string, string> _identifierReplacements = new Dictionary<string, string>() { { "alt:radar", "alt|radar" },
                                                                                                                  { "alt:apoapsis", "alt|apoapsis" },
@@ -356,6 +357,9 @@ namespace kOS.Compilation.KS
                 case TokenType.shutdown_stmt:
                     VisitShutdownStatement(node);
                     break;
+                case TokenType.for_stmt:
+                    VisitForStatement(node);
+                    break;
                 case TokenType.filevol_name:
                     VisitFileVol(node);
                     break;
@@ -430,6 +434,13 @@ namespace kOS.Compilation.KS
             {
                 VisitNode(childNode);
             }
+        }
+
+        private void VisitVariableNode(ParseNode node)
+        {
+            _identifierIsVariable = true;
+            VisitNode(node);
+            _identifierIsVariable = false;
         }
 
         private void VisitExpression(ParseNode node)
@@ -558,10 +569,16 @@ namespace kOS.Compilation.KS
 
         private void VisitFunction(ParseNode node)
         {
-            int parameterCount = (node.Nodes[2].Nodes.Count / 2) + 1;
             string functionName = node.Nodes[0].Token.Text;
+            int parameterCount = 0;
+
+            if (node.Nodes[2].Token.Type == TokenType.arglist)
+            {
+                parameterCount = (node.Nodes[2].Nodes.Count / 2) + 1;
+                VisitNode(node.Nodes[2]);
+            }
+
             string overloadedFunctionName = GetFunctionOverload(functionName, parameterCount) + "()";
-            VisitNode(node.Nodes[2]);
             AddOpcode(new OpcodeCall(overloadedFunctionName));
         }
 
@@ -647,7 +664,8 @@ namespace kOS.Compilation.KS
 
         private void VisitIdentifier(ParseNode node)
         {
-            AddOpcode(new OpcodePush(node.Token.Text));
+            string prefix = _identifierIsVariable ? "$" : string.Empty;
+            AddOpcode(new OpcodePush(prefix + node.Token.Text));
         }
 
         private void VisitString(ParseNode node)
@@ -1051,7 +1069,7 @@ namespace kOS.Compilation.KS
             else
                 AddOpcode(new OpcodePush("files"));
 
-            AddOpcode(new OpcodeCall("list()"));
+            AddOpcode(new OpcodeCall("printlist()"));
         }
 
         private void VisitLogStatement(ParseNode node)
@@ -1075,6 +1093,44 @@ namespace kOS.Compilation.KS
         private void VisitShutdownStatement(ParseNode node)
         {
             AddOpcode(new OpcodeCall("shutdown()"));
+        }
+
+        private void VisitForStatement(ParseNode node)
+        {
+            string iteratorIdentifier = "$" + node.Nodes[3].Nodes[0].Token.Text + "-iterator";
+
+            PushBreakList();
+            AddOpcode(new OpcodePush(iteratorIdentifier));
+            VisitNode(node.Nodes[3]);
+            AddOpcode(new OpcodePush("iterator"));
+            AddOpcode(new OpcodeGetMember());
+            AddOpcode(new OpcodeStore());
+            // loop condition
+            Opcode condition = AddOpcode(new OpcodePush(iteratorIdentifier));
+            string conditionLabel = condition.Label;
+            AddOpcode(new OpcodePush("end"));
+            AddOpcode(new OpcodeGetMember());
+            AddOpcode(new OpcodeLogicNot());
+            // branch
+            Opcode branch = AddOpcode(new OpcodeBranchIfFalse());
+            AddToBreakList(branch);
+            // assign value to iteration variable
+            VisitVariableNode(node.Nodes[1]);
+            AddOpcode(new OpcodePush(iteratorIdentifier));
+            AddOpcode(new OpcodePush("value"));
+            AddOpcode(new OpcodeGetMember());
+            AddOpcode(new OpcodeStore());
+            // instructions in FOR body
+            VisitNode(node.Nodes[4]);
+            // jump to condition
+            Opcode jump = AddOpcode(new OpcodeBranchJump());
+            jump.DestinationLabel = conditionLabel;
+            // end of loop, cleanup
+            Opcode endLoop = AddOpcode(new OpcodePush(iteratorIdentifier));
+            AddOpcode(new OpcodePush("reset"));
+            AddOpcode(new OpcodeGetMember());
+            // TODO: add unset of iterator and iteration variable
+            PopBreakList(endLoop.Label);
         }
     }
 }

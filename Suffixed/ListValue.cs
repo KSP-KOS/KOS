@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace kOS
+namespace kOS.Suffixed
 {
     public class ListValue : SpecialValue
     {
@@ -11,11 +11,6 @@ namespace kOS
            list = new List<object>(); 
         }
 
-        public override object GetIndex(int index)
-        {
-            return list[index];
-        }
-
         public override bool SetSuffix(string suffixName, object value)
         {
             switch (suffixName)
@@ -23,10 +18,12 @@ namespace kOS
                 case "ADD":
                     list.Add(value);
                     return true;
-                case "CONTAINS":
-                    return list.Contains(value);
+                //case "CONTAINS":
+                //    return list.Contains(value);
                 case "REMOVE":
-                    return list.Remove(value);
+                    //return list.Remove(value);
+                    list.Remove(value);
+                    return true;
                 default:
                     return false;
             }
@@ -85,6 +82,8 @@ namespace kOS
                         return index;
                     case "VALUE":
                         return enumerator.Current;
+                    case "ITERATOR":
+                        return this;
                     default:
                         return string.Format("Suffix {0} Not Found", suffixName);
                 }
