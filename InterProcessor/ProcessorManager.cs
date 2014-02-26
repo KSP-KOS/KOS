@@ -25,7 +25,7 @@ namespace kOS.InterProcessor
             _processors.Clear();
             foreach (kOSProcessor processor in processorList)
             {
-                _processors.Add(processor.hardDisk, processor);
+                _processors.Add(processor.HardDisk, processor);
             }
         }
 

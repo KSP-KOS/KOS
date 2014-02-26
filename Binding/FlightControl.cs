@@ -162,7 +162,7 @@ namespace kOS.Binding
 
                 if (_value is VesselTarget)
                 {
-                    bearing = VesselUtils.GetTargetBearing(_shared.Vessel, ((VesselTarget)_value).target);
+                    bearing = VesselUtils.GetTargetBearing(_shared.Vessel, ((VesselTarget)_value).Target);
                 }
                 else if (_value is GeoCoordinates)
                 {

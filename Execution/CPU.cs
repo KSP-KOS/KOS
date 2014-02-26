@@ -347,13 +347,6 @@ namespace kOS.Execution
             {
                 _currentContext.Triggers.Remove(triggerFunctionPointer);
             }
-            //else
-            //{
-            //    if (_shared.Logger != null)
-            //    {
-            //        _shared.Logger.Log(string.Format("Can't remove trigger: {0}    IP: {1}", triggerFunctionPointer, _currentContext.InstructionPointer));
-            //    }
-            //}
         }
 
         public void StartWait(double waitTime)
@@ -414,6 +407,11 @@ namespace kOS.Execution
             }
             catch (Exception e)
             {
+                if (_shared.Logger != null)
+                {
+                    _shared.Logger.Log(e, _currentContext.InstructionPointer);
+                }
+
                 if (_contexts.Count == 1)
                 {
                     // interpreter context
@@ -423,11 +421,6 @@ namespace kOS.Execution
                 {
                     // break execution of all programs and pop interpreter context
                     PopFirstContext();
-                }
-
-                if (_shared.Logger != null)
-                {
-                    _shared.Logger.Log(e);
                 }
             }
 
@@ -539,6 +532,10 @@ namespace kOS.Execution
             {
                 FunctionBase function = _functions[functionName];
                 function.Execute(_shared);
+            }
+            else
+            {
+                throw new Exception("Call to non-existent function " + functionName);
             }
         }
 

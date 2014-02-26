@@ -138,7 +138,7 @@ namespace kOS.Function
                     var vT = new VesselTarget(vessel, shared.Vessel);
                     if (vT.IsInRange(commRange))
                     {
-                        list.AddItem(vT.target.vesselName, vT.GetDistance());
+                        list.AddItem(vT.Target.vesselName, vT.GetDistance());
                     }
                 }
             }

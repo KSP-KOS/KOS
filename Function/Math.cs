@@ -83,4 +83,54 @@ namespace kOS.Function
             shared.Cpu.PushStack(result);
         }
     }
+
+    [FunctionAttribute("ln")]
+    public class FunctionLn : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            double argument = GetDouble(shared.Cpu.PopValue());
+            double result = Math.Log(argument);
+            shared.Cpu.PushStack(result);
+        }
+    }
+
+    [FunctionAttribute("log10")]
+    public class FunctionLog10 : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            double argument = GetDouble(shared.Cpu.PopValue());
+            double result = Math.Log10(argument);
+            shared.Cpu.PushStack(result);
+        }
+    }
+
+    [FunctionAttribute("min")]
+    public class FunctionMin : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            object argument1 = shared.Cpu.PopValue();
+            object argument2 = shared.Cpu.PopValue();
+            
+            Compilation.Calculator calculator = Compilation.Calculator.GetCalculator(argument1, argument2);
+            object result = calculator.Min(argument1, argument2);
+            shared.Cpu.PushStack(result);
+        }
+    }
+
+    [FunctionAttribute("max")]
+    public class FunctionMax : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            object argument1 = shared.Cpu.PopValue();
+            object argument2 = shared.Cpu.PopValue();
+
+            Compilation.Calculator calculator = Compilation.Calculator.GetCalculator(argument1, argument2);
+            object result = calculator.Max(argument1, argument2);
+            shared.Cpu.PushStack(result);
+        }
+    }
 }

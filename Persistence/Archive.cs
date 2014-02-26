@@ -115,7 +115,7 @@ namespace kOS.Persistence
         {
             if (vessel != null)
             {
-                return (VesselUtils.GetDistanceToKerbinSurface(vessel) < VesselUtils.GetCommRange(vessel));
+                return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
             }
             else
             {

@@ -41,42 +41,13 @@ namespace kOS.Compilation
             argument2 = cpu.PopValue();
             argument1 = cpu.PopValue();
 
-            Calculator calc = GetCalculator();
-            object result = ExecuteCalculation(calc);
-            cpu.PushStack(result);
-        }
-
-        protected Calculator GetCalculator()
-        {
-            int intCount = 0;
-            int doubleCount = 0;
-            int stringCount = 0;
-            int specialCount = 0;
-            int boolCount = 0;
-
             // convert floats to doubles
             if (argument1 is float) argument1 = Convert.ToDouble(argument1);
             if (argument2 is float) argument2 = Convert.ToDouble(argument2);
 
-            if (argument1 is int) intCount++;
-            if (argument1 is double) doubleCount++;
-            if (argument1 is string) stringCount++;
-            if (argument1 is SpecialValue) specialCount++;
-            if (argument1 is bool) boolCount++;
-            if (argument2 is int) intCount++;
-            if (argument2 is double) doubleCount++;
-            if (argument2 is string) stringCount++;
-            if (argument2 is SpecialValue) specialCount++;
-            if (argument2 is bool) boolCount++;
-
-            if (intCount == 2) return new CalculatorIntInt();
-            if (doubleCount == 2) return new CalculatorDoubleDouble();
-            if (intCount == 1 && doubleCount == 1) return new CalculatorIntDouble();
-            if (stringCount > 0) return new CalculatorString();
-            if (boolCount > 0) return new CalculatorBool();
-            if (specialCount > 0) return new CalculatorSpecialValue();
-
-            throw new NotImplementedException(string.Format("Can't operate types {0} and {1}", argument1.GetType(), argument2.GetType()));
+            Calculator calc = Calculator.GetCalculator(argument1, argument2);
+            object result = ExecuteCalculation(calc);
+            cpu.PushStack(result);
         }
 
         protected virtual object ExecuteCalculation(Calculator calc)

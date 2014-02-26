@@ -126,4 +126,14 @@ namespace kOS.Function
             shared.Cpu.PushStack(listValue);
         }
     }
+
+    [FunctionAttribute("constant")]
+    public class FunctionConstant : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            ConstantValue constants = new ConstantValue();
+            shared.Cpu.PushStack(constants);
+        }
+    }
 }

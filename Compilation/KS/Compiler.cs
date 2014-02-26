@@ -1134,7 +1134,7 @@ namespace kOS.Compilation.KS
         {
             VisitNode(node.Nodes[1]);
             VisitNode(node.Nodes[3]);
-            AddOpcode(new OpcodeCall("log()"));
+            AddOpcode(new OpcodeCall("logfile()"));
         }
 
         private void VisitBreakStatement(ParseNode node)

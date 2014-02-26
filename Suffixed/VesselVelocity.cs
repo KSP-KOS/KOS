@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using kOS.Utilities;
+﻿using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
     public class VesselVelocity : SpecialValue
     {
-        Vector orbitVelocity;
-        Vector surfaceVelocity;
-        float velocityHeading;
+        private readonly Vector orbitVelocity;
+        private readonly Vector surfaceVelocity;
+        private readonly float velocityHeading;
 
         public VesselVelocity(Vessel v)
         {
@@ -21,11 +17,16 @@ namespace kOS.Suffixed
 
         public override object GetSuffix(string suffixName)
         {
-            if (suffixName == "ORBIT") return orbitVelocity;
-            if (suffixName == "SURFACE") return surfaceVelocity;
-
-            // I created this one for debugging purposes only, at some point I'll make a function to transform vectors to headings in a more eloquent way
-            if (suffixName == "SURFACEHEADING") return velocityHeading;
+            switch (suffixName)
+            {
+                case "ORBIT":
+                    return orbitVelocity;
+                case "SURFACE":
+                    return surfaceVelocity;
+                case "SURFACEHEADING":
+                    //TODO: I created this one for debugging purposes only, at some point I'll make a function to transform vectors to headings in a more eloquent way
+                    return velocityHeading;
+            }
 
             return base.GetSuffix(suffixName);
         }

@@ -23,11 +23,11 @@ namespace kOS.Binding
                 }
                 else if (val is VesselTarget)
                 {
-                    VesselUtils.SetTarget(((VesselTarget)val).target);
+                    VesselUtils.SetTarget(((VesselTarget)val).Target);
                 }
                 else if (val is BodyTarget)
                 {
-                    VesselUtils.SetTarget(((BodyTarget)val).target);
+                    VesselUtils.SetTarget(((BodyTarget)val).Target);
                 }
                 else
                 {

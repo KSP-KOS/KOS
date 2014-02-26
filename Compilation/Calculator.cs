@@ -18,6 +18,41 @@ namespace kOS.Compilation
         public abstract object GreaterThanEqual(object argument1, object argument2);
         public abstract object LessThanEqual(object argument1, object argument2);
         public abstract object Equal(object argument1, object argument2);
+        public abstract object Min(object argument1, object argument2);
+        public abstract object Max(object argument1, object argument2);
+
+        public static Calculator GetCalculator(object argument1, object argument2)
+        {
+            int intCount = 0;
+            int doubleCount = 0;
+            int stringCount = 0;
+            int specialCount = 0;
+            int boolCount = 0;
+
+            // convert floats to doubles
+            if (argument1 is float) argument1 = Convert.ToDouble(argument1);
+            if (argument2 is float) argument2 = Convert.ToDouble(argument2);
+
+            if (argument1 is int) intCount++;
+            if (argument1 is double) doubleCount++;
+            if (argument1 is string) stringCount++;
+            if (argument1 is SpecialValue) specialCount++;
+            if (argument1 is bool) boolCount++;
+            if (argument2 is int) intCount++;
+            if (argument2 is double) doubleCount++;
+            if (argument2 is string) stringCount++;
+            if (argument2 is SpecialValue) specialCount++;
+            if (argument2 is bool) boolCount++;
+
+            if (intCount == 2) return new CalculatorIntInt();
+            if (doubleCount == 2) return new CalculatorDoubleDouble();
+            if (intCount == 1 && doubleCount == 1) return new CalculatorIntDouble();
+            if (stringCount > 0) return new CalculatorString();
+            if (boolCount > 0) return new CalculatorBool();
+            if (specialCount > 0) return new CalculatorSpecialValue();
+
+            throw new NotImplementedException(string.Format("Can't operate types {0} and {1}", argument1.GetType(), argument2.GetType()));
+        }
     }
 
     public class CalculatorIntInt : Calculator
@@ -72,6 +107,16 @@ namespace kOS.Compilation
         {
             return (int)argument1 == (int)argument2;
         }
+
+        public override object Min(object argument1, object argument2)
+        {
+            return Math.Min((int)argument1, (int)argument2);
+        }
+
+        public override object Max(object argument1, object argument2)
+        {
+            return Math.Max((int)argument1, (int)argument2);
+        }
     }
 
     public class CalculatorDoubleDouble : Calculator
@@ -125,6 +170,16 @@ namespace kOS.Compilation
         public override object Equal(object argument1, object argument2)
         {
             return (double)argument1 == (double)argument2;
+        }
+
+        public override object Min(object argument1, object argument2)
+        {
+            return Math.Min((double)argument1, (double)argument2);
+        }
+
+        public override object Max(object argument1, object argument2)
+        {
+            return Math.Max((double)argument1, (double)argument2);
         }
     }
 
@@ -190,6 +245,18 @@ namespace kOS.Compilation
             if (argument1 is int) return (int)argument1 == (double)argument2;
             else return (double)argument1 == (int)argument2;
         }
+
+        public override object Min(object argument1, object argument2)
+        {
+            if (argument1 is int) return Math.Min((int)argument1, (double)argument2);
+            else return Math.Min((double)argument1, (int)argument2);
+        }
+
+        public override object Max(object argument1, object argument2)
+        {
+            if (argument1 is int) return Math.Max((int)argument1, (double)argument2);
+            else return Math.Max((double)argument1, (int)argument2);
+        }
     }
 
     public class CalculatorString : Calculator
@@ -242,6 +309,20 @@ namespace kOS.Compilation
         public override object Equal(object argument1, object argument2)
         {
             return argument1.ToString().ToLower() == argument2.ToString().ToLower();
+        }
+
+        public override object Min(object argument1, object argument2)
+        {
+            string arg1 = argument1.ToString();
+            string arg2 = argument2.ToString();
+            return (arg1.Length < arg2.Length) ? arg1 : arg2;
+        }
+
+        public override object Max(object argument1, object argument2)
+        {
+            string arg1 = argument1.ToString();
+            string arg2 = argument2.ToString();
+            return (arg1.Length > arg2.Length) ? arg1 : arg2;
         }
     }
 
@@ -301,6 +382,20 @@ namespace kOS.Compilation
         {
             return Convert.ToBoolean(argument1) == Convert.ToBoolean(argument2);
         }
+
+        public override object Min(object argument1, object argument2)
+        {
+            bool arg1 = Convert.ToBoolean(argument1);
+            bool arg2 = Convert.ToBoolean(argument2);
+            return !arg1 ? arg1 : arg2;
+        }
+
+        public override object Max(object argument1, object argument2)
+        {
+            bool arg1 = Convert.ToBoolean(argument1);
+            bool arg2 = Convert.ToBoolean(argument2);
+            return arg1 ? arg1 : arg2;
+        }
     }
 
     public class CalculatorSpecialValue : Calculator
@@ -359,6 +454,16 @@ namespace kOS.Compilation
         public override object Equal(object argument1, object argument2)
         {
             return Calculate("==", argument1, argument2);
+        }
+
+        public override object Min(object argument1, object argument2)
+        {
+            return Calculate("min", argument1, argument2);
+        }
+
+        public override object Max(object argument1, object argument2)
+        {
+            return Calculate("max", argument1, argument2);
         }
     }
 }

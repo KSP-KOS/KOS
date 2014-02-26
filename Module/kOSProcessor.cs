@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using KSP.IO;
 using kOS.InterProcessor;
 using kOS.Binding;
 using kOS.Persistence;
@@ -15,51 +16,66 @@ namespace kOS.Module
     {
         public enum Modes { READY, STARVED, OFF };
         public Modes Mode = Modes.READY;
-        public Harddisk hardDisk = null;
+        
+        private const int MEM_SIZE = 10000;
+        public Harddisk HardDisk { get; private set; }
         private int vesselPartCount = 0;
         private SharedObjects _shared = null;
-        private static int MemSize = 10000;
 
-        [KSPEvent(guiActive = true, guiName = "Open Terminal")]
+        [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true, guiActiveEditor = true)] private int
+            unitID = -1;
+        
+        [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
+            UnityEngine.Debug.Log("kOS: Activate");
             Core.OpenWindow(_shared);
         }
 
         [KSPEvent(guiActive = true, guiName = "Toggle Power")]
         public void TogglePower()
         {
-            Modes newMode;
-
-            if (Mode != Modes.OFF)
-            {
-                newMode = Modes.OFF;
-            }
-            else
-            {
-                newMode = Modes.STARVED;
-            }
-
+            UnityEngine.Debug.Log("kOS: Toggle Power");
+            Modes newMode = (Mode != Modes.OFF) ? Modes.OFF : Modes.STARVED;
             SetMode(newMode);
         }
         
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
-        public void Activate(KSPActionParam param) {
+        public void Activate(KSPActionParam param)
+        {
+            UnityEngine.Debug.Log("kOS: Open Terminal from Dialog");
             Activate();
         }
 
-        [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
-        public void TogglePower(KSPActionParam param) {
-            TogglePower();
+        [KSPAction("Close Terminal", actionGroup = KSPActionGroup.None)]
+        public void Deactivate(KSPActionParam param)
+        {
+            UnityEngine.Debug.Log("kOS: Close Terminal from ActionGroup");
+            Core.CloseWindow(_shared);
         }
 
-        [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true)]
-        public int UnitID = -1;
+        [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
+        public void TogglePower(KSPActionParam param)
+        {
+            UnityEngine.Debug.Log("kOS: Toggle Power from ActionGroup");
+            TogglePower();
+        }
+        
+        [KSPEvent(guiName = "Unit +", guiActive = false, guiActiveEditor = true)]
+        public void IncrementUnitId()
+        {
+            unitID++;
+            throw new NotImplementedException();
+        }
 
-        [KSPField(isPersistant = true, guiActive = false)]
-        public int MaxPartID = 0;
+        [KSPEvent(guiName = "Unit -", guiActive = false, guiActiveEditor = true)]
+        public void DecrementUnitId()
+        {
+            unitID--;
+            throw new NotImplementedException();
+        }
 
-        public override void OnStart(PartModule.StartState state)
+        public override void OnStart(StartState state)
         {
             //Do not start from editor and at KSP first loading
             if (state == StartState.Editor || state == StartState.None)
@@ -88,9 +104,9 @@ namespace kOS.Module
 
                 // initialize the file system
                 _shared.VolumeMgr.Add(new Archive());
-                if (hardDisk == null) hardDisk = new Harddisk(MemSize);
-                _shared.VolumeMgr.Add(hardDisk);
-                _shared.VolumeMgr.SwitchTo(hardDisk);
+                if (HardDisk == null) HardDisk = new Harddisk(MEM_SIZE);
+                _shared.VolumeMgr.Add(HardDisk);
+                _shared.VolumeMgr.SwitchTo(HardDisk);
             }
         }
 
@@ -98,6 +114,17 @@ namespace kOS.Module
         {
             //Debug.Log("*** External Function Registration Succeeded");
             //cpu.RegisterkOSExternalFunction(parameters);
+        }
+        
+        public static int AssignNewID()
+        {
+            var config = PluginConfiguration.CreateForType<kOSProcessor>();
+            config.load();
+            var id = config.GetValue<int>("CpuIDMax") + 1;
+            config.SetValue("CpuIDMax", id);
+            config.save();
+
+            return id;
         }
         
         public void Update()
@@ -123,7 +150,7 @@ namespace kOS.Module
             
             ProcessElectricity(this.part, TimeWarp.fixedDeltaTime);
         }
-
+        
         public void UpdateParts()
         {
             // Trigger whenever the number of parts in the vessel changes (like when staging, docking or undocking)
@@ -143,9 +170,9 @@ namespace kOS.Module
 
                         // A harddisk may be null because the kOS part haven't been initialized yet
                         // Wait until the next update and everything should be fine
-                        if (processorPart.hardDisk != null)
+                        if (processorPart.HardDisk != null)
                         {
-                            attachedVolumes.Add(processorPart.hardDisk);
+                            attachedVolumes.Add(processorPart.HardDisk);
                         }
                         else
                         {
@@ -181,7 +208,6 @@ namespace kOS.Module
 
         public override void OnFixedUpdate()
         {
-            
         }
 
         public override void OnLoad(ConfigNode node)
@@ -192,7 +218,7 @@ namespace kOS.Module
             if (node.HasNode("harddisk"))
             {
                 Harddisk newDisk = new Harddisk(node.GetNode("harddisk"));
-                hardDisk = newDisk;
+                HardDisk = newDisk;
             }
 
             InitObjects();
@@ -207,9 +233,9 @@ namespace kOS.Module
 
         public override void OnSave(ConfigNode node)
         {
-            if (hardDisk != null)
+            if (HardDisk != null)
             {
-                ConfigNode hdNode = hardDisk.Save("harddisk");
+                ConfigNode hdNode = HardDisk.Save("harddisk");
                 node.AddNode(hdNode);
             }
 

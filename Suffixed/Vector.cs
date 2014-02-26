@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace kOS.Suffixed
+﻿namespace kOS.Suffixed
 {
     public class Vector : SpecialValue
     {
@@ -32,6 +27,34 @@ namespace kOS.Suffixed
             this.z = (double)z;
         }
 
+        public override object TryOperation(string op, object other, bool reverseOrder)
+        {
+            other = ConvertToDoubleIfNeeded(other);
+
+            switch (op)
+            {
+                case "+":
+                    if (other is Vector) return this + (Vector) other;
+                    break;
+                case "*":
+                    if (other is Vector) return this*(Vector) other;
+                    if (other is double) return this*(double) other;
+                    break;
+                case "-":
+                    if (!reverseOrder)
+                    {
+                        if (other is Vector) return this - (Vector) other;
+                    }
+                    else
+                    {
+                        if (other is Vector) return (Vector) other - this;
+                    }
+                    break;
+            }
+
+            return null;
+        }
+
         public Direction ToDirection()
         {
             return new Direction(ToVector3D(), false);
@@ -39,11 +62,19 @@ namespace kOS.Suffixed
 
         public override object GetSuffix(string suffixName)
         {
-            if (suffixName == "X") return x;
-            if (suffixName == "Y") return y;
-            if (suffixName == "Z") return z;
-            if (suffixName == "MAG") return new Vector3d(x, y, z).magnitude;
-            if (suffixName == "VEC") return new Vector(x, y, z);
+            switch (suffixName)
+            {
+                case "X":
+                    return x;
+                case "Y":
+                    return y;
+                case "Z":
+                    return z;
+                case "MAG":
+                    return new Vector3d(x, y, z).magnitude;
+                case "VEC":
+                    return new Vector(x, y, z);
+            }
 
             return base.GetSuffix(suffixName);
         }
@@ -60,20 +91,27 @@ namespace kOS.Suffixed
                 return false;
             }
 
-            if (suffixName == "X") { x = dblValue; return true; }
-            if (suffixName == "Y") { y = dblValue; return true; }
-            if (suffixName == "Z") { z = dblValue; return true; }
-            if (suffixName == "MAG")
+            switch (suffixName)
             {
-                double oldMag = new Vector3d(x, y, z).magnitude;
+                case "X":
+                    x = dblValue;
+                    return true;
+                case "Y":
+                    y = dblValue;
+                    return true;
+                case "Z":
+                    z = dblValue;
+                    return true;
+                case "MAG":
+                    double oldMag = new Vector3d(x, y, z).magnitude;
 
-                if (oldMag == 0) return true; // Avoid division by zero
+                    if (oldMag == 0) return true; // Avoid division by zero
 
-                x = x / oldMag * dblValue;
-                y = y / oldMag * dblValue;
-                z = z / oldMag * dblValue;
+                    x = x/oldMag*dblValue;
+                    y = y/oldMag*dblValue;
+                    z = z/oldMag*dblValue;
 
-                return true;
+                    return true;
             }
 
             return base.SetSuffix(suffixName, value);
@@ -99,38 +137,29 @@ namespace kOS.Suffixed
             return new Direction(d.ToVector3D(), false);
         }
 
-        public static Vector operator *(Vector a, Vector b) { return new Vector(a.x * b.x, a.y * b.y, a.z * b.z); }
-        public static Vector operator *(Vector a, float b) { return new Vector(a.x * b, a.y * b, a.z * b); }
-        public static Vector operator *(Vector a, double b) { return new Vector(a.x * b, a.y * b, a.z * b); }
-        public static Vector operator +(Vector a, Vector b) { return new Vector(a.ToVector3D() + b.ToVector3D()); }
-        public static Vector operator -(Vector a, Vector b) { return new Vector(a.ToVector3D() - b.ToVector3D()); }
-
-        public override object TryOperation(string op, object other, bool reverseOrder)
+        public static Vector operator *(Vector a, Vector b)
         {
-            other = ConvertToDoubleIfNeeded(other);
+            return new Vector(a.x*b.x, a.y*b.y, a.z*b.z);
+        }
 
-            if (op == "+")
-            {
-                if (other is Vector) return this + (Vector)other;
-            }
-            else if (op == "*")
-            {
-                if (other is Vector) return this * (Vector)other;
-                if (other is double) return this * (double)other;
-            }
-            else if (op == "-")
-            {
-                if (!reverseOrder)
-                {
-                    if (other is Vector) return this - (Vector)other;
-                }
-                else
-                {
-                    if (other is Vector) return (Vector)other - this;
-                }
-            }
+        public static Vector operator *(Vector a, float b)
+        {
+            return new Vector(a.x*b, a.y*b, a.z*b);
+        }
 
-            return null;
+        public static Vector operator *(Vector a, double b)
+        {
+            return new Vector(a.x*b, a.y*b, a.z*b);
+        }
+
+        public static Vector operator +(Vector a, Vector b)
+        {
+            return new Vector(a.ToVector3D() + b.ToVector3D());
+        }
+
+        public static Vector operator -(Vector a, Vector b)
+        {
+            return new Vector(a.ToVector3D() - b.ToVector3D());
         }
     }
 }

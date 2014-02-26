@@ -1,6 +1,65 @@
 kOS Mod Changelog
 =================
 
+### 0.11.0
+
+- Thanks to enkido and jwvanderbeck for your help. 
+
+- Basic RemoveTech Intergration 
+- Added VOLUME:NAME to getting the current volume
+- Lists can now be populated with basic data that you can loop over or index [Full Info](/wiki/List/)
+    - Bodies (eg Kerbin, Mun, Duna)
+    - Targets - All Vessels other than current
+    - Engines - Active engines on the craft
+    - Resources - All Ship Resources
+    - Parts - All Ship Parts (slow)
+    - Sensors - (eg Pres, Grav, Accel)
+    - Elements - All flights connected to the active vessel
+- A Lot of bug fixes and refactoring
+- Constants (eg G, E, PI) are now retrieved using CONSTANT() rather than spreadout.
+- Commands resolve in order of descending specificity, rather than in the pseudorandom order they were in before
+- Added Math operators LN, LOG10, MIN, MAX.
+- Removed NODE:APOAPSIS and NODE:PERIAPSIS. They are now available in NODE:ORBIT:APOAPSIS
+### 0.10.0
+
+- Compatible with KSP 0.23 Thanks to Logris and MaHuJa for Commits
+- Added List() which creates a collection and the following commands 
+    - ADD - Adds the value of any variable
+    - CONTAINS - Tests and returns if the value exists in the list
+    - REMOVE - removes the item from the list if the list contains the item
+    - LENGTH - returns a count of the items in the list
+    - COPY - creates a copy of the list
+    - You can also index into a list with # (ie LIST#1 gives you the second item in the list).
+- Added the following stats
+    - OBT:PERIOD - http://en.wikipedia.org/wiki/Orbital_period
+    - OBT:INCLINATION - http://en.wikipedia.org/wiki/Orbital_inclination
+    - OBT:ECCENTRICITY - http://en.wikipedia.org/wiki/Orbital_eccentricity
+    - OBT:SEMIMAJORAXIS - http://en.wikipedia.org/wiki/Semi-major_axis
+    - OBT:SEMIMINORAXIS - http://en.wikipedia.org/wiki/Semi-major_axis
+    - VOLUME:NAME - Name of the current Volume
+    - ETA:TRANSITION - Seconds until next patch
+    - OBT:TRANSITION - Type of next patch: possibilities are
+        - FINAL
+        - ENCOUNTER
+        - ESCAPE
+        - MANEUVER
+- Adding a few BODY members
+    - RADIUS
+    - MU - G * Body Mass
+    - G - Gravitational Constant 
+    - ATM atmosphere info with sub elements
+        - EXISTS
+        - HASOXYGEN
+        - SCALE
+        - HEIGHT
+    
+- Added ORBIT to NODE
+- Added the following commands
+    - UNSET #VARIABLE - remove the variable, ALL removes all variables Thanks a1070
+    - FOR #USERVARIABLE IN #LIST takes a list and loops over it, exposing each item in the collection as a user defined variable
+- New close window action binding
+- Performance fixes 
+
 ### 0.9.2
 
 - Fixed a bug where you couldn't have an IF or WHEN inside an UNTIL

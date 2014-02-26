@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
     public class StageValues : SpecialValue
     {
-        Vessel vessel;
+        private readonly Vessel vessel;
 
         public StageValues(Vessel vessel)
         {

@@ -1,20 +1,34 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using UnityEngine;
 
 namespace kOS.Utilities
 {
     public enum kOSKeys
     {
-        LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40,
+        LEFT = 37,
+        UP = 38,
+        RIGHT = 39,
+        DOWN = 40,
         DEL = 46,
-        F1 = 112, F2 = 113, F3 = 114, F4 = 115, F5 = 116, F6 = 117, F7 = 118, F8 = 119, F9 = 120, F10 = 121, F11 = 122, F12 = 123,
-        PGUP = 33, PGDN = 34, END = 35, HOME = 36, DELETE = 44, INSERT = 45,
+        F1 = 112,
+        F2 = 113,
+        F3 = 114,
+        F4 = 115,
+        F5 = 116,
+        F6 = 117,
+        F7 = 118,
+        F8 = 119,
+        F9 = 120,
+        F10 = 121,
+        F11 = 122,
+        F12 = 123,
+        PGUP = 33,
+        PGDN = 34,
+        END = 35,
+        HOME = 36,
+        DELETE = 44,
+        INSERT = 45,
         BREAK = 19
     }
 
@@ -130,27 +144,21 @@ namespace kOS.Utilities
         //    return Balance(ref str, ref i, (char)0);
         //}
 
-        public static double ProspectForResource(String resourceName, List<Part> engines)
+        public static double ProspectForResource(string resourceName, List<Part> engines)
         {
-            List<Part> visited = new List<Part>();
-            double total = 0;
+            var visited = new List<Part>();
 
-            foreach (var part in engines)
-            {
-                total += ProspectForResource(resourceName, part, ref visited);
-            }
-
-            return total;
+            return engines.Sum(part => ProspectForResource(resourceName, part, ref visited));
         }
 
-        public static double ProspectForResource(String resourceName, Part engine)
+        public static double ProspectForResource(string resourceName, Part engine)
         {
-            List<Part> visited = new List<Part>();
+            var visited = new List<Part>();
 
             return ProspectForResource(resourceName, engine, ref visited);
         }
 
-        public static double ProspectForResource(String resourceName, Part part, ref List<Part> visited)
+        public static double ProspectForResource(string resourceName, Part part, ref List<Part> visited)
         {
             double ret = 0;
 
@@ -169,17 +177,16 @@ namespace kOS.Utilities
                 }
             }
 
-            foreach (AttachNode attachNode in part.attachNodes)
+            foreach (var attachNode in part.attachNodes)
             {
-                if (attachNode.attachedPart != null                                 //if there is a part attached here            
-                        && attachNode.nodeType == AttachNode.NodeType.Stack             //and the attached part is stacked (rather than surface mounted)
-                        && (attachNode.attachedPart.fuelCrossFeed                       //and the attached part allows fuel flow
-                            )
-                        && !(part.NoCrossFeedNodeKey.Length > 0                       //and this part does not forbid fuel flow
-                                && attachNode.id.Contains(part.NoCrossFeedNodeKey)))     //    through this particular node
+                if (attachNode.attachedPart != null //if there is a part attached here            
+                    && attachNode.nodeType == AttachNode.NodeType.Stack
+                    //and the attached part is stacked (rather than surface mounted)
+                    && (attachNode.attachedPart.fuelCrossFeed //and the attached part allows fuel flow
+                       )
+                    && !(part.NoCrossFeedNodeKey.Length > 0 //and this part does not forbid fuel flow
+                         && attachNode.id.Contains(part.NoCrossFeedNodeKey))) //    through this particular node
                 {
-
-
                     ret += ProspectForResource(resourceName, attachNode.attachedPart, ref visited);
                 }
             }
@@ -328,5 +335,3 @@ namespace kOS.Utilities
         //}
     }
 }
-
- 

@@ -40,14 +40,18 @@ You can use mathematical operations on numbers, like this:
 
 The system follows the order of operations, but currently the implementation is imperfect. For example, multiplication will always be performed before division, regardless of the order they come in. This will be fixed in a future release.
 
-### Mathematical Functions
+## Mathematical Functions
     
 ### Basic Functions
 
     ABS(1).             // Returns absolute value of input. e.g. 1
-    MOD(21,6).          // Returns remainder of an integer division. e.g. 3
-    FLOOR(1.887).       // Rounds down to the nearest whole number. e.g. 1
     CEILING(1.887).     // Rounds up to the nearest whole number. e.g. 2
+    FLOOR(1.887).       // Rounds down to the nearest whole number. e.g. 1
+    LN(5)               // Gives the natural log of the provided number
+    LOG10(5)            // Gives the log base 10 of the provided number
+    MOD(21,6).          // Returns remainder of an integer division. e.g. 3
+    MIN(0,100).         // Returns The lower of the two e.g. 0
+    MAX(0,100).         // Returns The higher of the two e.g. 100
     ROUND(1.887).       // Rounds to the nearest whole number. e.g. 2
     ROUND(1.887, 2).    // Rounds to the nearest place value. e.g. 1.89
     SQRT(7.89).         // Returns square root. e.g. 2.80891438103763
@@ -179,18 +183,41 @@ Example:
     IF X = 1 AND Y > 4 { PRINT "Both conditions are true". }.
     IF X = 1 OR Y > 4 { PRINT "At least one condition is true". }.
 
-### LIST
+### LISTS
 
-Lists the files on the current volume, or lists the currently available volumes. Lists files by default.
+If you want to make a collection of values, this is for you. [Full Documentation](http://github.com/erendrake/KOS/wiki/List)
+    
+    SET FOO TO LIST().   // Creates a new list in FOO variable
+    SET FOO:ADD TO 5.    // Adds a new element to the end of the list
+    PRINT FOO:LENGTH.    // Prints 3
+    FOO:CLEAR.           // Removes all elements from the FOO list.
+
+#### FOR
+
+Lists need to be iterated over sometimes, to help with this we have FOR.
+
+    SET FOO TO LIST().   // Creates a new list in FOO variable
+    SET FOO:ADD TO 5.    // Adds a new element to the end of the list
+    SET FOO:ADD TO ALTITUDE. // eg 10000
+    SET FOO:ADD TO ETA:APOAPSIS. // eg 30 
+
+    FOR BAR IN FOO { PRINT BAR. }. // Prints 5, then 10000, then 30
+    PRINT BAR. // ERROR, BAR doesn't exist outside the for statement
+
+#### Built-in Lists
+
+Builds a list of various resources and saves them to a variable.
+
+    EXAMPLE:
+    LIST ENGINES IN FOO // Creats a list of the currently active engines and puts it in the FOO variable
+
+#### printout Lists
+
+Outputs data to the console. Lists files by default.
 Example:
 
+    EXAMPLE:
     LIST.           // Lists files on the active volume
-    LIST FILES.     // Lists files on the active volume
-    LIST VOLUMES.   // Lists all volumes, with their numbers and names
-    LIST BODIES.    // Lists celestial bodies and their distance
-    LIST TARGETS.   // Lists target-able vessels in range
-    LIST RESOURCES. // List of resources by stage
-    LIST PARTS.     // Lists parts in vessel
     LIST ENGINES.   // List of engines
 
 ### LOCK
@@ -283,6 +310,7 @@ Example:
     SWITCH TO 0.                        // Switch to volume 0.
     RENAME VOLUME 1 TO AwesomeDisk.     // Name volume 1 as AwesomeDisk.
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
+    PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
 ### TOGGLE
 
@@ -359,9 +387,8 @@ Causes kOS module to shutdown.
 Flight Statistics
 =================
 
-You can get several useful vessel stats for your ships
+You can get several useful vessel stats for your ships 
 
-    VESSELNAME
     ALTITUDE
     ALT:RADAR           // Your radar altitude
     BODY                // The current celestial body whose influence you are under
@@ -369,14 +396,13 @@ You can get several useful vessel stats for your ships
     VELOCITY            // The current orbital velocity
     VERTICALSPEED
     SURFACESPEED
-    LATITUDE
-    LONGITUDE
     STATUS              // Current situation: LANDED, SPLASHED, PRELAUNCH, FLYING, SUB_ORBITAL, ORBITING, ESCAPING, or DOCKED
     INLIGHT          // Returns true if not blocked by celestial body, always false without solar panel.
     INCOMMRANGE         // returns true if in range
     COMMRANGE           // returns commrange
     MASS
     MAXTHRUST           // Combined thrust of active engines at full throttle (kN)
+    VESSELNAME
     
 ### TIME
 
@@ -390,6 +416,7 @@ Returns time in various formats.
     TIME:HOUR           // 1
     TIME:MINUTE         // 50
     TIME:SECOND         // 26
+    TIME:SECONDS          // Total Seconds
     
 ### Vectors
 
@@ -402,7 +429,7 @@ These return a vector object, which can be used in conjuction with the LOCK comm
 
 ### Orbit geometry values
 
-These values can be polled either for their altitude, or the vessel's ETA in reaching them. By default, altitude is returned.
+These values can be polled either for their altitude, or the vessel's ETA in reaching them. By default, altitude is returned. 
 
     APOAPSIS			// Altitude of apoapsis
     ALT:APOAPSIS		// Altitude of apoapsis
@@ -414,7 +441,6 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
 ### Maneuver nodes
 
     NODE                // Direction of next maneuver node, can be used with LOCK STEERING
-    MAG:NODE            // Delta-v magnitude of maneuver node
     ETA:NODE            // ETA to active maneuver node
     ENCOUNTER           // Returns celestial body of encounter
     NEXTNODE            // Next node in flight plan.
@@ -432,7 +458,7 @@ These values can be polled either for their altitude, or the vessel's ETA in rea
 
 ### Stage specific values
 
-    STAGE:LIQUIDFUEL            // Prints per stage liquid fuel.
+    STAGE:LIQUIDFUEL            // Prints the available fuel for all active engines.
     STAGE:OXIDIZER
     
 ### Global values
@@ -491,7 +517,7 @@ Represents a set of geo-coordinates.
 
 ### NODE (universalTime, radialOut, normal, prograde)
 
-Represents a maneuver node.
+Represents a maneuver node.[Full Documentation](/wiki/Node)
 
     SET X TO NODE(TIME+60, 0, 0, 100).  // Creates a node 60 seconds from now with
                                         // prograde=100 m/s
@@ -504,8 +530,9 @@ Represents a maneuver node.
     SET X TO NODE(0, 0, 0, 0).          // Create a blank node.
     ADD X.                              // Add Node to flight plan.
     SET X:PROGRADE to 500.              // Set nodes prograde to 500m/s deltav.
-    PRINT X:APOAPSIS.                   // Returns nodes apoapsis.
-    PRINT X:PERIAPSIS.                  // Returns nodes periapsis.
+    SET X:ETA to 30.              // Set nodes time to 30 seconds from now.
+    PRINT X:OBT:APOAPSIS.                   // Returns nodes apoapsis.
+    PRINT X:OBT:PERIAPSIS.                  // Returns nodes periapsis.
     
     
 ### HEADING (degreesFromNorth, pitchAboveHorizon)
@@ -533,7 +560,12 @@ Represents a vector.
     SET varname:X TO 111.               // Changes vector x value to 111.
     SET varname:MAG to 10.              // Changes magnitude of vector. e.g. V(9.98987,0.44999,0)
     
-### VESSEL (vesselname)
+### VESSELS
+
+All craft share a datastructure [Full Documentation](/wiki/Vessel)
+                    
+
+#### VESSEL (vesselname)
 
 Represents a targetable vessel
 
@@ -542,7 +574,7 @@ Represents a targetable vessel
     PRINT X:HEADING.                    // Print the heading to the vessel.
     PRINT X:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
     
-### SHIP
+#### SHIP
     
 Represents currently selected ship
     
@@ -551,7 +583,7 @@ Represents currently selected ship
     PRINT SHIP:HEADING.                    // Print the heading to the vessel.
     PRINT SHIP:BEARING.                    // Print the heading to the target vessel relative to vessel heading.
     
-### TARGET
+#### TARGET
 
 Represents targeted vessel or celestial body
 

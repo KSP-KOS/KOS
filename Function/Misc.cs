@@ -147,8 +147,8 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("log")]
-    public class FunctionLog : FunctionBase
+    [FunctionAttribute("logfile")]
+    public class FunctionLogFile : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace kOS.Suffixed
 {
@@ -8,7 +9,12 @@ namespace kOS.Suffixed
 
         public ListValue()
         {
-           list = new List<object>(); 
+            list = new List<object>();
+        }
+
+        public int Count
+        {
+            get { return list.Count; }
         }
 
         public override bool SetSuffix(string suffixName, object value)
@@ -21,7 +27,9 @@ namespace kOS.Suffixed
                 case "CONTAINS":
                     return list.Contains(value);
                 case "REMOVE":
-                    return list.Remove(value);
+                    var index = int.Parse(value.ToString());
+                    list.RemoveAt(index);
+                    return true;
                 default:
                     return false;
             }
@@ -45,9 +53,14 @@ namespace kOS.Suffixed
             }
         }
 
+        public void Add(object toAdd)
+        {
+            list.Add(toAdd);
+        }
+
         public override string ToString()
         {
-            return "LIST("+ list.Count +")";
+            return "LIST(" + list.Count + ")";
         }
 
         #region IIndexable Members
@@ -67,11 +80,11 @@ namespace kOS.Suffixed
 
     public class Enumerator : SpecialValue
     {
-        private readonly IEnumerator<object> enumerator;
-        private int index;
+        private readonly IEnumerator enumerator;
         private readonly object lockObject = new object();
+        private int index;
 
-        public Enumerator(IEnumerator<object> enumerator)
+        public Enumerator(IEnumerator enumerator)
         {
             this.enumerator = enumerator;
         }

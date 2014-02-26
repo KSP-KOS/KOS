@@ -8,11 +8,12 @@ namespace kOS.Compilation
 {
     public class Script
     {
-        private readonly Dictionary<string, string> _identifierReplacements = new Dictionary<string, string>() { { "alt:radar", "alt|radar" },
-                                                                                                                 { "alt:apoapsis", "alt|apoapsis" },
-                                                                                                                 { "alt:periapsis", "alt|periapsis" },
-                                                                                                                 { "eta:apoapsis", "eta|apoapsis" },
-                                                                                                                 { "eta:periapsis", "eta|periapsis" } };
+        private readonly Dictionary<string, string> _identifierReplacements = new Dictionary<string, string>() { { "alt:radar", "alt_radar" },
+                                                                                                                 { "alt:apoapsis", "alt_apoapsis" },
+                                                                                                                 { "alt:periapsis", "alt_periapsis" },
+                                                                                                                 { "eta:apoapsis", "eta_apoapsis" },
+                                                                                                                 { "eta:periapsis", "eta_periapsis" },
+                                                                                                                 { "eta:transition", "eta_transition" }};
         protected CompileCache _cache;
 
         public Script()
