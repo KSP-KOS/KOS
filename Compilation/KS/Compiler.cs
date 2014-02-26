@@ -16,11 +16,6 @@ namespace kOS.Compilation.KS
         private bool _compilingSetDestination = false;
         private bool _identifierIsVariable = false;
 
-        private readonly Dictionary<string, string> _identifierReplacements = new Dictionary<string, string>() { { "alt:radar", "alt|radar" },
-                                                                                                                 { "alt:apoapsis", "alt|apoapsis" },
-                                                                                                                 { "alt:periapsis", "alt|periapsis" },
-                                                                                                                 { "eta:apoapsis", "eta|apoapsis" },
-                                                                                                                 { "eta:periapsis", "eta|periapsis" } };
         private readonly Dictionary<string, string> _functionsOverloads = new Dictionary<string, string>() { { "round|1", "roundnearest" },
                                                                                                              { "round|2", "round"} };
         
@@ -132,7 +127,7 @@ namespace kOS.Compilation.KS
         {
             string triggerIdentifier = "on-" + node.Token.StartPos.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
-            triggerObject.SetTriggerVariable(node.Nodes[1].Nodes[0].Token.Text);
+            triggerObject.SetTriggerVariable(GetIdentifierText(node));
 
             _currentCodeSection = triggerObject.Code;
             AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
@@ -405,6 +400,12 @@ namespace kOS.Compilation.KS
                 case TokenType.varidentifier:
                     VisitVarIdentifier(node);
                     break;
+                case TokenType.array_identifier:
+                    VisitArrayIdentifier(node);
+                    break;
+                case TokenType.function_identifier:
+                    VisitFunctionIdentifier(node);
+                    break;
                 case TokenType.IDENTIFIER:
                     VisitIdentifier(node);
                     break;
@@ -612,53 +613,85 @@ namespace kOS.Compilation.KS
 
         private void VisitVarIdentifier(ParseNode node)
         {
-            string identifier = node.Nodes[0].Token.Text;
-            string concatenatedIdentifier = ConcatenateNodes(node);
-            bool ignoreSuffixs = false;
-            int suffixIndex = 1;
-            
-            // replace identifiers that look like special values but they are not
-            if (_identifierReplacements.ContainsKey(concatenatedIdentifier))
+            VisitNode(node.Nodes[0]);
+
+            int nodeIndex = 2;
+            while (nodeIndex < node.Nodes.Count)
             {
-                identifier = _identifierReplacements[concatenatedIdentifier];
-                ignoreSuffixs = true;
+                VisitNode(node.Nodes[nodeIndex]);
+
+                // when we are setting a member value we need to leave
+                // the last object and the last suffix in the stack
+                if (!(_compilingSetDestination &&
+                      nodeIndex == (node.Nodes.Count - 1)))
+                {
+                    AddOpcode(new OpcodeGetMember());
+                }
+
+                nodeIndex += 2;
+            }
+        }
+
+        private void VisitArrayIdentifier(ParseNode node)
+        {
+            VisitNode(node.Nodes[0]);
+
+            int nodeIndex = 2;
+            while (nodeIndex < node.Nodes.Count)
+            {
+                VisitNode(node.Nodes[nodeIndex]);
+                
+                // when we are setting a member value we need to leave
+                // the last object and the last index in the stack
+                // the only exception is when we are setting a suffix of the indexed value
+                if (!(_compilingSetDestination &&
+                      nodeIndex == (node.Nodes.Count - 1)) ||
+                    VarIdentifierHasSuffix(node.Parent))
+                {
+                    AddOpcode(new OpcodeGetIndex());
+                }
+
+                nodeIndex += 2;
+            }
+        }
+
+        private string GetIdentifierText(ParseNode node)
+        {
+            if (node.Token.Type == TokenType.IDENTIFIER)
+            {
+                return node.Token.Text;
+            }
+            else
+            {
+                foreach (ParseNode child in node.Nodes)
+                {
+                    string identifier = GetIdentifierText(child);
+                    if (identifier != string.Empty)
+                        return identifier;
+                }
             }
 
-            if (_context.Locks.Contains(identifier))
+            return string.Empty;
+        }
+
+        private void VisitFunctionIdentifier(ParseNode node)
+        {
+            string identifier = GetIdentifierText(node);
+
+            if (node.Nodes.Count > 1 &&
+                node.Nodes[1].Token.Type == TokenType.BRACKETOPEN)
+            {
+                // if a bracket follows an identifier then its a function call
+                VisitFunction(node);
+            }
+            else if (_context.Locks.Contains(identifier))
             {
                 Lock lockObject = _context.Locks.GetLock(identifier);
                 AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
             }
-            else if (node.Nodes.Count > 1 &&
-                     node.Nodes[1].Token.Type == TokenType.BRACKETOPEN)
-            {
-                // if a bracket follows an identifier then its a function call
-                VisitFunction(node);
-                suffixIndex += 3;
-            }
             else
             {
                 AddOpcode(new OpcodePush("$" + identifier));
-            }
-
-            if (!ignoreSuffixs && (suffixIndex < node.Nodes.Count))
-            {
-                // has suffixes
-                int nodeIndex = suffixIndex + 1;
-                while (nodeIndex < node.Nodes.Count)
-                {
-                    VisitNode(node.Nodes[nodeIndex]);
-
-                    // when we are setting a member value we need to leave
-                    // the last object and the last suffix in the stack
-                    if (!(_compilingSetDestination &&
-                          nodeIndex == (node.Nodes.Count - 1)))
-                    {
-                        AddOpcode(new OpcodeGetMember());
-                    }
-                                        
-                    nodeIndex += 2;
-                }
             }
         }
 
@@ -673,14 +706,27 @@ namespace kOS.Compilation.KS
             AddOpcode(new OpcodePush(node.Token.Text.Trim('"')));
         }
 
-        private bool VarIdentifierHasSuffixes(ParseNode node)
+        private bool VarIdentifierHasSuffix(ParseNode node)
         {
-            string concatenatedIdentifier = ConcatenateNodes(node);
-            if (!_identifierReplacements.ContainsKey(concatenatedIdentifier))
+            foreach (ParseNode child in node.Nodes)
             {
-                foreach (ParseNode child in node.Nodes)
+                if (child.Token.Type == TokenType.COLON)
                 {
-                    if (child.Token.Type == TokenType.COLON)
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool VarIdentifierHasIndex(ParseNode node)
+        {
+            if (node.Nodes.Count > 0 && node.Nodes[0].Token.Type == TokenType.array_identifier)
+            {
+                ParseNode arrayIdentifier = node.Nodes[0];
+                foreach (ParseNode child in arrayIdentifier.Nodes)
+                {
+                    if (child.Token.Type == TokenType.ARRAYINDEX)
                     {
                         return true;
                     }
@@ -692,7 +738,6 @@ namespace kOS.Compilation.KS
 
         private void VisitSetStatement(ParseNode node)
         {
-            bool settingMember = VarIdentifierHasSuffixes(node.Nodes[1]);
             // destination
             _compilingSetDestination = true;
             VisitVarIdentifier(node.Nodes[1]);
@@ -700,8 +745,18 @@ namespace kOS.Compilation.KS
             // expression
             VisitNode(node.Nodes[3]);
 
-            if (settingMember) AddOpcode(new OpcodeSetMember());
-            else AddOpcode(new OpcodeStore());
+            if (VarIdentifierHasSuffix(node.Nodes[1]))
+            {
+                AddOpcode(new OpcodeSetMember());
+            }
+            else if (VarIdentifierHasIndex(node.Nodes[1]))
+            {
+                AddOpcode(new OpcodeSetIndex());
+            }
+            else
+            {
+                AddOpcode(new OpcodeStore());
+            }
         }
 
         private void VisitIfStatement(ParseNode node)
@@ -1097,7 +1152,7 @@ namespace kOS.Compilation.KS
 
         private void VisitForStatement(ParseNode node)
         {
-            string iteratorIdentifier = "$" + node.Nodes[3].Nodes[0].Token.Text + "-iterator";
+            string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + "-iterator";
 
             PushBreakList();
             AddOpcode(new OpcodePush(iteratorIdentifier));

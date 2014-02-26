@@ -2221,6 +2221,107 @@ namespace kOS.Compilation.KS
 
 
             
+            Parsearray_identifier(node);
+
+            
+            tok = scanner.LookAhead(TokenType.COLON);
+            while (tok.Type == TokenType.COLON)
+            {
+
+                
+                tok = scanner.Scan(TokenType.COLON);
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.COLON) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COLON.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                
+                tok = scanner.Scan(TokenType.IDENTIFIER);
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.IDENTIFIER) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+                    return;
+                }
+            tok = scanner.LookAhead(TokenType.COLON);
+            }
+
+            parent.Token.UpdateRange(node.Token);
+        }
+
+        private void Parsearray_identifier(ParseNode parent)
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.array_identifier), "array_identifier");
+            parent.Nodes.Add(node);
+
+
+            
+            Parsefunction_identifier(node);
+
+            
+            tok = scanner.LookAhead(TokenType.ARRAYINDEX);
+            while (tok.Type == TokenType.ARRAYINDEX)
+            {
+
+                
+                tok = scanner.Scan(TokenType.ARRAYINDEX);
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.ARRAYINDEX) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ARRAYINDEX.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                
+                tok = scanner.LookAhead(TokenType.INTEGER, TokenType.IDENTIFIER);
+                switch (tok.Type)
+                {
+                    case TokenType.INTEGER:
+                        tok = scanner.Scan(TokenType.INTEGER);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.INTEGER) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.INTEGER.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    case TokenType.IDENTIFIER:
+                        tok = scanner.Scan(TokenType.IDENTIFIER);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.IDENTIFIER) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    default:
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                        break;
+                }
+            tok = scanner.LookAhead(TokenType.ARRAYINDEX);
+            }
+
+            parent.Token.UpdateRange(node.Token);
+        }
+
+        private void Parsefunction_identifier(ParseNode parent)
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.function_identifier), "function_identifier");
+            parent.Nodes.Add(node);
+
+
+            
             tok = scanner.Scan(TokenType.IDENTIFIER);
             n = node.CreateNode(tok, tok.ToString() );
             node.Token.UpdateRange(tok);
@@ -2267,33 +2368,6 @@ namespace kOS.Compilation.KS
                     tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.BRACKETCLOSE.ToString(), 0x1001, tok));
                     return;
                 }
-            }
-
-            
-            tok = scanner.LookAhead(TokenType.COLON);
-            while (tok.Type == TokenType.COLON)
-            {
-
-                
-                tok = scanner.Scan(TokenType.COLON);
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.COLON) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COLON.ToString(), 0x1001, tok));
-                    return;
-                }
-
-                
-                tok = scanner.Scan(TokenType.IDENTIFIER);
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.IDENTIFIER) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
-                    return;
-                }
-            tok = scanner.LookAhead(TokenType.COLON);
             }
 
             parent.Token.UpdateRange(node.Token);

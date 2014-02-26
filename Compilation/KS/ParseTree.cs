@@ -310,6 +310,12 @@ namespace kOS.Compilation.KS
                 case TokenType.varidentifier:
                     Value = Evalvaridentifier(tree, paramlist);
                     break;
+                case TokenType.array_identifier:
+                    Value = Evalarray_identifier(tree, paramlist);
+                    break;
+                case TokenType.function_identifier:
+                    Value = Evalfunction_identifier(tree, paramlist);
+                    break;
 
                 default:
                     Value = Token.Text;
@@ -618,6 +624,20 @@ namespace kOS.Compilation.KS
         }
 
         protected virtual object Evalvaridentifier(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalarray_identifier(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalfunction_identifier(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

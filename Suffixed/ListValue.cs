@@ -2,7 +2,7 @@
 
 namespace kOS.Suffixed
 {
-    public class ListValue : SpecialValue
+    public class ListValue : SpecialValue, IIndexable
     {
         private readonly IList<object> list;
 
@@ -18,12 +18,10 @@ namespace kOS.Suffixed
                 case "ADD":
                     list.Add(value);
                     return true;
-                //case "CONTAINS":
-                //    return list.Contains(value);
+                case "CONTAINS":
+                    return list.Contains(value);
                 case "REMOVE":
-                    //return list.Remove(value);
-                    list.Remove(value);
-                    return true;
+                    return list.Remove(value);
                 default:
                     return false;
             }
@@ -51,6 +49,20 @@ namespace kOS.Suffixed
         {
             return "LIST("+ list.Count +")";
         }
+
+        #region IIndexable Members
+
+        public object GetIndex(int index)
+        {
+            return list[index];
+        }
+
+        public void SetIndex(int index, object value)
+        {
+            list[index] = value;
+        }
+
+        #endregion
     }
 
     public class Enumerator : SpecialValue

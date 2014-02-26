@@ -83,6 +83,7 @@
     <Compile Include="Compilation\KS\Context.cs" />
     <Compile Include="Compilation\KS\KSScript.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="Suffixed\IIndexable.cs" />
     <Compile Include="Suffixed\ListValue.cs" />
     <Compile Include="Suffixed\Node.cs" />
     <Compile Include="Suffixed\Orbit.cs" />

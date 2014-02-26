@@ -57,6 +57,7 @@ CURLYOPEN -> @"\{";
 CURLYCLOSE -> @"\}";
 COMMA -> @",";
 COLON -> @":";
+ARRAYINDEX -> @"#";
 IDENTIFIER -> @"[a-z_][a-z0-9_]*";
 INTEGER -> @"[0-9]+";
 DOUBLE -> @"[0-9]*\.[0-9]+";
@@ -124,4 +125,6 @@ atom -> PLUSMINUS? ( sci_number |
         STRING;
 sci_number -> number (E INTEGER)?;
 number -> (INTEGER | DOUBLE);
-varidentifier -> IDENTIFIER (BRACKETOPEN arglist? BRACKETCLOSE)? (COLON IDENTIFIER)*;
+varidentifier -> array_identifier (COLON IDENTIFIER)*;
+array_identifier -> function_identifier (ARRAYINDEX (INTEGER | IDENTIFIER))*;
+function_identifier -> IDENTIFIER (BRACKETOPEN arglist? BRACKETCLOSE)?;

@@ -30,6 +30,7 @@ namespace kOS.Compilation.KS
             
             // make the code lowercase
             scriptText = MakeLowerCase(scriptText);
+            scriptText = ReplaceIdentifiers(scriptText);
             
             // TODO: I don't like that the compiler has to know about the interpreter
             if (contextId != "interpreter") parts = _cache.GetFromCache(scriptText);

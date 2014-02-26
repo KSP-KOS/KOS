@@ -8,6 +8,11 @@ namespace kOS.Compilation
 {
     public class Script
     {
+        private readonly Dictionary<string, string> _identifierReplacements = new Dictionary<string, string>() { { "alt:radar", "alt|radar" },
+                                                                                                                 { "alt:apoapsis", "alt|apoapsis" },
+                                                                                                                 { "alt:periapsis", "alt|periapsis" },
+                                                                                                                 { "eta:apoapsis", "eta|apoapsis" },
+                                                                                                                 { "eta:periapsis", "eta|periapsis" } };
         protected CompileCache _cache;
 
         public Script()
@@ -89,6 +94,16 @@ namespace kOS.Compilation
             parseMessage.AppendLine(new string(' ', absolutePosition - startIndex) + "^");
 
             throw new Exception(parseMessage.ToString());
+        }
+
+        protected virtual string ReplaceIdentifiers(string scriptText)
+        {
+            foreach (KeyValuePair<string, string> kvp in _identifierReplacements)
+            {
+                scriptText = scriptText.Replace(kvp.Key, kvp.Value);
+            }
+
+            return scriptText;
         }
     }
 }

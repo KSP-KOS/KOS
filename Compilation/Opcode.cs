@@ -176,6 +176,43 @@ namespace kOS.Compilation
         }
     }
 
+    public class OpcodeGetIndex : Opcode
+    {
+        public override string Name { get { return "getindex"; } }
+
+        public override void Execute(CPU cpu)
+        {
+            object index = cpu.PopValue();
+            object list = cpu.PopValue();
+
+            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            if (!(index is int)) throw new Exception("The index must be an integer number");
+
+            object value = ((IIndexable)list).GetIndex((int)index);
+            cpu.PushStack(value);
+        }
+    }
+
+    public class OpcodeSetIndex : Opcode
+    {
+        public override string Name { get { return "setindex"; } }
+
+        public override void Execute(CPU cpu)
+        {
+            object value = cpu.PopValue();
+            object index = cpu.PopValue();
+            object list = cpu.PopValue();
+
+            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            if (!(index is int)) throw new Exception("The index must be an integer number");
+
+            if (value != null)
+            {
+                ((IIndexable)list).SetIndex((int)index, value);
+            }
+        }
+    }
+
     public class OpcodeEOF : Opcode
     {
         public override string Name { get { return "EOF"; } }
