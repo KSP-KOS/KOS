@@ -1187,7 +1187,11 @@ namespace kOS.Compilation.KS
             Opcode endLoop = AddOpcode(new OpcodePush(iteratorIdentifier));
             AddOpcode(new OpcodePush("reset"));
             AddOpcode(new OpcodeGetMember());
-            // TODO: add unset of iterator and iteration variable
+            // unset of iterator and iteration variable
+            AddOpcode(new OpcodePush(iteratorIdentifier));
+            AddOpcode(new OpcodeUnset());
+            VisitVariableNode(node.Nodes[1]);
+            AddOpcode(new OpcodeUnset());
             PopBreakList(endLoop.Label);
         }
 
@@ -1200,8 +1204,10 @@ namespace kOS.Compilation.KS
             }
             else
             {
-                VisitVarIdentifier(node.Nodes[1]);
+                VisitVariableNode(node.Nodes[1]);
             }
+
+            AddOpcode(new OpcodeUnset());
         }
     }
 }
