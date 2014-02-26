@@ -356,6 +356,9 @@ namespace kOS.Compilation.KS
                 case TokenType.shutdown_stmt:
                     VisitShutdownStatement(node);
                     break;
+                case TokenType.unset_stmt:
+                    VisitUnsetStatement(node);
+                    break;
                 case TokenType.filevol_name:
                     VisitFileVol(node);
                     break;
@@ -1075,6 +1078,19 @@ namespace kOS.Compilation.KS
         private void VisitShutdownStatement(ParseNode node)
         {
             AddOpcode(new OpcodeCall("shutdown()"));
+        }
+
+        private void VisitUnsetStatement(ParseNode node)
+        {
+            if (node.Nodes[1].Token.Type == TokenType.ALL)
+            {
+                // null means all variables
+                AddOpcode(new OpcodePush(null));
+            }
+            else
+            {
+                VisitVarIdentifier(node.Nodes[1]);
+            }
         }
     }
 }

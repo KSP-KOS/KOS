@@ -271,6 +271,9 @@ namespace kOS.Compilation.KS
                 case TokenType.shutdown_stmt:
                     Value = Evalshutdown_stmt(tree, paramlist);
                     break;
+                case TokenType.unset_stmt:
+                    Value = Evalunset_stmt(tree, paramlist);
+                    break;
                 case TokenType.arglist:
                     Value = Evalarglist(tree, paramlist);
                     break;
@@ -524,6 +527,13 @@ namespace kOS.Compilation.KS
         }
 
         protected virtual object Evalshutdown_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalunset_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
