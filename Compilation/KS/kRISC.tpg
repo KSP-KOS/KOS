@@ -50,6 +50,7 @@ REBOOT -> @"reboot";
 SHUTDOWN -> @"shutdown";
 FOR -> @"for";
 IN -> @"in";
+UNSET -> @"unset";
 //Generic
 BRACKETOPEN -> @"\(";
 BRACKETCLOSE -> @"\)";
@@ -58,6 +59,7 @@ CURLYCLOSE -> @"\}";
 COMMA -> @",";
 COLON -> @":";
 ARRAYINDEX -> @"#";
+ALL -> @"all";
 IDENTIFIER -> @"[a-z_][a-z0-9_]*";
 INTEGER -> @"[0-9]+";
 DOUBLE -> @"[0-9]*\.[0-9]+";
@@ -78,7 +80,7 @@ instruction -> set_stmt | if_stmt | until_stmt | lock_stmt | unlock_stmt | print
                on_stmt | toggle_stmt | wait_stmt | when_stmt | onoff_stmt | stage_stmt |
                clear_stmt | add_stmt | remove_stmt | log_stmt | break_stmt | declare_stmt |
                switch_stmt | copy_stmt | rename_stmt | delete_stmt | edit_stmt | run_stmt |
-               list_stmt | reboot_stmt | shutdown_stmt | for_stmt;
+               list_stmt | reboot_stmt | shutdown_stmt | for_stmt | unset_stmt;
 // statements
 set_stmt -> SET varidentifier TO expr EOI;
 if_stmt -> IF expr instruction_block EOI?;
@@ -109,6 +111,7 @@ list_stmt -> LIST IDENTIFIER? EOI;
 reboot_stmt -> REBOOT EOI;
 shutdown_stmt -> SHUTDOWN EOI;
 for_stmt -> FOR IDENTIFIER IN varidentifier instruction_block EOI?;
+unset_stmt -> UNSET (IDENTIFIER | ALL) EOI;
 // expressions
 arglist -> expr (COMMA expr)*;
 expr -> or_expr (COMPARATOR or_expr)*;

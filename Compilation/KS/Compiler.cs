@@ -355,6 +355,9 @@ namespace kOS.Compilation.KS
                 case TokenType.for_stmt:
                     VisitForStatement(node);
                     break;
+                case TokenType.unset_stmt:
+                    VisitUnsetStatement(node);
+                    break;
                 case TokenType.filevol_name:
                     VisitFileVol(node);
                     break;
@@ -1186,6 +1189,19 @@ namespace kOS.Compilation.KS
             AddOpcode(new OpcodeGetMember());
             // TODO: add unset of iterator and iteration variable
             PopBreakList(endLoop.Label);
+        }
+
+        private void VisitUnsetStatement(ParseNode node)
+        {
+            if (node.Nodes[1].Token.Type == TokenType.ALL)
+            {
+                // null means all variables
+                AddOpcode(new OpcodePush(null));
+            }
+            else
+            {
+                VisitVarIdentifier(node.Nodes[1]);
+            }
         }
     }
 }

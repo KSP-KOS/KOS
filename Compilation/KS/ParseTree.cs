@@ -274,6 +274,9 @@ namespace kOS.Compilation.KS
                 case TokenType.for_stmt:
                     Value = Evalfor_stmt(tree, paramlist);
                     break;
+                case TokenType.unset_stmt:
+                    Value = Evalunset_stmt(tree, paramlist);
+                    break;
                 case TokenType.arglist:
                     Value = Evalarglist(tree, paramlist);
                     break;
@@ -540,6 +543,13 @@ namespace kOS.Compilation.KS
         }
 
         protected virtual object Evalfor_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalunset_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

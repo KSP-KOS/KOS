@@ -268,6 +268,40 @@ namespace kOS.Execution
             _vars.Add(identifier, variable);
         }
 
+        public bool VariableIsRemovable(Variable variable)
+        {
+            return !(variable is Bindings.BoundVariable);
+        }
+
+        public void RemoveVariable(string identifier)
+        {
+            identifier = identifier.ToLower();
+            
+            if (_vars.ContainsKey(identifier) &&
+                VariableIsRemovable(_vars[identifier]))
+            {
+                _vars.Remove(identifier);
+            }
+        }
+
+        public void RemoveAllVariables()
+        {
+            List<string> removals = new List<string>();
+            
+            foreach (KeyValuePair<string, Variable> kvp in _vars)
+            {
+                if (VariableIsRemovable(kvp.Value))
+                {
+                    removals.Add(kvp.Key);
+                }
+            }
+
+            foreach (string identifier in removals)
+            {
+                _vars.Remove(identifier);
+            }
+        }
+
         public object GetValue(object testValue)
         {
             // $cos     cos named variable

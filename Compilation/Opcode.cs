@@ -124,6 +124,24 @@ namespace kOS.Compilation
         }
     }
 
+    public class OpcodeUnset : Opcode
+    {
+        public override string Name { get { return "unset"; } }
+
+        public override void Execute(CPU cpu)
+        {
+            object identifier = cpu.PopStack();
+            if (identifier != null)
+            {
+                cpu.RemoveVariable(identifier.ToString());
+            }
+            else
+            {
+                cpu.RemoveAllVariables();
+            }
+        }
+    }
+
     public class OpcodeGetMember : Opcode
     {
         public override string Name { get { return "getmember"; } }
