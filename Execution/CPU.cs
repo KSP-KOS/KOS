@@ -270,7 +270,7 @@ namespace kOS.Execution
 
         public bool VariableIsRemovable(Variable variable)
         {
-            return !(variable is Bindings.BoundVariable);
+            return !(variable is Binding.BoundVariable);
         }
 
         public void RemoveVariable(string identifier)
@@ -579,7 +579,7 @@ namespace kOS.Execution
 
                 foreach (var kvp in _vars)
                 {
-                    if (!(kvp.Value is Bindings.BoundVariable))
+                    if (!(kvp.Value is Binding.BoundVariable))
                     {
                         varNode.AddValue(kvp.Key.TrimStart('$'), Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
                     }

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 using kOS.InterProcessor;
-using kOS.Bindings;
+using kOS.Binding;
 using kOS.Persistence;
 using kOS.Suffixed;
 

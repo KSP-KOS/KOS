@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using kOS.Bindings;
+using kOS.Binding;
 using kOS.Compilation;
 
 namespace kOS.Execution

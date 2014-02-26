@@ -6,7 +6,7 @@ using kOS.Suffixed;
 using kOS.Utilities;
 using kOS.Execution;
 
-namespace kOS.Bindings
+namespace kOS.Binding
 {
     [kOSBinding("ksp")]
     public class MissionSettings : Binding

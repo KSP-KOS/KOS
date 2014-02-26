@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using kOS.Execution;
 
-namespace kOS.Bindings
+namespace kOS.Binding
 {
     public class BoundVariable : Variable
     {

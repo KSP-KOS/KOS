@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using kOS.Utilities;
 using kOS.Execution;
+using kOS.Utilities;
 
-namespace kOS.Bindings
+namespace kOS.Binding
 {
     [kOSBinding("ksp")]
-    public class BindingActionGroups : Binding
+    public class ActionGroups : Binding
     {
         public override void AddTo(SharedObjects shared)
         {

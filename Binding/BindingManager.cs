@@ -5,7 +5,7 @@ using System.Text;
 using System.Reflection;
 using kOS.Execution;
 
-namespace kOS.Bindings
+namespace kOS.Binding
 {
     public class BindingManager
     {

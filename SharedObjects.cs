@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using kOS.InterProcessor;
-using kOS.Bindings;
+using kOS.Binding;
 using kOS.Module;
 using kOS.Persistence;
 using kOS.Compilation;

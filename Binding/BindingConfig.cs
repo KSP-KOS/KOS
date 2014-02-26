@@ -5,7 +5,7 @@ using System.Text;
 using kOS.Suffixed;
 using kOS.Execution;
 
-namespace kOS.Bindings
+namespace kOS.Binding
 {
     [kOSBinding("ksp")]
     public class BindingConfig : Binding

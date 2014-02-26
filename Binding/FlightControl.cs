@@ -8,7 +8,7 @@ using kOS.Suffixed;
 using kOS.Utilities;
 using kOS.Execution;
 
-namespace kOS.Bindings
+namespace kOS.Binding
 {
     [kOSBinding("ksp")]
     public class BindingFlightControls : Binding
@@ -75,11 +75,6 @@ namespace kOS.Bindings
                 {
                     _currentVessel = _shared.Vessel;
                     _currentVessel.OnFlyByWire += OnFlyByWire;
-
-                    //foreach (FlightCtrlParam param in _flightParams.Values)
-                    //{
-                    //    param.UpdateVessel(vessel);
-                    //}
                 }
             }
         }
