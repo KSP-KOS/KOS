@@ -65,6 +65,14 @@ namespace kOS.Suffixed
             return new Direction(vesselFacing);
         }
 
+        public Direction GetSurfacePrograde()
+        {
+            var up = (Target.findLocalMOI(Target.findWorldCenterOfMass()) - Target.mainBody.position).normalized;
+
+            var d = new Direction { Rotation = Quaternion.LookRotation(Target.srf_velocity.normalized, up) };
+            return d;
+        }
+
         public override object GetSuffix(string suffixName)
         {
             switch (suffixName)
@@ -128,6 +136,8 @@ namespace kOS.Suffixed
                     return VesselUtils.GetTerminalVelocity(Target);
                 case "OBT":
                     return new OrbitInfo(Target.orbit, Target);
+                case "SRFPROGRADE":
+                    return GetSurfacePrograde();
             }
 
             // Is this a resource?
