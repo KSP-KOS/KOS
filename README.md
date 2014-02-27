@@ -137,7 +137,7 @@ Example:
     COPY file1 FROM 0. // Copies a file called file1 from volume 0 to volume 1
     COPY file2 TO 0.   // Copies a file called file1 from volume 1 to volume 0
 
-## DELETE
+### DELETE
 
 Deletes a file. You can delete a file from the current volume, or from a named volume.
 Example:
