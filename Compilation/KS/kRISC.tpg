@@ -49,7 +49,6 @@ LIST -> @"list";
 REBOOT -> @"reboot";
 SHUTDOWN -> @"shutdown";
 FOR -> @"for";
-IN -> @"in";
 UNSET -> @"unset";
 //Generic
 BRACKETOPEN -> @"\(";
@@ -58,6 +57,7 @@ CURLYOPEN -> @"\{";
 CURLYCLOSE -> @"\}";
 COMMA -> @",";
 COLON -> @":";
+IN -> @"in";
 ARRAYINDEX -> @"#";
 ALL -> @"all";
 IDENTIFIER -> @"[a-z_][a-z0-9_]*";
@@ -107,7 +107,7 @@ delete_stmt -> DELETE IDENTIFIER (FROM filevol_name)? EOI;
 edit_stmt -> EDIT IDENTIFIER EOI;
 run_stmt -> RUN IDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? (ON filevol_name)? EOI;
 filevol_name -> INTEGER | IDENTIFIER;
-list_stmt -> LIST IDENTIFIER? EOI;
+list_stmt -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
 reboot_stmt -> REBOOT EOI;
 shutdown_stmt -> SHUTDOWN EOI;
 for_stmt -> FOR IDENTIFIER IN varidentifier instruction_block EOI?;
@@ -126,7 +126,7 @@ atom -> PLUSMINUS? ( sci_number |
                      varidentifier |
                      BRACKETOPEN expr BRACKETCLOSE ) |
         STRING;
-sci_number -> number (E INTEGER)?;
+sci_number -> number (E PLUSMINUS? INTEGER)?;
 number -> (INTEGER | DOUBLE);
 varidentifier -> array_identifier (COLON IDENTIFIER)*;
 array_identifier -> function_identifier (ARRAYINDEX (INTEGER | IDENTIFIER))*;

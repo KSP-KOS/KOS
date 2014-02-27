@@ -509,20 +509,27 @@ namespace kOS.Compilation.KS
 
         private void VisitSciNumber(ParseNode node)
         {
-            if (node.Nodes.Count == 3)
+            if (node.Nodes.Count == 1)
             {
-                //number in scientific notation
-                double mantissa = double.Parse(node.Nodes[0].Nodes[0].Token.Text);
-                int exponent = int.Parse(node.Nodes[2].Token.Text);
-                double number = mantissa * Math.Pow(10, exponent);
-                AddOpcode(new OpcodePush(number));
+                VisitNumber(node.Nodes[0]);
             }
             else
             {
-                if (node.Nodes.Count == 1)
+                //number in scientific notation
+                int exponentIndex = 2;
+                int exponentSign = 1;
+                
+                double mantissa = double.Parse(node.Nodes[0].Nodes[0].Token.Text);
+
+                if (node.Nodes[2].Token.Type == TokenType.PLUSMINUS)
                 {
-                    VisitNumber(node.Nodes[0]);
+                    exponentIndex++;
+                    exponentSign = (node.Nodes[2].Token.Text == "-") ? -1 : 1;
                 }
+
+                int exponent = exponentSign * int.Parse(node.Nodes[exponentIndex].Token.Text);
+                double number = mantissa * Math.Pow(10, exponent);
+                AddOpcode(new OpcodePush(number));
             }
         }
 
@@ -1122,12 +1129,27 @@ namespace kOS.Compilation.KS
 
         private void VisitListStatement(ParseNode node)
         {
-            if (node.Nodes.Count == 3)
-                VisitNode(node.Nodes[1]);
-            else
-                AddOpcode(new OpcodePush("files"));
+            bool hasIdentifier = (node.Nodes[1].Token.Type == TokenType.IDENTIFIER);
+            bool hasIn = hasIdentifier && (node.Nodes[2].Token.Type == TokenType.IN);
 
-            AddOpcode(new OpcodeCall("printlist()"));
+            if (hasIn)
+            {
+                // destination variable
+                VisitVariableNode(node.Nodes[3]);
+                // list type
+                VisitNode(node.Nodes[1]);
+                // build list
+                AddOpcode(new OpcodeCall("buildlist()"));
+                AddOpcode(new OpcodeStore());
+            }
+            else
+            {
+                // list type
+                if (hasIdentifier) VisitNode(node.Nodes[1]);
+                else AddOpcode(new OpcodePush("files"));
+                // print list
+                AddOpcode(new OpcodeCall("printlist()"));
+            }
         }
 
         private void VisitLogStatement(ParseNode node)

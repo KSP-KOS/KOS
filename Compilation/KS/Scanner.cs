@@ -214,10 +214,6 @@ namespace kOS.Compilation.KS
             Patterns.Add(TokenType.FOR, regex);
             Tokens.Add(TokenType.FOR);
 
-            regex = new Regex(@"in");
-            Patterns.Add(TokenType.IN, regex);
-            Tokens.Add(TokenType.IN);
-
             regex = new Regex(@"unset");
             Patterns.Add(TokenType.UNSET, regex);
             Tokens.Add(TokenType.UNSET);
@@ -245,6 +241,10 @@ namespace kOS.Compilation.KS
             regex = new Regex(@":");
             Patterns.Add(TokenType.COLON, regex);
             Tokens.Add(TokenType.COLON);
+
+            regex = new Regex(@"in");
+            Patterns.Add(TokenType.IN, regex);
+            Tokens.Add(TokenType.IN);
 
             regex = new Regex(@"#");
             Patterns.Add(TokenType.ARRAYINDEX, regex);
@@ -539,14 +539,14 @@ namespace kOS.Compilation.KS
             REBOOT  = 90,
             SHUTDOWN= 91,
             FOR     = 92,
-            IN      = 93,
-            UNSET   = 94,
-            BRACKETOPEN= 95,
-            BRACKETCLOSE= 96,
-            CURLYOPEN= 97,
-            CURLYCLOSE= 98,
-            COMMA   = 99,
-            COLON   = 100,
+            UNSET   = 93,
+            BRACKETOPEN= 94,
+            BRACKETCLOSE= 95,
+            CURLYOPEN= 96,
+            CURLYCLOSE= 97,
+            COMMA   = 98,
+            COLON   = 99,
+            IN      = 100,
             ARRAYINDEX= 101,
             ALL     = 102,
             IDENTIFIER= 103,

@@ -567,49 +567,64 @@ namespace kOS.Execution
 
         public void OnSave(ConfigNode node)
         {
-            ConfigNode contextNode = new ConfigNode("context");
-
-            // Save variables
-            if (_vars.Count > 0)
+            try
             {
-                ConfigNode varNode = new ConfigNode("variables");
+                ConfigNode contextNode = new ConfigNode("context");
 
-                foreach (var kvp in _vars)
+                // Save variables
+                if (_vars.Count > 0)
                 {
-                    if (!(kvp.Value is Binding.BoundVariable))
+                    ConfigNode varNode = new ConfigNode("variables");
+
+                    foreach (var kvp in _vars)
                     {
-                        varNode.AddValue(kvp.Key.TrimStart('$'), Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
+                        if (!(kvp.Value is Binding.BoundVariable) &&
+                            (kvp.Value.Name.IndexOfAny(new char[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
+                        {
+                            varNode.AddValue(kvp.Key.TrimStart('$'), Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
+                        }
                     }
+
+                    contextNode.AddNode(varNode);
                 }
 
-                contextNode.AddNode(varNode);
+                node.AddNode(contextNode);
             }
-
-            node.AddNode(contextNode);
+            catch (Exception e)
+            {
+                if (_shared.Logger != null) _shared.Logger.Log(e);
+            }
         }
 
         public void OnLoad(ConfigNode node)
         {
-            StringBuilder scriptBuilder = new StringBuilder();
-            
-            foreach (ConfigNode contextNode in node.GetNodes("context"))
+            try
             {
-                foreach (ConfigNode varNode in contextNode.GetNodes("variables"))
+                StringBuilder scriptBuilder = new StringBuilder();
+
+                foreach (ConfigNode contextNode in node.GetNodes("context"))
                 {
-                    foreach (ConfigNode.Value value in varNode.values)
+                    foreach (ConfigNode varNode in contextNode.GetNodes("variables"))
                     {
-                        string varValue = Persistence.ProgramFile.DecodeLine(value.value);
-                        scriptBuilder.AppendLine(string.Format("set {0} to {1}.", value.name, varValue));
+                        foreach (ConfigNode.Value value in varNode.values)
+                        {
+                            string varValue = Persistence.ProgramFile.DecodeLine(value.value);
+                            scriptBuilder.AppendLine(string.Format("set {0} to {1}.", value.name, varValue));
+                        }
                     }
                 }
-            }
 
-            if (_shared.ScriptHandler != null && scriptBuilder.Length > 0)
+                if (_shared.ScriptHandler != null && scriptBuilder.Length > 0)
+                {
+                    ProgramBuilder programBuilder = new ProgramBuilder();
+                    programBuilder.AddRange(_shared.ScriptHandler.Compile(scriptBuilder.ToString()));
+                    List<Opcode> program = programBuilder.BuildProgram(false);
+                    RunProgram(program, true);
+                }
+            }
+            catch (Exception e)
             {
-                ProgramBuilder programBuilder = new ProgramBuilder();
-                programBuilder.AddRange(_shared.ScriptHandler.Compile(scriptBuilder.ToString()));
-                List<Opcode> program = programBuilder.BuildProgram(false);
-                RunProgram(program, true);
+                if (_shared.Logger != null) _shared.Logger.Log(e);
             }
         }
     }
