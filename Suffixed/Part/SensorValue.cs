@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace kOS.Suffixed
+namespace kOS.Suffixed.Part
 {
     public class SensorValue : PartValue
     {
         private readonly ModuleEnviroSensor sensor;
 
-        public SensorValue(Part part, ModuleEnviroSensor sensor) : base(part)
+        public SensorValue(global::Part part, ModuleEnviroSensor sensor) : base(part)
         {
             this.sensor = sensor;
         }
@@ -41,7 +41,7 @@ namespace kOS.Suffixed
             return base.SetSuffix(suffixName, value);
         }
 
-        public new static ListValue PartsToList(IEnumerable<Part> parts)
+        public new static ListValue PartsToList(IEnumerable<global::Part> parts)
         {
             var toReturn = new ListValue();
             foreach (var part in parts)

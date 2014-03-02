@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using kOS.Suffixed;
+using kOS.Suffixed.Part;
 
 namespace kOS.Utilities
 {
-    public class VesselUtils
+    public static class VesselUtils
     {
         public static List<Part> GetListOfActivatedEngines(Vessel vessel)
         {
@@ -73,6 +74,35 @@ namespace kOS.Utilities
             return total;
         }
 
+        public static ListValue PartList(this IShipconstruct vessel, string partType)
+        {
+            var list = new ListValue();
+            var partList = vessel.Parts.ToList();
+
+            switch (partType.ToUpper())
+            {
+                case "RESOURCES":
+                    list = ResourceValue.PartsToList(partList);
+                    break;
+                case "PARTS":
+                    list = PartValue.PartsToList(partList);
+                    break;
+                case "ENGINES":
+                    list = EngineValue.PartsToList(partList);
+                    break;
+                case "SENSORS":
+                    list = SensorValue.PartsToList(partList);
+                    break;
+                case "ELEMENTS":
+                    list = ElementValue.PartsToList(partList);
+                    break;
+                case "DOCKINGPORTS":
+                    list = DockingPortValue.PartsToList(partList);
+                    break;
+            }
+            return list;
+        }
+
         public static double GetMaxThrust(Vessel vessel)
         {
             var thrust = 0.0;
@@ -106,21 +136,17 @@ namespace kOS.Utilities
 
         public static Vessel TryGetVesselByName(string name, Vessel origin)
         {
-            foreach (var v in FlightGlobals.Vessels)
-            {
-                if (v != origin && v.vesselName.ToUpper() == name.ToUpper())
-                {
-                    return v;
-                }
-            }
+            return FlightGlobals.Vessels.FirstOrDefault<Vessel>(v => v != origin && v.vesselName.ToUpper() == name.ToUpper());
+        }
 
-            return null;
+        public static Vessel TryGetVesselByName(string name)
+        {
+            return FlightGlobals.Vessels.FirstOrDefault<Vessel>(v => v.vesselName.ToUpper() == name.ToUpper());
         }
 
         public static CelestialBody GetBodyByName(string name)
         {
-            return
-                FlightGlobals.fetch.bodies.FirstOrDefault<CelestialBody>(body => name.ToUpper() == body.name.ToUpper());
+            return FlightGlobals.fetch.bodies.FirstOrDefault<CelestialBody>(body => name.ToUpper() == body.name.ToUpper());
         }
 
         public static Vessel GetVesselByName(string name, Vessel origin)
@@ -134,10 +160,33 @@ namespace kOS.Utilities
             return vessel;
         }
 
+        public static Vessel GetVesselByName(string name)
+        {
+            var vessel = TryGetVesselByName(name);
+
+            if (vessel == null)
+            {
+                throw new Exception("Vessel '" + name + "' not found");
+            }
+            return vessel;
+        }
+
+        public static void SetTarget(IKOSTargetable val)
+        {
+            if (val.Target != null)
+            {
+                SetTarget(val.Target);
+            }
+            else
+            {
+                throw new Exception("Error on targeting " + val);
+            }
+        }
+
         public static void SetTarget(ITargetable val)
         {
-            FlightGlobals.fetch.SetVesselTarget(val);
-        }
+           FlightGlobals.fetch.SetVesselTarget(val);
+        } 
 
         public static double GetCommRange(Vessel vessel)
         {

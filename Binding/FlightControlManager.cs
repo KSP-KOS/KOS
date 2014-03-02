@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using UnityEngine;
 using kOS.Suffixed;
 using kOS.Utilities;
@@ -11,15 +8,16 @@ using kOS.Execution;
 namespace kOS.Binding
 {
     [kOSBinding("ksp")]
-    public class BindingFlightControls : Binding
+    public class FlightControlManager : Binding
     {
         private Vessel _currentVessel;
         private Dictionary<string, FlightCtrlParam> _flightParams = new Dictionary<string, FlightCtrlParam>();
-        
+        readonly static Dictionary<uint, FlightControl> flightControls = new Dictionary<uint, FlightControl>();
+
         public override void AddTo(SharedObjects shared)
         {
             _shared = shared;
-          
+
             AddNewFlightParam("throttle", shared);
             AddNewFlightParam("steering", shared);
             AddNewFlightParam("wheelthrottle", shared);
@@ -42,7 +40,7 @@ namespace kOS.Binding
             foreach (FlightCtrlParam param in _flightParams.Values)
             {
                 if (param.enabled)
-                {                    
+                {
                     param.OnFlyByWire(ref c);
                 }
             }
@@ -62,6 +60,8 @@ namespace kOS.Binding
 
         public override void Update()
         {
+            UnbindUnloaded();
+
             if (_currentVessel != _shared.Vessel)
             {
                 // Try to re-establish connection to vessel
@@ -79,7 +79,30 @@ namespace kOS.Binding
             }
         }
 
-        public class FlightCtrlParam
+        public static FlightControl GetControllerByVessel(Vessel target)
+        {
+            FlightControl flightControl;
+            if (!flightControls.TryGetValue(target.rootPart.flightID, out flightControl))
+            {
+                flightControl = new FlightControl(target);
+                flightControls.Add(target.rootPart.flightID, flightControl);
+            }
+            return flightControl;
+        }
+
+        public static void UnbindUnloaded()
+        {
+            var keys = flightControls.Keys;
+            foreach (var key in keys)
+            {
+                var value = flightControls[key];
+                if (value.Vessel.loaded) continue;
+                flightControls.Remove(key);
+                value.Dispose();
+            }
+        }
+
+        private class FlightCtrlParam
         {
             public string name;
             public bool enabled;
@@ -109,16 +132,16 @@ namespace kOS.Binding
                     switch (name)
                     {
                         case "throttle":
-                            UpdateThrottle(ref c);
+                            UpdateThrottle(c);
                             break;
                         case "wheelthrottle":
-                            UpdateWheelThrottle(ref c);
+                            UpdateWheelThrottle(c);
                             break;
                         case "steering":
-                            UpdateSteering(ref c);
+                            SteerByWire(c);
                             break;
                         case "wheelsteering":
-                            UpdateWheelSteering(ref c);
+                            WheelSteer(c);
                             break;
                         default:
                             break;
@@ -126,17 +149,17 @@ namespace kOS.Binding
                 }
             }
 
-            private void UpdateThrottle(ref FlightCtrlState c)
+            private void UpdateThrottle(FlightCtrlState c)
             {
                 c.mainThrottle = (float)Convert.ToDouble(_value);
             }
 
-            private void UpdateWheelThrottle(ref FlightCtrlState c)
+            private void UpdateWheelThrottle(FlightCtrlState c)
             {
                 c.wheelThrottle = (float)Utils.Clamp(Convert.ToDouble(_value), -1, 1);                
             }
 
-            private void UpdateSteering(ref FlightCtrlState c)
+            private void SteerByWire(FlightCtrlState c)
             {
                 if (_value is string && ((string)_value).ToUpper() == "KILL")
                 {
@@ -156,13 +179,13 @@ namespace kOS.Binding
                 }
             }
 
-            private void UpdateWheelSteering(ref FlightCtrlState c)
+            private void WheelSteer(FlightCtrlState c)
             {
                 float bearing = 0;
 
                 if (_value is VesselTarget)
                 {
-                    bearing = VesselUtils.GetTargetBearing(_shared.Vessel, ((VesselTarget)_value).Target);
+                    bearing = VesselUtils.GetTargetBearing(_shared.Vessel, ((VesselTarget)_value).Vessel);
                 }
                 else if (_value is GeoCoordinates)
                 {
@@ -173,22 +196,16 @@ namespace kOS.Binding
                     bearing = (float)(Math.Round((double)_value) - Mathf.Round(FlightGlobals.ship_heading));
                 }
 
-                if (_shared.Vessel.horizontalSrfSpeed > 0.1f)
-                {
-                    if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(_shared.Vessel), VesselUtils.GetVelocityHeading(_shared.Vessel))) <= 90)
-                    {
-                        c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
-                    }
-                    else
-                    {
-                        c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
-                    }
-                }
-            }
+                if (!(_shared.Vessel.horizontalSrfSpeed > 0.1f)) return;
 
-            internal void UpdateVessel(Vessel vessel)
-            {
-                _shared.Vessel = vessel;
+                if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(_shared.Vessel), VesselUtils.GetVelocityHeading(_shared.Vessel))) <= 90)
+                {
+                    c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
+                }
+                else
+                {
+                    c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
+                }
             }
         }
     }

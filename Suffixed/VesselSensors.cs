@@ -6,9 +6,9 @@ namespace kOS.Suffixed
     {
         private readonly Vector acceleration = new Vector(0, 0, 0);
         private readonly Vector geeForce = new Vector(0, 0, 0);
-        private readonly Single kerbolExposure;
-        private readonly Single pressure;
-        private readonly Single temperature;
+        private readonly double kerbolExposure;
+        private readonly double temperature;
+        private readonly double pressure;
 
         public VesselSensors(Vessel target)
         {
@@ -24,11 +24,10 @@ namespace kOS.Suffixed
                         {
                             case "ACC":
                                 acceleration =
-                                    new Vector(FlightGlobals.getGeeForceAtPosition(part.transform.position) -
-                                               target.acceleration);
+                                    new Vector(FlightGlobals.getGeeForceAtPosition(part.transform.position) - target.acceleration);
                                 break;
                             case "PRES":
-                                pressure = (Single) FlightGlobals.getStaticPressure();
+                                pressure = FlightGlobals.getStaticPressure();
                                 break;
                             case "TEMP":
                                 temperature = part.temperature;

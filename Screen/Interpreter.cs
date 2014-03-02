@@ -14,10 +14,12 @@ namespace kOS.Screen
         private List<string> _commandHistory = new List<string>();
         private int _commandHistoryIndex = 0;
         private bool _locked = false;
+        public bool BatchMode { get; set; }
 
         public Interpreter(SharedObjects shared)
         {
             _shared = shared;
+            BatchMode = false;
         }
 
         protected override void NewLine()

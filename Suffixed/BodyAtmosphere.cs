@@ -11,8 +11,10 @@
             Scale = Exists ? b.atmosphereScaleHeight : 0;
             Height = Exists ? b.maxAtmosphereAltitude : 0;
             Oxygen = Exists && b.atmosphereContainsOxygen;
+            SeaLevelPressure = Exists ? b.staticPressureASL : 0;
         }
 
+        protected double SeaLevelPressure { get; set; }
         protected string BodyName { get; set; }
         protected double Scale { get; set; }
         protected float Height { get; set; }
@@ -32,6 +34,8 @@
                     return Oxygen;
                 case "SCALE":
                     return Scale;
+                case "SEALEVELPRESSURE":
+                    return SeaLevelPressure;
                 case "HEIGHT":
                     return Height;
             }

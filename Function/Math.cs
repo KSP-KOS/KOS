@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using kOS.Suffixed;
 
 namespace kOS.Function
 {
@@ -131,6 +132,81 @@ namespace kOS.Function
             Compilation.Calculator calculator = Compilation.Calculator.GetCalculator(argument1, argument2);
             object result = calculator.Max(argument1, argument2);
             shared.Cpu.PushStack(result);
+        }
+    }
+
+    [FunctionAttribute("random")]
+    public class FunctionRandom : FunctionBase
+    {
+        private readonly Random random = new Random();
+
+        public override void Execute(SharedObjects shared)
+        {
+            shared.Cpu.PushStack(random.NextDouble());
+        }
+    }
+
+    [FunctionAttribute("vcrs", "vectorcrossproduct")]
+    public class FunctionVectorCross : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Vector vector1 = shared.Cpu.PopValue() as Vector;
+            Vector vector2 = shared.Cpu.PopValue() as Vector;
+
+            if (vector1 != null && vector2 != null)
+            {
+                object result = new Vector(Vector3d.Cross(vector1.ToVector3D(), vector2.ToVector3D()));
+                shared.Cpu.PushStack(result);
+            }
+        }
+    }
+
+    [FunctionAttribute("vdot", "vectordotproduct")]
+    public class FunctionVectorDot : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Vector vector1 = shared.Cpu.PopValue() as Vector;
+            Vector vector2 = shared.Cpu.PopValue() as Vector;
+
+            if (vector1 != null && vector2 != null)
+            {
+                object result = Vector3d.Dot(vector1.ToVector3D(), vector2.ToVector3D());
+                shared.Cpu.PushStack(result);
+            }
+        }
+    }
+
+    [FunctionAttribute("vxcl", "vectorexclude")]
+    public class FunctionVectorExclude : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Vector vector1 = shared.Cpu.PopValue() as Vector;
+            Vector vector2 = shared.Cpu.PopValue() as Vector;
+
+            if (vector1 != null && vector2 != null)
+            {
+                object result = new Vector(Vector3d.Exclude(vector1.ToVector3D(), vector2.ToVector3D()));
+                shared.Cpu.PushStack(result);
+            }
+        }
+    }
+
+    [FunctionAttribute("vang", "vectorangle")]
+    public class FunctionVectorAngle : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Vector vector1 = shared.Cpu.PopValue() as Vector;
+            Vector vector2 = shared.Cpu.PopValue() as Vector;
+
+            if (vector1 != null && vector2 != null)
+            {
+                object result = Vector3d.Angle(vector1.ToVector3D(), vector2.ToVector3D());
+                shared.Cpu.PushStack(result);
+            }
         }
     }
 }

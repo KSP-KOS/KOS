@@ -7,11 +7,21 @@ namespace kOS.Persistence
 {
     public class Volume
     {
-        protected Dictionary<string, ProgramFile> _files = new Dictionary<string, ProgramFile>();
+        protected const int BASE_CAPACITY = 10000;
+        protected const float BASE_POWER = 0.02f;
 
-        public int Capacity = -1;
-        public string Name = "";
-        public bool Renameable = true;
+        protected Volume()
+        {
+            Renameable = true;
+            Capacity = -1;
+            Name = "";
+            _files = new Dictionary<string, ProgramFile>();
+        }
+
+        protected Dictionary<string, ProgramFile> _files;
+        public string Name { get; set; }
+        public int Capacity { get; set; }
+        public bool Renameable { get; set; }
 
 
         public virtual ProgramFile GetByName(string name)
@@ -118,6 +128,14 @@ namespace kOS.Persistence
         public virtual bool CheckRange(Vessel vessel)
         {
             return true;
+        }
+
+        public virtual float RequiredPower()
+        {
+            var multiplier = ((float)Capacity) / BASE_CAPACITY;
+            var powerRequired = BASE_POWER * multiplier;
+
+            return powerRequired;
         }
     }    
 }

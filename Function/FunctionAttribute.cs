@@ -7,10 +7,11 @@ namespace kOS.Function
 {
     public class FunctionAttribute : Attribute
     {
-        public string functionName { get; set; }
-        public FunctionAttribute(string functionName)
+        public string[] Names { get; set; }
+
+        public FunctionAttribute(params string[] names)
         {
-            this.functionName = functionName;
+            Names = names;
         }
     }
 }

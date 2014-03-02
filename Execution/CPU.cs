@@ -62,9 +62,13 @@ namespace kOS.Execution
                 FunctionAttribute attr = (FunctionAttribute)type.GetCustomAttributes(typeof(FunctionAttribute), true).FirstOrDefault();
                 if (attr != null)
                 {
-                    if (attr.functionName != string.Empty)
+                    object functionObject = Activator.CreateInstance(type);
+                    foreach (string functionName in attr.Names)
                     {
-                        _functions.Add(attr.functionName, (FunctionBase)Activator.CreateInstance(type));
+                        if (functionName != string.Empty)
+                        {
+                            _functions.Add(functionName, (FunctionBase)functionObject);
+                        }
                     }
                 }
             }

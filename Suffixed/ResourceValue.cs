@@ -46,7 +46,7 @@ namespace kOS.Suffixed
             return string.Format("RESOURCE({0},{1},{2}", name, amount, capacity);
         }
 
-        public static ListValue PartsToList(IEnumerable<Part> parts)
+        public static ListValue PartsToList(IEnumerable<global::Part> parts)
         {
             var list = new ListValue();
             var resources = new Dictionary<string, ResourceValue>();

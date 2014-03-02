@@ -48,11 +48,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddOns\RemoteTech2\Functions.cs" />
+    <Compile Include="AddOns\RemoteTech2\IRemoteTechAPIv1.cs" />
+    <Compile Include="AddOns\RemoteTech2\RemoteTechAPI.cs" />
+    <Compile Include="AddOns\RemoteTech2\RemoteTechHook.cs" />
+    <Compile Include="AddOns\RemoteTech2\RemoteTechUtility.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\Binding.cs" />
     <Compile Include="Binding\BindingConfig.cs" />
     <Compile Include="Binding\BindingManager.cs" />
-    <Compile Include="Binding\FlightControl.cs" />
+    <Compile Include="Binding\FlightControlManager.cs" />
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\RoverStats.cs" />
@@ -81,7 +86,7 @@
     <Compile Include="Core.cs" />
     <Compile Include="Suffixed\ConstantValue.cs" />
     <Compile Include="Suffixed\ElementValue.cs" />
-    <Compile Include="Suffixed\EngineValue.cs" />
+    <Compile Include="Suffixed\FlightControl.cs" />
     <Compile Include="Suffixed\GeoCoordinates.cs" />
     <Compile Include="Screen\Interpreter.cs" />
     <Compile Include="Module\kOSProcessor.cs" />
@@ -89,6 +94,7 @@
     <Compile Include="Compilation\KS\KSScript.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Suffixed\IIndexable.cs" />
+    <Compile Include="Suffixed\IKOSTargetable.cs" />
     <Compile Include="Suffixed\ListValue.cs" />
     <Compile Include="Suffixed\Node.cs" />
     <Compile Include="Suffixed\Orbit.cs" />
@@ -100,10 +106,13 @@
     <Compile Include="Screen\ScreenBuffer.cs" />
     <Compile Include="Compilation\Script.cs" />
     <Compile Include="SharedObjects.cs" />
-    <Compile Include="Suffixed\PartValue.cs" />
+    <Compile Include="Suffixed\Part\DockingPortValue.cs" />
+    <Compile Include="Suffixed\Part\EngineValue.cs" />
+    <Compile Include="Suffixed\Part\PartValue.cs" />
+    <Compile Include="Suffixed\Part\SensorValue.cs" />
     <Compile Include="Suffixed\ResourceValue.cs" />
-    <Compile Include="Suffixed\SensorValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
+    <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Screen\TermWindow.cs" />
     <Compile Include="Screen\TextEditor.cs" />

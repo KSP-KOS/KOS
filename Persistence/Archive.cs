@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using UnityEngine;
 using kOS.Utilities;
+using kOS.AddOns.RemoteTech2;
 
 namespace kOS.Persistence
 {
@@ -115,12 +116,23 @@ namespace kOS.Persistence
         {
             if (vessel != null)
             {
-                return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
+                if (RemoteTechHook.Instance != null)
+                    return RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
+                else
+                    return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
             }
             else
             {
                 return false;
             }
+        }
+
+        public override float RequiredPower()
+        {
+            const int multiplier = 5;
+            const float powerRequired = BASE_POWER * multiplier;
+
+            return powerRequired;
         }
     }
 }

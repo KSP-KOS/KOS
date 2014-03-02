@@ -12,21 +12,27 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            _shared = shared;
-
-            _shared.BindingMgr.AddGetter("WARP", delegate(CPU cpu) { return TimeWarp.fetch.current_rate_index; });
-            _shared.BindingMgr.AddSetter("WARP", delegate(CPU cpu, object val)
-            {
-                int newRate;
-                if (int.TryParse(val.ToString(), out newRate))
+            _shared.BindingMgr.AddGetter("LOADDISTANCE", cpu => Vessel.loadDistance );
+            _shared.BindingMgr.AddSetter("LOADDISTANCE", delegate(CPU cpu, object val)
                 {
-                    TimeWarp.SetRate(newRate, false);
-                }
-            });
+                    var distance = (float) val;
+                    Vessel.loadDistance = distance;
+                    Vessel.unloadDistance = distance - 250;
+                });
+            _shared.BindingMgr.AddGetter("WARP", cpu => TimeWarp.fetch.current_rate_index);
+            _shared.BindingMgr.AddSetter("WARP", delegate(CPU cpu, object val)
+                {
+                    int newRate;
+                    if (int.TryParse(val.ToString(), out newRate))
+                    {
+                        TimeWarp.SetRate(newRate, false);
+                    }
+                });
 
-            foreach (CelestialBody body in FlightGlobals.fetch.bodies)
+            foreach (var body in FlightGlobals.fetch.bodies)
             {
-                _shared.BindingMgr.AddGetter(body.name, delegate(CPU cpu) { return new BodyTarget(body, _shared.Vessel); });
+                var cBody = body;
+                _shared.BindingMgr.AddGetter(body.name, cpu => new BodyTarget(cBody, _shared.Vessel));
             }
         }
     }

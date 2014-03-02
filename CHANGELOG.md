@@ -1,16 +1,82 @@
 kOS Mod Changelog
 =================
 
+# v0.11.1
+
+* BREAKING: Disk Space is now defined by the kOS part, existing missions might have the available space reduced to 500. (whaaw)
+* BREAKING: Vector * Vector Operator has been changed from V( X * X, Y * Y, Z * Z) to a dot product.
+
+* Added Ctrl+Shift+X hotkey to close the terminal window (jwvanderbeck)
+* Improved RemoteTech integration (jwvanderbeck) Current state is discussed https://github.com/erendrake/KOS/pull/51
+* Added engine stats to the enginevalue
+    * ACTIVE (get/set)
+    * ALLOWRESTART (get
+    * ALLOWSHUTDOWN (get)
+    * THROTTLELOCK (get)
+    * THRUSTLIMIT (get/set)
+
+* Added to BODY:ATM:SEALEVELPRESSURE
+* Added a DockingPort Part Type, You can access it by "LIST DOCKINGPORTS IN ..."
+* Added PART:CONTROLFROM which centers the transform on that part.
+
+* Vector now has two new Suffixes
+    * NORMALIZED - Vector keeps same direction, but will have a magnitude of 1.
+    * SQRMAGNITUDE - https://docs.unity3d.com/Documentation/ScriptReference/Vector3-sqrMagnitude.html
+
+* New math operators involving Vectors
+    * VECTORCROSSPRODUCT (VCRS)
+    * VECTORDOTPRODUCT (VDOT)
+    * VECTOREXCLUDE (VXCL) - projects one vector onto another
+    * VECTORANGLE (VANG) - Returns the angle in degrees between from and to.
+
+* Direct control of vessel and nearby vessels (SHIP:CONTROL, TARGET:CONTROL)
+    * __GETTERS__
+	* YAW - Rotation (1 to -1)
+	* PITCH - Rotation (1 to -1)
+	* ROLL - Rotation (1 to -1)
+	* FORE - Translation (1 to -1)
+	* STARBOARD - Translation (1 to -1)
+	* TOP - Translation (1 to -1)
+	* ROTATION - Vector
+	* TRANSLATION - Vector
+	* NEUTRAL - bool, 
+	* MAINTHROTTLE (1 to -1)
+	* WHEELTHROTTLE (1 to -1)
+	* WHEELSTEER (1 to -1)
+    * __SETTERS__
+	* YAW - Rotation (1 to -1)
+	* PITCH - Rotation (1 to -1)
+	* ROLL - Rotation (1 to -1)
+	* FORE - Translation (1 to -1)
+	* STARBOARD - Translation (1 to -1)
+	* TOP - Translation (1 to -1)
+	* ROTATION - Vector
+	* TRANSLATION - Vector
+	* NEUTRALIZE - bool, releases vessel control, 
+	* MAINTHROTTLE (1 to -1)
+	* WHEELTHROTTLE (1 to -1)
+	* WHEELSTEER (1 to -1)
+* changing systems vessel load distance 
+    * LOADDISTANCE get/set for adjusting load distance for every vessel
+    * VESSELTARGET:LOAD bool - is the vessel loaded
+    * VESSELTARGET:PACKDISTANCE - Setter for pack distance for every vessel.
+* Added RANDOM() generator (0 - 1)
+
+* Power requirements are now directly tied to the active volume's size, the ARCHIVE's size is unlimited so it is capped at the equivalent of 50KB. 
+
 ### 0.11.0
 
 - Thanks to enkido and jwvanderbeck for your help. 
+
+- BREAKING: BODY, SHIP:BODY, TARGET:BODY now all return a Body structure rather than the name of the body
+- BREAKING: Removed NODE:APOAPSIS and NODE:PERIAPSIS. They are now available in NODE:ORBIT:APOAPSIS
 
 - Basic RemoveTech Intergration 
 - Added VOLUME:NAME to getting the current volume
 - Lists can now be populated with basic data that you can loop over or index [Full Info](/wiki/List/)
     - Bodies (eg Kerbin, Mun, Duna)
     - Targets - All Vessels other than current
-    - Engines - Active engines on the craft
+    - Engines - Engines on the craft
     - Resources - All Ship Resources
     - Parts - All Ship Parts (slow)
     - Sensors - (eg Pres, Grav, Accel)
@@ -19,7 +85,7 @@ kOS Mod Changelog
 - Constants (eg G, E, PI) are now retrieved using CONSTANT() rather than spreadout.
 - Commands resolve in order of descending specificity, rather than in the pseudorandom order they were in before
 - Added Math operators LN, LOG10, MIN, MAX.
-- Removed NODE:APOAPSIS and NODE:PERIAPSIS. They are now available in NODE:ORBIT:APOAPSIS
+
 ### 0.10.0
 
 - Compatible with KSP 0.23 Thanks to Logris and MaHuJa for Commits

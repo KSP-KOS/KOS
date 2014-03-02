@@ -28,14 +28,7 @@ namespace kOS.Persistence
 
         public override bool SaveFile(ProgramFile file)
         {
-            if (IsRoomFor(file))
-            {
-                return base.SaveFile(file);
-            }
-            else
-            {
-                return false;
-            }
+            return IsRoomFor(file) && base.SaveFile(file);
         }
 
         public override int GetFreeSpace()

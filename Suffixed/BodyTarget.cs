@@ -17,14 +17,14 @@ namespace kOS.Suffixed
         public BodyTarget(CelestialBody target, Vessel vessel)
         {
             this.vessel = vessel;
-            Target = target;
+            CelestialBody = target;
         }
 
-        public CelestialBody Target { get; set; }
+        public CelestialBody CelestialBody { get; set; }
 
         public double GetDistance()
         {
-            return Vector3d.Distance(vessel.GetWorldPos3D(), Target.position) - Target.Radius;
+            return Vector3d.Distance(vessel.GetWorldPos3D(), CelestialBody.position) - CelestialBody.Radius;
         }
 
         public override object GetSuffix(string suffixName)
@@ -34,31 +34,31 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "NAME":
-                    return Target.name;
+                    return CelestialBody.name;
                 case "DESCRIPTION":
-                    return Target.bodyDescription;
+                    return CelestialBody.bodyDescription;
                 case "MASS":
-                    return Target.Mass;
+                    return CelestialBody.Mass;
                 case "POSITION":
-                    return new Vector(Target.position);
+                    return new Vector(CelestialBody.position);
                 case "ALTITUDE":
-                    return Target.orbit.altitude;
+                    return CelestialBody.orbit.altitude;
                 case "APOAPSIS":
-                    return Target.orbit.ApA;
+                    return CelestialBody.orbit.ApA;
                 case "PERIAPSIS":
-                    return Target.orbit.PeA;
+                    return CelestialBody.orbit.PeA;
                 case "RADIUS":
-                    return Target.Radius;
+                    return CelestialBody.Radius;
                 case "MU":
-                    return Target.gravParameter;
+                    return CelestialBody.gravParameter;
                 case "ATM":
-                    return new BodyAtmosphere(Target);
+                    return new BodyAtmosphere(CelestialBody);
                 case "VELOCITY":
-                    return new Vector(Target.orbit.GetVel());
+                    return new Vector(CelestialBody.orbit.GetVel());
                 case "DISTANCE":
                     return (float) GetDistance();
                 case "BODY":
-                    return new BodyTarget(Target.orbit.referenceBody, vessel);
+                    return new BodyTarget(CelestialBody.orbit.referenceBody, vessel);
             }
 
             return base.GetSuffix(suffixName);
@@ -66,12 +66,17 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            if (Target != null)
+            if (CelestialBody != null)
             {
-                return "BODY(\"" + Target.name + "\")";
+                return "BODY(\"" + CelestialBody.name + "\")";
             }
 
             return base.ToString();
+        }
+
+        public ITargetable Target
+        {
+            get { return CelestialBody; }
         }
     }
 }

@@ -16,21 +16,30 @@ namespace kOS.Module
     {
         public enum Modes { READY, STARVED, OFF };
         public Modes Mode = Modes.READY;
-        
-        private const int MEM_SIZE = 10000;
+
         public Harddisk HardDisk { get; private set; }
         private int vesselPartCount = 0;
         private SharedObjects _shared = null;
 
+        //640K ought to be enough for anybody -sic
+        public const int PROCESSOR_HARD_CAP = 655360;
+        [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
+        public int diskSpace = 500;
+
+        [KSPField(isPersistant = true, guiActive = false)] public int MaxPartID = 100;
+
         [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true, guiActiveEditor = true)] private int
             unitID = -1;
-        
+
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
             UnityEngine.Debug.Log("kOS: Activate");
             Core.OpenWindow(_shared);
         }
+
+        [KSPField(isPersistant = true, guiName = "Required Power", guiActive = true)] 
+        public float RequiredPower;
 
         [KSPEvent(guiActive = true, guiName = "Toggle Power")]
         public void TogglePower()
@@ -60,7 +69,7 @@ namespace kOS.Module
             UnityEngine.Debug.Log("kOS: Toggle Power from ActionGroup");
             TogglePower();
         }
-        
+
         [KSPEvent(guiName = "Unit +", guiActive = false, guiActiveEditor = true)]
         public void IncrementUnitId()
         {
@@ -104,7 +113,7 @@ namespace kOS.Module
 
                 // initialize the file system
                 _shared.VolumeMgr.Add(new Archive());
-                if (HardDisk == null) HardDisk = new Harddisk(MEM_SIZE);
+                if (HardDisk == null) HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
                 _shared.VolumeMgr.Add(HardDisk);
                 _shared.VolumeMgr.SwitchTo(HardDisk);
             }
@@ -141,13 +150,13 @@ namespace kOS.Module
             {
                 _shared.Vessel = this.vessel;
             }
-
             if (Mode == Modes.READY)
             {
                 if (_shared.Cpu != null) _shared.Cpu.Update(Time.deltaTime);
                 UpdateParts();
             }
-            
+
+            //TODO: RequiredPower = cpu.SelectedVolume.RequiredPower();
             ProcessElectricity(this.part, TimeWarp.fixedDeltaTime);
         }
         
@@ -227,7 +236,6 @@ namespace kOS.Module
             {
                 _shared.Cpu.OnLoad(node);
             }
-            
             base.OnLoad(node);
         }
 
@@ -247,7 +255,8 @@ namespace kOS.Module
 
             base.OnSave(node);
         }
-        
+
+        // TODO: Compare with CPU
         private void ProcessElectricity(Part part, float time)
         {
             if (Mode == Modes.OFF) return;

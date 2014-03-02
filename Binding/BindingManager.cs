@@ -12,7 +12,7 @@ namespace kOS.Binding
         private SharedObjects _shared;
         private List<Binding> _bindings = new List<Binding>();
         private Dictionary<string, BoundVariable> _vars = new Dictionary<string, BoundVariable>();
-        private BindingFlightControls _flightControl = null;
+        private FlightControlManager _flightControl = null;
 
         public delegate void BindingSetDlg(CPU cpu, object val);
         public delegate object BindingGetDlg(CPU cpu);
@@ -43,9 +43,9 @@ namespace kOS.Binding
                         b.AddTo(_shared);
                         _bindings.Add(b);
 
-                        if (b is BindingFlightControls)
+                        if (b is FlightControlManager)
                         {
-                            _flightControl = (BindingFlightControls)b;
+                            _flightControl = (FlightControlManager)b;
                         }
                     }
                 }
