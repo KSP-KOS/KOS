@@ -12,6 +12,8 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
+            _shared = shared;
+
             _shared.BindingMgr.AddGetter("LOADDISTANCE", cpu => Vessel.loadDistance );
             _shared.BindingMgr.AddSetter("LOADDISTANCE", delegate(CPU cpu, object val)
                 {

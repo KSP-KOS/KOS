@@ -277,6 +277,12 @@ namespace kOS.Compilation.KS
                 case TokenType.unset_stmt:
                     Value = Evalunset_stmt(tree, paramlist);
                     break;
+                case TokenType.batch_stmt:
+                    Value = Evalbatch_stmt(tree, paramlist);
+                    break;
+                case TokenType.deploy_stmt:
+                    Value = Evaldeploy_stmt(tree, paramlist);
+                    break;
                 case TokenType.arglist:
                     Value = Evalarglist(tree, paramlist);
                     break;
@@ -550,6 +556,20 @@ namespace kOS.Compilation.KS
         }
 
         protected virtual object Evalunset_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalbatch_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evaldeploy_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

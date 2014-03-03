@@ -9,17 +9,15 @@ namespace kOS.Screen
 {
     public class Interpreter : TextEditor
     {
-        private SharedObjects _shared;
+        protected SharedObjects _shared;
         private ProgramBuilder builder = new ProgramBuilder();
         private List<string> _commandHistory = new List<string>();
         private int _commandHistoryIndex = 0;
         private bool _locked = false;
-        public bool BatchMode { get; set; }
 
         public Interpreter(SharedObjects shared)
         {
             _shared = shared;
-            BatchMode = false;
         }
 
         protected override void NewLine()
@@ -27,7 +25,7 @@ namespace kOS.Screen
             string commandText = _lineBuilder.ToString();
             base.NewLine();
 
-            CompileCommand(commandText);
+            ProcessCommand(commandText);
             AddCommandHistoryEntry(commandText);
         }
 
@@ -104,7 +102,12 @@ namespace kOS.Screen
             }
         }
 
-        private void CompileCommand(string commandText)
+        protected virtual void ProcessCommand(string commandText)
+        {
+            CompileCommand(commandText);
+        }
+
+        protected void CompileCommand(string commandText)
         {
             if (_shared.ScriptHandler != null)
             {

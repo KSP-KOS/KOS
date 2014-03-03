@@ -39,10 +39,10 @@ namespace kOS.Screen
             switch (key)
             {
                 case kOSKeys.LEFT:
-                    MoveCursor(-1);
+                    TryMoveCursor(-1);
                     break;
                 case kOSKeys.RIGHT:
-                    MoveCursor(1);
+                    TryMoveCursor(1);
                     break;
                 case kOSKeys.HOME:
                     MoveCursor(-_cursorColumn);
@@ -170,7 +170,7 @@ namespace kOS.Screen
             {
                 int newCursorIndex = GetCursorIndex(_lineStartRow) + deltaPosition;
 
-                if (newCursorIndex >= 0 && newCursorIndex < _lineBuilder.Length)
+                if (newCursorIndex >= 0 && newCursorIndex <= _lineBuilder.Length)
                 {
                     MoveCursor(deltaPosition);
                     success = true;

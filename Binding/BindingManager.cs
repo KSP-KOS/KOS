@@ -85,7 +85,7 @@ namespace kOS.Binding
             AddBoundVariable(name, null, dlg);
         }
 
-        public void PreUpdate(double time)
+        public void PreUpdate()
         {
             // update the bindings
             foreach (Binding b in _bindings)

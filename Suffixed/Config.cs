@@ -14,9 +14,10 @@ namespace kOS.Suffixed
         private Dictionary<PropId, ConfigKey> _properties;
 
         public int InstructionsPerUpdate { get { return GetPropValue<int>(PropId.InstructionsPerUpdate); } set { SetPropValue(PropId.InstructionsPerUpdate, value); } }
-        public bool UseNewPersistenceFormat { get { return GetPropValue<bool>(PropId.UseNewPersistenceFormat); } set { SetPropValue(PropId.UseNewPersistenceFormat, value); } }
+        public bool UseCompressedPersistence { get { return GetPropValue<bool>(PropId.UseCompressedPersistence); } set { SetPropValue(PropId.UseCompressedPersistence, value); } }
         public bool ShowStatistics { get { return GetPropValue<bool>(PropId.ShowStatistics); } set { SetPropValue(PropId.ShowStatistics, value); } }
-
+        public bool EnableRT2Integration { get { return GetPropValue<bool>(PropId.EnableRT2Integration); } set { SetPropValue(PropId.EnableRT2Integration, value); } }
+        
         private Config()
         {
             _keys = new Dictionary<string, ConfigKey>();
@@ -28,9 +29,10 @@ namespace kOS.Suffixed
 
         private void BuildValuesDictionary()
         {
-            AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 40, typeof(int)));
-            AddConfigKey(PropId.UseNewPersistenceFormat, new ConfigKey("UseNewPersistenceFormat", "NPF", "Use new persistence format", false, typeof(bool)));
+            AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 100, typeof(int)));
+            AddConfigKey(PropId.UseCompressedPersistence, new ConfigKey("UseCompressedPersistence", "UCP", "Use compressed persistence", false, typeof(bool)));
             AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, typeof(bool)));
+            AddConfigKey(PropId.EnableRT2Integration, new ConfigKey("EnableRT2Integration", "RT2", "Enable RT2 Integration", false, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -171,8 +173,9 @@ namespace kOS.Suffixed
         private enum PropId
         {
             InstructionsPerUpdate = 1,
-            UseNewPersistenceFormat = 2,
-            ShowStatistics = 3
+            UseCompressedPersistence = 2,
+            ShowStatistics = 3,
+            EnableRT2Integration = 4
         }
     }
 

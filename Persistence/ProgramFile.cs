@@ -46,7 +46,7 @@ namespace kOS.Persistence
             ConfigNode node = new ConfigNode(nodeName);
             node.AddValue("filename", Filename);
 
-            if (Config.GetInstance().UseNewPersistenceFormat)
+            if (Config.GetInstance().UseCompressedPersistence)
             {
                 node.AddValue("line", EncodeBase64(Content));
             }

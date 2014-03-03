@@ -358,6 +358,12 @@ namespace kOS.Compilation.KS
                 case TokenType.unset_stmt:
                     VisitUnsetStatement(node);
                     break;
+                case TokenType.batch_stmt:
+                    VisitBatchStatement(node);
+                    break;
+                case TokenType.deploy_stmt:
+                    VisitDeployStatement(node);
+                    break;
                 case TokenType.filevol_name:
                     VisitFileVol(node);
                     break;
@@ -1230,6 +1236,16 @@ namespace kOS.Compilation.KS
             }
 
             AddOpcode(new OpcodeUnset());
+        }
+
+        private void VisitBatchStatement(ParseNode node)
+        {
+            throw new Exception("Batch mode can only be used when in immediate mode.");
+        }
+
+        private void VisitDeployStatement(ParseNode node)
+        {
+            throw new Exception("Batch mode can only be used when in immediate mode.");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace kOS.Suffixed.Part
 {
@@ -19,11 +20,11 @@ namespace kOS.Suffixed.Part
 
         public override bool SetSuffix(string suffixName, object value)
         {
-            if (engine == null)
+            if (engine != null)
             {
                 return SetEngineSuffix(suffixName, value, engine);
             }
-            if (enginefFx == null)
+            if (enginefFx != null)
             {
                 return SetEngineFxSuffix(suffixName, value, enginefFx);
             }
@@ -35,7 +36,7 @@ namespace kOS.Suffixed.Part
             switch (suffixName)
             {
                 case "ACTIVE":
-                    var activate = (bool) value;
+                    var activate = Convert.ToBoolean(value);
                     if (activate)
                     {
                         moduleEnginesFx.Activate();
@@ -46,9 +47,9 @@ namespace kOS.Suffixed.Part
                     }
                     return true;
                 case "THRUSTLIMIT":
-                    var throttlePercent = (float) value;
+                    var throttlePercent = (float)Convert.ToDouble(value);
                     moduleEnginesFx.thrustPercentage = throttlePercent;
-                    return false;
+                    return true;
             }
             return base.SetSuffix(suffixName, value);
         }
@@ -58,7 +59,7 @@ namespace kOS.Suffixed.Part
             switch (suffixName)
             {
                 case "ACTIVE":
-                    var activate = (bool) value;
+                    var activate = Convert.ToBoolean(value);
                     if (activate)
                     {
                         moduleEngines.Activate();
@@ -69,9 +70,9 @@ namespace kOS.Suffixed.Part
                     }
                     return true;
                 case "THRUSTLIMIT":
-                    var throttlePercent = (float) value;
+                    var throttlePercent = (float)Convert.ToDouble(value);
                     moduleEngines.thrustPercentage = throttlePercent;
-                    return false;
+                    return true;
             }
             return base.SetSuffix(suffixName, value);
         }
@@ -79,11 +80,11 @@ namespace kOS.Suffixed.Part
 
         public override object GetSuffix(string suffixName)
         {
-            if (engine == null)
+            if (engine != null)
             {
                 return GetEngineSuffix(suffixName, engine);
             }
-            if (enginefFx == null)
+            if (enginefFx != null)
             {
                 return GetEngineFxSuffix(suffixName, enginefFx);
             }
@@ -156,11 +157,13 @@ namespace kOS.Suffixed.Part
                     var engineModule = module as ModuleEngines;
                     if (engineModule != null)
                     {
+                        UnityEngine.Debug.Log("Adding normal engine");
                         toReturn.Add(new EngineValue(part, engineModule));
                     }
                     var engineModuleFx = module as ModuleEnginesFX;
                     if (engineModuleFx != null)
                     {
+                        UnityEngine.Debug.Log("Adding Fx engine");
                         toReturn.Add(new EngineValue(part, engineModuleFx));
                     }
                 }

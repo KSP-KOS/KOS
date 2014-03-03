@@ -32,8 +32,7 @@ namespace kOS.Compilation.KS
             scriptText = MakeLowerCase(scriptText);
             scriptText = ReplaceIdentifiers(scriptText);
             
-            // TODO: I don't like that the compiler has to know about the interpreter
-            if (contextId != "interpreter") parts = _cache.GetFromCache(scriptText);
+            if (contextId == string.Empty) parts = _cache.GetFromCache(scriptText);
 
             // if parts is null means the code doesn't exists in the cache
             if (parts == null)
@@ -56,8 +55,7 @@ namespace kOS.Compilation.KS
 
                     AssignInstructionId(parts);
 
-                    // TODO: I don't like that the compiler has to know about the interpreter
-                    if (contextId != "interpreter") _cache.AddToCache(scriptText, parts);
+                    if (contextId == string.Empty) _cache.AddToCache(scriptText, parts);
                 }
                 else
                 {

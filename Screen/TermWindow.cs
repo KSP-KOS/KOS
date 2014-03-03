@@ -12,60 +12,35 @@ namespace kOS.Screen
     // Blockotronix 550 Computor Monitor
     public class TermWindow : MonoBehaviour
     {
-        private static string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+        private const int CHARSIZE = 8;
+        private const int CHARS_PER_ROW = 16;
+        private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+        private static readonly Color color = new Color(1, 1, 1, 1);
+        private static readonly Color colorAlpha = new Color(0.9f, 0.9f, 0.9f, 0.2f);
+        private static readonly Color textColor = new Color(0.45f, 0.92f, 0.23f, 0.9f);
+        private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
+        private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
+        private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
+        private static Rect closeButtonRect = new Rect(398, 359, 59, 30);
 
-        private Rect windowRect = new Rect(60, 50, 470, 395);
-        private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private bool isOpen = false;
-        private bool showPilcrows = false;
+        private bool allTexturesFound = true;
         private CameraManager cameraManager;
-        private CameraManager.CameraMode cameraModeWhenOpened;
-        private bool isLocked = false;
         private float cursorBlinkTime;
-        public static int CHARSIZE = 8;
-        public static int CHARS_PER_ROW = 16;
-        public static int XOFFSET = 15;
-        public static int YOFFSET = 35;
-        public static int XBGOFFSET = 15;
-        public static int YBGOFFSET = 35;
-        public static Color COLOR = new Color(1,1,1,1);
-        public static Color COLOR_ALPHA = new Color(0.9f, 0.9f, 0.9f, 0.2f);
-        public static Color TEXTCOLOR = new Color(0.45f, 0.92f, 0.23f, 0.9f);
-        public static Color TEXTCOLOR_ALPHA = new Color(0.45f, 0.92f, 0.23f, 0.5f);
-        public static Color TEXTCOLOROFF = new Color(0.8f, 0.8f, 0.8f, 0.7f);
-        public static Color TEXTCOLOROFF_ALPHA = new Color(0.8f, 0.8f, 0.8f, 0.3f);
-        public static Rect CLOSEBUTTON_RECT = new Rect(398, 359, 59, 30);
-
-        public bool allTexturesFound = true;
+        private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private bool isLocked = false;
+        private bool isOpen = false;
+        private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Rect windowRect = new Rect(60, 50, 470, 395);
 
         private SharedObjects _shared;
         private bool _isPowered = true;
         private bool _showCursor = true;
-
+        
+        
         public void Awake()
         {
-            string pluginFolder = string.Empty;
-            string gameDataFolder = Path.Combine(root, "GameData");
-            
-            if (Directory.Exists(Path.Combine(gameDataFolder, "kOS")))
-            {
-                pluginFolder = "GameData/kOS/";
-            }
-            else if (Directory.Exists(Path.Combine(gameDataFolder, "kRISC")))
-            {
-                pluginFolder = "GameData/kRISC/";
-            }
-
-            if (pluginFolder != string.Empty)
-            {
-                LoadTexture(pluginFolder + "GFX/font_sml.png", ref fontImage);
-                LoadTexture(pluginFolder + "GFX/monitor_minimal.png", ref terminalImage);
-            }
-            else
-            {
-                allTexturesFound = false;
-            }
+            LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
+            LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
         }
 
         public void LoadTexture(String relativePath, ref Texture2D targetTexture)
@@ -104,7 +79,6 @@ namespace kOS.Screen
                 isLocked = true;
 
                 cameraManager = CameraManager.Instance;
-                cameraModeWhenOpened = cameraManager.currentCameraMode;
                 cameraManager.enabled = false;
 
                 InputLockManager.SetControlLock("kOSTerminal");
@@ -145,7 +119,7 @@ namespace kOS.Screen
             if (!isOpen) return;
             
             GUI.skin = HighLogic.Skin;
-            GUI.color = isLocked ? COLOR : COLOR_ALPHA;
+            GUI.color = isLocked ? color : colorAlpha;
 
             windowRect = GUI.Window(0, windowRect, TerminalGui, "");
         }
@@ -164,14 +138,6 @@ namespace kOS.Screen
             if (cursorBlinkTime > 1) cursorBlinkTime -= 1;
         }
 
-        private List<KeyEvent> KeyStates = new List<KeyEvent>();
-
-        public class KeyEvent
-        {
-            public KeyCode code;
-            public float duration = 0;
-        }
-        
         void ProcessKeyStrokes()
         {
             if (Event.current.type == EventType.KeyDown)
@@ -194,34 +160,88 @@ namespace kOS.Screen
             bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             bool control = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
 
-            if (code == (KeyCode.Break)) { SpecialKey(kOSKeys.BREAK); return; }
-            if (code == (KeyCode.C) && control) { SpecialKey(kOSKeys.BREAK); return; }
+            if (code == (KeyCode.C) && control)
+            {
+                SpecialKey(kOSKeys.BREAK);
+                return;
+            }
 
-            if (code == (KeyCode.F1)) { SpecialKey(kOSKeys.F1); return; }
-            if (code == (KeyCode.F2)) { SpecialKey(kOSKeys.F2); return; }
-            if (code == (KeyCode.F3)) { SpecialKey(kOSKeys.F3); return; }
-            if (code == (KeyCode.F4)) { SpecialKey(kOSKeys.F4); return; }
-            if (code == (KeyCode.F5)) { SpecialKey(kOSKeys.F5); return; }
-            if (code == (KeyCode.F6)) { SpecialKey(kOSKeys.F6); return; }
-            if (code == (KeyCode.F7)) { SpecialKey(kOSKeys.F7); return; }
-            if (code == (KeyCode.F8)) { SpecialKey(kOSKeys.F8); return; }
-            if (code == (KeyCode.F9)) { SpecialKey(kOSKeys.F9); return; }
-            if (code == (KeyCode.F10)) { SpecialKey(kOSKeys.F10); return; }
-            if (code == (KeyCode.F11)) { SpecialKey(kOSKeys.F11); return; }
-            if (code == (KeyCode.F12)) { SpecialKey(kOSKeys.F12); return; }
+            if (code == (KeyCode.X) && control && shift)
+            {
+                Close();
+                return;
+            }
 
-            if (code == (KeyCode.UpArrow)) { SpecialKey(kOSKeys.UP); return; }
-            if (code == (KeyCode.DownArrow)) { SpecialKey(kOSKeys.DOWN); return; }
-            if (code == (KeyCode.LeftArrow)) { SpecialKey(kOSKeys.LEFT); return; }
-            if (code == (KeyCode.RightArrow)) { SpecialKey(kOSKeys.RIGHT); return; }
-            if (code == (KeyCode.Home)) { SpecialKey(kOSKeys.HOME); return; }
-            if (code == (KeyCode.End)) { SpecialKey(kOSKeys.END); return; }
-            if (code == (KeyCode.Backspace)) { Type((char)8); return; }
-            if (code == (KeyCode.Delete)) { SpecialKey(kOSKeys.DEL); return; }
-            if (code == (KeyCode.PageUp)) { SpecialKey(kOSKeys.PGUP); return; }
-            if (code == (KeyCode.PageDown)) { SpecialKey(kOSKeys.PGDN); return; }
-
-            if (code == (KeyCode.Return) || code == (KeyCode.KeypadEnter)) { Type((char)13); return; }
+            switch (code)
+            {
+                case (KeyCode.Break):
+                    SpecialKey(kOSKeys.BREAK);
+                    return;
+                case (KeyCode.F1):
+                    SpecialKey(kOSKeys.F1);
+                    return;
+                case (KeyCode.F2):
+                    SpecialKey(kOSKeys.F2);
+                    return;
+                case (KeyCode.F3):
+                    SpecialKey(kOSKeys.F3);
+                    return;
+                case (KeyCode.F4):
+                    SpecialKey(kOSKeys.F4);
+                    return;
+                case (KeyCode.F5):
+                    SpecialKey(kOSKeys.F5);
+                    return;
+                case (KeyCode.F6):
+                    SpecialKey(kOSKeys.F6);
+                    return;
+                case (KeyCode.F7):
+                    SpecialKey(kOSKeys.F7);
+                    return;
+                case (KeyCode.F8):
+                    SpecialKey(kOSKeys.F8);
+                    return;
+                case (KeyCode.F9):
+                    SpecialKey(kOSKeys.F9);
+                    return;
+                case (KeyCode.F10):
+                    SpecialKey(kOSKeys.F10);
+                    return;
+                case (KeyCode.F11):
+                    SpecialKey(kOSKeys.F11);
+                    return;
+                case (KeyCode.F12):
+                    SpecialKey(kOSKeys.F12);
+                    return;
+                case (KeyCode.UpArrow):
+                    SpecialKey(kOSKeys.UP);
+                    return;
+                case (KeyCode.DownArrow):
+                    SpecialKey(kOSKeys.DOWN);
+                    return;
+                case (KeyCode.LeftArrow):
+                    SpecialKey(kOSKeys.LEFT);
+                    return;
+                case (KeyCode.RightArrow):
+                    SpecialKey(kOSKeys.RIGHT);
+                    return;
+                case (KeyCode.Home):
+                    SpecialKey(kOSKeys.HOME);
+                    return;
+                case (KeyCode.End):
+                    SpecialKey(kOSKeys.END);
+                    return;
+                case (KeyCode.Backspace):
+                    Type((char)8);
+                    return;
+                case (KeyCode.Delete):
+                    SpecialKey(kOSKeys.DEL);
+                    return;
+                case (KeyCode.KeypadEnter):
+                case (KeyCode.Return):
+                    Type((char)13);
+                    return;
+            }
         }
 
         void Type(char ch)
@@ -251,7 +271,7 @@ namespace kOS.Screen
             {
                 var mousePos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
 
-                if (CLOSEBUTTON_RECT.Contains(mousePos))
+                if (closeButtonRect.Contains(mousePos))
                 {
                     Close();
                 }
@@ -270,7 +290,7 @@ namespace kOS.Screen
                 GUI.Label(new Rect(15, 15, 450, 300), "Error: Some or all kOS textures were not found. Please " +
                            "go to the following folder: \n\n<Your KSP Folder>\\GameData\\kOS\\GFX\\ \n\nand ensure that the png texture files are there.");
 
-                GUI.Label(CLOSEBUTTON_RECT, "Close");
+                GUI.Label(closeButtonRect, "Close");
 
                 return;
             }
@@ -280,7 +300,7 @@ namespace kOS.Screen
                 return;
             }
 
-            GUI.color = isLocked ? COLOR : COLOR_ALPHA;
+            GUI.color = isLocked ? color : colorAlpha;
             GUI.DrawTexture(new Rect(10, 10, terminalImage.width, terminalImage.height), terminalImage);
 
             if (GUI.Button(new Rect(580, 10, 80, 30), "Close"))
@@ -291,14 +311,14 @@ namespace kOS.Screen
 
             GUI.DragWindow(new Rect(0, 0, 10000, 500));
 
-            Color textColor;
+            Color currentTextColor;
             if (_isPowered)
             {
-                textColor = isLocked ? TEXTCOLOR : TEXTCOLOR_ALPHA;
+                currentTextColor = isLocked ? textColor : textColorAlpha;
             }
             else
             {
-                textColor = isLocked ? TEXTCOLOROFF : TEXTCOLOROFF_ALPHA;
+                currentTextColor = isLocked ? textColorOff : textColorOffAlpha;
             }
 
             GUI.BeginGroup(new Rect(31, 38, 420, 340));
@@ -312,7 +332,7 @@ namespace kOS.Screen
                 for (int column = 0; column < screen.ColumnCount; column++)
                 {
                     char c = lineBuffer[column];
-                    if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(c, column, row, textColor);
+                    if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(c, column, row, currentTextColor);
                 }
             }
 
@@ -323,7 +343,7 @@ namespace kOS.Screen
                            _showCursor;
             if (blinkOn)
             {
-                ShowCharacterByAscii((char)1, screen.CursorColumn, screen.CursorRow, textColor);
+                ShowCharacterByAscii((char)1, screen.CursorColumn, screen.CursorRow, currentTextColor);
             }
 
             GUI.EndGroup();
@@ -343,11 +363,6 @@ namespace kOS.Screen
             GUI.color = textColor;
             GUI.DrawTexture(new Rect(tx * -CHARSIZE, ty * -CHARSIZE, fontImage.width, fontImage.height), fontImage);
             GUI.EndGroup();
-        }
-
-        public void SetOptionPilcrows(bool val)
-        {
-            showPilcrows = val;
         }
 
         internal void AttachTo(SharedObjects shared)

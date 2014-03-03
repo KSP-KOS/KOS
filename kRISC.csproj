@@ -48,11 +48,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddOns\RemoteTech2\Functions.cs" />
     <Compile Include="AddOns\RemoteTech2\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechAPI.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechHook.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechUtility.cs" />
+    <Compile Include="AddOns\RemoteTech2\RemoteTechInterpreter.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\Binding.cs" />
     <Compile Include="Binding\BindingConfig.cs" />
@@ -65,6 +65,9 @@
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="Binding\BoundVariable.cs" />
     <Compile Include="Binding\KOSBinding.cs" />
+    <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
+    <Compile Include="Factories\IFactory.cs" />
+    <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
     <Compile Include="Function\BuildList.cs" />
     <Compile Include="Function\Math.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="Function\Persistence.cs" />
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="Function\Trigonometry.cs" />
+    <Compile Include="IUpdateObserver.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
     <Compile Include="Compilation\CompileCache.cs" />
@@ -112,6 +116,7 @@
     <Compile Include="Suffixed\Part\SensorValue.cs" />
     <Compile Include="Suffixed\ResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
+    <Compile Include="UpdateHandler.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Screen\TermWindow.cs" />

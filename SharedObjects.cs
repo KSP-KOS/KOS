@@ -9,6 +9,7 @@ using kOS.Persistence;
 using kOS.Compilation;
 using kOS.Execution;
 using kOS.Screen;
+using kOS.Factories;
 
 namespace kOS
 {
@@ -25,5 +26,7 @@ namespace kOS
         public TermWindow Window;
         public kOSProcessor Processor;
         public ProcessorManager ProcessorMgr;
+        public UpdateHandler UpdateHandler;
+        public IFactory Factory;
     }
 }

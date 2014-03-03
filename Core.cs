@@ -14,7 +14,6 @@ namespace kOS
 
         public static Core Fetch; 
         public TermWindow Window;
-        private SharedObjects _shared;
         
         public void Awake()
         {

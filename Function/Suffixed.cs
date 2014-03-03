@@ -100,6 +100,17 @@ namespace kOS.Function
         }
     }
 
+    [FunctionAttribute("bodyatmosphere")]
+    public class FunctionBodyAtmosphere : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string bodyName = shared.Cpu.PopValue().ToString();
+            BodyAtmosphere result = new BodyAtmosphere(VesselUtils.GetBodyByName(bodyName));
+            shared.Cpu.PushStack(result);
+        }
+    }
+
     [FunctionAttribute("heading")]
     public class FunctionHeading : FunctionBase
     {

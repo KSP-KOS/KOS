@@ -4,14 +4,16 @@ namespace kOS.AddOns.RemoteTech2
 {
     public static class RemoteTechUtility
     {
-        // TODO: Convert this
-        //public static void DrawProgressBar(this IExecutionContext context, double elapsed, double total, string text)
-        //{
-        //    var bars = (int)((ExecutionContext.COLUMNS) * elapsed / total);
-        //    var spaces = (ExecutionContext.COLUMNS) - bars;
-        //    var time = new DateTime(TimeSpan.FromSeconds(total - elapsed + 0.5).Ticks).ToString("H:mm:ss");
-        //    context.Put(text + new string(' ', ExecutionContext.COLUMNS - time.Length - text.Length) + time, 0, ExecutionContext.ROWS - 2);
-        //    context.Put(new string('|', bars) + new string(' ', spaces), 0, ExecutionContext.ROWS - 1);
-        //}
+        public static double GetTotalWaitTime(Vessel vessel)
+        {
+            double waitTotal = 0;
+
+            if (RemoteTechHook.Instance != null && vessel.GetVesselCrew().Count == 0)
+            {
+                waitTotal = RemoteTechHook.Instance.GetShortestSignalDelay(vessel.id);
+            }
+
+            return waitTotal;
+        }
     }
 }

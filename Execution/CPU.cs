@@ -10,7 +10,7 @@ using kOS.Compilation;
 
 namespace kOS.Execution
 {
-    public class CPU
+    public class CPU: IUpdateObserver
     {
         private enum Status
         {
@@ -50,6 +50,7 @@ namespace kOS.Execution
             _stack = new Stack();
             _vars = new Dictionary<string, Variable>();
             _contexts = new List<ProgramContext>();
+            if (_shared.UpdateHandler != null) _shared.UpdateHandler.AddObserver(this);
             Boot();
         }
 
@@ -376,12 +377,12 @@ namespace kOS.Execution
             Stopwatch executionWatch = null;
 
             if (showStatistics) updateWatch = Stopwatch.StartNew();
-            
-            _currentTime += deltaTime;
+
+            _currentTime = _shared.UpdateHandler.CurrentTime;
 
             try
             {
-                PreUpdateBindings(deltaTime);
+                PreUpdateBindings();
 
                 if (_currentContext != null && _currentContext.Program != null)
                 {
@@ -435,11 +436,11 @@ namespace kOS.Execution
             }
         }
 
-        private void PreUpdateBindings(double deltaTime)
+        private void PreUpdateBindings()
         {
             if (_shared.BindingMgr != null)
             {
-                _shared.BindingMgr.PreUpdate(deltaTime);
+                _shared.BindingMgr.PreUpdate();
             }
         }
 

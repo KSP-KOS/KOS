@@ -23,6 +23,7 @@ namespace kOS.Module
 
         //640K ought to be enough for anybody -sic
         public const int PROCESSOR_HARD_CAP = 655360;
+
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
         public int diskSpace = 500;
 
@@ -100,10 +101,13 @@ namespace kOS.Module
             if (_shared == null)
             {
                 _shared = new SharedObjects();
+                CreateFactory();
+                    
                 _shared.Vessel = this.vessel;
                 _shared.Processor = this;
+                _shared.UpdateHandler = new UpdateHandler();
                 _shared.BindingMgr = new BindingManager(_shared);
-                _shared.Interpreter = new kOS.Screen.Interpreter(_shared);
+                _shared.Interpreter = _shared.Factory.CreateInterpreter(_shared);
                 _shared.Screen = _shared.Interpreter;
                 _shared.ScriptHandler = new Compilation.KS.KSScript();
                 _shared.Logger = new Logger(_shared);
@@ -116,6 +120,19 @@ namespace kOS.Module
                 if (HardDisk == null) HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
                 _shared.VolumeMgr.Add(HardDisk);
                 _shared.VolumeMgr.SwitchTo(HardDisk);
+            }
+        }
+
+        private void CreateFactory()
+        {
+            // TODO: replace the 'false' with a check to identify if RT2 is available
+            if (Config.GetInstance().EnableRT2Integration && false)
+            {
+                _shared.Factory = new kOS.AddOns.RemoteTech2.RemoteTechFactory();
+            }
+            else
+            {
+                _shared.Factory = new kOS.Factories.StandardFactory();
             }
         }
 
@@ -139,7 +156,7 @@ namespace kOS.Module
         public void Update()
         {
             if (_shared == null) return;
-            
+
             if (part.State == PartStates.DEAD)
             {
                 Mode = Modes.OFF;
@@ -150,13 +167,13 @@ namespace kOS.Module
             {
                 _shared.Vessel = this.vessel;
             }
+
             if (Mode == Modes.READY)
             {
-                if (_shared.Cpu != null) _shared.Cpu.Update(Time.deltaTime);
+                if (_shared.UpdateHandler != null) _shared.UpdateHandler.UpdateObservers(Time.deltaTime);
                 UpdateParts();
             }
 
-            //TODO: RequiredPower = cpu.SelectedVolume.RequiredPower();
             ProcessElectricity(this.part, TimeWarp.fixedDeltaTime);
         }
         
@@ -256,12 +273,12 @@ namespace kOS.Module
             base.OnSave(node);
         }
 
-        // TODO: Compare with CPU
         private void ProcessElectricity(Part part, float time)
         {
             if (Mode == Modes.OFF) return;
 
-            var electricReq = 0.01f * time;
+            RequiredPower = (float)Math.Round((double)_shared.VolumeMgr.CurrentVolume.RequiredPower(), 2);
+            var electricReq = time * RequiredPower;
             var result = part.RequestResource("ElectricCharge", electricReq) / electricReq;
 
             var newMode = (result < 0.5f) ? Modes.STARVED : Modes.READY;
