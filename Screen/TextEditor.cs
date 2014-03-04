@@ -8,16 +8,32 @@ namespace kOS.Screen
 {
     public class TextEditor : ScreenBuffer
     {
-        protected StringBuilder _lineBuilder = new StringBuilder();
-        protected int _lineStartRow;
-        protected bool _updateLineStartRow = true;
+        protected StringBuilder _lineBuilder;
+        protected int _lineCursorIndex = 0;
+        protected SubBuffer _lineSubBuffer;
         private int _savedCursorRow;
         private int _savedCursorColumn;
         
+        public override int CursorColumnShow { get { return _lineCursorIndex % ColumnCount; } }
+        public override int CursorRowShow { get { return CursorRow + (_lineCursorIndex / ColumnCount); } }    // integer division
+
+        
+        public TextEditor() : base()
+        {
+            _lineBuilder = new StringBuilder();
+            CreateSubBuffer();
+        }
+
+        private void CreateSubBuffer()
+        {
+            _lineSubBuffer = new SubBuffer();
+            _lineSubBuffer.SetSize(1, ColumnCount);
+            _lineSubBuffer.Enabled = true;
+            AddSubBuffer(_lineSubBuffer);
+        }
+
         public virtual void Type(char ch)
         {
-            UpdateLineStartRow();
-            
             switch ((int)ch)
             {
                 case 8:  // backspace
@@ -34,8 +50,6 @@ namespace kOS.Screen
 
         public virtual void SpecialKey(kOSKeys key)
         {
-            UpdateLineStartRow();
-
             switch (key)
             {
                 case kOSKeys.LEFT:
@@ -45,10 +59,10 @@ namespace kOS.Screen
                     TryMoveCursor(1);
                     break;
                 case kOSKeys.HOME:
-                    MoveCursor(-_cursorColumn);
+                    _lineCursorIndex = 0;
                     break;
                 case kOSKeys.END:
-                    MoveCursor((_lineBuilder.Length % _columnCount) - _cursorColumn);
+                    _lineCursorIndex = _lineBuilder.Length;
                     break;
                 case kOSKeys.DEL:
                     RemoveChar();
@@ -62,104 +76,63 @@ namespace kOS.Screen
             }
         }
 
-        protected void UpdateLineStartRow()
-        {
-            if (_updateLineStartRow)
-            {
-                _lineStartRow = AbsoluteCursorRow;
-                _updateLineStartRow = false;
-            }
-        }
-        
-        private int GetCursorIndex(int referenceRow)
-        {
-            return ((AbsoluteCursorRow - referenceRow) * _columnCount) + _cursorColumn;
-        }
-
         protected void SaveCursorPos()
         {
             _savedCursorRow = AbsoluteCursorRow;
-            _savedCursorColumn = AbsoluteCursorColumn;
+            _savedCursorColumn = CursorColumn;
         }
 
         protected void RestoreCursorPos()
         {
             AbsoluteCursorRow = _savedCursorRow;
-            AbsoluteCursorColumn = _savedCursorColumn;
+            CursorColumn = _savedCursorColumn;
         }
 
-        protected override void InsertChar(char character)
+        protected void InsertChar(char character)
         {
-            int cursorIndex = GetCursorIndex(_lineStartRow);
-            char lastChar = _buffer[AbsoluteCursorRow][_columnCount - 1];
-            
-            _lineBuilder.Insert(cursorIndex, character);
-            base.InsertChar(character);
-
-            SaveCursorPos();
-            OverflowLast(lastChar);
-            RestoreCursorPos();
+            _lineBuilder.Insert(_lineCursorIndex, character);
+            _lineCursorIndex++;
+            UpdateLineSubBuffer();
         }
 
-        protected virtual void OverflowLast(char overflowChar)
-        {
-            // if the last character of the line is not empty then
-            // it gets inserted at the beggining of the next line
-            if (overflowChar != 0)
-            {
-                int originalCursorRow = _cursorRow;
-                int originalCursorColumn = _cursorColumn;
-                
-                MoveToNextLine();
-                char lastChar = _buffer[AbsoluteCursorRow][_columnCount - 1];
-                base.InsertChar(overflowChar);
-                OverflowLast(lastChar);
-
-                _cursorRow = originalCursorRow;
-                _cursorColumn = originalCursorColumn;
-            }
-        }
-
-        protected override void RemoveChar()
+        protected void RemoveChar()
         {
             if (_lineBuilder.Length > 0)
             {
-                int cursorIndex = GetCursorIndex(_lineStartRow);
-                if (cursorIndex >= 0 && cursorIndex < _lineBuilder.Length)
+                if (_lineCursorIndex >= 0 && _lineCursorIndex < _lineBuilder.Length)
                 {
-                    _lineBuilder.Remove(cursorIndex, 1);
-                    base.RemoveChar();
-
-                    SaveCursorPos();
-                    OverflowFirst();
-                    RestoreCursorPos();
+                    _lineBuilder.Remove(_lineCursorIndex, 1);
+                    UpdateLineSubBuffer();
                 }
             }
         }
 
-        protected virtual void OverflowFirst()
+        protected void UpdateLineSubBuffer()
         {
-            int charCursorRow = AbsoluteCursorRow + 1;
-            if (charCursorRow < _buffer.Count)
+            int startIndex = 0;
+            int lineIndex = 0;
+            int lineCount = ((_lineBuilder.Length - 1) / _lineSubBuffer.ColumnCount) + 1;   // integer division
+
+            if (lineCount != _lineSubBuffer.RowCount) _lineSubBuffer.SetSize(lineCount, _lineSubBuffer.ColumnCount);
+
+            while ((_lineBuilder.Length - startIndex) > _lineSubBuffer.ColumnCount)
             {
-                char firstChar = _buffer[charCursorRow][0];
-                if (firstChar != 0)
-                {
-                    PrintAt(firstChar, _cursorRow, _columnCount - 1);
-                    // PrintAt moves the cursor to the next character and since we are printing
-                    // at the last column the cursor ends up at the beggining of the next line
-                    base.RemoveChar();
-                    OverflowFirst();
-                }
+                _lineBuilder.CopyTo(startIndex, _lineSubBuffer.Buffer[lineIndex], 0, _lineSubBuffer.ColumnCount);
+                startIndex += _lineSubBuffer.ColumnCount;
+                lineIndex++;
             }
+
+            char[] bufferLine = new char[_lineSubBuffer.ColumnCount];
+            _lineBuilder.CopyTo(startIndex, bufferLine, 0, (_lineBuilder.Length - startIndex));
+            bufferLine.CopyTo(_lineSubBuffer.Buffer[lineIndex], 0);
         }
 
         protected virtual void NewLine()
         {
-            MoveToNextLine();
+            Print(_lineBuilder.ToString());
             _lineBuilder = new StringBuilder();
-            _lineStartRow = AbsoluteCursorRow;
-            _updateLineStartRow = true;
+            _lineCursorIndex = 0;
+            UpdateLineSubBuffer();
         }
 
         protected virtual bool TryMoveCursor(int deltaPosition)
@@ -168,11 +141,10 @@ namespace kOS.Screen
 
             if (_lineBuilder.Length > 0 && deltaPosition != 0)
             {
-                int newCursorIndex = GetCursorIndex(_lineStartRow) + deltaPosition;
-
+                int newCursorIndex = _lineCursorIndex + deltaPosition;
                 if (newCursorIndex >= 0 && newCursorIndex <= _lineBuilder.Length)
                 {
-                    MoveCursor(deltaPosition);
+                    _lineCursorIndex += deltaPosition;
                     success = true;
                 }
             }
@@ -180,40 +152,15 @@ namespace kOS.Screen
             return success;
         }
 
-        protected virtual void MoveCursor(int deltaPosition)
-        {
-            int newCursorColumn = _cursorColumn + deltaPosition;
-            int newCursorRow = _cursorRow;
-            
-            while (newCursorColumn < 0)
-            {
-                newCursorColumn += _columnCount;
-                newCursorRow--;
-            }
-
-            while (newCursorColumn >= _columnCount)
-            {
-                newCursorColumn -= _columnCount;
-                newCursorRow++;
-            }
-
-            if (newCursorColumn < 0) newCursorColumn = 0;
-            if (newCursorColumn >= _columnCount) newCursorColumn = _columnCount;
-
-            MoveCursor(newCursorRow, newCursorColumn);
-        }
-
-        public override int ScrollVertical(int deltaRows)
-        {
-            deltaRows = base.ScrollVertical(deltaRows);
-            _cursorRow -= deltaRows;
-            return deltaRows;
-        }
-
         public virtual void Reset()
         {
             _lineBuilder = new StringBuilder();
-            _updateLineStartRow = true;
+            _lineCursorIndex = 0;
+        }
+
+        protected override void UpdateSubBuffers()
+        {
+            _lineSubBuffer.PositionRow = AbsoluteCursorRow;
         }
     }
 }

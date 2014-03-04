@@ -39,10 +39,13 @@ namespace kOS.Screen
 
         public override void SpecialKey(kOSKeys key)
         {
+            if (key == kOSKeys.BREAK)
+            {
+                _shared.Cpu.BreakExecution(true);
+            }
+            
             if (!_locked)
             {
-                UpdateLineStartRow();
-
                 switch (key)
                 {
                     case kOSKeys.UP:
@@ -76,29 +79,11 @@ namespace kOS.Screen
                 if (newHistoryIndex >= 0 && newHistoryIndex < _commandHistory.Count)
                 {
                     _commandHistoryIndex = newHistoryIndex;
-                    string lastCommand = _lineBuilder.ToString();
-                    string currentCommand = _commandHistory[_commandHistoryIndex].PadRight(lastCommand.Length);
-                    PrintAtAbsolute(currentCommand, _lineStartRow, 0);
-                    MoveCursorEndTrimmedLine(currentCommand);
-
                     _lineBuilder = new StringBuilder();
                     _lineBuilder.Append(_commandHistory[_commandHistoryIndex]);
+                    _lineCursorIndex = _lineBuilder.Length;
+                    UpdateLineSubBuffer();
                 }
-            }
-        }
-
-        private void MoveCursorEndTrimmedLine(string printedText)
-        {
-            // move the cursor to the end of the printed text
-            MoveCursor(_cursorRow, (printedText.Length % _columnCount));
-
-            // move the cursor to the end of the trimmed printed text
-            int textLength = printedText.Length;
-            int trimmedLength = printedText.TrimEnd().Length;
-
-            if (textLength > trimmedLength)
-            {
-                MoveCursor(trimmedLength - textLength);
             }
         }
 
@@ -139,6 +124,7 @@ namespace kOS.Screen
         {
             _locked = locked;
             if (_shared.Window != null) _shared.Window.SetShowCursor(!locked);
+            _lineSubBuffer.Enabled = !locked;
         }
 
         public override void Reset()
@@ -148,13 +134,6 @@ namespace kOS.Screen
             _commandHistory.Clear();
             _commandHistoryIndex = 0;
             base.Reset();
-        }
-
-        public override void PrintAt(char character, int row, int column)
-        {
-            SaveCursorPos();
-            base.PrintAt(character, row, column);
-            RestoreCursorPos();
         }
 
         public override void PrintAt(string textToPrint, int row, int column)

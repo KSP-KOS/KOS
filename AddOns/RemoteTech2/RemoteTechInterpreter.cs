@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using kOS.Screen;
+using kOS.Utilities;
 
 namespace kOS.AddOns.RemoteTech2
 {
-    // TODO
-    // - Reserve the last three/four rows for the progress bar
-    // - Disable scroll while deploying or keep the progress bar in a separated buffer
-    // - Override the break program command (ctrl+c) to cancel the current deployment
     public class RemoteTechInterpreter : Interpreter, IUpdateObserver
     {
         private List<string> _commandQueue = new List<string>();
         private List<string> _batchQueue = new List<string>();
+        private SubBuffer _progressBarSubBuffer;
         private bool _batchMode { get; set; }
         private double _waitTotal = 0;
         private double _waitElapsed = 0;
@@ -25,6 +23,19 @@ namespace kOS.AddOns.RemoteTech2
         public RemoteTechInterpreter(SharedObjects shared) : base(shared)
         {
             _shared.UpdateHandler.AddObserver(this);
+            CreateProgressBarSubBuffer();
+        }
+
+        private void CreateProgressBarSubBuffer()
+        {
+            _progressBarSubBuffer = new SubBuffer();
+            _progressBarSubBuffer.SetSize(3, ColumnCount);
+            _progressBarSubBuffer.Fixed = true;
+            _progressBarSubBuffer.PositionRow = RowCount - _progressBarSubBuffer.RowCount;
+            AddSubBuffer(_progressBarSubBuffer);
+
+            string separator = new string('-', _progressBarSubBuffer.ColumnCount);
+            separator.ToCharArray().CopyTo(_progressBarSubBuffer.Buffer[0], 0);
         }
 
         protected override void ProcessCommand(string commandText)
@@ -60,14 +71,27 @@ namespace kOS.AddOns.RemoteTech2
 
             if (RemoteTechHook.Instance != null)
             {
-                _waitTotal = RemoteTechHook.Instance.GetShortestSignalDelay(_shared.Vessel.id);
+                _waitTotal = RemoteTechUtility.GetTotalWaitTime(_shared.Vessel);
                 if (double.IsPositiveInfinity(_waitTotal)) throw new Exception("No connection available.");
                 
                 Print("Deploying...");
                 _batchMode = false;
                 _deployingBatch = true;
-                _deploymentInProgress = true;
+                StartDeployment();
             }
+        }
+
+        private void StartDeployment()
+        {
+            _deploymentInProgress = true;
+            _progressBarSubBuffer.Enabled = true;
+        }
+
+        private void StopDeployment()
+        {
+            _deploymentInProgress = false;
+            _progressBarSubBuffer.Enabled = false;
+            _waitElapsed = 0;
         }
 
         public void Update(double deltaTime)
@@ -75,7 +99,7 @@ namespace kOS.AddOns.RemoteTech2
             if (!_deploymentInProgress && _commandQueue.Count > 0 && !_batchMode)
             {
                 _waitTotal = RemoteTechUtility.GetTotalWaitTime(_shared.Vessel);
-                _deploymentInProgress = true;
+                StartDeployment();
                 deltaTime = 0; // so the elapsed time is zero in this update
             }
 
@@ -91,8 +115,7 @@ namespace kOS.AddOns.RemoteTech2
             {
                 if (!_signalLossWarning)
                 {
-                    // TODO: show this next to the progress bar (and erase it when the signal is reacquired)
-                    Print("Signal lost.  Waiting to re-acquire signal.");
+                    PrintProgressStatus("Signal lost.  Waiting to re-acquire signal.");
                     _signalLossWarning = true;
                 }
             }
@@ -128,9 +151,7 @@ namespace kOS.AddOns.RemoteTech2
                         }
                     }
 
-                    _deploymentInProgress = false;
-                    _waitElapsed = 0;
-                    // TODO: erase the progress bar
+                    StopDeployment();
                 }
             }
         }
@@ -140,10 +161,28 @@ namespace kOS.AddOns.RemoteTech2
             var bars = (int)((ColumnCount) * elapsed / total);
             var time = new DateTime(TimeSpan.FromSeconds(total - elapsed + 0.5).Ticks).ToString("H:mm:ss");
 
-            string captionText = text + new string(' ', ColumnCount - time.Length - text.Length) + time;
+            string statusText = text + new string(' ', ColumnCount - time.Length - text.Length) + time;
             string barsText = new string('|', bars).PadRight(ColumnCount);
-            PrintAt(captionText, RowCount - 3, 0);
-            PrintAt(barsText, RowCount - 2, 0);
+            PrintProgressStatus(statusText);
+            barsText.ToCharArray().CopyTo(_progressBarSubBuffer.Buffer[2], 0);
+        }
+
+        private void PrintProgressStatus(string status)
+        {
+            status = status.PadRight(_progressBarSubBuffer.ColumnCount);
+            status.ToCharArray().CopyTo(_progressBarSubBuffer.Buffer[1], 0);
+        }
+
+        public override void SpecialKey(kOSKeys key)
+        {
+            if (key == kOSKeys.BREAK && _deploymentInProgress)
+            {
+                StopDeployment();
+            }
+            else
+            {
+                base.SpecialKey(key);
+            }
         }
     }
 }

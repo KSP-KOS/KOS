@@ -254,11 +254,6 @@ namespace kOS.Screen
 
         void SpecialKey(kOSKeys key)
         {
-            if (key == kOSKeys.BREAK)
-            {
-                _shared.Cpu.BreakExecution(true);
-            }
-
             if (_shared != null && _shared.Interpreter != null)
             {
                 _shared.Interpreter.SpecialKey(key);
@@ -324,7 +319,7 @@ namespace kOS.Screen
             GUI.BeginGroup(new Rect(31, 38, 420, 340));
 
             ScreenBuffer screen = _shared.Screen;
-            List<char[]> buffer = screen.Buffer;
+            List<char[]> buffer = screen.GetBuffer();
 
             for (int row = 0; row < screen.RowCount; row++)
             {
@@ -337,13 +332,12 @@ namespace kOS.Screen
             }
 
             bool blinkOn = cursorBlinkTime < 0.5f &&
-                           screen.CursorColumn > -1 &&
-                           screen.CursorRow < screen.RowCount &&
+                           screen.CursorRowShow < screen.RowCount &&
                            _isPowered &&
                            _showCursor;
             if (blinkOn)
             {
-                ShowCharacterByAscii((char)1, screen.CursorColumn, screen.CursorRow, currentTextColor);
+                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor);
             }
 
             GUI.EndGroup();
