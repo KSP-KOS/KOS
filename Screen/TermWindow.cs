@@ -241,6 +241,12 @@ namespace kOS.Screen
                 case (KeyCode.Return):
                     Type((char)13);
                     return;
+                case (KeyCode.PageUp):
+                    SpecialKey(kOSKeys.PGUP);
+                    return;
+                case (KeyCode.PageDown):
+                    SpecialKey(kOSKeys.PGDN);
+                    return;
             }
         }
 

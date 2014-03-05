@@ -157,13 +157,11 @@ namespace kOS.Suffixed.Part
                     var engineModule = module as ModuleEngines;
                     if (engineModule != null)
                     {
-                        UnityEngine.Debug.Log("Adding normal engine");
                         toReturn.Add(new EngineValue(part, engineModule));
                     }
                     var engineModuleFx = module as ModuleEnginesFX;
                     if (engineModuleFx != null)
                     {
-                        UnityEngine.Debug.Log("Adding Fx engine");
                         toReturn.Add(new EngineValue(part, engineModuleFx));
                     }
                 }

@@ -116,10 +116,7 @@ namespace kOS.Persistence
         {
             if (vessel != null)
             {
-                if (RemoteTechHook.Instance != null)
-                    return RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
-                else
-                    return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
+                return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
             }
             else
             {

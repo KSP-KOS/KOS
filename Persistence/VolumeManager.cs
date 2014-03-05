@@ -11,9 +11,10 @@ namespace kOS.Persistence
         private Volume _currentVolume;
         private SharedObjects _shared;
         private int _lastId = 0;
-
+        
         public Dictionary<int, Volume> Volumes { get { return _volumes; } }
         public Volume CurrentVolume { get { return GetVolumeWithRangeCheck(_currentVolume); } }
+        public float CurrentRequiredPower { get; private set; }
 
         public VolumeManager(SharedObjects shared)
         {
@@ -110,6 +111,7 @@ namespace kOS.Persistence
                 if (_currentVolume == null)
                 {
                     _currentVolume = _volumes[0];
+                    UpdateRequiredPower();
                 }
             }
         }
@@ -132,6 +134,7 @@ namespace kOS.Persistence
                     if (_volumes.Count > 0)
                     {
                         _currentVolume = _volumes[0];
+                        UpdateRequiredPower();
                     }
                     else
                     {
@@ -146,6 +149,7 @@ namespace kOS.Persistence
             if (volume != null)
             {
                 _currentVolume = volume;
+                UpdateRequiredPower();
             }
         }
 
@@ -183,5 +187,9 @@ namespace kOS.Persistence
             else return "#" + id;
         }
 
+        private void UpdateRequiredPower()
+        {
+            CurrentRequiredPower = (float)Math.Round((double)_currentVolume.RequiredPower(), 4);
+        }
     }
 }

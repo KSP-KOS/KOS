@@ -9,6 +9,7 @@ using kOS.InterProcessor;
 using kOS.Binding;
 using kOS.Persistence;
 using kOS.Suffixed;
+using kOS.AddOns.RemoteTech2;
 
 namespace kOS.Module
 {
@@ -116,19 +117,18 @@ namespace kOS.Module
                 _shared.Cpu = new kOS.Execution.CPU(_shared);
 
                 // initialize the file system
-                _shared.VolumeMgr.Add(new Archive());
+                _shared.VolumeMgr.Add(_shared.Factory.CreateArchive());
                 if (HardDisk == null) HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
                 _shared.VolumeMgr.Add(HardDisk);
-                _shared.VolumeMgr.SwitchTo(HardDisk);
+                if (!Config.GetInstance().StartOnArchive) _shared.VolumeMgr.SwitchTo(HardDisk);
             }
         }
 
         private void CreateFactory()
         {
-            // TODO: replace the 'false' with a check to identify if RT2 is available
-            if (Config.GetInstance().EnableRT2Integration && false)
+            if (Config.GetInstance().EnableRT2Integration && (RemoteTechHook.Instance != null))
             {
-                _shared.Factory = new kOS.AddOns.RemoteTech2.RemoteTechFactory();
+                _shared.Factory = new RemoteTechFactory();
             }
             else
             {
@@ -277,7 +277,7 @@ namespace kOS.Module
         {
             if (Mode == Modes.OFF) return;
 
-            RequiredPower = (float)Math.Round((double)_shared.VolumeMgr.CurrentVolume.RequiredPower(), 2);
+            RequiredPower = _shared.VolumeMgr.CurrentRequiredPower;
             var electricReq = time * RequiredPower;
             var result = part.RequestResource("ElectricCharge", electricReq) / electricReq;
 

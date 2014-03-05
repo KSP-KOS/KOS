@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="AddOns\RemoteTech2\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechAPI.cs" />
+    <Compile Include="AddOns\RemoteTech2\RemoteTechArchive.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechHook.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechUtility.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechInterpreter.cs" />

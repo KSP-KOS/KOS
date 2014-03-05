@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using kOS.Factories;
 using kOS.Screen;
+using kOS.Persistence;
 
 namespace kOS.AddOns.RemoteTech2
 {
@@ -12,6 +13,11 @@ namespace kOS.AddOns.RemoteTech2
         public Interpreter CreateInterpreter(SharedObjects shared)
         {
             return new RemoteTechInterpreter(shared);
+        }
+
+        public Archive CreateArchive()
+        {
+            return new RemoteTechArchive();
         }
     }
 }
