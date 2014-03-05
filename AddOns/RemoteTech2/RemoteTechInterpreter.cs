@@ -17,6 +17,7 @@ namespace kOS.AddOns.RemoteTech2
         private double _waitElapsed = 0;
         private bool _deploymentInProgress = false;
         private bool _deployingBatch = false;
+        private string _deploymentMessage;
         private bool _signalLossWarning = false;
         
         public RemoteTechInterpreter(SharedObjects shared) : base(shared)
@@ -80,7 +81,8 @@ namespace kOS.AddOns.RemoteTech2
         private void StartDeployment()
         {
             _deploymentInProgress = true;
-            _progressBarSubBuffer.Enabled = (_waitTotal > 0.1);
+            _progressBarSubBuffer.Enabled = (_waitTotal > 0.5);
+            _deploymentMessage = _deployingBatch ? "Deploying batch." : "Deploying command.";
             DrawBars("");
         }
 
@@ -166,10 +168,8 @@ namespace kOS.AddOns.RemoteTech2
             {
                 var bars = (int)((ColumnCount) * elapsed / total);
                 var time = new DateTime(TimeSpan.FromSeconds(total - elapsed + 0.5).Ticks).ToString("H:mm:ss");
-
-                string deploymentMessage = _deployingBatch ? "Deploying batch." : "Deploying command.";
-                string statusText = deploymentMessage + new string(' ', ColumnCount - time.Length - deploymentMessage.Length) + time;
-                string barsText = new string('|', bars).PadRight(ColumnCount);
+                string statusText = _deploymentMessage + new string(' ', ColumnCount - time.Length - _deploymentMessage.Length) + time;
+                string barsText = new string('|', bars);
                 DrawStatus(statusText);
                 DrawBars(barsText);
             }
@@ -191,6 +191,9 @@ namespace kOS.AddOns.RemoteTech2
         {
             if (key == kOSKeys.BREAK && _deploymentInProgress)
             {
+                if (_deployingBatch) _batchQueue.Clear();
+                else _commandQueue.Clear();
+                
                 StopDeployment();
             }
             else
