@@ -15,6 +15,7 @@ namespace kOS.Compilation.KS
         private List<List<Opcode>> _breakList = new List<List<Opcode>>();
         private bool _compilingSetDestination = false;
         private bool _identifierIsVariable = false;
+        private List<ParseNode> _programParameters = new List<ParseNode>();
 
         private readonly Dictionary<string, string> _functionsOverloads = new Dictionary<string, string>() { { "round|1", "roundnearest" },
                                                                                                              { "round|2", "round"} };
@@ -50,6 +51,7 @@ namespace kOS.Compilation.KS
         private void CompileProgram(ParseTree tree)
         {
             _currentCodeSection = _part.MainCode;
+            PushProgramParameters();
             VisitNode(tree.Nodes[0]);
 
             if (_addBranchDestination)
@@ -109,6 +111,9 @@ namespace kOS.Compilation.KS
                     break;
                 case TokenType.lock_stmt:
                     PreProcessLockStatement(node);
+                    break;
+                case TokenType.declare_stmt:
+                    PreProcessProgramParameters(node);
                     break;
                 default:
                     break;
@@ -228,6 +233,38 @@ namespace kOS.Compilation.KS
             _currentCodeSection = lockObject.GetLockFunction(expressionHash);
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodeReturn());
+        }
+
+        private void PreProcessProgramParameters(ParseNode node)
+        {
+            // if the declaration is a parameter
+            if (node.Nodes[1].Token.Type == TokenType.PARAMETER)
+            {
+                if (node.Nodes[2].Token.Type == TokenType.arglist)
+                {
+                    for (int index = node.Nodes.Count - 2; index > 1; index -= 2)
+                    {
+                        _programParameters.Add(node.Nodes[index]);
+                    }
+                }
+                else
+                {
+                    _programParameters.Add(node.Nodes[2]);
+                }
+            }
+        }
+
+        private void PushProgramParameters()
+        {
+            // reverse the order of parameters so the stack
+            // is popped in the correct order
+            _programParameters.Reverse();
+            foreach (ParseNode node in _programParameters)
+            {
+                VisitNode(node);
+                AddOpcode(new OpcodeSwap());
+                AddOpcode(new OpcodeStore());
+            }
         }
 
         private void PushBreakList()
@@ -981,16 +1018,6 @@ namespace kOS.Compilation.KS
                 VisitNode(node.Nodes[1]);
                 AddOpcode(new OpcodePush(0));
                 AddOpcode(new OpcodeStore());
-            }
-            else
-            {
-                // declare parameters
-                for (int index = node.Nodes.Count - 2; index > 1; index -= 2)
-                {
-                    VisitNode(node.Nodes[index]);
-                    AddOpcode(new OpcodeSwap());
-                    AddOpcode(new OpcodeStore());
-                }
             }
         }
 
