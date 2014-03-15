@@ -39,8 +39,8 @@ namespace kOS.Utilities
                 PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(
                     rd => rd.name.Equals(resourceName, StringComparison.OrdinalIgnoreCase));
             // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
-            if (resourceDefinition == null)
-                return resourceIsFound;
+            if (resourceDefinition != null)
+                resourceIsFound = true;
             resourceName = resourceName.ToUpper();
             foreach (var part in vessel.parts)
             {
