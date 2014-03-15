@@ -209,6 +209,10 @@ namespace kOS.Execution
                     }
                 }
             }
+            else
+            {
+                SkipCurrentInstructionId();
+            }
         }
 
         public void PushStack(object item)
