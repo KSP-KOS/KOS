@@ -240,16 +240,9 @@ namespace kOS.Compilation.KS
             // if the declaration is a parameter
             if (node.Nodes[1].Token.Type == TokenType.PARAMETER)
             {
-                if (node.Nodes[2].Token.Type == TokenType.arglist)
+                for (int index = 2; index < node.Nodes.Count; index += 2)
                 {
-                    for (int index = node.Nodes.Count - 2; index > 1; index -= 2)
-                    {
-                        _programParameters.Add(node.Nodes[index]);
-                    }
-                }
-                else
-                {
-                    _programParameters.Add(node.Nodes[2]);
+                    _programParameters.Add(node.Nodes[index]);
                 }
             }
         }
