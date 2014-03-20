@@ -22,8 +22,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double dividend = GetDouble(shared.Cpu.PopValue());
             double divisor = GetDouble(shared.Cpu.PopValue());
+            double dividend = GetDouble(shared.Cpu.PopValue());
             double result = dividend % divisor;
             shared.Cpu.PushStack(result);
         }

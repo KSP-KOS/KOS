@@ -13,22 +13,26 @@ namespace kOS.Function
 
         protected double GetDouble(object argument)
         {
-            if (argument is int)
-                return (double)(int)argument;
-            else if (argument is double)
-                return (double)argument;
-            else
+            try
+            {
+                return Convert.ToDouble(argument);
+            }
+            catch(Exception)
+            {
                 throw new ArgumentException(string.Format("Can't cast {0} to double.", argument));
+            }    
         }
 
         protected int GetInt(object argument)
         {
-            if (argument is int)
-                return (int)argument;
-            else if (argument is double)
-                return (int)(double)argument;
-            else
+            try
+            {
+                return Convert.ToInt32(argument);
+            }
+            catch (Exception)
+            {
                 throw new ArgumentException(string.Format("Can't cast {0} to int.", argument));
+            }
         }
 
         protected double DegreesToRadians(double degrees)
