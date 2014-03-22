@@ -52,7 +52,8 @@ namespace kOS.Compilation
             if (program.MainCode.Count > 0)
             {
                 OpcodeBranchJump jumpOpcode = new OpcodeBranchJump();
-                jumpOpcode.DestinationLabel = program.MainCode[0].Label;
+                List<Opcode> codeSection = program.InitializationCode.Count > 0 ? program.InitializationCode : program.MainCode;
+                jumpOpcode.DestinationLabel = codeSection[0].Label;
                 program.FunctionsCode.Insert(0, jumpOpcode);
             }
         }

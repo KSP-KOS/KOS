@@ -733,7 +733,15 @@ namespace kOS.Compilation.KS
             else if (_context.Locks.Contains(identifier))
             {
                 Lock lockObject = _context.Locks.GetLock(identifier);
-                AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
+                if (_compilingSetDestination)
+                {
+                    UnlockIdentifier(lockObject);
+                    AddOpcode(new OpcodePush("$" + identifier));
+                }
+                else
+                {
+                    AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
+                }
             }
             else
             {
@@ -927,18 +935,22 @@ namespace kOS.Compilation.KS
         {
             string lockIdentifier = node.Nodes[1].Token.Text;
             Lock lockObject = _context.Locks.GetLock(lockIdentifier);
+            UnlockIdentifier(lockObject);
+        }
 
+        private void UnlockIdentifier(Lock lockObject)
+        {
             if (lockObject.IsInitialized())
             {
                 if (lockObject.IsSystemLock())
                 {
                     // disable this FlyByWire parameter
-                    AddOpcode(new OpcodePush(lockIdentifier));
+                    AddOpcode(new OpcodePush(lockObject.Identifier));
                     AddOpcode(new OpcodePush(false));
                     AddOpcode(new OpcodeCall("toggleflybywire()"));
 
                     // remove update trigger
-                    string triggerIdentifier = "lock-" + lockIdentifier;
+                    string triggerIdentifier = "lock-" + lockObject.Identifier;
                     if (_context.Triggers.Contains(triggerIdentifier))
                     {
                         Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
