@@ -111,7 +111,7 @@ namespace kOS.Module
                 _shared.Interpreter = _shared.Factory.CreateInterpreter(_shared);
                 _shared.Screen = _shared.Interpreter;
                 _shared.ScriptHandler = new Compilation.KS.KSScript();
-                _shared.Logger = new Logger(_shared);
+                _shared.Logger = new KSPLogger(_shared);
                 _shared.VolumeMgr = new VolumeManager(_shared);
                 _shared.ProcessorMgr = new ProcessorManager(_shared);
                 _shared.Cpu = new kOS.Execution.CPU(_shared);

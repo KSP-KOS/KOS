@@ -85,5 +85,20 @@ namespace kOS.Execution
             }
         }
 
+        public List<string> GetCodeFragment(int contextLines)
+        {
+            List<string> codeFragment = new List<string>();
+
+            for (int index = (InstructionPointer - contextLines); index <= (InstructionPointer + contextLines); index++)
+            {
+                if (index >= 0 && index < Program.Count)
+                {
+                    codeFragment.Add(string.Format("{0:0000}    {1}    {2}", index, Program[index], (index == InstructionPointer ? "<<" : "")));
+                }
+            }
+
+            return codeFragment;
+        }
+
     }
 }

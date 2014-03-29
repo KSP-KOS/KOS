@@ -418,7 +418,7 @@ namespace kOS.Execution
             {
                 if (_shared.Logger != null)
                 {
-                    _shared.Logger.Log(e, _currentContext.InstructionPointer);
+                    _shared.Logger.Log(e);
                 }
 
                 if (_contexts.Count == 1)
@@ -555,6 +555,11 @@ namespace kOS.Execution
                 _shared.BindingMgr.ToggleFlyByWire(paramName, enabled);
                 _currentContext.ToggleFlyByWire(paramName, enabled);
             }
+        }
+
+        public List<string> GetCodeFragment(int contextLines)
+        {
+            return _currentContext.GetCodeFragment(contextLines);
         }
 
         public void PrintStatistics()

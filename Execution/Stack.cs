@@ -12,8 +12,36 @@ namespace kOS.Execution
 
         public void Push(object item)
         {
-            _stackPointer++;
-            _stack.Insert(_stackPointer, item);
+            string message = string.Empty;
+            
+            if (IsValid(item, ref message))
+            {
+                _stackPointer++;
+                _stack.Insert(_stackPointer, item);
+            }
+            else
+            {
+                throw new ArgumentException(message);
+            }
+        }
+
+        private bool IsValid(object item, ref string message)
+        {
+            if (item is double)
+            {
+                if (Double.IsNaN((double)item))
+                {
+                    message = "Tried to push NaN into the stack.";
+                    return false;
+                }
+                if (Double.IsInfinity((double)item))
+                {
+                    message = "Tried to push Infinity into the stack.";
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public object Pop()
