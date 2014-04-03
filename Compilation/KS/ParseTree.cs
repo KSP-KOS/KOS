@@ -289,11 +289,11 @@ namespace kOS.Compilation.KS
                 case TokenType.expr:
                     Value = Evalexpr(tree, paramlist);
                     break;
-                case TokenType.or_expr:
-                    Value = Evalor_expr(tree, paramlist);
-                    break;
                 case TokenType.and_expr:
                     Value = Evaland_expr(tree, paramlist);
+                    break;
+                case TokenType.compare_expr:
+                    Value = Evalcompare_expr(tree, paramlist);
                     break;
                 case TokenType.arith_expr:
                     Value = Evalarith_expr(tree, paramlist);
@@ -590,14 +590,14 @@ namespace kOS.Compilation.KS
             return null;
         }
 
-        protected virtual object Evalor_expr(ParseTree tree, params object[] paramlist)
+        protected virtual object Evaland_expr(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
             return null;
         }
 
-        protected virtual object Evaland_expr(ParseTree tree, params object[] paramlist)
+        protected virtual object Evalcompare_expr(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

@@ -1973,40 +1973,6 @@ namespace kOS.Compilation.KS
 
 
             
-            Parseor_expr(node);
-
-            
-            tok = scanner.LookAhead(TokenType.COMPARATOR);
-            while (tok.Type == TokenType.COMPARATOR)
-            {
-
-                
-                tok = scanner.Scan(TokenType.COMPARATOR);
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.COMPARATOR) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COMPARATOR.ToString(), 0x1001, tok));
-                    return;
-                }
-
-                
-                Parseor_expr(node);
-            tok = scanner.LookAhead(TokenType.COMPARATOR);
-            }
-
-            parent.Token.UpdateRange(node.Token);
-        }
-
-        private void Parseor_expr(ParseNode parent)
-        {
-            Token tok;
-            ParseNode n;
-            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.or_expr), "or_expr");
-            parent.Nodes.Add(node);
-
-
-            
             Parseand_expr(node);
 
             
@@ -2041,7 +2007,7 @@ namespace kOS.Compilation.KS
 
 
             
-            Parsearith_expr(node);
+            Parsecompare_expr(node);
 
             
             tok = scanner.LookAhead(TokenType.AND);
@@ -2059,8 +2025,42 @@ namespace kOS.Compilation.KS
                 }
 
                 
-                Parsearith_expr(node);
+                Parsecompare_expr(node);
             tok = scanner.LookAhead(TokenType.AND);
+            }
+
+            parent.Token.UpdateRange(node.Token);
+        }
+
+        private void Parsecompare_expr(ParseNode parent)
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.compare_expr), "compare_expr");
+            parent.Nodes.Add(node);
+
+
+            
+            Parsearith_expr(node);
+
+            
+            tok = scanner.LookAhead(TokenType.COMPARATOR);
+            while (tok.Type == TokenType.COMPARATOR)
+            {
+
+                
+                tok = scanner.Scan(TokenType.COMPARATOR);
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.COMPARATOR) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.COMPARATOR.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                
+                Parsearith_expr(node);
+            tok = scanner.LookAhead(TokenType.COMPARATOR);
             }
 
             parent.Token.UpdateRange(node.Token);

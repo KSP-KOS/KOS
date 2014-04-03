@@ -401,7 +401,7 @@ namespace kOS.Compilation.KS
                     VisitArgList(node);
                     break;
                 case TokenType.expr:
-                case TokenType.or_expr:
+                case TokenType.compare_expr: // for issue #20
                 case TokenType.and_expr:
                 case TokenType.arith_expr:
                 case TokenType.div_expr:

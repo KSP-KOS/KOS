@@ -119,9 +119,15 @@ batch_stmt -> BATCH EOI;
 deploy_stmt -> DEPLOY EOI;
 // expressions
 arglist -> expr (COMMA expr)*;
-expr -> or_expr (COMPARATOR or_expr)*;
-or_expr -> and_expr (OR and_expr)*;
-and_expr -> arith_expr (AND arith_expr)*;
+// ------ for github #20, changed this:
+//expr -> or_expr (COMPARATOR or_expr)*;
+//or_expr -> and_expr (OR and_expr)*;
+//and_expr -> arith_expr (AND arith_expr)*;
+// ------- into this:
+expr -> and_expr (OR and_expr)*;
+and_expr -> compare_expr (AND compare_expr)*;
+compare_expr -> arith_expr (COMPARATOR arith_expr)*;
+// -------
 arith_expr -> div_expr (PLUSMINUS div_expr)*;
 div_expr -> mult_expr (DIV mult_expr)*;
 mult_expr -> factor (MULT factor)*;
