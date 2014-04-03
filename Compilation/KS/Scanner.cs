@@ -38,259 +38,259 @@ namespace kOS.Compilation.KS
             SkipList.Add(TokenType.WHITESPACE);
             SkipList.Add(TokenType.COMMENTLINE);
 
-            regex = new Regex(@"(\+|-)", RegexOptions.Compiled);
+            regex = new Regex(@"(\+|-)");
             Patterns.Add(TokenType.PLUSMINUS, regex);
             Tokens.Add(TokenType.PLUSMINUS);
 
-            regex = new Regex(@"\*", RegexOptions.Compiled);
+            regex = new Regex(@"\*");
             Patterns.Add(TokenType.MULT, regex);
             Tokens.Add(TokenType.MULT);
 
-            regex = new Regex(@"/", RegexOptions.Compiled);
+            regex = new Regex(@"/");
             Patterns.Add(TokenType.DIV, regex);
             Tokens.Add(TokenType.DIV);
 
-            regex = new Regex(@"\^", RegexOptions.Compiled);
+            regex = new Regex(@"\^");
             Patterns.Add(TokenType.POWER, regex);
             Tokens.Add(TokenType.POWER);
 
-            regex = new Regex(@"e", RegexOptions.Compiled);
+            regex = new Regex(@"e");
             Patterns.Add(TokenType.E, regex);
             Tokens.Add(TokenType.E);
 
-            regex = new Regex(@"and", RegexOptions.Compiled);
+            regex = new Regex(@"and");
             Patterns.Add(TokenType.AND, regex);
             Tokens.Add(TokenType.AND);
 
-            regex = new Regex(@"or", RegexOptions.Compiled);
+            regex = new Regex(@"or");
             Patterns.Add(TokenType.OR, regex);
             Tokens.Add(TokenType.OR);
 
-            regex = new Regex(@"true|false", RegexOptions.Compiled);
+            regex = new Regex(@"true|false");
             Patterns.Add(TokenType.TRUEFALSE, regex);
             Tokens.Add(TokenType.TRUEFALSE);
 
-            regex = new Regex(@">=|<=|=|>|<", RegexOptions.Compiled);
+            regex = new Regex(@">=|<=|=|>|<");
             Patterns.Add(TokenType.COMPARATOR, regex);
             Tokens.Add(TokenType.COMPARATOR);
 
-            regex = new Regex(@"set", RegexOptions.Compiled);
+            regex = new Regex(@"set");
             Patterns.Add(TokenType.SET, regex);
             Tokens.Add(TokenType.SET);
 
-            regex = new Regex(@"to", RegexOptions.Compiled);
+            regex = new Regex(@"to");
             Patterns.Add(TokenType.TO, regex);
             Tokens.Add(TokenType.TO);
 
-            regex = new Regex(@"if", RegexOptions.Compiled);
+            regex = new Regex(@"if");
             Patterns.Add(TokenType.IF, regex);
             Tokens.Add(TokenType.IF);
 
-            regex = new Regex(@"until", RegexOptions.Compiled);
+            regex = new Regex(@"until");
             Patterns.Add(TokenType.UNTIL, regex);
             Tokens.Add(TokenType.UNTIL);
 
-            regex = new Regex(@"lock", RegexOptions.Compiled);
+            regex = new Regex(@"lock");
             Patterns.Add(TokenType.LOCK, regex);
             Tokens.Add(TokenType.LOCK);
 
-            regex = new Regex(@"unlock", RegexOptions.Compiled);
+            regex = new Regex(@"unlock");
             Patterns.Add(TokenType.UNLOCK, regex);
             Tokens.Add(TokenType.UNLOCK);
 
-            regex = new Regex(@"print", RegexOptions.Compiled);
+            regex = new Regex(@"print");
             Patterns.Add(TokenType.PRINT, regex);
             Tokens.Add(TokenType.PRINT);
 
-            regex = new Regex(@"at", RegexOptions.Compiled);
+            regex = new Regex(@"at");
             Patterns.Add(TokenType.AT, regex);
             Tokens.Add(TokenType.AT);
 
-            regex = new Regex(@"on", RegexOptions.Compiled);
+            regex = new Regex(@"on");
             Patterns.Add(TokenType.ON, regex);
             Tokens.Add(TokenType.ON);
 
-            regex = new Regex(@"toggle", RegexOptions.Compiled);
+            regex = new Regex(@"toggle");
             Patterns.Add(TokenType.TOGGLE, regex);
             Tokens.Add(TokenType.TOGGLE);
 
-            regex = new Regex(@"wait", RegexOptions.Compiled);
+            regex = new Regex(@"wait");
             Patterns.Add(TokenType.WAIT, regex);
             Tokens.Add(TokenType.WAIT);
 
-            regex = new Regex(@"when", RegexOptions.Compiled);
+            regex = new Regex(@"when");
             Patterns.Add(TokenType.WHEN, regex);
             Tokens.Add(TokenType.WHEN);
 
-            regex = new Regex(@"then", RegexOptions.Compiled);
+            regex = new Regex(@"then");
             Patterns.Add(TokenType.THEN, regex);
             Tokens.Add(TokenType.THEN);
 
-            regex = new Regex(@"off", RegexOptions.Compiled);
+            regex = new Regex(@"off");
             Patterns.Add(TokenType.OFF, regex);
             Tokens.Add(TokenType.OFF);
 
-            regex = new Regex(@"stage", RegexOptions.Compiled);
+            regex = new Regex(@"stage");
             Patterns.Add(TokenType.STAGE, regex);
             Tokens.Add(TokenType.STAGE);
 
-            regex = new Regex(@"clearscreen", RegexOptions.Compiled);
+            regex = new Regex(@"clearscreen");
             Patterns.Add(TokenType.CLEARSCREEN, regex);
             Tokens.Add(TokenType.CLEARSCREEN);
 
-            regex = new Regex(@"add", RegexOptions.Compiled);
+            regex = new Regex(@"add");
             Patterns.Add(TokenType.ADD, regex);
             Tokens.Add(TokenType.ADD);
 
-            regex = new Regex(@"remove", RegexOptions.Compiled);
+            regex = new Regex(@"remove");
             Patterns.Add(TokenType.REMOVE, regex);
             Tokens.Add(TokenType.REMOVE);
 
-            regex = new Regex(@"log", RegexOptions.Compiled);
+            regex = new Regex(@"log");
             Patterns.Add(TokenType.LOG, regex);
             Tokens.Add(TokenType.LOG);
 
-            regex = new Regex(@"break", RegexOptions.Compiled);
+            regex = new Regex(@"break");
             Patterns.Add(TokenType.BREAK, regex);
             Tokens.Add(TokenType.BREAK);
 
-            regex = new Regex(@"declare", RegexOptions.Compiled);
+            regex = new Regex(@"declare");
             Patterns.Add(TokenType.DECLARE, regex);
             Tokens.Add(TokenType.DECLARE);
 
-            regex = new Regex(@"parameter", RegexOptions.Compiled);
+            regex = new Regex(@"parameter");
             Patterns.Add(TokenType.PARAMETER, regex);
             Tokens.Add(TokenType.PARAMETER);
 
-            regex = new Regex(@"switch", RegexOptions.Compiled);
+            regex = new Regex(@"switch");
             Patterns.Add(TokenType.SWITCH, regex);
             Tokens.Add(TokenType.SWITCH);
 
-            regex = new Regex(@"copy", RegexOptions.Compiled);
+            regex = new Regex(@"copy");
             Patterns.Add(TokenType.COPY, regex);
             Tokens.Add(TokenType.COPY);
 
-            regex = new Regex(@"from", RegexOptions.Compiled);
+            regex = new Regex(@"from");
             Patterns.Add(TokenType.FROM, regex);
             Tokens.Add(TokenType.FROM);
 
-            regex = new Regex(@"rename", RegexOptions.Compiled);
+            regex = new Regex(@"rename");
             Patterns.Add(TokenType.RENAME, regex);
             Tokens.Add(TokenType.RENAME);
 
-            regex = new Regex(@"volume", RegexOptions.Compiled);
+            regex = new Regex(@"volume");
             Patterns.Add(TokenType.VOLUME, regex);
             Tokens.Add(TokenType.VOLUME);
 
-            regex = new Regex(@"file", RegexOptions.Compiled);
+            regex = new Regex(@"file");
             Patterns.Add(TokenType.FILE, regex);
             Tokens.Add(TokenType.FILE);
 
-            regex = new Regex(@"delete", RegexOptions.Compiled);
+            regex = new Regex(@"delete");
             Patterns.Add(TokenType.DELETE, regex);
             Tokens.Add(TokenType.DELETE);
 
-            regex = new Regex(@"edit", RegexOptions.Compiled);
+            regex = new Regex(@"edit");
             Patterns.Add(TokenType.EDIT, regex);
             Tokens.Add(TokenType.EDIT);
 
-            regex = new Regex(@"run", RegexOptions.Compiled);
+            regex = new Regex(@"run");
             Patterns.Add(TokenType.RUN, regex);
             Tokens.Add(TokenType.RUN);
 
-            regex = new Regex(@"list", RegexOptions.Compiled);
+            regex = new Regex(@"list");
             Patterns.Add(TokenType.LIST, regex);
             Tokens.Add(TokenType.LIST);
 
-            regex = new Regex(@"reboot", RegexOptions.Compiled);
+            regex = new Regex(@"reboot");
             Patterns.Add(TokenType.REBOOT, regex);
             Tokens.Add(TokenType.REBOOT);
 
-            regex = new Regex(@"shutdown", RegexOptions.Compiled);
+            regex = new Regex(@"shutdown");
             Patterns.Add(TokenType.SHUTDOWN, regex);
             Tokens.Add(TokenType.SHUTDOWN);
 
-            regex = new Regex(@"for", RegexOptions.Compiled);
+            regex = new Regex(@"for");
             Patterns.Add(TokenType.FOR, regex);
             Tokens.Add(TokenType.FOR);
 
-            regex = new Regex(@"unset", RegexOptions.Compiled);
+            regex = new Regex(@"unset");
             Patterns.Add(TokenType.UNSET, regex);
             Tokens.Add(TokenType.UNSET);
 
-            regex = new Regex(@"batch", RegexOptions.Compiled);
+            regex = new Regex(@"batch");
             Patterns.Add(TokenType.BATCH, regex);
             Tokens.Add(TokenType.BATCH);
 
-            regex = new Regex(@"deploy", RegexOptions.Compiled);
+            regex = new Regex(@"deploy");
             Patterns.Add(TokenType.DEPLOY, regex);
             Tokens.Add(TokenType.DEPLOY);
 
-            regex = new Regex(@"\(", RegexOptions.Compiled);
+            regex = new Regex(@"\(");
             Patterns.Add(TokenType.BRACKETOPEN, regex);
             Tokens.Add(TokenType.BRACKETOPEN);
 
-            regex = new Regex(@"\)", RegexOptions.Compiled);
+            regex = new Regex(@"\)");
             Patterns.Add(TokenType.BRACKETCLOSE, regex);
             Tokens.Add(TokenType.BRACKETCLOSE);
 
-            regex = new Regex(@"\{", RegexOptions.Compiled);
+            regex = new Regex(@"\{");
             Patterns.Add(TokenType.CURLYOPEN, regex);
             Tokens.Add(TokenType.CURLYOPEN);
 
-            regex = new Regex(@"\}", RegexOptions.Compiled);
+            regex = new Regex(@"\}");
             Patterns.Add(TokenType.CURLYCLOSE, regex);
             Tokens.Add(TokenType.CURLYCLOSE);
 
-            regex = new Regex(@",", RegexOptions.Compiled);
+            regex = new Regex(@",");
             Patterns.Add(TokenType.COMMA, regex);
             Tokens.Add(TokenType.COMMA);
 
-            regex = new Regex(@":", RegexOptions.Compiled);
+            regex = new Regex(@":");
             Patterns.Add(TokenType.COLON, regex);
             Tokens.Add(TokenType.COLON);
 
-            regex = new Regex(@"in", RegexOptions.Compiled);
+            regex = new Regex(@"in");
             Patterns.Add(TokenType.IN, regex);
             Tokens.Add(TokenType.IN);
 
-            regex = new Regex(@"#", RegexOptions.Compiled);
+            regex = new Regex(@"#");
             Patterns.Add(TokenType.ARRAYINDEX, regex);
             Tokens.Add(TokenType.ARRAYINDEX);
 
-            regex = new Regex(@"all", RegexOptions.Compiled);
+            regex = new Regex(@"all");
             Patterns.Add(TokenType.ALL, regex);
             Tokens.Add(TokenType.ALL);
 
-            regex = new Regex(@"[a-z_][a-z0-9_]*", RegexOptions.Compiled);
+            regex = new Regex(@"[a-z_][a-z0-9_]*");
             Patterns.Add(TokenType.IDENTIFIER, regex);
             Tokens.Add(TokenType.IDENTIFIER);
 
-            regex = new Regex(@"[0-9]+", RegexOptions.Compiled);
+            regex = new Regex(@"[0-9]+");
             Patterns.Add(TokenType.INTEGER, regex);
             Tokens.Add(TokenType.INTEGER);
 
-            regex = new Regex(@"[0-9]*\.[0-9]+", RegexOptions.Compiled);
+            regex = new Regex(@"[0-9]*\.[0-9]+");
             Patterns.Add(TokenType.DOUBLE, regex);
             Tokens.Add(TokenType.DOUBLE);
 
-            regex = new Regex(@"@?\""(\""\""|[^\""])*\""", RegexOptions.Compiled);
+            regex = new Regex(@"@?\""(\""\""|[^\""])*\""");
             Patterns.Add(TokenType.STRING, regex);
             Tokens.Add(TokenType.STRING);
 
-            regex = new Regex(@"\.", RegexOptions.Compiled);
+            regex = new Regex(@"\.");
             Patterns.Add(TokenType.EOI, regex);
             Tokens.Add(TokenType.EOI);
 
-            regex = new Regex(@"^$", RegexOptions.Compiled);
+            regex = new Regex(@"^$");
             Patterns.Add(TokenType.EOF, regex);
             Tokens.Add(TokenType.EOF);
 
-            regex = new Regex(@"\s+", RegexOptions.Compiled);
+            regex = new Regex(@"\s+");
             Patterns.Add(TokenType.WHITESPACE, regex);
             Tokens.Add(TokenType.WHITESPACE);
 
-            regex = new Regex(@"//[^\n]*\n?", RegexOptions.Compiled);
+            regex = new Regex(@"//[^\n]*\n?");
             Patterns.Add(TokenType.COMMENTLINE, regex);
             Tokens.Add(TokenType.COMMENTLINE);
 
