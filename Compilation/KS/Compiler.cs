@@ -401,7 +401,7 @@ namespace kOS.Compilation.KS
                     VisitArgList(node);
                     break;
                 case TokenType.expr:
-                case TokenType.or_expr:
+                case TokenType.compare_expr: // for issue #20
                 case TokenType.and_expr:
                 case TokenType.arith_expr:
                 case TokenType.div_expr:
@@ -815,11 +815,29 @@ namespace kOS.Compilation.KS
 
         private void VisitIfStatement(ParseNode node)
         {
+        	// The IF check:
             VisitNode(node.Nodes[1]);
-            Opcode branch = AddOpcode(new OpcodeBranchIfFalse());
+            Opcode branchToFalse = AddOpcode(new OpcodeBranchIfFalse());
+            // The IF BODY:
             VisitNode(node.Nodes[2]);
-            branch.DestinationLabel = GetNextLabel(false);
-            _addBranchDestination = true;
+            if( node.Nodes.Count < 4 ) {
+            	// No ELSE exists.
+            	// Jump to after the IF BODY if false:
+                branchToFalse.DestinationLabel = GetNextLabel(false);
+                _addBranchDestination = true;
+            } else {
+            	// The IF statement has an ELSE clause.
+
+            	// Jump past the ELSE body from the end of the IF body:
+            	Opcode branchPastElse = AddOpcode( new OpcodeBranchJump() );
+            	// This is where the ELSE clause starts:
+            	branchToFalse.DestinationLabel = GetNextLabel(false);
+            	// The else body:
+            	VisitNode(node.Nodes[4]);
+                // End of Else body label:
+            	branchPastElse.DestinationLabel = GetNextLabel(false);                
+            	_addBranchDestination = true;
+            }
         }
 
         private void VisitUntilStatement(ParseNode node)

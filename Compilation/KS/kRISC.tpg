@@ -17,6 +17,7 @@ COMPARATOR -> @">=|<=|=|>|<";
 SET -> @"set";
 TO -> @"to";
 IF -> @"if";
+ELSE -> @"else";
 UNTIL -> @"until";
 LOCK -> @"lock";
 UNLOCK -> @"unlock";
@@ -86,7 +87,7 @@ instruction -> set_stmt | if_stmt | until_stmt | lock_stmt | unlock_stmt | print
                deploy_stmt;
 // statements
 set_stmt -> SET varidentifier TO expr EOI;
-if_stmt -> IF expr instruction_block EOI?;
+if_stmt -> IF expr instruction_block (ELSE instruction_block)? EOI?;
 until_stmt -> UNTIL expr instruction_block EOI?;
 lock_stmt -> LOCK IDENTIFIER TO expr EOI;
 unlock_stmt -> UNLOCK IDENTIFIER EOI;
@@ -119,9 +120,9 @@ batch_stmt -> BATCH EOI;
 deploy_stmt -> DEPLOY EOI;
 // expressions
 arglist -> expr (COMMA expr)*;
-expr -> or_expr (COMPARATOR or_expr)*;
-or_expr -> and_expr (OR and_expr)*;
-and_expr -> arith_expr (AND arith_expr)*;
+expr -> and_expr (OR and_expr)*;
+and_expr -> compare_expr (AND compare_expr)*;
+compare_expr -> arith_expr (COMPARATOR arith_expr)*;
 arith_expr -> div_expr (PLUSMINUS div_expr)*;
 div_expr -> mult_expr (DIV mult_expr)*;
 mult_expr -> factor (MULT factor)*;
