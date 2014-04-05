@@ -149,10 +149,9 @@ namespace kOS.Binding
                         }
                     }
                 }
-                catch (Exception ex) {
-                    
-                    
-                    // TODO: Write exception to game log
+                catch (Exception ex) 
+                {
+                    if (_shared.Logger != null) _shared.Logger.Log(e);
                 }
             }
 
