@@ -403,6 +403,25 @@ namespace kOS.Compilation.KS
             Parseinstruction_block(node);
 
             
+            tok = scanner.LookAhead(TokenType.ELSE);
+            if (tok.Type == TokenType.ELSE)
+            {
+
+                
+                tok = scanner.Scan(TokenType.ELSE);
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.ELSE) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ELSE.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                
+                Parseinstruction_block(node);
+            }
+
+            
             tok = scanner.LookAhead(TokenType.EOI);
             if (tok.Type == TokenType.EOI)
             {
