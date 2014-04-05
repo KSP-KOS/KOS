@@ -149,7 +149,7 @@ namespace kOS.Binding
                         }
                     }
                 }
-                catch (Exception ex) 
+                catch (Exception e) 
                 {
                     if (_shared.Logger != null) _shared.Logger.Log(e);
                 }
