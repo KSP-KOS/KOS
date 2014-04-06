@@ -23,7 +23,7 @@ namespace kOS.Module
         private SharedObjects _shared = null;
 
         //640K ought to be enough for anybody -sic
-        public const int PROCESSOR_HARD_CAP = 655360;
+        private const int PROCESSOR_HARD_CAP = 655360;
 
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
         public int diskSpace = 500;
