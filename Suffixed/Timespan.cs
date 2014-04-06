@@ -114,7 +114,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return Math.Floor(span.TotalSeconds).ToString("0");
+            return "TIME{" + Math.Floor(span.TotalSeconds).ToString("0") + "}";
         }
     }
 }
