@@ -526,12 +526,15 @@ namespace kOS.Execution
 
         private void SkipCurrentInstructionId()
         {
-            int currentInstructionId = _currentContext.Program[_currentContext.InstructionPointer].InstructionId;
-
-            while (_currentContext.InstructionPointer < _currentContext.Program.Count &&
-                   _currentContext.Program[_currentContext.InstructionPointer].InstructionId == currentInstructionId)
+            if (_currentContext.InstructionPointer < (_currentContext.Program.Count - 1))
             {
-                _currentContext.InstructionPointer++;
+                int currentInstructionId = _currentContext.Program[_currentContext.InstructionPointer].InstructionId;
+
+                while (_currentContext.InstructionPointer < _currentContext.Program.Count &&
+                       _currentContext.Program[_currentContext.InstructionPointer].InstructionId == currentInstructionId)
+                {
+                    _currentContext.InstructionPointer++;
+                }
             }
         }
 
