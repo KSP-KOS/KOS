@@ -127,25 +127,31 @@ namespace kOS.Binding
 
             public void OnFlyByWire(ref FlightCtrlState c)
             {
-                if (_value != null)
-                {
-                    switch (name)
+                try {
+                    if (_value != null)
                     {
-                        case "throttle":
-                            UpdateThrottle(c);
-                            break;
-                        case "wheelthrottle":
-                            UpdateWheelThrottle(c);
-                            break;
-                        case "steering":
-                            SteerByWire(c);
-                            break;
-                        case "wheelsteering":
-                            WheelSteer(c);
-                            break;
-                        default:
-                            break;
+                        switch (name)
+                        {
+                            case "throttle":
+                                UpdateThrottle(c);
+                                break;
+                            case "wheelthrottle":
+                                UpdateWheelThrottle(c);
+                                break;
+                            case "steering":
+                                SteerByWire(c);
+                                break;
+                            case "wheelsteering":
+                                WheelSteer(c);
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                }
+                catch (Exception e) 
+                {
+                    if (_shared.Logger != null) _shared.Logger.Log(e);
                 }
             }
 
