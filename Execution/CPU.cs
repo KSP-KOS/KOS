@@ -98,7 +98,7 @@ namespace kOS.Execution
             if (_shared.Screen != null)
             {
                 _shared.Screen.ClearScreen();
-                string bootMessage = "kRISC Operating System\n" +
+                string bootMessage = "kOS Operating System\n" +
                                      "KerboScript v" + Core.VersionInfo.ToString() + "\n \n" +
                                      "Proceed.\n ";
                 _shared.Screen.Print(bootMessage);
