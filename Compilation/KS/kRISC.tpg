@@ -9,10 +9,11 @@ DIV -> @"/";
 POWER -> @"\^";
 E -> @"e";
 //Logic
+NOT -> @"not";
 AND -> @"and";
 OR -> @"or";
 TRUEFALSE -> @"true|false";
-COMPARATOR -> @">=|<=|=|>|<";
+COMPARATOR -> @"<>|>=|<=|=|>|<";
 //Instructions tokens
 SET -> @"set";
 TO -> @"to";
@@ -127,13 +128,13 @@ arith_expr -> div_expr (PLUSMINUS div_expr)*;
 div_expr -> mult_expr (DIV mult_expr)*;
 mult_expr -> factor (MULT factor)*;
 factor -> atom (POWER atom)*;
-atom -> PLUSMINUS? ( sci_number | 
+atom -> (PLUSMINUS|NOT)? ( sci_number | 
                      TRUEFALSE |
                      varidentifier |
                      BRACKETOPEN expr BRACKETCLOSE ) |
         STRING;
 sci_number -> number (E PLUSMINUS? INTEGER)?;
 number -> (INTEGER | DOUBLE);
+array_identifier -> function_identifier (ARRAYINDEX expr)*;
 varidentifier -> array_identifier (COLON IDENTIFIER)*;
-array_identifier -> function_identifier (ARRAYINDEX (INTEGER | IDENTIFIER))*;
 function_identifier -> IDENTIFIER (BRACKETOPEN arglist? BRACKETCLOSE)?;

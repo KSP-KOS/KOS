@@ -172,6 +172,10 @@ namespace kOS.Compilation
         public override void Execute(CPU cpu)
         {
             object index = cpu.PopValue();
+            if( index is double || index is float )
+            {
+            	index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indeces
+            }
             object list = cpu.PopValue();
 
             if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
@@ -191,6 +195,10 @@ namespace kOS.Compilation
             object value = cpu.PopValue();
             object index = cpu.PopValue();
             object list = cpu.PopValue();
+            if( index is double || index is float )
+            {
+            	index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indeces
+            }
 
             if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
             if (!(index is int)) throw new Exception("The index must be an integer number");
@@ -297,6 +305,16 @@ namespace kOS.Compilation
         }
     }
 
+    public class OpcodeCompareNE : BinaryOpcode
+    {
+        public override string Name { get { return "ne"; } }
+
+        protected override object ExecuteCalculation(Calculator calc)
+        {
+        	return calc.NotEqual(argument1, argument2);
+        }
+    }
+    
     public class OpcodeCompareEqual : BinaryOpcode
     {
         public override string Name { get { return "eq"; } }
@@ -310,6 +328,29 @@ namespace kOS.Compilation
     #endregion
 
     #region Math
+
+        
+    public class OpcodeMathNegate : Opcode
+    {
+        public override string Name { get { return "negate"; } }
+
+        public override void Execute(CPU cpu)
+        {
+            object value = cpu.PopValue();
+            object result;
+
+            if (value is int)
+                result = -((int)value);
+            else if (value is float)
+            	result = -( Convert.ToDouble(value) );
+            else if (value is double)
+                result = -((double)value);
+            else
+                throw new ArgumentException(string.Format("Can't negate object {0} of type {1}", value, value.GetType()));
+
+            cpu.PushStack(result);
+        }
+    }
 
     public class OpcodeMathAdd : BinaryOpcode
     {
@@ -392,16 +433,16 @@ namespace kOS.Compilation
             if (value is bool)
                 result = !((bool)value);
             else if (value is int)
-                result = -((int)value);
-            else if (value is double)
-                result = -((double)value);
+            	result = (int) ( Convert.ToBoolean(value) ? 0 : 1 );
+            else if ( (value is double) || (value is float) )
+            	result = (double) ( Convert.ToBoolean(value) ? 0.0 : 1.0 );
             else
-                throw new ArgumentException(string.Format("Can't negate object {0} of type {1}", value, value.GetType()));
+                throw new ArgumentException(string.Format("Can't apply logical-not to object {0} of type {1}", value, value.GetType()));
 
             cpu.PushStack(result);
         }
     }
-
+    
     public class OpcodeLogicAnd : Opcode
     {
         public override string Name { get { return "and"; } }

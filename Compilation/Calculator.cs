@@ -17,6 +17,7 @@ namespace kOS.Compilation
         public abstract object LessThan(object argument1, object argument2);
         public abstract object GreaterThanEqual(object argument1, object argument2);
         public abstract object LessThanEqual(object argument1, object argument2);
+        public abstract object NotEqual(object argument1, object argument2);
         public abstract object Equal(object argument1, object argument2);
         public abstract object Min(object argument1, object argument2);
         public abstract object Max(object argument1, object argument2);
@@ -103,6 +104,11 @@ namespace kOS.Compilation
             return (int)argument1 <= (int)argument2;
         }
 
+        public override object NotEqual(object argument1, object argument2)
+        {
+            return (int)argument1 != (int)argument2;
+        }
+
         public override object Equal(object argument1, object argument2)
         {
             return (int)argument1 == (int)argument2;
@@ -165,6 +171,11 @@ namespace kOS.Compilation
         public override object LessThanEqual(object argument1, object argument2)
         {
             return (double)argument1 <= (double)argument2;
+        }
+
+        public override object NotEqual(object argument1, object argument2)
+        {
+            return (double)argument1 != (double)argument2;
         }
 
         public override object Equal(object argument1, object argument2)
@@ -240,6 +251,12 @@ namespace kOS.Compilation
             else return (double)argument1 <= (int)argument2;
         }
 
+        public override object NotEqual(object argument1, object argument2)
+        {
+            if (argument1 is int) return (int)argument1 != (double)argument2;
+            else return (double)argument1 != (int)argument2;
+        }
+
         public override object Equal(object argument1, object argument2)
         {
             if (argument1 is int) return (int)argument1 == (double)argument2;
@@ -304,6 +321,11 @@ namespace kOS.Compilation
         public override object LessThanEqual(object argument1, object argument2)
         {
             return argument1.ToString().Length <= argument2.ToString().Length;
+        }
+
+        public override object NotEqual(object argument1, object argument2)
+        {
+            return argument1.ToString().ToLower() != argument2.ToString().ToLower();
         }
 
         public override object Equal(object argument1, object argument2)
@@ -378,6 +400,11 @@ namespace kOS.Compilation
             return (!arg1 & arg2) | (arg1 == arg2);
         }
 
+        public override object NotEqual(object argument1, object argument2)
+        {
+            return Convert.ToBoolean(argument1) != Convert.ToBoolean(argument2);
+        }
+
         public override object Equal(object argument1, object argument2)
         {
             return Convert.ToBoolean(argument1) == Convert.ToBoolean(argument2);
@@ -449,6 +476,11 @@ namespace kOS.Compilation
         public override object LessThanEqual(object argument1, object argument2)
         {
             return Calculate("<=", argument1, argument2);
+        }
+
+        public override object NotEqual(object argument1, object argument2)
+        {
+            return Calculate("<>", argument1, argument2);
         }
 
         public override object Equal(object argument1, object argument2)
