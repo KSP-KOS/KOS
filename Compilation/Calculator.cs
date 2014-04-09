@@ -57,30 +57,35 @@ namespace kOS.Compilation
 
     public class CalculatorIntInt : Calculator
     {
+        private object PromoteToDouble(double result)
+        {
+            if (Math.Abs(result) <= int.MaxValue) return (int)result;
+            else return result;
+        }
+
         public override object Add(object argument1, object argument2)
         {
-            return (int)argument1 + (int)argument2;
+            return PromoteToDouble((double)(int)argument1 + (int)argument2);
         }
 
         public override object Subtract(object argument1, object argument2)
         {
-            return (int)argument1 - (int)argument2;
+            return PromoteToDouble((double)(int)argument1 - (int)argument2);
         }
 
         public override object Multiply(object argument1, object argument2)
         {
-            return (int)argument1 * (int)argument2;
+            return PromoteToDouble((double)(int)argument1 * (int)argument2);
         }
 
         public override object Divide(object argument1, object argument2)
         {
-            //TODO: catch exception
             return (double)(int)argument1 / (int)argument2;
         }
 
         public override object Power(object argument1, object argument2)
         {
-            return (int)Math.Pow((int)argument1, (int)argument2);
+            return PromoteToDouble(Math.Pow((int)argument1, (int)argument2));
         }
 
         public override object GreaterThan(object argument1, object argument2)
@@ -110,12 +115,12 @@ namespace kOS.Compilation
 
         public override object Min(object argument1, object argument2)
         {
-            return Math.Min((int)argument1, (int)argument2);
+            return (int)Math.Min((int)argument1, (int)argument2);
         }
 
         public override object Max(object argument1, object argument2)
         {
-            return Math.Max((int)argument1, (int)argument2);
+            return (int)Math.Max((int)argument1, (int)argument2);
         }
     }
 
@@ -138,7 +143,6 @@ namespace kOS.Compilation
 
         public override object Divide(object argument1, object argument2)
         {
-            //TODO: catch exception
             return (double)argument1 / (double)argument2;
         }
 
@@ -205,7 +209,6 @@ namespace kOS.Compilation
 
         public override object Divide(object argument1, object argument2)
         {
-            //TODO: catch exception
             if (argument1 is int) return (int)argument1 / (double)argument2;
             else return (double)argument1 / (int)argument2;
         }
