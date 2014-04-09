@@ -685,7 +685,10 @@ namespace kOS.Compilation.KS
             int nodeIndex = 2;
             while (nodeIndex < node.Nodes.Count)
             {
-                VisitNode(node.Nodes[nodeIndex]);
+                if (node.Nodes[nodeIndex].Token.Type == TokenType.IDENTIFIER)
+                    VisitVariableNode(node.Nodes[nodeIndex]);
+                else
+                    VisitNode(node.Nodes[nodeIndex]);
                 
                 // when we are setting a member value we need to leave
                 // the last object and the last index in the stack
