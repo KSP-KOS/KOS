@@ -51,8 +51,26 @@ namespace kOS.Compilation.KS
 
         public List<CodePart> GetNewParts()
         {
+            // new locks
             List<CodePart> parts = GetParts(_newLocks);
+
+            // updated locks
+            foreach (Lock lockObject in _locks.Values)
+            {
+                // if the lock is new then clear the new functions list
+                if (_newLocks.Contains(lockObject))
+                {
+                    lockObject.ClearNewFunctions();
+                }
+                else if (lockObject.HasNewFunctions())
+                {
+                    // if the lock has new functions then create a new code part for them
+                    parts.Add(lockObject.GetNewFunctionsCodePart());
+                }
+            }
+
             _newLocks.Clear();
+
             return parts;
         }
     }
@@ -63,6 +81,7 @@ namespace kOS.Compilation.KS
         
         private CodePart _codePart;
         private Dictionary<int, LockFunction> _functions;
+        private List<LockFunction> _newFunctions;
 
         public string Identifier;
         public string PointerIdentifier;
@@ -83,6 +102,7 @@ namespace kOS.Compilation.KS
         {
             _codePart = new CodePart();
             _functions = new Dictionary<int, LockFunction>();
+            _newFunctions = new List<LockFunction>();
         }
 
         public Lock(string lockIdentifier)
@@ -109,6 +129,7 @@ namespace kOS.Compilation.KS
             {
                 LockFunction newLockFunction = new LockFunction();
                 _functions.Add(expressionHash, newLockFunction);
+                _newFunctions.Add(newLockFunction);
                 return newLockFunction.Code;
             }
         }
@@ -125,6 +146,29 @@ namespace kOS.Compilation.KS
             }
 
             return mergedPart;
+        }
+
+        public bool HasNewFunctions()
+        {
+            return (_newFunctions.Count > 0);
+        }
+
+        public void ClearNewFunctions()
+        {
+            _newFunctions.Clear();
+        }
+
+        public CodePart GetNewFunctionsCodePart()
+        {
+            CodePart newFunctionsPart = new CodePart();
+
+            foreach (LockFunction function in _newFunctions)
+            {
+                newFunctionsPart.FunctionsCode.AddRange(function.Code);
+            }
+
+            ClearNewFunctions();
+            return newFunctionsPart;
         }
 
         public bool IsSystemLock()
