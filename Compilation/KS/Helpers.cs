@@ -32,6 +32,11 @@ namespace kOS.Compilation.KS
             }
         }
 
+        public List<Lock> GetLockList()
+        {
+            return _locks.Values.ToList();
+        }
+
         public List<CodePart> GetParts(List<Lock> locks)
         {
             List<CodePart> parts = new List<CodePart>();

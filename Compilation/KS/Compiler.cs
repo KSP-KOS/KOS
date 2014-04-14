@@ -954,9 +954,18 @@ namespace kOS.Compilation.KS
 
         private void VisitUnlockStatement(ParseNode node)
         {
-            string lockIdentifier = node.Nodes[1].Token.Text;
-            Lock lockObject = _context.Locks.GetLock(lockIdentifier);
-            UnlockIdentifier(lockObject);
+            if (node.Nodes[1].Token.Type == TokenType.ALL)
+            {
+                // unlock all locks
+                foreach(Lock lockObject in _context.Locks.GetLockList())
+                    UnlockIdentifier(lockObject);
+            }
+            else
+            {
+                string lockIdentifier = node.Nodes[1].Token.Text;
+                Lock lockObject = _context.Locks.GetLock(lockIdentifier);
+                UnlockIdentifier(lockObject);
+            }
         }
 
         private void UnlockIdentifier(Lock lockObject)
