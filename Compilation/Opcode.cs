@@ -172,6 +172,10 @@ namespace kOS.Compilation
         public override void Execute(CPU cpu)
         {
             object index = cpu.PopValue();
+            if( index is double || index is float )
+            {
+            	index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indeces
+            }
             object list = cpu.PopValue();
 
             if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
@@ -191,7 +195,10 @@ namespace kOS.Compilation
             object value = cpu.PopValue();
             object index = cpu.PopValue();
             object list = cpu.PopValue();
-
+            if( index is double || index is float )
+            {
+            	index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indeces
+            }
             if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
             if (!(index is int)) throw new Exception("The index must be an integer number");
 

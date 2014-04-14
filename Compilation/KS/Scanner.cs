@@ -246,6 +246,14 @@ namespace kOS.Compilation.KS
             Patterns.Add(TokenType.CURLYCLOSE, regex);
             Tokens.Add(TokenType.CURLYCLOSE);
 
+            regex = new Regex(@"\[");
+            Patterns.Add(TokenType.SQUAREOPEN, regex);
+            Tokens.Add(TokenType.SQUAREOPEN);
+
+            regex = new Regex(@"\]");
+            Patterns.Add(TokenType.SQUARECLOSE, regex);
+            Tokens.Add(TokenType.SQUARECLOSE);
+
             regex = new Regex(@",");
             Patterns.Add(TokenType.COMMA, regex);
             Tokens.Add(TokenType.COMMA);
@@ -504,8 +512,8 @@ namespace kOS.Compilation.KS
             atom    = 45,
             sci_number= 46,
             number  = 47,
-            varidentifier= 48,
-            array_identifier= 49,
+            array_identifier= 48,
+            varidentifier= 49,
             function_identifier= 50,
 
             //Terminal tokens:
@@ -561,19 +569,21 @@ namespace kOS.Compilation.KS
             BRACKETCLOSE= 100,
             CURLYOPEN= 101,
             CURLYCLOSE= 102,
-            COMMA   = 103,
-            COLON   = 104,
-            IN      = 105,
-            ARRAYINDEX= 106,
-            ALL     = 107,
-            IDENTIFIER= 108,
-            INTEGER = 109,
-            DOUBLE  = 110,
-            STRING  = 111,
-            EOI     = 112,
-            EOF     = 113,
-            WHITESPACE= 114,
-            COMMENTLINE= 115
+            SQUAREOPEN= 103,
+            SQUARECLOSE= 104,
+            COMMA   = 105,
+            COLON   = 106,
+            IN      = 107,
+            ARRAYINDEX= 108,
+            ALL     = 109,
+            IDENTIFIER= 110,
+            INTEGER = 111,
+            DOUBLE  = 112,
+            STRING  = 113,
+            EOI     = 114,
+            EOF     = 115,
+            WHITESPACE= 116,
+            COMMENTLINE= 117
     }
 
     public class Token

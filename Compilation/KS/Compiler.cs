@@ -685,6 +685,11 @@ namespace kOS.Compilation.KS
             int nodeIndex = 2;
             while (nodeIndex < node.Nodes.Count)
             {
+            	// Skip two tokens instead of one bewteen dimensions if using the "[]" syntax:
+            	if( node.Nodes[nodeIndex].Token.Type == TokenType.SQUAREOPEN ){
+            		++nodeIndex;
+            	}
+            	
                 VisitNode(node.Nodes[nodeIndex]);
                 
                 // when we are setting a member value we need to leave
@@ -780,7 +785,8 @@ namespace kOS.Compilation.KS
                 ParseNode arrayIdentifier = node.Nodes[0];
                 foreach (ParseNode child in arrayIdentifier.Nodes)
                 {
-                    if (child.Token.Type == TokenType.ARRAYINDEX)
+                    if (child.Token.Type == TokenType.SQUAREOPEN ||
+                	    child.Token.Type == TokenType.ARRAYINDEX )
                     {
                         return true;
                     }
