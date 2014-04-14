@@ -23,10 +23,17 @@ namespace kOS.Screen
         protected override void NewLine()
         {
             string commandText = _lineBuilder.ToString();
-            base.NewLine();
 
-            ProcessCommand(commandText);
-            AddCommandHistoryEntry(commandText);
+            if (_shared.ScriptHandler.IsCommandComplete(commandText))
+            {
+                base.NewLine();
+                ProcessCommand(commandText);
+                AddCommandHistoryEntry(commandText);
+            }
+            else
+            {
+                InsertChar('\n');
+            }
         }
 
         public override void Type(char ch)

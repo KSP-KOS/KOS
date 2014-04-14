@@ -103,5 +103,33 @@ namespace kOS.Compilation.KS
                 _contexts.Remove(contextId);
             }
         }
+
+        public override bool IsCommandComplete(string command)
+        {
+            char[] commandChars = command.ToCharArray();
+            int length = commandChars.Length;
+            int openCurlyBrackets = 0;
+            int openBrackets = 0;
+
+            for (int n = 0; n < length; n++)
+            {
+                // match curly brackets
+                if (commandChars[n] == '{')
+                    openCurlyBrackets++;
+
+                if (commandChars[n] == '}')
+                    openCurlyBrackets--;
+
+                // match brackets
+                if (commandChars[n] == '(')
+                    openBrackets++;
+
+                if (commandChars[n] == ')')
+                    openBrackets--;
+            }
+
+            return (openCurlyBrackets <= 0)
+                && (openBrackets <= 0);
+        }
     }
 }
