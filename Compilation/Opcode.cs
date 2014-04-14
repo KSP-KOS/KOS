@@ -178,8 +178,8 @@ namespace kOS.Compilation
             }
             object list = cpu.PopValue();
 
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
+                if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+                if (!(index is int)) throw new Exception("The index must be an integer number");
 
             object value = ((IIndexable)list).GetIndex((int)index);
             cpu.PushStack(value);

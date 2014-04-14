@@ -2446,23 +2446,71 @@ namespace kOS.Compilation.KS
             Parsefunction_identifier(node);
 
             
-            tok = scanner.LookAhead(TokenType.ARRAYINDEX);
-            while (tok.Type == TokenType.ARRAYINDEX)
+            tok = scanner.LookAhead(TokenType.ARRAYINDEX, TokenType.SQUAREOPEN);
+            while (tok.Type == TokenType.ARRAYINDEX
+                || tok.Type == TokenType.SQUAREOPEN)
             {
+                tok = scanner.LookAhead(TokenType.ARRAYINDEX, TokenType.SQUAREOPEN);
+                switch (tok.Type)
+                {
+                    case TokenType.ARRAYINDEX:
 
-                
-                tok = scanner.Scan(TokenType.ARRAYINDEX);
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.ARRAYINDEX) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ARRAYINDEX.ToString(), 0x1001, tok));
-                    return;
+                        
+                        tok = scanner.Scan(TokenType.ARRAYINDEX);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.ARRAYINDEX) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ARRAYINDEX.ToString(), 0x1001, tok));
+                            return;
+                        }
+
+                        
+                        tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.INTEGER, TokenType.DOUBLE);
+                        switch (tok.Type)
+                        {
+                            case TokenType.IDENTIFIER:
+                                Parsefunction_identifier(node);
+                                break;
+                            case TokenType.INTEGER:
+                            case TokenType.DOUBLE:
+                                Parsenumber(node);
+                                break;
+                            default:
+                                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                                break;
+                        }
+                        break;
+                    case TokenType.SQUAREOPEN:
+
+                        
+                        tok = scanner.Scan(TokenType.SQUAREOPEN);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.SQUAREOPEN) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.SQUAREOPEN.ToString(), 0x1001, tok));
+                            return;
+                        }
+
+                        
+                        Parseexpr(node);
+
+                        
+                        tok = scanner.Scan(TokenType.SQUARECLOSE);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.SQUARECLOSE) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.SQUARECLOSE.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    default:
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                        break;
                 }
-
-                
-                Parseexpr(node);
-            tok = scanner.LookAhead(TokenType.ARRAYINDEX);
+            tok = scanner.LookAhead(TokenType.ARRAYINDEX, TokenType.SQUAREOPEN);
             }
 
             parent.Token.UpdateRange(node.Token);
