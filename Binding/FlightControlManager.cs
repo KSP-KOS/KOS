@@ -151,12 +151,16 @@ namespace kOS.Binding
 
             private void UpdateThrottle(FlightCtrlState c)
             {
-                c.mainThrottle = (float)Convert.ToDouble(_value);
+                double doubleValue = Convert.ToDouble(_value);
+                if (!double.IsNaN(doubleValue))
+                    c.mainThrottle = (float)Utils.Clamp(doubleValue, 0, 1);
             }
 
             private void UpdateWheelThrottle(FlightCtrlState c)
             {
-                c.wheelThrottle = (float)Utils.Clamp(Convert.ToDouble(_value), -1, 1);                
+                double doubleValue = Convert.ToDouble(_value);
+                if (!double.IsNaN(doubleValue))
+                    c.wheelThrottle = (float)Utils.Clamp(doubleValue, -1, 1);
             }
 
             private void SteerByWire(FlightCtrlState c)
@@ -193,7 +197,9 @@ namespace kOS.Binding
                 }
                 else if (_value is double)
                 {
-                    bearing = (float)(Math.Round((double)_value) - Mathf.Round(FlightGlobals.ship_heading));
+                    double doubleValue = Convert.ToDouble(_value);
+                    if (Utils.IsValidNumber(doubleValue))
+                        bearing = (float)(Math.Round(doubleValue) - Mathf.Round(FlightGlobals.ship_heading));
                 }
 
                 if (!(_shared.Vessel.horizontalSrfSpeed > 0.1f)) return;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using kOS.Suffixed;
 
 namespace kOS.Execution
 {
@@ -27,17 +28,20 @@ namespace kOS.Execution
 
         private bool IsValid(object item, ref string message)
         {
-            if (item is double)
+            if (Config.GetInstance().EnableSafeMode)
             {
-                if (Double.IsNaN((double)item))
+                if (item is double)
                 {
-                    message = "Tried to push NaN into the stack.";
-                    return false;
-                }
-                if (Double.IsInfinity((double)item))
-                {
-                    message = "Tried to push Infinity into the stack.";
-                    return false;
+                    if (Double.IsNaN((double)item))
+                    {
+                        message = "Tried to push NaN into the stack.";
+                        return false;
+                    }
+                    if (Double.IsInfinity((double)item))
+                    {
+                        message = "Tried to push Infinity into the stack.";
+                        return false;
+                    }
                 }
             }
 

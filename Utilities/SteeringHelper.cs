@@ -36,6 +36,17 @@ namespace kOS.Utilities
             var target = targetDir.Rotation;
             var vesselR = vessel.transform.rotation;
 
+            // some validations
+            if (!Utils.IsValidNumber(c.mainThrottle) ||
+                !Utils.IsValidVector(CoM) ||
+                !Utils.IsValidNumber(mass) ||
+                !Utils.IsValidVector(up) ||
+                !Utils.IsValidRotation(target) ||
+                !Utils.IsValidRotation(vesselR))
+            {
+                return;
+            }
+
             Quaternion delta;
             delta = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselR) * target);
 
