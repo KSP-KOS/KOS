@@ -83,7 +83,32 @@ namespace kOS.Compilation.KS
 
         private void PreProcess(ParseTree tree)
         {
-            PreProcessStatements(tree.Nodes[0]);
+            ParseNode rootNode = tree.Nodes[0];
+            PreProcessLocks(rootNode);
+            PreProcessStatements(rootNode);
+        }
+
+        private void PreProcessLocks(ParseNode node)
+        {
+            switch (node.Token.Type)
+            {
+                // statements that can have a lock inside
+                case TokenType.Start:
+                case TokenType.instruction_block:
+                case TokenType.instruction:
+                case TokenType.if_stmt:
+                case TokenType.until_stmt:
+                case TokenType.on_stmt:
+                case TokenType.when_stmt:
+                    foreach (ParseNode childNode in node.Nodes)
+                        PreProcessLocks(childNode);
+                    break;
+                case TokenType.lock_stmt:
+                    PreProcessLockStatement(node);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void PreProcessStatements(ParseNode node)
@@ -108,9 +133,6 @@ namespace kOS.Compilation.KS
                     break;
                 case TokenType.wait_stmt:
                     PreProcessWaitStatement(node);
-                    break;
-                case TokenType.lock_stmt:
-                    PreProcessLockStatement(node);
                     break;
                 case TokenType.declare_stmt:
                     PreProcessProgramParameters(node);
