@@ -538,6 +538,7 @@ namespace kOS.Compilation.KS
             if (node.Nodes.Count > 0)
             {
                 bool addNegation = false;
+                bool addNot = false;
                 int nodeIndex = 0;
 
                 if (node.Nodes[0].Token.Type == TokenType.PLUSMINUS)
@@ -548,7 +549,12 @@ namespace kOS.Compilation.KS
                         addNegation = true;
                     }
                 }
-
+                else if( node.Nodes[0].Token.Type == TokenType.NOT )
+                {
+                	nodeIndex++;
+                  	addNot = true;
+                }
+                
                 if (node.Nodes[nodeIndex].Token.Type == TokenType.BRACKETOPEN)
                 {
                     VisitNode(node.Nodes[nodeIndex + 1]);
@@ -559,6 +565,10 @@ namespace kOS.Compilation.KS
                 }
 
                 if (addNegation)
+                {
+                    AddOpcode(new OpcodeMathNegate());
+                }
+                if (addNot)
                 {
                     AddOpcode(new OpcodeLogicNot());
                 }
@@ -932,6 +942,9 @@ namespace kOS.Compilation.KS
                     break;
                 case "<=":
                     AddOpcode(new OpcodeCompareLTE());
+                    break;
+                case "<>":
+                    AddOpcode(new OpcodeCompareNE());
                     break;
                 case "=":
                     AddOpcode(new OpcodeCompareEqual());
