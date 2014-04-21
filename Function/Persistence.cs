@@ -53,19 +53,11 @@ namespace kOS.Function
                     destination = shared.VolumeMgr.GetVolume(volumeId);
                 }
 
-                if( origin == null )
-                {
-                	throw new Exception(string.Format("Volume {0} not found", origin.Name ) );
-                }
-                else if( destination == null )
-                {
-                	throw new Exception(string.Format("Volume {0} not found", destination.Name ) );
-                }
-                else
+                if (origin != null && destination != null)
                 {
                     if (origin == destination)
                     {
-                	    throw new Exception("Cannot copy from a volume to the same volume.");
+                        throw new Exception("Cannot copy from a volume to the same volume.");
                     }
                     else
                     {
@@ -82,6 +74,10 @@ namespace kOS.Function
                             throw new Exception(string.Format("File '{0}' not found", fileName));
                         }
                     }
+                }
+                else
+                {
+                    throw new Exception(string.Format("Volume {0} not found", volumeId));
                 }
             }
         }
