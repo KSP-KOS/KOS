@@ -9,10 +9,11 @@ DIV -> @"/";
 POWER -> @"\^";
 E -> @"e";
 //Logic
+NOT -> @"not";
 AND -> @"and";
 OR -> @"or";
 TRUEFALSE -> @"true|false";
-COMPARATOR -> @">=|<=|=|>|<";
+COMPARATOR -> @"<>|>=|<=|=|>|<";
 //Instructions tokens
 SET -> @"set";
 TO -> @"to";
@@ -126,8 +127,8 @@ compare_expr -> arith_expr (COMPARATOR arith_expr)*;
 arith_expr -> div_expr (PLUSMINUS div_expr)*;
 div_expr -> mult_expr (DIV mult_expr)*;
 mult_expr -> factor (MULT factor)*;
-factor -> atom (POWER atom)*;
-atom -> PLUSMINUS? ( sci_number | 
+factor ->  atom (POWER atom)*;
+atom -> (PLUSMINUS|NOT)? ( sci_number | 
                      TRUEFALSE |
                      varidentifier |
                      BRACKETOPEN expr BRACKETCLOSE ) |
