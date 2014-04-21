@@ -127,7 +127,7 @@ compare_expr -> arith_expr (COMPARATOR arith_expr)*;
 arith_expr -> div_expr (PLUSMINUS div_expr)*;
 div_expr -> mult_expr (DIV mult_expr)*;
 mult_expr -> factor (MULT factor)*;
-factor ->  atom (POWER atom)*;
+factor -> atom (POWER atom)*;
 atom -> (PLUSMINUS|NOT)? ( sci_number | 
                      TRUEFALSE |
                      varidentifier |

@@ -549,10 +549,10 @@ namespace kOS.Compilation.KS
                         addNegation = true;
                     }
                 }
-                else if( node.Nodes[0].Token.Type == TokenType.NOT )
+                else if (node.Nodes[0].Token.Type == TokenType.NOT)
                 {
-                	nodeIndex++;
-                  	addNot = true;
+                    nodeIndex++;
+                    addNot = true;
                 }
                 
                 if (node.Nodes[nodeIndex].Token.Type == TokenType.BRACKETOPEN)

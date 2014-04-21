@@ -303,7 +303,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-        	return calc.NotEqual(argument1, argument2);
+            return calc.NotEqual(argument1, argument2);
         }
     }
     
@@ -333,7 +333,7 @@ namespace kOS.Compilation
             if (value is int)
                 result = -((int)value);
             else if (value is float)
-            	result = -( Convert.ToDouble(value) );
+                result = -(Convert.ToDouble(value));
             else if (value is double)
                 result = -((double)value);
             else
@@ -424,9 +424,9 @@ namespace kOS.Compilation
             if (value is bool)
                 result = !((bool)value);
             else if (value is int)
-                result =  (int) ( Convert.ToBoolean(value) ? 0 : 1 );
-            else if ( (value is double) || (value is float) )
-                result = (double) ( Convert.ToBoolean(value) ? 0.0 : 1.0 );
+                result = (int)(Convert.ToBoolean(value) ? 0 : 1);
+            else if ((value is double) || (value is float))
+                result = (double)(Convert.ToBoolean(value) ? 0.0 : 1.0);
             else
                 throw new ArgumentException(string.Format("Can't negate object {0} of type {1}", value, value.GetType()));
 
