@@ -552,13 +552,32 @@ namespace kOS.Compilation.KS
             }
 
             
-            tok = scanner.Scan(TokenType.IDENTIFIER);
-            n = node.CreateNode(tok, tok.ToString() );
-            node.Token.UpdateRange(tok);
-            node.Nodes.Add(n);
-            if (tok.Type != TokenType.IDENTIFIER) {
-                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
-                return;
+            tok = scanner.LookAhead(TokenType.IDENTIFIER, TokenType.ALL);
+            switch (tok.Type)
+            {
+                case TokenType.IDENTIFIER:
+                    tok = scanner.Scan(TokenType.IDENTIFIER);
+                    n = node.CreateNode(tok, tok.ToString() );
+                    node.Token.UpdateRange(tok);
+                    node.Nodes.Add(n);
+                    if (tok.Type != TokenType.IDENTIFIER) {
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.IDENTIFIER.ToString(), 0x1001, tok));
+                        return;
+                    }
+                    break;
+                case TokenType.ALL:
+                    tok = scanner.Scan(TokenType.ALL);
+                    n = node.CreateNode(tok, tok.ToString() );
+                    node.Token.UpdateRange(tok);
+                    node.Nodes.Add(n);
+                    if (tok.Type != TokenType.ALL) {
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ALL.ToString(), 0x1001, tok));
+                        return;
+                    }
+                    break;
+                default:
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                    break;
             }
 
             
@@ -2228,10 +2247,11 @@ namespace kOS.Compilation.KS
             ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.atom), "atom");
             parent.Nodes.Add(node);
 
-            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.BRACKETOPEN, TokenType.STRING);
+            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.BRACKETOPEN, TokenType.STRING);
             switch (tok.Type)
             {
                 case TokenType.PLUSMINUS:
+                case TokenType.NOT:
                 case TokenType.INTEGER:
                 case TokenType.DOUBLE:
                 case TokenType.TRUEFALSE:
@@ -2239,16 +2259,36 @@ namespace kOS.Compilation.KS
                 case TokenType.BRACKETOPEN:
 
                     
-                    tok = scanner.LookAhead(TokenType.PLUSMINUS);
-                    if (tok.Type == TokenType.PLUSMINUS)
+                    tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT);
+                    if (tok.Type == TokenType.PLUSMINUS
+                        || tok.Type == TokenType.NOT)
                     {
-                        tok = scanner.Scan(TokenType.PLUSMINUS);
-                        n = node.CreateNode(tok, tok.ToString() );
-                        node.Token.UpdateRange(tok);
-                        node.Nodes.Add(n);
-                        if (tok.Type != TokenType.PLUSMINUS) {
-                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PLUSMINUS.ToString(), 0x1001, tok));
-                            return;
+                        tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT);
+                        switch (tok.Type)
+                        {
+                            case TokenType.PLUSMINUS:
+                                tok = scanner.Scan(TokenType.PLUSMINUS);
+                                n = node.CreateNode(tok, tok.ToString() );
+                                node.Token.UpdateRange(tok);
+                                node.Nodes.Add(n);
+                                if (tok.Type != TokenType.PLUSMINUS) {
+                                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PLUSMINUS.ToString(), 0x1001, tok));
+                                    return;
+                                }
+                                break;
+                            case TokenType.NOT:
+                                tok = scanner.Scan(TokenType.NOT);
+                                n = node.CreateNode(tok, tok.ToString() );
+                                node.Token.UpdateRange(tok);
+                                node.Nodes.Add(n);
+                                if (tok.Type != TokenType.NOT) {
+                                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.NOT.ToString(), 0x1001, tok));
+                                    return;
+                                }
+                                break;
+                            default:
+                                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                                break;
                         }
                     }
 
@@ -2548,8 +2588,9 @@ namespace kOS.Compilation.KS
                 }
 
                 
-                tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.BRACKETOPEN, TokenType.STRING);
+                tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.BRACKETOPEN, TokenType.STRING);
                 if (tok.Type == TokenType.PLUSMINUS
+                    || tok.Type == TokenType.NOT
                     || tok.Type == TokenType.INTEGER
                     || tok.Type == TokenType.DOUBLE
                     || tok.Type == TokenType.TRUEFALSE

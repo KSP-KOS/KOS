@@ -9,10 +9,11 @@ DIV -> @"/";
 POWER -> @"\^";
 E -> @"e";
 //Logic
+NOT -> @"not";
 AND -> @"and";
 OR -> @"or";
 TRUEFALSE -> @"true|false";
-COMPARATOR -> @">=|<=|=|>|<";
+COMPARATOR -> @"<>|>=|<=|=|>|<";
 //Instructions tokens
 SET -> @"set";
 TO -> @"to";
@@ -90,7 +91,7 @@ set_stmt -> SET varidentifier TO expr EOI;
 if_stmt -> IF expr instruction_block (ELSE instruction_block)? EOI?;
 until_stmt -> UNTIL expr instruction_block EOI?;
 lock_stmt -> LOCK IDENTIFIER TO expr EOI;
-unlock_stmt -> UNLOCK IDENTIFIER EOI;
+unlock_stmt -> UNLOCK (IDENTIFIER | ALL) EOI;
 print_stmt -> PRINT expr (AT BRACKETOPEN INTEGER COMMA INTEGER BRACKETCLOSE)? EOI;
 on_stmt -> ON varidentifier instruction_block EOI?;
 toggle_stmt -> TOGGLE varidentifier EOI;
@@ -127,7 +128,7 @@ arith_expr -> div_expr (PLUSMINUS div_expr)*;
 div_expr -> mult_expr (DIV mult_expr)*;
 mult_expr -> factor (MULT factor)*;
 factor -> atom (POWER atom)*;
-atom -> PLUSMINUS? ( sci_number | 
+atom -> (PLUSMINUS|NOT)? ( sci_number | 
                      TRUEFALSE |
                      varidentifier |
                      BRACKETOPEN expr BRACKETCLOSE ) |

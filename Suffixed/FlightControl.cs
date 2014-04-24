@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
@@ -15,6 +16,8 @@ namespace kOS.Suffixed
         private readonly Flushable<bool> killRotation;
         private readonly Vessel vessel;
         private bool bound;
+        private readonly List<string> doubleSuffixes;
+        private readonly List<string> vectorSuffixes;
 
         public FlightControl(Vessel vessel)
         {
@@ -25,6 +28,9 @@ namespace kOS.Suffixed
             bound = true;
             this.vessel = vessel;
             Vessel.OnFlyByWire += OnFlyByWire;
+
+            doubleSuffixes = new List<string>() { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
+            vectorSuffixes = new List<string>() { "ROTATION", "TRANSLATION" };
         }
 
         public Vessel Vessel
@@ -69,6 +75,9 @@ namespace kOS.Suffixed
 
         public override bool SetSuffix(string suffixName, object value)
         {
+            double doubleValue = 0;
+            Vector vectorValue = null;
+            
             UnityEngine.Debug.Log("FlightControl Set: " + suffixName + " Value: " + value);
             Bind();
 
@@ -82,40 +91,54 @@ namespace kOS.Suffixed
                 return true;
             }
 
+            if (doubleSuffixes.Contains(suffixName))
+            {
+                doubleValue = Convert.ToDouble(value);
+                if (double.IsNaN(doubleValue))
+                    return true;
+            }
+
+            if (vectorSuffixes.Contains(suffixName))
+            {
+                vectorValue = (Vector)value;
+                if (!Utils.IsValidVector(vectorValue))
+                    return true;
+            }
+
             switch (suffixName)
             {
                 case "YAW":
-                    rotation.X = Convert.ToSingle(value);
+                    rotation.X = Utils.Clamp(doubleValue, -1, 1);
                     break;
                 case "PITCH":
-                    rotation.Y = Convert.ToSingle(value);
+                    rotation.Y = Utils.Clamp(doubleValue, -1, 1);
                     break;
                 case "ROLL":
-                    rotation.Z = Convert.ToSingle(value);
+                    rotation.Z = Utils.Clamp(doubleValue, -1, 1);
                     break;
                 case "STARBOARD":
-                    translation.X = Convert.ToSingle(value);
+                    translation.X = Utils.Clamp(doubleValue, -1, 1);
                     break;
                 case "TOP":
-                    translation.Y = Convert.ToSingle(value);
+                    translation.Y = Utils.Clamp(doubleValue, -1, 1);
                     break;
                 case "FORE":
-                    translation.Z = Convert.ToSingle(value);
+                    translation.Z = Utils.Clamp(doubleValue, -1, 1);
                     break;
                 case "ROTATION":
-                    rotation = (Vector) value;
+                    rotation = vectorValue;
                     break;
                 case "TRANSLATION":
-                    translation = (Vector) value;
+                    translation = vectorValue;
                     break;
                 case "MAINTHROTTLE":
-                    mainThrottle = Convert.ToSingle(value);
+                    mainThrottle = (float)Utils.Clamp(doubleValue, 0, 1);
                     break;
                 case "WHEELTHROTTLE":
-                    wheelThrottle = Convert.ToSingle(value);
+                    wheelThrottle = (float)Utils.Clamp(doubleValue, 0, 1);
                     break;
                 case "WHEELSTEER":
-                    wheelSteer = Convert.ToSingle(value);
+                    wheelSteer = (float)Utils.Clamp(doubleValue, -1, 1);
                     break;
                 default:
                     return false;

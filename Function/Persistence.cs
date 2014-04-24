@@ -55,7 +55,11 @@ namespace kOS.Function
 
                 if (origin != null && destination != null)
                 {
-                    if (origin != destination)
+                    if (origin == destination)
+                    {
+                        throw new Exception("Cannot copy from a volume to the same volume.");
+                    }
+                    else
                     {
                         ProgramFile file = origin.GetByName(fileName);
                         if (file != null)
@@ -73,7 +77,7 @@ namespace kOS.Function
                 }
                 else
                 {
-                    throw new Exception("Volume not found");
+                    throw new Exception(string.Format("Volume {0} not found", volumeId));
                 }
             }
         }

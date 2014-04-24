@@ -13,9 +13,11 @@ namespace kOS.Screen
         protected SubBuffer _lineSubBuffer;
         private int _savedCursorRow;
         private int _savedCursorColumn;
+        private int _cursorColumnBuffer;
+        private int _cursorRowBuffer;
         
-        public override int CursorColumnShow { get { return _lineCursorIndex % ColumnCount; } }
-        public override int CursorRowShow { get { return CursorRow + (_lineCursorIndex / ColumnCount); } }    // integer division
+        public override int CursorColumnShow { get { return _cursorColumnBuffer; } }
+        public override int CursorRowShow { get { return CursorRow + _cursorRowBuffer; } }
 
         
         public TextEditor() : base()
@@ -60,9 +62,11 @@ namespace kOS.Screen
                     break;
                 case kOSKeys.HOME:
                     _lineCursorIndex = 0;
+                    UpdateSubBufferCursor();
                     break;
                 case kOSKeys.END:
                     _lineCursorIndex = _lineBuilder.Length;
+                    UpdateSubBufferCursor();
                     break;
                 case kOSKeys.DEL:
                     RemoveChar();
@@ -107,24 +111,57 @@ namespace kOS.Screen
             }
         }
 
+        private List<string> SplitIntoLinesPreserveNewLine(string text)
+        {
+            List<string> lines = SplitIntoLines(text);
+
+            if (text.EndsWith("\n"))
+            {
+                int newLinesCount = text.Length - text.TrimEnd('\n').Length;
+                while(newLinesCount-- > 0)
+                    lines.Add("");
+            }
+
+            return lines;
+        }
+
         protected void UpdateLineSubBuffer()
         {
-            int startIndex = 0;
-            int lineIndex = 0;
-            int lineCount = ((_lineBuilder.Length - 1) / _lineSubBuffer.ColumnCount) + 1;   // integer division
+            string commandText = _lineBuilder.ToString();
+            List<string> lines = SplitIntoLinesPreserveNewLine(commandText);
 
-            if (lineCount != _lineSubBuffer.RowCount) _lineSubBuffer.SetSize(lineCount, _lineSubBuffer.ColumnCount);
+            if (lines.Count != _lineSubBuffer.RowCount)
+                _lineSubBuffer.SetSize(lines.Count, _lineSubBuffer.ColumnCount);
 
-            while ((_lineBuilder.Length - startIndex) > _lineSubBuffer.ColumnCount)
+            for (int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
             {
-                _lineBuilder.CopyTo(startIndex, _lineSubBuffer.Buffer[lineIndex], 0, _lineSubBuffer.ColumnCount);
-                startIndex += _lineSubBuffer.ColumnCount;
+                char[] lineCharArray = lines[lineIndex].PadRight(_lineSubBuffer.ColumnCount, ' ').ToCharArray();
+                lineCharArray.CopyTo(_lineSubBuffer.Buffer[lineIndex], 0);   
+            }
+
+            UpdateSubBufferCursor(lines);
+        }
+
+        private void UpdateSubBufferCursor()
+        {
+            string commandText = _lineBuilder.ToString();
+            List<string> lines = SplitIntoLinesPreserveNewLine(commandText);
+            UpdateSubBufferCursor(lines);
+        }
+
+        private void UpdateSubBufferCursor(List<string> lines)
+        {
+            int lineIndex = 0;
+            int lineCursorIndex = _lineCursorIndex;
+
+            while (lineCursorIndex > lines[lineIndex].Length)
+            {
+                lineCursorIndex -= (lines[lineIndex].Length + 1);
                 lineIndex++;
             }
 
-            char[] bufferLine = new char[_lineSubBuffer.ColumnCount];
-            _lineBuilder.CopyTo(startIndex, bufferLine, 0, (_lineBuilder.Length - startIndex));
-            bufferLine.CopyTo(_lineSubBuffer.Buffer[lineIndex], 0);
+            _cursorRowBuffer = lineIndex;
+            _cursorColumnBuffer = lineCursorIndex;
         }
 
         protected virtual void NewLine()
@@ -145,6 +182,7 @@ namespace kOS.Screen
                 if (newCursorIndex >= 0 && newCursorIndex <= _lineBuilder.Length)
                 {
                     _lineCursorIndex += deltaPosition;
+                    UpdateSubBufferCursor();
                     success = true;
                 }
             }

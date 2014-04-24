@@ -83,7 +83,32 @@ namespace kOS.Compilation.KS
 
         private void PreProcess(ParseTree tree)
         {
-            PreProcessStatements(tree.Nodes[0]);
+            ParseNode rootNode = tree.Nodes[0];
+            PreProcessLocks(rootNode);
+            PreProcessStatements(rootNode);
+        }
+
+        private void PreProcessLocks(ParseNode node)
+        {
+            switch (node.Token.Type)
+            {
+                // statements that can have a lock inside
+                case TokenType.Start:
+                case TokenType.instruction_block:
+                case TokenType.instruction:
+                case TokenType.if_stmt:
+                case TokenType.until_stmt:
+                case TokenType.on_stmt:
+                case TokenType.when_stmt:
+                    foreach (ParseNode childNode in node.Nodes)
+                        PreProcessLocks(childNode);
+                    break;
+                case TokenType.lock_stmt:
+                    PreProcessLockStatement(node);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void PreProcessStatements(ParseNode node)
@@ -108,9 +133,6 @@ namespace kOS.Compilation.KS
                     break;
                 case TokenType.wait_stmt:
                     PreProcessWaitStatement(node);
-                    break;
-                case TokenType.lock_stmt:
-                    PreProcessLockStatement(node);
                     break;
                 case TokenType.declare_stmt:
                     PreProcessProgramParameters(node);
@@ -516,6 +538,7 @@ namespace kOS.Compilation.KS
             if (node.Nodes.Count > 0)
             {
                 bool addNegation = false;
+                bool addNot = false;
                 int nodeIndex = 0;
 
                 if (node.Nodes[0].Token.Type == TokenType.PLUSMINUS)
@@ -526,7 +549,12 @@ namespace kOS.Compilation.KS
                         addNegation = true;
                     }
                 }
-
+                else if (node.Nodes[0].Token.Type == TokenType.NOT)
+                {
+                    nodeIndex++;
+                    addNot = true;
+                }
+                
                 if (node.Nodes[nodeIndex].Token.Type == TokenType.BRACKETOPEN)
                 {
                     VisitNode(node.Nodes[nodeIndex + 1]);
@@ -537,6 +565,10 @@ namespace kOS.Compilation.KS
                 }
 
                 if (addNegation)
+                {
+                    AddOpcode(new OpcodeMathNegate());
+                }
+                if (addNot)
                 {
                     AddOpcode(new OpcodeLogicNot());
                 }
@@ -685,7 +717,10 @@ namespace kOS.Compilation.KS
             int nodeIndex = 2;
             while (nodeIndex < node.Nodes.Count)
             {
-                VisitNode(node.Nodes[nodeIndex]);
+                if (node.Nodes[nodeIndex].Token.Type == TokenType.IDENTIFIER)
+                    VisitVariableNode(node.Nodes[nodeIndex]);
+                else
+                    VisitNode(node.Nodes[nodeIndex]);
                 
                 // when we are setting a member value we need to leave
                 // the last object and the last index in the stack
@@ -908,6 +943,9 @@ namespace kOS.Compilation.KS
                 case "<=":
                     AddOpcode(new OpcodeCompareLTE());
                     break;
+                case "<>":
+                    AddOpcode(new OpcodeCompareNE());
+                    break;
                 case "=":
                     AddOpcode(new OpcodeCompareEqual());
                     break;
@@ -951,9 +989,18 @@ namespace kOS.Compilation.KS
 
         private void VisitUnlockStatement(ParseNode node)
         {
-            string lockIdentifier = node.Nodes[1].Token.Text;
-            Lock lockObject = _context.Locks.GetLock(lockIdentifier);
-            UnlockIdentifier(lockObject);
+            if (node.Nodes[1].Token.Type == TokenType.ALL)
+            {
+                // unlock all locks
+                foreach(Lock lockObject in _context.Locks.GetLockList())
+                    UnlockIdentifier(lockObject);
+            }
+            else
+            {
+                string lockIdentifier = node.Nodes[1].Token.Text;
+                Lock lockObject = _context.Locks.GetLock(lockIdentifier);
+                UnlockIdentifier(lockObject);
+            }
         }
 
         private void UnlockIdentifier(Lock lockObject)

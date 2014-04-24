@@ -155,7 +155,7 @@ namespace kOS.Screen
             }
         }
 
-        private List<string> SplitIntoLines(string textToPrint)
+        protected List<string> SplitIntoLines(string textToPrint)
         {
             List<string> lineList = new List<string>();
             int availableColumns = ColumnCount - CursorColumn;
