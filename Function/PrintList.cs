@@ -209,10 +209,14 @@ namespace kOS.Function
             {
                 foreach (PartModule module in part.Modules)
                 {
-                    if (module is ModuleEngines)
-                    {
-                        var engineMod = (ModuleEngines)module;
+                    var engineMod = module as ModuleEngines;
+                    if (engineMod != null) {
                         list.AddItem(part.uid, part.inverseStage, engineMod.moduleName);
+                    }
+
+                    var engineModFx = module as ModuleEnginesFX;
+                    if (engineModFx != null) {
+                        list.AddItem(part.uid, part.inverseStage, engineModFx.moduleName);
                     }
                 }
             }

@@ -155,14 +155,14 @@ namespace kOS.Suffixed.Part
                 foreach (PartModule module in part.Modules)
                 {
                     var engineModule = module as ModuleEngines;
-                    if (engineModule != null)
-                    {
-                        toReturn.Add(new EngineValue(part, engineModule));
-                    }
                     var engineModuleFx = module as ModuleEnginesFX;
                     if (engineModuleFx != null)
                     {
                         toReturn.Add(new EngineValue(part, engineModuleFx));
+                    }
+                    else if (engineModule != null)
+                    {
+                        toReturn.Add(new EngineValue(part, engineModule));
                     }
                 }
             }
