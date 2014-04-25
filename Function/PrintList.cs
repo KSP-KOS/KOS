@@ -153,7 +153,7 @@ namespace kOS.Function
             list.AddColumn("Resource Name", 28, ColumnAlignment.Left);
             list.AddColumn("Amount", 9, ColumnAlignment.Right, "0.00");
 
-            SortedDictionary<string, double> resourceDict = new SortedDictionary<string, double>();
+            var resourceDict = new SortedDictionary<string, double>();
 
             foreach (Part part in shared.Vessel.Parts)
             {

@@ -102,7 +102,7 @@ namespace kOS.Utilities
 
             foreach (PartResource resource in part.Resources)
             {
-                if (resource.resourceName.ToLower() == resourceName.ToLower())
+                if (String.Equals(resource.resourceName, resourceName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     ret += resource.amount;
                 }
@@ -111,12 +111,10 @@ namespace kOS.Utilities
             foreach (var attachNode in part.attachNodes)
             {
                 if (attachNode.attachedPart != null //if there is a part attached here            
-                    && attachNode.nodeType == AttachNode.NodeType.Stack
-                    //and the attached part is stacked (rather than surface mounted)
-                    && (attachNode.attachedPart.fuelCrossFeed //and the attached part allows fuel flow
-                       )
+                    && attachNode.nodeType == AttachNode.NodeType.Stack //and the attached part is stacked (rather than surface mounted)
+                    && (attachNode.attachedPart.fuelCrossFeed) //and the attached part allows fuel flow
                     && !(part.NoCrossFeedNodeKey.Length > 0 //and this part does not forbid fuel flow
-                         && attachNode.id.Contains(part.NoCrossFeedNodeKey))) //    through this particular node
+                    && attachNode.id.Contains(part.NoCrossFeedNodeKey))) //    through this particular node
                 {
                     ret += ProspectForResource(resourceName, attachNode.attachedPart, ref visited);
                 }

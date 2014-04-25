@@ -64,7 +64,7 @@ namespace kOS.Utilities
             {
                 foreach (PartResource resource in part.Resources)
                 {
-                    if (resource.resourceName.ToUpper() == resourceName)
+                    if (String.Equals(resource.resourceName, resourceName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         total += resource.amount;
                     }
@@ -136,17 +136,17 @@ namespace kOS.Utilities
 
         public static Vessel TryGetVesselByName(string name, Vessel origin)
         {
-            return FlightGlobals.Vessels.FirstOrDefault<Vessel>(v => v != origin && v.vesselName.ToUpper() == name.ToUpper());
+            return FlightGlobals.Vessels.FirstOrDefault(v => v != origin && v.vesselName.ToUpper() == name.ToUpper());
         }
 
         public static Vessel TryGetVesselByName(string name)
         {
-            return FlightGlobals.Vessels.FirstOrDefault<Vessel>(v => v.vesselName.ToUpper() == name.ToUpper());
+            return FlightGlobals.Vessels.FirstOrDefault(v => v.vesselName.ToUpper() == name.ToUpper());
         }
 
         public static CelestialBody GetBodyByName(string name)
         {
-            return FlightGlobals.fetch.bodies.FirstOrDefault<CelestialBody>(body => name.ToUpper() == body.name.ToUpper());
+            return FlightGlobals.fetch.bodies.FirstOrDefault(body => name.ToUpper() == body.name.ToUpper());
         }
 
         public static Vessel GetVesselByName(string name, Vessel origin)
@@ -230,10 +230,9 @@ namespace kOS.Utilities
 
         public static double GetDistanceToHome(Vessel vessel)
         {
-            foreach (
-                var body in
-                    FlightGlobals.fetch.bodies.Where(
-                        body => body.name.ToUpper() == "KERBIN" || body.name.ToUpper() == "EARTH"))
+            foreach ( var body in FlightGlobals.fetch.bodies.Where( 
+                body => body.name.ToUpper() == "KERBIN" || 
+                body.name.ToUpper() == "EARTH"))
             {
                 return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - body.Radius;
                 // Kerbin radius = 600,000
