@@ -154,7 +154,7 @@ namespace kOS.Suffixed
             bound = true;
         }
 
-        private void Unbind()
+        public void Unbind()
         {
             if (!bound) return;
             UnityEngine.Debug.Log("FlightControl Unbound");

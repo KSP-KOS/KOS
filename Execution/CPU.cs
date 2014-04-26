@@ -209,6 +209,7 @@ namespace kOS.Execution
                         PrintStatistics();
                     }
                 }
+                _shared.BindingMgr.UnBindAll();
             }
             else
             {

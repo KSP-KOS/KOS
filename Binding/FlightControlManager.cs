@@ -11,7 +11,7 @@ namespace kOS.Binding
     public class FlightControlManager : Binding
     {
         private Vessel _currentVessel;
-        private Dictionary<string, FlightCtrlParam> _flightParams = new Dictionary<string, FlightCtrlParam>();
+        private Dictionary<string, FlightCtrlParam> _flightParameters = new Dictionary<string, FlightCtrlParam>();
         readonly static Dictionary<uint, FlightControl> flightControls = new Dictionary<uint, FlightControl>();
 
         public override void AddTo(SharedObjects shared)
@@ -32,12 +32,12 @@ namespace kOS.Binding
 
         private void AddNewFlightParam(string name, SharedObjects shared)
         {
-            _flightParams.Add(name, new FlightCtrlParam(name, shared));
+            _flightParameters.Add(name, new FlightCtrlParam(name, shared));
         }
 
         public void OnFlyByWire(FlightCtrlState c)
         {
-            foreach (FlightCtrlParam param in _flightParams.Values)
+            foreach (FlightCtrlParam param in _flightParameters.Values)
             {
                 if (param.enabled)
                 {
@@ -48,12 +48,12 @@ namespace kOS.Binding
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            if (_flightParams.ContainsKey(paramName))
+            if (_flightParameters.ContainsKey(paramName))
             {
-                _flightParams[paramName].enabled = enabled;
+                _flightParameters[paramName].enabled = enabled;
                 if (!enabled)
                 {
-                    _flightParams[paramName].ClearValue();
+                    _flightParameters[paramName].ClearValue();
                 }
             }
         }
@@ -212,6 +212,19 @@ namespace kOS.Binding
                 {
                     c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
                 }
+            }
+        }
+
+        public void UnBind()
+        {
+            foreach (var parameter in _flightParameters)
+            {
+                parameter.Value.enabled = false;
+            }
+            FlightControl flightControl;
+            if (flightControls.TryGetValue(_currentVessel.rootPart.flightID, out flightControl))
+            {
+                flightControl.Unbind();
             }
         }
     }

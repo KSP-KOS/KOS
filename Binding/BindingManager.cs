@@ -116,5 +116,10 @@ namespace kOS.Binding
                 _flightControl.ToggleFlyByWire(paramName, enabled);
             }
         }
+
+        public void UnBindAll()
+        {
+            _flightControl.UnBind();
+        }
     }
 }
