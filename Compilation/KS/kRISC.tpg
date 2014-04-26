@@ -91,7 +91,7 @@ if_stmt -> IF expr instruction_block (ELSE instruction_block)? EOI?;
 until_stmt -> UNTIL expr instruction_block EOI?;
 lock_stmt -> LOCK IDENTIFIER TO expr EOI;
 unlock_stmt -> UNLOCK IDENTIFIER EOI;
-print_stmt -> PRINT expr (AT BRACKETOPEN INTEGER COMMA INTEGER BRACKETCLOSE)? EOI;
+print_stmt -> PRINT expr (AT BRACKETOPEN expr COMMA expr BRACKETCLOSE)? EOI;
 on_stmt -> ON varidentifier instruction_block EOI?;
 toggle_stmt -> TOGGLE varidentifier EOI;
 wait_stmt -> WAIT UNTIL? expr EOI;

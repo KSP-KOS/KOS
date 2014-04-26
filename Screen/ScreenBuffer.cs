@@ -92,6 +92,7 @@ namespace kOS.Screen
                 row = RowCount - 1;
                 MoveToNextLine();
             }
+            if (row < 0 ) row = 0;
 
             if (column >= ColumnCount) column = ColumnCount - 1;
             if (column < 0) column = 0;
