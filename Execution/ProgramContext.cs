@@ -85,6 +85,14 @@ namespace kOS.Execution
             }
         }
 
+        public void EnableActiveFlyByWire(BindingManager manager)
+        {
+            foreach (KeyValuePair<string, bool> kvp in _flyByWire)
+            {
+                manager.ToggleFlyByWire(kvp.Key, kvp.Value);
+            }
+        }
+
         public List<string> GetCodeFragment(int contextLines)
         {
             List<string> codeFragment = new List<string>();

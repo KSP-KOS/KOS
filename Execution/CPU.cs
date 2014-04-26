@@ -135,6 +135,7 @@ namespace kOS.Execution
                 if (_contexts.Count > 0)
                 {
                     _currentContext = _contexts[_contexts.Count - 1];
+                    _currentContext.EnableActiveFlyByWire(_shared.BindingMgr);
                 }
                 else
                 {
