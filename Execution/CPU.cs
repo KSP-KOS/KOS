@@ -7,6 +7,7 @@ using System.Diagnostics;
 using kOS.Suffixed;
 using kOS.Function;
 using kOS.Compilation;
+using kOS.Binding;
 
 namespace kOS.Execution
 {
@@ -130,7 +131,16 @@ namespace kOS.Execution
                 // remove the last context
                 ProgramContext contextRemove = _contexts[_contexts.Count - 1];
                 _contexts.Remove(contextRemove);
+
+                // Let go of the Flight control from LOCK statements:
                 contextRemove.DisableActiveFlyByWire(_shared.BindingMgr);
+
+                // Let go of the Flight control from raw SET statements:
+                FlightControl fControl = FlightControlManager.GetControllerByVessel( _shared.Vessel );
+                if (fControl != null)
+                {
+                    fControl.SetSuffix( "NEUTRALIZE", "True" );
+                }
 
                 if (_contexts.Count > 0)
                 {
