@@ -717,10 +717,12 @@ namespace kOS.Compilation.KS
             int nodeIndex = 2;
             while (nodeIndex < node.Nodes.Count)
             {
-                if (node.Nodes[nodeIndex].Token.Type == TokenType.IDENTIFIER)
-                    VisitVariableNode(node.Nodes[nodeIndex]);
-                else
-                    VisitNode(node.Nodes[nodeIndex]);
+                // Skip two tokens instead of one bewteen dimensions if using the "[]" syntax:
+                if (node.Nodes[nodeIndex].Token.Type == TokenType.SQUAREOPEN){
+                    ++nodeIndex;
+                }
+                
+                VisitNode(node.Nodes[nodeIndex]);
                 
                 // when we are setting a member value we need to leave
                 // the last object and the last index in the stack
@@ -815,7 +817,8 @@ namespace kOS.Compilation.KS
                 ParseNode arrayIdentifier = node.Nodes[0];
                 foreach (ParseNode child in arrayIdentifier.Nodes)
                 {
-                    if (child.Token.Type == TokenType.ARRAYINDEX)
+                    if (child.Token.Type == TokenType.SQUAREOPEN ||
+                        child.Token.Type == TokenType.ARRAYINDEX )
                     {
                         return true;
                     }
@@ -850,28 +853,28 @@ namespace kOS.Compilation.KS
 
         private void VisitIfStatement(ParseNode node)
         {
-        	// The IF check:
+            // The IF check:
             VisitNode(node.Nodes[1]);
             Opcode branchToFalse = AddOpcode(new OpcodeBranchIfFalse());
             // The IF BODY:
             VisitNode(node.Nodes[2]);
-            if( node.Nodes.Count < 4 ) {
-            	// No ELSE exists.
-            	// Jump to after the IF BODY if false:
+            if (node.Nodes.Count < 4) {
+                // No ELSE exists.
+                // Jump to after the IF BODY if false:
                 branchToFalse.DestinationLabel = GetNextLabel(false);
                 _addBranchDestination = true;
             } else {
-            	// The IF statement has an ELSE clause.
+                // The IF statement has an ELSE clause.
 
-            	// Jump past the ELSE body from the end of the IF body:
-            	Opcode branchPastElse = AddOpcode( new OpcodeBranchJump() );
-            	// This is where the ELSE clause starts:
-            	branchToFalse.DestinationLabel = GetNextLabel(false);
-            	// The else body:
-            	VisitNode(node.Nodes[4]);
+                // Jump past the ELSE body from the end of the IF body:
+                Opcode branchPastElse = AddOpcode( new OpcodeBranchJump() );
+                // This is where the ELSE clause starts:
+                branchToFalse.DestinationLabel = GetNextLabel(false);
+                // The else body:
+                VisitNode(node.Nodes[4]);
                 // End of Else body label:
-            	branchPastElse.DestinationLabel = GetNextLabel(false);                
-            	_addBranchDestination = true;
+                branchPastElse.DestinationLabel = GetNextLabel(false);                
+                _addBranchDestination = true;
             }
         }
 

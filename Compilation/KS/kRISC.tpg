@@ -59,6 +59,8 @@ BRACKETOPEN -> @"\(";
 BRACKETCLOSE -> @"\)";
 CURLYOPEN -> @"\{";
 CURLYCLOSE -> @"\}";
+SQUAREOPEN -> @"\[";
+SQUARECLOSE -> @"\]";
 COMMA -> @",";
 COLON -> @":";
 IN -> @"in";
@@ -135,6 +137,6 @@ atom -> (PLUSMINUS|NOT)? ( sci_number |
         STRING;
 sci_number -> number (E PLUSMINUS? INTEGER)?;
 number -> (INTEGER | DOUBLE);
+array_identifier -> function_identifier ( (ARRAYINDEX (function_identifier | INTEGER)) | (SQUAREOPEN expr SQUARECLOSE) )*;
 varidentifier -> array_identifier (COLON IDENTIFIER)*;
-array_identifier -> function_identifier (ARRAYINDEX (INTEGER | IDENTIFIER))*;
 function_identifier -> IDENTIFIER (BRACKETOPEN arglist? BRACKETCLOSE)?;

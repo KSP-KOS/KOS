@@ -316,11 +316,11 @@ namespace kOS.Compilation.KS
                 case TokenType.number:
                     Value = Evalnumber(tree, paramlist);
                     break;
-                case TokenType.varidentifier:
-                    Value = Evalvaridentifier(tree, paramlist);
-                    break;
                 case TokenType.array_identifier:
                     Value = Evalarray_identifier(tree, paramlist);
+                    break;
+                case TokenType.varidentifier:
+                    Value = Evalvaridentifier(tree, paramlist);
                     break;
                 case TokenType.function_identifier:
                     Value = Evalfunction_identifier(tree, paramlist);
@@ -653,14 +653,14 @@ namespace kOS.Compilation.KS
             return null;
         }
 
-        protected virtual object Evalvaridentifier(ParseTree tree, params object[] paramlist)
+        protected virtual object Evalarray_identifier(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
             return null;
         }
 
-        protected virtual object Evalarray_identifier(ParseTree tree, params object[] paramlist)
+        protected virtual object Evalvaridentifier(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
