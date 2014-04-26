@@ -640,14 +640,7 @@ namespace kOS.Compilation.KS
                 }
 
                 
-                tok = scanner.Scan(TokenType.INTEGER);
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.INTEGER) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.INTEGER.ToString(), 0x1001, tok));
-                    return;
-                }
+                Parseexpr(node);
 
                 
                 tok = scanner.Scan(TokenType.COMMA);
@@ -660,14 +653,7 @@ namespace kOS.Compilation.KS
                 }
 
                 
-                tok = scanner.Scan(TokenType.INTEGER);
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.INTEGER) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.INTEGER.ToString(), 0x1001, tok));
-                    return;
-                }
+                Parseexpr(node);
 
                 
                 tok = scanner.Scan(TokenType.BRACKETCLOSE);
