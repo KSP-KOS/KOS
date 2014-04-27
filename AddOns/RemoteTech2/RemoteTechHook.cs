@@ -19,7 +19,17 @@ namespace kOS.AddOns.RemoteTech2
                 if (instance == null) hookFail = true;
                 return instance;
             }
-        } 
+        }
+
+        public static bool IsAvailable(Guid vesselId)
+        {
+            return (IsAvailable() && Instance.HasFlightComputer(vesselId));
+        }
+
+        public static bool IsAvailable()
+        {
+            return Instance != null;
+        }
 
         private static IRemoteTechAPIv1 InitializeAPI()
         {

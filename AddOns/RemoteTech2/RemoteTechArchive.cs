@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using kOS.Persistence;
+﻿using kOS.Persistence;
 
 namespace kOS.AddOns.RemoteTech2
 {
@@ -10,14 +6,7 @@ namespace kOS.AddOns.RemoteTech2
     {
         public override bool CheckRange(Vessel vessel)
         {
-            if (vessel != null)
-            {
-                return RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
-            }
-            else
-            {
-                return false;
-            }
+            return vessel != null && RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
         }
     }
 }

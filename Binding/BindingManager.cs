@@ -37,9 +37,9 @@ namespace kOS.Binding
                 kOSBinding attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
                 if (attr != null)
                 {
-                    if (attr.Contexts.Count() == 0 || attr.Contexts.Intersect(contexts).Any())
+                    if (!attr.Contexts.Any() || attr.Contexts.Intersect(contexts).Any())
                     {
-                        Binding b = (Binding)Activator.CreateInstance(t);
+                        var b = (Binding)Activator.CreateInstance(t);
                         b.AddTo(_shared);
                         _bindings.Add(b);
 

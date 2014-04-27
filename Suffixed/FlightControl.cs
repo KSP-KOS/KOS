@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using kOS.AddOns.RemoteTech2;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
@@ -29,8 +31,8 @@ namespace kOS.Suffixed
             this.vessel = vessel;
             Vessel.OnFlyByWire += OnFlyByWire;
 
-            doubleSuffixes = new List<string>() { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
-            vectorSuffixes = new List<string>() { "ROTATION", "TRANSLATION" };
+            doubleSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
+            vectorSuffixes = new List<string> { "ROTATION", "TRANSLATION" };
         }
 
         public Vessel Vessel
@@ -78,7 +80,6 @@ namespace kOS.Suffixed
             double doubleValue = 0;
             Vector vectorValue = null;
             
-            UnityEngine.Debug.Log("FlightControl Set: " + suffixName + " Value: " + value);
             Bind();
 
             if (CheckNeutral(suffixName, value))
@@ -149,16 +150,32 @@ namespace kOS.Suffixed
         private void Bind()
         {
             if (bound) return;
-            UnityEngine.Debug.Log("FlightControl Bound");
-            Vessel.OnFlyByWire += OnFlyByWire;
+            UnityEngine.Debug.Log("kOS : FlightControl Bound");
+
+            if (RemoteTechHook.IsAvailable(Vessel.id))
+            {
+                RemoteTechHook.Instance.AddSanctionedPilot(Vessel.id, OnFlyByWire);
+            }
+            else
+            {
+                Vessel.OnFlyByWire += OnFlyByWire;
+            }
             bound = true;
         }
 
         public void Unbind()
         {
             if (!bound) return;
-            UnityEngine.Debug.Log("FlightControl Unbound");
-            Vessel.OnFlyByWire -= OnFlyByWire;
+            UnityEngine.Debug.Log("kOS : FlightControl Unbound");
+
+            if (RemoteTechHook.IsAvailable())
+            {
+                RemoteTechHook.Instance.RemoveSanctionedPilot(Vessel.id, OnFlyByWire);
+            }
+            else
+            {
+                Vessel.OnFlyByWire -= OnFlyByWire;
+            }
             bound = false;
         }
 
@@ -211,6 +228,7 @@ namespace kOS.Suffixed
             st.wheelSteer = wheelSteer;
             st.wheelThrottle = wheelThrottle;
             st.mainThrottle = mainThrottle;
+
         }
 
         public void Dispose()

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using kOS.Factories;
+﻿using kOS.Factories;
 using kOS.Screen;
 using kOS.Persistence;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.AddOns.RemoteTech2;
 using UnityEngine;
 using kOS.Suffixed;
 using kOS.Utilities;
@@ -10,8 +11,8 @@ namespace kOS.Binding
     [kOSBinding("ksp")]
     public class FlightControlManager : Binding
     {
-        private Vessel _currentVessel;
-        private Dictionary<string, FlightCtrlParam> _flightParameters = new Dictionary<string, FlightCtrlParam>();
+        private Vessel currentVessel;
+        private readonly Dictionary<string, FlightCtrlParam> flightParameters = new Dictionary<string, FlightCtrlParam>();
         readonly static Dictionary<uint, FlightControl> flightControls = new Dictionary<uint, FlightControl>();
 
         public override void AddTo(SharedObjects shared)
@@ -25,21 +26,16 @@ namespace kOS.Binding
 
             if (shared.Vessel != null)
             {
-                _currentVessel = shared.Vessel;
-                _currentVessel.OnFlyByWire += OnFlyByWire;
+                currentVessel = shared.Vessel;
+                currentVessel.OnFlyByWire += OnFlyByWire;
             }
-        }
-
-        private void AddNewFlightParam(string name, SharedObjects shared)
-        {
-            _flightParameters.Add(name, new FlightCtrlParam(name, shared));
         }
 
         public void OnFlyByWire(FlightCtrlState c)
         {
-            foreach (FlightCtrlParam param in _flightParameters.Values)
+            foreach (var param in flightParameters.Values)
             {
-                if (param.enabled)
+                if (param.Enabled)
                 {
                     param.OnFlyByWire(ref c);
                 }
@@ -48,12 +44,12 @@ namespace kOS.Binding
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            if (_flightParameters.ContainsKey(paramName))
+            if (flightParameters.ContainsKey(paramName))
             {
-                _flightParameters[paramName].enabled = enabled;
+                flightParameters[paramName].Enabled = enabled;
                 if (!enabled)
                 {
-                    _flightParameters[paramName].ClearValue();
+                    flightParameters[paramName].ClearValue();
                 }
             }
         }
@@ -62,19 +58,23 @@ namespace kOS.Binding
         {
             UnbindUnloaded();
 
-            if (_currentVessel != _shared.Vessel)
+            if (currentVessel != _shared.Vessel)
             {
                 // Try to re-establish connection to vessel
-                if (_currentVessel != null)
+                if (currentVessel != null)
                 {
-                    _currentVessel.OnFlyByWire -= OnFlyByWire;
-                    _currentVessel = null;
+                    currentVessel.OnFlyByWire -= OnFlyByWire;
+                    currentVessel = null;
                 }
 
                 if (_shared.Vessel != null)
                 {
-                    _currentVessel = _shared.Vessel;
-                    _currentVessel.OnFlyByWire += OnFlyByWire;
+                    currentVessel = _shared.Vessel;
+                    currentVessel.OnFlyByWire += OnFlyByWire;
+                    if (currentVessel)
+                    {
+                        
+                    }
                 }
             }
         }
@@ -102,84 +102,117 @@ namespace kOS.Binding
             }
         }
 
+        private void AddNewFlightParam(string name, SharedObjects shared)
+        {
+            flightParameters.Add(name, new FlightCtrlParam(name, GetControllerByVessel(shared.Vessel), shared.BindingMgr));
+        }
+
         private class FlightCtrlParam
         {
-            public string name;
-            public bool enabled;
-            private SharedObjects _shared;
-            private object _value;
+            private readonly string name;
+            private readonly FlightControl control;
+            private object value;
             
-            public FlightCtrlParam(string name, SharedObjects shared)
+            public FlightCtrlParam(string name, FlightControl control, BindingManager binding)
             {
                 this.name = name;
-                enabled = false;
-                _shared = shared;
-                _value = null;
+                this.control = control;
+                Enabled = false;
+                value = null;
 
-                shared.BindingMgr.AddGetter(name, delegate(CPU c) { return _value; });
-                shared.BindingMgr.AddSetter(name, delegate(CPU c, object val) { _value = val; });
+                binding.AddGetter(name, c => value);
+                binding.AddSetter(name, delegate(CPU c, object val) { value = val; });
             }
+
+            public bool Enabled { get; set; }
 
             public void ClearValue()
             {
-                _value = null;
+                value = null;
             }
 
             public void OnFlyByWire(ref FlightCtrlState c)
             {
-                if (_value != null)
+                if (value == null) return;
+
+                var action = ChooseAction();
+                if (action == null)
                 {
-                    switch (name)
+                    return;
+                }
+
+                if (RemoteTechHook.IsAvailable(control.Vessel.id))
+                {
+                    if (Enabled)
                     {
-                        case "throttle":
-                            UpdateThrottle(c);
-                            break;
-                        case "wheelthrottle":
-                            UpdateWheelThrottle(c);
-                            break;
-                        case "steering":
-                            SteerByWire(c);
-                            break;
-                        case "wheelsteering":
-                            WheelSteer(c);
-                            break;
-                        default:
-                            break;
+                        RemoteTechHook.Instance.AddSanctionedPilot(control.Vessel.id, action);
+                    }
+                    else
+                    {
+                        RemoteTechHook.Instance.RemoveSanctionedPilot(control.Vessel.id, action);
                     }
                 }
+                else
+                {
+                    action.Invoke(c);
+                }
+            }
+
+            private Action<FlightCtrlState> ChooseAction()
+            {
+                Action<FlightCtrlState> action;
+                switch (name)
+                {
+                    case "throttle":
+                        action = UpdateThrottle;
+                        break;
+                    case "wheelthrottle":
+                        action = UpdateWheelThrottle;
+                        break;
+                    case "steering":
+                        action = SteerByWire;
+                        break;
+                    case "wheelsteering":
+                        action = WheelSteer;
+                        break;
+                    default:
+                        action = null;
+                        break;
+                }
+                return action;
             }
 
             private void UpdateThrottle(FlightCtrlState c)
             {
-                double doubleValue = Convert.ToDouble(_value);
+                double doubleValue = Convert.ToDouble(value);
                 if (!double.IsNaN(doubleValue))
                     c.mainThrottle = (float)Utils.Clamp(doubleValue, 0, 1);
             }
 
             private void UpdateWheelThrottle(FlightCtrlState c)
             {
-                double doubleValue = Convert.ToDouble(_value);
+                double doubleValue = Convert.ToDouble(value);
                 if (!double.IsNaN(doubleValue))
                     c.wheelThrottle = (float)Utils.Clamp(doubleValue, -1, 1);
             }
 
             private void SteerByWire(FlightCtrlState c)
             {
-                if (_value is string && ((string)_value).ToUpper() == "KILL")
+                if (value is string && ((string)value).ToUpper() == "KILL")
                 {
-                    SteeringHelper.KillRotation(c, _shared.Vessel);
+                    SteeringHelper.KillRotation(c, control.Vessel);
                 }
-                else if (_value is Direction)
+                else if (value is Direction)
                 {
-                    SteeringHelper.SteerShipToward((Direction)_value, c, _shared.Vessel);
+                    SteeringHelper.SteerShipToward((Direction)value, c, control.Vessel);
                 }
-                else if (_value is Vector)
+                else if (value is Vector)
                 {
-                    SteeringHelper.SteerShipToward(((Vector)_value).ToDirection(), c, _shared.Vessel);
+                    SteeringHelper.SteerShipToward(((Vector)value).ToDirection(), c, control.Vessel);
                 }
-                else if (_value is Node)
+                else if (value is Node)
                 {
-                    SteeringHelper.SteerShipToward(((Node)_value).GetBurnVector().ToDirection(), c, _shared.Vessel);
+                    SteeringHelper.SteerShipToward(((Node)value).GetBurnVector().ToDirection(), c, control.Vessel);
                 }
             }
 
@@ -187,24 +220,24 @@ namespace kOS.Binding
             {
                 float bearing = 0;
 
-                if (_value is VesselTarget)
+                if (value is VesselTarget)
                 {
-                    bearing = VesselUtils.GetTargetBearing(_shared.Vessel, ((VesselTarget)_value).Vessel);
+                    bearing = VesselUtils.GetTargetBearing(control.Vessel, ((VesselTarget)value).Vessel);
                 }
-                else if (_value is GeoCoordinates)
+                else if (value is GeoCoordinates)
                 {
-                    bearing = ((GeoCoordinates)_value).GetBearing(_shared.Vessel);
+                    bearing = ((GeoCoordinates)value).GetBearing(control.Vessel);
                 }
-                else if (_value is double)
+                else if (value is double)
                 {
-                    double doubleValue = Convert.ToDouble(_value);
+                    double doubleValue = Convert.ToDouble(value);
                     if (Utils.IsValidNumber(doubleValue))
                         bearing = (float)(Math.Round(doubleValue) - Mathf.Round(FlightGlobals.ship_heading));
                 }
 
-                if (!(_shared.Vessel.horizontalSrfSpeed > 0.1f)) return;
+                if (!(control.Vessel.horizontalSrfSpeed > 0.1f)) return;
 
-                if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(_shared.Vessel), VesselUtils.GetVelocityHeading(_shared.Vessel))) <= 90)
+                if (Mathf.Abs(VesselUtils.AngleDelta(VesselUtils.GetHeading(control.Vessel), VesselUtils.GetVelocityHeading(control.Vessel))) <= 90)
                 {
                     c.wheelSteer = Mathf.Clamp(bearing / -10, -1, 1);
                 }
@@ -217,12 +250,12 @@ namespace kOS.Binding
 
         public void UnBind()
         {
-            foreach (var parameter in _flightParameters)
+            foreach (var parameter in flightParameters)
             {
-                parameter.Value.enabled = false;
+                parameter.Value.Enabled = false;
             }
             FlightControl flightControl;
-            if (flightControls.TryGetValue(_currentVessel.rootPart.flightID, out flightControl))
+            if (flightControls.TryGetValue(currentVessel.rootPart.flightID, out flightControl))
             {
                 flightControl.Unbind();
             }

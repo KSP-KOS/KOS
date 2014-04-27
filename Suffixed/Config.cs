@@ -1,30 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using KSP.IO;
 
 namespace kOS.Suffixed
 {
     public class Config : SpecialValue
     {
-        private static Config _instance = null;
-        private Dictionary<string, ConfigKey> _keys;
-        private Dictionary<string, ConfigKey> _alias;
-        private Dictionary<PropId, ConfigKey> _properties;
+        private static Config _instance;
+        private readonly Dictionary<string, ConfigKey> keys;
+        private readonly Dictionary<string, ConfigKey> alias;
+        private readonly Dictionary<PropId, ConfigKey> properties;
 
         public int InstructionsPerUpdate { get { return GetPropValue<int>(PropId.InstructionsPerUpdate); } set { SetPropValue(PropId.InstructionsPerUpdate, value); } }
         public bool UseCompressedPersistence { get { return GetPropValue<bool>(PropId.UseCompressedPersistence); } set { SetPropValue(PropId.UseCompressedPersistence, value); } }
         public bool ShowStatistics { get { return GetPropValue<bool>(PropId.ShowStatistics); } set { SetPropValue(PropId.ShowStatistics, value); } }
-        public bool EnableRT2Integration { get { return GetPropValue<bool>(PropId.EnableRT2Integration); } set { SetPropValue(PropId.EnableRT2Integration, value); } }
+        public bool EnableRt2Integration { get { return GetPropValue<bool>(PropId.EnableRT2Integration); } set { SetPropValue(PropId.EnableRT2Integration, value); } }
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
         
         private Config()
         {
-            _keys = new Dictionary<string, ConfigKey>();
-            _alias = new Dictionary<string, ConfigKey>();
-            _properties = new Dictionary<PropId, ConfigKey>();
+            keys = new Dictionary<string, ConfigKey>();
+            alias = new Dictionary<string, ConfigKey>();
+            properties = new Dictionary<PropId, ConfigKey>();
             BuildValuesDictionary();
             LoadConfig();
         }
@@ -34,28 +33,28 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 100, typeof(int)));
             AddConfigKey(PropId.UseCompressedPersistence, new ConfigKey("UseCompressedPersistence", "UCP", "Use compressed persistence", false, typeof(bool)));
             AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, typeof(bool)));
-            AddConfigKey(PropId.EnableRT2Integration, new ConfigKey("EnableRT2Integration", "RT2", "Enable RT2 integration", false, typeof(bool)));
+            AddConfigKey(PropId.EnableRT2Integration, new ConfigKey("EnableRT2Integration", "RT2", "Enable RT2 integration", true, typeof(bool)));
             AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, typeof(bool)));
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
         {
-            _keys.Add(key.StringKey.ToUpper(), key);
-            _alias.Add(key.Alias.ToUpper(), key);
-            _properties.Add(id, key);
+            keys.Add(key.StringKey.ToUpper(), key);
+            alias.Add(key.Alias.ToUpper(), key);
+            properties.Add(id, key);
         }
 
         private void LoadConfig()
         {
             try
             {
-                PluginConfiguration config = PluginConfiguration.CreateForType<Config>();
+                var config = PluginConfiguration.CreateForType<Config>();
                 config.load();
 
-                foreach (ConfigKey key in _keys.Values)
+                foreach (var key in keys.Values)
                 {
-                    object value = config[key.StringKey];
+                    var value = config[key.StringKey];
                     if (value != null)
                     {
                         key.Value = value;
@@ -69,26 +68,25 @@ namespace kOS.Suffixed
 
         public static Config GetInstance()
         {
-            if (_instance == null) _instance = new Config();
-            return _instance;
+            return _instance ?? (_instance = new Config());
         }
 
         private T GetPropValue<T>(PropId id)
         {
-            return (T)_properties[id].Value;
+            return (T)properties[id].Value;
         }
 
         private void SetPropValue(PropId id, object value)
         {
-            _properties[id].Value = value;
+            properties[id].Value = value;
         }
 
         public void SaveConfig()
         {
-            PluginConfiguration config = PluginConfiguration.CreateForType<Config>();
+            var config = PluginConfiguration.CreateForType<Config>();
             config.load();
 
-            foreach (ConfigKey key in _keys.Values)
+            foreach (var key in keys.Values)
             {
                 SaveConfigKey(key, config);
             }
@@ -98,7 +96,7 @@ namespace kOS.Suffixed
 
         private void SaveConfigKey(ConfigKey key)
         {
-            PluginConfiguration config = PluginConfiguration.CreateForType<Config>();
+            var config = PluginConfiguration.CreateForType<Config>();
             config.load();
             SaveConfigKey(key, config);
             config.save();
@@ -106,67 +104,52 @@ namespace kOS.Suffixed
 
         private void SaveConfigKey(ConfigKey key, PluginConfiguration config)
         {
-            config.SetValue(key.StringKey, _keys[key.StringKey.ToUpper()].Value);
+            config.SetValue(key.StringKey, keys[key.StringKey.ToUpper()].Value);
         }
 
         public override object GetSuffix(String suffixName)
         {
             ConfigKey key = null;
 
-            if (_keys.ContainsKey(suffixName))
+            if (keys.ContainsKey(suffixName))
             {
-                key = _keys[suffixName];
+                key = keys[suffixName];
             }
-            else if (_alias.ContainsKey(suffixName))
+            else if (alias.ContainsKey(suffixName))
             {
-                key = _alias[suffixName];
+                key = alias[suffixName];
             }
 
-            if (key != null)
-            {
-                return key.Value;
-            }
-            else
-            {
-                return base.GetSuffix(suffixName);
-            }
+            return key != null ? key.Value : base.GetSuffix(suffixName);
         }
 
         public override bool SetSuffix(String suffixName, object value)
         {
             ConfigKey key = null;
 
-            if (_keys.ContainsKey(suffixName))
+            if (keys.ContainsKey(suffixName))
             {
-                key = _keys[suffixName];
+                key = keys[suffixName];
             }
-            else if (_alias.ContainsKey(suffixName))
+            else if (alias.ContainsKey(suffixName))
             {
-                key = _alias[suffixName];
+                key = alias[suffixName];
             }
 
-            if (key != null)
+            if (key == null) return false;
+
+            if (value.GetType() == key.Type)
             {
-                if (value.GetType() == key.Type)
-                {
-                    key.Value = value;
-                    SaveConfigKey(key);
-                    return true;
-                }
-                else
-                {
-                    throw new Exception(string.Format("The value of the configuration key '{0}' has to be of type '{1}'", key.Name, key.Type));
-                }
+                key.Value = value;
+                SaveConfigKey(key);
+                return true;
             }
-            else
-            {
-                return false;
-            }
+            throw new Exception(string.Format("The value of the configuration key '{0}' has to be of type '{1}'", key.Name, key.Type));
         }
 
         public List<ConfigKey> GetConfigKeys()
         {
-            return _keys.Values.ToList<ConfigKey>();
+            return keys.Values.ToList();
         }
 
         public override string ToString()
@@ -195,11 +178,11 @@ namespace kOS.Suffixed
 
         public ConfigKey(string stringKey, string alias, string name, object defaultValue, Type type)
         {
-            this.StringKey = stringKey;
-            this.Alias = alias;
-            this.Name = name;
-            this.Value = defaultValue;
-            this.Type = type;
+            StringKey = stringKey;
+            Alias = alias;
+            Name = name;
+            Value = defaultValue;
+            Type = type;
         }
     }
 }

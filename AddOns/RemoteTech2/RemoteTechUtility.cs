@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace kOS.AddOns.RemoteTech2
+﻿namespace kOS.AddOns.RemoteTech2
 {
     public static class RemoteTechUtility
     {
@@ -8,7 +6,7 @@ namespace kOS.AddOns.RemoteTech2
         {
             double waitTotal = 0;
 
-            if (RemoteTechHook.Instance != null && vessel.GetVesselCrew().Count == 0)
+            if (RemoteTechHook.IsAvailable(vessel.id) && vessel.GetVesselCrew().Count == 0)
             {
                 waitTotal = RemoteTechHook.Instance.GetShortestSignalDelay(vessel.id);
             }

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
+using kOS.Factories;
 using UnityEngine;
 using KSP.IO;
 using kOS.InterProcessor;
@@ -19,8 +17,8 @@ namespace kOS.Module
         public Modes Mode = Modes.READY;
 
         public Harddisk HardDisk { get; private set; }
-        private int vesselPartCount = 0;
-        private SharedObjects _shared = null;
+        private int vesselPartCount;
+        private SharedObjects shared;
 
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
@@ -28,16 +26,13 @@ namespace kOS.Module
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
         public int diskSpace = 500;
 
-        [KSPField(isPersistant = true, guiActive = false)] public int MaxPartID = 100;
-
-        [KSPField(isPersistant = true, guiName = "kOS Unit ID", guiActive = true, guiActiveEditor = true)] private int
-            unitID = -1;
+        [KSPField(isPersistant = true, guiActive = false)] public int MaxPartId = 100;
 
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
-            UnityEngine.Debug.Log("kOS: Activate");
-            Core.OpenWindow(_shared);
+            Debug.Log("kOS: Activate");
+            Core.OpenWindow(shared);
         }
 
         [KSPField(isPersistant = true, guiName = "Required Power", guiActive = true)] 
@@ -46,7 +41,7 @@ namespace kOS.Module
         [KSPEvent(guiActive = true, guiName = "Toggle Power")]
         public void TogglePower()
         {
-            UnityEngine.Debug.Log("kOS: Toggle Power");
+            Debug.Log("kOS: Toggle Power");
             Modes newMode = (Mode != Modes.OFF) ? Modes.OFF : Modes.STARVED;
             SetMode(newMode);
         }
@@ -54,36 +49,22 @@ namespace kOS.Module
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
         public void Activate(KSPActionParam param)
         {
-            UnityEngine.Debug.Log("kOS: Open Terminal from Dialog");
+            Debug.Log("kOS: Open Terminal from Dialog");
             Activate();
         }
 
         [KSPAction("Close Terminal", actionGroup = KSPActionGroup.None)]
         public void Deactivate(KSPActionParam param)
         {
-            UnityEngine.Debug.Log("kOS: Close Terminal from ActionGroup");
-            Core.CloseWindow(_shared);
+            Debug.Log("kOS: Close Terminal from ActionGroup");
+            Core.CloseWindow(shared);
         }
 
         [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
         public void TogglePower(KSPActionParam param)
         {
-            UnityEngine.Debug.Log("kOS: Toggle Power from ActionGroup");
+            Debug.Log("kOS: Toggle Power from ActionGroup");
             TogglePower();
-        }
-
-        [KSPEvent(guiName = "Unit +", guiActive = false, guiActiveEditor = true)]
-        public void IncrementUnitId()
-        {
-            unitID++;
-            throw new NotImplementedException();
-        }
-
-        [KSPEvent(guiName = "Unit -", guiActive = false, guiActiveEditor = true)]
-        public void DecrementUnitId()
-        {
-            unitID--;
-            throw new NotImplementedException();
         }
 
         public override void OnStart(StartState state)
@@ -99,40 +80,44 @@ namespace kOS.Module
 
         public void InitObjects()
         {
-            if (_shared == null)
+            if (shared == null)
             {
-                _shared = new SharedObjects();
+                shared = new SharedObjects();
                 CreateFactory();
                     
-                _shared.Vessel = this.vessel;
-                _shared.Processor = this;
-                _shared.UpdateHandler = new UpdateHandler();
-                _shared.BindingMgr = new BindingManager(_shared);
-                _shared.Interpreter = _shared.Factory.CreateInterpreter(_shared);
-                _shared.Screen = _shared.Interpreter;
-                _shared.ScriptHandler = new Compilation.KS.KSScript();
-                _shared.Logger = new KSPLogger(_shared);
-                _shared.VolumeMgr = new VolumeManager(_shared);
-                _shared.ProcessorMgr = new ProcessorManager(_shared);
-                _shared.Cpu = new kOS.Execution.CPU(_shared);
+                shared.Vessel = vessel;
+                shared.Processor = this;
+                shared.UpdateHandler = new UpdateHandler();
+                shared.BindingMgr = new BindingManager(shared);
+                shared.Interpreter = shared.Factory.CreateInterpreter(shared);
+                shared.Screen = shared.Interpreter;
+                shared.ScriptHandler = new Compilation.KS.KSScript();
+                shared.Logger = new KSPLogger(shared);
+                shared.VolumeMgr = new VolumeManager(shared);
+                shared.ProcessorMgr = new ProcessorManager(shared);
+                shared.Cpu = new Execution.CPU(shared);
 
                 // initialize the file system
-                _shared.VolumeMgr.Add(_shared.Factory.CreateArchive());
+                shared.VolumeMgr.Add(shared.Factory.CreateArchive());
                 if (HardDisk == null) HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
-                _shared.VolumeMgr.Add(HardDisk);
-                if (!Config.GetInstance().StartOnArchive) _shared.VolumeMgr.SwitchTo(HardDisk);
+                shared.VolumeMgr.Add(HardDisk);
+                if (!Config.GetInstance().StartOnArchive) shared.VolumeMgr.SwitchTo(HardDisk);
             }
         }
 
         private void CreateFactory()
         {
-            if (Config.GetInstance().EnableRT2Integration && (RemoteTechHook.Instance != null))
+            var config = Config.GetInstance();
+
+            if (config.EnableRt2Integration && RemoteTechHook.IsAvailable(shared.Vessel.id))
             {
-                _shared.Factory = new RemoteTechFactory();
+                Debug.LogWarning("RemoteTech Factory Building");
+                shared.Factory = new RemoteTechFactory();
             }
             else
             {
-                _shared.Factory = new kOS.Factories.StandardFactory();
+                Debug.LogWarning("Standard Factory Building");
+                shared.Factory = new StandardFactory();
             }
         }
 
@@ -142,7 +127,7 @@ namespace kOS.Module
             //cpu.RegisterkOSExternalFunction(parameters);
         }
         
-        public static int AssignNewID()
+        public static int AssignNewId()
         {
             var config = PluginConfiguration.CreateForType<kOSProcessor>();
             config.load();
@@ -155,7 +140,7 @@ namespace kOS.Module
         
         public void Update()
         {
-            if (_shared == null) return;
+            if (shared == null) return;
 
             if (part.State == PartStates.DEAD)
             {
@@ -163,69 +148,63 @@ namespace kOS.Module
                 return;
             }
 
-            if (_shared != null && _shared.Vessel != this.vessel)
+            if (shared != null && shared.Vessel != vessel)
             {
-                _shared.Vessel = this.vessel;
+                shared.Vessel = vessel;
             }
 
             if (Mode == Modes.READY)
             {
-                if (_shared.UpdateHandler != null) _shared.UpdateHandler.UpdateObservers(Time.deltaTime);
+                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(Time.deltaTime);
                 UpdateParts();
             }
 
-            ProcessElectricity(this.part, TimeWarp.fixedDeltaTime);
+            ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
         
         public void UpdateParts()
         {
             // Trigger whenever the number of parts in the vessel changes (like when staging, docking or undocking)
-            if (vessel.parts.Count != vesselPartCount)
+            if (vessel.parts.Count == vesselPartCount) return;
+
+            var missingHardDisks = false;
+            var attachedVolumes = new List<Volume>();
+            var processors = new List<kOSProcessor>();
+
+            // Look for all the processors that exists in the vessel
+            foreach (var partObj in vessel.parts)
             {
-                bool missingHardDisks = false;
-                List<Volume> attachedVolumes = new List<Volume>();
-                List<kOSProcessor> processors = new List<kOSProcessor>();
+                kOSProcessor processorPart;
+                if (!PartIsKosProc(partObj, out processorPart)) continue;
 
-                // Look for all the processors that exists in the vessel
-                foreach (Part part in vessel.parts)
+                processors.Add(processorPart);
+
+                // A harddisk may be null because the kOS part haven't been initialized yet
+                // Wait until the next update and everything should be fine
+                if (processorPart.HardDisk != null)
                 {
-                    kOSProcessor processorPart;
-                    if (PartIsKosProc(part, out processorPart))
-                    {
-                        processors.Add(processorPart);
-
-                        // A harddisk may be null because the kOS part haven't been initialized yet
-                        // Wait until the next update and everything should be fine
-                        if (processorPart.HardDisk != null)
-                        {
-                            attachedVolumes.Add(processorPart.HardDisk);
-                        }
-                        else
-                        {
-                            missingHardDisks = true;
-                            break;
-                        }
-                    }
+                    attachedVolumes.Add(processorPart.HardDisk);
                 }
-
-                if (!missingHardDisks)
+                else
                 {
-                    _shared.VolumeMgr.UpdateVolumes(attachedVolumes);
-                    _shared.ProcessorMgr.UpdateProcessors(processors);
-                    vesselPartCount = vessel.parts.Count;
+                    missingHardDisks = true;
+                    break;
                 }
             }
+
+            if (missingHardDisks) return;
+
+            shared.VolumeMgr.UpdateVolumes(attachedVolumes);
+            shared.ProcessorMgr.UpdateProcessors(processors);
+            vesselPartCount = vessel.parts.Count;
         }
 
         public bool PartIsKosProc(Part input, out kOSProcessor proc)
         {
-            foreach (PartModule module in input.Modules)
+            foreach (var processor in input.Modules.OfType<kOSProcessor>())
             {
-                if (module is kOSProcessor)
-                {
-                    proc = (kOSProcessor)module;
-                    return true;
-                }
+                proc = processor;
+                return true;
             }
 
             proc = null;
@@ -243,15 +222,15 @@ namespace kOS.Module
 
             if (node.HasNode("harddisk"))
             {
-                Harddisk newDisk = new Harddisk(node.GetNode("harddisk"));
+                var newDisk = new Harddisk(node.GetNode("harddisk"));
                 HardDisk = newDisk;
             }
 
             InitObjects();
 
-            if (_shared != null && _shared.Cpu != null)
+            if (shared != null && shared.Cpu != null)
             {
-                _shared.Cpu.OnLoad(node);
+                shared.Cpu.OnLoad(node);
             }
             base.OnLoad(node);
         }
@@ -264,22 +243,22 @@ namespace kOS.Module
                 node.AddNode(hdNode);
             }
 
-            if (_shared != null && _shared.Cpu != null)
+            if (shared != null && shared.Cpu != null)
             {
-                _shared.Cpu.OnSave(node);
+                shared.Cpu.OnSave(node);
                 Config.GetInstance().SaveConfig();
             }
 
             base.OnSave(node);
         }
 
-        private void ProcessElectricity(Part part, float time)
+        private void ProcessElectricity(Part partObj, float time)
         {
             if (Mode == Modes.OFF) return;
 
-            RequiredPower = _shared.VolumeMgr.CurrentRequiredPower;
+            RequiredPower = shared.VolumeMgr.CurrentRequiredPower;
             var electricReq = time * RequiredPower;
-            var result = part.RequestResource("ElectricCharge", electricReq) / electricReq;
+            var result = partObj.RequestResource("ElectricCharge", electricReq) / electricReq;
 
             var newMode = (result < 0.5f) ? Modes.STARVED : Modes.READY;
             SetMode(newMode);
@@ -292,15 +271,15 @@ namespace kOS.Module
                 switch (newMode)
                 {
                     case Modes.READY:
-                        if (Mode == Modes.STARVED && _shared.Cpu != null) _shared.Cpu.Boot();
-                        if (_shared.Interpreter != null) _shared.Interpreter.SetInputLock(false);
-                        if (_shared.Window != null) _shared.Window.SetPowered(true);
+                        if (Mode == Modes.STARVED && shared.Cpu != null) shared.Cpu.Boot();
+                        if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
+                        if (shared.Window != null) shared.Window.SetPowered(true);
                         break;
 
                     case Modes.OFF:
                     case Modes.STARVED:
-                        if (_shared.Interpreter != null) _shared.Interpreter.SetInputLock(true);
-                        if (_shared.Window != null) _shared.Window.SetPowered(false);
+                        if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
+                        if (shared.Window != null) shared.Window.SetPowered(false);
                         break;
                 }
 
@@ -312,7 +291,7 @@ namespace kOS.Module
         {
             if (command != null)
             {
-                command.Execute(_shared);
+                command.Execute(shared);
             }
         }
     }
