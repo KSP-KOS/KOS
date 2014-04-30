@@ -149,6 +149,7 @@ namespace kOS.Suffixed
 
         private void Bind()
         {
+            UnityEngine.Debug.Log("kOS: FlightControl Binding");
             if (bound) return;
 
             if (RemoteTechHook.IsAvailable(Vessel.id))
@@ -165,6 +166,7 @@ namespace kOS.Suffixed
 
         public void Unbind()
         {
+            UnityEngine.Debug.Log("kOS: FlightControl Unbinding");
             if (!bound) return;
 
             if (RemoteTechHook.IsAvailable())
