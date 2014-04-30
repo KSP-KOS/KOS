@@ -107,16 +107,14 @@ namespace kOS.Module
 
         private void CreateFactory()
         {
-            var config = Config.GetInstance();
-
-            if (config.EnableRT2Integration && RemoteTechHook.IsAvailable(shared.Vessel.id))
+            if (RemoteTechHook.IsAvailable(vessel.id))
             {
-                Debug.LogWarning("RemoteTech Factory Building");
+                Debug.LogWarning("kOS: RemoteTech Factory Building");
                 shared.Factory = new RemoteTechFactory();
             }
             else
             {
-                Debug.LogWarning("Standard Factory Building");
+                Debug.LogWarning("kOS: Standard Factory Building");
                 shared.Factory = new StandardFactory();
             }
         }
