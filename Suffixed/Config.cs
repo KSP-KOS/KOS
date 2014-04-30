@@ -15,7 +15,7 @@ namespace kOS.Suffixed
         public int InstructionsPerUpdate { get { return GetPropValue<int>(PropId.InstructionsPerUpdate); } set { SetPropValue(PropId.InstructionsPerUpdate, value); } }
         public bool UseCompressedPersistence { get { return GetPropValue<bool>(PropId.UseCompressedPersistence); } set { SetPropValue(PropId.UseCompressedPersistence, value); } }
         public bool ShowStatistics { get { return GetPropValue<bool>(PropId.ShowStatistics); } set { SetPropValue(PropId.ShowStatistics, value); } }
-        public bool EnableRt2Integration { get { return GetPropValue<bool>(PropId.EnableRT2Integration); } set { SetPropValue(PropId.EnableRT2Integration, value); } }
+        public bool EnableRT2Integration { get { return GetPropValue<bool>(PropId.EnableRT2Integration); } set { SetPropValue(PropId.EnableRT2Integration, value); } }
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
         
