@@ -61,8 +61,9 @@ namespace kOS.Suffixed
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                UnityEngine.Debug.LogError("kOS: Exception Loading Config: " + ex.Message);
             }
         }
 
