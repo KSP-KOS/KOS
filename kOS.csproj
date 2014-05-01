@@ -33,11 +33,11 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\KOSLIB\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\KSP_LIB\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\KOSLIB\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\KSP_LIB\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\KOSLIB\UnityEngine.dll</HintPath>
+      <HintPath>..\..\KSP_LIB\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
