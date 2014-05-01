@@ -31,8 +31,11 @@ namespace kOS
         {
             LastDeltaTime = deltaTime;
             CurrentTime += deltaTime;
-
-            foreach (IUpdateObserver observer in _observers)
+            
+            // Iterate over a frozen snapshot of _observers rather than  _observers itself,
+            // because _observers can be altered during the course of the loop:
+            List<IUpdateObserver> fixedObserverList = new List<IUpdateObserver>(_observers);
+            foreach (IUpdateObserver observer in fixedObserverList)
             {
                 observer.Update(deltaTime);
             }
