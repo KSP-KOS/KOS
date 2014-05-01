@@ -197,6 +197,7 @@ namespace kOS.Execution
                 {
                     PopFirstContext();
                     _shared.Screen.Print("Program aborted.");
+                    _shared.BindingMgr.UnBindAll();
                     PrintStatistics();
                 }
                 else
@@ -206,10 +207,10 @@ namespace kOS.Execution
                     if (_contexts.Count == 1 && !silent)
                     {
                         _shared.Screen.Print("Program ended.");
+                        _shared.BindingMgr.UnBindAll();
                         PrintStatistics();
                     }
                 }
-                _shared.BindingMgr.UnBindAll();
             }
             else
             {
