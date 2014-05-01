@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using kOS.Suffixed;
 
 namespace kOS.AddOns.RemoteTech2
 {
@@ -23,12 +24,24 @@ namespace kOS.AddOns.RemoteTech2
 
         public static bool IsAvailable(Guid vesselId)
         {
-            return (IsAvailable() && Instance.HasFlightComputer(vesselId));
+            var isAvailableBase = IsAvailable();
+            if (!isAvailableBase)
+            {
+                return false;
+            }
+            var hasFlightComputer = Instance.HasFlightComputer(vesselId);
+            return isAvailableBase && hasFlightComputer;
         }
 
         public static bool IsAvailable()
         {
-            return Instance != null;
+            var integrationEnabled = Config.GetInstance().EnableRT2Integration;
+            if (!integrationEnabled)
+            {
+                return false;
+            }
+            var instanceAvailable = Instance != null;
+            return integrationEnabled && instanceAvailable;
         }
 
         private static IRemoteTechAPIv1 InitializeAPI()

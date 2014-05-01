@@ -114,6 +114,7 @@ namespace kOS.Execution
 
         private void PushContext(ProgramContext context)
         {
+            UnityEngine.Debug.Log("kOS: Pushing context staring with: " + context.GetCodeFragment(1).FirstOrDefault());
             _contexts.Add(context);
             _currentContext = _contexts[_contexts.Count - 1];
 
@@ -125,17 +126,21 @@ namespace kOS.Execution
 
         private void PopContext()
         {
-            if (_contexts.Count > 0)
+            UnityEngine.Debug.Log("kOS: Popping context " + _contexts.Count);
+            if (_contexts.Any())
             {
                 // remove the last context
-                ProgramContext contextRemove = _contexts[_contexts.Count - 1];
+                var contextRemove = _contexts.Last();
                 _contexts.Remove(contextRemove);
                 contextRemove.DisableActiveFlyByWire(_shared.BindingMgr);
+                UnityEngine.Debug.Log("kOS: Removed Context " + contextRemove.GetCodeFragment(1).FirstOrDefault());
 
-                if (_contexts.Count > 0)
+
+                if (_contexts.Any())
                 {
-                    _currentContext = _contexts[_contexts.Count - 1];
+                    _currentContext = _contexts.Last();
                     _currentContext.EnableActiveFlyByWire(_shared.BindingMgr);
+                    UnityEngine.Debug.Log("kOS: New current context " + _currentContext.GetCodeFragment(1).FirstOrDefault());
                 }
                 else
                 {
@@ -189,6 +194,7 @@ namespace kOS.Execution
 
         public void BreakExecution(bool manual)
         {
+            UnityEngine.Debug.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automaticly", _contexts.Count));
             if (_contexts.Count > 1)
             {
                 EndWait();
@@ -522,6 +528,7 @@ namespace kOS.Execution
                 if (opcode is OpcodeEOP)
                 {
                     BreakExecution(false);
+                    UnityEngine.Debug.LogWarning("kOS: Execution Broken");
                 }
                 return false;
             }

@@ -27,7 +27,7 @@ namespace kOS.Suffixed
             translation = new Vector(0, 0, 0);
             neutral = new Flushable<bool>(); 
             killRotation = new Flushable<bool>(); 
-            bound = true;
+            bound = false;
             this.vessel = vessel;
             Vessel.OnFlyByWire += OnFlyByWire;
 
@@ -149,8 +149,8 @@ namespace kOS.Suffixed
 
         private void Bind()
         {
+            UnityEngine.Debug.Log("kOS: FlightControl Binding");
             if (bound) return;
-            UnityEngine.Debug.Log("kOS : FlightControl Bound");
 
             if (RemoteTechHook.IsAvailable(Vessel.id))
             {
@@ -161,12 +161,13 @@ namespace kOS.Suffixed
                 Vessel.OnFlyByWire += OnFlyByWire;
             }
             bound = true;
+            UnityEngine.Debug.Log("kOS: FlightControl Bound");
         }
 
         public void Unbind()
         {
+            UnityEngine.Debug.Log("kOS: FlightControl Unbinding");
             if (!bound) return;
-            UnityEngine.Debug.Log("kOS : FlightControl Unbound");
 
             if (RemoteTechHook.IsAvailable())
             {
@@ -177,6 +178,7 @@ namespace kOS.Suffixed
                 Vessel.OnFlyByWire -= OnFlyByWire;
             }
             bound = false;
+            UnityEngine.Debug.Log("kOS: FlightControl Unbound");
         }
 
         private bool CheckKillRotation(string suffixName, object value)
