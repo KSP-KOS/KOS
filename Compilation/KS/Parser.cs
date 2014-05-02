@@ -2099,7 +2099,7 @@ namespace kOS.Compilation.KS
 
 
             
-            Parsediv_expr(node);
+            Parsemultdiv_expr(node);
 
             
             tok = scanner.LookAhead(TokenType.PLUSMINUS);
@@ -2117,52 +2117,18 @@ namespace kOS.Compilation.KS
                 }
 
                 
-                Parsediv_expr(node);
+                Parsemultdiv_expr(node);
             tok = scanner.LookAhead(TokenType.PLUSMINUS);
             }
 
             parent.Token.UpdateRange(node.Token);
         }
 
-        private void Parsediv_expr(ParseNode parent)
+        private void Parsemultdiv_expr(ParseNode parent)
         {
             Token tok;
             ParseNode n;
-            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.div_expr), "div_expr");
-            parent.Nodes.Add(node);
-
-
-            
-            Parsemult_expr(node);
-
-            
-            tok = scanner.LookAhead(TokenType.DIV);
-            while (tok.Type == TokenType.DIV)
-            {
-
-                
-                tok = scanner.Scan(TokenType.DIV);
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.DIV) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DIV.ToString(), 0x1001, tok));
-                    return;
-                }
-
-                
-                Parsemult_expr(node);
-            tok = scanner.LookAhead(TokenType.DIV);
-            }
-
-            parent.Token.UpdateRange(node.Token);
-        }
-
-        private void Parsemult_expr(ParseNode parent)
-        {
-            Token tok;
-            ParseNode n;
-            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.mult_expr), "mult_expr");
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.multdiv_expr), "multdiv_expr");
             parent.Nodes.Add(node);
 
 
@@ -2170,23 +2136,43 @@ namespace kOS.Compilation.KS
             Parsefactor(node);
 
             
-            tok = scanner.LookAhead(TokenType.MULT);
-            while (tok.Type == TokenType.MULT)
+            tok = scanner.LookAhead(TokenType.MULT, TokenType.DIV);
+            while (tok.Type == TokenType.MULT
+                || tok.Type == TokenType.DIV)
             {
 
                 
-                tok = scanner.Scan(TokenType.MULT);
-                n = node.CreateNode(tok, tok.ToString() );
-                node.Token.UpdateRange(tok);
-                node.Nodes.Add(n);
-                if (tok.Type != TokenType.MULT) {
-                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.MULT.ToString(), 0x1001, tok));
-                    return;
+                tok = scanner.LookAhead(TokenType.MULT, TokenType.DIV);
+                switch (tok.Type)
+                {
+                    case TokenType.MULT:
+                        tok = scanner.Scan(TokenType.MULT);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.MULT) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.MULT.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    case TokenType.DIV:
+                        tok = scanner.Scan(TokenType.DIV);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.DIV) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.DIV.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    default:
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                        break;
                 }
 
                 
                 Parsefactor(node);
-            tok = scanner.LookAhead(TokenType.MULT);
+            tok = scanner.LookAhead(TokenType.MULT, TokenType.DIV);
             }
 
             parent.Token.UpdateRange(node.Token);

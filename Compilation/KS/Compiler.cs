@@ -426,8 +426,7 @@ namespace kOS.Compilation.KS
                 case TokenType.compare_expr: // for issue #20
                 case TokenType.and_expr:
                 case TokenType.arith_expr:
-                case TokenType.div_expr:
-                case TokenType.mult_expr:
+                case TokenType.multdiv_expr:
                 case TokenType.factor:
                     VisitExpression(node);
                     break;

@@ -298,11 +298,8 @@ namespace kOS.Compilation.KS
                 case TokenType.arith_expr:
                     Value = Evalarith_expr(tree, paramlist);
                     break;
-                case TokenType.div_expr:
-                    Value = Evaldiv_expr(tree, paramlist);
-                    break;
-                case TokenType.mult_expr:
-                    Value = Evalmult_expr(tree, paramlist);
+                case TokenType.multdiv_expr:
+                    Value = Evalmultdiv_expr(tree, paramlist);
                     break;
                 case TokenType.factor:
                     Value = Evalfactor(tree, paramlist);
@@ -611,14 +608,7 @@ namespace kOS.Compilation.KS
             return null;
         }
 
-        protected virtual object Evaldiv_expr(ParseTree tree, params object[] paramlist)
-        {
-            foreach (var node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
-
-        protected virtual object Evalmult_expr(ParseTree tree, params object[] paramlist)
+        protected virtual object Evalmultdiv_expr(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
