@@ -63,6 +63,7 @@ namespace kOS.Suffixed
                         if (other is Vector) return (Vector) other - this;
                     }
                     break;
+                    
                 default:
                     throw new NotImplementedException(string.Format(
                         "Cannot perform operation: {0} {1} {2}", ToString(), op, other.ToString() ) );
