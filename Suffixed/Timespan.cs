@@ -1,46 +1,71 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS.Suffixed
 {
     public class TimeSpan : SpecialValue
     {
-        System.TimeSpan span;
+        readonly double span;
+        private const int DAYS_IN_YEAR = 365;
+        private const int HOURS_IN_DAY = 6;
+        private const int MINUTE_IN_HOUR = 60;
+        private const int SECONDS_IN_MINUTE = 60;
+
+        private const int SECONDS_IN_HOUR = MINUTE_IN_HOUR * SECONDS_IN_MINUTE;
+        private const int SECONDS_IN_DAY = SECONDS_IN_HOUR * HOURS_IN_DAY;
+        private const int SECONDS_IN_YEAR = SECONDS_IN_DAY * DAYS_IN_YEAR;
 
         public TimeSpan(double unixStyleTime)
         {
-            span = System.TimeSpan.FromSeconds(unixStyleTime);
+            UnityEngine.Debug.Log("kOS: Timespan Input: " + unixStyleTime);
+            span = unixStyleTime;
+            UnityEngine.Debug.Log("kOS: Timespan Span: " + span);
         }
 
-        public int Year()
+        private int CalculateYear()
         {
-            return (int)Math.Floor(span.Days / 365.0) + 1;
+            return (int)Math.Floor(span / SECONDS_IN_YEAR) + 1;
         }
 
-        public int Day()
+        private int CalculateDay()
         {
-            return (span.Days % 365) + 1;
+            var secondsThisYear = span%SECONDS_IN_YEAR;
+            return (int)Math.Floor(secondsThisYear / SECONDS_IN_DAY) + 1;
+        }
+
+        private int CalculateHour()
+        {
+            var secondsToday = span%SECONDS_IN_DAY;
+            return (int)Math.Floor(secondsToday / SECONDS_IN_HOUR);
+        }
+
+        private int CalculateMinute()
+        {
+            var secondsThisHour = span%SECONDS_IN_HOUR;
+            return (int)Math.Floor(secondsThisHour / SECONDS_IN_MINUTE);
+        }
+
+        private double CalculateSecond()
+        {
+            return span%SECONDS_IN_MINUTE;
         }
 
         public double ToUnixStyleTime()
         {
-            return span.TotalSeconds;
+            return span;
         }
 
         public override object GetSuffix(string suffixName)
         {
-            if (suffixName == "YEAR") return Year();
-            if (suffixName == "DAY") return Day();
-            if (suffixName == "HOUR") return span.Hours;
-            if (suffixName == "MINUTE") return span.Minutes;
-            if (suffixName == "SECOND") return span.Seconds;
+            if (suffixName == "YEAR") return CalculateYear();
+            if (suffixName == "DAY") return CalculateDay();
+            if (suffixName == "HOUR") return CalculateHour();
+            if (suffixName == "MINUTE") return CalculateMinute();
+            if (suffixName == "SECOND") return CalculateSecond();
 
-            if (suffixName == "SECONDS") return span.TotalSeconds;
+            if (suffixName == "SECONDS") return span;
 
-            if (suffixName == "CLOCK") return span.Hours + ":" + String.Format(span.Minutes.ToString("00") + ":" + String.Format(span.Seconds.ToString("00")));
-            if (suffixName == "CALENDAR") return "Year " + Year() + ", day " + Day();
+            if (suffixName == "CLOCK") return string.Format("{0:00}:{1:00}:{2:00}", CalculateHour(), CalculateMinute(), CalculateSecond());
+            if (suffixName == "CALENDAR") return "Year " + CalculateYear() + ", day " + CalculateDay();
 
             return base.GetSuffix(suffixName);
         }
@@ -114,7 +139,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "TIME{" + Math.Floor(span.TotalSeconds).ToString("0") + "}";
+            return string.Format("TIME({0:0})", span);
         }
     }
 }
