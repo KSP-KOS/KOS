@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using kOS.AddOns.RemoteTech2;
-using UnityEngine;
+﻿using kOS.AddOns.RemoteTech2;
+using kOS.Execution;
 using kOS.Suffixed;
 using kOS.Utilities;
-using kOS.Execution;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace kOS.Binding
 {
@@ -13,10 +13,11 @@ namespace kOS.Binding
     {
         private Vessel currentVessel;
         private readonly Dictionary<string, FlightCtrlParam> flightParameters = new Dictionary<string, FlightCtrlParam>();
-        readonly static Dictionary<uint, FlightControl> flightControls = new Dictionary<uint, FlightControl>();
+        private static readonly Dictionary<uint, FlightControl> flightControls = new Dictionary<uint, FlightControl>();
 
         public override void AddTo(SharedObjects shared)
         {
+            Debug.Log("kOS: FlightControlManager.AddTo " + shared.Vessel.id);
             _shared = shared;
 
             AddNewFlightParam("throttle", shared);
@@ -44,6 +45,7 @@ namespace kOS.Binding
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
+            Debug.Log(string.Format("kOS: FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
             if (flightParameters.ContainsKey(paramName))
             {
                 flightParameters[paramName].Enabled = enabled;
@@ -58,7 +60,7 @@ namespace kOS.Binding
         {
             UnbindUnloaded();
 
-            if (currentVessel != _shared.Vessel)
+            if (currentVessel.id != _shared.Vessel.id)
             {
                 // Try to re-establish connection to vessel
                 if (currentVessel != null)
@@ -71,10 +73,6 @@ namespace kOS.Binding
                 {
                     currentVessel = _shared.Vessel;
                     currentVessel.OnFlyByWire += OnFlyByWire;
-                    if (currentVessel)
-                    {
-                        
-                    }
                 }
             }
         }
@@ -97,6 +95,7 @@ namespace kOS.Binding
             {
                 var value = flightControls[key];
                 if (value.Vessel.loaded) continue;
+                Debug.Log("kOS: Unloading " + value.Vessel.vesselName);
                 flightControls.Remove(key);
                 value.Dispose();
             }
@@ -112,7 +111,8 @@ namespace kOS.Binding
             private readonly string name;
             private readonly FlightControl control;
             private object value;
-            
+            private bool enabled;
+
             public FlightCtrlParam(string name, FlightControl control, BindingManager binding)
             {
                 this.name = name;
@@ -124,7 +124,40 @@ namespace kOS.Binding
                 binding.AddSetter(name, delegate(CPU c, object val) { value = val; });
             }
 
-            public bool Enabled { get; set; }
+            public bool Enabled
+            {
+                get { return enabled; }
+                set
+                {
+                    Debug.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1}", name, enabled));
+
+                    if (RemoteTechHook.IsAvailable(control.Vessel.id))
+                    {
+                        HandleRemoteTechPilot();
+                    }
+                    else
+                    {
+                        enabled = value;
+                    }
+                }
+            }
+
+            private void HandleRemoteTechPilot()
+            {
+                var action = ChooseAction();
+                if (action == null)
+                {
+                    return;
+                }
+                if (Enabled)
+                {
+                    RemoteTechHook.Instance.AddSanctionedPilot(control.Vessel.id, action);
+                }
+                else
+                {
+                    RemoteTechHook.Instance.RemoveSanctionedPilot(control.Vessel.id, action);
+                }
+            }
 
             public void ClearValue()
             {
@@ -133,7 +166,7 @@ namespace kOS.Binding
 
             public void OnFlyByWire(ref FlightCtrlState c)
             {
-                if (value == null) return;
+                if (value == null || !Enabled) return;
 
                 var action = ChooseAction();
                 if (action == null)
@@ -141,21 +174,7 @@ namespace kOS.Binding
                     return;
                 }
 
-                if (RemoteTechHook.IsAvailable(control.Vessel.id))
-                {
-                    if (Enabled)
-                    {
-                        RemoteTechHook.Instance.AddSanctionedPilot(control.Vessel.id, action);
-                    }
-                    else
-                    {
-                        RemoteTechHook.Instance.RemoveSanctionedPilot(control.Vessel.id, action);
-                    }
-                }
-                else
-                {
-                    action.Invoke(c);
-                }
+                action.Invoke(c);
             }
 
             private Action<FlightCtrlState> ChooseAction()
@@ -166,15 +185,19 @@ namespace kOS.Binding
                     case "throttle":
                         action = UpdateThrottle;
                         break;
+
                     case "wheelthrottle":
                         action = UpdateWheelThrottle;
                         break;
+
                     case "steering":
                         action = SteerByWire;
                         break;
+
                     case "wheelsteering":
                         action = WheelSteer;
                         break;
+
                     default:
                         action = null;
                         break;
@@ -184,6 +207,7 @@ namespace kOS.Binding
 
             private void UpdateThrottle(FlightCtrlState c)
             {
+                if (!Enabled) return;
                 double doubleValue = Convert.ToDouble(value);
                 if (!double.IsNaN(doubleValue))
                     c.mainThrottle = (float)Utils.Clamp(doubleValue, 0, 1);
@@ -191,6 +215,7 @@ namespace kOS.Binding
 
             private void UpdateWheelThrottle(FlightCtrlState c)
             {
+                if (!Enabled) return;
                 double doubleValue = Convert.ToDouble(value);
                 if (!double.IsNaN(doubleValue))
                     c.wheelThrottle = (float)Utils.Clamp(doubleValue, -1, 1);
@@ -198,6 +223,7 @@ namespace kOS.Binding
 
             private void SteerByWire(FlightCtrlState c)
             {
+                if (!Enabled) return;
                 if (value is string && ((string)value).ToUpper() == "KILL")
                 {
                     SteeringHelper.KillRotation(c, control.Vessel);
@@ -218,6 +244,7 @@ namespace kOS.Binding
 
             private void WheelSteer(FlightCtrlState c)
             {
+                if (!Enabled) return;
                 float bearing = 0;
 
                 if (value is VesselTarget)
