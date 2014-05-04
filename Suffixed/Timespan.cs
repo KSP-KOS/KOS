@@ -5,43 +5,54 @@ namespace kOS.Suffixed
     public class TimeSpan : SpecialValue
     {
         readonly double span;
+        private readonly bool kerbinTimeSetting;
         private const int DAYS_IN_YEAR = 365;
-        private const int HOURS_IN_DAY = 6;
+        private const int HOURS_IN_KERBIN_DAY = 6;
+        private const int HOURS_IN_EARTH_DAY = 24;
         private const int MINUTE_IN_HOUR = 60;
         private const int SECONDS_IN_MINUTE = 60;
 
-        private const int SECONDS_IN_HOUR = MINUTE_IN_HOUR * SECONDS_IN_MINUTE;
-        private const int SECONDS_IN_DAY = SECONDS_IN_HOUR * HOURS_IN_DAY;
-        private const int SECONDS_IN_YEAR = SECONDS_IN_DAY * DAYS_IN_YEAR;
+        private const int SECONDS_IN_KERBIN_HOUR = MINUTE_IN_HOUR * SECONDS_IN_MINUTE;
+        private const int SECONDS_IN_KERBIN_DAY = SECONDS_IN_KERBIN_HOUR * HOURS_IN_KERBIN_DAY;
+        private const int SECONDS_IN_KERBIN_YEAR = SECONDS_IN_KERBIN_DAY * DAYS_IN_YEAR;
+        private const int SECONDS_IN_EARTH_HOUR = MINUTE_IN_HOUR * SECONDS_IN_MINUTE;
+        private const int SECONDS_IN_EARTH_DAY = SECONDS_IN_EARTH_HOUR * HOURS_IN_EARTH_DAY;
+        private const int SECONDS_IN_EARTH_YEAR = SECONDS_IN_EARTH_DAY * DAYS_IN_YEAR;
 
         public TimeSpan(double unixStyleTime)
         {
             UnityEngine.Debug.Log("kOS: Timespan Input: " + unixStyleTime);
             span = unixStyleTime;
+            kerbinTimeSetting = GameSettings.KERBIN_TIME;
             UnityEngine.Debug.Log("kOS: Timespan Span: " + span);
         }
 
         private int CalculateYear()
         {
-            return (int)Math.Floor(span / SECONDS_IN_YEAR) + 1;
+            if (kerbinTimeSetting)
+            {
+                return (int)Math.Floor(span / SECONDS_IN_KERBIN_YEAR) + 1;
+            }
+            return (int)Math.Floor(span / SECONDS_IN_EARTH_YEAR) + 1;
         }
+
+        private int SecondsPerDay { get { return kerbinTimeSetting ? SECONDS_IN_KERBIN_DAY : SECONDS_IN_EARTH_DAY; } }
+        private int SecondsPerHour { get { return kerbinTimeSetting ? SECONDS_IN_KERBIN_HOUR : SECONDS_IN_EARTH_HOUR; } }
+        private int SecongsPerYear { get { return kerbinTimeSetting ? SECONDS_IN_KERBIN_YEAR : SECONDS_IN_EARTH_YEAR; } }
 
         private int CalculateDay()
         {
-            var secondsThisYear = span%SECONDS_IN_YEAR;
-            return (int)Math.Floor(secondsThisYear / SECONDS_IN_DAY) + 1;
+            return (int)Math.Floor((span % SecongsPerYear) / SecondsPerDay) + 1;
         }
 
         private int CalculateHour()
         {
-            var secondsToday = span%SECONDS_IN_DAY;
-            return (int)Math.Floor(secondsToday / SECONDS_IN_HOUR);
+            return (int)Math.Floor((span % SecondsPerDay) / SecondsPerHour);
         }
 
         private int CalculateMinute()
         {
-            var secondsThisHour = span%SECONDS_IN_HOUR;
-            return (int)Math.Floor(secondsThisHour / SECONDS_IN_MINUTE);
+            return (int)Math.Floor((span % SecondsPerHour) / SECONDS_IN_MINUTE);
         }
 
         private double CalculateSecond()
