@@ -213,6 +213,11 @@ namespace kOS.Module
         {
         }
 
+        public override void OnInactive()
+        {
+            Debug.Log("kOS: Processor Stop");
+        }
+
         public override void OnLoad(ConfigNode node)
         {
             // KSP Seems to want to make an instance of my partModule during initial load
