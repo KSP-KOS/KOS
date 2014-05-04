@@ -29,7 +29,6 @@ namespace kOS.Suffixed
             killRotation = new Flushable<bool>(); 
             bound = false;
             this.vessel = vessel;
-            Vessel.OnFlyByWire += OnFlyByWire;
 
             doubleSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
             vectorSuffixes = new List<string> { "ROTATION", "TRANSLATION" };
@@ -206,6 +205,7 @@ namespace kOS.Suffixed
 
         private void OnFlyByWire(FlightCtrlState st)
         {
+            if (!bound) return;
             if (neutral.IsStale)
             {
                 if (neutral.FlushValue)
