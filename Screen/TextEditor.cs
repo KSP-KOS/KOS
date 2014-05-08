@@ -156,12 +156,34 @@ namespace kOS.Screen
 
             while (lineCursorIndex > lines[lineIndex].Length)
             {
-                lineCursorIndex -= (lines[lineIndex].Length + 1);
+                //lineCursorIndex -= (lines[lineIndex].Length + 1);
+                lineCursorIndex -= lines[lineIndex].Length;
                 lineIndex++;
             }
 
             _cursorRowBuffer = lineIndex;
             _cursorColumnBuffer = lineCursorIndex;
+
+            KeepCursorInBounds();
+        }
+        
+        protected void KeepCursorInBounds()
+        {
+            // Check to see if wrapping or scrolling needs to be done
+            // because the cursor went off the screen, and if so, do it:
+            if (CursorColumnShow >= MAX_COLUMNS)
+            {
+                int tooBigColumn = CursorColumnShow;
+                _cursorColumnBuffer = (tooBigColumn % MAX_COLUMNS);
+                _cursorRowBuffer += (tooBigColumn / MAX_COLUMNS); // truncating integer division.
+            }
+            if (CursorRowShow >= MAX_ROWS)
+            {
+                int rowsToScroll = (CursorRowShow-MAX_ROWS) + 1;
+                CursorRow -= rowsToScroll;
+                ScrollVertical(rowsToScroll);
+                AddNewBufferLines(rowsToScroll);
+            }
         }
 
         protected virtual void NewLine()

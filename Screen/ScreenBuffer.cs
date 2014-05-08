@@ -41,24 +41,22 @@ namespace kOS.Screen
 
         private void InitializeBuffer()
         {
-            for (int row = 0; row < RowCount; row++)
-            {
-                AddNewBufferLine();
-            }
+            AddNewBufferLines(RowCount);
 
             _topRow = 0;
             CursorRow = 0;
             CursorColumn = 0;
         }
 
-        private void AddNewBufferLine()
+        protected void AddNewBufferLines( int howMany = 1)
         {
-            _buffer.Add(new char[ColumnCount]);
+            while (howMany-- > 0)
+                _buffer.Add(new char[ColumnCount]);
         }
 
         public void SetSize(int rowCount, int columnCount)
         {
-            if (rowCount <= 36 && columnCount <= 50)
+            if (rowCount <= MAX_ROWS && columnCount <= MAX_COLUMNS)
             {
                 RowCount = rowCount;
                 ColumnCount = columnCount;
@@ -69,7 +67,7 @@ namespace kOS.Screen
 
         private int ScrollVerticalInternal(int deltaRows)
         {
-            int maxTopRow = _buffer.Count - RowCount;
+            int maxTopRow = _buffer.Count - 1;
 
             // boundary checks
             if (_topRow + deltaRows < 0) deltaRows = -_topRow;
@@ -106,7 +104,7 @@ namespace kOS.Screen
             if ((CursorRow + 1) >= RowCount)
             {
                 // scrolling up
-                AddNewBufferLine();
+                AddNewBufferLines(1);
                 ScrollVerticalInternal(1);
             }
             else
@@ -207,9 +205,17 @@ namespace kOS.Screen
         }
 
         public List<char[]> GetBuffer()
-        { 
+        {
+            
             // base buffer
             List<char[]> mergedBuffer = new List<char[]>(_buffer.GetRange(_topRow, RowCount));
+
+            // The screen may be scrolled such that the bottom of the text content doesn't
+            // go all the way to the bottom of the screen.  If so, pad it for display:
+            while (mergedBuffer.Count < RowCount)
+            {
+                mergedBuffer.Add(new char[ColumnCount]);
+            }
 
             // merge sub buffers
             UpdateSubBuffers();
