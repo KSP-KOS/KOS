@@ -12,7 +12,8 @@ namespace kOS.Compilation.KS
         private List<Opcode> _currentCodeSection = null;
         private bool _addBranchDestination = false;
         private ParseNode _lastNode = null;
-        private List<List<Opcode>> _breakList = new List<List<Opcode>>();
+        private List<List<Opcode>> _breakList = new List<List<Opcode>>();   // list of breaks
+        private List<List<Opcode>> _goAgainList = new List<List<Opcode>>(); // list of agains or 'continues?' in future?
         private bool _compilingSetDestination = false;
         private bool _identifierIsVariable = false;
         private List<ParseNode> _programParameters = new List<ParseNode>();
@@ -157,6 +158,7 @@ namespace kOS.Compilation.KS
             triggerObject.SetTriggerVariable(GetIdentifierText(node));
 
             _currentCodeSection = triggerObject.Code;
+            PushGoAgainList();
             AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
             AddOpcode(new OpcodePush(triggerObject.VariableName));
             AddOpcode(new OpcodeCompareEqual());
@@ -167,6 +169,7 @@ namespace kOS.Compilation.KS
             AddOpcode(new OpcodeRemoveTrigger());
             Opcode eofOpcode = AddOpcode(new OpcodeEOF());
             branchOpcode.DestinationLabel = eofOpcode.Label;
+            PopGoAgainList(eofOpcode.Label);  // If preserving the trigger, jump out to here. skipping OpcodeRemoveTrigger.
         }
 
         private void PreProcessWhenStatement(ParseNode node)
@@ -175,6 +178,7 @@ namespace kOS.Compilation.KS
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
             _currentCodeSection = triggerObject.Code;
+            PushGoAgainList();
             VisitNode(node.Nodes[1]);
             Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
             VisitNode(node.Nodes[3]);
@@ -182,6 +186,7 @@ namespace kOS.Compilation.KS
             AddOpcode(new OpcodeRemoveTrigger());
             Opcode eofOpcode = AddOpcode(new OpcodeEOF());
             branchOpcode.DestinationLabel = eofOpcode.Label;
+            PopGoAgainList(eofOpcode.Label);  // If preserving the trigger, jump out to here. skipping OpcodeRemoveTrigger.
         }
 
         private void PreProcessWaitStatement(ParseNode node)
@@ -193,6 +198,7 @@ namespace kOS.Compilation.KS
                 Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
                 _currentCodeSection = triggerObject.Code;
+                PushGoAgainList();
                 VisitNode(node.Nodes[2]);
                 Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
                 AddOpcode(new OpcodeEndWait());
@@ -200,6 +206,7 @@ namespace kOS.Compilation.KS
                 AddOpcode(new OpcodeRemoveTrigger());
                 Opcode eofOpcode = AddOpcode(new OpcodeEOF());
                 branchOpcode.DestinationLabel = eofOpcode.Label;
+                PopGoAgainList(eofOpcode.Label);  // If preserving the trigger, jump out to here. skipping OpcodeRemoveTrigger.
             }
         }
 
@@ -279,6 +286,37 @@ namespace kOS.Compilation.KS
                 VisitNode(node);
                 AddOpcode(new OpcodeSwap());
                 AddOpcode(new OpcodeStore());
+            }
+        }
+        
+        private void PushGoAgainList()
+        {
+            List<Opcode> list = new List<Opcode>();
+            _goAgainList.Add(list);
+        }
+
+        private void AddToGoAgainList(Opcode opcode)
+        {
+            if (_goAgainList.Count > 0)
+            {
+                List<Opcode> list = _goAgainList[_goAgainList.Count - 1];
+                list.Add(opcode);
+            }
+        }
+
+        private void PopGoAgainList(string label)
+        {
+            if (_goAgainList.Count > 0)
+            {
+                List<Opcode> list = _goAgainList[_goAgainList.Count - 1];
+                if (list != null)
+                {
+                    _goAgainList.Remove(list);
+                    foreach (Opcode opcode in list)
+                    {
+                        opcode.DestinationLabel = label;
+                    }
+                }
             }
         }
 
@@ -374,6 +412,9 @@ namespace kOS.Compilation.KS
                     break;
                 case TokenType.break_stmt:
                     VisitBreakStatement(node);
+                    break;
+                case TokenType.again_stmt:
+                    VisitAgainStatement(node);
                     break;
                 case TokenType.declare_stmt:
                     VisitDeclareStatement(node);
@@ -1262,6 +1303,12 @@ namespace kOS.Compilation.KS
             VisitNode(node.Nodes[1]);
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodeCall("logfile()"));
+        }
+
+        private void VisitAgainStatement(ParseNode node)
+        {
+            Opcode jump = AddOpcode(new OpcodeBranchJump());
+            AddToGoAgainList(jump);
         }
 
         private void VisitBreakStatement(ParseNode node)

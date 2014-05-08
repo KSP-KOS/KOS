@@ -238,6 +238,9 @@ namespace kOS.Compilation.KS
                 case TokenType.break_stmt:
                     Value = Evalbreak_stmt(tree, paramlist);
                     break;
+                case TokenType.again_stmt:
+                    Value = Evalagain_stmt(tree, paramlist);
+                    break;
                 case TokenType.declare_stmt:
                     Value = Evaldeclare_stmt(tree, paramlist);
                     break;
@@ -462,6 +465,13 @@ namespace kOS.Compilation.KS
         }
 
         protected virtual object Evalbreak_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalagain_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
