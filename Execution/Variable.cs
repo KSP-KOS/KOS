@@ -14,22 +14,32 @@ namespace kOS.Execution
             get { return _value; }
             set
             {
-                // Value (capital 'V') is this property, while
-                // value (lower 'v') is the C# setter argument
+                // Be very careful here to notice the difference
+                // between _value and value:
+                object oldValue = _value;
                 
-                // If changing the variable to a new value and the old
-                // value was a ScopeLossObserver, notify it:
-                if (  _value is ScopeLostObserver   &&
-                    ! System.Object.ReferenceEquals(_value, value) )
-                {
-                    ((ScopeLostObserver)_value).ScopeLost(Name);
-                }
                 _value = value;
-                
+
+                // Alter link count of my new value:
+                if (_value is KOSScopeObserver)
+                {
+                    ((KOSScopeObserver)_value).linkCount++;
+                }
+                // Alter link count of my previous value:
+                if (oldValue is KOSScopeObserver)
+                {
+                    ((KOSScopeObserver)oldValue).linkCount--;
+                    
+                    // If the old value no longer has any kOS Variable references, inform it:
+                    if ( ((KOSScopeObserver)oldValue).linkCount <= 0 ) {
+                        ((KOSScopeObserver)oldValue).ScopeLost();
+                    }
+                }
+
                 // Question to @marianoapp - does the same logic have to
-                // be put into BoundVariable, which overrides this?  I'm
-                // not sure it does, since bound variables don't use
-                // normal user-land objects.
+                // be put into BoundVariable, which overrides this?  I
+                // don't think it does, since bound variables don't use
+                // normal user-land objects and seem to live forever.
             }
         }
 
@@ -40,9 +50,19 @@ namespace kOS.Execution
 
         ~Variable()
         {
-            if (Value is ScopeLostObserver)
+            // There is no guarantee of timeliness for calling a finalizer,
+            // only that it will happen eventually before the object goes
+            // away.  So if the user lets a
+            // KOSScopeObserver variable go out of scope without explicilty
+            // cleaning it up, or because a script crashed, this last check
+            // will eventually catch that fact, but it might not happen
+            // immediately.  Sometimes it takes 10-20 seconds:
+            if (_value is KOSScopeObserver)
             {
-                ((ScopeLostObserver)Value).ScopeLost(Name);
+                ((KOSScopeObserver)_value).linkCount--;
+                if ( ((KOSScopeObserver)_value).linkCount <= 0 ) {
+                    ((KOSScopeObserver)_value).ScopeLost();
+                }
             }
         }
     }

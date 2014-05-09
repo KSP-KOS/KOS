@@ -7,7 +7,12 @@ namespace kOS
 {
     public class UpdateHandler
     {
-        private List<IUpdateObserver> _observers = new List<IUpdateObserver>();
+        // Using a Dictionary instead of List to prevent duplications.  If an object tries to
+        // insert itself more than once into the observer list, it still only gets in the list
+        // once and therefore only gets its Update() called once per update.
+        // The value of the KeyValuePair, the int, is unused.
+        private Dictionary<IUpdateObserver, int> _observers = new Dictionary<IUpdateObserver, int>();
+        
         public double CurrentTime { get; private set; }
         public double LastDeltaTime { get; private set; }
 
@@ -19,7 +24,14 @@ namespace kOS
 
         public void AddObserver(IUpdateObserver observer)
         {
-            _observers.Add(observer);
+            try 
+            {
+                _observers.Add(observer, 0);
+            }
+            catch (ArgumentException)
+            {
+                // observer is alredy in the list.  Nothing needs to be done.
+            }
         }
 
         public void RemoveObserver(IUpdateObserver observer)
@@ -34,10 +46,10 @@ namespace kOS
             
             // Iterate over a frozen snapshot of _observers rather than  _observers itself,
             // because _observers can be altered during the course of the loop:
-            List<IUpdateObserver> fixedObserverList = new List<IUpdateObserver>(_observers);
-            foreach (IUpdateObserver observer in fixedObserverList)
+            Dictionary<IUpdateObserver,int> fixedObserverList = new Dictionary<IUpdateObserver,int>(_observers);
+            foreach (KeyValuePair<IUpdateObserver,int> observer in fixedObserverList)
             {
-                observer.Update(deltaTime);
+                observer.Key.Update(deltaTime);
             }
         }
     }

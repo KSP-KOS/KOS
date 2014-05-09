@@ -6,7 +6,7 @@ using kOS.Execution;
 
 namespace kOS.Utilities
 {
-    public class VectorRenderer : SpecialValue, IUpdateObserver, ScopeLostObserver
+    public class VectorRenderer : SpecialValue, IUpdateObserver, KOSScopeObserver
     {
         public Vector3d      vec { get; set; }
         public RgbaColor     rgba { get; set; }
@@ -55,16 +55,21 @@ namespace kOS.Utilities
             _uHandler    = uHand;
         }
 
-        // When kos script can't access me any more (I have just
-        // become orphaned from my script variable name), then
-        // tell Unity to make me disappear, and also tell UpdateHandler
-        // to take me out of its list (that should orphan me from
-        // C# referencces as well and make me go away):
-        public void ScopeLost( string name )
+        // Implementation of KOSSCopeObserver interface:
+        // ---------------------------------------------
+        public int linkCount { get; set; }
+        public void ScopeLost()
         {
+            // When no kos script variables can still access me,
+            // tell Unity to make me disappear, and also
+            // tell UpdateHandler to take me out of its list
+            // (Note that if I didn't do this,
+            // then as far as C# thinks, I wouldn't be orphaned because
+            // UpdateHandler is holding a reference to me.)
             SetShow(false);
         }
 
+        
         public void Update( double deltaTime )
         {
             /// <summary>
