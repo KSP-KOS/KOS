@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using kOS.Factories;
 using UnityEngine;
@@ -75,39 +76,50 @@ namespace kOS.Module
                 return;
             }
 
+            Debug.Log(string.Format("kOS: OnStart: {0} {1}", state, Mode));
             InitObjects();
         }
 
         public void InitObjects()
         {
-            if (shared == null)
-            {
-                shared = new SharedObjects();
-                CreateFactory();
-                    
-                shared.Vessel = vessel;
-                shared.Processor = this;
-                shared.UpdateHandler = new UpdateHandler();
-                shared.BindingMgr = new BindingManager(shared);
-                shared.Interpreter = shared.Factory.CreateInterpreter(shared);
-                shared.Screen = shared.Interpreter;
-                shared.ScriptHandler = new Compilation.KS.KSScript();
-                shared.Logger = new KSPLogger(shared);
-                shared.VolumeMgr = new VolumeManager(shared);
-                shared.ProcessorMgr = new ProcessorManager(shared);
-                shared.Cpu = new Execution.CPU(shared);
+            Debug.LogWarning("kOS: InitObjects: " + (shared == null));
 
-                // initialize the file system
-                shared.VolumeMgr.Add(shared.Factory.CreateArchive());
-                if (HardDisk == null) HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
-                shared.VolumeMgr.Add(HardDisk);
-                if (!Config.GetInstance().StartOnArchive) shared.VolumeMgr.SwitchTo(HardDisk);
-            }
+            shared = new SharedObjects();
+            CreateFactory();
+                    
+            shared.Vessel = vessel;
+            shared.Processor = this;
+            shared.UpdateHandler = new UpdateHandler();
+            shared.BindingMgr = new BindingManager(shared);
+            shared.Interpreter = shared.Factory.CreateInterpreter(shared);
+            shared.Screen = shared.Interpreter;
+            shared.ScriptHandler = new Compilation.KS.KSScript();
+            shared.Logger = new KSPLogger(shared);
+            shared.VolumeMgr = new VolumeManager(shared);
+            shared.ProcessorMgr = new ProcessorManager(shared);
+            shared.Cpu = new Execution.CPU(shared);
+
+            // initialize the file system
+            shared.VolumeMgr.Add(shared.Factory.CreateArchive());
+            if (HardDisk == null) HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+            shared.VolumeMgr.Add(HardDisk);
+            if (!Config.GetInstance().StartOnArchive) shared.VolumeMgr.SwitchTo(HardDisk);
         }
 
         private void CreateFactory()
         {
-            if (RemoteTechHook.IsAvailable(vessel.id))
+            Debug.LogWarning("kOS: Starting Factory Building");
+            bool isAvailable;
+            try
+            {
+                isAvailable = RemoteTechHook.IsAvailable(vessel.id);
+            }
+            catch
+            {
+                isAvailable = false;
+            }
+
+            if (isAvailable)
             {
                 Debug.LogWarning("kOS: RemoteTech Factory Building");
                 shared.Factory = new RemoteTechFactory();
