@@ -69,60 +69,71 @@ namespace kOS.Function
             object volumeId = shared.Cpu.PopValue();
             string fileName = shared.Cpu.PopValue().ToString();
 
-            if (shared.VolumeMgr != null)
-            {
-                if (shared.VolumeMgr.CurrentVolume != null)
-                {
-                    ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName);
-                    if (file != null)
-                    {
-                        if (shared.ScriptHandler != null)
-                        {
-                            Stopwatch compileWatch = null;
-                            bool showStatistics = Config.GetInstance().ShowStatistics;
-                            if (showStatistics) compileWatch = Stopwatch.StartNew();
+            if (shared.VolumeMgr == null) return;
+            if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
 
+            ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName);
+            if (file == null) throw new Exception(string.Format("File '{0}' not found", fileName));
+
+            if (shared.ScriptHandler != null)
+            {
+                if (volumeId != null)
+                {
+                    Volume targetVolume = shared.VolumeMgr.GetVolume(volumeId);
+                    if (targetVolume != null)
+                    {
+                        if (shared.ProcessorMgr != null)
+                        {
                             List<CodePart> parts = shared.ScriptHandler.Compile(file.Content);
                             ProgramBuilder builder = new ProgramBuilder();
                             builder.AddRange(parts);
-                            List<Opcode> program = builder.BuildProgram(false);
-
-                            if (showStatistics)
-                            {
-                                compileWatch.Stop();
-                                shared.Cpu.TotalCompileTime += compileWatch.ElapsedMilliseconds;
-                            }
-
-                            if (volumeId != null)
-                            {
-                                Volume targetVolume = shared.VolumeMgr.GetVolume(volumeId);
-                                if (targetVolume != null)
-                                {
-                                    if (shared.ProcessorMgr != null)
-                                    {
-                                        shared.ProcessorMgr.RunProgramOn(program, targetVolume);
-                                    }
-                                }
-                                else
-                                {
-                                    throw new Exception("Volume not found");
-                                }
-                            }
-                            else
-                            {
-                                shared.Cpu.RunProgram(program);
-                            }
+                            List<Opcode> program = builder.BuildProgram();
+                            shared.ProcessorMgr.RunProgramOn(program, targetVolume);
                         }
                     }
                     else
                     {
-                        throw new Exception(string.Format("File '{0}' not found", fileName));
+                        throw new Exception("Volume not found");
                     }
                 }
                 else
                 {
-                    throw new Exception("Volume not found");
+                    // clear the "program" compilation context
+                    shared.ScriptHandler.ClearContext("program");
+
+                    var programContext = shared.Cpu.GetProgramContext();
+                    CompilerOptions options = new CompilerOptions();
+                    options.LoadProgramsInSameAddressSpace = true;
+                    List<CodePart> parts = shared.ScriptHandler.Compile(file.Content, "program", options);
+                    programContext.AddParts(parts);
                 }
+            }
+        }
+    }
+
+    [FunctionAttribute("load")]
+    public class FunctionLoad : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = shared.Cpu.PopValue().ToString();
+
+            if (shared.VolumeMgr == null) return;
+            if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
+
+            ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName);
+            if (file == null) throw new Exception(string.Format("File '{0}' not found", fileName));
+
+            if (shared.ScriptHandler != null)
+            {
+                var programContext = shared.Cpu.GetProgramContext();
+                CompilerOptions options = new CompilerOptions();
+                options.LoadProgramsInSameAddressSpace = true;
+                List<CodePart> parts = shared.ScriptHandler.Compile(file.Content, "program", options);
+                // add this program to the address space of the parent program
+                int programAddress = programContext.AddObjectParts(parts);
+                // push the entry point address of the new program onto the stack
+                shared.Cpu.PushStack(programAddress);
             }
         }
     }

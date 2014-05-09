@@ -21,10 +21,27 @@ namespace kOS.Compilation
             _cache = CompileCache.GetInstance();
         }
 
-        public virtual List<CodePart> Compile(string scriptText) { return new List<CodePart>(); }
-        public virtual List<CodePart> Compile(string scriptText, string contextId) { return new List<CodePart>(); }
+        public virtual List<CodePart> Compile(string scriptText)
+        {
+            return Compile(scriptText, string.Empty);
+        }
+
+        public virtual List<CodePart> Compile(string scriptText, string contextId)
+        {
+            return Compile(scriptText, contextId, new CompilerOptions());
+        }
+
+        public virtual List<CodePart> Compile(string scriptText, string contextId, CompilerOptions options)
+        {
+            return new List<CodePart>();
+        }
+        
         public virtual void ClearContext(string contextId) { }
-        public virtual bool IsCommandComplete(string command) { return true; }
+
+        public virtual bool IsCommandComplete(string command)
+        {
+            return true;
+        }
 
         protected virtual string MakeLowerCase(string scriptText)
         {

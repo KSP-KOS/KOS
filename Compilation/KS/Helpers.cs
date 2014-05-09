@@ -299,4 +299,89 @@ namespace kOS.Compilation.KS
     }
 
     #endregion
+
+    #region Subprograms
+
+    class SubprogramCollection
+    {
+        private Dictionary<string, Subprogram> subprograms = new Dictionary<string, Subprogram>();
+        private List<Subprogram> newSubprograms = new List<Subprogram>();
+
+        public bool Contains(string subprogramName)
+        {
+            return subprograms.ContainsKey(subprogramName);
+        }
+
+        public Subprogram GetSubprogram(string subprogramName)
+        {
+            if (subprograms.ContainsKey(subprogramName))
+            {
+                return subprograms[subprogramName];
+            }
+            else
+            {
+                Subprogram subprogramObject = new Subprogram(subprogramName);
+                subprograms.Add(subprogramName, subprogramObject);
+                newSubprograms.Add(subprogramObject);
+                return subprogramObject;
+            }
+        }
+
+        public List<CodePart> GetParts(List<Subprogram> subprogramList)
+        {
+            List<CodePart> parts = new List<CodePart>();
+
+            foreach (Subprogram subprogramObject in subprogramList)
+            {
+                parts.Add(subprogramObject.GetCodePart());
+            }
+
+            return parts;
+        }
+
+        public List<CodePart> GetParts()
+        {
+            return GetParts(subprograms.Values.ToList());
+        }
+
+        public List<CodePart> GetNewParts()
+        {
+            List<CodePart> parts = GetParts(newSubprograms);
+            newSubprograms.Clear();
+            return parts;
+        }
+    }
+
+    class Subprogram
+    {
+        private CodePart codePart;
+        public string SubprogramName;
+        public string PointerIdentifier;
+        public string FunctionLabel;
+
+        public List<Opcode> FunctionCode
+        {
+            get { return codePart.FunctionsCode; }
+        }
+
+        public List<Opcode> InitializationCode
+        {
+            get { return codePart.InitializationCode; }
+        }
+
+        public Subprogram(string subprogramName)
+        {
+            codePart = new CodePart();
+            SubprogramName = subprogramName;
+            PointerIdentifier = string.Format("$program-{0}*", subprogramName);
+        }
+
+        public CodePart GetCodePart()
+        {
+            return codePart;
+        }
+    }
+
+
+    #endregion
 }

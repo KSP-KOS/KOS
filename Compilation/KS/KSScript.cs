@@ -19,12 +19,7 @@ namespace kOS.Compilation.KS
             _contexts = new Dictionary<string, Context>();
         }
 
-        public override List<CodePart> Compile(string scriptText)
-        {
-            return Compile(scriptText, string.Empty);
-        }
-
-        public override List<CodePart> Compile(string scriptText, string contextId)
+        public override List<CodePart> Compile(string scriptText, string contextId, CompilerOptions options)
         {
             List<CodePart> parts = null;
             
@@ -32,7 +27,7 @@ namespace kOS.Compilation.KS
             scriptText = MakeLowerCase(scriptText);
             scriptText = ReplaceIdentifiers(scriptText);
             
-            if (contextId == string.Empty) parts = _cache.GetFromCache(scriptText);
+            //if (contextId != "interpreter") parts = _cache.GetFromCache(scriptText);
 
             // if parts is null means the code doesn't exists in the cache
             if (parts == null)
@@ -45,17 +40,18 @@ namespace kOS.Compilation.KS
                     LoadContext(contextId);
 
                     // TODO: handle compile errors (e.g. wrong run parameter count)
-                    CodePart mainPart = compiler.Compile(parseTree, _currentContext);
+                    CodePart mainPart = compiler.Compile(parseTree, _currentContext, options);
 
                     // add locks and triggers
                     parts.AddRange(_currentContext.Locks.GetNewParts());
                     parts.AddRange(_currentContext.Triggers.GetNewParts());
+                    parts.AddRange(_currentContext.Subprograms.GetNewParts());
 
                     parts.Add(mainPart);
 
                     AssignInstructionId(parts);
 
-                    if (contextId == string.Empty) _cache.AddToCache(scriptText, parts);
+                    //if (contextId != "interpreter") _cache.AddToCache(scriptText, parts);
                 }
                 else
                 {
@@ -109,27 +105,32 @@ namespace kOS.Compilation.KS
             char[] commandChars = command.ToCharArray();
             int length = commandChars.Length;
             int openCurlyBrackets = 0;
-            int openBrackets = 0;
+            int openParentheses = 0;
 
             for (int n = 0; n < length; n++)
             {
-                // match curly brackets
-                if (commandChars[n] == '{')
-                    openCurlyBrackets++;
-
-                if (commandChars[n] == '}')
-                    openCurlyBrackets--;
-
-                // match brackets
-                if (commandChars[n] == '(')
-                    openBrackets++;
-
-                if (commandChars[n] == ')')
-                    openBrackets--;
+                switch (commandChars[n])
+                {
+                    // match curly brackets
+                    case '{':
+                        openCurlyBrackets++;
+                        break;
+                    case '}':
+                        openCurlyBrackets--;
+                        break;
+                    // match parentheses
+                    case '(':
+                        openParentheses++;
+                        break;
+                    case ')':
+                        openParentheses--;
+                        break;
+                }
             }
 
+            // returns true even if you wrote extra closing curly brackets/parentheses
             return (openCurlyBrackets <= 0)
-                && (openBrackets <= 0);
+                && (openParentheses <= 0);
         }
     }
 }

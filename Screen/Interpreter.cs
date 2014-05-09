@@ -10,7 +10,6 @@ namespace kOS.Screen
     public class Interpreter : TextEditor
     {
         protected SharedObjects _shared;
-        private ProgramBuilder builder = new ProgramBuilder();
         private List<string> _commandHistory = new List<string>();
         private int _commandHistoryIndex = 0;
         private bool _locked = false;
@@ -108,20 +107,15 @@ namespace kOS.Screen
                     List<CodePart> commandParts = _shared.ScriptHandler.Compile(commandText, "interpreter");
                     if (commandParts != null)
                     {
-                        builder.AddRange(commandParts);
-                        List<Opcode> program = builder.BuildProgram(true);
-
-                        if (_shared.Cpu != null)
-                        {
-                            _shared.Cpu.UpdateProgram(program);
-                        }
+                        var interpreterContext = _shared.Cpu.GetInterpreterContext();
+                        interpreterContext.AddParts(commandParts);
                     }
                 }
                 catch (Exception e)
                 {
                     if (_shared.Logger != null)
                     {
-                        _shared.Logger.Log(e.Message);
+                        _shared.Logger.Log(e);
                     }
                 }
             }
@@ -136,7 +130,6 @@ namespace kOS.Screen
 
         public override void Reset()
         {
-            builder = new ProgramBuilder();
             _shared.ScriptHandler.ClearContext("interpreter");
             _commandHistory.Clear();
             _commandHistoryIndex = 0;

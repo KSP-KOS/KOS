@@ -16,14 +16,16 @@ namespace kOS.Compilation.KS
         private bool _compilingSetDestination = false;
         private bool _identifierIsVariable = false;
         private List<ParseNode> _programParameters = new List<ParseNode>();
+        private CompilerOptions _options;
 
         private readonly Dictionary<string, string> _functionsOverloads = new Dictionary<string, string>() { { "round|1", "roundnearest" },
                                                                                                              { "round|2", "round"} };
         
-        public CodePart Compile(ParseTree tree, Context context)
+        public CodePart Compile(ParseTree tree, Context context, CompilerOptions options)
         {
             _part = new CodePart();
             _context = context;
+            _options = options;
 
             try
             {
@@ -136,6 +138,9 @@ namespace kOS.Compilation.KS
                     break;
                 case TokenType.declare_stmt:
                     PreProcessProgramParameters(node);
+                    break;
+                case TokenType.run_stmt:
+                    PreProcessRunStatement(node);
                     break;
                 default:
                     break;
@@ -265,6 +270,52 @@ namespace kOS.Compilation.KS
                 for (int index = 2; index < node.Nodes.Count; index += 2)
                 {
                     _programParameters.Add(node.Nodes[index]);
+                }
+            }
+        }
+
+        private void PreProcessRunStatement(ParseNode node)
+        {
+            if (_options.LoadProgramsInSameAddressSpace)
+            {
+                bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
+                if (!hasON)
+                {
+                    string subprogramName = node.Nodes[1].Token.Text;
+                    if (!_context.Subprograms.Contains(subprogramName))
+                    {
+                        Subprogram subprogramObject = _context.Subprograms.GetSubprogram(subprogramName);
+                        // Function code
+                        _currentCodeSection = subprogramObject.FunctionCode;
+                        // verify if the program has been loaded
+                        Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
+                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodeCompareEqual());
+                        OpcodeBranchIfFalse branchOpcode = new OpcodeBranchIfFalse();
+                        AddOpcode(branchOpcode);
+                        // if it wasn't then load it now
+                        AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
+                        AddOpcode(new OpcodePush(subprogramObject.SubprogramName));
+                        AddOpcode(new OpcodeCall("load()"));
+                        // store the address of the program in the pointer variable
+                        // (the load() function pushes the address onto the stack)
+                        AddOpcode(new OpcodeStore());
+                        // call the program
+                        Opcode callOpcode = AddOpcode(new OpcodeCall(subprogramObject.PointerIdentifier));
+                        // set the call opcode as the destination of the previous branch
+                        branchOpcode.DestinationLabel = callOpcode.Label;
+                        // return to the caller address
+                        AddOpcode(new OpcodeReturn());
+                        // set the function start label
+                        subprogramObject.FunctionLabel = functionStart.Label;
+
+                        // Initialization code
+                        _currentCodeSection = subprogramObject.InitializationCode;
+                        // initialize the pointer to zero
+                        AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
+                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodeStore());
+                    }
                 }
             }
         }
@@ -1161,16 +1212,29 @@ namespace kOS.Compilation.KS
                 volumeIndex += 3;
             }
 
-            // program name
-            VisitNode(node.Nodes[1]);
-
-            // volume where program should be executed (null means local)
-            if (volumeIndex < node.Nodes.Count)
-                VisitNode(node.Nodes[volumeIndex]);
+            bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
+            if (!hasON && _options.LoadProgramsInSameAddressSpace)
+            {
+                string subprogramName = node.Nodes[1].Token.Text;
+                if (_context.Subprograms.Contains(subprogramName))
+                {
+                    Subprogram subprogramObject = _context.Subprograms.GetSubprogram(subprogramName);
+                    AddOpcode(new OpcodeCall(null)).DestinationLabel = subprogramObject.FunctionLabel;
+                }
+            }
             else
-                AddOpcode(new OpcodePush(null));
+            {
+                // program name
+                VisitNode(node.Nodes[1]);
 
-            AddOpcode(new OpcodeCall("run()"));
+                // volume where program should be executed (null means local)
+                if (volumeIndex < node.Nodes.Count)
+                    VisitNode(node.Nodes[volumeIndex]);
+                else
+                    AddOpcode(new OpcodePush(null));
+
+                AddOpcode(new OpcodeCall("run()"));
+            }
         }
 
         private void VisitSwitchStatement(ParseNode node)
