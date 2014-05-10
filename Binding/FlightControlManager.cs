@@ -1,4 +1,5 @@
-﻿using kOS.AddOns.RemoteTech2;
+﻿using System.Linq;
+using kOS.AddOns.RemoteTech2;
 using kOS.Execution;
 using kOS.Suffixed;
 using kOS.Utilities;
@@ -9,7 +10,7 @@ using UnityEngine;
 namespace kOS.Binding
 {
     [kOSBinding("ksp")]
-    public class FlightControlManager : Binding
+    public class FlightControlManager : Binding , IDisposable
     {
         private Vessel currentVessel;
         private readonly Dictionary<string, FlightCtrlParam> flightParameters = new Dictionary<string, FlightCtrlParam>();
@@ -103,26 +104,54 @@ namespace kOS.Binding
 
         private void AddNewFlightParam(string name, SharedObjects shared)
         {
-            flightParameters.Add(name, new FlightCtrlParam(name, GetControllerByVessel(shared.Vessel), shared.BindingMgr));
+            flightParameters.Add(name, new FlightCtrlParam(name, shared));
         }
 
-        private class FlightCtrlParam
+        public void UnBind()
+        {
+            foreach (var parameter in flightParameters)
+            {
+                parameter.Value.Enabled = false;
+            }
+            FlightControl flightControl;
+            if (flightControls.TryGetValue(currentVessel.rootPart.flightID, out flightControl))
+            {
+                flightControl.Unbind();
+            }
+        }
+
+        public void Dispose()
+        {
+            UnBind();
+            flightParameters.Clear();
+            flightControls.Remove(currentVessel.rootPart.flightID);
+        }
+
+        private class FlightCtrlParam : IDisposable
         {
             private readonly string name;
             private readonly FlightControl control;
+            private readonly BindingManager binding;
             private object value;
             private bool enabled;
 
-            public FlightCtrlParam(string name, FlightControl control, BindingManager binding)
+            public FlightCtrlParam(string name, SharedObjects sharedObjects)
             {
                 this.name = name;
-                this.control = control;
+                this.control = GetControllerByVessel(sharedObjects.Vessel);
+                this.binding = sharedObjects.BindingMgr;
                 Enabled = false;
                 value = null;
 
+                HookEvents();
+            }
+
+            private void HookEvents()
+            {
                 binding.AddGetter(name, c => value);
                 binding.AddSetter(name, delegate(CPU c, object val) { value = val; });
             }
+
 
             public bool Enabled
             {
@@ -131,13 +160,10 @@ namespace kOS.Binding
                 {
                     Debug.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1}", name, enabled));
 
+                    enabled = value;
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
                     {
                         HandleRemoteTechPilot();
-                    }
-                    else
-                    {
-                        enabled = value;
                     }
                 }
             }
@@ -151,10 +177,12 @@ namespace kOS.Binding
                 }
                 if (Enabled)
                 {
+                    Debug.Log(string.Format("kOS: Adding RemoteTechPilot: " + name + " For : " + control.Vessel.id));
                     RemoteTechHook.Instance.AddSanctionedPilot(control.Vessel.id, action);
                 }
                 else
                 {
+                    Debug.Log(string.Format("kOS: Removing RemoteTechPilot: " + name + " For : " + control.Vessel.id));
                     RemoteTechHook.Instance.RemoveSanctionedPilot(control.Vessel.id, action);
                 }
             }
@@ -174,7 +202,10 @@ namespace kOS.Binding
                     return;
                 }
 
-                action.Invoke(c);
+                if (!RemoteTechHook.IsAvailable(control.Vessel.id))
+                {
+                    action.Invoke(c);
+                }
             }
 
             private Action<FlightCtrlState> ChooseAction()
@@ -273,18 +304,10 @@ namespace kOS.Binding
                     c.wheelSteer = -Mathf.Clamp(bearing / -10, -1, 1);
                 }
             }
-        }
 
-        public void UnBind()
-        {
-            foreach (var parameter in flightParameters)
+            public void Dispose()
             {
-                parameter.Value.Enabled = false;
-            }
-            FlightControl flightControl;
-            if (flightControls.TryGetValue(currentVessel.rootPart.flightID, out flightControl))
-            {
-                flightControl.Unbind();
+                Enabled = false;
             }
         }
     }

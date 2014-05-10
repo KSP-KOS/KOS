@@ -7,7 +7,7 @@ using kOS.Execution;
 
 namespace kOS.Binding
 {
-    public class BindingManager
+    public class BindingManager : IDisposable
     {
         private SharedObjects _shared;
         private List<Binding> _bindings = new List<Binding>();
@@ -120,6 +120,11 @@ namespace kOS.Binding
         public void UnBindAll()
         {
             _flightControl.UnBind();
+        }
+
+        public void Dispose()
+        {
+            _flightControl.Dispose();
         }
     }
 }
