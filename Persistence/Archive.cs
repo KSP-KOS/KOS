@@ -15,6 +15,7 @@ namespace kOS.Persistence
 
         public Archive()
         {
+            Directory.CreateDirectory(_archiveFolder);
             Renameable = false;
             Name = "Archive";
         }
