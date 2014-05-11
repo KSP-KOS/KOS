@@ -485,12 +485,20 @@ namespace kOS.Execution
 
                 foreach (int triggerPointer in triggerList)
                 {
-                    _currentContext.InstructionPointer = triggerPointer;
-
-                    bool executeNext = true;
-                    while (executeNext)
+                    try
                     {
-                        executeNext = ExecuteInstruction(_currentContext);
+                        _currentContext.InstructionPointer = triggerPointer;
+
+                        bool executeNext = true;
+                        while (executeNext)
+                        {
+                            executeNext = ExecuteInstruction(_currentContext);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        RemoveTrigger(triggerPointer);
+                        _shared.Logger.Log(e);
                     }
                 }
 
