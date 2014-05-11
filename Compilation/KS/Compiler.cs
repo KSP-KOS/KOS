@@ -157,7 +157,8 @@ namespace kOS.Compilation.KS
 
         private void PreProcessOnStatement(ParseNode node)
         {
-            string triggerIdentifier = "on-" + node.Token.StartPos.ToString();
+            int expressionHash = ConcatenateNodes(node).GetHashCode();
+            string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
             triggerObject.SetTriggerVariable(GetIdentifierText(node));
 
@@ -176,7 +177,8 @@ namespace kOS.Compilation.KS
 
         private void PreProcessWhenStatement(ParseNode node)
         {
-            string triggerIdentifier = "when-" + node.Token.StartPos.ToString();
+            int expressionHash = ConcatenateNodes(node).GetHashCode();
+            string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
             _currentCodeSection = triggerObject.Code;
@@ -194,7 +196,8 @@ namespace kOS.Compilation.KS
             if (node.Nodes.Count == 4)
             {
                 // wait condition
-                string triggerIdentifier = "wait-" + node.Token.StartPos.ToString();
+                int expressionHash = ConcatenateNodes(node).GetHashCode();
+                string triggerIdentifier = "wait-" + expressionHash.ToString();
                 Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
                 _currentCodeSection = triggerObject.Code;
@@ -1086,7 +1089,8 @@ namespace kOS.Compilation.KS
 
         private void VisitOnStatement(ParseNode node)
         {
-            string triggerIdentifier = "on-" + node.Token.StartPos.ToString();
+            int expressionHash = ConcatenateNodes(node).GetHashCode();
+            string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
             if (triggerObject.IsInitialized())
@@ -1101,7 +1105,8 @@ namespace kOS.Compilation.KS
 
         private void VisitWhenStatement(ParseNode node)
         {
-            string triggerIdentifier = "when-" + node.Token.StartPos.ToString();
+            int expressionHash = ConcatenateNodes(node).GetHashCode();
+            string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
             if (triggerObject.IsInitialized())
@@ -1122,7 +1127,8 @@ namespace kOS.Compilation.KS
             else
             {
                 // wait condition
-                string triggerIdentifier = "wait-" + node.Token.StartPos.ToString();
+                int expressionHash = ConcatenateNodes(node).GetHashCode();
+                string triggerIdentifier = "wait-" + expressionHash.ToString();
                 Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
                 if (triggerObject.IsInitialized())
