@@ -104,6 +104,8 @@ namespace kOS.Suffixed
                 case "DIRECTION":
                     var vector = (Vessel.GetWorldPos3D() - CurrentVessel.GetWorldPos3D());
                     return new Direction(vector, false);
+                case "POSITION":
+                    return new Vector( Vessel.GetWorldPos3D() - CurrentVessel.GetWorldPos3D() );
                 case "DISTANCE":
                     return (float) GetDistance();
                 case "BEARING":

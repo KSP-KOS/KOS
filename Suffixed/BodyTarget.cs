@@ -40,7 +40,7 @@ namespace kOS.Suffixed
                 case "MASS":
                     return CelestialBody.Mass;
                 case "POSITION":
-                    return new Vector(CelestialBody.position);
+                    return new Vector(CelestialBody.position - vessel.GetWorldPos3D() );
                 case "ALTITUDE":
                     return CelestialBody.orbit.altitude;
                 case "APOAPSIS":
