@@ -30,7 +30,18 @@ namespace kOS.Binding
                         TimeWarp.SetRate(newRate, false);
                     }
                 });
-
+            _shared.BindingMgr.AddGetter("MAPVIEW", delegate(CPU cpu) { return MapView.MapIsEnabled; } );
+            _shared.BindingMgr.AddSetter("MAPVIEW", delegate(CPU cpu, object val)
+                {
+                    if( Convert.ToBoolean( val ) )
+                    {
+                        MapView.EnterMapView();
+                    }
+                    else
+                    {
+                        MapView.ExitMapView();
+                    }
+                });
             foreach (var body in FlightGlobals.fetch.bodies)
             {
                 var cBody = body;
