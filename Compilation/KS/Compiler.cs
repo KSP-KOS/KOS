@@ -1384,6 +1384,7 @@ namespace kOS.Compilation.KS
             Opcode endLoop = AddOpcode(new OpcodePush(iteratorIdentifier));
             AddOpcode(new OpcodePush("reset"));
             AddOpcode(new OpcodeGetMember());
+            AddOpcode(new OpcodePop()); // removes the "true" returned by the previous getmember
             // unset of iterator and iteration variable
             AddOpcode(new OpcodePush(iteratorIdentifier));
             AddOpcode(new OpcodeUnset());

@@ -60,29 +60,6 @@ namespace kOS.Compilation
 
     #region General
 
-    public class OpcodePush : Opcode
-    {
-        public object argument;
-
-        public override string Name { get { return "push"; } }
-
-        public OpcodePush(object argument)
-        {
-            this.argument = argument;
-        }
-
-        public override void Execute(CPU cpu)
-        {
-            cpu.PushStack(argument);
-        }
-
-        public override string ToString()
-        {
-            string argumentString = argument != null ? argument.ToString() : "null";
-            return Name + " " + argumentString;
-        }
-    }
-
     public class OpcodeStore : Opcode
     {
         public override string Name { get { return "store"; } }
@@ -525,7 +502,40 @@ namespace kOS.Compilation
     #endregion
 
     #region Stack
-    
+
+    public class OpcodePush : Opcode
+    {
+        public object argument;
+
+        public override string Name { get { return "push"; } }
+
+        public OpcodePush(object argument)
+        {
+            this.argument = argument;
+        }
+
+        public override void Execute(CPU cpu)
+        {
+            cpu.PushStack(argument);
+        }
+
+        public override string ToString()
+        {
+            string argumentString = argument != null ? argument.ToString() : "null";
+            return Name + " " + argumentString;
+        }
+    }
+
+    public class OpcodePop : Opcode
+    {
+        public override string Name { get { return "pop"; } }
+
+        public override void Execute(CPU cpu)
+        {
+            cpu.PopStack();
+        }
+    }
+
     public class OpcodeDup : Opcode
     {
         public override string Name { get { return "dup"; } }
