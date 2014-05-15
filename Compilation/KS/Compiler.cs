@@ -13,6 +13,8 @@ namespace kOS.Compilation.KS
         private bool _addBranchDestination = false;
         private ParseNode _lastNode = null;
         private List<List<Opcode>> _breakList = new List<List<Opcode>>();
+        private List<string> _triggerRemoveNames = new List<string>();
+        private bool _nowCompilingTrigger = false;
         private bool _compilingSetDestination = false;
         private bool _identifierIsVariable = false;
         private List<ParseNode> _programParameters = new List<ParseNode>();
@@ -162,11 +164,32 @@ namespace kOS.Compilation.KS
             AddOpcode(new OpcodeCompareEqual());
             AddOpcode(new OpcodeLogicNot());
             Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
+            
+            // make flag that remembers whether to remove trigger:
+            // defaults to true = removal should happen.
+            string triggerRemoveVarName = "$remove-" + triggerIdentifier;
+            PushTriggerRemoveName( triggerRemoveVarName );
+            AddOpcode(new OpcodePush( triggerRemoveVarName ));
+            AddOpcode(new OpcodePush(true));
+            AddOpcode(new OpcodeStore());
+
             VisitNode(node.Nodes[2]);
+
+            // Reset the "old value" so the boolean has to change *again* to retrigger
+            AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
+            AddOpcode(new OpcodePush(triggerObject.VariableName));
+            AddOpcode(new OpcodeStore());
+
+            // Skip removing the trigger if PRESERVE happened:
+            PopTriggerRemoveName(); // Throw away return value.
+            AddOpcode(new OpcodePush( triggerRemoveVarName ));
+            Opcode skipRemoval = AddOpcode(new OpcodeBranchIfFalse());
+            
             AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
             AddOpcode(new OpcodeRemoveTrigger());
             Opcode eofOpcode = AddOpcode(new OpcodeEOF());
             branchOpcode.DestinationLabel = eofOpcode.Label;
+            skipRemoval.DestinationLabel = eofOpcode.Label;
         }
 
         private void PreProcessWhenStatement(ParseNode node)
@@ -177,11 +200,27 @@ namespace kOS.Compilation.KS
             _currentCodeSection = triggerObject.Code;
             VisitNode(node.Nodes[1]);
             Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
+
+            // make flag that remembers whether to remove trigger:
+            // defaults to true = removal should happen.
+            string triggerRemoveVarName = "$remove-" + triggerIdentifier;
+            PushTriggerRemoveName( triggerRemoveVarName );
+            AddOpcode(new OpcodePush( triggerRemoveVarName ));
+            AddOpcode(new OpcodePush(true));
+            AddOpcode(new OpcodeStore());
+
             VisitNode(node.Nodes[3]);
+
+            // Skip removing the trigger if PRESERVE happened:
+            PopTriggerRemoveName(); // Throw away return value.
+            AddOpcode(new OpcodePush( triggerRemoveVarName ));
+            Opcode skipRemoval = AddOpcode(new OpcodeBranchIfFalse());
+
             AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
             AddOpcode(new OpcodeRemoveTrigger());
             Opcode eofOpcode = AddOpcode(new OpcodeEOF());
             branchOpcode.DestinationLabel = eofOpcode.Label;
+            skipRemoval.DestinationLabel = eofOpcode.Label;
         }
 
         private void PreProcessWaitStatement(ParseNode node)
@@ -282,6 +321,32 @@ namespace kOS.Compilation.KS
             }
         }
 
+        private void PushTriggerRemoveName(string newLabel)
+        {
+            _triggerRemoveNames.Add(newLabel);
+            _nowCompilingTrigger = true;
+        }
+
+        private string PeekTriggerRemoveName()
+        {
+            if( _nowCompilingTrigger)
+                return _triggerRemoveNames[_triggerRemoveNames.Count - 1];
+            else
+                return "";
+        }
+
+        private string PopTriggerRemoveName()
+        {
+            // Will throw exception if list is empty, but that "should
+            // never happen" as pushes and pops should be balanced in
+            // the compiler's code.  If it throws exception we want to
+            // let the exception happen to highlight the bug:
+            string returnVal = _triggerRemoveNames[_triggerRemoveNames.Count - 1];
+            _triggerRemoveNames.RemoveAt(_triggerRemoveNames.Count - 1);
+            _nowCompilingTrigger = (_triggerRemoveNames.Count > 0);
+            return returnVal;
+        }
+
         private void PushBreakList()
         {
             List<Opcode> list = new List<Opcode>();
@@ -374,6 +439,9 @@ namespace kOS.Compilation.KS
                     break;
                 case TokenType.break_stmt:
                     VisitBreakStatement(node);
+                    break;
+                case TokenType.preserve_stmt:
+                    VisitPreserveStatement(node);
                     break;
                 case TokenType.declare_stmt:
                     VisitDeclareStatement(node);
@@ -1268,6 +1336,21 @@ namespace kOS.Compilation.KS
         {
             Opcode jump = AddOpcode(new OpcodeBranchJump());
             AddToBreakList(jump);
+        }
+
+        private void VisitPreserveStatement(ParseNode node)
+        {
+            if (_nowCompilingTrigger)
+            {
+                string flagName = PeekTriggerRemoveName();
+                AddOpcode(new OpcodePush(flagName));
+                AddOpcode(new OpcodePush(false));
+                AddOpcode(new OpcodeStore());
+            }
+            else
+            {
+                throw new Exception("PRESERVE keyword is only allowed inside triggers like WHEN and ON.");
+            }
         }
 
         private void VisitRebootStatement(ParseNode node)
