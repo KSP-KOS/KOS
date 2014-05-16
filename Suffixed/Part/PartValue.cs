@@ -71,7 +71,7 @@ namespace kOS.Suffixed.Part
                     return modules;
                 case "TARGETABLE":
                     return Part.Modules.OfType<ITargetable>().Any();
-                case "VESSEL":
+                case "SHIP":
                     return new VesselTarget(Part.vessel);
             }
             return base.GetSuffix(suffixName);
