@@ -220,6 +220,7 @@ namespace kOS.Execution
             }
             else
             {
+                _currentContext.Triggers.Clear();   // remove all the active triggers
                 SkipCurrentInstructionId();
             }
         }
