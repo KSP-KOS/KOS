@@ -17,7 +17,7 @@ namespace kOS.Suffixed.Part
             {
                 case "STATE":
                     return module.state;
-                case "ORIENTATION":
+                case "FACING":
                     return new Vector( module.GetFwdVector() );
                 case "DOCKEDVESSELNAME":
                     return module.vesselInfo != null ? module.vesselInfo.name : string.Empty;
