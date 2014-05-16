@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using kOS.Suffixed;
-using kOS.Utilities;
 using kOS.Execution;
+using kOS.Suffixed;
+using kOS.Suffixed.Part;
+using kOS.Utilities;
 
 namespace kOS.Binding
 {
@@ -39,9 +36,9 @@ namespace kOS.Binding
                     }
                 });
 
-            _shared.BindingMgr.AddGetter("TARGET", delegate(CPU cpu)
-            {
-                var currentTarget = FlightGlobals.fetch.VesselTarget;
+            _shared.BindingMgr.AddGetter("TARGET", delegate
+                {
+                    var currentTarget = FlightGlobals.fetch.VesselTarget;
 
                     var vessel = currentTarget as Vessel;
                     if (vessel != null)
@@ -53,9 +50,14 @@ namespace kOS.Binding
                     {
                         return new BodyTarget(body, _shared.Vessel);
                     }
+                    var dockingNode = currentTarget as ModuleDockingNode;
+                    if (dockingNode != null)
+                    {
+                        return new DockingPortValue(dockingNode);
+                    }
 
-                return null;
-            });
+                    return null;
+                });
         }
     }
 }
