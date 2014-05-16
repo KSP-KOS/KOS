@@ -36,6 +36,7 @@ ADD -> @"add";
 REMOVE -> @"remove";
 LOG -> @"log";
 BREAK -> @"break";
+PRESERVE -> @"preserve";
 DECLARE -> @"declare";
 PARAMETER -> @"parameter";
 SWITCH -> @"switch";
@@ -84,7 +85,7 @@ Start -> (instruction)* EOF;
 instruction_block -> instruction | CURLYOPEN instruction+ CURLYCLOSE EOI?;
 instruction -> set_stmt | if_stmt | until_stmt | lock_stmt | unlock_stmt | print_stmt |
                on_stmt | toggle_stmt | wait_stmt | when_stmt | onoff_stmt | stage_stmt |
-               clear_stmt | add_stmt | remove_stmt | log_stmt | break_stmt | declare_stmt |
+               clear_stmt | add_stmt | remove_stmt | log_stmt | break_stmt | preserve_stmt | declare_stmt |
                switch_stmt | copy_stmt | rename_stmt | delete_stmt | edit_stmt | run_stmt |
                list_stmt | reboot_stmt | shutdown_stmt | for_stmt | unset_stmt | batch_stmt |
                deploy_stmt;
@@ -106,6 +107,7 @@ add_stmt -> ADD expr EOI;
 remove_stmt -> REMOVE expr EOI;
 log_stmt -> LOG expr TO IDENTIFIER EOI;
 break_stmt -> BREAK EOI;
+preserve_stmt -> PRESERVE EOI;
 declare_stmt -> DECLARE PARAMETER? IDENTIFIER (COMMA IDENTIFIER)* EOI;
 switch_stmt -> SWITCH TO filevol_name EOI;
 copy_stmt -> COPY IDENTIFIER (FROM | TO) filevol_name EOI;
