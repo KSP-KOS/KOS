@@ -14,7 +14,7 @@ namespace kOS.Suffixed
                     "LONGITUDE",
                     "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED",
                     "AIRSPEED", "VESSELNAME",
-                    "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR"
+                    "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE"
                 };
         }
 
