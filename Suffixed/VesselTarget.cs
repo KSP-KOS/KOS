@@ -161,7 +161,7 @@ namespace kOS.Suffixed
                 case "LOADED":
                     return Vessel.loaded;
                 case "OBT":
-                    return new OrbitInfo(Vessel.orbit, Vessel);
+                    return new OrbitInfo(Vessel);
                 case "SRFPROGRADE":
                     return GetSurfacePrograde();
             }
