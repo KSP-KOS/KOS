@@ -24,6 +24,8 @@ namespace kOS.Suffixed
             Vessel = target;
         }
 
+        public VesselTarget(Vessel vessel) : this (vessel, vessel){}
+
         public Vessel CurrentVessel { get; private set; }
 
         public ITargetable Target

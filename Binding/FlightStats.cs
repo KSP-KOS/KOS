@@ -30,7 +30,7 @@ namespace kOS.Binding
             _shared.BindingMgr.AddGetter("MISSIONTIME", cpu => _shared.Vessel.missionTime);
             _shared.BindingMgr.AddGetter("OBT", cpu => new OrbitInfo(_shared.Vessel));
             _shared.BindingMgr.AddGetter("TIME", cpu => new TimeSpan(Planetarium.GetUniversalTime()));
-            _shared.BindingMgr.AddGetter("SHIP", cpu => new VesselTarget(_shared.Vessel, _shared.Vessel));
+            _shared.BindingMgr.AddGetter("SHIP", cpu => new VesselTarget(_shared.Vessel));
             _shared.BindingMgr.AddGetter("STATUS", cpu => _shared.Vessel.situation.ToString());
             _shared.BindingMgr.AddGetter("STAGE", cpu => new StageValues(_shared.Vessel));
             _shared.BindingMgr.AddSetter("VESSELNAME", delegate(CPU cpu, object value) { _shared.Vessel.vesselName = value.ToString(); });
@@ -50,7 +50,7 @@ namespace kOS.Binding
             foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)
             {
                 var cName = scName;
-                _shared.BindingMgr.AddGetter(scName, cpu => new VesselTarget(_shared.Vessel, _shared.Vessel).GetSuffix(cName));
+                _shared.BindingMgr.AddGetter(scName, cpu => new VesselTarget(_shared.Vessel).GetSuffix(cName));
             }
         }
             
