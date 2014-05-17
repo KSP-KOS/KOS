@@ -61,6 +61,7 @@
     <Compile Include="Binding\Binding.cs" />
     <Compile Include="Binding\BindingConfig.cs" />
     <Compile Include="Binding\BindingManager.cs" />
+    <Compile Include="Binding\ColorBinding.cs" />
     <Compile Include="Binding\FlightControlManager.cs" />
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
+    <Compile Include="Execution\KOSScopeObserver.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
     <Compile Include="Compilation\CompileCache.cs" />
+    <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />
     <Compile Include="Function\PrintList.cs" />
     <Compile Include="Persistence\Harddisk.cs" />
@@ -124,6 +127,7 @@
     <Compile Include="Suffixed\Part\SensorValue.cs" />
     <Compile Include="Suffixed\ResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
+    <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />

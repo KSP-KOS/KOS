@@ -138,6 +138,75 @@ namespace kOS.Function
         }
     }
 
+    [FunctionAttribute("rgb")]
+    public class FunctionRgb : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            float b = (float) GetDouble(shared.Cpu.PopValue());
+            float g = (float) GetDouble(shared.Cpu.PopValue());
+            float r = (float) GetDouble(shared.Cpu.PopValue());
+            shared.Cpu.PushStack( new RgbaColor(r,g,b) );
+        }
+    }
+
+    [FunctionAttribute("rgba")]
+    public class FunctionRgba : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            float a = (float) GetDouble(shared.Cpu.PopValue());
+            float b = (float) GetDouble(shared.Cpu.PopValue());
+            float g = (float) GetDouble(shared.Cpu.PopValue());
+            float r = (float) GetDouble(shared.Cpu.PopValue());
+            shared.Cpu.PushStack( new RgbaColor(r,g,b,a) );
+        }
+    }
+
+    // There are two ways to initialize a vecdraw, with
+    //   vecdraw()
+    // or with
+    //   vecdrawargs(,vector,vector,rgba,double,bool)
+    // If varying args were more easily supported, this could
+    // be done with just one fuction that counts how many args it
+    // was given.
+    //
+    [FunctionAttribute("vecdraw")]
+    public class FunctionVecDrawNull : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            VectorRenderer vRend = new VectorRenderer( shared.UpdateHandler );
+            vRend.SetShow( false );
+            
+            shared.Cpu.PushStack( vRend );
+        }
+    }
+
+    [FunctionAttribute("vecdrawargs")]
+    public class FunctionVecDraw : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            bool      show  = Convert.ToBoolean(shared.Cpu.PopValue());
+            double    scale = GetDouble(shared.Cpu.PopValue());
+            string    str   = shared.Cpu.PopValue().ToString();
+            RgbaColor rgba  = GetRgba(shared.Cpu.PopValue());
+            Vector    vec   = GetVector(shared.Cpu.PopValue());
+            Vector    start = GetVector(shared.Cpu.PopValue());
+
+            VectorRenderer vRend = new VectorRenderer( shared.UpdateHandler );
+            vRend.vec   = vec;
+            vRend.start = start;
+            vRend.rgba  = rgba;
+            vRend.scale = scale;
+            vRend.SetLabel( str );
+            vRend.SetShow( show );
+            
+            shared.Cpu.PushStack( vRend );
+        }
+    }
+
     [FunctionAttribute("constant")]
     public class FunctionConstant : FunctionBase
     {

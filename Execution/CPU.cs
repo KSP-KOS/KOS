@@ -299,6 +299,10 @@ namespace kOS.Execution
             if (_vars.ContainsKey(identifier) &&
                 VariableIsRemovable(_vars[identifier]))
             {
+                // Tell Variable to orphan its old value now.  Faster than relying 
+                // on waiting several seconds for GC to eventually call ~Variable()
+                _vars[identifier].Value = null;
+                
                 _vars.Remove(identifier);
             }
         }
@@ -317,6 +321,10 @@ namespace kOS.Execution
 
             foreach (string identifier in removals)
             {
+                // Tell Variable to orphan its old value now.  Faster than relying 
+                // on waiting several seconds for GC to eventually call ~Variable()
+                _vars[identifier].Value = null;
+
                 _vars.Remove(identifier);
             }
         }

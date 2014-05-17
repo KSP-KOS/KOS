@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using kOS.Suffixed;
 
 namespace kOS.Function
 {
@@ -32,6 +33,30 @@ namespace kOS.Function
             catch (Exception)
             {
                 throw new ArgumentException(string.Format("Can't cast {0} to int.", argument));
+            }
+        }
+
+        protected Vector GetVector(object argument)
+        {
+            if (argument is Vector)
+            {
+                return (Vector) argument;
+            }
+            else
+            {
+                throw new ArgumentException(string.Format("Can't cast {0} to V().", argument));
+            }
+        }
+
+        protected RgbaColor GetRgba(object argument)
+        {
+            if (argument is RgbaColor)
+            {
+                return (RgbaColor) argument;
+            }
+            else
+            {
+                throw new ArgumentException(string.Format("Can't cast {0} to RGB().", argument));
             }
         }
 
