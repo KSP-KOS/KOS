@@ -10,32 +10,56 @@ namespace kOS.Execution
     public class ProgramContext
     {
         private Dictionary<string, bool> _flyByWire;
-        
+        private ProgramBuilder builder;
+
         public List<Opcode> Program;
         public int InstructionPointer;
         public List<int> Triggers;
         public bool Silent;
 
-        public ProgramContext()
+        public ProgramContext(bool interpreterContext)
         {
             Program = new List<Opcode>();
             InstructionPointer = 0;
             Triggers = new List<int>();
+            builder = interpreterContext ? new ProgramBuilderInterpreter() : new ProgramBuilder();
             _flyByWire = new Dictionary<string, bool>();
         }
 
-        public ProgramContext(List<Opcode> program)
-            : this()
+        public ProgramContext(bool interpreterContext, List<Opcode> program)
+            : this(interpreterContext)
         {
             this.Program = program;
         }
 
-
-        public void UpdateProgram(List<Opcode> newProgram)
+        public void AddParts(IEnumerable<CodePart> parts)
         {
-            List<Opcode> oldProgram = Program;
-            Program = newProgram;
-            UpdateInstructionPointer(oldProgram);
+            builder.AddRange(parts);
+            List<Opcode> newProgram = builder.BuildProgram();
+            UpdateProgram(newProgram);
+        }
+
+        public int AddObjectParts(IEnumerable<CodePart> parts)
+        {
+            Guid objectFileId = builder.AddObjectFile(parts);
+            List<Opcode> newProgram = builder.BuildProgram();
+            int entryPointAddress = builder.GetObjectFileEntryPointAddress(objectFileId);
+            UpdateProgram(newProgram);
+            return entryPointAddress;
+        }
+
+        private void UpdateProgram(List<Opcode> newProgram)
+        {
+            if (Program != null)
+            {
+                List<Opcode> oldProgram = Program;
+                Program = newProgram;
+                UpdateInstructionPointer(oldProgram);
+            }
+            else
+            {
+                Program = newProgram;
+            }
         }
 
         private void UpdateInstructionPointer(List<Opcode> oldProgram)

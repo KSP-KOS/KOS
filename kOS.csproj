@@ -70,6 +70,8 @@
     <Compile Include="Binding\BoundVariable.cs" />
     <Compile Include="Binding\KOSBinding.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
+    <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />

@@ -14,7 +14,7 @@ namespace kOS.Suffixed
                     "LONGITUDE",
                     "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED",
                     "AIRSPEED", "VESSELNAME",
-                    "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR"
+                    "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE"
                 };
         }
 
@@ -23,6 +23,8 @@ namespace kOS.Suffixed
             CurrentVessel = currentVessel;
             Vessel = target;
         }
+
+        public VesselTarget(Vessel vessel) : this (vessel, vessel){}
 
         public Vessel CurrentVessel { get; private set; }
 
@@ -161,7 +163,7 @@ namespace kOS.Suffixed
                 case "LOADED":
                     return Vessel.loaded;
                 case "OBT":
-                    return new OrbitInfo(Vessel.orbit, Vessel);
+                    return new OrbitInfo(Vessel);
                 case "SRFPROGRADE":
                     return GetSurfacePrograde();
             }

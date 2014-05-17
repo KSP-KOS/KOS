@@ -8,6 +8,7 @@ namespace kOS.Execution
 {
     public class Stack
     {
+        private const int MAX_STACK_SIZE = 1000;
         private List<object> _stack = new List<object>();
         private int _stackPointer = -1;
 
@@ -18,7 +19,10 @@ namespace kOS.Execution
             if (IsValid(item, ref message))
             {
                 _stackPointer++;
-                _stack.Insert(_stackPointer, item);
+                if (_stackPointer < MAX_STACK_SIZE)
+                    _stack.Insert(_stackPointer, item);
+                else
+                    throw new Exception("Stack overflow!!");
             }
             else
             {

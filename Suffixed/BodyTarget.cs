@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
@@ -57,6 +54,8 @@ namespace kOS.Suffixed
                     return new Vector(CelestialBody.orbit.GetVel());
                 case "DISTANCE":
                     return (float) GetDistance();
+                case "OBT":
+                    return new OrbitInfo(CelestialBody.orbit, vessel);
                 case "BODY":
                     return new BodyTarget(CelestialBody.orbit.referenceBody, vessel);
             }

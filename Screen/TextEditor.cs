@@ -154,10 +154,14 @@ namespace kOS.Screen
             int lineIndex = 0;
             int lineCursorIndex = _lineCursorIndex;
 
-            while (lineCursorIndex > lines[lineIndex].Length)
+            while ((lineIndex < lines.Count)
+                && (lineCursorIndex > lines[lineIndex].Length))
             {
-                //lineCursorIndex -= (lines[lineIndex].Length + 1);
                 lineCursorIndex -= lines[lineIndex].Length;
+                // if the line is shorter than the width of the screen then move
+                // the cursor another position to compensate for the newline character
+                if (lines[lineIndex].Length < MAX_COLUMNS)
+                    lineCursorIndex--;
                 lineIndex++;
             }
 

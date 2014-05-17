@@ -107,16 +107,17 @@ namespace kOS.Execution
 
         private void PushInterpreterContext()
         {
-            ProgramBuilder builder = new ProgramBuilder();
-            List<Opcode> emptyProgram = builder.BuildProgram(true);
-            PushContext(new ProgramContext(emptyProgram));
+            ProgramContext interpreterContext = new ProgramContext(true);
+            // initialize the context with an empty program
+            interpreterContext.AddParts(new List<CodePart>());
+            PushContext(interpreterContext);
         }
 
         private void PushContext(ProgramContext context)
         {
             UnityEngine.Debug.Log("kOS: Pushing context staring with: " + context.GetCodeFragment(1).FirstOrDefault());
             _contexts.Add(context);
-            _currentContext = _contexts[_contexts.Count - 1];
+            _currentContext = _contexts.Last();
 
             if (_contexts.Count > 1)
             {
@@ -134,7 +135,6 @@ namespace kOS.Execution
                 _contexts.Remove(contextRemove);
                 contextRemove.DisableActiveFlyByWire(_shared.BindingMgr);
                 UnityEngine.Debug.Log("kOS: Removed Context " + contextRemove.GetCodeFragment(1).FirstOrDefault());
-
 
                 if (_contexts.Any())
                 {
@@ -162,6 +162,21 @@ namespace kOS.Execution
             }
         }
 
+        // only two contexts exist now, one for the interpreter and one for the programs
+        public ProgramContext GetInterpreterContext()
+        {
+            return _contexts[0];
+        }
+
+        public ProgramContext GetProgramContext()
+        {
+            if (_contexts.Count == 1)
+            {
+                PushContext(new ProgramContext(false));
+            }
+            return _currentContext;
+        }
+
         public void RunProgram(List<Opcode> program)
         {
             RunProgram(program, false);
@@ -171,24 +186,9 @@ namespace kOS.Execution
         {
             if (program.Count > 0)
             {
-                ProgramContext newContext = new ProgramContext(program);
+                ProgramContext newContext = new ProgramContext(false, program);
                 newContext.Silent = silent;
                 PushContext(newContext);
-            }
-        }
-
-        public void UpdateProgram(List<Opcode> program)
-        {
-            if (program.Count > 0)
-            {
-                if (_currentContext != null && _currentContext.Program != null)
-                {
-                    _currentContext.UpdateProgram(program);
-                }
-                else
-                {
-                    RunProgram(program);
-                }
             }
         }
 
@@ -220,6 +220,7 @@ namespace kOS.Execution
             }
             else
             {
+                _currentContext.Triggers.Clear();   // remove all the active triggers
                 SkipCurrentInstructionId();
             }
         }
@@ -485,12 +486,20 @@ namespace kOS.Execution
 
                 foreach (int triggerPointer in triggerList)
                 {
-                    _currentContext.InstructionPointer = triggerPointer;
-
-                    bool executeNext = true;
-                    while (executeNext)
+                    try
                     {
-                        executeNext = ExecuteInstruction(_currentContext);
+                        _currentContext.InstructionPointer = triggerPointer;
+
+                        bool executeNext = true;
+                        while (executeNext)
+                        {
+                            executeNext = ExecuteInstruction(_currentContext);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        RemoveTrigger(triggerPointer);
+                        _shared.Logger.Log(e);
                     }
                 }
 
@@ -645,7 +654,7 @@ namespace kOS.Execution
                 {
                     ProgramBuilder programBuilder = new ProgramBuilder();
                     programBuilder.AddRange(_shared.ScriptHandler.Compile(scriptBuilder.ToString()));
-                    List<Opcode> program = programBuilder.BuildProgram(false);
+                    List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);
                 }
             }

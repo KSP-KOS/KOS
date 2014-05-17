@@ -24,13 +24,20 @@ namespace kOS.AddOns.RemoteTech2
 
         public static bool IsAvailable(Guid vesselId)
         {
-            var isAvailableBase = IsAvailable();
-            if (!isAvailableBase)
+            try
+            {
+                var isAvailableBase = IsAvailable();
+                if (!isAvailableBase)
+                {
+                    return false;
+                }
+                var hasFlightComputer = Instance.HasFlightComputer(vesselId);
+                return isAvailableBase && hasFlightComputer;
+            }
+            catch (Exception)
             {
                 return false;
             }
-            var hasFlightComputer = Instance.HasFlightComputer(vesselId);
-            return isAvailableBase && hasFlightComputer;
         }
 
         public static bool IsAvailable()

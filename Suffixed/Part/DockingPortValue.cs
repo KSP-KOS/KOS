@@ -6,7 +6,7 @@ namespace kOS.Suffixed.Part
     {
         private readonly ModuleDockingNode module;
 
-        public DockingPortValue(global::Part part, ModuleDockingNode module) : base(part)
+        public DockingPortValue(ModuleDockingNode module) : base(module.part)
         {
             this.module = module;
         }
@@ -17,7 +17,7 @@ namespace kOS.Suffixed.Part
             {
                 case "STATE":
                     return module.state;
-                case "ORIENTATION":
+                case "FACING":
                     return new Vector( module.GetFwdVector() );
                 case "DOCKEDVESSELNAME":
                     return module.vesselInfo != null ? module.vesselInfo.name : string.Empty;
@@ -43,7 +43,7 @@ namespace kOS.Suffixed.Part
                     var dockingNode = module as ModuleDockingNode;
                     if (dockingNode != null)
                     {
-                        toReturn.Add(new DockingPortValue(part, dockingNode));
+                        toReturn.Add(new DockingPortValue(dockingNode));
                     }
                 }
             }

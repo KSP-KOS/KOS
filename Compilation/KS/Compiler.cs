@@ -13,17 +13,21 @@ namespace kOS.Compilation.KS
         private bool _addBranchDestination = false;
         private ParseNode _lastNode = null;
         private List<List<Opcode>> _breakList = new List<List<Opcode>>();
+        private List<string> _triggerRemoveNames = new List<string>();
+        private bool _nowCompilingTrigger = false;
         private bool _compilingSetDestination = false;
         private bool _identifierIsVariable = false;
         private List<ParseNode> _programParameters = new List<ParseNode>();
+        private CompilerOptions _options;
 
         private readonly Dictionary<string, string> _functionsOverloads = new Dictionary<string, string>() { { "round|1", "roundnearest" },
                                                                                                              { "round|2", "round"} };
         
-        public CodePart Compile(ParseTree tree, Context context)
+        public CodePart Compile(ParseTree tree, Context context, CompilerOptions options)
         {
             _part = new CodePart();
             _context = context;
+            _options = options;
 
             try
             {
@@ -137,6 +141,9 @@ namespace kOS.Compilation.KS
                 case TokenType.declare_stmt:
                     PreProcessProgramParameters(node);
                     break;
+                case TokenType.run_stmt:
+                    PreProcessRunStatement(node);
+                    break;
                 default:
                     break;
             }
@@ -152,7 +159,8 @@ namespace kOS.Compilation.KS
 
         private void PreProcessOnStatement(ParseNode node)
         {
-            string triggerIdentifier = "on-" + node.Token.StartPos.ToString();
+            int expressionHash = ConcatenateNodes(node).GetHashCode();
+            string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
             triggerObject.SetTriggerVariable(GetIdentifierText(node));
 
@@ -162,26 +170,64 @@ namespace kOS.Compilation.KS
             AddOpcode(new OpcodeCompareEqual());
             AddOpcode(new OpcodeLogicNot());
             Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
+            
+            // make flag that remembers whether to remove trigger:
+            // defaults to true = removal should happen.
+            string triggerRemoveVarName = "$remove-" + triggerIdentifier;
+            PushTriggerRemoveName( triggerRemoveVarName );
+            AddOpcode(new OpcodePush( triggerRemoveVarName ));
+            AddOpcode(new OpcodePush(true));
+            AddOpcode(new OpcodeStore());
+
             VisitNode(node.Nodes[2]);
+
+            // Reset the "old value" so the boolean has to change *again* to retrigger
+            AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
+            AddOpcode(new OpcodePush(triggerObject.VariableName));
+            AddOpcode(new OpcodeStore());
+
+            // Skip removing the trigger if PRESERVE happened:
+            PopTriggerRemoveName(); // Throw away return value.
+            AddOpcode(new OpcodePush( triggerRemoveVarName ));
+            Opcode skipRemoval = AddOpcode(new OpcodeBranchIfFalse());
+            
             AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
             AddOpcode(new OpcodeRemoveTrigger());
             Opcode eofOpcode = AddOpcode(new OpcodeEOF());
             branchOpcode.DestinationLabel = eofOpcode.Label;
+            skipRemoval.DestinationLabel = eofOpcode.Label;
         }
 
         private void PreProcessWhenStatement(ParseNode node)
         {
-            string triggerIdentifier = "when-" + node.Token.StartPos.ToString();
+            int expressionHash = ConcatenateNodes(node).GetHashCode();
+            string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
             _currentCodeSection = triggerObject.Code;
             VisitNode(node.Nodes[1]);
             Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
+
+            // make flag that remembers whether to remove trigger:
+            // defaults to true = removal should happen.
+            string triggerRemoveVarName = "$remove-" + triggerIdentifier;
+            PushTriggerRemoveName( triggerRemoveVarName );
+            AddOpcode(new OpcodePush( triggerRemoveVarName ));
+            AddOpcode(new OpcodePush(true));
+            AddOpcode(new OpcodeStore());
+
             VisitNode(node.Nodes[3]);
+
+            // Skip removing the trigger if PRESERVE happened:
+            PopTriggerRemoveName(); // Throw away return value.
+            AddOpcode(new OpcodePush( triggerRemoveVarName ));
+            Opcode skipRemoval = AddOpcode(new OpcodeBranchIfFalse());
+
             AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
             AddOpcode(new OpcodeRemoveTrigger());
             Opcode eofOpcode = AddOpcode(new OpcodeEOF());
             branchOpcode.DestinationLabel = eofOpcode.Label;
+            skipRemoval.DestinationLabel = eofOpcode.Label;
         }
 
         private void PreProcessWaitStatement(ParseNode node)
@@ -189,7 +235,8 @@ namespace kOS.Compilation.KS
             if (node.Nodes.Count == 4)
             {
                 // wait condition
-                string triggerIdentifier = "wait-" + node.Token.StartPos.ToString();
+                int expressionHash = ConcatenateNodes(node).GetHashCode();
+                string triggerIdentifier = "wait-" + expressionHash.ToString();
                 Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
                 _currentCodeSection = triggerObject.Code;
@@ -269,6 +316,52 @@ namespace kOS.Compilation.KS
             }
         }
 
+        private void PreProcessRunStatement(ParseNode node)
+        {
+            if (_options.LoadProgramsInSameAddressSpace)
+            {
+                bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
+                if (!hasON)
+                {
+                    string subprogramName = node.Nodes[1].Token.Text;
+                    if (!_context.Subprograms.Contains(subprogramName))
+                    {
+                        Subprogram subprogramObject = _context.Subprograms.GetSubprogram(subprogramName);
+                        // Function code
+                        _currentCodeSection = subprogramObject.FunctionCode;
+                        // verify if the program has been loaded
+                        Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
+                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodeCompareEqual());
+                        OpcodeBranchIfFalse branchOpcode = new OpcodeBranchIfFalse();
+                        AddOpcode(branchOpcode);
+                        // if it wasn't then load it now
+                        AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
+                        AddOpcode(new OpcodePush(subprogramObject.SubprogramName));
+                        AddOpcode(new OpcodeCall("load()"));
+                        // store the address of the program in the pointer variable
+                        // (the load() function pushes the address onto the stack)
+                        AddOpcode(new OpcodeStore());
+                        // call the program
+                        Opcode callOpcode = AddOpcode(new OpcodeCall(subprogramObject.PointerIdentifier));
+                        // set the call opcode as the destination of the previous branch
+                        branchOpcode.DestinationLabel = callOpcode.Label;
+                        // return to the caller address
+                        AddOpcode(new OpcodeReturn());
+                        // set the function start label
+                        subprogramObject.FunctionLabel = functionStart.Label;
+
+                        // Initialization code
+                        _currentCodeSection = subprogramObject.InitializationCode;
+                        // initialize the pointer to zero
+                        AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
+                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodeStore());
+                    }
+                }
+            }
+        }
+
         private void PushProgramParameters()
         {
             // reverse the order of parameters so the stack
@@ -280,6 +373,32 @@ namespace kOS.Compilation.KS
                 AddOpcode(new OpcodeSwap());
                 AddOpcode(new OpcodeStore());
             }
+        }
+
+        private void PushTriggerRemoveName(string newLabel)
+        {
+            _triggerRemoveNames.Add(newLabel);
+            _nowCompilingTrigger = true;
+        }
+
+        private string PeekTriggerRemoveName()
+        {
+            if( _nowCompilingTrigger)
+                return _triggerRemoveNames[_triggerRemoveNames.Count - 1];
+            else
+                return "";
+        }
+
+        private string PopTriggerRemoveName()
+        {
+            // Will throw exception if list is empty, but that "should
+            // never happen" as pushes and pops should be balanced in
+            // the compiler's code.  If it throws exception we want to
+            // let the exception happen to highlight the bug:
+            string returnVal = _triggerRemoveNames[_triggerRemoveNames.Count - 1];
+            _triggerRemoveNames.RemoveAt(_triggerRemoveNames.Count - 1);
+            _nowCompilingTrigger = (_triggerRemoveNames.Count > 0);
+            return returnVal;
         }
 
         private void PushBreakList()
@@ -374,6 +493,9 @@ namespace kOS.Compilation.KS
                     break;
                 case TokenType.break_stmt:
                     VisitBreakStatement(node);
+                    break;
+                case TokenType.preserve_stmt:
+                    VisitPreserveStatement(node);
                     break;
                 case TokenType.declare_stmt:
                     VisitDeclareStatement(node);
@@ -1035,7 +1157,8 @@ namespace kOS.Compilation.KS
 
         private void VisitOnStatement(ParseNode node)
         {
-            string triggerIdentifier = "on-" + node.Token.StartPos.ToString();
+            int expressionHash = ConcatenateNodes(node).GetHashCode();
+            string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
             if (triggerObject.IsInitialized())
@@ -1050,7 +1173,8 @@ namespace kOS.Compilation.KS
 
         private void VisitWhenStatement(ParseNode node)
         {
-            string triggerIdentifier = "when-" + node.Token.StartPos.ToString();
+            int expressionHash = ConcatenateNodes(node).GetHashCode();
+            string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
             if (triggerObject.IsInitialized())
@@ -1071,7 +1195,8 @@ namespace kOS.Compilation.KS
             else
             {
                 // wait condition
-                string triggerIdentifier = "wait-" + node.Token.StartPos.ToString();
+                int expressionHash = ConcatenateNodes(node).GetHashCode();
+                string triggerIdentifier = "wait-" + expressionHash.ToString();
                 Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
                 if (triggerObject.IsInitialized())
@@ -1161,16 +1286,29 @@ namespace kOS.Compilation.KS
                 volumeIndex += 3;
             }
 
-            // program name
-            VisitNode(node.Nodes[1]);
-
-            // volume where program should be executed (null means local)
-            if (volumeIndex < node.Nodes.Count)
-                VisitNode(node.Nodes[volumeIndex]);
+            bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
+            if (!hasON && _options.LoadProgramsInSameAddressSpace)
+            {
+                string subprogramName = node.Nodes[1].Token.Text;
+                if (_context.Subprograms.Contains(subprogramName))
+                {
+                    Subprogram subprogramObject = _context.Subprograms.GetSubprogram(subprogramName);
+                    AddOpcode(new OpcodeCall(null)).DestinationLabel = subprogramObject.FunctionLabel;
+                }
+            }
             else
-                AddOpcode(new OpcodePush(null));
+            {
+                // program name
+                VisitNode(node.Nodes[1]);
 
-            AddOpcode(new OpcodeCall("run()"));
+                // volume where program should be executed (null means local)
+                if (volumeIndex < node.Nodes.Count)
+                    VisitNode(node.Nodes[volumeIndex]);
+                else
+                    AddOpcode(new OpcodePush(null));
+
+                AddOpcode(new OpcodeCall("run()"));
+            }
         }
 
         private void VisitSwitchStatement(ParseNode node)
@@ -1270,6 +1408,21 @@ namespace kOS.Compilation.KS
             AddToBreakList(jump);
         }
 
+        private void VisitPreserveStatement(ParseNode node)
+        {
+            if (_nowCompilingTrigger)
+            {
+                string flagName = PeekTriggerRemoveName();
+                AddOpcode(new OpcodePush(flagName));
+                AddOpcode(new OpcodePush(false));
+                AddOpcode(new OpcodeStore());
+            }
+            else
+            {
+                throw new Exception("PRESERVE keyword is only allowed inside triggers like WHEN and ON.");
+            }
+        }
+
         private void VisitRebootStatement(ParseNode node)
         {
             AddOpcode(new OpcodeCall("reboot()"));
@@ -1314,6 +1467,7 @@ namespace kOS.Compilation.KS
             Opcode endLoop = AddOpcode(new OpcodePush(iteratorIdentifier));
             AddOpcode(new OpcodePush("reset"));
             AddOpcode(new OpcodeGetMember());
+            AddOpcode(new OpcodePop()); // removes the "true" returned by the previous getmember
             // unset of iterator and iteration variable
             AddOpcode(new OpcodePush(iteratorIdentifier));
             AddOpcode(new OpcodeUnset());

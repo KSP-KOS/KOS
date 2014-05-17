@@ -12,6 +12,8 @@
             this.vesselRef = vesselRef;
         }
 
+        public OrbitInfo(Vessel vesselRef) : this(vesselRef.orbit, vesselRef){}
+
         public override object GetSuffix(string suffixName)
         {
             switch (suffixName)
