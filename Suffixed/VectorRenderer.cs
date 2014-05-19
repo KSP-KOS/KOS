@@ -209,9 +209,11 @@ namespace kOS.Utilities
                     _line.material           = new Material(Shader.Find("Particles/Additive"));
                     _hat.material            = new Material(Shader.Find("Particles/Additive"));
 
-                    Font arial = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf" );
-                    // eraseme? _labelObj.renderer.sharedMaterial = arial.material;
-                    _label.font = arial;
+                    // This is how font loading would work if other fonts were available in KSP:
+                    // Font lblFont = (Font)Resources.Load( "Arial", typeof(Font) );
+                    // Debug.Log( "lblFont is " + (lblFont == null ? "null" : "not null") );
+                    // _label.font = lblFont;
+                    
                     _label.fontSize = 12;
                     _label.text = _labelStr;
                     _label.anchor = TextAnchor.MiddleCenter;

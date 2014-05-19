@@ -512,8 +512,9 @@ namespace kOS.Compilation.KS
                 case TokenType.delete_stmt:
                     VisitDeleteStatement(node);
                     break;
-                //case TokenType.edit_stmt:
-                //    break;
+                case TokenType.edit_stmt:
+                    VisitEditStatement(node);
+                    break;
                 case TokenType.run_stmt:
                     VisitRunStatement(node);
                     break;
@@ -1273,6 +1274,13 @@ namespace kOS.Compilation.KS
         private void VisitClearStatement(ParseNode node)
         {
             AddOpcode(new OpcodeCall("clearscreen()"));
+        }
+
+        private void VisitEditStatement(ParseNode node)
+        {
+            string fileName = node.Nodes[1].Token.Text;
+            AddOpcode(new OpcodePush(fileName) );
+            AddOpcode(new OpcodeCall("edit()"));
         }
 
         private void VisitRunStatement(ParseNode node)

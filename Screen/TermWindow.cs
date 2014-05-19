@@ -6,6 +6,8 @@ using System.Text;
 using System.IO;
 using UnityEngine;
 using kOS.Utilities;
+using kOS.Persistence;
+using kOS;
 
 namespace kOS.Screen
 {
@@ -28,19 +30,25 @@ namespace kOS.Screen
         private float cursorBlinkTime;
         private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool isLocked = false;
-        private bool isOpen = false;
+        private bool _isOpen = false;
+        public bool isOpen { get {return _isOpen;} protected set { _isOpen = value;} }
         private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Rect windowRect = new Rect(60, 50, 470, 395);
 
         private SharedObjects _shared;
         private bool _isPowered = true;
+        public bool isPowered{ get {return _isPowered;} protected set { _isPowered = value;} }
         private bool _showCursor = true;
         
+        private KOSTextEditPopup _popupEditor = null;
         
         public void Awake()
         {
             LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
+            GameObject gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
+            UnityEngine.Object.DontDestroyOnLoad(gObj);
+            _popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
         }
 
         public void LoadTexture(String relativePath, ref Texture2D targetTexture)
@@ -49,6 +57,12 @@ namespace kOS.Screen
             imageLoader.LoadImageIntoTexture(targetTexture);
 
             if (imageLoader.isDone && imageLoader.size == 0) allTexturesFound = false;
+        }
+        
+        public void OpenPopupEditor( Volume v, string fName, string content )
+        {
+            _popupEditor.AttachTo(this, v, fName, content);
+            _popupEditor.Open();
         }
 
         public void Open()
@@ -363,6 +377,16 @@ namespace kOS.Screen
             GUI.color = textColor;
             GUI.DrawTexture(new Rect(tx * -CHARSIZE, ty * -CHARSIZE, fontImage.width, fontImage.height), fontImage);
             GUI.EndGroup();
+        }
+
+        public Rect GetRect()
+        {
+            return windowRect;
+        }
+        
+        public void Print( string str )
+        {
+            _shared.Screen.Print( str );
         }
 
         internal void AttachTo(SharedObjects shared)

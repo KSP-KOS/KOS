@@ -27,6 +27,36 @@ namespace kOS.Function
             }
         }
     }
+    
+    [FunctionAttribute("edit")]
+    public class FunctionEdit : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = shared.Cpu.PopValue().ToString();
+            string msg = "[Editing '" + fileName +"' ";
+
+            if (shared.VolumeMgr != null)
+            {
+                Volume vol = shared.VolumeMgr.CurrentVolume;
+
+                ProgramFile file = vol.GetByName(fileName);
+                // When editing a file, if it doesn't exist then make a new one:
+                if (file == null)
+                {
+                    msg += "as a new file.]";
+                    file = new ProgramFile(fileName);
+                }
+                else
+                {
+                    msg += ".]";
+                }
+                shared.Screen.Print(msg);
+                UnityEngine.Debug.Log(file.Content); //eraseme
+                shared.Window.OpenPopupEditor( vol, file.Filename, file.Content );
+            }
+        }
+    }
 
     [FunctionAttribute("copy")]
     public class FunctionCopy : FunctionBase
