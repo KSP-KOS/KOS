@@ -39,21 +39,7 @@ namespace kOS.Function
             if (shared.VolumeMgr != null)
             {
                 Volume vol = shared.VolumeMgr.CurrentVolume;
-
-                ProgramFile file = vol.GetByName(fileName);
-                // When editing a file, if it doesn't exist then make a new one:
-                if (file == null)
-                {
-                    msg += "as a new file.]";
-                    file = new ProgramFile(fileName);
-                }
-                else
-                {
-                    msg += ".]";
-                }
-                shared.Screen.Print(msg);
-                UnityEngine.Debug.Log(file.Content); //eraseme
-                shared.Window.OpenPopupEditor( vol, file.Filename, file.Content );
+                shared.Window.OpenPopupEditor( vol, fileName );
             }
         }
     }

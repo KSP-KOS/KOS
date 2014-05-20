@@ -59,9 +59,9 @@ namespace kOS.Screen
             if (imageLoader.isDone && imageLoader.size == 0) allTexturesFound = false;
         }
         
-        public void OpenPopupEditor( Volume v, string fName, string content )
+        public void OpenPopupEditor( Volume v, string fName )
         {
-            _popupEditor.AttachTo(this, v, fName, content);
+            _popupEditor.AttachTo(this, v, fName );
             _popupEditor.Open();
         }
 
