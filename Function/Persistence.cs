@@ -27,6 +27,22 @@ namespace kOS.Function
             }
         }
     }
+    
+    [FunctionAttribute("edit")]
+    public class FunctionEdit : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string fileName = shared.Cpu.PopValue().ToString();
+            string msg = "[Editing '" + fileName +"' ";
+
+            if (shared.VolumeMgr != null)
+            {
+                Volume vol = shared.VolumeMgr.CurrentVolume;
+                shared.Window.OpenPopupEditor( vol, fileName );
+            }
+        }
+    }
 
     [FunctionAttribute("copy")]
     public class FunctionCopy : FunctionBase
