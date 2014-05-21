@@ -242,19 +242,6 @@ namespace kOS.Screen
         {
             if (Event.current.type == EventType.KeyDown)
             {
-                // If any printed character key was pressed then mark the editor contents dirty,
-                // but still allow the keypress to pass through to the TextArea widget unprocessed:                
-                char ch = Event.current.character;
-                
-                if (System.Char.IsSymbol(ch) ||
-                    System.Char.IsLetterOrDigit(ch) ||
-                    System.Char.IsPunctuation(ch) ||
-                    System.Char.IsSeparator(ch) )
-                {
-                    _isDirty = true;
-                }
-
-                // Keys to actually use and consume:
                 switch (Event.current.keyCode)
                 {
                     case KeyCode.PageUp:
@@ -430,9 +417,12 @@ namespace kOS.Screen
         {
             GUI.contentColor = Color.green;
 
+
             GUILayout.BeginArea( _innerCoords );
             _scrollPosition = GUILayout.BeginScrollView( _scrollPosition );
+            int preLength = _contents.Length;
             _contents = GUILayout.TextArea( _contents );
+            int postLength = _contents.Length;
             GUILayout.EndScrollView();            
             GUILayout.EndArea();
             
@@ -443,6 +433,11 @@ namespace kOS.Screen
             KeepCursorScrolledInView();            
 
             GUI.Box( _resizeButtonCoords, _resizeImage );
+            
+            if (preLength != postLength)
+            {
+                _isDirty = true;
+            }
         }
 
         protected void CalcOuterCoords()
@@ -502,8 +497,14 @@ namespace kOS.Screen
         {
             // It's utterly ridiculous that Unity's TextArea widget doesn't
             // just do this automatically.  It's basic behavior for a scrolling
-            // text widget that when the cursor moves out of the viewport you
+            // text widget that when the text cursor moves out of the viewport you
             // scroll to keep it in view.  Oh well, have to do it manually:
+            //
+            // NOTE: This method is what is interferring with the scrollbar's ability
+            // to scroll with the mouse - this routine is locking the scrollbar
+            // to only be allowed to move as far as the cursor is still in view.
+            // Fixing that would take a bit of work.
+            //
             
             UnityEngine.TextEditor editor = GetWidgetController();
             Vector2 pos = editor.graphicalCursorPos;
