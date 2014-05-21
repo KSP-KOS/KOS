@@ -74,6 +74,9 @@ namespace kOS.Binding
                 {
                     currentVessel = _shared.Vessel;
                     currentVessel.OnFlyByWire += OnFlyByWire;
+
+                    foreach (var param in flightParameters.Values)
+                        param.UpdateFlightControl(currentVessel);
                 }
             }
         }
@@ -86,6 +89,10 @@ namespace kOS.Binding
                 flightControl = new FlightControl(target);
                 flightControls.Add(target.rootPart.flightID, flightControl);
             }
+
+            if (flightControl.Vessel == null)
+                flightControl.UpdateVessel(target);
+
             return flightControl;
         }
 
@@ -130,7 +137,7 @@ namespace kOS.Binding
         private class FlightCtrlParam : IDisposable
         {
             private readonly string name;
-            private readonly FlightControl control;
+            private FlightControl control;
             private readonly BindingManager binding;
             private object value;
             private bool enabled;
@@ -308,6 +315,11 @@ namespace kOS.Binding
             public void Dispose()
             {
                 Enabled = false;
+            }
+
+            public void UpdateFlightControl(Vessel vessel)
+            {
+                this.control = GetControllerByVessel(vessel);
             }
         }
     }
