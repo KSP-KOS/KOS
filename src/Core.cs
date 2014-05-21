@@ -10,7 +10,7 @@ namespace kOS
 {
     public class Core : MonoBehaviour
     {
-        public static VersionInfo VersionInfo = new VersionInfo(0, 12.0);
+        public static VersionInfo VersionInfo = new VersionInfo(0, 12.2);
 
         public static Core Fetch; 
         public TermWindow Window;
