@@ -31,7 +31,8 @@ namespace kOS.Screen
         protected bool _isOpen = false;
         private Texture2D _resizeImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool _resizeMouseDown = false;
-        private Vector2 _mouseDownPos; // Position the mouse was at when button went down - for measuring drags.
+        private Vector2 _mouseDownPos; // Position the mouse was at when button went down.
+        private Vector2 _mouseUpPos;   // Position the mouse was at when button went up.
         private Vector2 _resizeOldSize; // width and height it had when the mouse button went down on the resize button.
         private bool _isDirty = false; // have any edits occured since last load or save?
         private bool _frozen = false;
@@ -97,7 +98,7 @@ namespace kOS.Screen
                 // Unity wants to constantly see the Window constructor run again on each
                 // onGUI call, or else it goes away:
                 if (_isOpen)
-                    GUI.Window( _idCount, _outerCoords, DrawWindow, "" );
+                    GUI.Window( _idCount, _outerCoords, ProcessWindow, "" );
             }
         }
         
@@ -170,26 +171,26 @@ namespace kOS.Screen
             _dialog.Invoke( this, "\""+_fName+"\" has been edited.  Throw away changes and reload?", choices, actions );
         }
         
-        static void DelegateSaveExit( KOSTextEditPopup me )
+        protected static void DelegateSaveExit( KOSTextEditPopup me )
         {
             me.SaveContents();
             me.Freeze(false);
             me.Close();
         }
 
-        static void DelegateNoSaveExit( KOSTextEditPopup me )
+        protected static void DelegateNoSaveExit( KOSTextEditPopup me )
         {
             me.Freeze(false);
             me.Close();
         }
         
-        static void DelegateSaveThenLoad( KOSTextEditPopup me )
+        protected static void DelegateSaveThenLoad( KOSTextEditPopup me )
         {
             me.SaveContents();
             DelegateLoadContents( me );
         }
 
-        static void DelegateLoadContents( KOSTextEditPopup me )
+        protected static void DelegateLoadContents( KOSTextEditPopup me )
         {
             me._vol = me._loadingVol;
             me._fName = me._loadingFName;
@@ -206,29 +207,33 @@ namespace kOS.Screen
             me._isDirty = false;
         }
 
-        static void DelegateCancel( KOSTextEditPopup me )
+        protected static void DelegateCancel( KOSTextEditPopup me )
         {
             // do nothing.
         }
         
-        void DrawWindow( int windowID )
+        protected void CheckKeyboard()
         {
             if (Event.current.type == EventType.KeyDown)
             {
-                char c = Event.current.character;
-                if (System.Char.IsSymbol(c) ||
-                    System.Char.IsLetterOrDigit(c) ||
-                    System.Char.IsPunctuation(c) ||
-                    System.Char.IsSeparator(c) )
+                // If any printed character key was pressed then mark the editor contents dirty,
+                // but still allow the keypress to pass through to the TextArea widget unprocessed:                
+                char ch = Event.current.character;
+                
+                if (System.Char.IsSymbol(ch) ||
+                    System.Char.IsLetterOrDigit(ch) ||
+                    System.Char.IsPunctuation(ch) ||
+                    System.Char.IsSeparator(ch) )
                 {
                     _isDirty = true;
                 }
-            }
-            
-            if (Input.GetMouseButtonDown(0)) // mouse button went from Up to Down just now.
+            }            
+        }
+        
+        protected void CheckResizeDrag()
+        {
+            if (Input.GetMouseButtonDown(0))
             {
-                _mouseDownPos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
-
                 // Rememeber the fact that this mouseDown started on the resize button:
                 if (_resizeButtonCoords.Contains(_mouseDownPos))
                 {
@@ -236,47 +241,10 @@ namespace kOS.Screen
                     _resizeOldSize = new Vector2(_outerCoords.width,_outerCoords.height);
                 }
             }
-            
             if (Input.GetMouseButtonUp(0)) // mouse button went from Down to Up just now.
             {
-                Vector2 mouseUpPos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
-
                 _resizeMouseDown = false;
-
-
-                // Mouse buton went both down and up in the save box (a click):
-                if ( _saveCoords.Contains(mouseUpPos) &&
-                    _saveCoords.Contains(_mouseDownPos) )
-                {
-                    SaveContents();
-                    Event.current.Use(); // Without this it was quadruple-firing the same event.
-                    _term.Print("[Saved changes to " + _fName + "]");
-                }
-                // Mouse button went both down and up in the exit box (a click):
-                else if ( _exitCoords.Contains(mouseUpPos) &&
-                         _exitCoords.Contains(_mouseDownPos) )
-                {
-                    if (_isDirty)
-                        InvokeDirtySaveExitDialog();
-                    else
-                        Close();
-                    
-                    Event.current.Use(); // Without this it was quadruple-firing the same event.
-                }
-                // Mouse button went both down and up in the reload box (a click):
-                else if ( _reloadCoords.Contains(mouseUpPos) &&
-                         _reloadCoords.Contains(_mouseDownPos) )
-                {
-                    if (_isDirty)
-                        InvokeReloadConfirmDialog();
-                    else
-                        Close();
-                    
-                    Event.current.Use(); // Without this it was quadruple-firing the same event.
-                }
-                
-            }
-            
+            }            
             if (Input.GetMouseButton(0)) // mouse button is currently held down.
             {
                 if (_resizeMouseDown)
@@ -291,9 +259,81 @@ namespace kOS.Screen
                     Event.current.Use();
                 }
             }
+        }
+        
+        protected void CheckExitClicked()
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                // Mouse button went both down and up in the exit box (a click):
+                if ( _exitCoords.Contains(_mouseUpPos) &&
+                         _exitCoords.Contains(_mouseDownPos) )
+                {
+                    if (_isDirty)
+                        InvokeDirtySaveExitDialog();
+                    else
+                        Close();
+                    
+                    Event.current.Use(); // Without this it was quadruple-firing the same event.
+                }
+            }
+        }
 
+        protected void CheckSaveClicked()
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                // Mouse buton went both down and up in the save box (a click):
+                if ( _saveCoords.Contains(_mouseUpPos) &&
+                    _saveCoords.Contains(_mouseDownPos) )
+                {
+                    SaveContents();
+                    Event.current.Use(); // Without this it was quadruple-firing the same event.
+                    _term.Print("[Saved changes to " + _fName + "]");
+                }
+            }
+        }
+        
+        protected void CheckReloadClicked()
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                // Mouse button went both down and up in the reload box (a click):
+                if ( _reloadCoords.Contains(_mouseUpPos) &&
+                         _reloadCoords.Contains(_mouseDownPos) )
+                {
+                    if (_isDirty)
+                        InvokeReloadConfirmDialog();
+                    else
+                        Close();
+                    
+                    Event.current.Use(); // Without this it was quadruple-firing the same event.
+                }
+            }
+        }
+        
+        void ProcessWindow( int windowID )
+        {
+            CheckKeyboard();
+            
+            // Some mouse global state data used by several of the checks:
+            if (Input.GetMouseButtonDown(0))
+                _mouseDownPos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
+            if (Input.GetMouseButtonUp(0))
+                _mouseUpPos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
+
+            CheckResizeDrag();            
+            CheckExitClicked();
+            CheckSaveClicked();
+            CheckReloadClicked();
+            
             CalcOuterCoords();
-
+            
+            DrawWindow( windowID );
+        }
+        
+        protected void DrawWindow( int windowID/*currently unused argument*/ )
+        {            
             // These styles don't seem to be having any effect at the moment:
             GUIStyle editStyle = new GUIStyle( GUI.skin.textArea );
             editStyle.fontSize = _fontHeight;
