@@ -16,7 +16,7 @@ namespace kOS.Suffixed
         private float mainThrottle;
         private readonly Flushable<bool> neutral;
         private readonly Flushable<bool> killRotation;
-        private readonly Vessel vessel;
+        private Vessel vessel;
         private bool bound;
         private readonly List<string> doubleSuffixes;
         private readonly List<string> vectorSuffixes;
@@ -231,6 +231,11 @@ namespace kOS.Suffixed
             st.wheelThrottle = wheelThrottle;
             st.mainThrottle = mainThrottle;
 
+        }
+
+        public void UpdateVessel(Vessel vessel)
+        {
+            this.vessel = vessel;
         }
 
         public void Dispose()

@@ -43,7 +43,7 @@ namespace kOS.Binding
                     var vessel = currentTarget as Vessel;
                     if (vessel != null)
                     {
-                        return new VesselTarget(vessel, _shared.Vessel);
+                        return new VesselTarget(vessel, _shared);
                     }
                     var body = currentTarget as CelestialBody;
                     if (body != null)

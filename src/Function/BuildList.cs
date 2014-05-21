@@ -27,7 +27,7 @@ namespace kOS.Function
                     foreach (var vessel in FlightGlobals.Vessels)
                     {
                         if (vessel == shared.Vessel) continue;
-                        list.Add(new VesselTarget(vessel, shared.Vessel));
+                        list.Add(new VesselTarget(vessel, shared));
                     }
                     break;
                 case "resources":

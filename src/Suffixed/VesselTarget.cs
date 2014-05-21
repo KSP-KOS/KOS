@@ -6,6 +6,9 @@ namespace kOS.Suffixed
 {
     public class VesselTarget : SpecialValue
     {
+        private SharedObjects shared;
+        private Vessel vessel;
+        
         static VesselTarget()
         {
             ShortCuttableShipSuffixes = new[]
@@ -18,15 +21,21 @@ namespace kOS.Suffixed
                 };
         }
 
-        public VesselTarget(Vessel target, Vessel currentVessel)
+        public VesselTarget(Vessel target, SharedObjects shared)
         {
-            CurrentVessel = currentVessel;
             Vessel = target;
+            this.shared = shared;
         }
 
-        public VesselTarget(Vessel vessel) : this (vessel, vessel){}
+        public VesselTarget(Vessel target)
+        {
+            Vessel = target;
+            this.vessel = target;
+        }
 
-        public Vessel CurrentVessel { get; private set; }
+        public VesselTarget(SharedObjects shared) : this(shared.Vessel, shared) { }
+
+        public Vessel CurrentVessel { get { return shared != null ? shared.Vessel : vessel; } }
 
         public ITargetable Target
         {
@@ -70,7 +79,7 @@ namespace kOS.Suffixed
 
         public Direction GetFacing()
         {
-            var vesselRotation = Vessel.transform.rotation;
+            var vesselRotation = Vessel.ReferenceTransform.rotation;
             Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
             return new Direction(vesselFacing);
         }
