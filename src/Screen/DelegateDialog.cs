@@ -60,6 +60,7 @@ namespace kOS.Screen
                         _actions[bNum](_parent);
                         _invoked = false;
                         _parent.Freeze(false);
+                        GUI.FocusWindow(_parent.windowID);
                     }
                 }
             }
