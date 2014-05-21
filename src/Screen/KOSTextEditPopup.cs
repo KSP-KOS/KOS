@@ -238,7 +238,7 @@ namespace kOS.Screen
             if (Event.current.type == EventType.KeyDown)
             {
                 // If any printed character key was pressed then mark the editor contents dirty,
-                // but still allow the keypress to pass through to the TextArea widget unprocessed:
+                // but still allow the keypress to pass through to the TextArea widget unprocessed:                
                 char ch = Event.current.character;
                 
                 if (System.Char.IsSymbol(ch) ||
@@ -381,7 +381,7 @@ namespace kOS.Screen
         }
         
         protected void DrawWindow( int windowID/*currently unused argument*/ )
-        {
+        {            
             // These styles don't seem to be having any effect at the moment:
             GUIStyle editStyle = new GUIStyle( GUI.skin.textArea );
             editStyle.fontSize = _fontHeight;

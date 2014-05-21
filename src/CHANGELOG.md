@@ -1,6 +1,55 @@
 kOS Mod Changelog
 =================
 
+# v0.12.1
+
+BREAKING: DOCKINGPORT:ORIENTATION is now DOCKINGPORT:FACING
+
+* Fixed Terminal linewrap @ the bottom of the terminal
+* Fixed "Revert to Launch" button, it was blowing up the world and not allowing control before
+* Fixed LOCK s in subprograms
+* Fixed RemoteTech integration blowing up everything
+* Fixed flight controls not releasing when they should
+* Disabled RemoteTech Integration while RT development is stalled 
+* Fix exception when trying to type a multiline instruction in the interpreter
+* srfprograde is available as a new shortcut
+* BODY now has an OBT suffix
+* Parts now have a SHIP suffix
+* You can now work with your target if that target is a docking port
+* Added a new PRESERVE keyword for repeating a trigger.
+* all active triggers are removed when a script is finished.
+
+# v0.12.0
+
+* the aforementioned new parser by @marianoapp with all of its speed improvements and other goodies.
+* There's a config SpecialValue that can be used to control how some of the mod features work, like setting the execution speed, the integration with RT2 and starting from the archive volume.
+* The terminal screen can be scrolled using PageUp and PageDown
+* Negative numbers/expressions can be written starting with a minus sign, so no more "0-..."
+* Added ELSE syntax!
+* Added ELSE syntax!
+* Added NOT syntax!!
+* Added List square brackets [] as list subelement accessor
+* you can use variables as arguments for PRINT AT statements
+
+This version adds a new 0.625m part. Thanks to SMA on this neat new addition. 
+* it works as a kOS computer core
+* has 5000 units of code space
+* as a smaller part it is unlocked with "precision engineering" in career mode.
+* also has a light that will be controllable before the actual release
+
+
+Bug fixes
+* Cannot "set" a variable that later will become a "lock" #13 
+* Sanitize values sent to KSP #14 
+* Strange order of operations: "and" seems to evaluate before ">" #20 
+* moved some names back to "kOS"
+* Work on some structure's ToString return.
+* Parameters now get passed in the correct order
+* Ship resources no longer generate an error if they arent present 
+* Ctrl+C now interrupts correctly once again.
+* ETA:TRANSITION returns the correct time.
+* Better handling of types.
+
 # v0.11.1
 
 * BREAKING: Disk Space is now defined by the kOS part, existing missions might have the available space reduced to 500. (whaaw)
