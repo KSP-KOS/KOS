@@ -84,7 +84,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string vesselName = shared.Cpu.PopValue().ToString();
-            VesselTarget result = new VesselTarget(VesselUtils.GetVesselByName(vesselName, shared.Vessel), shared.Vessel);
+            VesselTarget result = new VesselTarget(VesselUtils.GetVesselByName(vesselName, shared.Vessel), shared);
             shared.Cpu.PushStack(result);
         }
     }

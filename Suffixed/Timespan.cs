@@ -21,10 +21,8 @@ namespace kOS.Suffixed
 
         public TimeSpan(double unixStyleTime)
         {
-            UnityEngine.Debug.Log("kOS: Timespan Input: " + unixStyleTime);
             span = unixStyleTime;
             kerbinTimeSetting = GameSettings.KERBIN_TIME;
-            UnityEngine.Debug.Log("kOS: Timespan Span: " + span);
         }
 
         private int CalculateYear()

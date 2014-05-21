@@ -27,6 +27,11 @@ namespace kOS.Utilities
         public static void SteerShipToward(Direction targetDir, FlightCtrlState c, Vessel vessel)
         {
             // I take no credit for this, this is a stripped down, rearranged version of MechJeb's attitude control system
+            if (vessel == null)
+            {
+                Debug.LogError("kOS: SteerShipToward: Vessel is null!!");
+                return;
+            }
 
             var CoM = vessel.findWorldCenterOfMass();
             var MoI = vessel.findLocalMOI(CoM);
