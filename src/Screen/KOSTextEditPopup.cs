@@ -37,7 +37,10 @@ namespace kOS.Screen
         private bool _isDirty = false; // have any edits occured since last load or save?
         private bool _frozen = false;
         private DelegateDialog _dialog = null;
-        
+        private string _exitButtonText = "(E)xit";
+        private string _saveButtonText = "(S)ave";
+        private string _reloadButtonText = "(R)eload";
+        private Vector2 _scrollPosition; // tracks where within the text box it's scrolled to.
         
         public void Freeze(bool newVal)
         {
@@ -101,6 +104,15 @@ namespace kOS.Screen
                     GUI.Window( _idCount, _outerCoords, ProcessWindow, "" );
             }
         }
+
+        protected void ExitEditor()
+        {
+            if (_isDirty)
+                InvokeDirtySaveExitDialog();
+            else
+                Close();
+        }
+
         
         public void SaveContents()
         {
@@ -112,6 +124,15 @@ namespace kOS.Screen
                 throw new Exception("[File Save failed]");
             }
             _isDirty = false;
+            _term.Print("[Saved changes to " + _fName + "]");
+        }
+        
+        protected void ReloadContents()
+        {
+            if (_isDirty)
+                InvokeReloadConfirmDialog();
+            else
+                Close();
         }
 
         public void LoadContents( Volume vol, string fName )
@@ -217,7 +238,7 @@ namespace kOS.Screen
             if (Event.current.type == EventType.KeyDown)
             {
                 // If any printed character key was pressed then mark the editor contents dirty,
-                // but still allow the keypress to pass through to the TextArea widget unprocessed:                
+                // but still allow the keypress to pass through to the TextArea widget unprocessed:
                 char ch = Event.current.character;
                 
                 if (System.Char.IsSymbol(ch) ||
@@ -227,9 +248,45 @@ namespace kOS.Screen
                 {
                     _isDirty = true;
                 }
-            }            
+
+                switch (Event.current.keyCode)
+                {
+                    case KeyCode.PageUp:
+                        DoPageUp();
+                        break;
+                    case KeyCode.PageDown:
+                        DoPageDown();
+                        break;
+                    case KeyCode.S:
+                        if (Event.current.control)
+                            SaveContents();
+                        break;
+                    case KeyCode.E:
+                        if (Event.current.control)
+                            ExitEditor();
+                        break;
+                    case KeyCode.R:
+                        if (Event.current.control)
+                            ReloadContents();
+                        break;
+                }
+            }
         }
         
+        protected void DoPageUp()
+        {
+            // scroll a few pixels less than the whole height:
+            _scrollPosition.y -= (_innerCoords.height - 10);
+            // If the new position is < 0, Unity will correct that for us.
+        }
+       
+        protected void DoPageDown()
+        {
+            // scroll a few pixels less than the whole height:
+            _scrollPosition.y += (_innerCoords.height - 10);
+            // If the new position is > max buffer height, Unity will correct that for us.
+        }
+
         protected void CheckResizeDrag()
         {
             if (Input.GetMouseButtonDown(0))
@@ -244,7 +301,7 @@ namespace kOS.Screen
             if (Input.GetMouseButtonUp(0)) // mouse button went from Down to Up just now.
             {
                 _resizeMouseDown = false;
-            }            
+            }
             if (Input.GetMouseButton(0)) // mouse button is currently held down.
             {
                 if (_resizeMouseDown)
@@ -267,13 +324,9 @@ namespace kOS.Screen
             {
                 // Mouse button went both down and up in the exit box (a click):
                 if ( _exitCoords.Contains(_mouseUpPos) &&
-                         _exitCoords.Contains(_mouseDownPos) )
+                    _exitCoords.Contains(_mouseDownPos) )
                 {
-                    if (_isDirty)
-                        InvokeDirtySaveExitDialog();
-                    else
-                        Close();
-                    
+                    ExitEditor();
                     Event.current.Use(); // Without this it was quadruple-firing the same event.
                 }
             }
@@ -289,7 +342,6 @@ namespace kOS.Screen
                 {
                     SaveContents();
                     Event.current.Use(); // Without this it was quadruple-firing the same event.
-                    _term.Print("[Saved changes to " + _fName + "]");
                 }
             }
         }
@@ -300,13 +352,9 @@ namespace kOS.Screen
             {
                 // Mouse button went both down and up in the reload box (a click):
                 if ( _reloadCoords.Contains(_mouseUpPos) &&
-                         _reloadCoords.Contains(_mouseDownPos) )
+                    _reloadCoords.Contains(_mouseDownPos) )
                 {
-                    if (_isDirty)
-                        InvokeReloadConfirmDialog();
-                    else
-                        Close();
-                    
+                    ReloadContents();
                     Event.current.Use(); // Without this it was quadruple-firing the same event.
                 }
             }
@@ -322,7 +370,7 @@ namespace kOS.Screen
             if (Input.GetMouseButtonUp(0))
                 _mouseUpPos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
 
-            CheckResizeDrag();            
+            CheckResizeDrag();
             CheckExitClicked();
             CheckSaveClicked();
             CheckReloadClicked();
@@ -333,21 +381,21 @@ namespace kOS.Screen
         }
         
         protected void DrawWindow( int windowID/*currently unused argument*/ )
-        {            
+        {
             // These styles don't seem to be having any effect at the moment:
             GUIStyle editStyle = new GUIStyle( GUI.skin.textArea );
             editStyle.fontSize = _fontHeight;
             
             GUI.contentColor = Color.green;
-            
-            // Must BOTH pass contents in and assign return val to contents or else Unity
-            // makes the widget un-editable.  It doesn't edit the contents string in-place:
-            _contents = GUI.TextArea( _innerCoords, _contents, editStyle );
+
+            _scrollPosition = GUI.BeginScrollView( _innerCoords, _scrollPosition, _innerCoords );
+            _contents = GUI.TextArea( _contents, editStyle );
+            GUI.EndScrollView();            
             
             GUI.Label( _labelCoords, _fName+" on Volume " + _vol.Name );
-            GUI.Box( _reloadCoords, "Reload" );
-            GUI.Box( _exitCoords, "Exit" );
-            GUI.Box( _saveCoords, "Save" );
+            GUI.Box( _exitCoords, _exitButtonText );
+            GUI.Box( _saveCoords, _saveButtonText );
+            GUI.Box( _reloadCoords, _reloadButtonText );
             GUI.Box( _resizeButtonCoords, _resizeImage );
         }
 
@@ -380,9 +428,9 @@ namespace kOS.Screen
                                         _outerCoords.height - 2*_frameThickness - _fontHeight );
 
                 Vector2 labSize  = GUI.skin.label.CalcSize( new GUIContent(_fName) );
-                Vector2 saveSize = GUI.skin.box.CalcSize(   new GUIContent("Save") );
-                Vector2 exitSize = GUI.skin.box.CalcSize(   new GUIContent("Exit") );
-                Vector2 reloadSize = GUI.skin.box.CalcSize( new GUIContent("Reload") );
+                Vector2 exitSize = GUI.skin.box.CalcSize(   new GUIContent(_exitButtonText) );
+                Vector2 saveSize = GUI.skin.box.CalcSize(   new GUIContent(_saveButtonText) );
+                Vector2 reloadSize = GUI.skin.box.CalcSize( new GUIContent(_reloadButtonText) );
                 
                 _labelCoords = new Rect( 5, 1, labSize.x, labSize.y);
                 
