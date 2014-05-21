@@ -79,7 +79,7 @@ namespace kOS.Suffixed
 
         public Direction GetFacing()
         {
-            var vesselRotation = Vessel.transform.rotation;
+            var vesselRotation = Vessel.ReferenceTransform.rotation;
             Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
             return new Direction(vesselFacing);
         }
