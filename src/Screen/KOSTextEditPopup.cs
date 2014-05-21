@@ -7,7 +7,7 @@ using kOS.Persistence;
 namespace kOS.Screen
 {
     /// <summary>
-    /// A Unity window that cotains the text editor for kOS inside it.  It should only be
+    /// A Unity window that contains the text editor for kOS inside it.  It should only be
     /// popped into existence when you feed it a file using the AttachTo call.
     /// </summary>
     public class KOSTextEditPopup : MonoBehaviour
@@ -25,7 +25,8 @@ namespace kOS.Screen
         protected Volume _vol;
         protected Volume _loadingVol;
         protected string _contents = "";
-        static protected int _idCount = 100;
+        private int _windowID=100;
+        public int windowID{ get{ return _windowID; } set {_windowID = value;} }
         static protected int _frameThickness = 8;
         static protected int _fontHeight = 12;
         protected bool _isOpen = false;
@@ -37,7 +38,10 @@ namespace kOS.Screen
         private bool _isDirty = false; // have any edits occured since last load or save?
         private bool _frozen = false;
         private DelegateDialog _dialog = null;
-        
+        private string _exitButtonText = "(E)xit";
+        private string _saveButtonText = "(S)ave";
+        private string _reloadButtonText = "(R)eload";
+        private Vector2 _scrollPosition; // tracks where within the text box it's scrolled to.
         
         public void Freeze(bool newVal)
         {
@@ -98,9 +102,18 @@ namespace kOS.Screen
                 // Unity wants to constantly see the Window constructor run again on each
                 // onGUI call, or else it goes away:
                 if (_isOpen)
-                    GUI.Window( _idCount, _outerCoords, ProcessWindow, "" );
+                    GUI.Window( windowID, _outerCoords, ProcessWindow, "" );
             }
         }
+
+        protected void ExitEditor()
+        {
+            if (_isDirty)
+                InvokeDirtySaveExitDialog();
+            else
+                Close();
+        }
+
         
         public void SaveContents()
         {
@@ -109,9 +122,22 @@ namespace kOS.Screen
             
             if (! _vol.SaveFile(file) )
             {
-                throw new Exception("[File Save failed]");
+                // For some reason the normal trap that prints exeptions on
+                // the terminal doesn't work here in this part of the code,
+                // thus the two messages:
+                _term.Print("[File Save failed. Check space on device?]");
+                throw new Exception( "File Save Failed from Text Editor.");
             }
             _isDirty = false;
+            _term.Print("[Saved changes to " + _fName + "]");
+        }
+        
+        protected void ReloadContents()
+        {
+            if (_isDirty)
+                InvokeReloadConfirmDialog();
+            else
+                DelegateLoadContents(this);                
         }
 
         public void LoadContents( Volume vol, string fName )
@@ -216,36 +242,94 @@ namespace kOS.Screen
         {
             if (Event.current.type == EventType.KeyDown)
             {
-                // If any printed character key was pressed then mark the editor contents dirty,
-                // but still allow the keypress to pass through to the TextArea widget unprocessed:                
-                char ch = Event.current.character;
-                
-                if (System.Char.IsSymbol(ch) ||
-                    System.Char.IsLetterOrDigit(ch) ||
-                    System.Char.IsPunctuation(ch) ||
-                    System.Char.IsSeparator(ch) )
+                switch (Event.current.keyCode)
                 {
-                    _isDirty = true;
+                    case KeyCode.PageUp:
+                        DoPageUp();
+                        Event.current.Use();
+                        break;
+                    case KeyCode.PageDown:
+                        DoPageDown();
+                        Event.current.Use();
+                        break;
+                    case KeyCode.E:
+                        if (Event.current.control)
+                            ExitEditor();
+                        Event.current.Use();
+                        break;
+                    case KeyCode.S:
+                        if (Event.current.control)
+                            SaveContents();
+                        Event.current.Use();
+                        break;
+                    case KeyCode.R:
+                        if (Event.current.control)
+                            ReloadContents();
+                        Event.current.Use();
+                        break;
                 }
-            }            
+            }
         }
         
+        protected void DoPageUp()
+        {
+            UnityEngine.TextEditor editor = GetWidgetController();
+
+            // Seems to be no way to move more than one line at
+            // a time - so have to do this:
+            int pos = Math.Min( editor.pos, _contents.Length - 1);
+            int rows = ((int)_innerCoords.height) / _fontHeight;
+            while (rows > 0 && pos >= 0)
+            {
+                if (_contents[pos] == '\n')
+                    rows--;
+                pos--;
+                editor.MoveLeft();  // there is a MoveUp but it doesn't work.
+            }
+        }
+
+        protected void DoPageDown()
+        {
+            UnityEngine.TextEditor editor = GetWidgetController();          
+            
+            // Seems to be no way to move more than one line at
+            // a time - so have to do this:
+            int pos = Math.Min( editor.pos, _contents.Length - 1);
+            int rows = ((int)_innerCoords.height) / _fontHeight;
+            while (rows > 0 && pos < _contents.Length)
+            {
+                if (_contents[pos] == '\n')
+                    rows--;
+                pos++;
+                editor.MoveRight(); // there is a MoveDown but it doesn't work.
+            }
+        }
+
         protected void CheckResizeDrag()
         {
-            if (Input.GetMouseButtonDown(0))
+            Event e = Event.current;
+            if (e.type == EventType.mouseDown && e.button == 0)
             {
                 // Rememeber the fact that this mouseDown started on the resize button:
                 if (_resizeButtonCoords.Contains(_mouseDownPos))
                 {
                     _resizeMouseDown = true;
                     _resizeOldSize = new Vector2(_outerCoords.width,_outerCoords.height);
+                    Event.current.Use();
                 }
             }
-            if (Input.GetMouseButtonUp(0)) // mouse button went from Down to Up just now.
+            if (e.type == EventType.mouseUp && e.button == 0) // mouse button went from Down to Up just now.
             {
-                _resizeMouseDown = false;
-            }            
-            if (Input.GetMouseButton(0)) // mouse button is currently held down.
+                if (_resizeMouseDown)
+                {
+                    _resizeMouseDown = false;
+                    Event.current.Use();
+                }
+            }
+            // For some reason the Event style of checking won't let you
+            // see drags extending outside the curent window, while the Input style
+            // will.  That's why this looks different from the others.
+            if (Input.GetMouseButton(0))
             {
                 if (_resizeMouseDown)
                 {
@@ -263,17 +347,14 @@ namespace kOS.Screen
         
         protected void CheckExitClicked()
         {
-            if (Input.GetMouseButtonUp(0))
+            Event e = Event.current;
+            if (e.type == EventType.mouseUp && e.button == 0)
             {
                 // Mouse button went both down and up in the exit box (a click):
                 if ( _exitCoords.Contains(_mouseUpPos) &&
-                         _exitCoords.Contains(_mouseDownPos) )
+                    _exitCoords.Contains(_mouseDownPos) )
                 {
-                    if (_isDirty)
-                        InvokeDirtySaveExitDialog();
-                    else
-                        Close();
-                    
+                    ExitEditor();
                     Event.current.Use(); // Without this it was quadruple-firing the same event.
                 }
             }
@@ -281,7 +362,8 @@ namespace kOS.Screen
 
         protected void CheckSaveClicked()
         {
-            if (Input.GetMouseButtonUp(0))
+            Event e = Event.current;
+            if (e.type == EventType.mouseUp && e.button == 0)
             {
                 // Mouse buton went both down and up in the save box (a click):
                 if ( _saveCoords.Contains(_mouseUpPos) &&
@@ -289,24 +371,20 @@ namespace kOS.Screen
                 {
                     SaveContents();
                     Event.current.Use(); // Without this it was quadruple-firing the same event.
-                    _term.Print("[Saved changes to " + _fName + "]");
                 }
             }
         }
         
         protected void CheckReloadClicked()
         {
-            if (Input.GetMouseButtonUp(0))
+            Event e = Event.current;
+            if (e.type == EventType.mouseUp && e.button == 0)
             {
                 // Mouse button went both down and up in the reload box (a click):
                 if ( _reloadCoords.Contains(_mouseUpPos) &&
-                         _reloadCoords.Contains(_mouseDownPos) )
+                    _reloadCoords.Contains(_mouseDownPos) )
                 {
-                    if (_isDirty)
-                        InvokeReloadConfirmDialog();
-                    else
-                        Close();
-                    
+                    ReloadContents();
                     Event.current.Use(); // Without this it was quadruple-firing the same event.
                 }
             }
@@ -314,46 +392,57 @@ namespace kOS.Screen
         
         void ProcessWindow( int windowID )
         {
+
             CheckKeyboard();
             
             // Some mouse global state data used by several of the checks:
-            if (Input.GetMouseButtonDown(0))
-                _mouseDownPos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
-            if (Input.GetMouseButtonUp(0))
-                _mouseUpPos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
+            Event e = Event.current;
+            if (e.type == EventType.MouseDown && e.button == 0)
+                _mouseDownPos = new Vector2(e.mousePosition.x, e.mousePosition.y);
+            if (e.type == EventType.MouseUp && e.button == 0)
+                _mouseUpPos = new Vector2(e.mousePosition.x, e.mousePosition.y);
 
-            CheckResizeDrag();            
+            CheckResizeDrag();
             CheckExitClicked();
             CheckSaveClicked();
             CheckReloadClicked();
-            
+
             CalcOuterCoords();
-            
+
             DrawWindow( windowID );
+            
         }
         
         protected void DrawWindow( int windowID/*currently unused argument*/ )
-        {            
-            // These styles don't seem to be having any effect at the moment:
-            GUIStyle editStyle = new GUIStyle( GUI.skin.textArea );
-            editStyle.fontSize = _fontHeight;
-            
+        {
             GUI.contentColor = Color.green;
+
+
+            GUILayout.BeginArea( _innerCoords );
+            _scrollPosition = GUILayout.BeginScrollView( _scrollPosition );
+            int preLength = _contents.Length;
+            _contents = GUILayout.TextArea( _contents );
+            int postLength = _contents.Length;
+            GUILayout.EndScrollView();            
+            GUILayout.EndArea();
             
-            // Must BOTH pass contents in and assign return val to contents or else Unity
-            // makes the widget un-editable.  It doesn't edit the contents string in-place:
-            _contents = GUI.TextArea( _innerCoords, _contents, editStyle );
-            
-            GUI.Label( _labelCoords, _fName+" on Volume " + _vol.Name );
-            GUI.Box( _reloadCoords, "Reload" );
-            GUI.Box( _exitCoords, "Exit" );
-            GUI.Box( _saveCoords, "Save" );
+            GUI.Label( _labelCoords, BuildTitle() );
+            GUI.Box( _exitCoords, _exitButtonText );
+            GUI.Box( _saveCoords, _saveButtonText );
+            GUI.Box( _reloadCoords, _reloadButtonText );
+            KeepCursorScrolledInView();            
+
             GUI.Box( _resizeButtonCoords, _resizeImage );
+            
+            if (preLength != postLength)
+            {
+                _isDirty = true;
+            }
         }
 
         protected void CalcOuterCoords()
         {
-            if ( _isOpen && _term != null)
+            if (_isOpen && _term != null)
             {
                 Rect tRect = _term.GetRect();
                 
@@ -364,9 +453,9 @@ namespace kOS.Screen
                 // If it hasn't been given a size yet, then give it a starting size that matches
                 // the attached terminal window size.  Otherwise keep whatever size the user changed it to:
                 if (_outerCoords.width == 0)
-                    _outerCoords = new Rect( left, top, tRect.width, tRect.height);
+                    _outerCoords = new Rect( left, top, tRect.width, tRect.height );
                 else
-                    _outerCoords = new Rect( left, top, _outerCoords.width, _outerCoords.height);
+                    _outerCoords = new Rect( left, top, _outerCoords.width, _outerCoords.height );
             }
         }
 
@@ -375,14 +464,14 @@ namespace kOS.Screen
             if (_isOpen)
             {
                 _innerCoords = new Rect( _frameThickness,
-                                        _frameThickness + _fontHeight,
+                                        _frameThickness + 1.5f*_fontHeight,
                                         _outerCoords.width - 2*_frameThickness,
-                                        _outerCoords.height - 2*_frameThickness - _fontHeight );
+                                        _outerCoords.height - 2*_frameThickness -2*_fontHeight );
 
-                Vector2 labSize  = GUI.skin.label.CalcSize( new GUIContent(_fName) );
-                Vector2 saveSize = GUI.skin.box.CalcSize(   new GUIContent("Save") );
-                Vector2 exitSize = GUI.skin.box.CalcSize(   new GUIContent("Exit") );
-                Vector2 reloadSize = GUI.skin.box.CalcSize( new GUIContent("Reload") );
+                Vector2 labSize  = GUI.skin.label.CalcSize( new GUIContent(BuildTitle()) );
+                Vector2 exitSize = GUI.skin.box.CalcSize(   new GUIContent(_exitButtonText) );
+                Vector2 saveSize = GUI.skin.box.CalcSize(   new GUIContent(_saveButtonText) );
+                Vector2 reloadSize = GUI.skin.box.CalcSize( new GUIContent(_reloadButtonText) );
                 
                 _labelCoords = new Rect( 5, 1, labSize.x, labSize.y);
                 
@@ -404,10 +493,50 @@ namespace kOS.Screen
             }
         }
         
+        protected void KeepCursorScrolledInView()
+        {
+            // It's utterly ridiculous that Unity's TextArea widget doesn't
+            // just do this automatically.  It's basic behavior for a scrolling
+            // text widget that when the text cursor moves out of the viewport you
+            // scroll to keep it in view.  Oh well, have to do it manually:
+            //
+            // NOTE: This method is what is interferring with the scrollbar's ability
+            // to scroll with the mouse - this routine is locking the scrollbar
+            // to only be allowed to move as far as the cursor is still in view.
+            // Fixing that would take a bit of work.
+            //
+            
+            UnityEngine.TextEditor editor = GetWidgetController();
+            Vector2 pos = editor.graphicalCursorPos;
+            float usableHeight = _innerCoords.height - 2.5f*_fontHeight;
+            if (pos.y < _scrollPosition.y)
+                _scrollPosition.y = pos.y;
+            else if (pos.y > _scrollPosition.y + usableHeight)
+                _scrollPosition.y = pos.y - usableHeight;
+            
+        }
+
+        // Return type needs full namespace path because kOS namespace has a TextEditor class too:
+        protected UnityEngine.TextEditor GetWidgetController()
+        {
+            // Whichever TextEdit widget has current focus (should be this one if processing input):
+            // There seems to be no way to grab the text edit controller of a Unity Widget by 
+            // specific ID.
+            return (UnityEngine.TextEditor)
+                GUIUtility.GetStateObject(typeof(UnityEngine.TextEditor), GUIUtility.keyboardControl);
+        }
+        
         public Rect GetRect()
         {
             return _outerCoords;
         }
         
+        protected string BuildTitle()
+        {
+            if (_vol.Name.Length > 0)                
+                return _fName + " on " + _vol.Name;
+            else
+                return _fName + " on local volume";  // Don't know which number because no link to VolumeManager from this class.
+        }        
     }
 }
