@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Suffixed;
 using kOS.Execution;
 
@@ -21,7 +18,37 @@ namespace kOS.Binding
                     Vessel.loadDistance = distance;
                     Vessel.unloadDistance = distance - 250;
                 });
-            _shared.BindingMgr.AddGetter("WARP", cpu => TimeWarp.fetch.current_rate_index);
+            _shared.BindingMgr.AddGetter("WARPMODE", cpu =>
+                {
+                    switch (TimeWarp.WarpMode)
+                    {
+                        case TimeWarp.Modes.HIGH:
+                            return "RAILS";
+                        case TimeWarp.Modes.LOW:
+                            return "PHYSICS";
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                });
+            _shared.BindingMgr.AddSetter("WARPMODE", (cpu, val) =>
+                {
+                    TimeWarp.Modes toSet;
+
+                    switch (val.ToString())
+                    {
+                        case "PHYSICS":
+                            toSet = TimeWarp.Modes.LOW;
+                            break;
+                        case "RAILS":
+                            toSet = TimeWarp.Modes.HIGH;
+                            break;
+                        default:
+                            throw new Exception(string.Format("WARPMODE '{0}' is not valid", val));
+                    }
+
+                    TimeWarp.fetch.Mode = toSet;
+                });
+            _shared.BindingMgr.AddGetter("WARP", cpu => TimeWarp.CurrentRateIndex);
             _shared.BindingMgr.AddSetter("WARP", delegate(CPU cpu, object val)
                 {
                     int newRate;
@@ -30,7 +57,7 @@ namespace kOS.Binding
                         TimeWarp.SetRate(newRate, false);
                     }
                 });
-            _shared.BindingMgr.AddGetter("MAPVIEW", delegate(CPU cpu) { return MapView.MapIsEnabled; } );
+            _shared.BindingMgr.AddGetter("MAPVIEW", cpu => MapView.MapIsEnabled);
             _shared.BindingMgr.AddSetter("MAPVIEW", delegate(CPU cpu, object val)
                 {
                     if( Convert.ToBoolean( val ) )
