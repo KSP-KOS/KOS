@@ -18,22 +18,24 @@ namespace kOS.Binding
                     if (targetable != null)
                     {
                         VesselUtils.SetTarget(targetable);
+                        return;
                     }
-                    else
-                    {
-                        var body = VesselUtils.GetBodyByName(val.ToString());
-                        if (body != null)
-                        {
-                            VesselUtils.SetTarget(body);
-                            return;
-                        }
 
-                        var vessel = VesselUtils.GetVesselByName(val.ToString(), _shared.Vessel);
-                        if (vessel != null)
-                        {
-                            VesselUtils.SetTarget(vessel);
-                        }
+                    var body = VesselUtils.GetBodyByName(val.ToString());
+                    if (body != null)
+                    {
+                        VesselUtils.SetTarget(body);
+                        return;
                     }
+
+                    var vessel = VesselUtils.GetVesselByName(val.ToString(), _shared.Vessel);
+                    if (vessel != null)
+                    {
+                        VesselUtils.SetTarget(vessel);
+                        return;
+                    }
+                    //Target not found, if we have a target we clear it
+                    VesselUtils.UnsetTarget();
                 });
 
             _shared.BindingMgr.AddGetter("TARGET", delegate

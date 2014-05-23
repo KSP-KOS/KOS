@@ -457,5 +457,10 @@ namespace kOS.Utilities
 
             return retVal;
         }
+
+        public static void UnsetTarget()
+        {
+           FlightGlobals.fetch.SetVesselTarget(null);
+        }
     }
 }
