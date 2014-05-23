@@ -9,10 +9,10 @@ namespace kOS.Binding
 {
     public class BindingManager : IDisposable
     {
-        private SharedObjects _shared;
-        private List<Binding> _bindings = new List<Binding>();
-        private Dictionary<string, BoundVariable> _vars = new Dictionary<string, BoundVariable>();
-        private FlightControlManager _flightControl = null;
+        private readonly SharedObjects _shared;
+        private readonly List<Binding> _bindings = new List<Binding>();
+        private readonly Dictionary<string, BoundVariable> _vars = new Dictionary<string, BoundVariable>();
+        private FlightControlManager _flightControl;
 
         public delegate void BindingSetDlg(CPU cpu, object val);
         public delegate object BindingGetDlg(CPU cpu);
@@ -32,22 +32,20 @@ namespace kOS.Binding
             _vars.Clear();
             _flightControl = null;
 
-            foreach (Type t in Assembly.GetExecutingAssembly().GetTypes())
+            foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                kOSBinding attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
-                if (attr != null)
-                {
-                    if (!attr.Contexts.Any() || attr.Contexts.Intersect(contexts).Any())
-                    {
-                        var b = (Binding)Activator.CreateInstance(t);
-                        b.AddTo(_shared);
-                        _bindings.Add(b);
+                var attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
+                if (attr == null) continue;
+                if (attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
 
-                        if (b is FlightControlManager)
-                        {
-                            _flightControl = (FlightControlManager)b;
-                        }
-                    }
+                var b = (Binding)Activator.CreateInstance(t);
+                b.AddTo(_shared);
+                _bindings.Add(b);
+
+                var manager = b as FlightControlManager;
+                if (manager != null)
+                {
+                    _flightControl = manager;
                 }
             }
         }
@@ -61,9 +59,11 @@ namespace kOS.Binding
             }
             else
             {
-                variable = new BoundVariable();
-                variable.Name = name;
-                variable.cpu = _shared.Cpu;
+                variable = new BoundVariable
+                    {
+                        Name = name, 
+                        Cpu = _shared.Cpu
+                    };
                 _vars.Add(name, variable);
                 _shared.Cpu.AddVariable(variable, name);
             }
@@ -88,13 +88,13 @@ namespace kOS.Binding
         public void PreUpdate()
         {
             // update the bindings
-            foreach (Binding b in _bindings)
+            foreach (var b in _bindings)
             {
                 b.Update();
             }
 
             // clear bound variables values
-            foreach (BoundVariable variable in _vars.Values)
+            foreach (var variable in _vars.Values)
             {
                 variable.ClearValue();
             }

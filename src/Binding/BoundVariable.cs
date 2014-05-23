@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using kOS.Execution;
+﻿using kOS.Execution;
 
 namespace kOS.Binding
 {
@@ -10,10 +6,10 @@ namespace kOS.Binding
     {
         public BindingManager.BindingSetDlg Set;
         public BindingManager.BindingGetDlg Get;
-        public CPU cpu;
+        public CPU Cpu { get; set; }
 
-        private object _currentValue = null;
-        private bool _wasUpdated = false;
+        private object currentValue;
+        private bool wasUpdated;
 
         public override object Value
         {
@@ -21,34 +17,30 @@ namespace kOS.Binding
             {
                 if (Get != null)
                 {
-                    if (_currentValue == null)
-                        _currentValue = Get(cpu);
-                    return _currentValue;
+                    return currentValue ?? (currentValue = Get(Cpu));
                 }
-                else
-                    return null;
+                return null;
             }
             set
             {
-                if (Set != null)
-                {
-                    _currentValue = value;
-                    _wasUpdated = true;
-                }
+                if (Set == null) return;
+
+                currentValue = value;
+                wasUpdated = true;
             }
         }
 
         public void ClearValue()
         {
-            _currentValue = null;
-            _wasUpdated = false;
+            currentValue = null;
+            wasUpdated = false;
         }
 
         public void SaveValue()
         {
-            if (_wasUpdated && _currentValue != null)
+            if (wasUpdated && currentValue != null)
             {
-                Set(cpu, _currentValue);
+                Set(Cpu, currentValue);
             }
         }
     }
