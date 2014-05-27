@@ -51,7 +51,6 @@ namespace kOS.Execution
             _vars = new Dictionary<string, Variable>();
             _contexts = new List<ProgramContext>();
             if (_shared.UpdateHandler != null) _shared.UpdateHandler.AddObserver(this);
-            Boot();
         }
 
         private void LoadFunctions()
@@ -102,6 +101,21 @@ namespace kOS.Execution
                                      "KerboScript v" + Core.VersionInfo.ToString() + "\n \n" +
                                      "Proceed.\n ";
                 _shared.Screen.Print(bootMessage);
+            }
+            
+            if (_shared.VolumeMgr == null) { UnityEngine.Debug.Log("kOS: No volume mgr"); }
+            else if (_shared.VolumeMgr.CurrentVolume == null) { UnityEngine.Debug.Log("kOS: No current volume"); }
+            else if (_shared.ScriptHandler == null) { UnityEngine.Debug.Log("kOS: No script handler"); }
+            else if (_shared.VolumeMgr.CurrentVolume.GetByName("boot") != null)
+            {
+                _shared.ScriptHandler.ClearContext("program");
+
+                var programContext = _shared.Cpu.GetProgramContext();
+                programContext.Silent = true;
+                CompilerOptions options = new CompilerOptions();
+                options.LoadProgramsInSameAddressSpace = true;
+                List<CodePart> parts = _shared.ScriptHandler.Compile("run boot.", "program", options);
+                programContext.AddParts(parts);
             }
         }
 

@@ -9,6 +9,7 @@ using kOS.Binding;
 using kOS.Persistence;
 using kOS.Suffixed;
 using kOS.AddOns.RemoteTech2;
+using kOS.Utilities;
 
 namespace kOS.Module
 {
@@ -23,6 +24,16 @@ namespace kOS.Module
 
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
+
+        [KSPField(isPersistant = false, guiName = "Comm Range", guiActive = true, guiActiveEditor = true)]
+        public string commRange = "[calculating...]";
+
+        [KSPField(isPersistant = true, guiName = "Boot File", guiActive = false, guiActiveEditor = false)]
+        public string bootFile = "Boot";
+
+        [KSPField(isPersistant = false, guiName = "Boot File Choice", guiActive = false, guiActiveEditor = true), UI_FloatRange(minValue=0f,maxValue=1f,stepIncrement=1f)]
+        public float bootFileChoice = 0f;
+        private float bootFileChoiceLast = -1f;
 
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
         public int diskSpace = 500;
@@ -100,10 +111,25 @@ namespace kOS.Module
             shared.Cpu = new Execution.CPU(shared);
 
             // initialize the file system
-            shared.VolumeMgr.Add(shared.Factory.CreateArchive());
-            if (HardDisk == null) HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+            var archive = shared.Factory.CreateArchive();
+            shared.VolumeMgr.Add(archive);
+            if (HardDisk == null && archive.CheckRange(vessel))
+            {
+                HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+                var bootProgramFile = archive.GetByName(bootFile);
+                if (bootProgramFile != null)
+                {
+                    // Copy to HardDisk as "boot".
+                    var boot = new ProgramFile(bootProgramFile);
+                    boot.Filename = "boot";
+                    HardDisk.Add(boot);
+                }
+            }
+
             shared.VolumeMgr.Add(HardDisk);
             if (!Config.GetInstance().StartOnArchive) shared.VolumeMgr.SwitchTo(HardDisk);
+
+            shared.Cpu.Boot();
         }
 
         private void CreateFactory()
@@ -150,6 +176,76 @@ namespace kOS.Module
         
         public void Update()
         {
+            if (bootFileChoice != bootFileChoiceLast)
+            {
+                var temp = new Archive();
+                var files = temp.GetFileList();
+                var maxchoice = 0;
+                for (var i = 0; i < files.Count; ++i)
+                {
+                    if (!files[i].Name.StartsWith("boot",StringComparison.InvariantCultureIgnoreCase)) continue;
+                    maxchoice++;
+                    if (bootFileChoiceLast < 0)
+                    {
+                        // find previous
+                        if (files[i].Name == bootFile) {
+                            bootFileChoice = i;
+                            bootFileChoiceLast = i;
+                        }
+                    }
+                    if (i == bootFileChoice) {
+                        bootFile = files[i].Name;
+                   }
+                }
+                var field = Fields["bootFileChoice"];
+                if (field != null)
+                {
+                    field.guiName = bootFile;
+                    var ui = field.uiControlEditor as UI_FloatRange;
+                        if (ui != null) {
+                            ui.maxValue = maxchoice;
+                            ui.controlEnabled = maxchoice > 0;
+                            field.guiActiveEditor = maxchoice > 0;
+                            bootFileChoiceLast = bootFileChoice;
+                        }
+                }
+            }
+
+            double cr;
+            if (vessel == null)
+            {
+                // Vessel not available in Editor.
+                var parts = new List<Part>();
+                parts.AddRange(part.localRoot.FindChildParts<Part>(true));
+                cr = VesselUtils.GetCommRange(parts);
+            } else {
+                cr = VesselUtils.GetCommRange(vessel);
+            }
+
+            commRange = Math.Round(cr / 1000) + "km";
+
+            if (vessel == null)
+            {
+                // In edtior, give more useful value.
+                var bestdistance = 0.0;
+                var kerbin = FlightGlobals.getMainBody();
+                foreach (var body in FlightGlobals.Bodies)
+                {
+                    if (body.name == "Sun")
+                        continue;
+                    if (body.referenceBody != kerbin.referenceBody && body.referenceBody != kerbin)
+                        continue;
+                    var maxdistance = body.orbit.semiMajorAxis;
+                    if (body.referenceBody != kerbin)
+                        maxdistance += kerbin.orbit.semiMajorAxis;
+                    if (maxdistance > bestdistance && maxdistance < cr)
+                    {
+                        bestdistance = maxdistance;
+                        commRange = body.name;
+                    }
+                }
+            }
+             
             if (shared == null) return;
 
             if (part.State == PartStates.DEAD)
