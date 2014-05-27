@@ -199,9 +199,14 @@ namespace kOS.Utilities
 
         public static double GetCommRange(Vessel vessel)
         {
+            return GetCommRange(vessel.parts);
+        }
+
+        public static double GetCommRange(List<Part> parts)
+        {
             double range = 100000;
 
-            foreach (var part in vessel.parts)
+            foreach (var part in parts)
             {
                 if (part.partInfo.name != "longAntenna") continue;
                 string status = ((ModuleAnimateGeneric) part.Modules["ModuleAnimateGeneric"]).status;
@@ -212,7 +217,7 @@ namespace kOS.Utilities
                 }
             }
 
-            foreach (var part in vessel.parts)
+            foreach (var part in parts)
             {
                 if (part.partInfo.name != "mediumDishAntenna") continue;
                 string status = ((ModuleAnimateGeneric) part.Modules["ModuleAnimateGeneric"]).status;
@@ -223,7 +228,7 @@ namespace kOS.Utilities
                 }
             }
 
-            foreach (var part in vessel.parts)
+            foreach (var part in parts)
             {
                 if (part.partInfo.name != "commDish") continue;
                 string status = ((ModuleAnimateGeneric) part.Modules["ModuleAnimateGeneric"]).status;
