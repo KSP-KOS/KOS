@@ -3,7 +3,7 @@ using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
-    public class BodyTarget : SpecialValue
+    public class BodyTarget : SpecialValue, IKOSTargetable
     {
         private readonly Vessel vessel;
 
