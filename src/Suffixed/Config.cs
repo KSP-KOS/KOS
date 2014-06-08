@@ -7,7 +7,7 @@ namespace kOS.Suffixed
 {
     public class Config : SpecialValue
     {
-        private static Config _instance;
+        private static Config instance;
         private readonly Dictionary<string, ConfigKey> keys;
         private readonly Dictionary<string, ConfigKey> alias;
         private readonly Dictionary<PropId, ConfigKey> properties;
@@ -68,9 +68,12 @@ namespace kOS.Suffixed
             }
         }
 
-        public static Config GetInstance()
+        public static Config Instance
         {
-            return _instance ?? (_instance = new Config());
+            get
+            {
+                return instance ?? (instance = new Config());
+            }
         }
 
         private T GetPropValue<T>(PropId id)
