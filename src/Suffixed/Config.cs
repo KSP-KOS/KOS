@@ -58,7 +58,7 @@ namespace kOS.Suffixed
                     if (value != null)
                     {
                         key.Value = value;
-                        UnityEngine.Debug.LogError(string.Format("kOS: Loading Config: {0} Value: {1}", key, value));
+                        UnityEngine.Debug.LogError(string.Format("kOS: Loading Config: {0} Value: {1}", key.StringKey, value));
                     }
                 }
             }
