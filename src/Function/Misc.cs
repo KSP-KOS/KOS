@@ -101,10 +101,10 @@ namespace kOS.Function
                     // clear the "program" compilation context
                     shared.ScriptHandler.ClearContext("program");
 
-                    var programContext = shared.Cpu.GetProgramContext();
                     CompilerOptions options = new CompilerOptions();
                     options.LoadProgramsInSameAddressSpace = true;
                     List<CodePart> parts = shared.ScriptHandler.Compile(file.Content, "program", options);
+                    var programContext = shared.Cpu.GetProgramContext();
                     programContext.AddParts(parts);
                 }
             }

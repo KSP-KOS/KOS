@@ -76,5 +76,18 @@ namespace kOS.Execution
             _stack.Clear();
             _stackPointer = -1;
         }
+
+        public string Dump(int lineCount)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("Stack dump:");
+
+            int startIndex = Math.Max(0, _stack.Count - lineCount);
+            
+            for(int index = startIndex; index < _stack.Count; index++)
+                builder.AppendLine(string.Format("{0:000}    {1}", index, _stack[index]));
+
+            return builder.ToString();
+        }
     }
 }

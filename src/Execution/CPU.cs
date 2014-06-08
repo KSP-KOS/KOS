@@ -27,6 +27,7 @@ namespace kOS.Execution
         private SharedObjects _shared;
         private List<ProgramContext> _contexts;
         private ProgramContext _currentContext;
+        private Dictionary<string, Variable> _savedPointers;
         
         // statistics
         public double TotalCompileTime = 0D;
@@ -129,7 +130,8 @@ namespace kOS.Execution
 
         private void PushContext(ProgramContext context)
         {
-            UnityEngine.Debug.Log("kOS: Pushing context staring with: " + context.GetCodeFragment(1).FirstOrDefault());
+            UnityEngine.Debug.Log("kOS: Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
+            SaveAndClearPointers();
             _contexts.Add(context);
             _currentContext = _contexts.Last();
 
@@ -148,13 +150,14 @@ namespace kOS.Execution
                 var contextRemove = _contexts.Last();
                 _contexts.Remove(contextRemove);
                 contextRemove.DisableActiveFlyByWire(_shared.BindingMgr);
-                UnityEngine.Debug.Log("kOS: Removed Context " + contextRemove.GetCodeFragment(1).FirstOrDefault());
+                UnityEngine.Debug.Log("kOS: Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
 
                 if (_contexts.Any())
                 {
                     _currentContext = _contexts.Last();
                     _currentContext.EnableActiveFlyByWire(_shared.BindingMgr);
-                    UnityEngine.Debug.Log("kOS: New current context " + _currentContext.GetCodeFragment(1).FirstOrDefault());
+                    RestorePointers();
+                    UnityEngine.Debug.Log("kOS: New current context " + _currentContext.GetCodeFragment(0).FirstOrDefault());
                 }
                 else
                 {
@@ -189,6 +192,46 @@ namespace kOS.Execution
                 PushContext(new ProgramContext(false));
             }
             return _currentContext;
+        }
+
+        private void SaveAndClearPointers()
+        {
+            _savedPointers = new Dictionary<string, Variable>();
+            var pointers = new List<string>(_vars.Keys.Where(v => v.Contains('*')));
+
+            foreach (var pointerName in pointers)
+            {
+                _savedPointers.Add(pointerName, _vars[pointerName]);
+                _vars.Remove(pointerName);
+            }
+            UnityEngine.Debug.Log(string.Format("kOS: Saving and removing {0} pointers", pointers.Count));
+        }
+
+        private void RestorePointers()
+        {
+            int restoredPointers = 0;
+            int deletedPointers = 0;
+
+            foreach (var item in _savedPointers)
+            {
+                if (_vars.ContainsKey(item.Key))
+                {
+                    // if the pointer exists it means it was redefined from inside a program
+                    // and it's going to be invalid outside of it, so we remove it
+                    _vars.Remove(item.Key);
+                    deletedPointers++;
+                    // also remove the corresponding trigger if exists
+                    if (item.Value.Value is int)
+                        RemoveTrigger((int)item.Value.Value);
+                }
+                else
+                {
+                    _vars.Add(item.Key, item.Value);
+                    restoredPointers++;
+                }
+            }
+
+            UnityEngine.Debug.Log(string.Format("kOS: Deleting {0} pointers and restoring {1} pointers", deletedPointers, restoredPointers));
         }
 
         public void RunProgram(List<Opcode> program)
@@ -451,6 +494,7 @@ namespace kOS.Execution
                 if (_shared.Logger != null)
                 {
                     _shared.Logger.Log(e);
+                    UnityEngine.Debug.Log(_stack.Dump(15));
                 }
 
                 if (_contexts.Count == 1)
