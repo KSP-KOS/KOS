@@ -32,7 +32,7 @@ namespace kOS.Execution
 
         private bool IsValid(object item, ref string message)
         {
-            if (Config.GetInstance().EnableSafeMode)
+            if (Config.Instance.EnableSafeMode)
             {
                 if (item is double)
                 {

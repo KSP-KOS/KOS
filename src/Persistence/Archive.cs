@@ -29,12 +29,11 @@ namespace kOS.Persistence
         {
             try
             {
-                using (StreamReader infile = new StreamReader(_archiveFolder + name + ".txt", true))
+                using (var infile = new StreamReader(_archiveFolder + name + ".txt", true))
                 {
                     string fileBody = infile.ReadToEnd().Replace("\r\n", "\n");
 
-                    ProgramFile retFile = new ProgramFile(name);
-                    retFile.Content = fileBody;
+                    var retFile = new ProgramFile(name) {Content = fileBody};
                     base.DeleteByName(name);
                     base.Add(retFile);
 

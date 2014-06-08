@@ -110,9 +110,11 @@ namespace kOS.Module
             shared.ProcessorMgr = new ProcessorManager(shared);
             shared.Cpu = new Execution.CPU(shared);
 
-            // initialize the file system
+            // initialize archive
             var archive = shared.Factory.CreateArchive();
             shared.VolumeMgr.Add(archive);
+
+            // initialize harddisk
             if (HardDisk == null && archive.CheckRange(vessel))
             {
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
@@ -120,14 +122,17 @@ namespace kOS.Module
                 if (bootProgramFile != null)
                 {
                     // Copy to HardDisk as "boot".
-                    var boot = new ProgramFile(bootProgramFile);
-                    boot.Filename = "boot";
+                    var boot = new ProgramFile(bootProgramFile) {Filename = "boot"};
                     HardDisk.Add(boot);
                 }
             }
-
             shared.VolumeMgr.Add(HardDisk);
-            if (!Config.GetInstance().StartOnArchive) shared.VolumeMgr.SwitchTo(HardDisk);
+
+            // process setting
+            if (!Config.Instance.StartOnArchive)
+            {
+                shared.VolumeMgr.SwitchTo(HardDisk);
+            }
 
             shared.Cpu.Boot();
         }
@@ -357,7 +362,7 @@ namespace kOS.Module
             if (shared != null && shared.Cpu != null)
             {
                 shared.Cpu.OnSave(node);
-                Config.GetInstance().SaveConfig();
+                Config.Instance.SaveConfig();
             }
 
             base.OnSave(node);

@@ -247,12 +247,12 @@ namespace kOS.Function
 
         private kList GetConfigList(SharedObjects shared)
         {
-            kList list = new kList();
+            var list = new kList();
             list.AddColumn("", 5, ColumnAlignment.Left);
             list.AddColumn("Name", 30, ColumnAlignment.Left);
             list.AddColumn("Value", 10, ColumnAlignment.Left);
 
-            foreach (ConfigKey key in Config.GetInstance().GetConfigKeys())
+            foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
                 list.AddItem(key.Alias, key.Name, key.Value);
             }            

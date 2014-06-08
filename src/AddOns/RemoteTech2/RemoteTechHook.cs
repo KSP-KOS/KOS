@@ -42,7 +42,7 @@ namespace kOS.AddOns.RemoteTech2
 
         public static bool IsAvailable()
         {
-            var integrationEnabled = Config.GetInstance().EnableRT2Integration;
+            var integrationEnabled = Config.Instance.EnableRT2Integration;
             if (!integrationEnabled)
             {
                 return false;

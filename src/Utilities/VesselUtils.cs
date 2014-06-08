@@ -128,13 +128,13 @@ namespace kOS.Utilities
 
                     if (enginefx != null)
                     {
-                        if (!enginefx.EngineIgnited) continue;
+                        if (!enginefx.isOperational) continue;
                         thrust += enginefx.maxThrust;
                     }
 
                     if (engine != null)
                     {
-                        if (!engine.EngineIgnited) continue;
+                        if (!engine.isOperational) continue;
                         thrust += engine.maxThrust;
                     }
                 }

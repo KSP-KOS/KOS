@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using kOS.AddOns.RemoteTech2;
+﻿using kOS.AddOns.RemoteTech2;
 using kOS.Execution;
 using kOS.Suffixed;
 using kOS.Utilities;
@@ -98,14 +97,19 @@ namespace kOS.Binding
 
         public static void UnbindUnloaded()
         {
-            var keys = flightControls.Keys;
-            foreach (var key in keys)
+            var toRemove = new List<uint>();
+            foreach (var key in flightControls.Keys)
             {
                 var value = flightControls[key];
                 if (value.Vessel.loaded) continue;
                 Debug.Log("kOS: Unloading " + value.Vessel.vesselName);
-                flightControls.Remove(key);
+                toRemove.Add(key);
                 value.Dispose();
+            }
+
+            foreach (var key in toRemove)
+            {
+                flightControls.Remove(key);
             }
         }
 
@@ -145,8 +149,8 @@ namespace kOS.Binding
             public FlightCtrlParam(string name, SharedObjects sharedObjects)
             {
                 this.name = name;
-                this.control = GetControllerByVessel(sharedObjects.Vessel);
-                this.binding = sharedObjects.BindingMgr;
+                control = GetControllerByVessel(sharedObjects.Vessel);
+                binding = sharedObjects.BindingMgr;
                 Enabled = false;
                 value = null;
 
@@ -319,7 +323,7 @@ namespace kOS.Binding
 
             public void UpdateFlightControl(Vessel vessel)
             {
-                this.control = GetControllerByVessel(vessel);
+                control = GetControllerByVessel(vessel);
             }
         }
     }

@@ -18,22 +18,22 @@ namespace kOS.Execution
             Waiting = 2
         }
 
-        private Stack _stack;
-        private Dictionary<string, Variable> _vars;
+        private readonly Stack _stack;
+        private readonly Dictionary<string, Variable> _vars;
         private Status _currentStatus;
         private double _currentTime;
         private double _timeWaitUntil;
         private Dictionary<string, FunctionBase> _functions;
-        private SharedObjects _shared;
-        private List<ProgramContext> _contexts;
+        private readonly SharedObjects _shared;
+        private readonly List<ProgramContext> _contexts;
         private ProgramContext _currentContext;
         private Dictionary<string, Variable> _savedPointers;
         
         // statistics
         public double TotalCompileTime = 0D;
-        private double _totalUpdateTime = 0D;
-        private double _totalTriggersTime = 0D;
-        private double _totalExecutionTime = 0D;
+        private double _totalUpdateTime;
+        private double _totalTriggersTime;
+        private double _totalExecutionTime;
 
         public int InstructionPointer
         {
@@ -60,16 +60,15 @@ namespace kOS.Execution
 
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                FunctionAttribute attr = (FunctionAttribute)type.GetCustomAttributes(typeof(FunctionAttribute), true).FirstOrDefault();
-                if (attr != null)
+                var attr = (FunctionAttribute)type.GetCustomAttributes(typeof(FunctionAttribute), true).FirstOrDefault();
+                if (attr == null) continue;
+
+                object functionObject = Activator.CreateInstance(type);
+                foreach (string functionName in attr.Names)
                 {
-                    object functionObject = Activator.CreateInstance(type);
-                    foreach (string functionName in attr.Names)
+                    if (functionName != string.Empty)
                     {
-                        if (functionName != string.Empty)
-                        {
-                            _functions.Add(functionName, (FunctionBase)functionObject);
-                        }
+                        _functions.Add(functionName, (FunctionBase)functionObject);
                     }
                 }
             }
@@ -99,7 +98,7 @@ namespace kOS.Execution
             {
                 _shared.Screen.ClearScreen();
                 string bootMessage = "kOS Operating System\n" +
-                                     "KerboScript v" + Core.VersionInfo.ToString() + "\n \n" +
+                                     "KerboScript v" + Core.VersionInfo + "\n \n" +
                                      "Proceed.\n ";
                 _shared.Screen.Print(bootMessage);
             }
@@ -113,8 +112,7 @@ namespace kOS.Execution
 
                 var programContext = _shared.Cpu.GetProgramContext();
                 programContext.Silent = true;
-                CompilerOptions options = new CompilerOptions();
-                options.LoadProgramsInSameAddressSpace = true;
+                var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                 List<CodePart> parts = _shared.ScriptHandler.Compile("run boot.", "program", options);
                 programContext.AddParts(parts);
             }
@@ -122,7 +120,7 @@ namespace kOS.Execution
 
         private void PushInterpreterContext()
         {
-            ProgramContext interpreterContext = new ProgramContext(true);
+            var interpreterContext = new ProgramContext(true);
             // initialize the context with an empty program
             interpreterContext.AddParts(new List<CodePart>());
             PushContext(interpreterContext);
@@ -241,12 +239,10 @@ namespace kOS.Execution
 
         public void RunProgram(List<Opcode> program, bool silent)
         {
-            if (program.Count > 0)
-            {
-                ProgramContext newContext = new ProgramContext(false, program);
-                newContext.Silent = silent;
-                PushContext(newContext);
-            }
+            if (!program.Any()) return;
+
+            var newContext = new ProgramContext(false, program) {Silent = silent};
+            PushContext(newContext);
         }
 
         public void BreakExecution(bool manual)
@@ -307,8 +303,7 @@ namespace kOS.Execution
             }
             else
             {
-                variable = new Variable();
-                variable.Name = identifier;
+                variable = new Variable {Name = identifier};
                 AddVariable(variable, identifier);
             }
             return variable;
@@ -321,10 +316,7 @@ namespace kOS.Execution
             {
                 return _vars[identifier];
             }
-            else
-            {
-                throw new Exception(string.Format("Variable {0} is not defined", identifier.TrimStart('$')));
-            }
+            throw new Exception(string.Format("Variable {0} is not defined", identifier.TrimStart('$')));
         }
 
         public void AddVariable(Variable variable, string identifier)
@@ -366,7 +358,7 @@ namespace kOS.Execution
 
         public void RemoveAllVariables()
         {
-            List<string> removals = new List<string>();
+            var removals = new List<string>();
             
             foreach (KeyValuePair<string, Variable> kvp in _vars)
             {
@@ -396,14 +388,11 @@ namespace kOS.Execution
                 ((string)testValue).StartsWith("$"))
             {
                 // value is a variable
-                string identifier = (string)testValue;
+                var identifier = (string)testValue;
                 Variable variable = GetVariable(identifier);
                 return variable.Value;
             }
-            else
-            {
-                return testValue;
-            }
+            return testValue;
         }
 
         public void SetValue(string identifier, object value)
@@ -450,7 +439,7 @@ namespace kOS.Execution
 
         public void Update(double deltaTime)
         {
-            bool showStatistics = Config.GetInstance().ShowStatistics;
+            bool showStatistics = Config.Instance.ShowStatistics;
             Stopwatch updateWatch = null;
             Stopwatch triggerWatch = null;
             Stopwatch executionWatch = null;
@@ -548,7 +537,7 @@ namespace kOS.Execution
             if (_currentContext.Triggers.Count > 0)
             {
                 int currentInstructionPointer = _currentContext.InstructionPointer;
-                List<int> triggerList = new List<int>(_currentContext.Triggers);
+                var triggerList = new List<int>(_currentContext.Triggers);
 
                 foreach (int triggerPointer in triggerList)
                 {
@@ -577,7 +566,7 @@ namespace kOS.Execution
         {
             int instructionCounter = 0;
             bool executeNext = true;
-            int instructionsPerUpdate = Config.GetInstance().InstructionsPerUpdate;
+            int instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
             
             while (_currentStatus == Status.Running && 
                    instructionCounter < instructionsPerUpdate &&
@@ -598,15 +587,12 @@ namespace kOS.Execution
                 context.InstructionPointer += opcode.DeltaInstructionPointer;
                 return true;
             }
-            else
+            if (opcode is OpcodeEOP)
             {
-                if (opcode is OpcodeEOP)
-                {
-                    BreakExecution(false);
-                    UnityEngine.Debug.LogWarning("kOS: Execution Broken");
-                }
-                return false;
+                BreakExecution(false);
+                UnityEngine.Debug.LogWarning("kOS: Execution Broken");
             }
+            return false;
         }
 
         private void SkipCurrentInstructionId()
@@ -652,36 +638,35 @@ namespace kOS.Execution
 
         public void PrintStatistics()
         {
-            if (Config.GetInstance().ShowStatistics)
-            {
-                _shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", TotalCompileTime));
-                _shared.Screen.Print(string.Format("Total update time: {0:F3}ms", _totalUpdateTime));
-                _shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", _totalTriggersTime));
-                _shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", _totalExecutionTime));
-                _shared.Screen.Print(" ");
+            if (!Config.Instance.ShowStatistics) return;
 
-                TotalCompileTime = 0D;
-                _totalUpdateTime = 0D;
-                _totalTriggersTime = 0D;
-                _totalExecutionTime = 0D;
-            }
+            _shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", TotalCompileTime));
+            _shared.Screen.Print(string.Format("Total update time: {0:F3}ms", _totalUpdateTime));
+            _shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", _totalTriggersTime));
+            _shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", _totalExecutionTime));
+            _shared.Screen.Print(" ");
+
+            TotalCompileTime = 0D;
+            _totalUpdateTime = 0D;
+            _totalTriggersTime = 0D;
+            _totalExecutionTime = 0D;
         }
 
         public void OnSave(ConfigNode node)
         {
             try
             {
-                ConfigNode contextNode = new ConfigNode("context");
+                var contextNode = new ConfigNode("context");
 
                 // Save variables
                 if (_vars.Count > 0)
                 {
-                    ConfigNode varNode = new ConfigNode("variables");
+                    var varNode = new ConfigNode("variables");
 
                     foreach (var kvp in _vars)
                     {
                         if (!(kvp.Value is Binding.BoundVariable) &&
-                            (kvp.Value.Name.IndexOfAny(new char[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
+                            (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
                         {
                             varNode.AddValue(kvp.Key.TrimStart('$'), Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
                         }
@@ -702,7 +687,7 @@ namespace kOS.Execution
         {
             try
             {
-                StringBuilder scriptBuilder = new StringBuilder();
+                var scriptBuilder = new StringBuilder();
 
                 foreach (ConfigNode contextNode in node.GetNodes("context"))
                 {
@@ -718,7 +703,7 @@ namespace kOS.Execution
 
                 if (_shared.ScriptHandler != null && scriptBuilder.Length > 0)
                 {
-                    ProgramBuilder programBuilder = new ProgramBuilder();
+                    var programBuilder = new ProgramBuilder();
                     programBuilder.AddRange(_shared.ScriptHandler.Compile(scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);

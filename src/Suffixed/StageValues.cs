@@ -20,7 +20,8 @@ namespace kOS.Suffixed
         private object GetResourceOfCurrentStage(string resourceName)
         {
             var activeEngines = VesselUtils.GetListOfActivatedEngines(vessel);
-            return Utils.ProspectForResource(resourceName, activeEngines);
+            var total = Utils.ProspectForResource(resourceName, activeEngines);
+            return Math.Round(total, 2);
         }
     }
 }

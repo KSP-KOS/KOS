@@ -13,7 +13,7 @@ namespace kOS.Binding
         public override void AddTo(SharedObjects shared)
         {
             _shared = shared;
-            _shared.BindingMgr.AddGetter("CONFIG", delegate(CPU cpu) { return Config.GetInstance(); });
+            _shared.BindingMgr.AddGetter("CONFIG", cpu => Config.Instance);
         }
     }
 }
