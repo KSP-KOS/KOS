@@ -50,12 +50,12 @@ namespace kOS.Binding
                     var body = currentTarget as CelestialBody;
                     if (body != null)
                     {
-                        return new BodyTarget(body, _shared.Vessel);
+                        return new BodyTarget(body, _shared);
                     }
                     var dockingNode = currentTarget as ModuleDockingNode;
                     if (dockingNode != null)
                     {
-                        return new DockingPortValue(dockingNode);
+                        return new DockingPortValue(dockingNode, _shared);
                     }
 
                     return null;

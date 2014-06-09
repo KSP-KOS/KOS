@@ -150,6 +150,7 @@ namespace kOS.Binding
             {
                 this.name = name;
                 control = GetControllerByVessel(sharedObjects.Vessel);
+                
                 binding = sharedObjects.BindingMgr;
                 Enabled = false;
                 value = null;
@@ -295,7 +296,7 @@ namespace kOS.Binding
                 }
                 else if (value is GeoCoordinates)
                 {
-                    bearing = ((GeoCoordinates)value).GetBearing(control.Vessel);
+                    bearing = (float) ((GeoCoordinates)value).GetBearing();
                 }
                 else if (value is double)
                 {

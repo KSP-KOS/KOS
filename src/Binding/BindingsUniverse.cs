@@ -72,7 +72,7 @@ namespace kOS.Binding
             foreach (var body in FlightGlobals.fetch.bodies)
             {
                 var cBody = body;
-                _shared.BindingMgr.AddGetter(body.name, cpu => new BodyTarget(cBody, _shared.Vessel));
+                _shared.BindingMgr.AddGetter(body.name, cpu => new BodyTarget(cBody, _shared));
             }
         }
     }

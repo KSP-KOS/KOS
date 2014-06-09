@@ -83,7 +83,7 @@ namespace kOS.Utilities
             return total;
         }
 
-        public static ListValue PartList(this IShipconstruct vessel, string partType)
+        public static ListValue PartList(this IShipconstruct vessel, string partType, SharedObjects sharedObj)
         {
             var list = new ListValue();
             var partList = vessel.Parts.ToList();
@@ -94,19 +94,19 @@ namespace kOS.Utilities
                     list = ResourceValue.PartsToList(partList);
                     break;
                 case "PARTS":
-                    list = PartValue.PartsToList(partList);
+                    list = PartValue.PartsToList(partList, sharedObj);
                     break;
                 case "ENGINES":
-                    list = EngineValue.PartsToList(partList);
+                    list = EngineValue.PartsToList(partList, sharedObj);
                     break;
                 case "SENSORS":
-                    list = SensorValue.PartsToList(partList);
+                    list = SensorValue.PartsToList(partList, sharedObj);
                     break;
                 case "ELEMENTS":
                     list = ElementValue.PartsToList(partList);
                     break;
                 case "DOCKINGPORTS":
-                    list = DockingPortValue.PartsToList(partList);
+                    list = DockingPortValue.PartsToList(partList, sharedObj);
                     break;
             }
             return list;
@@ -259,10 +259,7 @@ namespace kOS.Utilities
         {
             var delta = b - a;
 
-            while (delta > 180) delta -= 360;
-            while (delta < -180) delta += 360;
-
-            return delta;
+            return (float) Utils.DegreeFix(delta,-180.0);
         }
 
         public static float GetHeading(Vessel vessel)
@@ -310,13 +307,13 @@ namespace kOS.Utilities
             return Vector3d.Exclude(vessel.upAxis, vessel.mainBody.transform.up);
         }
 
-        public static object TryGetEncounter(Vessel vessel)
+        public static object TryGetEncounter(Vessel vessel, SharedObjects sharedObj)
         {
             foreach (var patch in vessel.patchedConicSolver.flightPlan)
             {
                 if (patch.patchStartTransition == Orbit.PatchTransitionType.ENCOUNTER)
                 {
-                    return new OrbitInfo(patch, vessel);
+                    return new OrbitInfo(patch, sharedObj);
                 }
             }
 
@@ -455,12 +452,9 @@ namespace kOS.Utilities
 
         public static float GetVesselLongitude(Vessel vessel)
         {
-            var retVal = (float) vessel.longitude;
+            var retVal = vessel.longitude;
 
-            while (retVal > 180) retVal -= 360;
-            while (retVal < -180) retVal += 360;
-
-            return retVal;
+            return (float) Utils.DegreeFix(retVal, -180.0);
         }
 
         public static void UnsetTarget()

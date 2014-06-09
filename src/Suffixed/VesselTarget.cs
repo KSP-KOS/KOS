@@ -4,11 +4,54 @@ using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
-    public class VesselTarget : SpecialValue
+    public class VesselTarget : Orbitable
     {
-        private SharedObjects shared;
-        private Vessel vessel;
+        override public Orbit orbit { get{return Vessel.orbit;} set{} }
+
+        private SharedObjects _shared;
+        override public SharedObjects shared{ get{return _shared;} set{_shared = value;} }
+
+        override public string GetName()
+        {
+            return Vessel.vesselName;
+        }
+
+        override public Vector GetPosition()
+        {
+            return new Vector( Vessel.GetWorldPos3D() - CurrentVessel.GetWorldPos3D() );
+        }
+
+        override public Velocities GetVelocities()
+        {
+            return new Velocities(Vessel);
+        }
         
+        override public Vector GetPositionAtUT( TimeSpan timeStamp )
+        {
+            // TODO: This will take work - getting the manuever nodes and SOI transitions to
+            // find the position at the given timestamp.  This is a stub to get it to compile
+            // for now:
+            return new Vector(0.0, 0.0, 0.0);
+        }
+
+        override public Velocities GetVelocitiesAtUT( TimeSpan timeStamp )
+        {
+            // TODO: This will take work - getting the manuever nodes and SOI transitions to
+            // find the position at the given timestamp.  This is a stub to get it to compile
+            // for now:
+            return new Velocities( new Vector(0.0, 0.0, 0.0), new Vector( 0.0, 0.0, 0.0) );
+        }
+        
+        override public Vector GetUpVector()
+        {
+            return new Vector( Vessel.upAxis );
+        }
+
+        override public Vector GetNorthVector()
+        {
+            return new Vector( VesselUtils.GetNorthVector(Vessel) );
+        }
+
         static VesselTarget()
         {
             ShortCuttableShipSuffixes = new[]
@@ -17,7 +60,7 @@ namespace kOS.Suffixed
                     "LONGITUDE",
                     "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED",
                     "AIRSPEED", "VESSELNAME",
-                    "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE"
+                    "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
                 };
         }
 
@@ -27,15 +70,9 @@ namespace kOS.Suffixed
             this.shared = shared;
         }
 
-        public VesselTarget(Vessel target)
-        {
-            Vessel = target;
-            this.vessel = target;
-        }
-
         public VesselTarget(SharedObjects shared) : this(shared.Vessel, shared) { }
 
-        public Vessel CurrentVessel { get { return shared != null ? shared.Vessel : vessel; } }
+        public Vessel CurrentVessel { get { return shared.Vessel; } }
 
         public ITargetable Target
         {
@@ -46,11 +83,14 @@ namespace kOS.Suffixed
 
         public static string[] ShortCuttableShipSuffixes { get; private set; }
 
+
         public bool IsInRange(double range)
         {
             return GetDistance() <= range;
         }
 
+        // TODO: We will need to replace with the same thing Orbitable:DISTANCE does
+        // in order to implement the orbit solver later.
         public double GetDistance()
         {
             return Vector3d.Distance(CurrentVessel.GetWorldPos3D(), Vessel.GetWorldPos3D());
@@ -61,35 +101,11 @@ namespace kOS.Suffixed
             return "VESSEL(\"" + Vessel.vesselName + "\")";
         }
 
-        public Direction GetPrograde()
-        {
-            var up = (Vessel.findLocalMOI(Vessel.findWorldCenterOfMass()) - Vessel.mainBody.position).normalized;
-
-            var d = new Direction {Rotation = Quaternion.LookRotation(Vessel.orbit.GetVel().normalized, up)};
-            return d;
-        }
-
-        public Direction GetRetrograde()
-        {
-            var up = (Vessel.findLocalMOI(Vessel.findWorldCenterOfMass()) - Vessel.mainBody.position).normalized;
-
-            var d = new Direction {Rotation = Quaternion.LookRotation(Vessel.orbit.GetVel().normalized*-1, up)};
-            return d;
-        }
-
         public Direction GetFacing()
         {
             var vesselRotation = Vessel.ReferenceTransform.rotation;
             Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
             return new Direction(vesselFacing);
-        }
-
-        public Direction GetSurfacePrograde()
-        {
-            var up = (Vessel.findLocalMOI(Vessel.findWorldCenterOfMass()) - Vessel.mainBody.position).normalized;
-
-            var d = new Direction { Rotation = Quaternion.LookRotation(Vessel.srf_velocity.normalized, up) };
-            return d;
         }
 
         public override bool SetSuffix(string suffixName, object value)
@@ -112,39 +128,16 @@ namespace kOS.Suffixed
             {
                 case "CONTROL":
                     return FlightControlManager.GetControllerByVessel(Vessel);
-                case "DIRECTION":
-                    var vector = (Vessel.GetWorldPos3D() - CurrentVessel.GetWorldPos3D());
-                    return new Direction(vector, false);
-                case "POSITION":
-                    return new Vector( Vessel.GetWorldPos3D() - CurrentVessel.GetWorldPos3D() );
-                case "DISTANCE":
-                    return (float) GetDistance();
                 case "BEARING":
                     return VesselUtils.GetTargetBearing(CurrentVessel, Vessel);
                 case "HEADING":
                     return VesselUtils.GetTargetHeading(CurrentVessel, Vessel);
-                case "PROGRADE":
-                    return GetPrograde();
-                case "RETROGRADE":
-                    return GetRetrograde();
                 case "MAXTHRUST":
                     return VesselUtils.GetMaxThrust(Vessel);
-                case "VELOCITY":
-                    return new VesselVelocity(Vessel);
-                case "GEOPOSITION":
-                    return new GeoCoordinates(Vessel);
-                case "LATITUDE":
-                    return VesselUtils.GetVesselLattitude(Vessel);
-                case "LONGITUDE":
-                    return VesselUtils.GetVesselLongitude(Vessel);
                 case "FACING":
                     return GetFacing();
-                case "UP":
-                    return new Direction(Vessel.upAxis, false);
-                case "NORTH":
-                    return new Direction(VesselUtils.GetNorthVector(Vessel), false);
                 case "BODY":
-                    return new BodyTarget(Vessel.mainBody, Vessel);
+                    return new BodyTarget(Vessel.mainBody, shared);
                 case "ANGULARMOMENTUM":
                     return new Direction(Vessel.angularMomentum, true);
                 case "ANGULARVEL":
@@ -161,22 +154,23 @@ namespace kOS.Suffixed
                             .magnitude; //the velocity of the vessel relative to the air);
                 case "VESSELNAME":
                     return Vessel.vesselName;
+
+                // Although there is an implementation of lat/long/alt in Orbitible,
+                // it's better to use the methods for vessels that are faster if they're
+                // available:
+                case "LATITUDE":
+                    return VesselUtils.GetVesselLattitude(Vessel);
+                case "LONGITUDE":
+                    return VesselUtils.GetVesselLongitude(Vessel);
                 case "ALTITUDE":
                     return Vessel.altitude;
-                case "APOAPSIS":
-                    return Vessel.orbit.ApA;
-                case "PERIAPSIS":
-                    return Vessel.orbit.PeA;
+
                 case "SENSORS":
                     return new VesselSensors(Vessel);
                 case "TERMVELOCITY":
                     return VesselUtils.GetTerminalVelocity(Vessel);
                 case "LOADED":
                     return Vessel.loaded;
-                case "OBT":
-                    return new OrbitInfo(Vessel);
-                case "SRFPROGRADE":
-                    return GetSurfacePrograde();
             }
 
             // Is this a resource?

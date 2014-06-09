@@ -8,12 +8,12 @@ namespace kOS.Suffixed.Part
         private readonly ModuleEnginesFX enginefFx;
         private readonly ModuleEngines engine;
 
-        public EngineValue(global::Part part, ModuleEngines engine) : base(part)
+        public EngineValue(global::Part part, ModuleEngines engine, SharedObjects sharedObj) : base(part, sharedObj)
         {
             this.engine = engine;
         }
 
-        public EngineValue(global::Part part, ModuleEnginesFX enginefFx) : base(part)
+        public EngineValue(global::Part part, ModuleEnginesFX enginefFx, SharedObjects sharedObj) : base(part, sharedObj)
         {
             this.enginefFx = enginefFx;
         }
@@ -147,7 +147,7 @@ namespace kOS.Suffixed.Part
             return base.GetSuffix(suffixName);
         }
 
-        public new static ListValue PartsToList(IEnumerable<global::Part> parts)
+        public new static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
         {
             var toReturn = new ListValue();
             foreach (var part in parts)
@@ -158,11 +158,11 @@ namespace kOS.Suffixed.Part
                     var engineModuleFx = module as ModuleEnginesFX;
                     if (engineModuleFx != null)
                     {
-                        toReturn.Add(new EngineValue(part, engineModuleFx));
+                        toReturn.Add(new EngineValue(part, engineModuleFx, sharedObj));
                     }
                     else if (engineModule != null)
                     {
-                        toReturn.Add(new EngineValue(part, engineModule));
+                        toReturn.Add(new EngineValue(part, engineModule, sharedObj));
                     }
                 }
             }

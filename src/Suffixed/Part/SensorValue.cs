@@ -6,7 +6,7 @@ namespace kOS.Suffixed.Part
     {
         private readonly ModuleEnviroSensor sensor;
 
-        public SensorValue(global::Part part, ModuleEnviroSensor sensor) : base(part)
+        public SensorValue(global::Part part, ModuleEnviroSensor sensor, SharedObjects sharedObj) : base(part,sharedObj)
         {
             this.sensor = sensor;
         }
@@ -41,7 +41,7 @@ namespace kOS.Suffixed.Part
             return base.SetSuffix(suffixName, value);
         }
 
-        public new static ListValue PartsToList(IEnumerable<global::Part> parts)
+        public new static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
         {
             var toReturn = new ListValue();
             foreach (var part in parts)
@@ -50,7 +50,7 @@ namespace kOS.Suffixed.Part
                 {
                     var sensor = module as ModuleEnviroSensor;
                     if (sensor == null) continue;
-                    toReturn.Add(new SensorValue(part, sensor));
+                    toReturn.Add(new SensorValue(part, sensor, sharedObj));
                 }
             }
             return toReturn;

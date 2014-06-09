@@ -5,9 +5,12 @@ namespace kOS.Suffixed.Part
 {
     public class PartValue : SpecialValue, IKOSTargetable
     {
-        public PartValue(global::Part part)
+        private SharedObjects shared;
+        
+        public PartValue(global::Part part, SharedObjects sharedObj)
         {
             Part = part;
+            shared = sharedObj;
         }
 
         protected global::Part Part { get; private set; }
@@ -72,7 +75,7 @@ namespace kOS.Suffixed.Part
                 case "TARGETABLE":
                     return Part.Modules.OfType<ITargetable>().Any();
                 case "SHIP":
-                    return new VesselTarget(Part.vessel);
+                    return new VesselTarget(Part.vessel, shared);
             }
             return base.GetSuffix(suffixName);
         }
@@ -82,12 +85,12 @@ namespace kOS.Suffixed.Part
             return string.Format("PART({0},{1})", Part.name, Part.uid);
         }
 
-        public static ListValue PartsToList(IEnumerable<global::Part> parts)
+        public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
         {
             var toReturn = new ListValue();
             foreach (var part in parts)
             {
-                toReturn.Add(new PartValue(part));
+                toReturn.Add(new PartValue(part, sharedObj));
             }
             return toReturn;
         }

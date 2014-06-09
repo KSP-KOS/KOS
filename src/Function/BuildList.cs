@@ -20,7 +20,7 @@ namespace kOS.Function
                 case "bodies":
                     foreach (var body in FlightGlobals.fetch.bodies)
                     {
-                        list.Add(new BodyTarget(body, shared.Vessel));
+                        list.Add(new BodyTarget(body, shared));
                     }
                     break;
                 case "targets":
@@ -35,7 +35,7 @@ namespace kOS.Function
                 case "engines":
                 case "sensors":
                 case "elements":
-                    list = VesselUtils.PartList(shared.Vessel, listType);
+                    list = VesselUtils.PartList(shared.Vessel, listType, shared);
                     break;
             }
 
