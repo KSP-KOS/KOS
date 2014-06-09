@@ -1,4 +1,5 @@
-﻿using kOS.Execution;
+﻿using System;
+using kOS.Execution;
 
 namespace kOS.Binding
 {
@@ -17,7 +18,14 @@ namespace kOS.Binding
             {
                 if (Get != null)
                 {
-                    return currentValue ?? (currentValue = Get(Cpu));
+                    if (currentValue == null)
+                    {
+                        currentValue = Get(Cpu);
+                        if (currentValue is float)
+                            // promote floats to doubles
+                            currentValue = Convert.ToDouble(currentValue);
+                    }
+                    return currentValue;
                 }
                 return null;
             }

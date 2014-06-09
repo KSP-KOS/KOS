@@ -20,7 +20,7 @@ namespace kOS.Execution
             {
                 _stackPointer++;
                 if (_stackPointer < MAX_STACK_SIZE)
-                    _stack.Insert(_stackPointer, item);
+                    _stack.Insert(_stackPointer, ProcessItem(item));
                 else
                     throw new Exception("Stack overflow!!");
             }
@@ -50,6 +50,20 @@ namespace kOS.Execution
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Make any conversion needed before pushing an item onto the stack
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private object ProcessItem(object item)
+        {
+            if (item is float)
+                // promote floats to doubles
+                return Convert.ToDouble(item);
+            else
+                return item;
         }
 
         public object Pop()

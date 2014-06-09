@@ -19,7 +19,7 @@ namespace kOS.Binding
 
             _shared.BindingMgr.AddGetter("ALT_APOAPSIS", cpu => _shared.Vessel.orbit.ApA);
             _shared.BindingMgr.AddGetter("ALT_PERIAPSIS", cpu => _shared.Vessel.orbit.PeA);
-            _shared.BindingMgr.AddGetter("ALT_RADAR", cpu => _shared.Vessel.heightFromTerrain > 0 ? Mathf.Min(_shared.Vessel.heightFromTerrain, (float)_shared.Vessel.altitude) : (float)_shared.Vessel.altitude);
+            _shared.BindingMgr.AddGetter("ALT_RADAR", cpu => Convert.ToDouble(_shared.Vessel.heightFromTerrain > 0 ? Mathf.Min(_shared.Vessel.heightFromTerrain, (float)_shared.Vessel.altitude) : (float)_shared.Vessel.altitude));
             _shared.BindingMgr.AddGetter("ANGULARVELOCITY", cpu => _shared.Vessel.transform.InverseTransformDirection(_shared.Vessel.rigidbody.angularVelocity));
             _shared.BindingMgr.AddGetter("COMMRANGE", cpu => VesselUtils.GetCommRange(_shared.Vessel));
             _shared.BindingMgr.AddGetter("ENCOUNTER", cpu => VesselUtils.TryGetEncounter(_shared.Vessel));
