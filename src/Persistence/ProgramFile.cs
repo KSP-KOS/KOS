@@ -129,12 +129,20 @@ namespace kOS.Persistence
 
         public static string EncodeLine(string input)
         {
-            return input.Replace("{", "&#123;").Replace("}", "&#125;").Replace(" ", "&#32;");     // Stops universe from imploding
+            return input
+                .Replace("{", "&#123;")
+                .Replace("}", "&#125;")
+                .Replace(" ", "&#32;")
+                .Replace("\n", "&#10");     // Stops universe from imploding
         }
 
         public static string DecodeLine(string input)
         {
-            return input.Replace("&#123;", "{").Replace("&#125;", "}").Replace("&#32;", " ");
+            return input
+                .Replace("&#123;", "{")
+                .Replace("&#125;", "}")
+                .Replace("&#32;", " ")
+                .Replace("&#10", "\n");
         }
     }
 
