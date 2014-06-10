@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using kOS.AddOns.RemoteTech2;
 using kOS.Utilities;
 
@@ -9,28 +8,30 @@ namespace kOS.Suffixed
     public class FlightControl : SpecialValue , IDisposable
     {
         // For rotation x = yaw, y = pitch, and z = roll
-        private Vector rotation;
-        private Vector translation;
-        private float wheelSteer;
-        private float wheelThrottle;
-        private float mainThrottle;
+        private float? yaw;
+        private float? pitch;
+        private float? roll;
+        private float? fore;
+        private float? starboard;
+        private float? top;
+        private float? wheelSteer;
+        private float? wheelThrottle;
+        private float? mainThrottle;
         private readonly Flushable<bool> neutral;
         private readonly Flushable<bool> killRotation;
         private Vessel vessel;
         private bool bound;
-        private readonly List<string> doubleSuffixes;
+        private readonly List<string> floatSuffixes;
         private readonly List<string> vectorSuffixes;
 
         public FlightControl(Vessel vessel)
         {
-            rotation = new Vector(0, 0, 0);
-            translation = new Vector(0, 0, 0);
             neutral = new Flushable<bool>(); 
             killRotation = new Flushable<bool>(); 
             bound = false;
             this.vessel = vessel;
 
-            doubleSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
+            floatSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
             vectorSuffixes = new List<string> { "ROTATION", "TRANSLATION" };
         }
 
@@ -44,29 +45,29 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "YAW":
-                    return rotation.X;
+                    return yaw.HasValue ? yaw : default(float);
                 case "PITCH":
-                    return rotation.Y;
+                    return pitch.HasValue ? pitch : default(float);
                 case "ROLL":
-                    return rotation.Z;
+                    return roll.HasValue ? roll : default(float);
                 case "FORE":
-                    return translation.Z;
+                    return fore.HasValue ? fore : default(float);
                 case "STARBOARD":
-                    return translation.X;
+                    return starboard.HasValue ? starboard : default(float);
                 case "TOP":
-                    return translation.Y;
+                    return top.HasValue ? top : default(float);
                 case "ROTATION":
-                    return rotation;
+                    return new Vector(yaw ?? default(float), pitch ?? default(float), roll ?? default(float));
                 case "TRANSLATION":
-                    return translation;
+                    return new Vector(starboard ?? default(float), top ?? default(float), fore ?? default(float));
                 case "NEUTRAL":
                     return neutral;
                 case "MAINTHROTTLE":
-                    return mainThrottle;
+                    return mainThrottle.HasValue ? mainThrottle : default(float);
                 case "WHEELTHROTTLE":
-                    return wheelThrottle;
+                    return wheelThrottle.HasValue ? wheelThrottle : default(float);
                 case "WHEELSTEER":
-                    return wheelSteer;
+                    return wheelSteer.HasValue ? wheelSteer : default(float);
                 case "BOUND":
                     return bound;
                 default:
@@ -76,7 +77,7 @@ namespace kOS.Suffixed
 
         public override bool SetSuffix(string suffixName, object value)
         {
-            double doubleValue = 0;
+            float? floatValue = 0;
             Vector vectorValue = null;
             
             Bind();
@@ -91,59 +92,129 @@ namespace kOS.Suffixed
                 return true;
             }
 
-            if (doubleSuffixes.Contains(suffixName))
+            if (floatSuffixes.Contains(suffixName))
             {
-                doubleValue = Convert.ToDouble(value);
-                if (double.IsNaN(doubleValue))
-                    return true;
+                if (!ValueToFloat(value, ref floatValue)) return true;
             }
 
             if (vectorSuffixes.Contains(suffixName))
             {
-                vectorValue = (Vector)value;
-                if (!Utils.IsValidVector(vectorValue))
-                    return true;
+                if (!ValueToVector(value, ref vectorValue)) return true;
             }
 
             switch (suffixName)
             {
                 case "YAW":
-                    rotation.X = Utils.Clamp(doubleValue, -1, 1);
+                    yaw = Utils.Clamp(floatValue, -1, 1);
                     break;
                 case "PITCH":
-                    rotation.Y = Utils.Clamp(doubleValue, -1, 1);
+                    pitch = Utils.Clamp(floatValue, -1, 1);
                     break;
                 case "ROLL":
-                    rotation.Z = Utils.Clamp(doubleValue, -1, 1);
+                    roll = Utils.Clamp(floatValue, -1, 1);
                     break;
                 case "STARBOARD":
-                    translation.X = Utils.Clamp(doubleValue, -1, 1);
+                    starboard = Utils.Clamp(floatValue, -1, 1);
                     break;
                 case "TOP":
-                    translation.Y = Utils.Clamp(doubleValue, -1, 1);
+                    top = Utils.Clamp(floatValue, -1, 1);
                     break;
                 case "FORE":
-                    translation.Z = Utils.Clamp(doubleValue, -1, 1);
+                    fore = Utils.Clamp(floatValue, -1, 1);
                     break;
                 case "ROTATION":
-                    rotation = vectorValue;
+                    SetRotation(vectorValue);
                     break;
                 case "TRANSLATION":
-                    translation = vectorValue;
+                    SetTranslation(vectorValue);
                     break;
                 case "MAINTHROTTLE":
-                    mainThrottle = (float)Utils.Clamp(doubleValue, 0, 1);
+                    mainThrottle = Utils.Clamp(floatValue, 0, 1);
                     break;
                 case "WHEELTHROTTLE":
-                    wheelThrottle = (float)Utils.Clamp(doubleValue, 0, 1);
+                    wheelThrottle = Utils.Clamp(floatValue, 0, 1);
                     break;
                 case "WHEELSTEER":
-                    wheelSteer = (float)Utils.Clamp(doubleValue, -1, 1);
+                    wheelSteer = Utils.Clamp(floatValue, -1, 1);
                     break;
                 default:
                     return false;
             }
             return true;
+        }
+
+        private void SetTranslation(Vector vectorValue)
+        {
+            if (vectorValue == null)
+            {
+                fore = default(float);
+                top = default(float);
+                starboard = default(float);
+            }
+            else
+            {
+                starboard = (float)vectorValue.X;
+                top = (float)vectorValue.Y;
+                fore = (float)vectorValue.Z;
+            }
+        }
+
+        private void SetRotation(Vector vectorValue)
+        {
+            if (vectorValue == null)
+            {
+                yaw = default(float);
+                pitch = default(float);
+                roll = default(float);
+            }
+            else
+            {
+                yaw = (float)vectorValue.X;
+                pitch = (float)vectorValue.Y;
+                roll = (float)vectorValue.Z;
+            }
+        }
+
+        private bool ValueToVector(object value, ref Vector vectorValue)
+        {
+            var valueStr = value.ToString();
+
+            var vector = value as Vector;
+
+            if (valueStr.ToLower() == "null")
+            {
+                vectorValue = null;
+            }
+            else if (vector != null)
+            {
+                if (!Utils.IsValidVector(vector))
+                    return false;
+                vectorValue = vector;
+            }
+            else
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private static bool ValueToFloat(object value, ref float? doubleValue)
+        {
+            var valueStr = value.ToString();
+            float valueParsed;
+            if (valueStr.ToLower() == "null")
+            {
+                doubleValue = null;
+            }
+            else if (float.TryParse(valueStr, out valueParsed))
+            {
+                doubleValue = valueParsed;
+            }
+            else
+            {
+                return true;
+            }
+            return false;
         }
 
         private void Bind()
@@ -219,17 +290,17 @@ namespace kOS.Suffixed
 
         private void PushNewSetting(ref FlightCtrlState st)
         {
-            st.X = (float)translation.X;
-            st.Y = (float)translation.Y;
-            st.Z = (float)translation.Z;
+            if(yaw.HasValue) st.X = yaw.Value;
+            if(pitch.HasValue) st.Y = pitch.Value;
+            if(roll.HasValue) st.Z = roll.Value ;
 
-            st.pitch = (float)rotation.Y;
-            st.yaw = (float)rotation.X;
-            st.roll = (float)rotation.Z;
+            if(starboard.HasValue) st.pitch = starboard.Value;
+            if(top.HasValue) st.yaw = top.Value;
+            if(fore.HasValue) st.roll = fore.Value;
 
-            st.wheelSteer = wheelSteer;
-            st.wheelThrottle = wheelThrottle;
-            st.mainThrottle = mainThrottle;
+            if(wheelSteer.HasValue) st.wheelSteer = wheelSteer.Value;
+            if(wheelThrottle.HasValue) st.wheelThrottle = wheelThrottle.Value;
+            if(mainThrottle.HasValue) st.mainThrottle = mainThrottle.Value;
 
         }
 
