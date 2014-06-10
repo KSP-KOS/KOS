@@ -11,10 +11,10 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            _shared = shared;
-            _shared.BindingMgr.AddGetter("SESSIONTIME", cpu => cpu.SessionTime);
-            _shared.BindingMgr.AddGetter("VERSION", cpu => Core.VersionInfo);
-            _shared.BindingMgr.AddGetter("VOLUME:NAME", cpu => _shared.VolumeMgr.CurrentVolume.Name);
+            Shared = shared;
+            Shared.BindingMgr.AddGetter("SESSIONTIME", cpu => cpu.SessionTime);
+            Shared.BindingMgr.AddGetter("VERSION", cpu => Core.VersionInfo);
+            Shared.BindingMgr.AddGetter("VOLUME:NAME", cpu => Shared.VolumeMgr.CurrentVolume.Name);
         }
     }
 }

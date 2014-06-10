@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using kOS.Suffixed;
-using kOS.Execution;
+﻿using kOS.Suffixed;
 
 namespace kOS.Binding
 {
@@ -12,8 +7,8 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            _shared = shared;
-            _shared.BindingMgr.AddGetter("CONFIG", cpu => Config.Instance);
+            Shared = shared;
+            Shared.BindingMgr.AddGetter("CONFIG", cpu => Config.Instance);
         }
     }
 }
