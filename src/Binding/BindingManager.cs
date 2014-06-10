@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using kOS.Execution;
 
@@ -9,18 +8,18 @@ namespace kOS.Binding
 {
     public class BindingManager : IDisposable
     {
-        private readonly SharedObjects _shared;
-        private readonly List<Binding> _bindings = new List<Binding>();
-        private readonly Dictionary<string, BoundVariable> _vars = new Dictionary<string, BoundVariable>();
-        private FlightControlManager _flightControl;
+        private readonly SharedObjects shared;
+        private readonly List<Binding> bindings = new List<Binding>();
+        private readonly Dictionary<string, BoundVariable> vars = new Dictionary<string, BoundVariable>();
+        private FlightControlManager flightControl;
 
         public delegate void BindingSetDlg(CPU cpu, object val);
         public delegate object BindingGetDlg(CPU cpu);
 
         public BindingManager(SharedObjects shared)
         {
-            _shared = shared;
-            _shared.BindingMgr = this;
+            this.shared = shared;
+            this.shared.BindingMgr = this;
         }
 
         public void LoadBindings()
@@ -28,9 +27,9 @@ namespace kOS.Binding
             var contexts = new string[1];
             contexts[0] = "ksp";
 
-            _bindings.Clear();
-            _vars.Clear();
-            _flightControl = null;
+            bindings.Clear();
+            vars.Clear();
+            flightControl = null;
 
             foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
             {
@@ -39,13 +38,13 @@ namespace kOS.Binding
                 if (attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
 
                 var b = (Binding)Activator.CreateInstance(t);
-                b.AddTo(_shared);
-                _bindings.Add(b);
+                b.AddTo(shared);
+                bindings.Add(b);
 
                 var manager = b as FlightControlManager;
                 if (manager != null)
                 {
-                    _flightControl = manager;
+                    flightControl = manager;
                 }
             }
         }
@@ -53,19 +52,19 @@ namespace kOS.Binding
         public void AddBoundVariable(string name, BindingGetDlg getDelegate, BindingSetDlg setDelegate)
         {
             BoundVariable variable;
-            if (_vars.ContainsKey(name))
+            if (vars.ContainsKey(name))
             {
-                variable = _vars[name];
+                variable = vars[name];
             }
             else
             {
                 variable = new BoundVariable
                     {
                         Name = name, 
-                        Cpu = _shared.Cpu
+                        Cpu = shared.Cpu
                     };
-                _vars.Add(name, variable);
-                _shared.Cpu.AddVariable(variable, name);
+                vars.Add(name, variable);
+                shared.Cpu.AddVariable(variable, name);
             }
 
             if (getDelegate != null)
@@ -88,13 +87,13 @@ namespace kOS.Binding
         public void PreUpdate()
         {
             // update the bindings
-            foreach (var b in _bindings)
+            foreach (var b in bindings)
             {
                 b.Update();
             }
 
             // clear bound variables values
-            foreach (var variable in _vars.Values)
+            foreach (var variable in vars.Values)
             {
                 variable.ClearValue();
             }
@@ -103,7 +102,7 @@ namespace kOS.Binding
         public void PostUpdate()
         {
             // save bound variables values
-            foreach (BoundVariable variable in _vars.Values)
+            foreach (BoundVariable variable in vars.Values)
             {
                 variable.SaveValue();
             }
@@ -111,20 +110,20 @@ namespace kOS.Binding
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            if (_flightControl != null)
+            if (flightControl != null)
             {
-                _flightControl.ToggleFlyByWire(paramName, enabled);
+                flightControl.ToggleFlyByWire(paramName, enabled);
             }
         }
 
         public void UnBindAll()
         {
-            _flightControl.UnBind();
+            flightControl.UnBind();
         }
 
         public void Dispose()
         {
-            _flightControl.Dispose();
+            flightControl.Dispose();
         }
     }
 }

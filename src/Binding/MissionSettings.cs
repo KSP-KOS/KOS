@@ -10,9 +10,9 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            _shared = shared;
+            Shared = shared;
 
-            _shared.BindingMgr.AddSetter("TARGET", delegate(CPU cpu, object val)
+            Shared.BindingMgr.AddSetter("TARGET", delegate(CPU cpu, object val)
                 {
                     var targetable = val as IKOSTargetable;
                     if (targetable != null)
@@ -28,7 +28,7 @@ namespace kOS.Binding
                         return;
                     }
 
-                    var vessel = VesselUtils.GetVesselByName(val.ToString(), _shared.Vessel);
+                    var vessel = VesselUtils.GetVesselByName(val.ToString(), Shared.Vessel);
                     if (vessel != null)
                     {
                         VesselUtils.SetTarget(vessel);
@@ -38,19 +38,19 @@ namespace kOS.Binding
                     VesselUtils.UnsetTarget();
                 });
 
-            _shared.BindingMgr.AddGetter("TARGET", delegate
+            Shared.BindingMgr.AddGetter("TARGET", delegate
                 {
                     var currentTarget = FlightGlobals.fetch.VesselTarget;
 
                     var vessel = currentTarget as Vessel;
                     if (vessel != null)
                     {
-                        return new VesselTarget(vessel, _shared);
+                        return new VesselTarget(vessel, Shared);
                     }
                     var body = currentTarget as CelestialBody;
                     if (body != null)
                     {
-                        return new BodyTarget(body, _shared.Vessel);
+                        return new BodyTarget(body, Shared.Vessel);
                     }
                     var dockingNode = currentTarget as ModuleDockingNode;
                     if (dockingNode != null)

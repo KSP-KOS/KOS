@@ -18,7 +18,7 @@ namespace kOS.Binding
         public override void AddTo(SharedObjects shared)
         {
             Debug.Log("kOS: FlightControlManager.AddTo " + shared.Vessel.id);
-            _shared = shared;
+            Shared = shared;
 
             AddNewFlightParam("throttle", shared);
             AddNewFlightParam("steering", shared);
@@ -60,7 +60,7 @@ namespace kOS.Binding
         {
             UnbindUnloaded();
 
-            if (currentVessel.id != _shared.Vessel.id)
+            if (currentVessel.id != Shared.Vessel.id)
             {
                 // Try to re-establish connection to vessel
                 if (currentVessel != null)
@@ -69,9 +69,9 @@ namespace kOS.Binding
                     currentVessel = null;
                 }
 
-                if (_shared.Vessel != null)
+                if (Shared.Vessel != null)
                 {
-                    currentVessel = _shared.Vessel;
+                    currentVessel = Shared.Vessel;
                     currentVessel.OnFlyByWire += OnFlyByWire;
 
                     foreach (var param in flightParameters.Values)
