@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using kOS.Utilities;
+﻿using UnityEngine;
 
 namespace kOS.Suffixed
 {
@@ -18,7 +14,8 @@ namespace kOS.Suffixed
         {
             _color = copyFrom._color;
         }
-        public Color color()
+        
+        public Color Color()
         {
             return _color;
         }

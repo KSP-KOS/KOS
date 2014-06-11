@@ -8,10 +8,8 @@ namespace kOS.Suffixed
 
         public CelestialBody Body { get; set; }
         
-        override public Orbit orbit{ get{return Body.orbit;} set{} }
-        private SharedObjects _shared;
-        override public SharedObjects shared{ get{return _shared;} set{_shared = value;} }
-        
+        override public Orbit Orbit{ get{return Body.orbit;} }
+
         override public string GetName()
         {
             return Body.name;
@@ -19,28 +17,28 @@ namespace kOS.Suffixed
 
         override public Vector GetPosition()
         {
-            return new Vector( Body.position - shared.Vessel.GetWorldPos3D() );
+            return new Vector( Body.position - Shared.Vessel.GetWorldPos3D() );
         }
         
-        override public Velocities GetVelocities()
+        override public OrbitableVelocity GetVelocities()
         {
-            return new Velocities(Body);
+            return new OrbitableVelocity(Body);
         }
         
         override public Vector GetPositionAtUT( TimeSpan timeStamp )
         {
-            return new Vector( Body.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - shared.Vessel.GetWorldPos3D() );
+            return new Vector( Body.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - Shared.Vessel.GetWorldPos3D() );
         }
 
-        override public Velocities GetVelocitiesAtUT( TimeSpan timeStamp )
+        override public OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp )
         {
-            Vector orbVel = new Vector( orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
+            var orbVel = new Vector( Orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
             CelestialBody parent = Body.referenceBody;
             if (parent==null) // only if Body is Sun and therefore has no parent.
-                return new Velocities( new Vector(0.0,0.0,0.0), new Vector(0.0,0.0,0.0) );
-            Vector surfVel = new Vector( Body.orbit.GetVel() - parent.getRFrmVel( Body.position ) );
+                return new OrbitableVelocity( new Vector(0.0,0.0,0.0), new Vector(0.0,0.0,0.0) );
+            var surfVel = new Vector( Body.orbit.GetVel() - parent.getRFrmVel( Body.position ) );
 
-            return new Velocities( orbVel, surfVel );
+            return new OrbitableVelocity( orbVel, surfVel );
         }
 
         override public Vector GetUpVector()
@@ -53,9 +51,7 @@ namespace kOS.Suffixed
 
         override public Vector GetNorthVector()
         {
-            CelestialBody parent = Body.referenceBody;
-            if (parent==null) // only if Body is Sun and therefore has no parent.
-                parent = Body;
+            CelestialBody parent = Body.referenceBody ?? Body;
             return new Vector( Vector3d.Exclude(GetUpVector().ToVector3D(), parent.transform.up) );
         }
 
@@ -63,15 +59,14 @@ namespace kOS.Suffixed
         {
         }
 
-        public BodyTarget(CelestialBody body, SharedObjects shareObj)
+        public BodyTarget(CelestialBody body, SharedObjects shareObj) :base(shareObj)
         {
             Body = body;
-            shared = shareObj;
         }
         
         public double GetDistance()
         {
-            return Vector3d.Distance(shared.Vessel.GetWorldPos3D(), Body.position) - Body.Radius;
+            return Vector3d.Distance(Shared.Vessel.GetWorldPos3D(), Body.position) - Body.Radius;
         }
 
         public override object GetSuffix(string suffixName)

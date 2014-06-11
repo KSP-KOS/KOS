@@ -1,29 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
-using kOS.Suffixed;
 using kOS.Execution;
 
-namespace kOS.Utilities
+namespace kOS.Suffixed
 {
     public class VectorRenderer : SpecialValue, IUpdateObserver, KOSScopeObserver
     {
-        public Vector3d      vec { get; set; }
-        public RgbaColor     rgba { get; set; }
-        public Vector3d      start { get; set; }
-        public double        scale { get; set; }
-        public double        width { get; set; }
+        public Vector3d      Vector { get; set; }
+        public RgbaColor     Color { get; set; }
+        public Vector3d      Start { get; set; }
+        public double        Scale { get; set; }
+        public double        Width { get; set; }
 
-        private LineRenderer  _line = null;
-        private LineRenderer  _hat = null;
-        private bool          _enable = false;
-        private UpdateHandler _uHandler = null;
-        private GameObject    _lineObj = null;
-        private GameObject    _hatObj  = null;
-        private GameObject    _labelObj  = null;
-        private GUIText       _label = null;
-        private string        _labelStr = "";
-        private Vector3       _labelLocation;
+        private LineRenderer  line;
+        private LineRenderer  hat;
+        private bool          enable;
+        private readonly UpdateHandler updateHandler;
+        private GameObject    lineObj;
+        private GameObject    hatObj;
+        private GameObject    labelObj;
+        private GUIText       label;
+        private string        labelStr = "";
+        private Vector3       labelLocation;
 
         // These could probably be moved somewhere where they are updated
         // more globally just once per Update() rather than once per
@@ -32,27 +30,27 @@ namespace kOS.Utilities
         // it might be worth the work to move these, and their associated
         // updater methods, to a new class with one global instance for the whole
         // mod.  Until then it's not that much of an extra cost:
-        private Vector3       _shipCenterCoords;
-        private Vector3       _camPos;         // camera coordinates.
-        private Vector3       _prevCamPos;
-        private Vector3       _camLookVec;     // vector from camera to ship positon.
-        private Vector3       _prevCamLookVec;
-        private Quaternion    _camRot = new Quaternion();
-        private Quaternion    _prevCamRot = new Quaternion();
-        private bool          _isOnMap = false; // true = Map view, false = Flight view.
-        private bool          _prevIsOnMap = false;
-        private int           _mapLayer = 10;   // found through trial-and-error
-        private int           _flightLayer = 0; // found through trial-and-error
-        
-        public VectorRenderer( UpdateHandler uHand )
+        private Vector3       shipCenterCoords;
+        private Vector3       camPos;         // camera coordinates.
+        private Vector3       prevCamPos; //TODO: do we need this?
+        private Vector3       camLookVec;     // vector from camera to ship positon.
+        private Vector3       prevCamLookVec;
+        private Quaternion    camRot;
+        private Quaternion    prevCamRot;
+        private bool          isOnMap; // true = Map view, false = Flight view.
+        private bool          prevIsOnMap;
+        private const int     MAP_LAYER = 10; // found through trial-and-error
+        private const int     FLIGHT_LAYER = 0; // found through trial-and-error
+
+        public VectorRenderer( UpdateHandler updateHand )
         {
-            vec     = new Vector3d(0,0,0);
-            rgba    = new RgbaColor(1,1,1,1);
-            start   = new Vector3d(0,0,0);
-            scale   = 1.0;
-            width   = 0;
+            Vector     = new Vector3d(0,0,0);
+            Color    = new RgbaColor(1,1,1);
+            Start   = new Vector3d(0,0,0);
+            Scale   = 1.0;
+            Width   = 0;
             
-            _uHandler    = uHand;
+            updateHandler    = updateHand;
         }
 
         // Implementation of KOSSCopeObserver interface:
@@ -70,186 +68,176 @@ namespace kOS.Utilities
         }
 
         
+        /// <summary>
+        /// Move the origin point of the vector drawings to move with the
+        /// current ship, whichever ship that happens to be at the moment,
+        /// and move to wherever that ship is within its local XYZ world (which
+        /// isn't always at (0,0,0), as it turns out.):
+        /// </summary>
         public void Update( double deltaTime )
         {
-            /// <summary>
-            /// Move the origin point of the vector drawings to move with the
-            /// current ship, whichever ship that happens to be at the moment,
-            /// and move to wherever that ship is within its local XYZ world (which
-            /// isn't always at (0,0,0), as it turns out.):
-            /// </summary>
-            
+            if (line == null || hat == null) return;
+            if (!enable) return;
 
-            if (_line != null && _hat != null)
+            GetCamData();
+            GetShipCenterCoords();
+            PutAtShipRelativeCoords();
+
+            SetLayer(isOnMap ? MAP_LAYER : FLIGHT_LAYER);
+
+            if ( isOnMap != prevIsOnMap || prevCamLookVec.magnitude != camLookVec.magnitude )
             {
-                if (_enable)
-                {
-                    GetCamData();
-                    GetShipCenterCoords();
-                    PutAtShipRelativeCoords();
-                    
-                    if (_isOnMap)
-                        SetLayer( _mapLayer );
-                    else
-                        SetLayer( _flightLayer );
-                    
-                    if ( _isOnMap != _prevIsOnMap || _prevCamLookVec.magnitude != _camLookVec.magnitude )
-                    {
-                        RenderPointCoords();
-                        LabelPlacement();
-                    }
-                    else if (_prevCamRot != _camRot)
-                    {
-                        LabelPlacement();
-                    }
-                }
+                RenderPointCoords();
+                LabelPlacement();
+            }
+            else if (prevCamRot != camRot)
+            {
+                LabelPlacement();
             }
         }
-        
+
+        /// <summary>
+        /// Update _shipCenterCoords, abstracting the different ways to do
+        /// it depending on view mode:
+        /// </summary>
         private void GetShipCenterCoords()
         {
-            /// <summary>
-            /// Update _shipCenterCoords, abstracting the different ways to do
-            /// it depending on view mode:
-            /// </summary>
-            if (_isOnMap)
-                _shipCenterCoords = ScaledSpace.LocalToScaledSpace(
+            if (isOnMap)
+                shipCenterCoords = ScaledSpace.LocalToScaledSpace(
                     FlightGlobals.ActiveVessel.GetWorldPos3D() );
             else
-                _shipCenterCoords = FlightGlobals.ActiveVessel.findWorldCenterOfMass();
+                shipCenterCoords = FlightGlobals.ActiveVessel.findWorldCenterOfMass();
         }
         
+        /// <summary>
+        /// Update camera data, abstracting the different ways KSP does it
+        /// depending on view mode:
+        /// </summary>
         private void GetCamData()
         {
-            /// <summary>
-            /// Update camera data, abstracting the different ways KSP does it
-            /// depending on view mode:
-            /// </summary>
 
-            _prevIsOnMap    = _isOnMap;
-            _prevCamLookVec = _camLookVec;
-            _prevCamPos     = _camPos;
-            _prevCamRot     = _camRot;
+            prevIsOnMap    = isOnMap;
+            prevCamLookVec = camLookVec;
+            prevCamPos     = camPos;
+            prevCamRot     = camRot;
             
-            _isOnMap = MapView.MapIsEnabled;
+            isOnMap = MapView.MapIsEnabled;
 
-            if (_isOnMap)
+            if (isOnMap)
             {
                 PlanetariumCamera pc = MapView.MapCamera;
-                _camPos = pc.transform.localPosition;
+                camPos = pc.transform.localPosition;
                 // the Distance coming from from MapView.MapCamera.Distance
                 // doesn't seem to work - calculating it myself below:
                 // _camdist = pc.Distance();
-                _camRot = MapView.MapCamera.GetCameraTransform().rotation;
+                camRot = MapView.MapCamera.GetCameraTransform().rotation;
             }
             else
             {
                 FlightCamera fc = FlightCamera.fetch;
-                _camPos = fc.transform.localPosition;
+                camPos = fc.transform.localPosition;
                 // the Distance coming from from FlightCamera.Distance
                 // doesn't seem to work - calculating it myself below:
                 // _camdist = fc.Distance();
-                _camRot = FlightCamera.fetch.GetCameraTransform().rotation;
+                camRot = FlightCamera.fetch.GetCameraTransform().rotation;
             }
-            _camLookVec = _camPos - _shipCenterCoords;
+            camLookVec = camPos - shipCenterCoords;
         }
         
+        /// <summary>
+        /// Get the position in screen coordinates that the 3d world coordinates
+        /// project onto, abstracting the two different ways KSP has to access
+        /// the camera depending on view mode.
+        /// Returned coords are in a system where the screen viewport goes from
+        /// (0,0) to (1,1) and the Z coord is how far from the screen it is
+        /// (-Z means behind you).
+        /// </summary>
         private Vector3 GetViewportPosFor( Vector3 v )
         {
-            /// <summary>
-            /// Get the position in screen coordinates that the 3d world coordinates
-            /// project onto, abstracting the two different ways KSP has to access
-            /// the camera depending on view mode.
-            /// Returned coords are in a system where the screen viewport goes from
-            /// (0,0) to (1,1) and the Z coord is how far from the screen it is
-            /// (-Z means behind you).
-            /// </summary>
-            Camera cam;
-            if (_isOnMap)
-                cam = MapView.MapCamera.camera;
-            else
-                cam = FlightCamera.fetch.mainCamera;
+            Camera cam = isOnMap ? 
+                MapView.MapCamera.camera : 
+                FlightCamera.fetch.mainCamera;
             return cam.WorldToViewportPoint( v );
         }
-        
+
+        /// <summary>
+        /// Position the origins of the objects that make up the arrow
+        /// such that they anchor relatove to current ship position.
+        /// </summary>
         private void PutAtShipRelativeCoords()
         {
-            /// <summary>
-            /// Position the origins of the objects that make up the arrow
-            /// such that they anchor relatove to current ship position.
-            /// </summary>
-            _line.transform.localPosition  = _shipCenterCoords;
-            _hat.transform.localPosition   = _shipCenterCoords;
+            line.transform.localPosition  = shipCenterCoords;
+            hat.transform.localPosition   = shipCenterCoords;
         }
         
         public bool GetShow()
         {
-            return _enable;
+            return enable;
         }
         
         public void SetShow( bool newShowVal )
         {
             if (newShowVal)
             {
-                if (_line == null || _hat == null )
+                if (line == null || hat == null )
                 {
-                    _lineObj     = new GameObject("vecdrawLine");
-                    _hatObj      = new GameObject("vecdrawHat");
-                    _labelObj    = new GameObject("vecdrawLabel", typeof(GUIText) );
+                    lineObj     = new GameObject("vecdrawLine");
+                    hatObj      = new GameObject("vecdrawHat");
+                    labelObj    = new GameObject("vecdrawLabel", typeof(GUIText) );
 
-                    _line  = _lineObj.AddComponent<LineRenderer>();
-                    _hat   = _hatObj.AddComponent<LineRenderer>();
-                    _label = _labelObj.guiText;
+                    line  = lineObj.AddComponent<LineRenderer>();
+                    hat   = hatObj.AddComponent<LineRenderer>();
+                    label = labelObj.guiText;
 
-                    _line.useWorldSpace      = false;
-                    _hat.useWorldSpace       = false;
+                    line.useWorldSpace      = false;
+                    hat.useWorldSpace       = false;
 
                     GetShipCenterCoords();
 
-                    _line.material           = new Material(Shader.Find("Particles/Additive"));
-                    _hat.material            = new Material(Shader.Find("Particles/Additive"));
+                    line.material           = new Material(Shader.Find("Particles/Additive"));
+                    hat.material            = new Material(Shader.Find("Particles/Additive"));
 
                     // This is how font loading would work if other fonts were available in KSP:
                     // Font lblFont = (Font)Resources.Load( "Arial", typeof(Font) );
                     // Debug.Log( "lblFont is " + (lblFont == null ? "null" : "not null") );
                     // _label.font = lblFont;
                     
-                    _label.fontSize = 12;
-                    _label.text = _labelStr;
-                    _label.anchor = TextAnchor.MiddleCenter;
+                    label.fontSize = 12;
+                    label.text = labelStr;
+                    label.anchor = TextAnchor.MiddleCenter;
 
                     PutAtShipRelativeCoords();
                     RenderValues();
                 }
-                _uHandler.AddObserver( this );
-                _line.enabled  = true;
-                _hat.enabled   = true;
-                _label.enabled = true;
+                updateHandler.AddObserver( this );
+                line.enabled  = true;
+                hat.enabled   = true;
+                label.enabled = true;
             }
             else
             {
-                _uHandler.RemoveObserver( this );
-                if (_label != null)
+                updateHandler.RemoveObserver( this );
+                if (label != null)
                 {
-                    _label.enabled = false;
-                    _label = null;
+                    label.enabled = false;
+                    label = null;
                 }
-                if (_hat != null)
+                if (hat != null)
                 {
-                    _hat.enabled   = false;
-                    _hat = null;
+                    hat.enabled   = false;
+                    hat = null;
                 }
-                if (_line != null)
+                if (line != null)
                 {
-                    _line.enabled  = false;
-                    _line = null;
+                    line.enabled  = false;
+                    line = null;
                 }
-                _labelObj = null;
-                _hatObj   = null;
-                _lineObj  = null;
+                labelObj = null;
+                hatObj   = null;
+                lineObj  = null;
             }
 
-            _enable = newShowVal;
+            enable = newShowVal;
         }
         
         public override object GetSuffix(string suffixName)
@@ -258,20 +246,20 @@ namespace kOS.Utilities
             {
                 case "VEC":
                 case "VECTOR":
-                    return  new Vector(vec);
+                    return  new Vector(Vector);
                 case "SHOW":
-                    return _enable;
+                    return enable;
                 case "COLOR":
                 case "COLOUR":
-                    return rgba ;
+                    return Color ;
                 case "START":
-                    return  new Vector(start);
+                    return  new Vector(Start);
                 case "SCALE":
-                    return scale ;
+                    return Scale ;
                 case "LABEL":
-                    return _labelStr;
+                    return labelStr;
                 case "WIDTH":
-                    return width;
+                    return Width;
             }
 
             return base.GetSuffix(suffixName);
@@ -282,8 +270,8 @@ namespace kOS.Utilities
             double dblValue = 0.0;
             bool boolValue = false;
             string strValue = "";
-            RgbaColor rgbaValue = new RgbaColor(1,1,1,1);
-            Vector vectorValue = new Vector(0,0,0);
+            var rgbaValue = new RgbaColor(1,1,1);
+            var vectorValue = new Vector(0,0,0);
             
             // When the wrong type of value is given, attempt
             // to make at least SOME value out of it that won't crash
@@ -292,15 +280,15 @@ namespace kOS.Utilities
             // used to deny any of them being usable other than doubles.
             // This is getting a bit silly looking and something else
             // needs to be done, I think.
-            if (value is double || value is int || value is float ||value is Int32 || value is Int64)
+            if (value is double || value is int || value is float || value is long)
             {
                 dblValue = Convert.ToDouble(value);
-                boolValue = (Convert.ToBoolean(value) ? true : false);
+                boolValue = (Convert.ToBoolean(value));
             }
             else if (value is bool)
             {
                 boolValue = (bool)value;
-                dblValue = (double) ( ((bool)value) ? 1.0 : 0.0 );
+                dblValue = ((bool)value) ? 1.0 : 0.0;
             }
             else if (value is RgbaColor)
             {
@@ -323,7 +311,7 @@ namespace kOS.Utilities
             {
                 case "VEC":
                 case "VECTOR":
-                    vec = vectorValue.ToVector3D();
+                    Vector = vectorValue.ToVector3D();
                     RenderPointCoords();
                     return true;
                 case "SHOW":
@@ -331,22 +319,22 @@ namespace kOS.Utilities
                     return true;
                 case "COLOR":
                 case "COLOUR":
-                    rgba = rgbaValue;
+                    Color = rgbaValue;
                     RenderColor();
                     return true;
                 case "START":
-                    start = vectorValue.ToVector3D();
+                    Start = vectorValue.ToVector3D();
                     RenderPointCoords();
                     return true;
                 case "SCALE":
-                    scale = dblValue;
+                    Scale = dblValue;
                     RenderPointCoords();
                     return true;
                 case "LABEL":
                     SetLabel( strValue );
                     return true;
                 case "WIDTH":
-                    width = dblValue;
+                    Width = dblValue;
                     RenderPointCoords();
                     return true;
             }
@@ -355,15 +343,15 @@ namespace kOS.Utilities
         }
         public void SetLayer( int newVal )
         {
-            if (_lineObj  != null) _lineObj.layer  = newVal;
-            if (_hatObj   != null) _hatObj.layer   = newVal;
-            if (_labelObj != null) _labelObj.layer = newVal;
+            if (lineObj  != null) lineObj.layer  = newVal;
+            if (hatObj   != null) hatObj.layer   = newVal;
+            if (labelObj != null) labelObj.layer = newVal;
         }
         
         public void SetLabel( string newVal )
         {
-            _labelStr = newVal;
-            if (_label != null) _label.text = _labelStr;
+            labelStr = newVal;
+            if (label != null) label.text = labelStr;
         }
         
         public void RenderValues()
@@ -374,103 +362,106 @@ namespace kOS.Utilities
             LabelPlacement();
         }
 
+        /// <summary>
+        /// Assign the arrow and label's positions in space.  Call
+        /// whenever :VEC, :START, or :SCALE change, or when the
+        /// game switches between flight view and map view, as they
+        /// don't use the same size scale.
+        /// </summary>
         public void RenderPointCoords()
         {
-            /// <summary>
-            /// Assign the arrow and label's positions in space.  Call
-            /// whenever :VEC, :START, or :SCALE change, or when the
-            /// game switches between flight view and map view, as they
-            /// don't use the same size scale.
-            /// </summary>
 
-            if (_line != null && _hat != null)
+            if (line != null && hat != null)
             {
-                double mag = vec.magnitude;
                 double mapLengthMult = 1.0; // for scaling when on map view.
                 double mapWidthMult  = 1.0; // for scaling when on map view.
-                float useWidth = 1.0f;
+                float useWidth;
 
-                if (_isOnMap)
+                if (isOnMap)
                 {
                     mapLengthMult = ScaledSpace.InverseScaleFactor;
-                    mapWidthMult = Math.Max( _camLookVec.magnitude, 100.0f ) / 100.0f;
+                    mapWidthMult = Math.Max( camLookVec.magnitude, 100.0f ) / 100.0f;
                 }
                 
-                Vector3d point1 = mapLengthMult * scale * start;
-                Vector3d point2 = mapLengthMult * scale * (start+0.95*vec);
-                Vector3d point3 = mapLengthMult * scale * (start+vec);
+                Vector3d point1 = mapLengthMult * Scale * Start;
+                Vector3d point2 = mapLengthMult * Scale * (Start+0.95*Vector);
+                Vector3d point3 = mapLengthMult * Scale * (Start+Vector);
                 
-                if (width <= 0) // User didn't pick a valid width. Use dynamic calculation.
+                if (Width <= 0) // User didn't pick a valid width. Use dynamic calculation.
                 {
                     useWidth = (float) (0.2*mapWidthMult);
                 }
                 else // User did pick a width to override the dynamic calculations.
                 {
-                    useWidth = (float)width;
+                    useWidth = (float)Width;
                 }
 
                 // Position the arrow line:
-                _line.SetVertexCount( 2 );
-                _line.SetWidth( useWidth , useWidth );
-                _line.SetPosition( 0, point1 );
-                _line.SetPosition( 1, point2 );
+                line.SetVertexCount( 2 );
+                line.SetWidth( useWidth , useWidth );
+                line.SetPosition( 0, point1 );
+                line.SetPosition( 1, point2 );
 
                 // Position the arrow hat:
-                _hat.SetVertexCount( 2 );
-                _hat.SetWidth( useWidth * 3.5f, 0.0F );
-                _hat.SetPosition( 0, point2 );
-                _hat.SetPosition( 1, point3 );
+                hat.SetVertexCount( 2 );
+                hat.SetWidth( useWidth * 3.5f, 0.0F );
+                hat.SetPosition( 0, point2 );
+                hat.SetPosition( 1, point3 );
 
                 // Put the label at the midpoint of the arrow:
-                _labelLocation = (point1 + point3) / 2;
+                labelLocation = (point1 + point3) / 2;
 
                 PutAtShipRelativeCoords();
 
             }
         }
 
+        /// <summary>
+        /// Calculates colors and applies transparency fade effect.
+        /// Only needs to be called when the color changes.
+        /// </summary>
         public void RenderColor()
         {
-            /// <summary>
-            /// Calculates colors and applies transparency fade effect.
-            /// Only needs to be called when the color changes.
-            /// </summary>
 
-            Color c1 = rgba.color();
-            Color c2 = rgba.color();
+            Color c1 = Color.Color();
+            Color c2 = Color.Color();
             c1.a = c1.a * (float)0.25;
-            Color lCol = Color.Lerp( c2, Color.white, 0.7f ); // "whiten" the label color a lot.
+            Color lCol = UnityEngine.Color.Lerp( c2, UnityEngine.Color.white, 0.7f ); // "whiten" the label color a lot.
 
-            if (_line != null && _hat != null)
+            if (line != null && hat != null)
             {
-                _line.SetColors( c1, c2 ); // The line has the fade effect
-                _hat.SetColors( c2, c2 );  // The hat does not have the fade effect.
-                _label.color = lCol;     // The label does not have the fade effect.
+                line.SetColors( c1, c2 ); // The line has the fade effect
+                hat.SetColors( c2, c2 );  // The hat does not have the fade effect.
+                label.color = lCol;     // The label does not have the fade effect.
             }
         }
         
+        /// <summary>
+        /// Place the 2D label at the correct projected spot on
+        /// the screen from its location in 3D space:
+        /// </summary>
         private void LabelPlacement()
         {
-            /// <summary>
-            /// Place the 2D label at the correct projected spot on
-            /// the screen from its location in 3D space:
-            /// </summary>
             
-            Vector3 screenPos = GetViewportPosFor( _shipCenterCoords + _labelLocation );
+            Vector3 screenPos = GetViewportPosFor( shipCenterCoords + labelLocation );
             
             // If the projected location is onscreen:
             if ( screenPos.z > 0
                  && screenPos.x >= 0 && screenPos.x <= 1
                  && screenPos.y >= 0 && screenPos.y <= 1 )
             {
-                _label.enabled = true;
-                _label.transform.position = screenPos;
+                label.enabled = true;
+                label.transform.position = screenPos;
             }
             else
             {
-                _label.enabled = false;
+                label.enabled = false;
             }
         }
 
+        public override string ToString()
+        {
+            return string.Format("{0} VectorRenderer", base.ToString());
+        }
     }
 }

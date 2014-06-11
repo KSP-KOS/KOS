@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS.Suffixed
 {
-    public class SpecialValue
+    public abstract class SpecialValue
     {
         public virtual bool SetSuffix(String suffixName, object value)
         {
@@ -30,6 +27,11 @@ namespace kOS.Suffixed
             }
 
             return value;
+        }
+
+        public override string ToString()
+        {
+            return "Structure ";
         }
     }
 }

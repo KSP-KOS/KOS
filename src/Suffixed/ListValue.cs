@@ -61,7 +61,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "LIST(" + list.Count + ")";
+            return string.Format("{0} LIST({1})", base.ToString(), list.Count);
         }
 
         public bool Empty()
@@ -119,6 +119,11 @@ namespace kOS.Suffixed
                         return string.Format("Suffix {0} Not Found", suffixName);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} Enumerator", base.ToString());
         }
     }
 }

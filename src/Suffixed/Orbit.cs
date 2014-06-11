@@ -17,7 +17,7 @@
  
         public OrbitInfo(Orbitable orb, SharedObjects sharedObj)
         {
-            orbit = orb.orbit;
+            orbit = orb.Orbit;
             shared = sharedObj;
             name = orb.GetName();
         }
@@ -50,7 +50,7 @@
         /// </summary>
         /// <param name="timeStamp">The universal time to query for</param>
         /// <returns></returns>
-        public Velocities GetVelocityAtUT( TimeSpan timeStamp )
+        public OrbitableVelocity GetVelocityAtUT( TimeSpan timeStamp )
         {
             Vector orbVel = new Vector( orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
             // For some weird reason orbit returns velocities with Y and Z swapped, so flip them back:
@@ -64,7 +64,7 @@
             }
             else
                 surfVel = new Vector( orbVel.X, orbVel.Y, orbVel.Z );
-            return new Velocities( orbVel, surfVel );
+            return new OrbitableVelocity( orbVel, surfVel );
         }
         
         public override object GetSuffix(string suffixName)

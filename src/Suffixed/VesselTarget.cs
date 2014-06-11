@@ -6,10 +6,7 @@ namespace kOS.Suffixed
 {
     public class VesselTarget : Orbitable
     {
-        override public Orbit orbit { get{return Vessel.orbit;} set{} }
-
-        private SharedObjects _shared;
-        override public SharedObjects shared{ get{return _shared;} set{_shared = value;} }
+        override public Orbit Orbit { get{return Vessel.orbit;} }
 
         override public string GetName()
         {
@@ -21,9 +18,9 @@ namespace kOS.Suffixed
             return new Vector( Vessel.GetWorldPos3D() - CurrentVessel.GetWorldPos3D() );
         }
 
-        override public Velocities GetVelocities()
+        override public OrbitableVelocity GetVelocities()
         {
-            return new Velocities(Vessel);
+            return new OrbitableVelocity(Vessel);
         }
         
         override public Vector GetPositionAtUT( TimeSpan timeStamp )
@@ -34,12 +31,12 @@ namespace kOS.Suffixed
             return new Vector(0.0, 0.0, 0.0);
         }
 
-        override public Velocities GetVelocitiesAtUT( TimeSpan timeStamp )
+        override public OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp )
         {
             // TODO: This will take work - getting the manuever nodes and SOI transitions to
             // find the position at the given timestamp.  This is a stub to get it to compile
             // for now:
-            return new Velocities( new Vector(0.0, 0.0, 0.0), new Vector( 0.0, 0.0, 0.0) );
+            return new OrbitableVelocity( new Vector(0.0, 0.0, 0.0), new Vector( 0.0, 0.0, 0.0) );
         }
         
         override public Vector GetUpVector()
@@ -64,15 +61,14 @@ namespace kOS.Suffixed
                 };
         }
 
-        public VesselTarget(Vessel target, SharedObjects shared)
+        public VesselTarget(Vessel target, SharedObjects shared) :base(shared)
         {
             Vessel = target;
-            this.shared = shared;
         }
 
         public VesselTarget(SharedObjects shared) : this(shared.Vessel, shared) { }
 
-        public Vessel CurrentVessel { get { return shared.Vessel; } }
+        public Vessel CurrentVessel { get { return Shared.Vessel; } }
 
         public ITargetable Target
         {
@@ -137,7 +133,7 @@ namespace kOS.Suffixed
                 case "FACING":
                     return GetFacing();
                 case "BODY":
-                    return new BodyTarget(Vessel.mainBody, shared);
+                    return new BodyTarget(Vessel.mainBody, Shared);
                 case "ANGULARMOMENTUM":
                     return new Direction(Vessel.angularMomentum, true);
                 case "ANGULARVEL":

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Suffixed;
 using kOS.Utilities;
 
@@ -195,11 +192,13 @@ namespace kOS.Function
             Vector    vec   = GetVector(shared.Cpu.PopValue());
             Vector    start = GetVector(shared.Cpu.PopValue());
 
-            VectorRenderer vRend = new VectorRenderer( shared.UpdateHandler );
-            vRend.vec   = vec;
-            vRend.start = start;
-            vRend.rgba  = rgba;
-            vRend.scale = scale;
+            var vRend = new VectorRenderer( shared.UpdateHandler )
+                {
+                    Vector = vec,
+                    Start = start,
+                    Color = rgba,
+                    Scale = scale
+                };
             vRend.SetLabel( str );
             vRend.SetShow( show );
             

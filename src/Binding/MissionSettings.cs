@@ -55,7 +55,7 @@ namespace kOS.Binding
                     var dockingNode = currentTarget as ModuleDockingNode;
                     if (dockingNode != null)
                     {
-                        return new DockingPortValue(dockingNode, _shared);
+                        return new DockingPortValue(dockingNode, Shared);
                     }
 
                     return null;

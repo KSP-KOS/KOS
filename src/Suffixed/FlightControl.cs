@@ -304,14 +304,19 @@ namespace kOS.Suffixed
 
         }
 
-        public void UpdateVessel(Vessel vessel)
+        public void UpdateVessel(Vessel toUpdate)
         {
-            this.vessel = vessel;
+            vessel = toUpdate;
         }
 
         public void Dispose()
         {
             Unbind();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} FlightControl for {1}", base.ToString(), vessel.vesselName);
         }
     }
 }

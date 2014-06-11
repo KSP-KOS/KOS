@@ -63,5 +63,10 @@ namespace kOS.Suffixed
 
             return base.GetSuffix(suffixName);
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} VesselSensor", base.ToString());
+        }
     }
 }

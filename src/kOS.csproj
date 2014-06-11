@@ -153,7 +153,7 @@
     <Compile Include="Suffixed\VesselSensors.cs" />
     <Compile Include="Suffixed\VesselTarget.cs" />
     <Compile Include="Utilities\VesselUtils.cs" />
-    <Compile Include="Suffixed\Velocities.cs" />
+    <Compile Include="Suffixed\OrbitableVelocity.cs" />
     <Compile Include="Persistence\Volume.cs" />
     <Compile Include="Persistence\VolumeManager.cs" />
   </ItemGroup>

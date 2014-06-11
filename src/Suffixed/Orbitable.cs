@@ -1,6 +1,4 @@
-﻿
-using System;
-using kOS.Utilities;
+﻿using kOS.Utilities;
 using UnityEngine;
 
 namespace kOS.Suffixed
@@ -12,18 +10,20 @@ namespace kOS.Suffixed
     /// </summary>
     abstract public class Orbitable : SpecialValue
     {
+        protected Orbitable(SharedObjects shareObj)
+        {
+            Shared = shareObj;
+        }
 
         /// <summary>
-        ///   The KSP Orbit object attached to this object.  Subclasses must
-        ///   override this.
+        ///   The KSP Orbit object attached to this object.
         /// </summary>
-        abstract public Orbit orbit{get;set;}
+        abstract public Orbit Orbit{get;}
 
         /// <summary>
-        ///   The shared context for the CPU running the code.  Subclasses must
-        ///   override this.
+        ///   The shared context for the CPU running the code.
         /// </summary>
-        abstract public SharedObjects shared{get;set;}
+        public SharedObjects Shared{get; private set;}
         
         /// <summary>
         ///   Subclasses must override this method to return the position of this object right now.
@@ -41,13 +41,13 @@ namespace kOS.Suffixed
         ///   Subclasses must override this method to return the velocity of this object right now.
         /// </summary>
         /// <returns>
-        ///   A Velocities object containing both the oribtal and surface velocities of the object in the
+        ///   A OrbitableVelocity object containing both the oribtal and surface velocities of the object in the
         ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (soi-body-origin)
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        abstract public Velocities GetVelocities();
+        abstract public OrbitableVelocity GetVelocities();
 
         /// <summary>
         ///   Subclasses must orverride this method to return the position of this object at some
@@ -67,7 +67,7 @@ namespace kOS.Suffixed
         abstract public Vector GetPositionAtUT( TimeSpan timeStamp );
 
         /// <summary>
-        ///   Subclasses must override this method to return the Velocities of this object at some
+        ///   Subclasses must override this method to return the OrbitableVelocity of this object at some
         ///   arbitrary future time.  It must take into account any orbital transfers to other SOI's
         ///   and any planned maneuver nodes (It should return the predicted location under the
         ///   assumption that the maneuver nodes currently planned will be executed as planned.)
@@ -75,13 +75,13 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="timeStamp">The universal time of the future prediction</param>
         /// <returns>
-        ///   A Velocities object containing both the oribtal and surface velocities of the object in the
+        ///   A OrbitableVelocity object containing both the oribtal and surface velocities of the object in the
         ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (soi-body-origin)
         ///   </a>
         ///   coordinate reference frame.
         /// </returns>
-        abstract public Velocities GetVelocitiesAtUT( TimeSpan timeStamp );
+        abstract public OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp );
         
         /// <summary>
         ///   Subclasses must override this method to return a unit vector in
@@ -110,7 +110,7 @@ namespace kOS.Suffixed
         /// <returns>same as using the :ORB suffix term.</returns>
         public OrbitInfo GetOrbitInfo()
         {
-            return new OrbitInfo(this,shared);
+            return new OrbitInfo(this,Shared);
         }
 
         /// <summary>
@@ -119,19 +119,19 @@ namespace kOS.Suffixed
         /// <returns>same as using the :ORB suffix term.</returns>
         public Orbit GetOrbit()
         {
-            return orbit;
+            return Orbit;
         }
 
         public CelestialBody GetParentBody()
         {
-            return orbit.referenceBody;
+            return Orbit.referenceBody;
         }
         
         public Direction GetPrograde()
         {
             Vector3d up = GetUpVector().ToVector3D();
-            Velocities vels = GetVelocities();
-            Vector3d normOrbVec = vels.orbital.normalized().ToVector3D();
+            OrbitableVelocity vels = GetVelocities();
+            Vector3d normOrbVec = vels.Orbital.normalized().ToVector3D();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normOrbVec, up)};
             return d;
@@ -140,8 +140,8 @@ namespace kOS.Suffixed
         public Direction GetRetrograde()
         {
             Vector3d up = GetUpVector().ToVector3D();
-            Velocities vels = GetVelocities();
-            Vector3d normOrbVec = vels.orbital.normalized().ToVector3D();
+            OrbitableVelocity vels = GetVelocities();
+            Vector3d normOrbVec = vels.Orbital.normalized().ToVector3D();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normOrbVec*(-1), up)};
             return d;
@@ -150,8 +150,8 @@ namespace kOS.Suffixed
         public Direction GetSurfacePrograde()
         {
             Vector3d up = GetUpVector().ToVector3D();
-            Velocities vels = GetVelocities();
-            Vector3d normSrfVec = vels.surface.normalized().ToVector3D();
+            OrbitableVelocity vels = GetVelocities();
+            Vector3d normSrfVec = vels.Surface.normalized().ToVector3D();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normSrfVec, up)};
             return d;
@@ -160,8 +160,8 @@ namespace kOS.Suffixed
         public Direction GetSurfaceRetrograde()
         {
             Vector3d up = GetUpVector().ToVector3D();
-            Velocities vels = GetVelocities();
-            Vector3d normSrfVec = vels.surface.normalized().ToVector3D();
+            OrbitableVelocity vels = GetVelocities();
+            Vector3d normSrfVec = vels.Surface.normalized().ToVector3D();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normSrfVec*(-1), up)};
             return d;
@@ -170,26 +170,26 @@ namespace kOS.Suffixed
 
         public double PositionToLatitude( Vector pos )
         {
-            CelestialBody parent = orbit.referenceBody;
+            CelestialBody parent = Orbit.referenceBody;
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
-            Vector3d unityWorldPos = GetPosition() + shared.Vessel.GetWorldPos3D();
+            Vector3d unityWorldPos = GetPosition() + Shared.Vessel.GetWorldPos3D();
             return parent.GetLatitude(unityWorldPos);
         }
         public double PositionToLongitude( Vector pos )
         {
-            CelestialBody parent = orbit.referenceBody;
+            CelestialBody parent = Orbit.referenceBody;
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
-            Vector3d unityWorldPos = GetPosition() + shared.Vessel.GetWorldPos3D();
+            Vector3d unityWorldPos = GetPosition() + Shared.Vessel.GetWorldPos3D();
             return Utils.DegreeFix( parent.GetLongitude(unityWorldPos), -180.0 );
         }
         public double PositionToAltitude( Vector pos )
         {
-            CelestialBody parent = orbit.referenceBody;
+            CelestialBody parent = Orbit.referenceBody;
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
-            Vector3d unityWorldPos = GetPosition() + shared.Vessel.GetWorldPos3D();
+            Vector3d unityWorldPos = GetPosition() + Shared.Vessel.GetWorldPos3D();
             return parent.GetAltitude(unityWorldPos);
         }
         
@@ -208,23 +208,23 @@ namespace kOS.Suffixed
                 case "NAME":
                     return GetName();
                 case "APOAPSIS":
-                    return orbit.ApA;
+                    return Orbit.ApA;
                 case "PERIAPSIS":
-                    return orbit.PeA;
+                    return Orbit.PeA;
                 case "BODY":
-                    return new BodyTarget(orbit.referenceBody, shared);
+                    return new BodyTarget(Orbit.referenceBody, Shared);
                 case "PERIOD":
-                    return orbit.period;
+                    return Orbit.period;
                 case "INCLINATION":
-                    return orbit.inclination;
+                    return Orbit.inclination;
                 case "ECCENTRICITY":
-                    return orbit.eccentricity;
+                    return Orbit.eccentricity;
                 case "SEMIMAJORAXIS":
-                    return orbit.semiMajorAxis;
+                    return Orbit.semiMajorAxis;
                 case "SEMIMINORAXIS":
-                    return orbit.semiMinorAxis;
+                    return Orbit.semiMinorAxis;
                 case "TRANSITION":
-                    return orbit.patchEndTransition;
+                    return Orbit.patchEndTransition;
                     
                 // The cases after this point were added to Orbitable from either VesselTarget or BodyTarget:
                 
@@ -257,7 +257,7 @@ namespace kOS.Suffixed
                 case "ALTITUDE":
                     return PositionToAltitude( GetPosition() );
                 case "GEOPOSITION":
-                    return new GeoCoordinates(this, shared);
+                    return new GeoCoordinates(this, Shared);
             }
             return null;
         }
@@ -265,16 +265,7 @@ namespace kOS.Suffixed
         public override object GetSuffix( string suffixName )
         {
             object returnVal = GetOnlyOrbitableSuffixes(suffixName);
-
-            if (returnVal == null)
-                return base.GetSuffix(suffixName);
-            else
-                return returnVal;
-        }
-        
-        public override string ToString()
-        {
-            return "Orbitable"; // Should be overridden by subclasses, I hope.
+            return returnVal ?? base.GetSuffix(suffixName);
         }
     }
 }

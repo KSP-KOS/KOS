@@ -25,7 +25,7 @@ namespace kOS.Binding
             Shared.BindingMgr.AddGetter("ETA_TRANSITION", cpu => Shared.Vessel.orbit.EndUT - Planetarium.GetUniversalTime());
             Shared.BindingMgr.AddGetter("INCOMMRANGE", cpu => Convert.ToDouble(CheckCommRange(Shared.Vessel)));
             Shared.BindingMgr.AddGetter("MISSIONTIME", cpu => Shared.Vessel.missionTime);
-            Shared.BindingMgr.AddGetter("OBT", cpu => new OrbitInfo(Shared.Vessel,Shared));
+            Shared.BindingMgr.AddGetter("OBT", cpu => new OrbitInfo(Shared.Vessel.orbit,Shared));
             Shared.BindingMgr.AddGetter("TIME", cpu => new TimeSpan(Planetarium.GetUniversalTime()));
             Shared.BindingMgr.AddGetter("SHIP", cpu => new VesselTarget(Shared));
             Shared.BindingMgr.AddGetter("STATUS", cpu => Shared.Vessel.situation.ToString());

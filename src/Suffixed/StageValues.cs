@@ -23,5 +23,10 @@ namespace kOS.Suffixed
             var total = Utils.ProspectForResource(resourceName, activeEngines);
             return Math.Round(total, 2);
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} Stage", base.ToString());
+        }
     }
 }
