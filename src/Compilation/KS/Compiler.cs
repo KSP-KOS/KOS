@@ -94,6 +94,12 @@ namespace kOS.Compilation.KS
 
         private void PreProcessLocks(ParseNode node)
         {
+            IterateLocks(node, IdentifyLocks);
+            IterateLocks(node, PreProcessLockStatement);
+        }
+
+        private void IterateLocks(ParseNode node, Action<ParseNode> action)
+        {
             switch (node.Token.Type)
             {
                 // statements that can have a lock inside
@@ -105,10 +111,10 @@ namespace kOS.Compilation.KS
                 case TokenType.on_stmt:
                 case TokenType.when_stmt:
                     foreach (ParseNode childNode in node.Nodes)
-                        PreProcessLocks(childNode);
+                        IterateLocks(childNode, action);
                     break;
                 case TokenType.lock_stmt:
-                    PreProcessLockStatement(node);
+                    action.Invoke(node);
                     break;
                 default:
                     break;
@@ -263,6 +269,12 @@ namespace kOS.Compilation.KS
             }
 
             return concatenated;
+        }
+
+        private void IdentifyLocks(ParseNode node)
+        {
+            string lockIdentifier = node.Nodes[1].Token.Text;
+            Lock lockObject = _context.Locks.GetLock(lockIdentifier);
         }
 
         private void PreProcessLockStatement(ParseNode node)
