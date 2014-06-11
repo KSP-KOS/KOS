@@ -3,25 +3,75 @@ using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
-    public class BodyTarget : SpecialValue, IKOSTargetable
+    public class BodyTarget : Orbitable, IKOSTargetable
     {
-        private readonly Vessel vessel;
 
-        public BodyTarget(string name, Vessel vessel) : this(VesselUtils.GetBodyByName(name), vessel)
+        public CelestialBody Body { get; set; }
+        
+        override public Orbit orbit{ get{return Body.orbit;} set{} }
+        private SharedObjects _shared;
+        override public SharedObjects shared{ get{return _shared;} set{_shared = value;} }
+        
+        override public string GetName()
+        {
+            return Body.name;
+        }
+
+        override public Vector GetPosition()
+        {
+            return new Vector( Body.position - shared.Vessel.GetWorldPos3D() );
+        }
+        
+        override public Velocities GetVelocities()
+        {
+            return new Velocities(Body);
+        }
+        
+        override public Vector GetPositionAtUT( TimeSpan timeStamp )
+        {
+            return new Vector( Body.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - shared.Vessel.GetWorldPos3D() );
+        }
+
+        override public Velocities GetVelocitiesAtUT( TimeSpan timeStamp )
+        {
+            Vector orbVel = new Vector( orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
+            CelestialBody parent = Body.referenceBody;
+            if (parent==null) // only if Body is Sun and therefore has no parent.
+                return new Velocities( new Vector(0.0,0.0,0.0), new Vector(0.0,0.0,0.0) );
+            Vector surfVel = new Vector( Body.orbit.GetVel() - parent.getRFrmVel( Body.position ) );
+
+            return new Velocities( orbVel, surfVel );
+        }
+
+        override public Vector GetUpVector()
+        {
+            CelestialBody parent = Body.referenceBody;
+            if (parent==null) // only if Body is Sun and therefore has no parent.
+                return new Vector(0.0,0.0,0.0);
+            return new Vector( (Body.position - parent.position).normalized );
+        }
+
+        override public Vector GetNorthVector()
+        {
+            CelestialBody parent = Body.referenceBody;
+            if (parent==null) // only if Body is Sun and therefore has no parent.
+                parent = Body;
+            return new Vector( Vector3d.Exclude(GetUpVector().ToVector3D(), parent.transform.up) );
+        }
+
+        public BodyTarget(string name, SharedObjects shareObj) : this(VesselUtils.GetBodyByName(name),shareObj)
         {
         }
 
-        public BodyTarget(CelestialBody target, Vessel vessel)
+        public BodyTarget(CelestialBody body, SharedObjects shareObj)
         {
-            this.vessel = vessel;
-            CelestialBody = target;
+            Body = body;
+            shared = shareObj;
         }
-
-        public CelestialBody CelestialBody { get; set; }
-
+        
         public double GetDistance()
         {
-            return Vector3d.Distance(vessel.GetWorldPos3D(), CelestialBody.position) - CelestialBody.Radius;
+            return Vector3d.Distance(shared.Vessel.GetWorldPos3D(), Body.position) - Body.Radius;
         }
 
         public override object GetSuffix(string suffixName)
@@ -31,33 +81,21 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "NAME":
-                    return CelestialBody.name;
+                    return Body.name;
                 case "DESCRIPTION":
-                    return CelestialBody.bodyDescription;
+                    return Body.bodyDescription;
                 case "MASS":
-                    return CelestialBody.Mass;
-                case "POSITION":
-                    return new Vector(CelestialBody.position - vessel.GetWorldPos3D() );
+                    return Body.Mass;
                 case "ALTITUDE":
-                    return CelestialBody.orbit.altitude;
-                case "APOAPSIS":
-                    return CelestialBody.orbit.ApA;
-                case "PERIAPSIS":
-                    return CelestialBody.orbit.PeA;
+                    return Body.orbit.altitude;
                 case "RADIUS":
-                    return CelestialBody.Radius;
+                    return Body.Radius;
                 case "MU":
-                    return CelestialBody.gravParameter;
+                    return Body.gravParameter;
                 case "ATM":
-                    return new BodyAtmosphere(CelestialBody);
-                case "VELOCITY":
-                    return new Vector(CelestialBody.orbit.GetVel());
-                case "DISTANCE":
-                    return (float) GetDistance();
-                case "OBT":
-                    return new OrbitInfo(CelestialBody.orbit, vessel);
-                case "BODY":
-                    return new BodyTarget(CelestialBody.orbit.referenceBody, vessel);
+                    return new BodyAtmosphere(Body);
+                case "ANGULARVEL":
+                    return new Direction(Body.angularVelocity, true);
             }
 
             return base.GetSuffix(suffixName);
@@ -65,9 +103,9 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            if (CelestialBody != null)
+            if (Body != null)
             {
-                return "BODY(\"" + CelestialBody.name + "\")";
+                return "BODY(\"" + Body.name + "\")";
             }
 
             return base.ToString();
@@ -75,7 +113,7 @@ namespace kOS.Suffixed
 
         public ITargetable Target
         {
-            get { return CelestialBody; }
+            get { return Body; }
         }
     }
 }

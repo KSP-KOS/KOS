@@ -6,7 +6,7 @@ namespace kOS.Suffixed.Part
     {
         private readonly ModuleDockingNode module;
 
-        public DockingPortValue(ModuleDockingNode module) : base(module.part)
+        public DockingPortValue(ModuleDockingNode module, SharedObjects sharedObj) : base(module.part, sharedObj)
         {
             this.module = module;
         }
@@ -32,7 +32,7 @@ namespace kOS.Suffixed.Part
             get { return module; }
         }
 
-        public new static ListValue PartsToList(IEnumerable<global::Part> parts)
+        public new static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
         {
             var toReturn = new ListValue();
             foreach (var part in parts)
@@ -43,7 +43,7 @@ namespace kOS.Suffixed.Part
                     var dockingNode = module as ModuleDockingNode;
                     if (dockingNode != null)
                     {
-                        toReturn.Add(new DockingPortValue(dockingNode));
+                        toReturn.Add(new DockingPortValue(dockingNode, sharedObj));
                     }
                 }
             }

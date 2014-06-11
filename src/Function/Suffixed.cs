@@ -17,7 +17,7 @@ namespace kOS.Function
             double radial = GetDouble(shared.Cpu.PopValue());
             double time = GetDouble(shared.Cpu.PopValue());
 
-            Node result = new Node(time, radial, normal, prograde);
+            Node result = new Node(time, radial, normal, prograde, shared);
             shared.Cpu.PushStack(result);
         }
     }
@@ -73,7 +73,7 @@ namespace kOS.Function
             double longitude = GetDouble(shared.Cpu.PopValue());
             double latitude = GetDouble(shared.Cpu.PopValue());
 
-            GeoCoordinates result = new GeoCoordinates(shared.Vessel, latitude, longitude);
+            GeoCoordinates result = new GeoCoordinates(shared, latitude, longitude);
             shared.Cpu.PushStack(result);
         }
     }
@@ -95,7 +95,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string bodyName = shared.Cpu.PopValue().ToString();
-            BodyTarget result = new BodyTarget(bodyName, shared.Vessel);
+            BodyTarget result = new BodyTarget(bodyName, shared);
             shared.Cpu.PushStack(result);
         }
     }

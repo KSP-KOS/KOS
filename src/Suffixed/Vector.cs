@@ -71,6 +71,16 @@ namespace kOS.Suffixed
 
             return null;
         }
+        
+        public double magnitude()
+        {
+            return new Vector3d(X,Y,Z).magnitude;
+        }
+        
+        public Vector normalized()
+        {
+            return new Vector( new Vector3d(X,Y,Z).normalized );
+        }
 
         public Direction ToDirection()
         {
@@ -88,11 +98,11 @@ namespace kOS.Suffixed
                 case "Z":
                     return Z;
                 case "MAG":
-                    return new Vector3d(X, Y, Z).magnitude;
+                    return magnitude();
                 case "VEC":
                     return new Vector(X, Y, Z);
                 case "NORMALIZED":
-                    return new Vector(new Vector3d(X, Y, Z).normalized);
+                    return normalized();
                 case "SQRMAGNITUDE":
                     return new Vector3d(X, Y, Z).sqrMagnitude;
             }

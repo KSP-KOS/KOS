@@ -8,19 +8,22 @@ namespace kOS.Suffixed
         public static Dictionary<ManeuverNode, Node> NodeLookup = new Dictionary<ManeuverNode, Node>();
         private ManeuverNode nodeRef;
         private Vessel vesselRef;
+        private SharedObjects shared;
 
-        public Node(double time, double radialOut, double normal, double prograde)
+        public Node(double time, double radialOut, double normal, double prograde, SharedObjects shareObj)
         {
             Time = time;
             Pro = prograde;
             RadOut = radialOut;
             Norm = normal;
+            shared = shareObj;
         }
 
-        public Node(Vessel v, ManeuverNode existingNode)
+        public Node(Vessel v, ManeuverNode existingNode, SharedObjects shareObj)
         {
             nodeRef = existingNode;
             vesselRef = v;
+            shared = shareObj;
             NodeLookup.Add(existingNode, this);
 
             UpdateValues();
@@ -32,9 +35,9 @@ namespace kOS.Suffixed
         public double Norm { get; set; }
 
 
-        public static Node FromExisting(Vessel v, ManeuverNode existingNode)
+        public static Node FromExisting(Vessel v, ManeuverNode existingNode, SharedObjects shared)
         {
-            return NodeLookup.ContainsKey(existingNode) ? NodeLookup[existingNode] : new Node(v, existingNode);
+            return NodeLookup.ContainsKey(existingNode) ? NodeLookup[existingNode] : new Node(v, existingNode, shared);
         }
 
         public void AddToVessel(Vessel v)
@@ -108,7 +111,7 @@ namespace kOS.Suffixed
                     return Norm;
                 case "ORBIT":
                     if (nodeRef == null) throw new Exception("Node must be added to flight plan first");
-                    return new OrbitInfo(nodeRef.nextPatch, vesselRef);
+                    return new OrbitInfo(nodeRef.nextPatch, shared);
             }
 
             return base.GetSuffix(suffixName);

@@ -19,13 +19,13 @@ namespace kOS.Binding
             Shared.BindingMgr.AddGetter("ALT_RADAR", cpu => Convert.ToDouble(Shared.Vessel.heightFromTerrain > 0 ? Mathf.Min(Shared.Vessel.heightFromTerrain, (float)Shared.Vessel.altitude) : (float)Shared.Vessel.altitude));
             Shared.BindingMgr.AddGetter("ANGULARVELOCITY", cpu => Shared.Vessel.transform.InverseTransformDirection(Shared.Vessel.rigidbody.angularVelocity));
             Shared.BindingMgr.AddGetter("COMMRANGE", cpu => VesselUtils.GetCommRange(Shared.Vessel));
-            Shared.BindingMgr.AddGetter("ENCOUNTER", cpu => VesselUtils.TryGetEncounter(Shared.Vessel));
+            Shared.BindingMgr.AddGetter("ENCOUNTER", cpu => VesselUtils.TryGetEncounter(Shared.Vessel,Shared));
             Shared.BindingMgr.AddGetter("ETA_APOAPSIS", cpu => Shared.Vessel.orbit.timeToAp);
             Shared.BindingMgr.AddGetter("ETA_PERIAPSIS", cpu => Shared.Vessel.orbit.timeToPe);
             Shared.BindingMgr.AddGetter("ETA_TRANSITION", cpu => Shared.Vessel.orbit.EndUT - Planetarium.GetUniversalTime());
             Shared.BindingMgr.AddGetter("INCOMMRANGE", cpu => Convert.ToDouble(CheckCommRange(Shared.Vessel)));
             Shared.BindingMgr.AddGetter("MISSIONTIME", cpu => Shared.Vessel.missionTime);
-            Shared.BindingMgr.AddGetter("OBT", cpu => new OrbitInfo(Shared.Vessel));
+            Shared.BindingMgr.AddGetter("OBT", cpu => new OrbitInfo(Shared.Vessel,Shared));
             Shared.BindingMgr.AddGetter("TIME", cpu => new TimeSpan(Planetarium.GetUniversalTime()));
             Shared.BindingMgr.AddGetter("SHIP", cpu => new VesselTarget(Shared));
             Shared.BindingMgr.AddGetter("STATUS", cpu => Shared.Vessel.situation.ToString());
@@ -40,7 +40,7 @@ namespace kOS.Binding
                         throw new Exception("No maneuver nodes present!");
                     }
 
-                    return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0]);
+                    return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0], Shared);
                 });
 
             // These are now considered shortcuts to SHIP:suffix
