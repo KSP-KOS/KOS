@@ -147,9 +147,9 @@ namespace kOS.Suffixed
         {
             if (vectorValue == null)
             {
-                fore = default(float);
-                top = default(float);
-                starboard = default(float);
+                fore = null;
+                top = null;
+                starboard = null;
             }
             else
             {
@@ -163,9 +163,9 @@ namespace kOS.Suffixed
         {
             if (vectorValue == null)
             {
-                yaw = default(float);
-                pitch = default(float);
-                roll = default(float);
+                yaw = null;
+                pitch = null;
+                roll = null;
             }
             else
             {
