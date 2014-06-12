@@ -19,7 +19,6 @@ namespace kOS.Suffixed
         private float? mainThrottle;
         private readonly Flushable<bool> neutral;
         private readonly Flushable<bool> killRotation;
-        private Vessel vessel;
         private bool bound;
         private readonly List<string> floatSuffixes;
         private readonly List<string> vectorSuffixes;
@@ -29,16 +28,13 @@ namespace kOS.Suffixed
             neutral = new Flushable<bool>(); 
             killRotation = new Flushable<bool>(); 
             bound = false;
-            this.vessel = vessel;
+            Vessel = vessel;
 
             floatSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
             vectorSuffixes = new List<string> { "ROTATION", "TRANSLATION" };
         }
 
-        public Vessel Vessel
-        {
-            get { return vessel; }
-        }
+        public Vessel Vessel { get; private set; }
 
         public override object GetSuffix(string suffixName)
         {
@@ -306,7 +302,7 @@ namespace kOS.Suffixed
 
         public void UpdateVessel(Vessel toUpdate)
         {
-            vessel = toUpdate;
+            Vessel = toUpdate;
         }
 
         public void Dispose()
@@ -316,7 +312,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return string.Format("{0} FlightControl for {1}", base.ToString(), vessel.vesselName);
+            return string.Format("{0} FlightControl for {1}", base.ToString(), Vessel.vesselName);
         }
     }
 }

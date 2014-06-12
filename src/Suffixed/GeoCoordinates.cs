@@ -5,9 +5,9 @@ namespace kOS.Suffixed
 {
     public class GeoCoordinates : SpecialValue
     {
-        public double Lat;
-        public double Lng;
-        public SharedObjects shared; // for finding the current CPU's vessel, as per issue #107
+        public double Lat { get; private set; }
+        public double Lng { get; private set; }
+        public SharedObjects Shared { get; set; } // for finding the current CPU's vessel, as per issue #107
         
         /// <summary>
         ///   Build a GeoCoordinates from the current lat/long of the orbitable
@@ -18,7 +18,7 @@ namespace kOS.Suffixed
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         public GeoCoordinates(Orbitable orb, SharedObjects sharedObj)
         {
-            shared = sharedObj;
+            Shared = sharedObj;
             Vector p = orb.GetPosition();
             Lat = orb.PositionToLatitude(p);
             Lng = orb.PositionToLongitude(p);
@@ -34,7 +34,7 @@ namespace kOS.Suffixed
         {
             Lat = lat;
             Lng = lng;
-            shared = sharedObj;
+            Shared = sharedObj;
         }
 
         /// <summary>
@@ -47,38 +47,36 @@ namespace kOS.Suffixed
         {
             Lat = lat;
             Lng = lng;
-            shared = sharedObj;
+            Shared = sharedObj;
         }
 
         /// <summary>
         ///   The bearing from the current CPU vessel to the surface spot with the
         ///   given lat/long coords, relative to the current CPU vessel's heading.
         /// </summary>
-        /// <param name="vessel"></param>
         /// <returns> bearing </returns>
         public double GetBearing()
         {
-            return VesselUtils.AngleDelta(VesselUtils.GetHeading(shared.Vessel), (float) GetHeadingFrom());
+            return VesselUtils.AngleDelta(VesselUtils.GetHeading(Shared.Vessel), (float) GetHeadingFrom());
         }
 
         /// <summary>
         ///   The compass heading from the current position of the CPU vessel to the
         ///   LAT/LANG position on the SOI body's surface.
         /// </summary>
-        /// <param name="vessel"></param>
         /// <returns>compass heading in degrees</returns>
         private double GetHeadingFrom()
         {
-            var up = shared.Vessel.upAxis;
-            var north = VesselUtils.GetNorthVector(shared.Vessel);
+            var up = Shared.Vessel.upAxis;
+            var north = VesselUtils.GetNorthVector(Shared.Vessel);
 
-            CelestialBody parent = shared.Vessel.mainBody;
+            CelestialBody parent = Shared.Vessel.mainBody;
             if (parent==null) // Can only happen if current object is Sun, which is probably impossible
                 return 0.0;
 
-            var targetWorldCoords = parent.GetWorldSurfacePosition(Lat, Lng, shared.Vessel.altitude);
+            var targetWorldCoords = parent.GetWorldSurfacePosition(Lat, Lng, Shared.Vessel.altitude);
 
-            var vector = Vector3d.Exclude(up, targetWorldCoords - shared.Vessel.GetWorldPos3D()).normalized;
+            var vector = Vector3d.Exclude(up, targetWorldCoords - Shared.Vessel.GetWorldPos3D()).normalized;
             var headingQ =
                 Quaternion.Inverse(Quaternion.Euler(90, 0, 0)*Quaternion.Inverse(Quaternion.LookRotation(vector, up))*
                                    Quaternion.LookRotation(north, up));
@@ -94,11 +92,11 @@ namespace kOS.Suffixed
         /// <returns>distance scalar</returns>
         private double DistanceFrom()
         {
-            CelestialBody parent = shared.Vessel.mainBody;
+            CelestialBody parent = Shared.Vessel.mainBody;
             if (parent==null) // Can only happen if current object is Sun, which is probably impossible
                 return 0.0;
             Vector3d latLongCoords = parent.GetWorldSurfacePosition( Lat, Lng, 0.0 );
-            Vector3d hereCoords = shared.Vessel.GetWorldPos3D();
+            Vector3d hereCoords = Shared.Vessel.GetWorldPos3D();
             return Vector3d.Distance( latLongCoords, hereCoords );
         }
 

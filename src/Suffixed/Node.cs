@@ -5,28 +5,33 @@ namespace kOS.Suffixed
 {
     public class Node : SpecialValue
     {
-        public static Dictionary<ManeuverNode, Node> NodeLookup = new Dictionary<ManeuverNode, Node>();
+        public static Dictionary<ManeuverNode, Node> NodeLookup { get; private set; } 
+
         private ManeuverNode nodeRef;
         private Vessel vesselRef;
-        private SharedObjects shared;
+        private readonly SharedObjects shared;
 
-        public Node(double time, double radialOut, double normal, double prograde, SharedObjects shareObj)
+        public Node(double time, double radialOut, double normal, double prograde, SharedObjects shareObj) :this (shareObj)
         {
             Time = time;
             Pro = prograde;
             RadOut = radialOut;
             Norm = normal;
-            shared = shareObj;
         }
 
-        public Node(Vessel v, ManeuverNode existingNode, SharedObjects shareObj)
+        public Node(Vessel v, ManeuverNode existingNode, SharedObjects shareObj) :this(shareObj)
         {
             nodeRef = existingNode;
             vesselRef = v;
-            shared = shareObj;
             NodeLookup.Add(existingNode, this);
 
             UpdateValues();
+        }
+
+        private Node(SharedObjects shared)
+        {
+            this.shared = shared;
+            NodeLookup = new Dictionary<ManeuverNode, Node>();
         }
 
         public double Time { get; set; }

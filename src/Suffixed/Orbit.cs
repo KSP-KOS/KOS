@@ -11,9 +11,9 @@
     public class OrbitInfo : SpecialValue
     {
         private const int PATCHES_LIMIT = 16;
-        private Orbit orbit;
-        private SharedObjects shared;
-        private string name;
+        private readonly Orbit orbit;
+        private readonly SharedObjects shared;
+        private readonly string name;
  
         public OrbitInfo(Orbitable orb, SharedObjects sharedObj)
         {
@@ -52,7 +52,7 @@
         /// <returns></returns>
         public OrbitableVelocity GetVelocityAtUT( TimeSpan timeStamp )
         {
-            Vector orbVel = new Vector( orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
+            var orbVel = new Vector( orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
             // For some weird reason orbit returns velocities with Y and Z swapped, so flip them back:
             orbVel = new Vector( orbVel.X, orbVel.Z, orbVel.Y );
             CelestialBody parent = orbit.referenceBody;
