@@ -9,7 +9,6 @@ using kOS.Binding;
 using kOS.Persistence;
 using kOS.Suffixed;
 using kOS.AddOns.RemoteTech2;
-using kOS.Utilities;
 
 namespace kOS.Module
 {
@@ -24,9 +23,6 @@ namespace kOS.Module
 
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
-
-        [KSPField(isPersistant = false, guiName = "Comm Range", guiActive = true, guiActiveEditor = true)]
-        public string commRange = "[calculating...]";
 
         [KSPField(isPersistant = true, guiName = "Boot File", guiActive = false, guiActiveEditor = false)]
         public string bootFile = "Boot";
@@ -213,41 +209,6 @@ namespace kOS.Module
                             field.guiActiveEditor = maxchoice > 0;
                             bootFileChoiceLast = bootFileChoice;
                         }
-                }
-            }
-
-            double cr;
-            if (vessel == null)
-            {
-                // Vessel not available in Editor.
-                var parts = new List<Part>();
-                parts.AddRange(part.localRoot.FindChildParts<Part>(true));
-                cr = VesselUtils.GetCommRange(parts);
-            } else {
-                cr = VesselUtils.GetCommRange(vessel);
-            }
-
-            commRange = Math.Round(cr / 1000) + "km";
-
-            if (vessel == null)
-            {
-                // In edtior, give more useful value.
-                var bestdistance = 0.0;
-                var kerbin = FlightGlobals.getMainBody();
-                foreach (var body in FlightGlobals.Bodies)
-                {
-                    if (body.name == "Sun")
-                        continue;
-                    if (body.referenceBody != kerbin.referenceBody && body.referenceBody != kerbin)
-                        continue;
-                    var maxdistance = body.orbit.semiMajorAxis;
-                    if (body.referenceBody != kerbin)
-                        maxdistance += kerbin.orbit.semiMajorAxis;
-                    if (maxdistance > bestdistance && maxdistance < cr)
-                    {
-                        bestdistance = maxdistance;
-                        commRange = body.name;
-                    }
                 }
             }
              

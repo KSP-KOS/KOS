@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace kOS.Persistence
 {
     public class Volume
     {
         protected const int BASE_CAPACITY = 10000;
-        protected const float BASE_POWER = 0.02f;
+        protected const float BASE_POWER = 0.04f;
 
         protected Volume()
         {
             Renameable = true;
             Capacity = -1;
             Name = "";
-            _files = new Dictionary<string, ProgramFile>();
+            Files = new Dictionary<string, ProgramFile>();
         }
 
-        protected Dictionary<string, ProgramFile> _files;
+        protected Dictionary<string, ProgramFile> Files;
         public string Name { get; set; }
         public int Capacity { get; set; }
         public bool Renameable { get; set; }
@@ -27,28 +25,22 @@ namespace kOS.Persistence
         public virtual ProgramFile GetByName(string name)
         {
             name = name.ToLower();
-            if (_files.ContainsKey(name))
+            if (Files.ContainsKey(name))
             {
-                return _files[name];
+                return Files[name];
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         public virtual bool DeleteByName(string name)
         {
             name = name.ToLower();
-            if (_files.ContainsKey(name))
+            if (Files.ContainsKey(name))
             {
-                _files.Remove(name);
+                Files.Remove(name);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public virtual bool RenameFile(string name, string newName)
@@ -61,19 +53,12 @@ namespace kOS.Persistence
                 Add(file);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public virtual void AppendToFile(string name, string textToAppend)
         {
-            ProgramFile file = GetByName(name);
-            if (file == null)
-            {
-                file = new ProgramFile(name);
-            }
+            ProgramFile file = GetByName(name) ?? new ProgramFile(name);
 
             if (file.Content.Length > 0 && !file.Content.EndsWith("\n"))
             {
@@ -86,7 +71,7 @@ namespace kOS.Persistence
 
         public virtual void Add(ProgramFile file)
         {
-            _files.Add(file.Filename.ToLower(), file);
+            Files.Add(file.Filename.ToLower(), file);
         }
 
         public virtual bool SaveFile(ProgramFile file)
@@ -98,14 +83,7 @@ namespace kOS.Persistence
 
         public virtual int GetUsedSpace()
         {
-            int usedSpace = 0;
-
-            foreach (ProgramFile file in _files.Values)
-            {
-                usedSpace += file.GetSize();
-            }
-
-            return usedSpace;
+            return Files.Values.Sum(file => file.GetSize());
         }
 
         public virtual int GetFreeSpace() { return -1; }
@@ -115,14 +93,7 @@ namespace kOS.Persistence
 
         public virtual List<FileInfo> GetFileList()
         {
-            List<FileInfo> retList = new List<FileInfo>();
-
-            foreach (ProgramFile file in _files.Values)
-            {
-                retList.Add(new FileInfo(file.Filename, file.GetSize()));
-            }
-
-            return retList;
+            return Files.Values.Select(file => new FileInfo(file.Filename, file.GetSize())).ToList();
         }
 
         public virtual bool CheckRange(Vessel vessel)
