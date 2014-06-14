@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using kOS.Persistence;
 using kOS.Suffixed;
@@ -17,7 +16,7 @@ namespace kOS.Function
 
             if (shared.Screen != null)
             {
-                kList list = null;
+                kList list;
 
                 switch (listType)
                 {
@@ -46,7 +45,7 @@ namespace kOS.Function
                         list = GetSensorList(shared);
                         break;
                     case "config":
-                        list = GetConfigList(shared);
+                        list = GetConfigList();
                         break;
                     default:
                         throw new Exception("List type not supported");
@@ -63,7 +62,7 @@ namespace kOS.Function
 
         private kList GetFileList(SharedObjects shared)
         {
-            kList list = new kList();
+            var list = new kList();
             list.AddColumn("Name", 30, ColumnAlignment.Left);
             list.AddColumn("Size", 7, ColumnAlignment.Right);
 
@@ -89,8 +88,7 @@ namespace kOS.Function
 
         private kList GetVolumeList(SharedObjects shared)
         {
-            kList list = new kList();
-            list.Title = "Volumes";
+            var list = new kList {Title = "Volumes"};
             list.AddColumn("ID", 6, ColumnAlignment.Left);
             list.AddColumn("Name", 24, ColumnAlignment.Left);
             list.AddColumn("Size", 7, ColumnAlignment.Right);
@@ -101,7 +99,7 @@ namespace kOS.Function
                 {
                     Volume volume = kvp.Value;
                     string id = kvp.Key.ToString() + (shared.VolumeMgr.VolumeIsCurrent(volume) ? "*" : "");
-                    string size = volume.CheckRange(shared.Vessel) ? (volume.Capacity > -1 ? volume.Capacity.ToString() : "Inf") : "Disc";
+                    string size = volume.Capacity.ToString();
                     list.AddItem(id, volume.Name, size);
                 }
             }
@@ -111,7 +109,7 @@ namespace kOS.Function
 
         private kList GetBodyList(SharedObjects shared)
         {
-            kList list = new kList();
+            var list = new kList();
             list.AddColumn("Name", 15, ColumnAlignment.Left);
             list.AddColumn("Distance", 22, ColumnAlignment.Right, "0");
             
@@ -125,21 +123,16 @@ namespace kOS.Function
 
         private kList GetTargetList(SharedObjects shared)
         {
-            kList list = new kList();
+            var list = new kList();
             list.AddColumn("Vessel Name", 25, ColumnAlignment.Left);
             list.AddColumn("Distance", 12, ColumnAlignment.Right, "0.0");
-
-            double commRange = VesselUtils.GetCommRange(shared.Vessel);
 
             foreach (Vessel vessel in FlightGlobals.Vessels)
             {
                 if (vessel != shared.Vessel)
                 {
                     var vT = new VesselTarget(vessel, shared);
-                    if (vT.IsInRange(commRange))
-                    {
-                        list.AddItem(vT.Vessel.vesselName, vT.GetDistance());
-                    }
+                    list.AddItem(vT.Vessel.vesselName, vT.GetDistance());
                 }
             }
 
@@ -148,7 +141,7 @@ namespace kOS.Function
 
         private kList GetResourceList(SharedObjects shared)
         {
-            kList list = new kList();
+            var list = new kList();
             list.AddColumn("Stage", 11, ColumnAlignment.Left);
             list.AddColumn("Resource Name", 28, ColumnAlignment.Left);
             list.AddColumn("Amount", 9, ColumnAlignment.Right, "0.00");
@@ -174,7 +167,7 @@ namespace kOS.Function
 
             foreach (KeyValuePair<string, double> kvp in resourceDict)
             {
-                string key = kvp.Key.ToString();
+                string key = kvp.Key;
                 string stageStr = key.Substring(0, key.IndexOf('|'));
                 string resourceName = key.Substring(key.IndexOf('|') + 1);
 
@@ -186,7 +179,7 @@ namespace kOS.Function
 
         private kList GetPartList(SharedObjects shared)
         {
-            kList list = new kList();
+            var list = new kList();
             list.AddColumn("ID", 28, ColumnAlignment.Left);
             list.AddColumn("Name", 20, ColumnAlignment.Left);
 
@@ -200,7 +193,7 @@ namespace kOS.Function
 
         private kList GetEngineList(SharedObjects shared)
         {
-            kList list = new kList();
+            var list = new kList();
             list.AddColumn("ID", 12, ColumnAlignment.Left);
             list.AddColumn("Stage", 8, ColumnAlignment.Left);
             list.AddColumn("Name", 28, ColumnAlignment.Left);
@@ -226,7 +219,7 @@ namespace kOS.Function
 
         private kList GetSensorList(SharedObjects shared)
         {
-            kList list = new kList();
+            var list = new kList();
             list.AddColumn("Part Name", 37, ColumnAlignment.Left);
             list.AddColumn("Sensor Type", 11, ColumnAlignment.Left);
 
@@ -234,7 +227,7 @@ namespace kOS.Function
             {
                 foreach (PartModule module in part.Modules)
                 {
-                    ModuleEnviroSensor sensor = module as ModuleEnviroSensor;
+                    var sensor = module as ModuleEnviroSensor;
                     if (sensor != null)
                     {
                         list.AddItem(part.partInfo.title, sensor.sensorType);
@@ -245,7 +238,7 @@ namespace kOS.Function
             return list;
         }
 
-        private kList GetConfigList(SharedObjects shared)
+        private kList GetConfigList()
         {
             var list = new kList();
             list.AddColumn("", 5, ColumnAlignment.Left);
@@ -268,17 +261,12 @@ namespace kOS.Function
             public string Title = string.Empty;
             public string Footer = string.Empty;
 
-            private List<kListColumn> _columns = new List<kListColumn>();
-            private List<string> _items = new List<string>();
-            private string _formatString = string.Empty;
-            private string _headerString = string.Empty;
-            private int _totalWidth = 0;
+            private readonly List<kListColumn> columns = new List<kListColumn>();
+            private readonly List<string> items = new List<string>();
+            private string formatString = string.Empty;
+            private string headerString = string.Empty;
+            private int totalWidth;
 
-            public void AddColumn(string title, int width)
-            {
-                AddColumn(title, width, ColumnAlignment.Left, string.Empty);
-            }
-            
             public void AddColumn(string title, int width, ColumnAlignment alignment)
             {
                 AddColumn(title, width, alignment, string.Empty);
@@ -286,77 +274,77 @@ namespace kOS.Function
 
             public void AddColumn(string title, int width, ColumnAlignment alignment, string format)
             {
-                _columns.Add(new kListColumn(title, width, alignment, format));
-                _formatString = string.Empty;
-                _totalWidth += width;
+                columns.Add(new kListColumn(title, width, alignment, format));
+                formatString = string.Empty;
+                totalWidth += width;
 
                 if (alignment == ColumnAlignment.Left)
                 {
-                    _headerString += title.Substring(0, Math.Min(width, title.Length)).PadRight(width);
+                    headerString += title.Substring(0, Math.Min(width, title.Length)).PadRight(width);
                 }
                 else
                 {
-                    _headerString += title.Substring(0, Math.Min(width, title.Length)).PadLeft(width);
+                    headerString += title.Substring(0, Math.Min(width, title.Length)).PadLeft(width);
                 }
             }
 
             private void BuildFormatString()
             {
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
 
-                for (int index = 0; index < _columns.Count; index++)
+                for (int index = 0; index < columns.Count; index++)
                 {
-                    string alignment = _columns[index].Alignment == ColumnAlignment.Left ? "-" : "";
+                    string alignment = columns[index].Alignment == ColumnAlignment.Left ? "-" : "";
                     string separator;
 
-                    if (index < (_columns.Count - 1))
+                    if (index < (columns.Count - 1))
                     {
-                        _columns[index].ItemWidth = _columns[index].Width - 1;
+                        columns[index].ItemWidth = columns[index].Width - 1;
                         separator = " ";
                     }
                     else
                     {
-                        _columns[index].ItemWidth = _columns[index].Width;
+                        columns[index].ItemWidth = columns[index].Width;
                         separator = "";
                     }
 
-                    builder.AppendFormat("{{{0},{1}{2}}}{3}", index, alignment, _columns[index].ItemWidth, separator);
+                    builder.AppendFormat("{{{0},{1}{2}}}{3}", index, alignment, columns[index].ItemWidth, separator);
                 }
 
-                _formatString = builder.ToString();
+                formatString = builder.ToString();
             }
 
             public void AddItem(params object[] fields)
             {
-                if (fields.Length == _columns.Count)
+                if (fields.Length == columns.Count)
                 {
-                    if (_formatString == string.Empty)
+                    if (formatString == string.Empty)
                     {
                         BuildFormatString();
                     }
 
-                    string[] stringFields = new string[fields.Length];
-                    for (int index = 0; index < _columns.Count; index++)
+                    object[] stringFields = new string[fields.Length];
+                    for (int index = 0; index < columns.Count; index++)
                     {
                         string field;
 
-                        if (_columns[index].Format != string.Empty &&
+                        if (columns[index].Format != string.Empty &&
                             (fields[index] is int ||
                              fields[index] is double ||
                              fields[index] is float))
                         {
                             double number = Convert.ToDouble(fields[index]);
-                            field = number.ToString(_columns[index].Format);
+                            field = number.ToString(columns[index].Format);
                         }
                         else
                         {
                             field = fields[index].ToString();
                         }
                         
-                        stringFields[index] = field.Substring(0, Math.Min(_columns[index].ItemWidth, field.Length));
+                        stringFields[index] = field.Substring(0, Math.Min(columns[index].ItemWidth, field.Length));
                     }
 
-                    _items.Add(string.Format(_formatString, stringFields));
+                    items.Add(string.Format(formatString, stringFields));
                 }
                 else
                 {
@@ -366,12 +354,12 @@ namespace kOS.Function
 
             public override string ToString()
             {
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
                 if (Title != string.Empty) builder.AppendLine(Title);
-                builder.AppendLine(_headerString);
-                builder.AppendLine(new string('-', _totalWidth));
+                builder.AppendLine(headerString);
+                builder.AppendLine(new string('-', totalWidth));
 
-                foreach (string item in _items)
+                foreach (string item in items)
                 {
                     builder.AppendLine(item);
                 }
@@ -390,18 +378,18 @@ namespace kOS.Function
 
         private class kListColumn
         {
-            public string Title;
-            public int Width;
+            private readonly string title;
+            public readonly int Width;
             public int ItemWidth;
-            public ColumnAlignment Alignment;
-            public string Format;
+            public readonly ColumnAlignment Alignment;
+            public readonly string Format;
 
             public kListColumn(string title, int width, ColumnAlignment alignment, string format)
             {
-                this.Title = title;
-                this.Width = width;
-                this.Alignment = alignment;
-                this.Format = format;
+                this.title = title;
+                Width = width;
+                Alignment = alignment;
+                Format = format;
             }
         }
 

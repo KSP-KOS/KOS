@@ -197,51 +197,6 @@ namespace kOS.Utilities
            FlightGlobals.fetch.SetVesselTarget(val);
         } 
 
-        public static double GetCommRange(Vessel vessel)
-        {
-            return GetCommRange(vessel.parts);
-        }
-
-        public static double GetCommRange(List<Part> parts)
-        {
-            double range = 100000;
-
-            foreach (var part in parts)
-            {
-                if (part.partInfo.name != "longAntenna") continue;
-                string status = ((ModuleAnimateGeneric) part.Modules["ModuleAnimateGeneric"]).status;
-
-                if (status == "Fixed" || status == "Locked")
-                {
-                    range += 1000000;
-                }
-            }
-
-            foreach (var part in parts)
-            {
-                if (part.partInfo.name != "mediumDishAntenna") continue;
-                string status = ((ModuleAnimateGeneric) part.Modules["ModuleAnimateGeneric"]).status;
-
-                if (status == "Fixed" || status == "Locked")
-                {
-                    range *= 100;
-                }
-            }
-
-            foreach (var part in parts)
-            {
-                if (part.partInfo.name != "commDish") continue;
-                string status = ((ModuleAnimateGeneric) part.Modules["ModuleAnimateGeneric"]).status;
-
-                if (status == "Fixed" || status == "Locked")
-                {
-                    range *= 200;
-                }
-            }
-
-            return range;
-        }
-
         public static double GetDistanceToHome(Vessel vessel)
         {
             foreach ( var body in FlightGlobals.fetch.bodies.Where( 

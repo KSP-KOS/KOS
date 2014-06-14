@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using UnityEngine;
-using kOS.Utilities;
-using kOS.AddOns.RemoteTech2;
 
 namespace kOS.Persistence
 {
     public class Archive : Volume
     {
-        private string _archiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
+        private readonly string archiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
 
         public Archive()
         {
-            Directory.CreateDirectory(_archiveFolder);
+            Directory.CreateDirectory(archiveFolder);
             Renameable = false;
             Name = "Archive";
         }
@@ -29,7 +25,7 @@ namespace kOS.Persistence
         {
             try
             {
-                using (var infile = new StreamReader(_archiveFolder + name + ".txt", true))
+                using (var infile = new StreamReader(archiveFolder + name + ".txt", true))
                 {
                     string fileBody = infile.ReadToEnd().Replace("\r\n", "\n");
 
@@ -51,11 +47,11 @@ namespace kOS.Persistence
         {
             base.SaveFile(file);
 
-            Directory.CreateDirectory(_archiveFolder);
+            Directory.CreateDirectory(archiveFolder);
 
             try
             {
-                using (StreamWriter outfile = new StreamWriter(_archiveFolder + file.Filename + ".txt", false))
+                using (var outfile = new StreamWriter(archiveFolder + file.Filename + ".txt", false))
                 {
                     string fileBody = file.Content;
 
@@ -82,7 +78,7 @@ namespace kOS.Persistence
             try
             {
                 base.DeleteByName(name);
-                System.IO.File.Delete(_archiveFolder + name + ".txt");
+                File.Delete(archiveFolder + name + ".txt");
                 return true;
             }
             catch (Exception)
@@ -97,7 +93,7 @@ namespace kOS.Persistence
 
             try
             {
-                foreach (var file in Directory.GetFiles(_archiveFolder, "*.txt"))
+                foreach (var file in Directory.GetFiles(archiveFolder, "*.txt"))
                 {
                     var sysFileInfo = new System.IO.FileInfo(file);
                     var fileInfo = new FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
@@ -112,24 +108,12 @@ namespace kOS.Persistence
             return retList;
         }
 
-        public override bool CheckRange(Vessel vessel)
-        {
-            if (vessel != null)
-            {
-                return (VesselUtils.GetDistanceToHome(vessel) < VesselUtils.GetCommRange(vessel));
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public override float RequiredPower()
         {
-            const int multiplier = 5;
-            const float powerRequired = BASE_POWER * multiplier;
+            const int MULTIPLIER = 5;
+            const float POWER_REQUIRED = BASE_POWER * MULTIPLIER;
 
-            return powerRequired;
+            return POWER_REQUIRED;
         }
     }
 }

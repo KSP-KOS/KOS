@@ -63,7 +63,7 @@ namespace kOS.Persistence
             node.AddValue("capacity", Capacity);
             node.AddValue("volumeName", Name);
 
-            foreach (ProgramFile file in _files.Values)
+            foreach (ProgramFile file in Files.Values)
             {
                 node.AddNode(file.Save("file"));
             }
