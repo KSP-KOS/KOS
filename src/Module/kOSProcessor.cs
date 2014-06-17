@@ -68,6 +68,13 @@ namespace kOS.Module
             Core.CloseWindow(shared);
         }
 
+        [KSPAction("Toggle Terminal", actionGroup = KSPActionGroup.None)]
+        public void Toggle(KSPActionParam param)
+        {
+            Debug.Log("kOS: Toggle Terminal from ActionGroup");
+            Core.ToggleWindow(shared);
+        }
+
         [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
         public void TogglePower(KSPActionParam param)
         {
