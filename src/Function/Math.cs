@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Suffixed;
 
 namespace kOS.Function
@@ -151,8 +148,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            Vector vector2 = shared.Cpu.PopValue() as Vector;
-            Vector vector1 = shared.Cpu.PopValue() as Vector;
+            var vector2 = shared.Cpu.PopValue() as Vector;
+            var vector1 = shared.Cpu.PopValue() as Vector;
 
             if (vector1 != null && vector2 != null)
             {
@@ -167,8 +164,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            Vector vector2 = shared.Cpu.PopValue() as Vector;
-            Vector vector1 = shared.Cpu.PopValue() as Vector;
+            var vector2 = shared.Cpu.PopValue() as Vector;
+            var vector1 = shared.Cpu.PopValue() as Vector;
 
             if (vector1 != null && vector2 != null)
             {
@@ -183,8 +180,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            Vector vector2 = shared.Cpu.PopValue() as Vector;
-            Vector vector1 = shared.Cpu.PopValue() as Vector;
+            var vector2 = shared.Cpu.PopValue() as Vector;
+            var vector1 = shared.Cpu.PopValue() as Vector;
 
             if (vector1 != null && vector2 != null)
             {
@@ -199,8 +196,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            Vector vector2 = shared.Cpu.PopValue() as Vector;
-            Vector vector1 = shared.Cpu.PopValue() as Vector;
+            var vector2 = shared.Cpu.PopValue() as Vector;
+            var vector1 = shared.Cpu.PopValue() as Vector;
 
             if (vector1 != null && vector2 != null)
             {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 
 namespace kOS.Screen
 {
@@ -11,28 +7,28 @@ namespace kOS.Screen
         public const int MAX_ROWS = 36;
         public const int MAX_COLUMNS = 50;
         
-        protected int _topRow;
-        private List<char[]> _buffer;
-        private List<SubBuffer> _subBuffers;
+        private int topRow;
+        private readonly List<char[]> buffer;
+        private readonly List<SubBuffer> subBuffers;
 
-        public int RowCount { get; private set; }
-        public int ColumnCount { get; private set; }
-        public int CursorRow { get; protected set; }
-        public int CursorColumn { get; protected set; }
+        protected int CursorRow { get; set; }
+        protected int CursorColumn { get; set; }
         public virtual int CursorRowShow { get { return CursorRow; } }
         public virtual int CursorColumnShow { get { return CursorColumn; } }
+        public int RowCount { get; private set; }
+        public int ColumnCount { get; private set; }
 
         public int AbsoluteCursorRow
         {
-            get { return CursorRow + _topRow; }
-            set { CursorRow = value - _topRow; }
+            get { return CursorRow + topRow; }
+            set { CursorRow = value - topRow; }
         }
 
 
         public ScreenBuffer()
         {
-            _buffer = new List<char[]>();
-            _subBuffers = new List<SubBuffer>();
+            buffer = new List<char[]>();
+            subBuffers = new List<SubBuffer>();
 
             RowCount = MAX_ROWS;
             ColumnCount = MAX_COLUMNS;
@@ -43,7 +39,7 @@ namespace kOS.Screen
         {
             AddNewBufferLines(RowCount);
 
-            _topRow = 0;
+            topRow = 0;
             CursorRow = 0;
             CursorColumn = 0;
         }
@@ -51,7 +47,7 @@ namespace kOS.Screen
         protected void AddNewBufferLines( int howMany = 1)
         {
             while (howMany-- > 0)
-                _buffer.Add(new char[ColumnCount]);
+                buffer.Add(new char[ColumnCount]);
         }
 
         public void SetSize(int rowCount, int columnCount)
@@ -60,20 +56,20 @@ namespace kOS.Screen
             {
                 RowCount = rowCount;
                 ColumnCount = columnCount;
-                _buffer.Clear();
+                buffer.Clear();
                 InitializeBuffer();
             }
         }
 
-        private int ScrollVerticalInternal(int deltaRows)
+        private int ScrollVerticalInternal(int deltaRows = 1)
         {
-            int maxTopRow = _buffer.Count - 1;
+            int maxTopRow = buffer.Count - 1;
 
             // boundary checks
-            if (_topRow + deltaRows < 0) deltaRows = -_topRow;
-            if (_topRow + deltaRows > maxTopRow) deltaRows = (maxTopRow - _topRow);
+            if (topRow + deltaRows < 0) deltaRows = -topRow;
+            if (topRow + deltaRows > maxTopRow) deltaRows = (maxTopRow - topRow);
 
-            _topRow += deltaRows;
+            topRow += deltaRows;
 
             return deltaRows;
         }
@@ -104,8 +100,8 @@ namespace kOS.Screen
             if ((CursorRow + 1) >= RowCount)
             {
                 // scrolling up
-                AddNewBufferLines(1);
-                ScrollVerticalInternal(1);
+                AddNewBufferLines();
+                ScrollVerticalInternal();
             }
             else
             {
@@ -156,16 +152,15 @@ namespace kOS.Screen
 
         protected List<string> SplitIntoLines(string textToPrint)
         {
-            List<string> lineList = new List<string>();
+            var lineList = new List<string>();
             int availableColumns = ColumnCount - CursorColumn;
-            int startIndex;
 
-            string[] lines = textToPrint.Trim(new char[] { '\r', '\n' }).Split('\n');
+            string[] lines = textToPrint.Trim(new[] { '\r', '\n' }).Split('\n');
             
-            for (int index = 0; index < lines.Length; index++)
+            foreach (string line in lines)
             {
-                string lineToPrint = lines[index].TrimEnd('\r');
-                startIndex = 0;
+                string lineToPrint = line.TrimEnd('\r');
+                int startIndex = 0;
                 
                 while ((lineToPrint.Length - startIndex) > availableColumns)
                 {
@@ -183,32 +178,32 @@ namespace kOS.Screen
 
         private void PrintLine(string textToPrint)
         {
-            char[] lineBuffer = _buffer[AbsoluteCursorRow];
+            char[] lineBuffer = buffer[AbsoluteCursorRow];
             textToPrint.ToCharArray().CopyTo(lineBuffer, CursorColumn);
             MoveColumn(textToPrint.Length);
         }
 
         public void ClearScreen()
         {
-            _buffer.Clear();
+            buffer.Clear();
             InitializeBuffer();
         }
 
         public void AddSubBuffer(SubBuffer subBuffer)
         {
-            _subBuffers.Add(subBuffer);
+            subBuffers.Add(subBuffer);
         }
 
         public void RemoveSubBuffer(SubBuffer subBuffer)
         {
-            _subBuffers.Remove(subBuffer);
+            subBuffers.Remove(subBuffer);
         }
 
         public List<char[]> GetBuffer()
         {
             
             // base buffer
-            List<char[]> mergedBuffer = new List<char[]>(_buffer.GetRange(_topRow, RowCount));
+            var mergedBuffer = new List<char[]>(buffer.GetRange(topRow, RowCount));
 
             // The screen may be scrolled such that the bottom of the text content doesn't
             // go all the way to the bottom of the screen.  If so, pad it for display:
@@ -219,11 +214,11 @@ namespace kOS.Screen
 
             // merge sub buffers
             UpdateSubBuffers();
-            foreach (SubBuffer subBuffer in _subBuffers)
+            foreach (SubBuffer subBuffer in subBuffers)
             {
                 if (subBuffer.RowCount > 0 && subBuffer.Enabled)
                 {
-                    int mergeRow = subBuffer.Fixed ? subBuffer.PositionRow : (subBuffer.PositionRow - _topRow);
+                    int mergeRow = subBuffer.Fixed ? subBuffer.PositionRow : (subBuffer.PositionRow - topRow);
 
                     if ((mergeRow + subBuffer.RowCount) > 0 && mergeRow < RowCount)
                     {

@@ -11,7 +11,7 @@ namespace kOS.InterProcessor
         {
             if (shared.Cpu != null)
             {
-                shared.Cpu.RunProgram(this.Program);
+                shared.Cpu.RunProgram(Program);
             }
         }
     }

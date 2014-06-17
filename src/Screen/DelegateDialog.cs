@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using kOS;
-using kOS.Persistence;
 
 namespace kOS.Screen
 {
@@ -19,30 +16,30 @@ namespace kOS.Screen
     /// all flat and globally accessible
     public class DelegateDialog : MonoBehaviour
     {
-        private KOSTextEditPopup   _parent = null;
-        private string             _message = "";
-        private List<string>       _options;
-        private List<DialogAction> _actions;
-        private bool               _invoked = false;
+        private KOSTextEditPopup   parent;
+        private string             message = "";
+        private List<string>       options;
+        private List<DialogAction> actions;
+        private bool               invoked;
         
         
         public void Invoke( KOSTextEditPopup parent, string message, List<string> options, List<DialogAction> actions )
         {
-            _parent = parent;
-            _parent.Freeze(true);
-            _message = message;
-            _options = options;
-            _actions = actions;
-            _invoked = true;
+            this.parent = parent;
+            this.parent.Freeze(true);
+            this.message = message;
+            this.options = options;
+            this.actions = actions;
+            invoked = true;
         }
         
         public void OnGUI()
         {
-            if (_invoked)
+            if (invoked)
             {
-                float guessWidth = GUI.skin.label.CalcSize( new GUIContent(_message) ).x;
-                GUILayout.Window( 101, new Rect( _parent.GetRect().xMin+10,
-                                                 _parent.GetRect().yMin+10,
+                float guessWidth = GUI.skin.label.CalcSize( new GUIContent(message) ).x;
+                GUILayout.Window( 101, new Rect( parent.GetRect().xMin+10,
+                                                 parent.GetRect().yMin+10,
                                                  guessWidth,
                                                  0) , DrawConfirm, "Confirm", GUILayout.ExpandWidth(true) );
             }
@@ -50,17 +47,17 @@ namespace kOS.Screen
         
         public void DrawConfirm( int windowID )
         {
-            if (_invoked)
+            if (invoked)
             {
-                GUILayout.Label( _message );
-                for (int bNum = 0 ; bNum < _options.Count ; bNum++)
+                GUILayout.Label( message );
+                for (int bNum = 0 ; bNum < options.Count ; bNum++)
                 {
-                    if (GUILayout.Button( _options[bNum]))
+                    if (GUILayout.Button( options[bNum]))
                     {
-                        _actions[bNum](_parent);
-                        _invoked = false;
-                        _parent.Freeze(false);
-                        GUI.FocusWindow(_parent.windowID);
+                        actions[bNum](parent);
+                        invoked = false;
+                        parent.Freeze(false);
+                        GUI.FocusWindow(parent.WindowID);
                     }
                 }
             }

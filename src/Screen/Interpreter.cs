@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using kOS.Utilities;
 using kOS.Compilation;
@@ -9,21 +8,22 @@ namespace kOS.Screen
 {
     public class Interpreter : TextEditor
     {
-        protected SharedObjects _shared;
-        private List<string> _commandHistory = new List<string>();
-        private int _commandHistoryIndex = 0;
-        private bool _locked = false;
+        private readonly List<string> commandHistory = new List<string>();
+        private int commandHistoryIndex;
+        private bool locked;
 
         public Interpreter(SharedObjects shared)
         {
-            _shared = shared;
+            Shared = shared;
         }
+
+        protected SharedObjects Shared { get; private set; }
 
         protected override void NewLine()
         {
-            string commandText = _lineBuilder.ToString();
+            string commandText = LineBuilder.ToString();
 
-            if (_shared.ScriptHandler.IsCommandComplete(commandText))
+            if (Shared.ScriptHandler.IsCommandComplete(commandText))
             {
                 base.NewLine();
                 ProcessCommand(commandText);
@@ -37,7 +37,7 @@ namespace kOS.Screen
 
         public override void Type(char ch)
         {
-            if (!_locked)
+            if (!locked)
             {
                 base.Type(ch);
             }
@@ -47,10 +47,10 @@ namespace kOS.Screen
         {
             if (key == kOSKeys.BREAK)
             {
-                _shared.Cpu.BreakExecution(true);
+                Shared.Cpu.BreakExecution(true);
             }
             
-            if (!_locked)
+            if (!locked)
             {
                 switch (key)
                 {
@@ -69,25 +69,25 @@ namespace kOS.Screen
 
         private void AddCommandHistoryEntry(string commandText)
         {
-            if (_commandHistory.Count == 0 ||
-                commandText != _commandHistory[_commandHistory.Count - 1])
+            if (commandHistory.Count == 0 ||
+                commandText != commandHistory[commandHistory.Count - 1])
             {
-                _commandHistory.Add(commandText);
+                commandHistory.Add(commandText);
             }
-            _commandHistoryIndex = _commandHistory.Count;
+            commandHistoryIndex = commandHistory.Count;
         }
 
         private void ShowCommandHistoryEntry(int deltaIndex)
         {
-            if (_commandHistory.Count > 0)
+            if (commandHistory.Count > 0)
             {
-                int newHistoryIndex = _commandHistoryIndex + deltaIndex;
-                if (newHistoryIndex >= 0 && newHistoryIndex < _commandHistory.Count)
+                int newHistoryIndex = commandHistoryIndex + deltaIndex;
+                if (newHistoryIndex >= 0 && newHistoryIndex < commandHistory.Count)
                 {
-                    _commandHistoryIndex = newHistoryIndex;
-                    _lineBuilder = new StringBuilder();
-                    _lineBuilder.Append(_commandHistory[_commandHistoryIndex]);
-                    _lineCursorIndex = _lineBuilder.Length;
+                    commandHistoryIndex = newHistoryIndex;
+                    LineBuilder = new StringBuilder();
+                    LineBuilder.Append(commandHistory[commandHistoryIndex]);
+                    LineCursorIndex = LineBuilder.Length;
                     UpdateLineSubBuffer();
                 }
             }
@@ -100,39 +100,38 @@ namespace kOS.Screen
 
         protected void CompileCommand(string commandText)
         {
-            if (_shared.ScriptHandler != null)
+            if (Shared.ScriptHandler == null) return;
+
+            try
             {
-                try
+                List<CodePart> commandParts = Shared.ScriptHandler.Compile(commandText, "interpreter");
+                if (commandParts != null)
                 {
-                    List<CodePart> commandParts = _shared.ScriptHandler.Compile(commandText, "interpreter");
-                    if (commandParts != null)
-                    {
-                        var interpreterContext = _shared.Cpu.GetInterpreterContext();
-                        interpreterContext.AddParts(commandParts);
-                    }
+                    var interpreterContext = Shared.Cpu.GetInterpreterContext();
+                    interpreterContext.AddParts(commandParts);
                 }
-                catch (Exception e)
+            }
+            catch (Exception e)
+            {
+                if (Shared.Logger != null)
                 {
-                    if (_shared.Logger != null)
-                    {
-                        _shared.Logger.Log(e);
-                    }
+                    Shared.Logger.Log(e);
                 }
             }
         }
 
-        public void SetInputLock(bool locked)
+        public void SetInputLock(bool isLocked)
         {
-            _locked = locked;
-            if (_shared.Window != null) _shared.Window.SetShowCursor(!locked);
-            _lineSubBuffer.Enabled = !locked;
+            locked = isLocked;
+            if (Shared.Window != null) Shared.Window.SetShowCursor(!isLocked);
+            LineSubBuffer.Enabled = !isLocked;
         }
 
         public override void Reset()
         {
-            _shared.ScriptHandler.ClearContext("interpreter");
-            _commandHistory.Clear();
-            _commandHistoryIndex = 0;
+            Shared.ScriptHandler.ClearContext("interpreter");
+            commandHistory.Clear();
+            commandHistoryIndex = 0;
             base.Reset();
         }
 

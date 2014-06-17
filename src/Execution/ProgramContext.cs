@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Binding;
 using kOS.Compilation;
 
@@ -9,8 +7,8 @@ namespace kOS.Execution
 {
     public class ProgramContext
     {
-        private Dictionary<string, bool> _flyByWire;
-        private ProgramBuilder builder;
+        private readonly Dictionary<string, bool> flyByWire;
+        private readonly ProgramBuilder builder;
 
         public List<Opcode> Program;
         public int InstructionPointer;
@@ -23,13 +21,13 @@ namespace kOS.Execution
             InstructionPointer = 0;
             Triggers = new List<int>();
             builder = interpreterContext ? new ProgramBuilderInterpreter() : new ProgramBuilder();
-            _flyByWire = new Dictionary<string, bool>();
+            flyByWire = new Dictionary<string, bool>();
         }
 
         public ProgramContext(bool interpreterContext, List<Opcode> program)
             : this(interpreterContext)
         {
-            this.Program = program;
+            Program = program;
         }
 
         public void AddParts(IEnumerable<CodePart> parts)
@@ -88,19 +86,19 @@ namespace kOS.Execution
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            if (!_flyByWire.ContainsKey(paramName))
+            if (!flyByWire.ContainsKey(paramName))
             {
-                _flyByWire.Add(paramName, enabled);
+                flyByWire.Add(paramName, enabled);
             }
             else
             {
-                _flyByWire[paramName] = enabled;
+                flyByWire[paramName] = enabled;
             }
         }
 
         public void DisableActiveFlyByWire(BindingManager manager)
         {
-            foreach (KeyValuePair<string, bool> kvp in _flyByWire)
+            foreach (KeyValuePair<string, bool> kvp in flyByWire)
             {
                 if (kvp.Value)
                 {
@@ -111,7 +109,7 @@ namespace kOS.Execution
 
         public void EnableActiveFlyByWire(BindingManager manager)
         {
-            foreach (KeyValuePair<string, bool> kvp in _flyByWire)
+            foreach (KeyValuePair<string, bool> kvp in flyByWire)
             {
                 manager.ToggleFlyByWire(kvp.Key, kvp.Value);
             }
@@ -119,7 +117,7 @@ namespace kOS.Execution
 
         public List<string> GetCodeFragment(int contextLines)
         {
-            List<string> codeFragment = new List<string>();
+            var codeFragment = new List<string>();
 
             for (int index = (InstructionPointer - contextLines); index <= (InstructionPointer + contextLines); index++)
             {

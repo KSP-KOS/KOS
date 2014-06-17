@@ -18,45 +18,45 @@ namespace kOS.Execution
             Waiting = 2
         }
 
-        private readonly Stack _stack;
-        private readonly Dictionary<string, Variable> _vars;
-        private Status _currentStatus;
-        private double _currentTime;
-        private double _timeWaitUntil;
-        private Dictionary<string, FunctionBase> _functions;
-        private readonly SharedObjects _shared;
-        private readonly List<ProgramContext> _contexts;
-        private ProgramContext _currentContext;
-        private Dictionary<string, Variable> _savedPointers;
+        private readonly Stack stack;
+        private readonly Dictionary<string, Variable> vars;
+        private Status currentStatus;
+        private double currentTime;
+        private double timeWaitUntil;
+        private Dictionary<string, FunctionBase> functions;
+        private readonly SharedObjects shared;
+        private readonly List<ProgramContext> contexts;
+        private ProgramContext currentContext;
+        private Dictionary<string, Variable> savedPointers;
         
         // statistics
         public double TotalCompileTime = 0D;
-        private double _totalUpdateTime;
-        private double _totalTriggersTime;
-        private double _totalExecutionTime;
+        private double totalUpdateTime;
+        private double totalTriggersTime;
+        private double totalExecutionTime;
 
         public int InstructionPointer
         {
-            get { return _currentContext.InstructionPointer; }
-            set { _currentContext.InstructionPointer = value; }
+            get { return currentContext.InstructionPointer; }
+            set { currentContext.InstructionPointer = value; }
         }
 
-        public double SessionTime { get { return _currentTime; } }
+        public double SessionTime { get { return currentTime; } }
 
 
         public CPU(SharedObjects shared)
         {
-            _shared = shared;
-            _shared.Cpu = this;
-            _stack = new Stack();
-            _vars = new Dictionary<string, Variable>();
-            _contexts = new List<ProgramContext>();
-            if (_shared.UpdateHandler != null) _shared.UpdateHandler.AddObserver(this);
+            this.shared = shared;
+            this.shared.Cpu = this;
+            stack = new Stack();
+            vars = new Dictionary<string, Variable>();
+            contexts = new List<ProgramContext>();
+            if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddObserver(this);
         }
 
         private void LoadFunctions()
         {
-            _functions = new Dictionary<string, FunctionBase>();
+            functions = new Dictionary<string, FunctionBase>();
 
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
@@ -68,7 +68,7 @@ namespace kOS.Execution
                 {
                     if (functionName != string.Empty)
                     {
-                        _functions.Add(functionName, (FunctionBase)functionObject);
+                        functions.Add(functionName, (FunctionBase)functionObject);
                     }
                 }
             }
@@ -77,43 +77,43 @@ namespace kOS.Execution
         public void Boot()
         {
             // break all running programs
-            _currentContext = null;
-            _contexts.Clear();
+            currentContext = null;
+            contexts.Clear();
             PushInterpreterContext();
-            _currentStatus = Status.Running;
-            _currentTime = 0;
-            _timeWaitUntil = 0;
+            currentStatus = Status.Running;
+            currentTime = 0;
+            timeWaitUntil = 0;
             // clear stack
-            _stack.Clear();
+            stack.Clear();
             // clear variables
-            _vars.Clear();
+            vars.Clear();
             // clear interpreter
-            if (_shared.Interpreter != null) _shared.Interpreter.Reset();
+            if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
             LoadFunctions();
             // load bindings
-            if (_shared.BindingMgr != null) _shared.BindingMgr.LoadBindings();
+            if (shared.BindingMgr != null) shared.BindingMgr.LoadBindings();
             // Booting message
-            if (_shared.Screen != null)
+            if (shared.Screen != null)
             {
-                _shared.Screen.ClearScreen();
+                shared.Screen.ClearScreen();
                 string bootMessage = "kOS Operating System\n" +
                                      "KerboScript v" + Core.VersionInfo + "\n \n" +
                                      "Proceed.\n ";
-                _shared.Screen.Print(bootMessage);
+                shared.Screen.Print(bootMessage);
             }
             
-            if (_shared.VolumeMgr == null) { UnityEngine.Debug.Log("kOS: No volume mgr"); }
-            else if (_shared.VolumeMgr.CurrentVolume == null) { UnityEngine.Debug.Log("kOS: No current volume"); }
-            else if (_shared.ScriptHandler == null) { UnityEngine.Debug.Log("kOS: No script handler"); }
-            else if (_shared.VolumeMgr.CurrentVolume.GetByName("boot") != null)
+            if (shared.VolumeMgr == null) { UnityEngine.Debug.Log("kOS: No volume mgr"); }
+            else if (shared.VolumeMgr.CurrentVolume == null) { UnityEngine.Debug.Log("kOS: No current volume"); }
+            else if (shared.ScriptHandler == null) { UnityEngine.Debug.Log("kOS: No script handler"); }
+            else if (shared.VolumeMgr.CurrentVolume.GetByName("boot") != null)
             {
-                _shared.ScriptHandler.ClearContext("program");
+                shared.ScriptHandler.ClearContext("program");
 
-                var programContext = _shared.Cpu.GetProgramContext();
+                var programContext = shared.Cpu.GetProgramContext();
                 programContext.Silent = true;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                List<CodePart> parts = _shared.ScriptHandler.Compile("run boot.", "program", options);
+                List<CodePart> parts = shared.ScriptHandler.Compile("run boot.", "program", options);
                 programContext.AddParts(parts);
             }
         }
@@ -130,48 +130,48 @@ namespace kOS.Execution
         {
             UnityEngine.Debug.Log("kOS: Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
             SaveAndClearPointers();
-            _contexts.Add(context);
-            _currentContext = _contexts.Last();
+            contexts.Add(context);
+            currentContext = contexts.Last();
 
-            if (_contexts.Count > 1)
+            if (contexts.Count > 1)
             {
-                _shared.Interpreter.SetInputLock(true);
+                shared.Interpreter.SetInputLock(true);
             }
         }
 
         private void PopContext()
         {
-            UnityEngine.Debug.Log("kOS: Popping context " + _contexts.Count);
-            if (_contexts.Any())
+            UnityEngine.Debug.Log("kOS: Popping context " + contexts.Count);
+            if (contexts.Any())
             {
                 // remove the last context
-                var contextRemove = _contexts.Last();
-                _contexts.Remove(contextRemove);
-                contextRemove.DisableActiveFlyByWire(_shared.BindingMgr);
+                var contextRemove = contexts.Last();
+                contexts.Remove(contextRemove);
+                contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
                 UnityEngine.Debug.Log("kOS: Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
 
-                if (_contexts.Any())
+                if (contexts.Any())
                 {
-                    _currentContext = _contexts.Last();
-                    _currentContext.EnableActiveFlyByWire(_shared.BindingMgr);
+                    currentContext = contexts.Last();
+                    currentContext.EnableActiveFlyByWire(shared.BindingMgr);
                     RestorePointers();
-                    UnityEngine.Debug.Log("kOS: New current context " + _currentContext.GetCodeFragment(0).FirstOrDefault());
+                    UnityEngine.Debug.Log("kOS: New current context " + currentContext.GetCodeFragment(0).FirstOrDefault());
                 }
                 else
                 {
-                    _currentContext = null;
+                    currentContext = null;
                 }
 
-                if (_contexts.Count == 1)
+                if (contexts.Count == 1)
                 {
-                    _shared.Interpreter.SetInputLock(false);
+                    shared.Interpreter.SetInputLock(false);
                 }
             }
         }
 
         private void PopFirstContext()
         {
-            while (_contexts.Count > 1)
+            while (contexts.Count > 1)
             {
                 PopContext();
             }
@@ -180,27 +180,27 @@ namespace kOS.Execution
         // only two contexts exist now, one for the interpreter and one for the programs
         public ProgramContext GetInterpreterContext()
         {
-            return _contexts[0];
+            return contexts[0];
         }
 
         public ProgramContext GetProgramContext()
         {
-            if (_contexts.Count == 1)
+            if (contexts.Count == 1)
             {
                 PushContext(new ProgramContext(false));
             }
-            return _currentContext;
+            return currentContext;
         }
 
         private void SaveAndClearPointers()
         {
-            _savedPointers = new Dictionary<string, Variable>();
-            var pointers = new List<string>(_vars.Keys.Where(v => v.Contains('*')));
+            savedPointers = new Dictionary<string, Variable>();
+            var pointers = new List<string>(vars.Keys.Where(v => v.Contains('*')));
 
             foreach (var pointerName in pointers)
             {
-                _savedPointers.Add(pointerName, _vars[pointerName]);
-                _vars.Remove(pointerName);
+                savedPointers.Add(pointerName, vars[pointerName]);
+                vars.Remove(pointerName);
             }
             UnityEngine.Debug.Log(string.Format("kOS: Saving and removing {0} pointers", pointers.Count));
         }
@@ -210,13 +210,13 @@ namespace kOS.Execution
             int restoredPointers = 0;
             int deletedPointers = 0;
 
-            foreach (var item in _savedPointers)
+            foreach (var item in savedPointers)
             {
-                if (_vars.ContainsKey(item.Key))
+                if (vars.ContainsKey(item.Key))
                 {
                     // if the pointer exists it means it was redefined from inside a program
                     // and it's going to be invalid outside of it, so we remove it
-                    _vars.Remove(item.Key);
+                    vars.Remove(item.Key);
                     deletedPointers++;
                     // also remove the corresponding trigger if exists
                     if (item.Value.Value is int)
@@ -224,7 +224,7 @@ namespace kOS.Execution
                 }
                 else
                 {
-                    _vars.Add(item.Key, item.Value);
+                    vars.Add(item.Key, item.Value);
                     restoredPointers++;
                 }
             }
@@ -247,57 +247,57 @@ namespace kOS.Execution
 
         public void BreakExecution(bool manual)
         {
-            UnityEngine.Debug.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automaticly", _contexts.Count));
-            if (_contexts.Count > 1)
+            UnityEngine.Debug.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automaticly", contexts.Count));
+            if (contexts.Count > 1)
             {
                 EndWait();
 
                 if (manual)
                 {
                     PopFirstContext();
-                    _shared.Screen.Print("Program aborted.");
-                    _shared.BindingMgr.UnBindAll();
+                    shared.Screen.Print("Program aborted.");
+                    shared.BindingMgr.UnBindAll();
                     PrintStatistics();
                 }
                 else
                 {
-                    bool silent = _currentContext.Silent;
+                    bool silent = currentContext.Silent;
                     PopContext();
-                    if (_contexts.Count == 1 && !silent)
+                    if (contexts.Count == 1 && !silent)
                     {
-                        _shared.Screen.Print("Program ended.");
-                        _shared.BindingMgr.UnBindAll();
+                        shared.Screen.Print("Program ended.");
+                        shared.BindingMgr.UnBindAll();
                         PrintStatistics();
                     }
                 }
             }
             else
             {
-                _currentContext.Triggers.Clear();   // remove all the active triggers
+                currentContext.Triggers.Clear();   // remove all the active triggers
                 SkipCurrentInstructionId();
             }
         }
 
         public void PushStack(object item)
         {
-            _stack.Push(item);
+            stack.Push(item);
         }
 
         public object PopStack()
         {
-            return _stack.Pop();
+            return stack.Pop();
         }
 
         public void MoveStackPointer(int delta)
         {
-            _stack.MoveStackPointer(delta);
+            stack.MoveStackPointer(delta);
         }
 
         private Variable GetOrCreateVariable(string identifier)
         {
             Variable variable;
 
-            if (_vars.ContainsKey(identifier))
+            if (vars.ContainsKey(identifier))
             {
                 variable = GetVariable(identifier);
             }
@@ -312,9 +312,9 @@ namespace kOS.Execution
         private Variable GetVariable(string identifier)
         {
             identifier = identifier.ToLower();
-            if (_vars.ContainsKey(identifier))
+            if (vars.ContainsKey(identifier))
             {
-                return _vars[identifier];
+                return vars[identifier];
             }
             throw new Exception(string.Format("Variable {0} is not defined", identifier.TrimStart('$')));
         }
@@ -328,12 +328,12 @@ namespace kOS.Execution
                 identifier = "$" + identifier;
             }
 
-            if (_vars.ContainsKey(identifier))
+            if (vars.ContainsKey(identifier))
             {
-                _vars.Remove(identifier);
+                vars.Remove(identifier);
             }
 
-            _vars.Add(identifier, variable);
+            vars.Add(identifier, variable);
         }
 
         public bool VariableIsRemovable(Variable variable)
@@ -345,14 +345,14 @@ namespace kOS.Execution
         {
             identifier = identifier.ToLower();
             
-            if (_vars.ContainsKey(identifier) &&
-                VariableIsRemovable(_vars[identifier]))
+            if (vars.ContainsKey(identifier) &&
+                VariableIsRemovable(vars[identifier]))
             {
                 // Tell Variable to orphan its old value now.  Faster than relying 
                 // on waiting several seconds for GC to eventually call ~Variable()
-                _vars[identifier].Value = null;
+                vars[identifier].Value = null;
                 
-                _vars.Remove(identifier);
+                vars.Remove(identifier);
             }
         }
 
@@ -360,7 +360,7 @@ namespace kOS.Execution
         {
             var removals = new List<string>();
             
-            foreach (KeyValuePair<string, Variable> kvp in _vars)
+            foreach (var kvp in vars)
             {
                 if (VariableIsRemovable(kvp.Value))
                 {
@@ -372,9 +372,9 @@ namespace kOS.Execution
             {
                 // Tell Variable to orphan its old value now.  Faster than relying 
                 // on waiting several seconds for GC to eventually call ~Variable()
-                _vars[identifier].Value = null;
+                vars[identifier].Value = null;
 
-                _vars.Remove(identifier);
+                vars.Remove(identifier);
             }
         }
 
@@ -408,17 +408,17 @@ namespace kOS.Execution
 
         public void AddTrigger(int triggerFunctionPointer)
         {
-            if (!_currentContext.Triggers.Contains(triggerFunctionPointer))
+            if (!currentContext.Triggers.Contains(triggerFunctionPointer))
             {
-                _currentContext.Triggers.Add(triggerFunctionPointer);
+                currentContext.Triggers.Add(triggerFunctionPointer);
             }
         }
 
         public void RemoveTrigger(int triggerFunctionPointer)
         {
-            if (_currentContext.Triggers.Contains(triggerFunctionPointer))
+            if (currentContext.Triggers.Contains(triggerFunctionPointer))
             {
-                _currentContext.Triggers.Remove(triggerFunctionPointer);
+                currentContext.Triggers.Remove(triggerFunctionPointer);
             }
         }
 
@@ -426,15 +426,15 @@ namespace kOS.Execution
         {
             if (waitTime > 0)
             {
-                _timeWaitUntil = _currentTime + waitTime;
+                timeWaitUntil = currentTime + waitTime;
             }
-            _currentStatus = Status.Waiting;
+            currentStatus = Status.Waiting;
         }
 
         public void EndWait()
         {
-            _timeWaitUntil = 0;
-            _currentStatus = Status.Running;
+            timeWaitUntil = 0;
+            currentStatus = Status.Running;
         }
 
         public void Update(double deltaTime)
@@ -446,32 +446,32 @@ namespace kOS.Execution
 
             if (showStatistics) updateWatch = Stopwatch.StartNew();
 
-            _currentTime = _shared.UpdateHandler.CurrentTime;
+            currentTime = shared.UpdateHandler.CurrentTime;
 
             try
             {
                 PreUpdateBindings();
 
-                if (_currentContext != null && _currentContext.Program != null)
+                if (currentContext != null && currentContext.Program != null)
                 {
                     if (showStatistics) triggerWatch = Stopwatch.StartNew();
                     ProcessTriggers();
                     if (showStatistics)
                     {
                         triggerWatch.Stop();
-                        _totalTriggersTime += triggerWatch.ElapsedMilliseconds;
+                        totalTriggersTime += triggerWatch.ElapsedMilliseconds;
                     }
 
                     ProcessWait();
 
-                    if (_currentStatus == Status.Running)
+                    if (currentStatus == Status.Running)
                     {
                         if (showStatistics) executionWatch = Stopwatch.StartNew();
                         ContinueExecution();
                         if (showStatistics)
                         {
                             executionWatch.Stop();
-                            _totalExecutionTime += executionWatch.ElapsedMilliseconds;
+                            totalExecutionTime += executionWatch.ElapsedMilliseconds;
                         }
                     }
                 }
@@ -480,13 +480,13 @@ namespace kOS.Execution
             }
             catch (Exception e)
             {
-                if (_shared.Logger != null)
+                if (shared.Logger != null)
                 {
-                    _shared.Logger.Log(e);
-                    UnityEngine.Debug.Log(_stack.Dump(15));
+                    shared.Logger.Log(e);
+                    UnityEngine.Debug.Log(stack.Dump(15));
                 }
 
-                if (_contexts.Count == 1)
+                if (contexts.Count == 1)
                 {
                     // interpreter context
                     SkipCurrentInstructionId();
@@ -501,31 +501,31 @@ namespace kOS.Execution
             if (showStatistics)
             {
                 updateWatch.Stop();
-                _totalUpdateTime += updateWatch.ElapsedMilliseconds;
+                totalUpdateTime += updateWatch.ElapsedMilliseconds;
             }
         }
 
         private void PreUpdateBindings()
         {
-            if (_shared.BindingMgr != null)
+            if (shared.BindingMgr != null)
             {
-                _shared.BindingMgr.PreUpdate();
+                shared.BindingMgr.PreUpdate();
             }
         }
 
         private void PostUpdateBindings()
         {
-            if (_shared.BindingMgr != null)
+            if (shared.BindingMgr != null)
             {
-                _shared.BindingMgr.PostUpdate();
+                shared.BindingMgr.PostUpdate();
             }
         }
 
         private void ProcessWait()
         {
-            if (_currentStatus == Status.Waiting && _timeWaitUntil > 0)
+            if (currentStatus == Status.Waiting && timeWaitUntil > 0)
             {
-                if (_currentTime >= _timeWaitUntil)
+                if (currentTime >= timeWaitUntil)
                 {
                     EndWait();
                 }
@@ -534,31 +534,31 @@ namespace kOS.Execution
 
         private void ProcessTriggers()
         {
-            if (_currentContext.Triggers.Count > 0)
+            if (currentContext.Triggers.Count > 0)
             {
-                int currentInstructionPointer = _currentContext.InstructionPointer;
-                var triggerList = new List<int>(_currentContext.Triggers);
+                int currentInstructionPointer = currentContext.InstructionPointer;
+                var triggerList = new List<int>(currentContext.Triggers);
 
                 foreach (int triggerPointer in triggerList)
                 {
                     try
                     {
-                        _currentContext.InstructionPointer = triggerPointer;
+                        currentContext.InstructionPointer = triggerPointer;
 
                         bool executeNext = true;
                         while (executeNext)
                         {
-                            executeNext = ExecuteInstruction(_currentContext);
+                            executeNext = ExecuteInstruction(currentContext);
                         }
                     }
                     catch (Exception e)
                     {
                         RemoveTrigger(triggerPointer);
-                        _shared.Logger.Log(e);
+                        shared.Logger.Log(e);
                     }
                 }
 
-                _currentContext.InstructionPointer = currentInstructionPointer;
+                currentContext.InstructionPointer = currentInstructionPointer;
             }
         }
 
@@ -568,12 +568,12 @@ namespace kOS.Execution
             bool executeNext = true;
             int instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
             
-            while (_currentStatus == Status.Running && 
+            while (currentStatus == Status.Running && 
                    instructionCounter < instructionsPerUpdate &&
                    executeNext &&
-                   _currentContext != null)
+                   currentContext != null)
             {
-                executeNext = ExecuteInstruction(_currentContext);
+                executeNext = ExecuteInstruction(currentContext);
                 instructionCounter++;
             }
         }
@@ -597,24 +597,24 @@ namespace kOS.Execution
 
         private void SkipCurrentInstructionId()
         {
-            if (_currentContext.InstructionPointer < (_currentContext.Program.Count - 1))
+            if (currentContext.InstructionPointer < (currentContext.Program.Count - 1))
             {
-                int currentInstructionId = _currentContext.Program[_currentContext.InstructionPointer].InstructionId;
+                int currentInstructionId = currentContext.Program[currentContext.InstructionPointer].InstructionId;
 
-                while (_currentContext.InstructionPointer < _currentContext.Program.Count &&
-                       _currentContext.Program[_currentContext.InstructionPointer].InstructionId == currentInstructionId)
+                while (currentContext.InstructionPointer < currentContext.Program.Count &&
+                       currentContext.Program[currentContext.InstructionPointer].InstructionId == currentInstructionId)
                 {
-                    _currentContext.InstructionPointer++;
+                    currentContext.InstructionPointer++;
                 }
             }
         }
 
         public void CallBuiltinFunction(string functionName)
         {
-            if (_functions.ContainsKey(functionName))
+            if (functions.ContainsKey(functionName))
             {
-                FunctionBase function = _functions[functionName];
-                function.Execute(_shared);
+                FunctionBase function = functions[functionName];
+                function.Execute(shared);
             }
             else
             {
@@ -624,32 +624,32 @@ namespace kOS.Execution
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            if (_shared.BindingMgr != null)
+            if (shared.BindingMgr != null)
             {
-                _shared.BindingMgr.ToggleFlyByWire(paramName, enabled);
-                _currentContext.ToggleFlyByWire(paramName, enabled);
+                shared.BindingMgr.ToggleFlyByWire(paramName, enabled);
+                currentContext.ToggleFlyByWire(paramName, enabled);
             }
         }
 
         public List<string> GetCodeFragment(int contextLines)
         {
-            return _currentContext.GetCodeFragment(contextLines);
+            return currentContext.GetCodeFragment(contextLines);
         }
 
         public void PrintStatistics()
         {
             if (!Config.Instance.ShowStatistics) return;
 
-            _shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", TotalCompileTime));
-            _shared.Screen.Print(string.Format("Total update time: {0:F3}ms", _totalUpdateTime));
-            _shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", _totalTriggersTime));
-            _shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", _totalExecutionTime));
-            _shared.Screen.Print(" ");
+            shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", TotalCompileTime));
+            shared.Screen.Print(string.Format("Total update time: {0:F3}ms", totalUpdateTime));
+            shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", totalTriggersTime));
+            shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", totalExecutionTime));
+            shared.Screen.Print(" ");
 
             TotalCompileTime = 0D;
-            _totalUpdateTime = 0D;
-            _totalTriggersTime = 0D;
-            _totalExecutionTime = 0D;
+            totalUpdateTime = 0D;
+            totalTriggersTime = 0D;
+            totalExecutionTime = 0D;
         }
 
         public void OnSave(ConfigNode node)
@@ -659,11 +659,11 @@ namespace kOS.Execution
                 var contextNode = new ConfigNode("context");
 
                 // Save variables
-                if (_vars.Count > 0)
+                if (vars.Count > 0)
                 {
                     var varNode = new ConfigNode("variables");
 
-                    foreach (var kvp in _vars)
+                    foreach (var kvp in vars)
                     {
                         if (!(kvp.Value is Binding.BoundVariable) &&
                             (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
@@ -679,7 +679,7 @@ namespace kOS.Execution
             }
             catch (Exception e)
             {
-                if (_shared.Logger != null) _shared.Logger.Log(e);
+                if (shared.Logger != null) shared.Logger.Log(e);
             }
         }
 
@@ -701,17 +701,17 @@ namespace kOS.Execution
                     }
                 }
 
-                if (_shared.ScriptHandler != null && scriptBuilder.Length > 0)
+                if (shared.ScriptHandler != null && scriptBuilder.Length > 0)
                 {
                     var programBuilder = new ProgramBuilder();
-                    programBuilder.AddRange(_shared.ScriptHandler.Compile(scriptBuilder.ToString()));
+                    programBuilder.AddRange(shared.ScriptHandler.Compile(scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);
                 }
             }
             catch (Exception e)
             {
-                if (_shared.Logger != null) _shared.Logger.Log(e);
+                if (shared.Logger != null) shared.Logger.Log(e);
             }
         }
     }

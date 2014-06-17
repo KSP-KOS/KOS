@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using kOS.Suffixed;
 
@@ -9,8 +8,8 @@ namespace kOS.Execution
     public class Stack
     {
         private const int MAX_STACK_SIZE = 1000;
-        private List<object> _stack = new List<object>();
-        private int _stackPointer = -1;
+        private readonly List<object> stack = new List<object>();
+        private int stackPointer = -1;
 
         public void Push(object item)
         {
@@ -18,9 +17,9 @@ namespace kOS.Execution
             
             if (IsValid(item, ref message))
             {
-                _stackPointer++;
-                if (_stackPointer < MAX_STACK_SIZE)
-                    _stack.Insert(_stackPointer, ProcessItem(item));
+                stackPointer++;
+                if (stackPointer < MAX_STACK_SIZE)
+                    stack.Insert(stackPointer, ProcessItem(item));
                 else
                     throw new Exception("Stack overflow!!");
             }
@@ -62,19 +61,18 @@ namespace kOS.Execution
             if (item is float)
                 // promote floats to doubles
                 return Convert.ToDouble(item);
-            else
-                return item;
+            return item;
         }
 
         public object Pop()
         {
             object item = null;
 
-            if (_stack.Count > 0)
+            if (stack.Count > 0)
             {
-                item = _stack[_stackPointer];
-                _stack.RemoveAt(_stackPointer);
-                _stackPointer--;
+                item = stack[stackPointer];
+                stack.RemoveAt(stackPointer);
+                stackPointer--;
             }
 
             return item;
@@ -82,24 +80,24 @@ namespace kOS.Execution
 
         public void MoveStackPointer(int delta)
         {
-            _stackPointer += delta;
+            stackPointer += delta;
         }
 
         public void Clear()
         {
-            _stack.Clear();
-            _stackPointer = -1;
+            stack.Clear();
+            stackPointer = -1;
         }
 
         public string Dump(int lineCount)
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine("Stack dump:");
 
-            int startIndex = Math.Max(0, _stack.Count - lineCount);
+            int startIndex = Math.Max(0, stack.Count - lineCount);
             
-            for(int index = startIndex; index < _stack.Count; index++)
-                builder.AppendLine(string.Format("{0:000}    {1}", index, _stack[index]));
+            for(int index = startIndex; index < stack.Count; index++)
+                builder.AppendLine(string.Format("{0:000}    {1}", index, stack[index]));
 
             return builder.ToString();
         }

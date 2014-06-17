@@ -1,5 +1,4 @@
-﻿using System;
-using kOS.InterProcessor;
+﻿using kOS.InterProcessor;
 using kOS.Binding;
 using kOS.Module;
 using kOS.Persistence;

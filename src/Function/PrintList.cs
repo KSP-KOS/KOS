@@ -14,49 +14,48 @@ namespace kOS.Function
         {
             string listType = shared.Cpu.PopValue().ToString();
 
-            if (shared.Screen != null)
+            if (shared.Screen == null) return;
+
+            kList list;
+
+            switch (listType)
             {
-                kList list;
+                case "files":
+                    list = GetFileList(shared);
+                    break;
+                case "volumes":
+                    list = GetVolumeList(shared);
+                    break;
+                case "bodies":
+                    list = GetBodyList(shared);
+                    break;
+                case "targets":
+                    list = GetTargetList(shared);
+                    break;
+                case "resources":
+                    list = GetResourceList(shared);
+                    break;
+                case "parts":
+                    list = GetPartList(shared);
+                    break;
+                case "engines":
+                    list = GetEngineList(shared);
+                    break;
+                case "sensors":
+                    list = GetSensorList(shared);
+                    break;
+                case "config":
+                    list = GetConfigList();
+                    break;
+                default:
+                    throw new Exception("List type not supported");
+            }
 
-                switch (listType)
-                {
-                    case "files":
-                        list = GetFileList(shared);
-                        break;
-                    case "volumes":
-                        list = GetVolumeList(shared);
-                        break;
-                    case "bodies":
-                        list = GetBodyList(shared);
-                        break;
-                    case "targets":
-                        list = GetTargetList(shared);
-                        break;
-                    case "resources":
-                        list = GetResourceList(shared);
-                        break;
-                    case "parts":
-                        list = GetPartList(shared);
-                        break;
-                    case "engines":
-                        list = GetEngineList(shared);
-                        break;
-                    case "sensors":
-                        list = GetSensorList(shared);
-                        break;
-                    case "config":
-                        list = GetConfigList();
-                        break;
-                    default:
-                        throw new Exception("List type not supported");
-                }
-
-                if (list != null)
-                {
-                    shared.Screen.Print(" ");
-                    shared.Screen.Print(list.ToString());
-                    shared.Screen.Print(" ");
-                }
+            if (list != null)
+            {
+                shared.Screen.Print(" ");
+                shared.Screen.Print(list.ToString());
+                shared.Screen.Print(" ");
             }
         }
 
@@ -378,19 +377,19 @@ namespace kOS.Function
 
         private class kListColumn
         {
-            private readonly string title;
-            public readonly int Width;
-            public int ItemWidth;
-            public readonly ColumnAlignment Alignment;
-            public readonly string Format;
-
             public kListColumn(string title, int width, ColumnAlignment alignment, string format)
             {
-                this.title = title;
+                Title = title;
                 Width = width;
                 Alignment = alignment;
                 Format = format;
             }
+
+            public string Title { get; private set; }
+            public int Width { get; private set; }
+            public int ItemWidth { get; set; }
+            public ColumnAlignment Alignment { get; private set; }
+            public string Format { get; private set; }
         }
 
         #endregion

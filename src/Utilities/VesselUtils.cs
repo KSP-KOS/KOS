@@ -290,13 +290,11 @@ namespace kOS.Utilities
                 if (!p.Modules.OfType<ModuleLandingLeg>().Any()) continue;
                 atLeastOneLeg = true;
 
-                foreach (var l in p.FindModulesImplementing<ModuleLandingLeg>())
+                var legs = p.FindModulesImplementing<ModuleLandingLeg>();
+
+                if (legs.Any(l => l.savedLegState != (int) (ModuleLandingLeg.LegStates.DEPLOYED)))
                 {
-                    if (l.savedLegState != (int) (ModuleLandingLeg.LegStates.DEPLOYED))
-                    {
-                        // If just one leg is retracted, still moving, or broken return false.
-                        return false;
-                    }
+                    return false;
                 }
             }
 
@@ -329,7 +327,7 @@ namespace kOS.Utilities
             if (!vessel.mainBody.atmosphere || !state) return;
             foreach (var p in vessel.parts)
             {
-                if (!p.Modules.OfType<ModuleParachute>().Any() || !state) continue;
+                if (!p.Modules.OfType<ModuleParachute>().Any()) continue;
                 foreach (var c in p.FindModulesImplementing<ModuleParachute>())
                 {
                     if (c.deploymentState == ModuleParachute.deploymentStates.STOWED)

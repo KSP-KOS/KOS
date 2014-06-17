@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
 using kOS.Persistence;
 using kOS.Module;
 using kOS.Suffixed;
@@ -85,7 +82,7 @@ namespace kOS.Function
                         if (shared.ProcessorMgr != null)
                         {
                             List<CodePart> parts = shared.ScriptHandler.Compile(file.Content);
-                            ProgramBuilder builder = new ProgramBuilder();
+                            var builder = new ProgramBuilder();
                             builder.AddRange(parts);
                             List<Opcode> program = builder.BuildProgram();
                             shared.ProcessorMgr.RunProgramOn(program, targetVolume);
@@ -101,8 +98,7 @@ namespace kOS.Function
                     // clear the "program" compilation context
                     shared.ScriptHandler.ClearContext("program");
 
-                    CompilerOptions options = new CompilerOptions();
-                    options.LoadProgramsInSameAddressSpace = true;
+                    var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                     List<CodePart> parts = shared.ScriptHandler.Compile(file.Content, "program", options);
                     var programContext = shared.Cpu.GetProgramContext();
                     programContext.AddParts(parts);
@@ -127,8 +123,7 @@ namespace kOS.Function
             if (shared.ScriptHandler != null)
             {
                 var programContext = shared.Cpu.GetProgramContext();
-                CompilerOptions options = new CompilerOptions();
-                options.LoadProgramsInSameAddressSpace = true;
+                var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                 List<CodePart> parts = shared.ScriptHandler.Compile(file.Content, "program", options);
                 // add this program to the address space of the parent program
                 int programAddress = programContext.AddObjectParts(parts);
@@ -143,7 +138,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            Node node = (Node)shared.Cpu.PopValue();
+            var node = (Node)shared.Cpu.PopValue();
             node.AddToVessel(shared.Vessel);
         }
     }
@@ -153,7 +148,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            Node node = (Node)shared.Cpu.PopValue();
+            var node = (Node)shared.Cpu.PopValue();
             node.Remove();
         }
     }

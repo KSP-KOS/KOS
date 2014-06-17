@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace kOS.Execution
+﻿namespace kOS.Execution
 {
     /// <summary>
-    /// A KOSScopeObserver is any object which wants to be kept informed
+    /// A IKOSScopeObserver is any object which wants to be kept informed
     /// of how many kOS variables there are that reference it, and
     /// wants to be informed when the kOS scope for the object
     /// is gone (meaning the last kOS variable that could have referred
@@ -15,13 +13,13 @@ namespace kOS.Execution
     // orphaned and never be able to detect that they are
     // orphaned as far as the kosscript code is concerned.
     //
-    public interface KOSScopeObserver
+    public interface IKOSScopeObserver
     {
         /// <summary>
         /// Updated whenever a new Variable object holding this object
         /// is made or destroyed.
         /// </summary>
-        int linkCount { get; set; } 
+        int LinkCount { get; set; } 
 
         /// <summary>
         /// Called by the Variable object that holds this object,

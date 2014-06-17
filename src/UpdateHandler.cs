@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS
 {
@@ -11,7 +9,7 @@ namespace kOS
         // insert itself more than once into the observer list, it still only gets in the list
         // once and therefore only gets its Update() called once per update.
         // The value of the KeyValuePair, the int, is unused.
-        private Dictionary<IUpdateObserver, int> _observers = new Dictionary<IUpdateObserver, int>();
+        private readonly Dictionary<IUpdateObserver, int> observers = new Dictionary<IUpdateObserver, int>();
         
         public double CurrentTime { get; private set; }
         public double LastDeltaTime { get; private set; }
@@ -26,7 +24,7 @@ namespace kOS
         {
             try 
             {
-                _observers.Add(observer, 0);
+                observers.Add(observer, 0);
             }
             catch (ArgumentException)
             {
@@ -36,7 +34,7 @@ namespace kOS
 
         public void RemoveObserver(IUpdateObserver observer)
         {
-            _observers.Remove(observer);
+            observers.Remove(observer);
         }
 
         public void UpdateObservers(double deltaTime)
@@ -46,7 +44,7 @@ namespace kOS
             
             // Iterate over a frozen snapshot of _observers rather than  _observers itself,
             // because _observers can be altered during the course of the loop:
-            Dictionary<IUpdateObserver,int> fixedObserverList = new Dictionary<IUpdateObserver,int>(_observers);
+            var fixedObserverList = new Dictionary<IUpdateObserver,int>(observers);
             foreach (KeyValuePair<IUpdateObserver,int> observer in fixedObserverList)
             {
                 observer.Key.Update(deltaTime);

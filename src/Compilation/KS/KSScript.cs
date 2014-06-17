@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace kOS.Compilation.KS
 {
     public class KSScript : Script
     {
-        private Scanner _scanner;
-        private Parser _parser;
-        private Dictionary<string, Context> _contexts;
-        private Context _currentContext;
+        private readonly Scanner scanner;
+        private readonly Parser parser;
+        private readonly Dictionary<string, Context> contexts;
+        private Context currentContext;
 
         public KSScript()
         {
-            _scanner = new Scanner();
-            _parser = new Parser(_scanner);
-            _contexts = new Dictionary<string, Context>();
+            scanner = new Scanner();
+            parser = new Parser(scanner);
+            contexts = new Dictionary<string, Context>();
         }
 
         public override List<CodePart> Compile(string scriptText, string contextId, CompilerOptions options)
@@ -33,19 +30,19 @@ namespace kOS.Compilation.KS
             if (parts == null)
             {
                 parts = new List<CodePart>();
-                ParseTree parseTree = _parser.Parse(scriptText);
+                ParseTree parseTree = parser.Parse(scriptText);
                 if (parseTree.Errors.Count == 0)
                 {
-                    Compiler compiler = new Compiler();
+                    var compiler = new Compiler();
                     LoadContext(contextId);
 
                     // TODO: handle compile errors (e.g. wrong run parameter count)
-                    CodePart mainPart = compiler.Compile(parseTree, _currentContext, options);
+                    CodePart mainPart = compiler.Compile(parseTree, currentContext, options);
 
                     // add locks and triggers
-                    parts.AddRange(_currentContext.Locks.GetNewParts());
-                    parts.AddRange(_currentContext.Triggers.GetNewParts());
-                    parts.AddRange(_currentContext.Subprograms.GetNewParts());
+                    parts.AddRange(currentContext.Locks.GetNewParts());
+                    parts.AddRange(currentContext.Triggers.GetNewParts());
+                    parts.AddRange(currentContext.Subprograms.GetNewParts());
 
                     parts.Add(mainPart);
 
@@ -67,36 +64,36 @@ namespace kOS.Compilation.KS
         {
             if (contextId != string.Empty)
             {
-                if (_contexts.ContainsKey(contextId))
+                if (contexts.ContainsKey(contextId))
                 {
-                    _currentContext = _contexts[contextId];
+                    currentContext = contexts[contextId];
                 }
                 else
                 {
-                    _currentContext = new Context();
-                    _contexts.Add(contextId, _currentContext);
+                    currentContext = new Context();
+                    contexts.Add(contextId, currentContext);
                 }
             }
             else
             {
-                _currentContext = new Context();
+                currentContext = new Context();
             }
         }
 
-        private void AssignInstructionId(List<CodePart> parts)
+        private void AssignInstructionId(IEnumerable<CodePart> parts)
         {
-            _currentContext.InstructionId++;
+            currentContext.InstructionId++;
             foreach (CodePart part in parts)
             {
-                part.AssignInstructionId(_currentContext.InstructionId);
+                part.AssignInstructionId(currentContext.InstructionId);
             }
         }
 
         public override void ClearContext(string contextId)
         {
-            if (_contexts.ContainsKey(contextId))
+            if (contexts.ContainsKey(contextId))
             {
-                _contexts.Remove(contextId);
+                contexts.Remove(contextId);
             }
         }
 

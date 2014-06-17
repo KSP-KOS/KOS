@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace kOS.Compilation
 {
     public class ProgramBuilder
     {
-        private Dictionary<Guid, ObjectFile> _objectFiles = new Dictionary<Guid, ObjectFile>();
+        private readonly Dictionary<Guid, ObjectFile> objectFiles = new Dictionary<Guid, ObjectFile>();
 
         /// <summary>
         /// Creates a new ObjectFile with the parts provided
@@ -16,8 +15,8 @@ namespace kOS.Compilation
         /// <returns>Id of the new ObjectFile</returns>
         public Guid AddObjectFile(IEnumerable<CodePart> parts)
         {
-            ObjectFile objectFile = new ObjectFile(parts);
-            _objectFiles.Add(objectFile.Id, objectFile);
+            var objectFile = new ObjectFile(parts);
+            objectFiles.Add(objectFile.Id, objectFile);
             return objectFile.Id;
         }
 
@@ -25,25 +24,25 @@ namespace kOS.Compilation
         {
             ObjectFile objectFile;
             
-            if (_objectFiles.Count == 0)
+            if (objectFiles.Count == 0)
             {
                 objectFile = new ObjectFile(parts);
-                _objectFiles.Add(objectFile.Id, objectFile);
+                objectFiles.Add(objectFile.Id, objectFile);
             }
             else
             {
-                objectFile = _objectFiles.First().Value;
+                objectFile = objectFiles.First().Value;
                 objectFile.Parts.AddRange(parts);
             }
         }
         
         public List<Opcode> BuildProgram()
         {
-            List<Opcode> program = new List<Opcode>();
+            var program = new List<Opcode>();
 
-            foreach (var objectFile in _objectFiles.Values)
+            foreach (var objectFile in objectFiles.Values)
             {
-                CodePart linkedObject = new CodePart();
+                var linkedObject = new CodePart();
 
                 foreach (var part in objectFile.Parts)
                 {
@@ -53,7 +52,7 @@ namespace kOS.Compilation
                 }
 
                 // we assume that the first object is the main program and the rest are subprograms/libraries
-                bool isMainProgram = (objectFile == _objectFiles.Values.First());
+                bool isMainProgram = (objectFile == objectFiles.Values.First());
                 // add a jump to the entry point so the execution skips the functions code
                 if (isMainProgram)
                     AddJumpToEntryPoint(linkedObject);
@@ -78,12 +77,11 @@ namespace kOS.Compilation
 
         private void AddJumpToEntryPoint(CodePart linkedObject)
         {
-            if (linkedObject.MainCode.Count > 0)
-            {
-                OpcodeBranchJump jumpOpcode = new OpcodeBranchJump();
-                jumpOpcode.DestinationLabel = GetEntryPointLabel(linkedObject);
-                linkedObject.FunctionsCode.Insert(0, jumpOpcode);
-            }
+            if (linkedObject.MainCode.Count <= 0) return;
+
+            var jumpOpcode = new OpcodeBranchJump();
+            jumpOpcode.DestinationLabel = GetEntryPointLabel(linkedObject);
+            linkedObject.FunctionsCode.Insert(0, jumpOpcode);
         }
 
         private string GetEntryPointLabel(CodePart linkedObject)
@@ -106,7 +104,7 @@ namespace kOS.Compilation
 
         private void ReplaceLabels(List<Opcode> program)
         {
-            Dictionary<string, int> labels = new Dictionary<string, int>();
+            var labels = new Dictionary<string, int>();
 
             // get the index of every label
             for (int index = 0; index < program.Count; index++)
@@ -121,26 +119,25 @@ namespace kOS.Compilation
             for (int index = 0; index < program.Count; index++)
             {
                 Opcode opcode = program[index];
-                if (opcode.DestinationLabel != null && opcode.DestinationLabel != string.Empty)
+                if (string.IsNullOrEmpty(opcode.DestinationLabel)) continue;
+
+                int destinationIndex = labels[opcode.DestinationLabel];
+                if (opcode is BranchOpcode)
                 {
-                    int destinationIndex = labels[opcode.DestinationLabel];
-                    if (opcode is BranchOpcode)
-                    {
-                        ((BranchOpcode)opcode).distance = destinationIndex - index;
-                    }
-                    else if (opcode is OpcodePush)
-                    {
-                        ((OpcodePush)opcode).argument = destinationIndex;
-                    }
-                    else if (opcode is OpcodeCall)
-                    {
-                        ((OpcodeCall)opcode).destination = destinationIndex;
-                    }
+                    ((BranchOpcode)opcode).distance = destinationIndex - index;
+                }
+                else if (opcode is OpcodePush)
+                {
+                    ((OpcodePush)opcode).argument = destinationIndex;
+                }
+                else if (opcode is OpcodeCall)
+                {
+                    ((OpcodeCall)opcode).destination = destinationIndex;
                 }
             }
 
             // complete the entry point address of all the objects
-            foreach (var objectFile in _objectFiles.Values)
+            foreach (var objectFile in objectFiles.Values)
             {
                 if (objectFile.EntryPointLabel != string.Empty)
                     objectFile.EntryPointAddress = labels[objectFile.EntryPointLabel];
@@ -149,14 +146,7 @@ namespace kOS.Compilation
 
         public int GetObjectFileEntryPointAddress(Guid objectFileId)
         {
-            if (_objectFiles.ContainsKey(objectFileId))
-            {
-                return _objectFiles[objectFileId].EntryPointAddress;
-            }
-            else
-            {
-                return 0;
-            }
+            return objectFiles.ContainsKey(objectFileId) ? objectFiles[objectFileId].EntryPointAddress : 0;
         }
 
 

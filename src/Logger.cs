@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS
 {
     public class Logger
     {
-        protected SharedObjects _shared;
+        protected SharedObjects Shared;
         
         public Logger()
         {
@@ -15,7 +12,7 @@ namespace kOS
 
         public Logger(SharedObjects shared)
         {
-            _shared = shared;
+            Shared = shared;
         }
 
         public virtual void Log(string text)
@@ -30,9 +27,9 @@ namespace kOS
 
         protected void LogToScreen(string text)
         {
-            if (_shared != null && _shared.Screen != null)
+            if (Shared != null && Shared.Screen != null)
             {
-                _shared.Screen.Print(text);
+                Shared.Screen.Print(text);
             }
         }
     }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Persistence;
 
 namespace kOS.Function
@@ -34,7 +31,6 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string fileName = shared.Cpu.PopValue().ToString();
-            string msg = "[Editing '" + fileName +"' ";
 
             if (shared.VolumeMgr != null)
             {
@@ -75,20 +71,18 @@ namespace kOS.Function
                     {
                         throw new Exception("Cannot copy from a volume to the same volume.");
                     }
+
+                    ProgramFile file = origin.GetByName(fileName);
+                    if (file != null)
+                    {
+                        if (!destination.SaveFile(new ProgramFile(file)))
+                        {
+                            throw new Exception("File copy failed");
+                        }
+                    }
                     else
                     {
-                        ProgramFile file = origin.GetByName(fileName);
-                        if (file != null)
-                        {
-                            if (!destination.SaveFile(new ProgramFile(file)))
-                            {
-                                throw new Exception("File copy failed");
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception(string.Format("File '{0}' not found", fileName));
-                        }
+                        throw new Exception(string.Format("File '{0}' not found", fileName));
                     }
                 }
                 else
@@ -119,7 +113,7 @@ namespace kOS.Function
                         {
                             if (!volume.RenameFile(oldName.ToString(), newName))
                             {
-                                throw new Exception(string.Format("File '{0}' not found", oldName.ToString()));
+                                throw new Exception(string.Format("File '{0}' not found", oldName));
                             }
                         }
                         else
@@ -165,16 +159,7 @@ namespace kOS.Function
 
             if (shared.VolumeMgr != null)
             {
-                Volume volume;
-
-                if (volumeId != null)
-                {
-                    volume = shared.VolumeMgr.GetVolume(volumeId);
-                }
-                else
-                {
-                    volume = shared.VolumeMgr.CurrentVolume;
-                }
+                Volume volume = volumeId != null ? shared.VolumeMgr.GetVolume(volumeId) : shared.VolumeMgr.CurrentVolume;
 
                 if (volume != null)
                 {

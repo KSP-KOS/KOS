@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Screen;
 using kOS.Utilities;
 
@@ -9,33 +7,33 @@ namespace kOS.AddOns.RemoteTech2
 {
     public class RemoteTechInterpreter : Interpreter, IUpdateObserver
     {
-        private List<string> _commandQueue = new List<string>();
-        private List<string> _batchQueue = new List<string>();
-        private SubBuffer _progressBarSubBuffer;
-        private bool _batchMode { get; set; }
-        private double _waitTotal = 0;
-        private double _waitElapsed = 0;
-        private bool _deploymentInProgress = false;
-        private bool _deployingBatch = false;
-        private string _deploymentMessage;
-        private bool _signalLossWarning = false;
+        private readonly List<string> commandQueue = new List<string>();
+        private readonly List<string> batchQueue = new List<string>();
+        private SubBuffer progressBarSubBuffer;
+        private bool BatchMode { get; set; }
+        private double waitTotal;
+        private double waitElapsed;
+        private bool deploymentInProgress;
+        private bool deployingBatch;
+        private string deploymentMessage;
+        private bool signalLossWarning;
         
         public RemoteTechInterpreter(SharedObjects shared) : base(shared)
         {
-            _shared.UpdateHandler.AddObserver(this);
+            Shared.UpdateHandler.AddObserver(this);
             CreateProgressBarSubBuffer();
         }
 
         private void CreateProgressBarSubBuffer()
         {
-            _progressBarSubBuffer = new SubBuffer();
-            _progressBarSubBuffer.SetSize(3, ColumnCount);
-            _progressBarSubBuffer.Fixed = true;
-            _progressBarSubBuffer.PositionRow = RowCount - _progressBarSubBuffer.RowCount;
-            AddSubBuffer(_progressBarSubBuffer);
+            progressBarSubBuffer = new SubBuffer();
+            progressBarSubBuffer.SetSize(3, ColumnCount);
+            progressBarSubBuffer.Fixed = true;
+            progressBarSubBuffer.PositionRow = RowCount - progressBarSubBuffer.RowCount;
+            AddSubBuffer(progressBarSubBuffer);
 
-            string separator = new string('-', _progressBarSubBuffer.ColumnCount);
-            separator.ToCharArray().CopyTo(_progressBarSubBuffer.Buffer[0], 0);
+            var separator = new string('-', progressBarSubBuffer.ColumnCount);
+            separator.ToCharArray().CopyTo(progressBarSubBuffer.Buffer[0], 0);
         }
 
         protected override void ProcessCommand(string commandText)
@@ -51,58 +49,58 @@ namespace kOS.AddOns.RemoteTech2
                     ProcessDeployCommand();
                     break;
                 default:
-                    if (_batchMode) _batchQueue.Add(commandText);
-                    else _commandQueue.Add(commandText);
+                    if (BatchMode) batchQueue.Add(commandText);
+                    else commandQueue.Add(commandText);
                     break;
             }
         }
 
         private void ProcessBatchCommand()
         {
-            if (_batchMode) throw new Exception("Batch mode is already active.");
-            _batchMode = true;
+            if (BatchMode) throw new Exception("Batch mode is already active.");
+            BatchMode = true;
             Print("Starting new batch.");
         }
 
         private void ProcessDeployCommand()
         {
-            if (!_batchMode) throw new Exception("Batch mode is not active.");
-            if (_batchQueue.Count == 0) throw new Exception("There are no commands to deploy.");
+            if (!BatchMode) throw new Exception("Batch mode is not active.");
+            if (batchQueue.Count == 0) throw new Exception("There are no commands to deploy.");
 
-            _waitTotal = RemoteTechUtility.GetTotalWaitTime(_shared.Vessel);
-            if (double.IsPositiveInfinity(_waitTotal)) throw new Exception("No connection available.");
+            waitTotal = RemoteTechUtility.GetTotalWaitTime(Shared.Vessel);
+            if (double.IsPositiveInfinity(waitTotal)) throw new Exception("No connection available.");
                 
             Print("Deploying...");
-            _batchMode = false;
-            _deployingBatch = true;
+            BatchMode = false;
+            deployingBatch = true;
             StartDeployment();
         }
 
         private void StartDeployment()
         {
-            _deploymentInProgress = true;
-            _progressBarSubBuffer.Enabled = (_waitTotal > 0.5);
-            _deploymentMessage = _deployingBatch ? "Deploying batch." : "Deploying command.";
+            deploymentInProgress = true;
+            progressBarSubBuffer.Enabled = (waitTotal > 0.5);
+            deploymentMessage = deployingBatch ? "Deploying batch." : "Deploying command.";
             DrawBars("");
         }
 
         private void StopDeployment()
         {
-            _deploymentInProgress = false;
-            _progressBarSubBuffer.Enabled = false;
-            _waitElapsed = 0;
+            deploymentInProgress = false;
+            progressBarSubBuffer.Enabled = false;
+            waitElapsed = 0;
         }
 
         public void Update(double deltaTime)
         {
-            if (!_deploymentInProgress && _commandQueue.Count > 0 && !_batchMode)
+            if (!deploymentInProgress && commandQueue.Count > 0 && !BatchMode)
             {
-                _waitTotal = RemoteTechUtility.GetTotalWaitTime(_shared.Vessel);
+                waitTotal = RemoteTechUtility.GetTotalWaitTime(Shared.Vessel);
                 StartDeployment();
                 deltaTime = 0; // so the elapsed time is zero in this update
             }
 
-            if (_deploymentInProgress)
+            if (deploymentInProgress)
             {
                 UpdateDeployment(deltaTime);
             }
@@ -110,49 +108,49 @@ namespace kOS.AddOns.RemoteTech2
 
         private void UpdateDeployment(double deltaTime)
         {
-            if (!RemoteTechHook.Instance.HasAnyConnection(_shared.Vessel.id))
+            if (!RemoteTechHook.Instance.HasAnyConnection(Shared.Vessel.id))
             {
-                if (!_signalLossWarning)
+                if (!signalLossWarning)
                 {
                     DrawStatus("Signal lost.  Waiting to re-acquire signal.");
-                    _progressBarSubBuffer.Enabled = true;
-                    _signalLossWarning = true;
+                    progressBarSubBuffer.Enabled = true;
+                    signalLossWarning = true;
                 }
             }
             else
             {
-                if (_signalLossWarning)
+                if (signalLossWarning)
                 {
-                    if (double.IsPositiveInfinity(_waitTotal))
+                    if (double.IsPositiveInfinity(waitTotal))
                     {
-                        _waitTotal = RemoteTechUtility.GetTotalWaitTime(_shared.Vessel);
+                        waitTotal = RemoteTechUtility.GetTotalWaitTime(Shared.Vessel);
                     }
-                    _signalLossWarning = false;
+                    signalLossWarning = false;
                 }
 
-                _waitElapsed += Math.Min(deltaTime, _waitTotal - _waitElapsed);
-                DrawProgressBar(_waitElapsed, _waitTotal);
+                waitElapsed += Math.Min(deltaTime, waitTotal - waitElapsed);
+                DrawProgressBar(waitElapsed, waitTotal);
 
-                if (_waitElapsed == _waitTotal)
+                if (waitElapsed == waitTotal)
                 {
-                    if (_deployingBatch)
+                    if (deployingBatch)
                     {
                         // deploy all commands
-                        foreach (string commandText in _batchQueue)
+                        foreach (string commandText in batchQueue)
                         {
                             base.ProcessCommand(commandText);
                         }
 
-                        _batchQueue.Clear();
-                        _deployingBatch = false;
+                        batchQueue.Clear();
+                        deployingBatch = false;
                     }
                     else
                     {
                         // deploy first command
-                        if (_commandQueue.Count > 0)
+                        if (commandQueue.Count > 0)
                         {
-                            string commandText = _commandQueue[0];
-                            _commandQueue.RemoveAt(0);
+                            string commandText = commandQueue[0];
+                            commandQueue.RemoveAt(0);
                             base.ProcessCommand(commandText);
                         }
                     }
@@ -164,12 +162,12 @@ namespace kOS.AddOns.RemoteTech2
 
         private void DrawProgressBar(double elapsed, double total)
         {
-            if (_progressBarSubBuffer.Enabled)
+            if (progressBarSubBuffer.Enabled)
             {
                 var bars = (int)((ColumnCount) * elapsed / total);
                 var time = new DateTime(TimeSpan.FromSeconds(total - elapsed + 0.5).Ticks).ToString("H:mm:ss");
-                string statusText = _deploymentMessage + new string(' ', ColumnCount - time.Length - _deploymentMessage.Length) + time;
-                string barsText = new string('|', bars);
+                string statusText = deploymentMessage + new string(' ', ColumnCount - time.Length - deploymentMessage.Length) + time;
+                var barsText = new string('|', bars);
                 DrawStatus(statusText);
                 DrawBars(barsText);
             }
@@ -177,22 +175,22 @@ namespace kOS.AddOns.RemoteTech2
 
         private void DrawStatus(string status)
         {
-            status = status.PadRight(_progressBarSubBuffer.ColumnCount);
-            status.ToCharArray().CopyTo(_progressBarSubBuffer.Buffer[1], 0);
+            status = status.PadRight(progressBarSubBuffer.ColumnCount);
+            status.ToCharArray().CopyTo(progressBarSubBuffer.Buffer[1], 0);
         }
 
         private void DrawBars(string bars)
         {
-            bars = bars.PadRight(_progressBarSubBuffer.ColumnCount);
-            bars.ToCharArray().CopyTo(_progressBarSubBuffer.Buffer[2], 0);
+            bars = bars.PadRight(progressBarSubBuffer.ColumnCount);
+            bars.ToCharArray().CopyTo(progressBarSubBuffer.Buffer[2], 0);
         }
 
         public override void SpecialKey(kOSKeys key)
         {
-            if (key == kOSKeys.BREAK && _deploymentInProgress)
+            if (key == kOSKeys.BREAK && deploymentInProgress)
             {
-                if (_deployingBatch) _batchQueue.Clear();
-                else _commandQueue.Clear();
+                if (deployingBatch) batchQueue.Clear();
+                else commandQueue.Clear();
                 
                 StopDeployment();
             }

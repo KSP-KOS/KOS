@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.IO;
 using UnityEngine;
 using kOS.Utilities;
 using kOS.Persistence;
-using kOS;
 
 namespace kOS.Screen
 {
@@ -29,26 +24,31 @@ namespace kOS.Screen
         private CameraManager cameraManager;
         private float cursorBlinkTime;
         private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private bool isLocked = false;
-        private bool _isOpen = false;
-        public bool isOpen { get {return _isOpen;} protected set { _isOpen = value;} }
+        private bool isLocked;
         private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Rect windowRect = new Rect(60, 50, 470, 395);
 
-        private SharedObjects _shared;
-        private bool _isPowered = true;
-        public bool isPowered{ get {return _isPowered;} protected set { _isPowered = value;} }
-        private bool _showCursor = true;
-        
-        private KOSTextEditPopup _popupEditor = null;
-        
+        private SharedObjects shared;
+        private bool showCursor = true;
+        private KOSTextEditPopup popupEditor;
+
+        public bool IsOpen { get; protected set; }
+        public bool IsPowered { get; protected set; }
+
+
+        public TermWindow()
+        {
+            IsPowered = true;
+            IsOpen = false;
+        }
+
         public void Awake()
         {
             LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
-            GameObject gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
-            UnityEngine.Object.DontDestroyOnLoad(gObj);
-            _popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
+            var gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
+            DontDestroyOnLoad(gObj);
+            popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
         }
 
         public void LoadTexture(String relativePath, ref Texture2D targetTexture)
@@ -61,13 +61,13 @@ namespace kOS.Screen
         
         public void OpenPopupEditor( Volume v, string fName )
         {
-            _popupEditor.AttachTo(this, v, fName );
-            _popupEditor.Open();
+            popupEditor.AttachTo(this, v, fName );
+            popupEditor.Open();
         }
 
         public void Open()
         {
-            isOpen = true;
+            IsOpen = true;
 
             Lock();
         }
@@ -75,14 +75,14 @@ namespace kOS.Screen
         public void Close()
         {
             // Diable GUI and release all locks
-            isOpen = false;
+            IsOpen = false;
 
             Unlock();
         }
 
         public void Toggle()
         {
-            if (isOpen) Close();
+            if (IsOpen) Close();
             else Open();
         }
 
@@ -120,7 +120,7 @@ namespace kOS.Screen
 
         void OnGUI()
         {
-            if (isOpen && isLocked) ProcessKeyStrokes();
+            if (IsOpen && isLocked) ProcessKeyStrokes();
             
             try
             {
@@ -130,7 +130,7 @@ namespace kOS.Screen
             {
             }
 
-            if (!isOpen) return;
+            if (!IsOpen) return;
             
             GUI.skin = HighLogic.Skin;
             GUI.color = isLocked ? color : colorAlpha;
@@ -140,13 +140,13 @@ namespace kOS.Screen
 
         void Update()
         {
-            if (_shared == null || _shared.Vessel == null || _shared.Vessel.parts.Count == 0)
+            if (shared == null || shared.Vessel == null || shared.Vessel.parts.Count == 0)
             {
                 // Holding onto a vessel instance that no longer exists?
                 Close();
             }
 
-            if (!isOpen || !isLocked) return;
+            if (!IsOpen || !isLocked) return;
 
             cursorBlinkTime += Time.deltaTime;
             if (cursorBlinkTime > 1) cursorBlinkTime -= 1;
@@ -266,17 +266,17 @@ namespace kOS.Screen
 
         void Type(char ch)
         {
-            if (_shared != null && _shared.Interpreter != null)
+            if (shared != null && shared.Interpreter != null)
             {
-                _shared.Interpreter.Type(ch);
+                shared.Interpreter.Type(ch);
             }
         }
 
         void SpecialKey(kOSKeys key)
         {
-            if (_shared != null && _shared.Interpreter != null)
+            if (shared != null && shared.Interpreter != null)
             {
-                _shared.Interpreter.SpecialKey(key);
+                shared.Interpreter.SpecialKey(key);
             }
         }
 
@@ -310,7 +310,7 @@ namespace kOS.Screen
                 return;
             }
 
-            if (_shared == null || _shared.Screen == null)
+            if (shared == null || shared.Screen == null)
             {
                 return;
             }
@@ -320,14 +320,14 @@ namespace kOS.Screen
 
             if (GUI.Button(new Rect(580, 10, 80, 30), "Close"))
             {
-                isOpen = false;
+                IsOpen = false;
                 Close();
             }
 
             GUI.DragWindow(new Rect(0, 0, 10000, 500));
 
             Color currentTextColor;
-            if (_isPowered)
+            if (IsPowered)
             {
                 currentTextColor = isLocked ? textColor : textColorAlpha;
             }
@@ -338,7 +338,7 @@ namespace kOS.Screen
 
             GUI.BeginGroup(new Rect(31, 38, 420, 340));
 
-            ScreenBuffer screen = _shared.Screen;
+            ScreenBuffer screen = shared.Screen;
             List<char[]> buffer = screen.GetBuffer();
 
             for (int row = 0; row < screen.RowCount; row++)
@@ -353,8 +353,8 @@ namespace kOS.Screen
 
             bool blinkOn = cursorBlinkTime < 0.5f &&
                            screen.CursorRowShow < screen.RowCount &&
-                           _isPowered &&
-                           _showCursor;
+                           IsPowered &&
+                           showCursor;
             if (blinkOn)
             {
                 ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor);
@@ -386,23 +386,23 @@ namespace kOS.Screen
         
         public void Print( string str )
         {
-            _shared.Screen.Print( str );
+            shared.Screen.Print( str );
         }
 
         internal void AttachTo(SharedObjects shared)
         {
-            _shared = shared;
-            _shared.Window = this;
+            this.shared = shared;
+            this.shared.Window = this;
         }
 
         public void SetPowered(bool isPowered)
         {
-            _isPowered = isPowered;
+            IsPowered = isPowered;
         }
 
         public void SetShowCursor(bool showCursor)
         {
-            _showCursor = showCursor;
+            this.showCursor = showCursor;
         }
     }
 }

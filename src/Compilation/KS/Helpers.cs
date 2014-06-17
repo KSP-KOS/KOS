@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace kOS.Compilation.KS
 {
@@ -9,61 +7,51 @@ namespace kOS.Compilation.KS
 
     class LockCollection
     {
-        private Dictionary<string, Lock> _locks = new Dictionary<string, Lock>();
-        private List<Lock> _newLocks = new List<Lock>();
+        private readonly Dictionary<string, Lock> locks = new Dictionary<string, Lock>();
+        private readonly List<Lock> newLocks = new List<Lock>();
 
         public bool Contains(string lockIdentifier)
         {
-            return _locks.ContainsKey(lockIdentifier);
+            return locks.ContainsKey(lockIdentifier);
         }
 
         public Lock GetLock(string lockIdentifier)
         {
-            if (_locks.ContainsKey(lockIdentifier))
+            if (locks.ContainsKey(lockIdentifier))
             {
-                return _locks[lockIdentifier];
+                return locks[lockIdentifier];
             }
-            else
-            {
-                Lock lockObject = new Lock(lockIdentifier);
-                _locks.Add(lockIdentifier, lockObject);
-                _newLocks.Add(lockObject);
-                return lockObject;
-            }
+            var lockObject = new Lock(lockIdentifier);
+            locks.Add(lockIdentifier, lockObject);
+            newLocks.Add(lockObject);
+            return lockObject;
         }
 
         public List<Lock> GetLockList()
         {
-            return _locks.Values.ToList();
+            return locks.Values.ToList();
         }
 
-        public List<CodePart> GetParts(List<Lock> locks)
+        public List<CodePart> GetParts(List<Lock> lockList)
         {
-            List<CodePart> parts = new List<CodePart>();
-
-            foreach (Lock lockObject in locks)
-            {
-                parts.Add(lockObject.GetCodePart());
-            }
-
-            return parts;
+            return lockList.Select(lockObject => lockObject.GetCodePart()).ToList();
         }
 
         public List<CodePart> GetParts()
         {
-            return GetParts(_locks.Values.ToList<Lock>());
+            return GetParts(locks.Values.ToList());
         }
 
         public List<CodePart> GetNewParts()
         {
             // new locks
-            List<CodePart> parts = GetParts(_newLocks);
+            List<CodePart> parts = GetParts(newLocks);
 
             // updated locks
-            foreach (Lock lockObject in _locks.Values)
+            foreach (Lock lockObject in locks.Values)
             {
                 // if the lock is new then clear the new functions list
-                if (_newLocks.Contains(lockObject))
+                if (newLocks.Contains(lockObject))
                 {
                     lockObject.ClearNewFunctions();
                 }
@@ -74,7 +62,7 @@ namespace kOS.Compilation.KS
                 }
             }
 
-            _newLocks.Clear();
+            newLocks.Clear();
 
             return parts;
         }
@@ -82,11 +70,11 @@ namespace kOS.Compilation.KS
 
     class Lock
     {
-        private static readonly List<string> _systemLocks = new List<string>() { "throttle", "steering", "wheelthrottle", "wheelsteering" };
+        private static readonly List<string> systemLocks = new List<string> { "throttle", "steering", "wheelthrottle", "wheelsteering" };
         
-        private CodePart _codePart;
-        private Dictionary<int, LockFunction> _functions;
-        private List<LockFunction> _newFunctions;
+        private readonly CodePart codePart;
+        private readonly Dictionary<int, LockFunction> functions;
+        private readonly List<LockFunction> newFunctions;
 
         public string Identifier;
         public string PointerIdentifier;
@@ -94,58 +82,57 @@ namespace kOS.Compilation.KS
 
         public List<Opcode> InitializationCode
         {
-            get { return _codePart.InitializationCode; }
+            get { return codePart.InitializationCode; }
         }
 
         public List<Opcode> MainCode
         {
-            get { return _codePart.MainCode; }
+            get { return codePart.MainCode; }
         }
 
         
         public Lock()
         {
-            _codePart = new CodePart();
-            _functions = new Dictionary<int, LockFunction>();
-            _newFunctions = new List<LockFunction>();
+            codePart = new CodePart();
+            functions = new Dictionary<int, LockFunction>();
+            newFunctions = new List<LockFunction>();
         }
 
         public Lock(string lockIdentifier)
             : this()
         {
-            this.Identifier = lockIdentifier;
-            this.PointerIdentifier = "$" + this.Identifier + "*";
-            this.DefaultLabel = this.Identifier + "-default";
+            Identifier = lockIdentifier;
+            PointerIdentifier = "$" + Identifier + "*";
+            DefaultLabel = Identifier + "-default";
         }
 
 
         public bool IsInitialized()
         {
-            return (_codePart.InitializationCode.Count > 0);
+            return (codePart.InitializationCode.Count > 0);
         }
 
         public List<Opcode> GetLockFunction(int expressionHash)
         {
-            if (_functions.ContainsKey(expressionHash))
+            if (functions.ContainsKey(expressionHash))
             {
-                return _functions[expressionHash].Code;
+                return functions[expressionHash].Code;
             }
-            else
-            {
-                LockFunction newLockFunction = new LockFunction();
-                _functions.Add(expressionHash, newLockFunction);
-                _newFunctions.Add(newLockFunction);
-                return newLockFunction.Code;
-            }
+            var newLockFunction = new LockFunction();
+            functions.Add(expressionHash, newLockFunction);
+            newFunctions.Add(newLockFunction);
+            return newLockFunction.Code;
         }
 
         public CodePart GetCodePart()
         {
-            CodePart mergedPart = new CodePart();
-            mergedPart.InitializationCode = _codePart.InitializationCode;
-            mergedPart.MainCode = _codePart.MainCode;
-            
-            foreach (LockFunction function in _functions.Values)
+            var mergedPart = new CodePart
+                {
+                    InitializationCode = codePart.InitializationCode,
+                    MainCode = codePart.MainCode
+                };
+
+            foreach (LockFunction function in functions.Values)
             {
                 mergedPart.FunctionsCode.AddRange(function.Code);
             }
@@ -155,19 +142,19 @@ namespace kOS.Compilation.KS
 
         public bool HasNewFunctions()
         {
-            return (_newFunctions.Count > 0);
+            return (newFunctions.Count > 0);
         }
 
         public void ClearNewFunctions()
         {
-            _newFunctions.Clear();
+            newFunctions.Clear();
         }
 
         public CodePart GetNewFunctionsCodePart()
         {
-            CodePart newFunctionsPart = new CodePart();
+            var newFunctionsPart = new CodePart();
 
-            foreach (LockFunction function in _newFunctions)
+            foreach (LockFunction function in newFunctions)
             {
                 newFunctionsPart.FunctionsCode.AddRange(function.Code);
             }
@@ -178,7 +165,7 @@ namespace kOS.Compilation.KS
 
         public bool IsSystemLock()
         {
-            return _systemLocks.Contains(Identifier.ToLower());
+            return systemLocks.Contains(Identifier.ToLower());
         }
     }
 
@@ -198,80 +185,70 @@ namespace kOS.Compilation.KS
 
     class TriggerCollection
     {
-        private Dictionary<string, Trigger> _triggers = new Dictionary<string, Trigger>();
-        private List<Trigger> _newTriggers = new List<Trigger>();
+        private readonly Dictionary<string, Trigger> triggers = new Dictionary<string, Trigger>();
+        private readonly List<Trigger> newTriggers = new List<Trigger>();
 
         public bool Contains(string triggerIdentifier)
         {
-            return _triggers.ContainsKey(triggerIdentifier);
+            return triggers.ContainsKey(triggerIdentifier);
         }
 
         public Trigger GetTrigger(string triggerIdentifier)
         {
-            if (_triggers.ContainsKey(triggerIdentifier))
+            if (triggers.ContainsKey(triggerIdentifier))
             {
-                return _triggers[triggerIdentifier];
+                return triggers[triggerIdentifier];
             }
-            else
-            {
-                Trigger triggerObject = new Trigger(triggerIdentifier);
-                _triggers.Add(triggerIdentifier, triggerObject);
-                _newTriggers.Add(triggerObject);
-                return triggerObject;
-            }
+            var triggerObject = new Trigger(triggerIdentifier);
+            triggers.Add(triggerIdentifier, triggerObject);
+            newTriggers.Add(triggerObject);
+            return triggerObject;
         }
 
-        public List<CodePart> GetParts(List<Trigger> triggers)
+        public List<CodePart> GetParts(List<Trigger> triggerList)
         {
-            List<CodePart> parts = new List<CodePart>();
-
-            foreach (Trigger triggerObject in triggers)
-            {
-                parts.Add(triggerObject.GetCodePart());
-            }
-
-            return parts;
+            return triggerList.Select(triggerObject => triggerObject.GetCodePart()).ToList();
         }
 
         public List<CodePart> GetParts()
         {
-            return GetParts(_triggers.Values.ToList<Trigger>());
+            return GetParts(triggers.Values.ToList());
         }
 
         public List<CodePart> GetNewParts()
         {
-            List<CodePart> parts = GetParts(_newTriggers);
-            _newTriggers.Clear();
+            List<CodePart> parts = GetParts(newTriggers);
+            newTriggers.Clear();
             return parts;
         }
     }
 
     class Trigger
     {
-        private CodePart _codePart;
+        private readonly CodePart codePart;
         public string Identifier;
         public string VariableName;
         public string VariableNameOldValue;
                 
         public List<Opcode> Code
         {
-            get { return _codePart.FunctionsCode; }
+            get { return codePart.FunctionsCode; }
         }
 
         public Trigger()
         {
-            _codePart = new CodePart();
+            codePart = new CodePart();
         }
 
         public Trigger(string triggerIdentifier)
             : this()
         {
-            this.Identifier = triggerIdentifier;
+            Identifier = triggerIdentifier;
         }
 
         public bool IsInitialized()
         {
-            return (_codePart.FunctionsCode.Count > 0);
+            return (codePart.FunctionsCode.Count > 0);
         }
 
         public void SetTriggerVariable(string triggerVariable)
@@ -282,19 +259,12 @@ namespace kOS.Compilation.KS
 
         public string GetFunctionLabel()
         {
-            if (Code.Count > 0)
-            {
-                return Code[0].Label;
-            }
-            else
-            {
-                return string.Empty;
-            }
+            return Code.Count > 0 ? Code[0].Label : string.Empty;
         }
 
         public CodePart GetCodePart()
         {
-            return _codePart;
+            return codePart;
         }
     }
 
@@ -304,8 +274,8 @@ namespace kOS.Compilation.KS
 
     class SubprogramCollection
     {
-        private Dictionary<string, Subprogram> subprograms = new Dictionary<string, Subprogram>();
-        private List<Subprogram> newSubprograms = new List<Subprogram>();
+        private readonly Dictionary<string, Subprogram> subprograms = new Dictionary<string, Subprogram>();
+        private readonly List<Subprogram> newSubprograms = new List<Subprogram>();
 
         public bool Contains(string subprogramName)
         {
@@ -318,25 +288,15 @@ namespace kOS.Compilation.KS
             {
                 return subprograms[subprogramName];
             }
-            else
-            {
-                Subprogram subprogramObject = new Subprogram(subprogramName);
-                subprograms.Add(subprogramName, subprogramObject);
-                newSubprograms.Add(subprogramObject);
-                return subprogramObject;
-            }
+            var subprogramObject = new Subprogram(subprogramName);
+            subprograms.Add(subprogramName, subprogramObject);
+            newSubprograms.Add(subprogramObject);
+            return subprogramObject;
         }
 
         public List<CodePart> GetParts(List<Subprogram> subprogramList)
         {
-            List<CodePart> parts = new List<CodePart>();
-
-            foreach (Subprogram subprogramObject in subprogramList)
-            {
-                parts.Add(subprogramObject.GetCodePart());
-            }
-
-            return parts;
+            return subprogramList.Select(subprogramObject => subprogramObject.GetCodePart()).ToList();
         }
 
         public List<CodePart> GetParts()
@@ -354,7 +314,7 @@ namespace kOS.Compilation.KS
 
     class Subprogram
     {
-        private CodePart codePart;
+        private readonly CodePart codePart;
         public string SubprogramName;
         public string PointerIdentifier;
         public string FunctionLabel;

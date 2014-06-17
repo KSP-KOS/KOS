@@ -4,7 +4,7 @@ using kOS.Execution;
 
 namespace kOS.Suffixed
 {
-    public class VectorRenderer : SpecialValue, IUpdateObserver, KOSScopeObserver
+    public class VectorRenderer : SpecialValue, IUpdateObserver, IKOSScopeObserver
     {
         public Vector3d      Vector { get; set; }
         public RgbaColor     Color { get; set; }
@@ -55,7 +55,7 @@ namespace kOS.Suffixed
 
         // Implementation of KOSSCopeObserver interface:
         // ---------------------------------------------
-        public int linkCount { get; set; }
+        public int LinkCount { get; set; }
         public void ScopeLost()
         {
             // When no kos script variables can still access me,

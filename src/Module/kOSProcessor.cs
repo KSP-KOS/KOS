@@ -110,7 +110,7 @@ namespace kOS.Module
             shared.ScriptHandler = new Compilation.KS.KSScript();
             shared.Logger = new KSPLogger(shared);
             shared.VolumeMgr = new VolumeManager(shared);
-            shared.ProcessorMgr = new ProcessorManager(shared);
+            shared.ProcessorMgr = new ProcessorManager();
             shared.Cpu = new Execution.CPU(shared);
 
             // initialize archive

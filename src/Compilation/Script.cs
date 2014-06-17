@@ -8,17 +8,17 @@ namespace kOS.Compilation
 {
     public class Script
     {
-        private readonly Dictionary<string, string> _identifierReplacements = new Dictionary<string, string>() { { "alt:radar", "alt_radar" },
+        private readonly Dictionary<string, string> identifierReplacements = new Dictionary<string, string> {    { "alt:radar", "alt_radar" },
                                                                                                                  { "alt:apoapsis", "alt_apoapsis" },
                                                                                                                  { "alt:periapsis", "alt_periapsis" },
                                                                                                                  { "eta:apoapsis", "eta_apoapsis" },
                                                                                                                  { "eta:periapsis", "eta_periapsis" },
                                                                                                                  { "eta:transition", "eta_transition" }};
-        protected CompileCache _cache;
+        protected CompileCache Cache { get; set; }
 
         public Script()
         {
-            _cache = CompileCache.GetInstance();
+            Cache = CompileCache.GetInstance();
         }
 
         public virtual List<CodePart> Compile(string scriptText)
@@ -51,19 +51,13 @@ namespace kOS.Compilation
             if (stringsLiterals.Count > 0)
             {
                 // replace strings with tokens
-                foreach (KeyValuePair<string, string> kvp in stringsLiterals)
-                {
-                    modifiedScriptText = modifiedScriptText.Replace(kvp.Value, kvp.Key);
-                }
+                modifiedScriptText = stringsLiterals.Aggregate(modifiedScriptText, (current, kvp) => current.Replace(kvp.Value, kvp.Key));
 
                 // make lowercase
                 modifiedScriptText = modifiedScriptText.ToLower();
 
                 // restore strings
-                foreach (KeyValuePair<string, string> kvp in stringsLiterals)
-                {
-                    modifiedScriptText = modifiedScriptText.Replace(kvp.Key, kvp.Value);
-                }
+                modifiedScriptText = stringsLiterals.Aggregate(modifiedScriptText, (current, kvp) => current.Replace(kvp.Key, kvp.Value));
             }
             else
             {
@@ -76,10 +70,10 @@ namespace kOS.Compilation
 
         private Dictionary<string, string> ExtractStrings(string scriptText)
         {
-            Dictionary<string, string> stringsLiterals = new Dictionary<string, string>();
+            var stringsLiterals = new Dictionary<string, string>();
             int stringIndex = 0;
             
-            Regex regex = new Regex("\".+?\"");
+            var regex = new Regex("\".+?\"");
             MatchCollection matches = regex.Matches(scriptText);
 
             foreach (Match match in matches)
@@ -96,18 +90,18 @@ namespace kOS.Compilation
 
         protected virtual void RaiseParseException(string scriptText, int line, int absolutePosition)
         {
-            int lineSize = 50;
+            const int LINE_SIZE = 50;
             int minStartIndex = Math.Max(absolutePosition - 40, 0);
             int maxEndIndex = scriptText.Length - 1;
 
             int startIndex = scriptText.LastIndexOf('\n', Math.Max(absolutePosition - 1, 0)) + 1;
             if (startIndex < minStartIndex) startIndex = minStartIndex;
             int endIndex = scriptText.IndexOf('\n', absolutePosition);
-            if (endIndex == -1 || endIndex - startIndex > lineSize) endIndex = startIndex + lineSize;
+            if (endIndex == -1 || endIndex - startIndex > LINE_SIZE) endIndex = startIndex + LINE_SIZE;
             if (endIndex > maxEndIndex) endIndex = maxEndIndex;
             string errorScript = scriptText.Substring(startIndex, (endIndex - startIndex) + 1);
 
-            StringBuilder parseMessage = new StringBuilder();
+            var parseMessage = new StringBuilder();
             parseMessage.AppendLine(string.Format("Syntax error at line {0}", line));
             parseMessage.AppendLine(errorScript);
             parseMessage.AppendLine(new string(' ', absolutePosition - startIndex) + "^");
@@ -117,12 +111,7 @@ namespace kOS.Compilation
 
         protected virtual string ReplaceIdentifiers(string scriptText)
         {
-            foreach (KeyValuePair<string, string> kvp in _identifierReplacements)
-            {
-                scriptText = scriptText.Replace(kvp.Key, kvp.Value);
-            }
-
-            return scriptText;
+            return identifierReplacements.Aggregate(scriptText, (current, kvp) => current.Replace(kvp.Key, kvp.Value));
         }
     }
 }

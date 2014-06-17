@@ -1,43 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS.Persistence
 {
     public class VolumeManager
     {
-        private Dictionary<int, Volume> _volumes;
-        private Volume _currentVolume;
-        private SharedObjects _shared;
-        private int _lastId = 0;
+        private readonly Dictionary<int, Volume> volumes;
+        private Volume currentVolume;
+        private readonly SharedObjects shared;
+        private int lastId;
         
-        public Dictionary<int, Volume> Volumes { get { return _volumes; } }
-        public Volume CurrentVolume { get { return GetVolumeWithRangeCheck(_currentVolume); } }
+        public Dictionary<int, Volume> Volumes { get { return volumes; } }
+        public Volume CurrentVolume { get { return GetVolumeWithRangeCheck(currentVolume); } }
         public float CurrentRequiredPower { get; private set; }
 
         public VolumeManager(SharedObjects shared)
         {
-            _volumes = new Dictionary<int, Volume>();
-            _currentVolume = null;
-            _shared = shared;
+            volumes = new Dictionary<int, Volume>();
+            currentVolume = null;
+            this.shared = shared;
         }
 
         private Volume GetVolumeWithRangeCheck(Volume volume)
         {
-            if (volume.CheckRange(_shared.Vessel))
+            if (volume.CheckRange(shared.Vessel))
             {
                 return volume;
             }
-            else
-            {
-                throw new Exception("Volume is out of range");
-            }
+            throw new Exception("Volume is out of range");
         }
 
         public bool VolumeIsCurrent(Volume volume)
         {
-            return volume == _currentVolume;
+            return volume == currentVolume;
         }
 
         private int GetVolumeId(string name)
@@ -45,7 +40,7 @@ namespace kOS.Persistence
             int volumeId = -1;
             
             name = name.ToLower();
-            foreach (KeyValuePair<int, Volume> kvp in _volumes)
+            foreach (KeyValuePair<int, Volume> kvp in volumes)
             {
                 if (kvp.Value.Name.ToLower() == name)
                 {
@@ -61,7 +56,7 @@ namespace kOS.Persistence
         {
             int volumeId = -1;
 
-            foreach (KeyValuePair<int, Volume> kvp in _volumes)
+            foreach (KeyValuePair<int, Volume> kvp in volumes)
             {
                 if (kvp.Value == volume)
                 {
@@ -79,12 +74,9 @@ namespace kOS.Persistence
             {
                 return GetVolume((int)volumeId);
             }
-            else
-            {
-                return GetVolume(volumeId.ToString());
-            }
+            return GetVolume(volumeId.ToString());
         }
-        
+
         public Volume GetVolume(string name)
         {
             return GetVolume(GetVolumeId(name));
@@ -92,25 +84,22 @@ namespace kOS.Persistence
 
         public Volume GetVolume(int id)
         {
-            if (_volumes.ContainsKey(id))
+            if (volumes.ContainsKey(id))
             {
-                return GetVolumeWithRangeCheck(_volumes[id]);
+                return GetVolumeWithRangeCheck(volumes[id]);
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         public void Add(Volume volume)
         {
-            if (!_volumes.ContainsValue(volume))
+            if (!volumes.ContainsValue(volume))
             {
-                _volumes.Add(_lastId++, volume);
+                volumes.Add(lastId++, volume);
 
-                if (_currentVolume == null)
+                if (currentVolume == null)
                 {
-                    _currentVolume = _volumes[0];
+                    currentVolume = volumes[0];
                     UpdateRequiredPower();
                 }
             }
@@ -127,18 +116,18 @@ namespace kOS.Persistence
 
             if (volume != null)
             {
-                _volumes.Remove(id);
+                volumes.Remove(id);
 
-                if (_currentVolume == volume)
+                if (currentVolume == volume)
                 {
-                    if (_volumes.Count > 0)
+                    if (volumes.Count > 0)
                     {
-                        _currentVolume = _volumes[0];
+                        currentVolume = volumes[0];
                         UpdateRequiredPower();
                     }
                     else
                     {
-                        _currentVolume = null;
+                        currentVolume = null;
                     }
                 }
             }
@@ -148,7 +137,7 @@ namespace kOS.Persistence
         {
             if (volume != null)
             {
-                _currentVolume = volume;
+                currentVolume = volume;
                 UpdateRequiredPower();
             }
         }
@@ -156,8 +145,8 @@ namespace kOS.Persistence
         public void UpdateVolumes(List<Volume> attachedVolumes)
         {
             // Remove volumes that are no longer attached
-            List<int> removals = new List<int>();
-            foreach (KeyValuePair<int, Volume> kvp in _volumes)
+            var removals = new List<int>();
+            foreach (KeyValuePair<int, Volume> kvp in volumes)
             {
                 if (!(kvp.Value is Archive) && !attachedVolumes.Contains(kvp.Value))
                 {
@@ -167,13 +156,13 @@ namespace kOS.Persistence
 
             foreach (int id in removals)
             {
-                _volumes.Remove(id);
+                volumes.Remove(id);
             }
 
             // Add volumes that have become attached
             foreach (Volume volume in attachedVolumes)
             {
-                if (volume != null && !_volumes.ContainsValue(volume))
+                if (volume != null && !volumes.ContainsValue(volume))
                 {
                     Add(volume);
                 }
@@ -184,12 +173,12 @@ namespace kOS.Persistence
         {
             int id = GetVolumeId(volume);
             if (!string.IsNullOrEmpty(volume.Name)) return string.Format("#{0}: \"{1}\"", id, volume.Name);
-            else return "#" + id;
+            return "#" + id;
         }
 
         private void UpdateRequiredPower()
         {
-            CurrentRequiredPower = (float)Math.Round((double)_currentVolume.RequiredPower(), 4);
+            CurrentRequiredPower = (float)Math.Round(currentVolume.RequiredPower(), 4);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace kOS.Function
             double radial = GetDouble(shared.Cpu.PopValue());
             double time = GetDouble(shared.Cpu.PopValue());
 
-            Node result = new Node(time, radial, normal, prograde, shared);
+            var result = new Node(time, radial, normal, prograde, shared);
             shared.Cpu.PushStack(result);
         }
     }
@@ -28,7 +28,7 @@ namespace kOS.Function
             double y = GetDouble(shared.Cpu.PopValue());
             double x = GetDouble(shared.Cpu.PopValue());
 
-            Vector result = new Vector(x, y, z);
+            var result = new Vector(x, y, z);
             shared.Cpu.PushStack(result);
         }
     }
@@ -42,7 +42,7 @@ namespace kOS.Function
             double yaw = GetDouble(shared.Cpu.PopValue());
             double pitch = GetDouble(shared.Cpu.PopValue());
 
-            Direction result = new Direction(new Vector3d(pitch, yaw, roll), true);
+            var result = new Direction(new Vector3d(pitch, yaw, roll), true);
             shared.Cpu.PushStack(result);
         }
     }
@@ -57,7 +57,7 @@ namespace kOS.Function
             double yaw = GetDouble(shared.Cpu.PopValue());
             double pitch = GetDouble(shared.Cpu.PopValue());
 
-            Direction result = new Direction(new UnityEngine.Quaternion((float)pitch, (float)yaw, (float)roll, (float)angle));
+            var result = new Direction(new UnityEngine.Quaternion((float)pitch, (float)yaw, (float)roll, (float)angle));
             shared.Cpu.PushStack(result);
         }
     }
@@ -70,7 +70,7 @@ namespace kOS.Function
             double longitude = GetDouble(shared.Cpu.PopValue());
             double latitude = GetDouble(shared.Cpu.PopValue());
 
-            GeoCoordinates result = new GeoCoordinates(shared, latitude, longitude);
+            var result = new GeoCoordinates(shared, latitude, longitude);
             shared.Cpu.PushStack(result);
         }
     }
@@ -81,7 +81,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string vesselName = shared.Cpu.PopValue().ToString();
-            VesselTarget result = new VesselTarget(VesselUtils.GetVesselByName(vesselName, shared.Vessel), shared);
+            var result = new VesselTarget(VesselUtils.GetVesselByName(vesselName, shared.Vessel), shared);
             shared.Cpu.PushStack(result);
         }
     }
@@ -92,7 +92,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string bodyName = shared.Cpu.PopValue().ToString();
-            BodyTarget result = new BodyTarget(bodyName, shared);
+            var result = new BodyTarget(bodyName, shared);
             shared.Cpu.PushStack(result);
         }
     }
@@ -103,7 +103,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string bodyName = shared.Cpu.PopValue().ToString();
-            BodyAtmosphere result = new BodyAtmosphere(VesselUtils.GetBodyByName(bodyName));
+            var result = new BodyAtmosphere(VesselUtils.GetBodyByName(bodyName));
             shared.Cpu.PushStack(result);
         }
     }
@@ -120,7 +120,7 @@ namespace kOS.Function
             var q = UnityEngine.Quaternion.LookRotation(VesselUtils.GetNorthVector(currentVessel), currentVessel.upAxis);
             q *= UnityEngine.Quaternion.Euler(new UnityEngine.Vector3((float)-pitchAboveHorizon, (float)degreesFromNorth, 0));
 
-            Direction result = new Direction(q);
+            var result = new Direction(q);
             shared.Cpu.PushStack(result);
         }
     }
@@ -130,7 +130,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            ListValue listValue = new ListValue();
+            var listValue = new ListValue();
             shared.Cpu.PushStack(listValue);
         }
     }
@@ -140,9 +140,9 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            float b = (float) GetDouble(shared.Cpu.PopValue());
-            float g = (float) GetDouble(shared.Cpu.PopValue());
-            float r = (float) GetDouble(shared.Cpu.PopValue());
+            var b = (float) GetDouble(shared.Cpu.PopValue());
+            var g = (float) GetDouble(shared.Cpu.PopValue());
+            var r = (float) GetDouble(shared.Cpu.PopValue());
             shared.Cpu.PushStack( new RgbaColor(r,g,b) );
         }
     }
@@ -152,10 +152,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            float a = (float) GetDouble(shared.Cpu.PopValue());
-            float b = (float) GetDouble(shared.Cpu.PopValue());
-            float g = (float) GetDouble(shared.Cpu.PopValue());
-            float r = (float) GetDouble(shared.Cpu.PopValue());
+            var a = (float) GetDouble(shared.Cpu.PopValue());
+            var b = (float) GetDouble(shared.Cpu.PopValue());
+            var g = (float) GetDouble(shared.Cpu.PopValue());
+            var r = (float) GetDouble(shared.Cpu.PopValue());
             shared.Cpu.PushStack( new RgbaColor(r,g,b,a) );
         }
     }
@@ -173,7 +173,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            VectorRenderer vRend = new VectorRenderer( shared.UpdateHandler );
+            var vRend = new VectorRenderer( shared.UpdateHandler );
             vRend.SetShow( false );
             
             shared.Cpu.PushStack( vRend );
@@ -211,7 +211,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            ConstantValue constants = new ConstantValue();
+            var constants = new ConstantValue();
             shared.Cpu.PushStack(constants);
         }
     }

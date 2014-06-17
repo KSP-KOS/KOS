@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 using kOS.Screen;
 using kOS.Suffixed;
 
@@ -22,7 +18,7 @@ namespace kOS
             Fetch = this;
 
             var gObj = new GameObject("kOSTermWindow", typeof(TermWindow));
-            UnityEngine.Object.DontDestroyOnLoad(gObj);
+            DontDestroyOnLoad(gObj);
             Window = (TermWindow)gObj.GetComponent(typeof(TermWindow));
         }
 
@@ -63,7 +59,7 @@ namespace kOS
         public CoreInitializer()
         {
             var gameobject = new GameObject("kOSCore", typeof (Core));
-            UnityEngine.Object.DontDestroyOnLoad(gameobject);
+            Object.DontDestroyOnLoad(gameobject);
         }
     }
 }

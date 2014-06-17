@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Suffixed;
 
 namespace kOS.Function
@@ -38,26 +35,22 @@ namespace kOS.Function
 
         protected Vector GetVector(object argument)
         {
-            if (argument is Vector)
+            var vector = argument as Vector;
+            if (vector != null)
             {
-                return (Vector) argument;
+                return vector;
             }
-            else
-            {
-                throw new ArgumentException(string.Format("Can't cast {0} to V().", argument));
-            }
+            throw new ArgumentException(string.Format("Can't cast {0} to V().", argument));
         }
 
         protected RgbaColor GetRgba(object argument)
         {
-            if (argument is RgbaColor)
+            var rgba = argument as RgbaColor;
+            if (rgba != null)
             {
-                return (RgbaColor) argument;
+                return rgba;
             }
-            else
-            {
-                throw new ArgumentException(string.Format("Can't cast {0} to RGB().", argument));
-            }
+            throw new ArgumentException(string.Format("Can't cast {0} to RGB().", argument));
         }
 
         protected double DegreesToRadians(double degrees)

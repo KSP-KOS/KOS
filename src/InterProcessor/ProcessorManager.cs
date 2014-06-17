@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using kOS.Module;
 using kOS.Persistence;
 using kOS.Compilation;
@@ -10,42 +8,36 @@ namespace kOS.InterProcessor
 {
     public class ProcessorManager
     {
-        private SharedObjects _shared;
         // Use the attached volume as processor identifier
-        private Dictionary<Volume, kOSProcessor> _processors;
+        private readonly Dictionary<Volume, kOSProcessor> processors;
 
-        public ProcessorManager(SharedObjects shared)
+        public ProcessorManager()
         {
-            _shared = shared;
-            _processors = new Dictionary<Volume, kOSProcessor>();
+            processors = new Dictionary<Volume, kOSProcessor>();
         }
 
         public void UpdateProcessors(List<kOSProcessor> processorList)
         {
-            _processors.Clear();
+            processors.Clear();
             foreach (kOSProcessor processor in processorList)
             {
-                _processors.Add(processor.HardDisk, processor);
+                processors.Add(processor.HardDisk, processor);
             }
         }
 
         private kOSProcessor GetProcessor(Volume volume)
         {
-            if (_processors.ContainsKey(volume))
+            if (processors.ContainsKey(volume))
             {
-                return _processors[volume];
+                return processors[volume];
             }
-            else
-            {
-                throw new Exception("The volume is not attached to any processor");
-            }
+            throw new Exception("The volume is not attached to any processor");
         }
 
         public void RunProgramOn(List<Opcode> program, Volume volume)
         {
             kOSProcessor processor = GetProcessor(volume);
-            RunCommand runCommand = new RunCommand();
-            runCommand.Program = program;
+            var runCommand = new RunCommand {Program = program};
             processor.ExecuteInterProcCommand(runCommand);            
         }
     }

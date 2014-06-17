@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using kOS.Suffixed;
+﻿using kOS.Suffixed;
 using kOS.Utilities;
 
 namespace kOS.Function
@@ -13,7 +9,7 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string listType = shared.Cpu.PopValue().ToString();
-            ListValue list = new ListValue();
+            var list = new ListValue();
 
             switch (listType)
             {
@@ -35,7 +31,7 @@ namespace kOS.Function
                 case "engines":
                 case "sensors":
                 case "elements":
-                    list = VesselUtils.PartList(shared.Vessel, listType, shared);
+                    list = shared.Vessel.PartList(listType, shared);
                     break;
             }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using kOS.Utilities;
 
@@ -8,30 +6,31 @@ namespace kOS.Screen
 {
     public class TextEditor : ScreenBuffer
     {
-        protected StringBuilder _lineBuilder;
-        protected int _lineCursorIndex = 0;
-        protected SubBuffer _lineSubBuffer;
-        private int _savedCursorRow;
-        private int _savedCursorColumn;
-        private int _cursorColumnBuffer;
-        private int _cursorRowBuffer;
+        private int savedCursorRow;
+        private int savedCursorColumn;
+        private int cursorColumnBuffer;
+        private int cursorRowBuffer;
         
-        public override int CursorColumnShow { get { return _cursorColumnBuffer; } }
-        public override int CursorRowShow { get { return CursorRow + _cursorRowBuffer; } }
+        public override int CursorColumnShow { get { return cursorColumnBuffer; } }
+        public override int CursorRowShow { get { return CursorRow + cursorRowBuffer; } }
 
-        
-        public TextEditor() : base()
+        protected StringBuilder LineBuilder { get; set; }
+        protected SubBuffer LineSubBuffer { get; set; }
+        protected int LineCursorIndex { get; set; }
+
+
+        public TextEditor()
         {
-            _lineBuilder = new StringBuilder();
+            LineBuilder = new StringBuilder();
             CreateSubBuffer();
         }
 
         private void CreateSubBuffer()
         {
-            _lineSubBuffer = new SubBuffer();
-            _lineSubBuffer.SetSize(1, ColumnCount);
-            _lineSubBuffer.Enabled = true;
-            AddSubBuffer(_lineSubBuffer);
+            LineSubBuffer = new SubBuffer();
+            LineSubBuffer.SetSize(1, ColumnCount);
+            LineSubBuffer.Enabled = true;
+            AddSubBuffer(LineSubBuffer);
         }
 
         public virtual void Type(char ch)
@@ -61,11 +60,11 @@ namespace kOS.Screen
                     TryMoveCursor(1);
                     break;
                 case kOSKeys.HOME:
-                    _lineCursorIndex = 0;
+                    LineCursorIndex = 0;
                     UpdateSubBufferCursor();
                     break;
                 case kOSKeys.END:
-                    _lineCursorIndex = _lineBuilder.Length;
+                    LineCursorIndex = LineBuilder.Length;
                     UpdateSubBufferCursor();
                     break;
                 case kOSKeys.DEL:
@@ -82,30 +81,30 @@ namespace kOS.Screen
 
         protected void SaveCursorPos()
         {
-            _savedCursorRow = AbsoluteCursorRow;
-            _savedCursorColumn = CursorColumn;
+            savedCursorRow = AbsoluteCursorRow;
+            savedCursorColumn = CursorColumn;
         }
 
         protected void RestoreCursorPos()
         {
-            AbsoluteCursorRow = _savedCursorRow;
-            CursorColumn = _savedCursorColumn;
+            AbsoluteCursorRow = savedCursorRow;
+            CursorColumn = savedCursorColumn;
         }
 
         protected void InsertChar(char character)
         {
-            _lineBuilder.Insert(_lineCursorIndex, character);
-            _lineCursorIndex++;
+            LineBuilder.Insert(LineCursorIndex, character);
+            LineCursorIndex++;
             UpdateLineSubBuffer();
         }
 
         protected void RemoveChar()
         {
-            if (_lineBuilder.Length > 0)
+            if (LineBuilder.Length > 0)
             {
-                if (_lineCursorIndex >= 0 && _lineCursorIndex < _lineBuilder.Length)
+                if (LineCursorIndex >= 0 && LineCursorIndex < LineBuilder.Length)
                 {
-                    _lineBuilder.Remove(_lineCursorIndex, 1);
+                    LineBuilder.Remove(LineCursorIndex, 1);
                     UpdateLineSubBuffer();
                 }
             }
@@ -127,16 +126,16 @@ namespace kOS.Screen
 
         protected void UpdateLineSubBuffer()
         {
-            string commandText = _lineBuilder.ToString();
+            string commandText = LineBuilder.ToString();
             List<string> lines = SplitIntoLinesPreserveNewLine(commandText);
 
-            if (lines.Count != _lineSubBuffer.RowCount)
-                _lineSubBuffer.SetSize(lines.Count, _lineSubBuffer.ColumnCount);
+            if (lines.Count != LineSubBuffer.RowCount)
+                LineSubBuffer.SetSize(lines.Count, LineSubBuffer.ColumnCount);
 
             for (int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
             {
-                char[] lineCharArray = lines[lineIndex].PadRight(_lineSubBuffer.ColumnCount, ' ').ToCharArray();
-                lineCharArray.CopyTo(_lineSubBuffer.Buffer[lineIndex], 0);   
+                char[] lineCharArray = lines[lineIndex].PadRight(LineSubBuffer.ColumnCount, ' ').ToCharArray();
+                lineCharArray.CopyTo(LineSubBuffer.Buffer[lineIndex], 0);   
             }
 
             UpdateSubBufferCursor(lines);
@@ -144,7 +143,7 @@ namespace kOS.Screen
 
         private void UpdateSubBufferCursor()
         {
-            string commandText = _lineBuilder.ToString();
+            string commandText = LineBuilder.ToString();
             List<string> lines = SplitIntoLinesPreserveNewLine(commandText);
             UpdateSubBufferCursor(lines);
         }
@@ -152,7 +151,7 @@ namespace kOS.Screen
         private void UpdateSubBufferCursor(List<string> lines)
         {
             int lineIndex = 0;
-            int lineCursorIndex = _lineCursorIndex;
+            int lineCursorIndex = LineCursorIndex;
 
             while ((lineIndex < lines.Count)
                 && (lineCursorIndex > lines[lineIndex].Length))
@@ -165,8 +164,8 @@ namespace kOS.Screen
                 lineIndex++;
             }
 
-            _cursorRowBuffer = lineIndex;
-            _cursorColumnBuffer = lineCursorIndex;
+            cursorRowBuffer = lineIndex;
+            cursorColumnBuffer = lineCursorIndex;
 
             KeepCursorInBounds();
         }
@@ -178,8 +177,8 @@ namespace kOS.Screen
             if (CursorColumnShow >= MAX_COLUMNS)
             {
                 int tooBigColumn = CursorColumnShow;
-                _cursorColumnBuffer = (tooBigColumn % MAX_COLUMNS);
-                _cursorRowBuffer += (tooBigColumn / MAX_COLUMNS); // truncating integer division.
+                cursorColumnBuffer = (tooBigColumn % MAX_COLUMNS);
+                cursorRowBuffer += (tooBigColumn / MAX_COLUMNS); // truncating integer division.
             }
             if (CursorRowShow >= MAX_ROWS)
             {
@@ -192,9 +191,9 @@ namespace kOS.Screen
 
         protected virtual void NewLine()
         {
-            Print(_lineBuilder.ToString());
-            _lineBuilder = new StringBuilder();
-            _lineCursorIndex = 0;
+            Print(LineBuilder.ToString());
+            LineBuilder = new StringBuilder();
+            LineCursorIndex = 0;
             UpdateLineSubBuffer();
         }
 
@@ -202,12 +201,12 @@ namespace kOS.Screen
         {
             bool success = false;
 
-            if (_lineBuilder.Length > 0 && deltaPosition != 0)
+            if (LineBuilder.Length > 0 && deltaPosition != 0)
             {
-                int newCursorIndex = _lineCursorIndex + deltaPosition;
-                if (newCursorIndex >= 0 && newCursorIndex <= _lineBuilder.Length)
+                int newCursorIndex = LineCursorIndex + deltaPosition;
+                if (newCursorIndex >= 0 && newCursorIndex <= LineBuilder.Length)
                 {
-                    _lineCursorIndex += deltaPosition;
+                    LineCursorIndex += deltaPosition;
                     UpdateSubBufferCursor();
                     success = true;
                 }
@@ -218,13 +217,13 @@ namespace kOS.Screen
 
         public virtual void Reset()
         {
-            _lineBuilder = new StringBuilder();
-            _lineCursorIndex = 0;
+            LineBuilder = new StringBuilder();
+            LineCursorIndex = 0;
         }
 
         protected override void UpdateSubBuffers()
         {
-            _lineSubBuffer.PositionRow = AbsoluteCursorRow;
+            LineSubBuffer.PositionRow = AbsoluteCursorRow;
         }
     }
 }

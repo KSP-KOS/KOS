@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
 
 namespace kOS.Persistence
 {
-    public class Harddisk : Volume
+    public sealed class Harddisk : Volume
     {
         public Harddisk(int size)
         {
-            this.Capacity = size;
+            Capacity = size;
         }
 
         public Harddisk(ConfigNode node)
@@ -59,7 +56,7 @@ namespace kOS.Persistence
 
         public override ConfigNode Save(string nodeName)
         {
-            ConfigNode node = new ConfigNode(nodeName);
+            var node = new ConfigNode(nodeName);
             node.AddValue("capacity", Capacity);
             node.AddValue("volumeName", Name);
 

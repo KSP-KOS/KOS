@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
 using UnityEngine;
@@ -22,8 +20,8 @@ namespace kOS.Persistence
 
         public ProgramFile(string filename)
         {
-            this.Filename = filename;
-            this.Content = string.Empty;
+            Filename = filename;
+            Content = string.Empty;
         }
 
         public ProgramFile(ConfigNode fileNode)
@@ -46,14 +44,7 @@ namespace kOS.Persistence
             var node = new ConfigNode(nodeName);
             node.AddValue("filename", Filename);
 
-            if (Config.Instance.UseCompressedPersistence)
-            {
-                node.AddValue("line", EncodeBase64(Content));
-            }
-            else
-            {
-                node.AddValue("line", EncodeLine(Content));
-            }
+            node.AddValue("line", Config.Instance.UseCompressedPersistence ? EncodeBase64(Content) : EncodeLine(Content));
 
             return node;
         }
@@ -83,7 +74,7 @@ namespace kOS.Persistence
             }
             catch (Exception e)
             {
-                Debug.Log("Exception decoding: " + e.ToString() + " | " + e.Message);
+                Debug.Log(string.Format("Exception decoding: {0} | {1}", e, e.Message));
             }
 
             return decodedString;
@@ -91,7 +82,7 @@ namespace kOS.Persistence
 
         private string EncodeBase64(string input)
         {
-            using (MemoryStream compressedStream = new MemoryStream())
+            using (var compressedStream = new MemoryStream())
             {
                 // mono requires an installed zlib library for GZipStream to work :(
                 // using (Stream csStream = new GZipStream(compressedStream, CompressionMode.Compress))
@@ -109,7 +100,7 @@ namespace kOS.Persistence
         {
             byte[] inputBuffer = Convert.FromBase64String(input);
 
-            using (MemoryStream inputStream = new MemoryStream(inputBuffer))
+            using (var inputStream = new MemoryStream(inputBuffer))
             // mono requires an installed zlib library for GZipStream to work :(
             //using (var zipStream = new GZipStream(inputStream, CompressionMode.Decompress))
             using (var zipStream = new GZipInputStream(inputStream))
@@ -151,10 +142,10 @@ namespace kOS.Persistence
         public string Name;
         public int Size;
 
-        public FileInfo(string Name, int Size)
+        public FileInfo(string name, int size)
         {
-            this.Name = Name;
-            this.Size = Size;
+            Name = name;
+            Size = size;
         }
     }
 }

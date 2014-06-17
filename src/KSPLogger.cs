@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace kOS
@@ -23,8 +22,8 @@ namespace kOS
             // print the call stack
             UnityEngine.Debug.Log(e);
             // print a fragment of the code where the exception ocurred
-            List<string> codeFragment = _shared.Cpu.GetCodeFragment(4);
-            StringBuilder messageBuilder = new StringBuilder();
+            List<string> codeFragment = Shared.Cpu.GetCodeFragment(4);
+            var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine("Code Fragment");
             foreach (string instruction in codeFragment)
                 messageBuilder.AppendLine(instruction);

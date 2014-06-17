@@ -4,20 +4,20 @@ namespace kOS.Suffixed
 {
     public class RgbaColor : SpecialValue
     {
-        private Color _color;
+        private Color color;
 
         public RgbaColor( float red, float green, float blue, float alpha = (float) 1.0 )
         {
-            _color = new Color(red,green,blue,alpha);
+            color = new Color(red,green,blue,alpha);
         }
         public RgbaColor( RgbaColor copyFrom )
         {
-            _color = copyFrom._color;
+            color = copyFrom.color;
         }
         
         public Color Color()
         {
-            return _color;
+            return color;
         }
 
         public override object GetSuffix(string suffixName)
@@ -26,16 +26,16 @@ namespace kOS.Suffixed
             {
                 case "R":
                 case "RED":
-                    return (double) _color.r;
+                    return (double) color.r;
                 case "G":
                 case "GREEN":
-                    return (double) _color.g;
+                    return (double) color.g;
                 case "B":
                 case "BLUE":
-                    return (double) _color.b;
+                    return (double) color.b;
                 case "A":
                 case "ALPHA":
-                    return (double) _color.a;
+                    return (double) color.a;
             }
 
             return base.GetSuffix(suffixName);
@@ -47,19 +47,19 @@ namespace kOS.Suffixed
             {
                 case "R":
                 case "RED":
-                    _color.r = (float) value;
+                    color.r = (float) value;
                     return true;
                 case "G":
                 case "GREEN":
-                    _color.g = (float) value;
+                    color.g = (float) value;
                     return true;
                 case "B":
                 case "BLUE":
-                    _color.b = (float) value;
+                    color.b = (float) value;
                     return true;
                 case "A":
                 case "ALPHA":
-                    _color.a = (float) value;
+                    color.a = (float) value;
                     return true;
             }
 
@@ -68,7 +68,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "RGBA(" + _color.r + ", " + _color.g + ", " + _color.b + ", " + _color.a + ")";
+            return "RGBA(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")";
         }
 
     }
