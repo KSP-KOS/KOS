@@ -132,8 +132,6 @@ namespace kOS.Suffixed
                     return VesselUtils.GetMaxThrust(Vessel);
                 case "FACING":
                     return GetFacing();
-                case "BODY":
-                    return new BodyTarget(Vessel.mainBody, Shared);
                 case "ANGULARMOMENTUM":
                     return new Direction(Vessel.angularMomentum, true);
                 case "ANGULARVEL":

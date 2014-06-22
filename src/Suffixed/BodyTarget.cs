@@ -89,8 +89,6 @@ namespace kOS.Suffixed
                     return Body.gravParameter;
                 case "ATM":
                     return new BodyAtmosphere(Body);
-                case "BODY":
-                    return new BodyTarget(Body.orbit.referenceBody, Shared);
                 case "ANGULARVEL":
                     return new Direction(Body.angularVelocity, true);
             }

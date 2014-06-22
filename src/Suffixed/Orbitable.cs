@@ -213,7 +213,8 @@ namespace kOS.Suffixed
                     return Orbit.PeA;
                     
                 // The cases after this point were added to Orbitable from either VesselTarget or BodyTarget:
-                
+                case "BODY":
+                    return new BodyTarget(Orbit.referenceBody, Shared); 
                 case "UP":
                     return new Direction(GetUpVector().ToVector3D(), false);
                 case "NORTH":
