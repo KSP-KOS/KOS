@@ -112,7 +112,7 @@
     <Compile Include="Suffixed\IKOSTargetable.cs" />
     <Compile Include="Suffixed\ListValue.cs" />
     <Compile Include="Suffixed\Node.cs" />
-    <Compile Include="Suffixed\Orbit.cs" />
+    <Compile Include="Suffixed\OrbitInfo.cs" />
     <Compile Include="Compilation\CodePart.cs" />
     <Compile Include="Persistence\Archive.cs" />
     <Compile Include="Compilation\ProgramBuilder.cs" />

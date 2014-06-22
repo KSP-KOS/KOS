@@ -211,20 +211,6 @@ namespace kOS.Suffixed
                     return Orbit.ApA;
                 case "PERIAPSIS":
                     return Orbit.PeA;
-                case "BODY":
-                    return new BodyTarget(Orbit.referenceBody, Shared);
-                case "PERIOD":
-                    return Orbit.period;
-                case "INCLINATION":
-                    return Orbit.inclination;
-                case "ECCENTRICITY":
-                    return Orbit.eccentricity;
-                case "SEMIMAJORAXIS":
-                    return Orbit.semiMajorAxis;
-                case "SEMIMINORAXIS":
-                    return Orbit.semiMinorAxis;
-                case "TRANSITION":
-                    return Orbit.patchEndTransition;
                     
                 // The cases after this point were added to Orbitable from either VesselTarget or BodyTarget:
                 

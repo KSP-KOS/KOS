@@ -1,13 +1,5 @@
 ﻿namespace kOS.Suffixed
 {
-    /// <summary>
-    ///   Much of what this class did has been superceeded by
-    ///   Orbitable, but it's here because there's still
-    ///   cases where an orbit is just a subset of a larger
-    ///   orbit and therefore doesn't have as much information
-    ///   (for example the orbit patch after a manuever node).
-    ///   this class is used for single patches of an orbit.
-    /// </summary>
     public class OrbitInfo : SpecialValue
     {
         private const int PATCHES_LIMIT = 16;
@@ -90,6 +82,15 @@
                     return orbit.semiMajorAxis;
                 case "SEMIMINORAXIS":
                     return orbit.semiMinorAxis;
+                case "LAN":
+                case "LONGITUDEOFASCENDINGNODE":
+                    return orbit.LAN;
+                case "ARGUMENTOFPERIAPSIS":
+                    return orbit.argumentOfPeriapsis;
+                case "TRUEANOMALY":
+                    return orbit.trueAnomaly;
+                case "MEANANOMALYATEPOCH":
+                    return orbit.meanAnomalyAtEpoch;
                 case "TRANSITION":
                     return orbit.patchEndTransition;
                 case "POSITION":
@@ -98,6 +99,12 @@
                     return GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) );
                 case "PATCHES":
                     return BuildPatchList();
+                    
+                //TODO: Determine if these vectors are different than POSITION and VELOCITY
+                case "VSTATEVECTOR":
+                    return orbit.vel;
+                case "RSTATEVECTOR":
+                    return orbit.pos;
             }
             return base.GetSuffix(suffixName);
         }
