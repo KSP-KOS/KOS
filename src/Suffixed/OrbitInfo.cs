@@ -2,7 +2,6 @@
 {
     public class OrbitInfo : SpecialValue
     {
-        private const int PATCHES_LIMIT = 16;
         private readonly Orbit orbit;
         private readonly SharedObjects shared;
         private readonly string name;
@@ -113,7 +112,7 @@
         {
             var list = new ListValue();
             var orb = orbit;
-            while (orb.nextPatch != null && list.Count <= PATCHES_LIMIT)
+            while (orb.activePatch)
             {
                 list.Add(new OrbitInfo(orb, shared ));
                 orb = orb.nextPatch;
