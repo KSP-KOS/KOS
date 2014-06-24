@@ -141,7 +141,7 @@ namespace kOS.Suffixed
         {
             Vector3d up = GetUpVector().ToVector3D();
             OrbitableVelocity vels = GetVelocities();
-            Vector3d normOrbVec = vels.Orbital.normalized().ToVector3D();
+            Vector3d normOrbVec = vels.Orbital.Normalized().ToVector3D();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normOrbVec, up)};
             return d;
@@ -151,7 +151,7 @@ namespace kOS.Suffixed
         {
             Vector3d up = GetUpVector().ToVector3D();
             OrbitableVelocity vels = GetVelocities();
-            Vector3d normOrbVec = vels.Orbital.normalized().ToVector3D();
+            Vector3d normOrbVec = vels.Orbital.Normalized().ToVector3D();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normOrbVec*(-1), up)};
             return d;
@@ -161,7 +161,7 @@ namespace kOS.Suffixed
         {
             Vector3d up = GetUpVector().ToVector3D();
             OrbitableVelocity vels = GetVelocities();
-            Vector3d normSrfVec = vels.Surface.normalized().ToVector3D();
+            Vector3d normSrfVec = vels.Surface.Normalized().ToVector3D();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normSrfVec, up)};
             return d;
@@ -171,7 +171,7 @@ namespace kOS.Suffixed
         {
             Vector3d up = GetUpVector().ToVector3D();
             OrbitableVelocity vels = GetVelocities();
-            Vector3d normSrfVec = vels.Surface.normalized().ToVector3D();
+            Vector3d normSrfVec = vels.Surface.Normalized().ToVector3D();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normSrfVec*(-1), up)};
             return d;
@@ -244,7 +244,7 @@ namespace kOS.Suffixed
                 case "VELOCITY":
                     return GetVelocities();
                 case "DISTANCE":
-                    return GetPosition().magnitude();
+                    return GetPosition().Magnitude();
                 case "DIRECTION":
                     return new Direction(GetPosition(), false);
                 case "LATITUDE":
