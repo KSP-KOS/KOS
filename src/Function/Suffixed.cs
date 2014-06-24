@@ -206,6 +206,48 @@ namespace kOS.Function
         }
     }
 
+    [FunctionAttribute("positionat")]
+    public class FunctionPositionAt : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            kOS.Suffixed.TimeSpan  when = GetTimeSpan(shared.Cpu.PopValue());
+            Orbitable what = GetOrbitable(shared.Cpu.PopValue());
+
+            Vector pos = what.GetPositionAtUT(when);
+            
+            shared.Cpu.PushStack(pos);
+        }
+    }
+
+    [FunctionAttribute("velocityat")]
+    public class FunctionVelocityAt : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            kOS.Suffixed.TimeSpan  when = GetTimeSpan(shared.Cpu.PopValue());
+            Orbitable what = GetOrbitable(shared.Cpu.PopValue());
+
+            OrbitableVelocity vels = what.GetVelocitiesAtUT(when);
+            
+            shared.Cpu.PushStack(vels);
+        }
+    }
+
+    [FunctionAttribute("orbitat")]
+    public class FunctionOrbitAt : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            kOS.Suffixed.TimeSpan  when = GetTimeSpan(shared.Cpu.PopValue());
+            Orbitable what = GetOrbitable(shared.Cpu.PopValue());
+
+            OrbitInfo orb = new OrbitInfo( what.GetOrbitAtUT(when.ToUnixStyleTime()), shared );
+            
+            shared.Cpu.PushStack(orb);
+        }
+    }
+    
     [FunctionAttribute("constant")]
     public class FunctionConstant : FunctionBase
     {

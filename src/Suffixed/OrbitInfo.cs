@@ -51,7 +51,7 @@
             if (parent != null)
             {
                 Vector3d pos = GetPositionAtUT( timeStamp ).ToVector3D();
-                surfVel = new Vector( orbit.GetVel() - parent.getRFrmVel( pos ) );
+                surfVel = new Vector( orbVel - parent.getRFrmVel( pos + shared.Vessel.GetWorldPos3D()) );
             }
             else
                 surfVel = new Vector( orbVel.X, orbVel.Y, orbVel.Z );

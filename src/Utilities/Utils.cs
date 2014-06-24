@@ -165,5 +165,31 @@ namespace kOS.Utilities
                 outAngle += 360.0;
             return outAngle;        
         }
+        
+        /// <summary>
+        ///   Returns true if body a orbits body b, either directly or through
+        ///   a grandparent chain.
+        /// </summary>
+        /// <param name="a">Does this body</param>
+        /// <param name="b">Orbit around this body</param>
+        /// <returns>True if a orbits b.  </returns>
+        public static Boolean BodyOrbitsBody( CelestialBody a, CelestialBody b)
+        {
+            UnityEngine.Debug.Log( "BodyOrbitsBody("+a.name+","+b.name+")");
+            UnityEngine.Debug.Log( "a's ref body = " + (a.referenceBody==null?"null":a.referenceBody.name) );
+            Boolean found = false;
+            for (CelestialBody curBody = a.referenceBody ;
+                 curBody != null && curBody != curBody.referenceBody ; // reference body of Sun points to itself, weirdly.
+                 curBody = curBody.referenceBody)
+            {
+                UnityEngine.Debug.Log( "curBody="+curBody.name);
+                if (curBody.name.Equals(b.name))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            return found;
+        }
     }
 }
