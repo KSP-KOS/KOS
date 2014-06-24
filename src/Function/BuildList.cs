@@ -31,6 +31,7 @@ namespace kOS.Function
                 case "engines":
                 case "sensors":
                 case "elements":
+                case "dockingports":
                     list = shared.Vessel.PartList(listType, shared);
                     break;
             }
