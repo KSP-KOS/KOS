@@ -112,8 +112,18 @@
         {
             var list = new ListValue();
             var orb = orbit;
-            while (orb.activePatch)
+            while (true)
             {
+                if (orb == null)
+                {
+                    break;
+                }
+
+                if (orb.nextPatch != null && !orb.nextPatch.activePatch)
+                {
+                    break;
+                }
+
                 list.Add(new OrbitInfo(orb, shared ));
                 orb = orb.nextPatch;
             }
