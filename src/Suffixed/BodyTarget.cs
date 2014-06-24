@@ -32,13 +32,20 @@ namespace kOS.Suffixed
 
         override public OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp )
         {
-            var orbVel = new Vector( Orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
+            Vector orbVel = new Vector( Orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
+            orbVel = new Vector(orbVel.X,orbVel.Z,orbVel.Y); // swap Y and Z because KSP API is weird.
+            
             CelestialBody parent = Body.referenceBody;
             if (parent==null) // only if Body is Sun and therefore has no parent.
                 return new OrbitableVelocity( new Vector(0.0,0.0,0.0), new Vector(0.0,0.0,0.0) );
             var surfVel = new Vector( Body.orbit.GetVel() - parent.getRFrmVel( Body.position ) );
 
             return new OrbitableVelocity( orbVel, surfVel );
+        }
+
+        override public Orbit GetOrbitAtUT(double desiredUT)
+        {
+            return Orbit;  // Bodies cannot transition and are always on rails so this is constant.
         }
 
         override public Vector GetUpVector()

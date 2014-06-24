@@ -82,6 +82,16 @@ namespace kOS.Suffixed
         ///   coordinate reference frame.
         /// </returns>
         abstract public OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp );
+
+        /// <summary>
+        ///   Return the Orbit that the object will be in at some point in the future.
+        ///   If the object is capable of having maneuver nodes and transitions (a vessel),
+        ///   then it should give a prediction under the assumption that the chain of
+        ///   maneuver nodes will be executed as planned.
+        /// </summary>
+        /// <param name="desiredUT">the timestamp when to query for </param>
+        /// <returns>An OrbitInfo constructed from the orbit patch in question</returns>
+        abstract public Orbit GetOrbitAtUT(double desiredUT);
         
         /// <summary>
         ///   Subclasses must override this method to return a unit vector in
@@ -121,7 +131,7 @@ namespace kOS.Suffixed
         {
             return Orbit;
         }
-
+        
         public CelestialBody GetParentBody()
         {
             return Orbit.referenceBody;
