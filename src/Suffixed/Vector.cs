@@ -17,16 +17,16 @@ namespace kOS.Suffixed
 
         public Vector(double x, double y, double z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         public Vector(float x, float y, float z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         public override object TryOperation(string op, object other, bool reverseOrder)
@@ -66,18 +66,18 @@ namespace kOS.Suffixed
                     
                 default:
                     throw new NotImplementedException(string.Format(
-                        "Cannot perform operation: {0} {1} {2}", ToString(), op, other.ToString() ) );
+                        "Cannot perform operation: {0} {1} {2}", this, op, other ) );
             }
 
             return null;
         }
         
-        public double magnitude()
+        public double Magnitude()
         {
             return new Vector3d(X,Y,Z).magnitude;
         }
         
-        public Vector normalized()
+        public Vector Normalized()
         {
             return new Vector( new Vector3d(X,Y,Z).normalized );
         }
@@ -98,11 +98,11 @@ namespace kOS.Suffixed
                 case "Z":
                     return Z;
                 case "MAG":
-                    return magnitude();
+                    return Magnitude();
                 case "VEC":
                     return new Vector(X, Y, Z);
                 case "NORMALIZED":
-                    return normalized();
+                    return Normalized();
                 case "SQRMAGNITUDE":
                     return new Vector3d(X, Y, Z).sqrMagnitude;
             }
