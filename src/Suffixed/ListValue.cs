@@ -88,7 +88,8 @@ namespace kOS.Suffixed
     {
         private readonly IEnumerator enumerator;
         private readonly object lockObject = new object();
-        private int index;
+        private int index = -1;
+        private bool status = false;
 
         public Enumerator(IEnumerator enumerator)
         {
@@ -102,12 +103,15 @@ namespace kOS.Suffixed
                 switch (suffixName)
                 {
                     case "RESET":
-                        index = 0;
+                        index = -1;
+                        status = false;
                         enumerator.Reset();
                         return true;
-                    case "END":
-                        var status = enumerator.MoveNext();
+                    case "NEXT":
+                        status = enumerator.MoveNext();
                         index++;
+                        return status;
+                    case "ATEND":
                         return !status;
                     case "INDEX":
                         return index;

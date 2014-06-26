@@ -1466,9 +1466,8 @@ namespace kOS.Compilation.KS
             // loop condition
             Opcode condition = AddOpcode(new OpcodePush(iteratorIdentifier));
             string conditionLabel = condition.Label;
-            AddOpcode(new OpcodePush("end"));
+            AddOpcode(new OpcodePush("next"));
             AddOpcode(new OpcodeGetMember());
-            AddOpcode(new OpcodeLogicNot());
             // branch
             Opcode branch = AddOpcode(new OpcodeBranchIfFalse());
             AddToBreakList(branch);
