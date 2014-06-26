@@ -8,15 +8,15 @@ namespace kOS.Suffixed
     public class FlightControl : SpecialValue , IDisposable
     {
         // For rotation x = yaw, y = pitch, and z = roll
-        private float? yaw;
-        private float? pitch;
-        private float? roll;
-        private float? fore;
-        private float? starboard;
-        private float? top;
-        private float? wheelSteer;
-        private float? wheelThrottle;
-        private float? mainThrottle;
+        private float yaw;
+        private float pitch;
+        private float roll;
+        private float fore;
+        private float starboard;
+        private float top;
+        private float wheelSteer;
+        private float wheelThrottle;
+        private float mainThrottle;
         private readonly Flushable<bool> neutral;
         private readonly Flushable<bool> killRotation;
         private bool bound;
@@ -41,29 +41,29 @@ namespace kOS.Suffixed
             switch (suffixName)
             {
                 case "YAW":
-                    return yaw.HasValue ? yaw : default(float);
+                    return yaw;
                 case "PITCH":
-                    return pitch.HasValue ? pitch : default(float);
+                    return pitch;
                 case "ROLL":
-                    return roll.HasValue ? roll : default(float);
+                    return roll;
                 case "FORE":
-                    return fore.HasValue ? fore : default(float);
+                    return fore;
                 case "STARBOARD":
-                    return starboard.HasValue ? starboard : default(float);
+                    return starboard;
                 case "TOP":
-                    return top.HasValue ? top : default(float);
+                    return top;
                 case "ROTATION":
-                    return new Vector(yaw ?? default(float), pitch ?? default(float), roll ?? default(float));
+                    return new Vector(yaw , pitch , roll );
                 case "TRANSLATION":
-                    return new Vector(starboard ?? default(float), top ?? default(float), fore ?? default(float));
+                    return new Vector(starboard , top , fore );
                 case "NEUTRAL":
                     return neutral;
                 case "MAINTHROTTLE":
-                    return mainThrottle.HasValue ? mainThrottle : default(float);
+                    return mainThrottle;
                 case "WHEELTHROTTLE":
-                    return wheelThrottle.HasValue ? wheelThrottle : default(float);
+                    return wheelThrottle;
                 case "WHEELSTEER":
-                    return wheelSteer.HasValue ? wheelSteer : default(float);
+                    return wheelSteer;
                 case "BOUND":
                     return bound;
                 default:
@@ -73,7 +73,7 @@ namespace kOS.Suffixed
 
         public override bool SetSuffix(string suffixName, object value)
         {
-            float? floatValue = 0;
+            float floatValue = 0;
             Vector vectorValue = null;
             
             Bind();
@@ -143,9 +143,9 @@ namespace kOS.Suffixed
         {
             if (vectorValue == null)
             {
-                fore = null;
-                top = null;
-                starboard = null;
+                fore = 0.0f;
+                top = 0.0f;
+                starboard = 0.0f;
             }
             else
             {
@@ -159,9 +159,9 @@ namespace kOS.Suffixed
         {
             if (vectorValue == null)
             {
-                yaw = null;
-                pitch = null;
-                roll = null;
+                yaw = 0.0f;
+                pitch = 0.0f;
+                roll = 0.0f;
             }
             else
             {
@@ -177,11 +177,7 @@ namespace kOS.Suffixed
 
             var vector = value as Vector;
 
-            if (valueStr.ToLower() == "null")
-            {
-                vectorValue = null;
-            }
-            else if (vector != null)
+            if (vector != null)
             {
                 if (!Utils.IsValidVector(vector))
                     return false;
@@ -194,15 +190,11 @@ namespace kOS.Suffixed
             return true;
         }
 
-        private static bool ValueToFloat(object value, ref float? doubleValue)
+        private static bool ValueToFloat(object value, ref float doubleValue)
         {
             var valueStr = value.ToString();
             float valueParsed;
-            if (valueStr.ToLower() == "null")
-            {
-                doubleValue = null;
-            }
-            else if (float.TryParse(valueStr, out valueParsed))
+            if (float.TryParse(valueStr, out valueParsed))
             {
                 doubleValue = valueParsed;
             }
@@ -286,17 +278,18 @@ namespace kOS.Suffixed
 
         private void PushNewSetting(ref FlightCtrlState st)
         {
-            if(yaw.HasValue) st.X = yaw.Value;
-            if(pitch.HasValue) st.Y = pitch.Value;
-            if(roll.HasValue) st.Z = roll.Value ;
+            if(yaw != 0) st.yaw = yaw;
+            if(pitch != 0) st.pitch = pitch;
+            if(roll != 0) st.roll = roll;
 
-            if(starboard.HasValue) st.pitch = starboard.Value;
-            if(top.HasValue) st.yaw = top.Value;
-            if(fore.HasValue) st.roll = fore.Value;
+            // starboard and fore are reversed in KSP so we invert them here
+            if(starboard != 0) st.X = starboard * -1;
+            if(top != 0) st.Y = top;
+            if(fore != 0) st.Z = fore * -1;
 
-            if(wheelSteer.HasValue) st.wheelSteer = wheelSteer.Value;
-            if(wheelThrottle.HasValue) st.wheelThrottle = wheelThrottle.Value;
-            if(mainThrottle.HasValue) st.mainThrottle = mainThrottle.Value;
+            if(wheelSteer != 0) st.wheelSteer = wheelSteer;
+            if(wheelThrottle != 0) st.wheelThrottle = wheelThrottle;
+            if(mainThrottle != 0) st.mainThrottle = mainThrottle;
 
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace kOS.Suffixed.Part
 {
@@ -59,7 +60,7 @@ namespace kOS.Suffixed.Part
                 case "UID":
                     return Part.uid;
                 case "FACING":
-                    return new Direction(module.GetFwdVector());
+                    return GetFacing(Part);
                 case "RESOURCES":
                     var resources = new ListValue();
                     foreach (PartResource resource in Part.Resources)
@@ -85,6 +86,15 @@ namespace kOS.Suffixed.Part
         public override string ToString()
         {
             return string.Format("PART({0},{1})", Part.name, Part.uid);
+        }
+
+        public Direction GetFacing(global::Part part)
+        {
+            Vector3d up = part.vessel.upAxis;
+            var partVec = part.partTransform.forward;
+
+            var d = new Direction { Rotation = Quaternion.LookRotation(partVec, up) };
+            return d;
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
