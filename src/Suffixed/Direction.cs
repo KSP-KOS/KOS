@@ -18,6 +18,7 @@ namespace kOS.Suffixed
         {
             rotation = q;
             euler = q.eulerAngles;
+            vector = rotation * Vector3d.forward;
         }
 
         public Direction(Vector3d v3D, bool isEuler)
@@ -50,6 +51,7 @@ namespace kOS.Suffixed
             {
                 euler = value;
                 rotation = Quaternion.Euler(value);
+                vector = rotation * Vector3d.forward;
             }
         }
 
@@ -60,6 +62,7 @@ namespace kOS.Suffixed
             {
                 rotation = value;
                 euler = value.eulerAngles;
+                vector = rotation * Vector3d.forward;
             }
         }
 
