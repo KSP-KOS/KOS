@@ -208,9 +208,9 @@ namespace kOS.Suffixed
             }
             else
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         private void Bind()

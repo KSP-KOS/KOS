@@ -58,6 +58,8 @@ namespace kOS.Suffixed.Part
                     return Part.inverseStage;
                 case "UID":
                     return Part.uid;
+                case "FACING":
+                    return new Direction(module.GetFwdVector());
                 case "RESOURCES":
                     var resources = new ListValue();
                     foreach (PartResource resource in Part.Resources)
