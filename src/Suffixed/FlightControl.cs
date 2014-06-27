@@ -254,12 +254,25 @@ namespace kOS.Suffixed
         {
             if (suffix == "NEUTRALIZE")
             {
+                ResetControls();
                 neutral.Value = bool.Parse(value.ToString());
                 Unbind();
                 return true;
             }
             neutral.Value = false;
             return false;
+        }
+
+        private void ResetControls()
+        {
+            yaw = default(float);
+            pitch = default(float);
+            roll = default(float);
+            fore = default(float);
+            starboard = default(float);
+            top = default(float);
+            wheelSteer = default(float);
+            wheelThrottle = default(float);
         }
 
         private void OnFlyByWire(FlightCtrlState st)
