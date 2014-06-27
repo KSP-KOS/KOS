@@ -82,4 +82,16 @@ namespace kOS.Function
             shared.Cpu.PushStack(result);
         }
     }
+
+    [FunctionAttribute("anglediff")]
+    public class FunctionAngleDiff : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            double ang2 = GetDouble(shared.Cpu.PopValue());
+            double ang1 = GetDouble(shared.Cpu.PopValue());
+            double result = kOS.Utilities.Utils.DegreeFix( ang2 - ang1, -180 );
+            shared.Cpu.PushStack(result);
+        }
+    }
 }
