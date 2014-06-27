@@ -38,7 +38,7 @@ namespace kOS.Suffixed
             get { return vector; }
             set
             {
-                vector = value;
+                vector = value.normalized;
                 rotation = Quaternion.LookRotation(value);
                 euler = rotation.eulerAngles;
             }
