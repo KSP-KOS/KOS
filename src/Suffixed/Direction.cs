@@ -102,7 +102,8 @@ namespace kOS.Suffixed
         {
             if (other is Vector)
             {
-                other = ((Vector) other).ToDirection();
+                Vector3d vec = ((Vector)other).ToVector3D();
+                return new Vector(Rotation*vec);
             }
 
             if (op == "*" && other is Direction)
