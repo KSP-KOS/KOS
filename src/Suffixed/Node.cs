@@ -31,7 +31,6 @@ namespace kOS.Suffixed
         private Node(SharedObjects shared)
         {
             this.shared = shared;
-            NodeLookup = new Dictionary<ManeuverNode, Node>();
         }
 
         public double Time { get; set; }
@@ -39,6 +38,10 @@ namespace kOS.Suffixed
         public double RadOut { get; set; }
         public double Norm { get; set; }
 
+        static Node()
+        {
+            NodeLookup = new Dictionary<ManeuverNode, Node>();
+        }
 
         public static Node FromExisting(Vessel v, ManeuverNode existingNode, SharedObjects shared)
         {
