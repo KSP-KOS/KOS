@@ -42,7 +42,7 @@ namespace kOS.Suffixed
 
         public static Node FromExisting(Vessel v, ManeuverNode existingNode, SharedObjects shared)
         {
-            return NodeLookup.ContainsKey(existingNode) ? NodeLookup[existingNode] : new Node(v, existingNode, shared);
+            return (NodeLookup != null && NodeLookup.ContainsKey(existingNode)) ? NodeLookup[existingNode] : new Node(v, existingNode, shared);
         }
 
         public void AddToVessel(Vessel v)
