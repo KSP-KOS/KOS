@@ -101,22 +101,42 @@ namespace kOS.Utilities
         {
             var visited = new List<Part>();
 
-            return engines.Sum(part => ProspectForResource(resourceName, part, ref visited));
+            IEnumerable<FuelLine> lines;
+            if (engines.Count > 0)
+            {
+                // The recursinve algorithm is written to assume all the engines are on
+                // the same vessel, so just use one of the engines to get the vessel:
+                lines = engines[0].vessel.parts.OfType<FuelLine>();
+            }
+            else
+            {
+                // Uhh... no engines in engine list - no point in doing the work.
+                return 0.0;
+            }
+            return engines.Sum(part => ProspectForResource(resourceName, part, lines, 0, ref visited));
         }
 
         public static double ProspectForResource(string resourceName, Part engine)
         {
             var visited = new List<Part>();
 
-            return ProspectForResource(resourceName, engine, ref visited);
+            IEnumerable<FuelLine> lines = engine.vessel.parts.OfType<FuelLine>();
+
+            return ProspectForResource(resourceName, engine, lines, 0, ref visited);
         }
 
-        public static double ProspectForResource(string resourceName, Part part, ref List<Part> visited)
+        public static double ProspectForResource(string resourceName, Part part, IEnumerable<FuelLine> lines, int rDepth, ref List<Part> visited)
         {
+            bool debugWalk = false; // set to true to enable the logging of the recursive walk.
+            string indent = new String(',',rDepth);
+
+            if (debugWalk) UnityEngine.Debug.Log(indent + "ProspectForResource( " + resourceName + ", " + part.uid + ":" + part.name + ", ...)");
             double ret = 0;
+
 
             if (visited.Contains(part))
             {
+            if (debugWalk) UnityEngine.Debug.Log(indent + "- Already visited, truncate recurse branch here.");
                 return 0;
             }
 
@@ -130,19 +150,62 @@ namespace kOS.Utilities
                 }
             }
 
-            foreach (var attachNode in part.attachNodes)
+            foreach (var attachNode in GetActualAttachedNodes(part))
             {
-                if (attachNode.attachedPart != null //if there is a part attached here            
-                    && attachNode.nodeType == AttachNode.NodeType.Stack //and the attached part is stacked (rather than surface mounted)
-                    && (attachNode.attachedPart.fuelCrossFeed) //and the attached part allows fuel flow
-                    && !(part.NoCrossFeedNodeKey.Length > 0 //and this part does not forbid fuel flow
-                    && attachNode.id.Contains(part.NoCrossFeedNodeKey))) //    through this particular node
+                if (debugWalk) UnityEngine.Debug.Log(indent + "- AttachNode " + attachNode.id );
+                if (attachNode.ResourceXFeed)
                 {
-                    ret += ProspectForResource(resourceName, attachNode.attachedPart, ref visited);
+                    if (debugWalk) UnityEngine.Debug.Log(indent + "- - It is an xfeed-able attachnode.");
+                    if (attachNode.attachedPart != null
+                        && (attachNode.attachedPart.fuelCrossFeed) )
+                    {
+                    if (debugWalk) UnityEngine.Debug.Log(indent + "- - AttachNode's other part allows crossfeed in general.");
+                        if (!(part.NoCrossFeedNodeKey.Length > 0
+                              && attachNode.id.Contains(part.NoCrossFeedNodeKey)))
+                        {
+                            if (debugWalk) UnityEngine.Debug.Log(indent + "- - This part allows crossfeed through specifically through this AttachNode.");
+                            if (!(attachNode.attachedPart.NoCrossFeedNodeKey.Length > 0
+                                  && attachNode.id.Contains(attachNode.attachedPart.NoCrossFeedNodeKey)))
+                            {
+                                if (debugWalk) UnityEngine.Debug.Log(indent + "- -  Part on other side allows flow specifically through this AttachNode.");
+                                ret += ProspectForResource(resourceName, attachNode.attachedPart, lines, rDepth+1, ref visited);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Fuel lines have to be handled specially because they are not in the normal parts tree
+            // and are not connected via AttachNodes:
+            foreach (var fuelLine in lines)
+            {
+                if (part == fuelLine.target && fuelLine.fuelLineOpen && fuelLine.fuelCrossFeed)
+                {
+                    if (debugWalk) UnityEngine.Debug.Log(indent + "- Part is target of a fuel line, traversing fuel line upstream.");
+                    ret += ProspectForResource(resourceName, fuelLine.parent, lines, rDepth+1, ref visited);
                 }
             }
 
+            if (debugWalk) UnityEngine.Debug.Log(indent + "Sum from this branch of the recurse tree is " + ret);
             return ret;
+        }
+        
+        /// <summary>
+        /// Gets the *actual* list of attachnodes for a part.  Use as a replacement
+        /// for the KSP API property part.attachNodes because that doesn't seem to
+        /// reliably include the surface attached attachnodes all of the time.
+        /// </summary>
+        /// <param name="checkPart">part to get the nodes for</param>
+        /// <returns>AttachNodes from this part to others</returns>
+        private static List<AttachNode> GetActualAttachedNodes(Part checkPart)
+        {
+            List <AttachNode> returnList = new List<AttachNode>(checkPart.attachNodes);
+            AttachNode srfNode = checkPart.srfAttachNode;
+            if (! returnList.Contains(srfNode) )
+            {
+                returnList.Add(srfNode);
+            }
+            return returnList;
         }
         
         /// <summary>
