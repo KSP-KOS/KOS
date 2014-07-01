@@ -6,7 +6,6 @@ namespace kOS.Suffixed
     public class Direction : SpecialValue
     {
         private Vector3d euler;
-
         private Quaternion rotation;
         private Vector3d vector;
 
@@ -100,9 +99,10 @@ namespace kOS.Suffixed
 
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
-            if (other is Vector)
+            var otherVector = other as Vector;
+            if (otherVector != null)
             {
-                Vector3d vec = ((Vector)other).ToVector3D();
+                Vector3d vec = otherVector.ToVector3D();
                 return new Vector(Rotation*vec);
             }
 
