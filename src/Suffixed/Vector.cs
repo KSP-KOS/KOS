@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace kOS.Suffixed
 {
@@ -105,6 +106,8 @@ namespace kOS.Suffixed
                     return Normalized();
                 case "SQRMAGNITUDE":
                     return new Vector3d(X, Y, Z).sqrMagnitude;
+                case "DIRECTION":
+                    return ToDirection();
             }
 
             return base.GetSuffix(suffixName);
@@ -113,20 +116,52 @@ namespace kOS.Suffixed
         public override bool SetSuffix(string suffixName, object value)
         {
             double dblValue;
+            Direction dirValue = null;
+            bool isDouble = false;
+            bool isDirection = false;
+
             if (value is double)
             {
                 dblValue = (double)value;
+                isDouble = true;
             }
-            else if (!double.TryParse(value.ToString(), out dblValue))
+            else if (double.TryParse(value.ToString(), out dblValue))
             {
-                return false;
+                isDouble = true;                
+            }
+            else if (value is Direction)
+            {
+                dirValue = (Direction)value;
+                isDirection = true;
+            }
+
+            // Type check (this is the sort of thing that it would be good
+            // to do automatically with a standard suffix handling system):
+            bool typeMismatch = false;
+            switch (suffixName)
+            {
+                case "X":
+                case "Y":
+                case "Z":
+                case "MAG":
+                    if (!isDouble)
+                        typeMismatch = true;
+                    break;
+                case "DIRECTION":
+                    if (!isDirection)
+                        typeMismatch = true;
+                    break;
+            }
+            if (typeMismatch)
+            {
+                throw new InvalidCastException("Can't set a vector's :" + suffixName + " to a " + value.GetType().Name);
             }
 
             switch (suffixName)
             {
                 case "X":
                     X = dblValue;
-                    return true;
+                    return true;                        
                 case "Y":
                     Y = dblValue;
                     return true;
@@ -141,7 +176,12 @@ namespace kOS.Suffixed
                     X = X/oldMag*dblValue;
                     Y = Y/oldMag*dblValue;
                     Z = Z/oldMag*dblValue;
-
+                    return true;
+                case "DIRECTION":
+                    Vector3d newVal = dirValue.Rotation * Vector3d.forward;
+                    X = newVal.x;
+                    Y = newVal.y;
+                    Z = newVal.z;
                     return true;
             }
 
