@@ -1,8 +1,8 @@
-﻿using System;
+﻿using kOS.Suffixed;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using kOS.Suffixed;
 
 namespace kOS.Utilities
 {
@@ -40,7 +40,7 @@ namespace kOS.Utilities
         {
             return (input > high ? high : (input < low ? low : input));
         }
-        
+
         public static double Clamp(double input, double low, double high)
         {
             return (input > high ? high : (input < low ? low : input));
@@ -54,6 +54,7 @@ namespace kOS.Utilities
             }
             return Clamp(input.Value, low, high);
         }
+
         public static float? Clamp(float? input, float low, float high)
         {
             if (!input.HasValue)
@@ -96,7 +97,7 @@ namespace kOS.Utilities
                    IsValidNumber(quaternion.z) &&
                    IsValidNumber(quaternion.w);
         }
-        
+
         public static double ProspectForResource(string resourceName, List<Part> engines)
         {
             var visited = new List<Part>();
@@ -127,16 +128,15 @@ namespace kOS.Utilities
 
         public static double ProspectForResource(string resourceName, Part part, IEnumerable<FuelLine> lines, int rDepth, ref List<Part> visited)
         {
-            bool debugWalk = false; // set to true to enable the logging of the recursive walk.
-            string indent = new String(',',rDepth);
+            const bool DEBUG_WALK = false; // set to true to enable the logging of the recursive walk.
+            var indent = new String(',', rDepth);
 
-            if (debugWalk) UnityEngine.Debug.Log(indent + "ProspectForResource( " + resourceName + ", " + part.uid + ":" + part.name + ", ...)");
+            if (DEBUG_WALK) Debug.Log(indent + "ProspectForResource( " + resourceName + ", " + part.uid + ":" + part.name + ", ...)");
             double ret = 0;
-
 
             if (visited.Contains(part))
             {
-            if (debugWalk) UnityEngine.Debug.Log(indent + "- Already visited, truncate recurse branch here.");
+                if (DEBUG_WALK) Debug.Log(indent + "- Already visited, truncate recurse branch here.");
                 return 0;
             }
 
@@ -152,44 +152,34 @@ namespace kOS.Utilities
 
             foreach (var attachNode in GetActualAttachedNodes(part))
             {
-                if (debugWalk) UnityEngine.Debug.Log(indent + "- AttachNode " + attachNode.id );
-                if (attachNode.ResourceXFeed)
-                {
-                    if (debugWalk) UnityEngine.Debug.Log(indent + "- - It is an xfeed-able attachnode.");
-                    if (attachNode.attachedPart != null
-                        && (attachNode.attachedPart.fuelCrossFeed) )
-                    {
-                    if (debugWalk) UnityEngine.Debug.Log(indent + "- - AttachNode's other part allows crossfeed in general.");
-                        if (!(part.NoCrossFeedNodeKey.Length > 0
-                              && attachNode.id.Contains(part.NoCrossFeedNodeKey)))
-                        {
-                            if (debugWalk) UnityEngine.Debug.Log(indent + "- - This part allows crossfeed through specifically through this AttachNode.");
-                            if (!(attachNode.attachedPart.NoCrossFeedNodeKey.Length > 0
-                                  && attachNode.id.Contains(attachNode.attachedPart.NoCrossFeedNodeKey)))
-                            {
-                                if (debugWalk) UnityEngine.Debug.Log(indent + "- -  Part on other side allows flow specifically through this AttachNode.");
-                                ret += ProspectForResource(resourceName, attachNode.attachedPart, lines, rDepth+1, ref visited);
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Fuel lines have to be handled specially because they are not in the normal parts tree
-            // and are not connected via AttachNodes:
-            foreach (var fuelLine in lines)
-            {
-                if (part == fuelLine.target && fuelLine.fuelLineOpen && fuelLine.fuelCrossFeed)
-                {
-                    if (debugWalk) UnityEngine.Debug.Log(indent + "- Part is target of a fuel line, traversing fuel line upstream.");
-                    ret += ProspectForResource(resourceName, fuelLine.parent, lines, rDepth+1, ref visited);
-                }
+                if (DEBUG_WALK) Debug.Log(indent + "- AttachNode " + attachNode.id);
+                if (!attachNode.ResourceXFeed) continue;
+
+                if (DEBUG_WALK) Debug.Log(indent + "- - It is an xfeed-able attachnode.");
+                if (attachNode.attachedPart == null || (!attachNode.attachedPart.fuelCrossFeed)) continue;
+
+                if (DEBUG_WALK) Debug.Log(indent + "- - AttachNode's other part allows crossfeed in general.");
+                if (part.NoCrossFeedNodeKey.Length > 0 && attachNode.id.Contains(part.NoCrossFeedNodeKey)) continue;
+
+                if (DEBUG_WALK) Debug.Log(indent + "- - This part allows crossfeed through specifically through this AttachNode.");
+                if (attachNode.attachedPart.NoCrossFeedNodeKey.Length > 0 && attachNode.id.Contains(attachNode.attachedPart.NoCrossFeedNodeKey)) continue;
+
+                if (DEBUG_WALK) Debug.Log(indent + "- -  Part on other side allows flow specifically through this AttachNode.");
+                ret += ProspectForResource(resourceName, attachNode.attachedPart, lines, rDepth + 1, ref visited);
             }
 
-            if (debugWalk) UnityEngine.Debug.Log(indent + "Sum from this branch of the recurse tree is " + ret);
+            // Fuel lines have to be handled specially because they are not in the normal parts tree
+            // and are not connected via AttachNodes:
+            foreach (var fuelLine in lines.Where(fuelLine => part == fuelLine.target && fuelLine.fuelLineOpen && fuelLine.fuelCrossFeed))
+            {
+                if (DEBUG_WALK) Debug.Log(indent + "- Part is target of a fuel line, traversing fuel line upstream.");
+                ret += ProspectForResource(resourceName, fuelLine.parent, lines, rDepth + 1, ref visited);
+            }
+
+            if (DEBUG_WALK) Debug.Log(indent + "Sum from this branch of the recurse tree is " + ret);
             return ret;
         }
-        
+
         /// <summary>
         /// Gets the *actual* list of attachnodes for a part.  Use as a replacement
         /// for the KSP API property part.attachNodes because that doesn't seem to
@@ -197,28 +187,28 @@ namespace kOS.Utilities
         /// </summary>
         /// <param name="checkPart">part to get the nodes for</param>
         /// <returns>AttachNodes from this part to others</returns>
-        private static List<AttachNode> GetActualAttachedNodes(Part checkPart)
+        private static IEnumerable<AttachNode> GetActualAttachedNodes(Part checkPart)
         {
-            List <AttachNode> returnList = new List<AttachNode>(checkPart.attachNodes);
+            var returnList = new List<AttachNode>(checkPart.attachNodes);
             AttachNode srfNode = checkPart.srfAttachNode;
-            if (! returnList.Contains(srfNode) )
+            if (!returnList.Contains(srfNode))
             {
                 returnList.Add(srfNode);
             }
             return returnList;
         }
-        
+
         /// <summary>
         ///   Fix the strange too-large or too-small angle degrees that are sometimes
         ///   returned by KSP, normalizing them into a constrained 360 degree range.
         /// </summary>
         /// <param name="inAngle">input angle in degrees</param>
         /// <param name="rangeStart">
-        ///   Bottom of 360 degree range to normalize to. 
+        ///   Bottom of 360 degree range to normalize to.
         ///   ( 0 means the range [0..360]), while -180 means [-180,180] )
         /// </param>
         /// <returns>the same angle, normalized to the range given.</returns>
-        public static double DegreeFix( double inAngle, double rangeStart )
+        public static double DegreeFix(double inAngle, double rangeStart)
         {
             double rangeEnd = rangeStart + 360.0;
             double outAngle = inAngle;
@@ -226,9 +216,9 @@ namespace kOS.Utilities
                 outAngle -= 360.0;
             while (outAngle < rangeStart)
                 outAngle += 360.0;
-            return outAngle;        
+            return outAngle;
         }
-        
+
         /// <summary>
         ///   Returns true if body a orbits body b, either directly or through
         ///   a grandparent chain.
@@ -236,21 +226,20 @@ namespace kOS.Utilities
         /// <param name="a">Does this body</param>
         /// <param name="b">Orbit around this body</param>
         /// <returns>True if a orbits b.  </returns>
-        public static Boolean BodyOrbitsBody( CelestialBody a, CelestialBody b)
+        public static Boolean BodyOrbitsBody(CelestialBody a, CelestialBody b)
         {
-            UnityEngine.Debug.Log( "BodyOrbitsBody("+a.name+","+b.name+")");
-            UnityEngine.Debug.Log( "a's ref body = " + (a.referenceBody==null?"null":a.referenceBody.name) );
+            Debug.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
+            Debug.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
             Boolean found = false;
-            for (CelestialBody curBody = a.referenceBody ;
-                 curBody != null && curBody != curBody.referenceBody ; // reference body of Sun points to itself, weirdly.
+            for (var curBody = a.referenceBody;
+                 curBody != null && curBody != curBody.referenceBody; // reference body of Sun points to itself, weirdly.
                  curBody = curBody.referenceBody)
             {
-                UnityEngine.Debug.Log( "curBody="+curBody.name);
-                if (curBody.name.Equals(b.name))
-                {
-                    found = true;
-                    break;
-                }
+                Debug.Log("curBody=" + curBody.name);
+                if (!curBody.name.Equals(b.name)) continue;
+
+                found = true;
+                break;
             }
             return found;
         }
