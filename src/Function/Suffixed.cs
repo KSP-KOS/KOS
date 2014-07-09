@@ -173,7 +173,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var vRend = new VectorRenderer( shared.UpdateHandler );
+            var vRend = new VectorRenderer( shared.UpdateHandler, shared );
             vRend.SetShow( false );
             
             shared.Cpu.PushStack( vRend );
@@ -192,7 +192,7 @@ namespace kOS.Function
             Vector    vec   = GetVector(shared.Cpu.PopValue());
             Vector    start = GetVector(shared.Cpu.PopValue());
 
-            var vRend = new VectorRenderer( shared.UpdateHandler )
+            var vRend = new VectorRenderer( shared.UpdateHandler, shared )
                 {
                     Vector = vec,
                     Start = start,
