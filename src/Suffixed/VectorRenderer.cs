@@ -16,6 +16,7 @@ namespace kOS.Suffixed
         private LineRenderer  hat;
         private bool          enable;
         private readonly UpdateHandler updateHandler;
+        private readonly SharedObjects Shared;
         private GameObject    lineObj;
         private GameObject    hatObj;
         private GameObject    labelObj;
@@ -42,15 +43,16 @@ namespace kOS.Suffixed
         private const int     MAP_LAYER = 10; // found through trial-and-error
         private const int     FLIGHT_LAYER = 0; // found through trial-and-error
 
-        public VectorRenderer( UpdateHandler updateHand )
+        public VectorRenderer( UpdateHandler updateHand, SharedObjects shared )
         {
-            Vector     = new Vector3d(0,0,0);
-            Color    = new RgbaColor(1,1,1);
+            Vector  = new Vector3d(0,0,0);
+            Color   = new RgbaColor(1,1,1);
             Start   = new Vector3d(0,0,0);
             Scale   = 1.0;
             Width   = 0;
             
-            updateHandler    = updateHand;
+            updateHandler = updateHand;
+            Shared = shared;
         }
 
         // Implementation of KOSSCopeObserver interface:
@@ -104,9 +106,9 @@ namespace kOS.Suffixed
         {
             if (isOnMap)
                 shipCenterCoords = ScaledSpace.LocalToScaledSpace(
-                    FlightGlobals.ActiveVessel.GetWorldPos3D() );
+                     Shared.Vessel.GetWorldPos3D() );
             else
-                shipCenterCoords = FlightGlobals.ActiveVessel.findWorldCenterOfMass();
+                shipCenterCoords = Shared.Vessel.findWorldCenterOfMass();
         }
         
         /// <summary>
