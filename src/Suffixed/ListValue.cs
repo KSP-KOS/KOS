@@ -13,6 +13,11 @@ namespace kOS.Suffixed
             list = new List<object>();
         }
 
+        private ListValue(ListValue toCopy)
+        {
+            list = new List<object>(toCopy.list);
+        }
+
         public int Count
         {
             get { return list.Count; }
@@ -48,7 +53,7 @@ namespace kOS.Suffixed
                 case "ITERATOR":
                     return new Enumerator(list.GetEnumerator());
                 case "COPY":
-                    return new List<object>(list);
+                    return new ListValue(this);
                 default:
                     return string.Format("Suffix {0} Not Found", suffixName);
             }
@@ -89,7 +94,7 @@ namespace kOS.Suffixed
         private readonly IEnumerator enumerator;
         private readonly object lockObject = new object();
         private int index = -1;
-        private bool status = false;
+        private bool status;
 
         public Enumerator(IEnumerator enumerator)
         {

@@ -128,6 +128,7 @@ namespace kOS.Utilities
 
         public static double ProspectForResource(string resourceName, Part part, IEnumerable<FuelLine> lines, int rDepth, ref List<Part> visited)
         {
+#pragma warning disable 162
             const bool DEBUG_WALK = false; // set to true to enable the logging of the recursive walk.
             var indent = new String(',', rDepth);
 
@@ -178,6 +179,7 @@ namespace kOS.Utilities
 
             if (DEBUG_WALK) Debug.Log(indent + "Sum from this branch of the recurse tree is " + ret);
             return ret;
+#pragma warning restore 162
         }
 
         /// <summary>
