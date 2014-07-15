@@ -91,7 +91,7 @@
                 case "MEANANOMALYATEPOCH":
                     return orbit.meanAnomalyAtEpoch;
                 case "TRANSITION":
-                    return orbit.patchEndTransition;
+                    return orbit.patchEndTransition.ToString();
                 case "POSITION":
                     return GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) );
                 case "VELOCITY":
