@@ -30,7 +30,10 @@ namespace kOS.Binding
             Shared.BindingMgr.AddGetter("SHIP", cpu => new VesselTarget(Shared));
             Shared.BindingMgr.AddGetter("STATUS", cpu => Shared.Vessel.situation.ToString());
             Shared.BindingMgr.AddGetter("STAGE", cpu => new StageValues(Shared.Vessel));
+
+            //DEPRICATED VESSELNAME
             Shared.BindingMgr.AddSetter("VESSELNAME", delegate(CPU cpu, object value) { Shared.Vessel.vesselName = value.ToString(); });
+            Shared.BindingMgr.AddSetter("SHIPNAME", delegate(CPU cpu, object value) { Shared.Vessel.vesselName = value.ToString(); });
 
             Shared.BindingMgr.AddGetter("NEXTNODE", delegate
                 {

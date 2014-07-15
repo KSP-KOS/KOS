@@ -166,7 +166,7 @@ namespace kOS.Suffixed
                     "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
                     "LONGITUDE",
                     "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED",
-                    "AIRSPEED", "VESSELNAME",
+                    "AIRSPEED", "VESSELNAME", "SHIPNAME",
                     "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
                 };
         }
@@ -204,7 +204,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "VESSEL(\"" + Vessel.vesselName + "\")";
+            return "SHIP(\"" + Vessel.vesselName + "\")";
         }
 
         public Direction GetFacing()
@@ -256,7 +256,9 @@ namespace kOS.Suffixed
                     return
                         (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.GetWorldPos3D()))
                             .magnitude; //the velocity of the vessel relative to the air);
+                //DEPRICATED VESSELNAME
                 case "VESSELNAME":
+                case "SHIPNAME":
                     return Vessel.vesselName;
 
                 // Although there is an implementation of lat/long/alt in Orbitible,

@@ -17,7 +17,7 @@ namespace kOS.Suffixed.Part
             {
                 case "STATE":
                     return module.state;
-                case "DOCKEDVESSELNAME":
+                case "DOCKEDSHIPNAME":
                     return module.vesselInfo != null ? module.vesselInfo.name : string.Empty;
                 case "TARGETABLE":
                     return true;
