@@ -7,8 +7,11 @@ namespace kOS.Suffixed
     {
         public double Lat { get; private set; }
         public double Lng { get; private set; }
+        public CelestialBody body { get; private set; }
         public SharedObjects Shared { get; set; } // for finding the current CPU's vessel, as per issue #107
         
+        private int terrainMaskBit = 15;
+
         /// <summary>
         ///   Build a GeoCoordinates from the current lat/long of the orbitable
         ///   object passed in.  The object being checked for should be in the same
@@ -22,6 +25,7 @@ namespace kOS.Suffixed
             Vector p = orb.GetPosition();
             Lat = orb.PositionToLatitude(p);
             Lng = orb.PositionToLongitude(p);
+            body = orb.GetParentBody();
         }
 
         /// <summary>
@@ -35,6 +39,7 @@ namespace kOS.Suffixed
             Lat = lat;
             Lng = lng;
             Shared = sharedObj;
+            body = Shared.Vessel.GetOrbit().referenceBody;
         }
 
         /// <summary>
@@ -48,6 +53,7 @@ namespace kOS.Suffixed
             Lat = lat;
             Lng = lng;
             Shared = sharedObj;
+            body = Shared.Vessel.GetOrbit().referenceBody;
         }
 
         /// <summary>
@@ -61,6 +67,66 @@ namespace kOS.Suffixed
         }
 
         /// <summary>
+        ///  Returns the ground's altitude above sea level at this geo position.
+        /// </summary>
+        /// <returns></returns>
+        private double GetTerrainAltitude()
+        {
+            double alt = 0.0;
+            PQS bodyPQS = body.pqsController;
+            if (bodyPQS != null) // The sun has no terrain.  Everthing else has a PQScontroller.
+            {
+                // The PQS controller gives the theoretical ideal smooth surface curve terrain.
+                // The actual ground that exists in-game that you land on, however, is the terrain
+                // polygon mesh which is built dynamically from the PQS controller's altitude values,
+                // and it only approximates the PQS controller.  The discrepency between the two
+                // can be as high as 20 meters on relatively mild rolling terrain and is probably worse
+                // in mountainous terrain with steeper slopes.  It also varies with the user terrain detail
+                // graphics setting.
+
+                // Therefore the algorithm here is this:  Get the PQS ideal terrain altitude first.
+                // Then try using RayCast to get the actual terrain altitude, which will only work
+                // if the LAT/LONG is near the active vessel so the relevant terrain polygons are
+                // loaded.  If the RayCast hit works, it overrides the PQS altitude.
+                                
+                // PQS controller ideal altitude value:
+                // -------------------------------------
+
+                // The vector the pqs GetSurfaceHeight method expects is a vector in the following
+                // reference frame:
+                //     Origin = body center.
+                //     X axis = LATLNG(0,0), Y axis = LATLNG(90,0)(north pole), Z axis = LATLNG(0,-90).
+                // Using that reference frame, you tell GetSurfaceHeight what the "up" vector is pointing through
+                // the spot on the surface you're querying for.
+                Vector3d bodyUpVector = new Vector3d(1,0,0);
+                bodyUpVector = QuaternionD.AngleAxis(Lat, Vector3d.forward/*around Z axis*/) * bodyUpVector;
+                bodyUpVector = QuaternionD.AngleAxis(Lng, Vector3d.down/*around -Y axis*/) * bodyUpVector;
+
+                alt = bodyPQS.GetSurfaceHeight( bodyUpVector ) - bodyPQS.radius ;
+
+                // Terrain polygon raycasting:
+                // ---------------------------
+                double highAGL = 1000.0;
+                double pointAGL = 800.0;
+                // a point hopefully above the terrain:
+                Vector3d worldRayCastStart = body.GetWorldSurfacePosition( Lat, Lng, alt+highAGL );
+                // a point a bit below it, to aim down to the terrain:
+                Vector3d worldRayCastStop = body.GetWorldSurfacePosition( Lat, Lng, alt+pointAGL );
+                RaycastHit hit;
+                if (Physics.Raycast(worldRayCastStart, (worldRayCastStop - worldRayCastStart), out hit, 1<<terrainMaskBit ))
+                {
+                    // Ensure hit is on the topside of planet, near the worldRayCastStart, not on the far side.
+                    if (Mathf.Abs(hit.distance) < 3000)
+                    {
+                        // Okay a hit was found, use it instead of PQS alt:
+                        alt = ((alt+highAGL) - hit.distance);
+                    }
+                }
+            }
+            return alt;
+        }
+
+        /// <summary>
         ///   The compass heading from the current position of the CPU vessel to the
         ///   LAT/LANG position on the SOI body's surface.
         /// </summary>
@@ -70,11 +136,7 @@ namespace kOS.Suffixed
             var up = Shared.Vessel.upAxis;
             var north = VesselUtils.GetNorthVector(Shared.Vessel);
 
-            CelestialBody parent = Shared.Vessel.mainBody;
-            if (parent==null) // Can only happen if current object is Sun, which is probably impossible
-                return 0.0;
-
-            var targetWorldCoords = parent.GetWorldSurfacePosition(Lat, Lng, Shared.Vessel.altitude);
+            var targetWorldCoords = body.GetWorldSurfacePosition(Lat, Lng, GetTerrainAltitude() );
 
             var vector = Vector3d.Exclude(up, targetWorldCoords - Shared.Vessel.GetWorldPos3D()).normalized;
             var headingQ =
@@ -84,7 +146,6 @@ namespace kOS.Suffixed
             return headingQ.eulerAngles.y;
         }
 
-
         /// <summary>
         ///   The distance of the surface point of this LAT/LONG from where
         ///   the current CPU vessel is now.
@@ -92,10 +153,7 @@ namespace kOS.Suffixed
         /// <returns>distance scalar</returns>
         private double DistanceFrom()
         {
-            CelestialBody parent = Shared.Vessel.mainBody;
-            if (parent==null) // Can only happen if current object is Sun, which is probably impossible
-                return 0.0;
-            Vector3d latLongCoords = parent.GetWorldSurfacePosition( Lat, Lng, 0.0 );
+            Vector3d latLongCoords = body.GetWorldSurfacePosition( Lat, Lng, GetTerrainAltitude() );
             Vector3d hereCoords = Shared.Vessel.GetWorldPos3D();
             return Vector3d.Distance( latLongCoords, hereCoords );
         }
@@ -108,6 +166,10 @@ namespace kOS.Suffixed
                     return Lat;
                 case "LNG":
                     return Lng;
+                case "BODY":
+                    return new BodyTarget( body, Shared );
+                case "HEIGHT":
+                    return GetTerrainAltitude();
                 case "DISTANCE":
                     return DistanceFrom();
                 case "HEADING":
