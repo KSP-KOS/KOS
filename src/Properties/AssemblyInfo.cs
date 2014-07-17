@@ -34,5 +34,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: KSPAssembly("kOS", 0, 12)]
-[assembly: KSPAssemblyDependency("KSP", 0, 23)]
+[assembly: KSPAssembly("kOS", 0, 13)]
+[assembly: KSPAssemblyDependency("KSP", 0, 24)]
