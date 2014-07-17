@@ -120,19 +120,31 @@ namespace kOS.Persistence
 
         public static string EncodeLine(string input)
         {
+            // This could probably be re-coded into something more algorithmic and less hardcoded,
+            // as in "For any of the characters in this blacklist, if the character exists then
+            // replace it with [ampersand,hash,unicode_num,semicolon] for the char's unicode value."
             return input
                 .Replace("{", "&#123;")
                 .Replace("}", "&#125;")
                 .Replace(" ", "&#32;")
+                .Replace("\\", "&#92;") // NOT a double backslash, but a single backslashed backslash.
+                .Replace("//", "&#47;&#47;") // a double slash is also a comment in the persistence file's syntax.
+                .Replace("\t", "&#8;") // protect tabs, if there are any
                 .Replace("\n", "&#10");     // Stops universe from imploding
         }
 
         public static string DecodeLine(string input)
         {
+            // This could probably be re-coded into something more algorithmic and less hardcoded,
+            // as in "any time there is [ampersand,hash,digits,semicolon], replace with the unicode
+            // char for the digits' number."
             return input
                 .Replace("&#123;", "{")
                 .Replace("&#125;", "}")
                 .Replace("&#32;", " ")
+                .Replace("&#92;", "\\") // NOT a double backslash, but a single backslashed backslash.
+                .Replace("&#47;", "/")
+                .Replace("&#8;", "\t")
                 .Replace("&#10", "\n");
         }
     }
