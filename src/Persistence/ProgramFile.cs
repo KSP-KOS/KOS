@@ -127,7 +127,7 @@ namespace kOS.Persistence
                 .Replace("{", "&#123;")
                 .Replace("}", "&#125;")
                 .Replace(" ", "&#32;")
-                .Replace("\\", "&#92;") // NOT a double backslash, but a single backslashed backslash.
+                .Replace(@"\", "&#92;") 
                 .Replace("//", "&#47;&#47;") // a double slash is also a comment in the persistence file's syntax.
                 .Replace("\t", "&#8;") // protect tabs, if there are any
                 .Replace("\n", "&#10");     // Stops universe from imploding
@@ -142,7 +142,7 @@ namespace kOS.Persistence
                 .Replace("&#123;", "{")
                 .Replace("&#125;", "}")
                 .Replace("&#32;", " ")
-                .Replace("&#92;", "\\") // NOT a double backslash, but a single backslashed backslash.
+                .Replace("&#92;", @"\") 
                 .Replace("&#47;", "/")
                 .Replace("&#8;", "\t")
                 .Replace("&#10", "\n");
