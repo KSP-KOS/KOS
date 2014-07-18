@@ -1,6 +1,63 @@
 kOS Mod Changelog
 =================
 
+# v0.13.1
+* Fixed an issue with Dependancies that kept kOS modules from registering
+
+# v0.13
+
+## MAJOR
+* BREAKING: Commrange has more or less been removed from stock kOS, we realized that most of the behavior of it was copied by other mods and was invisible to users 
+* BREAKING: All direction references are now relative to the controlling part, not the vessel, this will only break on vessels there these two directions are not the same.
+* BREAKING: Direction:Vector will always return a unit vector.
+* BREAKING: Body:Velocity now returns a <a href="http://ksp-kos.github.io/KOS_DOC/structure/orbitablevelocity/">pair of orbit/surface velocities</a> just like Vessel:Velocity does. (previously it returned just the orbit velocity as a single vector.)
+* BREAKING: Direction*Vector now returns the rotated Vector, and vectors can be rotated with DIRECTION suffix.
+* BREAKING: DOCKINGPORT:DOCKEDVESSELNAME is not DOCKINGPORT:DOCKEDSHIPNAME
+* SHIP:APOAPSIS and SHIP:PERIAPSIS are deprecated for removal later, you can find them both under SHIP:OBT
+* SHIP:VESSELNAME is deprecated for later removal, use SHIP:NAME or SHIPNAME
+
+
+## New Features
+* Added the ability to get and set the current timewarp "Mode" either RAILS or PHYSICS
+* Added Boot files that will run when you get to the pad automatically, you select which one will run in the VAB thanks @WazWaz 
+* <a href="http://ksp-kos.github.io/KOS_DOC/structure/vessel/">Vessels</a> and <a href="http://ksp-kos.github.io/KOS_DOC/structure/body/">Bodies</a> now <a href="http://ksp-kos.github.io/KOS_DOC/structure/orbitable/">can be used interchangeably as much as possible.</a>
+* Three new prediction routines for <a href="http://ksp-kos.github.io/KOS_DOC/command/prediction/"> finding state of an object at a future time: </a>
+* POSITIONAT( Object, Time ).
+* VELOCITYAT( Object, Time ).
+* ORBITATAT( Object, Time ).
+* you can now get the FACING of all parts.
+* ITERATOR:END is now split into :NEXT and :ATEND
+* Direction can now always return a proper vector. 
+    * IE SHIP:FACING returned V(0,0,0) before
+* Added a 3d Drawing tool for letting you draw lines and labels. 
+    * Tour: https://www.youtube.com/watch?v=Vn6lUozVUHA
+* Added a new and improved file editor so the edit command actually works again in game!
+* Added the ability to switch to MapView and back in code
+* ACTIVESHIP alias links to the ship that is currently under user direct control
+* added GEOPOSITION suffixes BODY and TERRAINHEIGHT 
+
+
+## Known Issues
+* due to issues with the new version of RemoteTech, you will always have a connection available for use with kOS.
+
+## Fixes
+* if you have a target and attempt to set a new target and that fails, you would no longer have a target
+* increased power requirement of the kOS Module
+* Bodies are now targetable
+* MAXTHRUST no longer includes flamed out engines
+* resource floating values are now truncated to 2 significant digits to match the game UI and behavior 
+* files saved to the local volume maintain their linebreaks
+* radar altimiter now returns a double
+* fixed an issues where setting some controls blocked the rest.
+* allow empty bodies on {} blocks
+* locks called from another lock are not correctly recognized
+* Neutralizing the controls will clear the values of all controls.
+* fixed node initialization
+* Better resource processing
+* LIST:COPY returns a kOS type that you can actually use
+* ORBIT:TRANSITION returns a string type that you can actually use.
+* Comments in code dont cause data loss on load/save
+
 # v0.12.1
 
 BREAKING: DOCKINGPORT:ORIENTATION is now DOCKINGPORT:FACING
