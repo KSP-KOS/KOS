@@ -61,8 +61,6 @@ namespace kOS.Binding
             double landHeight = 0;
             bool firstRay = true;
 
-
-
             if (FlightGlobals.ActiveVessel.LandedOrSplashed)
             {
                 landHeight = 0;
@@ -91,7 +89,6 @@ namespace kOS.Binding
                     {
                         partToRay.Add(partHeights[i].prt); 
                     }
-
                 }
 
                 foreach (Part p in partToRay)
@@ -106,20 +103,14 @@ namespace kOS.Binding
                             LayerMask pRayMask = 33792;
                             if (Physics.Raycast(pRayDown, out pHit, (float)(FlightGlobals.ActiveVessel.mainBody.Radius + FlightGlobals.ActiveVessel.altitude), pRayMask)) 
                             {
-
                                 if (firstRay) 
                                 {
-
                                     landHeight = pHit.distance;
-
                                     firstRay = false;
                                 }
                                 else
                                 {
-
                                     landHeight = Math.Min(landHeight, pHit.distance);
-
-
                                 }
                             }
                             else if (!firstRay)
@@ -134,14 +125,12 @@ namespace kOS.Binding
                         landHeight = FlightGlobals.ActiveVessel.altitude;
                         firstRay = false;
                     }
-
                 }
                 if (landHeight < 1)
                 {
                     landHeight = 1;
                 }
             }
-
             if (FlightGlobals.ActiveVessel.mainBody.ocean)
             {
                 if (landHeight > FlightGlobals.ActiveVessel.altitude)
@@ -149,7 +138,6 @@ namespace kOS.Binding
                     landHeight = FlightGlobals.ActiveVessel.altitude;
                 }
             }
-
             return landHeight;
         }
 
