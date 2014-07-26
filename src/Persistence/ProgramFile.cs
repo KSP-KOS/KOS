@@ -148,16 +148,4 @@ namespace kOS.Persistence
                 .Replace("&#10", "\n");
         }
     }
-
-    public struct FileInfo
-    {
-        public string Name;
-        public int Size;
-
-        public FileInfo(string name, int size)
-        {
-            Name = name;
-            Size = size;
-        }
-    }
 }

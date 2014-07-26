@@ -34,6 +34,12 @@ namespace kOS.Function
                 case "dockingports":
                     list = shared.Vessel.PartList(listType, shared);
                     break;
+                case "files":
+                    foreach (var fileinfo in shared.VolumeMgr.CurrentVolume.GetFileList())
+                    {
+                        list.Add(fileinfo);
+                    }
+                    break;
             }
 
             shared.Cpu.PushStack(list);
