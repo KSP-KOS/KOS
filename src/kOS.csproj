@@ -88,6 +88,7 @@
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
     <Compile Include="Compilation\CompileCache.cs" />
+    <Compile Include="Suffixed\FileInfo.cs" />
     <Compile Include="Suffixed\Orbitable.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />

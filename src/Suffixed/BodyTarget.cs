@@ -32,7 +32,7 @@ namespace kOS.Suffixed
 
         override public OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp )
         {
-            Vector orbVel = new Vector( Orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
+            var orbVel = new Vector( Orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
             orbVel = new Vector(orbVel.X,orbVel.Z,orbVel.Y); // swap Y and Z because KSP API is weird.
             
             CelestialBody parent = Body.referenceBody;

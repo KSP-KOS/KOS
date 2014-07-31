@@ -1,5 +1,3 @@
-using System;
-
 namespace kOS.Suffixed
 {
     public class VesselSensors : SpecialValue

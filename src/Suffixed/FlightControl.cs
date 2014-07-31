@@ -173,8 +173,6 @@ namespace kOS.Suffixed
 
         private bool ValueToVector(object value, ref Vector vectorValue)
         {
-            var valueStr = value.ToString();
-
             var vector = value as Vector;
 
             if (vector != null)
