@@ -114,7 +114,7 @@ namespace kOS.Execution
                 programContext.Silent = true;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                 string filePath = shared.VolumeMgr.GetVolumeBestIdentifierRaw(shared.VolumeMgr.CurrentVolume) + "/" + "boot" ;
-                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, "run boot.", "program", options);
+                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, "run boot.", "program", options);
                 programContext.AddParts(parts);
             }
         }
@@ -733,7 +733,7 @@ namespace kOS.Execution
                     // (Possibly all of OnLoad needs work because it never seemed to bring
                     // back the context fully right anyway, which is why this hasn't been
                     // addressed yet).
-                    programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file",scriptBuilder.ToString()));
+                    programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);
                 }

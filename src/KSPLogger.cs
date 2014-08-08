@@ -76,11 +76,26 @@ namespace kOS
                 else
                     msg += "Called from ";
                 
-                msg += thisOpcode.SourceName + ", line: " + thisOpcode.SourceLine + "\n";
+                msg += buildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine) + "\n";
                 msg += textLine + "\n";
                 msg += new String(' ',thisOpcode.SourceColumn-1) + "^" + "\n";
             }
             return msg;
+        }
+        
+        private string buildLocationString(string source, int line)
+        {
+            string[] splitParts = source.Split('/');
+            
+            if (splitParts.Length > 1)
+            {
+                if (source == "interpreter history")
+                    return "interpreter line " + line;
+                else
+                    return splitParts[1] + " on " + splitParts[0] + ", line " + line;
+            }
+            else
+                return source + ", line " + line;
         }
         
         private string getSourceLine(string filePath, int line)
@@ -91,6 +106,7 @@ namespace kOS
             string volName = "";
             int volNum;
             Volume vol;
+            bool getFile = true; // should it try to retrive the file?
             if (pathParts.Length > 1)
             {
                 volName = pathParts[0];
@@ -110,16 +126,24 @@ namespace kOS
             {
                 vol = Shared.VolumeMgr.CurrentVolume;
             }
-            
-            ProgramFile file = vol.GetByName(fileName);
-            
-            if (file!=null)
+
+            if (fileName == "interpreter history")
             {
-                // works on both unix or windows EOLN's, but leaves an extra '\r' in the string for windows, which is not fatal.
-                string[] splitLines = file.Content.Split('\n');
-                if (splitLines.Length >= line)
+                // Get the line from the interpreter command history instead of from a file on volume:
+                getFile = false;
+                returnVal = Shared.Interpreter.GetCommandHistoryAbsolute(line);
+            }
+            
+            if (getFile)
+            {
+                ProgramFile file = vol.GetByName(fileName);
+                if (file!=null)
                 {
-                    returnVal = splitLines[line-1];
+                    string[] splitLines = file.Content.Split('\n');
+                    if (splitLines.Length >= line)
+                    {
+                        returnVal = splitLines[line-1];
+                    }
                 }
             }
             

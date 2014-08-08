@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using kOS.Utilities;
 using kOS.Compilation;
+using kOS.Persistence;
 
 namespace kOS.Screen
 {
@@ -26,8 +27,10 @@ namespace kOS.Screen
             if (Shared.ScriptHandler.IsCommandComplete(commandText))
             {
                 base.NewLine();
+                AddCommandHistoryEntry(commandText); // add to history first so that if ProcessCommand generates an exception,
+                                                     // the command is present in the history to be found and printed in the
+                                                     // error message.
                 ProcessCommand(commandText);
-                AddCommandHistoryEntry(commandText);
             }
             else
             {
@@ -92,6 +95,11 @@ namespace kOS.Screen
                 }
             }
         }
+        
+        public string GetCommandHistoryAbsolute(int absoluteIndex)
+        {
+            return commandHistory[absoluteIndex-1];
+        }
 
         protected virtual void ProcessCommand(string commandText)
         {
@@ -104,7 +112,7 @@ namespace kOS.Screen
 
             try
             {
-                List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter", commandText, "interpreter");
+                List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter");
                 if (commandParts != null)
                 {
                     var interpreterContext = Shared.Cpu.GetInterpreterContext();

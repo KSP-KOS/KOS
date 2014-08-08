@@ -12,6 +12,7 @@ namespace kOS.Compilation.KS
         private List<Opcode> _currentCodeSection = null;
         private bool _addBranchDestination = false;
         private ParseNode _lastNode = null;
+        private int _startLineNum = 1;
         private int _lastLine = 0;
         private int _lastColumn = 0;
         private List<List<Opcode>> _breakList = new List<List<Opcode>>();
@@ -25,11 +26,12 @@ namespace kOS.Compilation.KS
         private readonly Dictionary<string, string> _functionsOverloads = new Dictionary<string, string>() { { "round|1", "roundnearest" },
                                                                                                              { "round|2", "round"} };
         
-        public CodePart Compile(ParseTree tree, Context context, CompilerOptions options)
+        public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
         {
             _part = new CodePart();
             _context = context;
             _options = options;
+            _startLineNum = startLineNum;
 
             try
             {
@@ -77,7 +79,7 @@ namespace kOS.Compilation.KS
         {
             if (node != null && node.Token != null && node.Token.Line > 0)
             {
-                _lastLine = node.Token.Line;
+                _lastLine = node.Token.Line + (_startLineNum - 1);
                 _lastColumn = node.Token.Column;
                 return true;
             }

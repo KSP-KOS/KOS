@@ -82,7 +82,7 @@ namespace kOS.Function
                         if (shared.ProcessorMgr != null)
                         {
                             string filePath = shared.VolumeMgr.GetVolumeBestIdentifierRaw(targetVolume) + "/" + fileName ;
-                            List<CodePart> parts = shared.ScriptHandler.Compile(filePath, file.Content);
+                            List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content);
                             var builder = new ProgramBuilder();
                             builder.AddRange(parts);
                             List<Opcode> program = builder.BuildProgram();
@@ -100,7 +100,7 @@ namespace kOS.Function
                     shared.ScriptHandler.ClearContext("program");
                     string filePath = shared.VolumeMgr.GetVolumeBestIdentifierRaw(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
                     var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                    List<CodePart> parts = shared.ScriptHandler.Compile(filePath, file.Content, "program", options);
+                    List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
                     var programContext = shared.Cpu.GetProgramContext();
                     programContext.AddParts(parts);
                 }
@@ -126,7 +126,7 @@ namespace kOS.Function
                 var programContext = shared.Cpu.GetProgramContext();
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                 string filePath = shared.VolumeMgr.GetVolumeBestIdentifierRaw(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
-                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, file.Content, "program", options);
+                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
                 // add this program to the address space of the parent program
                 int programAddress = programContext.AddObjectParts(parts);
                 // push the entry point address of the new program onto the stack

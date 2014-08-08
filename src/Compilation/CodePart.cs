@@ -26,16 +26,16 @@ namespace kOS.Compilation
 
         public void AssignSourceName(string sourceName)
         {
-            AssignSourceNameToSection(sourceName, FunctionsCode);
-            AssignSourceNameToSection(sourceName, InitializationCode);
-            AssignSourceNameToSection(sourceName, MainCode);
+            AssignSourceNameToSection(sourceName.ToLower(), FunctionsCode);
+            AssignSourceNameToSection(sourceName.ToLower(), InitializationCode);
+            AssignSourceNameToSection(sourceName.ToLower(), MainCode);
         }
 
         private void AssignSourceNameToSection(string sourceName, IEnumerable<Opcode> section)
         {
             foreach (Opcode opcode in section)
             {
-                opcode.SourceName = string.Intern(sourceName); // Intern ensures we don't waste space storing the filename again and again per opcode.
+                opcode.SourceName = string.Intern(sourceName.ToLower()); // Intern ensures we don't waste space storing the filename again and again per opcode.
             }
         }
 

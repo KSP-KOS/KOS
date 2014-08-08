@@ -29,11 +29,13 @@ namespace kOS.Compilation
         /// actual file this should still be a pseudo-filename for reporting, for
         /// example "(commandline)" or "(socket stream)"
         /// </param>
+        /// <param name="startLineNum">Assuming scriptText is a subset of some bigger buffer, line 1 of scripttext
+        /// corresponds to line (what) of the more global something, for reporting numbers on errors.</param>
         /// <param name="scriptText">The text to be compiled.</param>
         /// <returns>The CodeParts made from the scriptText</returns>
-        public virtual List<CodePart> Compile(string filePath, string scriptText)
+        public virtual List<CodePart> Compile(string filePath, int startLineNum, string scriptText)
         {
-            return Compile(filePath, scriptText, string.Empty);
+            return Compile(filePath, startLineNum, scriptText, string.Empty);
         }
 
         /// <summary>
@@ -44,12 +46,14 @@ namespace kOS.Compilation
         /// actual file this should still be a pseudo-filename for reporting, for
         /// example "(commandline)" or "(socket stream)"
         /// </param>
+        /// <param name="startLineNum">Assuming scriptText is a subset of some bigger buffer, line 1 of scripttext
+        /// corresponds to line (what) of the more global something, for reporting numbers on errors.</param>
         /// <param name="scriptText">The text to be compiled.</param>
         /// <param name="contextId">The name of the runtime context (i.e. "interpreter").</param>
         /// <returns>The CodeParts made from the scriptText</returns>
-        public virtual List<CodePart> Compile(string filePath, string scriptText, string contextId)
+        public virtual List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId)
         {
-            return Compile(filePath, scriptText, contextId, new CompilerOptions());
+            return Compile(filePath, startLineNum, scriptText, contextId, new CompilerOptions());
         }
 
         /// <summary>
@@ -60,13 +64,15 @@ namespace kOS.Compilation
         /// actual file this should still be a pseudo-filename for reporting, for
         /// example "(commandline)" or "(socket stream)"
         /// </param>
+        /// <param name="startLineNum">Assuming scriptText is a subset of some bigger buffer, line 1 of scripttext
+        /// corresponds to line (what) of the more global something, for reporting numbers on errors.</param>
         /// <param name="scriptText">The text to be compiled.</param>
         /// <param name="contextId">The name of the runtime context (i.e. "interpreter").</param>
         /// <param name="CompilerOptions">settings for the compile</param>
         /// <returns>The CodeParts made from the scriptText</returns>
-        public virtual List<CodePart> Compile(string filePath, string scriptText, string contextId, CompilerOptions options)
+        public virtual List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId, CompilerOptions options)
         {
-            return new List<CodePart>();
+            return Compile(filePath, startLineNum, scriptText, contextId, options);
         }
         
         public virtual void ClearContext(string contextId) { }

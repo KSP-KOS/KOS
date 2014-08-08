@@ -16,7 +16,7 @@ namespace kOS.Compilation.KS
             contexts = new Dictionary<string, Context>();
         }
 
-        public override List<CodePart> Compile(string filePath, string scriptText, string contextId, CompilerOptions options)
+        public override List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId, CompilerOptions options)
         {
             List<CodePart> parts = null;
             
@@ -37,7 +37,7 @@ namespace kOS.Compilation.KS
                     LoadContext(contextId);
 
                     // TODO: handle compile errors (e.g. wrong run parameter count)
-                    CodePart mainPart = compiler.Compile(parseTree, currentContext, options);
+                    CodePart mainPart = compiler.Compile(startLineNum, parseTree, currentContext, options);
 
                     // add locks and triggers
                     parts.AddRange(currentContext.Locks.GetNewParts());
