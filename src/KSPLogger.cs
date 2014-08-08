@@ -49,7 +49,7 @@ namespace kOS
             List<int>trace = Shared.Cpu.GetCallTrace();
             string msg = "";
             Opcode thisOpcode;
-            Opcode nextOpcode;
+            Opcode prevOpcode;
             for (int index = 0 ; index < trace.Count ; ++index)
             {
                 thisOpcode = Shared.Cpu.GetOpcodeAt(trace[index]);
@@ -58,13 +58,13 @@ namespace kOS
                 // as the logic to check if the program needs compiling is implemented as a
                 // separate kRISC function that gets called from the main code.  Therefore to
                 // avoid the same RUN statement giving two nested levels on the call trace,
-                // only print the lastmost instance of a contiguous part of the call stack that
+                // only print the firstmost instance of a contiguous part of the call stack that
                 // comes from the same source line:
-                if (index+1 < trace.Count)
+                if (index > 0)
                 {
-                    nextOpcode = Shared.Cpu.GetOpcodeAt(trace[index+1]);
-                    if (nextOpcode.SourceName == thisOpcode.SourceName &&
-                        nextOpcode.SourceLine == thisOpcode.SourceLine)
+                    prevOpcode = Shared.Cpu.GetOpcodeAt(trace[index-1]);
+                    if (prevOpcode.SourceName == thisOpcode.SourceName &&
+                        prevOpcode.SourceLine == thisOpcode.SourceLine)
                     {
                         continue;
                     }
