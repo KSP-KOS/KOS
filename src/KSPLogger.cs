@@ -78,7 +78,10 @@ namespace kOS
                 
                 msg += buildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine) + "\n";
                 msg += textLine + "\n";
-                msg += new String(' ',thisOpcode.SourceColumn-1) + "^" + "\n";
+                int numPadSpaces = thisOpcode.SourceColumn-1;
+                if (numPadSpaces < 0)
+                    numPadSpaces = 0;
+                msg += new String(' ', numPadSpaces) + "^" + "\n";
             }
             return msg;
         }
@@ -87,15 +90,25 @@ namespace kOS
         {
             string[] splitParts = source.Split('/');
             
-            if (splitParts.Length > 1)
+            if (line < 0)
             {
-                if (source == "interpreter history")
-                    return "interpreter line " + line;
-                else
-                    return splitParts[1] + " on " + splitParts[0] + ", line " + line;
+                // Special exception - if line number is negative then this isn't from any
+                // line of user's code but from the system itself (like the triggers the compiler builds
+                // to recalculate LOCK THROTTLE and LOCK STEERING each time there's an Update).
+                return "(kOS built-in Update)";
             }
             else
-                return source + ", line " + line;
+            {
+                if (splitParts.Length > 1)
+                {
+                    if (source == "interpreter history")
+                        return "interpreter line " + line;
+                    else
+                        return splitParts[1] + " on " + splitParts[0] + ", line " + line;
+                }
+                else
+                    return source + ", line " + line;
+            }
         }
         
         private string getSourceLine(string filePath, int line)
@@ -107,6 +120,13 @@ namespace kOS
             int volNum;
             Volume vol;
             bool getFile = true; // should it try to retrive the file?
+            if (line < 0)
+            {
+                // Special exception - if line number is negative then this isn't from any
+                // line of user's code but from the system itself (like the triggers the compiler builds
+                // to recalculate LOCK THROTTLE and LOCK STEERING each time there's an Update).
+                return "<<System Built-In Flight Control Updater>>";
+            }
             if (pathParts.Length > 1)
             {
                 volName = pathParts[0];

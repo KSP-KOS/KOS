@@ -340,11 +340,14 @@ namespace kOS.Compilation.KS
                     string triggerIdentifier = "lock-" + lockObject.Identifier;
                     Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
+                    int rememberLastLine = _lastLine;
+                    _lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
                     _currentCodeSection = triggerObject.Code;
                     AddOpcode(new OpcodePush("$" + lockObject.Identifier));
                     AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
                     AddOpcode(new OpcodeStore());
                     AddOpcode(new OpcodeEOF());
+                    _lastLine = rememberLastLine;
                 }
 
                 // default function
