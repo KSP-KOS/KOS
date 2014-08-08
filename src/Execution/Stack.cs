@@ -117,7 +117,7 @@ namespace kOS.Execution
         public List<int> GetCallTrace()
         {
             List<int> trace = new List<int>();
-            for (int index = stack.Count-1 ; index > stackPointer ; --index)
+            for (int index = stackPointer+1 ; index < stack.Count ; ++index)
             {
                 if (stack[index] is SubroutineContext)
                 {
