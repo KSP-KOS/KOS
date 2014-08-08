@@ -21,17 +21,50 @@ namespace kOS.Compilation
             Cache = CompileCache.GetInstance();
         }
 
-        public virtual List<CodePart> Compile(string scriptText)
+        /// <summary>
+        /// Compile source text into compiled codeparts.
+        /// </summary>
+        /// <param name="filePath">The name that should get reported to the user on
+        /// runtime errors in this compiled code. Even if the text is not from an
+        /// actual file this should still be a pseudo-filename for reporting, for
+        /// example "(commandline)" or "(socket stream)"
+        /// </param>
+        /// <param name="scriptText">The text to be compiled.</param>
+        /// <returns>The CodeParts made from the scriptText</returns>
+        public virtual List<CodePart> Compile(string filePath, string scriptText)
         {
-            return Compile(scriptText, string.Empty);
+            return Compile(filePath, scriptText, string.Empty);
         }
 
-        public virtual List<CodePart> Compile(string scriptText, string contextId)
+        /// <summary>
+        /// Compile source text into compiled codeparts.
+        /// </summary>
+        /// <param name="filePath">The name that should get reported to the user on
+        /// runtime errors in this compiled code. Even if the text is not from an
+        /// actual file this should still be a pseudo-filename for reporting, for
+        /// example "(commandline)" or "(socket stream)"
+        /// </param>
+        /// <param name="scriptText">The text to be compiled.</param>
+        /// <param name="contextId">The name of the runtime context (i.e. "interpreter").</param>
+        /// <returns>The CodeParts made from the scriptText</returns>
+        public virtual List<CodePart> Compile(string filePath, string scriptText, string contextId)
         {
-            return Compile(scriptText, contextId, new CompilerOptions());
+            return Compile(filePath, scriptText, contextId, new CompilerOptions());
         }
 
-        public virtual List<CodePart> Compile(string scriptText, string contextId, CompilerOptions options)
+        /// <summary>
+        /// Compile source text into compiled codeparts.
+        /// </summary>
+        /// <param name="filePath">The name that should get reported to the user on
+        /// runtime errors in this compiled code. Even if the text is not from an
+        /// actual file this should still be a pseudo-filename for reporting, for
+        /// example "(commandline)" or "(socket stream)"
+        /// </param>
+        /// <param name="scriptText">The text to be compiled.</param>
+        /// <param name="contextId">The name of the runtime context (i.e. "interpreter").</param>
+        /// <param name="CompilerOptions">settings for the compile</param>
+        /// <returns>The CodeParts made from the scriptText</returns>
+        public virtual List<CodePart> Compile(string filePath, string scriptText, string contextId, CompilerOptions options)
         {
             return new List<CodePart>();
         }

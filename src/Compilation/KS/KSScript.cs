@@ -16,7 +16,7 @@ namespace kOS.Compilation.KS
             contexts = new Dictionary<string, Context>();
         }
 
-        public override List<CodePart> Compile(string scriptText, string contextId, CompilerOptions options)
+        public override List<CodePart> Compile(string filePath, string scriptText, string contextId, CompilerOptions options)
         {
             List<CodePart> parts = null;
             
@@ -46,7 +46,7 @@ namespace kOS.Compilation.KS
 
                     parts.Add(mainPart);
 
-                    AssignInstructionId(parts);
+                    AssignSourceId(parts, filePath);
 
                     //if (contextId != "interpreter") _cache.AddToCache(scriptText, parts);
                 }
@@ -80,12 +80,12 @@ namespace kOS.Compilation.KS
             }
         }
 
-        private void AssignInstructionId(IEnumerable<CodePart> parts)
+        private void AssignSourceId(IEnumerable<CodePart> parts, string fileName)
         {
-            currentContext.InstructionId++;
+            currentContext.LastSourceName = fileName;
             foreach (CodePart part in parts)
             {
-                part.AssignInstructionId(currentContext.InstructionId);
+                part.AssignSourceName(currentContext.LastSourceName);
             }
         }
 

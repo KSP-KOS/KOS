@@ -4,7 +4,7 @@ namespace kOS.Compilation
 {
     public class CodePart
     {
-        public CodePart()
+        public CodePart(string fromFile = "")
         {
             FunctionsCode = new List<Opcode>(); 
             InitializationCode = new List<Opcode>();
@@ -24,19 +24,20 @@ namespace kOS.Compilation
             return mergedCode;
         }
 
-        public void AssignInstructionId(int instructionId)
+        public void AssignSourceName(string sourceName)
         {
-            AssignInstructionIdToSection(instructionId, FunctionsCode);
-            AssignInstructionIdToSection(instructionId, InitializationCode);
-            AssignInstructionIdToSection(instructionId, MainCode);
+            AssignSourceNameToSection(sourceName, FunctionsCode);
+            AssignSourceNameToSection(sourceName, InitializationCode);
+            AssignSourceNameToSection(sourceName, MainCode);
         }
 
-        private void AssignInstructionIdToSection(int instructionId, IEnumerable<Opcode> section)
+        private void AssignSourceNameToSection(string sourceName, IEnumerable<Opcode> section)
         {
             foreach (Opcode opcode in section)
             {
-                opcode.InstructionId = instructionId;
+                opcode.SourceName = string.Intern(sourceName); // Intern ensures we don't waste space storing the filename again and again per opcode.
             }
         }
+
     }
 }

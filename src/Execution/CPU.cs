@@ -113,7 +113,8 @@ namespace kOS.Execution
                 var programContext = shared.Cpu.GetProgramContext();
                 programContext.Silent = true;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                List<CodePart> parts = shared.ScriptHandler.Compile("run boot.", "program", options);
+                string filePath = shared.VolumeMgr.GetVolumeBestIdentifierRaw(shared.VolumeMgr.CurrentVolume) + "/" + "boot" ;
+                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, "run boot.", "program", options);
                 programContext.AddParts(parts);
             }
         }
@@ -190,6 +191,16 @@ namespace kOS.Execution
                 PushContext(new ProgramContext(false));
             }
             return currentContext;
+        }
+        
+        public Opcode GetCurrentOpcode()
+        {
+            return currentContext.Program[currentContext.InstructionPointer];
+        }
+        
+        public Opcode GetOpcodeAt(int instructionPtr)
+        {
+            return currentContext.Program[instructionPtr];            
         }
 
         private void SaveAndClearPointers()
@@ -291,6 +302,19 @@ namespace kOS.Execution
         public void MoveStackPointer(int delta)
         {
             stack.MoveStackPointer(delta);
+        }
+
+        /// <summary>
+        /// Return the subroutine call trace of how the code got to where it is right now.
+        /// </summary>
+        /// <returns>The first item in the list is the current instruction pointer.
+        /// The rest of the items in the list after that are the instruction pointers of the Opcodecall instructions
+        /// that got us to here.</returns>
+        public List<int> GetCallTrace()
+        {
+            List<int> trace = stack.GetCallTrace();
+            trace.Insert(0, currentContext.InstructionPointer); // prepend current IP
+            return trace;
         }
 
         private Variable GetOrCreateVariable(string identifier)
@@ -495,6 +519,7 @@ namespace kOS.Execution
                 {
                     // break execution of all programs and pop interpreter context
                     PopFirstContext();
+                    stack.Clear(); // If breaking all exection, get rid of the cruft here too.
                 }
             }
 
@@ -599,10 +624,10 @@ namespace kOS.Execution
         {
             if (currentContext.InstructionPointer < (currentContext.Program.Count - 1))
             {
-                int currentInstructionId = currentContext.Program[currentContext.InstructionPointer].InstructionId;
+                string currentSourceName = currentContext.Program[currentContext.InstructionPointer].SourceName;
 
                 while (currentContext.InstructionPointer < currentContext.Program.Count &&
-                       currentContext.Program[currentContext.InstructionPointer].InstructionId == currentInstructionId)
+                       currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName)
                 {
                     currentContext.InstructionPointer++;
                 }
@@ -704,7 +729,11 @@ namespace kOS.Execution
                 if (shared.ScriptHandler != null && scriptBuilder.Length > 0)
                 {
                     var programBuilder = new ProgramBuilder();
-                    programBuilder.AddRange(shared.ScriptHandler.Compile(scriptBuilder.ToString()));
+                    // TODO: figure out how to store the filename and reload it for arg 1 below:
+                    // (Possibly all of OnLoad needs work because it never seemed to bring
+                    // back the context fully right anyway, which is why this hasn't been
+                    // addressed yet).
+                    programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file",scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);
                 }

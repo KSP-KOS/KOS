@@ -16,8 +16,10 @@ namespace kOS.Compilation
         public int DeltaInstructionPointer = 1;
         public string Label = string.Empty;
         public string DestinationLabel;
-        public int InstructionId;
-
+        public string SourceName;
+        public int SourceLine = 0; // line number in the source code that this was compiled from.
+        public int SourceColumn = 0; // column number of the token nearest the cause of this Opcode.
+        
         public virtual void Execute(CPU cpu)
         {
         }
@@ -197,7 +199,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "nop"; } }
     }
-
+    
     #endregion
 
     #region Branch
@@ -463,7 +465,8 @@ namespace kOS.Compilation
             {
                 int currentPointer = cpu.InstructionPointer;
                 DeltaInstructionPointer = (int)functionPointer - currentPointer;
-                cpu.PushStack(currentPointer + 1);
+                SubroutineContext contextRecord = new SubroutineContext(currentPointer+1);
+                cpu.PushStack(contextRecord);
                 cpu.MoveStackPointer(-1);
             }
             else
@@ -490,7 +493,15 @@ namespace kOS.Compilation
         public override void Execute(CPU cpu)
         {
             cpu.MoveStackPointer(1);
-            int destinationPointer = (int)cpu.PopValue();
+            object shouldBeContextRecord = cpu.PopValue();
+            if ( !(shouldBeContextRecord is SubroutineContext) )
+            {
+                // This should never happen with any user code:
+                throw new Exception( "kOS internal error: Stack misalignment detected when returning from routine.");
+            }
+            SubroutineContext contextRecord = shouldBeContextRecord as SubroutineContext;
+            
+            int destinationPointer = contextRecord.CameFromIP;
             int currentPointer = cpu.InstructionPointer;
             DeltaInstructionPointer = destinationPointer - currentPointer;
         }

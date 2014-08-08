@@ -104,7 +104,7 @@ namespace kOS.Screen
 
             try
             {
-                List<CodePart> commandParts = Shared.ScriptHandler.Compile(commandText, "interpreter");
+                List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter", commandText, "interpreter");
                 if (commandParts != null)
                 {
                     var interpreterContext = Shared.Cpu.GetInterpreterContext();

@@ -13,8 +13,8 @@ namespace kOS.Execution
         public List<Opcode> Program;
         public int InstructionPointer;
         public List<int> Triggers;
-        public bool Silent;
-
+        public bool Silent; 
+        
         public ProgramContext(bool interpreterContext)
         {
             Program = new List<Opcode>();
@@ -118,17 +118,34 @@ namespace kOS.Execution
         public List<string> GetCodeFragment(int contextLines)
         {
             var codeFragment = new List<string>();
+            
+            string formatStr = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5}";
+            codeFragment.Add(string.Format(formatStr, "File", "Line", "Col", "IP  ", "opcode", "operand" ));
+            codeFragment.Add(string.Format(formatStr, "----", "----", "---", "----", "---------------------", "" ));
 
             for (int index = (InstructionPointer - contextLines); index <= (InstructionPointer + contextLines); index++)
             {
                 if (index >= 0 && index < Program.Count)
                 {
-                    codeFragment.Add(string.Format("{0:0000}    {1}    {2}", index, Program[index], (index == InstructionPointer ? "<<" : "")));
+                    codeFragment.Add(string.Format(formatStr,
+                                                   Program[index].SourceName,
+                                                   Program[index].SourceLine,
+                                                   Program[index].SourceColumn,
+                                                   index,
+                                                   Program[index],
+                                                   (index == InstructionPointer ? "<<--INSTRUCTION POINTER--" : "")));
                 }
             }
 
             return codeFragment;
         }
 
+    }
+    
+    public struct FileRange
+    {
+        public string filename;
+        public int start;
+        public int stop;
     }
 }
