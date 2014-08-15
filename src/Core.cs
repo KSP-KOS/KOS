@@ -9,7 +9,6 @@ namespace kOS
         public static VersionInfo VersionInfo = new VersionInfo(0, 13.2);
 
         public static Core Fetch; 
-        public TermWindow Window;
         
         public void Awake()
         {
@@ -17,9 +16,6 @@ namespace kOS
             if (Fetch != null) return;
             Fetch = this;
 
-            var gObj = new GameObject("kOSTermWindow", typeof(TermWindow));
-            DontDestroyOnLoad(gObj);
-            Window = (TermWindow)gObj.GetComponent(typeof(TermWindow));
         }
 
         public void SaveSettings()
@@ -31,27 +27,10 @@ namespace kOS
         {
         }
 
-        public static void OpenWindow(SharedObjects shared)
-        {
-            Fetch.Window.AttachTo(shared);
-            Fetch.Window.Open();
-        }
-
-        internal static void ToggleWindow(SharedObjects shared)
-        {
-            Fetch.Window.AttachTo(shared);
-            Fetch.Window.Toggle();
-        }
-
         void OnGUI()
         {
         }
 
-        public static void CloseWindow(SharedObjects shared)
-        {
-            Fetch.Window.AttachTo(shared);
-            Fetch.Window.Close();
-        }
     }
 
     public class CoreInitializer : KSP.Testing.UnitTest
