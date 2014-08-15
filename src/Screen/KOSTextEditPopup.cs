@@ -31,7 +31,6 @@ namespace kOS.Screen
         private string contents = "";
         private readonly Texture2D resizeImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool resizeMouseDown;
-        private Vector2 mouseUpPosRelative;   // Position the mouse was at when button went up.
         private Vector2 resizeOldSize; // width and height it had when the mouse button went down on the resize button.
         private bool isDirty; // have any edits occured since last load or save?
         private bool frozen;
@@ -127,10 +126,6 @@ namespace kOS.Screen
                 windowRect = GUI.Window( uniqueId, windowRect, ProcessWindow, "" );
                 // Some mouse global state data used by several of the checks:
                 Event e = Event.current;
-                if (consumeEvent)
-                {
-                    mouseUpPosRelative = new Vector2(mousePosAbsolute.x, mousePosAbsolute.y);
-                }
 
                 if (consumeEvent)
                 {
@@ -432,9 +427,9 @@ namespace kOS.Screen
             DrawWindow( windowId );
 
             CheckResizeDrag();
-            CheckExitClicked();
-            CheckSaveClicked();
-            CheckReloadClicked();
+            // CheckExitClicked();
+            // CheckSaveClicked();
+            // CheckReloadClicked();
 
             CalcOuterCoords();
         }
@@ -453,9 +448,18 @@ namespace kOS.Screen
             GUILayout.EndArea();
             
             GUI.Label( labelCoords, BuildTitle() );
-            GUI.Box( exitCoords, EXIT_BUTTON_TEXT );
-            GUI.Box( saveCoords, SAVE_BUTTON_TEXT );
-            GUI.Box( reloadCoords, RELOAD_BUTTON_TEXT );
+            if (GUI.Button( exitCoords, EXIT_BUTTON_TEXT ))
+            {
+                ExitEditor();
+            }
+            if (GUI.Button( saveCoords, SAVE_BUTTON_TEXT ))
+            {
+                SaveContents();
+            }
+            if (GUI.Button( reloadCoords, RELOAD_BUTTON_TEXT ))
+            {
+                ReloadContents();
+            }
             KeepCursorScrolledInView();            
 
             GUI.Box( resizeButtonCoords, resizeImage );
@@ -496,8 +500,11 @@ namespace kOS.Screen
 
             Vector2 labSize  = GUI.skin.label.CalcSize( new GUIContent(BuildTitle()) );
             Vector2 exitSize = GUI.skin.box.CalcSize(   new GUIContent(EXIT_BUTTON_TEXT) );
+            exitSize = new Vector2(exitSize.x+4, exitSize.y+4);
             Vector2 saveSize = GUI.skin.box.CalcSize(   new GUIContent(SAVE_BUTTON_TEXT) );
+            saveSize = new Vector2(saveSize.x+4, saveSize.y+4);
             Vector2 reloadSize = GUI.skin.box.CalcSize( new GUIContent(RELOAD_BUTTON_TEXT) );
+            reloadSize = new Vector2(reloadSize.x+4, reloadSize.y+4);
                 
             labelCoords = new Rect( 5, 1, labSize.x, labSize.y);
                 

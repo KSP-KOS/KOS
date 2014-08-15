@@ -323,9 +323,10 @@ namespace kOS.Screen
             GUI.color = isLocked ? color : colorAlpha;
             GUI.DrawTexture(new Rect(10, 10, terminalImage.width, terminalImage.height), terminalImage);
 
-            if (GUI.Button(new Rect(580, 10, 80, 30), "Close"))
+            if (GUI.Button(closeButtonRect, "Close"))
             {
                 Close();
+                Event.current.Use();
             }
 
             GUI.DragWindow(new Rect(0, 0, 10000, 500));
@@ -363,15 +364,7 @@ namespace kOS.Screen
             {
                 ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor);
             }
-
             GUI.EndGroup();
-            if (Event.current.type == EventType.MouseDown || IsInsideMyExposedPortion(mousePosAbsolute) )
-            {
-                if (closeButtonRect.Contains(mousePosRelative))
-                {
-                    Close();
-                }
-            }
 
         }
 
