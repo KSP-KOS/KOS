@@ -372,52 +372,7 @@ namespace kOS.Screen
                 }
             }
         }
-        
-        protected void CheckExitClicked()
-        {
-            Event e = Event.current;
-            if (e.type == EventType.mouseDown && e.button == 0)
-            {
-                // Mouse button went down in the exit box:
-                if ( exitCoords.Contains(mousePosRelative) &&
-                    IsInsideMyExposedPortion(mousePosAbsolute) )
-                {
-                    ExitEditor();
-                    Event.current.Use(); // Without this it was quadruple-firing the same event.
-                }
-            }
-        }
-
-        protected void CheckSaveClicked()
-        {
-            Event e = Event.current;
-            if (e.type == EventType.mouseDown && e.button == 0)
-            {
-                // Mouse button went down in the save box:
-                if ( saveCoords.Contains(mousePosRelative) &&
-                    IsInsideMyExposedPortion(mousePosAbsolute) )
-                {
-                    SaveContents();
-                    Event.current.Use(); // Without this it was quadruple-firing the same event.
-                }
-            }
-        }
-        
-        protected void CheckReloadClicked()
-        {
-            Event e = Event.current;
-            if (e.type == EventType.mouseDown && e.button == 0)
-            {
-                // Mouse button went down in the reload box:
-                if ( reloadCoords.Contains(mousePosRelative) &&
-                    IsInsideMyExposedPortion(mousePosAbsolute) )
-                {
-                    ReloadContents();
-                    Event.current.Use(); // Without this it was quadruple-firing the same event.
-                }
-            }
-        }
-        
+                
         void ProcessWindow( int windowId )
         {
 
@@ -427,9 +382,6 @@ namespace kOS.Screen
             DrawWindow( windowId );
 
             CheckResizeDrag();
-            // CheckExitClicked();
-            // CheckSaveClicked();
-            // CheckReloadClicked();
 
             CalcOuterCoords();
         }
