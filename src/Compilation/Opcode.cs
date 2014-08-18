@@ -8,11 +8,11 @@ namespace kOS.Compilation
 
     public class Opcode
     {
-        private static int _lastId = 0;
-        private int _id = ++_lastId;
+        private static int lastId;
+        private readonly int id = ++lastId;
         
         public virtual string Name { get { return string.Empty; } }
-        public int Id { get { return _id; } }
+        public int Id { get { return id; } }
         public int DeltaInstructionPointer = 1;
         public string Label = string.Empty;
         public string DestinationLabel;
@@ -32,19 +32,19 @@ namespace kOS.Compilation
 
     public class BinaryOpcode : Opcode
     {
-        protected object argument1 = null;
-        protected object argument2 = null;
+        protected object Argument1 { get; set; }
+        protected object Argument2 { get; set; }
 
         public override void Execute(CPU cpu)
         {
-            argument2 = cpu.PopValue();
-            argument1 = cpu.PopValue();
+            Argument2 = cpu.PopValue();
+            Argument1 = cpu.PopValue();
 
             // convert floats to doubles
-            if (argument1 is float) argument1 = Convert.ToDouble(argument1);
-            if (argument2 is float) argument2 = Convert.ToDouble(argument2);
+            if (Argument1 is float) Argument1 = Convert.ToDouble(Argument1);
+            if (Argument2 is float) Argument2 = Convert.ToDouble(Argument2);
 
-            Calculator calc = Calculator.GetCalculator(argument1, argument2);
+            Calculator calc = Calculator.GetCalculator(Argument1, Argument2);
             object result = ExecuteCalculation(calc);
             cpu.PushStack(result);
         }
@@ -66,7 +66,7 @@ namespace kOS.Compilation
         public override void Execute(CPU cpu)
         {
             object value = cpu.PopValue();
-            string identifier = (string)cpu.PopStack();
+            var identifier = (string)cpu.PopStack();
             cpu.SetValue(identifier, value);
         }
     }
@@ -96,23 +96,22 @@ namespace kOS.Compilation
         public override void Execute(CPU cpu)
         {
             string suffixName = cpu.PopStack().ToString().ToUpper();
-            object specialValue = cpu.PopValue();
+            object popValue = cpu.PopValue();
 
-            if (specialValue is SpecialValue)
+            var specialValue = popValue as SpecialValue;
+            if (specialValue == null)
             {
-                object value = ((SpecialValue)specialValue).GetSuffix(suffixName);
-                if (value != null)
-                {
-                    cpu.PushStack(value);
-                }
-                else
-                {
-                    throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
-                }
+                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+            }
+
+            object value = specialValue.GetSuffix(suffixName);
+            if (value != null)
+            {
+                cpu.PushStack(value);
             }
             else
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", specialValue.GetType().ToString()));
+                throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
             }
         }
     }
@@ -125,18 +124,17 @@ namespace kOS.Compilation
         {
             object value = cpu.PopValue();
             string suffixName = cpu.PopStack().ToString().ToUpper();
-            object specialValue = cpu.PopValue();
+            object popValue = cpu.PopValue();
 
-            if (specialValue is SpecialValue)
+            var specialValue = popValue as SpecialValue;
+            if (specialValue == null)
             {
-                if (!((SpecialValue)specialValue).SetSuffix(suffixName, value))
-                {
-                    throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
-                }
+                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
             }
-            else
+
+            if (!specialValue.SetSuffix(suffixName, value))
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", specialValue.GetType().ToString()));
+                throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
             }
         }
     }
@@ -206,11 +204,11 @@ namespace kOS.Compilation
 
     public class BranchOpcode : Opcode
     {
-        public int distance = 0;
+        public int Distance { get; set; }
 
         public override string ToString()
         {
-            return Name + " " + distance.ToString();
+            return string.Format("{0} {1}", Name, Distance);
         }
     }
 
@@ -221,8 +219,7 @@ namespace kOS.Compilation
         public override void Execute(CPU cpu)
         {
             bool condition = Convert.ToBoolean(cpu.PopValue());
-            if (!condition) DeltaInstructionPointer = distance;
-            else DeltaInstructionPointer = 1;
+            DeltaInstructionPointer = !condition ? Distance : 1;
         }
     }
 
@@ -232,7 +229,7 @@ namespace kOS.Compilation
 
         public override void Execute(CPU cpu)
         {
-            DeltaInstructionPointer = distance;
+            DeltaInstructionPointer = Distance;
         }
     }
 
@@ -246,7 +243,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.GreaterThan(argument1, argument2);
+            return calc.GreaterThan(Argument1, Argument2);
         }
     }
 
@@ -256,7 +253,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.LessThan(argument1, argument2);
+            return calc.LessThan(Argument1, Argument2);
         }
     }
 
@@ -266,7 +263,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.GreaterThanEqual(argument1, argument2);
+            return calc.GreaterThanEqual(Argument1, Argument2);
         }
     }
 
@@ -276,7 +273,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.LessThanEqual(argument1, argument2);
+            return calc.LessThanEqual(Argument1, Argument2);
         }
     }
 
@@ -286,7 +283,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.NotEqual(argument1, argument2);
+            return calc.NotEqual(Argument1, Argument2);
         }
     }
     
@@ -296,7 +293,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Equal(argument1, argument2);
+            return calc.Equal(Argument1, Argument2);
         }
     }
 
@@ -332,7 +329,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            object result = calc.Add(argument1, argument2);
+            object result = calc.Add(Argument1, Argument2);
             // TODO: complete message
             if (result == null) throw new ArgumentException("Can't add ....");
             return result;
@@ -345,7 +342,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Subtract(argument1, argument2);
+            return calc.Subtract(Argument1, Argument2);
         }
     }
 
@@ -355,7 +352,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Multiply(argument1, argument2);
+            return calc.Multiply(Argument1, Argument2);
         }
     }
 
@@ -365,7 +362,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Divide(argument1, argument2);
+            return calc.Divide(Argument1, Argument2);
         }
     }
 
@@ -375,7 +372,7 @@ namespace kOS.Compilation
 
         protected override object ExecuteCalculation(Calculator calc)
         {
-            return calc.Power(argument1, argument2);
+            return calc.Power(Argument1, Argument2);
         }
     }
 
@@ -407,9 +404,9 @@ namespace kOS.Compilation
             if (value is bool)
                 result = !((bool)value);
             else if (value is int)
-                result = (int)(Convert.ToBoolean(value) ? 0 : 1);
+                result = Convert.ToBoolean(value) ? 0 : 1;
             else if ((value is double) || (value is float))
-                result = (double)(Convert.ToBoolean(value) ? 0.0 : 1.0);
+                result = Convert.ToBoolean(value) ? 0.0 : 1.0;
             else
                 throw new ArgumentException(string.Format("Can't negate object {0} of type {1}", value, value.GetType()));
 
@@ -449,31 +446,32 @@ namespace kOS.Compilation
 
     public class OpcodeCall : Opcode
     {
-        public object destination;
+        public object Destination { get; set; }
 
         public override string Name { get { return "call"; } }
 
         public OpcodeCall(object destination)
         {
-            this.destination = destination;
+            Destination = destination;
         }
 
         public override void Execute(CPU cpu)
         {
-            object functionPointer = cpu.GetValue(destination);
+            object functionPointer = cpu.GetValue(Destination);
             if (functionPointer is int)
             {
                 int currentPointer = cpu.InstructionPointer;
                 DeltaInstructionPointer = (int)functionPointer - currentPointer;
-                SubroutineContext contextRecord = new SubroutineContext(currentPointer+1);
+                var contextRecord = new SubroutineContext(currentPointer+1);
                 cpu.PushStack(contextRecord);
                 cpu.MoveStackPointer(-1);
             }
             else
             {
-                if (functionPointer is string)
+                var name = functionPointer as string;
+                if (name != null)
                 {
-                    string functionName = (string)functionPointer;
+                    string functionName = name;
                     functionName = functionName.Substring(0, functionName.Length - 2);
                     cpu.CallBuiltinFunction(functionName);
                 }
@@ -482,7 +480,7 @@ namespace kOS.Compilation
 
         public override string ToString()
         {
-            return Name + " " + destination.ToString();
+            return string.Format("{0} {1}", Name, Destination);
         }
     }
 
@@ -499,7 +497,7 @@ namespace kOS.Compilation
                 // This should never happen with any user code:
                 throw new Exception( "kOS internal error: Stack misalignment detected when returning from routine.");
             }
-            SubroutineContext contextRecord = shouldBeContextRecord as SubroutineContext;
+            var contextRecord = shouldBeContextRecord as SubroutineContext;
             
             int destinationPointer = contextRecord.CameFromIP;
             int currentPointer = cpu.InstructionPointer;
@@ -513,23 +511,23 @@ namespace kOS.Compilation
 
     public class OpcodePush : Opcode
     {
-        public object argument;
+        public object Argument { get; set; }
 
         public override string Name { get { return "push"; } }
 
         public OpcodePush(object argument)
         {
-            this.argument = argument;
+            Argument = argument;
         }
 
         public override void Execute(CPU cpu)
         {
-            cpu.PushStack(argument);
+            cpu.PushStack(Argument);
         }
 
         public override string ToString()
         {
-            string argumentString = argument != null ? argument.ToString() : "null";
+            string argumentString = Argument != null ? Argument.ToString() : "null";
             return Name + " " + argumentString;
         }
     }
@@ -575,26 +573,26 @@ namespace kOS.Compilation
 
     public class OpcodeAddTrigger : Opcode
     {
-        public bool shouldWait;
+        public bool ShouldWait { get; set; }
         
         public override string Name { get { return "addtrigger"; } }
 
         public OpcodeAddTrigger(bool shouldWait)
         {
-            this.shouldWait = shouldWait;
+            ShouldWait = shouldWait;
         }
 
         public override void Execute(CPU cpu)
         {
-            int functionPointer = (int)cpu.PopValue();
+            var functionPointer = (int)cpu.PopValue();
             cpu.AddTrigger(functionPointer);
-            if (shouldWait)
+            if (ShouldWait)
                 cpu.StartWait(0);
         }
 
         public override string ToString()
         {
-            return Name + " " + shouldWait.ToString().ToLower();
+            return Name + " " + ShouldWait.ToString().ToLower();
         }
     }
 
@@ -604,7 +602,7 @@ namespace kOS.Compilation
 
         public override void Execute(CPU cpu)
         {
-            int functionPointer = (int)cpu.PopValue();
+            var functionPointer = (int)cpu.PopValue();
             cpu.RemoveTrigger(functionPointer);
         }
     }

@@ -14,21 +14,19 @@ namespace kOS.Execution
         public void Push(object item)
         {
             string message = string.Empty;
-            
-            if (IsValid(item, ref message))
-            {
-                stackPointer++;
-                if (stackPointer < MAX_STACK_SIZE)
-                {
-                    stack.Insert(stackPointer, ProcessItem(item));
-                }
-                else
-                    throw new Exception("Stack overflow!!");
-            }
-            else
+
+            if (!IsValid(item, ref message))
             {
                 throw new ArgumentException(message);
             }
+
+            stackPointer++;
+            if (stackPointer < MAX_STACK_SIZE)
+            {
+                stack.Insert(stackPointer, ProcessItem(item));
+            }
+            else
+                throw new Exception("Stack overflow!!");
         }
 
         private bool IsValid(object item, ref string message)
@@ -116,7 +114,7 @@ namespace kOS.Execution
         /// that got us to here.</returns>
         public List<int> GetCallTrace()
         {
-            List<int> trace = new List<int>();
+            var trace = new List<int>();
             for (int index = stackPointer+1 ; index < stack.Count ; ++index)
             {
                 if (stack[index] is SubroutineContext)

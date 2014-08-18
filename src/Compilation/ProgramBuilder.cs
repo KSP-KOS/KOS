@@ -124,15 +124,15 @@ namespace kOS.Compilation
                 int destinationIndex = labels[opcode.DestinationLabel];
                 if (opcode is BranchOpcode)
                 {
-                    ((BranchOpcode)opcode).distance = destinationIndex - index;
+                    ((BranchOpcode)opcode).Distance = destinationIndex - index;
                 }
                 else if (opcode is OpcodePush)
                 {
-                    ((OpcodePush)opcode).argument = destinationIndex;
+                    ((OpcodePush)opcode).Argument = destinationIndex;
                 }
                 else if (opcode is OpcodeCall)
                 {
-                    ((OpcodeCall)opcode).destination = destinationIndex;
+                    ((OpcodeCall)opcode).Destination = destinationIndex;
                 }
             }
 

@@ -68,7 +68,7 @@ namespace kOS.Compilation
         /// corresponds to line (what) of the more global something, for reporting numbers on errors.</param>
         /// <param name="scriptText">The text to be compiled.</param>
         /// <param name="contextId">The name of the runtime context (i.e. "interpreter").</param>
-        /// <param name="CompilerOptions">settings for the compile</param>
+        /// <param name="options">settings for the compile</param>
         /// <returns>The CodeParts made from the scriptText</returns>
         public virtual List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId, CompilerOptions options)
         {

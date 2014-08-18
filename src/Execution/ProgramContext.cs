@@ -119,15 +119,15 @@ namespace kOS.Execution
         {
             var codeFragment = new List<string>();
             
-            string formatStr = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5}";
-            codeFragment.Add(string.Format(formatStr, "File", "Line", "Col", "IP  ", "opcode", "operand" ));
-            codeFragment.Add(string.Format(formatStr, "----", "----", "---", "----", "---------------------", "" ));
+            const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5}";
+            codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "opcode", "operand" ));
+            codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "---------------------", "" ));
 
             for (int index = (InstructionPointer - contextLines); index <= (InstructionPointer + contextLines); index++)
             {
                 if (index >= 0 && index < Program.Count)
                 {
-                    codeFragment.Add(string.Format(formatStr,
+                    codeFragment.Add(string.Format(FORMAT_STR,
                                                    Program[index].SourceName,
                                                    Program[index].SourceLine,
                                                    Program[index].SourceColumn,
@@ -140,12 +140,5 @@ namespace kOS.Execution
             return codeFragment;
         }
 
-    }
-    
-    public struct FileRange
-    {
-        public string filename;
-        public int start;
-        public int stop;
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using kOS;
 using kOS.Persistence;
 using kOS.Compilation;
 
@@ -24,7 +24,7 @@ namespace kOS
         {
             base.Log(e);
 
-            string traceText = traceLog();
+            string traceText = TraceLog();
             LogToScreen(traceText);
             UnityEngine.Debug.Log(traceText);
 
@@ -44,15 +44,13 @@ namespace kOS
         /// the current point.
         /// </summary>
         /// <returns></returns>
-        private string traceLog()
+        private string TraceLog()
         {
             List<int>trace = Shared.Cpu.GetCallTrace();
             string msg = "";
-            Opcode thisOpcode;
-            Opcode prevOpcode;
             for (int index = 0 ; index < trace.Count ; ++index)
             {
-                thisOpcode = Shared.Cpu.GetOpcodeAt(trace[index]);
+                Opcode thisOpcode = Shared.Cpu.GetOpcodeAt(trace[index]);
                 
                 // The statement "run program" actually causes TWO nested function calls,
                 // as the logic to check if the program needs compiling is implemented as a
@@ -62,21 +60,21 @@ namespace kOS
                 // comes from the same source line:
                 if (index > 0)
                 {
-                    prevOpcode = Shared.Cpu.GetOpcodeAt(trace[index-1]);
+                    Opcode prevOpcode = Shared.Cpu.GetOpcodeAt(trace[index-1]);
                     if (prevOpcode.SourceName == thisOpcode.SourceName &&
                         prevOpcode.SourceLine == thisOpcode.SourceLine)
                     {
                         continue;
                     }
                 }
-                
-                string textLine = getSourceLine(thisOpcode.SourceName, thisOpcode.SourceLine);
+
+                string textLine = GetSourceLine(thisOpcode.SourceName, thisOpcode.SourceLine);
                 if (msg.Length == 0)
                     msg += "At ";
                 else
                     msg += "Called from ";
                 
-                msg += buildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine) + "\n";
+                msg += BuildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine) + "\n";
                 msg += textLine + "\n";
                 int numPadSpaces = thisOpcode.SourceColumn-1;
                 if (numPadSpaces < 0)
@@ -86,7 +84,7 @@ namespace kOS
             return msg;
         }
         
-        private string buildLocationString(string source, int line)
+        private string BuildLocationString(string source, int line)
         {
             string[] splitParts = source.Split('/');
             
@@ -97,27 +95,19 @@ namespace kOS
                 // to recalculate LOCK THROTTLE and LOCK STEERING each time there's an Update).
                 return "(kOS built-in Update)";
             }
-            else
-            {
-                if (splitParts.Length > 1)
-                {
-                    if (source == "interpreter history")
-                        return "interpreter line " + line;
-                    else
-                        return splitParts[1] + " on " + splitParts[0] + ", line " + line;
-                }
-                else
-                    return source + ", line " + line;
-            }
+
+            if (splitParts.Length <= 1)
+                return string.Format("{0}, line {1}", source, line);
+            if (source == "interpreter history")
+                return string.Format("interpreter line {0}", line);
+            return string.Format("{0} on {1}, line {2}", splitParts[1], splitParts[0], line);
         }
         
-        private string getSourceLine(string filePath, int line)
+        private string GetSourceLine(string filePath, int line)
         {
             string returnVal = "(Can't show source line)";
             string[] pathParts = filePath.Split('/');
-            string fileName = pathParts[ pathParts.Length - 1];
-            string volName = "";
-            int volNum;
+            string fileName = pathParts.Last();
             Volume vol;
             bool getFile = true; // should it try to retrive the file?
             if (line < 0)
@@ -129,10 +119,11 @@ namespace kOS
             }
             if (pathParts.Length > 1)
             {
-                volName = pathParts[0];
+                string volName = pathParts.First();
                 if (Regex.IsMatch(volName, @"^\d+$"))
                 {
                     // If the volume is a number, then get the volume by integer id.
+                    int volNum;
                     int.TryParse(volName, out volNum);
                     vol = Shared.VolumeMgr.GetVolume(volNum);
                 }

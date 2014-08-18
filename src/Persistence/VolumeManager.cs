@@ -180,18 +180,11 @@ namespace kOS.Persistence
         /// Like GetVolumeBestIdentifier, but without the extra string formatting.
         /// </summary>
         /// <param name="volume"></param>
-        /// <returns></returns>
-        public string GetVolumeBestIdentifierRaw(Volume volume)
+        /// <returns>The Volume's Identifier without pretty formatting</returns>
+        public string GetVolumeRawIdentifier(Volume volume)
         {
             int id = GetVolumeId(volume);
-            if (!string.IsNullOrEmpty(volume.Name))
-            {
-                return volume.Name;
-            }
-            else
-            {
-                return id.ToString();
-            }
+            return !string.IsNullOrEmpty(volume.Name) ? volume.Name : id.ToString();
         }
 
         private void UpdateRequiredPower()

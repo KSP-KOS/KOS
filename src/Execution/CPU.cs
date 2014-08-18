@@ -19,7 +19,7 @@ namespace kOS.Execution
         }
 
         private readonly Stack stack;
-        private readonly Dictionary<string, Variable> vars;
+        private readonly Dictionary<string, Variable> variables;
         private Status currentStatus;
         private double currentTime;
         private double timeWaitUntil;
@@ -30,7 +30,7 @@ namespace kOS.Execution
         private Dictionary<string, Variable> savedPointers;
         
         // statistics
-        public double TotalCompileTime = 0D;
+        private double TotalCompileTime;
         private double totalUpdateTime;
         private double totalTriggersTime;
         private double totalExecutionTime;
@@ -49,7 +49,7 @@ namespace kOS.Execution
             this.shared = shared;
             this.shared.Cpu = this;
             stack = new Stack();
-            vars = new Dictionary<string, Variable>();
+            variables = new Dictionary<string, Variable>();
             contexts = new List<ProgramContext>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddObserver(this);
         }
@@ -86,7 +86,7 @@ namespace kOS.Execution
             // clear stack
             stack.Clear();
             // clear variables
-            vars.Clear();
+            variables.Clear();
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
@@ -97,9 +97,7 @@ namespace kOS.Execution
             if (shared.Screen != null)
             {
                 shared.Screen.ClearScreen();
-                string bootMessage = "kOS Operating System\n" +
-                                     "KerboScript v" + Core.VersionInfo + "\n \n" +
-                                     "Proceed.\n ";
+                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n ", Core.VersionInfo);
                 shared.Screen.Print(bootMessage);
             }
             
@@ -113,7 +111,7 @@ namespace kOS.Execution
                 var programContext = shared.Cpu.GetProgramContext();
                 programContext.Silent = true;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                string filePath = shared.VolumeMgr.GetVolumeBestIdentifierRaw(shared.VolumeMgr.CurrentVolume) + "/" + "boot" ;
+                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + "boot" ;
                 List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, "run boot.", "program", options);
                 programContext.AddParts(parts);
             }
@@ -206,12 +204,12 @@ namespace kOS.Execution
         private void SaveAndClearPointers()
         {
             savedPointers = new Dictionary<string, Variable>();
-            var pointers = new List<string>(vars.Keys.Where(v => v.Contains('*')));
+            var pointers = new List<string>(variables.Keys.Where(v => v.Contains('*')));
 
             foreach (var pointerName in pointers)
             {
-                savedPointers.Add(pointerName, vars[pointerName]);
-                vars.Remove(pointerName);
+                savedPointers.Add(pointerName, variables[pointerName]);
+                variables.Remove(pointerName);
             }
             UnityEngine.Debug.Log(string.Format("kOS: Saving and removing {0} pointers", pointers.Count));
         }
@@ -223,11 +221,11 @@ namespace kOS.Execution
 
             foreach (var item in savedPointers)
             {
-                if (vars.ContainsKey(item.Key))
+                if (variables.ContainsKey(item.Key))
                 {
                     // if the pointer exists it means it was redefined from inside a program
                     // and it's going to be invalid outside of it, so we remove it
-                    vars.Remove(item.Key);
+                    variables.Remove(item.Key);
                     deletedPointers++;
                     // also remove the corresponding trigger if exists
                     if (item.Value.Value is int)
@@ -235,7 +233,7 @@ namespace kOS.Execution
                 }
                 else
                 {
-                    vars.Add(item.Key, item.Value);
+                    variables.Add(item.Key, item.Value);
                     restoredPointers++;
                 }
             }
@@ -321,7 +319,7 @@ namespace kOS.Execution
         {
             Variable variable;
 
-            if (vars.ContainsKey(identifier))
+            if (variables.ContainsKey(identifier))
             {
                 variable = GetVariable(identifier);
             }
@@ -336,9 +334,9 @@ namespace kOS.Execution
         private Variable GetVariable(string identifier)
         {
             identifier = identifier.ToLower();
-            if (vars.ContainsKey(identifier))
+            if (variables.ContainsKey(identifier))
             {
-                return vars[identifier];
+                return variables[identifier];
             }
             throw new Exception(string.Format("Variable {0} is not defined", identifier.TrimStart('$')));
         }
@@ -352,12 +350,12 @@ namespace kOS.Execution
                 identifier = "$" + identifier;
             }
 
-            if (vars.ContainsKey(identifier))
+            if (variables.ContainsKey(identifier))
             {
-                vars.Remove(identifier);
+                variables.Remove(identifier);
             }
 
-            vars.Add(identifier, variable);
+            variables.Add(identifier, variable);
         }
 
         public bool VariableIsRemovable(Variable variable)
@@ -369,14 +367,14 @@ namespace kOS.Execution
         {
             identifier = identifier.ToLower();
             
-            if (vars.ContainsKey(identifier) &&
-                VariableIsRemovable(vars[identifier]))
+            if (variables.ContainsKey(identifier) &&
+                VariableIsRemovable(variables[identifier]))
             {
                 // Tell Variable to orphan its old value now.  Faster than relying 
                 // on waiting several seconds for GC to eventually call ~Variable()
-                vars[identifier].Value = null;
+                variables[identifier].Value = null;
                 
-                vars.Remove(identifier);
+                variables.Remove(identifier);
             }
         }
 
@@ -384,7 +382,7 @@ namespace kOS.Execution
         {
             var removals = new List<string>();
             
-            foreach (var kvp in vars)
+            foreach (var kvp in variables)
             {
                 if (VariableIsRemovable(kvp.Value))
                 {
@@ -396,9 +394,9 @@ namespace kOS.Execution
             {
                 // Tell Variable to orphan its old value now.  Faster than relying 
                 // on waiting several seconds for GC to eventually call ~Variable()
-                vars[identifier].Value = null;
+                variables[identifier].Value = null;
 
-                vars.Remove(identifier);
+                variables.Remove(identifier);
             }
         }
 
@@ -684,11 +682,11 @@ namespace kOS.Execution
                 var contextNode = new ConfigNode("context");
 
                 // Save variables
-                if (vars.Count > 0)
+                if (variables.Count > 0)
                 {
                     var varNode = new ConfigNode("variables");
 
-                    foreach (var kvp in vars)
+                    foreach (var kvp in variables)
                     {
                         if (!(kvp.Value is Binding.BoundVariable) &&
                             (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted

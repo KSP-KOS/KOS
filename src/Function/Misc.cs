@@ -71,39 +71,37 @@ namespace kOS.Function
 
             ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName);
             if (file == null) throw new Exception(string.Format("File '{0}' not found", fileName));
+            if (shared.ScriptHandler == null) return;
 
-            if (shared.ScriptHandler != null)
+            if (volumeId != null)
             {
-                if (volumeId != null)
+                Volume targetVolume = shared.VolumeMgr.GetVolume(volumeId);
+                if (targetVolume != null)
                 {
-                    Volume targetVolume = shared.VolumeMgr.GetVolume(volumeId);
-                    if (targetVolume != null)
+                    if (shared.ProcessorMgr != null)
                     {
-                        if (shared.ProcessorMgr != null)
-                        {
-                            string filePath = shared.VolumeMgr.GetVolumeBestIdentifierRaw(targetVolume) + "/" + fileName ;
-                            List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content);
-                            var builder = new ProgramBuilder();
-                            builder.AddRange(parts);
-                            List<Opcode> program = builder.BuildProgram();
-                            shared.ProcessorMgr.RunProgramOn(program, targetVolume);
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("Volume not found");
+                        string filePath = string.Format("{0}/{1}", shared.VolumeMgr.GetVolumeRawIdentifier(targetVolume), fileName) ;
+                        List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content);
+                        var builder = new ProgramBuilder();
+                        builder.AddRange(parts);
+                        List<Opcode> program = builder.BuildProgram();
+                        shared.ProcessorMgr.RunProgramOn(program, targetVolume);
                     }
                 }
                 else
                 {
-                    // clear the "program" compilation context
-                    shared.ScriptHandler.ClearContext("program");
-                    string filePath = shared.VolumeMgr.GetVolumeBestIdentifierRaw(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
-                    var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                    List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
-                    var programContext = shared.Cpu.GetProgramContext();
-                    programContext.AddParts(parts);
+                    throw new Exception("Volume not found");
                 }
+            }
+            else
+            {
+                // clear the "program" compilation context
+                shared.ScriptHandler.ClearContext("program");
+                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
+                var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
+                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
+                var programContext = shared.Cpu.GetProgramContext();
+                programContext.AddParts(parts);
             }
         }
     }
@@ -125,7 +123,7 @@ namespace kOS.Function
             {
                 var programContext = shared.Cpu.GetProgramContext();
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                string filePath = shared.VolumeMgr.GetVolumeBestIdentifierRaw(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
+                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
                 List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
                 // add this program to the address space of the parent program
                 int programAddress = programContext.AddObjectParts(parts);

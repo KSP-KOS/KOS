@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using kOS.Utilities;
 using kOS.Compilation;
-using kOS.Persistence;
 
 namespace kOS.Screen
 {
@@ -52,21 +51,20 @@ namespace kOS.Screen
             {
                 Shared.Cpu.BreakExecution(true);
             }
-            
-            if (!locked)
+
+            if (locked) return;
+
+            switch (key)
             {
-                switch (key)
-                {
-                    case kOSKeys.UP:
-                        ShowCommandHistoryEntry(-1);
-                        break;
-                    case kOSKeys.DOWN:
-                        ShowCommandHistoryEntry(1);
-                        break;
-                    default:
-                        base.SpecialKey(key);
-                        break;
-                }
+                case kOSKeys.UP:
+                    ShowCommandHistoryEntry(-1);
+                    break;
+                case kOSKeys.DOWN:
+                    ShowCommandHistoryEntry(1);
+                    break;
+                default:
+                    base.SpecialKey(key);
+                    break;
             }
         }
 
@@ -113,11 +111,10 @@ namespace kOS.Screen
             try
             {
                 List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter");
-                if (commandParts != null)
-                {
-                    var interpreterContext = Shared.Cpu.GetInterpreterContext();
-                    interpreterContext.AddParts(commandParts);
-                }
+                if (commandParts == null) return;
+
+                var interpreterContext = Shared.Cpu.GetInterpreterContext();
+                interpreterContext.AddParts(commandParts);
             }
             catch (Exception e)
             {

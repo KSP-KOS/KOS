@@ -53,7 +53,7 @@ namespace kOS.Execution
         
         public override string ToString()
         {
-            return "SubroutineContext: {CameFromIP " + CameFromIP +"}";
+            return string.Format("SubroutineContext: {{CameFromIP {0}}}", CameFromIP);
         }
     }
 }
