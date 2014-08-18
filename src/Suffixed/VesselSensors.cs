@@ -21,11 +21,10 @@ namespace kOS.Suffixed
                         switch (module.Fields.GetValue("sensorType").ToString())
                         {
                             case "ACC":
-                                acceleration =
-                                    new Vector(FlightGlobals.getGeeForceAtPosition(part.transform.position) - target.acceleration);
+                                acceleration = new Vector(target.acceleration);
                                 break;
                             case "PRES":
-                                pressure = FlightGlobals.getStaticPressure();
+                                pressure = target.staticPressure;
                                 break;
                             case "TEMP":
                                 temperature = part.temperature;
