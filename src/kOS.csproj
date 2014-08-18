@@ -70,7 +70,6 @@
     <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
-    <Compile Include="Execution\FileRange.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Factories\IFactory.cs" />
