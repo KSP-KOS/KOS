@@ -31,7 +31,7 @@ namespace kOS
             // print the call stack
             UnityEngine.Debug.Log(e);
             // print a fragment of the code where the exception ocurred
-            List<string> codeFragment = Shared.Cpu.GetCodeFragment(4);
+            List<string> codeFragment = Shared.Cpu.GetCodeFragment(16);
             var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine("Code Fragment");
             foreach (string instruction in codeFragment)
