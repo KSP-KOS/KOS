@@ -87,6 +87,22 @@ namespace kOS.Persistence
             }
         }
 
+        public override bool RenameFile(string name, string newName)
+        {
+            try
+            {
+                var sourcePath = string.Format("{0}{1}.txt", archiveFolder, name);
+                var destinationPath = string.Format("{0}{1}.txt", archiveFolder, newName);
+
+                File.Move(sourcePath,destinationPath);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public override List<Suffixed.FileInfo> GetFileList()
         {
             var retList = new List<Suffixed.FileInfo>();

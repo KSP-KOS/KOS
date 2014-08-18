@@ -17,18 +17,29 @@ namespace kOS.Binding
 
         public override void AddTo(SharedObjects shared)
         {
-            Debug.Log("kOS: FlightControlManager.AddTo " + shared.Vessel.id);
-            Shared = shared;
-
-            AddNewFlightParam("throttle", shared);
-            AddNewFlightParam("steering", shared);
-            AddNewFlightParam("wheelthrottle", shared);
-            AddNewFlightParam("wheelsteering", shared);
-
             if (shared.Vessel != null)
             {
-                currentVessel = shared.Vessel;
-                currentVessel.OnFlyByWire += OnFlyByWire;
+                if (shared.Vessel.rootPart != null)
+                {
+                    Debug.Log("kOS: FlightControlManager.AddTo " + shared.Vessel.id);
+                    Shared = shared;
+
+                    currentVessel = shared.Vessel;
+                    currentVessel.OnFlyByWire += OnFlyByWire;
+
+                    AddNewFlightParam("throttle", shared);
+                    AddNewFlightParam("steering", shared);
+                    AddNewFlightParam("wheelthrottle", shared);
+                    AddNewFlightParam("wheelsteering", shared);
+                }
+                else
+                {
+                    Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel.rootPart == null");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel== null");
             }
         }
 
@@ -124,18 +135,27 @@ namespace kOS.Binding
             {
                 parameter.Value.Enabled = false;
             }
-            FlightControl flightControl;
-            if (flightControls.TryGetValue(currentVessel.rootPart.flightID, out flightControl))
+            if (currentVessel.rootPart != null)
             {
-                flightControl.Unbind();
+                FlightControl flightControl;
+                if (flightControls.TryGetValue(currentVessel.rootPart.flightID, out flightControl))
+                {
+                    flightControl.Unbind();
+                }
             }
         }
 
         public void Dispose()
         {
-            UnBind();
             flightParameters.Clear();
-            flightControls.Remove(currentVessel.rootPart.flightID);
+            if (currentVessel != null)
+            {
+                if (currentVessel.rootPart != null)
+                {
+                    UnBind();
+                    flightControls.Remove(currentVessel.rootPart.flightID);
+                }
+            }
         }
 
         private class FlightCtrlParam : IDisposable
