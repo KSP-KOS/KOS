@@ -84,6 +84,7 @@
     <Compile Include="IUpdateObserver.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
+    <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSTextEditPopup.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />

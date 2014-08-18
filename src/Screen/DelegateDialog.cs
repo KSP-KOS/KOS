@@ -23,7 +23,7 @@ namespace kOS.Screen
         private bool               invoked;
         
         
-        public void Invoke( KOSTextEditPopup parent, string message, List<string> options, List<DialogAction> actions )
+        public void Invoke(KOSTextEditPopup parent, string message, List<string> options, List<DialogAction> actions )
         {
             this.parent = parent;
             this.parent.Freeze(true);
@@ -38,7 +38,7 @@ namespace kOS.Screen
             if (invoked)
             {
                 float guessWidth = GUI.skin.label.CalcSize( new GUIContent(message) ).x;
-                GUILayout.Window( 101, new Rect( parent.GetRect().xMin+10,
+                GUILayout.Window( parent.GetUniqueId()+1, new Rect( parent.GetRect().xMin+10,
                                                  parent.GetRect().yMin+10,
                                                  guessWidth,
                                                  0) , DrawConfirm, "Confirm", GUILayout.ExpandWidth(true) );
@@ -57,7 +57,7 @@ namespace kOS.Screen
                         actions[bNum](parent);
                         invoked = false;
                         parent.Freeze(false);
-                        GUI.FocusWindow(parent.WindowID);
+                        GUI.FocusWindow(parent.GetUniqueId());
                     }
                 }
             }

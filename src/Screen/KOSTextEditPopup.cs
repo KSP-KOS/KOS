@@ -9,15 +9,14 @@ namespace kOS.Screen
     /// A Unity window that contains the text editor for kOS inside it.  It should only be
     /// popped into existence when you feed it a file using the AttachTo call.
     /// </summary>
-    public class KOSTextEditPopup : MonoBehaviour
+    public class KOSTextEditPopup : KOSManagedWindow
     {
         private const int FRAME_THICKNESS = 8;
         private const int FONT_HEIGHT = 12;
         private const string EXIT_BUTTON_TEXT = "(E)xit";
         private const string SAVE_BUTTON_TEXT = "(S)ave";
         private const string RELOAD_BUTTON_TEXT = "(R)eload";
-
-        private Rect outerCoords;
+        
         private Rect innerCoords;
         private Rect saveCoords;
         private Rect exitCoords;
@@ -30,23 +29,22 @@ namespace kOS.Screen
         private Volume volume;
         private Volume loadingVolume;
         private string contents = "";
-        private bool isOpen;
         private readonly Texture2D resizeImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool resizeMouseDown;
-        private Vector2 mouseDownPos; // Position the mouse was at when button went down.
-        private Vector2 mouseUpPos;   // Position the mouse was at when button went up.
         private Vector2 resizeOldSize; // width and height it had when the mouse button went down on the resize button.
         private bool isDirty; // have any edits occured since last load or save?
         private bool frozen;
         private DelegateDialog dialog;
         private Vector2 scrollPosition; // tracks where within the text box it's scrolled to.
+        private bool consumeEvent;
 
         public KOSTextEditPopup()
         {
-            WindowID = 100;
+            uniqueId = 100 ; // This is expected to be overridden, but Unity requires that
+                             // KosTextEditPopup() be a constructor that takes zero arguments,
+                             // so the real WindowId has to be set after construction.
+            windowRect = new Rect(0,0,470,280); // bogus starting value will be changed later when attaching to a terminal.
         }
-
-        public int WindowID { get; private set; }
 
         public void Freeze(bool newVal)
         {
@@ -65,47 +63,75 @@ namespace kOS.Screen
         public void AttachTo( TermWindow termWindow, Volume attachVolume, string attachFileName = "" )
         {
             term = termWindow;
-            outerCoords = new Rect(0,0,0,0); // will be resized and moved in onGUI.
+            windowRect = new Rect(0,0,470,280); // will be resized and moved in onGUI.
             frozen = false;
             loadingVolume = attachVolume;
             loadingFileName = attachFileName;
             LoadContents(attachVolume, attachFileName);
         }
         
-        public void Open()
+        public bool Contains(Vector2 posAbs)
         {
-            isOpen = true;
-            isDirty = false;
+            return windowRect.Contains(posAbs);
+        }
+
+        public override void GetFocus()
+        {
             Freeze(false);
+        }            
+
+        public override void LoseFocus()
+        {
+            Freeze(true);
+        }            
+
+        public override void Open()
+        {
+            isDirty = false;
+            base.Open();
+            BringToFront();
         }
         
-        public void Close()
+        public override void Close()
         {
-            isOpen = false;
             isDirty = false;
-            Freeze(false);
+            base.Close();
+        }
+                
+        public int GetUniqueId()
+        {
+            return uniqueId;
         }
         
+        public void SetUniqueId(int newValue)
+        {
+            uniqueId = newValue;
+        }
+
         public void Update()
         {
             // Only stay open as long as the attached terminal window stays open:
-            if (isOpen && term != null && term.IsOpen && term.IsPowered )
-                isOpen = true;
-            else
+            if (IsOpen() && ( term == null || !(term.IsPowered) ))
                 isOpen = false;
+            UpdateLogic();
         }
         
         public void OnGUI()
         {
-            if (isOpen && !frozen)
+            if (IsOpen())
             {
-                CalcOuterCoords();
+                CalcOuterCoords(); // force windowRect to lock to bottom edge of the parents
                 CalcInnerCoords();
 
-                // Unity wants to constantly see the Window constructor run again on each
-                // onGUI call, or else it goes away:
-                if (isOpen)
-                    GUI.Window( WindowID, outerCoords, ProcessWindow, "" );
+                windowRect = GUI.Window( uniqueId, windowRect, ProcessWindow, "" );
+                // Some mouse global state data used by several of the checks:
+                Event e = Event.current;
+
+                if (consumeEvent)
+                {
+                    consumeEvent = false;
+                    Event.current.Use();  
+                }
             }
         }
 
@@ -313,10 +339,10 @@ namespace kOS.Screen
             if (e.type == EventType.mouseDown && e.button == 0)
             {
                 // Rememeber the fact that this mouseDown started on the resize button:
-                if (resizeButtonCoords.Contains(mouseDownPos))
+                if (resizeButtonCoords.Contains(mouseButtonDownPosRelative))
                 {
                     resizeMouseDown = true;
-                    resizeOldSize = new Vector2(outerCoords.width,outerCoords.height);
+                    resizeOldSize = new Vector2(windowRect.width,windowRect.height);
                     Event.current.Use();
                 }
             }
@@ -336,9 +362,9 @@ namespace kOS.Screen
                 if (resizeMouseDown)
                 {
                     var mousePos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
-                    Vector2 dragDelta = mousePos - mouseDownPos;
-                    outerCoords = new Rect( outerCoords.xMin,
-                                            outerCoords.yMin,
+                    Vector2 dragDelta = mousePos - mouseButtonDownPosRelative;
+                    windowRect = new Rect( windowRect.xMin,
+                                            windowRect.yMin,
                                             Math.Max( resizeOldSize.x + dragDelta.x, 100 ),
                                             Math.Max( resizeOldSize.y + dragDelta.y, 30 )   );
                     CalcInnerCoords();
@@ -346,76 +372,21 @@ namespace kOS.Screen
                 }
             }
         }
-        
-        protected void CheckExitClicked()
-        {
-            Event e = Event.current;
-            if (e.type == EventType.mouseUp && e.button == 0)
-            {
-                // Mouse button went both down and up in the exit box (a click):
-                if ( exitCoords.Contains(mouseUpPos) &&
-                    exitCoords.Contains(mouseDownPos) )
-                {
-                    ExitEditor();
-                    Event.current.Use(); // Without this it was quadruple-firing the same event.
-                }
-            }
-        }
-
-        protected void CheckSaveClicked()
-        {
-            Event e = Event.current;
-            if (e.type == EventType.mouseUp && e.button == 0)
-            {
-                // Mouse buton went both down and up in the save box (a click):
-                if ( saveCoords.Contains(mouseUpPos) &&
-                    saveCoords.Contains(mouseDownPos) )
-                {
-                    SaveContents();
-                    Event.current.Use(); // Without this it was quadruple-firing the same event.
-                }
-            }
-        }
-        
-        protected void CheckReloadClicked()
-        {
-            Event e = Event.current;
-            if (e.type == EventType.mouseUp && e.button == 0)
-            {
-                // Mouse button went both down and up in the reload box (a click):
-                if ( reloadCoords.Contains(mouseUpPos) &&
-                    reloadCoords.Contains(mouseDownPos) )
-                {
-                    ReloadContents();
-                    Event.current.Use(); // Without this it was quadruple-firing the same event.
-                }
-            }
-        }
-        
-        void ProcessWindow( int windowID )
+                
+        void ProcessWindow( int windowId )
         {
 
-            CheckKeyboard();
-            
-            // Some mouse global state data used by several of the checks:
-            Event e = Event.current;
-            if (e.type == EventType.MouseDown && e.button == 0)
-                mouseDownPos = new Vector2(e.mousePosition.x, e.mousePosition.y);
-            if (e.type == EventType.MouseUp && e.button == 0)
-                mouseUpPos = new Vector2(e.mousePosition.x, e.mousePosition.y);
+            if (!frozen)
+                CheckKeyboard();
+
+            DrawWindow( windowId );
 
             CheckResizeDrag();
-            CheckExitClicked();
-            CheckSaveClicked();
-            CheckReloadClicked();
 
             CalcOuterCoords();
-
-            DrawWindow( windowID );
-            
         }
         
-        protected void DrawWindow( int windowID/*currently unused argument*/ )
+        protected void DrawWindow( int windowId )
         {
             GUI.contentColor = Color.green;
 
@@ -429,9 +400,18 @@ namespace kOS.Screen
             GUILayout.EndArea();
             
             GUI.Label( labelCoords, BuildTitle() );
-            GUI.Box( exitCoords, EXIT_BUTTON_TEXT );
-            GUI.Box( saveCoords, SAVE_BUTTON_TEXT );
-            GUI.Box( reloadCoords, RELOAD_BUTTON_TEXT );
+            if (GUI.Button( exitCoords, EXIT_BUTTON_TEXT ))
+            {
+                ExitEditor();
+            }
+            if (GUI.Button( saveCoords, SAVE_BUTTON_TEXT ))
+            {
+                SaveContents();
+            }
+            if (GUI.Button( reloadCoords, RELOAD_BUTTON_TEXT ))
+            {
+                ReloadContents();
+            }
             KeepCursorScrolledInView();            
 
             GUI.Box( resizeButtonCoords, resizeImage );
@@ -444,7 +424,7 @@ namespace kOS.Screen
 
         protected void CalcOuterCoords()
         {
-            if (isOpen && term != null)
+            if (IsOpen() && term != null)
             {
                 Rect tRect = term.GetRect();
                 
@@ -454,30 +434,33 @@ namespace kOS.Screen
                 
                 // If it hasn't been given a size yet, then give it a starting size that matches
                 // the attached terminal window size.  Otherwise keep whatever size the user changed it to:
-                if (outerCoords.width == 0)
-                    outerCoords = new Rect( left, top, tRect.width, tRect.height );
+                if (windowRect.width == 0)
+                    windowRect = new Rect( left, top, tRect.width, tRect.height );
                 else
-                    outerCoords = new Rect( left, top, outerCoords.width, outerCoords.height );
+                    windowRect = new Rect( left, top, windowRect.width, windowRect.height );
             }
         }
 
         protected void CalcInnerCoords()
         {
-            if (!isOpen) return;
+            if (!IsOpen()) return;
 
             innerCoords = new Rect( FRAME_THICKNESS,
                                     FRAME_THICKNESS + 1.5f*FONT_HEIGHT,
-                                    outerCoords.width - 2*FRAME_THICKNESS,
-                                    outerCoords.height - 2*FRAME_THICKNESS -2*FONT_HEIGHT );
+                                    windowRect.width - 2*FRAME_THICKNESS,
+                                    windowRect.height - 2*FRAME_THICKNESS -2*FONT_HEIGHT );
 
             Vector2 labSize  = GUI.skin.label.CalcSize( new GUIContent(BuildTitle()) );
             Vector2 exitSize = GUI.skin.box.CalcSize(   new GUIContent(EXIT_BUTTON_TEXT) );
+            exitSize = new Vector2(exitSize.x+4, exitSize.y+4);
             Vector2 saveSize = GUI.skin.box.CalcSize(   new GUIContent(SAVE_BUTTON_TEXT) );
+            saveSize = new Vector2(saveSize.x+4, saveSize.y+4);
             Vector2 reloadSize = GUI.skin.box.CalcSize( new GUIContent(RELOAD_BUTTON_TEXT) );
+            reloadSize = new Vector2(reloadSize.x+4, reloadSize.y+4);
                 
             labelCoords = new Rect( 5, 1, labSize.x, labSize.y);
                 
-            float buttonXCounter = outerCoords.width; // Keep track of the x coord of leftmost button so far.
+            float buttonXCounter = windowRect.width; // Keep track of the x coord of leftmost button so far.
 
             buttonXCounter -= (exitSize.x + 5);
             exitCoords = new Rect( buttonXCounter, 1, exitSize.x, exitSize.y );
@@ -488,8 +471,8 @@ namespace kOS.Screen
             buttonXCounter -= (reloadSize.x + 2);
             reloadCoords = new Rect( buttonXCounter, 1, reloadSize.x, reloadSize.y );
 
-            resizeButtonCoords = new Rect( outerCoords.width - resizeImage.width,
-                                           outerCoords.height - resizeImage.height,
+            resizeButtonCoords = new Rect( windowRect.width - resizeImage.width,
+                                           windowRect.height - resizeImage.height,
                                            resizeImage.width,
                                            resizeImage.height );
         }
@@ -529,7 +512,7 @@ namespace kOS.Screen
         
         public Rect GetRect()
         {
-            return outerCoords;
+            return windowRect;
         }
         
         protected string BuildTitle()

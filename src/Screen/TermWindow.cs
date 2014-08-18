@@ -7,18 +7,21 @@ using kOS.Persistence;
 namespace kOS.Screen
 {
     // Blockotronix 550 Computor Monitor
-    public class TermWindow : MonoBehaviour
+    public class TermWindow : KOSManagedWindow
     {
         private const int CHARSIZE = 8;
         private const int CHARS_PER_ROW = 16;
         private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private static readonly Color color = new Color(1, 1, 1, 1);
-        private static readonly Color colorAlpha = new Color(0.9f, 0.9f, 0.9f, 0.2f);
+        private static readonly Color colorAlpha = new Color(0.9f, 0.9f, 0.9f, 0.6f);
         private static readonly Color textColor = new Color(0.45f, 0.92f, 0.23f, 0.9f);
         private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
         private static Rect closeButtonRect = new Rect(398, 359, 59, 30);
+        
+        
+        private bool consumeEvent;
 
         private bool allTexturesFound = true;
         private CameraManager cameraManager;
@@ -26,20 +29,18 @@ namespace kOS.Screen
         private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool isLocked;
         private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        private Rect windowRect = new Rect(60, 50, 470, 395);
 
         private SharedObjects shared;
         private bool showCursor = true;
         private KOSTextEditPopup popupEditor;
 
-        public bool IsOpen { get; protected set; }
         public bool IsPowered { get; protected set; }
 
 
         public TermWindow()
         {
             IsPowered = true;
-            IsOpen = false;
+            windowRect = new Rect(60, 50, 470, 395);
         }
 
         public void Awake()
@@ -49,6 +50,7 @@ namespace kOS.Screen
             var gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
             DontDestroyOnLoad(gObj);
             popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
+            popupEditor.SetUniqueId(uniqueId + 5);
         }
 
         public void LoadTexture(String relativePath, ref Texture2D targetTexture)
@@ -64,25 +66,32 @@ namespace kOS.Screen
             popupEditor.AttachTo(this, v, fName );
             popupEditor.Open();
         }
-
-        public void Open()
+        
+        public override void GetFocus()
         {
-            IsOpen = true;
-
             Lock();
         }
+        
+        public override void LoseFocus()
+        {
+            Unlock();
+        }
 
-        public void Close()
+        public override void Open()
+        {
+            base.Open();
+            BringToFront();
+        }
+
+        public override void Close()
         {
             // Diable GUI and release all locks
-            IsOpen = false;
-
-            Unlock();
+            base.Close();
         }
 
         public void Toggle()
         {
-            if (IsOpen) Close();
+            if (IsOpen()) Close();
             else Open();
         }
 
@@ -91,6 +100,7 @@ namespace kOS.Screen
             if (!isLocked)
             {
                 isLocked = true;
+                BringToFront();
 
                 cameraManager = CameraManager.Instance;
                 cameraManager.enabled = false;
@@ -120,7 +130,9 @@ namespace kOS.Screen
 
         void OnGUI()
         {
-            if (IsOpen && isLocked) ProcessKeyStrokes();
+            if (!IsOpen()) return;
+
+            if (isLocked) ProcessKeyStrokes();
             
             try
             {
@@ -129,15 +141,19 @@ namespace kOS.Screen
             catch(NullReferenceException)
             {
             }
-
-            if (!IsOpen) return;
             
             GUI.skin = HighLogic.Skin;
             GUI.color = isLocked ? color : colorAlpha;
 
-            windowRect = GUI.Window(0, windowRect, TerminalGui, "");
+            windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, "");
+            
+            if (consumeEvent)
+            {
+                consumeEvent = false;
+                Event.current.Use();
+            }
         }
-
+        
         void Update()
         {
             if (shared == null || shared.Vessel == null || shared.Vessel.parts.Count == 0)
@@ -146,7 +162,11 @@ namespace kOS.Screen
                 Close();
             }
 
-            if (!IsOpen || !isLocked) return;
+            if (!IsOpen() ) return;
+         
+            UpdateLogic();
+
+            if (!isLocked) return;
 
             cursorBlinkTime += Time.deltaTime;
             if (cursorBlinkTime > 1) cursorBlinkTime -= 1;
@@ -159,10 +179,12 @@ namespace kOS.Screen
                 if (Event.current.character != 0 && Event.current.character != 13 && Event.current.character != 10)
                 {
                     Type(Event.current.character);
+                    consumeEvent = true;
                 }
                 else if (Event.current.keyCode != KeyCode.None) 
                 {
                     Keydown(Event.current.keyCode);
+                    consumeEvent = true;
                 }
 
                 cursorBlinkTime = 0.0f;
@@ -280,25 +302,8 @@ namespace kOS.Screen
             }
         }
 
-        void TerminalGui(int windowID)
+        void TerminalGui(int windowId)
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                var mousePos = new Vector2(Event.current.mousePosition.x, Event.current.mousePosition.y);
-
-                if (closeButtonRect.Contains(mousePos))
-                {
-                    Close();
-                }
-                else if (new Rect(0,0,terminalImage.width, terminalImage.height).Contains(mousePos))
-                {
-                    Lock();
-                }
-                else
-                {
-                    Unlock();
-                }
-            }
 
             if (!allTexturesFound)
             {
@@ -318,10 +323,10 @@ namespace kOS.Screen
             GUI.color = isLocked ? color : colorAlpha;
             GUI.DrawTexture(new Rect(10, 10, terminalImage.width, terminalImage.height), terminalImage);
 
-            if (GUI.Button(new Rect(580, 10, 80, 30), "Close"))
+            if (GUI.Button(closeButtonRect, "Close"))
             {
-                IsOpen = false;
                 Close();
+                Event.current.Use();
             }
 
             GUI.DragWindow(new Rect(0, 0, 10000, 500));
@@ -359,8 +364,8 @@ namespace kOS.Screen
             {
                 ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor);
             }
-
             GUI.EndGroup();
+
         }
 
         void ShowCharacterByAscii(char ch, int x, int y, Color textColor)
