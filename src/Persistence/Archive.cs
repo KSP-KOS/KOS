@@ -78,7 +78,7 @@ namespace kOS.Persistence
             try
             {
                 base.DeleteByName(name);
-                File.Delete(archiveFolder + name + ".txt");
+                File.Delete(string.Format("{0}{1}.txt", archiveFolder, name));
                 return true;
             }
             catch (Exception)

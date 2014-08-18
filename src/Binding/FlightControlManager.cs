@@ -17,33 +17,31 @@ namespace kOS.Binding
 
         public override void AddTo(SharedObjects shared)
         {
-            if (shared.Vessel != null)
-            {
-                if (shared.Vessel.rootPart != null)
-                {
-                    Debug.Log("kOS: FlightControlManager.AddTo " + shared.Vessel.id);
-                    Shared = shared;
-
-                    currentVessel = shared.Vessel;
-                    currentVessel.OnFlyByWire += OnFlyByWire;
-
-                    AddNewFlightParam("throttle", shared);
-                    AddNewFlightParam("steering", shared);
-                    AddNewFlightParam("wheelthrottle", shared);
-                    AddNewFlightParam("wheelsteering", shared);
-                }
-                else
-                {
-                    Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel.rootPart == null");
-                }
-            }
-            else
+            if (shared.Vessel == null)
             {
                 Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel== null");
+                return;
             }
+
+            if (shared.Vessel.rootPart == null)
+            {
+                Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel.rootPart == null");
+                return;
+            }
+
+            Debug.Log("kOS: FlightControlManager.AddTo " + shared.Vessel.id);
+            Shared = shared;
+
+            currentVessel = shared.Vessel;
+            currentVessel.OnFlyByWire += OnFlyByWire;
+
+            AddNewFlightParam("throttle", shared);
+            AddNewFlightParam("steering", shared);
+            AddNewFlightParam("wheelthrottle", shared);
+            AddNewFlightParam("wheelsteering", shared);
         }
 
-        public void OnFlyByWire(FlightCtrlState c)
+        private void OnFlyByWire(FlightCtrlState c)
         {
             foreach (var param in flightParameters.Values)
             {
@@ -57,13 +55,12 @@ namespace kOS.Binding
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
             Debug.Log(string.Format("kOS: FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
-            if (flightParameters.ContainsKey(paramName))
+            if (!flightParameters.ContainsKey(paramName)) return;
+
+            flightParameters[paramName].Enabled = enabled;
+            if (!enabled)
             {
-                flightParameters[paramName].Enabled = enabled;
-                if (!enabled)
-                {
-                    flightParameters[paramName].ClearValue();
-                }
+                flightParameters[paramName].ClearValue();
             }
         }
 
@@ -71,24 +68,22 @@ namespace kOS.Binding
         {
             UnbindUnloaded();
 
-            if (currentVessel.id != Shared.Vessel.id)
+            if (currentVessel.id == Shared.Vessel.id) return;
+
+            // Try to re-establish connection to vessel
+            if (VesselIsValid(currentVessel))
             {
-                // Try to re-establish connection to vessel
-                if (currentVessel != null)
-                {
-                    currentVessel.OnFlyByWire -= OnFlyByWire;
-                    currentVessel = null;
-                }
-
-                if (Shared.Vessel != null)
-                {
-                    currentVessel = Shared.Vessel;
-                    currentVessel.OnFlyByWire += OnFlyByWire;
-
-                    foreach (var param in flightParameters.Values)
-                        param.UpdateFlightControl(currentVessel);
-                }
+                currentVessel.OnFlyByWire -= OnFlyByWire;
+                currentVessel = null;
             }
+
+            if (VesselIsValid(Shared.Vessel)) return;
+
+            currentVessel = Shared.Vessel;
+            currentVessel.OnFlyByWire += OnFlyByWire;
+
+            foreach (var param in flightParameters.Values)
+                param.UpdateFlightControl(currentVessel);
         }
 
         public static FlightControl GetControllerByVessel(Vessel target)
@@ -135,27 +130,27 @@ namespace kOS.Binding
             {
                 parameter.Value.Enabled = false;
             }
-            if (currentVessel.rootPart != null)
+            if (!VesselIsValid(currentVessel)) return;
+
+            FlightControl flightControl;
+            if (flightControls.TryGetValue(currentVessel.rootPart.flightID, out flightControl))
             {
-                FlightControl flightControl;
-                if (flightControls.TryGetValue(currentVessel.rootPart.flightID, out flightControl))
-                {
-                    flightControl.Unbind();
-                }
+                flightControl.Unbind();
             }
         }
 
         public void Dispose()
         {
             flightParameters.Clear();
-            if (currentVessel != null)
-            {
-                if (currentVessel.rootPart != null)
-                {
-                    UnBind();
-                    flightControls.Remove(currentVessel.rootPart.flightID);
-                }
-            }
+            if (!VesselIsValid(currentVessel)) return;
+
+            UnBind();
+            flightControls.Remove(currentVessel.rootPart.flightID);
+        }
+
+        private bool VesselIsValid(Vessel vessel)
+        {
+            return currentVessel != null && currentVessel.rootPart != null;
         }
 
         private class FlightCtrlParam : IDisposable
