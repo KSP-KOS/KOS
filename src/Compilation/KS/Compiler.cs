@@ -925,21 +925,22 @@ namespace kOS.Compilation.KS
                 // Two ways to check if this is the last index (i.e. the 'k' in arr[i][j][k]'),
                 // depeding on whehter using the "#" syntax or the "[..]" syntax:
                 bool isLastIndex = false;
-                if (node.Nodes[nodeIndex-1].Token.Type == TokenType.ARRAYINDEX)
+                var previousNodeType = node.Nodes[nodeIndex - 1].Token.Type;
+                switch (previousNodeType)
                 {
-                    isLastIndex = (nodeIndex == node.Nodes.Count-1);
-                }
-                else if (node.Nodes[nodeIndex-1].Token.Type == TokenType.SQUAREOPEN)
-                {
-                    isLastIndex = (nodeIndex == node.Nodes.Count-2);
+                    case TokenType.ARRAYINDEX:
+                        isLastIndex = (nodeIndex == node.Nodes.Count-1);
+                        break;
+                    case TokenType.SQUAREOPEN:
+                        isLastIndex = (nodeIndex == node.Nodes.Count-2);
+                        break;
                 }
 
                 // when we are setting a member value we need to leave
                 // the last object and the last index in the stack
                 // the only exception is when we are setting a suffix of the indexed value
-                if (!(_compilingSetDestination &&
-                      isLastIndex) ||
-                    VarIdentifierHasSuffix(node.Parent))
+                var hasSuffix = VarIdentifierHasSuffix(node.Parent);
+                if (!(_compilingSetDestination && isLastIndex) || hasSuffix)
                 {
                     AddOpcode(new OpcodeGetIndex());
                 }
