@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace kOS.Execution
+﻿namespace kOS.Execution
 {
     /// <summary>
     /// <p>The context record that gets pushed onto the stack to store everything
@@ -42,18 +40,18 @@ namespace kOS.Execution
     {
         /// <summary>The instruction pointer that this subroutine call came from, and therefore
         /// should be returned to when it's done.</summary>
-        public int CameFromIP {get; private set;}
+        public int CameFromInstPtr {get; private set;}
 
         /// <summary>Make a new Subroutine Context, with all the required data.</summary>
-        /// <param name="comeFromIP">Sets the ComeFromIP field</param>
-        public SubroutineContext(int cameFromIP)
+        /// <param name="cameFromInstPtr">Sets the ComeFromIP field</param>
+        public SubroutineContext(int cameFromInstPtr)
         {
-            CameFromIP = cameFromIP;
+            CameFromInstPtr = cameFromInstPtr;
         }
         
         public override string ToString()
         {
-            return string.Format("SubroutineContext: {{CameFromIP {0}}}", CameFromIP);
+            return string.Format("SubroutineContext: {{CameFromInstPtr {0}}}", CameFromInstPtr);
         }
     }
 }
