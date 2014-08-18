@@ -499,7 +499,7 @@ namespace kOS.Compilation
             }
             var contextRecord = shouldBeContextRecord as SubroutineContext;
             
-            int destinationPointer = contextRecord.CameFromIP;
+            int destinationPointer = contextRecord.CameFromInstPtr;
             int currentPointer = cpu.InstructionPointer;
             DeltaInstructionPointer = destinationPointer - currentPointer;
         }

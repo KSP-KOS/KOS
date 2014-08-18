@@ -119,7 +119,7 @@ namespace kOS.Execution
             {
                 if (stack[index] is SubroutineContext)
                 {
-                    trace.Add( ((SubroutineContext)(stack[index])).CameFromIP - 1 );
+                    trace.Add( ((SubroutineContext)(stack[index])).CameFromInstPtr - 1 );
                 }
             }
             return trace;
