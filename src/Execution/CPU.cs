@@ -28,12 +28,16 @@ namespace kOS.Execution
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
         private Dictionary<string, Variable> savedPointers;
+        private int instructionsSoFarInUpdate;
+        private int instructionsPerUpdate;
         
         // statistics
         private double TotalCompileTime;
         private double totalUpdateTime;
         private double totalTriggersTime;
         private double totalExecutionTime;
+        private int mostMainlineInstSoFar = 0;
+        private int mostTriggerInstSoFar = 0;
 
         public int InstructionPointer
         {
@@ -465,6 +469,12 @@ namespace kOS.Execution
             Stopwatch updateWatch = null;
             Stopwatch triggerWatch = null;
             Stopwatch executionWatch = null;
+            
+            // If the script changes config value, it doesn't take effect until next update:
+            instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
+            instructionsSoFarInUpdate = 0;
+            int numTriggerInstructions = 0;
+            int numMainlineInstructions = 0;
 
             if (showStatistics) updateWatch = Stopwatch.StartNew();
 
@@ -478,6 +488,7 @@ namespace kOS.Execution
                 {
                     if (showStatistics) triggerWatch = Stopwatch.StartNew();
                     ProcessTriggers();
+                    numTriggerInstructions = instructionsSoFarInUpdate;
                     if (showStatistics)
                     {
                         triggerWatch.Stop();
@@ -490,6 +501,7 @@ namespace kOS.Execution
                     {
                         if (showStatistics) executionWatch = Stopwatch.StartNew();
                         ContinueExecution();
+                        numMainlineInstructions = instructionsSoFarInUpdate - numTriggerInstructions;
                         if (showStatistics)
                         {
                             executionWatch.Stop();
@@ -525,6 +537,10 @@ namespace kOS.Execution
             {
                 updateWatch.Stop();
                 totalUpdateTime += updateWatch.ElapsedMilliseconds;
+                if (mostTriggerInstSoFar < numTriggerInstructions)
+                    mostTriggerInstSoFar = numTriggerInstructions;
+                if (mostMainlineInstSoFar < numMainlineInstructions)
+                    mostMainlineInstSoFar = numMainlineInstructions;
             }
         }
 
@@ -569,15 +585,32 @@ namespace kOS.Execution
                         currentContext.InstructionPointer = triggerPointer;
 
                         bool executeNext = true;
-                        while (executeNext)
+                        while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
                         {
                             executeNext = ExecuteInstruction(currentContext);
+                            instructionsSoFarInUpdate++;
                         }
                     }
                     catch (Exception e)
                     {
                         RemoveTrigger(triggerPointer);
                         shared.Logger.Log(e);
+                    }
+                    if (instructionsSoFarInUpdate >= instructionsPerUpdate)
+                    {
+                        // This is a verbose error message, but it's important, as without knowing
+                        // the internals, a user has no idea why it's happening.  The verbose
+                        // error message helps direct the user to areas of the documentation
+                        // where longer explanations can be found.
+                        throw new Exception("__________________________________________________\n" +
+                                            "Triggers (*) exceeded max Instructions-Per-Update.\n" +
+                                            "TO FIX THIS PROBLEM, TRY ONE OR MORE OF THESE:\n" +
+                                            " - Redesign your triggers to use less code.\n" +
+                                            " - Make CONFIG:IPU value bigger.\n" +
+                                            " - If your trigger body was meant to be a loop, \n" +
+                                            "     consider using the PRESERVE keyword instead\n" +
+                                            "     to make it run one iteration per Update.\n" +
+                                            "* (\"Trigger\" means a WHEN or ON or LOCK command.)\n");
                     }
                 }
 
@@ -587,17 +620,15 @@ namespace kOS.Execution
 
         private void ContinueExecution()
         {
-            int instructionCounter = 0;
             bool executeNext = true;
-            int instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
             
             while (currentStatus == Status.Running && 
-                   instructionCounter < instructionsPerUpdate &&
+                   instructionsSoFarInUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
             {
                 executeNext = ExecuteInstruction(currentContext);
-                instructionCounter++;
+                instructionsSoFarInUpdate++;
             }
         }
 
@@ -667,12 +698,16 @@ namespace kOS.Execution
             shared.Screen.Print(string.Format("Total update time: {0:F3}ms", totalUpdateTime));
             shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", totalTriggersTime));
             shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", totalExecutionTime));
+            shared.Screen.Print(string.Format("Most Trigger instructions in one update: {0}", mostTriggerInstSoFar));
+            shared.Screen.Print(string.Format("Most Mainline instructions in one update: {0}", mostMainlineInstSoFar));
             shared.Screen.Print(" ");
 
             TotalCompileTime = 0D;
             totalUpdateTime = 0D;
             totalTriggersTime = 0D;
             totalExecutionTime = 0D;
+            mostMainlineInstSoFar = 0;
+            mostTriggerInstSoFar = 0;
         }
 
         public void OnSave(ConfigNode node)
