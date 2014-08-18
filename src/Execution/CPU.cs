@@ -32,12 +32,12 @@ namespace kOS.Execution
         private int instructionsPerUpdate;
         
         // statistics
-        private double TotalCompileTime;
+        private double totalCompileTime;
         private double totalUpdateTime;
         private double totalTriggersTime;
         private double totalExecutionTime;
-        private int mostMainlineInstSoFar = 0;
-        private int mostTriggerInstSoFar = 0;
+        private int maxMainlineInstructionsSoFar;
+        private int maxTriggerInstructionsSoFar;
 
         public int InstructionPointer
         {
@@ -384,15 +384,9 @@ namespace kOS.Execution
 
         public void RemoveAllVariables()
         {
-            var removals = new List<string>();
-            
-            foreach (var kvp in variables)
-            {
-                if (VariableIsRemovable(kvp.Value))
-                {
-                    removals.Add(kvp.Key);
-                }
-            }
+            var removals = variables.
+                Where(v => VariableIsRemovable(v.Value)).
+                Select(kvp => kvp.Key).ToList();
 
             foreach (string identifier in removals)
             {
@@ -537,10 +531,10 @@ namespace kOS.Execution
             {
                 updateWatch.Stop();
                 totalUpdateTime += updateWatch.ElapsedMilliseconds;
-                if (mostTriggerInstSoFar < numTriggerInstructions)
-                    mostTriggerInstSoFar = numTriggerInstructions;
-                if (mostMainlineInstSoFar < numMainlineInstructions)
-                    mostMainlineInstSoFar = numMainlineInstructions;
+                if (maxTriggerInstructionsSoFar < numTriggerInstructions)
+                    maxTriggerInstructionsSoFar = numTriggerInstructions;
+                if (maxMainlineInstructionsSoFar < numMainlineInstructions)
+                    maxMainlineInstructionsSoFar = numMainlineInstructions;
             }
         }
 
@@ -573,49 +567,48 @@ namespace kOS.Execution
 
         private void ProcessTriggers()
         {
-            if (currentContext.Triggers.Count > 0)
+            if (currentContext.Triggers.Count <= 0) return;
+
+            int currentInstructionPointer = currentContext.InstructionPointer;
+            var triggerList = new List<int>(currentContext.Triggers);
+
+            foreach (int triggerPointer in triggerList)
             {
-                int currentInstructionPointer = currentContext.InstructionPointer;
-                var triggerList = new List<int>(currentContext.Triggers);
-
-                foreach (int triggerPointer in triggerList)
+                try
                 {
-                    try
-                    {
-                        currentContext.InstructionPointer = triggerPointer;
+                    currentContext.InstructionPointer = triggerPointer;
 
-                        bool executeNext = true;
-                        while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
-                        {
-                            executeNext = ExecuteInstruction(currentContext);
-                            instructionsSoFarInUpdate++;
-                        }
-                    }
-                    catch (Exception e)
+                    bool executeNext = true;
+                    while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
                     {
-                        RemoveTrigger(triggerPointer);
-                        shared.Logger.Log(e);
-                    }
-                    if (instructionsSoFarInUpdate >= instructionsPerUpdate)
-                    {
-                        // This is a verbose error message, but it's important, as without knowing
-                        // the internals, a user has no idea why it's happening.  The verbose
-                        // error message helps direct the user to areas of the documentation
-                        // where longer explanations can be found.
-                        throw new Exception("__________________________________________________\n" +
-                                            "Triggers (*) exceeded max Instructions-Per-Update.\n" +
-                                            "TO FIX THIS PROBLEM, TRY ONE OR MORE OF THESE:\n" +
-                                            " - Redesign your triggers to use less code.\n" +
-                                            " - Make CONFIG:IPU value bigger.\n" +
-                                            " - If your trigger body was meant to be a loop, \n" +
-                                            "     consider using the PRESERVE keyword instead\n" +
-                                            "     to make it run one iteration per Update.\n" +
-                                            "* (\"Trigger\" means a WHEN or ON or LOCK command.)\n");
+                        executeNext = ExecuteInstruction(currentContext);
+                        instructionsSoFarInUpdate++;
                     }
                 }
-
-                currentContext.InstructionPointer = currentInstructionPointer;
+                catch (Exception e)
+                {
+                    RemoveTrigger(triggerPointer);
+                    shared.Logger.Log(e);
+                }
+                if (instructionsSoFarInUpdate >= instructionsPerUpdate)
+                {
+                    // This is a verbose error message, but it's important, as without knowing
+                    // the internals, a user has no idea why it's happening.  The verbose
+                    // error message helps direct the user to areas of the documentation
+                    // where longer explanations can be found.
+                    throw new Exception("__________________________________________________\n" +
+                                        "Triggers (*) exceeded max Instructions-Per-Update.\n" +
+                                        "TO FIX THIS PROBLEM, TRY ONE OR MORE OF THESE:\n" +
+                                        " - Redesign your triggers to use less code.\n" +
+                                        " - Make CONFIG:IPU value bigger.\n" +
+                                        " - If your trigger body was meant to be a loop, \n" +
+                                        "     consider using the PRESERVE keyword instead\n" +
+                                        "     to make it run one iteration per Update.\n" +
+                                        "* (\"Trigger\" means a WHEN or ON or LOCK command.)\n");
+                }
             }
+
+            currentContext.InstructionPointer = currentInstructionPointer;
         }
 
         private void ContinueExecution()
@@ -651,38 +644,34 @@ namespace kOS.Execution
 
         private void SkipCurrentInstructionId()
         {
-            if (currentContext.InstructionPointer < (currentContext.Program.Count - 1))
-            {
-                string currentSourceName = currentContext.Program[currentContext.InstructionPointer].SourceName;
+            if (currentContext.InstructionPointer >= (currentContext.Program.Count - 1)) return;
 
-                while (currentContext.InstructionPointer < currentContext.Program.Count &&
-                       currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName)
-                {
-                    currentContext.InstructionPointer++;
-                }
+            string currentSourceName = currentContext.Program[currentContext.InstructionPointer].SourceName;
+            bool isCurrentSource = currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName;
+
+            while (currentContext.InstructionPointer < currentContext.Program.Count && isCurrentSource)
+            {
+                currentContext.InstructionPointer++;
             }
         }
 
         public void CallBuiltinFunction(string functionName)
         {
-            if (functions.ContainsKey(functionName))
-            {
-                FunctionBase function = functions[functionName];
-                function.Execute(shared);
-            }
-            else
+            if (!functions.ContainsKey(functionName))
             {
                 throw new Exception("Call to non-existent function " + functionName);
             }
+
+            FunctionBase function = functions[functionName];
+            function.Execute(shared);
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            if (shared.BindingMgr != null)
-            {
-                shared.BindingMgr.ToggleFlyByWire(paramName, enabled);
-                currentContext.ToggleFlyByWire(paramName, enabled);
-            }
+            if (shared.BindingMgr == null) return;
+
+            shared.BindingMgr.ToggleFlyByWire(paramName, enabled);
+            currentContext.ToggleFlyByWire(paramName, enabled);
         }
 
         public List<string> GetCodeFragment(int contextLines)
@@ -694,20 +683,20 @@ namespace kOS.Execution
         {
             if (!Config.Instance.ShowStatistics) return;
 
-            shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", TotalCompileTime));
+            shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", totalCompileTime));
             shared.Screen.Print(string.Format("Total update time: {0:F3}ms", totalUpdateTime));
             shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", totalTriggersTime));
             shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", totalExecutionTime));
-            shared.Screen.Print(string.Format("Most Trigger instructions in one update: {0}", mostTriggerInstSoFar));
-            shared.Screen.Print(string.Format("Most Mainline instructions in one update: {0}", mostMainlineInstSoFar));
+            shared.Screen.Print(string.Format("Most Trigger instructions in one update: {0}", maxTriggerInstructionsSoFar));
+            shared.Screen.Print(string.Format("Most Mainline instructions in one update: {0}", maxMainlineInstructionsSoFar));
             shared.Screen.Print(" ");
 
-            TotalCompileTime = 0D;
+            totalCompileTime = 0D;
             totalUpdateTime = 0D;
             totalTriggersTime = 0D;
             totalExecutionTime = 0D;
-            mostMainlineInstSoFar = 0;
-            mostTriggerInstSoFar = 0;
+            maxMainlineInstructionsSoFar = 0;
+            maxTriggerInstructionsSoFar = 0;
         }
 
         public void OnSave(ConfigNode node)
