@@ -14,7 +14,16 @@ We are using the C# coding conventions described in this document: [C# Coding Gu
 * Each file should not start with a copyright notice. The ones at the root of the source tree will suffice. 
 * Regions (#region) are not used. 
 * using statements are on top of a file (outside of namespace {...}) 
-* Use var only if you have an anonymous type or you can clearly tell what the type is from the right hand side of the expression (see examples below). 
+* Use var only if you have an anonymous type or you can clearly tell what the type is from the right hand side of the expression 
+
+#### Naming
+Follow all .NET Framework Design Guidelines for both internal and external members. Highlights of these include:
+* Do not use Hungarian notation
+* Do not use a prefix for member variables (_, m_, s_, etc.). If you want to distinguish between local and member variables you should use “this.” in C# and “Me.” in VB.NET.
+* Do use camelCasing for member variables, parameters and local variables
+* Do use PascalCasing for function, property, event, and class names
+* Do prefix interfaces names with “I”
+* Do not prefix enums, classes, or delegates with any letter
 
 Here is some sample code that follows these conventions.
 
@@ -58,6 +67,10 @@ Here is some sample code that follows these conventions.
 						return "Bar";
 				}
 				return String.Empty;
+			}
+			
+			private string AnotherMethod(){
+				return privateMember.Count;
 			}
 		}
     }		
