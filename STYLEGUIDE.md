@@ -19,7 +19,7 @@ We are using the C# coding conventions described in this document: [C# Coding Gu
 #### Naming
 Follow all .NET Framework Design Guidelines for both internal and external members. Highlights of these include:
 * Do not use Hungarian notation
-* Do not use a prefix for member variables (_, m_, s_, etc.). If you want to distinguish between local and member variables you should use “this.” in C# and “Me.” in VB.NET.
+* Do not use a prefix for member variables (_, m_, s_, etc.). If you want to distinguish between local and member variables you should use “this.”
 * Do use camelCasing for member variables, parameters and local variables
 * Do use PascalCasing for function, property, event, and class names
 * Do prefix interfaces names with “I”
