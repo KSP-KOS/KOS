@@ -202,7 +202,7 @@ namespace kOS.Execution
         
         public Opcode GetOpcodeAt(int instructionPtr)
         {
-            return currentContext.Program[instructionPtr];            
+            return currentContext.Program[instructionPtr];
         }
 
         private void SaveAndClearPointers()
@@ -647,9 +647,9 @@ namespace kOS.Execution
             if (currentContext.InstructionPointer >= (currentContext.Program.Count - 1)) return;
 
             string currentSourceName = currentContext.Program[currentContext.InstructionPointer].SourceName;
-            bool isCurrentSource = currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName;
 
-            while (currentContext.InstructionPointer < currentContext.Program.Count && isCurrentSource)
+            while (currentContext.InstructionPointer < currentContext.Program.Count && 
+                   currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName)
             {
                 currentContext.InstructionPointer++;
             }
