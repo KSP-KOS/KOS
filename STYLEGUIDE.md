@@ -15,6 +15,7 @@ We are using the C# coding conventions described in this document: [C# Coding Gu
 * Regions (#region) are not used. 
 * using statements are on top of a file (outside of namespace {...}) 
 * Use var only if you have an anonymous type or you can clearly tell what the type is from the right hand side of the expression 
+* Member variables should always be private, public access should be provided by an encapsulated property.
 
 #### Naming
 Follow all .NET Framework Design Guidelines for both internal and external members. Highlights of these include:
