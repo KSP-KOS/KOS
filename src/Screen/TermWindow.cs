@@ -176,7 +176,10 @@ namespace kOS.Screen
         {
             if (Event.current.type == EventType.KeyDown)
             {
-                char c = Event.current.character;
+                // Unity handles some keys in a particular way
+                // e.g. Keypad7 is mapped to 0xffb7 instead of 0x37
+                char c = (char)(Event.current.character & 0x007f);
+
                 if (0x20 <= c && c < 0x7f) // printable characters
                 {
                     Type(c);
