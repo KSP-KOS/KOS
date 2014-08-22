@@ -94,8 +94,6 @@ namespace kOS.Execution
             var builder = new StringBuilder();
             builder.AppendLine("Stack dump:");
 
-            int startIndex = Math.Max(0, stack.Count - lineCount);
-            
             // Print in reverse order so the top of the stack is on top of the printout:
             // (actually given the double nature of the stack, one of the two sub-stacks
             // inside it will always be backwardly printed):
