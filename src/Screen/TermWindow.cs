@@ -279,7 +279,10 @@ namespace kOS.Screen
                     return;
                 case (KeyCode.KeypadEnter):
                 case (KeyCode.Return):
-                    Type((char)13);
+                    Type('\r');
+                    return;
+                case (KeyCode.Tab):
+                    Type('\t');
                     return;
                 case (KeyCode.PageUp):
                     SpecialKey(kOSKeys.PGUP);
