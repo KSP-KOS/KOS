@@ -176,9 +176,10 @@ namespace kOS.Screen
         {
             if (Event.current.type == EventType.KeyDown)
             {
-                if (Event.current.character != 0 && Event.current.character != 13 && Event.current.character != 10)
+                char c = Event.current.character;
+                if (0x20 <= c && c < 0x7f) // printable characters
                 {
-                    Type(Event.current.character);
+                    Type(c);
                     consumeEvent = true;
                 }
                 else if (Event.current.keyCode != KeyCode.None) 
