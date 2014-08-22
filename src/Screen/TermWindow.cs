@@ -174,20 +174,35 @@ namespace kOS.Screen
 
         void ProcessKeyStrokes()
         {
-            if (Event.current.type == EventType.KeyDown)
+            Event e = Event.current;
+            if (e.type == EventType.KeyDown)
             {
                 // Unity handles some keys in a particular way
                 // e.g. Keypad7 is mapped to 0xffb7 instead of 0x37
-                char c = (char)(Event.current.character & 0x007f);
+                char c = (char)(e.character & 0x007f);
+
+                // command sequences
+                if (e.keyCode == KeyCode.C && e.control) // Ctrl+C
+                {
+                    SpecialKey(kOSKeys.BREAK);
+                    consumeEvent = true;
+                    return;
+                }
+                if (e.keyCode == KeyCode.X && e.control && e.shift) // Ctrl+Shift+X
+                {
+                    Close();
+                    consumeEvent = true;
+                    return;
+                }
 
                 if (0x20 <= c && c < 0x7f) // printable characters
                 {
                     Type(c);
                     consumeEvent = true;
                 }
-                else if (Event.current.keyCode != KeyCode.None) 
+                else if (e.keyCode != KeyCode.None) 
                 {
-                    Keydown(Event.current.keyCode);
+                    Keydown(e.keyCode);
                     consumeEvent = true;
                 }
 
@@ -197,21 +212,6 @@ namespace kOS.Screen
 
         private void Keydown(KeyCode code)
         {
-            bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-            bool control = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
-
-            if (code == (KeyCode.C) && control)
-            {
-                SpecialKey(kOSKeys.BREAK);
-                return;
-            }
-
-            if (code == (KeyCode.X) && control && shift)
-            {
-                Close();
-                return;
-            }
-
             switch (code)
             {
                 case (KeyCode.Break):
