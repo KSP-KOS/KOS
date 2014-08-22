@@ -214,82 +214,41 @@ namespace kOS.Screen
         {
             switch (code)
             {
-                case (KeyCode.Break):
-                    SpecialKey(kOSKeys.BREAK);
-                    return;
-                case (KeyCode.F1):
-                    SpecialKey(kOSKeys.F1);
-                    return;
-                case (KeyCode.F2):
-                    SpecialKey(kOSKeys.F2);
-                    return;
-                case (KeyCode.F3):
-                    SpecialKey(kOSKeys.F3);
-                    return;
-                case (KeyCode.F4):
-                    SpecialKey(kOSKeys.F4);
-                    return;
-                case (KeyCode.F5):
-                    SpecialKey(kOSKeys.F5);
-                    return;
-                case (KeyCode.F6):
-                    SpecialKey(kOSKeys.F6);
-                    return;
-                case (KeyCode.F7):
-                    SpecialKey(kOSKeys.F7);
-                    return;
-                case (KeyCode.F8):
-                    SpecialKey(kOSKeys.F8);
-                    return;
-                case (KeyCode.F9):
-                    SpecialKey(kOSKeys.F9);
-                    return;
-                case (KeyCode.F10):
-                    SpecialKey(kOSKeys.F10);
-                    return;
-                case (KeyCode.F11):
-                    SpecialKey(kOSKeys.F11);
-                    return;
-                case (KeyCode.F12):
-                    SpecialKey(kOSKeys.F12);
-                    return;
-                case (KeyCode.UpArrow):
-                    SpecialKey(kOSKeys.UP);
-                    return;
-                case (KeyCode.DownArrow):
-                    SpecialKey(kOSKeys.DOWN);
-                    return;
-                case (KeyCode.LeftArrow):
-                    SpecialKey(kOSKeys.LEFT);
-                    return;
-                case (KeyCode.RightArrow):
-                    SpecialKey(kOSKeys.RIGHT);
-                    return;
-                case (KeyCode.Home):
-                    SpecialKey(kOSKeys.HOME);
-                    return;
-                case (KeyCode.End):
-                    SpecialKey(kOSKeys.END);
-                    return;
+                case KeyCode.Break:      SpecialKey(kOSKeys.BREAK); break;
+                case KeyCode.F1:         SpecialKey(kOSKeys.F1);    break;
+                case KeyCode.F2:         SpecialKey(kOSKeys.F2);    break;
+                case KeyCode.F3:         SpecialKey(kOSKeys.F3);    break;
+                case KeyCode.F4:         SpecialKey(kOSKeys.F4);    break;
+                case KeyCode.F5:         SpecialKey(kOSKeys.F5);    break;
+                case KeyCode.F6:         SpecialKey(kOSKeys.F6);    break;
+                case KeyCode.F7:         SpecialKey(kOSKeys.F7);    break;
+                case KeyCode.F8:         SpecialKey(kOSKeys.F8);    break;
+                case KeyCode.F9:         SpecialKey(kOSKeys.F9);    break;
+                case KeyCode.F10:        SpecialKey(kOSKeys.F10);   break;
+                case KeyCode.F11:        SpecialKey(kOSKeys.F11);   break;
+                case KeyCode.F12:        SpecialKey(kOSKeys.F12);   break;
+                case KeyCode.UpArrow:    SpecialKey(kOSKeys.UP);    break;
+                case KeyCode.DownArrow:  SpecialKey(kOSKeys.DOWN);  break;
+                case KeyCode.LeftArrow:  SpecialKey(kOSKeys.LEFT);  break;
+                case KeyCode.RightArrow: SpecialKey(kOSKeys.RIGHT); break;
+                case KeyCode.Home:       SpecialKey(kOSKeys.HOME);  break;
+                case KeyCode.End:        SpecialKey(kOSKeys.END);   break;
+                case KeyCode.Delete:     SpecialKey(kOSKeys.DEL);   break;
+                case KeyCode.PageUp:     SpecialKey(kOSKeys.PGUP);  break;
+                case KeyCode.PageDown:   SpecialKey(kOSKeys.PGDN);  break;
+
                 case (KeyCode.Backspace):
                     Type((char)8);
-                    return;
-                case (KeyCode.Delete):
-                    SpecialKey(kOSKeys.DEL);
-                    return;
+                    break;
+
                 case (KeyCode.KeypadEnter):
                 case (KeyCode.Return):
                     Type('\r');
-                    return;
+                    break;
+
                 case (KeyCode.Tab):
                     Type('\t');
-                    return;
-                case (KeyCode.PageUp):
-                    SpecialKey(kOSKeys.PGUP);
-                    return;
-                case (KeyCode.PageDown):
-                    SpecialKey(kOSKeys.PGDN);
-                    return;
+                    break;
             }
         }
 
