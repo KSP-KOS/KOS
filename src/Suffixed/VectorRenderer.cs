@@ -33,7 +33,6 @@ namespace kOS.Suffixed
         // mod.  Until then it's not that much of an extra cost:
         private Vector3       shipCenterCoords;
         private Vector3       camPos;         // camera coordinates.
-        private Vector3       prevCamPos; //TODO: do we need this?
         private Vector3       camLookVec;     // vector from camera to ship positon.
         private Vector3       prevCamLookVec;
         private Quaternion    camRot;
@@ -122,7 +121,6 @@ namespace kOS.Suffixed
 
             prevIsOnMap    = isOnMap;
             prevCamLookVec = camLookVec;
-            prevCamPos     = camPos;
             prevCamRot     = camRot;
             
             isOnMap = MapView.MapIsEnabled;
