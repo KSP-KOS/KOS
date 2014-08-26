@@ -9,7 +9,7 @@
 
 We should use the [Allman bracing style](http://en.wikipedia.org/wiki/Indent_style#Allman_style) for consistency.
 
-We are using the C# coding conventions described in this document: [C# Coding Guidelines](http://blogs.msdn.com/brada/articles/361363.aspx) with the following exceptions:
+We are using the C# coding conventions described in this document as a guide, not everything in this doc is gospel and is open to debate: [C# Coding Guidelines](http://blogs.msdn.com/brada/articles/361363.aspx) with the following exceptions:
 
 * Each file should not start with a copyright notice. The ones at the root of the source tree will suffice. 
 * Regions (#region) are not used. 
@@ -25,7 +25,6 @@ Follow all .NET Framework Design Guidelines for both internal and external membe
 * Do __not__ use Hungarian notation
 * Do __not__ use a prefix for member variables (_, m_, s_, etc.). If you want to distinguish between local and member variables you should use “this.”
 * Do __not__ prefix enums, classes, or delegates with any letter
-
 
 Here is some sample code that follows these conventions.
 
