@@ -262,6 +262,9 @@ namespace kOS.Compilation.KS
                 case TokenType.run_stmt:
                     Value = Evalrun_stmt(tree, paramlist);
                     break;
+                case TokenType.compile_stmt:
+                    Value = Evalcompile_stmt(tree, paramlist);
+                    break;
                 case TokenType.filevol_name:
                     Value = Evalfilevol_name(tree, paramlist);
                     break;
@@ -521,6 +524,13 @@ namespace kOS.Compilation.KS
         }
 
         protected virtual object Evalrun_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalcompile_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

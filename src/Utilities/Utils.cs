@@ -33,9 +33,63 @@ namespace kOS.Utilities
         INSERT = 45,
         BREAK = 19
     }
+    
+    public enum NagType
+    {
+        /// <summary>Make message go away</summary>
+        SHUTUP = 0,
+        /// <summary>Report this just once, then revert to SHUTUP after that</summary>
+        NAGONCE,
+        /// <summary>Always give the nag message every time the terminal welcome is printed</summary>
+        NAGFOREVER
+    }
+    
+    public class NagMessage
+    {
+        public NagType nag;
+        public string message;
+        public NagMessage(NagType n, string msg)
+        {
+            nag = n;
+            message = msg;
+        }
+    }
 
     public static class Utils
-    {
+    {        
+        private static List<NagMessage> nags = new List<NagMessage>();
+        /// <summary>
+        /// Add a string message that should be shown on the terminal
+        /// the next time it shows its Welcome message.
+        /// It is possible to chain several of these messages together,
+        /// but remember that the terminal window is small.  Keep
+        /// the message short so there's room for other nag messages too.
+        /// </summary>
+        /// <param name="nag">Should the message be shown once, or keep being shown
+        /// every time the terminal welcome message appears?</param>
+        /// <param name="Message">Message to print</param>
+        public static void AddNagMessage(NagType nag, string message)
+        {
+            nags.Add( new NagMessage(nag, message) );
+        }
+        /// <summary>
+        /// Gets a list of all the pending nag messages,
+        /// and in the process of doing that it clears out any
+        /// that were set to just NAGONCE.
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetPendingNags()
+        {
+            List<string> returnVal = new List<string>();
+            foreach (NagMessage nag in nags)
+                returnVal.Add(nag.message);
+            
+            // Only keep the NAGFOREVER ones:
+            nags.RemoveAll( delegate(NagMessage nag) { if (nag.nag != NagType.NAGFOREVER) return true; else return false; } );
+
+            return returnVal;
+        }
+        
         public static float Clamp(float input, float low, float high)
         {
             return (input > high ? high : (input < low ? low : input));

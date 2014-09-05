@@ -51,6 +51,10 @@ namespace kOS
             for (int index = 0 ; index < trace.Count ; ++index)
             {
                 Opcode thisOpcode = Shared.Cpu.GetOpcodeAt(trace[index]);
+                if (thisOpcode is OpcodeBogus) 
+                {
+                    return "(Cannot Show kOS Error Location - error might really be internal. See kOS devs.)";
+                }
                 
                 // The statement "run program" actually causes TWO nested function calls,
                 // as the logic to check if the program needs compiling is implemented as a

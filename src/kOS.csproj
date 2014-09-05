@@ -69,6 +69,7 @@
     <Compile Include="Binding\KOSBinding.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />

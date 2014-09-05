@@ -111,7 +111,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            string fileNameOut = shared.Cpu.PopValue().ToString(); // null if there's no output file (output file means compile, not run).
             string fileName = shared.Cpu.PopValue().ToString();
+            
+            if (fileName != null && fileNameOut != null && fileName == fileNameOut)
+                throw new Exception("Input and output filenames must differ.");
 
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
@@ -121,14 +125,26 @@ namespace kOS.Function
 
             if (shared.ScriptHandler != null)
             {
-                var programContext = shared.Cpu.GetProgramContext();
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
-                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
-                // add this program to the address space of the parent program
-                int programAddress = programContext.AddObjectParts(parts);
-                // push the entry point address of the new program onto the stack
-                shared.Cpu.PushStack(programAddress);
+                // add this program to the address space of the parent program,
+                // or to a file to save:
+                if (fileNameOut != null)
+                {
+                    UnityEngine.Debug.Log("Checkpoint A01");
+                    List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, file.Content, String.Empty, options);
+                    
+                    shared.VolumeMgr.CurrentVolume.SaveObjectFile(fileNameOut,compileParts);
+                    UnityEngine.Debug.Log("Checkpoint A02");
+                }
+                else
+                {
+                    var programContext = shared.Cpu.GetProgramContext();
+                    List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "compile", options);
+                    int programAddress = programContext.AddObjectParts(parts);
+                    // push the entry point address of the new program onto the stack
+                    shared.Cpu.PushStack(programAddress);                    
+                }
             }
         }
     }

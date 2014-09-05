@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using kOS.Suffixed;
+using kOS.Compilation;
 
 namespace kOS.Persistence
 {
@@ -79,6 +80,18 @@ namespace kOS.Persistence
         {
             DeleteByName(file.Filename);
             Add(file);
+            return true;
+        }
+        
+        public virtual bool SaveObjectFile(string fileNameOut, List<CodePart> parts)
+        {
+            UnityEngine.Debug.Log("Checkpoint B01");
+            ProgramFile newFile = new ProgramFile(fileNameOut);
+            UnityEngine.Debug.Log("Checkpoint B02");
+            newFile.Content = Compilation.CompiledObject.Pack(fileNameOut, parts);
+            UnityEngine.Debug.Log("Checkpoint B03");
+            SaveFile(newFile);
+            UnityEngine.Debug.Log("Checkpoint B04");
             return true;
         }
 

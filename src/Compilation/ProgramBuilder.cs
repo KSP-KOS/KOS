@@ -40,28 +40,40 @@ namespace kOS.Compilation
         {
             var program = new List<Opcode>();
 
+            UnityEngine.Debug.Log("Checkpoint E01");
             foreach (var objectFile in objectFiles.Values)
             {
+                UnityEngine.Debug.Log("Checkpoint E02");
                 var linkedObject = new CodePart();
+                UnityEngine.Debug.Log("Checkpoint E03");
 
                 foreach (var part in objectFile.Parts)
                 {
+                    UnityEngine.Debug.Log("Checkpoint E03.1");
                     AddInitializationCode(linkedObject, part);
+                    UnityEngine.Debug.Log("Checkpoint E03.2");
                     linkedObject.FunctionsCode.AddRange(part.FunctionsCode);
+                    UnityEngine.Debug.Log("Checkpoint E03.3");
                     linkedObject.MainCode.AddRange(part.MainCode);
+                    UnityEngine.Debug.Log("Checkpoint E03.4");
                 }
 
+                UnityEngine.Debug.Log("Checkpoint E04");
                 // we assume that the first object is the main program and the rest are subprograms/libraries
                 bool isMainProgram = (objectFile == objectFiles.Values.First());
+                UnityEngine.Debug.Log("Checkpoint E05");
                 // add a jump to the entry point so the execution skips the functions code
                 if (isMainProgram)
                     AddJumpToEntryPoint(linkedObject);
+                UnityEngine.Debug.Log("Checkpoint E06");
                 // add an instruction to indicate the end of the program
                 AddEndOfProgram(linkedObject, isMainProgram);
                 // save the entry point of the object
+                UnityEngine.Debug.Log("Checkpoint E07");
                 objectFile.EntryPointLabel = GetEntryPointLabel(linkedObject);
                 // add the linked object to the final program
                 program.AddRange(linkedObject.MergeSections());
+                UnityEngine.Debug.Log("Checkpoint E08");
             }
 
             // replace all the labels references with the corresponding address
@@ -104,44 +116,59 @@ namespace kOS.Compilation
 
         private void ReplaceLabels(List<Opcode> program)
         {
+            UnityEngine.Debug.Log("Checkpoint RL01");
             var labels = new Dictionary<string, int>();
+            UnityEngine.Debug.Log("Checkpoint RL02");
 
             // get the index of every label
             for (int index = 0; index < program.Count; index++)
             {
+                UnityEngine.Debug.Log("Checkpoint RL03");
                 if (program[index].Label != string.Empty)
                 {
                     labels.Add(program[index].Label, index);
                 }
+                UnityEngine.Debug.Log("Checkpoint RL04");
             }
+            UnityEngine.Debug.Log("Checkpoint RL05");
 
             // replace destination labels with the corresponding index
             for (int index = 0; index < program.Count; index++)
             {
+                UnityEngine.Debug.Log("Checkpoint RL06");
                 Opcode opcode = program[index];
+                UnityEngine.Debug.Log("Checkpoint RL07");
                 if (string.IsNullOrEmpty(opcode.DestinationLabel)) continue;
+                UnityEngine.Debug.Log("Checkpoint RL08");
 
                 int destinationIndex = labels[opcode.DestinationLabel];
+                UnityEngine.Debug.Log("Checkpoint RL09");
                 if (opcode is BranchOpcode)
                 {
+                    UnityEngine.Debug.Log("Checkpoint RL10");
                     ((BranchOpcode)opcode).Distance = destinationIndex - index;
                 }
                 else if (opcode is OpcodePush)
                 {
+                    UnityEngine.Debug.Log("Checkpoint RL11");
                     ((OpcodePush)opcode).Argument = destinationIndex;
                 }
                 else if (opcode is OpcodeCall)
                 {
+                    UnityEngine.Debug.Log("Checkpoint RL12");
                     ((OpcodeCall)opcode).Destination = destinationIndex;
                 }
             }
+            UnityEngine.Debug.Log("Checkpoint RL13");
 
             // complete the entry point address of all the objects
             foreach (var objectFile in objectFiles.Values)
             {
+                UnityEngine.Debug.Log("Checkpoint RL14");
                 if (objectFile.EntryPointLabel != string.Empty)
                     objectFile.EntryPointAddress = labels[objectFile.EntryPointLabel];
             }
+            UnityEngine.Debug.Log("Checkpoint RL15");
         }
 
         public int GetObjectFileEntryPointAddress(Guid objectFileId)
