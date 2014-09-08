@@ -83,7 +83,7 @@ namespace kOS.Compilation
         /// </summary>
         /// <param name="maxVal">max value the bytes have to hold</param>
         /// <returns>number of bytes to hold it</returns>
-        private static int FewestBytesToHold(long maxValue)
+        public static int FewestBytesToHold(long maxValue)
         {
             return  (maxValue <= 0x100) ? 1 :
                     (maxValue <= 0x10000) ? 2 :
@@ -92,6 +92,29 @@ namespace kOS.Compilation
                     (maxValue <= 0x10000000000) ? 5 :
                     (maxValue <= 0x1000000000000) ? 6 :
                     (maxValue <= 0x100000000000000) ? 7 : 8 ;
+        }
+        
+        /// <summary>
+        /// Create a packing of the number given into the number of
+        /// bytes given, using a homegrown packing algorithm that's
+        /// always big-endian and allows weird oddball numbers of
+        /// bytes, like 3 or 5, which the default BinaryWriter routines
+        /// won't do.
+        /// </summary>
+        /// <param name="number">number to encode</param>
+        /// <param name="numBytes">bytes to use</param>
+        /// <returns>resulting array of bytes</returns>
+        public static byte[] EncodeNumberToNBytes(long number, int numBytes)
+        {
+            // Encode the index into the right number of bytes:
+            byte[] returnValue = new byte[numBytes];
+            for (int bNum = 0; bNum < numBytes ; ++bNum)
+            {
+                // This ends up being big-endian.  Dunno if that's the standard,
+                // but as long as the reading back is consistent it's fine:
+                returnValue[bNum] = (byte)( ((number >> (bNum*8)) & 0xff) << (bNum*8) );
+            }
+            return returnValue;
         }
         
         /// <summary>
@@ -106,6 +129,13 @@ namespace kOS.Compilation
         /// length.
         /// </summary>
         private static int argumentPackLogicalLength = 0;
+
+        /// <summary>
+        /// Holds the mapping of line numbers from source to the ranges of the
+        /// machine language section of the file where the opcodes derived
+        /// from those line numbers are:
+        /// </summary>
+        private static DebugLineMap lineMap = null;
 
         /// <summary>
         /// A memory stream writer being used to temporarily pack and unpack values so
@@ -128,11 +158,12 @@ namespace kOS.Compilation
         public static string Pack(string programName, List<CodePart> program)
         {
             packTempWriter = new BinaryWriter( new MemoryStream() );
-            StringBuilder everythingBuff = new StringBuilder();
+            StringBuilder allCodeBuff = new StringBuilder();
             StringBuilder headBuff = new StringBuilder();
             argumentPack = new byte[8]; // this will grow bigger (be replaced by new arrays) as needed.
             argumentPackLogicalLength = 0; // nothing in the argumentPack yet.
             argumentPackFinder = new Dictionary<object,int>();
+            lineMap = new DebugLineMap();
 
             for (int index = 0 ; index < program.Count ; ++index)  // --.    This can be replaced with a
             {                                                      //   |--- foreach.  I do it this way so I
@@ -146,7 +177,7 @@ namespace kOS.Compilation
             // to store the argumentPack, and thus the larges possible index into it.
             // This will be how many bytes our indeces will be in this packed ML file.
             int numArgIndexBytes = FewestBytesToHold((long)argumentPackLogicalLength);
-            headBuff.Append("%A"+numArgIndexBytes);                
+            headBuff.Append("%A"+ (char)(numArgIndexBytes) );
 
             byte[] truncatedArgumentPack = new Byte[argumentPackLogicalLength];
             Array.Copy(argumentPack, 0, truncatedArgumentPack, 0, argumentPackLogicalLength);
@@ -160,31 +191,40 @@ namespace kOS.Compilation
                 StringBuilder codeBuff = new StringBuilder();
 
                 byte[] packedCode;
+                int indexSoFar;
 
+                indexSoFar = allCodeBuff.Length;
                 codeBuff.Append("%F");
-                packedCode = PackCode(codePart.FunctionsCode,numArgIndexBytes);
+                packedCode = PackCode(codePart.FunctionsCode, numArgIndexBytes, indexSoFar);
                 codeBuff.Append(System.Text.Encoding.ASCII.GetString(packedCode));
 
+                indexSoFar = allCodeBuff.Length + codeBuff.Length;
                 codeBuff.Append("%I");
-                packedCode = PackCode(codePart.InitializationCode,numArgIndexBytes);
+                packedCode = PackCode(codePart.InitializationCode, numArgIndexBytes, indexSoFar);
                 codeBuff.Append(System.Text.Encoding.ASCII.GetString(packedCode));
 
+                indexSoFar = allCodeBuff.Length + codeBuff.Length;
                 codeBuff.Append("%M");
-                packedCode = PackCode(codePart.MainCode,numArgIndexBytes);
+                packedCode = PackCode(codePart.MainCode, numArgIndexBytes, indexSoFar);
                 codeBuff.Append(System.Text.Encoding.ASCII.GetString(packedCode));
 
-                UnityEngine.Debug.Log("DEBUG: CompiledObject program dump below:\n"+
-                                      "####### CodePart " + index + " ###########\n" +
-                                      "### FUNC ###\n" +
-                                      GetCodeFragment( codePart.FunctionsCode ) +
-                                      "### INIT ###\n" +
-                                      GetCodeFragment( codePart.InitializationCode ) +
-                                      "### MAIN ###\n" +
-                                      GetCodeFragment( codePart.MainCode ) );
+                UnityEngine.Debug.Log(
+                    "DEBUG: CompiledObject program dump below:\n"+
+                    "####### CodePart " + index + " ###########\n" +
+                    "### FUNC ###\n" +
+                    GetCodeFragment( codePart.FunctionsCode ) +
+                    "### INIT ###\n" +
+                    GetCodeFragment( codePart.InitializationCode ) +
+                    "### MAIN ###\n" +
+                    GetCodeFragment( codePart.MainCode ) );
                                       
-                everythingBuff.Append(codeBuff);
+                allCodeBuff.Append(codeBuff);
             }
-            return new String(magicID) + headBuff.ToString() + everythingBuff.ToString();
+            return new
+                String(magicID) +
+                headBuff.ToString() +
+                allCodeBuff.ToString() +
+                System.Text.Encoding.ASCII.GetString(lineMap.Pack());
         }
         
         /// <summary>
@@ -216,30 +256,20 @@ namespace kOS.Compilation
         /// <param name="fragment">the section being packed</param>
         /// <param name="argIndexSize">Number of bytes to use to encode argument indexes into the arg section.</param>
         /// <returns>the byte array of the packed together arguments</returns>
-        private static byte[] PackCode(List<Opcode> fragment, int argIndexSize)
+        private static byte[] PackCode(List<Opcode> fragment, int argIndexSize, int startByteIndex)
         {
             packTempWriter.Seek(0,SeekOrigin.Begin);
             for (int index = 0; index < fragment.Count ; ++index)
             {
+                int opcodeStartByte = (int)( startByteIndex + packTempWriter.BaseStream.Position );
                 Opcode op = fragment[index];
                 byte code = (byte)op.Code;
                 
-                // Use the high bit of the Opcode.ByteCode to flag whether or not this
-                // Opcode has a different line number than the previous one.  If high bit
-                // is zero, then it's the same as the previous.  If it's 1, then it's
-                // a different line number and it will be recorded in the file.
-                if (index == 0 || fragment[index-1].SourceLine != op.SourceLine)
-                    code = (byte)( (byte)code | (byte)0x80 );
                 UnityEngine.Debug.Log( "ERASEME Opcode " + index + " = " + (uint)code );
 
                 //Always start with the opcode's bytecode:
-                packTempWriter.Write((byte)code);
+                packTempWriter.Write(code);
                 
-                //If we made the code's high bit be on, then put out the source line
-                //right after the opcode:
-                if ((code & (byte)0x80) != (byte)0)
-                    packTempWriter.Write(op.SourceLine);
-
                 // Then append a number of argument indexes depending
                 // on how many arguments the opcode is supposed to have:
                 List<PropertyInfo> args = op.GetArgumentDefs();
@@ -248,22 +278,18 @@ namespace kOS.Compilation
                     object argVal = pInfo.GetValue(op,null);
                     int argPackedIndex = PackedArgumentLocation(argVal);
                     
-                    // Encode the index into the right number of bytes:
-                    byte[] argIndexEncoded = new byte[argIndexSize];
-                    for (int bNum = 0; bNum < argIndexSize ; ++bNum)
-                    {
-                        // This ends up being big-endian.  Dunno if that's the standard,
-                        // but as long as the reading back is consistent it's fine:
-                        argIndexEncoded[bNum] = (byte)( ((argPackedIndex >> (bNum*8)) & 0xff) << (bNum*8) );
-                    }
-                    // Append those bytes to the code:
+                    byte[] argIndexEncoded = EncodeNumberToNBytes(argPackedIndex,argIndexSize);
                     packTempWriter.Write(argIndexEncoded);
                 }
+                
+                // Now add this range to the Debug line mapping for this source line:
+                int opcodeStopByte = (int)(startByteIndex + packTempWriter.BaseStream.Position - 1);
+                lineMap.Add(op.SourceLine, new IntRange(opcodeStartByte,opcodeStopByte));
             }
             
             // Return the byte array that the memory writer has been outputting to in the above loop:
             MemoryStream mem = packTempWriter.BaseStream as MemoryStream;
-            byte[] returnVal = new Byte[ mem.Position ];
+            byte[] returnVal = new Byte[mem.Position];
             Array.Copy(mem.GetBuffer(), 0, returnVal, 0, (int)mem.Position);
             
             return returnVal;
@@ -278,6 +304,8 @@ namespace kOS.Compilation
         /// <returns>byte index of where it starts in the argument pack.</returns>
         private static int PackedArgumentLocation(object argument)
         {
+            int labelOffset = 3; // Account for the %A at the front of the argument pack.
+            
             object arg = (argument==null) ? new PseudoNull() : argument;
             
             UnityEngine.Debug.Log("AAA got here 1");
@@ -295,7 +323,7 @@ namespace kOS.Compilation
             // When it gets added, it's going to be tacked on right at the end.
             // We already know that, se let's get that populated now:
             UnityEngine.Debug.Log("AAA got here 5");
-            argumentPackFinder.Add(arg,argumentPackLogicalLength);
+            argumentPackFinder.Add(arg, labelOffset + argumentPackLogicalLength);
             UnityEngine.Debug.Log("AAA got here 6");
             returnValue = argumentPackLogicalLength;
             UnityEngine.Debug.Log("AAA got here 7");
@@ -312,7 +340,7 @@ namespace kOS.Compilation
             UnityEngine.Debug.Log("AAA got here 11: number of bytes written " + mem.Position);
             int argByteLength = (int)(mem.Position);
             UnityEngine.Debug.Log("AAA got here 12");
-            byte[] packedArg = new Byte[argByteLength+1]; // +1 because we insert the type byte at the front.
+            byte[] packedArg = new byte[argByteLength+1]; // +1 because we insert the type byte at the front.
             UnityEngine.Debug.Log("AAA got here 13, for arg type = " + arg.GetType().Name);
             packedArg[0] = IdFromType[arg.GetType()];
             UnityEngine.Debug.Log("AAA got here 14: ");
@@ -418,5 +446,111 @@ namespace kOS.Compilation
             return returnVal;
         }
         
+    }
+    /// <summary>
+    ///  Stores a range of ints [start,end], incusive of both
+    /// </summary>
+    public class IntRange
+    {
+        public int Start {get;set;}
+        public int Stop  {get;set;}
+        public IntRange(int start, int stop)
+        {
+            Start = start;
+            Stop = stop;
+        }
+    }
+
+    /// <summary>
+    /// Stores the mapping from line number to ranges of 
+    /// opcode locations that contain the code from that line number
+    /// </summary>
+    public class DebugLineMap
+    {
+
+        // When this gets packed out, how many bytes will be needed to
+        // hold the byte range indeces?        
+        private int numDebugIndexBytes = 0;
+
+        private static Dictionary<int,List<IntRange>> store = new Dictionary<int,List<IntRange>>();
+        
+        public DebugLineMap()
+        {
+            // TODO - does anything need doing here?
+        }
+        
+        public void Add( int lineNum, IntRange addRange )
+        {
+            List<IntRange> ranges = null;
+            
+            int neededBytes = CompiledObject.FewestBytesToHold( Math.Max(addRange.Start, addRange.Stop) );
+            if (neededBytes > numDebugIndexBytes)
+                numDebugIndexBytes = neededBytes;
+            
+            // If it doesn't already exist, make it exist:
+            if (! store.TryGetValue(lineNum, out ranges))
+            {
+                ranges = new List<IntRange>();
+                store.Add(lineNum,ranges);
+            }
+            
+            // Check if the addRange is contiguously just after an existing range:
+            bool needNewEntry = true;
+            foreach (IntRange range in ranges)
+            {
+                // If it's just after an existing range, then widen the existing range to include it:
+                if (range.Stop == addRange.Start - 1)
+                {
+                    range.Stop = addRange.Stop;
+                    needNewEntry = false;
+                    break;
+                }
+            }
+            // If it's not just after an existing range, then make a new range for it:
+            if (needNewEntry)
+            {
+                ranges.Add(new IntRange(addRange.Start, addRange.Stop));
+            }
+        }
+        
+        /// <summary>
+        /// pack together the debug line info into a section to tack on the
+        /// end of the ML file.
+        /// </summary>
+        public byte[] Pack()
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            
+            // section header: identify it as the debug map,
+            // and specify how many bytes the indeces will be packed into:
+            writer.Write('%');
+            writer.Write('D');
+            writer.Write((byte)numDebugIndexBytes);
+            
+            foreach (int lineNum in store.Keys)
+            {
+                List<IntRange> ranges = store[lineNum];
+
+                if (ranges.Count == 0)
+                    continue;
+                
+                // write line num (2 bytes), followed by 1 byte for how many
+                // ranges there are, followed by the ranges given as
+                // ranges of start/stop indeces of size numDebugIndexBytes.
+                writer.Write((short)lineNum);
+                writer.Write((byte)ranges.Count); // It would be weird for there to be > 256 ranges.
+                foreach (IntRange range in ranges)
+                {
+                    writer.Write( CompiledObject.EncodeNumberToNBytes(range.Start, numDebugIndexBytes));
+                    writer.Write( CompiledObject.EncodeNumberToNBytes(range.Stop, numDebugIndexBytes));
+                }
+            }
+            
+            int bufLength = (int)(writer.BaseStream.Position);
+            
+            byte[] returnValue = new byte[bufLength];
+            Array.Copy( ((MemoryStream)(writer.BaseStream)).GetBuffer(),0,returnValue,0,bufLength);
+            return returnValue;
+        }
     }
 }

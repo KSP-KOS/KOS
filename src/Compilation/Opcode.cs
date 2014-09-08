@@ -179,6 +179,7 @@ namespace kOS.Compilation
         //        they are public:
         public int Id { get { return id; } }
         public int DeltaInstructionPointer = 1;
+        public int MLIndex = 0; // index into the Machine Language code file for the COMPILE command.
         public string Label = string.Empty;
         public string DestinationLabel;
         public string SourceName;

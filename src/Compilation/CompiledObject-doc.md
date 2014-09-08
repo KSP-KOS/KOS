@@ -185,12 +185,26 @@ the compile step.
 The Format
 ==========
 
+*Overview*:
+
+The ML file format is a binary file with sections ordered as follows.
+Each section is explained in detail below:
+
+* magic number
+* Argument Section
+* Repeat the following once for each CodePart in the List<CodePart> for the program:
+* * Function Section
+* * Initializations Section
+* * Main COde Section
+* Debug Line Number Section
+
+
 "Magic" Number
 --------------
 
-byte 0|byte 1|byte 2|byte 4
-======|======|======|======
-'k'   |0x03  |'X'   |'E' 
+    byte 0|byte 1|byte 2|byte 4
+    ======|======|======|======
+    'k'   |0x03  |'X'   |'E' 
 
 
 The ML file always begins with a 4-byte "magic number" to identify
@@ -230,10 +244,15 @@ Opcodes, but they are not arguments to the Div Opcode.
 
 ### Argument header: 3 bytes.  "%An"
 
-byte 0           |byte 1                | byte 2
-section delimiter|section type character| numArgIndexBytes
-=================|======================|====================
-'%'              |'A'                   | one of ['1' .. '8']
+    byte 0           |byte 1                | byte 2
+    section delimiter|section type character| numArgIndexBytes
+    =================|======================|====================
+    '%'              |'A'                   | one of ['1' .. '8']
+                                            | 1 = 1-byte addressing.
+					    | 2 = 2-byte addressing (i.e. a ushort).
+					    | 3 = 3-byte addressing.
+					    | 4 = 4-byte addressing (i.e. a uint).
+					    |   .. etc.. 
 
 
 The argument section starts with the two-byte code formed by the
@@ -242,11 +261,9 @@ ASCII string "%A" to demark it's start.
 **numArgIndexBytes**
 
 The first byte immediately after the "%A" is the *numArgIndexBytes*,
-a one-digit number that indicates the minimum size of unsigned integer
-needed to index into the rest of the argument section.  Note that it
-is an ASCII digit, NOT a raw number.  (i.e. the number 2 is stored
-here as 0x32, the character '2', rather than as 0x02.)  If
-*numArgIndexBytes* is '1', it means the Argument Section is under
+a one-byte number that indicates the minimum size of unsigned integer
+needed to index into this argument section itself. 
+If *numArgIndexBytes* is '1', it means the Argument Section is under
 256 bytes long, such that you could index into any position within it
 using a mere one-byte unsigned integer.  If *numArgIndexBytes* is '2',
 it means the Argument Section is between 257 and 65536 bytes long, such
@@ -255,6 +272,11 @@ integer, and so on.  Although the format supports any number up to 4
 here, it is highly unlikely that anything higher than 2 will ever occur
 as that would require an initial kerboscript source file at least 64kB
 long, probably much longer in actuality.
+
+The addressing index into the Argument section starts counting with
+zero being the "%" of the "%A" of the header.  (So the first 
+actual argument, after the 3-byte header, is going to have address index
+0x03).
 
 The number *numArgIndexBytes* will be important, as it decides later
 on how big each argument to the opcodes down in the code will be.
@@ -265,10 +287,10 @@ will be index addresses pointing up into the Argument Section.
 
 ### Each argument
 
-byte 0       | bytes 1..n, n varying by arg type
-arg type ID  | The result of System.IO.BinaryWriter.Write()
-=============|===============================================
-from table in InitTypeData() | Binary coding of primitive type
+    byte 0                       | bytes 1..n, n varying by arg type
+    arg type ID                  | The result of System.IO.BinaryWriter.Write()
+    =============================|=============================================
+    from table in InitTypeData() | Binary coding of primitive type
 
 Each actual argument in the Argument Section is encoded by first
 using a byte that describes the type, followed by the result
@@ -282,16 +304,22 @@ Very few types are supported by the system, as it only needs to
 support the types used in ML arguments.  The list of the
 types supported is this:
 
-arg type ID | Type it represents | Length of bytes 1..n
-============|====================|========================
-0           | Any null.  Nulls technically don't have a type  | nonexistent.
-1           | bool                                            | 1
-2           | byte                                            | 1
-3           | Int16                                           | 2
-4           | Int32                                           | 4
-5           | float                                           | 4
-6           | double                                          | 8
-7           | String                                          | varies by string length.  BinaryWriter writes the string length in UTF7 coding first, then writes the content of the string.  kOS encodes the string as UTF-8.
+    arg type ID | Type it represents                              | Length of bytes 1..n
+    ============|=================================================|========================
+    0           | Any null.  Nulls technically don't have a type  | nonexistent.
+    1           | bool                                            | 1
+    2           | byte                                            | 1
+    3           | Int16                                           | 2
+    4           | Int32                                           | 4
+    5           | float                                           | 4
+    6           | double                                          | 8
+    7           | String                                          | varies by string length.
+	                                                            BinaryWriter writes the
+								    string length in UTF7 coding
+								    first, then writes the
+								    content of the string.
+								    kOS encodes the string
+								    as UTF-8.
 
 CodePart sections:
 ------------------
@@ -303,17 +331,17 @@ section marked by '%F', as explained below.
 
 (Remember, the ML file records a *List<CodePart>* structure.)
 
-byte 0           |byte 1                |byte 2 and up
-section delimiter|section type character|Opcode List
-=================|======================|======================
-'%'              |'F', 'I', or 'M'      |Encoded opcode list
+    byte 0           |byte 1                |byte 2 and up
+    section delimiter|section type character|Opcode List
+    =================|======================|======================
+    '%'              |'F', 'I', or 'M'      |Encoded opcode list
 
 Each CodePart section is composed of the following 3 subsections, in
 this order:
 
-* Function Opcode List (%F), which stores CodePart.FunctionsCode
-* Initialization Opcode List (%I), which stores CodePart.InitializationCode
-* Main Code Opcode List (%M), which stores CodePart.MainCode
+* **Function Opcode List** (%F), which stores CodePart.FunctionsCode
+* **Initialization Opcode List** (%I), which stores CodePart.InitializationCode
+* **Main Code Opcode List** (%M), which stores CodePart.MainCode
 
 The CodePart section has no header.  Instead you know you are
 looking at a new CodePart section when you see the start of a new
@@ -357,50 +385,26 @@ contiguous runs from the same line, this saves quite a few bytes.
 The Opcode only stores the source line number data when it differs from
 the line number of the previous opcode.
 
-For an Opcode with no [MLField] properties, and source line information:
+For an Opcode with no [MLField] properties:
 
-Opcode.ByteCode     |source line (Int16)
-byte enum value     |2 bytes.
-====================|===================
-(0x?? bit_or 0x80)  | 0x????
+    Opcode.Code      |
+    byte enum value  |
+    =================|
+    1 byte for opcode|
 
-For an Opcode with no [MLField] properties, and lacking source line information:
+For an Opcode with 1 [MLField] property:
 
-Opcode.ByteCode      ||
-byte enum value      ||
-=====================||
-(0x?? bit_and 0x7f)  ||
+    Opcode.Code      |Index into argument section|
+    byte enum value  |length = numArgIndexBytes  |
+    =================|===========================|
+    1 byte for opcode|??                         |
 
-(If the opcode does not store line number information, then the high bit
-of the opcode is 0.  If the high bit is 1, then there will be a line number)
+For an Opcode with 2 [MLField] properties:
 
-For an Opcode with 1 [MLField] property, with source line information:
-
-Opcode.ByteCode     |source line (Int16)|Index into argument section|
-byte enum value     |2 bytes.           |length = numArgIndexBytes  |
-====================|===================|===========================|
-(0x?? bit_or 0x80)  | 0x????            |??                         |
-
-For an Opcode with 1 [MLField] property, without source line information:
-
-Opcode.ByteCode      |Index into argument section|
-byte enum value      |length = numArgIndexBytes  |
-=====================|===========================|
-(0x?? bit_and 0x7f)  |??                         |
-
-For an Opcode with 2 [MLField] properties, with source line information:
-
-Opcode.ByteCode     |source line (Int16)|Index into argument section|Index into argument section|
-byte enum value     |2 bytes.           |length = numArgIndexBytes  |length = numArgIndexBytes  |
-====================|===================|===========================|===========================|
-(0x?? bit_or 0x80)  | 0x????            |??                         |??                         |
-
-For an Opcode with 2 [MLField] properties, without source line information:
-
-Opcode.ByteCode      |Index into argument section|Index into argument section|
-byte enum value      |length = numArgIndexBytes  |length = numArgIndexBytes  |
-=====================|===========================|===========================|
-(0x?? bit_and 0x7f)  |??                         |??                         |
+    Opcode.Code      |Index into argument section|Index into argument section|
+    byte enum value  |length = numArgIndexBytes  |length = numArgIndexBytes  |
+    =================|===========================|===========================|
+    1 byte for opcode|??                         |??                         |
 
 And so on.... for any 'N' of [MLField] properties.
 
@@ -456,7 +460,375 @@ Opcode who's Code is set to Compilation.ByteCode.DELIMITER,
 which is the '%' character that starts the next section, or
 when you reach EOF.
 
+Debug Line Number Section
+=========================
+
+
+>**_TODO_** Do we want to allow this section to be optional, where a user can leave it off entirely with a command flag, and thus produce more compact, but harder to debug, program files?
+
+In order to be able to print line numbers for runtime errors,
+it's important to be able to map from an opcode back to the
+source line it came from.  Storing a compiled ML file loses
+that information.  It's present in the Opcode class as
+
+    short Opcode.SourceLine;
+    short Opcode.SourceColume;
+
+But storing that per Opcode would bloat the size of the ML file
+by quite a bit.
+
+The means of holding this information must adhere to the
+following conditions:
+
+* 1: Don't bother storing the column number.  Go ahead and accept
+the loss of that information.
+* 2: Because often times (but not always),a contiguous range of
+Opcodes comes from a single line number, try to store a mapping
+between line numbers and ranges of opcodes rather than a one to
+one mapping of line number to opcode.
+* 3: Because of the Reverse Polish Notation style of expression
+evaluation the stack processor creates, opcodes don't always come
+out in the same order as the line numbers do, so the scheme must
+be able to account for discontinuous range chunks coming from the
+same source line.
+
+The format used to store this information is as follows:
+
+### Debug Line Numbers Section Header
+
+The Debug Line Number Section begins with the delimiter '%D',
+followed by a single byte describing the width of bytes needed
+to store indeces into the *Encoded Opcode List*, which
+much like the number of bytes to store indeces into the Argument
+List, depends on the length of that chunk of the ML file.
+
+    byte 0           |byte 1                |byte 2 
+    section delimiter|section type character|Encoded Opcode List index size
+    =================|======================|=====================================
+    '%'              |'D'                   |a small number stored in 1 byte:
+                                            | 1 = 1-byte addressing.
+					    | 2 = 2-byte addressing (i.e. a ushort).
+					    | 3 = 3-byte addressing.
+					    | 4 = 4-byte addressing (i.e. a uint).
+					    |   .. etc.. 
+
+The addressing index into the Debug Line Numbers section starts
+counting with zero being the "%" of the "%F" of the first Function
+Section of the First CodePart.  (So the first actual opcode, after
+that 3-byte header, is going to have address index 0x02).
+
+For the purpose of this address indexing, the entire list of CodeParts
+is considered one long contiguous section.  (In other words, the
+numbering doesn't start over again at zero when the next CodePart
+starts a new "%F" header - it keeps counting up.)
+
+### Debug Line Numbers 
+
+The purpose of the section is to store a mapping that looks conceptually
+like this example:
+
+    Source Line   |   Code section index ranges from that line:
+    ==============|===============================================
+           1      |  [0x02..0x1a]
+           3      |  [0x1b..0x1b],[0x1d,0x20],[0x25,0x28]
+           4      |  [0x1c..0x1c],
+           7      |  [0x21..0x24]
+
+The way you'd read the above table is this:
+
+* Source Line 1 produced the ML code that is stored from
+byte 0x02 through byte 0x1a inclusive.
+* Source Line 3 produced the ML code that s stored in a
+discontinous set of ranges:
+* * The ML code at the single byte 0x1b, and
+* * The ML code at byte 0x1d through byte 0x20 inclusive, and
+* * The ML code at byte 0x25 through byte 0x28 inclusive.
+address 0x1c through 0x1d inclusive.
+* Source Line 4 produced the ML code that is stored at
+the single byte 0x1c
+* Source Line 7 produced the ML code that is stored at
+bytes 0x21 through 0x24 inclusive.
+
+You can infer in this example that source code lines 2,5, and 6
+probably had no code on them at all, being comments or blank space.
+
+*(This is the structure held by the class DebugLineMap in
+CompiledObject.cs)*
+
+To encode this into the ML file, the format is:
+
+    2 byte ushort    |  1 byte num ranges  |  N bytes | N bytes ...
+    =================|=====================|==========|======== ...
+        line number  |   how many ranges   | start    | stop    ... (repeat start/stop for each range given)
+	
+With the start,stop repeated x numbers of times where x is the number 
+given for "how many ranges".  (This does make it impossible
+to store more than 255 discontinuous ranges for one line, but
+that would be a *really* weird compile result.)
+
+The "N" in "N bytes" refers to however many bytes was given in the
+header as the Encoded Opcode List Index Size immediately after the
+"%D" of the section start.  Very short programs might be possible
+to encode with just 1 byte addressing.  Typical ones will require 2
+byte addressing.  Very very rarely it might require 3.  It will probably
+never require 4 or more.
+
+These start and stop ranges are encoded in big-endian order manually,
+rather than by using the ordering that comes out of BinaryWriter.
+The reason for this manual encoding is that BinaryWriter doesn't know
+how to make arbitrary numerical types like 3-byte or 5-byte numbers.
+
 An example bringing it all together
 ===================================
 
-TODO
+This is a small example of a tiny program that shows it all.  A
+very small example was picked because it's possible to see it all 
+at once in one hexdump:
+
+Original Program as ascii source:
+---------------------------------
+
+    // This is testcode 
+    declare parameter p1,p2.
+    run testcode3(5).
+    set a to p1 + p2 + b.
+
+The result as lists of CodePart sections:
+-----------------------------------------
+
+This results in a List<CodePart> of 2 CodePart sections:
+
+CodePart Number 0 looks like this:
+
+CodePart 0's .FunctionsCode is a List<Opcode> like this:
+
+    File                 Line:Col IP   opcode operand
+    ----                 ----:--- ---- --------------------- 
+    archive/testcode2       3:1   0000 push $program-testcode3* 
+    archive/testcode2       3:1   0001 push 0 
+    archive/testcode2       3:1   0002 eq 
+    archive/testcode2       3:1   0003 br.false 0 
+    archive/testcode2       3:1   0004 push $program-testcode3* 
+    archive/testcode2       3:1   0005 push testcode3 
+    archive/testcode2       3:1   0006 push null 
+    archive/testcode2       3:1   0007 call load() 
+    archive/testcode2       3:1   0008 store 
+    archive/testcode2       3:1   0009 call $program-testcode3* 
+    archive/testcode2       3:1   0010 return 
+
+CodePart 0's .InitializationsCode is a List<Opcode> like this:
+
+    File                 Line:Col IP   opcode operand
+    ----                 ----:--- ---- --------------------- 
+    archive/testcode2       3:1   0000 push $program-testcode3* 
+    archive/testcode2       3:1   0001 push 0 
+    archive/testcode2       3:1   0002 store 
+
+CodePart 0's .MainCode is an empty List<Opcode> like this:
+
+    File                 Line:Col IP   opcode operand
+    ----                 ----:--- ---- --------------------- 
+
+CodePart Number 1 looks like this:
+
+CodePart 1's .FunctionCode is an empty List<Opcode> like this:
+
+    File                 Line:Col IP   opcode operand
+    ----                 ----:--- ---- --------------------- 
+
+CodePart 1's .InitializationsCode is an empty List<Opcode> like this:
+
+    File                 Line:Col IP   opcode operand
+    ----                 ----:--- ---- --------------------- 
+
+CodePart 1's .MainCode is a List<Opcode> like this:
+
+    File                 Line:Col IP   opcode operand
+    ----                 ----:--- ---- --------------------- 
+    archive/testcode2       2:22  0000 push p2 
+    archive/testcode2       2:22  0001 swap 
+    archive/testcode2       2:22  0002 store 
+    archive/testcode2       2:19  0003 push p1 
+    archive/testcode2       2:19  0004 swap 
+    archive/testcode2       2:19  0005 store 
+    archive/testcode2       3:15  0006 push 5 
+    archive/testcode2       3:15  0007 call  
+    archive/testcode2       4:5   0008 push $a 
+    archive/testcode2       4:10  0009 push $p1 
+    archive/testcode2       4:15  0010 push $p2 
+    archive/testcode2       4:13  0011 add 
+    archive/testcode2       4:20  0012 push $b 
+    archive/testcode2       4:18  0013 add 
+    archive/testcode2       4:5   0014 store 
+
+The result as an ML file:
+-------------------------
+
+The binary ML file has a hexdump that looks like this:
+------------------------------------------------------
+
+    0000000: 6b03 5845 2541 0107 1324 7072 6f67 7261  k.XE%A...$progra
+    0000010: 6d2d 7465 7374 636f 6465 332a 0400 0000  m-testcode3*....
+    0000020: 0007 0974 6573 7463 6f64 6533 0007 066c  ...testcode3...l
+    0000030: 6f61 6428 2907 0270 3207 0270 3104 0500  oad()..p2..p1...
+    0000040: 0000 0702 2461 0703 2470 3107 0324 7032  ....$a..$p1..$p2
+    0000050: 0702 2462 2546 4e03 4e18 453a 184e 034e  ..$b%FN.N.E:.N.N
+    0000060: 1d4e 284c 2934 4c03 4d25 494e 034e 1834  .N(L)4L.M%IN.N.4
+    0000070: 254d 2546 2549 254d 4e31 5134 4e35 5134  %M%F%I%MN1Q4N5Q4
+    0000080: 4e39 4c28 4e3e 4e42 4e47 3c4e 4c3c 3425  N9L(N>NBNG<NL<4%
+    0000090: 4401 0300 0300 1215 192a 2d02 0001 2229  D........*-...")
+    00000a0: 0400 012e 38                             ....8  
+
+Note that this is actually a bit larger than the original source file,
+but that's only because the original file was so small.  More normal
+programs with larger source files will tend to be smaller in their
+ML form because of the repeated use of the same identifier names,
+the repeated uses of the same numbers like 0 and 1, which the ML
+format crunches down.
+
+### Breaking the example down:
+
+It starts with the "magic number":
+
+0000000: **6b03 5845** 2541 0107 1324 7072 6f67 7261  **k.XE**%A...$progra
+
+Then begins the Argument Section Header, "%A" followed by the byte 0x01:
+
+0000000: 6b03 5845 **2541 01**07 1324 7072 6f67 7261  k.XE**%A.**..$progra
+
+The byte 0x01 tells us that the entire Argument section fit in under 256
+bytes, such that it can be addressed by just one byte.  A more typical
+larger program will probably have 0x02 here.
+
+**Argument at location 0x03 in Argument Section:**
+
+    0000000:                  07 1324 7072 6f67 7261         ..$progra
+    0000010: 6d2d 7465 7374 636f 6465 332a            m-testcode3*    
+
+Type code is 0x07, string, followed by the BinaryWriter's encoding
+of a string, which starts with a one-byte string length, 0x13,
+and then the UTF-8 encoding of the unicode string (so it looks like
+ASCII unless there's some extended chars).
+
+**Argument at location 0x18 in Argument Section:**
+
+    0000010:                               0400 0000              ....
+    0000020: 00                                       .               
+
+Type code 0x04, Int32, value = 0
+
+**Argument at location 0x1c in Argument Section:**
+
+    0000020:   07 0974 6573 7463 6f64 6533            ...testcode3    
+
+Type code 0x07, string, stringlength 0x09, value = "testcode3"
+
+Etc, for the rest of the Argument section
+
+Doing something similar for the entire rest of the Argument Section
+yields this result:
+
+    index | Type  | value
+    ======|=======|=============================================
+    0x03  |string | "$program-testcode3*"
+    0x18  |Int32  | 0
+    0x1d  |string | "testcode3"
+    0x28  |null   | (no bytes spent storing value for null.  Typecode is enough.)
+    0x29  |string | "load()"
+    0x31  |string | "p2"
+    0x35  |string | "p1"
+    0x39  |Int32  | 5
+    0x3e  |string | "$a"
+    0x42  |string | "$p1"
+    0x47  |string | "$p2"
+    0x4e  |string | "$b"
+
+Again, remember that the indeces here start counting zero at 4 bytes in, where
+the "%" of the "%A" section starts, not at the start of the whole file
+(so index 0x02 is at global file position 0x06).
+
+### First Function Section: "%F"
+
+Opcode 0:
+
+    0000050:                4e03                            N.        
+
+0x4e = ByteCode enum for PUSH.
+0x03 = index into Argument Section for "$program-testcode3".
+
+Therefore this is the "push $program-testcode3" operation.
+
+Opcode 1:
+
+    0000050:                     4e18                         N.      
+
+0x4e = ByteCode enum for PUSH.
+0x18 = index into Argument Section for (Int32)0
+
+Therefore this is the "push 0" operation.
+
+Opcode 2:
+
+    0000050:                          45                        E     
+
+0x45 = ByteCode enum for EQ. (EQ takes no arguments)
+
+Opcode 3:
+
+    0000050:                            3a 18                    :.   
+
+0x3a = ByteCode enum for BRANCHFALSE.
+0x18 = index into Argument Section for (Int32)0
+
+Therefore this is the "br.false 0" operation.
+
+That's the general idea.  Working through the example, you can build up
+the entire program.
+
+### Debug Line Number Section
+
+Tacked onto the end of the file is the Debug Line Number
+section, starting with this header:
+
+    0000080:                                      25                 %
+    0000090: 4401                                     D.              
+
+This says: "Start of debug line num section.  Addresses only take 1 byte."
+(A more typical larger source file will usually start this section with
+0x25,0x44,0x02 rather than 0x25,0x44,0x01, to indicate 2-byte indexes have
+been used in this section).
+
+    0000090: 4401 0300 0300 1215 192a 2d02 0001 2229  D........*-...")
+    00000a0: 0400 012e 380d 0a                        ....8..
+
+Because these come from a dictionary hash, note that they don't
+necessarily come out in order.  Note how line 3 is mentioned first:
+
+Data for Source Line 3:
+
+    0000090:      0300 0300 1215 192a 2d                .......*-     
+
+"Source line 3 (0x3000) consists of 3 (0x03) ranges of the ML code:
+They are ranges [0x00..0x12], [0x15..0x19], and [0x2a..0x2d]."
+
+So if you start counting all the code from the first "%F" function
+section in the ML file, these are the ranges of locations of code that
+came from source line 3.  (In the Opcode list dump up above, note how many
+opcodes came from location "3:1".  They cover a large range.)
+
+Data for Source Line 2:
+
+    0000090:                            02 0001 2229             ...")
+
+"Source line 2 (0x0200) consists of 1 (0x01) range of the ML code:
+from [0x22 to 0x29]".
+
+Data for Source Line 4:
+
+    00000a0: 0400 012e 38                             ....8  
+
+"Source line 4 (0x0400) consists of 1 (0x01) range of the ML code:
+from [0x2e to 0x38]".
+
+Note that because Source line 1 is a comment, there ended up being no
+data for it in the Debug Line Number Section.
