@@ -423,9 +423,8 @@ above in the Argument Section.  It may be smaller for some ML files
 than for others.
 
 The index position is counted starting relative to the byte
-immediately following the 'A' in the "%A" of the Argument section.
-The index points not to the argument itself, but to the type byte
-that immediately preceeds it.
+where the header of the address section began (the "%" of the
+"%A").
 
 When loading the ML file, the value of the [MLField] field or
 property on the Opcode object will be copied from the value
