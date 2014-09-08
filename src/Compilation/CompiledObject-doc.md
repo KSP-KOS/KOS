@@ -372,19 +372,6 @@ the previous one started, and how many arguments it needs.  (i.e.
 opcode 1 might take up 1 byte, 2 might need 4 bytes, then maybe
 3 needs 2 bytes, and so on.)
 
-The Opcode.Code is stored in the low 7 bits of a single byte.  The high
-bit is reserved for flagging whether or not the ML file will store the
-line number information for the Opcode.  If the high bit is on, then the
-line number will be present.  If the high bit is off, then it won't be.
-
-If the line number is not stored, then that means when loading the code,
-the loader will assume the opcode came from the same line number as
-the previous opcode in the list.  Because often opcodes occur in
-contiguous runs from the same line, this saves quite a few bytes.
-
-The Opcode only stores the source line number data when it differs from
-the line number of the previous opcode.
-
 For an Opcode with no [MLField] properties:
 
     Opcode.Code      |
