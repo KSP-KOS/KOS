@@ -12,7 +12,7 @@ Terminology
 ------------
 
 * **Machine Language** (abrev. ML) : To distinguish it from the
-fully-expanded List<Opcode> style of representing a list of
+fully-expanded List&lt;Opcode&gt; style of representing a list of
 kRISC instructions in a more human-readable assembly-like format,
 the file format described here will be called "Machine-Language".
 It is meant to match to the kRISC program in an exact one-to-one way,
@@ -25,7 +25,7 @@ a virtual computer running a virtual assembly code.  For the context
 here, when this document mentions kRISC, it's referring to the
 slightly more high-level way of representing the kRISC code, as 
 C# Collections of the C# type kos.Compilation.Opcode.  For example,
-if you are thinking in terms of List<Opcode>, then you're thinking
+if you are thinking in terms of List&lt;Opcode&gt;, then you're thinking
 of what this document is calling *kRISC*
 
 The purpose of CompiledObject.cs is to convert between the kRISC and
@@ -40,12 +40,12 @@ it goes through several steps of transform along the way, all of
 which could be thought of as *kRISC*.  For the sake of this document,
 we are referring to the state the program is in *just prior* to
 being appended into the ProgramContext.  In this state, the program
-is stored as *List<CodePart>*, and still has a few symbolic
+is stored as *List&lt;CodePart&gt;*, and still has a few symbolic
 references that need to be reassigned when the program is actually
 loaded into its final location in memory.
 
 The purpose of the ML (*Machine Language*) format is to essentially
-store a *List<CodePart>* in the most compact possible binary form.
+store a *List&lt;CodePart&gt;* in the most compact possible binary form.
 
 Goals and Ideas - Compactness
 -----------------------------
@@ -192,7 +192,7 @@ Each section is explained in detail below:
 
 * magic number
 * Argument Section
-* Repeat the following once for each CodePart in the List<CodePart> for the program:
+* Repeat the following once for each CodePart in the List&lt;CodePart&gt; for the program:
 * * Function Section
 * * Initializations Section
 * * Main COde Section
@@ -329,7 +329,7 @@ after the other.  It will be possible to identify where one stops
 and the next begins because they always begin with a function 
 section marked by '%F', as explained below.
 
-(Remember, the ML file records a *List<CodePart>* structure.)
+(Remember, the ML file records a *List&lt;CodePart&gt;* structure.)
 
     byte 0           |byte 1                |byte 2 and up
     section delimiter|section type character|Opcode List
@@ -596,11 +596,11 @@ Original Program as ascii source:
 The result as lists of CodePart sections:
 -----------------------------------------
 
-This results in a List<CodePart> of 2 CodePart sections:
+This results in a List&lt;CodePart&gt; of 2 CodePart sections:
 
 CodePart Number 0 looks like this:
 
-CodePart 0's .FunctionsCode is a List<Opcode> like this:
+CodePart 0's .FunctionsCode is a List&lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
     ----                 ----:--- ---- --------------------- 
@@ -616,7 +616,7 @@ CodePart 0's .FunctionsCode is a List<Opcode> like this:
     archive/testcode2       3:1   0009 call $program-testcode3* 
     archive/testcode2       3:1   0010 return 
 
-CodePart 0's .InitializationsCode is a List<Opcode> like this:
+CodePart 0's .InitializationsCode is a List&lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
     ----                 ----:--- ---- --------------------- 
@@ -624,24 +624,24 @@ CodePart 0's .InitializationsCode is a List<Opcode> like this:
     archive/testcode2       3:1   0001 push 0 
     archive/testcode2       3:1   0002 store 
 
-CodePart 0's .MainCode is an empty List<Opcode> like this:
+CodePart 0's .MainCode is an empty List&lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
     ----                 ----:--- ---- --------------------- 
 
 CodePart Number 1 looks like this:
 
-CodePart 1's .FunctionCode is an empty List<Opcode> like this:
+CodePart 1's .FunctionCode is an empty Listx&lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
     ----                 ----:--- ---- --------------------- 
 
-CodePart 1's .InitializationsCode is an empty List<Opcode> like this:
+CodePart 1's .InitializationsCode is an empty List&lt;Opcode*gt; like this:
 
     File                 Line:Col IP   opcode operand
     ----                 ----:--- ---- --------------------- 
 
-CodePart 1's .MainCode is a List<Opcode> like this:
+CodePart 1's .MainCode is a List*lt;Opcode&gt; like this:
 
     File                 Line:Col IP   opcode operand
     ----                 ----:--- ---- --------------------- 
