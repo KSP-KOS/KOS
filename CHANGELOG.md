@@ -1,6 +1,37 @@
 kOS Mod Changelog
 =================
 
+# v0.14
+
+### New Hotness
+* Updated fonts, Thanks @MrOnak
+* Now runtime errors show source location and call stack trace (Github issues #186 and #210).  Example:
+~~~
+    Tried To push Infinity into the stack.
+    At MyProgramFile2 on Archive, line 12
+        PRINT var1/var2.
+                  ^
+    Called from MyProgramFile1 on Archive, line 213
+    RUN MyProgramFIle2("hello").
+    ^
+    Called from StartMission on Archive, line 2.
+    RUN MyProgramFile1.
+    ^
+    _
+~~~
+* (WHEN and ON) Triggers that are taking longer than an Update is meant to take, and thus can freeze KSP are caught and reported (Github issue #104).  Gives the user an explanatory message about the problem.
+  * WARNING: Because of a change that had to be done for this, it is **_Highly_ recommended that you increase your *InstructionsPerUpdate* setting in config.xml to 150% as much** as it was before (i.e. from 100 to 150, or if it was 200, make it 300.).
+* Multiple Terminal Windows - possible to have one open per CPU part.  (Github issue #158) 
+
+![Multiple Windows!](https://github.com/KSP-KOS/KOS/blob/master/Docs/Images/MultiEdit.png)
+
+### Old and Busted ( now fixed )
+* "rename" was deleting files instead of moving them. (Github issue #220).
+* Was parsing array index brakets "[..]" incorrectly when they were on the lefthand side of an assignment.  (Github issue #219)
+* SHIP:SENSORS were reading the wrong ship's sensors sometimes in multi-ship scenarios.  (GIthub issue #218 )
+* Integer and Floating point numbers were not quite properly interchangable like they were meant to be. (Github issue #209) 
+
+
 # v0.13.1
 * Fixed an issue with Dependancies that kept kOS modules from registering
 
