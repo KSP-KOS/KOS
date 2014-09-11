@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace kOS.Compilation
 {
-    public class Script
+    public abstract class Script
     {
         private readonly Dictionary<string, string> identifierReplacements = new Dictionary<string, string> {    { "alt:radar", "alt_radar" },
                                                                                                                  { "alt:apoapsis", "alt_apoapsis" },
@@ -14,29 +14,66 @@ namespace kOS.Compilation
                                                                                                                  { "eta:apoapsis", "eta_apoapsis" },
                                                                                                                  { "eta:periapsis", "eta_periapsis" },
                                                                                                                  { "eta:transition", "eta_transition" }};
+
         protected CompileCache Cache { get; set; }
 
-        public Script()
+        protected Script()
         {
             Cache = CompileCache.GetInstance();
         }
 
-        public virtual List<CodePart> Compile(string scriptText)
+        /// <summary>
+        /// Compile source text into compiled codeparts.
+        /// </summary>
+        /// <param name="filePath">The name that should get reported to the user on
+        /// runtime errors in this compiled code. Even if the text is not from an
+        /// actual file this should still be a pseudo-filename for reporting, for
+        /// example "(commandline)" or "(socket stream)"
+        /// </param>
+        /// <param name="startLineNum">Assuming scriptText is a subset of some bigger buffer, line 1 of scripttext
+        /// corresponds to line (what) of the more global something, for reporting numbers on errors.</param>
+        /// <param name="scriptText">The text to be compiled.</param>
+        /// <returns>The CodeParts made from the scriptText</returns>
+        public virtual List<CodePart> Compile(string filePath, int startLineNum, string scriptText)
         {
-            return Compile(scriptText, string.Empty);
+            return Compile(filePath, startLineNum, scriptText, string.Empty);
         }
 
-        public virtual List<CodePart> Compile(string scriptText, string contextId)
+        /// <summary>
+        /// Compile source text into compiled codeparts.
+        /// </summary>
+        /// <param name="filePath">The name that should get reported to the user on
+        /// runtime errors in this compiled code. Even if the text is not from an
+        /// actual file this should still be a pseudo-filename for reporting, for
+        /// example "(commandline)" or "(socket stream)"
+        /// </param>
+        /// <param name="startLineNum">Assuming scriptText is a subset of some bigger buffer, line 1 of scripttext
+        /// corresponds to line (what) of the more global something, for reporting numbers on errors.</param>
+        /// <param name="scriptText">The text to be compiled.</param>
+        /// <param name="contextId">The name of the runtime context (i.e. "interpreter").</param>
+        /// <returns>The CodeParts made from the scriptText</returns>
+        public virtual List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId)
         {
-            return Compile(scriptText, contextId, new CompilerOptions());
+            return Compile(filePath, startLineNum, scriptText, contextId, new CompilerOptions());
         }
 
-        public virtual List<CodePart> Compile(string scriptText, string contextId, CompilerOptions options)
-        {
-            return new List<CodePart>();
-        }
-        
-        public virtual void ClearContext(string contextId) { }
+        /// <summary>
+        /// Compile source text into compiled codeparts.
+        /// </summary>
+        /// <param name="filePath">The name that should get reported to the user on
+        /// runtime errors in this compiled code. Even if the text is not from an
+        /// actual file this should still be a pseudo-filename for reporting, for
+        /// example "(commandline)" or "(socket stream)"
+        /// </param>
+        /// <param name="startLineNum">Assuming scriptText is a subset of some bigger buffer, line 1 of scripttext
+        /// corresponds to line (what) of the more global something, for reporting numbers on errors.</param>
+        /// <param name="scriptText">The text to be compiled.</param>
+        /// <param name="contextId">The name of the runtime context (i.e. "interpreter").</param>
+        /// <param name="options">settings for the compile</param>
+        /// <returns>The CodeParts made from the scriptText</returns>
+        public abstract List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId, CompilerOptions options);
+
+        public abstract void ClearContext(string contextId);
 
         public virtual bool IsCommandComplete(string command)
         {
@@ -67,27 +104,6 @@ namespace kOS.Compilation
 
             return modifiedScriptText;
         }
-
-        private Dictionary<string, string> ExtractStrings(string scriptText)
-        {
-            var stringsLiterals = new Dictionary<string, string>();
-            int stringIndex = 0;
-            
-            var regex = new Regex("\".+?\"");
-            MatchCollection matches = regex.Matches(scriptText);
-
-            foreach (Match match in matches)
-            {
-                if (match.Success)
-                {
-                    string token = string.Format("[s{0}]", ++stringIndex);
-                    stringsLiterals.Add(token, match.Value);
-                }
-            }
-
-            return stringsLiterals;
-        }
-
         protected virtual void RaiseParseException(string scriptText, int line, int absolutePosition)
         {
             const int LINE_SIZE = 50;
@@ -113,5 +129,26 @@ namespace kOS.Compilation
         {
             return identifierReplacements.Aggregate(scriptText, (current, kvp) => current.Replace(kvp.Key, kvp.Value));
         }
+
+        private Dictionary<string, string> ExtractStrings(string scriptText)
+        {
+            var stringsLiterals = new Dictionary<string, string>();
+            int stringIndex = 0;
+
+            var regex = new Regex("\".+?\"");
+            MatchCollection matches = regex.Matches(scriptText);
+
+            foreach (Match match in matches)
+            {
+                if (match.Success)
+                {
+                    string token = string.Format("[s{0}]", ++stringIndex);
+                    stringsLiterals.Add(token, match.Value);
+                }
+            }
+
+            return stringsLiterals;
+        }
+
     }
 }

@@ -26,8 +26,10 @@ namespace kOS.Screen
             if (Shared.ScriptHandler.IsCommandComplete(commandText))
             {
                 base.NewLine();
+                AddCommandHistoryEntry(commandText); // add to history first so that if ProcessCommand generates an exception,
+                                                     // the command is present in the history to be found and printed in the
+                                                     // error message.
                 ProcessCommand(commandText);
-                AddCommandHistoryEntry(commandText);
             }
             else
             {
@@ -49,21 +51,20 @@ namespace kOS.Screen
             {
                 Shared.Cpu.BreakExecution(true);
             }
-            
-            if (!locked)
+
+            if (locked) return;
+
+            switch (key)
             {
-                switch (key)
-                {
-                    case kOSKeys.UP:
-                        ShowCommandHistoryEntry(-1);
-                        break;
-                    case kOSKeys.DOWN:
-                        ShowCommandHistoryEntry(1);
-                        break;
-                    default:
-                        base.SpecialKey(key);
-                        break;
-                }
+                case kOSKeys.UP:
+                    ShowCommandHistoryEntry(-1);
+                    break;
+                case kOSKeys.DOWN:
+                    ShowCommandHistoryEntry(1);
+                    break;
+                default:
+                    base.SpecialKey(key);
+                    break;
             }
         }
 
@@ -92,6 +93,11 @@ namespace kOS.Screen
                 }
             }
         }
+        
+        public string GetCommandHistoryAbsolute(int absoluteIndex)
+        {
+            return commandHistory[absoluteIndex-1];
+        }
 
         protected virtual void ProcessCommand(string commandText)
         {
@@ -104,12 +110,11 @@ namespace kOS.Screen
 
             try
             {
-                List<CodePart> commandParts = Shared.ScriptHandler.Compile(commandText, "interpreter");
-                if (commandParts != null)
-                {
-                    var interpreterContext = Shared.Cpu.GetInterpreterContext();
-                    interpreterContext.AddParts(commandParts);
-                }
+                List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter");
+                if (commandParts == null) return;
+
+                var interpreterContext = Shared.Cpu.GetInterpreterContext();
+                interpreterContext.AddParts(commandParts);
             }
             catch (Exception e)
             {

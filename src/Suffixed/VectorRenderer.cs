@@ -16,7 +16,7 @@ namespace kOS.Suffixed
         private LineRenderer  hat;
         private bool          enable;
         private readonly UpdateHandler updateHandler;
-        private readonly SharedObjects Shared;
+        private readonly SharedObjects shared;
         private GameObject    lineObj;
         private GameObject    hatObj;
         private GameObject    labelObj;
@@ -33,7 +33,6 @@ namespace kOS.Suffixed
         // mod.  Until then it's not that much of an extra cost:
         private Vector3       shipCenterCoords;
         private Vector3       camPos;         // camera coordinates.
-        private Vector3       prevCamPos; //TODO: do we need this?
         private Vector3       camLookVec;     // vector from camera to ship positon.
         private Vector3       prevCamLookVec;
         private Quaternion    camRot;
@@ -52,7 +51,7 @@ namespace kOS.Suffixed
             Width   = 0;
             
             updateHandler = updateHand;
-            Shared = shared;
+            this.shared = shared;
         }
 
         // Implementation of KOSSCopeObserver interface:
@@ -87,7 +86,9 @@ namespace kOS.Suffixed
 
             SetLayer(isOnMap ? MAP_LAYER : FLIGHT_LAYER);
 
-            if ( isOnMap != prevIsOnMap || prevCamLookVec.magnitude != camLookVec.magnitude )
+            var mapChange = isOnMap != prevIsOnMap;
+            var magnitudeChange = prevCamLookVec.magnitude != camLookVec.magnitude; 
+            if ( mapChange || magnitudeChange )
             {
                 RenderPointCoords();
                 LabelPlacement();
@@ -106,9 +107,9 @@ namespace kOS.Suffixed
         {
             if (isOnMap)
                 shipCenterCoords = ScaledSpace.LocalToScaledSpace(
-                     Shared.Vessel.GetWorldPos3D() );
+                     shared.Vessel.GetWorldPos3D() );
             else
-                shipCenterCoords = Shared.Vessel.findWorldCenterOfMass();
+                shipCenterCoords = shared.Vessel.findWorldCenterOfMass();
         }
         
         /// <summary>
@@ -120,7 +121,6 @@ namespace kOS.Suffixed
 
             prevIsOnMap    = isOnMap;
             prevCamLookVec = camLookVec;
-            prevCamPos     = camPos;
             prevCamRot     = camRot;
             
             isOnMap = MapView.MapIsEnabled;

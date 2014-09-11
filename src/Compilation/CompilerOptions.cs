@@ -2,7 +2,7 @@
 {
     public class CompilerOptions
     {
-        public bool LoadProgramsInSameAddressSpace;
+        public bool LoadProgramsInSameAddressSpace { get; set; }
 
         public CompilerOptions()
         {

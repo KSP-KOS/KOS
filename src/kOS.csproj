@@ -70,6 +70,7 @@
     <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
+    <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
@@ -83,11 +84,13 @@
     <Compile Include="IUpdateObserver.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
+    <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSTextEditPopup.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
     <Compile Include="Compilation\CompileCache.cs" />
+    <Compile Include="Suffixed\FileInfo.cs" />
     <Compile Include="Suffixed\Orbitable.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />

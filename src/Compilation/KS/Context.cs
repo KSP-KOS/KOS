@@ -1,4 +1,6 @@
-﻿namespace kOS.Compilation.KS
+﻿using System.Collections.Generic;
+
+namespace kOS.Compilation.KS
 {
     class Context
     {
@@ -6,7 +8,7 @@
         public TriggerCollection Triggers;
         public SubprogramCollection Subprograms;
         public int LabelIndex;
-        public int InstructionId;
+        public string LastSourceName;
 
         public Context()
         {
@@ -14,7 +16,8 @@
             Triggers = new TriggerCollection();
             Subprograms = new SubprogramCollection();
             LabelIndex = 0;
-            InstructionId = 0;
+            LastSourceName = "";
         }
+        
     }
 }

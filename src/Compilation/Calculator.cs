@@ -55,35 +55,66 @@ namespace kOS.Compilation
 
     public class CalculatorIntInt : Calculator
     {
-        private object PromoteToDouble(double result)
+        /// <summary>If result is too big to fit in an int32, then turn it
+        /// into a double (since kOS doesn't do long's):</summary>
+        /// <param name="result">The value to maybe promote.  Use long so it
+        /// is capable of storing numbers too big for int.</param>
+        /// <returns>the value, possibly promoted to double</returns>
+        private object PromoteIfTooBig(long result)
         {
             if (Math.Abs(result) <= int.MaxValue) return (int)result;
-            return result;
+            return (double)result;
+        }
+
+        /// <summary>If result is too big to fit in an int32, then turn it
+        /// into a double (since kOS doesn't do long's):</summary>
+        /// <param name="result">The value to maybe promote.</param>
+        /// <returns>the value, possibly promoted to double</returns>
+        private object PromoteIfTooBig(double result)
+        {
+            if (Math.Abs(result) <= int.MaxValue) return (int)result;
+            return (double)result;
         }
 
         public override object Add(object argument1, object argument2)
         {
-            return PromoteToDouble((double)(int)argument1 + (int)argument2);
+            // C# doesn't know how to both unbox the object and promote it in the same cast, thus the (long)(int) syntax:
+            return PromoteIfTooBig((long)(int)argument1 + (long)(int)argument2);
         }
 
         public override object Subtract(object argument1, object argument2)
         {
-            return PromoteToDouble((double)(int)argument1 - (int)argument2);
+            // C# doesn't know how to both unbox the object and promote it in the same cast, thus the (long)(int) syntax:
+            return PromoteIfTooBig((long)(int)argument1 - (long)(int)argument2);
         }
 
         public override object Multiply(object argument1, object argument2)
         {
-            return PromoteToDouble((double)(int)argument1 * (int)argument2);
+            // C# doesn't know how to both unbox the object and promote it in the same cast, thus the (long)(int) syntax:
+            return PromoteIfTooBig((long)(int)argument1 * (long)(int)argument2);
         }
 
         public override object Divide(object argument1, object argument2)
         {
-            return (double)(int)argument1 / (int)argument2;
+            // Avoid integer division truncation.  Make double
+            // if there's a fractional part to preserve:
+            int remainder = (int)argument1 % (int)argument2;
+            if (remainder == 0)
+                return (int)argument1 / (int)argument2;
+            else
+                return Convert.ToDouble((int)argument1) /(int)argument2;
         }
 
         public override object Power(object argument1, object argument2)
         {
-            return PromoteToDouble(Math.Pow((int)argument1, (int)argument2));
+            // If the exponent is negative, then integer power operations would normally
+            // round to zero (i.e. 4^(-2) is (1/16) which rounds to zero).  This
+            // checks for that condition and if it happens it turns into a double operation:
+            if ((int)argument2 < 0)
+                return Math.Pow(Convert.ToDouble((int)argument1), Convert.ToDouble((int)argument2));
+            else
+                // C# doesn't know how to both unbox the object and promote it in the same cast, thus the (long)(int) syntax:
+                return PromoteIfTooBig(Math.Pow((long)(int)argument1, (long)(int)argument2));
         }
 
         public override object GreaterThan(object argument1, object argument2)
@@ -129,29 +160,43 @@ namespace kOS.Compilation
 
     public class CalculatorDoubleDouble : Calculator
     {
+        /// <summary>
+        /// Turn the double into an integer if the value is
+        /// a round number without a fractional component,
+        /// and it's small enough magnitude to fit in an int.
+        /// </summary>
+        /// <param name="result">the value to maybe demote</param>
+        /// <returns>the value, possibly demoted</returns>
+        public object DemoteIfRound(double result)
+        {
+            if (Math.Floor(result) == result && (Math.Abs(result) <= int.MaxValue))
+                return (int)result;
+            return (double)result;            
+        }
+
         public override object Add(object argument1, object argument2)
         {
-            return (double)argument1 + (double)argument2;
+            return DemoteIfRound((double)argument1 + (double)argument2);
         }
 
         public override object Subtract(object argument1, object argument2)
         {
-            return (double)argument1 - (double)argument2;
+            return DemoteIfRound((double)argument1 - (double)argument2);
         }
 
         public override object Multiply(object argument1, object argument2)
         {
-            return (double)argument1 * (double)argument2;
+            return DemoteIfRound((double)argument1 * (double)argument2);
         }
 
         public override object Divide(object argument1, object argument2)
         {
-            return (double)argument1 / (double)argument2;
+            return DemoteIfRound((double)argument1 / (double)argument2);
         }
 
         public override object Power(object argument1, object argument2)
         {
-            return Math.Pow((double)argument1, (double)argument2);
+            return DemoteIfRound(Math.Pow((double)argument1, (double)argument2));
         }
 
         public override object GreaterThan(object argument1, object argument2)
@@ -197,34 +242,48 @@ namespace kOS.Compilation
 
     public class CalculatorIntDouble : Calculator
     {
+        /// <summary>
+        /// Turn the double into an integer if the value is
+        /// a round number without a fractional component,
+        /// and it's small enough magnitude to fit in an int.
+        /// </summary>
+        /// <param name="result">the value to maybe demote</param>
+        /// <returns>the value, possibly demoted</returns>
+        public object DemoteIfRound(double result)
+        {
+            if (Math.Floor(result) == result && (Math.Abs(result) <= int.MaxValue))
+                return (int)result;
+            return (double)result;            
+        }
+
         public override object Add(object argument1, object argument2)
         {
-            if (argument1 is int) return (int)argument1 + (double)argument2;
-            return (double)argument1 + (int)argument2;
+            if (argument1 is int) return DemoteIfRound((int)argument1 + (double)argument2);
+            return DemoteIfRound((double)argument1 + (int)argument2);
         }
 
         public override object Subtract(object argument1, object argument2)
         {
-            if (argument1 is int) return (int)argument1 - (double)argument2;
-            return (double)argument1 - (int)argument2;
+            if (argument1 is int) return DemoteIfRound((int)argument1 - (double)argument2);
+            return DemoteIfRound((double)argument1 - (int)argument2);
         }
 
         public override object Multiply(object argument1, object argument2)
         {
-            if (argument1 is int) return (int)argument1 * (double)argument2;
-            return (double)argument1 * (int)argument2;
+            if (argument1 is int) return DemoteIfRound((int)argument1 * (double)argument2);
+            return DemoteIfRound((double)argument1 * (int)argument2);
         }
 
         public override object Divide(object argument1, object argument2)
         {
-            if (argument1 is int) return (int)argument1 / (double)argument2;
-            return (double)argument1 / (int)argument2;
+            if (argument1 is int) return DemoteIfRound((int)argument1 / (double)argument2);
+            return DemoteIfRound((double)argument1 / (int)argument2);
         }
 
         public override object Power(object argument1, object argument2)
         {
-            if (argument1 is int) return Math.Pow((int)argument1, (double)argument2);
-            return Math.Pow((double)argument1, (int)argument2);
+            if (argument1 is int) return DemoteIfRound(Math.Pow((int)argument1, (double)argument2));
+            return DemoteIfRound(Math.Pow((double)argument1, (int)argument2));
         }
 
         public override object GreaterThan(object argument1, object argument2)

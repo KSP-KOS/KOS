@@ -12,6 +12,9 @@ namespace kOS.Compilation.KS
         private List<Opcode> _currentCodeSection = null;
         private bool _addBranchDestination = false;
         private ParseNode _lastNode = null;
+        private int _startLineNum = 1;
+        private int _lastLine = 0;
+        private int _lastColumn = 0;
         private List<List<Opcode>> _breakList = new List<List<Opcode>>();
         private List<string> _triggerRemoveNames = new List<string>();
         private bool _nowCompilingTrigger = false;
@@ -23,11 +26,12 @@ namespace kOS.Compilation.KS
         private readonly Dictionary<string, string> _functionsOverloads = new Dictionary<string, string>() { { "round|1", "roundnearest" },
                                                                                                              { "round|2", "round"} };
         
-        public CodePart Compile(ParseTree tree, Context context, CompilerOptions options)
+        public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
         {
             _part = new CodePart();
             _context = context;
             _options = options;
+            _startLineNum = startLineNum;
 
             try
             {
@@ -63,11 +67,41 @@ namespace kOS.Compilation.KS
                 AddOpcode(new OpcodeNOP());
             }
         }
-
+        
+        /// <summary>
+        /// Only those nodes which are primitive tokens will have line number
+        /// information.  So perform a leftmost search of the subtree of nodes
+        /// until a node with a token with a line number is found:
+        /// </summary>
+        /// <returns>true if a line number was found in this node.  mostly used for internal recursion
+        /// and can be safely ignored when this is called.</returns>
+        private bool SetLineNum(ParseNode node)
+        {
+            if (node != null && node.Token != null && node.Token.Line > 0)
+            {
+                _lastLine = node.Token.Line + (_startLineNum - 1);
+                _lastColumn = node.Token.Column;
+                return true;
+            }
+            else
+            {
+                foreach (ParseNode childNode in node.Nodes)
+                {
+                    if (SetLineNum(childNode))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
         private Opcode AddOpcode(Opcode opcode, string destinationLabel)
         {
             opcode.Label = GetNextLabel(true);
             opcode.DestinationLabel = destinationLabel;
+            opcode.SourceLine = _lastLine;
+            opcode.SourceColumn = _lastColumn;
             _currentCodeSection.Add(opcode);
             _addBranchDestination = false;
             return opcode;
@@ -123,6 +157,11 @@ namespace kOS.Compilation.KS
 
         private void PreProcessStatements(ParseNode node)
         {
+            
+            _lastNode = node;
+            
+            SetLineNum(node);
+            
             switch (node.Token.Type)
             {
                 // statements that can have a lock inside
@@ -165,6 +204,7 @@ namespace kOS.Compilation.KS
 
         private void PreProcessOnStatement(ParseNode node)
         {
+            SetLineNum(node);
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
@@ -206,6 +246,7 @@ namespace kOS.Compilation.KS
 
         private void PreProcessWhenStatement(ParseNode node)
         {
+            SetLineNum(node);
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
@@ -238,6 +279,7 @@ namespace kOS.Compilation.KS
 
         private void PreProcessWaitStatement(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes.Count == 4)
             {
                 // wait condition
@@ -279,6 +321,7 @@ namespace kOS.Compilation.KS
 
         private void PreProcessLockStatement(ParseNode node)
         {
+            SetLineNum(node);
             string lockIdentifier = node.Nodes[1].Token.Text;
             Lock lockObject = _context.Locks.GetLock(lockIdentifier);
             int expressionHash = ConcatenateNodes(node.Nodes[3]).GetHashCode();
@@ -297,11 +340,14 @@ namespace kOS.Compilation.KS
                     string triggerIdentifier = "lock-" + lockObject.Identifier;
                     Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
+                    int rememberLastLine = _lastLine;
+                    _lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
                     _currentCodeSection = triggerObject.Code;
                     AddOpcode(new OpcodePush("$" + lockObject.Identifier));
                     AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
                     AddOpcode(new OpcodeStore());
                     AddOpcode(new OpcodeEOF());
+                    _lastLine = rememberLastLine;
                 }
 
                 // default function
@@ -318,6 +364,7 @@ namespace kOS.Compilation.KS
 
         private void PreProcessProgramParameters(ParseNode node)
         {
+            SetLineNum(node);
             // if the declaration is a parameter
             if (node.Nodes[1].Token.Type == TokenType.PARAMETER)
             {
@@ -330,6 +377,7 @@ namespace kOS.Compilation.KS
 
         private void PreProcessRunStatement(ParseNode node)
         {
+            SetLineNum(node);
             if (_options.LoadProgramsInSameAddressSpace)
             {
                 bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
@@ -447,6 +495,8 @@ namespace kOS.Compilation.KS
         private void VisitNode(ParseNode node)
         {
             _lastNode = node;
+
+            SetLineNum(node);
 
             switch (node.Token.Type)
             {
@@ -626,6 +676,7 @@ namespace kOS.Compilation.KS
 
         private void VisitChildNodes(ParseNode node)
         {
+            SetLineNum(node);
             foreach (ParseNode childNode in node.Nodes)
             {
                 VisitNode(childNode);
@@ -634,6 +685,7 @@ namespace kOS.Compilation.KS
 
         private void VisitVariableNode(ParseNode node)
         {
+            SetLineNum(node);
             _identifierIsVariable = true;
             VisitNode(node);
             _identifierIsVariable = false;
@@ -641,6 +693,7 @@ namespace kOS.Compilation.KS
 
         private void VisitExpression(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes.Count > 1)
             {
                 // it should always be odd, two arguments and one operator
@@ -669,6 +722,7 @@ namespace kOS.Compilation.KS
 
         private void VisitAtom(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes.Count > 0)
             {
                 bool addNegation = false;
@@ -711,6 +765,7 @@ namespace kOS.Compilation.KS
 
         private void VisitSciNumber(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes.Count == 1)
             {
                 VisitNumber(node.Nodes[0]);
@@ -737,11 +792,13 @@ namespace kOS.Compilation.KS
 
         private void VisitNumber(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[0]);
         }
 
         private void VisitInteger(ParseNode node)
         {
+            SetLineNum(node);
             object number = null;
             int integerNumber;
 
@@ -762,6 +819,7 @@ namespace kOS.Compilation.KS
 
         private void VisitDouble(ParseNode node)
         {
+            SetLineNum(node);
             object number = null;
             number = double.Parse(node.Token.Text);
 
@@ -773,6 +831,7 @@ namespace kOS.Compilation.KS
 
         private void VisitTrueFalse(ParseNode node)
         {
+            SetLineNum(node);
             bool boolValue;
             if (bool.TryParse(node.Token.Text, out boolValue))
             {
@@ -782,6 +841,7 @@ namespace kOS.Compilation.KS
 
         private void VisitFunction(ParseNode node)
         {
+            SetLineNum(node);
             string functionName = node.Nodes[0].Token.Text;
             int parameterCount = 0;
 
@@ -810,11 +870,13 @@ namespace kOS.Compilation.KS
 
         private void VisitFileVol(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[0]);
         }
 
         private void VisitArgList(ParseNode node)
         {
+            SetLineNum(node);
             int nodeIndex = 0;
             while (nodeIndex < node.Nodes.Count)
             {
@@ -825,6 +887,7 @@ namespace kOS.Compilation.KS
 
         private void VisitVarIdentifier(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[0]);
 
             int nodeIndex = 2;
@@ -846,6 +909,7 @@ namespace kOS.Compilation.KS
 
         private void VisitArrayIdentifier(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[0]);
 
             int nodeIndex = 2;
@@ -858,12 +922,25 @@ namespace kOS.Compilation.KS
                 
                 VisitNode(node.Nodes[nodeIndex]);
                 
+                // Two ways to check if this is the last index (i.e. the 'k' in arr[i][j][k]'),
+                // depeding on whehter using the "#" syntax or the "[..]" syntax:
+                bool isLastIndex = false;
+                var previousNodeType = node.Nodes[nodeIndex - 1].Token.Type;
+                switch (previousNodeType)
+                {
+                    case TokenType.ARRAYINDEX:
+                        isLastIndex = (nodeIndex == node.Nodes.Count-1);
+                        break;
+                    case TokenType.SQUAREOPEN:
+                        isLastIndex = (nodeIndex == node.Nodes.Count-2);
+                        break;
+                }
+
                 // when we are setting a member value we need to leave
                 // the last object and the last index in the stack
                 // the only exception is when we are setting a suffix of the indexed value
-                if (!(_compilingSetDestination &&
-                      nodeIndex == (node.Nodes.Count - 1)) ||
-                    VarIdentifierHasSuffix(node.Parent))
+                var hasSuffix = VarIdentifierHasSuffix(node.Parent);
+                if (!(_compilingSetDestination && isLastIndex) || hasSuffix)
                 {
                     AddOpcode(new OpcodeGetIndex());
                 }
@@ -893,6 +970,7 @@ namespace kOS.Compilation.KS
 
         private void VisitFunctionIdentifier(ParseNode node)
         {
+            SetLineNum(node);
             string identifier = GetIdentifierText(node);
 
             if (node.Nodes.Count > 1 &&
@@ -922,17 +1000,20 @@ namespace kOS.Compilation.KS
 
         private void VisitIdentifier(ParseNode node)
         {
+            SetLineNum(node);
             string prefix = _identifierIsVariable ? "$" : string.Empty;
             AddOpcode(new OpcodePush(prefix + node.Token.Text));
         }
 
         private void VisitString(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodePush(node.Token.Text.Trim('"')));
         }
 
         private bool VarIdentifierHasSuffix(ParseNode node)
         {
+            SetLineNum(node);
             foreach (ParseNode child in node.Nodes)
             {
                 if (child.Token.Type == TokenType.COLON)
@@ -946,6 +1027,7 @@ namespace kOS.Compilation.KS
 
         private bool VarIdentifierHasIndex(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes.Count > 0 && node.Nodes[0].Token.Type == TokenType.array_identifier)
             {
                 ParseNode arrayIdentifier = node.Nodes[0];
@@ -964,6 +1046,7 @@ namespace kOS.Compilation.KS
 
         private void VisitSetStatement(ParseNode node)
         {
+            SetLineNum(node);
             // destination
             _compilingSetDestination = true;
             VisitVarIdentifier(node.Nodes[1]);
@@ -987,6 +1070,7 @@ namespace kOS.Compilation.KS
 
         private void VisitIfStatement(ParseNode node)
         {
+            SetLineNum(node);
             // The IF check:
             VisitNode(node.Nodes[1]);
             Opcode branchToFalse = AddOpcode(new OpcodeBranchIfFalse());
@@ -1014,6 +1098,7 @@ namespace kOS.Compilation.KS
 
         private void VisitUntilStatement(ParseNode node)
         {
+            SetLineNum(node);
             string conditionLabel = GetNextLabel(false);
             PushBreakList();
             VisitNode(node.Nodes[1]);
@@ -1029,6 +1114,7 @@ namespace kOS.Compilation.KS
 
         private void VisitPlusMinus(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Token.Text == "+")
             {
                 AddOpcode(new OpcodeMathAdd());
@@ -1041,31 +1127,37 @@ namespace kOS.Compilation.KS
 
         private void VisitMult(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodeMathMultiply());
         }
 
         private void VisitDiv(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodeMathDivide());
         }
 
         private void VisitPower(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodeMathPower());
         }
 
         private void VisitAnd(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodeLogicAnd());
         }
 
         private void VisitOr(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodeLogicOr());
         }
 
         private void VisitComparator(ParseNode node)
         {
+            SetLineNum(node);
             switch (node.Token.Text)
             {
                 case ">":
@@ -1093,6 +1185,7 @@ namespace kOS.Compilation.KS
 
         private void VisitLockStatement(ParseNode node)
         {
+            SetLineNum(node);
             string lockIdentifier = node.Nodes[1].Token.Text;
             int expressionHash = ConcatenateNodes(node.Nodes[3]).GetHashCode();
             Lock lockObject = _context.Locks.GetLock(lockIdentifier);
@@ -1126,6 +1219,7 @@ namespace kOS.Compilation.KS
 
         private void VisitUnlockStatement(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes[1].Token.Type == TokenType.ALL)
             {
                 // unlock all locks
@@ -1170,6 +1264,7 @@ namespace kOS.Compilation.KS
 
         private void VisitOnStatement(ParseNode node)
         {
+            SetLineNum(node);
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "on-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
@@ -1186,6 +1281,7 @@ namespace kOS.Compilation.KS
 
         private void VisitWhenStatement(ParseNode node)
         {
+            SetLineNum(node);
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "when-" + expressionHash.ToString();
             Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
@@ -1199,6 +1295,7 @@ namespace kOS.Compilation.KS
 
         private void VisitWaitStatement(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes.Count == 3)
             {
                 // wait time
@@ -1222,6 +1319,7 @@ namespace kOS.Compilation.KS
 
         private void VisitDeclareStatement(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes.Count == 3)
             {
                 // standard declare
@@ -1233,6 +1331,7 @@ namespace kOS.Compilation.KS
 
         private void VisitToggleStatement(ParseNode node)
         {
+            SetLineNum(node);
             VisitVarIdentifier(node.Nodes[1]);
             VisitVarIdentifier(node.Nodes[1]);
             AddOpcode(new OpcodeLogicToBool());
@@ -1242,6 +1341,7 @@ namespace kOS.Compilation.KS
 
         private void VisitOnOffStatement(ParseNode node)
         {
+            SetLineNum(node);
             VisitVarIdentifier(node.Nodes[0]);
             if (node.Nodes[1].Token.Type == TokenType.ON)
                 AddOpcode(new OpcodePush(true));
@@ -1252,6 +1352,7 @@ namespace kOS.Compilation.KS
 
         private void VisitPrintStatement(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes.Count == 3)
             {
                 VisitNode(node.Nodes[1]);
@@ -1268,28 +1369,33 @@ namespace kOS.Compilation.KS
 
         private void VisitStageStatement(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodeCall("stage()"));
         }
 
         private void VisitAddStatement(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[1]);
             AddOpcode(new OpcodeCall("add()"));
         }
 
         private void VisitRemoveStatement(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[1]);
             AddOpcode(new OpcodeCall("remove()"));
         }
 
         private void VisitClearStatement(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodeCall("clearscreen()"));
         }
 
         private void VisitEditStatement(ParseNode node)
         {
+            SetLineNum(node);
             string fileName = node.Nodes[1].Token.Text;
             AddOpcode(new OpcodePush(fileName) );
             AddOpcode(new OpcodeCall("edit()"));
@@ -1297,6 +1403,7 @@ namespace kOS.Compilation.KS
 
         private void VisitRunStatement(ParseNode node)
         {
+            SetLineNum(node);
             int volumeIndex = 3;
 
             // process program arguments
@@ -1333,12 +1440,14 @@ namespace kOS.Compilation.KS
 
         private void VisitSwitchStatement(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[2]);
             AddOpcode(new OpcodeCall("switch()"));
         }
 
         private void VisitCopyStatement(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[1]);
             
             if (node.Nodes[2].Token.Type == TokenType.FROM)
@@ -1352,6 +1461,7 @@ namespace kOS.Compilation.KS
 
         private void VisitRenameStatement(ParseNode node)
         {
+            SetLineNum(node);
             int oldNameIndex = 2;
             int newNameIndex = 4;
             
@@ -1380,6 +1490,7 @@ namespace kOS.Compilation.KS
 
         private void VisitDeleteStatement(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[1]);
             
             if (node.Nodes.Count == 5)
@@ -1392,6 +1503,7 @@ namespace kOS.Compilation.KS
 
         private void VisitListStatement(ParseNode node)
         {
+            SetLineNum(node);
             bool hasIdentifier = (node.Nodes[1].Token.Type == TokenType.IDENTIFIER);
             bool hasIn = hasIdentifier && (node.Nodes[2].Token.Type == TokenType.IN);
 
@@ -1417,6 +1529,7 @@ namespace kOS.Compilation.KS
 
         private void VisitLogStatement(ParseNode node)
         {
+            SetLineNum(node);
             VisitNode(node.Nodes[1]);
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodeCall("logfile()"));
@@ -1424,12 +1537,14 @@ namespace kOS.Compilation.KS
 
         private void VisitBreakStatement(ParseNode node)
         {
+            SetLineNum(node);
             Opcode jump = AddOpcode(new OpcodeBranchJump());
             AddToBreakList(jump);
         }
 
         private void VisitPreserveStatement(ParseNode node)
         {
+            SetLineNum(node);
             if (_nowCompilingTrigger)
             {
                 string flagName = PeekTriggerRemoveName();
@@ -1445,16 +1560,19 @@ namespace kOS.Compilation.KS
 
         private void VisitRebootStatement(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodeCall("reboot()"));
         }
 
         private void VisitShutdownStatement(ParseNode node)
         {
+            SetLineNum(node);
             AddOpcode(new OpcodeCall("shutdown()"));
         }
 
         private void VisitForStatement(ParseNode node)
         {
+            SetLineNum(node);
             string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + "-iterator";
 
             PushBreakList();
@@ -1497,6 +1615,7 @@ namespace kOS.Compilation.KS
 
         private void VisitUnsetStatement(ParseNode node)
         {
+            SetLineNum(node);
             if (node.Nodes[1].Token.Type == TokenType.ALL)
             {
                 // null means all variables
@@ -1512,11 +1631,13 @@ namespace kOS.Compilation.KS
 
         private void VisitBatchStatement(ParseNode node)
         {
+            SetLineNum(node);
             throw new Exception("Batch mode can only be used when in immediate mode.");
         }
 
         private void VisitDeployStatement(ParseNode node)
         {
+            SetLineNum(node);
             throw new Exception("Batch mode can only be used when in immediate mode.");
         }
     }

@@ -228,7 +228,6 @@ namespace kOS.Compilation.KS
         private void Parseinstruction(ParseNode parent)
         {
             Token tok;
-            ParseNode n;
             ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.instruction), "instruction");
             parent.Nodes.Add(node);
 

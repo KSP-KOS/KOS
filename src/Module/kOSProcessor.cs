@@ -40,7 +40,7 @@ namespace kOS.Module
         public void Activate()
         {
             Debug.Log("kOS: Activate");
-            Core.OpenWindow(shared);
+            OpenWindow();
         }
 
         [KSPField(isPersistant = true, guiName = "Required Power", guiActive = true)] 
@@ -65,14 +65,14 @@ namespace kOS.Module
         public void Deactivate(KSPActionParam param)
         {
             Debug.Log("kOS: Close Terminal from ActionGroup");
-            Core.CloseWindow(shared);
+            CloseWindow();
         }
 
         [KSPAction("Toggle Terminal", actionGroup = KSPActionGroup.None)]
         public void Toggle(KSPActionParam param)
         {
             Debug.Log("kOS: Toggle Terminal from ActionGroup");
-            Core.ToggleWindow(shared);
+            ToggleWindow();
         }
 
         [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
@@ -80,6 +80,21 @@ namespace kOS.Module
         {
             Debug.Log("kOS: Toggle Power from ActionGroup");
             TogglePower();
+        }
+        
+        public void OpenWindow()
+        {
+            shared.Window.Open();
+        }
+
+        public void CloseWindow()
+        {
+            shared.Window.Close();
+        }
+
+        public void ToggleWindow()
+        {
+            shared.Window.Toggle();
         }
 
         public override void OnStart(StartState state)
@@ -112,6 +127,12 @@ namespace kOS.Module
             shared.VolumeMgr = new VolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();
             shared.Cpu = new Execution.CPU(shared);
+
+            // Make the window that is going to correspond to this kOS part:
+            var gObj = new GameObject("kOSTermWindow", typeof(kOS.Screen.TermWindow));
+            DontDestroyOnLoad(gObj);
+            shared.Window = (kOS.Screen.TermWindow)gObj.GetComponent(typeof(kOS.Screen.TermWindow));
+            shared.Window.AttachTo(shared);
 
             // initialize archive
             var archive = shared.Factory.CreateArchive();

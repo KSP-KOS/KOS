@@ -14,19 +14,19 @@ namespace kOS.Execution
         public void Push(object item)
         {
             string message = string.Empty;
-            
-            if (IsValid(item, ref message))
-            {
-                stackPointer++;
-                if (stackPointer < MAX_STACK_SIZE)
-                    stack.Insert(stackPointer, ProcessItem(item));
-                else
-                    throw new Exception("Stack overflow!!");
-            }
-            else
+
+            if (!IsValid(item, ref message))
             {
                 throw new ArgumentException(message);
             }
+
+            stackPointer++;
+            if (stackPointer < MAX_STACK_SIZE)
+            {
+                stack.Insert(stackPointer, ProcessItem(item));
+            }
+            else
+                throw new Exception("Stack overflow!!");
         }
 
         private bool IsValid(object item, ref string message)
@@ -94,12 +94,33 @@ namespace kOS.Execution
             var builder = new StringBuilder();
             builder.AppendLine("Stack dump:");
 
-            int startIndex = Math.Max(0, stack.Count - lineCount);
-            
-            for(int index = startIndex; index < stack.Count; index++)
-                builder.AppendLine(string.Format("{0:000}    {1}", index, stack[index]));
+            // Print in reverse order so the top of the stack is on top of the printout:
+            // (actually given the double nature of the stack, one of the two sub-stacks
+            // inside it will always be backwardly printed):
+            for (int index = stack.Count-1 ; index >= 0 ; --index)
+            {
+                builder.AppendLine(string.Format("{0:000} {1,4} {2}", index, (index==stackPointer ? "SP->" : "" ), stack[index]));
+            }
 
             return builder.ToString();
+        }
+        
+        /// <summary>
+        /// Return the subroutine call trace of how the code got to where it is right now.
+        /// </summary>
+        /// <returns>The items in the list are the instruction pointers of the Opcodecall instructions
+        /// that got us to here.</returns>
+        public List<int> GetCallTrace()
+        {
+            var trace = new List<int>();
+            for (int index = stackPointer+1 ; index < stack.Count ; ++index)
+            {
+                if (stack[index] is SubroutineContext)
+                {
+                    trace.Add( ((SubroutineContext)(stack[index])).CameFromInstPtr - 1 );
+                }
+            }
+            return trace;
         }
     }
 }

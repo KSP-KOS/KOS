@@ -24,6 +24,7 @@ namespace kOS
         public ProcessorManager ProcessorMgr { get; set; }
         public UpdateHandler UpdateHandler { get; set; }
         public IFactory Factory { get; set; }
+        
 
         public SharedObjects()
         {

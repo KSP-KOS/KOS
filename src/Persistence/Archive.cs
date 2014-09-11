@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using kOS.Suffixed;
 
 namespace kOS.Persistence
 {
@@ -79,7 +78,7 @@ namespace kOS.Persistence
             try
             {
                 base.DeleteByName(name);
-                File.Delete(archiveFolder + name + ".txt");
+                File.Delete(string.Format("{0}{1}.txt", archiveFolder, name));
                 return true;
             }
             catch (Exception)
@@ -88,16 +87,32 @@ namespace kOS.Persistence
             }
         }
 
-        public override List<kOS.Suffixed.FileInfo> GetFileList()
+        public override bool RenameFile(string name, string newName)
         {
-            var retList = new List<kOS.Suffixed.FileInfo>();
+            try
+            {
+                var sourcePath = string.Format("{0}{1}.txt", archiveFolder, name);
+                var destinationPath = string.Format("{0}{1}.txt", archiveFolder, newName);
+
+                File.Move(sourcePath,destinationPath);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public override List<Suffixed.FileInfo> GetFileList()
+        {
+            var retList = new List<Suffixed.FileInfo>();
 
             try
             {
                 foreach (var file in Directory.GetFiles(archiveFolder, "*.txt"))
                 {
-                    var sysFileInfo = new System.IO.FileInfo(file);
-                    var fileInfo = new kOS.Suffixed.FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
+                    var sysFileInfo = new FileInfo(file);
+                    var fileInfo = new Suffixed.FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
 
                     retList.Add(fileInfo);
                 }

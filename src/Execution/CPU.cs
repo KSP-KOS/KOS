@@ -19,7 +19,7 @@ namespace kOS.Execution
         }
 
         private readonly Stack stack;
-        private readonly Dictionary<string, Variable> vars;
+        private readonly Dictionary<string, Variable> variables;
         private Status currentStatus;
         private double currentTime;
         private double timeWaitUntil;
@@ -28,12 +28,16 @@ namespace kOS.Execution
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
         private Dictionary<string, Variable> savedPointers;
+        private int instructionsSoFarInUpdate;
+        private int instructionsPerUpdate;
         
         // statistics
-        public double TotalCompileTime = 0D;
+        private double totalCompileTime;
         private double totalUpdateTime;
         private double totalTriggersTime;
         private double totalExecutionTime;
+        private int maxMainlineInstructionsSoFar;
+        private int maxTriggerInstructionsSoFar;
 
         public int InstructionPointer
         {
@@ -49,7 +53,7 @@ namespace kOS.Execution
             this.shared = shared;
             this.shared.Cpu = this;
             stack = new Stack();
-            vars = new Dictionary<string, Variable>();
+            variables = new Dictionary<string, Variable>();
             contexts = new List<ProgramContext>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddObserver(this);
         }
@@ -86,7 +90,7 @@ namespace kOS.Execution
             // clear stack
             stack.Clear();
             // clear variables
-            vars.Clear();
+            variables.Clear();
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
@@ -97,9 +101,7 @@ namespace kOS.Execution
             if (shared.Screen != null)
             {
                 shared.Screen.ClearScreen();
-                string bootMessage = "kOS Operating System\n" +
-                                     "KerboScript v" + Core.VersionInfo + "\n \n" +
-                                     "Proceed.\n ";
+                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n ", Core.VersionInfo);
                 shared.Screen.Print(bootMessage);
             }
             
@@ -113,7 +115,8 @@ namespace kOS.Execution
                 var programContext = shared.Cpu.GetProgramContext();
                 programContext.Silent = true;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                List<CodePart> parts = shared.ScriptHandler.Compile("run boot.", "program", options);
+                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + "boot" ;
+                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, "run boot.", "program", options);
                 programContext.AddParts(parts);
             }
         }
@@ -191,16 +194,26 @@ namespace kOS.Execution
             }
             return currentContext;
         }
+        
+        public Opcode GetCurrentOpcode()
+        {
+            return currentContext.Program[currentContext.InstructionPointer];
+        }
+        
+        public Opcode GetOpcodeAt(int instructionPtr)
+        {
+            return currentContext.Program[instructionPtr];
+        }
 
         private void SaveAndClearPointers()
         {
             savedPointers = new Dictionary<string, Variable>();
-            var pointers = new List<string>(vars.Keys.Where(v => v.Contains('*')));
+            var pointers = new List<string>(variables.Keys.Where(v => v.Contains('*')));
 
             foreach (var pointerName in pointers)
             {
-                savedPointers.Add(pointerName, vars[pointerName]);
-                vars.Remove(pointerName);
+                savedPointers.Add(pointerName, variables[pointerName]);
+                variables.Remove(pointerName);
             }
             UnityEngine.Debug.Log(string.Format("kOS: Saving and removing {0} pointers", pointers.Count));
         }
@@ -212,11 +225,11 @@ namespace kOS.Execution
 
             foreach (var item in savedPointers)
             {
-                if (vars.ContainsKey(item.Key))
+                if (variables.ContainsKey(item.Key))
                 {
                     // if the pointer exists it means it was redefined from inside a program
                     // and it's going to be invalid outside of it, so we remove it
-                    vars.Remove(item.Key);
+                    variables.Remove(item.Key);
                     deletedPointers++;
                     // also remove the corresponding trigger if exists
                     if (item.Value.Value is int)
@@ -224,7 +237,7 @@ namespace kOS.Execution
                 }
                 else
                 {
-                    vars.Add(item.Key, item.Value);
+                    variables.Add(item.Key, item.Value);
                     restoredPointers++;
                 }
             }
@@ -293,11 +306,24 @@ namespace kOS.Execution
             stack.MoveStackPointer(delta);
         }
 
+        /// <summary>
+        /// Return the subroutine call trace of how the code got to where it is right now.
+        /// </summary>
+        /// <returns>The first item in the list is the current instruction pointer.
+        /// The rest of the items in the list after that are the instruction pointers of the Opcodecall instructions
+        /// that got us to here.</returns>
+        public List<int> GetCallTrace()
+        {
+            List<int> trace = stack.GetCallTrace();
+            trace.Insert(0, currentContext.InstructionPointer); // prepend current IP
+            return trace;
+        }
+
         private Variable GetOrCreateVariable(string identifier)
         {
             Variable variable;
 
-            if (vars.ContainsKey(identifier))
+            if (variables.ContainsKey(identifier))
             {
                 variable = GetVariable(identifier);
             }
@@ -312,9 +338,9 @@ namespace kOS.Execution
         private Variable GetVariable(string identifier)
         {
             identifier = identifier.ToLower();
-            if (vars.ContainsKey(identifier))
+            if (variables.ContainsKey(identifier))
             {
-                return vars[identifier];
+                return variables[identifier];
             }
             throw new Exception(string.Format("Variable {0} is not defined", identifier.TrimStart('$')));
         }
@@ -328,12 +354,12 @@ namespace kOS.Execution
                 identifier = "$" + identifier;
             }
 
-            if (vars.ContainsKey(identifier))
+            if (variables.ContainsKey(identifier))
             {
-                vars.Remove(identifier);
+                variables.Remove(identifier);
             }
 
-            vars.Add(identifier, variable);
+            variables.Add(identifier, variable);
         }
 
         public bool VariableIsRemovable(Variable variable)
@@ -345,36 +371,30 @@ namespace kOS.Execution
         {
             identifier = identifier.ToLower();
             
-            if (vars.ContainsKey(identifier) &&
-                VariableIsRemovable(vars[identifier]))
+            if (variables.ContainsKey(identifier) &&
+                VariableIsRemovable(variables[identifier]))
             {
                 // Tell Variable to orphan its old value now.  Faster than relying 
                 // on waiting several seconds for GC to eventually call ~Variable()
-                vars[identifier].Value = null;
+                variables[identifier].Value = null;
                 
-                vars.Remove(identifier);
+                variables.Remove(identifier);
             }
         }
 
         public void RemoveAllVariables()
         {
-            var removals = new List<string>();
-            
-            foreach (var kvp in vars)
-            {
-                if (VariableIsRemovable(kvp.Value))
-                {
-                    removals.Add(kvp.Key);
-                }
-            }
+            var removals = variables.
+                Where(v => VariableIsRemovable(v.Value)).
+                Select(kvp => kvp.Key).ToList();
 
             foreach (string identifier in removals)
             {
                 // Tell Variable to orphan its old value now.  Faster than relying 
                 // on waiting several seconds for GC to eventually call ~Variable()
-                vars[identifier].Value = null;
+                variables[identifier].Value = null;
 
-                vars.Remove(identifier);
+                variables.Remove(identifier);
             }
         }
 
@@ -443,6 +463,12 @@ namespace kOS.Execution
             Stopwatch updateWatch = null;
             Stopwatch triggerWatch = null;
             Stopwatch executionWatch = null;
+            
+            // If the script changes config value, it doesn't take effect until next update:
+            instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
+            instructionsSoFarInUpdate = 0;
+            int numTriggerInstructions = 0;
+            int numMainlineInstructions = 0;
 
             if (showStatistics) updateWatch = Stopwatch.StartNew();
 
@@ -456,6 +482,7 @@ namespace kOS.Execution
                 {
                     if (showStatistics) triggerWatch = Stopwatch.StartNew();
                     ProcessTriggers();
+                    numTriggerInstructions = instructionsSoFarInUpdate;
                     if (showStatistics)
                     {
                         triggerWatch.Stop();
@@ -468,6 +495,7 @@ namespace kOS.Execution
                     {
                         if (showStatistics) executionWatch = Stopwatch.StartNew();
                         ContinueExecution();
+                        numMainlineInstructions = instructionsSoFarInUpdate - numTriggerInstructions;
                         if (showStatistics)
                         {
                             executionWatch.Stop();
@@ -495,6 +523,7 @@ namespace kOS.Execution
                 {
                     // break execution of all programs and pop interpreter context
                     PopFirstContext();
+                    stack.Clear(); // If breaking all exection, get rid of the cruft here too.
                 }
             }
 
@@ -502,6 +531,10 @@ namespace kOS.Execution
             {
                 updateWatch.Stop();
                 totalUpdateTime += updateWatch.ElapsedMilliseconds;
+                if (maxTriggerInstructionsSoFar < numTriggerInstructions)
+                    maxTriggerInstructionsSoFar = numTriggerInstructions;
+                if (maxMainlineInstructionsSoFar < numMainlineInstructions)
+                    maxMainlineInstructionsSoFar = numMainlineInstructions;
             }
         }
 
@@ -534,47 +567,61 @@ namespace kOS.Execution
 
         private void ProcessTriggers()
         {
-            if (currentContext.Triggers.Count > 0)
+            if (currentContext.Triggers.Count <= 0) return;
+
+            int currentInstructionPointer = currentContext.InstructionPointer;
+            var triggerList = new List<int>(currentContext.Triggers);
+
+            foreach (int triggerPointer in triggerList)
             {
-                int currentInstructionPointer = currentContext.InstructionPointer;
-                var triggerList = new List<int>(currentContext.Triggers);
-
-                foreach (int triggerPointer in triggerList)
+                try
                 {
-                    try
-                    {
-                        currentContext.InstructionPointer = triggerPointer;
+                    currentContext.InstructionPointer = triggerPointer;
 
-                        bool executeNext = true;
-                        while (executeNext)
-                        {
-                            executeNext = ExecuteInstruction(currentContext);
-                        }
-                    }
-                    catch (Exception e)
+                    bool executeNext = true;
+                    while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
                     {
-                        RemoveTrigger(triggerPointer);
-                        shared.Logger.Log(e);
+                        executeNext = ExecuteInstruction(currentContext);
+                        instructionsSoFarInUpdate++;
                     }
                 }
-
-                currentContext.InstructionPointer = currentInstructionPointer;
+                catch (Exception e)
+                {
+                    RemoveTrigger(triggerPointer);
+                    shared.Logger.Log(e);
+                }
+                if (instructionsSoFarInUpdate >= instructionsPerUpdate)
+                {
+                    // This is a verbose error message, but it's important, as without knowing
+                    // the internals, a user has no idea why it's happening.  The verbose
+                    // error message helps direct the user to areas of the documentation
+                    // where longer explanations can be found.
+                    throw new Exception("__________________________________________________\n" +
+                                        "Triggers (*) exceeded max Instructions-Per-Update.\n" +
+                                        "TO FIX THIS PROBLEM, TRY ONE OR MORE OF THESE:\n" +
+                                        " - Redesign your triggers to use less code.\n" +
+                                        " - Make CONFIG:IPU value bigger.\n" +
+                                        " - If your trigger body was meant to be a loop, \n" +
+                                        "     consider using the PRESERVE keyword instead\n" +
+                                        "     to make it run one iteration per Update.\n" +
+                                        "* (\"Trigger\" means a WHEN or ON or LOCK command.)\n");
+                }
             }
+
+            currentContext.InstructionPointer = currentInstructionPointer;
         }
 
         private void ContinueExecution()
         {
-            int instructionCounter = 0;
             bool executeNext = true;
-            int instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
             
             while (currentStatus == Status.Running && 
-                   instructionCounter < instructionsPerUpdate &&
+                   instructionsSoFarInUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
             {
                 executeNext = ExecuteInstruction(currentContext);
-                instructionCounter++;
+                instructionsSoFarInUpdate++;
             }
         }
 
@@ -597,38 +644,34 @@ namespace kOS.Execution
 
         private void SkipCurrentInstructionId()
         {
-            if (currentContext.InstructionPointer < (currentContext.Program.Count - 1))
-            {
-                int currentInstructionId = currentContext.Program[currentContext.InstructionPointer].InstructionId;
+            if (currentContext.InstructionPointer >= (currentContext.Program.Count - 1)) return;
 
-                while (currentContext.InstructionPointer < currentContext.Program.Count &&
-                       currentContext.Program[currentContext.InstructionPointer].InstructionId == currentInstructionId)
-                {
-                    currentContext.InstructionPointer++;
-                }
+            string currentSourceName = currentContext.Program[currentContext.InstructionPointer].SourceName;
+
+            while (currentContext.InstructionPointer < currentContext.Program.Count && 
+                   currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName)
+            {
+                currentContext.InstructionPointer++;
             }
         }
 
         public void CallBuiltinFunction(string functionName)
         {
-            if (functions.ContainsKey(functionName))
-            {
-                FunctionBase function = functions[functionName];
-                function.Execute(shared);
-            }
-            else
+            if (!functions.ContainsKey(functionName))
             {
                 throw new Exception("Call to non-existent function " + functionName);
             }
+
+            FunctionBase function = functions[functionName];
+            function.Execute(shared);
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            if (shared.BindingMgr != null)
-            {
-                shared.BindingMgr.ToggleFlyByWire(paramName, enabled);
-                currentContext.ToggleFlyByWire(paramName, enabled);
-            }
+            if (shared.BindingMgr == null) return;
+
+            shared.BindingMgr.ToggleFlyByWire(paramName, enabled);
+            currentContext.ToggleFlyByWire(paramName, enabled);
         }
 
         public List<string> GetCodeFragment(int contextLines)
@@ -640,16 +683,20 @@ namespace kOS.Execution
         {
             if (!Config.Instance.ShowStatistics) return;
 
-            shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", TotalCompileTime));
+            shared.Screen.Print(string.Format("Total compile time: {0:F3}ms", totalCompileTime));
             shared.Screen.Print(string.Format("Total update time: {0:F3}ms", totalUpdateTime));
             shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", totalTriggersTime));
             shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", totalExecutionTime));
+            shared.Screen.Print(string.Format("Most Trigger instructions in one update: {0}", maxTriggerInstructionsSoFar));
+            shared.Screen.Print(string.Format("Most Mainline instructions in one update: {0}", maxMainlineInstructionsSoFar));
             shared.Screen.Print(" ");
 
-            TotalCompileTime = 0D;
+            totalCompileTime = 0D;
             totalUpdateTime = 0D;
             totalTriggersTime = 0D;
             totalExecutionTime = 0D;
+            maxMainlineInstructionsSoFar = 0;
+            maxTriggerInstructionsSoFar = 0;
         }
 
         public void OnSave(ConfigNode node)
@@ -659,11 +706,11 @@ namespace kOS.Execution
                 var contextNode = new ConfigNode("context");
 
                 // Save variables
-                if (vars.Count > 0)
+                if (variables.Count > 0)
                 {
                     var varNode = new ConfigNode("variables");
 
-                    foreach (var kvp in vars)
+                    foreach (var kvp in variables)
                     {
                         if (!(kvp.Value is Binding.BoundVariable) &&
                             (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
@@ -704,7 +751,11 @@ namespace kOS.Execution
                 if (shared.ScriptHandler != null && scriptBuilder.Length > 0)
                 {
                     var programBuilder = new ProgramBuilder();
-                    programBuilder.AddRange(shared.ScriptHandler.Compile(scriptBuilder.ToString()));
+                    // TODO: figure out how to store the filename and reload it for arg 1 below:
+                    // (Possibly all of OnLoad needs work because it never seemed to bring
+                    // back the context fully right anyway, which is why this hasn't been
+                    // addressed yet).
+                    programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);
                 }
