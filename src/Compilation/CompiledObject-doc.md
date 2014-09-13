@@ -117,7 +117,7 @@ you don't want it to be possible to construct your Opcode
 without passing arguments to the constructor, you can make
 your default constructor *protected*, so it can only be
 used by the reflection code that builds the machine language
-spec, and not by anyone else.
+spec, and not by "normal" code.
 
 (Note that if your Opcode has no constructor at all, that
 works too, as C# makes a default constructor for you when you
@@ -145,12 +145,36 @@ or property as being something that needs to be saved/loaded
 when writing out a ML file, give it the [MLField] attribute
 and CompiledObject.cs will automatically use it.
 
-You need not make sure your [MLField] fields are public, as
+**All [MLField] members must be *Properties* not *Fields*,
+despite the name "MLField". **
+
+You need not make sure your [MLField] members are public, as
 the code that is loading/reading them is "cheating" by using
 reflection that bypasses access protections.  This may seem
 like bad design, but the alternative is to allow *everyone*
-to write to your fields in order to allow the loader to restore
+to write to your members in order to allow the loader to restore
 them from the ML file, and that's even worse design.
+
+### The MLField attribute needs 2 arguments, as follows:
+
+[MLField(int order, bool needsRelocation)]
+
+The *order* is just a number on which to sort, to guarantee that
+the arguments get written in the ML file in the same order as
+they'll be read back in.  It serves no purpose other than that
+and you can pick any arbitrary number here you like as long as
+each MLField of your Opcode gets a unique number.  The only
+reason it's here is because Reflection operates via hashes that
+don't guarantee that fields come out in any particular order,
+not even necessarily the order that they appear in the source code.
+
+The *needsRelocation* flag indicates whether or not this member
+will be altered upon loading the file into memory by
+prepending a string prefix to it.  It's meant for destination
+labels and index labels that store the opcode's position in
+a string like "@0001".  They will be automatically altered
+so as to make them fit with the code in memory from other
+programs without causing clashes with them.
 
 Only a few object types can be [MLField]'s
 ------------------------------------------
@@ -171,6 +195,73 @@ In general, only primitives and strings can be used as
 [MLField], as they are meant to be the values to Opcodes
 in the low level computer code.
 
+TODO: Maybe create an assert that will detect when someone makes
+an MLField that is not one of these types, and issue a Nag
+message about it to remind them to make the aforemetioned change?
+
+PopulateFromMLFields(List<object> fields)
+------------------------------------------
+
+If your Opcode has [MLField]'s then it also will need to override
+this method:
+
+```
+    public override void PopulateFromMLFields(List<object> fields)
+
+```
+
+This is going to be called when creating the Opcode from the ML file.
+After your Opcode's default constructor is called (which must exist, as
+previously explained), then its PopulateFromMLFields() will be called
+with all the values to the MLFields passed in.  You must use those
+values to fill in the appropriate fields of your Opcode so it will be
+ready to run.  The *fields* list is **guaranteed** to come out in the
+same sort order as you gave in your constructors to the [MLField()]
+properties.  (i.e. if your opcode has 3 MLFields, that were declared
+thusly:
+
+```
+    [MLField(100,false)]
+    public int x {get;set;} // All [MLField] members must be *Properties* not *Fields*
+    [MLField(200,false)]
+    public string str {get;set;} // All [MLField] members must be *Properties* not *Fields*
+    [MLField(50,false)]
+    public double d {get;set;} // All [MLField] members must be *Properties* not *Fields*
+
+```
+
+Then the List<object> fields will be passed in in this order:
+
+* fields[0] is d   (it has sort order 50)
+* fields[1] is x   (it has sort order 100)
+* fields[2] is str (it has sort order 200)
+
+It's the sort order, NOT the order in which they appear in the
+class definition, that decides the ordering you'll see them
+in.
+
+An example of a PopulateFromMLFields that you might use in the above
+example Opcode might be something like this:
+
+```
+      public override void PopulateFromMLFields(List<object> fields)
+      {
+	  d = (double)(fields[0]);
+	  x = (int)(fields[1]);
+	  str = (string)(fields[2]);
+      }
+
+```
+Note that it is safe to write code that just assumes this is what you
+will be given, without performing checks on the length of
+the fields list and so on.  This is because the ML file was written
+out using reflection to read how many MLFields you have and what order
+to write them in, and PopulateFromMLFields is written to send them back
+to you in the same order they were written.  The only way the fields
+can come out differently is if the ML file itself is corrupted, which
+will be caught because it will cause all sorts of other errors too in
+that case.
+
 Publish and advertise backward-compatible-breakages
 ---------------------------------------------------
 
@@ -181,6 +272,18 @@ their source files into ML first before they can use them.
 This is acceptable, but it does require that you tell the users
 if you do make such a change, so they know they have to re-run
 the compile step.
+
+Examples of changes that would cause a break in backward
+compatibility with old compiled ML files:
+
+* Adding, Deleting, re-ordering, or altering the semantic meaning of [MLFields] on an existing Opcode
+* Editing the ByteCode enum in such a way as to alter the numerical value that goes with an existing Opcode (i.e. to avoid this, only append to the end of the list when making new Opcodes).
+* Changing Opcode.SourceLine to a bigger integer (it's currently a short, and is encoded in the ML file that way).
+
+Examples of changes that will NOT cause a break in backward
+compatibility with old compiled ML files:
+
+* Appending a new Opcode to the list of opcodes, and giving it a new Bytecode number.
 
 The Format
 ==========
@@ -817,3 +920,72 @@ from [0x2e to 0x38]".
 
 Note that because Source line 1 is a comment, there ended up being no
 data for it in the Debug Line Number Section.
+
+Other Supporting changes to other parts of kOS
+==============================================
+
+To make this work, a few changes to other things in kOS were needed.
+
+Labels prefixed with "@NNN_" instead of with "KL_",
+--------------------------------------------------
+
+### How it used to work:
+
+In the program in memory (the list of Opcodes) the opcode labels
+used to be formatted like so:
+
+* KL_0001 for the first instruction
+* KL_0002 for the next instruction
+* KL_0003 for the next instruction
+
+and so on.
+
+then if a new program was added to the runtime memory (for example
+if program1 runs program2, then both program1 and program2 exist
+in the list of opcodes at the same time, with program2 appeneded
+after program1), then the second program simply left off where the
+first one ended.  So if program1 ended on label KL_0150, then
+program2 would start with KL_0151.
+
+### How it now works:
+
+The first program loaded into memory uses a prefix of "@" instead
+of "KL_".  This change had nothing to do with this compiler
+feature, but was just a problem I noticed when looking at the code.
+Technically "KL_0001" is a perfectly valid kOS identifier, and thus
+could be the name of a function call and thus cause ambiguity in
+the program.  Using "@" means that it's a character that can't exist
+in a kOS identifier and thus cannot possibly clash with any labels
+in user-land.
+
+Now the second program loaded into memory uses a prefix of "@NNN_" for its
+labels, in which the NNN refers to the highest instruction that already
+existed in the memory before being loaded.  In the previous example
+where program1 ended on KL_0150 and program2 starts with KL0151, the 
+new way it will work is for program1 to end with @0150, and program2
+to begin with @150_0001, then @150_0002, then @150_0003, and so on.
+
+### Justification for the change:
+
+Previoiusly, because programs were never compiled until they were being
+run right then, the system was aware during compilation of how much of
+the memory was already being used before this program would be added to
+it.  The built in Compile() function was taking advantage of this
+information to know how to label things.  The reason it knew to start
+labelling at KL_0151 when compiling program2 was because it knew it was
+being loaded into memory just after whatever was there right now.
+
+But now when it's being compiled for use *later*, it doesn't know
+that yet at the time of compiling and it needs to be relocatable later.
+Therefore it labels everything starting at 1 *as if* it was the first
+program being labeled, and then this needs to be relocated when it gets
+loaded into memory.
+
+The reason for using a prefix instead of numerically adding is that once
+the labels have been created by compilation, I didn't want to rely on
+the fact that they were numerically increasing.  It may not be true
+forever in the future - since the label is a string in the Opcode,
+it can be *any* string, in principle, depending on future design
+changes.  This prefix technique allows the code to be "relocatable" by
+a string operation that is not dependant on the string contianing a
+number.
