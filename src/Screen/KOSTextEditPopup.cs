@@ -146,7 +146,8 @@ namespace kOS.Screen
         
         public void SaveContents()
         {
-            var file = new ProgramFile(fileName) {Content = contents};
+            var file = new ProgramFile(fileName);
+            file.Content = contents;
 
             if (! volume.SaveFile(file) )
             {

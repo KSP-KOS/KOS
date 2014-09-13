@@ -114,7 +114,7 @@ namespace kOS.Compilation.KS
 
         private string GetNextLabel(bool increment)
         {
-            string newLabel = string.Format("KL_{0:0000}", _context.LabelIndex + 1);
+            string newLabel = string.Format("@{0:0000}", _context.LabelIndex + 1);
             if (increment) _context.LabelIndex++;
             return newLabel;
         }

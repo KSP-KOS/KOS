@@ -99,9 +99,20 @@ namespace kOS.Function
                 shared.ScriptHandler.ClearContext("program");
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
+                List<CodePart> parts;
                 var programContext = shared.Cpu.GetProgramContext();
+                if (file.Category == FileCategory.KEXE)
+                {
+                    string prefix = programContext.Program.Count.ToString();
+                    parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.Content);
+                }
+                else
+                    parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
                 programContext.AddParts(parts);
+                List<string> erasemeDump = programContext.GetCodeFragment(0,10000);          // eraaseme - remove after debugging is done.
+                string erasemeString = "";                                                   // eraaseme - remove after debugging is done.
+                foreach (string str in erasemeDump) { erasemeString = erasemeString + str + "\n"; } // eraaseme - remove after debugging is done.
+                UnityEngine.Debug.Log("(PROGRAM DUMP)\n"+erasemeString);                           // eraaseme - remove after debugging is done.
             }
         }
     }
@@ -111,9 +122,16 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileNameOut = shared.Cpu.PopValue().ToString(); // null if there's no output file (output file means compile, not run).
-            string fileName = shared.Cpu.PopValue().ToString();
-            
+            string fileNameOut = null;
+            object topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
+            if (topStack!=null)
+                fileNameOut = topStack.ToString();
+
+            string fileName = null;
+            topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
+            if (topStack!=null)
+                fileName = topStack.ToString();
+
             if (fileName != null && fileNameOut != null && fileName == fileNameOut)
                 throw new Exception("Input and output filenames must differ.");
 
@@ -131,16 +149,20 @@ namespace kOS.Function
                 // or to a file to save:
                 if (fileNameOut != null)
                 {
-                    UnityEngine.Debug.Log("Checkpoint A01");
                     List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, file.Content, String.Empty, options);
-                    
                     shared.VolumeMgr.CurrentVolume.SaveObjectFile(fileNameOut,compileParts);
-                    UnityEngine.Debug.Log("Checkpoint A02");
                 }
                 else
                 {
                     var programContext = shared.Cpu.GetProgramContext();
-                    List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "compile", options);
+                    List<CodePart> parts;
+                    if (file.Category == FileCategory.KEXE)
+                    {
+                        string prefix = programContext.Program.Count.ToString();
+                        parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.Content);
+                    }
+                    else
+                        parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
                     int programAddress = programContext.AddObjectParts(parts);
                     // push the entry point address of the new program onto the stack
                     shared.Cpu.PushStack(programAddress);                    

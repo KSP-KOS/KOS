@@ -67,7 +67,7 @@ namespace kOS.Persistence
                 textToAppend = "\n" + textToAppend;
             }
 
-            file.Content += textToAppend;
+            file.Content = file.Content + textToAppend;
             SaveFile(file);
         }
 
@@ -85,14 +85,16 @@ namespace kOS.Persistence
         
         public virtual bool SaveObjectFile(string fileNameOut, List<CodePart> parts)
         {
-            UnityEngine.Debug.Log("Checkpoint B01");
             ProgramFile newFile = new ProgramFile(fileNameOut);
-            UnityEngine.Debug.Log("Checkpoint B02");
             newFile.Content = Compilation.CompiledObject.Pack(fileNameOut, parts);
-            UnityEngine.Debug.Log("Checkpoint B03");
             SaveFile(newFile);
-            UnityEngine.Debug.Log("Checkpoint B04");
             return true;
+        }
+
+        public virtual List<CodePart> LoadObjectFile(string filePath, int startLineNum, string prefix, string content)
+        {
+            List<CodePart> parts = Compilation.CompiledObject.UnPack(filePath, startLineNum, prefix , content);
+            return parts;
         }
 
         public virtual int GetUsedSpace()

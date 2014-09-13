@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
 using kOS;
 using kOS.Compilation;
 
@@ -39,8 +40,8 @@ namespace kOS.Compilation
         /// <summary>A homemade magic number for file identifcation, that will
         /// appear as the first part of the file contents and is hopefully
         /// unique and unlike anything another file type uses:</summary>
-        private static char[] magicID = { 'k', (char)0x03, 'X', 'E' };
-
+        public static byte[] MagicId { get { return magicId; } private set{} }
+        private static byte[] magicId = { (byte)'k', (byte)0x03, (byte)'X', (byte)'E' };
         private static Dictionary<Type,byte> IdFromType = null;
         private static Dictionary<byte,Type> TypeFromId = null;
         
@@ -104,18 +105,39 @@ namespace kOS.Compilation
         /// <param name="number">number to encode</param>
         /// <param name="numBytes">bytes to use</param>
         /// <returns>resulting array of bytes</returns>
-        public static byte[] EncodeNumberToNBytes(long number, int numBytes)
+        public static byte[] EncodeNumberToNBytes(ulong number, int numBytes)
         {
             // Encode the index into the right number of bytes:
             byte[] returnValue = new byte[numBytes];
             for (int bNum = 0; bNum < numBytes ; ++bNum)
             {
+                int bitsToShift = (numBytes-bNum) - 1;
                 // This ends up being big-endian.  Dunno if that's the standard,
                 // but as long as the reading back is consistent it's fine:
-                returnValue[bNum] = (byte)( ((number >> (bNum*8)) & 0xff) << (bNum*8) );
+                returnValue[bNum] = (byte)( (number>>((bitsToShift)*8)) & (ulong)0xff);
             }
             return returnValue;
         }
+
+        /// <summary>
+        /// The inverse operation of EncodeNumberToNBytes().  Given a packed
+        /// byte array of the encoded version, return the decoded version.
+        /// </summary>
+        /// <param name="encodedForm">The byte array holding the encoded pack of bytes</param>
+        /// <returns>resulting value - returned as ulong just in case it's big, but can be casted down to smaller formats</returns>
+        public static ulong DecodeNumberFromBytes(byte[] encodedForm)
+        {
+            int numBytes = encodedForm.Length;
+            ulong returnValue = 0;
+            for (int bNum = 0; bNum < numBytes ; ++bNum)
+            {
+                int bitsToShift = (numBytes-bNum) - 1;
+                // Read it back assuming it's big-endian, because that's how EncodeNumberToNBytes does it:
+                returnValue += ((ulong)encodedForm[bNum]) << bitsToShift;
+            }
+            return returnValue;
+        }
+        
         
         /// <summary>
         /// Holds all previously packed arguments to ML instructions.
@@ -193,19 +215,19 @@ namespace kOS.Compilation
                 byte[] packedCode;
                 int indexSoFar;
 
-                indexSoFar = allCodeBuff.Length;
+                indexSoFar = allCodeBuff.Length + codeBuff.Length;
                 codeBuff.Append("%F");
-                packedCode = PackCode(codePart.FunctionsCode, numArgIndexBytes, indexSoFar);
+                packedCode = PackCode(codePart.FunctionsCode, numArgIndexBytes, indexSoFar+2);
                 codeBuff.Append(System.Text.Encoding.ASCII.GetString(packedCode));
 
                 indexSoFar = allCodeBuff.Length + codeBuff.Length;
                 codeBuff.Append("%I");
-                packedCode = PackCode(codePart.InitializationCode, numArgIndexBytes, indexSoFar);
+                packedCode = PackCode(codePart.InitializationCode, numArgIndexBytes, indexSoFar+2);
                 codeBuff.Append(System.Text.Encoding.ASCII.GetString(packedCode));
 
                 indexSoFar = allCodeBuff.Length + codeBuff.Length;
                 codeBuff.Append("%M");
-                packedCode = PackCode(codePart.MainCode, numArgIndexBytes, indexSoFar);
+                packedCode = PackCode(codePart.MainCode, numArgIndexBytes, indexSoFar+2);
                 codeBuff.Append(System.Text.Encoding.ASCII.GetString(packedCode));
 
                 UnityEngine.Debug.Log(
@@ -220,8 +242,8 @@ namespace kOS.Compilation
                                       
                 allCodeBuff.Append(codeBuff);
             }
-            return new
-                String(magicID) +
+            return
+                System.Text.Encoding.ASCII.GetString(MagicId) +
                 headBuff.ToString() +
                 allCodeBuff.ToString() +
                 System.Text.Encoding.ASCII.GetString(lineMap.Pack());
@@ -236,10 +258,10 @@ namespace kOS.Compilation
             for (int index = 0; index < fragment.Count ; ++index)
             {
                 Opcode op = fragment[index];
-                List<PropertyInfo> args = op.GetArgumentDefs();
-                foreach (PropertyInfo pInfo in args)
+                List<MLArgInfo> args = op.GetArgumentDefs();
+                foreach (MLArgInfo arg in args)
                 {
-                    object argVal = pInfo.GetValue(op,null);
+                    object argVal = arg.propertyInfo.GetValue(op,null);
 
                     // Just trying to add the argument to the pack.  Don't
                     // care where in the pack it is (yet).
@@ -265,20 +287,20 @@ namespace kOS.Compilation
                 Opcode op = fragment[index];
                 byte code = (byte)op.Code;
                 
-                UnityEngine.Debug.Log( "ERASEME Opcode " + index + " = " + (uint)code );
+                UnityEngine.Debug.Log( "eraseme Opcode " + index + " = " + (uint)code );
 
                 //Always start with the opcode's bytecode:
                 packTempWriter.Write(code);
                 
                 // Then append a number of argument indexes depending
                 // on how many arguments the opcode is supposed to have:
-                List<PropertyInfo> args = op.GetArgumentDefs();
-                foreach (PropertyInfo pInfo in args)
+                List<MLArgInfo> args = op.GetArgumentDefs();
+                foreach (MLArgInfo arg in args)
                 {
-                    object argVal = pInfo.GetValue(op,null);
+                    object argVal = arg.propertyInfo.GetValue(op,null);
                     int argPackedIndex = PackedArgumentLocation(argVal);
                     
-                    byte[] argIndexEncoded = EncodeNumberToNBytes(argPackedIndex,argIndexSize);
+                    byte[] argIndexEncoded = EncodeNumberToNBytes((ulong)argPackedIndex,argIndexSize);
                     packTempWriter.Write(argIndexEncoded);
                 }
                 
@@ -359,7 +381,8 @@ namespace kOS.Compilation
         /// It's surprising that BinaryWriter.Write doesn't have a method that does the
         /// equivalent of this and allows any object of the types it knows how to write:
         /// </summary>
-        /// <param name="the thing to write"></param>
+        /// <param name="writer">the stream to write to</param>
+        /// <param name="obj">the thing to write</param>
         private static void WriteSomeBinaryPrimitive(BinaryWriter writer, object obj)
         {
             if      (obj is PseudoNull) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
@@ -369,9 +392,7 @@ namespace kOS.Compilation
             else if (obj is Double)     writer.Write((Double)obj);
             else if (obj is Single)     writer.Write((Single)obj);
             else if (obj is Byte)       writer.Write((byte)obj);
-            else if (obj is Byte[])     writer.Write((byte[])obj);
             else if (obj is Char)       writer.Write((char)obj);
-            else if (obj is Char[])     writer.Write((char[])obj);
             else if (obj is Decimal)    writer.Write((Decimal)obj);
             else if (obj is Int16)      writer.Write((Int16)obj);
             else if (obj is Int64)      writer.Write((Int64)obj);
@@ -381,6 +402,35 @@ namespace kOS.Compilation
             else if (obj is SByte)      writer.Write((SByte)obj);
             else
                 throw new Exception( "Don't konw how to write this type of object to binary file: " + obj.GetType().Name );
+        }
+        /// <summary>
+        /// It's surprising that BinaryWriter.Read doesn't have a method that does the
+        /// equivalent of this and allow you to pass in the Type as a parameter:
+        /// </summary>
+        /// <param name="reader">the stream to read from</param>
+        /// <param name="cSharpType">the expected type of object stored here</param>
+        private static object ReadSomeBinaryPrimitive(BinaryReader reader, Type cSharpType)
+        {
+            object returnValue = null;
+            
+            if      (cSharpType == typeof(PseudoNull)) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
+            else if (cSharpType == typeof(Boolean))    returnValue = reader.ReadBoolean();
+            else if (cSharpType == typeof(Int32))      returnValue = reader.ReadInt32();
+            else if (cSharpType == typeof(String))     returnValue = reader.ReadString();
+            else if (cSharpType == typeof(Double))     returnValue = reader.ReadDouble();
+            else if (cSharpType == typeof(Single))     returnValue = reader.ReadSingle();
+            else if (cSharpType == typeof(Byte))       returnValue = reader.ReadByte();
+            else if (cSharpType == typeof(Char))       returnValue = reader.ReadChar();
+            else if (cSharpType == typeof(Decimal))    returnValue = reader.ReadDecimal();
+            else if (cSharpType == typeof(Int16))      returnValue = reader.ReadInt16();
+            else if (cSharpType == typeof(Int64))      returnValue = reader.ReadInt64();
+            else if (cSharpType == typeof(UInt16))     returnValue = reader.ReadUInt16();
+            else if (cSharpType == typeof(UInt32))     returnValue = reader.ReadUInt32();
+            else if (cSharpType == typeof(UInt64))     returnValue = reader.ReadUInt64();
+            else if (cSharpType == typeof(SByte))      returnValue = reader.ReadSByte();
+            else
+                throw new Exception( "Don't konw how to read this type of object from binary file: " + cSharpType.Name );
+            return returnValue;
         }
         
         /// <summary>
@@ -409,15 +459,269 @@ namespace kOS.Compilation
             argumentPackLogicalLength = newLogicalLength;
         }
         
+
         /// <summary>
         /// Given a packed representation of the program, load it back into program form:
         /// </summary>
-        /// <param name="program">The list of opcodes for the compiled program.</param>
-        public static List<Opcode> Unpack(string packedString)
+        /// <param name="filePath">name of file (with preceeding "volume/") that the program came from, for runtime error reporting.</param>
+        /// <param name="startLineNum">line number the file should be assumed to start at (normally 1)</param>
+        /// <param name="prefix">prepend this string to all labels in this program.</param>
+        /// <param name="content">the file itself in ony big string.</param>
+        /// <returns></returns>
+        public static List<CodePart> UnPack(string filePath, int startLineNum, string prefix, string content)
         {
-            return null; // TODO - populate this method with real code.
+            List<CodePart> program = new List<CodePart>();
+            
+            byte[] packedContent = Encoding.UTF8.GetBytes(content);
+            BinaryReader reader = new BinaryReader(new MemoryStream(packedContent));
+            
+            byte[] firstFour = reader.ReadBytes(4);
+            
+            if (! firstFour.SequenceEqual(MagicId))
+                throw new Exception("Attempted to read an ML file that doesn't seem to be an ML file");
+            
+            int argIndexSize = 0;
+            Dictionary<int,object> arguments = ReadArgumentPack(reader, out argIndexSize);
+            lineMap = new DebugLineMap();
+            
+            int codeStart = 0;
+            
+            while (reader.BaseStream.Position < reader.BaseStream.Length)
+            {
+                // In principle, the delimiter should *always* be the next byte when this loop starts and
+                // the following loop should just read that one character:
+                while (reader.BaseStream.Position < reader.BaseStream.Length && reader.ReadByte() != (byte)(ByteCode.DELIMITER))
+                {
+                }
+                
+                if (reader.BaseStream.Position >= reader.BaseStream.Length)
+                    continue;
+                
+                byte sectionTypeId = reader.ReadByte();
+                switch (sectionTypeId)
+                {
+                    case (byte)'F':
+                        // new CodePart's always start with the function header:
+                        CodePart nextPart = new CodePart(filePath);
+                        program.Add(nextPart);
+                        // If this is the very first code we've ever encountered in the file, remember its position:
+                        if (codeStart == 0)
+                            codeStart = (int)(reader.BaseStream.Position - 2); // start is where the ByteCode.DELIMITER of the first section is.
+                        
+                        program[program.Count-1].FunctionsCode = ReadOpcodeList(reader, codeStart, prefix, arguments, argIndexSize);
+                        UnityEngine.Debug.Log("Just built FunctionsCode with " + program[program.Count-1].FunctionsCode.Count + " opcodes.");
+                        break;
+                    case (byte)'I':
+                        program[program.Count-1].InitializationCode = ReadOpcodeList(reader, codeStart, prefix, arguments, argIndexSize);
+                        UnityEngine.Debug.Log("Just built InitializtionsCode with " + program[program.Count-1].InitializationCode.Count + " opcodes.");
+                        break;
+                    case (byte)'M':
+                        program[program.Count-1].MainCode = ReadOpcodeList(reader, codeStart, prefix, arguments, argIndexSize);
+                        UnityEngine.Debug.Log("Just built MainCode with " + program[program.Count-1].MainCode.Count + " opcodes.");
+                        break;
+                    case (byte)'D':
+                        lineMap = new DebugLineMap(reader);
+                        break;
+                }
+            }
+            reader.Close();
+
+            PostReadProcessing(program, filePath, prefix, lineMap);
+
+            // This is debugging that will probably be removed later:
+            foreach (CodePart codePart in program)
+                UnityEngine.Debug.Log(
+                    "DEBUG: CompiledObject program dump below:\n"+
+                    "### FUNC ###\n" +
+                    (codePart.FunctionsCode!=null ? GetCodeFragment( codePart.FunctionsCode ) : "NULL\n" )+
+                    "### INIT ###\n" +
+                    (codePart.InitializationCode!=null ? GetCodeFragment( codePart.InitializationCode ) : "NULL\n" ) +
+                    "### MAIN ###\n" +
+                    (codePart.MainCode!=null ? GetCodeFragment( codePart.MainCode ) : "NULL\n" ) );
+                                                  
+            return program;
         }
         
+        /// <summary>
+        /// Fills an argument dictionary from the given reader, assuming its been positioned
+        /// at the start of the argument pack's "%A".
+        /// </summary>
+        /// <param name="reader">The BinaryReader to read from.</param>
+        /// <returns>The dictionary mapping indeces within the argument pack to the object that was stored there.</returns>
+        private static Dictionary<int,object> ReadArgumentPack(BinaryReader reader, out int argIndexSize)
+        {
+            Dictionary<int,object> returnArgs = new Dictionary<int,object>();
+
+            int startPos = (int) reader.BaseStream.Position;
+            
+            byte[] header = reader.ReadBytes(2);
+            if ( header[0] != '%' || header[1] != 'A')
+                throw new Exception("Attempted to read an ML file that doesn't have an Argument Pack in it.");
+
+            argIndexSize = reader.ReadByte();
+
+            bool sectionEnded = false;
+            while (reader.BaseStream.Position < reader.BaseStream.Length && !(sectionEnded))
+            {
+                int offsetLocation = (int)(reader.BaseStream.Position) - startPos;
+                
+                byte argTypeId = reader.ReadByte();
+                Type argCSharpType;
+                if (TypeFromId.TryGetValue(argTypeId, out argCSharpType))
+                {
+                    object arg = ReadSomeBinaryPrimitive(reader, argCSharpType);
+                    returnArgs.Add(offsetLocation,arg);
+                }
+                else
+                {
+                    // Just read something that wasn't a proper type ID, so un-read that byte, and finish:
+                    reader.BaseStream.Seek(-1,SeekOrigin.Current);
+                    sectionEnded = true;
+                }
+            }
+            return returnArgs;
+        }
+
+        /// <summary>
+        /// Go back and re-assign all the line number labels and location labels to their
+        /// proper values.
+        /// </summary>
+        /// <param name="program">recently built program parts to re-assign.</param>
+        /// <param name="filePath">name of file (with preceeding volume/) that the compiled code came from, for rutime error reporting purposes.</param>
+        /// <param name="prefix">a string to prepend to the labels in the program.</param>
+        /// <param name="lineMap">describes the mapping of line numbers to code locations.</param>
+        public static void PostReadProcessing(List<CodePart>program, string filePath, string prefix, DebugLineMap lineMap)
+        {
+            SortedList<IntRange,int> lineLookup = lineMap.BuildInverseLookup();
+            var lineEnumerator = lineLookup.GetEnumerator();
+            
+            int curLine = 0;
+            IntRange curRange = new IntRange(-1,-1);
+
+            int opIndex = 0;
+            
+            foreach (CodePart part in program)
+            {
+                // It's easier to iterate over the sections in the CodePart this way:
+                List<List<Opcode>> sections = new List<List<Opcode>>();
+                sections.Add(part.FunctionsCode);
+                sections.Add(part.InitializationCode);
+                sections.Add(part.MainCode);
+                
+                foreach (List<Opcode> codeList in sections)
+                {
+                    foreach (Opcode op in codeList)
+                    {
+                        ++opIndex; // First opIndex is called 1, not 0.  This matches the behavior of Compiler.cs's AddOpcode()'s call to GetNextIndex().
+                        
+                        // The algorithm is dependent on the fact that the opcodes will be iterated over
+                        // in the same order as they appeared in the ML file, and therefore the
+                        // DebugLineMap only ever has to be advanced forward, never backward.
+                        UnityEngine.Debug.Log("for op: " + op + ", MLIndex="+op.MLIndex+", and working on range: ["+curRange.Start+","+curRange.Stop+"]");
+                        while (op.MLIndex > curRange.Stop)
+                        {
+                            if (lineEnumerator.MoveNext())
+                            {
+                                curRange = lineEnumerator.Current.Key;
+                                curLine = lineEnumerator.Current.Value;
+                            }
+                            else
+                                break; // This shouldn't happen.  It means the %D section was written out wrong.
+                        }
+                        if (curRange.Start <= op.MLIndex && op.MLIndex <= curRange.Stop)
+                            op.SourceLine = (short)curLine;
+                        else
+                            // Not every opcode came from a source line - so if it's skipped over, assign it to bogus value.
+                            op.SourceLine = -1;
+                        
+                        // As long as we're visiting every opcode, may as well set the Label and filename strings too:
+                        if (op.Label == null || op.Label == String.Empty)
+                        {
+                            op.Label = "@" + prefix + "_" + string.Format("{0:0000}", opIndex);
+                        }
+                        else
+                            op.Label = String.Empty; // ensure no nulls here.
+
+                        if (op.SourceName == null || op.SourceName == String.Empty)
+                            op.SourceName = filePath;
+                        else
+                            op.SourceName = String.Empty; // ensure no nulls here.
+
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates the list of opcodes for one of the code sections of a codepart, assuming the
+        /// BinaryReader is starting at the byte right after the identifying header '%F', '%I', or '%M'.
+        /// </summary>
+        /// <param name="reader">binary reader to read from.</param>
+        /// <param name="codeStartPos">index into the stream where the first code block in the ML file started,
+        /// for calculating indeces.</param>
+        /// <param name="prefix">prefix to prepend to all labels within this program</param>.</param>
+        /// <param name="arguments">argument dictionary to pull arguments from.</param>
+        /// <param name="argIndexSize">number of bytes the argument indeces are packed into.</param>
+        /// <returns>list of opcodes generated</returns>
+        private static List<Opcode> ReadOpcodeList(BinaryReader reader, int codeStartPos, string prefix, Dictionary<int,object> arguments, int argIndexSize)
+        {            
+            List<Opcode> returnValue = new List<Opcode>();
+            
+            //
+            // TODO: this method isn't working.  it's returning an opcode list of zero opcodes.  find out why.
+            //
+
+            bool sectionEnded = false;
+            while (reader.BaseStream.Position < reader.BaseStream.Length && !(sectionEnded))
+            {
+                int opcodeMLPosition = (int)(reader.BaseStream.Position - codeStartPos); // For later use in PostReadProcessing().
+                byte opCodeTypeId = reader.ReadByte();
+                Type opCodeCSharpType = Opcode.TypeFromCode((ByteCode)opCodeTypeId);
+                
+                UnityEngine.Debug.Log("Just read an opcode with id="+opCodeTypeId+", Type="+opCodeCSharpType);
+                if (opCodeCSharpType == typeof(PseudoNull))
+                {
+                    // As soon as there's an opcode encountered that isn't a known opcode type, the section is done:
+                    sectionEnded = true;
+                    // Un-read the byte that wasn't an opcode (it's probably the '%' delimiter for the next section):
+                    reader.BaseStream.Seek(-1,SeekOrigin.Current);
+                    continue;
+                }
+
+                // Make a new empty Opcode instance of this type:
+                Opcode op = (Opcode)(Activator.CreateInstance(opCodeCSharpType,true));
+                op.MLIndex = opcodeMLPosition; // For later use in PostReadProcessing().
+                
+                // Find out how many [MLField] arguments it expects to have, and read them from the BinaryReader:
+                List<object> opArgs = new List<object>();
+                foreach (MLArgInfo argInfo in op.GetArgumentDefs())
+                {
+                    byte[] argPackIndex = reader.ReadBytes(argIndexSize);
+                    int argIndex = (int) DecodeNumberFromBytes(argPackIndex);
+                    object val;
+                    UnityEngine.Debug.Log("opcode NeedReindex = " + argInfo.NeedReindex);
+                    if (argInfo.NeedReindex)
+                    {
+                        val = arguments[argIndex];
+                        if ( val is string && ((string)val).StartsWith("@") && (((string)val).Length > 1) )
+                        {
+                            val = "@" + prefix + "_" + ((string)val).Substring(1);
+                        }
+                    }
+                    else
+                        val = arguments[argIndex];
+                    UnityEngine.Debug.Log("opcode new value = " + val);
+                    opArgs.Add(val);
+                }
+                
+                // Fill the MLFields, then add the opcode to the list:
+                if (opArgs.Count > 0)
+                    op.PopulateFromMLFields(opArgs);
+                returnValue.Add(op);
+            }
+            return returnValue;
+        }
+
         /// <summary>
         /// This is copied almost verbatim from ProgramContext,
         /// and will probably get removed later.  It's here to help me debug.
@@ -426,18 +730,20 @@ namespace kOS.Compilation
         {
             var codeFragment = new List<string>();
             
-            const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5}";
-            codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "opcode", "operand" ));
-            codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "---------------------", "" ));
+            const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5} {6} {7}";
+            codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "Label  ", "opcode", "operand", "Destination" ));
+            codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "-------", "---------------------", "", "" ));
 
             for (int index = 0; index < codes.Count; index++)
             {
                 codeFragment.Add(string.Format(FORMAT_STR,
-                                               codes[index].SourceName,
+                                               codes[index].SourceName ?? "null",
                                                codes[index].SourceLine,
-                                               codes[index].SourceColumn,
+                                               codes[index].SourceColumn ,
                                                index,
-                                               codes[index],
+                                               codes[index].Label ?? "null",
+                                               codes[index] ?? new OpcodeBogus(),
+                                               "DEST: " + (codes[index].DestinationLabel ?? "null" ),
                                                "" ) );
             }
             
@@ -448,7 +754,7 @@ namespace kOS.Compilation
         
     }
     /// <summary>
-    ///  Stores a range of ints [start,end], incusive of both
+    ///  Stores a range of ints [start,end], inclusive of both
     /// </summary>
     public class IntRange
     {
@@ -458,6 +764,19 @@ namespace kOS.Compilation
         {
             Start = start;
             Stop = stop;
+        }
+    }
+    
+    public class IntRangeCompare : Comparer<IntRange>
+    {
+        public override int Compare(IntRange a, IntRange b)
+        {
+            // If the range starts differ, use that to compare.
+            // If they tie, then break the tie with the range stops.
+            int returnValue = a.Start - b.Start;
+            if (returnValue == 0)
+                returnValue = a.Stop - b.Stop;
+            return returnValue;
         }
     }
 
@@ -472,11 +791,45 @@ namespace kOS.Compilation
         // hold the byte range indeces?        
         private int numDebugIndexBytes = 0;
 
-        private static Dictionary<int,List<IntRange>> store = new Dictionary<int,List<IntRange>>();
+        private Dictionary<int,List<IntRange>> store = new Dictionary<int,List<IntRange>>();
         
         public DebugLineMap()
         {
             // TODO - does anything need doing here?
+        }
+        
+        /// <summary>
+        /// Build a DebugLineMap from the encoded stream, assuming the stream is currently
+        /// positioned right after the letter 'D' in the "%D" header.
+        /// </summary>
+        /// <param name="reader">The stream to read it from.  Must be rewindable.</param>
+        public DebugLineMap(BinaryReader reader)
+        {
+            numDebugIndexBytes = reader.ReadByte();
+
+            // The debug line section must be placed just before EOF.  It expects
+            // to be terminated by running out of stream and not by anything else:
+            while (reader.BaseStream.Position < reader.BaseStream.Length)
+            {
+                short lineNum = reader.ReadInt16();
+                byte countRanges = reader.ReadByte();
+                
+                UnityEngine.Debug.Log("DebugLineMap constructing: numDebugIndexBytes="+numDebugIndexBytes+", lineNum="+lineNum+", countRanges="+countRanges);
+                
+                List<IntRange> ranges = new List<IntRange>();
+                for (int index = 0 ; index < countRanges ; ++index)
+                {
+                    byte[] encodedStart = reader.ReadBytes(numDebugIndexBytes);
+                    int start = (int)(CompiledObject.DecodeNumberFromBytes(encodedStart));
+
+                    byte[] encodedStop = reader.ReadBytes(numDebugIndexBytes);
+                    int stop = (int)(CompiledObject.DecodeNumberFromBytes(encodedStop));
+
+                    UnityEngine.Debug.Log("DebugLineMap adding range <"+start+", "+stop+">");
+                    ranges.Add(new IntRange(start, stop));
+                }
+                store.Add(lineNum, ranges);
+            }
         }
         
         public void Add( int lineNum, IntRange addRange )
@@ -541,8 +894,8 @@ namespace kOS.Compilation
                 writer.Write((byte)ranges.Count); // It would be weird for there to be > 256 ranges.
                 foreach (IntRange range in ranges)
                 {
-                    writer.Write( CompiledObject.EncodeNumberToNBytes(range.Start, numDebugIndexBytes));
-                    writer.Write( CompiledObject.EncodeNumberToNBytes(range.Stop, numDebugIndexBytes));
+                    writer.Write( CompiledObject.EncodeNumberToNBytes((ulong)range.Start, numDebugIndexBytes));
+                    writer.Write( CompiledObject.EncodeNumberToNBytes((ulong)range.Stop, numDebugIndexBytes));
                 }
             }
             
@@ -550,6 +903,29 @@ namespace kOS.Compilation
             
             byte[] returnValue = new byte[bufLength];
             Array.Copy( ((MemoryStream)(writer.BaseStream)).GetBuffer(),0,returnValue,0,bufLength);
+            return returnValue;
+        }
+        
+        /// <summary>
+        /// Creates a useful mapping in the inverse direction for this DebugLineMap,
+        /// that lets you search over a list ordered by the ML locations rather
+        /// than by the line numbers.
+        /// </summary>
+        /// <returns>A SotedList mapping ranges of ML offsets to line numbers they came from, in order by IntRanges.</returns>
+        public SortedList<IntRange,int> BuildInverseLookup()
+        {
+            SortedList<IntRange,int> returnValue = new SortedList<IntRange,int>(new IntRangeCompare());
+            
+            foreach (int lineNum in store.Keys)
+            {
+                UnityEngine.Debug.Log("BuildInverseLookup: adding for line number = "+lineNum);
+                List<IntRange> ranges = store[lineNum];
+                foreach (IntRange range in ranges)
+                {
+                    UnityEngine.Debug.Log("BuildInverseLookup: adding <"+range.Start+", "+range.Stop+">");
+                    returnValue.Add(range,lineNum);
+                }
+            }
             return returnValue;
         }
     }

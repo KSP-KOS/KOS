@@ -39,15 +39,10 @@ namespace kOS.Execution
 
         public int AddObjectParts(IEnumerable<CodePart> parts)
         {
-            UnityEngine.Debug.Log("Checkpoint D01");
             Guid objectFileId = builder.AddObjectFile(parts);
-            UnityEngine.Debug.Log("Checkpoint D02");
             List<Opcode> newProgram = builder.BuildProgram();
-            UnityEngine.Debug.Log("Checkpoint D03");
             int entryPointAddress = builder.GetObjectFileEntryPointAddress(objectFileId);
-            UnityEngine.Debug.Log("Checkpoint D04");
             UpdateProgram(newProgram);
-            UnityEngine.Debug.Log("Checkpoint D05");
             return entryPointAddress;
         }
         
@@ -119,8 +114,13 @@ namespace kOS.Execution
                 manager.ToggleFlyByWire(kvp.Key, kvp.Value);
             }
         }
-
+        
         public List<string> GetCodeFragment(int contextLines)
+        {
+            return GetCodeFragment( InstructionPointer - contextLines, InstructionPointer + contextLines );
+        }
+        
+        public List<string> GetCodeFragment(int start, int stop)
         {
             var codeFragment = new List<string>();
             
@@ -128,7 +128,7 @@ namespace kOS.Execution
             codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "opcode", "operand" ));
             codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "---------------------", "" ));
 
-            for (int index = (InstructionPointer - contextLines); index <= (InstructionPointer + contextLines); index++)
+            for (int index = start; index <= stop; index++)
             {
                 if (index >= 0 && index < Program.Count)
                 {

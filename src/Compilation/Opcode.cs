@@ -85,6 +85,11 @@ namespace kOS.Compilation
     /// But the members who's value is calculated upon loading, like the DeltaInstructionPointer,
     /// the SourceName, and so on, do not need to be MLFields.
     /// <br/>
+    /// One important consequence of the phrase "there should be enough information in all the
+    /// Opcode's MLFields to reconstruct the entire program again" is that if you make an
+    /// Opcode which requires arguments to the constructor, then all those arguments must be
+    /// flagged as [MLField]'s, otherwise it will be impossible to obtain the information
+    /// needed to reconstruct the Opcode when loading the ML file.
     /// <br/>
     /// WARNING! BE SURE TO EDIT CompiledObject.InitTypeData() if you add any new [MLField]'s that
     /// refer to argument types that haven't already been mentioned in CompiledObject.InitTypeData().
@@ -93,6 +98,7 @@ namespace kOS.Compilation
     public class MLField : System.Attribute
     {
         public int Ordering { get; private set; }
+        public bool NeedReindex { get; private set;}
         
         /// <summary>
         /// When constructing an MLField attribute, it's important
@@ -100,9 +106,23 @@ namespace kOS.Compilation
         /// ML file in a predictable consistent order.
         /// </summary>
         /// <param name="sortNumber">Sort the MLField by the order of these numbers</param>
-        public MLField(int sortNumber)
+        /// <param name="needReindex">True if this is a numeric value that needs its value adjusted by the base code offset.</param>
+        public MLField(int sortNumber, bool needReindex)
         {
             Ordering = sortNumber;
+            NeedReindex = needReindex;
+        }
+    }
+    
+    public class MLArgInfo
+    {
+        public PropertyInfo propertyInfo {get;set;}
+        public bool NeedReindex {get;set;}
+        
+        public MLArgInfo(PropertyInfo pInfo, bool needReindex)
+        {
+            propertyInfo = pInfo;
+            NeedReindex = needReindex;
         }
     }
 
@@ -153,7 +173,7 @@ namespace kOS.Compilation
         
         // A table describing the arguments in machine language form that each opcode needs.
         // This is populated by using Reflection to scan all the Opcodes for their MLField Attributes.
-        private static Dictionary<Type,List<PropertyInfo>> mapOpcodeToArgs = null;
+        private static Dictionary<Type,List<MLArgInfo>> mapOpcodeToArgs = null;
                 
         private static string forceDefaultConstructorMsg =
             "+----------- ERROR IN OPCODE DEFINITION ----------------------------------+\n" +
@@ -181,11 +201,10 @@ namespace kOS.Compilation
         public int DeltaInstructionPointer = 1;
         public int MLIndex = 0; // index into the Machine Language code file for the COMPILE command.
         public string Label = string.Empty;
-        public string DestinationLabel;
+        public virtual string DestinationLabel {get;set;}
         public string SourceName;
 
         public short SourceLine { get; set; } // line number in the source code that this was compiled from.
-
         public short SourceColumn { get; set; }  // column number of the token nearest the cause of this Opcode.
         
         public virtual void Execute(CPU cpu)
@@ -195,6 +214,35 @@ namespace kOS.Compilation
         public override string ToString()
         {
             return Name;
+        }
+        
+        /// <summary>
+        /// Starting from an empty instance of this opcode that you can assume was created
+        /// from the default constructor, populate the Opcode's properties from a
+        /// list of all the [MLFields] saved to the machine language file.<br/>
+        /// This needs to be overridden only if your Opcode has declared [MLField]'s.
+        /// If your Opcode has no [MLFields] then the generic base version of this method works
+        /// well enough.<br/>
+        /// <br/>
+        /// TODO: Perhaps add an assert to the Init methods that will throw up a NagMessage
+        /// if it detects an Opcode has be defined which has [MLFields] but lacks an override
+        /// of this method.
+        /// <br/>
+        /// </summary>
+        /// <param name="fields">A list of all the [MLFields] to populate the opcode with,
+        /// given *IN ORDER* of their Ordering fields.  This is important.  If the
+        /// opcode has 2 properties, one that was given attribute [MLField(10)] and the
+        /// other that was given attribute [MLField(20)], then the one with ordering=10
+        /// will be the first one in this list, and the one with ordering=20 will be the
+        /// second.  You can process the list in the guaranteed assumption that the caller
+        /// ordered the arguments this way.<br/>
+        /// NOTE: If the opcode has no MLField's attributes, then this may be passed in
+        /// as null, rather than as a list of 0 items.<br/>
+        /// </param>
+        public virtual void PopulateFromMLFields(List<object> fields)
+        {
+            // No use of the fields argument in the generic base version
+            // of this.  The compiler warning about this is ignorable.
         }
         
         /// <summary>
@@ -210,7 +258,7 @@ namespace kOS.Compilation
                 return;
             mapCodeToType = new Dictionary<ByteCode,Type>();
             mapNameToType = new Dictionary<string,Type>();
-            mapOpcodeToArgs = new Dictionary<Type,List<PropertyInfo>>();
+            mapOpcodeToArgs = new Dictionary<Type,List<MLArgInfo>>();
             
             // List of all subclasses of Opcode:
             Type opcodeType = typeof(Opcode);
@@ -238,7 +286,7 @@ namespace kOS.Compilation
                         return;
                     }
                     
-                    List<PropertyInfo> argsInfo = new List<PropertyInfo>();
+                    List<MLArgInfo> argsInfo = new List<MLArgInfo>();
 
                     PropertyInfo[] props = opType.GetProperties(BindingFlags.Instance |
                                                                 BindingFlags.FlattenHierarchy |
@@ -272,7 +320,7 @@ namespace kOS.Compilation
                                 if (attrib is MLField)
                                 {
                                     UnityEngine.Debug.Log(opType.Name + ", adding member: " + pInfo.Name );
-                                    argsInfo.Add(pInfo);
+                                    argsInfo.Add(new MLArgInfo(pInfo, ((MLField)attrib).NeedReindex));
                                     break;
                                 }
                             }                            
@@ -289,18 +337,18 @@ namespace kOS.Compilation
         /// Should only be called on properties that have [MLField] attributes
         /// on them.
         /// </summary>
-        /// <param name="p1"></param>
-        /// <param name="p2"></param>
-        /// <returns>negative if p1 less than p2, 0 if same, positive if p1 greater than p2</returns>
-        public static int MLFieldComparator(PropertyInfo p1, PropertyInfo p2)
+        /// <param name="a1"></param>
+        /// <param name="a2"></param>
+        /// <returns>negative if a1 less than a2, 0 if same, positive if a1 greater than a2</returns>
+        public static int MLFieldComparator(MLArgInfo a1, MLArgInfo a2)
         {
             // All the following is doing is just comparing p1 and p2's
             // MLField.Ordering fields to decide the sort order.
             //
             // Reflection: A good way to make a simple idea look messier than it really is.
             //
-            List<Attribute> attributes1 = new List<Attribute>(p1.GetCustomAttributes(true) as Attribute[]);
-            List<Attribute> attributes2 = new List<Attribute>(p2.GetCustomAttributes(true) as Attribute[]);
+            List<Attribute> attributes1 = new List<Attribute>(a1.propertyInfo.GetCustomAttributes(true) as Attribute[]);
+            List<Attribute> attributes2 = new List<Attribute>(a2.propertyInfo.GetCustomAttributes(true) as Attribute[]);
             MLField f1 = (MLField) attributes1.First(delegate (Attribute a) {return a is MLField;} );
             MLField f2 = (MLField) attributes2.First(delegate (Attribute a) {return a is MLField;} );
             return (f1.Ordering < f2.Ordering) ? -1 : (f1.Ordering > f2.Ordering) ? 1 : 0;
@@ -310,20 +358,30 @@ namespace kOS.Compilation
         /// Given a string value of Code, find the Opcode Type that uses that as its CodeName.
         /// </summary>
         /// <param name="code">ByteCode to look up</param>
-        /// <returns>Type, one of the subclasses of Opcode</returns>
+        /// <returns>Type, one of the subclasses of Opcode, or PseudoNull if there was no match</returns>
         public static Type TypeFromCode(ByteCode code)
         {
-            return mapCodeToType[code];
+            Type returnValue;
+            if (! mapCodeToType.TryGetValue(code, out returnValue))
+            {
+                returnValue = typeof(PseudoNull); // flag telling the caller "not found".
+            }        
+            return returnValue;
         }
 
         /// <summary>
         /// Given a string value of Name, find the Opcode Type that uses that as its Name.
         /// </summary>
         /// <param name="name">name to look up</param>
-        /// <returns>Type, one of the subclasses of Opcode</returns>
+        /// <returns>Type, one of the subclasses of Opcode, or PseudoNull if there was no match</returns>
         public static Type TypeFromName(string name)
         {
-            return mapNameToType[name];
+            Type returnValue;
+            if (! mapNameToType.TryGetValue(name, out returnValue))
+            {
+                returnValue = typeof(PseudoNull); // flag telling the caller "not found".
+            }
+            return returnValue;
         }
         
         /// <summary>
@@ -331,7 +389,7 @@ namespace kOS.Compilation
         /// for this opcode.
         /// </summary>
         /// <returns></returns>
-        public List<PropertyInfo> GetArgumentDefs()
+        public List<MLArgInfo> GetArgumentDefs()
         {
             return mapOpcodeToArgs[this.GetType()];
         }
@@ -543,8 +601,20 @@ namespace kOS.Compilation
     
     public abstract class BranchOpcode : Opcode
     {
-        [MLField(1)]
+        // This is identical to the base DestinationLabel, except that it has
+        // the MLFIeld attached to it:
+        [MLField(1,true)]
+        public override string DestinationLabel {get;set;}
+        
         public int Distance { get; set; }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for BranchOpcode seems to be missing.  Version mismatch?");
+            DestinationLabel = (string)(fields[0]);  // should throw exception if not an integer-ish type.
+        }
 
         public override string ToString()
         {
@@ -823,7 +893,10 @@ namespace kOS.Compilation
     
     public class OpcodeCall : Opcode
     {
-        [MLField(1)]
+        [MLField(0,true)]
+        public override string DestinationLabel { get; set; } // masks Opcode.DestinationLabel - so it can be saved as an MLField.
+        
+        [MLField(1,true)]
         public object Destination { get; set; }
 
         public override string Name { get { return "call"; } }
@@ -834,9 +907,18 @@ namespace kOS.Compilation
             Destination = destination;
         }
         /// <summary>
-        /// This variant of the constructor is just for InitMachineCodeData to use.
+        /// This variant of the constructor is just for machine language file read/write to use.
         /// </summary>
         protected OpcodeCall() { }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodeCall seems to be missing.  Version mismatch?");
+            DestinationLabel = (string)fields[0];
+            Destination = fields[1];
+        }
 
         public override void Execute(CPU cpu)
         {
@@ -897,7 +979,7 @@ namespace kOS.Compilation
     
     public class OpcodePush : Opcode
     {
-        [MLField(1)]
+        [MLField(1,false)]
         public object Argument { get; set; }
 
         public override string Name { get { return "push"; } }
@@ -909,9 +991,17 @@ namespace kOS.Compilation
         }
 
         /// <summary>
-        /// This variant of the constructor is just for InitMachineCodeData to use.
+        /// This variant of the constructor is just for ML file save/load to use.
         /// </summary>
         protected OpcodePush() { }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodePush seems to be missing.  Version mismatch?");
+            Argument = fields[0];
+        }
 
         public override void Execute(CPU cpu)
         {
@@ -973,7 +1063,7 @@ namespace kOS.Compilation
     
     public class OpcodeAddTrigger : Opcode
     {
-        [MLField(1)]
+        [MLField(1,false)]
         public bool ShouldWait { get; set; }
         
         public override string Name { get { return "addtrigger"; } }
@@ -985,9 +1075,17 @@ namespace kOS.Compilation
         }
 
         /// <summary>
-        /// This variant of the constructor is just for InitMachineCodeData to use.
+        /// This variant of the constructor is just for ML save/load to use.
         /// </summary>
         protected OpcodeAddTrigger() { }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodeAddTrigger seems to be missing.  Version mismatch?");
+            ShouldWait = (bool)(fields[0]); // should throw error if it's not a bool.
+        }
 
         public override void Execute(CPU cpu)
         {

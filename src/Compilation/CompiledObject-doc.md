@@ -193,9 +193,9 @@ Each section is explained in detail below:
 * magic number
 * Argument Section
 * Repeat the following once for each CodePart in the List&lt;CodePart&gt; for the program:
-* * Function Section
-* * Initializations Section
-* * Main COde Section
+*   * Function Section
+*   * Initializations Section
+*   * Main COde Section
 * Debug Line Number Section
 
 
@@ -501,7 +501,7 @@ List, depends on the length of that chunk of the ML file.
 The addressing index into the Debug Line Numbers section starts
 counting with zero being the "%" of the "%F" of the first Function
 Section of the First CodePart.  (So the first actual opcode, after
-that 3-byte header, is going to have address index 0x02).
+that 3-byte header, is going to have address index 0x03).
 
 For the purpose of this address indexing, the entire list of CodeParts
 is considered one long contiguous section.  (In other words, the
@@ -526,10 +526,9 @@ The way you'd read the above table is this:
 byte 0x02 through byte 0x1a inclusive.
 * Source Line 3 produced the ML code that s stored in a
 discontinous set of ranges:
-* * The ML code at the single byte 0x1b, and
-* * The ML code at byte 0x1d through byte 0x20 inclusive, and
-* * The ML code at byte 0x25 through byte 0x28 inclusive.
-address 0x1c through 0x1d inclusive.
+*   * The ML code at the single byte 0x1b, and
+*   * The ML code at byte 0x1d through byte 0x20 inclusive, and
+*   * The ML code at byte 0x25 through byte 0x28 inclusive.
 * Source Line 4 produced the ML code that is stored at
 the single byte 0x1c
 * Source Line 7 produced the ML code that is stored at

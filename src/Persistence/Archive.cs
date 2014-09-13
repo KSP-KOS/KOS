@@ -29,7 +29,8 @@ namespace kOS.Persistence
                 {
                     string fileBody = infile.ReadToEnd().Replace("\r\n", "\n");
 
-                    var retFile = new ProgramFile(name) {Content = fileBody};
+                    var retFile = new ProgramFile(name);
+                    retFile.Content = fileBody;
                     base.DeleteByName(name);
                     base.Add(retFile);
 
