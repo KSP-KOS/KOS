@@ -755,9 +755,16 @@ namespace kOS.Execution
                     // (Possibly all of OnLoad needs work because it never seemed to bring
                     // back the context fully right anyway, which is why this hasn't been
                     // addressed yet).
-                    programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
-                    List<Opcode> program = programBuilder.BuildProgram();
-                    RunProgram(program, true);
+                    try
+                    {
+                        programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
+                        List<Opcode> program = programBuilder.BuildProgram();
+                        RunProgram(program, true);
+                    }
+                    catch
+                    {
+                        UnityEngine.Debug.LogError("kOS: program builder failed on load.");
+                    }
                 }
             }
             catch (Exception e)
