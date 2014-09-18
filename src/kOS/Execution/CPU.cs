@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Diagnostics;
+using kOS.Safe;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Suffixed;

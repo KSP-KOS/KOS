@@ -38,6 +38,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compilation\CodePart.cs" />
+    <Compile Include="Compilation\CompileCache.cs" />
+    <Compile Include="Compilation\CompilerOptions.cs" />
     <Compile Include="Compilation\OpCode.cs" />
     <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
@@ -48,7 +51,9 @@
     <Compile Include="Execution\ICpu.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\Variable.cs" />
+    <Compile Include="IUpdateObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,6 +4,7 @@ using kOS.Module;
 using kOS.Persistence;
 using kOS.Compilation;
 using kOS.Execution;
+using kOS.Safe;
 using kOS.Screen;
 using kOS.Factories;
 

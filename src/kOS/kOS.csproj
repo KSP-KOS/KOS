@@ -68,7 +68,6 @@
     <Compile Include="Binding\BoundVariable.cs" />
     <Compile Include="Binding\KOSBinding.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
-    <Compile Include="Compilation\CompilerOptions.cs" />
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
@@ -79,7 +78,6 @@
     <Compile Include="Function\Persistence.cs" />
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="Function\Trigonometry.cs" />
-    <Compile Include="IUpdateObserver.cs" />
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
@@ -87,7 +85,6 @@
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
-    <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Suffixed\FileInfo.cs" />
     <Compile Include="Suffixed\Orbitable.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
@@ -114,7 +111,6 @@
     <Compile Include="Suffixed\ListValue.cs" />
     <Compile Include="Suffixed\Node.cs" />
     <Compile Include="Suffixed\OrbitInfo.cs" />
-    <Compile Include="Compilation\CodePart.cs" />
     <Compile Include="Persistence\Archive.cs" />
     <Compile Include="Compilation\ProgramBuilder.cs" />
     <Compile Include="Execution\ProgramContext.cs" />
@@ -129,7 +125,6 @@
     <Compile Include="Suffixed\ResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
-    <Compile Include="UpdateHandler.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Screen\TermWindow.cs" />
