@@ -761,9 +761,9 @@ namespace kOS.Execution
                         List<Opcode> program = programBuilder.BuildProgram();
                         RunProgram(program, true);
                     }
-                    catch
+                    catch (NullReferenceException ex)
                     {
-                        UnityEngine.Debug.LogError("kOS: program builder failed on load.");
+                        UnityEngine.Debug.LogError("kOS: program builder failed on load. " + ex.Message);
                     }
                 }
             }
