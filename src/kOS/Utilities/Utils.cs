@@ -1,4 +1,5 @@
-﻿using kOS.Suffixed;
+﻿using kOS.Safe.Compilation;
+using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,8 +7,62 @@ using UnityEngine;
 
 namespace kOS.Utilities
 {
-    public static class Utils
+    public enum NagType
     {
+        /// <summary>Make message go away</summary>
+        SHUTUP = 0,
+        /// <summary>Report this just once, then revert to SHUTUP after that</summary>
+        NAGONCE,
+        /// <summary>Always give the nag message every time the terminal welcome is printed</summary>
+        NAGFOREVER
+    }
+    
+    public class NagMessage
+    {
+        public NagType nag;
+        public string message;
+        public NagMessage(NagType n, string msg)
+        {
+            nag = n;
+            message = msg;
+        }
+    }
+
+    public static class Utils
+    {        
+        private static List<NagMessage> nags = new List<NagMessage>();
+        /// <summary>
+        /// Add a string message that should be shown on the terminal
+        /// the next time it shows its Welcome message.
+        /// It is possible to chain several of these messages together,
+        /// but remember that the terminal window is small.  Keep
+        /// the message short so there's room for other nag messages too.
+        /// </summary>
+        /// <param name="nag">Should the message be shown once, or keep being shown
+        /// every time the terminal welcome message appears?</param>
+        /// <param name="Message">Message to print</param>
+        public static void AddNagMessage(NagType nag, string message)
+        {
+            nags.Add( new NagMessage(nag, message) );
+        }
+        /// <summary>
+        /// Gets a list of all the pending nag messages,
+        /// and in the process of doing that it clears out any
+        /// that were set to just NAGONCE.
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetPendingNags()
+        {
+            List<string> returnVal = new List<string>();
+            foreach (NagMessage nag in nags)
+                returnVal.Add(nag.message);
+            
+            // Only keep the NAGFOREVER ones:
+            nags.RemoveAll( delegate(NagMessage nag) { if (nag.nag != NagType.NAGFOREVER) return true; else return false; } );
+
+            return returnVal;
+        }
+        
         public static float Clamp(float input, float low, float high)
         {
             return (input > high ? high : (input < low ? low : input));
@@ -202,14 +257,16 @@ namespace kOS.Utilities
         /// <returns>True if a orbits b.  </returns>
         public static Boolean BodyOrbitsBody(CelestialBody a, CelestialBody b)
         {
-            Debug.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
-            Debug.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
+            bool DEBUG_WALK = false;
+            
+            if (DEBUG_WALK) Debug.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
+            if (DEBUG_WALK) Debug.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
             Boolean found = false;
             for (var curBody = a.referenceBody;
                  curBody != null && curBody != curBody.referenceBody; // reference body of Sun points to itself, weirdly.
                  curBody = curBody.referenceBody)
             {
-                Debug.Log("curBody=" + curBody.name);
+                if (DEBUG_WALK) Debug.Log("curBody=" + curBody.name);
                 if (!curBody.name.Equals(b.name)) continue;
 
                 found = true;
@@ -217,5 +274,36 @@ namespace kOS.Utilities
             }
             return found;
         }
+
+        /// <summary>
+        /// This is copied almost verbatim from ProgramContext,
+        /// It's here to help debug.
+        /// </summary>
+        public static string GetCodeFragment(List<Opcode> codes)
+        {
+            var codeFragment = new List<string>();
+            
+            const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5} {6} {7}";
+            codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "Label  ", "opcode", "operand", "Destination" ));
+            codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "-------", "---------------------", "", "" ));
+
+            for (int index = 0; index < codes.Count; index++)
+            {
+                codeFragment.Add(string.Format(FORMAT_STR,
+                                               codes[index].SourceName ?? "null",
+                                               codes[index].SourceLine,
+                                               codes[index].SourceColumn ,
+                                               index,
+                                               codes[index].Label ?? "null",
+                                               codes[index] ?? new OpcodeBogus(),
+                                               "DEST: " + (codes[index].DestinationLabel ?? "null" ),
+                                               "" ) );
+            }
+            
+            string returnVal = "";
+            foreach (string s in codeFragment) returnVal += s + "\n";
+            return returnVal;
+        }
+                
     }
 }

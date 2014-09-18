@@ -102,7 +102,6 @@ namespace kOS.Screen
             for (int i=0 ; i< depthSort.Count ; ++i)
             {
                 KOSManagedWindow w = depthSort[i];
-                Debug.Log("depthsort["+i+"] = " + w.windowRect);
             }
         }
         

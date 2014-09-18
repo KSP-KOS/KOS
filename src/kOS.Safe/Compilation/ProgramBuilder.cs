@@ -126,9 +126,15 @@ namespace kOS.Safe.Compilation
                 {
                     ((BranchOpcode)opcode).Distance = destinationIndex - index;
                 }
-                else if (opcode is OpcodePush)
+                else if (opcode is OpcodePushRelocateLater)
                 {
-                    ((OpcodePush)opcode).Argument = destinationIndex;
+                    // Replace the OpcodePushRelocateLater with the proper OpcodePush:
+                    OpcodePush newOp = new OpcodePush(destinationIndex);
+                    newOp.SourceName = opcode.SourceName;
+                    newOp.SourceLine = opcode.SourceLine;
+                    newOp.SourceColumn = opcode.SourceColumn;
+                    newOp.Label = opcode.Label;
+                    program[index] = newOp;
                 }
                 else if (opcode is OpcodeCall)
                 {

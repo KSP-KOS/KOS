@@ -12,8 +12,8 @@ namespace kOS.Safe.Compilation.KS
         private bool _addBranchDestination = false;
         private ParseNode _lastNode = null;
         private int _startLineNum = 1;
-        private int _lastLine = 0;
-        private int _lastColumn = 0;
+        private short _lastLine = 0;
+        private short _lastColumn = 0;
         private List<List<Opcode>> _breakList = new List<List<Opcode>>();
         private List<string> _triggerRemoveNames = new List<string>();
         private bool _nowCompilingTrigger = false;
@@ -78,8 +78,8 @@ namespace kOS.Safe.Compilation.KS
         {
             if (node != null && node.Token != null && node.Token.Line > 0)
             {
-                _lastLine = node.Token.Line + (_startLineNum - 1);
-                _lastColumn = node.Token.Column;
+                _lastLine = (short) (node.Token.Line + (_startLineNum - 1));
+                _lastColumn = (short) (node.Token.Column);
                 return true;
             }
             else
@@ -113,7 +113,7 @@ namespace kOS.Safe.Compilation.KS
 
         private string GetNextLabel(bool increment)
         {
-            string newLabel = string.Format("KL_{0:0000}", _context.LabelIndex + 1);
+            string newLabel = string.Format("@{0:0000}", _context.LabelIndex + 1);
             if (increment) _context.LabelIndex++;
             return newLabel;
         }
@@ -236,7 +236,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePush( triggerRemoveVarName ));
             Opcode skipRemoval = AddOpcode(new OpcodeBranchIfFalse());
             
-            AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
+            AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
             AddOpcode(new OpcodeRemoveTrigger());
             Opcode eofOpcode = AddOpcode(new OpcodeEOF());
             branchOpcode.DestinationLabel = eofOpcode.Label;
@@ -269,7 +269,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePush( triggerRemoveVarName ));
             Opcode skipRemoval = AddOpcode(new OpcodeBranchIfFalse());
 
-            AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
+            AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
             AddOpcode(new OpcodeRemoveTrigger());
             Opcode eofOpcode = AddOpcode(new OpcodeEOF());
             branchOpcode.DestinationLabel = eofOpcode.Label;
@@ -290,7 +290,7 @@ namespace kOS.Safe.Compilation.KS
                 VisitNode(node.Nodes[2]);
                 Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
                 AddOpcode(new OpcodeEndWait());
-                AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
+                AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
                 AddOpcode(new OpcodeRemoveTrigger());
                 Opcode eofOpcode = AddOpcode(new OpcodeEOF());
                 branchOpcode.DestinationLabel = eofOpcode.Label;
@@ -330,7 +330,7 @@ namespace kOS.Safe.Compilation.KS
                 // initialization code
                 _currentCodeSection = lockObject.InitializationCode;
                 AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
-                AddOpcode(new OpcodePush(null)).DestinationLabel = lockObject.DefaultLabel;
+                AddOpcode(new OpcodePushRelocateLater(null),lockObject.DefaultLabel);
                 AddOpcode(new OpcodeStore());
 
                 if (lockObject.IsSystemLock())
@@ -339,7 +339,7 @@ namespace kOS.Safe.Compilation.KS
                     string triggerIdentifier = "lock-" + lockObject.Identifier;
                     Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
 
-                    int rememberLastLine = _lastLine;
+                    short rememberLastLine = _lastLine;
                     _lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
                     _currentCodeSection = triggerObject.Code;
                     AddOpcode(new OpcodePush("$" + lockObject.Identifier));
@@ -397,6 +397,7 @@ namespace kOS.Safe.Compilation.KS
                         // if it wasn't then load it now
                         AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
                         AddOpcode(new OpcodePush(subprogramObject.SubprogramName));
+                        AddOpcode(new OpcodePush(null)); // The output filename - only used for compile-to-file rather than for running.
                         AddOpcode(new OpcodeCall("load()"));
                         // store the address of the program in the pointer variable
                         // (the load() function pushes the address onto the stack)
@@ -578,6 +579,9 @@ namespace kOS.Safe.Compilation.KS
                     break;
                 case TokenType.run_stmt:
                     VisitRunStatement(node);
+                    break;
+                case TokenType.compile_stmt:
+                    VisitCompileStatement(node);
                     break;
                 case TokenType.list_stmt:
                     VisitListStatement(node);
@@ -1194,7 +1198,7 @@ namespace kOS.Safe.Compilation.KS
                 string functionLabel = lockObject.GetLockFunction(expressionHash)[0].Label;
                 // lock variable
                 AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
-                AddOpcode(new OpcodePush(null)).DestinationLabel = functionLabel;
+                AddOpcode(new OpcodePushRelocateLater(null),functionLabel);
                 AddOpcode(new OpcodeStore());
 
                 if (lockObject.IsSystemLock())
@@ -1204,7 +1208,7 @@ namespace kOS.Safe.Compilation.KS
                     if (_context.Triggers.Contains(triggerIdentifier))
                     {
                         Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
-                        AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
+                        AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
                         AddOpcode(new OpcodeAddTrigger(false));
                     }
                     
@@ -1249,14 +1253,14 @@ namespace kOS.Safe.Compilation.KS
                     if (_context.Triggers.Contains(triggerIdentifier))
                     {
                         Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
-                        AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
+                        AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
                         AddOpcode(new OpcodeRemoveTrigger());
                     }
                 }
 
                 // unlock variable
                 AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
-                AddOpcode(new OpcodePush(null)).DestinationLabel = lockObject.DefaultLabel;
+                AddOpcode(new OpcodePushRelocateLater(null),lockObject.DefaultLabel);
                 AddOpcode(new OpcodeStore());
             }
         }
@@ -1273,7 +1277,7 @@ namespace kOS.Safe.Compilation.KS
                 AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
                 AddOpcode(new OpcodePush(triggerObject.VariableName));
                 AddOpcode(new OpcodeStore());
-                AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
+                AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
                 AddOpcode(new OpcodeAddTrigger(false));
             }
         }
@@ -1287,7 +1291,7 @@ namespace kOS.Safe.Compilation.KS
 
             if (triggerObject.IsInitialized())
             {
-                AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
+                AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
                 AddOpcode(new OpcodeAddTrigger(false));
             }
         }
@@ -1310,7 +1314,7 @@ namespace kOS.Safe.Compilation.KS
 
                 if (triggerObject.IsInitialized())
                 {
-                    AddOpcode(new OpcodePush(null)).DestinationLabel = triggerObject.GetFunctionLabel();
+                    AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
                     AddOpcode(new OpcodeAddTrigger(true));
                 }
             }
@@ -1435,6 +1439,16 @@ namespace kOS.Safe.Compilation.KS
 
                 AddOpcode(new OpcodeCall("run()"));
             }
+        }
+        
+        private void VisitCompileStatement(ParseNode node)
+        {
+            SetLineNum(node);
+            string fileNameIn = node.Nodes[1].Token.Text;
+            string fileNameOut = node.Nodes[3].Token.Text;
+            AddOpcode(new OpcodePush(fileNameIn));
+            AddOpcode(new OpcodePush(fileNameOut));
+            AddOpcode(new OpcodeCall("load()"));
         }
 
         private void VisitSwitchStatement(ParseNode node)

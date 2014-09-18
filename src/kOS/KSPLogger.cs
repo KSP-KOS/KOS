@@ -51,6 +51,10 @@ namespace kOS
             for (int index = 0 ; index < trace.Count ; ++index)
             {
                 Opcode thisOpcode = Shared.Cpu.GetOpcodeAt(trace[index]);
+                if (thisOpcode is OpcodeBogus) 
+                {
+                    return "(Cannot Show kOS Error Location - error might really be internal. See kOS devs.)";
+                }
                 
                 // The statement "run program" actually causes TWO nested function calls,
                 // as the logic to check if the program needs compiling is implemented as a
@@ -76,10 +80,13 @@ namespace kOS
                 
                 msg += BuildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine) + "\n";
                 msg += textLine + "\n";
-                int numPadSpaces = thisOpcode.SourceColumn-1;
-                if (numPadSpaces < 0)
-                    numPadSpaces = 0;
-                msg += new String(' ', numPadSpaces) + "^" + "\n";
+                if (thisOpcode.SourceColumn > 0)
+                {
+                    int numPadSpaces = thisOpcode.SourceColumn-1;
+                    if (numPadSpaces < 0)
+                        numPadSpaces = 0;
+                    msg += new String(' ', numPadSpaces) + "^" + "\n";
+                }
             }
             return msg;
         }
@@ -109,15 +116,14 @@ namespace kOS
             string[] pathParts = filePath.Split('/');
             string fileName = pathParts.Last();
             Volume vol;
-            bool getFile = true; // should it try to retrive the file?
-            if (line < 0)
+            if (line < 0 && (filePath==null || filePath == String.Empty))
             {
                 // Special exception - if line number is negative then this isn't from any
                 // line of user's code but from the system itself (like the triggers the compiler builds
                 // to recalculate LOCK THROTTLE and LOCK STEERING each time there's an Update).
                 return "<<System Built-In Flight Control Updater>>";
             }
-            if (pathParts.Length > 1)
+            if (pathParts!=null && pathParts.Length > 1)
             {
                 string volName = pathParts.First();
                 if (Regex.IsMatch(volName, @"^\d+$"))
@@ -134,32 +140,27 @@ namespace kOS
                 }
             }
             else
-            {
                 vol = Shared.VolumeMgr.CurrentVolume;
-            }
-
-            if (fileName == "interpreter history")
-            {
-                // Get the line from the interpreter command history instead of from a file on volume:
-                getFile = false;
-                returnVal = Shared.Interpreter.GetCommandHistoryAbsolute(line);
-            }
             
-            if (getFile)
+            if (fileName == "interpreter history")
+                return Shared.Interpreter.GetCommandHistoryAbsolute(line);
+            
+            ProgramFile file = vol.GetByName(fileName);
+            if (file!=null)
             {
-                ProgramFile file = vol.GetByName(fileName);
-                if (file!=null)
+                if (file.Category == FileCategory.KEXE)
+                    return  "<<machine language file: can't show source line>>";
+                else
                 {
-                    string[] splitLines = file.Content.Split('\n');
+                    string[] splitLines = file.StringContent.Split('\n');
                     if (splitLines.Length >= line)
                     {
                         returnVal = splitLines[line-1];
                     }
                 }
             }
-            
             return returnVal;
         }
-        
+
     }
 }

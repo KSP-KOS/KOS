@@ -81,7 +81,7 @@ namespace kOS.Function
                     if (shared.ProcessorMgr != null)
                     {
                         string filePath = string.Format("{0}/{1}", shared.VolumeMgr.GetVolumeRawIdentifier(targetVolume), fileName) ;
-                        List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content);
+                        List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent);
                         var builder = new ProgramBuilder();
                         builder.AddRange(parts);
                         List<Opcode> program = builder.BuildProgram();
@@ -99,9 +99,19 @@ namespace kOS.Function
                 shared.ScriptHandler.ClearContext("program");
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
+                List<CodePart> parts;
                 var programContext = shared.Cpu.GetProgramContext();
+                if (file.Category == FileCategory.KEXE)
+                {
+                    string prefix = programContext.Program.Count.ToString();
+                    parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.BinaryContent);
+                }
+                else
+                    parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
                 programContext.AddParts(parts);
+                
+                string erasemeString = Utilities.Utils.GetCodeFragment(programContext.Program);  // eraaseme - remove after debugging is done.
+                UnityEngine.Debug.Log("(PROGRAM DUMP OF " + filePath + ")\n"+erasemeString);     // eraaseme - remove after debugging is done.
             }
         }
     }
@@ -111,7 +121,18 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = shared.Cpu.PopValue().ToString();
+            string fileNameOut = null;
+            object topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
+            if (topStack!=null)
+                fileNameOut = topStack.ToString();
+
+            string fileName = null;
+            topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
+            if (topStack!=null)
+                fileName = topStack.ToString();
+
+            if (fileName != null && fileNameOut != null && fileName == fileNameOut)
+                throw new Exception("Input and output filenames must differ.");
 
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
@@ -121,14 +142,30 @@ namespace kOS.Function
 
             if (shared.ScriptHandler != null)
             {
-                var programContext = shared.Cpu.GetProgramContext();
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
-                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
-                // add this program to the address space of the parent program
-                int programAddress = programContext.AddObjectParts(parts);
-                // push the entry point address of the new program onto the stack
-                shared.Cpu.PushStack(programAddress);
+                // add this program to the address space of the parent program,
+                // or to a file to save:
+                if (fileNameOut != null)
+                {
+                    List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, String.Empty, options);
+                    shared.VolumeMgr.CurrentVolume.SaveObjectFile(fileNameOut,compileParts);
+                }
+                else
+                {
+                    var programContext = shared.Cpu.GetProgramContext();
+                    List<CodePart> parts;
+                    if (file.Category == FileCategory.KEXE)
+                    {
+                        string prefix = programContext.Program.Count.ToString();
+                        parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.BinaryContent);
+                    }
+                    else
+                        parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
+                    int programAddress = programContext.AddObjectParts(parts);
+                    // push the entry point address of the new program onto the stack
+                    shared.Cpu.PushStack(programAddress);                    
+                }
             }
         }
     }
