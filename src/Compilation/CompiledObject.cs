@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
 using kOS;
@@ -44,6 +45,7 @@ namespace kOS.Compilation
         private static byte[] magicId = { (byte)'k', (byte)0x03, (byte)'X', (byte)'E' };
         private static Dictionary<Type,byte> IdFromType = null;
         private static Dictionary<byte,Type> TypeFromId = null;
+        private static Regex trailingDigitsRegex = new Regex(@"\d+$");
         
         /// <summary>
         /// Populate the above two lookup dictionaries.
@@ -111,10 +113,10 @@ namespace kOS.Compilation
             byte[] returnValue = new byte[numBytes];
             for (int bNum = 0; bNum < numBytes ; ++bNum)
             {
-                int bitsToShift = (numBytes-bNum) - 1;
+                int bytesToShift = (numBytes-bNum) - 1;
                 // This ends up being big-endian.  Dunno if that's the standard,
                 // but as long as the reading back is consistent it's fine:
-                returnValue[bNum] = (byte)( (number>>((bitsToShift)*8)) & (ulong)0xff);
+                returnValue[bNum] = (byte)( (number>>((bytesToShift)*8)) & (ulong)0xff);
             }
             return returnValue;
         }
@@ -131,9 +133,9 @@ namespace kOS.Compilation
             ulong returnValue = 0;
             for (int bNum = 0; bNum < numBytes ; ++bNum)
             {
-                int bitsToShift = (numBytes-bNum) - 1;
+                int bytesToShift = (numBytes-bNum) - 1;
                 // Read it back assuming it's big-endian, because that's how EncodeNumberToNBytes does it:
-                returnValue += ((ulong)encodedForm[bNum]) << bitsToShift;
+                returnValue += ((ulong)encodedForm[bNum]) << (bytesToShift*8);
             }
             return returnValue;
         }
@@ -172,20 +174,24 @@ namespace kOS.Compilation
         /// </summary>
         private static Dictionary<object,int> argumentPackFinder = null;
         
+        private static string previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
+
         /// <summary>
         /// Returns the compiled program's opcodes packed into a tight form, that is a direct
         /// streamed dump of the list of opcodes.
         /// </summary>
         /// <param name="program">The list of opcode codeparts for the compiled program.</param>
-        public static string Pack(string programName, List<CodePart> program)
+        /// <returns>The packed bytes that should be written to the binary file.</returns>
+        public static byte[] Pack(List<CodePart> program)
         {
             packTempWriter = new BinaryWriter( new MemoryStream() );
-            StringBuilder allCodeBuff = new StringBuilder();
-            StringBuilder headBuff = new StringBuilder();
+            List<byte> allCodeBuff = new List<byte>();
+            List<byte> headBuff = new List<byte>();
             argumentPack = new byte[8]; // this will grow bigger (be replaced by new arrays) as needed.
             argumentPackLogicalLength = 0; // nothing in the argumentPack yet.
             argumentPackFinder = new Dictionary<object,int>();
             lineMap = new DebugLineMap();
+            previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
 
             for (int index = 0 ; index < program.Count ; ++index)  // --.    This can be replaced with a
             {                                                      //   |--- foreach.  I do it this way so I
@@ -196,57 +202,54 @@ namespace kOS.Compilation
             }
 
             // Now that we've seen every argument, we know how many bytes are needed
-            // to store the argumentPack, and thus the larges possible index into it.
+            // to store the argumentPack, and thus the largest possible index into it.
             // This will be how many bytes our indeces will be in this packed ML file.
             int numArgIndexBytes = FewestBytesToHold((long)argumentPackLogicalLength);
-            headBuff.Append("%A"+ (char)(numArgIndexBytes) );
+            headBuff.Add((byte)'%');
+            headBuff.Add((byte)'A');
+            headBuff.Add(((byte)numArgIndexBytes));
 
-            byte[] truncatedArgumentPack = new Byte[argumentPackLogicalLength];
+            byte[] truncatedArgumentPack = new byte[argumentPackLogicalLength];
             Array.Copy(argumentPack, 0, truncatedArgumentPack, 0, argumentPackLogicalLength);
-                
-            headBuff.Append(System.Text.Encoding.ASCII.GetString(truncatedArgumentPack));
+
+            headBuff.AddRange(truncatedArgumentPack);
 
             for (int index = 0 ; index < program.Count ; ++index)  // --.    This can be replaced with a
             {                                                      //   |--- foreach.  I do it this way so I
                 CodePart codePart = program[index];                // --'    can print the index in debugging.
 
-                StringBuilder codeBuff = new StringBuilder();
+                List<byte> codeBuff = new List<byte>();
 
                 byte[] packedCode;
                 int indexSoFar;
 
-                indexSoFar = allCodeBuff.Length + codeBuff.Length;
-                codeBuff.Append("%F");
+                indexSoFar = allCodeBuff.Count + codeBuff.Count;
+                codeBuff.Add((byte)'%');
+                codeBuff.Add((byte)'F');
                 packedCode = PackCode(codePart.FunctionsCode, numArgIndexBytes, indexSoFar+2);
-                codeBuff.Append(System.Text.Encoding.ASCII.GetString(packedCode));
+                codeBuff.AddRange(packedCode);
 
-                indexSoFar = allCodeBuff.Length + codeBuff.Length;
-                codeBuff.Append("%I");
+                indexSoFar = allCodeBuff.Count + codeBuff.Count;
+                codeBuff.Add((byte)'%');
+                codeBuff.Add((byte)'I');
                 packedCode = PackCode(codePart.InitializationCode, numArgIndexBytes, indexSoFar+2);
-                codeBuff.Append(System.Text.Encoding.ASCII.GetString(packedCode));
+                codeBuff.AddRange(packedCode);
 
-                indexSoFar = allCodeBuff.Length + codeBuff.Length;
-                codeBuff.Append("%M");
+                indexSoFar = allCodeBuff.Count + codeBuff.Count;
+                codeBuff.Add((byte)'%');
+                codeBuff.Add((byte)'M');
                 packedCode = PackCode(codePart.MainCode, numArgIndexBytes, indexSoFar+2);
-                codeBuff.Append(System.Text.Encoding.ASCII.GetString(packedCode));
+                codeBuff.AddRange(packedCode);
 
-                UnityEngine.Debug.Log(
-                    "DEBUG: CompiledObject program dump below:\n"+
-                    "####### CodePart " + index + " ###########\n" +
-                    "### FUNC ###\n" +
-                    GetCodeFragment( codePart.FunctionsCode ) +
-                    "### INIT ###\n" +
-                    GetCodeFragment( codePart.InitializationCode ) +
-                    "### MAIN ###\n" +
-                    GetCodeFragment( codePart.MainCode ) );
-                                      
-                allCodeBuff.Append(codeBuff);
+                allCodeBuff.AddRange(codeBuff);
             }
-            return
-                System.Text.Encoding.ASCII.GetString(MagicId) +
-                headBuff.ToString() +
-                allCodeBuff.ToString() +
-                System.Text.Encoding.ASCII.GetString(lineMap.Pack());
+
+            List<byte> everything = new List<byte>();
+            everything.AddRange(MagicId);
+            everything.AddRange(headBuff);
+            everything.AddRange(allCodeBuff);
+            everything.AddRange(lineMap.Pack());
+            return everything.ToArray();
         }
         
         /// <summary>
@@ -258,6 +261,14 @@ namespace kOS.Compilation
             for (int index = 0; index < fragment.Count ; ++index)
             {
                 Opcode op = fragment[index];
+                string expectedLabel = NextConsecutiveLabel(previousLabel);
+
+                // in cases where there's a gap or jump in the consecutive labels, we'll be needing
+                // that label value in the argument pack to refer to later:
+                if ( (! string.IsNullOrEmpty(op.Label)) &&
+                      (op.Label != expectedLabel) )
+                    PackedArgumentLocation(op.Label);
+
                 List<MLArgInfo> args = op.GetArgumentDefs();
                 foreach (MLArgInfo arg in args)
                 {
@@ -265,10 +276,10 @@ namespace kOS.Compilation
 
                     // Just trying to add the argument to the pack.  Don't
                     // care where in the pack it is (yet).
-                    UnityEngine.Debug.Log("BEFORE PackedArgumentLocation");
                     PackedArgumentLocation(argVal);
-                    UnityEngine.Debug.Log("AFTER PackedArgumentLocation");
                 }
+                
+                previousLabel = op.Label;
             }
         }
         
@@ -281,14 +292,27 @@ namespace kOS.Compilation
         private static byte[] PackCode(List<Opcode> fragment, int argIndexSize, int startByteIndex)
         {
             packTempWriter.Seek(0,SeekOrigin.Begin);
+            bool justInsertedLabel = false;
             for (int index = 0; index < fragment.Count ; ++index)
             {
-                int opcodeStartByte = (int)( startByteIndex + packTempWriter.BaseStream.Position );
                 Opcode op = fragment[index];
+                string expectedLabel = NextConsecutiveLabel(previousLabel);
+
+                if (justInsertedLabel)
+                {
+                    justInsertedLabel = false;
+                }
+                else if ( (! string.IsNullOrEmpty(op.Label)) &&
+                          (op.Label != expectedLabel) )
+                {
+                    op = new OpcodeLabelReset(op.Label);
+                    --index;
+                    justInsertedLabel = true;
+                }
+                
+                int opcodeStartByte = (int)( startByteIndex + packTempWriter.BaseStream.Position );
                 byte code = (byte)op.Code;
                 
-                UnityEngine.Debug.Log( "eraseme Opcode " + index + " = " + (uint)code );
-
                 //Always start with the opcode's bytecode:
                 packTempWriter.Write(code);
                 
@@ -299,7 +323,6 @@ namespace kOS.Compilation
                 {
                     object argVal = arg.propertyInfo.GetValue(op,null);
                     int argPackedIndex = PackedArgumentLocation(argVal);
-                    
                     byte[] argIndexEncoded = EncodeNumberToNBytes((ulong)argPackedIndex,argIndexSize);
                     packTempWriter.Write(argIndexEncoded);
                 }
@@ -307,6 +330,8 @@ namespace kOS.Compilation
                 // Now add this range to the Debug line mapping for this source line:
                 int opcodeStopByte = (int)(startByteIndex + packTempWriter.BaseStream.Position - 1);
                 lineMap.Add(op.SourceLine, new IntRange(opcodeStartByte,opcodeStopByte));
+                
+                previousLabel = op.Label;
             }
             
             // Return the byte array that the memory writer has been outputting to in the above loop:
@@ -326,53 +351,35 @@ namespace kOS.Compilation
         /// <returns>byte index of where it starts in the argument pack.</returns>
         private static int PackedArgumentLocation(object argument)
         {
-            int labelOffset = 3; // Account for the %A at the front of the argument pack.
+            int labelOffset = 3; // Account for the %An at the front of the argument pack.
             
             object arg = (argument==null) ? new PseudoNull() : argument;
             
-            UnityEngine.Debug.Log("AAA got here 1");
             int returnValue = -1; // bogus starting value before it's calculated.
-            UnityEngine.Debug.Log("AAA got here 2");
             bool existsAlready = argumentPackFinder.TryGetValue(arg, out returnValue);
-            UnityEngine.Debug.Log("AAA got here 3");
             if (existsAlready)
                 return returnValue;
-            UnityEngine.Debug.Log("AAA got here 4");
             
             // Okay, so have to encode it and add it.
             // --------------------------------------
             
             // When it gets added, it's going to be tacked on right at the end.
             // We already know that, se let's get that populated now:
-            UnityEngine.Debug.Log("AAA got here 5");
             argumentPackFinder.Add(arg, labelOffset + argumentPackLogicalLength);
-            UnityEngine.Debug.Log("AAA got here 6");
-            returnValue = argumentPackLogicalLength;
-            UnityEngine.Debug.Log("AAA got here 7");
+            returnValue = labelOffset + argumentPackLogicalLength;
             
             // Borrow C#'s Binary IO writer to pack the object into the byte form,
             // rather than writing our own for each type:
-            UnityEngine.Debug.Log("AAA got here 8");
             packTempWriter.Seek(0,SeekOrigin.Begin);
-            UnityEngine.Debug.Log("AAA got here 9: writing object of type " + arg.GetType().Name );
             
             WriteSomeBinaryPrimitive(packTempWriter, arg);
-            UnityEngine.Debug.Log("AAA got here 10");
             MemoryStream mem = packTempWriter.BaseStream as MemoryStream;
-            UnityEngine.Debug.Log("AAA got here 11: number of bytes written " + mem.Position);
             int argByteLength = (int)(mem.Position);
-            UnityEngine.Debug.Log("AAA got here 12");
             byte[] packedArg = new byte[argByteLength+1]; // +1 because we insert the type byte at the front.
-            UnityEngine.Debug.Log("AAA got here 13, for arg type = " + arg.GetType().Name);
             packedArg[0] = IdFromType[arg.GetType()];
-            UnityEngine.Debug.Log("AAA got here 14: ");
             Array.Copy(mem.GetBuffer(), 0, packedArg, 1, argByteLength);
-            UnityEngine.Debug.Log("AAA got here 15");
-            for (int eraseme_i = 0 ; eraseme_i < packedArg.Length ; ++eraseme_i)
-                UnityEngine.Debug.Log( "packedArg[" + eraseme_i + "] = " + packedArg[eraseme_i] );
                 
             AddByteChunkToArgumentPack(packedArg);
-            UnityEngine.Debug.Log("AAA got here 16");
             
             return returnValue;
         }
@@ -441,14 +448,12 @@ namespace kOS.Compilation
         /// <param name="appendMe">block of bytes to append</param>
         private static void AddByteChunkToArgumentPack(byte[] appendMe)
         {
-            UnityEngine.Debug.Log("Adding " + appendMe.Length + " bytes to buffer that is " + argumentPackLogicalLength + " of " + argumentPack.Length );
             int newLogicalLength = argumentPackLogicalLength + appendMe.Length;
             if (newLogicalLength > argumentPack.Length)
             {
                 // Increase to double current size or if current size is too small or zero
                 // so doubling it doesn't help, then incrase to hold new logical length:
                 byte[] newBiggerPack = new byte[ Math.Max(argumentPack.Length*2, newLogicalLength) ];
-                UnityEngine.Debug.Log("Made Bigger argumentPack.  New size is " + newBiggerPack.Length );
                 if (argumentPackLogicalLength > 0)
                 {
                     Array.Copy(argumentPack,newBiggerPack,argumentPackLogicalLength);
@@ -466,14 +471,12 @@ namespace kOS.Compilation
         /// <param name="filePath">name of file (with preceeding "volume/") that the program came from, for runtime error reporting.</param>
         /// <param name="startLineNum">line number the file should be assumed to start at (normally 1)</param>
         /// <param name="prefix">prepend this string to all labels in this program.</param>
-        /// <param name="content">the file itself in ony big string.</param>
+        /// <param name="content">the file itself in ony big binary array.</param>
         /// <returns></returns>
-        public static List<CodePart> UnPack(string filePath, int startLineNum, string prefix, string content)
+        public static List<CodePart> UnPack(string filePath, int startLineNum, string prefix, byte[] content)
         {
             List<CodePart> program = new List<CodePart>();
-            
-            byte[] packedContent = Encoding.UTF8.GetBytes(content);
-            BinaryReader reader = new BinaryReader(new MemoryStream(packedContent));
+            BinaryReader reader = new BinaryReader(new MemoryStream(content));
             
             byte[] firstFour = reader.ReadBytes(4);
             
@@ -484,6 +487,8 @@ namespace kOS.Compilation
             Dictionary<int,object> arguments = ReadArgumentPack(reader, out argIndexSize);
             lineMap = new DebugLineMap();
             
+            previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
+
             int codeStart = 0;
             
             while (reader.BaseStream.Position < reader.BaseStream.Length)
@@ -509,15 +514,12 @@ namespace kOS.Compilation
                             codeStart = (int)(reader.BaseStream.Position - 2); // start is where the ByteCode.DELIMITER of the first section is.
                         
                         program[program.Count-1].FunctionsCode = ReadOpcodeList(reader, codeStart, prefix, arguments, argIndexSize);
-                        UnityEngine.Debug.Log("Just built FunctionsCode with " + program[program.Count-1].FunctionsCode.Count + " opcodes.");
                         break;
                     case (byte)'I':
                         program[program.Count-1].InitializationCode = ReadOpcodeList(reader, codeStart, prefix, arguments, argIndexSize);
-                        UnityEngine.Debug.Log("Just built InitializtionsCode with " + program[program.Count-1].InitializationCode.Count + " opcodes.");
                         break;
                     case (byte)'M':
                         program[program.Count-1].MainCode = ReadOpcodeList(reader, codeStart, prefix, arguments, argIndexSize);
-                        UnityEngine.Debug.Log("Just built MainCode with " + program[program.Count-1].MainCode.Count + " opcodes.");
                         break;
                     case (byte)'D':
                         lineMap = new DebugLineMap(reader);
@@ -527,17 +529,6 @@ namespace kOS.Compilation
             reader.Close();
 
             PostReadProcessing(program, filePath, prefix, lineMap);
-
-            // This is debugging that will probably be removed later:
-            foreach (CodePart codePart in program)
-                UnityEngine.Debug.Log(
-                    "DEBUG: CompiledObject program dump below:\n"+
-                    "### FUNC ###\n" +
-                    (codePart.FunctionsCode!=null ? GetCodeFragment( codePart.FunctionsCode ) : "NULL\n" )+
-                    "### INIT ###\n" +
-                    (codePart.InitializationCode!=null ? GetCodeFragment( codePart.InitializationCode ) : "NULL\n" ) +
-                    "### MAIN ###\n" +
-                    (codePart.MainCode!=null ? GetCodeFragment( codePart.MainCode ) : "NULL\n" ) );
                                                   
             return program;
         }
@@ -617,7 +608,6 @@ namespace kOS.Compilation
                         // The algorithm is dependent on the fact that the opcodes will be iterated over
                         // in the same order as they appeared in the ML file, and therefore the
                         // DebugLineMap only ever has to be advanced forward, never backward.
-                        UnityEngine.Debug.Log("for op: " + op + ", MLIndex="+op.MLIndex+", and working on range: ["+curRange.Start+","+curRange.Stop+"]");
                         while (op.MLIndex > curRange.Stop)
                         {
                             if (lineEnumerator.MoveNext())
@@ -634,14 +624,6 @@ namespace kOS.Compilation
                             // Not every opcode came from a source line - so if it's skipped over, assign it to bogus value.
                             op.SourceLine = -1;
                         
-                        // As long as we're visiting every opcode, may as well set the Label and filename strings too:
-                        if (op.Label == null || op.Label == String.Empty)
-                        {
-                            op.Label = "@" + prefix + "_" + string.Format("{0:0000}", opIndex);
-                        }
-                        else
-                            op.Label = String.Empty; // ensure no nulls here.
-
                         if (op.SourceName == null || op.SourceName == String.Empty)
                             op.SourceName = filePath;
                         else
@@ -650,6 +632,28 @@ namespace kOS.Compilation
                     }
                 }
             }
+        }
+        
+        /// <summary>
+        /// Generate what the expected next consecutive label string would be
+        /// given an existing label string.  For example, if given "@_0001"
+        /// it should return "@_0002".
+        /// </summary>
+        /// <param name="label">label to test</param>
+        /// <returns>Next label string</returns>
+        private static string NextConsecutiveLabel( string label)
+        {
+            string outLabel = "";
+            Match m = trailingDigitsRegex.Match(label);
+            if (m.Success)
+            {
+                int number = Convert.ToInt32(label.Substring(m.Index,m.Length));
+                string padFormat = "{0:" + new String('0', m.Length) + "}";
+                outLabel = label.Substring(0,m.Index) + String.Format(padFormat,number+1);
+            }
+            else
+                outLabel = label + "1"; // no digits already, so append one.
+            return outLabel;
         }
 
         /// <summary>
@@ -667,18 +671,15 @@ namespace kOS.Compilation
         {            
             List<Opcode> returnValue = new List<Opcode>();
             
-            //
-            // TODO: this method isn't working.  it's returning an opcode list of zero opcodes.  find out why.
-            //
-
             bool sectionEnded = false;
+            bool prevWasLabelReset = false;
+            
             while (reader.BaseStream.Position < reader.BaseStream.Length && !(sectionEnded))
             {
                 int opcodeMLPosition = (int)(reader.BaseStream.Position - codeStartPos); // For later use in PostReadProcessing().
                 byte opCodeTypeId = reader.ReadByte();
                 Type opCodeCSharpType = Opcode.TypeFromCode((ByteCode)opCodeTypeId);
                 
-                UnityEngine.Debug.Log("Just read an opcode with id="+opCodeTypeId+", Type="+opCodeCSharpType);
                 if (opCodeCSharpType == typeof(PseudoNull))
                 {
                     // As soon as there's an opcode encountered that isn't a known opcode type, the section is done:
@@ -699,9 +700,8 @@ namespace kOS.Compilation
                     byte[] argPackIndex = reader.ReadBytes(argIndexSize);
                     int argIndex = (int) DecodeNumberFromBytes(argPackIndex);
                     object val;
-                    UnityEngine.Debug.Log("opcode NeedReindex = " + argInfo.NeedReindex);
                     if (argInfo.NeedReindex)
-                    {
+                    {                                              
                         val = arguments[argIndex];
                         if ( val is string && ((string)val).StartsWith("@") && (((string)val).Length > 1) )
                         {
@@ -709,49 +709,40 @@ namespace kOS.Compilation
                         }
                     }
                     else
+                    {
                         val = arguments[argIndex];
-                    UnityEngine.Debug.Log("opcode new value = " + val);
+                    }
                     opArgs.Add(val);
                 }
                 
                 // Fill the MLFields, then add the opcode to the list:
                 if (opArgs.Count > 0)
                     op.PopulateFromMLFields(opArgs);
-                returnValue.Add(op);
+                
+                // Special case exception: if the opcode is just a dummy label, then don't insert it, and instead remember
+                // it's value so it can be used as a label for the next opcode to come:
+                if (prevWasLabelReset)
+                {
+                    op.Label = previousLabel;
+                    prevWasLabelReset = false;
+                }
+                else
+                    op.Label = NextConsecutiveLabel(previousLabel);
+
+                if (op is OpcodeLabelReset)
+                {
+                    previousLabel = ((OpcodeLabelReset)op).UpcomingLabel;
+                    prevWasLabelReset = true;
+                }
+                else
+                {
+                    returnValue.Add(op);
+                    previousLabel = op.Label;
+                }
             }
             return returnValue;
         }
 
-        /// <summary>
-        /// This is copied almost verbatim from ProgramContext,
-        /// and will probably get removed later.  It's here to help me debug.
-        /// </summary>
-        private static string GetCodeFragment(List<Opcode> codes)
-        {
-            var codeFragment = new List<string>();
-            
-            const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5} {6} {7}";
-            codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "Label  ", "opcode", "operand", "Destination" ));
-            codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "-------", "---------------------", "", "" ));
-
-            for (int index = 0; index < codes.Count; index++)
-            {
-                codeFragment.Add(string.Format(FORMAT_STR,
-                                               codes[index].SourceName ?? "null",
-                                               codes[index].SourceLine,
-                                               codes[index].SourceColumn ,
-                                               index,
-                                               codes[index].Label ?? "null",
-                                               codes[index] ?? new OpcodeBogus(),
-                                               "DEST: " + (codes[index].DestinationLabel ?? "null" ),
-                                               "" ) );
-            }
-            
-            string returnVal = "";
-            foreach (string s in codeFragment) returnVal += s + "\n";
-            return returnVal;
-        }
-        
     }
     /// <summary>
     ///  Stores a range of ints [start,end], inclusive of both
@@ -795,7 +786,7 @@ namespace kOS.Compilation
         
         public DebugLineMap()
         {
-            // TODO - does anything need doing here?
+            // does anything need doing here?
         }
         
         /// <summary>
@@ -814,8 +805,6 @@ namespace kOS.Compilation
                 short lineNum = reader.ReadInt16();
                 byte countRanges = reader.ReadByte();
                 
-                UnityEngine.Debug.Log("DebugLineMap constructing: numDebugIndexBytes="+numDebugIndexBytes+", lineNum="+lineNum+", countRanges="+countRanges);
-                
                 List<IntRange> ranges = new List<IntRange>();
                 for (int index = 0 ; index < countRanges ; ++index)
                 {
@@ -825,7 +814,6 @@ namespace kOS.Compilation
                     byte[] encodedStop = reader.ReadBytes(numDebugIndexBytes);
                     int stop = (int)(CompiledObject.DecodeNumberFromBytes(encodedStop));
 
-                    UnityEngine.Debug.Log("DebugLineMap adding range <"+start+", "+stop+">");
                     ranges.Add(new IntRange(start, stop));
                 }
                 store.Add(lineNum, ranges);
@@ -918,11 +906,9 @@ namespace kOS.Compilation
             
             foreach (int lineNum in store.Keys)
             {
-                UnityEngine.Debug.Log("BuildInverseLookup: adding for line number = "+lineNum);
                 List<IntRange> ranges = store[lineNum];
                 foreach (IntRange range in ranges)
                 {
-                    UnityEngine.Debug.Log("BuildInverseLookup: adding <"+range.Start+", "+range.Stop+">");
                     returnValue.Add(range,lineNum);
                 }
             }

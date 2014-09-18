@@ -111,9 +111,7 @@ namespace kOS.Compilation
             {
                 if (program[index].Label != string.Empty)
                 {
-                    UnityEngine.Debug.Log("ChECKPOINT: ADDING <"+program[index].Label+","+index+">, out of "+program.Count+" total things.");
                     labels.Add(program[index].Label, index);
-                    UnityEngine.Debug.Log("ChECKPOINT: WORKED");
                 }
             }
 
@@ -128,9 +126,15 @@ namespace kOS.Compilation
                 {
                     ((BranchOpcode)opcode).Distance = destinationIndex - index;
                 }
-                else if (opcode is OpcodePush)
+                else if (opcode is OpcodePushRelocateLater)
                 {
-                    ((OpcodePush)opcode).Argument = destinationIndex;
+                    // Replace the OpcodePushRelocateLater with the proper OpcodePush:
+                    OpcodePush newOp = new OpcodePush(destinationIndex);
+                    newOp.SourceName = opcode.SourceName;
+                    newOp.SourceLine = opcode.SourceLine;
+                    newOp.SourceColumn = opcode.SourceColumn;
+                    newOp.Label = opcode.Label;
+                    program[index] = newOp;
                 }
                 else if (opcode is OpcodeCall)
                 {

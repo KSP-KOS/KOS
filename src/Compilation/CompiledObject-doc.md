@@ -549,6 +549,136 @@ Opcode who's Code is set to Compilation.ByteCode.DELIMITER,
 which is the '%' character that starts the next section, or
 when you reach EOF.
 
+Special Opcodes for ML file
+---------------------------
+
+There are special opcodes that exist ONLY in the ML file.
+
+These special Opocodes are printed into the ML file when it's created,
+and they get removed when the ML file is loaded back into memory.  They
+exist to store data sparsely in the file in a way that would be verbose
+and use up a lot of memory if they were stored in a more natural way.
+
+### OpcodePushRelocateLater
+
+**The problem it's meant to solve:**
+
+Sometimes the operand of an *OpcodePush* is an opcode label address that
+needs to be relocated later upon loading the program into memory, much
+like what happens with the opcodes derived from *OpcodeBranch*.  This
+happens mainly when calling functions (such as the functions created by
+the LOCK command) where the way they work is by first pushing the label
+of the function's starting opcode, and then executing OpcodeCall, which
+reads the label to jump to from the top of the stack.
+
+When these types of Push opcodes are loaded into memory, the branch
+label is recalculated, and assigned into the Push's argument.  To store
+this properly in the ML file so it would work on realoading would have
+meant storing two operands for each OpcodePush - its normal Argument
+and its DestinationLabel.  But this is massively inefficient because
+they are never BOTH needed at the same time.  They could be both stored
+in one argument if there was a flag indicating whether or not this is
+an OpcodePush that requires such a reassignment of the label or not.
+
+**The way it solves it:**
+
+To create that "flag", the special opcode *OpcodePushRelocateLater* was
+invented.  An *OpcodePushRelocateLater* is identical to an normal
+*OpcodePush* except that its argument is meant to be relocated upon
+loading the ML file.  By the time the program is actually running, 
+all the *OpcodePushRelocateLater* opcodes should have been replaced
+by normal *OpcodePush*'es.  In fact, to enforce this and detect if 
+it's not being adhered to, the Execute() method of 
+*OpcodePushRelocateLater* throws an exception if it's ever called.
+
+### OpcodeLabelReset
+
+**The problem it's meant to solve:**
+
+The Compiler builds opcodes out of the program text with string
+labels on them so they can be referred to as the targets of branches
+and function calls without tracking their exact position in the
+program list.  As the opcodes get moved or inserted into different
+sections, their ordering slightly changes, so the index position would
+not be good enough to remember the destinations correctly.
+
+But *MOST* of the opcodes' labels *do* in fact count up sequentially
+by consecutive numbers embedded in the labels.  *Most* of the time
+if one Opcode has a Label of "@0100", then the next one will have an
+Opcode of "@0101" and the next one will be "@0102" and then "@0103"
+and so on.
+
+The numbers tend to "jump" strangely only when the compiler shifts
+its attention to a different section of the code for a bit then switch
+back.  For example, when compiling a LOCK statement, it switches
+to the function section, compiles the expression there, then switches
+back to the mainline code, causing the labels to jump in a way that's
+not consecutive because it was counting up while it was doing that.
+(i.e. you get labels sequenced like @0251,@0252,@0253,@0267,@0268,
+with the jump between @0253 and @0267 because opcodes @0254 through
+@0266 were inserted into the functions section instead of into the
+main code.)
+
+The problem is that to store the Opcode.Label for *every single* 
+Opcocde in the ML file would be massively inefficient when most
+of the time they are just consecutive and can be just incremented
+as the ML unpacker reads through the ML file.
+
+So we want to *only* store the exception cases, not the normal
+cases where opcode labels are consecutively counting.
+
+**The way it solves it:**
+
+The ML unpacker assumes the next opcode's Label is equal to the
+previous opcode's Label plus one.  Because the Label is really
+a string not a number, the definition of "plus one" for this
+is as follows:  get the integer value of the trailing digits
+at the end of the Label (i.e. 123 for the label @0_123), add 1
+to that, and then reformat it into a string using the same padded
+number of digits as it had in the original string.
+
+Whenever this will NOT work, and the next label differs from
+(previous label +1) in any way, then an *OpcodeLabelReset*
+is inserted into the ML file to mark the change in the labels.
+The ML unpacker will read this OpcodeLabelReset's argument
+as the new label to apply to the next opcode, after which the
+sequential counting would begin again unless there's yet
+another OpcodeLabelReset to override it.
+
+Example:  You have code like this:
+
+~~~
+    Label           Opcode
+
+    myfunction      push 1
+    @0033           push $x
+    @0034           push $y
+    @0035           add
+    @0036           sub
+    @0037           push @0129
+    @0038           call
+    @0080           push hello
+    @0081           push $playername
+    @0082... etc...
+~~~
+
+This would get stored in the ML file like so in this order:
+
+* OpcodeLabelReset  myfunction
+* push 1     // ML unpacker assigns its label to preceeding label reset: "myfunction"
+* OpcodeLabelReset  @0033
+* push $x    // ML unpacker assigns its label to preceeding label reset: "@0033"
+* push $y    // ML unpacker assumes it's labeled @0033 + 1 = "@0034"
+* add        // ML unpacker assumes it's labeled @0034 + 1 = "@0035"
+* sub        // ML unpacker assumes it's labeled @0035 + 1 = "@0036"
+* pushrelocatelater @0129  // ML unpacker assumes it's labeled @0036 + 1 = "@0037"
+* call // ML unpacker assumes it's labeled @0037 + 1 = "@0038"
+* OpcodeLabelReset  @0080
+* push hello   // ML unpacker assignts its label to preceeding label reset: "@0038"
+* push $playername  // ML unpacker assumes it's labeled @0080 + 1 = @0081
+* ... etc...
+
+
 Debug Line Number Section
 =========================
 

@@ -147,7 +147,7 @@ namespace kOS.Screen
         public void SaveContents()
         {
             var file = new ProgramFile(fileName);
-            file.Content = contents;
+            file.StringContent = contents;
 
             if (! volume.SaveFile(file) )
             {
@@ -257,7 +257,7 @@ namespace kOS.Screen
             }
             else
             {
-                me.contents = file.Content;
+                me.contents = file.StringContent;
             }
             me.isDirty = false;
         }

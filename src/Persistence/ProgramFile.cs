@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using ICSharpCode.SharpZipLib.GZip;
 using kOS.Suffixed;
@@ -41,27 +42,58 @@ namespace kOS.Persistence
 
     public class ProgramFile
     {
+        public static int MaxFileSize = 65355; // arbitrary, but binary reads need a max expected size.
         
         public string Filename {get;set;}
         public FileCategory Category {get;private set;}
-        public string Content
+        public string StringContent
         {
-            get { return content; }
-            // if changing content, re-check the category:
-            set { content = value; IdentifyCategory(); }
+            get 
+            {
+                if (Category != FileCategory.ASCII && Category != FileCategory.KERBOSCRIPT)
+                    throw new Exception("File is not ASCII.  Should use BinaryContent instead.");
+                return stringContent; 
+            }
+            set
+            {
+                Category = FileCategory.ASCII;
+                stringContent = value;
+            }
         }
-        private string content;
+        private string stringContent;
+
+        public byte[] BinaryContent
+        {
+            get
+            {
+                if (Category == FileCategory.ASCII || Category == FileCategory.KERBOSCRIPT)
+                    throw new Exception("File is not Binary. Should use StringContent instead.");
+                return binaryContent;
+            }
+            set 
+            {
+                Category = FileCategory.KEXE;
+                binaryContent = value;
+            }
+        }
+        private byte[] binaryContent;
 
         public ProgramFile(ProgramFile copy)
         {
             Filename = copy.Filename;
-            Content = copy.Content;
+            Category = copy.Category;
+            if (Category == FileCategory.KEXE)
+                BinaryContent = copy.BinaryContent;
+            else
+                StringContent = copy.StringContent;
         }
 
         public ProgramFile(string filename)
         {
             Filename = filename;
-            Content = string.Empty;
+            Category = FileCategory.UNKNOWN;
+            stringContent = string.Empty;
+            binaryContent = new byte[0];
         }
 
         public ProgramFile(ConfigNode fileNode)
@@ -76,7 +108,10 @@ namespace kOS.Persistence
 
         public int GetSize()
         {
-            return Content.Length;
+            if (Category == FileCategory.KEXE)
+                return BinaryContent.Length;
+            else
+                return StringContent.Length;
         }
 
         public ConfigNode SaveEncoded(string nodeName)
@@ -84,10 +119,21 @@ namespace kOS.Persistence
             var node = new ConfigNode(nodeName);
             node.AddValue("filename", Filename);
 
-            if (Config.Instance.UseCompressedPersistence || Category == FileCategory.KEXE)
-                node.AddValue("iine", EncodeBase64(Content));
+            if (Category == FileCategory.KEXE)
+            {
+                node.AddValue("line", EncodeBase64(BinaryContent));
+            }
             else
-                node.AddValue("iine", EncodeLine(Content));
+            {
+                if (Config.Instance.UseCompressedPersistence)
+                {
+                    node.AddValue("line", EncodeBase64(StringContent));
+                }
+                else
+                {
+                    node.AddValue("line", EncodeLine(StringContent));
+                }
+            }
                 
             return node;
         }
@@ -95,19 +141,30 @@ namespace kOS.Persistence
         internal void LoadEncoded(ConfigNode fileNode)
         {
             Filename = fileNode.GetValue("filename");
-            Content = Decode(fileNode.GetValue("line"));
+            Decode(fileNode.GetValue("line"));
         }
 
-        private string Decode(string input)
+        private void Decode(string input)
         {
             string decodedString = string.Empty;
+            byte[] decodedBuffer;
 
             try
             {
                 try
                 {
                     // base64 encoding
-                    decodedString = DecodeBase64(input);
+                    decodedBuffer = DecodeBase64ToBinary(input);
+                    FileCategory whatKind = IdentifyCategory(decodedBuffer);
+                    if (whatKind == FileCategory.ASCII || whatKind == FileCategory.KERBOSCRIPT)
+                    {
+                        decodedString = Encoding.ASCII.GetString(decodedBuffer);
+                        StringContent = decodedString;
+                    }
+                    else
+                    {
+                        BinaryContent = decodedBuffer;
+                    }
                 }
                 catch (FormatException)
                 {
@@ -119,11 +176,14 @@ namespace kOS.Persistence
             {
                 Debug.Log(string.Format("Exception decoding: {0} | {1}", e, e.Message));
             }
-
-            return decodedString;
         }
 
         private string EncodeBase64(string input)
+        {
+            return EncodeBase64(Encoding.ASCII.GetBytes(input));
+        }
+
+        private string EncodeBase64(byte[] input)
         {
             using (var compressedStream = new MemoryStream())
             {
@@ -131,15 +191,20 @@ namespace kOS.Persistence
                 // using (Stream csStream = new GZipStream(compressedStream, CompressionMode.Compress))
                 using (Stream csStream = new GZipOutputStream(compressedStream))
                 {
-                    byte[] buffer = Encoding.ASCII.GetBytes(input);
-                    csStream.Write(buffer, 0, buffer.Length);
+                    csStream.Write(input, 0, input.Length);
                 }
 
                 return Convert.ToBase64String(compressedStream.ToArray());
             }
         }
 
-        private string DecodeBase64(string input)
+        
+        private string DecodeBase64ToString(string input)
+        {
+            return Encoding.ASCII.GetString(DecodeBase64ToBinary(input));
+        }
+        
+        private byte[] DecodeBase64ToBinary(string input)
         {
             byte[] inputBuffer = Convert.FromBase64String(input);
 
@@ -157,7 +222,7 @@ namespace kOS.Persistence
                     decompressedStream.Write(buffer, 0, read);
                 }
 
-                return Encoding.ASCII.GetString(decompressedStream.ToArray());
+                return decompressedStream.ToArray();
             }
         }
 
@@ -192,41 +257,42 @@ namespace kOS.Persistence
         }
         
         /// <summary>
-        /// Read the current Content and decide what the FileCategory
+        /// Given the first few bytes of content, decide what the FileCategory
         /// should be, based on what's in the Content.<br/>
-        /// This should be called every time the Content changes.
+        /// This should be called before deciding how to set the content.
         /// </summary>
-        private void IdentifyCategory()
+        /// <param name="firstBytes">At least the first four bytes of the file read in binary form - can be longer if you wish</param>
+        /// <returns>The type that should be used to store this file.</returns>
+        public static FileCategory IdentifyCategory(byte[] firstBytes)
         {
-            Category = FileCategory.UNKNOWN; // default if none of the conditions pass
-            
-            // Annoyingly, .Net's Substring won't automatically just return a shorter string
-            // if length is too big.   Thus the need for the extra check for short contents:
-            int atMostFour = Math.Min(4,Content.Length);
-            string firstFour = Content.Substring(0, atMostFour);
-            
-            string kEXEMagicIdString =
-                System.Text.Encoding.ASCII.GetString(Compilation.CompiledObject.MagicId);
-            
-            if (firstFour == kEXEMagicIdString)
+            FileCategory returnCat  = FileCategory.UNKNOWN; // default if none of the conditions pass
+            byte[] firstFour = new Byte[4];
+            int atMostFour = Math.Min(4,firstBytes.Length);
+            Array.Copy(firstBytes,0,firstFour,0,atMostFour);
+                        
+            if (firstFour.SequenceEqual(Compilation.CompiledObject.MagicId))
             {
-                Category = FileCategory.KEXE;
+                returnCat = FileCategory.KEXE;
             }
             else
             {
                 bool isAscii = true;
-                foreach (char ch in firstFour)
+                foreach (byte b in firstFour)
                 {
-                    if (ch != '\n' && ch != '\t' && ch != '\r' && (ch < 32 || ch > 127))
+                    if (b != (byte)'\n' && b != (byte)'\t' && b != (byte)'\r' && (b < (byte)32 || b > (byte)127))
                     {
                         isAscii = false;
                         break;
                     }
                 }
                 if (isAscii)
-                    Category = FileCategory.ASCII;
+                    returnCat = FileCategory.ASCII;
             }
+            return returnCat;
+
             // There is not currently an explicit test for KERBOSRIPT versus other types of ASCII.
+            // At current, any time you want to test for is Kerboscript, make sure to test for is Ascii too,
+            // since nothing causes a file to become type kerboscript yet.
         }
     }
 }

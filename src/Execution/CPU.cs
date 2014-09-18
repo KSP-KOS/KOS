@@ -648,9 +648,15 @@ namespace kOS.Execution
 
         private bool ExecuteInstruction(ProgramContext context)
         {
-            UnityEngine.Debug.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count );
+            bool DEBUG_EACH_OPCODE = false;
+            
             Opcode opcode = context.Program[context.InstructionPointer];
-            UnityEngine.Debug.Log("ExecuteInstruction.     Opcode is: " + opcode.ToString() );
+            if (DEBUG_EACH_OPCODE)
+            {
+                UnityEngine.Debug.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count +
+                                      "\n                   Opcode is: " + opcode.ToString() );
+            }
+            
             if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
             {
                 opcode.Execute(this);

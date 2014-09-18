@@ -1,4 +1,5 @@
 ﻿using kOS.Suffixed;
+using kOS.Compilation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -284,14 +285,16 @@ namespace kOS.Utilities
         /// <returns>True if a orbits b.  </returns>
         public static Boolean BodyOrbitsBody(CelestialBody a, CelestialBody b)
         {
-            Debug.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
-            Debug.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
+            bool DEBUG_WALK = false;
+            
+            if (DEBUG_WALK) Debug.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
+            if (DEBUG_WALK) Debug.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
             Boolean found = false;
             for (var curBody = a.referenceBody;
                  curBody != null && curBody != curBody.referenceBody; // reference body of Sun points to itself, weirdly.
                  curBody = curBody.referenceBody)
             {
-                Debug.Log("curBody=" + curBody.name);
+                if (DEBUG_WALK) Debug.Log("curBody=" + curBody.name);
                 if (!curBody.name.Equals(b.name)) continue;
 
                 found = true;
@@ -299,5 +302,36 @@ namespace kOS.Utilities
             }
             return found;
         }
+
+        /// <summary>
+        /// This is copied almost verbatim from ProgramContext,
+        /// It's here to help debug.
+        /// </summary>
+        public static string GetCodeFragment(List<Opcode> codes)
+        {
+            var codeFragment = new List<string>();
+            
+            const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5} {6} {7}";
+            codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "Label  ", "opcode", "operand", "Destination" ));
+            codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "-------", "---------------------", "", "" ));
+
+            for (int index = 0; index < codes.Count; index++)
+            {
+                codeFragment.Add(string.Format(FORMAT_STR,
+                                               codes[index].SourceName ?? "null",
+                                               codes[index].SourceLine,
+                                               codes[index].SourceColumn ,
+                                               index,
+                                               codes[index].Label ?? "null",
+                                               codes[index] ?? new OpcodeBogus(),
+                                               "DEST: " + (codes[index].DestinationLabel ?? "null" ),
+                                               "" ) );
+            }
+            
+            string returnVal = "";
+            foreach (string s in codeFragment) returnVal += s + "\n";
+            return returnVal;
+        }
+                
     }
 }

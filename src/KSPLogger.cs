@@ -152,7 +152,7 @@ namespace kOS
                     return  "<<machine language file: can't show source line>>";
                 else
                 {
-                    string[] splitLines = file.Content.Split('\n');
+                    string[] splitLines = file.StringContent.Split('\n');
                     if (splitLines.Length >= line)
                     {
                         returnVal = splitLines[line-1];

@@ -70,12 +70,14 @@ namespace kOS.Compilation
         ADDTRIGGER     = 0x52,
         REMOVETRIGGER  = 0x53,
         WAIT           = 0x54,
-        ENDWAIT        = 0x55
-            
-        // DO NOT create any opcodes with a value higher than 0x7f!!
-        // The high bit is used to store whether or not the opcode has
-        // line number information stored on it.
-
+        ENDWAIT        = 0x55,
+        
+        // Augmented bogus placeholder versions of the normal
+        // opcodes: These only exist in the program temporarily
+        // or in the ML file but never actually can be executed.
+        
+        PUSHRELOCATELATER = 0xce,
+        LABELRESET = 0xf0     // for storing the fact that the Opcode.Label's positional index jumps weirdly.
     }
 
     /// <summary>
@@ -200,7 +202,8 @@ namespace kOS.Compilation
         public int Id { get { return id; } }
         public int DeltaInstructionPointer = 1;
         public int MLIndex = 0; // index into the Machine Language code file for the COMPILE command.
-        public string Label = string.Empty;
+        public virtual string Label {get{return label;} set {label = value;} }
+        private string label = "";
         public virtual string DestinationLabel {get;set;}
         public string SourceName;
 
@@ -265,8 +268,6 @@ namespace kOS.Compilation
             IEnumerable<Type> opcodeTypes = opcodeType.Assembly.GetTypes().Where( t => t.IsSubclassOf(opcodeType) );
             foreach (Type opType in opcodeTypes)
             {
-                
-                UnityEngine.Debug.Log("############## Operating on Opcode class: " + opType.Name);
                 if (!opType.IsAbstract) // only the ones that can be instanced matter.
                 {
                     // (Because overridden values cannot be static, discovering the Opcode's overridden names and codes
@@ -295,18 +296,15 @@ namespace kOS.Compilation
 
                     foreach (PropertyInfo pInfo in props)
                     {
-                        UnityEngine.Debug.Log("##### Working on Property " + pInfo.Name);
                         object[] attribs = pInfo.GetCustomAttributes(true);
                         if (pInfo.Name == "Code")
                         {
-                            UnityEngine.Debug.Log("IS CODE PROPERTY");
                             // Add to the map from codename to Opcode type:
                             ByteCode opCodeName = (ByteCode) pInfo.GetValue(dummyInstance, null);
                             mapCodeToType.Add(opCodeName, opType);                                                 
                         }
                         else if (pInfo.Name == "Name")
                         {
-                            UnityEngine.Debug.Log("IS NAME PROPERTY");
                             // Add to the map from Name to Opcode type:
                             string opName = (string) pInfo.GetValue(dummyInstance, null);
                             mapNameToType.Add(opName, opType);
@@ -316,10 +314,8 @@ namespace kOS.Compilation
                             // See if this property has an MLFields attribute somewhere on it.
                             foreach (object attrib in attribs)
                             {
-                                UnityEngine.Debug.Log("working on "+attrib.GetType().Name+" Attribute");
                                 if (attrib is MLField)
                                 {
-                                    UnityEngine.Debug.Log(opType.Name + ", adding member: " + pInfo.Name );
                                     argsInfo.Add(new MLArgInfo(pInfo, ((MLField)attrib).NeedReindex));
                                     break;
                                 }
@@ -645,6 +641,55 @@ namespace kOS.Compilation
         {
             DeltaInstructionPointer = Distance;
         }
+    }
+    
+    /// <summary>
+    /// Most Opcode.Label fields are just string-ified numbers for their index
+    /// position.  But sometimes, when they are the entry point for a function
+    /// call (from a lock expression), the label is an identifier string.  When
+    /// this is the case, then the mere position of the opcode within the program
+    /// is not enough to store the label.  Therefore, for import/export to an ML
+    /// file, in this case the numeric label needs to be stored.  It is done by
+    /// creating a dummy opcode that is just a no-op instruction intended to be
+    /// removed when the program is actually loaded into memory and run.  It
+    /// exists purely to store, as an argument, the label of the next opcode to
+    /// follow it.
+    /// </summary>
+    public class OpcodeLabelReset : Opcode
+    {
+        [MLField(0,true)]
+        public string UpcomingLabel {get;set;}
+        
+        public override string Name { get { return "OpcodeLabelReset"; } }
+        public override ByteCode Code { get { return ByteCode.LABELRESET; } }
+
+        public OpcodeLabelReset(string myLabel)
+        {
+            UpcomingLabel = myLabel;
+        }
+
+        /// <summary>
+        /// This variant of the constructor is just for ML file save/load to use.
+        /// </summary>
+        protected OpcodeLabelReset() { }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodePushRelocateLater seems to be missing.  Version mismatch?");
+            UpcomingLabel = (string)( fields[0] );
+        }
+
+        public override void Execute(CPU cpu)
+        {
+            throw new InvalidOperationException("Attempt to execute OpcodeNonNumericLabel. This type of Opcode should have been replaced before execution.\n");
+        }
+
+        public override string ToString()
+        {
+            return Name + " Label of next thing = {" + UpcomingLabel +"}";
+        }        
     }
 
     #endregion
@@ -1013,6 +1058,71 @@ namespace kOS.Compilation
             string argumentString = Argument != null ? Argument.ToString() : "null";
             return Name + " " + argumentString;
         }
+    }
+    
+    /// <summary>
+    /// This class is an ugly placeholder to handle the fact that sometimes
+    /// The compiler creates an OpcodePush that uses relocatable DestinationLabels as a
+    /// temporary place to store their arguments in the list until they get added to the program.
+    /// 
+    /// Basically, it's this:
+    /// 
+    /// Old way:
+    /// 1. In some cases, like setting up locks, Compiler would create an OpcodePush with Argument = null,
+    /// and a DestinationLabel = something.
+    /// 2. ProgramBuilder would rebuild the OpcodePush's Argument by copying it from the DestinationLabel
+    /// as part of ReplaceLabels at runtime.  
+    /// 
+    /// The Problem: When storing this in the ML file, BOTH the Argument AND the DestinationLabel would
+    /// need to be stored as [MLFields] even though they are never BOTH populated at the same time, which
+    /// causes ridiculous bloat.
+    /// 
+    /// New Way:
+    /// 1. Compiler creates an OpcodePushRelocateLater with a DestinationLabel = something.
+    /// 2. ProgramBuilder replaces this with a normal OpcodePush who's argument is set to
+    /// the relocated value of the DestinationLabel.
+    /// 
+    /// Why:
+    /// This way the MLFile only stores 1 argument: If it's an OpcodePush, it stores
+    /// OpcodePush.Argument.  If it's an OpcodePushRelocateLater, then it stores just
+    /// OpcodePushRelocateLater.DestinationLabel and no argument.
+    /// 
+    /// </summary>
+    public class OpcodePushRelocateLater : Opcode
+    {
+        [MLField(1,true)]
+        public override string DestinationLabel {get;set;}
+        
+        public override string Name { get { return "PushRelocateLater"; } }
+        public override ByteCode Code { get { return ByteCode.PUSHRELOCATELATER; } }
+
+        public OpcodePushRelocateLater(string destLabel)
+        {
+            DestinationLabel = destLabel;
+        }
+
+        /// <summary>
+        /// This variant of the constructor is just for ML file save/load to use.
+        /// </summary>
+        protected OpcodePushRelocateLater() { }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodePushRelocateLater seems to be missing.  Version mismatch?");
+            DestinationLabel = (string)( fields[0] );
+        }
+
+        public override void Execute(CPU cpu)
+        {
+            throw new InvalidOperationException("Attempt to execute OpcodePushRelocateLater. This type of Opcode should have been replaced before execution.\n");
+        }
+
+        public override string ToString()
+        {
+            return Name + " Dest{" + DestinationLabel +"}";
+        }        
     }
 
     

@@ -81,7 +81,7 @@ namespace kOS.Function
                     if (shared.ProcessorMgr != null)
                     {
                         string filePath = string.Format("{0}/{1}", shared.VolumeMgr.GetVolumeRawIdentifier(targetVolume), fileName) ;
-                        List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.Content);
+                        List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent);
                         var builder = new ProgramBuilder();
                         builder.AddRange(parts);
                         List<Opcode> program = builder.BuildProgram();
@@ -104,15 +104,14 @@ namespace kOS.Function
                 if (file.Category == FileCategory.KEXE)
                 {
                     string prefix = programContext.Program.Count.ToString();
-                    parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.Content);
+                    parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.BinaryContent);
                 }
                 else
-                    parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
+                    parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
                 programContext.AddParts(parts);
-                List<string> erasemeDump = programContext.GetCodeFragment(0,10000);          // eraaseme - remove after debugging is done.
-                string erasemeString = "";                                                   // eraaseme - remove after debugging is done.
-                foreach (string str in erasemeDump) { erasemeString = erasemeString + str + "\n"; } // eraaseme - remove after debugging is done.
-                UnityEngine.Debug.Log("(PROGRAM DUMP)\n"+erasemeString);                           // eraaseme - remove after debugging is done.
+                
+                string erasemeString = Utilities.Utils.GetCodeFragment(programContext.Program);  // eraaseme - remove after debugging is done.
+                UnityEngine.Debug.Log("(PROGRAM DUMP OF " + filePath + ")\n"+erasemeString);     // eraaseme - remove after debugging is done.
             }
         }
     }
@@ -149,7 +148,7 @@ namespace kOS.Function
                 // or to a file to save:
                 if (fileNameOut != null)
                 {
-                    List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, file.Content, String.Empty, options);
+                    List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, String.Empty, options);
                     shared.VolumeMgr.CurrentVolume.SaveObjectFile(fileNameOut,compileParts);
                 }
                 else
@@ -159,10 +158,10 @@ namespace kOS.Function
                     if (file.Category == FileCategory.KEXE)
                     {
                         string prefix = programContext.Program.Count.ToString();
-                        parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.Content);
+                        parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.BinaryContent);
                     }
                     else
-                        parts = shared.ScriptHandler.Compile(filePath, 1, file.Content, "program", options);
+                        parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
                     int programAddress = programContext.AddObjectParts(parts);
                     // push the entry point address of the new program onto the stack
                     shared.Cpu.PushStack(programAddress);                    
