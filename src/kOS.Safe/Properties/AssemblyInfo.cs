@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("kOS")]
+[assembly: AssemblyTitle("kOS.Safe")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("kOS")]
+[assembly: AssemblyProduct("kOS.Safe")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("324da3fe-391b-421d-93b7-29499dcf9ef3")]
+[assembly: Guid("c1a3b326-28f5-4b98-bf0f-8bd25363fbd7")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -33,5 +33,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("0.15.0.0")]
-[assembly: KSPAssembly("kOS", 0, 15)]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -160,7 +160,12 @@
     <Compile Include="Persistence\Volume.cs" />
     <Compile Include="Persistence\VolumeManager.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
+      <Project>{590ffda8-7b44-4bc3-a12a-5ffe2bb7d8fd}</Project>
+      <Name>kOS.Safe</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
