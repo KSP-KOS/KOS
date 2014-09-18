@@ -1,4 +1,5 @@
-﻿using kOS.Suffixed;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Suffixed;
 using kOS.Utilities;
 
 namespace kOS.Function

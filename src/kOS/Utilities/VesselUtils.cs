@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 

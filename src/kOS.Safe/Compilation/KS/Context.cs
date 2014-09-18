@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace kOS.Compilation.KS
+namespace kOS.Safe.Compilation.KS
 {
-    class Context
+    public class Context
     {
         public LockCollection Locks;
         public TriggerCollection Triggers;

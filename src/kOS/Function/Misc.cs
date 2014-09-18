@@ -4,7 +4,6 @@ using kOS.Persistence;
 using kOS.Module;
 using kOS.Safe.Compilation;
 using kOS.Suffixed;
-using kOS.Compilation;
 
 namespace kOS.Function
 {

@@ -2,9 +2,10 @@
 using kOS.Binding;
 using kOS.Module;
 using kOS.Persistence;
-using kOS.Compilation;
 using kOS.Execution;
 using kOS.Safe;
+using kOS.Safe.Compilation;
+using kOS.Safe.Screen;
 using kOS.Screen;
 using kOS.Factories;
 

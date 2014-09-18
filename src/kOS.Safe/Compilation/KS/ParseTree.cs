@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace kOS.Compilation.KS
+namespace kOS.Safe.Compilation.KS
 {
     #region ParseTree
     [Serializable]

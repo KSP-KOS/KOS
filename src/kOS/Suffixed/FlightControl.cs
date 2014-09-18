@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using kOS.AddOns.RemoteTech2;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Utilities;
 using kOS.Utilities;
 
 namespace kOS.Suffixed

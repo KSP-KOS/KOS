@@ -8,6 +8,7 @@ using kOS.InterProcessor;
 using kOS.Binding;
 using kOS.Persistence;
 using kOS.Safe;
+using kOS.Safe.Compilation.KS;
 using kOS.Suffixed;
 using kOS.AddOns.RemoteTech2;
 
@@ -123,7 +124,7 @@ namespace kOS.Module
             shared.BindingMgr = new BindingManager(shared);
             shared.Interpreter = shared.Factory.CreateInterpreter(shared);
             shared.Screen = shared.Interpreter;
-            shared.ScriptHandler = new Compilation.KS.KSScript();
+            shared.ScriptHandler = new KSScript();
             shared.Logger = new KSPLogger(shared);
             shared.VolumeMgr = new VolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();

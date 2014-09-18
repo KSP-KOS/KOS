@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.Compilation;
+using kOS.Safe.Screen;
+using kOS.Safe.Utilities;
 using kOS.Utilities;
-using kOS.Compilation;
 
 namespace kOS.Screen
 {

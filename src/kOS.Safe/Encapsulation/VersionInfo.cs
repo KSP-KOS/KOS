@@ -1,6 +1,4 @@
-﻿using kOS.Safe.Encapsulation;
-
-namespace kOS.Suffixed
+namespace kOS.Safe.Encapsulation
 {
     public class VersionInfo : Structure
     {

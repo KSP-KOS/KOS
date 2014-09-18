@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Compilation;
 using kOS.Suffixed;
 
 namespace kOS.Function
@@ -112,7 +113,7 @@ namespace kOS.Function
             object argument1 = shared.Cpu.PopValue();
             object argument2 = shared.Cpu.PopValue();
             
-            Compilation.Calculator calculator = Compilation.Calculator.GetCalculator(argument1, argument2);
+            Calculator calculator = Calculator.GetCalculator(argument1, argument2);
             object result = calculator.Min(argument1, argument2);
             shared.Cpu.PushStack(result);
         }
@@ -126,7 +127,7 @@ namespace kOS.Function
             object argument1 = shared.Cpu.PopValue();
             object argument2 = shared.Cpu.PopValue();
 
-            Compilation.Calculator calculator = Compilation.Calculator.GetCalculator(argument1, argument2);
+            Calculator calculator = Calculator.GetCalculator(argument1, argument2);
             object result = calculator.Max(argument1, argument2);
             shared.Cpu.PushStack(result);
         }

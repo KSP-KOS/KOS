@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using kOS.Safe.Encapsulation;
 using kOS.Screen;
 using kOS.Suffixed;
 

@@ -1,4 +1,4 @@
-namespace kOS.Utilities
+namespace kOS.Safe.Utilities
 {
     public class Flushable<T>
     {

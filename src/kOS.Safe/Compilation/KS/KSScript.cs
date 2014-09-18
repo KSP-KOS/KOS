@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using kOS.Safe.Compilation;
+using System.Collections.Generic;
 
-namespace kOS.Compilation.KS
+namespace kOS.Safe.Compilation.KS
 {
     public class KSScript : Script
     {

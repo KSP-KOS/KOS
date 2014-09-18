@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace kOS.Screen
+namespace kOS.Safe.Screen
 {
     public class ScreenBuffer
     {

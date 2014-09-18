@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using kOS.Module;
 using kOS.Persistence;
-using kOS.Compilation;
 using kOS.Safe.Compilation;
 
 namespace kOS.InterProcessor

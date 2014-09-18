@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Persistence
 {
@@ -103,16 +104,16 @@ namespace kOS.Persistence
             }
         }
 
-        public override List<Suffixed.FileInfo> GetFileList()
+        public override List<FileInfo> GetFileList()
         {
-            var retList = new List<Suffixed.FileInfo>();
+            var retList = new List<FileInfo>();
 
             try
             {
                 foreach (var file in Directory.GetFiles(archiveFolder, "*.txt"))
                 {
-                    var sysFileInfo = new FileInfo(file);
-                    var fileInfo = new Suffixed.FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
+                    var sysFileInfo = new System.IO.FileInfo(file);
+                    var fileInfo = new FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
 
                     retList.Add(fileInfo);
                 }

@@ -1,10 +1,8 @@
-﻿using System;
-using kOS.Safe.Compilation;
+using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
-using kOS.Suffixed;
 
-namespace kOS.Compilation
+namespace kOS.Safe.Compilation
 {
     #region Base classes
 

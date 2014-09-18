@@ -1,4 +1,4 @@
-﻿namespace kOS.Suffixed
+namespace kOS.Safe.Encapsulation
 {
     public interface IIndexable
     {

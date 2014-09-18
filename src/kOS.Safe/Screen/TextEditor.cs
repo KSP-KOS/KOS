@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
-using kOS.Utilities;
+using kOS.Safe.Utilities;
 
-namespace kOS.Screen
+namespace kOS.Safe.Screen
 {
     public class TextEditor : ScreenBuffer
     {

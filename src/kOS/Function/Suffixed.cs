@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 using kOS.Utilities;
 

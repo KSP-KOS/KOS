@@ -9,7 +9,6 @@ using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Suffixed;
 using kOS.Function;
-using kOS.Compilation;
 
 namespace kOS.Execution
 {

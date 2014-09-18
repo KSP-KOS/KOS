@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Compilation;
 
-namespace kOS.Compilation
+namespace kOS.Safe.Compilation
 {
     public class ProgramBuilder
     {

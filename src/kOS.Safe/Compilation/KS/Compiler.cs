@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Compilation;
 
-namespace kOS.Compilation.KS
+namespace kOS.Safe.Compilation.KS
 {
     class Compiler
     {

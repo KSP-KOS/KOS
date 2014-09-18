@@ -1,9 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Encapsulation;
 
-namespace kOS.Suffixed
+namespace kOS.Safe.Encapsulation
 {
     public class ListValue : Structure, IIndexable
     {

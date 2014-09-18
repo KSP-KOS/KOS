@@ -1,7 +1,6 @@
-﻿using System;
-using kOS.Safe.Encapsulation;
+using System;
 
-namespace kOS.Suffixed
+namespace kOS.Safe.Encapsulation
 {
     public class ConstantValue : Structure
     {

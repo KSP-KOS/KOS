@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed.Part
 {

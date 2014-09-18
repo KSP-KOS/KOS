@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using kOS.Safe.Encapsulation;
-using kOS.Suffixed;
 
-namespace kOS.Compilation
+namespace kOS.Safe.Compilation
 {
     public abstract class Calculator
     {
@@ -35,12 +34,12 @@ namespace kOS.Compilation
             if (argument1 is int) intCount++;
             if (argument1 is double) doubleCount++;
             if (argument1 is string) stringCount++;
-            if (argument1 is Structure) specialCount++;
+            if (argument1 is ISuffixed) specialCount++;
             if (argument1 is bool) boolCount++;
             if (argument2 is int) intCount++;
             if (argument2 is double) doubleCount++;
             if (argument2 is string) stringCount++;
-            if (argument2 is Structure) specialCount++;
+            if (argument2 is ISuffixed) specialCount++;
             if (argument2 is bool) boolCount++;
 
             if (intCount == 2) return new CalculatorIntInt();
@@ -489,8 +488,8 @@ namespace kOS.Compilation
     {
         private object Calculate(string op, object argument1, object argument2)
         {
-            if (argument1 is Structure) return ((Structure)argument1).TryOperation(op, argument2, false);
-            return ((Structure)argument2).TryOperation(op, argument1, true);
+            if (argument1 is IOperable) return ((IOperable)argument1).TryOperation(op, argument2, false);
+            return ((IOperable)argument2).TryOperation(op, argument1, true);
         }
 
         public override object Add(object argument1, object argument2)

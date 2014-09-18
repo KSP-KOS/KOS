@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using kOS.Safe.Compilation;
 
-namespace kOS.Compilation
+namespace kOS.Safe.Compilation
 {
     public abstract class Script
     {

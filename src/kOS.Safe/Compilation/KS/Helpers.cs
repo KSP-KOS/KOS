@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Compilation;
 
-namespace kOS.Compilation.KS
+namespace kOS.Safe.Compilation.KS
 {
     #region Locks
 
-    class LockCollection
+    public class LockCollection
     {
         private readonly Dictionary<string, Lock> locks = new Dictionary<string, Lock>();
         private readonly List<Lock> newLocks = new List<Lock>();
@@ -69,7 +68,7 @@ namespace kOS.Compilation.KS
         }
     }
 
-    class Lock
+    public class Lock
     {
         private static readonly List<string> systemLocks = new List<string> { "throttle", "steering", "wheelthrottle", "wheelsteering" };
         
@@ -170,7 +169,7 @@ namespace kOS.Compilation.KS
         }
     }
 
-    class LockFunction
+    public class LockFunction
     {
         public List<Opcode> Code;
 
@@ -184,7 +183,7 @@ namespace kOS.Compilation.KS
 
     #region Triggers
 
-    class TriggerCollection
+    public class TriggerCollection
     {
         private readonly Dictionary<string, Trigger> triggers = new Dictionary<string, Trigger>();
         private readonly List<Trigger> newTriggers = new List<Trigger>();
@@ -224,7 +223,7 @@ namespace kOS.Compilation.KS
         }
     }
 
-    class Trigger
+    public class Trigger
     {
         private readonly CodePart codePart;
         public string Identifier;
@@ -273,7 +272,7 @@ namespace kOS.Compilation.KS
 
     #region Subprograms
 
-    class SubprogramCollection
+    public class SubprogramCollection
     {
         private readonly Dictionary<string, Subprogram> subprograms = new Dictionary<string, Subprogram>();
         private readonly List<Subprogram> newSubprograms = new List<Subprogram>();
@@ -313,7 +312,7 @@ namespace kOS.Compilation.KS
         }
     }
 
-    class Subprogram
+    public class Subprogram
     {
         private readonly CodePart codePart;
         public string SubprogramName;
