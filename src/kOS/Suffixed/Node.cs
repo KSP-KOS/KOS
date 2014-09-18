@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class Node : SpecialValue
+    public class Node : Structure
     {
         private static readonly Dictionary<ManeuverNode, Node> nodeLookup;
 

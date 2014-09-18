@@ -1,4 +1,6 @@
-﻿namespace kOS.Compilation
+﻿using kOS.Safe.Compilation;
+
+namespace kOS.Compilation
 {
     public class ProgramBuilderInterpreter : ProgramBuilder
     {

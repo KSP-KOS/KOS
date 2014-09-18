@@ -38,6 +38,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compilation\OpCode.cs" />
+    <Compile Include="Encapsulation\IOperable.cs" />
+    <Compile Include="Encapsulation\ISetSuffix.cs" />
+    <Compile Include="Encapsulation\ISuffix.cs" />
+    <Compile Include="Encapsulation\ISuffixed.cs" />
+    <Compile Include="Encapsulation\Structure.cs" />
+    <Compile Include="Execution\IKOSScopeObserver.cs" />
+    <Compile Include="Execution\ICpu.cs" />
+    <Compile Include="Execution\SurboutineContext.cs" />
+    <Compile Include="Execution\Variable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

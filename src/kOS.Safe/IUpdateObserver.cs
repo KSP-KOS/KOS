@@ -1,4 +1,4 @@
-﻿namespace kOS
+namespace kOS.Safe
 {
     public interface IUpdateObserver
     {

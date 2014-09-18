@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class ResourceValue : SpecialValue
+    public class ResourceValue : Structure
     {
         private readonly string name;
         private double amount;

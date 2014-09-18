@@ -1,11 +1,13 @@
-﻿namespace kOS.Suffixed
+﻿using kOS.Safe.Encapsulation;
+
+namespace kOS.Suffixed
 {
     /// <summary>
     /// Holds the velocity of an object in both orbital and prograde
     /// reference frames.  (Note this may become moot after vector
     /// reference frame transformation is implemented.)
     /// </summary>
-    public class OrbitableVelocity : SpecialValue
+    public class OrbitableVelocity : Structure
     {
         public Vector Orbital { get; private set; }
 

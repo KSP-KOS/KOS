@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 
 namespace kOS.Compilation
@@ -34,12 +35,12 @@ namespace kOS.Compilation
             if (argument1 is int) intCount++;
             if (argument1 is double) doubleCount++;
             if (argument1 is string) stringCount++;
-            if (argument1 is SpecialValue) specialCount++;
+            if (argument1 is Structure) specialCount++;
             if (argument1 is bool) boolCount++;
             if (argument2 is int) intCount++;
             if (argument2 is double) doubleCount++;
             if (argument2 is string) stringCount++;
-            if (argument2 is SpecialValue) specialCount++;
+            if (argument2 is Structure) specialCount++;
             if (argument2 is bool) boolCount++;
 
             if (intCount == 2) return new CalculatorIntInt();
@@ -47,7 +48,7 @@ namespace kOS.Compilation
             if (intCount == 1 && doubleCount == 1) return new CalculatorIntDouble();
             if (stringCount > 0) return new CalculatorString();
             if (boolCount > 0) return new CalculatorBool();
-            if (specialCount > 0) return new CalculatorSpecialValue();
+            if (specialCount > 0) return new CalculatorStructure();
 
             throw new NotImplementedException(string.Format("Can't operate types {0} and {1}", argument1.GetType(), argument2.GetType()));
         }
@@ -484,12 +485,12 @@ namespace kOS.Compilation
         }
     }
 
-    public class CalculatorSpecialValue : Calculator
+    public class CalculatorStructure : Calculator
     {
         private object Calculate(string op, object argument1, object argument2)
         {
-            if (argument1 is SpecialValue) return ((SpecialValue)argument1).TryOperation(op, argument2, false);
-            return ((SpecialValue)argument2).TryOperation(op, argument1, true);
+            if (argument1 is Structure) return ((Structure)argument1).TryOperation(op, argument2, false);
+            return ((Structure)argument2).TryOperation(op, argument1, true);
         }
 
         public override object Add(object argument1, object argument2)

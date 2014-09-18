@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Safe;
 using kOS.Screen;
 using kOS.Utilities;
 

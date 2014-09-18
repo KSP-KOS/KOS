@@ -1,8 +1,9 @@
 ﻿using System;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class ConstantValue : SpecialValue
+    public class ConstantValue : Structure
     {
         public override object GetSuffix(string suffixName)
         {

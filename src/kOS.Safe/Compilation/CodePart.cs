@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace kOS.Compilation
+namespace kOS.Safe.Compilation
 {
     public class CodePart
     {

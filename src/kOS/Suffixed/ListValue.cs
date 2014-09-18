@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class ListValue : SpecialValue, IIndexable
+    public class ListValue : Structure, IIndexable
     {
         private readonly IList<object> list;
 
@@ -89,7 +90,7 @@ namespace kOS.Suffixed
         #endregion
     }
 
-    public class Enumerator : SpecialValue
+    public class Enumerator : Structure
     {
         private readonly IEnumerator enumerator;
         private readonly object lockObject = new object();

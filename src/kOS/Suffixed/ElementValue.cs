@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class ElementValue : SpecialValue
+    public class ElementValue : Structure
     {
         private readonly string name;
         private readonly IList<global::Part> parts;

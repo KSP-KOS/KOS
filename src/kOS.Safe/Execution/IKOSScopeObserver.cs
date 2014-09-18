@@ -1,4 +1,4 @@
-﻿namespace kOS.Execution
+namespace kOS.Safe.Execution
 {
     /// <summary>
     /// A IKOSScopeObserver is any object which wants to be kept informed

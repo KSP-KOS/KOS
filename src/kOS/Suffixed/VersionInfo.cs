@@ -1,6 +1,8 @@
-﻿namespace kOS.Suffixed
+﻿using kOS.Safe.Encapsulation;
+
+namespace kOS.Suffixed
 {
-    public class VersionInfo : SpecialValue
+    public class VersionInfo : Structure
     {
         public double Major;
         public double Minor;

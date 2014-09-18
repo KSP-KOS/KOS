@@ -1,4 +1,4 @@
-﻿namespace kOS.Compilation
+namespace kOS.Safe.Compilation
 {
     public class CompilerOptions
     {

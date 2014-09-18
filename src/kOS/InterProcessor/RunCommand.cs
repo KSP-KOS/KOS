@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using kOS.Compilation;
+using kOS.Safe.Compilation;
 
 namespace kOS.InterProcessor
 {

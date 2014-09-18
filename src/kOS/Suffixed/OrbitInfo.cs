@@ -1,6 +1,8 @@
-﻿namespace kOS.Suffixed
+﻿using kOS.Safe.Encapsulation;
+
+namespace kOS.Suffixed
 {
-    public class OrbitInfo : SpecialValue
+    public class OrbitInfo : Structure
     {
         private readonly Orbit orbit;
         private readonly SharedObjects shared;

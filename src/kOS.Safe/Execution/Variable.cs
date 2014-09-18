@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace kOS.Execution
+namespace kOS.Safe.Execution
 {
     public class Variable
     {

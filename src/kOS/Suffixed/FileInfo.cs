@@ -1,6 +1,8 @@
-﻿namespace kOS.Suffixed
+﻿using kOS.Safe.Encapsulation;
+
+namespace kOS.Suffixed
 {
-    public class FileInfo : SpecialValue
+    public class FileInfo : Structure
     {
         public string Name;
         public int Size;

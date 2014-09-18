@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using kOS.Safe.Compilation;
 
 namespace kOS.Compilation.KS
 {

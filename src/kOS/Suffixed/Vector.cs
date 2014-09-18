@@ -1,8 +1,9 @@
 ﻿using System;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class Vector : SpecialValue
+    public class Vector : Structure
     {
         public double X { get; set; }
         public double Y { get; set; }

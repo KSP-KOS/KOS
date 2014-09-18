@@ -1,6 +1,8 @@
+using kOS.Safe.Encapsulation;
+
 namespace kOS.Suffixed
 {
-    public class VesselSensors : SpecialValue
+    public class VesselSensors : Structure
     {
         private readonly Vector acceleration = new Vector(0, 0, 0);
         private readonly Vector geeForce = new Vector(0, 0, 0);

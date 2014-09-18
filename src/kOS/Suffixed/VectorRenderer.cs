@@ -1,10 +1,13 @@
 ﻿using System;
 using UnityEngine;
 using kOS.Execution;
+using kOS.Safe;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Execution;
 
 namespace kOS.Suffixed
 {
-    public class VectorRenderer : SpecialValue, IUpdateObserver, IKOSScopeObserver
+    public class VectorRenderer : Structure, IUpdateObserver, IKOSScopeObserver
     {
         public Vector3d      Vector { get; set; }
         public RgbaColor     Color { get; set; }

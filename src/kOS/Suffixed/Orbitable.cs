@@ -1,4 +1,5 @@
-﻿using kOS.Utilities;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Utilities;
 using UnityEngine;
 
 namespace kOS.Suffixed
@@ -8,7 +9,7 @@ namespace kOS.Suffixed
     /// in orbit around something.  It could be a vessel or a planet
     /// or a moon.
     /// </summary>
-    abstract public class Orbitable : SpecialValue
+    abstract public class Orbitable : Structure
     {
         protected Orbitable(SharedObjects shareObj)
         {

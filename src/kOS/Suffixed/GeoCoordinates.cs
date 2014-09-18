@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
+using kOS.Safe.Encapsulation;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
-    public class GeoCoordinates : SpecialValue
+    public class GeoCoordinates : Structure
     {
         public double Lat { get; private set; }
         public double Lng { get; private set; }

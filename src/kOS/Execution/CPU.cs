@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Diagnostics;
+using kOS.Safe.Compilation;
+using kOS.Safe.Execution;
 using kOS.Suffixed;
 using kOS.Function;
 using kOS.Compilation;
 
 namespace kOS.Execution
 {
-    public class CPU: IUpdateObserver
+    public class CPU: IUpdateObserver , ICpu
     {
         private enum Status
         {

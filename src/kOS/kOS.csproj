@@ -70,8 +70,6 @@
     <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
-    <Compile Include="Execution\SurboutineContext.cs" />
-    <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
@@ -149,9 +147,7 @@
     <Compile Include="Compilation\KS\ParseTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compilation\KS\Scanner.cs" />
-    <Compile Include="Suffixed\SpecialValue.cs" />
     <Compile Include="Execution\Stack.cs" />
-    <Compile Include="Execution\Variable.cs" />
     <Compile Include="Suffixed\VersionInfo.cs" />
     <Compile Include="Suffixed\VesselSensors.cs" />
     <Compile Include="Suffixed\VesselTarget.cs" />

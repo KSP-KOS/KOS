@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using kOS.AddOns.RemoteTech2;
+using kOS.Safe.Encapsulation;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
-    public class FlightControl : SpecialValue , IDisposable
+    public class FlightControl : Structure , IDisposable
     {
         // For rotation x = yaw, y = pitch, and z = roll
         private float yaw;

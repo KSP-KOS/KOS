@@ -1,41 +1,19 @@
 ﻿using System;
+using kOS.Safe.Compilation;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Execution;
 using kOS.Suffixed;
-using kOS.Execution;
 
 namespace kOS.Compilation
 {
     #region Base classes
-
-    public class Opcode
-    {
-        private static int lastId;
-        private readonly int id = ++lastId;
-        
-        public virtual string Name { get { return string.Empty; } }
-        public int Id { get { return id; } }
-        public int DeltaInstructionPointer = 1;
-        public string Label = string.Empty;
-        public string DestinationLabel;
-        public string SourceName;
-        public int SourceLine = 0; // line number in the source code that this was compiled from.
-        public int SourceColumn = 0; // column number of the token nearest the cause of this Opcode.
-        
-        public virtual void Execute(CPU cpu)
-        {
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-    }
 
     public class BinaryOpcode : Opcode
     {
         protected object Argument1 { get; set; }
         protected object Argument2 { get; set; }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             Argument2 = cpu.PopValue();
             Argument1 = cpu.PopValue();
@@ -63,7 +41,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "store"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValue();
             var identifier = (string)cpu.PopStack();
@@ -75,7 +53,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "unset"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object identifier = cpu.PopStack();
             if (identifier != null)
@@ -93,12 +71,12 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "getmember"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             string suffixName = cpu.PopStack().ToString().ToUpper();
             object popValue = cpu.PopValue();
 
-            var specialValue = popValue as SpecialValue;
+            var specialValue = popValue as Structure;
             if (specialValue == null)
             {
                 throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
@@ -120,13 +98,13 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "setmember"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValue();
             string suffixName = cpu.PopStack().ToString().ToUpper();
             object popValue = cpu.PopValue();
 
-            var specialValue = popValue as SpecialValue;
+            var specialValue = popValue as Structure;
             if (specialValue == null)
             {
                 throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
@@ -143,7 +121,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "getindex"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object index = cpu.PopValue();
             if (index is double || index is float)
@@ -164,7 +142,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "setindex"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValue();
             object index = cpu.PopValue();
@@ -216,7 +194,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "br.false"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             bool condition = Convert.ToBoolean(cpu.PopValue());
             DeltaInstructionPointer = !condition ? Distance : 1;
@@ -227,7 +205,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "jump"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             DeltaInstructionPointer = Distance;
         }
@@ -305,7 +283,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "negate"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValue();
             object result;
@@ -384,7 +362,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "bool"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValue();
             bool result = Convert.ToBoolean(value);
@@ -396,7 +374,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "not"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object value = cpu.PopValue();
             object result;
@@ -418,7 +396,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "and"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             bool argument2 = Convert.ToBoolean(cpu.PopValue());
             bool argument1 = Convert.ToBoolean(cpu.PopValue());
@@ -431,7 +409,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "or"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             bool argument2 = Convert.ToBoolean(cpu.PopValue());
             bool argument1 = Convert.ToBoolean(cpu.PopValue());
@@ -455,7 +433,7 @@ namespace kOS.Compilation
             Destination = destination;
         }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object functionPointer = cpu.GetValue(Destination);
             if (functionPointer is int)
@@ -488,7 +466,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "return"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             cpu.MoveStackPointer(1);
             object shouldBeContextRecord = cpu.PopValue();
@@ -520,7 +498,7 @@ namespace kOS.Compilation
             Argument = argument;
         }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             cpu.PushStack(Argument);
         }
@@ -536,7 +514,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "pop"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             cpu.PopStack();
         }
@@ -546,7 +524,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "dup"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object value = cpu.PopStack();
             cpu.PushStack(value);
@@ -558,7 +536,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "swap"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object value1 = cpu.PopStack();
             object value2 = cpu.PopStack();
@@ -582,7 +560,7 @@ namespace kOS.Compilation
             ShouldWait = shouldWait;
         }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             var functionPointer = (int)cpu.PopValue();
             cpu.AddTrigger(functionPointer);
@@ -600,7 +578,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "removetrigger"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             var functionPointer = (int)cpu.PopValue();
             cpu.RemoveTrigger(functionPointer);
@@ -611,7 +589,7 @@ namespace kOS.Compilation
     {
         public override string Name { get { return "wait"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             object waitTime = cpu.PopValue();
             if (waitTime is double)
@@ -625,7 +603,7 @@ namespace kOS.Compilation
     {  
         public override string Name { get { return "endwait"; } }
 
-        public override void Execute(CPU cpu)
+        public override void Execute(ICpu cpu)
         {
             cpu.EndWait();
         }

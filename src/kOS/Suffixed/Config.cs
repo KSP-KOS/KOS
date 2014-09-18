@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using KSP.IO;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class Config : SpecialValue
+    public class Config : Structure
     {
         private static Config instance;
         private readonly Dictionary<string, ConfigKey> keys;

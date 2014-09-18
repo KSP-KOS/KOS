@@ -7,6 +7,7 @@ using KSP.IO;
 using kOS.InterProcessor;
 using kOS.Binding;
 using kOS.Persistence;
+using kOS.Safe;
 using kOS.Suffixed;
 using kOS.AddOns.RemoteTech2;
 

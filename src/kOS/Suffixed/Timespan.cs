@@ -1,8 +1,9 @@
 ﻿using System;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class TimeSpan : SpecialValue
+    public class TimeSpan : Structure
     {
         readonly double span;
         private readonly bool kerbinTimeSetting;

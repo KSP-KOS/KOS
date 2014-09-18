@@ -1,6 +1,8 @@
-﻿namespace kOS.Suffixed
+﻿using kOS.Safe.Encapsulation;
+
+namespace kOS.Suffixed
 {
-    public class BodyAtmosphere : SpecialValue
+    public class BodyAtmosphere : Structure
     {
         public BodyAtmosphere(CelestialBody b)
         {

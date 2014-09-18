@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed.Part
 {
-    public class PartValue : SpecialValue, IKOSTargetable
+    public class PartValue : Structure, IKOSTargetable
     {
         private SharedObjects shared;
         

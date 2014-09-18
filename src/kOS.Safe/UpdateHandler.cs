@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace kOS
+namespace kOS.Safe
 {
     public class UpdateHandler
     {

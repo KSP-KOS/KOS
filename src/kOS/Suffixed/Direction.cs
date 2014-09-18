@@ -1,9 +1,10 @@
 ﻿using System;
 using UnityEngine;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class Direction : SpecialValue
+    public class Direction : Structure
     {
         private Vector3d euler;
         private Quaternion rotation;

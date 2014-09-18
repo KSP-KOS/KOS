@@ -1,9 +1,10 @@
 ﻿using System;
+using kOS.Safe.Encapsulation;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
-    public class StageValues : SpecialValue
+    public class StageValues : Structure
     {
         private readonly Vessel vessel;
 

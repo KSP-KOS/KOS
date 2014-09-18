@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class RgbaColor : SpecialValue
+    public class RgbaColor : Structure
     {
         private Color color;
 
