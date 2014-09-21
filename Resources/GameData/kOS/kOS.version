@@ -1,0 +1,14 @@
+{
+  "NAME": "kOS",
+  "URL": "http://bitbucket.org/Taverius/b9-aerospace/raw/HEAD/GameData/B9_Aerospace/B9_Aerospace.version",
+  "VERSION": {
+    "MAJOR": 0,
+    "MINOR": 14,
+    "PATCH": 0
+  },
+  "KSP_VERSION": {
+    "MAJOR": 0,
+    "MINOR": 24,
+    "PATCH": 2
+  }
+}
