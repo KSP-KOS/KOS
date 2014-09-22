@@ -1,6 +1,6 @@
 {
   "NAME": "kOS",
-  "URL": "https://github.com/aoighost/KOS-1/blob/kos_avc/Resources/GameData/kOS/kOS.version",
+  "URL": "https://raw.githubusercontent.com/KSP-KOS/KOS/master/Resources/GameData/kOS/kOS.version",
   "VERSION": {
     "MAJOR": 0,
     "MINOR": 14,
