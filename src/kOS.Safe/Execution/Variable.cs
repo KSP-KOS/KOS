@@ -43,6 +43,12 @@ namespace kOS.Safe.Execution
             return Name;
         }
 
+        public System.Type GetType()
+        {
+            return _value.GetType();
+        }
+
+
         ~Variable()
         {
             // There is no guarantee of timeliness for calling a finalizer,
