@@ -94,6 +94,8 @@ namespace kOS.Suffixed
                     return Body.Radius;
                 case "MU":
                     return Body.gravParameter;
+                case "ROTATIONPERIOD":
+                    return Body.rotationPeriod;
                 case "ATM":
                     return new BodyAtmosphere(Body);
                 case "ANGULARVEL":
