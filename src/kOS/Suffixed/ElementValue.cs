@@ -8,30 +8,17 @@ namespace kOS.Suffixed
     {
         private readonly string name;
         private readonly IList<global::Part> parts;
-        private readonly uint uid;
 
         public ElementValue(IEnumerable<global::Part> parts)
         {
             this.parts = parts.ToList();
             var vessel = this.parts.First().vessel;
             name = vessel.vesselName;
-            uid = vessel.rootPart.uid;
-        }
 
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "NAME":
-                    return name;
-                case "UID":
-                    return uid;
-                case "PARTCOUNT":
-                    return parts.Count;
-                case "RESOURCES":
-                    return ResourceValue.PartsToList(parts);
-            }
-            return base.GetSuffix(suffixName);
+            AddSuffix("NAME", new Suffix<Vessel,string>(vessel, model => model.vesselName));
+            AddSuffix("UID", new Suffix<Vessel,uint>(vessel, model => model.rootPart.uid));
+            AddSuffix("PARTCOUNT", new Suffix<IEnumerable<global::Part>,int>(parts, model => model.Count()));
+            AddSuffix("PARTCOUNT", new Suffix<IEnumerable<global::Part>,ListValue>(parts, PartsToList));
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts)
