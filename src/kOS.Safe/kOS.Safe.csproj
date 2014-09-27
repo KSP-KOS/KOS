@@ -56,13 +56,17 @@
     <Compile Include="Compilation\Script.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
+    <Compile Include="Encapsulation\GlobalSuffix.cs" />
+    <Compile Include="Encapsulation\SuffixDelegates.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
     <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
     <Compile Include="Encapsulation\ISuffix.cs" />
     <Compile Include="Encapsulation\ISuffixed.cs" />
     <Compile Include="Encapsulation\ListValue.cs" />
+    <Compile Include="Encapsulation\SetSuffix.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
+    <Compile Include="Encapsulation\Suffix.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Execution\ICpu.cs" />
