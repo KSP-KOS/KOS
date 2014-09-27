@@ -115,7 +115,7 @@ namespace kOS.Function
             
             foreach (var body in FlightGlobals.fetch.bodies)
             {
-                list.AddItem(body.bodyName, Vector3d.Distance(body.position, shared.Vessel.GetWorldPos3D()));
+                list.AddItem(body.bodyName, Vector3d.Distance(body.position, shared.Vessel.findWorldCenterOfMass()));
             }
 
             return list;

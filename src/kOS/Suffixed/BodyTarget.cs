@@ -17,7 +17,7 @@ namespace kOS.Suffixed
 
         override public Vector GetPosition()
         {
-            return new Vector( Body.position - Shared.Vessel.GetWorldPos3D() );
+            return new Vector( Body.position - Shared.Vessel.findWorldCenterOfMass() );
         }
         
         override public OrbitableVelocity GetVelocities()
@@ -27,7 +27,7 @@ namespace kOS.Suffixed
         
         override public Vector GetPositionAtUT( TimeSpan timeStamp )
         {
-            return new Vector( Body.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - Shared.Vessel.GetWorldPos3D() );
+            return new Vector( Body.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - Shared.Vessel.findWorldCenterOfMass() );
         }
 
         override public OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp )
@@ -73,7 +73,7 @@ namespace kOS.Suffixed
         
         public double GetDistance()
         {
-            return Vector3d.Distance(Shared.Vessel.GetWorldPos3D(), Body.position) - Body.Radius;
+            return Vector3d.Distance(Shared.Vessel.findWorldCenterOfMass(), Body.position) - Body.Radius;
         }
 
         public override object GetSuffix(string suffixName)
