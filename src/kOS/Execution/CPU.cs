@@ -133,8 +133,8 @@ namespace kOS.Execution
 
                 var programContext = shared.Cpu.GetProgramContext();
                 programContext.Silent = true;
-                var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + "boot" ;
+                var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
+                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + "boot";
                 List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, "run boot.", "program", options);
                 programContext.AddParts(parts);
             }
@@ -277,7 +277,7 @@ namespace kOS.Execution
         {
             if (!program.Any()) return;
 
-            var newContext = new ProgramContext(false, program) {Silent = silent};
+            var newContext = new ProgramContext(false, program) { Silent = silent };
             PushContext(newContext);
         }
 
@@ -746,7 +746,14 @@ namespace kOS.Execution
                         if (!(kvp.Value is Binding.BoundVariable) &&
                             (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
                         {
-                            varNode.AddValue(kvp.Key.TrimStart('$'), Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
+                            if (kvp.Value.Value.GetType().ToString() == "System.String")  // if the variable is a string, enclose the value in ""
+                            {
+                                varNode.AddValue(kvp.Key.TrimStart('$'), (char)34 + Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()) + (char)34);
+                            }
+                            else
+                            {
+                                varNode.AddValue(kvp.Key.TrimStart('$'), Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
+                            }
                         }
                     }
 
@@ -788,6 +795,7 @@ namespace kOS.Execution
                     // addressed yet).
                     try
                     {
+                        UnityEngine.Debug.LogWarning("kOS: Parsing Context:\n\n" + scriptBuilder.ToString());
                         programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
                         List<Opcode> program = programBuilder.BuildProgram();
                         RunProgram(program, true);
