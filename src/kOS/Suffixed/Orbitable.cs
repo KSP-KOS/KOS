@@ -178,13 +178,12 @@ namespace kOS.Suffixed
             return d;
         }
 
-
         public double PositionToLatitude( Vector pos )
         {
             CelestialBody parent = Orbit.referenceBody;
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
-            Vector3d unityWorldPos = GetPosition() + Shared.Vessel.GetWorldPos3D();
+            Vector3d unityWorldPos = GetPosition() + Utils.Vector3ToVector3d(Shared.Vessel.findWorldCenterOfMass());
             return parent.GetLatitude(unityWorldPos);
         }
         public double PositionToLongitude( Vector pos )
@@ -192,7 +191,7 @@ namespace kOS.Suffixed
             CelestialBody parent = Orbit.referenceBody;
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
-            Vector3d unityWorldPos = GetPosition() + Shared.Vessel.GetWorldPos3D();
+            Vector3d unityWorldPos = GetPosition() + Utils.Vector3ToVector3d(Shared.Vessel.findWorldCenterOfMass());
             return Utils.DegreeFix( parent.GetLongitude(unityWorldPos), -180.0 );
         }
         public double PositionToAltitude( Vector pos )
@@ -200,7 +199,7 @@ namespace kOS.Suffixed
             CelestialBody parent = Orbit.referenceBody;
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
-            Vector3d unityWorldPos = GetPosition() + Shared.Vessel.GetWorldPos3D();
+            Vector3d unityWorldPos = GetPosition() + Utils.Vector3ToVector3d(Shared.Vessel.findWorldCenterOfMass());
             return parent.GetAltitude(unityWorldPos);
         }
         

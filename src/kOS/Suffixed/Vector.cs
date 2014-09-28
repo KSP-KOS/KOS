@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
+using UnityEngine;
 
 namespace kOS.Suffixed
 {
@@ -10,6 +11,13 @@ namespace kOS.Suffixed
         public double Z { get; set; }
 
         public Vector(Vector3d init)
+        {
+            X = init.x;
+            Y = init.y;
+            Z = init.z;
+        }
+
+        public Vector(Vector3 init) // Vector3 is the single-precision version of Vector3d.
         {
             X = init.x;
             Y = init.y;
@@ -191,6 +199,11 @@ namespace kOS.Suffixed
         public Vector3d ToVector3D()
         {
             return new Vector3d(X, Y, Z);
+        }
+
+        public Vector3 ToVector3() // Vector3 is the single-precision version of Vector3D.
+        {
+            return new Vector3((float)X, (float)Y, (float)Z);
         }
 
         public override string ToString()

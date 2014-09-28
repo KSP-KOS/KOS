@@ -32,7 +32,7 @@ namespace kOS.Suffixed
         /// <returns></returns>
         public Vector GetPositionAtUT( TimeSpan timeStamp )
         {
-            return new Vector( orbit.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - shared.Vessel.GetWorldPos3D() );
+            return new Vector( orbit.getPositionAtUT( timeStamp.ToUnixStyleTime() ) - shared.Vessel.findWorldCenterOfMass() );
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace kOS.Suffixed
             if (parent != null)
             {
                 Vector3d pos = GetPositionAtUT( timeStamp ).ToVector3D();
-                surfVel = new Vector( orbVel - parent.getRFrmVel( pos + shared.Vessel.GetWorldPos3D()) );
+                surfVel = new Vector( orbVel - parent.getRFrmVel( pos + shared.Vessel.findWorldCenterOfMass()) );
             }
             else
                 surfVel = new Vector( orbVel.X, orbVel.Y, orbVel.Z );

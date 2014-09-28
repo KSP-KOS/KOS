@@ -204,7 +204,7 @@ namespace kOS.Utilities
                 body => body.name.ToUpper() == "KERBIN" || 
                 body.name.ToUpper() == "EARTH"))
             {
-                return Vector3d.Distance(body.position, vessel.GetWorldPos3D()) - body.Radius;
+                return Vector3d.Distance(body.position, vessel.findWorldCenterOfMass()) - body.Radius;
                 // Kerbin radius = 600,000
             }
 
@@ -250,7 +250,7 @@ namespace kOS.Utilities
             var up = vessel.upAxis;
             var north = GetNorthVector(vessel);
             var vector =
-                Vector3d.Exclude(vessel.upAxis, target.GetWorldPos3D() - vessel.GetWorldPos3D()).normalized;
+                Vector3d.Exclude(vessel.upAxis, target.findWorldCenterOfMass() - vessel.findWorldCenterOfMass()).normalized;
             var headingQ =
                 Quaternion.Inverse(Quaternion.Euler(90, 0, 0)*Quaternion.Inverse(Quaternion.LookRotation(vector, up))*
                                    Quaternion.LookRotation(north, up));

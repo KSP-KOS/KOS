@@ -139,7 +139,7 @@ namespace kOS.Suffixed
 
             var targetWorldCoords = Body.GetWorldSurfacePosition(Lat, Lng, GetTerrainAltitude() );
 
-            var vector = Vector3d.Exclude(up, targetWorldCoords - Shared.Vessel.GetWorldPos3D()).normalized;
+            var vector = Vector3d.Exclude(up, targetWorldCoords - Shared.Vessel.findWorldCenterOfMass()).normalized;
             var headingQ =
                 Quaternion.Inverse(Quaternion.Euler(90, 0, 0)*Quaternion.Inverse(Quaternion.LookRotation(vector, up))*
                                    Quaternion.LookRotation(north, up));
@@ -155,7 +155,7 @@ namespace kOS.Suffixed
         private double DistanceFrom()
         {
             Vector3d latLongCoords = Body.GetWorldSurfacePosition( Lat, Lng, GetTerrainAltitude() );
-            Vector3d hereCoords = Shared.Vessel.GetWorldPos3D();
+            Vector3d hereCoords = Shared.Vessel.findWorldCenterOfMass();
             return Vector3d.Distance( latLongCoords, hereCoords );
         }
 

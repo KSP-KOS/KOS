@@ -110,7 +110,7 @@ namespace kOS.Suffixed
         {
             if (isOnMap)
                 shipCenterCoords = ScaledSpace.LocalToScaledSpace(
-                     shared.Vessel.GetWorldPos3D() );
+                     shared.Vessel.findWorldCenterOfMass() );
             else
                 shipCenterCoords = shared.Vessel.findWorldCenterOfMass();
         }
