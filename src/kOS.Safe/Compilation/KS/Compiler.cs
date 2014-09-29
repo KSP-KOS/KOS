@@ -618,6 +618,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.factor:
                     VisitExpression(node);
                     break;
+                case TokenType.suffix:
+                    VisitSuffix(node);
+                    break;
                 case TokenType.atom:
                     VisitAtom(node);
                     break;
@@ -648,11 +651,11 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.varidentifier:
                     VisitVarIdentifier(node);
                     break;
-                case TokenType.array_identifier:
-                    VisitArrayIdentifier(node);
+                case TokenType.array:
+                    VisitArray(node);
                     break;
-                case TokenType.function_identifier:
-                    VisitFunctionIdentifier(node);
+                case TokenType.function:
+                    VisitFunction(node);
                     break;
                 case TokenType.IDENTIFIER:
                     VisitIdentifier(node);
@@ -842,10 +845,15 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
-        private void VisitFunction(ParseNode node)
+        private void VisitActualFunction(ParseNode node)
         {
+            
+            // TODO - change this to work when the leftmost term is not a vanilla identifier string.
+            // OpcodeCall will probably have to be edited to get the function name from whatever's on
+            // the stack rather than taking a function name as its ML argument.
+
             SetLineNum(node);
-            string functionName = node.Nodes[0].Token.Text;
+            string functionName = GetIdentifierText(node);
             int parameterCount = 0;
 
             if (node.Nodes[2].Token.Type == TokenType.arglist)
@@ -892,6 +900,12 @@ namespace kOS.Safe.Compilation.KS
         {
             SetLineNum(node);
             VisitNode(node.Nodes[0]);
+        }
+        
+        private void VisitSuffix(ParseNode node)
+        {
+            SetLineNum(node);
+            VisitNode(node.Nodes[0]);
 
             int nodeIndex = 2;
             while (nodeIndex < node.Nodes.Count)
@@ -910,10 +924,12 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
-        private void VisitArrayIdentifier(ParseNode node)
+        private void VisitArray(ParseNode node)
         {
             SetLineNum(node);
+            _identifierIsVariable = true;
             VisitNode(node.Nodes[0]);
+            _identifierIsVariable = false;
 
             int nodeIndex = 2;
             while (nodeIndex < node.Nodes.Count)
@@ -971,18 +987,31 @@ namespace kOS.Safe.Compilation.KS
             return string.Empty;
         }
 
-        private void VisitFunctionIdentifier(ParseNode node)
+        private void VisitFunction(ParseNode node)
         {
             SetLineNum(node);
-            string identifier = GetIdentifierText(node);
-
+            
+            // In principle it should be impossible for the parser to make a
+            // function node with more than 1 term unless the second token is
+            // a left parenthesis, so this check is probably redundant:
             if (node.Nodes.Count > 1 &&
                 node.Nodes[1].Token.Type == TokenType.BRACKETOPEN)
             {
                 // if a bracket follows an identifier then its a function call
-                VisitFunction(node);
+                VisitActualFunction(node);
             }
-            else if (_context.Locks.Contains(identifier))
+            else
+            {
+                VisitNode(node.Nodes[0]); // I'm not really a function call after all - just a wrapper around another node type.
+            }
+        }
+
+        private void VisitIdentifier(ParseNode node)
+        {
+            SetLineNum(node);
+            string prefix = _identifierIsVariable ? "$" : String.Empty;
+            string identifier = GetIdentifierText(node);
+            if (_identifierIsVariable && _context.Locks.Contains(identifier))
             {
                 Lock lockObject = _context.Locks.GetLock(identifier);
                 if (_compilingSetDestination)
@@ -995,17 +1024,10 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
                 }
             }
-            else
+            else                
             {
-                AddOpcode(new OpcodePush("$" + identifier));
+                AddOpcode(new OpcodePush(prefix + identifier));
             }
-        }
-
-        private void VisitIdentifier(ParseNode node)
-        {
-            SetLineNum(node);
-            string prefix = _identifierIsVariable ? "$" : string.Empty;
-            AddOpcode(new OpcodePush(prefix + node.Token.Text));
         }
 
         private void VisitString(ParseNode node)
@@ -1031,7 +1053,7 @@ namespace kOS.Safe.Compilation.KS
         private bool VarIdentifierHasIndex(ParseNode node)
         {
             SetLineNum(node);
-            if (node.Nodes.Count > 0 && node.Nodes[0].Token.Type == TokenType.array_identifier)
+            if (node.Nodes.Count > 0 && node.Nodes[0].Token.Type == TokenType.array)
             {
                 ParseNode arrayIdentifier = node.Nodes[0];
                 foreach (ParseNode child in arrayIdentifier.Nodes)

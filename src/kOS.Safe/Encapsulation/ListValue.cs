@@ -40,6 +40,51 @@ namespace kOS.Safe.Encapsulation
                     return false;
             }
         }
+        
+        public void AddMethod(object item)
+        {
+            list.Add(item);
+        }        
+        public void RemoveMethod(int index)
+        {
+            list.RemoveAt(index);
+        }
+        public bool ContainsMethod(object item)
+        {
+            return list.Contains(item);
+        }
+        public int LengthMethod()
+        {
+            return list.Count;
+        }
+        // This test case was added to ensure there was an example method with more than 1 argument.
+        public ListValue SubListMethod(int start, int runLength)
+        {
+             ListValue subList = new ListValue();
+             for( int i = start ; i < list.Count && i < start + runLength ; ++i )
+             {
+                 subList.Add( list[i] );
+             }
+             return subList;
+        }
+        
+        // It seems to be impossible in C# to just generically make a delegate out of
+        // a method - it won't let you return it in a generic object like so:
+        //     return funcname_without_parentheses;
+        // or so:
+        //     return (Delegate)funcname_without_parentheses;
+        // or so:
+        //     return new Delegate(funcname_without_parentheses);
+        // It refuses to let you store a delegate as an object unless it's been given a fully qualified
+        // type name for the delegate.  I don't understand why it can't read everything it needs to know
+        // to understand the delegate's prototype from the function's prototype.  Oh well, anyway that's the
+        // reason for this extra level of verbosity here:
+        public delegate void DelegateOfAddMethod(object item);
+        public delegate void DelegateOfRemoveMethod(int index);
+        public delegate bool DelegateOfContainsMethod(object item);
+        public delegate int DelegateOfLengthMethod();
+        public delegate ListValue DelegateOfSubListMethod(int start, int runLength);
+                                                   
 
         public override object GetSuffix(string suffixName)
         {
@@ -54,6 +99,27 @@ namespace kOS.Safe.Encapsulation
                     return new Enumerator(list.GetEnumerator());
                 case "COPY":
                     return new ListValue(this);
+                    
+                // These are placeholders to test with until erendrake's new suffix system is in place.
+                // The assumption is that any suffix which is a method should return an object of
+                // type delegate from its GetSuffix call to represent that it is a method.
+                // REMEMBER that even though a method can alter the object, it's still returned
+                // via GetSuffix and not SetSuffix because you are returning the delegate function
+                // as the object and letting the kOS computer call the delegate once it pulls the
+                // arguments off the stack for it.
+                case "METHADD":
+                    return (DelegateOfAddMethod) AddMethod;
+                case "METHREMOVE":
+                    return (DelegateOfRemoveMethod) RemoveMethod;
+                case "METHCONTAINS":
+                    return (DelegateOfContainsMethod) ContainsMethod;
+                // This is a test case to make sure it can deal with methods with zero arguments:
+                case "METHLENGTH":
+                    return (DelegateOfLengthMethod) LengthMethod;
+                // This is a test case to make sure it can deal with more than 1 argument:
+                case "METHSUBLIST":
+                    return (DelegateOfSubListMethod) SubListMethod;
+
                 default:
                     return string.Format("Suffix {0} Not Found", suffixName);
             }

@@ -463,6 +463,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             string suffixName = cpu.PopStack().ToString().ToUpper();
+            if (suffixName.StartsWith("$"))
+                suffixName = suffixName.Substring(1);
             object popValue = cpu.PopValue();
 
             var specialValue = popValue as ISuffixed;
@@ -493,6 +495,8 @@ namespace kOS.Safe.Compilation
         {
             object value = cpu.PopValue();
             string suffixName = cpu.PopStack().ToString().ToUpper();
+            if (suffixName.StartsWith("$"))
+                suffixName = suffixName.Substring(1);
             object popValue = cpu.PopValue();
 
             var specialValue = popValue as ISuffixed;
