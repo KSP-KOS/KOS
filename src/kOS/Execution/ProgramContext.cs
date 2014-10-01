@@ -10,10 +10,10 @@ namespace kOS.Execution
         private readonly Dictionary<string, bool> flyByWire;
         private readonly ProgramBuilder builder;
 
-        public List<Opcode> Program;
-        public int InstructionPointer;
-        public List<int> Triggers;
-        public bool Silent; 
+        public List<Opcode> Program { get; set; }
+        public int InstructionPointer { get; set; }
+        public List<int> Triggers { get; set; }
+        public bool Silent { get; set; } 
         
         public ProgramContext(bool interpreterContext)
         {

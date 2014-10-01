@@ -131,7 +131,7 @@ namespace kOS.Execution
             {
                 shared.ScriptHandler.ClearContext("program");
 
-                var programContext = shared.Cpu.GetProgramContext();
+                var programContext = ((CPU)shared.Cpu).GetProgramContext();
                 programContext.Silent = true;
                 var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + "boot";
