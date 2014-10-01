@@ -19,6 +19,7 @@ namespace kOS.Safe.Compilation.KS
         private bool _nowCompilingTrigger = false;
         private bool _compilingSetDestination = false;
         private bool _identifierIsVariable = false;
+        private bool _identifierIsSuffix = false;
         private List<ParseNode> _programParameters = new List<ParseNode>();
         private CompilerOptions _options;
 
@@ -845,25 +846,52 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
-        private void VisitActualFunction(ParseNode node)
+        /// <summary>
+        /// Do the work for function calls.
+        /// </summary>
+        /// <param name="node">parse node for the function term of the parse tree.</param>
+        /// <param name="isDirect">true if it should make an OpcodeCall that is Direct, false if it should make an indirect one.
+        /// See the documentation for OpcodeCall.Direct for the full explanation of the difference.  If isDirect is true, then
+        /// the name to the left of the parenthesss will be the name of the function call.  If isDirect is false, then it will
+        /// ignore the name to the left of the parenetheses and presume the function name, delegate, or branch index was
+        /// already placed atop the stack by other parts of this compiler.</param>
+        private void VisitActualFunction(ParseNode node, bool isDirect)
         {
-            
-            // TODO - change this to work when the leftmost term is not a vanilla identifier string.
-            // OpcodeCall will probably have to be edited to get the function name from whatever's on
-            // the stack rather than taking a function name as its ML argument.
-
             SetLineNum(node);
-            string functionName = GetIdentifierText(node);
+            
             int parameterCount = 0;
-
+                        
             if (node.Nodes[2].Token.Type == TokenType.arglist)
             {
+                if (! isDirect)
+                {
+                    // Need to tell OpcodeCall where in the stack the bottom of the arg list is:
+                    AddOpcode(new OpcodePush(OpcodeCall.ArgMarkerString));
+                }
+                
                 parameterCount = (node.Nodes[2].Nodes.Count / 2) + 1;
+                
+                bool remember = _identifierIsSuffix;
+                _identifierIsSuffix = false;
+                
                 VisitNode(node.Nodes[2]);
-            }
 
-            string overloadedFunctionName = GetFunctionOverload(functionName, parameterCount) + "()";
-            AddOpcode(new OpcodeCall(overloadedFunctionName));
+                _identifierIsSuffix = remember;
+            }
+            
+            if (isDirect)
+            {            
+                string functionName = GetIdentifierText(node);
+
+                string overloadedFunctionName = GetFunctionOverload(functionName, parameterCount) + "()";
+                AddOpcode(new OpcodeCall(overloadedFunctionName));
+            }
+            else
+            {
+                OpcodeCall op = new OpcodeCall("");
+                op.Direct = false;
+                AddOpcode(op);
+            }
         }
 
         private string GetFunctionOverload(string functionName, int parameterCount)
@@ -905,32 +933,70 @@ namespace kOS.Safe.Compilation.KS
         private void VisitSuffix(ParseNode node)
         {
             SetLineNum(node);
+            
             VisitNode(node.Nodes[0]);
 
             int nodeIndex = 2;
             while (nodeIndex < node.Nodes.Count)
             {
-                VisitNode(node.Nodes[nodeIndex]);
+                bool remember = _identifierIsSuffix;
+                _identifierIsSuffix = true;
+                ParseNode subTerm = node.Nodes[nodeIndex];
+
+                bool isFunc = IsActualFunctionCall(subTerm);
+                bool isArray = IsActualArrayIndexing(subTerm);
+                Console.WriteLine("term ("+subTerm.Text+") : isFunc="+isFunc+", isArray="+isArray);
+                if (isFunc || isArray)
+                {
+                    // Don't parse it as a function/array call yet.  Just visit its leftmost
+                    // term (the string name of the suffix), so that GetMember can do
+                    // it's work and retrieve the value of the suffix, then we'll go back and
+                    // parse the function/array:
+                    ParseNode identNode = DepthFirstLeftSearch(subTerm, TokenType.IDENTIFIER);
+
+                    bool rememberIsV = _identifierIsVariable;
+                    _identifierIsVariable = false;
+
+                    VisitNode(identNode);
+
+                    _identifierIsVariable = rememberIsV;
+                }
+                else
+                    VisitNode(subTerm);
+
+                _identifierIsSuffix = remember;
 
                 // when we are setting a member value we need to leave
                 // the last object and the last suffix in the stack
-                if (!(_compilingSetDestination &&
-                      nodeIndex == (node.Nodes.Count - 1)))
+                bool usingSetMember = (!isFunc && !isArray) && (_compilingSetDestination && nodeIndex == (node.Nodes.Count -1));
+                if (! usingSetMember)
                 {
                     AddOpcode(new OpcodeGetMember());
+                }
+                
+                if (isFunc)
+                {
+                    ParseNode funcNode = DepthFirstLeftSearch(subTerm, TokenType.function);
+                    VisitActualFunction(funcNode, false);
+                }
+                if (isArray)
+                {
+                    ParseNode arrayNode = DepthFirstLeftSearch(subTerm, TokenType.array);
+                    VisitActualArray(arrayNode);
                 }
 
                 nodeIndex += 2;
             }
         }
 
-        private void VisitArray(ParseNode node)
+        /// <summary>
+        /// Do the work for array index references.  It assumes the array object has already
+        /// been pushed on top of the stack so there's no reason to read that from the
+        /// node's children.  It just reads the indexing part.
+        /// </summary>
+        /// <param name="node">parse node for the array suffix of the parse tree.</param>
+        private void VisitActualArray(ParseNode node)
         {
-            SetLineNum(node);
-            _identifierIsVariable = true;
-            VisitNode(node.Nodes[0]);
-            _identifierIsVariable = false;
-
             int nodeIndex = 2;
             while (nodeIndex < node.Nodes.Count)
             {
@@ -939,10 +1005,15 @@ namespace kOS.Safe.Compilation.KS
                     ++nodeIndex;
                 }
                 
+                bool remember = _identifierIsSuffix;
+                _identifierIsSuffix = false;
+                
                 VisitNode(node.Nodes[nodeIndex]);
                 
+                _identifierIsSuffix = remember;
+
                 // Two ways to check if this is the last index (i.e. the 'k' in arr[i][j][k]'),
-                // depeding on whehter using the "#" syntax or the "[..]" syntax:
+                // depeding on whether using the "#" syntax or the "[..]" syntax:
                 bool isLastIndex = false;
                 var previousNodeType = node.Nodes[nodeIndex - 1].Token.Type;
                 switch (previousNodeType)
@@ -966,6 +1037,20 @@ namespace kOS.Safe.Compilation.KS
 
                 nodeIndex += 2;
             }
+            
+        }
+        
+        private void VisitArray(ParseNode node)
+        {
+            SetLineNum(node);
+            _identifierIsVariable = true;
+            VisitNode(node.Nodes[0]);
+            _identifierIsVariable = false;
+
+            if (node.Nodes.Count > 1)
+            {
+                VisitActualArray(node);
+            }
         }
 
         private string GetIdentifierText(ParseNode node)
@@ -986,6 +1071,35 @@ namespace kOS.Safe.Compilation.KS
 
             return string.Empty;
         }
+                
+        /// <summary>
+        /// The Function parse node contains both actual function calls
+        /// (with parentheses) and just plain vanilla terms.  This
+        /// determines if it's REALLY a function call or not by looking
+        /// for the parentheses.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns>true if it's really a function call.  False otherwise.</returns>
+        private bool IsActualFunctionCall(ParseNode node)
+        {
+            if (node.Token.Type == TokenType.function)
+                return false;
+            else
+                return node.Nodes.Exists(x => x.Token.Type == TokenType.BRACKETOPEN);
+        }
+
+        /// <summary>
+        /// The Array parse node contains both actual Array calls
+        /// (with index given) and just plain vanilla terms.  This
+        /// determines if it's REALLY an array index call or not by looking
+        /// for the brackets or hash sign.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns>true if it's really an array index referece call.  False otherwise.</returns>
+        private bool IsActualArrayIndexing(ParseNode node)
+        {
+            return VarIdentifierHasIndex(node);
+        }
 
         private void VisitFunction(ParseNode node)
         {
@@ -998,7 +1112,7 @@ namespace kOS.Safe.Compilation.KS
                 node.Nodes[1].Token.Type == TokenType.BRACKETOPEN)
             {
                 // if a bracket follows an identifier then its a function call
-                VisitActualFunction(node);
+                VisitActualFunction(node,true);
             }
             else
             {
@@ -1009,9 +1123,10 @@ namespace kOS.Safe.Compilation.KS
         private void VisitIdentifier(ParseNode node)
         {
             SetLineNum(node);
-            string prefix = _identifierIsVariable ? "$" : String.Empty;
+            bool isVariable = (_identifierIsVariable && !_identifierIsSuffix);
+            string prefix = isVariable ? "$" : String.Empty;
             string identifier = GetIdentifierText(node);
-            if (_identifierIsVariable && _context.Locks.Contains(identifier))
+            if (isVariable && _context.Locks.Contains(identifier))
             {
                 Lock lockObject = _context.Locks.GetLock(identifier);
                 if (_compilingSetDestination)
@@ -1039,34 +1154,87 @@ namespace kOS.Safe.Compilation.KS
         private bool VarIdentifierHasSuffix(ParseNode node)
         {
             SetLineNum(node);
-            foreach (ParseNode child in node.Nodes)
+            if (node.Token.Type == TokenType.COLON)
             {
-                if (child.Token.Type == TokenType.COLON)
+                return true;
+            }
+            // Descend into child nodes to try them but don't parse too far over.
+            // Only return true if there is an immediate neighbor to the right
+            // that is a suffix term, not if there's one several terms away.
+            // In other words, with text like AAA:BBB():CCC, you want AAA to
+            // say "I have a suffix" but not BBB, which is a function call first,
+            // and the suffix doesn't happen until further down the line.
+            // That's why it only looks at nodes [0] and [1] in the child list.
+            // It only wants to examine the immediate next neighbor terms.
+            for (int i = 0; i < node.Nodes.Count && i <= 1 ; ++i)
+            {
+                ParseNode child = node.Nodes[i];
+                if (VarIdentifierHasSuffix(child))
                 {
                     return true;
                 }
             }
-
             return false;
         }
-
+        
         private bool VarIdentifierHasIndex(ParseNode node)
         {
             SetLineNum(node);
-            if (node.Nodes.Count > 0 && node.Nodes[0].Token.Type == TokenType.array)
+            if (node.Token.Type == TokenType.ARRAYINDEX ||
+                node.Token.Type == TokenType.SQUAREOPEN)
             {
-                ParseNode arrayIdentifier = node.Nodes[0];
-                foreach (ParseNode child in arrayIdentifier.Nodes)
+                return true;
+            }
+            // Descend into child nodes to try them but don't parse too far over.
+            // i.e. in a chain like AAA:BBB:CCC[1], we don't want a call to
+            // VarIdentifierHasIndex( AAA ) to return true.  Just one to
+            // VarIdentifierHasIndex( CCC ). 
+            // That's why it only looks at nodes [0] and [1] in the child list.
+            // It only wants to examine the immediate next neighbor terms.
+            for (int i = 0; i < node.Nodes.Count && i <= 1 ; ++i)
+            {
+                ParseNode child = node.Nodes[i];
+                if (VarIdentifierHasIndex(child))
+                    return true;
+            }                    
+            return false;
+        }
+        
+        /// <summary>
+        /// Perform a depth-first leftmost search of the parse tree from the starting
+        /// point given to find the first occurrance of a node of the given token type.<br/>
+        /// This is intended as a way to make code that might be a bit more robustly able
+        /// to handle shifts and adjustments to the parse grammar in the TinyPG file.<br/>
+        /// Instead of assuming "I know that array nodes are always one level underneath
+        /// function nodes", it instead lets you say "Get the array node version of this
+        /// node, no matter how many levels down it may be."<br/>
+        /// This is needed because TinyPG's LL(1) limitations made it so we had to define
+        /// things like "we're going to call this node a 'function' even though it might
+        /// not actually be because the "(..)" part of the syntax is optional.  In reality
+        /// it's *potentially* a function, or maybe actually an array, or an identifier.<br/>
+        /// This method is intended to let you descend however far down is required to get
+        /// the node in the sort of context you're looking for.
+        /// </summary>
+        /// <param name="node">start the search from this point in the parse tree</param>
+        /// <param name="tokType">look for this kind of node</param>
+        /// <returns>the found node, or null if no such node found.</returns>
+        private ParseNode DepthFirstLeftSearch( ParseNode node, TokenType tokType)
+        {
+            if (node.Token.Type == tokType)
+            {
+                return node;
+            }
+            else
+            {
+                foreach (ParseNode child in node.Nodes)
                 {
-                    if (child.Token.Type == TokenType.SQUAREOPEN ||
-                        child.Token.Type == TokenType.ARRAYINDEX )
-                    {
-                        return true;
-                    }
+                    ParseNode hit = DepthFirstLeftSearch(child, tokType);
+                    if (hit != null)
+                        return hit;
                 }
             }
-
-            return false;
+            
+            return null; // not found.
         }
 
         private void VisitSetStatement(ParseNode node)

@@ -41,26 +41,26 @@ namespace kOS.Suffixed
 
             return base.GetSuffix(suffixName);
         }
-        
+
         public override bool SetSuffix(string suffixName, object value)
         {
             switch (suffixName)
             {
                 case "R":
                 case "RED":
-                    color.r = (float) value;
+                    color.r = System.Convert.ToSingle(value);
                     return true;
                 case "G":
                 case "GREEN":
-                    color.g = (float) value;
+                    color.g = System.Convert.ToSingle(value);
                     return true;
                 case "B":
                 case "BLUE":
-                    color.b = (float) value;
+                    color.b = System.Convert.ToSingle(value);
                     return true;
                 case "A":
                 case "ALPHA":
-                    color.a = (float) value;
+                    color.a = System.Convert.ToSingle(value);
                     return true;
             }
 
