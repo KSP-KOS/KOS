@@ -676,6 +676,12 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.OR:
                     VisitOr(node);
                     break;
+                case TokenType.identifier_led_stmt:
+                    VisitIdentifierLedStatement(node);
+                    break;
+                case TokenType.identifier_led_expr:
+                    VisitIdentifierLedExpression(node);
+                    break;
                 default:
                     break;
             }
@@ -860,21 +866,25 @@ namespace kOS.Safe.Compilation.KS
             SetLineNum(node);
             
             int parameterCount = 0;
-                        
-            if (node.Nodes[2].Token.Type == TokenType.arglist)
+            ParseNode trailerNode = node.Nodes[1]; // the function_trailer rule is here.
+            
+            if (! isDirect)
             {
-                if (! isDirect)
-                {
-                    // Need to tell OpcodeCall where in the stack the bottom of the arg list is:
-                    AddOpcode(new OpcodePush(OpcodeCall.ArgMarkerString));
-                }
+                // Need to tell OpcodeCall where in the stack the bottom of the arg list is.
+                // Even if there are no arguments, it still has to be TOLD that by showing
+                // it the marker atop the stack with nothing above it.
+                AddOpcode(new OpcodePush(OpcodeCall.ArgMarkerString));
+            }
+
+            if (trailerNode.Nodes[1].Token.Type == TokenType.arglist)
+            {
                 
-                parameterCount = (node.Nodes[2].Nodes.Count / 2) + 1;
+                parameterCount = (trailerNode.Nodes[1].Nodes.Count / 2) + 1;
                 
                 bool remember = _identifierIsSuffix;
                 _identifierIsSuffix = false;
                 
-                VisitNode(node.Nodes[2]);
+                VisitNode(trailerNode.Nodes[1]);
 
                 _identifierIsSuffix = remember;
             }
@@ -934,58 +944,67 @@ namespace kOS.Safe.Compilation.KS
         {
             SetLineNum(node);
             
+            if (node.Token.Type == TokenType.identifier_led_expr) // have to fake it because we don't have the full parse tree under the ident node.
+                _identifierIsVariable = true;
             VisitNode(node.Nodes[0]);
+            if (node.Token.Type == TokenType.identifier_led_expr) // have to fake it because we don't have the full parse tree under the ident node.
+                _identifierIsVariable = false;
 
-            int nodeIndex = 2;
-            while (nodeIndex < node.Nodes.Count)
+            if (node.Nodes.Count > 1)
             {
-                bool remember = _identifierIsSuffix;
-                _identifierIsSuffix = true;
-                ParseNode subTerm = node.Nodes[nodeIndex];
+                ParseNode trailerNode = node.Nodes[1]; // the suffix trailer is now a separate level of the parse tree, one child down.
 
-                bool isFunc = IsActualFunctionCall(subTerm);
-                bool isArray = IsActualArrayIndexing(subTerm);
-                Console.WriteLine("term ("+subTerm.Text+") : isFunc="+isFunc+", isArray="+isArray);
-                if (isFunc || isArray)
+                int nodeIndex = 1;
+                while (nodeIndex < trailerNode.Nodes.Count)
                 {
-                    // Don't parse it as a function/array call yet.  Just visit its leftmost
-                    // term (the string name of the suffix), so that GetMember can do
-                    // it's work and retrieve the value of the suffix, then we'll go back and
-                    // parse the function/array:
-                    ParseNode identNode = DepthFirstLeftSearch(subTerm, TokenType.IDENTIFIER);
+                    bool remember = _identifierIsSuffix;
+                    _identifierIsSuffix = true;
+                    ParseNode subTerm = trailerNode.Nodes[nodeIndex];
 
-                    bool rememberIsV = _identifierIsVariable;
-                    _identifierIsVariable = false;
+                    bool isFunc = IsActualFunctionCall(subTerm);
+                    bool isArray = IsActualArrayIndexing(subTerm);
+                    Console.WriteLine("term ("+subTerm.Text+") : isFunc="+isFunc+", isArray="+isArray);
+                    if (isFunc || isArray)
+                    {
+                        // Don't parse it as a function/array call yet.  Just visit its leftmost
+                        // term (the string name of the suffix), so that GetMember can do
+                        // it's work and retrieve the value of the suffix, then we'll go back and
+                        // parse the function/array:
+                        ParseNode identNode = DepthFirstLeftSearch(subTerm, TokenType.IDENTIFIER);
 
-                    VisitNode(identNode);
+                        bool rememberIsV = _identifierIsVariable;
+                        _identifierIsVariable = false;
 
-                    _identifierIsVariable = rememberIsV;
+                        VisitNode(identNode);
+
+                        _identifierIsVariable = rememberIsV;
+                    }
+                    else
+                        VisitNode(subTerm);
+
+                    _identifierIsSuffix = remember;
+
+                    // when we are setting a member value we need to leave
+                    // the last object and the last suffix in the stack
+                    bool usingSetMember = (!isFunc && !isArray) && (_compilingSetDestination && nodeIndex == (trailerNode.Nodes.Count -1));
+                    if (! usingSetMember)
+                    {
+                        AddOpcode(new OpcodeGetMember());
+                    }
+                    
+                    if (isFunc)
+                    {
+                        ParseNode funcNode = DepthFirstLeftSearch(subTerm, TokenType.function);
+                        VisitActualFunction(funcNode, false);
+                    }
+                    if (isArray)
+                    {
+                        ParseNode arrayNode = DepthFirstLeftSearch(subTerm, TokenType.array);
+                        VisitActualArray(arrayNode);
+                    }
+
+                    nodeIndex += 2;
                 }
-                else
-                    VisitNode(subTerm);
-
-                _identifierIsSuffix = remember;
-
-                // when we are setting a member value we need to leave
-                // the last object and the last suffix in the stack
-                bool usingSetMember = (!isFunc && !isArray) && (_compilingSetDestination && nodeIndex == (node.Nodes.Count -1));
-                if (! usingSetMember)
-                {
-                    AddOpcode(new OpcodeGetMember());
-                }
-                
-                if (isFunc)
-                {
-                    ParseNode funcNode = DepthFirstLeftSearch(subTerm, TokenType.function);
-                    VisitActualFunction(funcNode, false);
-                }
-                if (isArray)
-                {
-                    ParseNode arrayNode = DepthFirstLeftSearch(subTerm, TokenType.array);
-                    VisitActualArray(arrayNode);
-                }
-
-                nodeIndex += 2;
             }
         }
 
@@ -997,39 +1016,41 @@ namespace kOS.Safe.Compilation.KS
         /// <param name="node">parse node for the array suffix of the parse tree.</param>
         private void VisitActualArray(ParseNode node)
         {
-            int nodeIndex = 2;
-            while (nodeIndex < node.Nodes.Count)
+            ParseNode trailerNode = node.Nodes[1]; // should be type array_trailer.
+
+            int nodeIndex = 1;
+            while (nodeIndex < trailerNode.Nodes.Count)
             {
                 // Skip two tokens instead of one bewteen dimensions if using the "[]" syntax:
-                if (node.Nodes[nodeIndex].Token.Type == TokenType.SQUAREOPEN){
+                if (trailerNode.Nodes[nodeIndex].Token.Type == TokenType.SQUAREOPEN){
                     ++nodeIndex;
                 }
                 
                 bool remember = _identifierIsSuffix;
                 _identifierIsSuffix = false;
                 
-                VisitNode(node.Nodes[nodeIndex]);
+                VisitNode(trailerNode.Nodes[nodeIndex]);
                 
                 _identifierIsSuffix = remember;
 
                 // Two ways to check if this is the last index (i.e. the 'k' in arr[i][j][k]'),
                 // depeding on whether using the "#" syntax or the "[..]" syntax:
                 bool isLastIndex = false;
-                var previousNodeType = node.Nodes[nodeIndex - 1].Token.Type;
+                var previousNodeType = trailerNode.Nodes[nodeIndex - 1].Token.Type;
                 switch (previousNodeType)
                 {
                     case TokenType.ARRAYINDEX:
-                        isLastIndex = (nodeIndex == node.Nodes.Count-1);
+                        isLastIndex = (nodeIndex == trailerNode.Nodes.Count-1);
                         break;
                     case TokenType.SQUAREOPEN:
-                        isLastIndex = (nodeIndex == node.Nodes.Count-2);
+                        isLastIndex = (nodeIndex == trailerNode.Nodes.Count-2);
                         break;
                 }
 
                 // when we are setting a member value we need to leave
                 // the last object and the last index in the stack
                 // the only exception is when we are setting a suffix of the indexed value
-                var hasSuffix = VarIdentifierHasSuffix(node.Parent);
+                var hasSuffix = VarIdentifierPreceedsSuffix(node.Parent);
                 if (!(_compilingSetDestination && isLastIndex) || hasSuffix)
                 {
                     AddOpcode(new OpcodeGetIndex());
@@ -1075,41 +1096,59 @@ namespace kOS.Safe.Compilation.KS
         /// <summary>
         /// The Function parse node contains both actual function calls
         /// (with parentheses) and just plain vanilla terms.  This
-        /// determines if it's REALLY a function call or not by looking
-        /// for the parentheses.
+        /// determines if it's REALLY a function call or not.
         /// </summary>
         /// <param name="node"></param>
         /// <returns>true if it's really a function call.  False otherwise.</returns>
         private bool IsActualFunctionCall(ParseNode node)
         {
-            if (node.Token.Type == TokenType.function)
+            // This can be called at the level of the parent of the function node, so get down to it first:
+            ParseNode child = node;
+            while (child != null && 
+                   (child.Token.Type != TokenType.function &&
+                    child.Token.Type != TokenType.identifier_led_expr ))
+            {
+                child = child.Nodes.First();
+            }
+            if (child == null)
                 return false;
-            else
-                return node.Nodes.Exists(x => x.Token.Type == TokenType.BRACKETOPEN);
+
+            // If it has the optional function_trailer node tacked on to it, then it's really a function call with
+            // parentheses, not just using the function node as a dummy wrapper around a plain array node.
+            return child.Nodes.Count > 1;
         }
 
         /// <summary>
         /// The Array parse node contains both actual Array calls
         /// (with index given) and just plain vanilla terms.  This
-        /// determines if it's REALLY an array index call or not by looking
-        /// for the brackets or hash sign.
+        /// determines if it's REALLY an array index call or not.
         /// </summary>
         /// <param name="node"></param>
         /// <returns>true if it's really an array index referece call.  False otherwise.</returns>
         private bool IsActualArrayIndexing(ParseNode node)
         {
-            return VarIdentifierHasIndex(node);
+            // This can be called at the level of the parent of the array node, so get down to it first:
+            ParseNode child = node;
+            while (child != null && 
+                   (child.Token.Type != TokenType.array &&
+                    child.Token.Type != TokenType.identifier_led_expr ))
+            {
+                child = child.Nodes.First();
+            }
+            if (child == null)
+                return false;
+            
+            // If it has the optional array_trailer node tacked on to it, then it's really an array index, not just using array as
+            // a dummy wrapper around a plain atom node
+            return child.Nodes.Count > 1;
         }
 
         private void VisitFunction(ParseNode node)
         {
             SetLineNum(node);
             
-            // In principle it should be impossible for the parser to make a
-            // function node with more than 1 term unless the second token is
-            // a left parenthesis, so this check is probably redundant:
             if (node.Nodes.Count > 1 &&
-                node.Nodes[1].Token.Type == TokenType.BRACKETOPEN)
+                node.Nodes[1].Token.Type == TokenType.function_trailer)
             {
                 // if a bracket follows an identifier then its a function call
                 VisitActualFunction(node,true);
@@ -1151,53 +1190,130 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePush(node.Token.Text.Trim('"')));
         }
 
-        private bool VarIdentifierHasSuffix(ParseNode node)
+        /// <summary>
+        /// Check for if the var_identifer node has a suffix term as its very next neighor
+        /// to the right.  i.e. in the following syntax:<br/>
+        ///     AAA:BBB:CCC[0]:DDD:EEE[0]<br/>
+        /// This method should return true if called on the AAA, BBB, or DDD nodes,
+        /// but not when called on the CCC or EEE nodes.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private bool VarIdentifierPreceedsSuffix(ParseNode node)
         {
-            SetLineNum(node);
-            if (node.Token.Type == TokenType.COLON)
+            // If it's a var_identifier being worked on, drop down one level first
+            // to get into the actual meat of the syntax tree it represents:
+            if (node.Token.Type == TokenType.varidentifier)
+                return VarIdentifierPreceedsSuffix(node.Nodes.First());
+
+            if (node.Token.Type == TokenType.suffix_trailer ||
+                node.Nodes.Count>1 && node.Nodes[1].Token.Type == TokenType.suffix_trailer)
             {
                 return true;
             }
-            // Descend into child nodes to try them but don't parse too far over.
-            // Only return true if there is an immediate neighbor to the right
-            // that is a suffix term, not if there's one several terms away.
-            // In other words, with text like AAA:BBB():CCC, you want AAA to
-            // say "I have a suffix" but not BBB, which is a function call first,
-            // and the suffix doesn't happen until further down the line.
-            // That's why it only looks at nodes [0] and [1] in the child list.
-            // It only wants to examine the immediate next neighbor terms.
-            for (int i = 0; i < node.Nodes.Count && i <= 1 ; ++i)
+            // Descend into child nodes to try them but don't parse too far over to the right, just the immediate neighbor only.
+            if (node.Nodes.Count > 1)
             {
-                ParseNode child = node.Nodes[i];
-                if (VarIdentifierHasSuffix(child))
-                {
+                ParseNode child = node.Nodes[0];
+                if (VarIdentifierPreceedsSuffix(child))
                     return true;
-                }
             }
             return false;
         }
         
-        private bool VarIdentifierHasIndex(ParseNode node)
+        ///<summary>
+        /// Check for if the rightmost thing in the var_identifier node
+        /// is a suffix term.  i.e. return true if the var_identifier is:<br/>
+        ///    AAA:BBB, or<br/>
+        ///    AAA[0]:BBB,<br/>
+        /// but NOT if it's this:<br/>
+        ///    AAA:BBB[0].<br/>
+        /// (Which does *contain* a suffix, but not as the rightmost part of it.  The rightmost
+        /// part of it is the array indexer "[0]".)
+        /// </summary>
+        private bool VarIdentifierEndsWithSuffix(ParseNode node)
         {
-            SetLineNum(node);
-            if (node.Token.Type == TokenType.ARRAYINDEX ||
-                node.Token.Type == TokenType.SQUAREOPEN)
+            // If it's a var_identifier being worked on, drop down one level first
+            // to get into the actual meat of the syntax tree it represents:
+            if (node.Token.Type == TokenType.varidentifier)
+                return VarIdentifierEndsWithSuffix(node.Nodes.First());
+            
+            // Descend the rightmost children until encountering the deepest node that is
+            // still a suffix_trailer, array_trailer, or function_trailer.  If that node
+            // was a suffix_trailer, return true, else it's false.
+            ParseNode prevChild = node;
+            ParseNode thisChild = node.Nodes.Last();
+            while (thisChild.Token.Type == TokenType.suffix_trailer ||
+                   thisChild.Token.Type == TokenType.array_trailer ||
+                   thisChild.Token.Type == TokenType.function_trailer)
+            {
+                prevChild = thisChild;
+                thisChild = thisChild.Nodes.Last();
+            }
+            return prevChild.Token.Type == TokenType.suffix_trailer;
+        }
+        
+        /// <summary>
+        /// Check for if the var_identifer node has an array index as its very next neighbor
+        /// to the right.  i.e. in the following syntax:<br/>
+        ///     AAA:BBB:CCC[0]:DDD:EEE[0]<br/>
+        /// This method should return true if called on the CCC node or the EEE node,
+        /// but not when called on the AAA, BBB, or DDD nodes.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private bool VarIdentifierPreceedsIndex(ParseNode node)
+        {
+            // If it's a var_identifier being worked on, drop down one level first
+            // to get into the actual meat of the syntax tree it represents:
+            if (node.Token.Type == TokenType.varidentifier)
+                return VarIdentifierPreceedsIndex(node.Nodes.First());
+
+            if (node.Token.Type == TokenType.array_trailer ||
+                node.Nodes.Count>1 && node.Nodes[1].Token.Type == TokenType.array_trailer)
             {
                 return true;
             }
-            // Descend into child nodes to try them but don't parse too far over.
-            // i.e. in a chain like AAA:BBB:CCC[1], we don't want a call to
-            // VarIdentifierHasIndex( AAA ) to return true.  Just one to
-            // VarIdentifierHasIndex( CCC ). 
-            // That's why it only looks at nodes [0] and [1] in the child list.
-            // It only wants to examine the immediate next neighbor terms.
-            for (int i = 0; i < node.Nodes.Count && i <= 1 ; ++i)
+            // Descend into child nodes to try them but don't parse too far over to the right, just the immediate neighbor only.
+            if (node.Nodes.Count > 1)
             {
-                ParseNode child = node.Nodes[i];
-                if (VarIdentifierHasIndex(child))
+                ParseNode child = node.Nodes[0];
+                if (VarIdentifierPreceedsIndex(child))
                     return true;
             }                    
             return false;
+        }
+
+        ///<summary>
+        /// Check for if the rightmost thing in the var_identifier node
+        /// is an array indexer.  i.e. return true if the var_identifier is:<br/>
+        ///    AAA:BBB[0], or<br/>
+        ///    AAA[0],<br/>
+        /// but NOT if it's this:<br/>
+        ///    AAA[0]:BBB<br/>
+        /// (Which does *contain* an array indexer, but not as the rightmost part of it.  The rightmost
+        /// part of it is the suffix term ":BBB".)
+        /// </summary>
+        private bool VarIdentifierEndsWithIndex(ParseNode node)
+        {
+            // If it's a var_identifier being worked on, drop down one level first
+            // to get into the actual meat of the syntax tree it represents:
+            if (node.Token.Type == TokenType.varidentifier)
+                return VarIdentifierEndsWithIndex(node.Nodes.First());
+
+            // Descend the rightmost children until encountering the deepest node that is
+            // still a suffix_trailer, array_trailer, or function_trailer.  If that node
+            // was an array_trailer, return true, else it's false.
+            ParseNode prevChild = node;
+            ParseNode thisChild = node.Nodes.Last();
+            while (thisChild.Token.Type == TokenType.suffix_trailer ||
+                   thisChild.Token.Type == TokenType.array_trailer ||
+                   thisChild.Token.Type == TokenType.function_trailer)
+            {
+                prevChild = thisChild;
+                thisChild = thisChild.Nodes.Last();
+            }
+            return prevChild.Token.Type == TokenType.array_trailer;
         }
         
         /// <summary>
@@ -1247,11 +1363,11 @@ namespace kOS.Safe.Compilation.KS
             // expression
             VisitNode(node.Nodes[3]);
 
-            if (VarIdentifierHasSuffix(node.Nodes[1]))
+            if (VarIdentifierEndsWithSuffix(node.Nodes[1]))
             {
                 AddOpcode(new OpcodeSetMember());
             }
-            else if (VarIdentifierHasIndex(node.Nodes[1]))
+            else if (VarIdentifierEndsWithIndex(node.Nodes[1]))
             {
                 AddOpcode(new OpcodeSetIndex());
             }
@@ -1536,7 +1652,10 @@ namespace kOS.Safe.Compilation.KS
         {
             SetLineNum(node);
             VisitVarIdentifier(node.Nodes[0]);
-            if (node.Nodes[1].Token.Type == TokenType.ON)
+            
+            // node.Nodes[1].Token.Type == TokenType.onoff_trailer at this point
+                
+            if (node.Nodes[1].Nodes[0].Token.Type == TokenType.ON)
                 AddOpcode(new OpcodePush(true));
             else
                 AddOpcode(new OpcodePush(false));
@@ -1842,6 +1961,61 @@ namespace kOS.Safe.Compilation.KS
         {
             SetLineNum(node);
             throw new Exception("Batch mode can only be used when in immediate mode.");
+        }
+        
+        private void VisitIdentifierLedStatement(ParseNode node)
+        {
+            SetLineNum(node);
+
+            // IdentifierLedStatement is an IdentifierLedExpression with the end marker "." tacked on.
+            // Just parse the IdentifierLedExpression:
+            VisitNode(node.Nodes[0]);
+        }
+        
+        private void VisitIdentifierLedExpression(ParseNode node)
+        {
+            SetLineNum(node);
+            bool needThrowawayPop = false;
+            
+            // Figure out which part of the parse tree this is *really* meant to be and parse accordingly, pretending
+            // to be a node of that type of rule.
+            // Do so by reading the second value to see which kind of thing the parser decided it was.
+            switch (node.Nodes[1].Token.Type)
+            {
+                case TokenType.suffix_trailer:
+                    VisitSuffix(node);
+                    needThrowawayPop = true;
+                    break;
+                case TokenType.function_trailer:
+                    VisitFunction(node);
+                    needThrowawayPop = true;
+                    break;
+                case TokenType.array_trailer:
+                    VisitArray(node);
+                    needThrowawayPop = true;
+                    break;
+                    
+                // The onoff statement is a wacky exception that lives here only
+                // because Nivekk originally decided to make it a statement that
+                // starts with an identifier even though it's not a user-land made up
+                // statement but a built-in instead:
+                case TokenType.onoff_trailer:
+                    VisitOnOffStatement(node);
+                    needThrowawayPop = false;
+                    break;
+            }
+            
+            // The expressions above (except for onoff statements) leave a return value on the stack as the result
+            // of the expression, but in this context they're being used as raw statements that ignore the return value.
+            // So pop the expression's result and throw it away to keep the stack aligned correctly.
+            //
+            // To keep this code simple, we just have the rule that there will unconditionally always
+            // be something atop the stack that all function calls leave behind, even if it's a dummy.)
+            //
+            if (needThrowawayPop)
+            {
+                AddOpcode(new OpcodePop());
+            }            
         }
     }
 }

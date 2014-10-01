@@ -28,14 +28,37 @@ namespace kOS.Safe.Encapsulation
             switch (suffixName)
             {
                 case "ADD":
-                    list.Add(value);
-                    return true;
+                    // TODO:
+                    // @erendrake:  When changing this to your new Suffix system, it might be a good
+                    // idea to keep the old SetSuffix term "ADD", but change what it does to make it result in
+                    // an exception like the example below.  That way when people use old scripts
+                    // that use it, they'll get a nice explanation of exactly how to upgrade the script.
+                    // This could save us some headaches when this is released.
+                    // You can stil use the word "ADD" as the name of the new method because as a method,
+                    // it will be a GetSUffix instead of a SetSuffix.  Only throw this message when it's used
+                    // as a SetSuffix:
+                    throw new System.Exception("Old syntax \n" +
+                                               "   SET _somelist_:ADD TO _value_\n" +
+                                               "is no longer supported. Try replacing it with: \n" +
+                                               "   _somelist_:ADD(_value_).\n");
+                    return true; // compiler warning, unreachable because of the throw statement, but keep it in case I edit it later.
                 case "CONTAINS":
+                    // TODO: Uhm... @erendrake, take a careful look at this.  What is this even doing here?
+                    // It sounds like it should return a boolean but... but... This is a SetSuffix not a 
+                    // GetSuffix so I don't quite get how the resulting boolean is meant to be read by the
+                    // script.  Maybe when you method-ize ListValue.cs, this would make sense as a GetSuffix method
+                    // instead: SET doesItExist TO MYLIST:CONTAINS(VALUE).
                     return list.Contains(value);
                 case "REMOVE":
-                    var index = int.Parse(value.ToString());
-                    list.RemoveAt(index);
-                    return true;
+                    // TODO:
+                    // @erendrake:  When changing this to your new Suffix system, it might be a good
+                    // idea to keep the old SetSuffix term "REMOVE", but yadda yadda yadda (same comment
+                    // as I made above for "ADD".)
+                    throw new System.Exception("Old syntax \n" +
+                                               "   SET _somelist_:REMOVE TO _number_\n" +
+                                               "is no longer supported. Try replacing it with: \n" +
+                                               "   _somelist_:REMOVE(_number_).\n");
+                    return true; // compiler warning, unreachable because of the throw statement, but keep it in case I edit it later.
                 default:
                     return false;
             }
@@ -107,17 +130,18 @@ namespace kOS.Safe.Encapsulation
                 // via GetSuffix and not SetSuffix because you are returning the delegate function
                 // as the object and letting the kOS computer call the delegate once it pulls the
                 // arguments off the stack for it.
-                case "METHADD":
+                case "ADD":
                     return (DelegateOfAddMethod) AddMethod;
-                case "METHREMOVE":
+                case "REMOVE":
                     return (DelegateOfRemoveMethod) RemoveMethod;
-                case "METHCONTAINS":
+                case "CONTAINS":
                     return (DelegateOfContainsMethod) ContainsMethod;
-                // This is a test case to make sure it can deal with methods with zero arguments:
-                case "METHLENGTH":
+                // This is a test case that duplicates the information provided by :LENGTH, but does it as a function,
+                // because I needed a test case in which there was a method with zero arguments:
+                case "GETLENGTH":
                     return (DelegateOfLengthMethod) LengthMethod;
                 // This is a test case to make sure it can deal with more than 1 argument:
-                case "METHSUBLIST":
+                case "SUBLIST":
                     return (DelegateOfSubListMethod) SubListMethod;
 
                 default:
