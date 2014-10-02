@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
@@ -8,7 +9,7 @@ using kOS.Utilities;
 
 namespace kOS.Screen
 {
-    public class Interpreter : TextEditor
+    public class Interpreter : TextEditor, IInterpreter
     {
         private readonly List<string> commandHistory = new List<string>();
         private int commandHistoryIndex;
@@ -115,7 +116,7 @@ namespace kOS.Screen
                 List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter");
                 if (commandParts == null) return;
 
-                var interpreterContext = Shared.Cpu.GetInterpreterContext();
+                var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();
                 interpreterContext.AddParts(commandParts);
             }
             catch (Exception e)

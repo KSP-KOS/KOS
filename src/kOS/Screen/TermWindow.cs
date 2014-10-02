@@ -311,7 +311,7 @@ namespace kOS.Screen
 
             GUI.BeginGroup(new Rect(31, 38, 420, 340));
 
-            ScreenBuffer screen = shared.Screen;
+            IScreenBuffer screen = shared.Screen;
             List<char[]> buffer = screen.GetBuffer();
 
             for (int row = 0; row < screen.RowCount; row++)

@@ -61,7 +61,7 @@ namespace kOS.Binding
                 variable = new BoundVariable
                     {
                         Name = name, 
-                        Cpu = shared.Cpu
+                        Cpu = (CPU)shared.Cpu
                     };
                 vars.Add(name, variable);
                 shared.Cpu.AddVariable(variable, name);

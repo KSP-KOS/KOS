@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Execution;
 using kOS.Persistence;
 using kOS.Module;
 using kOS.Safe.Compilation;
+using kOS.Safe.Module;
 using kOS.Suffixed;
 
 namespace kOS.Function
@@ -45,7 +47,8 @@ namespace kOS.Function
         {
             bool enabled = Convert.ToBoolean(shared.Cpu.PopValue());
             string paramName = shared.Cpu.PopValue().ToString();
-            shared.Cpu.ToggleFlyByWire(paramName, enabled);
+            ((CPU)shared.Cpu).ToggleFlyByWire(paramName, enabled);
+
         }
     }
 
@@ -100,7 +103,7 @@ namespace kOS.Function
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                 List<CodePart> parts;
-                var programContext = shared.Cpu.GetProgramContext();
+                var programContext = ((CPU)shared.Cpu).GetProgramContext();
                 if (file.Category == FileCategory.KEXE)
                 {
                     string prefix = programContext.Program.Count.ToString();
@@ -153,7 +156,7 @@ namespace kOS.Function
                 }
                 else
                 {
-                    var programContext = shared.Cpu.GetProgramContext();
+                    var programContext = ((CPU)shared.Cpu).GetProgramContext();
                     List<CodePart> parts;
                     if (file.Category == FileCategory.KEXE)
                     {
@@ -227,7 +230,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            if (shared.Processor != null) shared.Processor.SetMode(kOSProcessor.Modes.OFF);
+            if (shared.Processor != null) shared.Processor.SetMode(ProcessorModes.OFF);
         }
     }
 }

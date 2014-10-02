@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Execution;
 using kOS.Factories;
 using UnityEngine;
 using KSP.IO;
@@ -10,15 +11,15 @@ using kOS.Persistence;
 using kOS.Safe;
 using kOS.Safe.Compilation;
 using kOS.Safe.Compilation.KS;
+using kOS.Safe.Module;
 using kOS.Suffixed;
 using kOS.AddOns.RemoteTech2;
 
 namespace kOS.Module
 {
-    public class kOSProcessor : PartModule
+    public class kOSProcessor : PartModule, IProcessor
     {
-        public enum Modes { READY, STARVED, OFF };
-        public Modes Mode = Modes.READY;
+        public ProcessorModes ProcessorMode = ProcessorModes.READY;
 
         public Harddisk HardDisk { get; private set; }
         private int vesselPartCount;
@@ -53,8 +54,8 @@ namespace kOS.Module
         public void TogglePower()
         {
             Debug.Log("kOS: Toggle Power");
-            Modes newMode = (Mode != Modes.OFF) ? Modes.OFF : Modes.STARVED;
-            SetMode(newMode);
+            ProcessorModes newProcessorMode = (ProcessorMode != ProcessorModes.OFF) ? ProcessorModes.OFF : ProcessorModes.STARVED;
+            SetMode(newProcessorMode);
         }
         
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
@@ -108,7 +109,7 @@ namespace kOS.Module
                 return;
             }
 
-            Debug.Log(string.Format("kOS: OnStart: {0} {1}", state, Mode));
+            Debug.Log(string.Format("kOS: OnStart: {0} {1}", state, ProcessorMode));
             InitObjects();
         }
 
@@ -247,7 +248,7 @@ namespace kOS.Module
 
             if (part.State == PartStates.DEAD)
             {
-                Mode = Modes.OFF;
+                ProcessorMode = ProcessorModes.OFF;
                 return;
             }
 
@@ -256,7 +257,7 @@ namespace kOS.Module
                 shared.Vessel = vessel;
             }
 
-            if (Mode == Modes.READY)
+            if (ProcessorMode == ProcessorModes.READY)
             {
                 if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(Time.deltaTime);
                 UpdateParts();
@@ -338,7 +339,7 @@ namespace kOS.Module
 
             if (shared != null && shared.Cpu != null)
             {
-                shared.Cpu.OnLoad(node);
+                ((CPU)shared.Cpu).OnLoad(node);
             }
             base.OnLoad(node);
         }
@@ -353,7 +354,7 @@ namespace kOS.Module
 
             if (shared != null && shared.Cpu != null)
             {
-                shared.Cpu.OnSave(node);
+                ((CPU)shared.Cpu).OnSave(node);
                 Config.Instance.SaveConfig();
             }
 
@@ -379,36 +380,36 @@ namespace kOS.Module
 
         private void ProcessElectricity(Part partObj, float time)
         {
-            if (Mode == Modes.OFF) return;
+            if (ProcessorMode == ProcessorModes.OFF) return;
 
             RequiredPower = shared.VolumeMgr.CurrentRequiredPower;
             var electricReq = time * RequiredPower;
             var result = partObj.RequestResource("ElectricCharge", electricReq) / electricReq;
 
-            var newMode = (result < 0.5f) ? Modes.STARVED : Modes.READY;
+            var newMode = (result < 0.5f) ? ProcessorModes.STARVED : ProcessorModes.READY;
             SetMode(newMode);
         }
 
-        public void SetMode(Modes newMode)
+        public void SetMode(ProcessorModes newProcessorMode)
         {
-            if (newMode != Mode)
+            if (newProcessorMode != ProcessorMode)
             {
-                switch (newMode)
+                switch (newProcessorMode)
                 {
-                    case Modes.READY:
-                        if (Mode == Modes.STARVED && shared.Cpu != null) shared.Cpu.Boot();
+                    case ProcessorModes.READY:
+                        if (ProcessorMode == ProcessorModes.STARVED && shared.Cpu != null) shared.Cpu.Boot();
                         if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                         if (shared.Window != null) shared.Window.SetPowered(true);
                         break;
 
-                    case Modes.OFF:
-                    case Modes.STARVED:
+                    case ProcessorModes.OFF:
+                    case ProcessorModes.STARVED:
                         if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
                         if (shared.Window != null) shared.Window.SetPowered(false);
                         break;
                 }
 
-                Mode = newMode;
+                ProcessorMode = newProcessorMode;
             }
         }
 

@@ -16,7 +16,7 @@ namespace kOS.Suffixed
 
         override public Vector GetPosition()
         {
-            return new Vector( Vessel.GetWorldPos3D() - CurrentVessel.GetWorldPos3D() );
+            return new Vector( Vessel.findWorldCenterOfMass() - CurrentVessel.findWorldCenterOfMass() );
         }
 
         override public OrbitableVelocity GetVelocities()
@@ -55,7 +55,7 @@ namespace kOS.Suffixed
                 pos = pos + offset;
             }
 
-            return new Vector( pos - Shared.Vessel.GetWorldPos3D() ); // Convert to ship-centered frame.
+            return new Vector( pos - Shared.Vessel.findWorldCenterOfMass() ); // Convert to ship-centered frame.
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace kOS.Suffixed
             if (parent != null)
             {
                 Vector3d pos = GetPositionAtUT( timeStamp ).ToVector3D();
-                surfVel = new Vector( orbVel - parent.getRFrmVel( pos + Shared.Vessel.GetWorldPos3D()) );
+                surfVel = new Vector( orbVel - parent.getRFrmVel( pos + Shared.Vessel.findWorldCenterOfMass()) );
             }
             else
                 surfVel = new Vector( orbVel.x, orbVel.y, orbVel.z );
@@ -199,7 +199,7 @@ namespace kOS.Suffixed
         // in order to implement the orbit solver later.
         public double GetDistance()
         {
-            return Vector3d.Distance(CurrentVessel.GetWorldPos3D(), Vessel.GetWorldPos3D());
+            return Vector3d.Distance(CurrentVessel.findWorldCenterOfMass(), Vessel.findWorldCenterOfMass());
         }
 
         public override string ToString()
@@ -254,7 +254,7 @@ namespace kOS.Suffixed
                     return Vessel.horizontalSrfSpeed;
                 case "AIRSPEED":
                     return
-                        (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.GetWorldPos3D()))
+                        (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass()))
                             .magnitude; //the velocity of the vessel relative to the air);
                 //DEPRICATED VESSELNAME
                 case "VESSELNAME":

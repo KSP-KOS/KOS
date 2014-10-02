@@ -1,8 +1,9 @@
 ﻿using System;
+using kOS.Safe;
 
 namespace kOS
 {
-    public class Logger
+    public class Logger : ILogger
     {
         protected SharedObjects Shared;
         

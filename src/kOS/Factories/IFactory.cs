@@ -1,11 +1,11 @@
-﻿using kOS.Screen;
+﻿using kOS.Safe.Screen;
 using kOS.Persistence;
 
 namespace kOS.Factories
 {
     public interface IFactory
     {
-        Interpreter CreateInterpreter(SharedObjects shared);
+        IInterpreter CreateInterpreter(SharedObjects shared);
         Archive CreateArchive();
     }
 }
