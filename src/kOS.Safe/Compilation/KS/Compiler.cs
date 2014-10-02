@@ -32,6 +32,11 @@ namespace kOS.Safe.Compilation.KS
             _context = context;
             _options = options;
             _startLineNum = startLineNum;
+            
+            // Set to true if you need to diagnose bugs in the compiler and turn off the catch-all
+            // exception suppression.
+            //
+            bool testingCompiler = true;
 
             try
             {
@@ -43,13 +48,25 @@ namespace kOS.Safe.Compilation.KS
             }
             catch (Exception e)
             {
-                if (_lastNode != null)
+                // TODO:  This is built on the logic that any exception thrown during the compile
+                // process must be the user's fault and have something to do with the script being
+                // wrong, so the C# stack trace should be suppressed.  That makes it a pain for developers
+                // who change the compiler and can't find where it has errors.  At some future point
+                // we need to refactor our use of Exceptions and instead design homebrewed Exceptions
+                // for all the things we throw deliberately that users should see.  That way we can
+                // JUST trap those exceptions and suppress their C# stack traces.
+                //
+                if (_lastNode != null && ! testingCompiler)
                 {
                     throw new Exception(string.Format("Error parsing {0}: {1}", ConcatenateNodes(_lastNode), e.Message));
                 }
                 else
                 {
-                    throw;
+                    // It turns out Console.WriteLine gets redirected to the same file as UnityEngine.Debug.Log uses,
+                    // and it's a way to log things in kOS.Safe without depending on Unity libraries.
+                    Console.WriteLine("Exception in Compiler: " + e.Message);
+                    Console.WriteLine(e.StackTrace);
+                    throw;  // throw it up in addition to logging the stack trace, so the kOS terminal will also give the user some message.
                 }
             }
             
@@ -937,7 +954,14 @@ namespace kOS.Safe.Compilation.KS
         private void VisitVarIdentifier(ParseNode node)
         {
             SetLineNum(node);
-            VisitNode(node.Nodes[0]);
+            
+            // I might be called on a raw IDENTIFIER, in which case I have no
+            // child nodes to descend into.  But if I *do* have a child node
+            // to descend into, then do so:
+            if (node.Nodes.Count == 0)
+                VisitNode(node);
+            else
+                VisitNode(node.Nodes[0]);
         }
         
         private void VisitSuffix(ParseNode node)
@@ -952,18 +976,17 @@ namespace kOS.Safe.Compilation.KS
 
             if (node.Nodes.Count > 1)
             {
-                ParseNode trailerNode = node.Nodes[1]; // the suffix trailer is now a separate level of the parse tree, one child down.
-
                 int nodeIndex = 1;
-                while (nodeIndex < trailerNode.Nodes.Count)
+                while (nodeIndex < node.Nodes.Count)
                 {
                     bool remember = _identifierIsSuffix;
                     _identifierIsSuffix = true;
-                    ParseNode subTerm = trailerNode.Nodes[nodeIndex];
+                    ParseNode subTerm = node.Nodes[nodeIndex];
+                    ParseNode subTermAfterColon = node.Nodes[nodeIndex].Nodes[1];
 
                     bool isFunc = IsActualFunctionCall(subTerm);
                     bool isArray = IsActualArrayIndexing(subTerm);
-                    Console.WriteLine("term ("+subTerm.Text+") : isFunc="+isFunc+", isArray="+isArray);
+                    Console.WriteLine("term at index " +nodeIndex+" ("+subTerm.Text+") : isFunc="+isFunc+", isArray="+isArray);
                     if (isFunc || isArray)
                     {
                         // Don't parse it as a function/array call yet.  Just visit its leftmost
@@ -974,36 +997,39 @@ namespace kOS.Safe.Compilation.KS
 
                         bool rememberIsV = _identifierIsVariable;
                         _identifierIsVariable = false;
+                        Console.WriteLine("term text = " +identNode.Token.Text);
 
                         VisitNode(identNode);
 
                         _identifierIsVariable = rememberIsV;
                     }
                     else
-                        VisitNode(subTerm);
+                    {
+                        Console.WriteLine("term text = " +subTerm.Token.Text);
+                        VisitNode(subTermAfterColon);
+                    }
 
                     _identifierIsSuffix = remember;
 
                     // when we are setting a member value we need to leave
                     // the last object and the last suffix in the stack
-                    bool usingSetMember = (!isFunc && !isArray) && (_compilingSetDestination && nodeIndex == (trailerNode.Nodes.Count -1));
+                    bool usingSetMember = (!isFunc && !isArray) && (_compilingSetDestination && nodeIndex == (node.Nodes.Count -1));
                     if (! usingSetMember)
                     {
                         AddOpcode(new OpcodeGetMember());
                     }
-                    
                     if (isFunc)
                     {
-                        ParseNode funcNode = DepthFirstLeftSearch(subTerm, TokenType.function);
+                        ParseNode funcNode = DepthFirstLeftSearch(subTermAfterColon, TokenType.function);
                         VisitActualFunction(funcNode, false);
                     }
                     if (isArray)
                     {
-                        ParseNode arrayNode = DepthFirstLeftSearch(subTerm, TokenType.array);
+                        ParseNode arrayNode = DepthFirstLeftSearch(subTermAfterColon, TokenType.array);
                         VisitActualArray(arrayNode);
                     }
 
-                    nodeIndex += 2;
+                    nodeIndex += 1;
                 }
             }
         }
@@ -1108,7 +1134,10 @@ namespace kOS.Safe.Compilation.KS
                    (child.Token.Type != TokenType.function &&
                     child.Token.Type != TokenType.identifier_led_expr ))
             {
-                child = child.Nodes.First();
+                if (child.Nodes.Count>1)
+                    child = child.Nodes[1];
+                else
+                    child = null;
             }
             if (child == null)
                 return false;
@@ -1133,7 +1162,10 @@ namespace kOS.Safe.Compilation.KS
                    (child.Token.Type != TokenType.array &&
                     child.Token.Type != TokenType.identifier_led_expr ))
             {
-                child = child.Nodes.First();
+                if (child.Nodes.Count>1)
+                    child = child.Nodes[1];
+                else
+                    child = null;
             }
             if (child == null)
                 return false;
