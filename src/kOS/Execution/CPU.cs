@@ -448,6 +448,16 @@ namespace kOS.Execution
         {
             return GetValue(PopStack());
         }
+        
+        public object PeekValue(int digDepth)
+        {
+            return GetValue(stack.Peek(digDepth));
+        }
+        
+        public int GetStackSize()
+        {
+            return stack.GetLogicalSize();
+        }
 
         public void AddTrigger(int triggerFunctionPointer)
         {
