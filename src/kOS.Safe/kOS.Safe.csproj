@@ -72,6 +72,7 @@
     <Compile Include="IUpdateObserver.cs" />
     <Compile Include="Module\IProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screen\IInterpreter.cs" />
     <Compile Include="Screen\ScreenBuffer.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
