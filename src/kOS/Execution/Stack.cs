@@ -16,10 +16,7 @@ namespace kOS.Execution
         {
             string message = string.Empty;
 
-            if (!IsValid(item, ref message))
-            {
-                throw new ArgumentException(message);
-            }
+            ThrowIfInvalid(item, ref message);
 
             stackPointer++;
             if (stackPointer < MAX_STACK_SIZE)
@@ -27,10 +24,11 @@ namespace kOS.Execution
                 stack.Insert(stackPointer, ProcessItem(item));
             }
             else
+                // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
         }
 
-        private bool IsValid(object item, ref string message)
+        private void ThrowIfInvalid(object item, ref string message)
         {
             if (Config.Instance.EnableSafeMode)
             {
@@ -38,18 +36,18 @@ namespace kOS.Execution
                 {
                     if (Double.IsNaN((double)item))
                     {
-                        message = "Tried to push NaN into the stack.";
-                        return false;
+                        // TODO: make an IKOSException for this:
+                        throw new Exception("Tried to push NaN into the stack.");
                     }
                     if (Double.IsInfinity((double)item))
                     {
-                        message = "Tried to push Infinity into the stack.";
-                        return false;
+                        // TODO: make an IKOSException for this:
+                        throw new Exception("Tried to push Infinity into the stack.");
                     }
                 }
             }
 
-            return true;
+            return;
         }
 
         /// <summary>

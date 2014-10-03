@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Compilation
 {
@@ -790,7 +791,7 @@ namespace kOS.Safe.Compilation
             else if (value is double)
                 result = -((double)value);
             else
-                throw new ArgumentException(string.Format("Can't negate object {0} of type {1}", value, value.GetType()));
+                throw new KOSUnaryOperandTypeException("negate", value);
 
             cpu.PushStack(result);
         }
@@ -805,8 +806,8 @@ namespace kOS.Safe.Compilation
         protected override object ExecuteCalculation(Calculator calc)
         {
             object result = calc.Add(Argument1, Argument2);
-            // TODO: complete message
-            if (result == null) throw new ArgumentException("Can't add ....");
+            if (result == null)
+                throw new KOSBinaryOperandTypeException(Argument1, "add", "to", Argument2);
             return result;
         }
     }
@@ -895,7 +896,7 @@ namespace kOS.Safe.Compilation
             else if ((value is double) || (value is float))
                 result = Convert.ToBoolean(value) ? 0.0 : 1.0;
             else
-                throw new ArgumentException(string.Format("Can't negate object {0} of type {1}", value, value.GetType()));
+                throw new KOSUnaryOperandTypeException("boolean-not", value);
 
             cpu.PushStack(result);
         }

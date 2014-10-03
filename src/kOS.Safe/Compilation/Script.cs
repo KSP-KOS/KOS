@@ -104,26 +104,7 @@ namespace kOS.Safe.Compilation
 
             return modifiedScriptText;
         }
-        protected virtual void RaiseParseException(string scriptText, int line, int absolutePosition)
-        {
-            const int LINE_SIZE = 50;
-            int minStartIndex = Math.Max(absolutePosition - 40, 0);
-            int maxEndIndex = scriptText.Length - 1;
 
-            int startIndex = scriptText.LastIndexOf('\n', Math.Max(absolutePosition - 1, 0)) + 1;
-            if (startIndex < minStartIndex) startIndex = minStartIndex;
-            int endIndex = scriptText.IndexOf('\n', absolutePosition);
-            if (endIndex == -1 || endIndex - startIndex > LINE_SIZE) endIndex = startIndex + LINE_SIZE;
-            if (endIndex > maxEndIndex) endIndex = maxEndIndex;
-            string errorScript = scriptText.Substring(startIndex, (endIndex - startIndex) + 1);
-
-            var parseMessage = new StringBuilder();
-            parseMessage.AppendLine(string.Format("Syntax error at line {0}", line));
-            parseMessage.AppendLine(errorScript);
-            parseMessage.AppendLine(new string(' ', absolutePosition - startIndex) + "^");
-
-            throw new Exception(parseMessage.ToString());
-        }
 
         protected virtual string ReplaceIdentifiers(string scriptText)
         {
