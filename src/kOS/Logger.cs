@@ -30,15 +30,18 @@ namespace kOS
 
         public virtual void Log(Exception e)
         {
-            string message;
             string lineRule = "__________________________________________\n";
+
+            string message = e.Message;
             
             if (Config.Instance.VerboseExceptions && e is IKOSException )
             {
-                message = lineRule;
                 // As a first primitive attempt at excercising the verbose exceptions,
                 // Just use a CONFIG setting for how verbose to be.  This will need
                 // to be replaced with something more sophisticated later, most likely.
+
+                message += "\n" + lineRule + "           VERBOSE DESCRIPTION\n";
+                
                 message += ((IKOSException)e).VerboseMessage;
                 
                 // Fallback if there was no verbose message defined:
@@ -49,12 +52,8 @@ namespace kOS
                 // Take on the URL if there is one:
                 string url = ((IKOSException)e).HelpURL;
                 if (url != String.Empty)
-                    message += "\n\nMore Information at:\n" + url;
+                    message += "\n\nMore Information at:\n" + url + "\n";
                 message += lineRule;
-            }
-            else
-            {
-                message = e.Message;
             }
             LogToScreen(message);
             

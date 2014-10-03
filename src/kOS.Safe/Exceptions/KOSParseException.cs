@@ -15,8 +15,8 @@ namespace kOS.Safe.Exceptions
         
             
         public override string VerboseMessage {get;set;}
-        public override string HelpURL {get{ return "??? dunno what might go here";} set{} }
-
+        public override string HelpURL {get{ return "";} set{} }
+        
         /// <summary>
         /// Create a parse exception message from one of TinyPG's ParseError
         /// objects, and the text of the script.
@@ -74,9 +74,7 @@ namespace kOS.Safe.Exceptions
                 "Error   Line: {0}\n" +
                 "Error Column: {1}\n" +
                 "Message: {2}\n" +
-                "Below are several lines of context around the.\n"+
-                "Line with the problem:\n"+
-                "______________________________________________\n"+
+                "__________________________________________\n"+
                 "{3}\n";
             
             // Scan backward to find the position 2 lines of code up:

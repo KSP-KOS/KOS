@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -19,11 +20,12 @@ namespace kOS.Safe.Compilation.KS
         private bool _nowCompilingTrigger = false;
         private bool _compilingSetDestination = false;
         private bool _identifierIsVariable = false;
+        private bool _nowInALoop = false;
         private List<ParseNode> _programParameters = new List<ParseNode>();
         private CompilerOptions _options;
 
         private readonly Dictionary<string, string> _functionsOverloads = new Dictionary<string, string>() { { "round|1", "roundnearest" },
-                                                                                                             { "round|2", "round"} };
+            { "round|2", "round"} };
         
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
         {
@@ -42,9 +44,11 @@ namespace kOS.Safe.Compilation.KS
             }
             catch (Exception e)
             {
-                if (_lastNode != null)
+                if (_lastNode != null && (e is IKOSException ))
                 {
-                    throw new Exception(string.Format("Error parsing {0}: {1}", ConcatenateNodes(_lastNode), e.Message));
+                    throw;  // TODO something more sophisticated will go here that will
+                            // attach source/line information to the exception before throwing it upward.
+                            // that's why this seemingly pointless "catch and then throw again" is here.
                 }
                 else
                 {
@@ -135,7 +139,7 @@ namespace kOS.Safe.Compilation.KS
         {
             switch (node.Token.Type)
             {
-                // statements that can have a lock inside
+                    // statements that can have a lock inside
                 case TokenType.Start:
                 case TokenType.instruction_block:
                 case TokenType.instruction:
@@ -163,7 +167,7 @@ namespace kOS.Safe.Compilation.KS
             
             switch (node.Token.Type)
             {
-                // statements that can have a lock inside
+                    // statements that can have a lock inside
                 case TokenType.Start:
                 case TokenType.instruction_block:
                 case TokenType.instruction:
@@ -1094,7 +1098,7 @@ namespace kOS.Safe.Compilation.KS
                 // The else body:
                 VisitNode(node.Nodes[4]);
                 // End of Else body label:
-                branchPastElse.DestinationLabel = GetNextLabel(false);                
+                branchPastElse.DestinationLabel = GetNextLabel(false);
                 _addBranchDestination = true;
             }
         }
@@ -1102,6 +1106,10 @@ namespace kOS.Safe.Compilation.KS
         private void VisitUntilStatement(ParseNode node)
         {
             SetLineNum(node);
+
+            bool remember = _nowInALoop;
+            _nowInALoop = true;
+            
             string conditionLabel = GetNextLabel(false);
             PushBreakList();
             VisitNode(node.Nodes[1]);
@@ -1113,6 +1121,8 @@ namespace kOS.Safe.Compilation.KS
             jump.DestinationLabel = conditionLabel;
             PopBreakList(GetNextLabel(false));
             _addBranchDestination = true;
+
+            _nowInALoop = remember;
         }
 
         private void VisitPlusMinus(ParseNode node)
@@ -1299,6 +1309,10 @@ namespace kOS.Safe.Compilation.KS
         private void VisitWaitStatement(ParseNode node)
         {
             SetLineNum(node);
+            
+            if (_nowCompilingTrigger)
+                throw new KOSWaitInvalidHereException();
+            
             if (node.Nodes.Count == 3)
             {
                 // wait time
@@ -1551,6 +1565,10 @@ namespace kOS.Safe.Compilation.KS
         private void VisitBreakStatement(ParseNode node)
         {
             SetLineNum(node);
+
+            if (! _nowInALoop)
+                throw new KOSBreakInvalidHereException();
+
             Opcode jump = AddOpcode(new OpcodeBranchJump());
             AddToBreakList(jump);
         }
@@ -1558,17 +1576,14 @@ namespace kOS.Safe.Compilation.KS
         private void VisitPreserveStatement(ParseNode node)
         {
             SetLineNum(node);
-            if (_nowCompilingTrigger)
-            {
-                string flagName = PeekTriggerRemoveName();
-                AddOpcode(new OpcodePush(flagName));
-                AddOpcode(new OpcodePush(false));
-                AddOpcode(new OpcodeStore());
-            }
-            else
-            {
-                throw new Exception("PRESERVE keyword is only allowed inside triggers like WHEN and ON.");
-            }
+
+            if (! _nowCompilingTrigger)
+                throw new KOSPreserveInvalidHereException();
+
+            string flagName = PeekTriggerRemoveName();
+            AddOpcode(new OpcodePush(flagName));
+            AddOpcode(new OpcodePush(false));
+            AddOpcode(new OpcodeStore());
         }
 
         private void VisitRebootStatement(ParseNode node)
@@ -1586,6 +1601,10 @@ namespace kOS.Safe.Compilation.KS
         private void VisitForStatement(ParseNode node)
         {
             SetLineNum(node);
+
+            bool remember = _nowInALoop;
+            _nowInALoop = true;
+            
             string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + "-iterator";
 
             PushBreakList();
@@ -1624,6 +1643,8 @@ namespace kOS.Safe.Compilation.KS
             VisitVariableNode(node.Nodes[1]);
             AddOpcode(new OpcodeUnset());
             PopBreakList(endLoop.Label);
+
+            _nowInALoop = remember;
         }
 
         private void VisitUnsetStatement(ParseNode node)

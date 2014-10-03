@@ -65,11 +65,15 @@
     <Compile Include="Encapsulation\Structure.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\IKOSException.cs" />
+    <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
+    <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
     <Compile Include="Exceptions\KOSCompileException.cs" />
     <Compile Include="Exceptions\KOSBinaryOperandTypeException.cs" />
     <Compile Include="Exceptions\KOSLongTriggerException.cs" />
     <Compile Include="Exceptions\KOSParseException.cs" />
+    <Compile Include="Exceptions\KOSPreserveInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSWaitInValidHereException.cs" />
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Execution\ICpu.cs" />

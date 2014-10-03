@@ -20,5 +20,6 @@ namespace kOS.Safe.Exceptions
         /// the exception.
         /// </summary>
         string HelpURL {get;set;}
+                
     }
 }

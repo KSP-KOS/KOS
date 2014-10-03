@@ -95,23 +95,31 @@ namespace kOS.Function
             }
             else
             {
+                Console.WriteLine("A");
                 // clear the "program" compilation context
                 shared.ScriptHandler.ClearContext("program");
+                Console.WriteLine("B");
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
+                Console.WriteLine("C");
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
+                Console.WriteLine("D");
                 List<CodePart> parts;
+                Console.WriteLine("E");
                 var programContext = shared.Cpu.GetProgramContext();
+                Console.WriteLine("F");
                 if (file.Category == FileCategory.KEXE)
                 {
+                Console.WriteLine("G");
                     string prefix = programContext.Program.Count.ToString();
+                Console.WriteLine("H");
                     parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.BinaryContent);
+                Console.WriteLine("I");
                 }
                 else
                     parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
+                Console.WriteLine("J");
                 programContext.AddParts(parts);
-                
-                string erasemeString = Utilities.Utils.GetCodeFragment(programContext.Program);  // eraaseme - remove after debugging is done.
-                UnityEngine.Debug.Log("(PROGRAM DUMP OF " + filePath + ")\n"+erasemeString);     // eraaseme - remove after debugging is done.
+                Console.WriteLine("L");
             }
         }
     }
