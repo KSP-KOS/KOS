@@ -1,5 +1,6 @@
 using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Compilation
 {
@@ -344,22 +345,22 @@ namespace kOS.Safe.Compilation
 
         public override object Subtract(object argument1, object argument2)
         {
-            throw new ArgumentException("Can't subtract two strings");
+            throw new KOSBinaryOperandTypeException(argument2, "subtract", "from", argument1);
         }
 
         public override object Multiply(object argument1, object argument2)
         {
-            throw new ArgumentException("Can't multiply two strings");
+            throw new KOSBinaryOperandTypeException(argument1, "multiply", "by", argument2);
         }
 
         public override object Divide(object argument1, object argument2)
         {
-            throw new ArgumentException("Can't divide two strings");
+            throw new KOSBinaryOperandTypeException(argument1, "divide", "by", argument2);
         }
 
         public override object Power(object argument1, object argument2)
         {
-            throw new ArgumentException("Can't power two strings");
+            throw new KOSBinaryOperandTypeException(argument1, "exponentiate", "by", argument2);
         }
 
         public override object GreaterThan(object argument1, object argument2)
@@ -416,7 +417,7 @@ namespace kOS.Safe.Compilation
 
         public override object Subtract(object argument1, object argument2)
         {
-            throw new ArgumentException("Can't subtract two booleans");
+            throw new KOSBinaryOperandTypeException(argument2, "subtract", "from", argument1);
         }
 
         public override object Multiply(object argument1, object argument2)
@@ -426,12 +427,12 @@ namespace kOS.Safe.Compilation
 
         public override object Divide(object argument1, object argument2)
         {
-            throw new ArgumentException("Can't divide two booleans");
+            throw new KOSBinaryOperandTypeException(argument1, "divide", "by", argument2);
         }
 
         public override object Power(object argument1, object argument2)
         {
-            throw new ArgumentException("Can't power two booleans");
+            throw new KOSBinaryOperandTypeException(argument1, "exponentiate", "by", argument2);
         }
 
         public override object GreaterThan(object argument1, object argument2)
