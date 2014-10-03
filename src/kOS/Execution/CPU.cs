@@ -427,10 +427,14 @@ namespace kOS.Execution
             // cos()    cos trigonometric function
             // cos      string literal "cos"
 
+            // If it's a variable, meaning it starts with "$" but
+            // does NOT have a value like $<.....>, which are special
+            // flags used internally:
             if (testValue is string &&
-                ((string)testValue).StartsWith("$"))
+                ((string)testValue).Length > 1 &&
+                ((string)testValue)[0] == '$' &&
+                ((string)testValue)[1] != '<' )
             {
-                // value is a variable
                 var identifier = (string)testValue;
                 Variable variable = GetVariable(identifier);
                 return variable.Value;

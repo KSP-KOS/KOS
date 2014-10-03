@@ -1022,6 +1022,8 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object functionPointer;
+            object delegateReturn = null;
+
             if (Direct)
             {
                 functionPointer = cpu.GetValue(Destination);
@@ -1060,7 +1062,7 @@ namespace kOS.Safe.Compilation
             }
             else if (functionPointer is Delegate)
             {
-                ExecuteDelegate(cpu, (Delegate)functionPointer);
+                delegateReturn = ExecuteDelegate(cpu, (Delegate)functionPointer);
             }
             else
             {
@@ -1072,10 +1074,12 @@ namespace kOS.Safe.Compilation
             if (! Direct)
             {
                 // Indirect calls have two more elements to consume from the stack.
-                // Calling the function itself only pops the arguments, not the function
-                // name and the argument bottom marker.
                 cpu.PopValue(); // consume arg bottom mark
                 cpu.PopValue(); // consume function name, branch index, or delegate
+            }
+            if (functionPointer is Delegate)
+            {
+                cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.
             }
 
         }
@@ -1087,7 +1091,8 @@ namespace kOS.Safe.Compilation
         /// </summary>
         /// <param name="cpu">the cpu this opcode is being called on</param>
         /// <param name="dlg">the delegate object this opcode is being called for.</param>
-        protected void ExecuteDelegate(ICpu cpu, Delegate dlg)
+        /// <returns>whatever object the delegate method returned</returns>
+        protected object ExecuteDelegate(ICpu cpu, Delegate dlg)
         {
             MethodInfo methInfo = dlg.Method;
             ParameterInfo[] paramArray = methInfo.GetParameters();
@@ -1130,11 +1135,15 @@ namespace kOS.Safe.Compilation
             if (methInfo.ReturnType == typeof(void))
             {
                 dlg.DynamicInvoke(argArray);
-                cpu.PushStack(null); // When there's no SET BLARG TO, this will get popped away.
+                return null; // So that the compiler building the opcodes for a function call statement doesn't
+                             // have to know the function prototype to decide whether or
+                             // not it needs to pop a value from the stack for the return value.  By adding this,
+                             // it can unconditionally assume there will be exactly 1 value left behind on the stack
+                             // regardless of what function it was that was being called.
             }
             else
             {
-                cpu.PushStack(dlg.DynamicInvoke(argArray));
+                return dlg.DynamicInvoke(argArray);
             }
         }
 
