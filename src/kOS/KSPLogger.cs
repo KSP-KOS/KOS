@@ -31,7 +31,7 @@ namespace kOS
             // -------------
             //    TODO
             // -------------
-            // IKOSExceptions probably should contain a reference to the stackTrace
+            // KOSExceptions probably should contain a reference to the stackTrace
             // information that TraceLog() builds up, and then in here when the
             // stack trace gets calculated by TraceLog(), it should also get assigned
             // to the exception object e's stackTrace reference.  That way when

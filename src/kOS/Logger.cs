@@ -13,7 +13,7 @@ namespace kOS
         // It's not implemented yet, but the intent of this is to give the user the ability
         // to see help data about old exceptions other than just the current one, perhaps
         // in a help log window or something.  At the moment nothing uses it yet.
-        protected List<Exception> exceptionHistory = new List<Exception>();
+        protected List<Exception> ExceptionHistory = new List<Exception>();
         
         public Logger()
         {
@@ -31,34 +31,34 @@ namespace kOS
 
         public virtual void Log(Exception e)
         {
-            string lineRule = "__________________________________________\n";
+            const string LINE_RULE = "__________________________________________\n";
 
             string message = e.Message;
             
-            if (Config.Instance.VerboseExceptions && e is IKOSException )
+            if (Config.Instance.VerboseExceptions && e is KOSException )
             {
                 // As a first primitive attempt at excercising the verbose exceptions,
                 // Just use a CONFIG setting for how verbose to be.  This will need
                 // to be replaced with something more sophisticated later, most likely.
 
-                message += "\n" + lineRule + "           VERBOSE DESCRIPTION\n";
+                message += "\n" + LINE_RULE + "           VERBOSE DESCRIPTION\n";
                 
-                message += ((IKOSException)e).VerboseMessage;
+                message += ((KOSException)e).VerboseMessage;
                 
                 // Fallback if there was no verbose message defined:
                 if (message == String.Empty)
                     message += e.Message;
-                message += lineRule;
+                message += LINE_RULE;
                 
                 // Take on the URL if there is one:
-                string url = ((IKOSException)e).HelpURL;
+                string url = ((KOSException)e).HelpURL;
                 if (url != String.Empty)
                     message += "\n\nMore Information at:\n" + url + "\n";
-                message += lineRule;
+                message += LINE_RULE;
             }
             LogToScreen(message);
             
-            exceptionHistory.Add(e);
+            ExceptionHistory.Add(e);
         }
 
         protected void LogToScreen(string text)

@@ -5,11 +5,11 @@ namespace kOS.Safe.Exceptions
     /// <summary>
     /// Thrown when CONFIG:IPU is exceeded in a trigger.
     /// </summary>
-    public class KOSLongTriggerException: Exception, IKOSException
+    public class KOSLongTriggerException: KOSException
     {
-        private static string terseMsgFmt = "Ran more than {0} instructions in trigger bodies, exceeding CONFIG:IPU";
+        private const string TERSE_MSG_FMT = "Ran more than {0} instructions in trigger bodies, exceeding CONFIG:IPU";
 
-        public string VerboseMessage
+        public override string VerboseMessage
         {
             get
             {
@@ -31,17 +31,15 @@ namespace kOS.Safe.Exceptions
                     " consider using the PRESERVE keyword instead\n" +
                     " to make it run one iteration per Update.\n";
             }
-            set{}
         }
         
-        public string HelpURL
+        public override string HelpURL
         {
             get{ return "http://ksp-kos.github.io/KOS_DOC/summary_topics/CPU_hardware/index.html#TRIGGERS"; }
-            set{}
         }
 
         public KOSLongTriggerException(int numInstructions) :
-            base( String.Format(terseMsgFmt,numInstructions) )
+            base( String.Format(TERSE_MSG_FMT,numInstructions) )
                  {
                  }
         }

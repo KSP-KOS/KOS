@@ -48,24 +48,21 @@ namespace kOS.Safe.Compilation.KS
                     CompileProgram(tree);
                 }
             }
-            catch (Exception e)
+            catch (KOSException kosException)
             {
-                if (_lastNode != null && (e is IKOSException ))
+                if (_lastNode != null)
                 {
                     throw;  // TODO something more sophisticated will go here that will
-                            // attach source/line information to the exception before throwing it upward.
-                            // that's why this seemingly pointless "catch and then throw again" is here.
+                    // attach source/line information to the exception before throwing it upward.
+                    // that's why this seemingly pointless "catch and then throw again" is here.
                 }
-                else
-                {
-                    // It turns out Console.WriteLine gets redirected to the same file as UnityEngine.Debug.Log uses,
-                    // and it's a way to log things in kOS.Safe without depending on Unity libraries.
-                    Console.WriteLine("Exception in Compiler: " + e.Message);
-                    Console.WriteLine(e.StackTrace);
-                    throw;  // throw it up in addition to logging the stack trace, so the kOS terminal will also give the user some message.
-                }
+                // It turns out Console.WriteLine gets redirected to the same file as UnityEngine.Debug.Log uses,
+                // and it's a way to log things in kOS.Safe without depending on Unity libraries.
+                Console.WriteLine("Exception in Compiler: " + kosException.Message);
+                Console.WriteLine(kosException.StackTrace);
+                throw;  // throw it up in addition to logging the stack trace, so the kOS terminal will also give the user some message.
             }
-            
+
             return _part;
         }
 

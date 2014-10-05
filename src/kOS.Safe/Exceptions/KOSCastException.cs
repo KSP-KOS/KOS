@@ -6,24 +6,22 @@ namespace kOS.Safe.Exceptions
     /// Indicates that KOS attempted to convert between two types and
     /// the system refused to allow the conversion.
     /// </summary>
-    public class KOSCastException: Exception, IKOSException
+    public class KOSCastException: KOSException
     {
-        private static string terseMsgFmt = "Cannot use {0} where {1} is needed";
-        
-        public string VerboseMessage { get{ return BuildVerboseMessage(); } set{} }
+        private const string TERSE_MSG_FMT = "Cannot use {0} where {1} is needed";
 
-        public string HelpURL { get{ return "";} set{} }
+        public override string VerboseMessage { get{ return BuildVerboseMessage(); } }
+
+        public override string HelpURL { get{ return "";} }
         
-        private Type typeFrom;
-        private Type typeTo;
+        private readonly Type typeFrom;
+        private readonly Type typeTo;
         
         /// <summary>
         /// Make an exception when an attempt to convert from one type to another failed.
         /// </summary>
-        /// <param name="verb">present-tense singular conjugation of the operation's verb, i.e "negate"</param>
-        /// <param name="operand">operand object being worked on</param>
         public KOSCastException(Type typeFrom, Type typeTo) :
-            base(String.Format(terseMsgFmt, typeFrom.Name, typeTo.Name))
+            base(String.Format(TERSE_MSG_FMT, typeFrom.Name, typeTo.Name))
         {
             this.typeFrom = typeFrom;
             this.typeTo = typeTo;
@@ -31,28 +29,27 @@ namespace kOS.Safe.Exceptions
         
         private string BuildVerboseMessage()
         {
-            string fmt =
-                "kOS attempts to do as much type conversion as\n" +
-                "possible behind the scenes so you don't have to\n" +
-                "worry about messy issues like the difference\n" +
-                "between integers, 32-bit numbers, 64-bit numbers,\n" +
-                "and so on.  But there are some conversions that\n" +
-                "it does not automatically do and apparently you\n" +
-                "have encountered one of them.\n" +
-                "\n" +
-                "When you get this message it means some part of\n" +
-                "your program script has tried to use a value of\n" +
-                "the wrong type for what it was being used for.\n" +
-                "(For example, trying to take the cosine of the\n" +
-                "string \"hello\".)\n" +
-                "\n" +
-                "In this specific instance, the script was trying\n" +
-                "to use some type of:\n" +
-                "    {0}\n" +
-                "in a place where it needed to use some type of:\n" +
-                "    {1}\n";
-            
-            return String.Format(fmt, typeFrom.Name, typeTo.Name);
+            const string VERBOSE_TEXT = "kOS attempts to do as much type conversion as{0}" +
+                               "possible behind the scenes so you don't have to{0}" +
+                               "worry about messy issues like the difference{0}" +
+                               "between integers, 32-bit numbers, 64-bit numbers,{0}" +
+                               "and so on.  But there are some conversions that{0}" +
+                               "it does not automatically do and apparently you{0}" +
+                               "have encountered one of them.{0}" +
+                               "{0}" +
+                               "When you get this message it means some part of{0}" +
+                               "your program script has tried to use a value of{0}" +
+                               "the wrong type for what it was being used for.{0}" +
+                               "(For example, trying to take the cosine of the{0}" +
+                               "string \"hello\".){0}" +
+                               "{0}" +
+                               "In this specific instance, the script was trying{0}" +
+                               "to use some type of:{0}" +
+                               "    {1}{0}" +
+                               "in a place where it needed to use some type of:{0}" +
+                               "    {2}{0}";
+
+            return String.Format(VERBOSE_TEXT, Environment.NewLine, typeFrom.Name, typeTo.Name);
         }
     }
 }

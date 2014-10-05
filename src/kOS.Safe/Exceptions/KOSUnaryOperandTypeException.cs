@@ -6,14 +6,14 @@ namespace kOS.Safe.Exceptions
     /// Indicates that some sort of unary expression operation was performed
     /// on an illegal data type, for example trying to "not" a string.
     /// </summary>
-    public class KOSUnaryOperandTypeException: Exception, IKOSException
+    public class KOSUnaryOperandTypeException: KOSException
     {
-        private static string terseMsgFmt = "Cannot {0} {1}";
-        
-        // for now just put a placeholder in using the terse message as the verbose one:
-        public string VerboseMessage { get{ return base.Message;} set{} }
+        private const string TERSE_MSG_FMT = "Cannot {0} {1}";
 
-        public string HelpURL { get{ return "";} set{} }
+        // for now just put a placeholder in using the terse message as the verbose one:
+        public override string VerboseMessage { get{ return base.Message;} }
+
+        public override string HelpURL { get{ return "";} }
         
         /// <summary>
         /// Describe the error in terms of the two operands and the verb/preposition
@@ -22,7 +22,7 @@ namespace kOS.Safe.Exceptions
         /// <param name="verb">present-tense singular conjugation of the operation's verb, i.e "negate"</param>
         /// <param name="operand">operand object being worked on</param>
         public KOSUnaryOperandTypeException(string verb, object operand) :
-            base(String.Format(terseMsgFmt, verb, operand.GetType().Name))
+            base(String.Format(TERSE_MSG_FMT, verb, operand.GetType().Name))
         {
         }
     }

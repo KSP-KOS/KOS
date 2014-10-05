@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace kOS.Safe.Exceptions
+﻿namespace kOS.Safe.Exceptions
 {
     /// <summary>
     /// Thrown whenever KOS compiler encounters something it does not like.
@@ -10,13 +8,13 @@ namespace kOS.Safe.Exceptions
     /// occur *prior* to actually letting the CPU start executing the
     /// program's opcodes.
     /// </summary>
-    public class KOSCompileException: Exception, IKOSException
+    public class KOSCompileException: KOSException
     {
         // Just default the Verbose message to return the terse message:
-        public virtual string VerboseMessage { get{return base.Message;} set{} }
+        public override string VerboseMessage { get{return base.Message;} }
 
         // Just nothing by default:
-        public virtual string HelpURL { get{ return "";} set{} }
+        public override string HelpURL { get{ return "";} }
 
         public KOSCompileException(string message) : base(message)
         {
