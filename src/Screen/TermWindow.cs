@@ -7,7 +7,7 @@ using kOS.Persistence;
 namespace kOS.Screen
 {
     // Blockotronix 550 Computor Monitor
-    public class TermWindow : KOSManagedWindow
+    public class TermWindow : KOSManagedWindow, IDisposable
     {
         private const int CHARSIZE = 8;
         private const int CHARS_PER_ROW = 16;
@@ -18,13 +18,13 @@ namespace kOS.Screen
         private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
-        private static Rect closeButtonRect = new Rect(398, 359, 59, 30);
+        private static readonly Rect closeButtonRect = new Rect(398, 359, 59, 30);
         
         
         private bool consumeEvent;
 
-        private KeyBinding rememberThrottleCutoffKey = null;
-        private KeyBinding rememberThrottleFullKey = null;
+        private KeyBinding rememberThrottleCutoffKey;
+        //private KeyBinding rememberThrottleFullKey;
 
         private bool allTexturesFound = true;
         private CameraManager cameraManager;
@@ -100,58 +100,56 @@ namespace kOS.Screen
 
         private void Lock()
         {
-            if (!isLocked)
-            {
-                isLocked = true;
-                BringToFront();
+            if (isLocked) return;
 
-                cameraManager = CameraManager.Instance;
-                cameraManager.enabled = false;
+            isLocked = true;
+            BringToFront();
 
-                InputLockManager.SetControlLock("kOSTerminal");
+            cameraManager = CameraManager.Instance;
+            cameraManager.enabled = false;
 
-                // Prevent editor keys from being pressed while typing
-                EditorLogic editor = EditorLogic.fetch;
-                if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true, "kOSTerminal");
+            InputLockManager.SetControlLock("kOSTerminal");
+
+            // Prevent editor keys from being pressed while typing
+            EditorLogic editor = EditorLogic.fetch;
+            if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true, "kOSTerminal");
                 
-                // This seems to be the only way to force KSP to let me lock out the "X" throttle
-                // key.  It seems to entirely bypass the logic of every other keypress in the game,
-                // so the only way to fix it is to use the keybindings system from the Setup screen.
-                // When the terminal is focused, the THROTTLE_CUTOFF action gets unbound, and then
-                // when its unfocused later, its put back the way it was:
-                rememberThrottleCutoffKey = GameSettings.THROTTLE_CUTOFF;
-                GameSettings.THROTTLE_CUTOFF = new KeyBinding(KeyCode.None);
-                // TODO for KSP 0.25: when 0.25 is released, uncomment these lines, and
-                // check what the name in the API actually is (THROTTLE_FULL is just my guess what
-                // they might call it):
-                //    rememberThrottleFullKey = GameSettings.THROTTLE_FULL;
-                //    GameSettings.THROTTLE_FULL = new KeyBinding(KeyCode.None);
-            }
+            // This seems to be the only way to force KSP to let me lock out the "X" throttle
+            // key.  It seems to entirely bypass the logic of every other keypress in the game,
+            // so the only way to fix it is to use the keybindings system from the Setup screen.
+            // When the terminal is focused, the THROTTLE_CUTOFF action gets unbound, and then
+            // when its unfocused later, its put back the way it was:
+            rememberThrottleCutoffKey = GameSettings.THROTTLE_CUTOFF;
+            GameSettings.THROTTLE_CUTOFF = new KeyBinding(KeyCode.None);
+            // TODO for KSP 0.25: when 0.25 is released, uncomment these lines, and
+            // check what the name in the API actually is (THROTTLE_FULL is just my guess what
+            // they might call it):
+            //    rememberThrottleFullKey = GameSettings.THROTTLE_FULL;
+            //    GameSettings.THROTTLE_FULL = new KeyBinding(KeyCode.None);
         }
 
         private void Unlock()
         {
-            if (isLocked)
-            {
-                isLocked = false;
+            if (!isLocked) return;
 
-                InputLockManager.RemoveControlLock("kOSTerminal");
+            isLocked = false;
 
-                cameraManager.enabled = true;
+            InputLockManager.RemoveControlLock("kOSTerminal");
 
-                EditorLogic editor = EditorLogic.fetch;
-                if (editor != null) editor.Unlock("kOSTerminal");
+            cameraManager.enabled = true;
 
-                // This seems to be the only way to force KSP to let me lock out the "X" throttle
-                // key.  It seems to entirely bypass the logic of every other keypress in the game:
-                if (rememberThrottleCutoffKey != null)
-                    GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
-                // TODO for KSP 0.25: when 0.25 is released, uncomment these lines, and
-                // check what the name in the API actually is (THROTTLE_FULL is just my guess what
-                // they might call it):
-                //    if (rememberThrottleFullKey != null)
-                //        GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
-            }
+            EditorLogic editor = EditorLogic.fetch;
+            if (editor != null) editor.Unlock("kOSTerminal");
+
+            // This seems to be the only way to force KSP to let me lock out the "X" throttle
+            // key.  It seems to entirely bypass the logic of every other keypress in the game:
+            if (rememberThrottleCutoffKey != null)
+                GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
+            // TODO for KSP 0.25: when 0.25 is released, uncomment these lines, and
+            // check what the name in the API actually is (THROTTLE_FULL is just my guess what
+            // they might call it):
+            //    if (rememberThrottleFullKey != null)
+            //        GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
         }
 
         void OnGUI()
@@ -205,7 +203,7 @@ namespace kOS.Screen
             {
                 // Unity handles some keys in a particular way
                 // e.g. Keypad7 is mapped to 0xffb7 instead of 0x37
-                char c = (char)(e.character & 0x007f);
+                var c = (char)(e.character & 0x007f);
 
                 // command sequences
                 if (e.keyCode == KeyCode.C && e.control) // Ctrl+C
@@ -360,18 +358,18 @@ namespace kOS.Screen
 
         }
 
-        void ShowCharacterByAscii(char ch, int x, int y, Color textColor)
+        void ShowCharacterByAscii(char ch, int x, int y, Color foreColor)
         {
             int tx = ch % CHARS_PER_ROW;
             int ty = ch / CHARS_PER_ROW;
 
-            ShowCharacterByXY(x, y, tx, ty, textColor);
+            ShowCharacterByXY(x, y, tx, ty, foreColor);
         }
 
-        void ShowCharacterByXY(int x, int y, int tx, int ty, Color textColor)
+        void ShowCharacterByXY(int x, int y, int tx, int ty, Color foreColor)
         {
             GUI.BeginGroup(new Rect((x * CHARSIZE), (y * CHARSIZE), CHARSIZE, CHARSIZE));
-            GUI.color = textColor;
+            GUI.color = foreColor;
             GUI.DrawTexture(new Rect(tx * -CHARSIZE, ty * -CHARSIZE, fontImage.width, fontImage.height), fontImage);
             GUI.EndGroup();
         }
@@ -400,6 +398,11 @@ namespace kOS.Screen
         public void SetShowCursor(bool showCursor)
         {
             this.showCursor = showCursor;
+        }
+
+        public void Dispose()
+        {
+            Unlock();
         }
     }
 }
