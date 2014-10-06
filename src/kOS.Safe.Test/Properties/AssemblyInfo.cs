@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("kOS.Safe.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Healthwise, Inc.")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("kOS.Safe.Test")]
-[assembly: AssemblyCopyright("Copyright © Healthwise, Inc. 2014")]
+[assembly: AssemblyCopyright("Copyright 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
