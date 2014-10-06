@@ -1,4 +1,5 @@
 using System;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {

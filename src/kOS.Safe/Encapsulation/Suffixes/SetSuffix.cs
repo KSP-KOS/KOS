@@ -1,10 +1,10 @@
-﻿namespace kOS.Safe.Encapsulation
+namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class SetSuffix<T,TR> : Suffix<T,TR>, ISetSuffix
     {
         private readonly SuffixSetDlg<T,TR> setter;
 
-        public SetSuffix(T type, SuffixGetDlg<T,TR> getter, SuffixSetDlg<T,TR> setter) : base(type, getter)
+        public SetSuffix(T type, SuffixGetDlg<T,TR> getter, SuffixSetDlg<T,TR> setter, string description = "") : base(type, getter, description)
         {
             this.setter = setter;
         }

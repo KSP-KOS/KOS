@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 using kOS.Safe.Encapsulation;
-using kOS.Screen;
-using kOS.Suffixed;
 
 namespace kOS
 {
     public class Core : MonoBehaviour
     {
-        public static VersionInfo VersionInfo = new VersionInfo(0, 14.1);
+        public static VersionInfo VersionInfo = new VersionInfo(0, 15, 0);
 
         public static Core Fetch; 
         

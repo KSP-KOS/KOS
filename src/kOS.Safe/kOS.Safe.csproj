@@ -56,24 +56,31 @@
     <Compile Include="Compilation\Script.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
-    <Compile Include="Encapsulation\GlobalSuffix.cs" />
-    <Compile Include="Encapsulation\SuffixDelegates.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
     <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
     <Compile Include="Encapsulation\ISuffix.cs" />
     <Compile Include="Encapsulation\ISuffixed.cs" />
     <Compile Include="Encapsulation\ListValue.cs" />
-    <Compile Include="Encapsulation\SetSuffix.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
-    <Compile Include="Encapsulation\Suffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
+    <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\NoArgsSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\NoArgsVoidSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\OneArgsSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\OneArgsVoidSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\SetSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\Suffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\SuffixDelegates.cs" />
+    <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
+    <Compile Include="Encapsulation\Suffixes\TwoArgsVoidSuffix.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
-    <Compile Include="Exceptions\KOSException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
     <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
     <Compile Include="Exceptions\KOSCompileException.cs" />
     <Compile Include="Exceptions\KOSBinaryOperandTypeException.cs" />
+    <Compile Include="Exceptions\KOSException.cs" />
     <Compile Include="Exceptions\KOSLongTriggerException.cs" />
     <Compile Include="Exceptions\KOSParseException.cs" />
     <Compile Include="Exceptions\KOSPreserveInvalidHereException.cs" />
@@ -87,6 +94,11 @@
     <Compile Include="IUpdateObserver.cs" />
     <Compile Include="Module\IProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Screen\IInterpreter.cs" />
     <Compile Include="Screen\ScreenBuffer.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
@@ -99,7 +111,12 @@
     <None Include="Compilation\CompiledObject-doc.md" />
     <None Include="Compilation\KS\kRISC.tpg" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

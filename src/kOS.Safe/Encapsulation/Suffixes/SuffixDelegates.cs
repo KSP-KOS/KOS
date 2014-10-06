@@ -1,4 +1,4 @@
-namespace kOS.Safe.Encapsulation
+namespace kOS.Safe.Encapsulation.Suffixes
 {
     public delegate TR GlobalSuffixGetDlg<out TR>();
     public delegate bool GlobalSuffixSetDlg<in T>(T value);
