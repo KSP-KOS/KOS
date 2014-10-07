@@ -11,14 +11,14 @@ namespace kOS.Safe.Test
         [Test]
         public void CanCreate()
         {
-            var suffix = new TwoArgsVoidSuffix<object, object>((one, two) => { });
+            var suffix = new TwoArgsSuffix<object, object>((one, two) => { });
             Assert.IsNotNull(suffix.Get());
         }
 
         [Test]
         public void CanGetDelegate()
         {
-            var suffix = new TwoArgsVoidSuffix<object, object>((one, two) => { });
+            var suffix = new TwoArgsSuffix<object, object>((one, two) => { });
             var del = suffix.Get();
             Assert.IsNotNull(del);
             var delegateAsDelegate = del as Delegate;
@@ -28,9 +28,9 @@ namespace kOS.Safe.Test
         [Test]
         public void CanExecuteDelegate()
         {
-            var mockDel = Substitute.For<TwoArgsVoidSuffix<object, object>.Del<object, object>>();
+            var mockDel = Substitute.For<TwoArgsSuffix<object, object>.Del<object, object>>();
 
-            var suffix = new TwoArgsVoidSuffix<object, object>(mockDel);
+            var suffix = new TwoArgsSuffix<object, object>(mockDel);
             var del = suffix.Get();
             Assert.IsNotNull(del);
             var delegateAsDelegate = del as Delegate;

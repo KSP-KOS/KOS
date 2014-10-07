@@ -1,7 +1,7 @@
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public delegate TR GlobalSuffixGetDlg<out TR>();
+    public delegate TReturn GlobalSuffixGetDlg<out TReturn>();
     public delegate bool GlobalSuffixSetDlg<in T>(T value);
-    public delegate TR SuffixGetDlg<in T, out TR>(T model);
+    public delegate TReturn SuffixGetDlg<in T, out TReturn>(T model);
     public delegate void SuffixSetDlg<in T, in TV>(T model, TV value);
 }

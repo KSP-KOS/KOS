@@ -23,9 +23,9 @@ namespace kOS.Safe.Encapsulation
 
         protected override void InitializeSuffixes()
         {
-            AddSuffix("ADD",      new OneArgsVoidSuffix<object>         (toAdd => list.Add(toAdd), Resources.ListAddDescription));
-            AddSuffix("REMOVE",   new OneArgsVoidSuffix<int>            (toRemove => list.RemoveAt(toRemove)));
-            AddSuffix("CLEAR",    new NoArgsVoidSuffix                  (() => list.Clear()));
+            AddSuffix("ADD",      new OneArgsSuffix<object>         (toAdd => list.Add(toAdd), Resources.ListAddDescription));
+            AddSuffix("REMOVE",   new OneArgsSuffix<int>            (toRemove => list.RemoveAt(toRemove)));
+            AddSuffix("CLEAR",    new NoArgsSuffix                  (() => list.Clear()));
             AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => list.Count));
             AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>          (() => new Enumerator(list.GetEnumerator())));
             AddSuffix("COPY",     new NoArgsSuffix<ListValue>           (() => new ListValue(this)));
@@ -108,7 +108,7 @@ namespace kOS.Safe.Encapsulation
 
         protected override void InitializeSuffixes()
         {
-            AddSuffix("RESET",    new NoArgsVoidSuffix    (() =>
+            AddSuffix("RESET",    new NoArgsSuffix    (() =>
                 {
                     index = -1;
                     status = false;

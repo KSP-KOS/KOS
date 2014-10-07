@@ -1,12 +1,12 @@
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class NoArgsVoidSuffix : SuffixBase
+    public class NoArgsSuffix : SuffixBase
     {
         private readonly Del del;
 
         public delegate void Del();
 
-        public NoArgsVoidSuffix(Del del, string description = ""):base(description)
+        public NoArgsSuffix(Del del, string description = ""):base(description)
         {
             this.del = del;
         }

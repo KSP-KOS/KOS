@@ -1,12 +1,31 @@
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class TwoArgsSuffix<TR,T,T2> : SuffixBase
+    public class TwoArgsSuffix<TReturn, TParam, TParam2> : SuffixBase
     {
-        private readonly Del<TR,T,T2> del;
+        private readonly Del<TReturn, TParam, TParam2> del;
 
-        public delegate TIR Del<out TIR, in TI, in TI2>(TI one, TI2 two);
+        public delegate TInnerReturn Del<out TInnerReturn, in TInnerParam, in TInnerParam2>(TInnerParam one, TInnerParam2 two);
 
-        public TwoArgsSuffix(Del<TR,T,T2> del, string description = ""):base(description)
+        public TwoArgsSuffix(Del<TReturn, TParam, TParam2> del, string description = "")
+            : base(description)
+        {
+            this.del = del;
+        }
+
+        public override object Get()
+        {
+            return del;
+        }
+    }
+
+    public class TwoArgsSuffix<TParam, TParam2> : SuffixBase
+    {
+        private readonly Del<TParam, TParam2> del;
+
+        public delegate void Del<in TInnerParam, in TInnerParam2>(TInnerParam one, TInnerParam2 two);
+
+        public TwoArgsSuffix(Del<TParam, TParam2> del, string description = "")
+            : base(description)
         {
             this.del = del;
         }

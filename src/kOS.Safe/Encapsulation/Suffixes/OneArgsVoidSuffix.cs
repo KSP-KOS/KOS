@@ -1,12 +1,12 @@
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class OneArgsVoidSuffix<T> : SuffixBase
+    public class OneArgsSuffix<TParam> : SuffixBase
     {
-        private readonly Del<T> del;
+        private readonly Del<TParam> del;
 
-        public delegate void Del<TI>(T argOne);
+        public delegate void Del<in TInnerParam>(TInnerParam argOne);
 
-        public OneArgsVoidSuffix(Del<T> del, string description = ""):base(description)
+        public OneArgsSuffix(Del<TParam> del, string description = ""):base(description)
         {
             this.del = del;
         }
