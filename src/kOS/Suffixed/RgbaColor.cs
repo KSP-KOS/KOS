@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
@@ -7,64 +8,25 @@ namespace kOS.Suffixed
     {
         private Color color;
 
-        public RgbaColor( float red, float green, float blue, float alpha = (float) 1.0 )
+        public RgbaColor( float red, float green, float blue, float alpha = (float) 1.0 ):this()
         {
             color = new Color(red,green,blue,alpha);
         }
-        public RgbaColor( RgbaColor copyFrom )
+        public RgbaColor( RgbaColor copyFrom ):this()
         {
             color = copyFrom.color;
+        }
+        private RgbaColor()
+        {
+            AddSuffix(new [] { "R", "RED" } , new SetSuffix<Color,float>(color, model => model.r, (model, value) => model.r = value));
+            AddSuffix(new [] { "G", "GREEN" } , new SetSuffix<Color,float>(color, model => model.g, (model, value) => model.g = value));
+            AddSuffix(new [] { "B", "BLUE" } , new SetSuffix<Color,float>(color, model => model.b, (model, value) => model.b = value));
+            AddSuffix(new [] { "A", "ALPHA" } , new SetSuffix<Color,float>(color, model => model.a, (model, value) => model.a = value));
         }
         
         public Color Color()
         {
-            return color;
-        }
-
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "R":
-                case "RED":
-                    return (double) color.r;
-                case "G":
-                case "GREEN":
-                    return (double) color.g;
-                case "B":
-                case "BLUE":
-                    return (double) color.b;
-                case "A":
-                case "ALPHA":
-                    return (double) color.a;
-            }
-
-            return base.GetSuffix(suffixName);
-        }
-        
-        public override bool SetSuffix(string suffixName, object value)
-        {
-            switch (suffixName)
-            {
-                case "R":
-                case "RED":
-                    color.r = (float) value;
-                    return true;
-                case "G":
-                case "GREEN":
-                    color.g = (float) value;
-                    return true;
-                case "B":
-                case "BLUE":
-                    color.b = (float) value;
-                    return true;
-                case "A":
-                case "ALPHA":
-                    color.a = (float) value;
-                    return true;
-            }
-
-            return base.SetSuffix(suffixName,value);
+            return new Color(color.r,color.g,color.b,color.a); 
         }
 
         public override string ToString()

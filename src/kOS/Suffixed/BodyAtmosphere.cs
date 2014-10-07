@@ -1,53 +1,27 @@
 ﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
     public class BodyAtmosphere : Structure
     {
-        public BodyAtmosphere(CelestialBody b)
+        private readonly CelestialBody celestialBody;
+
+        public BodyAtmosphere(CelestialBody celestialBody)
         {
-            BodyName = b.bodyName;
+            this.celestialBody = celestialBody;
 
-            Exists = b.atmosphere;
-
-            Scale = Exists ? b.atmosphereScaleHeight : 0;
-            Height = Exists ? b.maxAtmosphereAltitude : 0;
-            Oxygen = Exists && b.atmosphereContainsOxygen;
-            SeaLevelPressure = Exists ? b.staticPressureASL : 0;
-        }
-
-        protected double SeaLevelPressure { get; set; }
-        protected string BodyName { get; set; }
-        protected double Scale { get; set; }
-        protected float Height { get; set; }
-        protected bool Exists { get; set; }
-
-        public bool Oxygen { get; set; }
-
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "BODY":
-                    return BodyName;
-                case "EXISTS":
-                    return Exists;
-                case "HASOXYGEN":
-                    return Oxygen;
-                case "SCALE":
-                    return Scale;
-                case "SEALEVELPRESSURE":
-                    return SeaLevelPressure;
-                case "HEIGHT":
-                    return Height;
-            }
-
-            return base.GetSuffix(suffixName);
+            AddSuffix("BODY", new Suffix<CelestialBody,string>(celestialBody, model => model.bodyName));
+            AddSuffix("EXISTS", new Suffix<CelestialBody,bool>(celestialBody, model => model.atmosphere));
+            AddSuffix("OXYGEN", new Suffix<CelestialBody,bool>(celestialBody, model => celestialBody.atmosphere && celestialBody.atmosphereContainsOxygen));
+            AddSuffix("SCALE", new Suffix<CelestialBody,double>(celestialBody, model => celestialBody.atmosphere ? celestialBody.atmosphereScaleHeight : 0));
+            AddSuffix("SEALEVELPRESSURE", new Suffix<CelestialBody,double>(celestialBody, model => celestialBody.atmosphere ? celestialBody.staticPressureASL : 0));
+            AddSuffix("HEIGHT", new Suffix<CelestialBody,double>(celestialBody, model => celestialBody.atmosphere ? celestialBody.maxAtmosphereAltitude : 0));
         }
 
         public override string ToString()
         {
-            return "BODYATMOSPHERE(\"" + BodyName + "\")";
+            return "BODYATMOSPHERE(\"" + celestialBody.bodyName + "\")";
         }
     }
 }

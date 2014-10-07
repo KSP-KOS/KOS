@@ -3,12 +3,12 @@
   "URL": "https://raw.githubusercontent.com/KSP-KOS/KOS/master/Resources/GameData/kOS/kOS.version",
   "VERSION": {
     "MAJOR": 0,
-    "MINOR": 14,
+    "MINOR": 15,
     "PATCH": 0
   },
   "KSP_VERSION": {
     "MAJOR": 0,
-    "MINOR": 24,
-    "PATCH": 2
+    "MINOR": 25,
+    "PATCH": 0
   }
 }

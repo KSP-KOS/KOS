@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Suffixed;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Function
 {
@@ -17,7 +18,7 @@ namespace kOS.Function
             }
             catch(Exception)
             {
-                throw new ArgumentException(string.Format("Can't cast {0} to double.", argument));
+                throw new KOSCastException(argument.GetType(),typeof(Double));
             }    
         }
 
@@ -29,7 +30,7 @@ namespace kOS.Function
             }
             catch (Exception)
             {
-                throw new ArgumentException(string.Format("Can't cast {0} to int.", argument));
+                throw new KOSCastException(argument.GetType(),typeof(Int32));
             }
         }
 
@@ -40,7 +41,7 @@ namespace kOS.Function
             {
                 return vector;
             }
-            throw new ArgumentException(string.Format("Can't cast {0} to V().", argument));
+            throw new KOSCastException(argument.GetType(),typeof(Vector));
         }
 
         protected RgbaColor GetRgba(object argument)
@@ -50,7 +51,7 @@ namespace kOS.Function
             {
                 return rgba;
             }
-            throw new ArgumentException(string.Format("Can't cast {0} to RGB().", argument));
+            throw new KOSCastException(argument.GetType(),typeof(RgbaColor));
         }
 
         // Fully qualified name kos.Suffixed.TimeSpan used because the compiler
@@ -67,7 +68,7 @@ namespace kOS.Function
             }
             else
             {
-                throw new ArgumentException(string.Format("Can't cast {0} to Time structure.", argument));
+                throw new KOSCastException(argument.GetType(),typeof(kOS.Suffixed.TimeSpan));
             }
         }
 
@@ -79,7 +80,7 @@ namespace kOS.Function
             }
             else
             {
-                throw new ArgumentException(string.Format("{0} is neither a body nor a vessel.", argument));
+                throw new KOSCastException(argument.GetType(),typeof(Orbitable));
             }
         }
 

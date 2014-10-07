@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Compilation
 {
@@ -790,7 +791,7 @@ namespace kOS.Safe.Compilation
             else if (value is double)
                 result = -((double)value);
             else
-                throw new ArgumentException(string.Format("Can't negate object {0} of type {1}", value, value.GetType()));
+                throw new KOSUnaryOperandTypeException("negate", value);
 
             cpu.PushStack(result);
         }
@@ -805,8 +806,8 @@ namespace kOS.Safe.Compilation
         protected override object ExecuteCalculation(Calculator calc)
         {
             object result = calc.Add(Argument1, Argument2);
-            // TODO: complete message
-            if (result == null) throw new ArgumentException("Can't add ....");
+            if (result == null)
+                throw new KOSBinaryOperandTypeException(Argument1, "add", "to", Argument2);
             return result;
         }
     }
@@ -895,7 +896,7 @@ namespace kOS.Safe.Compilation
             else if ((value is double) || (value is float))
                 result = Convert.ToBoolean(value) ? 0.0 : 1.0;
             else
-                throw new ArgumentException(string.Format("Can't negate object {0} of type {1}", value, value.GetType()));
+                throw new KOSUnaryOperandTypeException("boolean-not", value);
 
             cpu.PushStack(result);
         }
@@ -938,6 +939,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeCall : Opcode
     {
+
         [MLField(0,true)]
         public override string DestinationLabel { get; set; } // masks Opcode.DestinationLabel - so it can be saved as an MLField.
         
@@ -946,6 +948,59 @@ namespace kOS.Safe.Compilation
 
         public override string Name { get { return "call"; } }
         public override ByteCode Code { get { return ByteCode.CALL; } }
+        
+        public static string ArgMarkerString = "$<argstart>"; // guaranteed to not be a legal variable name.
+
+        /// <summary>
+        /// The Direct property flags which mode the opcode will be operating in:<br/>
+        /// <br/>
+        /// If its a direct OpcodeCall, then that means the instruction index or function
+        /// name being called is contained inside the OpcodeCall's Destination argument,
+        /// and the current top of the stack contains the parameters to pass to it.
+        /// <br/>
+        /// If it's an indirect OpcodeCall, then that means the instruction index or function
+        /// name (or delegate) being called is contained in the stack just underneath the argument
+        /// list.  A string value of ArgMarkerString will exist on the stack just under the argument
+        /// list to differentiate where the arguments stop and the function name or index or
+        /// delegate itself is actually stored.
+        /// <br/>
+        /// EXAMPLE:<br/>
+        /// <br/>
+        /// Calling a function called "somefunc", which takes 2 parameters:<br/>
+        /// If the OpcodeCall is Direct, then the stack should look like this when it's executed:<br/>
+        /// <br/>
+        /// (arg2)  &lt; -- top of stack<br/>  
+        /// (arg1) <br/>
+        /// <br/>
+        /// If the OpcodeCall is Indirect, then the stack should look like this when it's executed:<br/>
+        /// <br/>
+        /// (arg2)  &lt; -- top of stack<br/>  
+        /// (arg1) <br/>
+        /// (ArgMarkerString) <br/>
+        /// ("somefunc" (or a delegate))<br/>
+        /// </summary>
+        public bool Direct
+        {
+            // Behind the scenes this is implemented as a flag value in the 
+            // Destination field.  The Opcode is only indirect if the Destination
+            // is a string equal to indirectPlaceholder.
+            get
+            {
+                if (Destination is string && Destination.ToString() == indirectPlaceholder)
+                    return false;
+                else
+                    return true;
+            }
+            set
+            {
+                if (value && !Direct)
+                    Destination = "TODO"; // If it's indirect and you set it to Direct, you'll need to also give it a Destination.
+                else if (!value && Direct)
+                    Destination = indirectPlaceholder;
+            }
+        }
+
+        private static string indirectPlaceholder = "<indirect>";  // Guaranteed not to be a possible real function name because of the "<" character.
 
         public OpcodeCall(object destination)
         {
@@ -955,7 +1010,7 @@ namespace kOS.Safe.Compilation
         /// This variant of the constructor is just for machine language file read/write to use.
         /// </summary>
         protected OpcodeCall() { }
-
+        
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
@@ -967,7 +1022,27 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object functionPointer = cpu.GetValue(Destination);
+            object functionPointer;
+            object delegateReturn = null;
+
+            if (Direct)
+            {
+                functionPointer = cpu.GetValue(Destination);
+            }
+            else // for indirect calls, dig down to find what's underneath the argument list in the stack and use that:
+            {
+                bool foundBottom = false;
+                int digDepth = 0;
+                for (digDepth = 0; (! foundBottom) && digDepth < cpu.GetStackSize() ; ++digDepth)
+                {
+                    object arg = cpu.PeekValue(digDepth);
+                    if (arg is string && arg.ToString() == ArgMarkerString)
+                        foundBottom = true;
+                }
+                functionPointer = cpu.PeekValue(digDepth);
+            }
+
+
             if (functionPointer is int)
             {
                 int currentPointer = cpu.InstructionPointer;
@@ -976,7 +1051,7 @@ namespace kOS.Safe.Compilation
                 cpu.PushStack(contextRecord);
                 cpu.MoveStackPointer(-1);
             }
-            else
+            else if (functionPointer is string)
             {
                 var name = functionPointer as string;
                 if (name != null)
@@ -986,6 +1061,91 @@ namespace kOS.Safe.Compilation
                     cpu.CallBuiltinFunction(functionName);
                 }
             }
+            else if (functionPointer is Delegate)
+            {
+                delegateReturn = ExecuteDelegate(cpu, (Delegate)functionPointer);
+            }
+            else
+            {
+                // This is one of those "the user had better NEVER see this error" sorts of messages that's here to keep us in check:
+                throw new Exception("kOS internal error: OpcodeCall calling a function described using " + functionPointer.ToString() +
+                                    " which is of type " + functionPointer.GetType().Name + " and kOS doesn't know how to call that.");
+            }
+            
+            if (! Direct)
+            {
+                // Indirect calls have two more elements to consume from the stack.
+                cpu.PopValue(); // consume arg bottom mark
+                cpu.PopValue(); // consume function name, branch index, or delegate
+            }
+            if (functionPointer is Delegate)
+            {
+                cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.
+            }
+
+        }
+        
+        /// <summary>
+        /// Call this when executing a delegate function whose delegate object was stored on
+        /// the stack underneath the arguments.  The code here is using reflection and complex
+        /// enough that it needed to be separated from the main Execute method.
+        /// </summary>
+        /// <param name="cpu">the cpu this opcode is being called on</param>
+        /// <param name="dlg">the delegate object this opcode is being called for.</param>
+        /// <returns>whatever object the delegate method returned</returns>
+        protected object ExecuteDelegate(ICpu cpu, Delegate dlg)
+        {
+            MethodInfo methInfo = dlg.Method;
+            ParameterInfo[] paramArray = methInfo.GetParameters();
+            List<object> args = new List<object>();
+            
+            // Iterating over parameter signature backward because stack:
+            for (int i = paramArray.Length - 1 ; i >= 0 ; --i)
+            {
+                object arg = cpu.PopValue();
+                Type argType = arg.GetType();
+                ParameterInfo paramInfo = paramArray[i];
+                Type paramType = paramInfo.ParameterType;
+                
+                // Parameter type-safe checking:
+                bool inheritable = paramType.IsAssignableFrom(argType);
+                if (! inheritable)
+                {
+                    // If it's not directly assignable to the expected type, maybe it's "castable" to it:
+                    try
+                    {
+                        arg = Convert.ChangeType(arg, Type.GetTypeCode(paramType));
+                    }
+                    catch (InvalidCastException)
+                    {
+                        throw new Exception("Argument " + i + " to method " + methInfo.Name + " should be " + paramType.Name + " instead of " + argType + ".");
+                    }
+                }
+                
+                args.Add(arg);
+            }
+            args.Reverse(); // Put back in normal order instead of stack order.
+            
+            // Dialog.DynamicInvoke expects a null, rather than an array of zero length, when
+            // there are no arguments to pass:
+            object[] argArray = (args.Count>0) ? args.ToArray() : null;
+
+            // I could find no documentation on what DynamicInvoke returns when the delegate
+            // is a function returning void.  Does it return a null?  I don't know.  So to avoid the
+            // problem, I split this into these two cases:
+            if (methInfo.ReturnType == typeof(void))
+            {
+                dlg.DynamicInvoke(argArray);
+                return null; // So that the compiler building the opcodes for a function call statement doesn't
+                             // have to know the function prototype to decide whether or
+                             // not it needs to pop a value from the stack for the return value.  By adding this,
+                             // it can unconditionally assume there will be exactly 1 value left behind on the stack
+                             // regardless of what function it was that was being called.
+            }
+            else
+            {
+                return dlg.DynamicInvoke(argArray);
+            }
         }
 
         public override string ToString()
@@ -993,7 +1153,6 @@ namespace kOS.Safe.Compilation
             return string.Format("{0} {1}", Name, Destination);
         }
     }
-
     
     public class OpcodeReturn : Opcode
     {

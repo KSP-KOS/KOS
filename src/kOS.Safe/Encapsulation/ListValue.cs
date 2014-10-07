@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Properties;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -18,45 +21,53 @@ namespace kOS.Safe.Encapsulation
             list = new List<object>(toCopy.list);
         }
 
-        public int Count
+        protected override void InitializeSuffixes()
         {
-            get { return list.Count; }
+            AddSuffix("ADD",      new OneArgsSuffix<object>         (toAdd => list.Add(toAdd), Resources.ListAddDescription));
+            AddSuffix("REMOVE",   new OneArgsSuffix<int>            (toRemove => list.RemoveAt(toRemove)));
+            AddSuffix("CLEAR",    new NoArgsSuffix                  (() => list.Clear()));
+            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => list.Count));
+            AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>          (() => new Enumerator(list.GetEnumerator())));
+            AddSuffix("COPY",     new NoArgsSuffix<ListValue>           (() => new ListValue(this)));
+            AddSuffix("CONTAINS", new OneArgsSuffix<bool, object>       (item => list.Contains(item)));
+            AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
+            AddSuffix("EMPTY",    new NoArgsSuffix<bool>                (() => !list.Any()));
         }
 
         public override bool SetSuffix(string suffixName, object value)
         {
+            //These were deprecated in v0.15. Text here it to assist in upgrading scripts
             switch (suffixName)
             {
                 case "ADD":
-                    list.Add(value);
-                    return true;
+                    throw new Exception("Old syntax \n" +
+                                               "   SET _somelist_:ADD TO _value_\n" +
+                                               "is no longer supported. Try replacing it with: \n" +
+                                               "   _somelist_:ADD(_value_).\n");
                 case "CONTAINS":
-                    return list.Contains(value);
+                    throw new Exception("Old syntax \n" +
+                                               "   SET _somelist_:CONTAINS TO _value_\n" +
+                                               "is no longer supported. Try replacing it with: \n" +
+                                               "   SET _somelist_:CONTAINS(_value_) TO _value_\n");
                 case "REMOVE":
-                    var index = int.Parse(value.ToString());
-                    list.RemoveAt(index);
-                    return true;
+                    throw new Exception("Old syntax \n" +
+                                               "   SET _somelist_:REMOVE TO _number_\n" +
+                                               "is no longer supported. Try replacing it with: \n" +
+                                               "   _somelist_:REMOVE(_number_).\n");
                 default:
                     return false;
             }
         }
 
-        public override object GetSuffix(string suffixName)
+        // This test case was added to ensure there was an example method with more than 1 argument.
+        public ListValue SubListMethod(int start, int runLength)
         {
-            switch (suffixName)
+            var subList = new ListValue();
+            for (int i = start; i < list.Count && i < start + runLength; ++i)
             {
-                case "CLEAR":
-                    list.Clear();
-                    return true;
-                case "LENGTH":
-                    return list.Count;
-                case "ITERATOR":
-                    return new Enumerator(list.GetEnumerator());
-                case "COPY":
-                    return new ListValue(this);
-                default:
-                    return string.Format("Suffix {0} Not Found", suffixName);
+                subList.Add(list[i]);
             }
+            return subList;
         }
 
         public void Add(object toAdd)
@@ -67,11 +78,6 @@ namespace kOS.Safe.Encapsulation
         public override string ToString()
         {
             return string.Format("{0} LIST({1})", base.ToString(), list.Count);
-        }
-
-        public bool Empty()
-        {
-            return !list.Any();
         }
 
         #region IIndexable Members
@@ -86,13 +92,12 @@ namespace kOS.Safe.Encapsulation
             list[index] = value;
         }
 
-        #endregion
+        #endregion IIndexable Members
     }
 
     public class Enumerator : Structure
     {
         private readonly IEnumerator enumerator;
-        private readonly object lockObject = new object();
         private int index = -1;
         private bool status;
 
@@ -101,33 +106,24 @@ namespace kOS.Safe.Encapsulation
             this.enumerator = enumerator;
         }
 
-        public override object GetSuffix(string suffixName)
+        protected override void InitializeSuffixes()
         {
-            lock (lockObject)
-            {
-                switch (suffixName)
+            AddSuffix("RESET",    new NoArgsSuffix    (() =>
                 {
-                    case "RESET":
-                        index = -1;
-                        status = false;
-                        enumerator.Reset();
-                        return true;
-                    case "NEXT":
-                        status = enumerator.MoveNext();
-                        index++;
-                        return status;
-                    case "ATEND":
-                        return !status;
-                    case "INDEX":
-                        return index;
-                    case "VALUE":
-                        return enumerator.Current;
-                    case "ITERATOR":
-                        return this;
-                    default:
-                        return string.Format("Suffix {0} Not Found", suffixName);
-                }
-            }
+                    index = -1;
+                    status = false;
+                    enumerator.Reset();
+                }));
+            AddSuffix("NEXT",     new NoArgsSuffix<bool>  (() =>
+                {
+                    status = enumerator.MoveNext();
+                    index++;
+                    return status;
+                }));
+            AddSuffix("ATEND",    new NoArgsSuffix<bool>  (() => !status));
+            AddSuffix("INDEX",    new NoArgsSuffix<int>   (() => index));
+            AddSuffix("VALUE",    new NoArgsSuffix<object>(() => enumerator.Current));
+            AddSuffix("ITERATOR", new NoArgsSuffix<object>(() => this));
         }
 
         public override string ToString()

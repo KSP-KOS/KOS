@@ -326,39 +326,55 @@ namespace kOS.Module
 
         public override void OnLoad(ConfigNode node)
         {
-            // KSP Seems to want to make an instance of my partModule during initial load
-            if (vessel == null) return;
-
-            if (node.HasNode("harddisk"))
+            try
             {
-                var newDisk = new Harddisk(node.GetNode("harddisk"));
-                HardDisk = newDisk;
+                // KSP Seems to want to make an instance of my partModule during initial load
+                if (vessel == null) return;
+
+                if (node.HasNode("harddisk"))
+                {
+                    var newDisk = new Harddisk(node.GetNode("harddisk"));
+                    HardDisk = newDisk;
+                }
+
+                InitObjects();
+
+                if (shared != null && shared.Cpu != null)
+                {
+                    ((CPU)shared.Cpu).OnLoad(node);
+                }
+                base.OnLoad(node);
             }
-
-            InitObjects();
-
-            if (shared != null && shared.Cpu != null)
+            catch (Exception ex) //Chris: Intentional Pokemon, if exceptions get out of here it can kill the craft
             {
-                ((CPU)shared.Cpu).OnLoad(node);
+                Debug.Log("kOS: ONLOAD Exception: " + ex.TargetSite);
+                Debug.LogException(ex);
             }
-            base.OnLoad(node);
         }
 
         public override void OnSave(ConfigNode node)
         {
-            if (HardDisk != null)
+            try
             {
-                ConfigNode hdNode = HardDisk.Save("harddisk");
-                node.AddNode(hdNode);
-            }
+                if (HardDisk != null)
+                {
+                    ConfigNode hdNode = HardDisk.Save("harddisk");
+                    node.AddNode(hdNode);
+                }
 
-            if (shared != null && shared.Cpu != null)
+                if (shared != null && shared.Cpu != null)
+                {
+                    ((CPU)shared.Cpu).OnSave(node);
+                    Config.Instance.SaveConfig();
+                }
+
+                base.OnSave(node);
+            }
+            catch (Exception ex) //Chris: Intentional Pokemon, if exceptions get out of here it can kill the craft
             {
-                ((CPU)shared.Cpu).OnSave(node);
-                Config.Instance.SaveConfig();
+                Debug.Log("kOS: ONSAVE Exception: " + ex.TargetSite);
+                Debug.LogException(ex);
             }
-
-            base.OnSave(node);
         }
         
         // This is what KSP calls during the initial loading screen (the screen

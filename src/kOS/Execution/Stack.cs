@@ -16,10 +16,7 @@ namespace kOS.Execution
         {
             string message = string.Empty;
 
-            if (!IsValid(item, ref message))
-            {
-                throw new ArgumentException(message);
-            }
+            ThrowIfInvalid(item, ref message);
 
             stackPointer++;
             if (stackPointer < MAX_STACK_SIZE)
@@ -27,10 +24,11 @@ namespace kOS.Execution
                 stack.Insert(stackPointer, ProcessItem(item));
             }
             else
+                // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
         }
 
-        private bool IsValid(object item, ref string message)
+        private void ThrowIfInvalid(object item, ref string message)
         {
             if (Config.Instance.EnableSafeMode)
             {
@@ -38,18 +36,18 @@ namespace kOS.Execution
                 {
                     if (Double.IsNaN((double)item))
                     {
-                        message = "Tried to push NaN into the stack.";
-                        return false;
+                        // TODO: make an IKOSException for this:
+                        throw new Exception("Tried to push NaN into the stack.");
                     }
                     if (Double.IsInfinity((double)item))
                     {
-                        message = "Tried to push Infinity into the stack.";
-                        return false;
+                        // TODO: make an IKOSException for this:
+                        throw new Exception("Tried to push Infinity into the stack.");
                     }
                 }
             }
 
-            return true;
+            return;
         }
 
         /// <summary>
@@ -77,6 +75,33 @@ namespace kOS.Execution
             }
 
             return item;
+        }
+        
+        /// <summary>
+        /// Slightly "cheats" and breaks out of the 'stack' model by allowing you to view the contents of
+        /// somewhere on the stack that is underneath the topmost thing.  You can only peek, but not pop
+        /// values this way.
+        /// </summary>
+        /// <param name="digDepth">How far underneath the top to look.  Zero means peek at the top,
+        /// 1 means peek at the item just under the top, 2 means peek at the item just under that, and
+        /// so on.</param>
+        /// <returns>The object at that depth.  Returns null when digDepth is too large and the stack isn't
+        /// big enough to dig that deep.</returns>
+        public object Peek(int digDepth)
+        {
+            if (digDepth > stackPointer)
+                return null;
+            else
+                return stack[stackPointer - digDepth];
+        }
+        
+        /// <summary>
+        /// Returns the logical size of the curent stack (not its potentially larger storage size).
+        /// </summary>
+        /// <returns>How many items are currently on the stack.</returns>
+        public int GetLogicalSize()
+        {
+            return stackPointer + 1;
         }
 
         public void MoveStackPointer(int delta)

@@ -241,9 +241,9 @@ namespace kOS.Function
         private kList GetConfigList()
         {
             var list = new kList();
-            list.AddColumn("", 5, ColumnAlignment.Left);
+            list.AddColumn("", 8, ColumnAlignment.Left);
             list.AddColumn("Name", 30, ColumnAlignment.Left);
-            list.AddColumn("Value", 10, ColumnAlignment.Left);
+            list.AddColumn("Value", 7, ColumnAlignment.Left);
 
             foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
