@@ -1,11 +1,11 @@
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class Suffix<T,TReturn> : SuffixBase
+    public class Suffix<TParam,TReturn> : SuffixBase
     {
-        protected T Model { get; private set; }
-        private readonly SuffixGetDlg<T,TReturn> getter;
+        protected TParam Model { get; private set; }
+        private readonly SuffixGetDlg<TParam,TReturn> getter;
 
-        public Suffix(T type, SuffixGetDlg<T,TReturn> getter, string description = ""):base(description)
+        public Suffix(TParam type, SuffixGetDlg<TParam,TReturn> getter, string description = ""):base(description)
         {
             Model = type;
             this.getter = getter;

@@ -17,9 +17,9 @@ namespace kOS.Safe.Encapsulation
 
         protected override void InitializeSuffixes()
         {
-            AddSuffix("MAJOR", new GlobalSuffix<int>(() => major));
-            AddSuffix("MINOR", new GlobalSuffix<int>(() => minor));
-            AddSuffix("BUILD", new GlobalSuffix<int>(() => build));
+            AddSuffix("MAJOR", new StaticSuffix<int>(() => major));
+            AddSuffix("MINOR", new StaticSuffix<int>(() => minor));
+            AddSuffix("BUILD", new StaticSuffix<int>(() => build));
         }
 
         public override string ToString()

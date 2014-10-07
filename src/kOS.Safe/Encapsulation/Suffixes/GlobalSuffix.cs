@@ -1,11 +1,11 @@
 namespace kOS.Safe.Encapsulation.Suffixes
 {
 
-    public class GlobalSuffix<TReturn> : SuffixBase
+    public class StaticSuffix<TReturn> : SuffixBase
     {
-        private readonly GlobalSuffixGetDlg<TReturn> getter;
+        private readonly StaticSuffixGetDlg<TReturn> getter;
 
-        public GlobalSuffix(GlobalSuffixGetDlg<TReturn> getter, string description = "") :base(description)
+        public StaticSuffix(StaticSuffixGetDlg<TReturn> getter, string description = "") :base(description)
         {
             this.getter = getter;
         }

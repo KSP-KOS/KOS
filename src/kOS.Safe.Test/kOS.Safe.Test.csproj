@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ListValueTest.cs" />
     <Compile Include="NoArgsSuffixTest.cs" />
     <Compile Include="StructureTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
