@@ -24,7 +24,7 @@ namespace kOS.Screen
         private bool consumeEvent;
 
         private KeyBinding rememberThrottleCutoffKey;
-        //private KeyBinding rememberThrottleFullKey;
+        private KeyBinding rememberThrottleFullKey;
 
         private bool allTexturesFound = true;
         private CameraManager cameraManager;
@@ -121,11 +121,8 @@ namespace kOS.Screen
             // when its unfocused later, its put back the way it was:
             rememberThrottleCutoffKey = GameSettings.THROTTLE_CUTOFF;
             GameSettings.THROTTLE_CUTOFF = new KeyBinding(KeyCode.None);
-            // TODO for KSP 0.25: when 0.25 is released, uncomment these lines, and
-            // check what the name in the API actually is (THROTTLE_FULL is just my guess what
-            // they might call it):
-            //    rememberThrottleFullKey = GameSettings.THROTTLE_FULL;
-            //    GameSettings.THROTTLE_FULL = new KeyBinding(KeyCode.None);
+            rememberThrottleFullKey = GameSettings.THROTTLE_FULL;
+            GameSettings.THROTTLE_FULL = new KeyBinding(KeyCode.None);
         }
 
         private void Unlock()
@@ -145,11 +142,8 @@ namespace kOS.Screen
             // key.  It seems to entirely bypass the logic of every other keypress in the game:
             if (rememberThrottleCutoffKey != null)
                 GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
-            // TODO for KSP 0.25: when 0.25 is released, uncomment these lines, and
-            // check what the name in the API actually is (THROTTLE_FULL is just my guess what
-            // they might call it):
-            //    if (rememberThrottleFullKey != null)
-            //        GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
+            if (rememberThrottleFullKey != null)
+                GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
         }
 
         void OnGUI()
