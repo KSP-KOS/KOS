@@ -25,8 +25,8 @@ namespace kOS.Screen
         
         private bool consumeEvent;
 
-        private KeyBinding rememberThrottleCutoffKey = null;
-        private KeyBinding rememberThrottleFullKey = null;
+        private KeyBinding rememberThrottleCutoffKey;
+        private KeyBinding rememberThrottleFullKey;
 
         private bool allTexturesFound = true;
         private CameraManager cameraManager;
@@ -116,19 +116,15 @@ namespace kOS.Screen
                 EditorLogic editor = EditorLogic.fetch;
                 if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true, "kOSTerminal");
                 
-                // This seems to be the only way to force KSP to let me lock out the "X" throttle
-                // key.  It seems to entirely bypass the logic of every other keypress in the game,
-                // so the only way to fix it is to use the keybindings system from the Setup screen.
-                // When the terminal is focused, the THROTTLE_CUTOFF action gets unbound, and then
-                // when its unfocused later, its put back the way it was:
-                rememberThrottleCutoffKey = GameSettings.THROTTLE_CUTOFF;
-                GameSettings.THROTTLE_CUTOFF = new KeyBinding(KeyCode.None);
-                // TODO for KSP 0.25: when 0.25 is released, uncomment these lines, and
-                // check what the name in the API actually is (THROTTLE_FULL is just my guess what
-                // they might call it):
-                //    rememberThrottleFullKey = GameSettings.THROTTLE_FULL;
-                //    GameSettings.THROTTLE_FULL = new KeyBinding(KeyCode.None);
-            }
+            // This seems to be the only way to force KSP to let me lock out the "X" throttle
+            // key.  It seems to entirely bypass the logic of every other keypress in the game,
+            // so the only way to fix it is to use the keybindings system from the Setup screen.
+            // When the terminal is focused, the THROTTLE_CUTOFF action gets unbound, and then
+            // when its unfocused later, its put back the way it was:
+            rememberThrottleCutoffKey = GameSettings.THROTTLE_CUTOFF;
+            GameSettings.THROTTLE_CUTOFF = new KeyBinding(KeyCode.None);
+            rememberThrottleFullKey = GameSettings.THROTTLE_FULL;
+            GameSettings.THROTTLE_FULL = new KeyBinding(KeyCode.None);
         }
 
         private void Unlock()
@@ -144,16 +140,15 @@ namespace kOS.Screen
                 EditorLogic editor = EditorLogic.fetch;
                 if (editor != null) editor.Unlock("kOSTerminal");
 
-                // This seems to be the only way to force KSP to let me lock out the "X" throttle
-                // key.  It seems to entirely bypass the logic of every other keypress in the game:
-                if (rememberThrottleCutoffKey != null)
-                    GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
-                // TODO for KSP 0.25: when 0.25 is released, uncomment these lines, and
-                // check what the name in the API actually is (THROTTLE_FULL is just my guess what
-                // they might call it):
-                //    if (rememberThrottleFullKey != null)
-                //        GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
-            }
+            EditorLogic editor = EditorLogic.fetch;
+            if (editor != null) editor.Unlock("kOSTerminal");
+
+            // This seems to be the only way to force KSP to let me lock out the "X" throttle
+            // key.  It seems to entirely bypass the logic of every other keypress in the game:
+            if (rememberThrottleCutoffKey != null)
+                GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
+            if (rememberThrottleFullKey != null)
+                GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
         }
 
         void OnGUI()
