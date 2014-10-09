@@ -1,14 +1,31 @@
 {
   "NAME": "kOS",
   "URL": "https://raw.githubusercontent.com/KSP-KOS/KOS/master/Resources/GameData/kOS/kOS.version",
+  "DOWNLOAD":"TODO - when release..."
+  "CHANGE_LOG_URL":"https://raw.githubusercontent.com/KSP-KOS/KOS/master/CHANGELOG.md",
+  "GITHUB": {
+    "USERNAME":"KSP-KOS",
+    "REPOSITORY":"KOS",
+    "ALLOW_PRE_RELEASE":false
+  },
   "VERSION": {
     "MAJOR": 0,
-    "MINOR": 14,
+    "MINOR": 15,
     "PATCH": 0
   },
   "KSP_VERSION": {
     "MAJOR": 0,
-    "MINOR": 24,
-    "PATCH": 2
+    "MINOR": 25,
+    "PATCH": 0
+  }
+  "KSP_VERSION_MIN": {
+    "MAJOR": 0,
+    "MINOR": 25,
+    "PATCH": 0
+  },
+  "KSP_VERSION_MAX": {
+    "MAJOR": 0,
+    "MINOR": 25,
+    "PATCH": 99
   }
 }
