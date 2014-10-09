@@ -372,6 +372,23 @@ namespace kOS.Module
                 Debug.LogException(ex);
             }
         }
+        
+        // This is what KSP calls during the initial loading screen (the screen
+        // with the progress bar and all of the "Turning correct end toward space"
+        // funny messages.)  This is where kOS *should* be putting all the
+        // static initializing that does not change per-part, or per-vessel
+        // or per-CPU.  It might be true that some of what we're doing up above
+        // in OnLoad and OnStart might relly belong here.
+        //
+        // At some future point it would be a really good idea to look very carefully
+        // at *everything* being done during those initialzations and see if any of
+        // those steps really are meant to be static do-once steps that belong here
+        // instead:
+        public override void OnAwake()
+        {
+            kOS.Compilation.Opcode.InitMachineCodeData();
+            kOS.Compilation.CompiledObject.InitTypeData();
+        }
 
         private void ProcessElectricity(Part partObj, float time)
         {

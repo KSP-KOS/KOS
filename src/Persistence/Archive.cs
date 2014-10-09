@@ -25,11 +25,19 @@ namespace kOS.Persistence
         {
             try
             {
-                using (var infile = new StreamReader(archiveFolder + name + ".txt", true))
+                using (var infile = new BinaryReader(File.Open(archiveFolder + name + ".txt", FileMode.Open)))
                 {
-                    string fileBody = infile.ReadToEnd().Replace("\r\n", "\n");
+                    byte[] fileBody = infile.ReadBytes(ProgramFile.MaxFileSize);
+                    ProgramFile retFile = new ProgramFile(name);
+                    FileCategory whatKind = ProgramFile.IdentifyCategory(fileBody);
+                    if (whatKind == FileCategory.KEXE)
+                        retFile.BinaryContent = fileBody;
+                    else
+                        retFile.StringContent = System.Text.Encoding.UTF8.GetString(fileBody);
+                    
+                    if (retFile.Category == FileCategory.ASCII || retFile.Category == FileCategory.KERBOSCRIPT)
+                        retFile.StringContent = retFile.StringContent.Replace("\r\n", "\n");
 
-                    var retFile = new ProgramFile(name) {Content = fileBody};
                     base.DeleteByName(name);
                     base.Add(retFile);
 
@@ -51,14 +59,21 @@ namespace kOS.Persistence
 
             try
             {
-                using (var outfile = new StreamWriter(archiveFolder + file.Filename + ".txt", false))
+                using (var outfile = new BinaryWriter(File.Open(archiveFolder + file.Filename + ".txt",FileMode.Create)))
                 {
-                    string fileBody = file.Content;
-
-                    if (Application.platform == RuntimePlatform.WindowsPlayer)
+                    
+                    byte[] fileBody;
+                    if (file.Category == FileCategory.KEXE)
+                        fileBody = file.BinaryContent;
+                    else
                     {
-                        // Only evil windows gets evil windows line breaks
-                        fileBody = fileBody.Replace("\n", "\r\n");
+                        string tempString = file.StringContent;
+                        if (Application.platform == RuntimePlatform.WindowsPlayer)
+                        {
+                            // Only evil windows gets evil windows line breaks, and only if this is some sort of ascii:
+                            tempString = tempString.Replace("\n", "\r\n");
+                        }
+                        fileBody = System.Text.Encoding.UTF8.GetBytes(tempString.ToCharArray());
                     }
 
                     outfile.Write(fileBody);

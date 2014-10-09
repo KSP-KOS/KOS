@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 using kOS.Suffixed;
+using kOS.Compilation;
 
 namespace kOS.Persistence
 {
@@ -61,12 +63,21 @@ namespace kOS.Persistence
         {
             ProgramFile file = GetByName(name) ?? new ProgramFile(name);
 
-            if (file.Content.Length > 0 && !file.Content.EndsWith("\n"))
+            if (file.StringContent.Length > 0 && !file.StringContent.EndsWith("\n"))
             {
                 textToAppend = "\n" + textToAppend;
             }
 
-            file.Content += textToAppend;
+            file.StringContent = file.StringContent + textToAppend;
+            SaveFile(file);
+        }
+
+        public virtual void AppendToFile(string name, byte[] bytesToAppend)
+        {
+            ProgramFile file = GetByName(name) ?? new ProgramFile(name);
+
+            file.BinaryContent = new byte[file.BinaryContent.Length + bytesToAppend.Length];
+            Array.Copy(bytesToAppend, 0, file.BinaryContent, file.BinaryContent.Length, bytesToAppend.Length);
             SaveFile(file);
         }
 
@@ -80,6 +91,20 @@ namespace kOS.Persistence
             DeleteByName(file.Filename);
             Add(file);
             return true;
+        }
+        
+        public virtual bool SaveObjectFile(string fileNameOut, List<CodePart> parts)
+        {
+            ProgramFile newFile = new ProgramFile(fileNameOut);
+            newFile.BinaryContent = Compilation.CompiledObject.Pack(parts);
+            SaveFile(newFile);
+            return true;
+        }
+
+        public virtual List<CodePart> LoadObjectFile(string filePath, int startLineNum, string prefix, byte[] content)
+        {
+            List<CodePart> parts = Compilation.CompiledObject.UnPack(filePath, startLineNum, prefix , content);
+            return parts;
         }
 
         public virtual int GetUsedSpace()

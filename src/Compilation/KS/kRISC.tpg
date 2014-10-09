@@ -48,6 +48,7 @@ FILE -> @"file";
 DELETE -> @"delete";
 EDIT -> @"edit";
 RUN -> @"run";
+COMPILE -> @"compile";
 LIST -> @"list";
 REBOOT -> @"reboot";
 SHUTDOWN -> @"shutdown";
@@ -86,7 +87,7 @@ instruction_block -> instruction | CURLYOPEN instruction* CURLYCLOSE EOI?;
 instruction -> set_stmt | if_stmt | until_stmt | lock_stmt | unlock_stmt | print_stmt |
                on_stmt | toggle_stmt | wait_stmt | when_stmt | onoff_stmt | stage_stmt |
                clear_stmt | add_stmt | remove_stmt | log_stmt | break_stmt | preserve_stmt | declare_stmt |
-               switch_stmt | copy_stmt | rename_stmt | delete_stmt | edit_stmt | run_stmt |
+               switch_stmt | copy_stmt | rename_stmt | delete_stmt | edit_stmt | run_stmt | compile_stmt |
                list_stmt | reboot_stmt | shutdown_stmt | for_stmt | unset_stmt | batch_stmt |
                deploy_stmt;
 // statements
@@ -115,6 +116,7 @@ rename_stmt -> RENAME (VOLUME | FILE)? filevol_name TO IDENTIFIER EOI;
 delete_stmt -> DELETE IDENTIFIER (FROM filevol_name)? EOI;
 edit_stmt -> EDIT IDENTIFIER EOI;
 run_stmt -> RUN IDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? (ON filevol_name)? EOI;
+compile_stmt -> COMPILE IDENTIFIER TO IDENTIFIER EOI;
 filevol_name -> INTEGER | IDENTIFIER;
 list_stmt -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
 reboot_stmt -> REBOOT EOI;

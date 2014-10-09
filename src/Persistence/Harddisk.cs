@@ -62,7 +62,7 @@ namespace kOS.Persistence
 
             foreach (ProgramFile file in Files.Values)
             {
-                node.AddNode(file.Save("file"));
+                node.AddNode(file.SaveEncoded("file"));
             }
             
             return node;

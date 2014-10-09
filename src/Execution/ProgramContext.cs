@@ -45,7 +45,7 @@ namespace kOS.Execution
             UpdateProgram(newProgram);
             return entryPointAddress;
         }
-
+        
         private void UpdateProgram(List<Opcode> newProgram)
         {
             if (Program != null)
@@ -114,8 +114,13 @@ namespace kOS.Execution
                 manager.ToggleFlyByWire(kvp.Key, kvp.Value);
             }
         }
-
+        
         public List<string> GetCodeFragment(int contextLines)
+        {
+            return GetCodeFragment( InstructionPointer - contextLines, InstructionPointer + contextLines );
+        }
+        
+        public List<string> GetCodeFragment(int start, int stop)
         {
             var codeFragment = new List<string>();
             
@@ -123,7 +128,7 @@ namespace kOS.Execution
             codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "opcode", "operand" ));
             codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "---------------------", "" ));
 
-            for (int index = (InstructionPointer - contextLines); index <= (InstructionPointer + contextLines); index++)
+            for (int index = start; index <= stop; index++)
             {
                 if (index >= 0 && index < Program.Count)
                 {

@@ -101,7 +101,24 @@ namespace kOS.Execution
             if (shared.Screen != null)
             {
                 shared.Screen.ClearScreen();
-                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n ", Core.VersionInfo);
+                string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n", Core.VersionInfo);
+                List<string>nags = Utilities.Utils.GetPendingNags();
+                if (nags.Count > 0)
+                {
+                    bootMessage +=
+                        "##################################################\n" +
+                        "#               NAG MESSAGES                     #\n" +
+                        "##################################################\n" +
+                        "# Further details about these important messages #\n" +
+                        "# can be found in the KSP error log.  If you see #\n" +
+                        "# this, then read the error log.  It's important.#\n" +
+                        "--------------------------------------------------\n";
+
+                    foreach (string msg in nags)
+                        bootMessage += msg + "\n";
+                    bootMessage +=
+                        "##################################################\n";
+                }
                 shared.Screen.Print(bootMessage);
             }
             
@@ -202,6 +219,10 @@ namespace kOS.Execution
         
         public Opcode GetOpcodeAt(int instructionPtr)
         {
+            if (instructionPtr < 0 || instructionPtr >= currentContext.Program.Count)
+            {
+                return new OpcodeBogus();
+            }
             return currentContext.Program[instructionPtr];
         }
 
@@ -627,7 +648,15 @@ namespace kOS.Execution
 
         private bool ExecuteInstruction(ProgramContext context)
         {
+            bool DEBUG_EACH_OPCODE = false;
+            
             Opcode opcode = context.Program[context.InstructionPointer];
+            if (DEBUG_EACH_OPCODE)
+            {
+                UnityEngine.Debug.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count +
+                                      "\n                   Opcode is: " + opcode.ToString() );
+            }
+            
             if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
             {
                 opcode.Execute(this);
