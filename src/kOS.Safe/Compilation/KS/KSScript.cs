@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -52,8 +53,15 @@ namespace kOS.Safe.Compilation.KS
                 }
                 else
                 {
+                    // TODO: Come back here and check on the possiblity of reporting more
+                    // errors than just the first one.  It appears that TinyPG builds a
+                    // whole array of error messages so people could see multiple syntax
+                    // errors in one go if we supported the reporting of it.  It may be that
+                    // it was deliberately not done because it might be too verbose that way
+                    // for the small text terminal.
+                    
                     ParseError error = parseTree.Errors[0];
-                    RaiseParseException(scriptText, error.Line, error.Position);
+                    throw new KOSParseException(error, scriptText);
                 } 
             }
 

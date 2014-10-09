@@ -220,6 +220,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.onoff_stmt:
                     Value = Evalonoff_stmt(tree, paramlist);
                     break;
+                case TokenType.onoff_trailer:
+                    Value = Evalonoff_trailer(tree, paramlist);
+                    break;
                 case TokenType.stage_stmt:
                     Value = Evalstage_stmt(tree, paramlist);
                     break;
@@ -310,6 +313,24 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.factor:
                     Value = Evalfactor(tree, paramlist);
                     break;
+                case TokenType.suffix:
+                    Value = Evalsuffix(tree, paramlist);
+                    break;
+                case TokenType.suffix_trailer:
+                    Value = Evalsuffix_trailer(tree, paramlist);
+                    break;
+                case TokenType.function:
+                    Value = Evalfunction(tree, paramlist);
+                    break;
+                case TokenType.function_trailer:
+                    Value = Evalfunction_trailer(tree, paramlist);
+                    break;
+                case TokenType.array:
+                    Value = Evalarray(tree, paramlist);
+                    break;
+                case TokenType.array_trailer:
+                    Value = Evalarray_trailer(tree, paramlist);
+                    break;
                 case TokenType.atom:
                     Value = Evalatom(tree, paramlist);
                     break;
@@ -319,14 +340,14 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.number:
                     Value = Evalnumber(tree, paramlist);
                     break;
-                case TokenType.array_identifier:
-                    Value = Evalarray_identifier(tree, paramlist);
-                    break;
                 case TokenType.varidentifier:
                     Value = Evalvaridentifier(tree, paramlist);
                     break;
-                case TokenType.function_identifier:
-                    Value = Evalfunction_identifier(tree, paramlist);
+                case TokenType.identifier_led_stmt:
+                    Value = Evalidentifier_led_stmt(tree, paramlist);
+                    break;
+                case TokenType.identifier_led_expr:
+                    Value = Evalidentifier_led_expr(tree, paramlist);
                     break;
 
                 default:
@@ -426,6 +447,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evalonoff_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalonoff_trailer(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
@@ -642,6 +670,48 @@ namespace kOS.Safe.Compilation.KS
             return null;
         }
 
+        protected virtual object Evalsuffix(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalsuffix_trailer(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalfunction(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalfunction_trailer(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalarray(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalarray_trailer(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
         protected virtual object Evalatom(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
@@ -663,13 +733,6 @@ namespace kOS.Safe.Compilation.KS
             return null;
         }
 
-        protected virtual object Evalarray_identifier(ParseTree tree, params object[] paramlist)
-        {
-            foreach (var node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
-
         protected virtual object Evalvaridentifier(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
@@ -677,7 +740,14 @@ namespace kOS.Safe.Compilation.KS
             return null;
         }
 
-        protected virtual object Evalfunction_identifier(ParseTree tree, params object[] paramlist)
+        protected virtual object Evalidentifier_led_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalidentifier_led_expr(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

@@ -5,36 +5,98 @@ namespace kOS.Safe.Encapsulation
 {
     public abstract class Structure : ISuffixed, IOperable 
     {
-        private readonly IDictionary<string, ISuffix> suffixes;
+        private static readonly IDictionary<Type,IDictionary<string, ISuffix>> globalSuffixes;
+        private readonly IDictionary<string, ISuffix> instanceSuffixes;
+        private static readonly object globalSuffixLock = new object();
+
+        static Structure()
+        {
+            globalSuffixes = new Dictionary<Type, IDictionary<string, ISuffix>>();
+        }
 
         protected Structure()
         {
-            suffixes = new Dictionary<string, ISuffix>();
+            instanceSuffixes = new Dictionary<string, ISuffix>();
+            // ReSharper disable DoNotCallOverridableMethodsInConstructor
+            InitializeSuffixes();
+            // ReSharper restore DoNotCallOverridableMethodsInConstructor
+        }
+
+        protected virtual void InitializeSuffixes()
+        {
+            
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
         {
-            if (suffixes.ContainsKey(suffixName))
+            AddSuffix(new[]{suffixName}, suffixToAdd);
+        }
+
+        protected void AddSuffix(string[] suffixNames, ISuffix suffixToAdd)
+        {
+            foreach (var suffixName in suffixNames)
             {
-                suffixes[suffixName] = suffixToAdd;
+                if (instanceSuffixes.ContainsKey(suffixName))
+                {
+                    instanceSuffixes[suffixName] = suffixToAdd;
+                }
+                else
+                {
+                    instanceSuffixes.Add(suffixName, suffixToAdd);
+                }
             }
-            else
+        }
+
+        protected static void AddGlobalSuffix<T>(string suffixName, ISuffix suffixToAdd)
+        {
+            AddGlobalSuffix<T>(new[]{suffixName}, suffixToAdd);
+        }
+
+        protected static void AddGlobalSuffix<T>(string[] suffixNames, ISuffix suffixToAdd)
+        {
+            var type = typeof (T);
+            var typeSuffixes = GetSuffixesForType(type);
+
+            foreach (var suffixName in suffixNames)
             {
-                suffixes.Add(suffixName, suffixToAdd);
+                if (typeSuffixes.ContainsKey(suffixName))
+                {
+                    typeSuffixes[suffixName] = suffixToAdd;
+                }
+                else
+                {
+                    typeSuffixes.Add(suffixName, suffixToAdd);
+                }
+            }
+            globalSuffixes[type] = typeSuffixes;
+        }
+
+        private static IDictionary<string, ISuffix> GetSuffixesForType(Type currentType)
+        {
+            lock (globalSuffixLock)
+            {
+                IDictionary<string, ISuffix> typeSuffixes;
+                if (!globalSuffixes.TryGetValue(currentType, out typeSuffixes))
+                {
+                    typeSuffixes = new Dictionary<string, ISuffix>();
+                }
+                return typeSuffixes;
             }
         }
 
         public virtual bool SetSuffix(string suffixName, object value)
         {
+            var suffixes = GetSuffixesForType(GetType());
+
             ISuffix suffix;
             if (suffixes.TryGetValue(suffixName, out suffix))
             {
                 var settable = suffix as ISetSuffix;
-                if (settable == null)
+                if (settable != null)
                 {
-                    return false;
+                    settable.Set(value);
+                    return true;
                 }
-                return settable.Set(value);
             }
             return false;
         }
@@ -42,7 +104,18 @@ namespace kOS.Safe.Encapsulation
         public virtual object GetSuffix(string suffixName)
         {
             ISuffix suffix;
-            return !suffixes.TryGetValue(suffixName, out suffix) ? null : suffix.Get();
+            if (instanceSuffixes.TryGetValue(suffixName, out suffix))
+            {
+                return suffix.Get();
+            }
+
+            var suffixes = GetSuffixesForType(GetType());
+
+            if (!suffixes.TryGetValue(suffixName, out suffix))
+            {
+                return null;
+            }
+            return suffix.Get();
         }
 
         public virtual object TryOperation(string op, object other, bool reverseOrder)

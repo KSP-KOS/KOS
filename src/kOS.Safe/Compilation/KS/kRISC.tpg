@@ -1,145 +1,210 @@
-<% @TinyPG Namespace="kOS.Compilation.KS" Language="C#"%>
+<% @TinyPG Namespace="kOS.Safe.Compilation.KS" Language="C#"%>
 
 // Terminals
 // ===================================================
 //Math
-PLUSMINUS -> @"(\+|-)";
-MULT -> @"\*";
-DIV -> @"/";
-POWER -> @"\^";
-E -> @"e";
+PLUSMINUS    -> @"(\+|-)";
+MULT         -> @"\*";
+DIV          -> @"/";
+POWER        -> @"\^";
+E            -> @"e";
 //Logic
-NOT -> @"not";
-AND -> @"and";
-OR -> @"or";
-TRUEFALSE -> @"true|false";
-COMPARATOR -> @"<>|>=|<=|=|>|<";
+NOT          -> @"not";
+AND          -> @"and";
+OR           -> @"or";
+TRUEFALSE    -> @"true|false";
+COMPARATOR   -> @"<>|>=|<=|=|>|<";
 //Instructions tokens
-SET -> @"set";
-TO -> @"to";
-IF -> @"if";
-ELSE -> @"else";
-UNTIL -> @"until";
-LOCK -> @"lock";
-UNLOCK -> @"unlock";
-PRINT -> @"print";
-AT -> @"at";
-ON -> @"on";
-TOGGLE -> @"toggle";
-WAIT -> @"wait";
-WHEN -> @"when";
-THEN -> @"then";
-OFF -> @"off";
-STAGE -> @"stage";
-CLEARSCREEN -> @"clearscreen";
-ADD -> @"add";
-REMOVE -> @"remove";
-LOG -> @"log";
-BREAK -> @"break";
-PRESERVE -> @"preserve";
-DECLARE -> @"declare";
-PARAMETER -> @"parameter";
-SWITCH -> @"switch";
-COPY -> @"copy";
-FROM -> @"from";
-RENAME -> @"rename";
-VOLUME -> @"volume";
-FILE -> @"file";
-DELETE -> @"delete";
-EDIT -> @"edit";
-RUN -> @"run";
-COMPILE -> @"compile";
-LIST -> @"list";
-REBOOT -> @"reboot";
-SHUTDOWN -> @"shutdown";
-FOR -> @"for";
-UNSET -> @"unset";
-BATCH -> @"batch";
-DEPLOY -> @"deploy";
+SET          -> @"set";
+TO           -> @"to";
+IF           -> @"if";
+ELSE         -> @"else";
+UNTIL        -> @"until";
+LOCK         -> @"lock";
+UNLOCK       -> @"unlock";
+PRINT        -> @"print";
+AT           -> @"at";
+ON           -> @"on";
+TOGGLE       -> @"toggle";
+WAIT         -> @"wait";
+WHEN         -> @"when";
+THEN         -> @"then";
+OFF          -> @"off";
+STAGE        -> @"stage";
+CLEARSCREEN  -> @"clearscreen";
+ADD          -> @"add";
+REMOVE       -> @"remove";
+LOG          -> @"log";
+BREAK        -> @"break";
+PRESERVE     -> @"preserve";
+DECLARE      -> @"declare";
+PARAMETER    -> @"parameter";
+SWITCH       -> @"switch";
+COPY         -> @"copy";
+FROM         -> @"from";
+RENAME       -> @"rename";
+VOLUME       -> @"volume";
+FILE         -> @"file";
+DELETE       -> @"delete";
+EDIT         -> @"edit";
+RUN          -> @"run";
+COMPILE      -> @"compile";
+LIST         -> @"list";
+REBOOT       -> @"reboot";
+SHUTDOWN     -> @"shutdown";
+FOR          -> @"for";
+UNSET        -> @"unset";
+BATCH        -> @"batch";
+DEPLOY       -> @"deploy";
 //Generic
-BRACKETOPEN -> @"\(";
+BRACKETOPEN  -> @"\(";
 BRACKETCLOSE -> @"\)";
-CURLYOPEN -> @"\{";
-CURLYCLOSE -> @"\}";
-SQUAREOPEN -> @"\[";
-SQUARECLOSE -> @"\]";
-COMMA -> @",";
-COLON -> @":";
-IN -> @"in";
-ARRAYINDEX -> @"#";
-ALL -> @"all";
-IDENTIFIER -> @"[a-z_][a-z0-9_]*";
-INTEGER -> @"[0-9]+";
-DOUBLE -> @"[0-9]*\.[0-9]+";
-STRING -> @"@?\""(\""\""|[^\""])*\""";
-EOI -> @"\.";
+CURLYOPEN    -> @"\{";
+CURLYCLOSE   -> @"\}";
+SQUAREOPEN   -> @"\[";
+SQUARECLOSE  -> @"\]";
+COMMA        -> @",";
+COLON        -> @":";
+IN           -> @"in";
+ARRAYINDEX   -> @"#";
+ALL          -> @"all";
+IDENTIFIER   -> @"[a-z_][a-z0-9_]*";
+INTEGER      -> @"[0-9]+";
+DOUBLE       -> @"[0-9]*\.[0-9]+";
+STRING       -> @"@?\""(\""\""|[^\""])*\""";
+EOI          -> @"\.";
 //Special
-EOF -> @"^$";
+EOF          -> @"^$";
 [Skip]
-WHITESPACE -> @"\s+";
+WHITESPACE   -> @"\s+";
 [Skip]
-COMMENTLINE -> @"//[^\n]*\n?";
+COMMENTLINE  -> @"//[^\n]*\n?";
 
 // Rules
 // ===================================================
 Start -> (instruction)* EOF;
 instruction_block -> instruction | CURLYOPEN instruction* CURLYCLOSE EOI?;
-instruction -> set_stmt | if_stmt | until_stmt | lock_stmt | unlock_stmt | print_stmt |
-               on_stmt | toggle_stmt | wait_stmt | when_stmt | onoff_stmt | stage_stmt |
-               clear_stmt | add_stmt | remove_stmt | log_stmt | break_stmt | preserve_stmt | declare_stmt |
-               switch_stmt | copy_stmt | rename_stmt | delete_stmt | edit_stmt | run_stmt | compile_stmt |
-               list_stmt | reboot_stmt | shutdown_stmt | for_stmt | unset_stmt | batch_stmt |
-               deploy_stmt;
-// statements
-set_stmt -> SET varidentifier TO expr EOI;
-if_stmt -> IF expr instruction_block (ELSE instruction_block)? EOI?;
-until_stmt -> UNTIL expr instruction_block EOI?;
-lock_stmt -> LOCK IDENTIFIER TO expr EOI;
-unlock_stmt -> UNLOCK (IDENTIFIER | ALL) EOI;
-print_stmt -> PRINT expr (AT BRACKETOPEN expr COMMA expr BRACKETCLOSE)? EOI;
-on_stmt -> ON varidentifier instruction_block EOI?;
-toggle_stmt -> TOGGLE varidentifier EOI;
-wait_stmt -> WAIT UNTIL? expr EOI;
-when_stmt -> WHEN expr THEN instruction_block EOI?;
-onoff_stmt -> varidentifier (ON | OFF) EOI;
-stage_stmt -> STAGE EOI;
-clear_stmt -> CLEARSCREEN EOI;
-add_stmt -> ADD expr EOI;
-remove_stmt -> REMOVE expr EOI;
-log_stmt -> LOG expr TO IDENTIFIER EOI;
-break_stmt -> BREAK EOI;
-preserve_stmt -> PRESERVE EOI;
-declare_stmt -> DECLARE PARAMETER? IDENTIFIER (COMMA IDENTIFIER)* EOI;
-switch_stmt -> SWITCH TO filevol_name EOI;
-copy_stmt -> COPY IDENTIFIER (FROM | TO) filevol_name EOI;
-rename_stmt -> RENAME (VOLUME | FILE)? filevol_name TO IDENTIFIER EOI;
-delete_stmt -> DELETE IDENTIFIER (FROM filevol_name)? EOI;
-edit_stmt -> EDIT IDENTIFIER EOI;
-run_stmt -> RUN IDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? (ON filevol_name)? EOI;
-compile_stmt -> COMPILE IDENTIFIER TO IDENTIFIER EOI;
-filevol_name -> INTEGER | IDENTIFIER;
-list_stmt -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
-reboot_stmt -> REBOOT EOI;
-shutdown_stmt -> SHUTDOWN EOI;
-for_stmt -> FOR IDENTIFIER IN varidentifier instruction_block EOI?;
-unset_stmt -> UNSET (IDENTIFIER | ALL) EOI;
-batch_stmt -> BATCH EOI;
-deploy_stmt -> DEPLOY EOI;
-// expressions
-arglist -> expr (COMMA expr)*;
-expr -> and_expr (OR and_expr)*;
-and_expr -> compare_expr (AND compare_expr)*;
-compare_expr -> arith_expr (COMPARATOR arith_expr)*;
-arith_expr -> multdiv_expr (PLUSMINUS multdiv_expr)*;
-multdiv_expr -> factor ((MULT|DIV) factor)*;
-factor -> atom (POWER atom)*;
-atom -> (PLUSMINUS|NOT)? ( sci_number | 
-                     TRUEFALSE |
-                     varidentifier |
-                     BRACKETOPEN expr BRACKETCLOSE ) |
-        STRING;
-sci_number -> number (E PLUSMINUS? INTEGER)?;
-number -> (INTEGER | DOUBLE);
-array_identifier -> function_identifier ( (ARRAYINDEX (function_identifier | INTEGER)) | (SQUAREOPEN expr SQUARECLOSE) )*;
-varidentifier -> array_identifier (COLON IDENTIFIER)*;
-function_identifier -> IDENTIFIER (BRACKETOPEN arglist? BRACKETCLOSE)?;
+instruction -> set_stmt | 
+               if_stmt |
+               until_stmt |
+               lock_stmt |
+               unlock_stmt |
+               print_stmt |
+               on_stmt |
+               toggle_stmt |
+               wait_stmt |
+               when_stmt |
+               stage_stmt |
+               clear_stmt |
+               add_stmt |
+               remove_stmt |
+               log_stmt |
+               break_stmt |
+               preserve_stmt |
+               declare_stmt |
+               switch_stmt |
+               copy_stmt |
+               rename_stmt |
+               delete_stmt |
+               edit_stmt |
+               run_stmt |
+               compile_stmt |
+               list_stmt |
+               reboot_stmt |
+               shutdown_stmt |
+               for_stmt |
+               unset_stmt |
+               batch_stmt |
+               deploy_stmt |
+               identifier_led_stmt; // any statement that starts with an identifier.
+
+
+// ------------ statements --------------------
+
+set_stmt       -> SET varidentifier TO expr EOI;
+if_stmt        -> IF expr instruction_block (ELSE instruction_block)? EOI?;
+until_stmt     -> UNTIL expr instruction_block EOI?;
+lock_stmt      -> LOCK IDENTIFIER TO expr EOI;
+unlock_stmt    -> UNLOCK (IDENTIFIER | ALL) EOI;
+print_stmt     -> PRINT expr (AT BRACKETOPEN expr COMMA expr BRACKETCLOSE)? EOI;
+on_stmt        -> ON varidentifier instruction_block EOI?;
+toggle_stmt    -> TOGGLE varidentifier EOI;
+wait_stmt      -> WAIT UNTIL? expr EOI;
+when_stmt      -> WHEN expr THEN instruction_block EOI?;
+onoff_stmt     -> varidentifier onoff_trailer EOI;
+onoff_trailer  -> (ON | OFF);
+stage_stmt     -> STAGE EOI;
+clear_stmt     -> CLEARSCREEN EOI;
+add_stmt       -> ADD expr EOI;
+remove_stmt    -> REMOVE expr EOI;
+log_stmt       -> LOG expr TO IDENTIFIER EOI;
+break_stmt     -> BREAK EOI;
+preserve_stmt  -> PRESERVE EOI;
+declare_stmt   -> DECLARE PARAMETER? IDENTIFIER (COMMA IDENTIFIER)* EOI;
+switch_stmt    -> SWITCH TO filevol_name EOI;
+copy_stmt      -> COPY IDENTIFIER (FROM | TO) filevol_name EOI;
+rename_stmt    -> RENAME (VOLUME | FILE)? filevol_name TO IDENTIFIER EOI;
+delete_stmt    -> DELETE IDENTIFIER (FROM filevol_name)? EOI;
+edit_stmt      -> EDIT IDENTIFIER EOI;
+run_stmt       -> RUN IDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? (ON filevol_name)? EOI;
+compile_stmt   -> COMPILE IDENTIFIER TO IDENTIFIER EOI;
+filevol_name   -> INTEGER | IDENTIFIER;
+list_stmt      -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
+reboot_stmt    -> REBOOT EOI;
+shutdown_stmt  -> SHUTDOWN EOI;
+for_stmt       -> FOR IDENTIFIER IN varidentifier instruction_block EOI?;
+unset_stmt     -> UNSET (IDENTIFIER | ALL) EOI;
+batch_stmt     -> BATCH EOI;
+deploy_stmt    -> DEPLOY EOI;
+
+
+// ---------- expressions ---------------------------
+
+arglist          -> expr (COMMA expr)*;
+expr             -> and_expr (OR and_expr)*;
+and_expr         -> compare_expr (AND compare_expr)*;
+compare_expr     -> arith_expr (COMPARATOR arith_expr)*;
+arith_expr       -> multdiv_expr (PLUSMINUS multdiv_expr)*;
+multdiv_expr     -> factor ((MULT|DIV) factor)*;
+factor           -> suffix (POWER suffix)*;
+
+suffix           -> function (suffix_trailer)*;
+suffix_trailer   -> (COLON function);
+
+function         -> array function_trailer?;
+function_trailer -> (BRACKETOPEN arglist? BRACKETCLOSE);
+
+array            -> atom array_trailer*;
+array_trailer    -> ( (ARRAYINDEX (IDENTIFIER | INTEGER)) | (SQUAREOPEN expr SQUARECLOSE) );
+
+atom             -> (PLUSMINUS|NOT)? ( sci_number |
+                                       TRUEFALSE |
+                                       IDENTIFIER |
+                                       BRACKETOPEN expr BRACKETCLOSE
+                                     ) | STRING;
+sci_number       -> number (E PLUSMINUS? INTEGER)?;
+number           -> (INTEGER | DOUBLE);
+
+// varidentifier:
+// --------------
+// The subset of expressions that are legal as the lefthand side of an assignment statement:
+// This isn't 100% right.  Technically this allows the following syntax:
+//   SET functionCall() to val.
+// Which shouldn't be allowed.  But fixing it in the grammar file makes TinyPG's LL(1) parser's
+// little head spin in a sea of ambiguous confusion, so it will have to be dealt with by the
+// compiler checking if the lefthand side of an assignment statement ended up being a
+// function call, and if so raise a syntax exception.
+
+varidentifier  -> suffix;
+
+// identifier_led_stmt
+// -------------------
+// Any of the expressions which might start with an identifier and might be used as
+// an actual statement on their own (function calls, etc).  These had to be pulled
+// out of the normal expression tree because they cause LL(1) ambiguities at the
+// topmost level in the definition of the instruction rule if it just allowed all
+// generic expressions there.  It had to be limited to only allowing the types of
+// expressions which are led by an identifier and are guaranteed to have SOMETHING
+// after the identifier - parens, colons, etc:
+identifier_led_stmt -> identifier_led_expr EOI;
+identifier_led_expr -> IDENTIFIER (onoff_trailer|suffix_trailer|function_trailer|array_trailer);

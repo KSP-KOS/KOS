@@ -25,6 +25,9 @@ namespace kOS.Screen
         
         private bool consumeEvent;
 
+        private KeyBinding rememberThrottleCutoffKey;
+        private KeyBinding rememberThrottleFullKey;
+
         private bool allTexturesFound = true;
         private CameraManager cameraManager;
         private float cursorBlinkTime;
@@ -112,7 +115,16 @@ namespace kOS.Screen
                 // Prevent editor keys from being pressed while typing
                 EditorLogic editor = EditorLogic.fetch;
                 if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true, "kOSTerminal");
-            }
+                
+            // This seems to be the only way to force KSP to let me lock out the "X" throttle
+            // key.  It seems to entirely bypass the logic of every other keypress in the game,
+            // so the only way to fix it is to use the keybindings system from the Setup screen.
+            // When the terminal is focused, the THROTTLE_CUTOFF action gets unbound, and then
+            // when its unfocused later, its put back the way it was:
+            rememberThrottleCutoffKey = GameSettings.THROTTLE_CUTOFF;
+            GameSettings.THROTTLE_CUTOFF = new KeyBinding(KeyCode.None);
+            rememberThrottleFullKey = GameSettings.THROTTLE_FULL;
+            GameSettings.THROTTLE_FULL = new KeyBinding(KeyCode.None);
         }
 
         private void Unlock()
@@ -127,7 +139,16 @@ namespace kOS.Screen
 
                 EditorLogic editor = EditorLogic.fetch;
                 if (editor != null) editor.Unlock("kOSTerminal");
-            }
+
+            EditorLogic editor = EditorLogic.fetch;
+            if (editor != null) editor.Unlock("kOSTerminal");
+
+            // This seems to be the only way to force KSP to let me lock out the "X" throttle
+            // key.  It seems to entirely bypass the logic of every other keypress in the game:
+            if (rememberThrottleCutoffKey != null)
+                GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
+            if (rememberThrottleFullKey != null)
+                GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
         }
 
         void OnGUI()
@@ -146,9 +167,9 @@ namespace kOS.Screen
             
             GUI.skin = HighLogic.Skin;
             GUI.color = isLocked ? color : colorAlpha;
-
-            windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, "");
             
+            windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, "");
+
             if (consumeEvent)
             {
                 consumeEvent = false;
@@ -311,7 +332,7 @@ namespace kOS.Screen
 
             GUI.BeginGroup(new Rect(31, 38, 420, 340));
 
-            ScreenBuffer screen = shared.Screen;
+            IScreenBuffer screen = shared.Screen;
             List<char[]> buffer = screen.GetBuffer();
 
             for (int row = 0; row < screen.RowCount; row++)

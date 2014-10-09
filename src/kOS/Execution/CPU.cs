@@ -7,6 +7,7 @@ using System.Diagnostics;
 using kOS.Safe;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
+using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Function;
 
@@ -427,10 +428,14 @@ namespace kOS.Execution
             // cos()    cos trigonometric function
             // cos      string literal "cos"
 
+            // If it's a variable, meaning it starts with "$" but
+            // does NOT have a value like $<.....>, which are special
+            // flags used internally:
             if (testValue is string &&
-                ((string)testValue).StartsWith("$"))
+                ((string)testValue).Length > 1 &&
+                ((string)testValue)[0] == '$' &&
+                ((string)testValue)[1] != '<' )
             {
-                // value is a variable
                 var identifier = (string)testValue;
                 Variable variable = GetVariable(identifier);
                 return variable.Value;
@@ -447,6 +452,16 @@ namespace kOS.Execution
         public object PopValue()
         {
             return GetValue(PopStack());
+        }
+        
+        public object PeekValue(int digDepth)
+        {
+            return GetValue(stack.Peek(digDepth));
+        }
+        
+        public int GetStackSize()
+        {
+            return stack.GetLogicalSize();
         }
 
         public void AddTrigger(int triggerFunctionPointer)
@@ -529,6 +544,7 @@ namespace kOS.Execution
 
                 PostUpdateBindings();
             }
+            
             catch (Exception e)
             {
                 if (shared.Logger != null)
@@ -615,19 +631,7 @@ namespace kOS.Execution
                 }
                 if (instructionsSoFarInUpdate >= instructionsPerUpdate)
                 {
-                    // This is a verbose error message, but it's important, as without knowing
-                    // the internals, a user has no idea why it's happening.  The verbose
-                    // error message helps direct the user to areas of the documentation
-                    // where longer explanations can be found.
-                    throw new Exception("__________________________________________________\n" +
-                                        "Triggers (*) exceeded max Instructions-Per-Update.\n" +
-                                        "TO FIX THIS PROBLEM, TRY ONE OR MORE OF THESE:\n" +
-                                        " - Redesign your triggers to use less code.\n" +
-                                        " - Make CONFIG:IPU value bigger.\n" +
-                                        " - If your trigger body was meant to be a loop, \n" +
-                                        "     consider using the PRESERVE keyword instead\n" +
-                                        "     to make it run one iteration per Update.\n" +
-                                        "* (\"Trigger\" means a WHEN or ON or LOCK command.)\n");
+                    throw new KOSLongTriggerException(instructionsSoFarInUpdate);
                 }
             }
 

@@ -19,6 +19,7 @@ namespace kOS.Suffixed
         public bool EnableRT2Integration { get { return GetPropValue<bool>(PropId.EnableRT2Integration); } set { SetPropValue(PropId.EnableRT2Integration, value); } }
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
+        public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
         
         private Config()
         {
@@ -37,6 +38,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.EnableRT2Integration, new ConfigKey("EnableRT2Integration", "RT2", "Enable RT2 integration", false, typeof(bool)));
             AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, typeof(bool)));
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, typeof(bool)));
+            AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -170,7 +172,8 @@ namespace kOS.Suffixed
             ShowStatistics = 3,
             EnableRT2Integration = 4,
             StartOnArchive = 5,
-            EnableSafeMode = 6
+            EnableSafeMode = 6,
+            VerboseExceptions = 7
         }
     }
 

@@ -1,32 +1,30 @@
+using kOS.Safe.Encapsulation.Suffixes;
+
 namespace kOS.Safe.Encapsulation
 {
     public class VersionInfo : Structure
     {
-        public double Major;
-        public double Minor;
+        private readonly int major;
+        private readonly int minor;
+        private readonly int build;
 
-        public VersionInfo(double major, double minor)
+        public VersionInfo(int major, int minor, int build)
         {
-            Major = major;
-            Minor = minor;
+            this.major = major;
+            this.minor = minor;
+            this.build = build;
         }
 
-        public override object GetSuffix(string suffixName)
+        protected override void InitializeSuffixes()
         {
-            switch (suffixName)
-            {
-                case "MAJOR":
-                    return Major;
-                case "MINOR":
-                    return Minor;
-            }
-
-            return base.GetSuffix(suffixName);
+            AddSuffix("MAJOR", new StaticSuffix<int>(() => major));
+            AddSuffix("MINOR", new StaticSuffix<int>(() => minor));
+            AddSuffix("BUILD", new StaticSuffix<int>(() => build));
         }
 
         public override string ToString()
         {
-            return Major + "." + Minor.ToString("0.0");
+            return string.Format("{0}.{1}.{2}", major, minor, build);
         }
     }
 }

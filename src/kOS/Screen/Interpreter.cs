@@ -9,7 +9,7 @@ using kOS.Utilities;
 
 namespace kOS.Screen
 {
-    public class Interpreter : TextEditor
+    public class Interpreter : TextEditor, IInterpreter
     {
         private readonly List<string> commandHistory = new List<string>();
         private int commandHistoryIndex;

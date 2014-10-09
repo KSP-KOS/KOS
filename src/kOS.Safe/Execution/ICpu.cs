@@ -10,6 +10,8 @@ namespace kOS.Safe.Execution
         void MoveStackPointer(int delta);
         object GetValue(object testValue);
         object PopValue();
+        object PeekValue(int digDepth);        
+        int GetStackSize();
         void SetValue(string identifier, object value);
         void RemoveVariable(string identifier);
         void RemoveAllVariables();
