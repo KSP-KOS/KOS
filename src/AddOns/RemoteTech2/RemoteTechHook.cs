@@ -6,7 +6,7 @@ namespace kOS.AddOns.RemoteTech2
 {
     public static class RemoteTechHook
     {
-        private const String REMOTE_TECH_ASSEMBLY = "RemoteTech2";
+        private const String REMOTE_TECH_ASSEMBLY = "RemoteTech"; // RemoteTech recently renamed the assembly from RemoteTech2 to RemoteTech
         private const String REMOTE_TECH_API = "RemoteTech.API";
 
         private static bool hookFail;
