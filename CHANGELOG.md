@@ -1,6 +1,20 @@
 kOS Mod Changelog
 =================
 
+## V0.14.2
+
+* Added entry cost to kOS parts
+* extended button lockout to include the full throttle button (default z)
+* updated the reference to RemoteTech rather than RemoteTech2
+
+## V0.14.1
+
+* Kerbal Space Program 0.25 Support
+* OnSave and OnLoad should no longer disappear your craft. This is a bit of a stop-gap fix that doesn't guarantee that the kOS part will be happy, but at least your craft will still be there.
+* Resolves #257 by unbinding the X key from throttle cutoff while the window is in focus.
+* KSP AVC Support
+* Added Body:RotationalPeroid
+
 # v0.14
 
 ### New Hotness
