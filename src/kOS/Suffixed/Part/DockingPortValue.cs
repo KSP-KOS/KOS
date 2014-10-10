@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed.Part
 {
@@ -12,18 +13,18 @@ namespace kOS.Suffixed.Part
             this.module = module;
         }
 
-        public override object GetSuffix(string suffixName)
+        protected override void InitializeSuffixes()
         {
-            switch (suffixName)
-            {
-                case "STATE":
-                    return module.state;
-                case "DOCKEDSHIPNAME":
-                    return module.vesselInfo != null ? module.vesselInfo.name : string.Empty;
-                case "TARGETABLE":
-                    return true;
-            }
-            return base.GetSuffix(suffixName);
+            base.InitializeSuffixes();
+            AddSuffix("AQUIRERANGE", new Suffix<ModuleDockingNode,float>(module, model => model.acquireRange));
+            AddSuffix("AQUIREFORCE", new Suffix<ModuleDockingNode,float>(module, model => model.acquireForce));
+            AddSuffix("AQUIRETORQUE", new Suffix<ModuleDockingNode,float>(module, model => model.acquireTorque));
+            AddSuffix("REENGAGEDISTANCE", new Suffix<ModuleDockingNode,float>(module, model => model.minDistanceToReEngage));
+            AddSuffix("DOCKEDSHIPNAME", new Suffix<ModuleDockingNode,string>(module, model => module.vesselInfo != null ? module.vesselInfo.name : string.Empty));
+            AddSuffix("STATE", new Suffix<ModuleDockingNode,string>(module, model => model.state));
+            AddSuffix("TARGETABLE", new Suffix<ModuleDockingNode,bool>(module, model => true));
+            AddSuffix("UNDOCK", new NoArgsSuffix(() => module.Undock()));
+            AddSuffix("TARGET", new NoArgsSuffix(() => module.SetAsTarget()));
         }
 
         public override ITargetable Target
