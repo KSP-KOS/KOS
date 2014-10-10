@@ -39,6 +39,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("CONTAINS", new OneArgsSuffix<bool, object>       (item => list.Contains(item)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
             AddSuffix("EMPTY",    new NoArgsSuffix<bool>                (() => !list.Any()));
+            AddSuffix("DUMP",     new NoArgsSuffix<string>              (() => ListDumpDeep()));
         }
 
         public override bool SetSuffix(string suffixName, object value)
@@ -135,7 +136,7 @@ namespace kOS.Safe.Encapsulation
         /// <returns>short string without eoln</returns>
         private string terseDump()
         {
-            return "LIST of " + list.Count + " item" + (list.Count>1 ? "s" : "") + ":";
+            return "LIST of " + list.Count + " item" + (list.Count>1 ? "s" : "");
         }
 
         /// <summary>
@@ -164,7 +165,6 @@ namespace kOS.Safe.Encapsulation
             return ListDump();
         }
         
-
         /// <summary>
         /// This is the engine underneath ListDump shallow/deep.  It uses the call stack
         /// to figure out if it was called from a deep or from a shallow lister.
@@ -181,7 +181,7 @@ namespace kOS.Safe.Encapsulation
             else
             {
                 StringBuilder contents = new StringBuilder();
-                contents.AppendLine( terseDump() );
+                contents.AppendLine( terseDump() + ":" );
                 for (int i = 0 ; i < list.Count ; ++i)
                 {
                     contents.AppendLine( string.Format("[{0,2}]= {1}", i, list[i].ToString()) );
@@ -189,7 +189,6 @@ namespace kOS.Safe.Encapsulation
                 return contents.ToString();
             }
         }
-        
 
         #region IIndexable Members
 
