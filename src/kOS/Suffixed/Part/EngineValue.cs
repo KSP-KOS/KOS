@@ -1,149 +1,77 @@
-﻿using System;
+﻿using kOS.Safe.Encapsulation;
+using System;
 using System.Collections.Generic;
-using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Part;
 
 namespace kOS.Suffixed.Part
 {
     public class EngineValue : PartValue
     {
-        private readonly ModuleEnginesFX enginefFx;
-        private readonly ModuleEngines engine;
+        private readonly IModuleEngine engine;
 
-        public EngineValue(global::Part part, ModuleEngines engine, SharedObjects sharedObj) : base(part, sharedObj)
+        public EngineValue(global::Part part, IModuleEngine engine, SharedObjects sharedObj)
+            : base(part, sharedObj)
         {
             this.engine = engine;
         }
 
-        public EngineValue(global::Part part, ModuleEnginesFX enginefFx, SharedObjects sharedObj) : base(part, sharedObj)
-        {
-            this.enginefFx = enginefFx;
-        }
-
         public override bool SetSuffix(string suffixName, object value)
         {
-            if (engine != null)
-            {
-                return SetEngineSuffix(suffixName, value, engine);
-            }
-            if (enginefFx != null)
-            {
-                return SetEngineFxSuffix(suffixName, value, enginefFx);
-            }
-            return base.SetSuffix(suffixName, value);
-        }
-
-        private bool SetEngineFxSuffix(string suffixName, object value, ModuleEnginesFX moduleEnginesFx)
-        {
             switch (suffixName)
             {
                 case "ACTIVE":
                     var activate = Convert.ToBoolean(value);
                     if (activate)
                     {
-                        moduleEnginesFx.Activate();
+                        engine.Activate();
                     }
                     else
                     {
-                        moduleEnginesFx.Shutdown();
+                        engine.Shutdown();
                     }
                     return true;
+
                 case "THRUSTLIMIT":
                     var throttlePercent = (float)Convert.ToDouble(value);
-                    moduleEnginesFx.thrustPercentage = throttlePercent;
+                    engine.ThrustPercentage = throttlePercent;
                     return true;
             }
             return base.SetSuffix(suffixName, value);
         }
-
-        private bool SetEngineSuffix(string suffixName, object value, ModuleEngines moduleEngines)
-        {
-            switch (suffixName)
-            {
-                case "ACTIVE":
-                    var activate = Convert.ToBoolean(value);
-                    if (activate)
-                    {
-                        moduleEngines.Activate();
-                    }
-                    else
-                    {
-                        moduleEngines.Shutdown();
-                    }
-                    return true;
-                case "THRUSTLIMIT":
-                    var throttlePercent = (float)Convert.ToDouble(value);
-                    moduleEngines.thrustPercentage = throttlePercent;
-                    return true;
-            }
-            return base.SetSuffix(suffixName, value);
-        }
-
 
         public override object GetSuffix(string suffixName)
         {
-            if (engine != null)
-            {
-                return GetEngineSuffix(suffixName, engine);
-            }
-            if (enginefFx != null)
-            {
-                return GetEngineFxSuffix(suffixName, enginefFx);
-            }
-            return base.GetSuffix(suffixName);
-        }
-
-        private object GetEngineSuffix(string suffixName, ModuleEngines moduleEngines)
-        {
             switch (suffixName)
             {
                 case "MAXTHRUST":
-                    return moduleEngines.maxThrust;
-                case "THRUST":
-                    return moduleEngines.finalThrust;
-                case "FUELFLOW":
-                    return moduleEngines.fuelFlowGui;
-                case "ISP":
-                    return moduleEngines.realIsp;
-                case "FLAMEOUT":
-                    return moduleEngines.getFlameoutState;
-                case "IGNITION":
-                    return moduleEngines.getIgnitionState;
-                case "ALLOWRESTART":
-                    return moduleEngines.allowRestart;
-                case "ALLOWSHUTDOWN":
-                    return moduleEngines.allowShutdown;
-                case "THROTTLELOCK":
-                    return moduleEngines.throttleLocked;
-                case "THRUSTLIMIT":
-                    return moduleEngines.thrustPercentage;
-            }
-            return base.GetSuffix(suffixName);
-        }
+                    return engine.MaxThrust;
 
-        private object GetEngineFxSuffix(string suffixName, ModuleEnginesFX moduleEngines)
-        {
-            switch (suffixName)
-            {
-                case "MAXTHRUST":
-                    return moduleEngines.maxThrust;
                 case "THRUST":
-                    return moduleEngines.finalThrust;
+                    return engine.FinalThrust;
+
                 case "FUELFLOW":
-                    return moduleEngines.fuelFlowGui;
+                    return engine.FuelFlow;
+
                 case "ISP":
-                    return moduleEngines.realIsp;
+                    return engine.SpecificImpulse;
+
                 case "FLAMEOUT":
-                    return moduleEngines.getFlameoutState;
+                    return engine.Flameout;
+
                 case "IGNITION":
-                    return moduleEngines.getIgnitionState;
+                    return engine.Ignition;
+
                 case "ALLOWRESTART":
-                    return moduleEngines.allowRestart;
+                    return engine.AllowRestart;
+
                 case "ALLOWSHUTDOWN":
-                    return moduleEngines.allowShutdown;
+                    return engine.AllowShutdown;
+
                 case "THROTTLELOCK":
-                    return moduleEngines.throttleLocked;
+                    return engine.ThrottleLock;
+
                 case "THRUSTLIMIT":
-                    return moduleEngines.thrustPercentage;
+                    return engine.ThrustPercentage;
             }
             return base.GetSuffix(suffixName);
         }
@@ -159,11 +87,11 @@ namespace kOS.Suffixed.Part
                     var engineModuleFx = module as ModuleEnginesFX;
                     if (engineModuleFx != null)
                     {
-                        toReturn.Add(new EngineValue(part, engineModuleFx, sharedObj));
+                        toReturn.Add(new EngineValue(part, new ModuleEngineAdapter(engineModuleFx), sharedObj));
                     }
                     else if (engineModule != null)
                     {
-                        toReturn.Add(new EngineValue(part, engineModule, sharedObj));
+                        toReturn.Add(new EngineValue(part, new ModuleEngineAdapter(engineModule), sharedObj));
                     }
                 }
             }

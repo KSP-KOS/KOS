@@ -60,6 +60,10 @@ namespace kOS.Suffixed.Part
                     return Part.inverseStage;
                 case "UID":
                     return Part.uid;
+                case "ROTATION":
+                    return new Direction(Part.orgRot);
+                case "POSITION":
+                    return new Vector(Part.orgPos);
                 case "FACING":
                     return GetFacing(Part);
                 case "RESOURCES":

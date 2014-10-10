@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
-using kOS.Utilities;
 using kOS.Persistence;
 
 namespace kOS.Screen
@@ -20,7 +19,7 @@ namespace kOS.Screen
         private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
-        private static Rect closeButtonRect = new Rect(398, 359, 59, 30);
+        private static readonly Rect closeButtonRect = new Rect(398, 359, 59, 30);
         
         
         private bool consumeEvent;
@@ -102,20 +101,20 @@ namespace kOS.Screen
 
         private void Lock()
         {
-            if (!isLocked)
-            {
-                isLocked = true;
-                BringToFront();
+            if (isLocked) return;
 
-                cameraManager = CameraManager.Instance;
-                cameraManager.enabled = false;
+            isLocked = true;
+            BringToFront();
 
-                InputLockManager.SetControlLock("kOSTerminal");
+            cameraManager = CameraManager.Instance;
+            cameraManager.enabled = false;
 
-                // Prevent editor keys from being pressed while typing
-                EditorLogic editor = EditorLogic.fetch;
-                if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true, "kOSTerminal");
-                
+            InputLockManager.SetControlLock("kOSTerminal");
+
+            // Prevent editor keys from being pressed while typing
+            EditorLogic editor = EditorLogic.fetch;
+            if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true, "kOSTerminal");
+
             // This seems to be the only way to force KSP to let me lock out the "X" throttle
             // key.  It seems to entirely bypass the logic of every other keypress in the game,
             // so the only way to fix it is to use the keybindings system from the Setup screen.
@@ -129,16 +128,14 @@ namespace kOS.Screen
 
         private void Unlock()
         {
-            if (isLocked)
-            {
-                isLocked = false;
+            if (!isLocked) return;
+            
+            isLocked = false;
 
-                InputLockManager.RemoveControlLock("kOSTerminal");
+            InputLockManager.RemoveControlLock("kOSTerminal");
 
-                cameraManager.enabled = true;
+            cameraManager.enabled = true;
 
-                EditorLogic editor = EditorLogic.fetch;
-                if (editor != null) editor.Unlock("kOSTerminal");
 
             EditorLogic editor = EditorLogic.fetch;
             if (editor != null) editor.Unlock("kOSTerminal");
@@ -202,7 +199,7 @@ namespace kOS.Screen
             {
                 // Unity handles some keys in a particular way
                 // e.g. Keypad7 is mapped to 0xffb7 instead of 0x37
-                char c = (char)(e.character & 0x007f);
+                var c = (char)(e.character & 0x007f);
 
                 // command sequences
                 if (e.keyCode == KeyCode.C && e.control) // Ctrl+C
