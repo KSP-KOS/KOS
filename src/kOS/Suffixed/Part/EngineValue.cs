@@ -1,7 +1,7 @@
 ﻿using kOS.Safe.Encapsulation;
-using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Part;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed.Part
 {
@@ -15,65 +15,21 @@ namespace kOS.Suffixed.Part
             this.engine = engine;
         }
 
-        public override bool SetSuffix(string suffixName, object value)
+        protected override void InitializeSuffixes()
         {
-            switch (suffixName)
-            {
-                case "ACTIVE":
-                    var activate = Convert.ToBoolean(value);
-                    if (activate)
-                    {
-                        engine.Activate();
-                    }
-                    else
-                    {
-                        engine.Shutdown();
-                    }
-                    return true;
-
-                case "THRUSTLIMIT":
-                    var throttlePercent = (float)Convert.ToDouble(value);
-                    engine.ThrustPercentage = throttlePercent;
-                    return true;
-            }
-            return base.SetSuffix(suffixName, value);
-        }
-
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "MAXTHRUST":
-                    return engine.MaxThrust;
-
-                case "THRUST":
-                    return engine.FinalThrust;
-
-                case "FUELFLOW":
-                    return engine.FuelFlow;
-
-                case "ISP":
-                    return engine.SpecificImpulse;
-
-                case "FLAMEOUT":
-                    return engine.Flameout;
-
-                case "IGNITION":
-                    return engine.Ignition;
-
-                case "ALLOWRESTART":
-                    return engine.AllowRestart;
-
-                case "ALLOWSHUTDOWN":
-                    return engine.AllowShutdown;
-
-                case "THROTTLELOCK":
-                    return engine.ThrottleLock;
-
-                case "THRUSTLIMIT":
-                    return engine.ThrustPercentage;
-            }
-            return base.GetSuffix(suffixName);
+            base.InitializeSuffixes();
+            AddSuffix("ACTIVATE", new NoArgsSuffix(() => engine.Activate()));
+            AddSuffix("SHUTDOWN", new NoArgsSuffix(() => engine.Shutdown()));
+            AddSuffix("THRUSTLIMIT", new SetSuffix<IModuleEngine,float>(engine, model => model.ThrustPercentage, (model, value) => model.ThrustPercentage = value));
+            AddSuffix("MAXTHRUST", new Suffix<IModuleEngine,float>(engine, model => model.MaxThrust));
+            AddSuffix("THRUST", new Suffix<IModuleEngine,float>(engine, model => model.FinalThrust));
+            AddSuffix("FUELFLOW", new Suffix<IModuleEngine,float>(engine, model => model.FuelFlow));
+            AddSuffix("ISP", new Suffix<IModuleEngine,float>(engine, model => model.SpecificImpulse));
+            AddSuffix("FLAMEOUT", new Suffix<IModuleEngine,bool>(engine, model => model.Flameout));
+            AddSuffix("IGNITION", new Suffix<IModuleEngine,bool>(engine, model => model.Ignition));
+            AddSuffix("ALLOWRESTART", new Suffix<IModuleEngine,bool>(engine, model => model.AllowRestart));
+            AddSuffix("ALLOWSHUTDOWN", new Suffix<IModuleEngine,bool>(engine, model => model.AllowShutdown));
+            AddSuffix("THROTTLELOCK", new Suffix<IModuleEngine,bool>(engine, model => model.ThrottleLock));
         }
 
         public new static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
