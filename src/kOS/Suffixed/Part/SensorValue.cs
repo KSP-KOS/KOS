@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed.Part
 {
@@ -12,34 +13,14 @@ namespace kOS.Suffixed.Part
             this.sensor = sensor;
         }
 
-        public override object GetSuffix(string suffixName)
+        protected override void InitializeSuffixes()
         {
-            switch (suffixName)
-            {
-                case "ACTIVE":
-                    return sensor.sensorActive;
-                case "TYPE":
-                    return sensor.sensorType;
-                case "READOUT":
-                    return sensor.readoutInfo;
-            }
-            return base.GetSuffix(suffixName);
-        }
-
-        public override bool SetSuffix(string suffixName, object value)
-        {
-            switch (suffixName)
-            {
-                case "ACTIVE":
-                    var activeState = value as bool?;
-                    if (!activeState.HasValue)
-                    {
-                        return false;
-                    }
-                    sensor.sensorActive = activeState.Value;
-                    return true;
-            }
-            return base.SetSuffix(suffixName, value);
+            base.InitializeSuffixes();
+            AddSuffix("ACTIVE", new SetSuffix<ModuleEnviroSensor,bool>(sensor, model => model.sensorActive, (model, value) => model.sensorActive = value));
+            AddSuffix("TYPE", new Suffix<ModuleEnviroSensor,string>(sensor, model => model.sensorType));
+            AddSuffix("DISPLAY", new Suffix<ModuleEnviroSensor,string>(sensor, model => model.readoutInfo));
+            AddSuffix("POWERCONSUMPTION", new Suffix<ModuleEnviroSensor,float>(sensor, model => model.powerConsumption));
+            AddSuffix("TOGGLE", new NoArgsSuffix(() => sensor.Toggle()));
         }
 
         public new static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)

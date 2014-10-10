@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
@@ -70,6 +71,20 @@ namespace kOS.Suffixed
         {
             Body = body;
         }
+
+        protected override void InitializeSuffixes()
+        {
+            base.InitializeSuffixes();
+            AddSuffix("NAME", new Suffix<CelestialBody,string>(Body, model => model.name));
+            AddSuffix("DESCRIPTION", new Suffix<CelestialBody,string>(Body, model => model.bodyDescription));
+            AddSuffix("MASS", new Suffix<CelestialBody,double>(Body, model => model.Mass));
+            AddSuffix("ALTITUDE", new Suffix<CelestialBody,double>(Body, model => model.orbit.altitude));
+            AddSuffix("RADIUS", new Suffix<CelestialBody,double>(Body, model => model.Radius));
+            AddSuffix("MU", new Suffix<CelestialBody,double>(Body, model => model.gravParameter));
+            AddSuffix("ROTATIONPERIOD", new Suffix<CelestialBody,double>(Body, model => model.rotationPeriod));
+            AddSuffix("ATM", new Suffix<CelestialBody,BodyAtmosphere>(Body, model => new BodyAtmosphere(Body)));
+            AddSuffix("ANGULARVEL", new Suffix<CelestialBody,Direction>(Body, model => new Direction(Body.angularVelocity, true)));
+        }
         
         public double GetDistance()
         {
@@ -79,29 +94,6 @@ namespace kOS.Suffixed
         public override object GetSuffix(string suffixName)
         {
             if (Target == null) throw new Exception("BODY structure appears to be empty!");
-
-            switch (suffixName)
-            {
-                case "NAME":
-                    return Body.name;
-                case "DESCRIPTION":
-                    return Body.bodyDescription;
-                case "MASS":
-                    return Body.Mass;
-                case "ALTITUDE":
-                    return Body.orbit.altitude;
-                case "RADIUS":
-                    return Body.Radius;
-                case "MU":
-                    return Body.gravParameter;
-                case "ROTATIONPERIOD":
-                    return Body.rotationPeriod;
-                case "ATM":
-                    return new BodyAtmosphere(Body);
-                case "ANGULARVEL":
-                    return new Direction(Body.angularVelocity, true);
-            }
-
             return base.GetSuffix(suffixName);
         }
 

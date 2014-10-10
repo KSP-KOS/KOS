@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
 
 namespace kOS.Suffixed
@@ -152,34 +153,23 @@ namespace kOS.Suffixed
         ///   the current CPU vessel is now.
         /// </summary>
         /// <returns>distance scalar</returns>
-        private double DistanceFrom()
+        private double GetDistanceFrom()
         {
             Vector3d latLongCoords = Body.GetWorldSurfacePosition( Lat, Lng, GetTerrainAltitude() );
             Vector3d hereCoords = Shared.Vessel.findWorldCenterOfMass();
             return Vector3d.Distance( latLongCoords, hereCoords );
         }
 
-        public override object GetSuffix(string suffixName)
+        protected override void InitializeSuffixes()
         {
-            switch (suffixName)
-            {
-                case "LAT":
-                    return Lat;
-                case "LNG":
-                    return Lng;
-                case "BODY":
-                    return new BodyTarget( Body, Shared );
-                case "TERRAINHEIGHT":
-                    return GetTerrainAltitude();
-                case "DISTANCE":
-                    return DistanceFrom();
-                case "HEADING":
-                    return GetHeadingFrom();
-                case "BEARING":
-                    return GetBearing();
-            }
-
-            return base.GetSuffix(suffixName);
+            base.InitializeSuffixes();
+            AddSuffix("LAT", new Suffix<double,double>(Lat, model => model));
+            AddSuffix("LNG", new Suffix<double,double>(Lng, model => model));
+            AddSuffix("BODY", new Suffix<CelestialBody,BodyTarget>(Body, model => new BodyTarget(model, Shared)));
+            AddSuffix("TERRAINHEIGHT", new Suffix<CelestialBody,double>(Body, model => GetTerrainAltitude()));
+            AddSuffix("DISTANCE", new Suffix<CelestialBody,double>(Body, model => GetDistanceFrom()));
+            AddSuffix("HEADING", new Suffix<CelestialBody,double>(Body, model => GetHeadingFrom()));
+            AddSuffix("BEARING", new Suffix<CelestialBody,double>(Body, model => GetBearing()));
         }
 
         public override string ToString()
