@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Diagnostics;
+
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Properties;
 
@@ -10,7 +13,11 @@ namespace kOS.Safe.Encapsulation
     public class ListValue : Structure, IIndexable
     {
         private readonly IList<object> list;
-
+        
+        private static string shallowDumpName = "ListDumpShallow";
+        private static string deepDumpName = "ListDumpDeep";
+        private static string unspecifiedDumpName = "ListDump";
+        
         public ListValue()
         {
             list = new List<object>();
@@ -77,8 +84,112 @@ namespace kOS.Safe.Encapsulation
 
         public override string ToString()
         {
-            return string.Format("{0} LIST({1})", base.ToString(), list.Count);
+            // If toString is nested inside another object's toString that was
+            // called from another list, then honor the verbosity of that
+            // original topmost call by not explicitly saying it's shallow or
+            // nested here. otherwise explictly say it's shallow if it's the outermost
+            // ToString() call:
+            if (calledFrom(unspecifiedDumpName))
+                return ListDump();
+            else
+                return ListDumpShallow();
         }
+        
+        /// <summary>
+        /// Returns whether or not the current method was called from the given method name
+        /// by examning the callstack downward from the current level's parent.  Assumes the
+        /// method in question is a method of this class (ListValue) itself.  Examines all
+        /// the nesting levels, so if A called B called C called D, then during D, a call to
+        /// calledFrom("A") would still return true.
+        /// </summary>
+        /// <param name="methodName">Test if this method called me</param>
+        /// <returns>True if the current method was called from the given method name</returns>
+        private bool calledFrom(string methodName)
+        {
+            StackFrame[] callStack = new StackTrace().GetFrames();  // get call stack
+
+            string thisDeclaringType = callStack[0].GetMethod().DeclaringType.Name;
+
+            // Find out whether or not this method call was nested inside
+            // another method call of itself which was not meant to recurse.
+            // If so, then set a flag that will avoid doing the full dump:
+
+            // (i starts at 1 not 0 deliberately.  That's not a bug - skipping to top stack
+            // frame on purpose because the top stack frame is the current method we're in
+            // the middle of executing):
+            for (int i = 1 ; i < callStack.Length ; ++i )
+            {
+                if (callStack[i].GetMethod().Name == methodName &&
+                    callStack[i].GetMethod().DeclaringType.Name == thisDeclaringType )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Show the contents of the string as tersely as possible, as just
+        /// a "this is a list and it has this many things int it" message.
+        /// </summary>
+        /// <returns>short string without eoln</returns>
+        private string terseDump()
+        {
+            return "LIST of " + list.Count + " item" + (list.Count>1 ? "s" : "") + ":";
+        }
+
+        /// <summary>
+        /// Dump the contents of the list in a shallow way, without recursing down
+        /// into any sublists inside the topmost list:<br/>
+        /// </summary>
+        /// Warning: If you Ever change the name of this, then change the value of the two
+        /// static variables "shallowDumpName" and "deepDumpName", or the ListDump algorithm
+        /// will break:
+        /// <returns>long string including eolns, ready for printing</returns>
+        private string ListDumpShallow()
+        {
+            return ListDump();
+        }
+        
+        /// <summary>
+        /// Dump the contens of the list into a string, by descending through the
+        /// list and appending the "ToString"'s of all the elements in the list.<br/>
+        /// </summary>
+        /// Warning: If you Ever change the name of this, then change the value of the two
+        /// static variables "shallowDumpName" and "deepDumpName", or the ListDump algorithm
+        /// will break:
+        /// <returns>long string including eolns, ready for printing</returns>
+        private string ListDumpDeep()
+        {
+            return ListDump();
+        }
+        
+
+        /// <summary>
+        /// This is the engine underneath ListDump shallow/deep.  It uses the call stack
+        /// to figure out if it was called from a deep or from a shallow lister.
+        /// </summary>
+        /// <returns></returns>
+        private string ListDump()
+        {
+            bool truncateHere = calledFrom(shallowDumpName);
+
+            if (truncateHere)
+            {
+                return terseDump();
+            }
+            else
+            {
+                StringBuilder contents = new StringBuilder();
+                contents.AppendLine( terseDump() );
+                for (int i = 0 ; i < list.Count ; ++i)
+                {
+                    contents.AppendLine( string.Format("[{0,2}]= {1}", i, list[i].ToString()) );
+                }
+                return contents.ToString();
+            }
+        }
+        
 
         #region IIndexable Members
 
