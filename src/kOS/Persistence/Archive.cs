@@ -28,8 +28,11 @@ namespace kOS.Persistence
             {
                 using (var infile = new BinaryReader(File.Open(archiveFolder + name + ".txt", FileMode.Open)))
                 {
-                    byte[] fileBody = infile.ReadBytes(ProgramFile.MaxFileSize);
-                    ProgramFile retFile = new ProgramFile(name);
+
+
+                    byte[] fileBody = ProcessBinaryReader(infile);
+
+                    var retFile = new ProgramFile(name);
                     FileCategory whatKind = ProgramFile.IdentifyCategory(fileBody);
                     if (whatKind == FileCategory.KEXE)
                         retFile.BinaryContent = fileBody;
@@ -49,6 +52,19 @@ namespace kOS.Persistence
             {
                 Debug.LogException(e);
                 return null;
+            }
+        }
+
+        private byte[] ProcessBinaryReader(BinaryReader infile)
+        {
+            const int BUFFER_SIZE = 4096;
+            using (var ms = new MemoryStream())
+            {
+                var buffer = new byte[BUFFER_SIZE];
+                int count;
+                while ((count = infile.Read(buffer, 0, buffer.Length)) != 0)
+                    ms.Write(buffer, 0, count);
+                return ms.ToArray();
             }
         }
 

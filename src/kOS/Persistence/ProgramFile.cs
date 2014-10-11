@@ -43,8 +43,6 @@ namespace kOS.Persistence
 
     public class ProgramFile
     {
-        public static int MaxFileSize = 65355; // arbitrary, but binary reads need a max expected size.
-        
         public string Filename {get;set;}
         public FileCategory Category {get;private set;}
         public string StringContent
@@ -109,10 +107,7 @@ namespace kOS.Persistence
 
         public int GetSize()
         {
-            if (Category == FileCategory.KEXE)
-                return BinaryContent.Length;
-            else
-                return StringContent.Length;
+            return Category == FileCategory.KEXE ? BinaryContent.Length : StringContent.Length;
         }
 
         public ConfigNode SaveEncoded(string nodeName)
@@ -147,15 +142,13 @@ namespace kOS.Persistence
 
         private void Decode(string input)
         {
-            string decodedString = string.Empty;
-            byte[] decodedBuffer;
-
             try
             {
+                string decodedString;
                 try
                 {
                     // base64 encoding
-                    decodedBuffer = DecodeBase64ToBinary(input);
+                    byte[] decodedBuffer = DecodeBase64ToBinary(input);
                     FileCategory whatKind = IdentifyCategory(decodedBuffer);
                     if (whatKind == FileCategory.ASCII || whatKind == FileCategory.KERBOSCRIPT)
                     {
@@ -199,12 +192,7 @@ namespace kOS.Persistence
             }
         }
 
-        
-        private string DecodeBase64ToString(string input)
-        {
-            return Encoding.ASCII.GetString(DecodeBase64ToBinary(input));
-        }
-        
+
         private byte[] DecodeBase64ToBinary(string input)
         {
             byte[] inputBuffer = Convert.FromBase64String(input);
@@ -266,8 +254,8 @@ namespace kOS.Persistence
         /// <returns>The type that should be used to store this file.</returns>
         public static FileCategory IdentifyCategory(byte[] firstBytes)
         {
-            FileCategory returnCat  = FileCategory.UNKNOWN; // default if none of the conditions pass
-            byte[] firstFour = new Byte[4];
+            var returnCat  = FileCategory.UNKNOWN; // default if none of the conditions pass
+            var firstFour = new Byte[4];
             int atMostFour = Math.Min(4,firstBytes.Length);
             Array.Copy(firstBytes,0,firstFour,0,atMostFour);
                         
