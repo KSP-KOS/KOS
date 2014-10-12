@@ -17,14 +17,6 @@ namespace kOS.Safe.Encapsulation
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>();
-            // ReSharper disable DoNotCallOverridableMethodsInConstructor
-            InitializeSuffixes();
-            // ReSharper restore DoNotCallOverridableMethodsInConstructor
-        }
-
-        protected virtual void InitializeSuffixes()
-        {
-            
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)

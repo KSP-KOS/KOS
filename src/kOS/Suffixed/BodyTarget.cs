@@ -65,16 +65,18 @@ namespace kOS.Suffixed
 
         public BodyTarget(string name, SharedObjects shareObj) : this(VesselUtils.GetBodyByName(name),shareObj)
         {
+            BodyInitializeSuffixes();
+
         }
 
         public BodyTarget(CelestialBody body, SharedObjects shareObj) :base(shareObj)
         {
             Body = body;
+            BodyInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void BodyInitializeSuffixes()
         {
-            base.InitializeSuffixes();
             AddSuffix("NAME", new Suffix<CelestialBody,string>(Body, model => model.name));
             AddSuffix("DESCRIPTION", new Suffix<CelestialBody,string>(Body, model => model.bodyDescription));
             AddSuffix("MASS", new Suffix<CelestialBody,double>(Body, model => model.Mass));

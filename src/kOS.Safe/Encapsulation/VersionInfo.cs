@@ -13,9 +13,10 @@ namespace kOS.Safe.Encapsulation
             this.major = major;
             this.minor = minor;
             this.build = build;
+            VersionInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void VersionInitializeSuffixes()
         {
             AddSuffix("MAJOR", new StaticSuffix<int>(() => major));
             AddSuffix("MINOR", new StaticSuffix<int>(() => minor));

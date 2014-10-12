@@ -11,11 +11,11 @@ namespace kOS.Suffixed.Part
         public SensorValue(global::Part part, ModuleEnviroSensor sensor, SharedObjects sharedObj) : base(part,sharedObj)
         {
             this.sensor = sensor;
+            SensorInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void SensorInitializeSuffixes()
         {
-            base.InitializeSuffixes();
             AddSuffix("ACTIVE", new SetSuffix<ModuleEnviroSensor,bool>(sensor, model => model.sensorActive, (model, value) => model.sensorActive = value));
             AddSuffix("TYPE", new Suffix<ModuleEnviroSensor,string>(sensor, model => model.sensorType));
             AddSuffix("DISPLAY", new Suffix<ModuleEnviroSensor,string>(sensor, model => model.readoutInfo));

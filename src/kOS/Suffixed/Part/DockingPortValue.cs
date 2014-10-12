@@ -11,11 +11,11 @@ namespace kOS.Suffixed.Part
         public DockingPortValue(ModuleDockingNode module, SharedObjects sharedObj) : base(module.part, sharedObj)
         {
             this.module = module;
+            DockingInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void DockingInitializeSuffixes()
         {
-            base.InitializeSuffixes();
             AddSuffix("AQUIRERANGE", new Suffix<ModuleDockingNode,float>(module, model => model.acquireRange));
             AddSuffix("AQUIREFORCE", new Suffix<ModuleDockingNode,float>(module, model => model.acquireForce));
             AddSuffix("AQUIRETORQUE", new Suffix<ModuleDockingNode,float>(module, model => model.acquireTorque));

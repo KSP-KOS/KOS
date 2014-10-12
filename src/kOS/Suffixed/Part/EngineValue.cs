@@ -13,11 +13,11 @@ namespace kOS.Suffixed.Part
             : base(part, sharedObj)
         {
             this.engine = engine;
+            EngineInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void EngineInitializeSuffixes()
         {
-            base.InitializeSuffixes();
             AddSuffix("ACTIVATE", new NoArgsSuffix(() => engine.Activate()));
             AddSuffix("SHUTDOWN", new NoArgsSuffix(() => engine.Shutdown()));
             AddSuffix("THRUSTLIMIT", new SetSuffix<IModuleEngine,float>(engine, model => model.ThrustPercentage, (model, value) => model.ThrustPercentage = value));

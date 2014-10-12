@@ -16,11 +16,11 @@ namespace kOS.Suffixed.Part
         {
             Part = part;
             shared = sharedObj;
+            PartInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void PartInitializeSuffixes()
         {
-            base.InitializeSuffixes();
             AddSuffix("CONTROLFROM", new NoArgsSuffix(ControlFrom));
             AddSuffix("NAME", new Suffix<global::Part, string>(Part, model => model.name));
             AddSuffix("STAGE", new Suffix<global::Part, int>(Part, model => model.inverseStage));

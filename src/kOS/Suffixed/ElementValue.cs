@@ -18,8 +18,8 @@ namespace kOS.Suffixed
 
             AddSuffix("NAME", new Suffix<Vessel,string>(vessel, model => model.vesselName));
             AddSuffix("UID", new Suffix<Vessel,uint>(vessel, model => model.rootPart.uid));
-            AddSuffix("PARTCOUNT", new Suffix<IEnumerable<global::Part>,int>(parts, model => model.Count()));
-            AddSuffix("PARTCOUNT", new Suffix<IEnumerable<global::Part>,ListValue>(parts, PartsToList));
+            AddSuffix("PARTCOUNT", new Suffix<IEnumerable<global::Part>,int>(this.parts, model => model.Count()));
+            AddSuffix("PARTS", new Suffix<IEnumerable<global::Part>,ListValue>(this.parts, PartsToList));
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts)

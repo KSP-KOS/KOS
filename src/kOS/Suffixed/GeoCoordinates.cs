@@ -28,6 +28,7 @@ namespace kOS.Suffixed
             Lat = orb.PositionToLatitude(p);
             Lng = orb.PositionToLongitude(p);
             Body = orb.GetParentBody();
+            GeoCoordsInitializeSuffixes();
         }
 
         /// <summary>
@@ -42,6 +43,7 @@ namespace kOS.Suffixed
             Lng = lng;
             Shared = sharedObj;
             Body = Shared.Vessel.GetOrbit().referenceBody;
+            GeoCoordsInitializeSuffixes();
         }
 
         /// <summary>
@@ -56,6 +58,7 @@ namespace kOS.Suffixed
             Lng = lng;
             Shared = sharedObj;
             Body = Shared.Vessel.GetOrbit().referenceBody;
+            GeoCoordsInitializeSuffixes();
         }
 
         /// <summary>
@@ -160,9 +163,8 @@ namespace kOS.Suffixed
             return Vector3d.Distance( latLongCoords, hereCoords );
         }
 
-        protected override void InitializeSuffixes()
+        private void GeoCoordsInitializeSuffixes()
         {
-            base.InitializeSuffixes();
             AddSuffix("LAT", new Suffix<double,double>(Lat, model => model));
             AddSuffix("LNG", new Suffix<double,double>(Lng, model => model));
             AddSuffix("BODY", new Suffix<CelestialBody,BodyTarget>(Body, model => new BodyTarget(model, Shared)));
