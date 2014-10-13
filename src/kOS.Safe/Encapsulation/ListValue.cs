@@ -13,11 +13,7 @@ namespace kOS.Safe.Encapsulation
     public class ListValue : Structure, IIndexable
     {
         private readonly IList<object> list;
-        
-        private static string shallowDumpName = "ListDumpShallow";
-        private static string deepDumpName = "ListDumpDeep";
-        private static string unspecifiedDumpName = "ListDump";
-        
+                
         public ListValue()
         {
             list = new List<object>();
@@ -83,6 +79,12 @@ namespace kOS.Safe.Encapsulation
             list.Add(toAdd);
         }
 
+        // Using Statics for this is not thread-safe, but kOS doesn't do threads at the moment.
+        // TODO: find a better way later to track the nesting level through all the messy
+        // calls of nested objects' ToStrings.
+        private static int currentNestDepth = 0;
+        private static int maxVerboseDepth = 0;
+        
         public override string ToString()
         {
             // If toString is nested inside another object's toString that was
@@ -90,7 +92,7 @@ namespace kOS.Safe.Encapsulation
             // original topmost call by not explicitly saying it's shallow or
             // nested here. otherwise explictly say it's shallow if it's the outermost
             // ToString() call:
-            if (calledFrom(unspecifiedDumpName))
+            if (calledFrom("ListDump"))
                 return ListDump();
             else
                 return ListDumpShallow();
@@ -149,6 +151,7 @@ namespace kOS.Safe.Encapsulation
         /// <returns>long string including eolns, ready for printing</returns>
         private string ListDumpShallow()
         {
+            maxVerboseDepth = 1;
             return ListDump();
         }
         
@@ -160,22 +163,24 @@ namespace kOS.Safe.Encapsulation
         /// static variables "shallowDumpName" and "deepDumpName", or the ListDump algorithm
         /// will break:
         /// <returns>long string including eolns, ready for printing</returns>
-        private string ListDumpDeep()
+        public string ListDumpDeep()
         {
+            maxVerboseDepth = 99;
             return ListDump();
         }
         
         /// <summary>
-        /// This is the engine underneath ListDump shallow/deep.  It uses the call stack
-        /// to figure out if it was called from a deep or from a shallow lister.
+        /// This is the engine underneath ListDump shallow/deep.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>string dump of the list</returns>
         private string ListDump()
         {
-            bool truncateHere = calledFrom(shallowDumpName);
+            ++currentNestDepth;
+            bool truncateHere = currentNestDepth > maxVerboseDepth;
 
             if (truncateHere)
             {
+                --currentNestDepth;                
                 return terseDump();
             }
             else
@@ -184,8 +189,9 @@ namespace kOS.Safe.Encapsulation
                 contents.AppendLine( terseDump() + ":" );
                 for (int i = 0 ; i < list.Count ; ++i)
                 {
-                    contents.AppendLine( string.Format("[{0,2}]= {1}", i, list[i].ToString()) );
+                    contents.AppendLine( string.Format("{0}[{1,2}]= {2}", new String(' ',currentNestDepth*2), i, list[i].ToString()) );
                 }
+                --currentNestDepth;                
                 return contents.ToString();
             }
         }
