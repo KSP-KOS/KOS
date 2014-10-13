@@ -24,7 +24,7 @@ namespace kOS.Safe.Encapsulation
 
         protected virtual void InitializeSuffixes()
         {
-            
+
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)

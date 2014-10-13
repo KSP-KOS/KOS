@@ -84,6 +84,7 @@
     <Compile Include="Exceptions\KOSLongTriggerException.cs" />
     <Compile Include="Exceptions\KOSParseException.cs" />
     <Compile Include="Exceptions\KOSPreserveInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSSuffixUseException.cs" />
     <Compile Include="Exceptions\KOSWaitInValidHereException.cs" />
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />

@@ -16,6 +16,10 @@ namespace kOS.Suffixed.Part
         {
             Part = part;
             shared = sharedObj;
+            
+            // This cannot be called from inside InitializeSuffixes because the base constructor calls
+            // InitializeSuffixes first before this constructor has set "Part" to a real value.
+            AddPartModuleSuffixes();
         }
 
         protected override void InitializeSuffixes()
@@ -33,7 +37,33 @@ namespace kOS.Suffixed.Part
             AddSuffix("TARGETABLE", new Suffix<global::Part, bool>(Part, model => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<global::Part, VesselTarget>(Part, model => new VesselTarget(Part.vessel, shared)));
         }
+        
+        private List<PartModuleFields> partModuleFieldsList = new List<PartModuleFields>();
 
+        protected void AddPartModuleSuffixes()
+        {
+            for (int i = 0; i < Part.Modules.Count ; ++i)
+            {
+                partModuleFieldsList.Add(new PartModuleFields(Part.Modules[i]));
+                string suffixName = Part.Modules[i].moduleName.ToUpper();
+                int closureFixedIndex = i; // maybe revisit this if we go to .net 4.0
+                AddSuffix(suffixName, new Suffix<PartValue,PartModuleFields>(this, model => partModuleFieldsList[closureFixedIndex]));
+            }
+
+            AddSuffix("MODULES", new Suffix<PartValue,ListValue>(this, model => model.GetAllModules(),
+                                                                 "A List of all the modules' names on this part"));            
+        }
+        
+        public ListValue GetAllModules()
+        {
+            ListValue returnValue = new ListValue();
+            foreach (PartModuleFields pmf in partModuleFieldsList)
+            {
+                returnValue.Add(pmf.GetModuleName());
+            }
+            return returnValue;
+        }
+        
         public override string ToString()
         {
             return string.Format("PART({0},{1})", Part.name, Part.uid);

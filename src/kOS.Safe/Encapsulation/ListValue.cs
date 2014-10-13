@@ -11,11 +11,17 @@ namespace kOS.Safe.Encapsulation
     {
         private readonly IList<object> list;
 
+        // It's nice for other parts of kOS's C# code to be able to operate on ListValues
+        // without having to go through the suffix system to do so.  Other wrappers should
+        // go here too, probably: Remove, element access with '[]', etc.
+        public int Count { get{ return list.Count;} }
+
         public ListValue()
         {
             list = new List<object>();
         }
 
+        // This looks useful.  Why is it private?
         private ListValue(ListValue toCopy)
         {
             list = new List<object>(toCopy.list);
@@ -74,7 +80,7 @@ namespace kOS.Safe.Encapsulation
         {
             list.Add(toAdd);
         }
-
+        
         public override string ToString()
         {
             return string.Format("{0} LIST({1})", base.ToString(), list.Count);
