@@ -177,6 +177,7 @@ namespace kOS.Safe.Test
             Assert.AreSame(testObject2, testStructure.GetSuffix(suffixName));
             Assert.AreSame(testObject2, testStructure.GetSuffix(suffixName2));
         }
+
     }
 }
 

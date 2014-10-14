@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ListValueTest.cs" />
     <Compile Include="NoArgsSuffixTest.cs" />
+    <Compile Include="SetSuffixTest.cs" />
     <Compile Include="StructureTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TwoArgsVoidSuffixTest.cs" />
