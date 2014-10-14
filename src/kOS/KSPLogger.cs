@@ -14,6 +14,11 @@ namespace kOS
         {
         }
 
+        public KSPLogger()
+        {
+            
+        }
+
         public override void Log(string text)
         {
             base.Log(text);
