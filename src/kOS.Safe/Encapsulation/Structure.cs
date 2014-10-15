@@ -80,7 +80,7 @@ namespace kOS.Safe.Encapsulation
         {
             var suffixes = GetStaticSuffixesForType(GetType());
 
-            if (ProcessSetSuffix(suffixes, suffixName, value))
+            if (!ProcessSetSuffix(suffixes, suffixName, value))
             {
                 return ProcessSetSuffix(instanceSuffixes, suffixName, value);
             }
@@ -90,7 +90,7 @@ namespace kOS.Safe.Encapsulation
         private bool ProcessSetSuffix(IDictionary<string, ISuffix> suffixes, string suffixName, object value)
         {
             ISuffix suffix;
-            if (instanceSuffixes.TryGetValue(suffixName, out suffix))
+            if (suffixes.TryGetValue(suffixName, out suffix))
             {
                 var settable = suffix as ISetSuffix;
                 if (settable != null)

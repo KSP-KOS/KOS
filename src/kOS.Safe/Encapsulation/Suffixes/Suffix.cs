@@ -1,19 +1,20 @@
+using kOS.Safe.Utilities;
+
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class Suffix<TParam,TReturn> : SuffixBase
+    public class Suffix<TReturn> : SuffixBase
     {
-        protected TParam Model { get; private set; }
-        private readonly SuffixGetDlg<TParam,TReturn> getter;
+        private readonly SuffixGetDlg<TReturn> getter;
 
-        public Suffix(TParam type, SuffixGetDlg<TParam,TReturn> getter, string description = ""):base(description)
+        public Suffix(SuffixGetDlg<TReturn> getter, string description = ""):base(description)
         {
-            Model = type;
             this.getter = getter;
+            bool firstTime;
         }
 
         public override object Get()
         {
-            return getter.Invoke(Model);
+            return getter.Invoke();
         }
     }
 

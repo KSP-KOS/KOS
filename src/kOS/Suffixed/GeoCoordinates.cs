@@ -165,13 +165,13 @@ namespace kOS.Suffixed
 
         private void GeoCoordsInitializeSuffixes()
         {
-            AddSuffix("LAT", new Suffix<double,double>(Lat, model => model));
-            AddSuffix("LNG", new Suffix<double,double>(Lng, model => model));
-            AddSuffix("BODY", new Suffix<CelestialBody,BodyTarget>(Body, model => new BodyTarget(model, Shared)));
-            AddSuffix("TERRAINHEIGHT", new Suffix<CelestialBody,double>(Body, model => GetTerrainAltitude()));
-            AddSuffix("DISTANCE", new Suffix<CelestialBody,double>(Body, model => GetDistanceFrom()));
-            AddSuffix("HEADING", new Suffix<CelestialBody,double>(Body, model => GetHeadingFrom()));
-            AddSuffix("BEARING", new Suffix<CelestialBody,double>(Body, model => GetBearing()));
+            AddSuffix("LAT", new Suffix<double>(()=> Lat));
+            AddSuffix("LNG", new Suffix<double>(()=> Lng));
+            AddSuffix("BODY", new Suffix<BodyTarget>(()=> new BodyTarget(Body, Shared)));
+            AddSuffix("TERRAINHEIGHT", new Suffix<double>(GetTerrainAltitude));
+            AddSuffix("DISTANCE", new Suffix<double>(GetDistanceFrom));
+            AddSuffix("HEADING", new Suffix<double>(GetHeadingFrom));
+            AddSuffix("BEARING", new Suffix<double>(GetBearing));
         }
 
         public override string ToString()

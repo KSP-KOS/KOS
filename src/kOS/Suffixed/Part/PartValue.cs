@@ -22,16 +22,16 @@ namespace kOS.Suffixed.Part
         private void PartInitializeSuffixes()
         {
             AddSuffix("CONTROLFROM", new NoArgsSuffix(ControlFrom));
-            AddSuffix("NAME", new Suffix<global::Part, string>(Part, model => model.name));
-            AddSuffix("STAGE", new Suffix<global::Part, int>(Part, model => model.inverseStage));
-            AddSuffix("UID", new Suffix<global::Part, uint>(Part, model => model.uid));
-            AddSuffix("ROTATION", new Suffix<global::Part, Direction>(Part, model => new Direction(Part.orgRot)));
-            AddSuffix("POSITION", new Suffix<global::Part, Vector>(Part, model => new Vector(Part.orgPos)));
-            AddSuffix("FACING", new Suffix<global::Part, Direction>(Part, model => GetFacing(Part)));
-            AddSuffix("RESOURCES", new Suffix<global::Part, ListValue>(Part, model => GatherResources(Part)));
-            AddSuffix("MODULES", new Suffix<global::Part, ListValue>(Part, model => GatherModules(Part)));
-            AddSuffix("TARGETABLE", new Suffix<global::Part, bool>(Part, model => Part.Modules.OfType<ITargetable>().Any()));
-            AddSuffix("SHIP", new Suffix<global::Part, VesselTarget>(Part, model => new VesselTarget(Part.vessel, shared)));
+            AddSuffix("NAME", new Suffix<string>(() => Part.name));
+            AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
+            AddSuffix("UID", new Suffix<uint>(() => Part.uid));
+            AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.orgRot)));
+            AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.orgPos)));
+            AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
+            AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
+            AddSuffix("MODULES", new Suffix<ListValue>(() => GatherModules(Part)));
+            AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
+            AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
         }
 
         public override string ToString()

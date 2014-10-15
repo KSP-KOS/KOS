@@ -36,7 +36,7 @@ namespace kOS.Utilities
             var up = (centerOfMass - vessel.mainBody.position).normalized;
 
             var target = targetDir.Rotation;
-            var vesselRotation = vessel.transform.rotation;
+            var vesselRotation = vessel.ReferenceTransform.rotation;
 
             // some validations
             if (!Utils.IsValidNumber(c.mainThrottle) ||

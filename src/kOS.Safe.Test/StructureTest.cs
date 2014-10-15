@@ -2,6 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Test
 {
@@ -29,6 +30,12 @@ namespace kOS.Safe.Test
             {
                 AddSuffix(name,suffix);
             }
+        }
+
+        [TestFixtureSetUp]
+        public void Setup()
+        {
+            Debug.Logger = new TestLogger();
         }
 
         [Test]
@@ -88,6 +95,34 @@ namespace kOS.Safe.Test
 
             testStructure.TestAddInstanceSuffix(suffixName, testSuffix);
             Assert.AreEqual(testObject, testStructure.GetSuffix(suffixName));
+        }
+
+        [Test]
+        public void CantFindSuffixThatDoesntExist()
+        {
+            var testObject = new object();
+            var testSuffix = Substitute.For<ISuffix>();
+            var testStructure = new TestStructure();
+            var suffixName = Guid.NewGuid().ToString();
+            testSuffix.Get().Returns(testObject);
+
+            Assert.IsNull(testStructure.GetSuffix(suffixName));
+            testStructure.TestAddInstanceSuffix(suffixName,testSuffix);
+            Assert.IsNotNull(testStructure.GetSuffix(suffixName));
+        }
+
+        [Test]
+        public void CantFindStaticSuffixThatDoesntExist()
+        {
+            var testObject = new object();
+            var testSuffix = Substitute.For<ISuffix>();
+            var testStructure = new TestStructure();
+            var suffixName = Guid.NewGuid().ToString();
+            testSuffix.Get().Returns(testObject);
+
+            Assert.IsNull(testStructure.GetSuffix(suffixName));
+            TestStructure.TestAddGlobal<TestStructure>(suffixName,testSuffix);
+            Assert.IsNotNull(testStructure.GetSuffix(suffixName));
         }
 
         [Test]

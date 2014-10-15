@@ -16,10 +16,10 @@ namespace kOS.Suffixed
             var vessel = this.parts.First().vessel;
             name = vessel.vesselName;
 
-            AddSuffix("NAME", new Suffix<Vessel,string>(vessel, model => model.vesselName));
-            AddSuffix("UID", new Suffix<Vessel,uint>(vessel, model => model.rootPart.uid));
-            AddSuffix("PARTCOUNT", new Suffix<IEnumerable<global::Part>,int>(this.parts, model => model.Count()));
-            AddSuffix("PARTS", new Suffix<IEnumerable<global::Part>,ListValue>(this.parts, PartsToList));
+            AddSuffix("NAME", new Suffix<string>(() => vessel.vesselName));
+            AddSuffix("UID", new Suffix<uint>(() => vessel.rootPart.uid));
+            AddSuffix("PARTCOUNT", new Suffix<int>(() => parts.Count()));
+            AddSuffix("PARTS", new Suffix<ListValue>(() => PartsToList(parts)));
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts)

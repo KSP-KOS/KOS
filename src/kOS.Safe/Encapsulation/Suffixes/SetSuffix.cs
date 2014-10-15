@@ -2,11 +2,11 @@ using System;
 
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class SetSuffix<TParam,TValue> : Suffix<TParam,TValue>, ISetSuffix
+    public class SetSuffix<TValue> : Suffix<TValue>, ISetSuffix
     {
-        private readonly SuffixSetDlg<TParam,TValue> setter;
+        private readonly SuffixSetDlg<TValue> setter;
 
-        public SetSuffix(TParam type, SuffixGetDlg<TParam,TValue> getter, SuffixSetDlg<TParam,TValue> setter, string description = "") : base(type, getter, description)
+        public SetSuffix(SuffixGetDlg<TValue> getter, SuffixSetDlg<TValue> setter, string description = "") : base(getter, description)
         {
             this.setter = setter;
         }
@@ -14,7 +14,7 @@ namespace kOS.Safe.Encapsulation.Suffixes
         public void Set(object value)
         {
             var test = (TValue)Convert.ChangeType(value, typeof(TValue));
-            setter.Invoke(Model, test);
+            setter.Invoke(test);
         }
     }
 }

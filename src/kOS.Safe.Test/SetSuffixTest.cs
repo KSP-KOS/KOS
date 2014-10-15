@@ -1,25 +1,23 @@
-﻿using NUnit.Framework;
+﻿using System.Runtime.CompilerServices;
+using NUnit.Framework;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Test
 {
     [TestFixture]
     public class SetSuffixTest
     {
-        private class BasicClass<T>
+        [TestFixtureSetUp]
+        public void Setup()
         {
-            public T State { get; set; }
+            Debug.Logger = new TestLogger();
         }
 
         [Test]
         public void CanGetDefaultValue()
         {
-            var basicInstance = new BasicClass<int>();
-
-            SuffixGetDlg<BasicClass<int>, int> getter = model => model.State;
-            SuffixSetDlg<BasicClass<int>, int> setter = (model, value) => model.State = value;
-
-            var suffix = new SetSuffix<BasicClass<int>, int>(basicInstance, getter, setter);
+            var suffix = BuildBasicSetSuffix<int>();
 
             Assert.IsNotNull(suffix);
             Assert.AreEqual(default(int), suffix.Get());
@@ -28,54 +26,58 @@ namespace kOS.Safe.Test
         [Test]
         public void CanSetAndGet()
         {
-            var basicInstance = new BasicClass<int>();
-
-            SuffixGetDlg<BasicClass<int>, int> getter = model => model.State;
-            SuffixSetDlg<BasicClass<int>, int> setter = (model, value) => model.State = value;
-
-            var suffix = new SetSuffix<BasicClass<int>, int>(basicInstance, getter, setter);
+            var suffix = BuildBasicSetSuffix<int>();
 
             Assert.IsNotNull(suffix);
             suffix.Set(15);
             Assert.AreEqual(15,suffix.Get());
+        }
 
+        private static SetSuffix<TParam> BuildBasicSetSuffix<TParam>()
+        {
+            var basicInstance = new StrongBox<TParam>(default(TParam));
+
+            SuffixSetDlg<TParam> setter = value => basicInstance.Value = value;
+            SuffixGetDlg<TParam> getter = () => basicInstance.Value;
+
+            return new SetSuffix<TParam>(getter, setter);
         }
 
         [Test]
         public void CanCoerceType()
         {
-            var basicInstance = new BasicClass<int>();
-
-            SuffixGetDlg<BasicClass<int>, int> getter = model => model.State;
-            SuffixSetDlg<BasicClass<int>, int> setter = (model, value) => model.State = value;
-
-            var suffix = new SetSuffix<BasicClass<int>, int>(basicInstance, getter, setter);
+            var suffix = BuildBasicSetSuffix<int>();
 
             const double TEST_VALUE = 15.0d;
             Assert.IsNotNull(suffix);
             suffix.Set(TEST_VALUE);
             var finalValue = suffix.Get();
             Assert.AreEqual(TEST_VALUE,finalValue);
-
         }
 
         [Test]
         public void CanCoerceAndTruncateType()
         {
-            var basicInstance = new BasicClass<int>();
-
-            SuffixGetDlg<BasicClass<int>, int> getter = model => model.State;
-            SuffixSetDlg<BasicClass<int>, int> setter = (model, value) => model.State = value;
-
-            var suffix = new SetSuffix<BasicClass<int>, int>(basicInstance, getter, setter);
+            var suffix = BuildBasicSetSuffix<int>();
 
             const double TEST_VALUE = 15.1234d;
-            const double TEST_VALUE_TRUNCATED = 15.0d;
+            const double TEST_VALUE_TRUNCATED = 15;
             Assert.IsNotNull(suffix);
             suffix.Set(TEST_VALUE);
             var finalValue = suffix.Get();
             Assert.AreEqual(TEST_VALUE_TRUNCATED,finalValue);
+        }
 
+        [Test]
+        public void CanCoerceAndExtendType()
+        {
+            var suffix = BuildBasicSetSuffix<int>();
+
+            const int TEST_VALUE = 15;
+            Assert.IsNotNull(suffix);
+            suffix.Set(TEST_VALUE);
+            var finalValue = suffix.Get();
+            Assert.AreEqual(TEST_VALUE,finalValue);
         }
     }
 }
