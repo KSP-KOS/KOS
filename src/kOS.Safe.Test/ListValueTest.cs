@@ -154,11 +154,11 @@ namespace kOS.Safe.Test
         /// 
         /// </summary>
         /// <returns>A list containing the description above</returns>
-        private ListValue makeNestedExample()
+        private ListValue MakeNestedExample()
         {
-            ListValue list = new ListValue();
+            const string OUTER_STRING = "String, outer value";
             
-            string str1 = "String, outer value";
+            ListValue list = new ListValue();
             ListValue innerList1 = new ListValue();
             ListValue innerList2 = new ListValue();
             ListValue innerInnerList = new ListValue();
@@ -177,7 +177,7 @@ namespace kOS.Safe.Test
             InvokeDelegate(list,"ADD", 200);
             InvokeDelegate(list,"ADD", innerList1);            
             InvokeDelegate(list,"ADD", innerList2);            
-            InvokeDelegate(list,"ADD", str1);
+            InvokeDelegate(list,"ADD", OUTER_STRING);
             
             return list;
         }
@@ -185,7 +185,7 @@ namespace kOS.Safe.Test
         [Test]
         public void CanShallowToString()
         {
-            ListValue list = makeNestedExample();
+            ListValue list = MakeNestedExample();
             
             string result = list.ToString();
             
@@ -198,7 +198,7 @@ namespace kOS.Safe.Test
         [Test]
         public void CanDeepToString()
         {
-            ListValue list = makeNestedExample();
+            ListValue list = MakeNestedExample();
             
             string result = (string)InvokeDelegate(list, "DUMP");
             

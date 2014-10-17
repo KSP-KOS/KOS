@@ -28,16 +28,16 @@ namespace kOS.Safe.Encapsulation
 
         private void ListInitializeSuffixes()
         {
-            AddSuffix("ADD",      new OneArgsSuffix<object>         (toAdd => list.Add(toAdd), Resources.ListAddDescription));
-            AddSuffix("REMOVE",   new OneArgsSuffix<int>            (toRemove => list.RemoveAt(toRemove)));
-            AddSuffix("CLEAR",    new NoArgsSuffix                  (() => list.Clear()));
+            AddSuffix("ADD",      new OneArgsSuffix<object>             (toAdd => list.Add(toAdd), Resources.ListAddDescription));
+            AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => list.RemoveAt(toRemove)));
+            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => list.Clear()));
             AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => list.Count));
             AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>          (() => new Enumerator(list.GetEnumerator())));
             AddSuffix("COPY",     new NoArgsSuffix<ListValue>           (() => new ListValue(this)));
             AddSuffix("CONTAINS", new OneArgsSuffix<bool, object>       (item => list.Contains(item)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
             AddSuffix("EMPTY",    new NoArgsSuffix<bool>                (() => !list.Any()));
-            AddSuffix("DUMP",     new NoArgsSuffix<string>              (() => ListDumpDeep()));
+            AddSuffix("DUMP",     new NoArgsSuffix<string>              (ListDumpDeep));
         }
 
         public override bool SetSuffix(string suffixName, object value)
@@ -47,26 +47,26 @@ namespace kOS.Safe.Encapsulation
             {
                 case "ADD":
                     throw new Exception("Old syntax \n" +
-                                               "   SET _somelist_:ADD TO _value_\n" +
-                                               "is no longer supported. Try replacing it with: \n" +
-                                               "   _somelist_:ADD(_value_).\n");
+                                           "   SET _somelist_:ADD TO _value_\n" +
+                                           "is no longer supported. Try replacing it with: \n" +
+                                           "   _somelist_:ADD(_value_).\n");
                 case "CONTAINS":
                     throw new Exception("Old syntax \n" +
-                                               "   SET _somelist_:CONTAINS TO _value_\n" +
-                                               "is no longer supported. Try replacing it with: \n" +
-                                               "   SET _somelist_:CONTAINS(_value_) TO _value_\n");
+                                           "   SET _somelist_:CONTAINS TO _value_\n" +
+                                           "is no longer supported. Try replacing it with: \n" +
+                                           "   SET _somelist_:CONTAINS(_value_) TO _value_\n");
                 case "REMOVE":
                     throw new Exception("Old syntax \n" +
-                                               "   SET _somelist_:REMOVE TO _number_\n" +
-                                               "is no longer supported. Try replacing it with: \n" +
-                                               "   _somelist_:REMOVE(_number_).\n");
+                                           "   SET _somelist_:REMOVE TO _number_\n" +
+                                           "is no longer supported. Try replacing it with: \n" +
+                                           "   _somelist_:REMOVE(_number_).\n");
                 default:
                     return false;
             }
         }
 
         // This test case was added to ensure there was an example method with more than 1 argument.
-        public ListValue SubListMethod(int start, int runLength)
+        private ListValue SubListMethod(int start, int runLength)
         {
             var subList = new ListValue();
             for (int i = start; i < list.Count && i < start + runLength; ++i)
@@ -84,8 +84,8 @@ namespace kOS.Safe.Encapsulation
         // Using Statics for this is not thread-safe, but kOS doesn't do threads at the moment.
         // TODO: find a better way later to track the nesting level through all the messy
         // calls of nested objects' ToStrings.
-        private static int currentNestDepth = 0;
-        private static int maxVerboseDepth = 0;
+        private static int currentNestDepth;
+        private static int maxVerboseDepth;
         
         public override string ToString()
         {
@@ -94,12 +94,11 @@ namespace kOS.Safe.Encapsulation
             // original topmost call by not explicitly saying it's shallow or
             // nested here. otherwise explictly say it's shallow if it's the outermost
             // ToString() call:
-            if (calledFrom("ListDump"))
+            if (CalledFrom("ListDump"))
                 return ListDump();
-            else
-                return ListDumpShallow();
+            return ListDumpShallow();
         }
-        
+
         /// <summary>
         /// Returns whether or not the current method was called from the given method name
         /// by examning the callstack downward from the current level's parent.  Assumes the
@@ -109,11 +108,15 @@ namespace kOS.Safe.Encapsulation
         /// </summary>
         /// <param name="methodName">Test if this method called me</param>
         /// <returns>True if the current method was called from the given method name</returns>
-        private bool calledFrom(string methodName)
+        private bool CalledFrom(string methodName)
         {
             StackFrame[] callStack = new StackTrace().GetFrames();  // get call stack
 
-            string thisDeclaringType = callStack[0].GetMethod().DeclaringType.Name;
+            if (callStack == null) return false;
+            var declaringType = callStack[0].GetMethod().DeclaringType;
+            if (declaringType == null) return false;
+
+            string thisDeclaringType = declaringType.Name;
 
             // Find out whether or not this method call was nested inside
             // another method call of itself which was not meant to recurse.
@@ -124,8 +127,12 @@ namespace kOS.Safe.Encapsulation
             // the middle of executing):
             for (int i = 1 ; i < callStack.Length ; ++i )
             {
-                if (callStack[i].GetMethod().Name == methodName &&
-                    callStack[i].GetMethod().DeclaringType.Name == thisDeclaringType )
+                var type = callStack[i].GetMethod().DeclaringType;
+                if (type == null) continue;
+
+                var matchingName = callStack[i].GetMethod().Name == methodName;
+                var matchingType = type.Name == thisDeclaringType;
+                if (matchingName && matchingType)
                 {
                     return true;
                 }
@@ -138,7 +145,7 @@ namespace kOS.Safe.Encapsulation
         /// a "this is a list and it has this many things int it" message.
         /// </summary>
         /// <returns>short string without eoln</returns>
-        private string terseDump()
+        private string TerseDump()
         {
             return "LIST of " + list.Count + " item" + (list.Count>1 ? "s" : "");
         }
@@ -165,7 +172,7 @@ namespace kOS.Safe.Encapsulation
         /// static variables "shallowDumpName" and "deepDumpName", or the ListDump algorithm
         /// will break:
         /// <returns>long string including eolns, ready for printing</returns>
-        public string ListDumpDeep()
+        private string ListDumpDeep()
         {
             maxVerboseDepth = 99;
             return ListDump();
@@ -177,25 +184,25 @@ namespace kOS.Safe.Encapsulation
         /// <returns>string dump of the list</returns>
         private string ListDump()
         {
+            const int SPACES_PER_INDENT = 2;
+
             ++currentNestDepth;
             bool truncateHere = currentNestDepth > maxVerboseDepth;
 
             if (truncateHere)
             {
                 --currentNestDepth;                
-                return terseDump();
+                return TerseDump();
             }
-            else
+            var contents = new StringBuilder();
+            contents.AppendLine( TerseDump() + ":" );
+            var indent = new string(' ', currentNestDepth*SPACES_PER_INDENT);
+            for (int i = 0 ; i < list.Count ; ++i)
             {
-                StringBuilder contents = new StringBuilder();
-                contents.AppendLine( terseDump() + ":" );
-                for (int i = 0 ; i < list.Count ; ++i)
-                {
-                    contents.AppendLine( string.Format("{0}[{1,2}]= {2}", new String(' ',currentNestDepth*2), i, list[i].ToString()) );
-                }
-                --currentNestDepth;                
-                return contents.ToString();
+                contents.AppendLine( string.Format("{0}[{1,2}]= {2}", indent, i, list[i]) );
             }
+            --currentNestDepth;                
+            return contents.ToString();
         }
 
         #region IIndexable Members
