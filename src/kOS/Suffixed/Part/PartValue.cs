@@ -33,7 +33,6 @@ namespace kOS.Suffixed.Part
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.orgPos)));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
-            AddSuffix("MODULES", new Suffix<ListValue>(() => GatherModules(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>((modName) => GetModule(modName)));
@@ -125,16 +124,6 @@ namespace kOS.Suffixed.Part
                 resources.Add(new ResourceValue(resource));
             }
             return resources;
-        }
-
-        private ListValue GatherModules(global::Part part)
-        {
-            var modules = new ListValue();
-            foreach (var module in part.Modules)
-            {
-                modules.Add(module.GetType());
-            }
-            return modules;
         }
     }
 }
