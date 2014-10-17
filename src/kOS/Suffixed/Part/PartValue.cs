@@ -1,4 +1,5 @@
 ﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,6 @@ namespace kOS.Suffixed.Part
             
             // This cannot be called from inside InitializeSuffixes because the base constructor calls
             // InitializeSuffixes first before this constructor has set "Part" to a real value.
-            AddPartModuleSuffixes();
             PartInitializeSuffixes();
         }
 
@@ -36,30 +36,32 @@ namespace kOS.Suffixed.Part
             AddSuffix("MODULES", new Suffix<ListValue>(() => GatherModules(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
+            AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>((modName) => GetModule(modName)));
+            AddSuffix("MODULES", new Suffix<ListValue>(() => GetAllModules(), "A List of all the modules' names on this part"));            
         }
         
         private List<PartModuleFields> partModuleFieldsList = new List<PartModuleFields>();
 
-        protected void AddPartModuleSuffixes()
+        protected PartModuleFields GetModule(string modName)
         {
-            for (int i = 0; i < Part.Modules.Count ; ++i)
+            foreach (PartModule mod in Part.Modules)
             {
-                partModuleFieldsList.Add(new PartModuleFields(Part.Modules[i]));
-                string suffixName = Part.Modules[i].moduleName.ToUpper();
-                int closureFixedIndex = i; // maybe revisit this if we go to .net 4.0
-                AddSuffix(suffixName, new Suffix<PartValue,PartModuleFields>(this, model => partModuleFieldsList[closureFixedIndex]));
+                Debug.Log("Does \"" + mod.moduleName.ToUpper() + "\" == \"" + modName.ToUpper() + "\"?");
+                if (mod.moduleName.ToUpper() == modName.ToUpper())
+                {
+                    Debug.Log("yes it does");
+                    return new PartModuleFields(mod);
+                }
             }
-
-            AddSuffix("MODULES", new Suffix<PartValue,ListValue>(this, model => model.GetAllModules(),
-                                                                 "A List of all the modules' names on this part"));            
+            throw new KOSLookupFailException( "module", modName.ToUpper(), this );
         }
         
         public ListValue GetAllModules()
         {
             ListValue returnValue = new ListValue();
-            foreach (PartModuleFields pmf in partModuleFieldsList)
+            foreach (PartModule mod in Part.Modules)
             {
-                returnValue.Add(pmf.GetModuleName());
+                returnValue.Add(mod.moduleName);
             }
             return returnValue;
         }

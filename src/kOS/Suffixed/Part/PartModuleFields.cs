@@ -19,6 +19,8 @@ namespace kOS.Suffixed.Part
     /// </summary>
     public class PartModuleFields : Structure
     {
+        private bool debugMsg = true;
+        
         protected PartModule partModule;
         
         /// <summary>
@@ -105,15 +107,27 @@ namespace kOS.Suffixed.Part
             except = null;
             bool isLegal = true;
             
+            Type fType = field.FieldInfo.FieldType;
+            object convertedVal = newVal;
+            
             if (!isEditable(field))
             {
                 except = new KOSInvalidFieldValueException("Field is not editable");
                 return false;
             }
-            if (! newVal.GetType().IsSubclassOf(field.FieldInfo.FieldType))
+            if (! newVal.GetType().IsSubclassOf(fType))
             {
-                except = new KOSInvalidFieldValueException("Field cannot store a value of type "+newVal.GetType().Name);
-                return false;
+                try {
+                    convertedVal = Convert.ChangeType(newVal,fType);
+                }
+                catch (InvalidCastException) {
+                    except = new KOSCastException(newVal.GetType(),fType);
+                    return false;
+                }
+                catch (FormatException) {
+                    except = new KOSCastException(newVal.GetType(),fType);
+                    return false;
+                }
             }
             List<UI_Control> controls = getFieldControls(field);
 
@@ -139,7 +153,7 @@ namespace kOS.Suffixed.Part
                 {
                     // I have no clue what this actually looks like in the UI?  What is a
                     // user editable 2-D vector widget?  I've never seen this before.
-                    Vector2 vec2 = (Vector2)newVal;
+                    Vector2 vec2 = (Vector2)convertedVal;
                     if (vec2.x < ((UI_Vector2)control).minValueX || vec2.x > ((UI_Vector2)control).maxValueX ||
                         vec2.y < ((UI_Vector2)control).minValueY || vec2.y > ((UI_Vector2)control).maxValueY)
                     {
@@ -149,7 +163,7 @@ namespace kOS.Suffixed.Part
                 }
                 if (control is UI_FloatRange)
                 {
-                    float val = Convert.ToSingle(newVal);
+                    float val = Convert.ToSingle(convertedVal);
                     float min = ((UI_FloatRange)control).minValue;
                     float max = ((UI_FloatRange)control).maxValue;
                     float inc = ((UI_FloatRange)control).stepIncrement;
@@ -234,6 +248,66 @@ namespace kOS.Suffixed.Part
             }
             return returnValue;
         }
+
+        /// <summary>
+        /// Return the KSP BaseEvent going with the given name.
+        /// </summary>
+        /// <param name="cookedGuiName">The event's guiname in KOS terms (ie, spaces turned to underscores).
+        /// Matching will be done case-insensitively.</param>
+        /// <returns></returns>
+        public BaseEvent GetEvent(string cookedGuiName)
+        {            
+            string lowerName = cookedGuiName.ToLower();
+            
+            foreach (BaseEvent kspEvent  in partModule.Events)
+            {
+                if (kspEvent.guiName.ToLower().Replace(' ','_') == lowerName)
+                {
+                    return kspEvent;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Return a list of all the KSPActions the module has in it.
+        /// </summary>
+        /// <returns></returns>
+        public ListValue AllActions(string formatter)
+        {            
+            ListValue returnValue = new ListValue();
+            
+            foreach (BaseAction kspAction  in partModule.Actions)
+            {
+                returnValue.Add(String.Format(formatter,
+                                              "callable",
+                                              kspAction.guiName.ToLower().Replace(' ','_'),
+                                              "KSPAction") );
+            }
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Return the KSP BaseAction going with the given name.
+        /// </summary>
+        /// <param name="cookedGuiName">The event's guiname in KOS terms (ie, spaces turned to underscores).
+        /// Matching will be done case-insensitively.</param>
+        /// <returns></returns>
+        public BaseAction GetAction(string cookedGuiName)
+        {            
+            string lowerName = cookedGuiName.ToLower();
+            
+            foreach (BaseAction kspAction in partModule.Actions)
+            {
+                Debug.Log("eraseme: does \""+kspAction.guiName.ToLower().Replace(' ','_')+"\" == \""+lowerName+"\"?");
+                if (kspAction.guiName.ToLower().Replace(' ','_') == lowerName)
+                {
+                    Debug.Log("eraseme: yes");
+                    return kspAction;
+                }
+            }
+            return null;
+        }
         
         /// <summary>
         /// Build a list of all the KSP things (fields, events, actions) that
@@ -247,8 +321,9 @@ namespace kOS.Suffixed.Part
 
             // We appear to have not implemented a concatenator or range add for
             // our ListValue type.  Thus the for-loops below:
-            ListValue fields = AllFields(formatter);
-            ListValue events = AllEvents(formatter);
+            ListValue fields  = AllFields(formatter);
+            ListValue events  = AllEvents(formatter);
+            ListValue actions = AllActions(formatter);
             for (int i = 0; i < fields.Count ; ++i)
             {
                 all.Add(fields.GetIndex(i));
@@ -262,66 +337,145 @@ namespace kOS.Suffixed.Part
 
         protected void InitializeSuffixesAfterConstruction()
         {
-            AddSuffix("ALL", new Suffix<PartModuleFields,ListValue>(this, model => model.AllThings()));
-            Debug.Log( "Adding PartModuleField suffixes for " + partModule.moduleName );
+            AddSuffix("ALLFIELDS",  new Suffix<ListValue>(() => AllFields("({0}) {1}, is {2}")));
+            AddSuffix("ALLEVENTS",  new Suffix<ListValue>(() => AllEvents("({0}) {1}, is {2}")));
+            AddSuffix("ALLACTIONS", new Suffix<ListValue>(() => AllActions("({0}) {1}, is {2}")));
+            AddSuffix("GETFIELD",   new OneArgsSuffix<object, string>((sufName) => GetKSPFieldValue(sufName)));
+            AddSuffix("SETFIELD",   new TwoArgsSuffix<string, object>((sufName,newVal) => SetKSPFieldValue(sufName, newVal)));
+            AddSuffix("DOEVENT",    new OneArgsSuffix<string>((sufName) => CallKSPEvent(sufName)));
+            AddSuffix("DOACTION",   new TwoArgsSuffix<string, bool>((sufName,flag) => CallKSPAction(sufName,flag)));
+        }
+        
+        // TODO - delete this unused method after verifying the new way works:
+        protected void InitializeKSPFields()
+        {
             foreach (BaseField field in partModule.Fields)
             {
-                string fieldNameForKSP = field.guiName.ToUpper().Replace(' ','_');
-                Debug.Log( "  KSP suffix name: " + fieldNameForKSP );
+                if (debugMsg) Debug.Log( "Adding PartModuleField suffixes for " + partModule.moduleName );
+                string fieldNameForKOS = field.guiName.ToUpper().Replace(' ','_');
+                if (debugMsg) Debug.Log( "  KSP suffix name: " + fieldNameForKOS );
                 ISuffix suf;
-                if (isEditable(field))
+                if (field.guiActive)
                 {
-                    Debug.Log( "      is Editable");
-                    // I actually do know the type of the ksp field at *runtime* but not at
-                    // *compile* time, so I can't pass it in to the generics syntax <....>
-                    // in this statement.  That's why it just says "object":
-                    suf = new SetSuffix<PartModuleFields,object>(
-                        this, model => model.GetFieldValue(fieldNameForKSP),
-                        (model, value) => model.SetFieldValue(fieldNameForKSP,value)
-                       );
+                    if (isEditable(field))
+                    {
+                        if (debugMsg) Debug.Log( "      is Editable");
+                        // I actually do know the type of the ksp field at *runtime* but not at
+                        // *compile* time, so I can't pass it in to the generics syntax <....>
+                        // in this statement.  That's why it just says "object":
+                        suf = new SetSuffix<object>(() => GetKSPFieldValue(fieldNameForKOS), value => SetKSPFieldValue(fieldNameForKOS,value));
+                    }
+                    else
+                    {
+                        if (debugMsg) Debug.Log( "      is NOT Editable");
+                        // I actually do know the type of the ksp field at *runtime* but not at
+                        // *compile* time, so I can't pass it in to the generics syntax <....>
+                        // in this statement.  That's why it just says "object":
+                        suf = new Suffix<object>(()=>GetKSPFieldValue(fieldNameForKOS));
+                    }
+                    AddSuffix( fieldNameForKOS, suf);
                 }
-                else
-                {
-                    Debug.Log( "      is NOT Editable");
-                    // I actually do know the type of the ksp field at *runtime* but not at
-                    // *compile* time, so I can't pass it in to the generics syntax <....>
-                    // in this statement.  That's why it just says "object":
-                    suf = new Suffix<PartModuleFields,object>(this, model => model.GetFieldValue(fieldNameForKSP));
-                }
-                AddSuffix( fieldNameForKSP, suf);
             }
         }
         
-        public object GetFieldValue(string suffixName)
+        // TODO - delete this unused method after verifying the new way works:
+        protected void InitializeKSPEvents()
         {
-            BaseField field = GetField(suffixName);
-            if (field!=null)
+            // Using variable name "evt" because "event" is a reserved word:
+            foreach (BaseEvent evt in partModule.Events)
             {
-                object obj = field.GetValue(partModule);
-                if (obj!=null)
-                    return obj;
-            }
-            throw new KOSSuffixUseException( "GET", suffixName, this);
-        }
-        
-        public void SetFieldValue(string suffixName, object newValue)
-        {
-            BaseField field = GetField(suffixName);
-            if (field!=null)
-            {
-                KOSException except;
-                
-                if (isLegalValue(field, newValue, out except))
+                if (debugMsg) Debug.Log( "Adding PartModuleEvent suffixes for " + partModule.moduleName );
+                string evtNameForKOS = evt.guiName.ToUpper().Replace(' ','_');
+                if (debugMsg) Debug.Log( "  KSP suffix name: " + evtNameForKOS );
+                if (evt.guiActive)
                 {
-                    field.SetValue(newValue, partModule);
-                    return;
+                    if (debugMsg) Debug.Log( "      is activatable");
+                    AddSuffix(evtNameForKOS, new NoArgsSuffix(() => CallKSPEvent(evtNameForKOS)));
                 }
                 else
                 {
-                    throw except;
+                    if (debugMsg) Debug.Log( "      is NOT activatable");
                 }
             }
-            throw new KOSSuffixUseException( "SET", suffixName, this);
-        }        
+        }
+
+        // TODO - delete this unused method after verifying the new way works:
+        protected void InitializeKSPActions()
+        {
+            foreach (BaseAction act in partModule.Actions)
+            {
+                if (debugMsg) Debug.Log( "Adding PartModuleAction suffixes for " + partModule.moduleName );
+                string actNameForKOS = "ACTION_" + act.guiName.ToUpper().Replace(' ','_');
+                if (debugMsg) Debug.Log( "  KSP suffix name: " + actNameForKOS );
+                if (debugMsg) Debug.Log( "      is activatable");
+                AddSuffix(actNameForKOS, new OneArgsSuffix<bool>((newFlag) => CallKSPAction(actNameForKOS, newFlag )));
+            }
+        }
+        
+        /// <summary>
+        /// Get a KSPField with the kOS suffix name given.
+        /// </summary>
+        /// <param name="suffixName"></param>
+        /// <returns></returns>
+        public object GetKSPFieldValue(string suffixName)
+        {
+            BaseField field = GetField(suffixName);
+            if (field==null) {
+                throw new KOSLookupFailException( "FIELD", suffixName, this);
+            }
+            object obj = field.GetValue(partModule);
+            return obj;
+        }
+        
+        /// <summary>
+        /// Set a KSPField with the kOS suffix name given to the new value given.
+        /// </summary>
+        /// <param name="suffixName"></param>
+        /// <param name="newValue"></param>
+        public void SetKSPFieldValue(string suffixName, object newValue)
+        {
+            BaseField field = GetField(suffixName);
+            if (field==null)
+                throw new KOSLookupFailException( "FIELD", suffixName, this);
+
+            KOSException except;                
+            if (isLegalValue(field, newValue, out except))
+            {
+                object convertedValue = Convert.ChangeType(newValue,field.FieldInfo.FieldType);
+                field.SetValue(convertedValue, partModule);
+                return;
+            }
+            else
+            {
+                throw except;
+            }
+        }
+
+        /// <summary>
+        /// Trigger whatever code the PartModule has attached to this Event, given the kOS name for the suffix.
+        /// </summary>
+        /// <param name="suffixName"></param>
+        public void CallKSPEvent(string suffixName)
+        {
+            BaseEvent evt = GetEvent(suffixName);
+            if (evt==null)
+                throw new KOSLookupFailException( "EVENT", suffixName, this);
+            evt.Invoke();
+        }
+
+        /// <summary>
+        /// Trigger whatever action the PartModule has attached to this Action, given the kOS name for the action.
+        /// Warning - it probably triggers the entire action group that is attached to this action if there is one,
+        /// not just the action on this one part.
+        /// </summary>
+        /// <param name="suffixName"></param>
+        /// <param name="param">true = activate, false = de-activate</param>
+        public void CallKSPAction(string suffixName, bool param)
+        {
+            BaseAction act = GetAction(suffixName);
+            if (act==null)
+                throw new KOSLookupFailException( "ACTION", suffixName, this);
+            act.Invoke( new KSPActionParam( act.actionGroup, (param ? KSPActionType.Activate : KSPActionType.Deactivate) ));
+        }
     }
 }
