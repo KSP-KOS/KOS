@@ -32,6 +32,18 @@ namespace kOS.Suffixed.Part
             AddSuffix("MODULES", new Suffix<ListValue>(() => GatherModules(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
+            AddSuffix("PARENT", new Suffix<PartValue>(() => new PartValue(Part.parent,shared), "The parent part of this part"));
+            AddSuffix("CHILDREN", new Suffix<ListValue>(() => GetChildren(), "A LIST() of the children parts of this part"));
+        }
+
+        private ListValue GatherModules(global::Part part)
+        {
+            var modules = new ListValue();
+            foreach (var module in part.Modules)
+            {
+                modules.Add(module.GetType());
+            }
+            return modules;
         }
 
         public override string ToString()
@@ -95,14 +107,14 @@ namespace kOS.Suffixed.Part
             return resources;
         }
 
-        private ListValue GatherModules(global::Part part)
+        private ListValue GetChildren()
         {
-            var modules = new ListValue();
-            foreach (var module in part.Modules)
+            ListValue kids = new ListValue();
+            foreach (global::Part part in Part.children)
             {
-                modules.Add(module.GetType());
+                kids.Add(new PartValue(part,shared));
             }
-            return modules;
+            return kids;
         }
     }
 }
