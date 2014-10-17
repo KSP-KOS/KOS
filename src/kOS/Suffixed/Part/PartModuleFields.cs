@@ -58,29 +58,120 @@ namespace kOS.Suffixed.Part
         /// </summary>
         /// <param name="field">the BaseField from the KSP API</param>
         /// <returns>true if this has a GUI edit widget on it, false if it doesn't.</returns>
-        private bool IsEditable(BaseField field)
+        private bool isEditable(BaseField field)
+        {
+            return getFieldControls(field).Count > 0;
+        }
+        
+        /// <summary>
+        /// Get the UI_Controls on a KSPField which are user editable.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private List<UI_Control> getFieldControls(BaseField field)
         {
             string fieldType = field.FieldInfo.FieldType.ToString();
             
-            // There isn't a quick simple boolean "is editable" value.  Instead we have to
-            // check if there's an attribute attached that declares of the tweakable
-            // UI controls for the field:
+            List<UI_Control> returnControls = new List<UI_Control>();
             
             List<object> attribs = new List<object>();
             attribs.AddRange(field.FieldInfo.GetCustomAttributes(true));
-            bool returnValue = false;
             foreach (object obj in attribs)
             {
                 if (obj is UI_Control) // all tweakable controls: sliders, toggle buttons, etc, are subclasses of this attribute.
                 {
                     if ( ((UI_Control)obj).controlEnabled )
                     {
-                        returnValue = true;
-                        break;
+                        returnControls.Add( (UI_Control)obj );
                     }
                 }
             }
-            return returnValue;
+            return returnControls;
+        }
+        
+        /// <summary>
+        /// Return true if the value given is allowed for the field given.  This uses the hints from the GUI
+        /// system to decide what is and isn't allowed.  (For example if a GUI slider goes from 10 to 20 at
+        /// increments of 2, then a value of 17 is not something you could achive in the GUI, being only able
+        /// to go from 16 to 18 skipping over 17, and therefore this routine would return false for trying to
+        /// set it to 17).
+        /// </summary>
+        /// <param name="field">Which KSPField is being checked?</param>
+        /// <param name="newVal">What is the value it's being set to?</param>
+        /// <param name="except">An exception you can choose to throw if you want, or null if the value is legal.</param>
+        /// <returns>Is it legal?</returns>
+        private bool isLegalValue(BaseField field, object newVal, out KOSException except)
+        {
+            except = null;
+            bool isLegal = true;
+            
+            if (!isEditable(field))
+            {
+                except = new KOSInvalidFieldValueException("Field is not editable");
+                return false;
+            }
+            if (! newVal.GetType().IsSubclassOf(field.FieldInfo.FieldType))
+            {
+                except = new KOSInvalidFieldValueException("Field cannot store a value of type "+newVal.GetType().Name);
+                return false;
+            }
+            List<UI_Control> controls = getFieldControls(field);
+
+            // It's really normal for there to be only one control on a KSPField, but because
+            // it's technically possible to have more than one according to the structure of
+            // the API, this loop is here to check all of "them":
+            foreach (UI_Control control in controls)
+            {
+                float floatCompareTolerance = 0.0001f; // because using exact equality with floats is a bad idea.
+                
+                // Some of these are subclasses of each other, so don't change this to an if/else.
+                // It's a series of if's on purpose so it checks all classes the control is derived from.
+                if (control is UI_Toggle)
+                {
+                    // Seems there's nothing to check here, but maybe later there will be?
+                }
+                if (control is UI_Label)
+                {
+                    except = new KOSInvalidFieldValueException("Labels are read-only objects that can't be changed");
+                    isLegal = false;
+                }
+                if (control is UI_Vector2)
+                {
+                    // I have no clue what this actually looks like in the UI?  What is a
+                    // user editable 2-D vector widget?  I've never seen this before.
+                    Vector2 vec2 = (Vector2)newVal;
+                    if (vec2.x < ((UI_Vector2)control).minValueX || vec2.x > ((UI_Vector2)control).maxValueX ||
+                        vec2.y < ((UI_Vector2)control).minValueY || vec2.y > ((UI_Vector2)control).maxValueY)
+                    {
+                        except = new KOSInvalidFieldValueException("Vector2 is outside of allowed range of values");
+                        isLegal = false;
+                    }
+                }
+                if (control is UI_FloatRange)
+                {
+                    float val = Convert.ToSingle(newVal);
+                    float min = ((UI_FloatRange)control).minValue;
+                    float max = ((UI_FloatRange)control).maxValue;
+                    float inc = ((UI_FloatRange)control).stepIncrement;
+                    if (val < min || val > max)
+                    {
+                        except = new KOSInvalidFieldValueException("Value is outside the allowed range ["+min+","+max+"]");
+                        isLegal = false;
+                    }
+                    else if (Math.Abs((val - min) % inc) > floatCompareTolerance)
+                    {
+                        except = new KOSInvalidFieldValueException("Value is not an exact integer multiple of allowed step increment "+inc);
+                        isLegal = false;
+                    }
+                }
+                if (control is UI_Control)
+                {
+                    // Generic cases to check for ... are there any? For now I can't think of any so this is blank.
+                }
+                if (! isLegal)
+                    break;
+            }
+            return isLegal;
         }
 
         /// <summary>
@@ -98,7 +189,7 @@ namespace kOS.Suffixed.Part
             foreach (BaseField field in partModule.Fields)
             {
                 returnValue.Add(String.Format(formatter,
-                                              (IsEditable(field)?"settable":"get-only"),
+                                              (isEditable(field)?"settable":"get-only"),
                                               field.guiName.ToLower().Replace(' ','_'),
                                               Utilities.Utils.KOSType(field.FieldInfo.FieldType)) );
             }
@@ -172,12 +263,15 @@ namespace kOS.Suffixed.Part
         protected void InitializeSuffixesAfterConstruction()
         {
             AddSuffix("ALL", new Suffix<PartModuleFields,ListValue>(this, model => model.AllThings()));
+            Debug.Log( "Adding PartModuleField suffixes for " + partModule.moduleName );
             foreach (BaseField field in partModule.Fields)
             {
                 string fieldNameForKSP = field.guiName.ToUpper().Replace(' ','_');
+                Debug.Log( "  KSP suffix name: " + fieldNameForKSP );
                 ISuffix suf;
-                if (IsEditable(field))
+                if (isEditable(field))
                 {
+                    Debug.Log( "      is Editable");
                     // I actually do know the type of the ksp field at *runtime* but not at
                     // *compile* time, so I can't pass it in to the generics syntax <....>
                     // in this statement.  That's why it just says "object":
@@ -188,6 +282,7 @@ namespace kOS.Suffixed.Part
                 }
                 else
                 {
+                    Debug.Log( "      is NOT Editable");
                     // I actually do know the type of the ksp field at *runtime* but not at
                     // *compile* time, so I can't pass it in to the generics syntax <....>
                     // in this statement.  That's why it just says "object":
@@ -209,15 +304,21 @@ namespace kOS.Suffixed.Part
             throw new KOSSuffixUseException( "GET", suffixName, this);
         }
         
-        public void SetFieldValue(string suffixName, object value)
+        public void SetFieldValue(string suffixName, object newValue)
         {
             BaseField field = GetField(suffixName);
             if (field!=null)
             {
-                if (IsEditable(field))
+                KOSException except;
+                
+                if (isLegalValue(field, newValue, out except))
                 {
-                    field.SetValue(value, partModule);
+                    field.SetValue(newValue, partModule);
                     return;
+                }
+                else
+                {
+                    throw except;
                 }
             }
             throw new KOSSuffixUseException( "SET", suffixName, this);
