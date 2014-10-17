@@ -3,11 +3,10 @@ using System.Linq;
 using System;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
-using kOS.Suffixed;
 
 namespace kOS.Persistence
 {
-    public class Volume
+    public abstract class Volume
     {
         protected const int BASE_CAPACITY = 10000;
         protected const float BASE_POWER = 0.04f;

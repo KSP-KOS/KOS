@@ -1,17 +1,20 @@
+using System;
+
 namespace kOS.Safe.Encapsulation.Suffixes
 {
-    public class SetSuffix<TParam,TReturn> : Suffix<TParam,TReturn>, ISetSuffix
+    public class SetSuffix<TValue> : Suffix<TValue>, ISetSuffix
     {
-        private readonly SuffixSetDlg<TParam,TReturn> setter;
+        private readonly SuffixSetDlg<TValue> setter;
 
-        public SetSuffix(TParam type, SuffixGetDlg<TParam,TReturn> getter, SuffixSetDlg<TParam,TReturn> setter, string description = "") : base(type, getter, description)
+        public SetSuffix(SuffixGetDlg<TValue> getter, SuffixSetDlg<TValue> setter, string description = "") : base(getter, description)
         {
             this.setter = setter;
         }
 
         public void Set(object value)
         {
-            setter.Invoke(Model, (TReturn) value);
+            var test = (TValue)Convert.ChangeType(value, typeof(TValue));
+            setter.Invoke(test);
         }
     }
 }

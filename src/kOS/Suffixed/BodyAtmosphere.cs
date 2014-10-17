@@ -11,12 +11,12 @@ namespace kOS.Suffixed
         {
             this.celestialBody = celestialBody;
 
-            AddSuffix("BODY", new Suffix<CelestialBody,string>(celestialBody, model => model.bodyName));
-            AddSuffix("EXISTS", new Suffix<CelestialBody,bool>(celestialBody, model => model.atmosphere));
-            AddSuffix("OXYGEN", new Suffix<CelestialBody,bool>(celestialBody, model => celestialBody.atmosphere && celestialBody.atmosphereContainsOxygen));
-            AddSuffix("SCALE", new Suffix<CelestialBody,double>(celestialBody, model => celestialBody.atmosphere ? celestialBody.atmosphereScaleHeight : 0));
-            AddSuffix("SEALEVELPRESSURE", new Suffix<CelestialBody,double>(celestialBody, model => celestialBody.atmosphere ? celestialBody.staticPressureASL : 0));
-            AddSuffix("HEIGHT", new Suffix<CelestialBody,double>(celestialBody, model => celestialBody.atmosphere ? celestialBody.maxAtmosphereAltitude : 0));
+            AddSuffix("BODY", new Suffix<string>(()=> celestialBody.bodyName));
+            AddSuffix("EXISTS", new Suffix<bool>(()=> celestialBody.atmosphere));
+            AddSuffix("OXYGEN", new Suffix<bool>(()=> celestialBody.atmosphere && celestialBody.atmosphereContainsOxygen));
+            AddSuffix("SCALE", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmosphereScaleHeight : 0));
+            AddSuffix("SEALEVELPRESSURE", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.staticPressureASL : 0));
+            AddSuffix("HEIGHT", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.maxAtmosphereAltitude : 0));
         }
 
         public override string ToString()

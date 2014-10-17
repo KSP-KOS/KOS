@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
 using kOS.Execution;
@@ -33,7 +34,7 @@ namespace kOS.Binding
             Shared.BindingMgr.AddGetter("STAGE", cpu => new StageValues(Shared.Vessel));
 
             //DEPRICATED VESSELNAME
-            Shared.BindingMgr.AddSetter("VESSELNAME", delegate(CPU cpu, object value) { Shared.Vessel.vesselName = value.ToString(); });
+            Shared.BindingMgr.AddSetter("VESSELNAME", delegate { throw new KOSException("VESSELNAME is DEPRICATED, use SHIPNAME.");});
             Shared.BindingMgr.AddSetter("SHIPNAME", delegate(CPU cpu, object value) { Shared.Vessel.vesselName = value.ToString(); });
 
             Shared.BindingMgr.AddGetter("NEXTNODE", delegate

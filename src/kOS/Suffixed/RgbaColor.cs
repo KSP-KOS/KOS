@@ -8,20 +8,23 @@ namespace kOS.Suffixed
     {
         private Color color;
 
-        public RgbaColor( float red, float green, float blue, float alpha = (float) 1.0 ):this()
+        public RgbaColor( float red, float green, float blue, float alpha = (float) 1.0 )
         {
             color = new Color(red,green,blue,alpha);
+            InitializeSuffixColor();
         }
-        public RgbaColor( RgbaColor copyFrom ):this()
+        public RgbaColor( RgbaColor copyFrom )
         {
+            Safe.Utilities.Debug.Logger.Log("kOS: --RgbaColor.Construct-- ");
             color = copyFrom.color;
+            InitializeSuffixColor();
         }
-        private RgbaColor()
+        private void InitializeSuffixColor()
         {
-            AddSuffix(new [] { "R", "RED" } , new SetSuffix<Color,float>(color, model => model.r, (model, value) => model.r = value));
-            AddSuffix(new [] { "G", "GREEN" } , new SetSuffix<Color,float>(color, model => model.g, (model, value) => model.g = value));
-            AddSuffix(new [] { "B", "BLUE" } , new SetSuffix<Color,float>(color, model => model.b, (model, value) => model.b = value));
-            AddSuffix(new [] { "A", "ALPHA" } , new SetSuffix<Color,float>(color, model => model.a, (model, value) => model.a = value));
+            AddSuffix(new [] { "R", "RED" } , new SetSuffix<float>(() => color.r, value => color.r = value));
+            AddSuffix(new [] { "G", "GREEN" } , new SetSuffix<float>(() => color.g, value => color.g = value));
+            AddSuffix(new [] { "B", "BLUE" } , new SetSuffix<float>(() => color.b, value => color.b = value));
+            AddSuffix(new [] { "A", "ALPHA" } , new SetSuffix<float>(() => color.a, value => color.a = value));
         }
         
         public Color Color()

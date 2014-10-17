@@ -17,14 +17,6 @@ namespace kOS.Safe.Encapsulation
         protected Structure()
         {
             instanceSuffixes = new Dictionary<string, ISuffix>();
-            // ReSharper disable DoNotCallOverridableMethodsInConstructor
-            InitializeSuffixes();
-            // ReSharper restore DoNotCallOverridableMethodsInConstructor
-        }
-
-        protected virtual void InitializeSuffixes()
-        {
-
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -55,7 +47,7 @@ namespace kOS.Safe.Encapsulation
         protected static void AddGlobalSuffix<T>(string[] suffixNames, ISuffix suffixToAdd)
         {
             var type = typeof (T);
-            var typeSuffixes = GetSuffixesForType(type);
+            var typeSuffixes = GetStaticSuffixesForType(type);
 
             foreach (var suffixName in suffixNames)
             {
@@ -71,23 +63,32 @@ namespace kOS.Safe.Encapsulation
             globalSuffixes[type] = typeSuffixes;
         }
 
-        private static IDictionary<string, ISuffix> GetSuffixesForType(Type currentType)
+        private static IDictionary<string, ISuffix> GetStaticSuffixesForType(Type currentType)
         {
             lock (globalSuffixLock)
             {
                 IDictionary<string, ISuffix> typeSuffixes;
-                if (!globalSuffixes.TryGetValue(currentType, out typeSuffixes))
+                if (globalSuffixes.TryGetValue(currentType, out typeSuffixes))
                 {
-                    typeSuffixes = new Dictionary<string, ISuffix>();
+                    return typeSuffixes;
                 }
-                return typeSuffixes;
+                return new Dictionary<string, ISuffix>();
             }
         }
 
         public virtual bool SetSuffix(string suffixName, object value)
         {
-            var suffixes = GetSuffixesForType(GetType());
+            var suffixes = GetStaticSuffixesForType(GetType());
 
+            if (!ProcessSetSuffix(suffixes, suffixName, value))
+            {
+                return ProcessSetSuffix(instanceSuffixes, suffixName, value);
+            }
+            return false;
+        }
+
+        private bool ProcessSetSuffix(IDictionary<string, ISuffix> suffixes, string suffixName, object value)
+        {
             ISuffix suffix;
             if (suffixes.TryGetValue(suffixName, out suffix))
             {
@@ -109,7 +110,7 @@ namespace kOS.Safe.Encapsulation
                 return suffix.Get();
             }
 
-            var suffixes = GetSuffixesForType(GetType());
+            var suffixes = GetStaticSuffixesForType(GetType());
 
             if (!suffixes.TryGetValue(suffixName, out suffix))
             {

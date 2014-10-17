@@ -65,25 +65,27 @@ namespace kOS.Suffixed
 
         public BodyTarget(string name, SharedObjects shareObj) : this(VesselUtils.GetBodyByName(name),shareObj)
         {
+            BodyInitializeSuffixes();
+
         }
 
         public BodyTarget(CelestialBody body, SharedObjects shareObj) :base(shareObj)
         {
             Body = body;
+            BodyInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void BodyInitializeSuffixes()
         {
-            base.InitializeSuffixes();
-            AddSuffix("NAME", new Suffix<CelestialBody,string>(Body, model => model.name));
-            AddSuffix("DESCRIPTION", new Suffix<CelestialBody,string>(Body, model => model.bodyDescription));
-            AddSuffix("MASS", new Suffix<CelestialBody,double>(Body, model => model.Mass));
-            AddSuffix("ALTITUDE", new Suffix<CelestialBody,double>(Body, model => model.orbit.altitude));
-            AddSuffix("RADIUS", new Suffix<CelestialBody,double>(Body, model => model.Radius));
-            AddSuffix("MU", new Suffix<CelestialBody,double>(Body, model => model.gravParameter));
-            AddSuffix("ROTATIONPERIOD", new Suffix<CelestialBody,double>(Body, model => model.rotationPeriod));
-            AddSuffix("ATM", new Suffix<CelestialBody,BodyAtmosphere>(Body, model => new BodyAtmosphere(Body)));
-            AddSuffix("ANGULARVEL", new Suffix<CelestialBody,Direction>(Body, model => new Direction(Body.angularVelocity, true)));
+            AddSuffix("NAME", new Suffix<string>(()=> Body.name));
+            AddSuffix("DESCRIPTION", new Suffix<string>(()=> Body.bodyDescription));
+            AddSuffix("MASS", new Suffix<double>(()=> Body.Mass));
+            AddSuffix("ALTITUDE", new Suffix<double>(()=> Body.orbit.altitude));
+            AddSuffix("RADIUS", new Suffix<double>(()=> Body.Radius));
+            AddSuffix("MU", new Suffix<double>(()=> Body.gravParameter));
+            AddSuffix("ROTATIONPERIOD", new Suffix<double>(()=> Body.rotationPeriod));
+            AddSuffix("ATM", new Suffix<BodyAtmosphere>(()=> new BodyAtmosphere(Body)));
+            AddSuffix("ANGULARVEL", new Suffix<Direction>(()=> new Direction(Body.angularVelocity, true)));
         }
         
         public double GetDistance()

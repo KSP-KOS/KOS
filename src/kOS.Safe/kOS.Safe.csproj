@@ -106,6 +106,7 @@
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
     <Compile Include="UpdateHandler.cs" />
+    <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
   </ItemGroup>

@@ -19,15 +19,17 @@ namespace kOS.Safe.Encapsulation
         public ListValue()
         {
             list = new List<object>();
+            ListInitializeSuffixes();
         }
 
         // This looks useful.  Why is it private?
         private ListValue(ListValue toCopy)
         {
             list = new List<object>(toCopy.list);
+            ListInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void ListInitializeSuffixes()
         {
             AddSuffix("ADD",      new OneArgsSuffix<object>         (toAdd => list.Add(toAdd), Resources.ListAddDescription));
             AddSuffix("REMOVE",   new OneArgsSuffix<int>            (toRemove => list.RemoveAt(toRemove)));
@@ -110,9 +112,10 @@ namespace kOS.Safe.Encapsulation
         public Enumerator(IEnumerator enumerator)
         {
             this.enumerator = enumerator;
+            EnumeratorInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void EnumeratorInitializeSuffixes()
         {
             AddSuffix("RESET",    new NoArgsSuffix    (() =>
                 {

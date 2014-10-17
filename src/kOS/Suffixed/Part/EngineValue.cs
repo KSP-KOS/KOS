@@ -13,23 +13,23 @@ namespace kOS.Suffixed.Part
             : base(part, sharedObj)
         {
             this.engine = engine;
+            EngineInitializeSuffixes();
         }
 
-        protected override void InitializeSuffixes()
+        private void EngineInitializeSuffixes()
         {
-            base.InitializeSuffixes();
             AddSuffix("ACTIVATE", new NoArgsSuffix(() => engine.Activate()));
             AddSuffix("SHUTDOWN", new NoArgsSuffix(() => engine.Shutdown()));
-            AddSuffix("THRUSTLIMIT", new SetSuffix<IModuleEngine,float>(engine, model => model.ThrustPercentage, (model, value) => model.ThrustPercentage = value));
-            AddSuffix("MAXTHRUST", new Suffix<IModuleEngine,float>(engine, model => model.MaxThrust));
-            AddSuffix("THRUST", new Suffix<IModuleEngine,float>(engine, model => model.FinalThrust));
-            AddSuffix("FUELFLOW", new Suffix<IModuleEngine,float>(engine, model => model.FuelFlow));
-            AddSuffix("ISP", new Suffix<IModuleEngine,float>(engine, model => model.SpecificImpulse));
-            AddSuffix("FLAMEOUT", new Suffix<IModuleEngine,bool>(engine, model => model.Flameout));
-            AddSuffix("IGNITION", new Suffix<IModuleEngine,bool>(engine, model => model.Ignition));
-            AddSuffix("ALLOWRESTART", new Suffix<IModuleEngine,bool>(engine, model => model.AllowRestart));
-            AddSuffix("ALLOWSHUTDOWN", new Suffix<IModuleEngine,bool>(engine, model => model.AllowShutdown));
-            AddSuffix("THROTTLELOCK", new Suffix<IModuleEngine,bool>(engine, model => model.ThrottleLock));
+            AddSuffix("THRUSTLIMIT", new SetSuffix<float>(() => engine.ThrustPercentage, value => engine.ThrustPercentage = value));
+            AddSuffix("MAXTHRUST", new Suffix<float>(() => engine.MaxThrust));
+            AddSuffix("THRUST", new Suffix<float>(() => engine.FinalThrust));
+            AddSuffix("FUELFLOW", new Suffix<float>(() => engine.FuelFlow));
+            AddSuffix("ISP", new Suffix<float>(() => engine.SpecificImpulse));
+            AddSuffix("FLAMEOUT", new Suffix<bool>(() => engine.Flameout));
+            AddSuffix("IGNITION", new Suffix<bool>(() => engine.Ignition));
+            AddSuffix("ALLOWRESTART", new Suffix<bool>(() => engine.AllowRestart));
+            AddSuffix("ALLOWSHUTDOWN", new Suffix<bool>(() => engine.AllowShutdown));
+            AddSuffix("THROTTLELOCK", new Suffix<bool>(() => engine.ThrottleLock));
         }
 
         public new static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using kOS.Binding;
+using kOS.Safe.Exceptions;
 using kOS.Utilities;
 using System.Collections.Generic;
 
@@ -258,6 +259,7 @@ namespace kOS.Suffixed
                             .magnitude; //the velocity of the vessel relative to the air);
                 //DEPRICATED VESSELNAME
                 case "VESSELNAME":
+                    throw new KOSException("VESSELNAME is DEPRICATED, use SHIPNAME.");
                 case "SHIPNAME":
                     return Vessel.vesselName;
 
