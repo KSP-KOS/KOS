@@ -81,6 +81,7 @@
     <Compile Include="Exceptions\KOSCompileException.cs" />
     <Compile Include="Exceptions\KOSBinaryOperandTypeException.cs" />
     <Compile Include="Exceptions\KOSException.cs" />
+    <Compile Include="Exceptions\KOSInvalidFieldValueException.cs" />
     <Compile Include="Exceptions\KOSLongTriggerException.cs" />
     <Compile Include="Exceptions\KOSParseException.cs" />
     <Compile Include="Exceptions\KOSPreserveInvalidHereException.cs" />
