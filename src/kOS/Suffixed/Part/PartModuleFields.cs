@@ -352,7 +352,7 @@ namespace kOS.Suffixed.Part
             foreach (BaseField field in partModule.Fields)
             {
                 if (debugMsg) Debug.Log( "Adding PartModuleField suffixes for " + partModule.moduleName );
-                string fieldNameForKOS = field.guiName.ToUpper());
+                string fieldNameForKOS = field.guiName.ToUpper();
                 if (debugMsg) Debug.Log( "  KSP suffix name: " + fieldNameForKOS );
                 ISuffix suf;
                 if (field.guiActive)
