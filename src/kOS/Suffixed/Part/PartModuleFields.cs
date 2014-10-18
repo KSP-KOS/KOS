@@ -204,7 +204,7 @@ namespace kOS.Suffixed.Part
             {
                 returnValue.Add(String.Format(formatter,
                                               (isEditable(field)?"settable":"get-only"),
-                                              field.guiName.ToLower().Replace(' ','_'),
+                                              field.guiName.ToLower(),
                                               Utilities.Utils.KOSType(field.FieldInfo.FieldType)) );
             }
             return returnValue;
@@ -243,7 +243,7 @@ namespace kOS.Suffixed.Part
             {
                 returnValue.Add(String.Format(formatter,
                                               "callable",
-                                              kspEvent.guiName.ToLower().Replace(' ','_'),
+                                              kspEvent.guiName.ToLower(),
                                               "KSPEvent") );
             }
             return returnValue;
@@ -261,7 +261,7 @@ namespace kOS.Suffixed.Part
             
             foreach (BaseEvent kspEvent  in partModule.Events)
             {
-                if (kspEvent.guiName.ToLower().Replace(' ','_') == lowerName)
+                if (kspEvent.guiName.ToLower() == lowerName)
                 {
                     return kspEvent;
                 }
@@ -281,7 +281,7 @@ namespace kOS.Suffixed.Part
             {
                 returnValue.Add(String.Format(formatter,
                                               "callable",
-                                              kspAction.guiName.ToLower().Replace(' ','_'),
+                                              kspAction.guiName.ToLower(),
                                               "KSPAction") );
             }
             return returnValue;
@@ -299,8 +299,8 @@ namespace kOS.Suffixed.Part
             
             foreach (BaseAction kspAction in partModule.Actions)
             {
-                Debug.Log("eraseme: does \""+kspAction.guiName.ToLower().Replace(' ','_')+"\" == \""+lowerName+"\"?");
-                if (kspAction.guiName.ToLower().Replace(' ','_') == lowerName)
+                Debug.Log("eraseme: does \""+kspAction.guiName.ToLower()+"\" == \""+lowerName+"\"?");
+                if (kspAction.guiName.ToLower() == lowerName)
                 {
                     Debug.Log("eraseme: yes");
                     return kspAction;
@@ -352,7 +352,7 @@ namespace kOS.Suffixed.Part
             foreach (BaseField field in partModule.Fields)
             {
                 if (debugMsg) Debug.Log( "Adding PartModuleField suffixes for " + partModule.moduleName );
-                string fieldNameForKOS = field.guiName.ToUpper().Replace(' ','_');
+                string fieldNameForKOS = field.guiName.ToUpper());
                 if (debugMsg) Debug.Log( "  KSP suffix name: " + fieldNameForKOS );
                 ISuffix suf;
                 if (field.guiActive)
@@ -385,7 +385,7 @@ namespace kOS.Suffixed.Part
             foreach (BaseEvent evt in partModule.Events)
             {
                 if (debugMsg) Debug.Log( "Adding PartModuleEvent suffixes for " + partModule.moduleName );
-                string evtNameForKOS = evt.guiName.ToUpper().Replace(' ','_');
+                string evtNameForKOS = evt.guiName.ToUpper();
                 if (debugMsg) Debug.Log( "  KSP suffix name: " + evtNameForKOS );
                 if (evt.guiActive)
                 {
@@ -405,7 +405,7 @@ namespace kOS.Suffixed.Part
             foreach (BaseAction act in partModule.Actions)
             {
                 if (debugMsg) Debug.Log( "Adding PartModuleAction suffixes for " + partModule.moduleName );
-                string actNameForKOS = "ACTION_" + act.guiName.ToUpper().Replace(' ','_');
+                string actNameForKOS = "ACTION_" + act.guiName.ToUpper();
                 if (debugMsg) Debug.Log( "  KSP suffix name: " + actNameForKOS );
                 if (debugMsg) Debug.Log( "      is activatable");
                 AddSuffix(actNameForKOS, new OneArgsSuffix<bool>((newFlag) => CallKSPAction(actNameForKOS, newFlag )));
