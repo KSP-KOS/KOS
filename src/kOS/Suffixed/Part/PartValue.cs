@@ -11,7 +11,7 @@ namespace kOS.Suffixed.Part
     {
         private readonly SharedObjects shared;
 
-        protected global::Part Part { get; private set; }
+        private global::Part Part { get; set; }
 
         public PartValue(global::Part part, SharedObjects sharedObj)
         {
@@ -35,15 +35,14 @@ namespace kOS.Suffixed.Part
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
-            AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>((modName) => GetModule(modName)));
-            AddSuffix("MODULES", new Suffix<ListValue>(() => GetAllModules(), "A List of all the modules' names on this part"));            
+            AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>(GetModule));
+            AddSuffix("MODULES", new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));            
             AddSuffix("PARENT", new Suffix<PartValue>(() => new PartValue(Part.parent,shared), "The parent part of this part"));
-            AddSuffix("CHILDREN", new Suffix<ListValue>(() => GetChildren(), "A LIST() of the children parts of this part"));
+            AddSuffix("HASPARENT", new Suffix<bool>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
+            AddSuffix("CHILDREN", new Suffix<ListValue>(GetChildren, "A LIST() of the children parts of this part"));
         }
         
-        private List<PartModuleFields> partModuleFieldsList = new List<PartModuleFields>();
-
-        protected PartModuleFields GetModule(string modName)
+        private PartModuleFields GetModule(string modName)
         {
             foreach (PartModule mod in Part.Modules)
             {
@@ -56,17 +55,6 @@ namespace kOS.Suffixed.Part
             }
             throw new KOSLookupFailException( "module", modName.ToUpper(), this );
         }
-        
-        public ListValue GetAllModules()
-        {
-            ListValue returnValue = new ListValue();
-            foreach (PartModule mod in Part.Modules)
-            {
-                returnValue.Add(mod.moduleName);
-            }
-            return returnValue;
-        }
-        
         public override string ToString()
         {
             return string.Format("PART({0},{1})", Part.name, Part.uid);
@@ -130,12 +118,23 @@ namespace kOS.Suffixed.Part
 
         private ListValue GetChildren()
         {
-            ListValue kids = new ListValue();
+            var kids = new ListValue();
             foreach (global::Part part in Part.children)
             {
                 kids.Add(new PartValue(part,shared));
             }
             return kids;
         }
+
+        private ListValue GetAllModules()
+        {
+            var returnValue = new ListValue();
+            foreach (PartModule mod in Part.Modules)
+            {
+                returnValue.Add(mod.moduleName);
+            }
+            return returnValue;
+        }
+        
     }
 }
