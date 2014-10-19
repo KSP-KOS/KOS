@@ -44,14 +44,14 @@ namespace kOS.Function
             throw new KOSCastException(argument.GetType(),typeof(Vector));
         }
 
-        protected KOSActionParam GetRgba(object argument)
+        protected RgbaColor GetRgba(object argument)
         {
-            var rgba = argument as KOSActionParam;
+            var rgba = argument as RgbaColor;
             if (rgba != null)
             {
                 return rgba;
             }
-            throw new KOSCastException(argument.GetType(),typeof(KOSActionParam));
+            throw new KOSCastException(argument.GetType(),typeof(RgbaColor));
         }
 
         // Fully qualified name kos.Suffixed.TimeSpan used because the compiler

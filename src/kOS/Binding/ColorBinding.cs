@@ -14,18 +14,18 @@ namespace kOS.Binding
             // The in-between values, like orange, brown, and so on, are deliberately left out
             // so we don't eat up too many keywords and deny them to the users as identifiers.
             
-            Shared.BindingMgr.AddGetter("WHITE", cpu => new KOSActionParam(1.0f, 1.0f, 1.0f));
-            Shared.BindingMgr.AddGetter("BLACK", cpu => new KOSActionParam(0.0f, 0.0f, 0.0f));
-            Shared.BindingMgr.AddGetter("RED", cpu => new KOSActionParam(1.0f, 0.0f, 0.0f));
-            Shared.BindingMgr.AddGetter("GREEN", cpu => new KOSActionParam(0.0f, 1.0f, 0.0f));
-            Shared.BindingMgr.AddGetter("BLUE", cpu => new KOSActionParam(0.0f, 0.0f, 1.0f));
-            Shared.BindingMgr.AddGetter("YELLOW", cpu => new KOSActionParam(1.0f, 1.0f, 0.0f));
-            Shared.BindingMgr.AddGetter("MAGENTA", cpu => new KOSActionParam(1.0f, 0.0f, 1.0f));
-            Shared.BindingMgr.AddGetter("CYAN", cpu => new KOSActionParam(0.0f, 1.0f, 1.0f));
+            Shared.BindingMgr.AddGetter("WHITE", cpu => new RgbaColor(1.0f, 1.0f, 1.0f));
+            Shared.BindingMgr.AddGetter("BLACK", cpu => new RgbaColor(0.0f, 0.0f, 0.0f));
+            Shared.BindingMgr.AddGetter("RED", cpu => new RgbaColor(1.0f, 0.0f, 0.0f));
+            Shared.BindingMgr.AddGetter("GREEN", cpu => new RgbaColor(0.0f, 1.0f, 0.0f));
+            Shared.BindingMgr.AddGetter("BLUE", cpu => new RgbaColor(0.0f, 0.0f, 1.0f));
+            Shared.BindingMgr.AddGetter("YELLOW", cpu => new RgbaColor(1.0f, 1.0f, 0.0f));
+            Shared.BindingMgr.AddGetter("MAGENTA", cpu => new RgbaColor(1.0f, 0.0f, 1.0f));
+            Shared.BindingMgr.AddGetter("CYAN", cpu => new RgbaColor(0.0f, 1.0f, 1.0f));
 
             // Other synonym spellings repeating the above colors:
-            Shared.BindingMgr.AddGetter("PURPLE", cpu => new KOSActionParam(1.0f, 0.0f, 1.0f));
-            Shared.BindingMgr.AddGetter("GRAY", cpu => new KOSActionParam(0.5f, 0.5f, 0.5f));
+            Shared.BindingMgr.AddGetter("PURPLE", cpu => new RgbaColor(1.0f, 0.0f, 1.0f));
+            Shared.BindingMgr.AddGetter("GRAY", cpu => new RgbaColor(0.5f, 0.5f, 0.5f));
 
         }
     }

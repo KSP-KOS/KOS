@@ -4,16 +4,16 @@ using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
-    public class KOSActionParam : Structure
+    public class RgbaColor : Structure
     {
         private Color color;
 
-        public KOSActionParam( float red, float green, float blue, float alpha = (float) 1.0 )
+        public RgbaColor( float red, float green, float blue, float alpha = (float) 1.0 )
         {
             color = new Color(red,green,blue,alpha);
             InitializeSuffixColor();
         }
-        public KOSActionParam( KOSActionParam copyFrom )
+        public RgbaColor( RgbaColor copyFrom )
         {
             Safe.Utilities.Debug.Logger.Log("kOS: --RgbaColor.Construct-- ");
             color = copyFrom.color;

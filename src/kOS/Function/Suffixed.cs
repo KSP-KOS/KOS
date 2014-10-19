@@ -144,7 +144,7 @@ namespace kOS.Function
             var b = (float) GetDouble(shared.Cpu.PopValue());
             var g = (float) GetDouble(shared.Cpu.PopValue());
             var r = (float) GetDouble(shared.Cpu.PopValue());
-            shared.Cpu.PushStack( new KOSActionParam(r,g,b) );
+            shared.Cpu.PushStack( new RgbaColor(r,g,b) );
         }
     }
 
@@ -157,7 +157,7 @@ namespace kOS.Function
             var b = (float) GetDouble(shared.Cpu.PopValue());
             var g = (float) GetDouble(shared.Cpu.PopValue());
             var r = (float) GetDouble(shared.Cpu.PopValue());
-            shared.Cpu.PushStack( new KOSActionParam(r,g,b,a) );
+            shared.Cpu.PushStack( new RgbaColor(r,g,b,a) );
         }
     }
 
@@ -189,7 +189,7 @@ namespace kOS.Function
             bool      show  = Convert.ToBoolean(shared.Cpu.PopValue());
             double    scale = GetDouble(shared.Cpu.PopValue());
             string    str   = shared.Cpu.PopValue().ToString();
-            KOSActionParam rgba  = GetRgba(shared.Cpu.PopValue());
+            RgbaColor rgba  = GetRgba(shared.Cpu.PopValue());
             Vector    vec   = GetVector(shared.Cpu.PopValue());
             Vector    start = GetVector(shared.Cpu.PopValue());
 

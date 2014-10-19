@@ -10,7 +10,7 @@ namespace kOS.Suffixed
     public class VectorRenderer : Structure, IUpdateObserver, IKOSScopeObserver
     {
         public Vector3d      Vector { get; set; }
-        public KOSActionParam     Color { get; set; }
+        public RgbaColor     Color { get; set; }
         public Vector3d      Start { get; set; }
         public double        Scale { get; set; }
         public double        Width { get; set; }
@@ -48,7 +48,7 @@ namespace kOS.Suffixed
         public VectorRenderer( UpdateHandler updateHand, SharedObjects shared )
         {
             Vector  = new Vector3d(0,0,0);
-            Color   = new KOSActionParam(1,1,1);
+            Color   = new RgbaColor(1,1,1);
             Start   = new Vector3d(0,0,0);
             Scale   = 1.0;
             Width   = 0;
@@ -275,7 +275,7 @@ namespace kOS.Suffixed
             double dblValue = 0.0;
             bool boolValue = false;
             string strValue = "";
-            var rgbaValue = new KOSActionParam(1,1,1);
+            var rgbaValue = new RgbaColor(1,1,1);
             var vectorValue = new Vector(0,0,0);
             
             // When the wrong type of value is given, attempt
@@ -295,9 +295,9 @@ namespace kOS.Suffixed
                 boolValue = (bool)value;
                 dblValue = ((bool)value) ? 1.0 : 0.0;
             }
-            else if (value is KOSActionParam)
+            else if (value is RgbaColor)
             {
-                rgbaValue = (KOSActionParam) value;
+                rgbaValue = (RgbaColor) value;
             }
             else if (value is Vector)
             {
