@@ -1009,7 +1009,10 @@ namespace kOS.Safe.Compilation.KS
                     bool usingSetMember = (!isFunc && !isArray) && (_compilingSetDestination && nodeIndex == (node.Nodes.Count -1));
                     if (! usingSetMember)
                     {
-                        AddOpcode(new OpcodeGetMember());
+                        if (isFunc)
+                            AddOpcode(new OpcodeGetMethod());
+                        else
+                            AddOpcode(new OpcodeGetMember());
                     }
                     if (isFunc)
                     {

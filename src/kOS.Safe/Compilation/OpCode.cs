@@ -71,6 +71,7 @@ namespace kOS.Safe.Compilation
         REMOVETRIGGER  = 0x53,
         WAIT           = 0x54,
         ENDWAIT        = 0x55,
+        GETMETHOD      = 0x56,
         
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -460,6 +461,7 @@ namespace kOS.Safe.Compilation
     {
         public override string Name { get { return "getmember"; } }
         public override ByteCode Code { get { return ByteCode.GETMEMBER; } }
+        protected bool isMethodCallAttempt = false;
 
         public override void Execute(ICpu cpu)
         {
@@ -473,6 +475,16 @@ namespace kOS.Safe.Compilation
             }
 
             object value = specialValue.GetSuffix(suffixName);
+            if (value is Delegate && !isMethodCallAttempt)
+            {
+                // This is what happens when someone tries to call a suffix method as if
+                // it wasn't a method (i.e. leaving the parentheses off the call).  The
+                // member returned is a delegate that needs to be called to get its actual
+                // value.  Borrowing the same routine that OpcodeCall uses for its method calls:
+                cpu.PushStack(OpcodeCall.ArgMarkerString);
+                value = OpcodeCall.ExecuteDelegate(cpu, (Delegate)value);
+            }
+
             if (value != null)
             {
                 cpu.PushStack(value);
@@ -481,6 +493,25 @@ namespace kOS.Safe.Compilation
             {
                 throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
             }
+        }
+    }
+    
+    /// <summary>
+    /// OpcodeGetMethod is *exactly* the same thing as OpcodeGetMember, and is in fact a subclass of it.
+    /// The only reason for the distinction is so that at runtime the Opcode can tell whether the
+    /// getting of the member was done with method call syntax with parentheses, like SHIP:NAME(), or
+    /// non-method call syntax, like SHIP:NAME. It needs to know whether there is an upcoming
+    /// OpcodeCall coming next or not, so it knows whether the delegate will get dealt with later
+    /// or if it needs to perform it now.
+    /// </summary>
+    public class OpcodeGetMethod : OpcodeGetMember
+    {
+        public override string Name { get { return "getmethod"; } }
+        public override ByteCode Code { get { return ByteCode.GETMETHOD; } }
+        public override void Execute(ICpu cpu)
+        {
+            isMethodCallAttempt = true;
+            base.Execute(cpu);
         }
     }
 
@@ -1033,17 +1064,37 @@ namespace kOS.Safe.Compilation
             {
                 bool foundBottom = false;
                 int digDepth = 0;
+                int argsCount = 0;
                 for (digDepth = 0; (! foundBottom) && digDepth < cpu.GetStackSize() ; ++digDepth)
                 {
                     object arg = cpu.PeekValue(digDepth);
                     if (arg is string && arg.ToString() == ArgMarkerString)
                         foundBottom = true;
+                    else
+                        ++argsCount;
                 }
                 functionPointer = cpu.PeekValue(digDepth);
+                if (! ( functionPointer is Delegate))
+                {
+                    // Indirect calls are meant to be delegates.  If they are not, then that means the
+                    // function parentheses were put on by the user when they weren't required.  Just dig
+                    // through the stack to the result of the getMember and skip the rest of the execute logic
+
+                    // If args were passed to a non-method, then clean them off the stack, and complain:
+                    if (argsCount>0)
+                    {
+                        for (int i=1 ; i<=argsCount; ++i)
+                            cpu.PopValue();
+                        throw new KOSArgumentMismatchException(
+                            0, argsCount, "\n(In fact in this case the parentheses are entirely optional)");
+                    }
+                    cpu.PopValue(); // pop the ArgMarkerString too.
+                    return;
+                }
             }
 
 
-            if (functionPointer is int)
+            if (functionPointer is int) 
             {
                 int currentPointer = cpu.InstructionPointer;
                 DeltaInstructionPointer = (int)functionPointer - currentPointer;
@@ -1074,8 +1125,6 @@ namespace kOS.Safe.Compilation
             
             if (! Direct)
             {
-                // Indirect calls have two more elements to consume from the stack.
-                cpu.PopValue(); // consume arg bottom mark
                 cpu.PopValue(); // consume function name, branch index, or delegate
             }
             if (functionPointer is Delegate)
@@ -1093,7 +1142,7 @@ namespace kOS.Safe.Compilation
         /// <param name="cpu">the cpu this opcode is being called on</param>
         /// <param name="dlg">the delegate object this opcode is being called for.</param>
         /// <returns>whatever object the delegate method returned</returns>
-        protected object ExecuteDelegate(ICpu cpu, Delegate dlg)
+        public static object ExecuteDelegate(ICpu cpu, Delegate dlg)
         {
             MethodInfo methInfo = dlg.Method;
             ParameterInfo[] paramArray = methInfo.GetParameters();
@@ -1103,6 +1152,8 @@ namespace kOS.Safe.Compilation
             for (int i = paramArray.Length - 1 ; i >= 0 ; --i)
             {
                 object arg = cpu.PopValue();
+                if (arg is string && ((string)arg) == ArgMarkerString)
+                    throw new KOSArgumentMismatchException(paramArray.Length, i-1);
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
                 Type paramType = paramInfo.ParameterType;
@@ -1118,12 +1169,27 @@ namespace kOS.Safe.Compilation
                     }
                     catch (InvalidCastException)
                     {
-                        throw new Exception("Argument " + i + " to method " + methInfo.Name + " should be " + paramType.Name + " instead of " + argType + ".");
+                        throw new KOSCastException(argType, paramType);
                     }
                 }
                 
                 args.Add(arg);
             }
+            // Consume the bottom marker under the args, which had better be
+            // immediately under the args we just popped, or the count was off:
+            bool foundArgMarker = false;
+            int numExtraArgs = 0;
+            while (cpu.GetStackSize() > 0 && !foundArgMarker)
+            {
+                object marker = cpu.PopValue();
+                if (marker is string && ((string)marker) == ArgMarkerString)
+                    foundArgMarker = true;
+                else
+                    ++numExtraArgs;
+            }
+            if (numExtraArgs > 0)
+                throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length + numExtraArgs);
+
             args.Reverse(); // Put back in normal order instead of stack order.
             
             // Dialog.DynamicInvoke expects a null, rather than an array of zero length, when
