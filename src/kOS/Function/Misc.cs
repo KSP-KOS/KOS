@@ -107,7 +107,7 @@ namespace kOS.Function
                 if (file.Category == FileCategory.KEXE)
                 {
                     string prefix = programContext.Program.Count.ToString();
-                    parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.BinaryContent);
+                    parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
                 }
                 else
                     parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
@@ -161,7 +161,7 @@ namespace kOS.Function
                     if (file.Category == FileCategory.KEXE)
                     {
                         string prefix = programContext.Program.Count.ToString();
-                        parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, 1, prefix, file.BinaryContent);
+                        parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
                     }
                     else
                         parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);

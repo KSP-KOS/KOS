@@ -883,7 +883,7 @@ namespace kOS.Safe.Compilation.KS
                 // Need to tell OpcodeCall where in the stack the bottom of the arg list is.
                 // Even if there are no arguments, it still has to be TOLD that by showing
                 // it the marker atop the stack with nothing above it.
-                AddOpcode(new OpcodePush(OpcodeCall.ArgMarkerString));
+                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
             }
 
             if (trailerNode.Nodes[1].Token.Type == TokenType.arglist)

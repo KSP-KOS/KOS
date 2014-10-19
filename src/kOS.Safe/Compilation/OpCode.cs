@@ -96,8 +96,8 @@ namespace kOS.Safe.Compilation
     /// WARNING! BE SURE TO EDIT CompiledObject.InitTypeData() if you add any new [MLField]'s that
     /// refer to argument types that haven't already been mentioned in CompiledObject.InitTypeData().
     /// </summary>
-    [System.AttributeUsage(System.AttributeTargets.Property, Inherited=true)]
-    public class MLField : System.Attribute
+    [AttributeUsage(AttributeTargets.Property, Inherited=true)]
+    public class MLField : Attribute
     {
         public int Ordering { get; private set; }
         public bool NeedReindex { get; private set;}
@@ -118,12 +118,12 @@ namespace kOS.Safe.Compilation
     
     public class MLArgInfo
     {
-        public PropertyInfo propertyInfo {get;set;}
-        public bool NeedReindex {get;set;}
+        public PropertyInfo PropertyInfo {get; private set;}
+        public bool NeedReindex {get; private set;}
         
         public MLArgInfo(PropertyInfo pInfo, bool needReindex)
         {
-            propertyInfo = pInfo;
+            PropertyInfo = pInfo;
             NeedReindex = needReindex;
         }
     }
@@ -158,8 +158,8 @@ namespace kOS.Safe.Compilation
         // Any place you see a member which is marked with a SHOULD-BE-STATIC comment, please do NOT
         // try to store separate values per instance into it.  Treat it like a static member, where to
         // change its value you should make a new derived class for the new value.
-        
-        public abstract /*SHOULD-BE-STATIC*/ string Name { get; }
+
+        protected abstract /*SHOULD-BE-STATIC*/ string Name { get; }
         
         /// <summary>
         /// The short coded value that indicates what kind of instruction this is.
@@ -168,14 +168,14 @@ namespace kOS.Safe.Compilation
         public abstract /*SHOULD-BE-STATIC*/ ByteCode Code { get; }
         
         // A mapping of CodeName to Opcode type, built at initialization time:        
-        private static Dictionary<ByteCode,Type> mapCodeToType = null; // will init this later.
+        private static Dictionary<ByteCode,Type> mapCodeToType; // will init this later.
 
         // A mapping of Name to Opcode type,  built at initialization time:
-        private static Dictionary<string,Type> mapNameToType = null; // will init this later.
+        private static Dictionary<string,Type> mapNameToType; // will init this later.
         
         // A table describing the arguments in machine language form that each opcode needs.
         // This is populated by using Reflection to scan all the Opcodes for their MLField Attributes.
-        private static Dictionary<Type,List<MLArgInfo>> mapOpcodeToArgs = null;
+        private static Dictionary<Type,List<MLArgInfo>> mapOpcodeToArgs;
                 
         private static string forceDefaultConstructorMsg =
             "+----------- ERROR IN OPCODE DEFINITION ----------------------------------+\n" +
@@ -197,12 +197,10 @@ namespace kOS.Safe.Compilation
             "|                                                                         |\n" +
             "+-------------------------------------------------------------------------+\n";
 
-        // TODO - The following should probably be properties instead of Fields, since
-        //        they are public:
         public int Id { get { return id; } }
-        public int DeltaInstructionPointer = 1;
-        public int MLIndex = 0; // index into the Machine Language code file for the COMPILE command.
-        public virtual string Label {get{return label;} set {label = value;} }
+        public int DeltaInstructionPointer { get; protected set; } 
+        public int MLIndex { get; set; } // index into the Machine Language code file for the COMPILE command.
+        public string Label {get{return label;} set {label = value;} }
         private string label = "";
         public virtual string DestinationLabel {get;set;}
         public string SourceName;
@@ -217,6 +215,11 @@ namespace kOS.Safe.Compilation
         public override string ToString()
         {
             return Name;
+        }
+
+        protected Opcode()
+        {
+            DeltaInstructionPointer = 1;
         }
         
         /// <summary>
@@ -282,13 +285,12 @@ namespace kOS.Safe.Compilation
                     }
                     catch (MissingMethodException)
                     {
-                        //TODO: CHRIS FIX IT!
-                     //   UnityEngine.Debug.Log( String.Format(forceDefaultConstructorMsg, opType.Name) );
-                     //   kOS.Utilities.Utils.AddNagMessage( kOS.Utilities.NagType.NAGFOREVER, "ERROR IN OPCODE DEFINITION " + opType.Name );
+                        Utilities.Debug.Logger.Log( String.Format(forceDefaultConstructorMsg, opType.Name) );
+                        Utilities.Debug.AddNagMessage( Utilities.Debug.NagType.NAGFOREVER, "ERROR IN OPCODE DEFINITION " + opType.Name );
                         return;
                     }
                     
-                    List<MLArgInfo> argsInfo = new List<MLArgInfo>();
+                    var argsInfo = new List<MLArgInfo>();
 
                     PropertyInfo[] props = opType.GetProperties(BindingFlags.Instance |
                                                                 BindingFlags.FlattenHierarchy |
@@ -301,13 +303,13 @@ namespace kOS.Safe.Compilation
                         if (pInfo.Name == "Code")
                         {
                             // Add to the map from codename to Opcode type:
-                            ByteCode opCodeName = (ByteCode) pInfo.GetValue(dummyInstance, null);
+                            var opCodeName = (ByteCode) pInfo.GetValue(dummyInstance, null);
                             mapCodeToType.Add(opCodeName, opType);                                                 
                         }
                         else if (pInfo.Name == "Name")
                         {
                             // Add to the map from Name to Opcode type:
-                            string opName = (string) pInfo.GetValue(dummyInstance, null);
+                            var opName = (string) pInfo.GetValue(dummyInstance, null);
                             mapNameToType.Add(opName, opType);
                         }
                         else
@@ -315,12 +317,12 @@ namespace kOS.Safe.Compilation
                             // See if this property has an MLFields attribute somewhere on it.
                             foreach (object attrib in attribs)
                             {
-                                if (attrib is MLField)
-                                {
-                                    argsInfo.Add(new MLArgInfo(pInfo, ((MLField)attrib).NeedReindex));
-                                    break;
-                                }
-                            }                            
+                                var field = attrib as MLField;
+                                if (field == null) continue;
+
+                                argsInfo.Add(new MLArgInfo(pInfo, field.NeedReindex));
+                                break;
+                            }
                         }
                     }
                     argsInfo.Sort(MLFieldComparator);
@@ -337,17 +339,17 @@ namespace kOS.Safe.Compilation
         /// <param name="a1"></param>
         /// <param name="a2"></param>
         /// <returns>negative if a1 less than a2, 0 if same, positive if a1 greater than a2</returns>
-        public static int MLFieldComparator(MLArgInfo a1, MLArgInfo a2)
+        private static int MLFieldComparator(MLArgInfo a1, MLArgInfo a2)
         {
             // All the following is doing is just comparing p1 and p2's
             // MLField.Ordering fields to decide the sort order.
             //
             // Reflection: A good way to make a simple idea look messier than it really is.
             //
-            List<Attribute> attributes1 = new List<Attribute>(a1.propertyInfo.GetCustomAttributes(true) as Attribute[]);
-            List<Attribute> attributes2 = new List<Attribute>(a2.propertyInfo.GetCustomAttributes(true) as Attribute[]);
-            MLField f1 = (MLField) attributes1.First(delegate (Attribute a) {return a is MLField;} );
-            MLField f2 = (MLField) attributes2.First(delegate (Attribute a) {return a is MLField;} );
+            var attributes1 = new List<Attribute>(a1.PropertyInfo.GetCustomAttributes(true) as Attribute[]);
+            var attributes2 = new List<Attribute>(a2.PropertyInfo.GetCustomAttributes(true) as Attribute[]);
+            var f1 = (MLField) attributes1.First(a => a is MLField);
+            var f2 = (MLField) attributes2.First(a => a is MLField);
             return (f1.Ordering < f2.Ordering) ? -1 : (f1.Ordering > f2.Ordering) ? 1 : 0;
         }
         
@@ -367,35 +369,20 @@ namespace kOS.Safe.Compilation
         }
 
         /// <summary>
-        /// Given a string value of Name, find the Opcode Type that uses that as its Name.
-        /// </summary>
-        /// <param name="name">name to look up</param>
-        /// <returns>Type, one of the subclasses of Opcode, or PseudoNull if there was no match</returns>
-        public static Type TypeFromName(string name)
-        {
-            Type returnValue;
-            if (! mapNameToType.TryGetValue(name, out returnValue))
-            {
-                returnValue = typeof(PseudoNull); // flag telling the caller "not found".
-            }
-            return returnValue;
-        }
-        
-        /// <summary>
         /// Return the list of member Properties that are part of what gets stored to machine langauge
         /// for this opcode.
         /// </summary>
         /// <returns></returns>
-        public List<MLArgInfo> GetArgumentDefs()
+        public IEnumerable<MLArgInfo> GetArgumentDefs()
         {
-            return mapOpcodeToArgs[this.GetType()];
+            return mapOpcodeToArgs[GetType()];
         }
     }
         
     public abstract class BinaryOpcode : Opcode
     {
-        protected object Argument1 { get; set; }
-        protected object Argument2 { get; set; }
+        protected object Argument1 { get; private set; }
+        protected object Argument2 { get; private set; }
 
         public override void Execute(ICpu cpu)
         {
@@ -424,7 +411,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeStore : Opcode
     {
-        public override string Name { get { return "store"; } }
+        protected override string Name { get { return "store"; } }
         public override ByteCode Code { get { return ByteCode.STORE; } }
 
         public override void Execute(ICpu cpu)
@@ -438,7 +425,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeUnset : Opcode
     {
-        public override string Name { get { return "unset"; } }
+        protected override string Name { get { return "unset"; } }
         public override ByteCode Code { get { return ByteCode.UNSET; } }
 
         public override void Execute(ICpu cpu)
@@ -458,7 +445,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeGetMember : Opcode
     {
-        public override string Name { get { return "getmember"; } }
+        protected override string Name { get { return "getmember"; } }
         public override ByteCode Code { get { return ByteCode.GETMEMBER; } }
 
         public override void Execute(ICpu cpu)
@@ -487,7 +474,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeSetMember : Opcode
     {
-        public override string Name { get { return "setmember"; } }
+        protected override string Name { get { return "setmember"; } }
         public override ByteCode Code { get { return ByteCode.SETMEMBER; } }
 
         public override void Execute(ICpu cpu)
@@ -512,7 +499,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeGetIndex : Opcode
     {
-        public override string Name { get { return "getindex"; } }
+        protected override string Name { get { return "getindex"; } }
         public override ByteCode Code { get { return ByteCode.GETINDEX; } }
 
         public override void Execute(ICpu cpu)
@@ -535,7 +522,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeSetIndex : Opcode
     {
-        public override string Name { get { return "setindex"; } }
+        protected override string Name { get { return "setindex"; } }
         public override ByteCode Code { get { return ByteCode.SETINDEX; } }
 
         public override void Execute(ICpu cpu)
@@ -560,21 +547,21 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeEOF : Opcode
     {
-        public override string Name { get { return "EOF"; } }
+        protected override string Name { get { return "EOF"; } }
         public override ByteCode Code { get { return ByteCode.EOF; } }
     }
 
     
     public class OpcodeEOP : Opcode
     {
-        public override string Name { get { return "EOP"; } }
+        protected override string Name { get { return "EOP"; } }
         public override ByteCode Code { get { return ByteCode.EOP; } }
     }
 
     
     public class OpcodeNOP : Opcode
     {
-        public override string Name { get { return "nop"; } }
+        protected override string Name { get { return "nop"; } }
         public override ByteCode Code { get { return ByteCode.NOP; } }
     }
 
@@ -587,7 +574,7 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodeBogus : Opcode
     {
-        public override string Name { get { return "not an opcode in the program."; } }
+        protected override string Name { get { return "not an opcode in the program."; } }
         public override ByteCode Code { get { return ByteCode.BOGUS; } }
     }
     
@@ -622,7 +609,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeBranchIfFalse : BranchOpcode
     {
-        public override string Name { get { return "br.false"; } }
+        protected override string Name { get { return "br.false"; } }
         public override ByteCode Code { get { return ByteCode.BRANCHFALSE; } } // branch if zero - a longstanding name for this op in many machine codes.
 
         public override void Execute(ICpu cpu)
@@ -635,7 +622,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeBranchJump : BranchOpcode
     {
-        public override string Name { get { return "jump"; } }
+        protected override string Name { get { return "jump"; } }
         public override ByteCode Code { get { return ByteCode.JUMP; } }
 
         public override void Execute(ICpu cpu)
@@ -659,9 +646,9 @@ namespace kOS.Safe.Compilation
     public class OpcodeLabelReset : Opcode
     {
         [MLField(0,true)]
-        public string UpcomingLabel {get;set;}
-        
-        public override string Name { get { return "OpcodeLabelReset"; } }
+        public string UpcomingLabel {get; private set;}
+
+        protected override string Name { get { return "OpcodeLabelReset"; } }
         public override ByteCode Code { get { return ByteCode.LABELRESET; } }
 
         public OpcodeLabelReset(string myLabel)
@@ -700,7 +687,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeCompareGT : BinaryOpcode
     {
-        public override string Name { get { return "gt"; } }
+        protected override string Name { get { return "gt"; } }
         public override ByteCode Code { get { return ByteCode.GT; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -712,7 +699,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeCompareLT : BinaryOpcode
     {
-        public override string Name { get { return "lt"; } }
+        protected override string Name { get { return "lt"; } }
         public override ByteCode Code { get { return ByteCode.LT; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -724,7 +711,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeCompareGTE : BinaryOpcode
     {
-        public override string Name { get { return "gte"; } }
+        protected override string Name { get { return "gte"; } }
         public override ByteCode Code { get { return ByteCode.GTE; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -736,7 +723,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeCompareLTE : BinaryOpcode
     {
-        public override string Name { get { return "lte"; } }
+        protected override string Name { get { return "lte"; } }
         public override ByteCode Code { get { return ByteCode.LTE; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -748,7 +735,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeCompareNE : BinaryOpcode
     {
-        public override string Name { get { return "ne"; } }
+        protected override string Name { get { return "ne"; } }
         public override ByteCode Code { get { return ByteCode.NE; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -760,7 +747,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeCompareEqual : BinaryOpcode
     {
-        public override string Name { get { return "eq"; } }
+        protected override string Name { get { return "eq"; } }
         public override ByteCode Code { get { return ByteCode.EQ; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -776,7 +763,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeMathNegate : Opcode
     {
-        public override string Name { get { return "negate"; } }
+        protected override string Name { get { return "negate"; } }
         public override ByteCode Code { get { return ByteCode.NEGATE; } }
 
         public override void Execute(ICpu cpu)
@@ -800,7 +787,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeMathAdd : BinaryOpcode
     {
-        public override string Name { get { return "add"; } }
+        protected override string Name { get { return "add"; } }
         public override ByteCode Code { get { return ByteCode.ADD; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -815,7 +802,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeMathSubtract : BinaryOpcode
     {
-        public override string Name { get { return "sub"; } }
+        protected override string Name { get { return "sub"; } }
         public override ByteCode Code { get { return ByteCode.SUB; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -827,7 +814,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeMathMultiply : BinaryOpcode
     {
-        public override string Name { get { return "mult"; } }
+        protected override string Name { get { return "mult"; } }
         public override ByteCode Code { get { return ByteCode.MULT; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -839,7 +826,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeMathDivide : BinaryOpcode
     {
-        public override string Name { get { return "div"; } }
+        protected override string Name { get { return "div"; } }
         public override ByteCode Code { get { return ByteCode.DIV; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -851,7 +838,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeMathPower : BinaryOpcode
     {
-        public override string Name { get { return "pow"; } }
+        protected override string Name { get { return "pow"; } }
         public override ByteCode Code { get { return ByteCode.POW; } }
 
         protected override object ExecuteCalculation(Calculator calc)
@@ -867,7 +854,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeLogicToBool : Opcode
     {
-        public override string Name { get { return "bool"; } }
+        protected override string Name { get { return "bool"; } }
         public override ByteCode Code { get { return ByteCode.BOOL; } }
 
         public override void Execute(ICpu cpu)
@@ -881,7 +868,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeLogicNot : Opcode
     {
-        public override string Name { get { return "not"; } }
+        protected override string Name { get { return "not"; } }
         public override ByteCode Code { get { return ByteCode.NOT; } }
 
         public override void Execute(ICpu cpu)
@@ -905,7 +892,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeLogicAnd : Opcode
     {
-        public override string Name { get { return "and"; } }
+        protected override string Name { get { return "and"; } }
         public override ByteCode Code { get { return ByteCode.AND; } }
 
         public override void Execute(ICpu cpu)
@@ -920,7 +907,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeLogicOr : Opcode
     {
-        public override string Name { get { return "or"; } }
+        protected override string Name { get { return "or"; } }
         public override ByteCode Code { get { return ByteCode.OR; } }
 
         public override void Execute(ICpu cpu)
@@ -946,10 +933,10 @@ namespace kOS.Safe.Compilation
         [MLField(1,true)]
         public object Destination { get; set; }
 
-        public override string Name { get { return "call"; } }
+        protected override string Name { get { return "call"; } }
         public override ByteCode Code { get { return ByteCode.CALL; } }
-        
-        public static string ArgMarkerString = "$<argstart>"; // guaranteed to not be a legal variable name.
+
+        public const string ARG_MARKER_STRING = "$<argstart>"; // guaranteed to not be a legal variable name.
 
         /// <summary>
         /// The Direct property flags which mode the opcode will be operating in:<br/>
@@ -986,21 +973,18 @@ namespace kOS.Safe.Compilation
             // is a string equal to indirectPlaceholder.
             get
             {
-                if (Destination is string && Destination.ToString() == indirectPlaceholder)
-                    return false;
-                else
-                    return true;
+                return !(Destination is string) || Destination.ToString() != INDIRECT_PLACEHOLDER;
             }
             set
             {
                 if (value && !Direct)
                     Destination = "TODO"; // If it's indirect and you set it to Direct, you'll need to also give it a Destination.
                 else if (!value && Direct)
-                    Destination = indirectPlaceholder;
+                    Destination = INDIRECT_PLACEHOLDER;
             }
         }
 
-        private static string indirectPlaceholder = "<indirect>";  // Guaranteed not to be a possible real function name because of the "<" character.
+        private const string INDIRECT_PLACEHOLDER = "<indirect>"; // Guaranteed not to be a possible real function name because of the "<" character.
 
         public OpcodeCall(object destination)
         {
@@ -1032,11 +1016,11 @@ namespace kOS.Safe.Compilation
             else // for indirect calls, dig down to find what's underneath the argument list in the stack and use that:
             {
                 bool foundBottom = false;
-                int digDepth = 0;
+                int digDepth;
                 for (digDepth = 0; (! foundBottom) && digDepth < cpu.GetStackSize() ; ++digDepth)
                 {
                     object arg = cpu.PeekValue(digDepth);
-                    if (arg is string && arg.ToString() == ArgMarkerString)
+                    if (arg is string && arg.ToString() == ARG_MARKER_STRING)
                         foundBottom = true;
                 }
                 functionPointer = cpu.PeekValue(digDepth);
@@ -1054,12 +1038,9 @@ namespace kOS.Safe.Compilation
             else if (functionPointer is string)
             {
                 var name = functionPointer as string;
-                if (name != null)
-                {
-                    string functionName = name;
-                    functionName = functionName.Substring(0, functionName.Length - 2);
-                    cpu.CallBuiltinFunction(functionName);
-                }
+                string functionName = name;
+                functionName = functionName.Substring(0, functionName.Length - 2);
+                cpu.CallBuiltinFunction(functionName);
             }
             else if (functionPointer is Delegate)
             {
@@ -1068,7 +1049,7 @@ namespace kOS.Safe.Compilation
             else
             {
                 // This is one of those "the user had better NEVER see this error" sorts of messages that's here to keep us in check:
-                throw new Exception("kOS internal error: OpcodeCall calling a function described using " + functionPointer.ToString() +
+                throw new Exception("kOS internal error: OpcodeCall calling a function described using " + functionPointer +
                                     " which is of type " + functionPointer.GetType().Name + " and kOS doesn't know how to call that.");
             }
             
@@ -1093,11 +1074,11 @@ namespace kOS.Safe.Compilation
         /// <param name="cpu">the cpu this opcode is being called on</param>
         /// <param name="dlg">the delegate object this opcode is being called for.</param>
         /// <returns>whatever object the delegate method returned</returns>
-        protected object ExecuteDelegate(ICpu cpu, Delegate dlg)
+        private object ExecuteDelegate(ICpu cpu, Delegate dlg)
         {
             MethodInfo methInfo = dlg.Method;
             ParameterInfo[] paramArray = methInfo.GetParameters();
-            List<object> args = new List<object>();
+            var args = new List<object>();
             
             // Iterating over parameter signature backward because stack:
             for (int i = paramArray.Length - 1 ; i >= 0 ; --i)
@@ -1151,10 +1132,7 @@ namespace kOS.Safe.Compilation
                                  // it can unconditionally assume there will be exactly 1 value left behind on the stack
                                  // regardless of what function it was that was being called.
                 }
-                else
-                {
-                    return dlg.DynamicInvoke(argArray);
-                }
+                return dlg.DynamicInvoke(argArray);
             }
             catch (TargetInvocationException e)
             {
@@ -1162,8 +1140,7 @@ namespace kOS.Safe.Compilation
                 // this TargetInvocationException, which hides them from the kOS user unless we do this:
                 if (e.InnerException != null)
                     throw e.InnerException;
-                else
-                    throw e;
+                throw;
             }
         }
 
@@ -1175,7 +1152,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeReturn : Opcode
     {
-        public override string Name { get { return "return"; } }
+        protected override string Name { get { return "return"; } }
         public override ByteCode Code { get { return ByteCode.RETURN; } }
 
         public override void Execute(ICpu cpu)
@@ -1203,9 +1180,9 @@ namespace kOS.Safe.Compilation
     public class OpcodePush : Opcode
     {
         [MLField(1,false)]
-        public object Argument { get; set; }
+        private object Argument { get; set; }
 
-        public override string Name { get { return "push"; } }
+        protected override string Name { get { return "push"; } }
         public override ByteCode Code { get { return ByteCode.PUSH; } }
 
         public OpcodePush(object argument)
@@ -1269,9 +1246,9 @@ namespace kOS.Safe.Compilation
     public class OpcodePushRelocateLater : Opcode
     {
         [MLField(1,true)]
-        public override string DestinationLabel {get;set;}
-        
-        public override string Name { get { return "PushRelocateLater"; } }
+        public override sealed string DestinationLabel {get;set;}
+
+        protected override string Name { get { return "PushRelocateLater"; } }
         public override ByteCode Code { get { return ByteCode.PUSHRELOCATELATER; } }
 
         public OpcodePushRelocateLater(string destLabel)
@@ -1306,7 +1283,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodePop : Opcode
     {
-        public override string Name { get { return "pop"; } }
+        protected override string Name { get { return "pop"; } }
         public override ByteCode Code { get { return ByteCode.POP; } }
 
         public override void Execute(ICpu cpu)
@@ -1318,7 +1295,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeDup : Opcode
     {
-        public override string Name { get { return "dup"; } }
+        protected override string Name { get { return "dup"; } }
         public override ByteCode Code { get { return ByteCode.DUP; } }
 
         public override void Execute(ICpu cpu)
@@ -1332,7 +1309,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeSwap : Opcode
     {
-        public override string Name { get { return "swap"; } }
+        protected override string Name { get { return "swap"; } }
         public override ByteCode Code { get { return ByteCode.SWAP; } }
 
         public override void Execute(ICpu cpu)
@@ -1352,9 +1329,9 @@ namespace kOS.Safe.Compilation
     public class OpcodeAddTrigger : Opcode
     {
         [MLField(1,false)]
-        public bool ShouldWait { get; set; }
-        
-        public override string Name { get { return "addtrigger"; } }
+        private bool ShouldWait { get; set; }
+
+        protected override string Name { get { return "addtrigger"; } }
         public override ByteCode Code { get { return ByteCode.ADDTRIGGER; } }
 
         public OpcodeAddTrigger(bool shouldWait)
@@ -1392,7 +1369,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeRemoveTrigger : Opcode
     {
-        public override string Name { get { return "removetrigger"; } }
+        protected override string Name { get { return "removetrigger"; } }
         public override ByteCode Code { get { return ByteCode.REMOVETRIGGER; } }
 
         public override void Execute(ICpu cpu)
@@ -1405,7 +1382,7 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeWait : Opcode
     {
-        public override string Name { get { return "wait"; } }
+        protected override string Name { get { return "wait"; } }
         public override ByteCode Code { get { return ByteCode.WAIT; } }
 
         public override void Execute(ICpu cpu)
@@ -1420,8 +1397,8 @@ namespace kOS.Safe.Compilation
 
     
     public class OpcodeEndWait : Opcode
-    {  
-        public override string Name { get { return "endwait"; } }
+    {
+        protected override string Name { get { return "endwait"; } }
         public override ByteCode Code { get { return ByteCode.ENDWAIT; } }
 
         public override void Execute(ICpu cpu)

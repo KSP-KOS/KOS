@@ -101,20 +101,20 @@ namespace kOS.Persistence
             return true;
         }
 
-        public virtual List<CodePart> LoadObjectFile(string filePath, int startLineNum, string prefix, byte[] content)
+        public List<CodePart> LoadObjectFile(string filePath, string prefix, byte[] content)
         {
-            List<CodePart> parts = CompiledObject.UnPack(filePath, startLineNum, prefix , content);
+            List<CodePart> parts = CompiledObject.UnPack(filePath, prefix , content);
             return parts;
         }
 
-        public virtual int GetUsedSpace()
+        protected int GetUsedSpace()
         {
             return Files.Values.Sum(file => file.GetSize());
         }
 
         public virtual int GetFreeSpace() { return -1; }
         public virtual bool IsRoomFor(ProgramFile newFile) { return true; }
-        public virtual void LoadPrograms(List<ProgramFile> programsToLoad) { }
+        public virtual void LoadPrograms(IEnumerable<ProgramFile> programsToLoad) { }
         public virtual ConfigNode Save(string nodeName) { return new ConfigNode(nodeName); }
 
         public virtual List<FileInfo> GetFileList()

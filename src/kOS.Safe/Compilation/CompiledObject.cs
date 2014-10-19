@@ -12,7 +12,11 @@ namespace kOS.Safe.Compilation
     public class PseudoNull : IEquatable<object>
     {
         // all instances of PseudoNull should be considered identical:
-        public override bool Equals(object o) { if (o is PseudoNull) return true; else return false; }
+        public override bool Equals(object o)
+        {
+            return o is PseudoNull;
+        }
+
         public override int GetHashCode() { return 0; }
     }
 
@@ -31,24 +35,24 @@ namespace kOS.Safe.Compilation
     /// make this a lot easier to follow and understand.
     /// 
     /// </summary>
-    public class CompiledObject
+    public static class CompiledObject
     {
         /// <summary>A homemade magic number for file identifcation, that will
         /// appear as the first part of the file contents and is hopefully
         /// unique and unlike anything another file type uses:</summary>
-        public static byte[] MagicId { get { return magicId; } private set{} }
-        private static byte[] magicId = { (byte)'k', (byte)0x03, (byte)'X', (byte)'E' };
-        private static Dictionary<Type,byte> IdFromType = null;
-        private static Dictionary<byte,Type> TypeFromId = null;
-        private static Regex trailingDigitsRegex = new Regex(@"\d+$");
+        public static IEnumerable<byte> MagicId { get { return magicId; } }
+        private static readonly byte[] magicId = { (byte)'k', 0x03, (byte)'X', (byte)'E' };
+        private static readonly Regex trailingDigitsRegex = new Regex(@"\d+$");
+        private static Dictionary<Type,byte> idFromType;
+        private static Dictionary<byte,Type> typeFromId;
         
         /// <summary>
         /// Populate the above two lookup dictionaries.
         /// </summary>
         public static void InitTypeData()
         {
-            IdFromType = new Dictionary<Type,byte>();
-            TypeFromId = new Dictionary<byte,Type>();
+            idFromType = new Dictionary<Type,byte>();
+            typeFromId = new Dictionary<byte,Type>();
             
             // WARNING:  All the possible object types supported as arguments
             // to Opcodes in the CPU (everything with an [MLField] attribute
@@ -68,10 +72,10 @@ namespace kOS.Safe.Compilation
             AddTypeData(7, typeof(string));
         }
         
-        private static void AddTypeData(int byteType, Type CSType)
+        private static void AddTypeData(int byteType, Type csType)
         {
-            IdFromType.Add(CSType, (byte)byteType);
-            TypeFromId.Add((byte)byteType, CSType);
+            idFromType.Add(csType, (byte)byteType);
+            typeFromId.Add((byte)byteType, csType);
         }
         
         /// <summary>
@@ -79,7 +83,7 @@ namespace kOS.Safe.Compilation
         /// to hold the given integer value, assuming its stored
         /// in an unsigned way.  Does not go higher than 8 bytes.
         /// </summary>
-        /// <param name="maxVal">max value the bytes have to hold</param>
+        /// <param name="maxValue">max value the bytes have to hold</param>
         /// <returns>number of bytes to hold it</returns>
         public static int FewestBytesToHold(long maxValue)
         {
@@ -105,13 +109,13 @@ namespace kOS.Safe.Compilation
         public static byte[] EncodeNumberToNBytes(ulong number, int numBytes)
         {
             // Encode the index into the right number of bytes:
-            byte[] returnValue = new byte[numBytes];
+            var returnValue = new byte[numBytes];
             for (int bNum = 0; bNum < numBytes ; ++bNum)
             {
                 int bytesToShift = (numBytes-bNum) - 1;
                 // This ends up being big-endian.  Dunno if that's the standard,
                 // but as long as the reading back is consistent it's fine:
-                returnValue[bNum] = (byte)( (number>>((bytesToShift)*8)) & (ulong)0xff);
+                returnValue[bNum] = (byte)( (number>>((bytesToShift)*8)) & 0xff);
             }
             return returnValue;
         }
@@ -139,7 +143,7 @@ namespace kOS.Safe.Compilation
         /// <summary>
         /// Holds all previously packed arguments to ML instructions.
         /// </summary>
-        private static byte[] argumentPack = null;
+        private static byte[] argumentPack;
         
         /// <summary>
         /// For efficiency, argumentPack will grow by 2x whenever it
@@ -147,27 +151,27 @@ namespace kOS.Safe.Compilation
         /// its logical length, which can be shorter than its physical
         /// length.
         /// </summary>
-        private static int argumentPackLogicalLength = 0;
+        private static int argumentPackLogicalLength;
 
         /// <summary>
         /// Holds the mapping of line numbers from source to the ranges of the
         /// machine language section of the file where the opcodes derived
         /// from those line numbers are:
         /// </summary>
-        private static DebugLineMap lineMap = null;
+        private static DebugLineMap lineMap;
 
         /// <summary>
         /// A memory stream writer being used to temporarily pack and unpack values so
         /// we can borrow the standard algorithms for that.
         /// </summary>
-        private static BinaryWriter packTempWriter = null;
+        private static BinaryWriter packTempWriter;
 
         /// <summary>
         /// Holds a list of previously encountered machine language arguments,
         /// and the byte index at which they were inserted into the argumentPack array,
         /// and the length within the list they take up.
         /// </summary>
-        private static Dictionary<object,int> argumentPackFinder = null;
+        private static Dictionary<object,int> argumentPackFinder;
         
         private static string previousLabel = "######"; // bogus value that is ensured to differ from any real value the first time through.
 
@@ -180,8 +184,8 @@ namespace kOS.Safe.Compilation
         public static byte[] Pack(List<CodePart> program)
         {
             packTempWriter = new BinaryWriter( new MemoryStream() );
-            List<byte> allCodeBuff = new List<byte>();
-            List<byte> headBuff = new List<byte>();
+            var allCodeBuff = new List<byte>();
+            var headBuff = new List<byte>();
             argumentPack = new byte[8]; // this will grow bigger (be replaced by new arrays) as needed.
             argumentPackLogicalLength = 0; // nothing in the argumentPack yet.
             argumentPackFinder = new Dictionary<object,int>();
@@ -199,12 +203,12 @@ namespace kOS.Safe.Compilation
             // Now that we've seen every argument, we know how many bytes are needed
             // to store the argumentPack, and thus the largest possible index into it.
             // This will be how many bytes our indeces will be in this packed ML file.
-            int numArgIndexBytes = FewestBytesToHold((long)argumentPackLogicalLength);
+            int numArgIndexBytes = FewestBytesToHold(argumentPackLogicalLength);
             headBuff.Add((byte)'%');
             headBuff.Add((byte)'A');
             headBuff.Add(((byte)numArgIndexBytes));
 
-            byte[] truncatedArgumentPack = new byte[argumentPackLogicalLength];
+            var truncatedArgumentPack = new byte[argumentPackLogicalLength];
             Array.Copy(argumentPack, 0, truncatedArgumentPack, 0, argumentPackLogicalLength);
 
             headBuff.AddRange(truncatedArgumentPack);
@@ -213,15 +217,12 @@ namespace kOS.Safe.Compilation
             {                                                      //   |--- foreach.  I do it this way so I
                 CodePart codePart = program[index];                // --'    can print the index in debugging.
 
-                List<byte> codeBuff = new List<byte>();
+                var codeBuff = new List<byte>();
 
-                byte[] packedCode;
-                int indexSoFar;
-
-                indexSoFar = allCodeBuff.Count + codeBuff.Count;
+                int indexSoFar = allCodeBuff.Count + codeBuff.Count;
                 codeBuff.Add((byte)'%');
                 codeBuff.Add((byte)'F');
-                packedCode = PackCode(codePart.FunctionsCode, numArgIndexBytes, indexSoFar+2);
+                byte[] packedCode = PackCode(codePart.FunctionsCode, numArgIndexBytes, indexSoFar+2);
                 codeBuff.AddRange(packedCode);
 
                 indexSoFar = allCodeBuff.Count + codeBuff.Count;
@@ -239,7 +240,7 @@ namespace kOS.Safe.Compilation
                 allCodeBuff.AddRange(codeBuff);
             }
 
-            List<byte> everything = new List<byte>();
+            var everything = new List<byte>();
             everything.AddRange(MagicId);
             everything.AddRange(headBuff);
             everything.AddRange(allCodeBuff);
@@ -264,10 +265,10 @@ namespace kOS.Safe.Compilation
                       (op.Label != expectedLabel) )
                     PackedArgumentLocation(op.Label);
 
-                List<MLArgInfo> args = op.GetArgumentDefs();
+                IEnumerable<MLArgInfo> args = op.GetArgumentDefs();
                 foreach (MLArgInfo arg in args)
                 {
-                    object argVal = arg.propertyInfo.GetValue(op,null);
+                    object argVal = arg.PropertyInfo.GetValue(op,null);
 
                     // Just trying to add the argument to the pack.  Don't
                     // care where in the pack it is (yet).
@@ -283,6 +284,7 @@ namespace kOS.Safe.Compilation
         /// </summary>
         /// <param name="fragment">the section being packed</param>
         /// <param name="argIndexSize">Number of bytes to use to encode argument indexes into the arg section.</param>
+        /// <param name="startByteIndex">this many bytes will be removed from the start of each fragment when debugging</param>
         /// <returns>the byte array of the packed together arguments</returns>
         private static byte[] PackCode(List<Opcode> fragment, int argIndexSize, int startByteIndex)
         {
@@ -305,33 +307,33 @@ namespace kOS.Safe.Compilation
                     justInsertedLabel = true;
                 }
                 
-                int opcodeStartByte = (int)( startByteIndex + packTempWriter.BaseStream.Position );
-                byte code = (byte)op.Code;
+                var opcodeStartByte = (int)( startByteIndex + packTempWriter.BaseStream.Position );
+                var code = (byte)op.Code;
                 
                 //Always start with the opcode's bytecode:
                 packTempWriter.Write(code);
                 
                 // Then append a number of argument indexes depending
                 // on how many arguments the opcode is supposed to have:
-                List<MLArgInfo> args = op.GetArgumentDefs();
+                IEnumerable<MLArgInfo> args = op.GetArgumentDefs();
                 foreach (MLArgInfo arg in args)
                 {
-                    object argVal = arg.propertyInfo.GetValue(op,null);
+                    object argVal = arg.PropertyInfo.GetValue(op,null);
                     int argPackedIndex = PackedArgumentLocation(argVal);
                     byte[] argIndexEncoded = EncodeNumberToNBytes((ulong)argPackedIndex,argIndexSize);
                     packTempWriter.Write(argIndexEncoded);
                 }
                 
                 // Now add this range to the Debug line mapping for this source line:
-                int opcodeStopByte = (int)(startByteIndex + packTempWriter.BaseStream.Position - 1);
+                var opcodeStopByte = (int)(startByteIndex + packTempWriter.BaseStream.Position - 1);
                 lineMap.Add(op.SourceLine, new IntRange(opcodeStartByte,opcodeStopByte));
                 
                 previousLabel = op.Label;
             }
             
             // Return the byte array that the memory writer has been outputting to in the above loop:
-            MemoryStream mem = packTempWriter.BaseStream as MemoryStream;
-            byte[] returnVal = new Byte[mem.Position];
+            var mem = packTempWriter.BaseStream as MemoryStream;
+            var returnVal = new Byte[mem.Position];
             Array.Copy(mem.GetBuffer(), 0, returnVal, 0, (int)mem.Position);
             
             return returnVal;
@@ -346,11 +348,11 @@ namespace kOS.Safe.Compilation
         /// <returns>byte index of where it starts in the argument pack.</returns>
         private static int PackedArgumentLocation(object argument)
         {
-            int labelOffset = 3; // Account for the %An at the front of the argument pack.
+            const int LABEL_OFFSET = 3; // Account for the %An at the front of the argument pack.
             
-            object arg = (argument==null) ? new PseudoNull() : argument;
+            object arg = argument ?? new PseudoNull();
             
-            int returnValue = -1; // bogus starting value before it's calculated.
+            int returnValue; // bogus starting value before it's calculated.
             bool existsAlready = argumentPackFinder.TryGetValue(arg, out returnValue);
             if (existsAlready)
                 return returnValue;
@@ -360,18 +362,18 @@ namespace kOS.Safe.Compilation
             
             // When it gets added, it's going to be tacked on right at the end.
             // We already know that, se let's get that populated now:
-            argumentPackFinder.Add(arg, labelOffset + argumentPackLogicalLength);
-            returnValue = labelOffset + argumentPackLogicalLength;
+            argumentPackFinder.Add(arg, LABEL_OFFSET + argumentPackLogicalLength);
+            returnValue = LABEL_OFFSET + argumentPackLogicalLength;
             
             // Borrow C#'s Binary IO writer to pack the object into the byte form,
             // rather than writing our own for each type:
             packTempWriter.Seek(0,SeekOrigin.Begin);
             
             WriteSomeBinaryPrimitive(packTempWriter, arg);
-            MemoryStream mem = packTempWriter.BaseStream as MemoryStream;
-            int argByteLength = (int)(mem.Position);
-            byte[] packedArg = new byte[argByteLength+1]; // +1 because we insert the type byte at the front.
-            packedArg[0] = IdFromType[arg.GetType()];
+            var mem = packTempWriter.BaseStream as MemoryStream;
+            var argByteLength = (int)(mem.Position);
+            var packedArg = new byte[argByteLength+1]; // +1 because we insert the type byte at the front.
+            packedArg[0] = idFromType[arg.GetType()];
             Array.Copy(mem.GetBuffer(), 0, packedArg, 1, argByteLength);
                 
             AddByteChunkToArgumentPack(packedArg);
@@ -448,7 +450,7 @@ namespace kOS.Safe.Compilation
             {
                 // Increase to double current size or if current size is too small or zero
                 // so doubling it doesn't help, then incrase to hold new logical length:
-                byte[] newBiggerPack = new byte[ Math.Max(argumentPack.Length*2, newLogicalLength) ];
+                var newBiggerPack = new byte[ Math.Max(argumentPack.Length*2, newLogicalLength) ];
                 if (argumentPackLogicalLength > 0)
                 {
                     Array.Copy(argumentPack,newBiggerPack,argumentPackLogicalLength);
@@ -458,27 +460,26 @@ namespace kOS.Safe.Compilation
             Array.Copy(appendMe, 0, argumentPack, argumentPackLogicalLength, appendMe.Length);
             argumentPackLogicalLength = newLogicalLength;
         }
-        
+
 
         /// <summary>
         /// Given a packed representation of the program, load it back into program form:
         /// </summary>
         /// <param name="filePath">name of file (with preceeding "volume/") that the program came from, for runtime error reporting.</param>
-        /// <param name="startLineNum">line number the file should be assumed to start at (normally 1)</param>
         /// <param name="prefix">prepend this string to all labels in this program.</param>
         /// <param name="content">the file itself in ony big binary array.</param>
         /// <returns></returns>
-        public static List<CodePart> UnPack(string filePath, int startLineNum, string prefix, byte[] content)
+        public static List<CodePart> UnPack(string filePath, string prefix, byte[] content)
         {
-            List<CodePart> program = new List<CodePart>();
-            BinaryReader reader = new BinaryReader(new MemoryStream(content));
+            var program = new List<CodePart>();
+            var reader = new BinaryReader(new MemoryStream(content));
             
             byte[] firstFour = reader.ReadBytes(4);
             
             if (! firstFour.SequenceEqual(MagicId))
                 throw new Exception("Attempted to read an ML file that doesn't seem to be an ML file");
             
-            int argIndexSize = 0;
+            int argIndexSize;
             Dictionary<int,object> arguments = ReadArgumentPack(reader, out argIndexSize);
             lineMap = new DebugLineMap();
             
@@ -502,7 +503,7 @@ namespace kOS.Safe.Compilation
                 {
                     case (byte)'F':
                         // new CodePart's always start with the function header:
-                        CodePart nextPart = new CodePart(filePath);
+                        var nextPart = new CodePart(filePath);
                         program.Add(nextPart);
                         // If this is the very first code we've ever encountered in the file, remember its position:
                         if (codeStart == 0)
@@ -536,9 +537,9 @@ namespace kOS.Safe.Compilation
         /// <returns>The dictionary mapping indeces within the argument pack to the object that was stored there.</returns>
         private static Dictionary<int,object> ReadArgumentPack(BinaryReader reader, out int argIndexSize)
         {
-            Dictionary<int,object> returnArgs = new Dictionary<int,object>();
+            var returnArgs = new Dictionary<int,object>();
 
-            int startPos = (int) reader.BaseStream.Position;
+            var startPos = (int) reader.BaseStream.Position;
             
             byte[] header = reader.ReadBytes(2);
             if ( header[0] != '%' || header[1] != 'A')
@@ -553,7 +554,7 @@ namespace kOS.Safe.Compilation
                 
                 byte argTypeId = reader.ReadByte();
                 Type argCSharpType;
-                if (TypeFromId.TryGetValue(argTypeId, out argCSharpType))
+                if (typeFromId.TryGetValue(argTypeId, out argCSharpType))
                 {
                     object arg = ReadSomeBinaryPrimitive(reader, argCSharpType);
                     returnArgs.Add(offsetLocation,arg);
@@ -576,24 +577,28 @@ namespace kOS.Safe.Compilation
         /// <param name="filePath">name of file (with preceeding volume/) that the compiled code came from, for rutime error reporting purposes.</param>
         /// <param name="prefix">a string to prepend to the labels in the program.</param>
         /// <param name="lineMap">describes the mapping of line numbers to code locations.</param>
-        public static void PostReadProcessing(List<CodePart>program, string filePath, string prefix, DebugLineMap lineMap)
+        private static void PostReadProcessing(IEnumerable<CodePart> program, string filePath, string prefix, DebugLineMap lineMap)
         {
+            //TODO:prefix is never used.
             SortedList<IntRange,int> lineLookup = lineMap.BuildInverseLookup();
             var lineEnumerator = lineLookup.GetEnumerator();
             
             int curLine = 0;
-            IntRange curRange = new IntRange(-1,-1);
+            var curRange = new IntRange(-1,-1);
 
+            //TODO:This is never used, just incremented. remove?
             int opIndex = 0;
             
             foreach (CodePart part in program)
             {
                 // It's easier to iterate over the sections in the CodePart this way:
-                List<List<Opcode>> sections = new List<List<Opcode>>();
-                sections.Add(part.FunctionsCode);
-                sections.Add(part.InitializationCode);
-                sections.Add(part.MainCode);
-                
+                var sections = new List<List<Opcode>>
+                {
+                    part.FunctionsCode, 
+                    part.InitializationCode, 
+                    part.MainCode
+                };
+
                 foreach (List<Opcode> codeList in sections)
                 {
                     foreach (Opcode op in codeList)
@@ -619,10 +624,7 @@ namespace kOS.Safe.Compilation
                             // Not every opcode came from a source line - so if it's skipped over, assign it to bogus value.
                             op.SourceLine = -1;
                         
-                        if (op.SourceName == null || op.SourceName == String.Empty)
-                            op.SourceName = filePath;
-                        else
-                            op.SourceName = String.Empty; // ensure no nulls here.
+                        op.SourceName = string.IsNullOrEmpty(op.SourceName) ? filePath : String.Empty;
 
                     }
                 }
@@ -638,7 +640,7 @@ namespace kOS.Safe.Compilation
         /// <returns>Next label string</returns>
         private static string NextConsecutiveLabel( string label)
         {
-            string outLabel = "";
+            string outLabel;
             Match m = trailingDigitsRegex.Match(label);
             if (m.Success)
             {
@@ -658,20 +660,20 @@ namespace kOS.Safe.Compilation
         /// <param name="reader">binary reader to read from.</param>
         /// <param name="codeStartPos">index into the stream where the first code block in the ML file started,
         /// for calculating indeces.</param>
-        /// <param name="prefix">prefix to prepend to all labels within this program</param>.</param>
+        /// <param name="prefix">prefix to prepend to all labels within this program.</param>
         /// <param name="arguments">argument dictionary to pull arguments from.</param>
         /// <param name="argIndexSize">number of bytes the argument indeces are packed into.</param>
         /// <returns>list of opcodes generated</returns>
         private static List<Opcode> ReadOpcodeList(BinaryReader reader, int codeStartPos, string prefix, Dictionary<int,object> arguments, int argIndexSize)
         {            
-            List<Opcode> returnValue = new List<Opcode>();
+            var returnValue = new List<Opcode>();
             
             bool sectionEnded = false;
             bool prevWasLabelReset = false;
             
             while (reader.BaseStream.Position < reader.BaseStream.Length && !(sectionEnded))
             {
-                int opcodeMLPosition = (int)(reader.BaseStream.Position - codeStartPos); // For later use in PostReadProcessing().
+                var opcodeMLPosition = (int)(reader.BaseStream.Position - codeStartPos); // For later use in PostReadProcessing().
                 byte opCodeTypeId = reader.ReadByte();
                 Type opCodeCSharpType = Opcode.TypeFromCode((ByteCode)opCodeTypeId);
                 
@@ -685,15 +687,15 @@ namespace kOS.Safe.Compilation
                 }
 
                 // Make a new empty Opcode instance of this type:
-                Opcode op = (Opcode)(Activator.CreateInstance(opCodeCSharpType,true));
+                var op = (Opcode)(Activator.CreateInstance(opCodeCSharpType,true));
                 op.MLIndex = opcodeMLPosition; // For later use in PostReadProcessing().
                 
                 // Find out how many [MLField] arguments it expects to have, and read them from the BinaryReader:
-                List<object> opArgs = new List<object>();
+                var opArgs = new List<object>();
                 foreach (MLArgInfo argInfo in op.GetArgumentDefs())
                 {
                     byte[] argPackIndex = reader.ReadBytes(argIndexSize);
-                    int argIndex = (int) DecodeNumberFromBytes(argPackIndex);
+                    var argIndex = (int) DecodeNumberFromBytes(argPackIndex);
                     object val;
                     if (argInfo.NeedReindex)
                     {                                              
@@ -724,9 +726,10 @@ namespace kOS.Safe.Compilation
                 else
                     op.Label = NextConsecutiveLabel(previousLabel);
 
-                if (op is OpcodeLabelReset)
+                var reset = op as OpcodeLabelReset;
+                if (reset != null)
                 {
-                    previousLabel = ((OpcodeLabelReset)op).UpcomingLabel;
+                    previousLabel = reset.UpcomingLabel;
                     prevWasLabelReset = true;
                 }
                 else
@@ -744,7 +747,7 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class IntRange
     {
-        public int Start {get;set;}
+        public int Start {get; private set;}
         public int Stop  {get;set;}
         public IntRange(int start, int stop)
         {
@@ -775,9 +778,9 @@ namespace kOS.Safe.Compilation
 
         // When this gets packed out, how many bytes will be needed to
         // hold the byte range indeces?        
-        private int numDebugIndexBytes = 0;
+        private int numDebugIndexBytes;
 
-        private Dictionary<int,List<IntRange>> store = new Dictionary<int,List<IntRange>>();
+        private readonly Dictionary<int,List<IntRange>> store = new Dictionary<int,List<IntRange>>();
         
         public DebugLineMap()
         {
@@ -800,14 +803,14 @@ namespace kOS.Safe.Compilation
                 short lineNum = reader.ReadInt16();
                 byte countRanges = reader.ReadByte();
                 
-                List<IntRange> ranges = new List<IntRange>();
+                var ranges = new List<IntRange>();
                 for (int index = 0 ; index < countRanges ; ++index)
                 {
                     byte[] encodedStart = reader.ReadBytes(numDebugIndexBytes);
-                    int start = (int)(CompiledObject.DecodeNumberFromBytes(encodedStart));
+                    var start = (int)(CompiledObject.DecodeNumberFromBytes(encodedStart));
 
                     byte[] encodedStop = reader.ReadBytes(numDebugIndexBytes);
-                    int stop = (int)(CompiledObject.DecodeNumberFromBytes(encodedStop));
+                    var stop = (int)(CompiledObject.DecodeNumberFromBytes(encodedStop));
 
                     ranges.Add(new IntRange(start, stop));
                 }
@@ -817,7 +820,7 @@ namespace kOS.Safe.Compilation
         
         public void Add( int lineNum, IntRange addRange )
         {
-            List<IntRange> ranges = null;
+            List<IntRange> ranges;
             
             int neededBytes = CompiledObject.FewestBytesToHold( Math.Max(addRange.Start, addRange.Stop) );
             if (neededBytes > numDebugIndexBytes)
@@ -853,9 +856,9 @@ namespace kOS.Safe.Compilation
         /// pack together the debug line info into a section to tack on the
         /// end of the ML file.
         /// </summary>
-        public byte[] Pack()
+        public IEnumerable<byte> Pack()
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            var writer = new BinaryWriter(new MemoryStream());
             
             // section header: identify it as the debug map,
             // and specify how many bytes the indeces will be packed into:
@@ -882,9 +885,9 @@ namespace kOS.Safe.Compilation
                 }
             }
             
-            int bufLength = (int)(writer.BaseStream.Position);
+            var bufLength = (int)(writer.BaseStream.Position);
             
-            byte[] returnValue = new byte[bufLength];
+            var returnValue = new byte[bufLength];
             Array.Copy( ((MemoryStream)(writer.BaseStream)).GetBuffer(),0,returnValue,0,bufLength);
             return returnValue;
         }
@@ -897,7 +900,7 @@ namespace kOS.Safe.Compilation
         /// <returns>A SotedList mapping ranges of ML offsets to line numbers they came from, in order by IntRanges.</returns>
         public SortedList<IntRange,int> BuildInverseLookup()
         {
-            SortedList<IntRange,int> returnValue = new SortedList<IntRange,int>(new IntRangeCompare());
+            var returnValue = new SortedList<IntRange,int>(new IntRangeCompare());
             
             foreach (int lineNum in store.Keys)
             {

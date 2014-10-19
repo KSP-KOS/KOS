@@ -100,9 +100,7 @@ namespace kOS.Safe.Encapsulation
             // original topmost call by not explicitly saying it's shallow or
             // nested here. otherwise explictly say it's shallow if it's the outermost
             // ToString() call:
-            if (CalledFrom("ListDump"))
-                return ListDump();
-            return ListDumpShallow();
+            return CalledFrom("ListDump") ? ListDump() : ListDumpShallow();
         }
 
         /// <summary>

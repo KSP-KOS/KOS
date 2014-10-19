@@ -105,7 +105,7 @@ namespace kOS.Execution
             {
                 shared.Screen.ClearScreen();
                 string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n", Core.VersionInfo);
-                List<string>nags = Utilities.Utils.GetPendingNags();
+                List<string>nags = Safe.Utilities.Debug.GetPendingNags();
                 if (nags.Count > 0)
                 {
                     bootMessage +=
