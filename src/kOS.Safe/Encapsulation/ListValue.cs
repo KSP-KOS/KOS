@@ -254,7 +254,7 @@ namespace kOS.Safe.Encapsulation
 
         public override string ToString()
         {
-            return string.Format("{0} Enumerator", base.ToString());
+            return string.Format("{0} Iterator", base.ToString());
         }
     }
 }

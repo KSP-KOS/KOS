@@ -362,7 +362,7 @@ namespace kOS.Safe.Compilation
             Type returnValue;
             if (! mapCodeToType.TryGetValue(code, out returnValue))
             {
-                returnValue = typeof(PseudoNull); // flag telling the caller "not found".
+                returnValue = typeof(PseudoVoid); // flag telling the caller "not found".
             }        
             return returnValue;
         }
@@ -377,7 +377,7 @@ namespace kOS.Safe.Compilation
             Type returnValue;
             if (! mapNameToType.TryGetValue(name, out returnValue))
             {
-                returnValue = typeof(PseudoNull); // flag telling the caller "not found".
+                returnValue = typeof(PseudoVoid); // flag telling the caller "not found".
             }
             return returnValue;
         }
@@ -485,14 +485,7 @@ namespace kOS.Safe.Compilation
                 value = OpcodeCall.ExecuteDelegate(cpu, (Delegate)value);
             }
 
-            if (value != null)
-            {
-                cpu.PushStack(value);
-            }
-            else
-            {
-                throw new Exception(string.Format("Suffix {0} not found on object", suffixName));
-            }
+            cpu.PushStack(value);
         }
     }
     

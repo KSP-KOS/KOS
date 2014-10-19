@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -114,7 +115,7 @@ namespace kOS.Safe.Encapsulation
 
             if (!suffixes.TryGetValue(suffixName, out suffix))
             {
-                return null;
+                throw new KOSSuffixUseException("get",suffixName,this);
             }
             return suffix.Get();
         }
