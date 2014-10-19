@@ -337,7 +337,7 @@ namespace kOS.Safe.Compilation
         {
             const int LABEL_OFFSET = 3; // Account for the %An at the front of the argument pack.
             
-            object arg = (argument==null) ? new PseudoVoid() : argument;
+            object arg = argument ?? new PseudoVoid();
             
             int returnValue; // bogus starting value before it's calculated.
             bool existsAlready = argumentPackFinder.TryGetValue(arg, out returnValue);

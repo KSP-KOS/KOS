@@ -7,7 +7,11 @@ namespace kOS.Safe.Compilation
     public class PseudoVoid : IEquatable<object>
     {
         // all instances of PseudoNull should be considered identical:
-        public override bool Equals(object o) { if (o is PseudoVoid) return true; else return false; }
+        public override bool Equals(object o)
+        {
+            return o is PseudoVoid;
+        }
+
         public override int GetHashCode() { return 0; }
         public override string ToString()
         {

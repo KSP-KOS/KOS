@@ -483,7 +483,7 @@ namespace kOS.Safe.Compilation
                 // it wasn't a method (i.e. leaving the parentheses off the call).  The
                 // member returned is a delegate that needs to be called to get its actual
                 // value.  Borrowing the same routine that OpcodeCall uses for its method calls:
-                cpu.PushStack(OpcodeCall.ArgMarkerString);
+                cpu.PushStack(OpcodeCall.ARG_MARKER_STRING);
                 value = OpcodeCall.ExecuteDelegate(cpu, (Delegate)value);
             }
 
@@ -501,7 +501,7 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodeGetMethod : OpcodeGetMember
     {
-        public override string Name { get { return "getmethod"; } }
+        protected override string Name { get { return "getmethod"; } }
         public override ByteCode Code { get { return ByteCode.GETMETHOD; } }
         public override void Execute(ICpu cpu)
         {
@@ -1141,7 +1141,7 @@ namespace kOS.Safe.Compilation
             for (int i = paramArray.Length - 1 ; i >= 0 ; --i)
             {
                 object arg = cpu.PopValue();
-                if (arg is string && ((string)arg) == ArgMarkerString)
+                if (arg is string && ((string)arg) == ARG_MARKER_STRING)
                     throw new KOSArgumentMismatchException(paramArray.Length, i-1);
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
@@ -1178,7 +1178,7 @@ namespace kOS.Safe.Compilation
             while (cpu.GetStackSize() > 0 && !foundArgMarker)
             {
                 object marker = cpu.PopValue();
-                if (marker is string && ((string)marker) == ArgMarkerString)
+                if (marker is string && ((string)marker) == ARG_MARKER_STRING)
                     foundArgMarker = true;
                 else
                     ++numExtraArgs;
