@@ -1111,6 +1111,7 @@ namespace kOS.Safe.Compilation
                 bool inheritable = paramType.IsAssignableFrom(argType);
                 if (! inheritable)
                 {
+                    bool castError = false;
                     // If it's not directly assignable to the expected type, maybe it's "castable" to it:
                     try
                     {
@@ -1118,7 +1119,13 @@ namespace kOS.Safe.Compilation
                     }
                     catch (InvalidCastException)
                     {
-                        throw new Exception("Argument " + i + " to method " + methInfo.Name + " should be " + paramType.Name + " instead of " + argType + ".");
+                        castError = true;
+                    }
+                    catch (FormatException) {
+                        castError = true;
+                    }
+                    if (castError) {
+                        throw new Exception("Argument " + i + "("+arg+") to method " + methInfo.Name + " should be " + paramType.Name + " instead of " + argType + ".");
                     }
                 }
                 
@@ -1130,21 +1137,33 @@ namespace kOS.Safe.Compilation
             // there are no arguments to pass:
             object[] argArray = (args.Count>0) ? args.ToArray() : null;
 
-            // I could find no documentation on what DynamicInvoke returns when the delegate
-            // is a function returning void.  Does it return a null?  I don't know.  So to avoid the
-            // problem, I split this into these two cases:
-            if (methInfo.ReturnType == typeof(void))
+            try
             {
-                dlg.DynamicInvoke(argArray);
-                return null; // So that the compiler building the opcodes for a function call statement doesn't
-                             // have to know the function prototype to decide whether or
-                             // not it needs to pop a value from the stack for the return value.  By adding this,
-                             // it can unconditionally assume there will be exactly 1 value left behind on the stack
-                             // regardless of what function it was that was being called.
+                // I could find no documentation on what DynamicInvoke returns when the delegate
+                // is a function returning void.  Does it return a null?  I don't know.  So to avoid the
+                // problem, I split this into these two cases:
+                if (methInfo.ReturnType == typeof(void))
+                {
+                    dlg.DynamicInvoke(argArray);
+                    return null; // So that the compiler building the opcodes for a function call statement doesn't
+                                 // have to know the function prototype to decide whether or
+                                 // not it needs to pop a value from the stack for the return value.  By adding this,
+                                 // it can unconditionally assume there will be exactly 1 value left behind on the stack
+                                 // regardless of what function it was that was being called.
+                }
+                else
+                {
+                    return dlg.DynamicInvoke(argArray);
+                }
             }
-            else
+            catch (TargetInvocationException e)
             {
-                return dlg.DynamicInvoke(argArray);
+                // Annoyingly, calling DynamicInvoke on a delegate wraps any exceptions the delegate throws inside
+                // this TargetInvocationException, which hides them from the kOS user unless we do this:
+                if (e.InnerException != null)
+                    throw e.InnerException;
+                else
+                    throw e;
             }
         }
 

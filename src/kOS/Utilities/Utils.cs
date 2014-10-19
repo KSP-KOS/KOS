@@ -285,6 +285,56 @@ namespace kOS.Utilities
             }
             return found;
         }
+        
+        /// <summary>
+        /// Given any CSharp object, return the string name of the type in
+        /// a way that makes more sense to kOS users, using kOS names rather
+        /// than Csharp names.
+        /// </summary>
+        /// <param name="type">native c-sharp object</param>
+        /// <returns>kOS name for this object</returns>
+        public static string KOSType(Type type)
+        {
+            // This logic doesn't seem to work.
+            // if the type is Int32, it still prints as
+            // "Int32" not "Number", indicating that this
+            // isn't quite working right:
+            if (type.IsSubclassOf(typeof(Single)) ||
+                type.IsSubclassOf(typeof(Double)) ||
+                type.IsSubclassOf(typeof(Int32)) || type.IsSubclassOf(typeof(UInt32)) ||
+                type.IsSubclassOf(typeof(Int64)) || type.IsSubclassOf(typeof(UInt64)) )
+            {
+                return "Number";
+            }
+            else if (type.IsSubclassOf(typeof(Boolean)))
+            {
+                return "Boolean";
+            }
+            else if (type.IsSubclassOf(typeof(String)))
+            {
+                return "String";
+            }
+            else if (type.IsSubclassOf(typeof(kOS.Safe.Encapsulation.Structure)) )
+            {
+                // If it's one of our suffixed Types, then
+                // first chop it down to just the lastmost term
+                // in the fully qualified name:
+                string name = type.Name;
+                int lastDotPos = name.LastIndexOf('.');
+                name = (lastDotPos < 0) ? name : name.Remove(0,lastDotPos);
+                
+                // Then drop the suffix "Target" or "Value", which we use a lot:
+                name.Replace("Value","");
+                name.Replace("Target","");
+
+                return name;
+            }
+            else // fallback to use the System's native type name:
+            {
+                return type.Name;
+            }
+                
+        }
 
         /// <summary>
         /// This is copied almost verbatim from ProgramContext,

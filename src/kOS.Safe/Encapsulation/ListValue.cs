@@ -14,12 +14,18 @@ namespace kOS.Safe.Encapsulation
     {
         private readonly IList<object> list;
                 
+        // It's nice for other parts of kOS's C# code to be able to operate on ListValues
+        // without having to go through the suffix system to do so.  Other wrappers should
+        // go here too, probably: Remove, element access with '[]', etc.
+        public int Count { get{ return list.Count;} }
+
         public ListValue()
         {
             list = new List<object>();
             ListInitializeSuffixes();
         }
 
+        // This looks useful.  Why is it private?
         private ListValue(ListValue toCopy)
         {
             list = new List<object>(toCopy.list);
@@ -80,7 +86,7 @@ namespace kOS.Safe.Encapsulation
         {
             list.Add(toAdd);
         }
-
+        
         // Using Statics for this is not thread-safe, but kOS doesn't do threads at the moment.
         // TODO: find a better way later to track the nesting level through all the messy
         // calls of nested objects' ToStrings.

@@ -1,4 +1,5 @@
 ﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,9 @@ namespace kOS.Suffixed.Part
         {
             Part = part;
             shared = sharedObj;
+            
+            // This cannot be called from inside InitializeSuffixes because the base constructor calls
+            // InitializeSuffixes first before this constructor has set "Part" to a real value.
             PartInitializeSuffixes();
         }
 
@@ -29,11 +33,38 @@ namespace kOS.Suffixed.Part
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.orgPos)));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
-            AddSuffix("MODULES", new Suffix<ListValue>(() => GatherModules(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
+            AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>((modName) => GetModule(modName)));
+            AddSuffix("MODULES", new Suffix<ListValue>(() => GetAllModules(), "A List of all the modules' names on this part"));            
         }
+        
+        private List<PartModuleFields> partModuleFieldsList = new List<PartModuleFields>();
 
+        protected PartModuleFields GetModule(string modName)
+        {
+            foreach (PartModule mod in Part.Modules)
+            {
+                Debug.Log("Does \"" + mod.moduleName.ToUpper() + "\" == \"" + modName.ToUpper() + "\"?");
+                if (mod.moduleName.ToUpper() == modName.ToUpper())
+                {
+                    Debug.Log("yes it does");
+                    return new PartModuleFields(mod);
+                }
+            }
+            throw new KOSLookupFailException( "module", modName.ToUpper(), this );
+        }
+        
+        public ListValue GetAllModules()
+        {
+            ListValue returnValue = new ListValue();
+            foreach (PartModule mod in Part.Modules)
+            {
+                returnValue.Add(mod.moduleName);
+            }
+            return returnValue;
+        }
+        
         public override string ToString()
         {
             return string.Format("PART({0},{1})", Part.name, Part.uid);
@@ -93,16 +124,6 @@ namespace kOS.Suffixed.Part
                 resources.Add(new ResourceValue(resource));
             }
             return resources;
-        }
-
-        private ListValue GatherModules(global::Part part)
-        {
-            var modules = new ListValue();
-            foreach (var module in part.Modules)
-            {
-                modules.Add(module.GetType());
-            }
-            return modules;
         }
     }
 }
