@@ -7,19 +7,6 @@ using System.Linq;
 namespace kOS.Safe.Compilation
 {
     
-    // Because nulls don't have real Types,
-    // use this for a fake "type" to reperesent null:
-    public class PseudoNull : IEquatable<object>
-    {
-        // all instances of PseudoNull should be considered identical:
-        public override bool Equals(object o)
-        {
-            return o is PseudoNull;
-        }
-
-        public override int GetHashCode() { return 0; }
-    }
-
     /// <summary>
     /// The class that controls the ability to make a compiled object
     /// file out of the opcode lists the compiler makes.  This is
@@ -62,7 +49,7 @@ namespace kOS.Safe.Compilation
             // TODO: Make some sort of Assertion to run during OnAwake that will
             // verify this is the case and give a Nag Message if it's not.
             //
-            AddTypeData(0, typeof(PseudoNull));
+            AddTypeData(0, typeof(PseudoVoid));
             AddTypeData(1, typeof(bool));
             AddTypeData(2, typeof(byte));
             AddTypeData(3, typeof(Int16));
@@ -350,7 +337,7 @@ namespace kOS.Safe.Compilation
         {
             const int LABEL_OFFSET = 3; // Account for the %An at the front of the argument pack.
             
-            object arg = argument ?? new PseudoNull();
+            object arg = (argument==null) ? new PseudoVoid() : argument;
             
             int returnValue; // bogus starting value before it's calculated.
             bool existsAlready = argumentPackFinder.TryGetValue(arg, out returnValue);
@@ -389,7 +376,7 @@ namespace kOS.Safe.Compilation
         /// <param name="obj">the thing to write</param>
         private static void WriteSomeBinaryPrimitive(BinaryWriter writer, object obj)
         {
-            if      (obj is PseudoNull) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
+            if      (obj is PseudoVoid) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
             else if (obj is Boolean)    writer.Write((bool)obj);
             else if (obj is Int32)      writer.Write((Int32)obj);
             else if (obj is String)     writer.Write((String)obj);
@@ -417,7 +404,7 @@ namespace kOS.Safe.Compilation
         {
             object returnValue = null;
             
-            if      (cSharpType == typeof(PseudoNull)) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
+            if      (cSharpType == typeof(PseudoVoid)) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
             else if (cSharpType == typeof(Boolean))    returnValue = reader.ReadBoolean();
             else if (cSharpType == typeof(Int32))      returnValue = reader.ReadInt32();
             else if (cSharpType == typeof(String))     returnValue = reader.ReadString();
@@ -677,7 +664,7 @@ namespace kOS.Safe.Compilation
                 byte opCodeTypeId = reader.ReadByte();
                 Type opCodeCSharpType = Opcode.TypeFromCode((ByteCode)opCodeTypeId);
                 
-                if (opCodeCSharpType == typeof(PseudoNull))
+                if (opCodeCSharpType == typeof(PseudoVoid))
                 {
                     // As soon as there's an opcode encountered that isn't a known opcode type, the section is done:
                     sectionEnded = true;

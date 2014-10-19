@@ -151,7 +151,7 @@ namespace kOS.Safe.Encapsulation
         /// <returns>short string without eoln</returns>
         private string TerseDump()
         {
-            return "LIST of " + list.Count + " item" + (list.Count>1 ? "s" : "");
+            return "LIST of " + list.Count + " item" + (list.Count==1 ? "" : "s");
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace kOS.Safe.Encapsulation
 
         public override string ToString()
         {
-            return string.Format("{0} Enumerator", base.ToString());
+            return string.Format("{0} Iterator", base.ToString());
         }
     }
 }

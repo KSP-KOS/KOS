@@ -2,6 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Test
@@ -106,7 +107,10 @@ namespace kOS.Safe.Test
             var suffixName = Guid.NewGuid().ToString();
             testSuffix.Get().Returns(testObject);
 
-            Assert.IsNull(testStructure.GetSuffix(suffixName));
+            Assert.Throws(typeof(KOSSuffixUseException),
+                          (() => testStructure.GetSuffix(suffixName)),
+                          "failed to throw exception getting nonexistent suffix" );
+
             testStructure.TestAddInstanceSuffix(suffixName,testSuffix);
             Assert.IsNotNull(testStructure.GetSuffix(suffixName));
         }
@@ -120,7 +124,10 @@ namespace kOS.Safe.Test
             var suffixName = Guid.NewGuid().ToString();
             testSuffix.Get().Returns(testObject);
 
-            Assert.IsNull(testStructure.GetSuffix(suffixName));
+            Assert.Throws(typeof(KOSSuffixUseException),
+                          (() => testStructure.GetSuffix(suffixName)),
+                          "failed to throw exception getting nonexistent static suffix");
+            
             TestStructure.TestAddGlobal<TestStructure>(suffixName,testSuffix);
             Assert.IsNotNull(testStructure.GetSuffix(suffixName));
         }
@@ -137,7 +144,10 @@ namespace kOS.Safe.Test
 
             testStructure.TestAddInstanceSuffix(suffixName, testSuffix);
             Assert.AreEqual(testObject, testStructure.GetSuffix(suffixName));
-            Assert.AreEqual(null, new TestStructure().GetSuffix(suffixName));
+            Assert.Throws(typeof(KOSSuffixUseException),
+                          (() => new TestStructure().GetSuffix(suffixName)),
+                          "failed to throw exception getting instance suffix of unpopulated object");
+                        
         }
 
         [Test]
