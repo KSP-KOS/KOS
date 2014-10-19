@@ -279,6 +279,8 @@ namespace kOS.Suffixed
                     return VesselUtils.GetTerminalVelocity(Vessel);
                 case "LOADED":
                     return Vessel.loaded;
+                case "ROOTPART":
+                    return new Part.PartValue(Vessel.rootPart,Shared);
             }
 
             // Is this a resource?

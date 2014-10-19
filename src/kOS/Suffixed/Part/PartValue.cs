@@ -37,6 +37,8 @@ namespace kOS.Suffixed.Part
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>((modName) => GetModule(modName)));
             AddSuffix("MODULES", new Suffix<ListValue>(() => GetAllModules(), "A List of all the modules' names on this part"));            
+            AddSuffix("PARENT", new Suffix<PartValue>(() => new PartValue(Part.parent,shared), "The parent part of this part"));
+            AddSuffix("CHILDREN", new Suffix<ListValue>(() => GetChildren(), "A LIST() of the children parts of this part"));
         }
         
         private List<PartModuleFields> partModuleFieldsList = new List<PartModuleFields>();
@@ -124,6 +126,16 @@ namespace kOS.Suffixed.Part
                 resources.Add(new ResourceValue(resource));
             }
             return resources;
+        }
+
+        private ListValue GetChildren()
+        {
+            ListValue kids = new ListValue();
+            foreach (global::Part part in Part.children)
+            {
+                kids.Add(new PartValue(part,shared));
+            }
+            return kids;
         }
     }
 }
