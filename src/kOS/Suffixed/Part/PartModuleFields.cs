@@ -20,14 +20,16 @@ namespace kOS.Suffixed.Part
     public class PartModuleFields : Structure
     {
         private readonly PartModule partModule;
+        private readonly SharedObjects shared;
         
         /// <summary>
         /// Create a kOS-user variable wrapper around a KSP PartModule attached to a part.
         /// </summary>
         /// <param name="partModule">the KSP PartModule to make a wrapper for</param>
-        public PartModuleFields(PartModule partModule)
+        public PartModuleFields(PartModule partModule, SharedObjects shared)
         {
             this.partModule = partModule;
+            this.shared = shared;
 
             // Overriding Structure.InitializeSuffixes() doesn't work because the base constructor calls it
             // prior to calling this constructor, and so partModule isn't set yet:
@@ -310,6 +312,8 @@ namespace kOS.Suffixed.Part
 
         private void InitializeSuffixesAfterConstruction()
         {
+            AddSuffix("NAME",       new Suffix<string>(() => partModule.moduleName));
+            AddSuffix("PART",       new Suffix<PartValue>(() => new PartValue(partModule.part,shared)));
             AddSuffix("ALLFIELDS",  new Suffix<ListValue>(() => AllFields("({0}) {1}, is {2}")));
             AddSuffix("ALLEVENTS",  new Suffix<ListValue>(() => AllEvents("({0}) {1}, is {2}")));
             AddSuffix("ALLACTIONS", new Suffix<ListValue>(() => AllActions("({0}) {1}, is {2}")));
