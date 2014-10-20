@@ -364,7 +364,7 @@ namespace kOS.Safe.Compilation
             Type returnValue;
             if (! mapCodeToType.TryGetValue(code, out returnValue))
             {
-                returnValue = typeof(PseudoVoid); // flag telling the caller "not found".
+                returnValue = typeof(PseudoNull); // flag telling the caller "not found".
             }        
             return returnValue;
         }
@@ -379,7 +379,7 @@ namespace kOS.Safe.Compilation
             Type returnValue;
             if (! mapNameToType.TryGetValue(name, out returnValue))
             {
-                returnValue = typeof(PseudoVoid); // flag telling the caller "not found".
+                returnValue = typeof(PseudoNull); // flag telling the caller "not found".
             }
             return returnValue;
         }

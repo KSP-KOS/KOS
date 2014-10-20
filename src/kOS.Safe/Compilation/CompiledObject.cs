@@ -49,7 +49,7 @@ namespace kOS.Safe.Compilation
             // TODO: Make some sort of Assertion to run during OnAwake that will
             // verify this is the case and give a Nag Message if it's not.
             //
-            AddTypeData(0, typeof(PseudoVoid));
+            AddTypeData(0, typeof(PseudoNull));
             AddTypeData(1, typeof(bool));
             AddTypeData(2, typeof(byte));
             AddTypeData(3, typeof(Int16));
@@ -337,7 +337,7 @@ namespace kOS.Safe.Compilation
         {
             const int LABEL_OFFSET = 3; // Account for the %An at the front of the argument pack.
             
-            object arg = argument ?? new PseudoVoid();
+            object arg = argument ?? new PseudoNull();
             
             int returnValue; // bogus starting value before it's calculated.
             bool existsAlready = argumentPackFinder.TryGetValue(arg, out returnValue);
@@ -376,7 +376,7 @@ namespace kOS.Safe.Compilation
         /// <param name="obj">the thing to write</param>
         private static void WriteSomeBinaryPrimitive(BinaryWriter writer, object obj)
         {
-            if      (obj is PseudoVoid) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
+            if      (obj is PseudoNull) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
             else if (obj is Boolean)    writer.Write((bool)obj);
             else if (obj is Int32)      writer.Write((Int32)obj);
             else if (obj is String)     writer.Write((String)obj);
@@ -404,7 +404,7 @@ namespace kOS.Safe.Compilation
         {
             object returnValue = null;
             
-            if      (cSharpType == typeof(PseudoVoid)) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
+            if      (cSharpType == typeof(PseudoNull)) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
             else if (cSharpType == typeof(Boolean))    returnValue = reader.ReadBoolean();
             else if (cSharpType == typeof(Int32))      returnValue = reader.ReadInt32();
             else if (cSharpType == typeof(String))     returnValue = reader.ReadString();
@@ -664,7 +664,7 @@ namespace kOS.Safe.Compilation
                 byte opCodeTypeId = reader.ReadByte();
                 Type opCodeCSharpType = Opcode.TypeFromCode((ByteCode)opCodeTypeId);
                 
-                if (opCodeCSharpType == typeof(PseudoVoid))
+                if (opCodeCSharpType == typeof(PseudoNull))
                 {
                     // As soon as there's an opcode encountered that isn't a known opcode type, the section is done:
                     sectionEnded = true;
