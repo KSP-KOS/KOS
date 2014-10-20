@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using kOS.Persistence;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace kOS.Module
     public class Bootstrapper : MonoBehaviour
     {
         private readonly string legacyArchiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
-        private readonly string backupFolder = GameDatabase.Instance.PluginDataFolder + "/GameData/kOS/Backup";
+        private readonly string backupFolder = GameDatabase.Instance.PluginDataFolder + "/GameData/kOS/Backup_" + DateTime.Now.ToFileTimeUtc();
 
         private bool backup = true;
 
@@ -60,7 +61,51 @@ namespace kOS.Module
                 BackupScripts();
             }
 
-            //TODO:Migrate
+            Directory.CreateDirectory(Archive.ArchiveFolder);
+
+            var files = Directory.GetFiles(legacyArchiveFolder);
+
+            foreach (var fileName in files)
+            {
+                if (fileName == null) { continue; }
+
+                var fileInfo = new FileInfo(fileName);
+
+                string newFileName;
+                if (Path.GetExtension(fileName) == "txt")
+                {
+                    var bareFilename = Path.GetFileNameWithoutExtension(fileName);
+                    const string NEW_EXTENSION = "ks";
+                    newFileName = string.Format("{0}/{1}.{2}", legacyArchiveFolder, bareFilename, NEW_EXTENSION);
+                }
+                else
+                {
+                    newFileName = Archive.ArchiveFolder + "/" + Path.GetFileName(fileName);
+                }
+
+                File.Move(fileInfo.FullName, newFileName);
+            }
+
+            DeleteDirectoryTreeIfEmpty(legacyArchiveFolder);
+        }
+
+        private void DeleteDirectoryTreeIfEmpty(string folderToDelete)
+        {
+            while (true)
+            {
+                if (Directory.GetFiles(folderToDelete).Any())
+                {
+                    return;
+                }
+
+                if (Directory.GetDirectories(folderToDelete).Any())
+                {
+                    return;
+                }
+
+                Directory.Delete(folderToDelete);
+                folderToDelete = Directory.GetParent(folderToDelete).FullName;
+            }
         }
 
         private void BackupScripts()
