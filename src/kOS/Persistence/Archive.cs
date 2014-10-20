@@ -8,11 +8,18 @@ namespace kOS.Persistence
 {
     public class Archive : Volume
     {
-        private readonly string archiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
+        public static string ArchiveFolder
+        {
+            get
+            {
+                return GameDatabase.Instance.PluginDataFolder + "/Ships/Script/";
+            }
+        }
+
 
         public Archive()
         {
-            Directory.CreateDirectory(archiveFolder);
+            Directory.CreateDirectory(ArchiveFolder);
             Renameable = false;
             Name = "Archive";
         }
@@ -26,7 +33,7 @@ namespace kOS.Persistence
         {
             try
             {
-                using (var infile = new BinaryReader(File.Open(archiveFolder + name + ".txt", FileMode.Open)))
+                using (var infile = new BinaryReader(File.Open(ArchiveFolder + name + ".txt", FileMode.Open)))
                 {
 
 
@@ -72,11 +79,11 @@ namespace kOS.Persistence
         {
             base.SaveFile(file);
 
-            Directory.CreateDirectory(archiveFolder);
+            Directory.CreateDirectory(ArchiveFolder);
 
             try
             {
-                using (var outfile = new BinaryWriter(File.Open(archiveFolder + file.Filename + ".txt",FileMode.Create)))
+                using (var outfile = new BinaryWriter(File.Open(ArchiveFolder + file.Filename + ".txt",FileMode.Create)))
                 {
                     
                     byte[] fileBody;
@@ -110,7 +117,7 @@ namespace kOS.Persistence
             try
             {
                 base.DeleteByName(name);
-                File.Delete(string.Format("{0}{1}.txt", archiveFolder, name));
+                File.Delete(string.Format("{0}{1}.txt", ArchiveFolder, name));
                 return true;
             }
             catch (Exception)
@@ -123,8 +130,8 @@ namespace kOS.Persistence
         {
             try
             {
-                var sourcePath = string.Format("{0}{1}.txt", archiveFolder, name);
-                var destinationPath = string.Format("{0}{1}.txt", archiveFolder, newName);
+                var sourcePath = string.Format("{0}{1}.txt", ArchiveFolder, name);
+                var destinationPath = string.Format("{0}{1}.txt", ArchiveFolder, newName);
 
                 File.Move(sourcePath,destinationPath);
                 return true;
@@ -141,7 +148,7 @@ namespace kOS.Persistence
 
             try
             {
-                foreach (var file in Directory.GetFiles(archiveFolder, "*.txt"))
+                foreach (var file in Directory.GetFiles(ArchiveFolder, "*.txt"))
                 {
                     var sysFileInfo = new System.IO.FileInfo(file);
                     var fileInfo = new FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);

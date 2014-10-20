@@ -19,15 +19,6 @@ namespace kOS.Module
 {
     public class kOSProcessor : PartModule, IProcessor
     {
-        static kOSProcessor()
-        {
-            if (Safe.Utilities.Debug.Logger == null)
-            {
-                Debug.Log("kOS: Init Logger");
-                Safe.Utilities.Debug.Logger = new KSPLogger();
-            }
-        }
-
         public ProcessorModes ProcessorMode = ProcessorModes.READY;
 
         public Harddisk HardDisk { get; private set; }
