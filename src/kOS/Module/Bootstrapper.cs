@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using kOS.Persistence;
 using UnityEngine;
 
 namespace kOS.Module
@@ -32,13 +33,18 @@ namespace kOS.Module
                 return;
             }
 
+            if (Directory.Exists(Archive.ArchiveFolder))
+            {
+                return;
+            }
+
             PopupDialog.SpawnPopupDialog(
                 new MultiOptionDialog(
                     "The kOS v0.15 update has moved the archive folder to /Ships/Script/ and changed the file extension from *.txt to *.ks to be more inline with squad's current folder structure. Would you like us to attempt to migrate your existing scripts?",
                     () => backup = GUILayout.Toggle(backup, "Backup My scripts first"),
                     "kOS",
                     HighLogic.Skin, 
-                    new DialogOption("Yes, Do it!", AttemptToMigrateScripts, true),
+                    new DialogOption("Yes, Do it!", MigrateScripts, true),
                     new DialogOption("No, I'll do it myself", () => { }, true)
                     ),
                 true,
@@ -47,7 +53,7 @@ namespace kOS.Module
         }
 
 
-        private void AttemptToMigrateScripts()
+        private void MigrateScripts()
         {
             if (backup)
             {
