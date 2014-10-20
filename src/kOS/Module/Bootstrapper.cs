@@ -61,6 +61,7 @@ namespace kOS.Module
                 BackupScripts();
             }
 
+            Safe.Utilities.Debug.Logger.Log("kOS: ScriptMigrate START");
             Directory.CreateDirectory(Archive.ArchiveFolder);
 
             var files = Directory.GetFiles(legacyArchiveFolder);
@@ -83,28 +84,33 @@ namespace kOS.Module
                     newFileName = Archive.ArchiveFolder + "/" + Path.GetFileName(fileName);
                 }
 
+                Safe.Utilities.Debug.Logger.Log("kOS: ScriptMigrate moving: " + fileName + " to: " + newFileName);
                 File.Move(fileInfo.FullName, newFileName);
             }
 
             DeleteDirectoryTreeIfEmpty(legacyArchiveFolder);
+            Safe.Utilities.Debug.Logger.Log("kOS: ScriptMigrate END");
         }
 
         private void DeleteDirectoryTreeIfEmpty(string folderToDelete)
         {
+            var toDelete = folderToDelete;
             while (true)
             {
-                if (Directory.GetFiles(folderToDelete).Any())
+                if (Directory.GetFiles(toDelete).Any())
                 {
                     return;
                 }
 
-                if (Directory.GetDirectories(folderToDelete).Any())
+                if (Directory.GetDirectories(toDelete).Any())
                 {
                     return;
                 }
 
-                Directory.Delete(folderToDelete);
-                folderToDelete = Directory.GetParent(folderToDelete).FullName;
+                var nextLevel = Directory.GetParent(toDelete).FullName;
+                Safe.Utilities.Debug.Logger.Log("kOS: ScriptMigrate - Deleting folder " + toDelete);
+                Directory.Delete(toDelete);
+                toDelete = nextLevel;
             }
         }
 

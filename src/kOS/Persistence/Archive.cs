@@ -16,7 +16,6 @@ namespace kOS.Persistence
             }
         }
 
-
         public Archive()
         {
             Directory.CreateDirectory(ArchiveFolder);
@@ -35,8 +34,6 @@ namespace kOS.Persistence
             {
                 using (var infile = new BinaryReader(File.Open(ArchiveFolder + name + ".txt", FileMode.Open)))
                 {
-
-
                     byte[] fileBody = ProcessBinaryReader(infile);
 
                     var retFile = new ProgramFile(name);
@@ -130,6 +127,7 @@ namespace kOS.Persistence
         {
             try
             {
+
                 var sourcePath = string.Format("{0}{1}.txt", ArchiveFolder, name);
                 var destinationPath = string.Format("{0}{1}.txt", ArchiveFolder, newName);
 
