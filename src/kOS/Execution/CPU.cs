@@ -359,6 +359,18 @@ namespace kOS.Execution
             return variable;
         }
 
+        public void DumpVariables()
+        {
+            foreach (string ident in variables.Keys)
+            {
+                Variable v = variables[ident];
+                string line = ident + "=" + (v.Value.ToString() ?? "<null>");
+                shared.Screen.Print(line);
+                UnityEngine.Debug.Log(line);
+            }
+            shared.Screen.Print("YOU CAN SEE THIS LOG IN THE DEBUG OUTPUT.");
+        }
+
         private Variable GetVariable(string identifier)
         {
             identifier = identifier.ToLower();

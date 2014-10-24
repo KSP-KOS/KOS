@@ -13,6 +13,7 @@ namespace kOS.Safe.Execution
         object PeekValue(int digDepth);        
         int GetStackSize();
         void SetValue(string identifier, object value);
+        void DumpVariables();
         void RemoveVariable(string identifier);
         void RemoveAllVariables();
         int InstructionPointer { get; set; }
