@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using kOS.Persistence;
 using UnityEngine;
 
@@ -76,7 +75,9 @@ namespace kOS.Module
                 if (Path.GetExtension(fileName) == "txt")
                 {
                     var bareFilename = Path.GetFileNameWithoutExtension(fileName);
-                    const string NEW_EXTENSION = "ks";
+                    //TODO: Chris we need to switch to *.ks before 0.15
+                    //const string NEW_EXTENSION = "ks";
+                    const string NEW_EXTENSION = "txt";
                     newFileName = string.Format("{0}/{1}.{2}", legacyArchiveFolder, bareFilename, NEW_EXTENSION);
                 }
                 else
@@ -88,30 +89,7 @@ namespace kOS.Module
                 File.Move(fileInfo.FullName, newFileName);
             }
 
-            DeleteDirectoryTreeIfEmpty(legacyArchiveFolder);
             Safe.Utilities.Debug.Logger.Log("kOS: ScriptMigrate END");
-        }
-
-        private void DeleteDirectoryTreeIfEmpty(string folderToDelete)
-        {
-            var toDelete = folderToDelete;
-            while (true)
-            {
-                if (Directory.GetFiles(toDelete).Any())
-                {
-                    return;
-                }
-
-                if (Directory.GetDirectories(toDelete).Any())
-                {
-                    return;
-                }
-
-                var nextLevel = Directory.GetParent(toDelete).FullName;
-                Safe.Utilities.Debug.Logger.Log("kOS: ScriptMigrate - Deleting folder " + toDelete);
-                Directory.Delete(toDelete);
-                toDelete = nextLevel;
-            }
         }
 
         private void BackupScripts()
