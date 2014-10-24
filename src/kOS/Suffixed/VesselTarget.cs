@@ -276,24 +276,61 @@ namespace kOS.Suffixed
             if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
             
             ListValue kScriptParts = new ListValue();
-            
+                        
             if (matchGroup != KSPActionGroup.None)
-            {
                 foreach (global::Part p in Vessel.parts)
                 {
+                    // See if any of the parts' actions are this action group:
                     foreach (BaseAction action in p.Actions)
-                    {
                         if (action.actionGroup.Equals(matchGroup))
-                        {
-                            // TODO THIS DOESN"T WORK - add debug logging to trace it down
-                            // and find out why.
                             kScriptParts.Add(new PartValue(p,Shared));
-                        }
-                    }
+                    // See if any of the parts' partmodule actions are this action group:
+                    foreach (PartModule pm in p.Modules)
+                        foreach (BaseAction action in pm.Actions)
+                            if (action.actionGroup.Equals(matchGroup))
+                                kScriptParts.Add(new PartValue(p,Shared));
                 }
-            }
             return kScriptParts;
         }
+        
+        private ListValue GetModulesInGroup(string groupName)
+        {
+            KSPActionGroup matchGroup = KSPActionGroup.None;
+            string upperName = groupName.ToUpper();
+            
+            // TODO: later refactor:  put this in a Dictionary lookup instead, and then share it
+            // by both this code and the code in ActionGroup.cs:
+            if (upperName == "SAS")    { matchGroup = KSPActionGroup.SAS; }
+            if (upperName == "GEAR")   { matchGroup = KSPActionGroup.Gear; }
+            if (upperName == "LIGHTS") { matchGroup = KSPActionGroup.Light; }
+            if (upperName == "BRAKES") { matchGroup = KSPActionGroup.Brakes; }
+            if (upperName == "RCS")    { matchGroup = KSPActionGroup.RCS; }
+            if (upperName == "ABORT")  { matchGroup = KSPActionGroup.Abort; }
+            if (upperName == "AG1")    { matchGroup = KSPActionGroup.Custom01; }
+            if (upperName == "AG2")    { matchGroup = KSPActionGroup.Custom02; }
+            if (upperName == "AG3")    { matchGroup = KSPActionGroup.Custom03; }
+            if (upperName == "AG4")    { matchGroup = KSPActionGroup.Custom04; }
+            if (upperName == "AG5")    { matchGroup = KSPActionGroup.Custom05; }
+            if (upperName == "AG6")    { matchGroup = KSPActionGroup.Custom06; }
+            if (upperName == "AG7")    { matchGroup = KSPActionGroup.Custom07; }
+            if (upperName == "AG8")    { matchGroup = KSPActionGroup.Custom08; }
+            if (upperName == "AG9")    { matchGroup = KSPActionGroup.Custom09; }
+            if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
+            
+            ListValue kScriptParts = new ListValue();
+            
+            // This is almost identical to the logic in GetPartsInGroup and it might be a nice idea
+            // later to merge them somehow:
+            //
+            if (matchGroup != KSPActionGroup.None)
+                foreach (global::Part p in Vessel.parts)
+                    foreach (PartModule pm in p.Modules)
+                        foreach (BaseAction action in pm.Actions)
+                            if (action.actionGroup.Equals(matchGroup))
+                                kScriptParts.Add(new PartModuleFields(pm,Shared));
+            return kScriptParts;
+        }
+        
 
         public override bool SetSuffix(string suffixName, object value)
         {
@@ -314,6 +351,7 @@ namespace kOS.Suffixed
             AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue,string>((name) => GetPartsNamed(name)));
             AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue,string>((name) => GetModulesNamed(name)));
             AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>((name) => GetPartsInGroup(name)));
+            AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>((name) => GetModulesInGroup(name)));
         }
 
         public override object GetSuffix(string suffixName)
