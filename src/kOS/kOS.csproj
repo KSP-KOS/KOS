@@ -78,6 +78,7 @@
     <Compile Include="Function\Suffixed.cs" />
     <Compile Include="Function\Trigonometry.cs" />
     <Compile Include="KSPLogger.cs" />
+    <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSTextEditPopup.cs" />
