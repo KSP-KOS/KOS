@@ -1686,7 +1686,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitOnOffStatement(ParseNode node)
         {
             SetLineNum(node);
-            VisitVarIdentifier(node.Nodes[0]);
+            VisitVariableNode(node.Nodes[0]);
             
             // node.Nodes[1].Token.Type == TokenType.onoff_trailer at this point
                 

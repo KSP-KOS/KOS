@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using kOS.Binding;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Suffixed.Part;
 using kOS.Utilities;
 using System.Collections.Generic;
 
@@ -162,6 +165,8 @@ namespace kOS.Suffixed
 
         static VesselTarget()
         {
+            // TODO: These need to be refactored into the new suffix system at some point:
+            
             ShortCuttableShipSuffixes = new[]
                 {
                     "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
@@ -175,6 +180,7 @@ namespace kOS.Suffixed
         public VesselTarget(Vessel target, SharedObjects shared) :base(shared)
         {
             Vessel = target;
+            InitializeSuffixes();
         }
 
         public VesselTarget(SharedObjects shared) : this(shared.Vessel, shared) { }
@@ -215,6 +221,117 @@ namespace kOS.Suffixed
             return new Direction(vesselFacing);
         }
 
+        private ListValue GetPartsNamed(string partName)
+        {
+            string lowerName = partName.ToLower();
+
+            List<global::Part> kspParts = Vessel.parts.FindAll(part => part.name.ToLower() == lowerName);
+
+            ListValue kScriptParts = new ListValue();
+            foreach (global::Part kspPart in kspParts)
+                kScriptParts.Add( new PartValue(kspPart,Shared));
+            return kScriptParts;
+        }
+
+        private ListValue GetModulesNamed(string modName)
+        {
+            string lowerName = modName.ToLower();
+            
+            ListValue kScriptParts = new ListValue();
+            // This is slow - maybe there should be a faster lookup string hash, but
+            // KSP's data model seems to have not implemented it:
+            foreach (global::Part p in Vessel.parts)
+            {
+                foreach (PartModule pMod in p.Modules)
+                {
+                    if (pMod.moduleName.ToLower() == lowerName)
+                        kScriptParts.Add(new PartModuleFields(pMod,Shared));
+                }
+            }
+            return kScriptParts;
+        }
+        
+        private ListValue GetPartsInGroup(string groupName)
+        {
+            KSPActionGroup matchGroup = KSPActionGroup.None;
+            string upperName = groupName.ToUpper();
+            
+            // TODO: later refactor:  put this in a Dictionary lookup instead, and then share it
+            // by both this code and the code in ActionGroup.cs:
+            if (upperName == "SAS")    { matchGroup = KSPActionGroup.SAS; }
+            if (upperName == "GEAR")   { matchGroup = KSPActionGroup.Gear; }
+            if (upperName == "LIGHTS") { matchGroup = KSPActionGroup.Light; }
+            if (upperName == "BRAKES") { matchGroup = KSPActionGroup.Brakes; }
+            if (upperName == "RCS")    { matchGroup = KSPActionGroup.RCS; }
+            if (upperName == "ABORT")  { matchGroup = KSPActionGroup.Abort; }
+            if (upperName == "AG1")    { matchGroup = KSPActionGroup.Custom01; }
+            if (upperName == "AG2")    { matchGroup = KSPActionGroup.Custom02; }
+            if (upperName == "AG3")    { matchGroup = KSPActionGroup.Custom03; }
+            if (upperName == "AG4")    { matchGroup = KSPActionGroup.Custom04; }
+            if (upperName == "AG5")    { matchGroup = KSPActionGroup.Custom05; }
+            if (upperName == "AG6")    { matchGroup = KSPActionGroup.Custom06; }
+            if (upperName == "AG7")    { matchGroup = KSPActionGroup.Custom07; }
+            if (upperName == "AG8")    { matchGroup = KSPActionGroup.Custom08; }
+            if (upperName == "AG9")    { matchGroup = KSPActionGroup.Custom09; }
+            if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
+            
+            ListValue kScriptParts = new ListValue();
+                        
+            if (matchGroup != KSPActionGroup.None)
+                foreach (global::Part p in Vessel.parts)
+                {
+                    // See if any of the parts' actions are this action group:
+                    foreach (BaseAction action in p.Actions)
+                        if (action.actionGroup.Equals(matchGroup))
+                            kScriptParts.Add(new PartValue(p,Shared));
+                    // See if any of the parts' partmodule actions are this action group:
+                    foreach (PartModule pm in p.Modules)
+                        foreach (BaseAction action in pm.Actions)
+                            if (action.actionGroup.Equals(matchGroup))
+                                kScriptParts.Add(new PartValue(p,Shared));
+                }
+            return kScriptParts;
+        }
+        
+        private ListValue GetModulesInGroup(string groupName)
+        {
+            KSPActionGroup matchGroup = KSPActionGroup.None;
+            string upperName = groupName.ToUpper();
+            
+            // TODO: later refactor:  put this in a Dictionary lookup instead, and then share it
+            // by both this code and the code in ActionGroup.cs:
+            if (upperName == "SAS")    { matchGroup = KSPActionGroup.SAS; }
+            if (upperName == "GEAR")   { matchGroup = KSPActionGroup.Gear; }
+            if (upperName == "LIGHTS") { matchGroup = KSPActionGroup.Light; }
+            if (upperName == "BRAKES") { matchGroup = KSPActionGroup.Brakes; }
+            if (upperName == "RCS")    { matchGroup = KSPActionGroup.RCS; }
+            if (upperName == "ABORT")  { matchGroup = KSPActionGroup.Abort; }
+            if (upperName == "AG1")    { matchGroup = KSPActionGroup.Custom01; }
+            if (upperName == "AG2")    { matchGroup = KSPActionGroup.Custom02; }
+            if (upperName == "AG3")    { matchGroup = KSPActionGroup.Custom03; }
+            if (upperName == "AG4")    { matchGroup = KSPActionGroup.Custom04; }
+            if (upperName == "AG5")    { matchGroup = KSPActionGroup.Custom05; }
+            if (upperName == "AG6")    { matchGroup = KSPActionGroup.Custom06; }
+            if (upperName == "AG7")    { matchGroup = KSPActionGroup.Custom07; }
+            if (upperName == "AG8")    { matchGroup = KSPActionGroup.Custom08; }
+            if (upperName == "AG9")    { matchGroup = KSPActionGroup.Custom09; }
+            if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
+            
+            ListValue kScriptParts = new ListValue();
+            
+            // This is almost identical to the logic in GetPartsInGroup and it might be a nice idea
+            // later to merge them somehow:
+            //
+            if (matchGroup != KSPActionGroup.None)
+                foreach (global::Part p in Vessel.parts)
+                    foreach (PartModule pm in p.Modules)
+                        foreach (BaseAction action in pm.Actions)
+                            if (action.actionGroup.Equals(matchGroup))
+                                kScriptParts.Add(new PartModuleFields(pm,Shared));
+            return kScriptParts;
+        }
+        
+
         public override bool SetSuffix(string suffixName, object value)
         {
             switch (suffixName)
@@ -229,10 +346,20 @@ namespace kOS.Suffixed
             return base.SetSuffix(suffixName, value);
         }
 
+        private void InitializeSuffixes()
+        {
+            AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue,string>((name) => GetPartsNamed(name)));
+            AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue,string>((name) => GetModulesNamed(name)));
+            AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>((name) => GetPartsInGroup(name)));
+            AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>((name) => GetModulesInGroup(name)));
+        }
+
         public override object GetSuffix(string suffixName)
         {
             switch (suffixName)
             {
+                // TODO: These need to be moved into InitializeSuffixes() at some point:
+
                 case "CONTROL":
                     return FlightControlManager.GetControllerByVessel(Vessel);
                 case "BEARING":

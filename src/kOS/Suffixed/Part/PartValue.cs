@@ -50,7 +50,7 @@ namespace kOS.Suffixed.Part
                 if (mod.moduleName.ToUpper() == modName.ToUpper())
                 {
                     Debug.Log("yes it does");
-                    return new PartModuleFields(mod);
+                    return new PartModuleFields(mod,shared);
                 }
             }
             throw new KOSLookupFailException( "module", modName.ToUpper(), this );

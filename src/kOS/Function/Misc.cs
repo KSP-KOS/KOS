@@ -233,4 +233,14 @@ namespace kOS.Function
             if (shared.Processor != null) shared.Processor.SetMode(ProcessorModes.OFF);
         }
     }
+
+    [FunctionAttribute("debugglobalvars")]
+    public class DebugGlobalVars : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            shared.Cpu.DumpVariables();
+        }
+    }
+
 }
