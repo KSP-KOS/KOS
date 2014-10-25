@@ -1,4 +1,5 @@
 ﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
@@ -60,6 +61,29 @@ namespace kOS.Suffixed
             return new OrbitableVelocity( orbVel, surfVel );
         }
         
+        /// <summary>
+        /// Return the next OrbitInfo after this one (i.e. transitional encounter)
+        /// </summary>
+        /// <returns>an OrbitInfo, or a null if there isn't any.</returns>
+        private OrbitInfo GetNextPatch()
+        {
+            if (! GetHasNextPatch())
+                return null;
+            return new OrbitInfo(orbit.nextPatch,shared);
+        }
+        
+        /// <summary>
+        /// Find out whether or not the orbit has a next patch.
+        /// </summary>
+        /// <returns>true if the :NEXTPATCH suffix will return a real suffix.</returns>
+        private bool GetHasNextPatch()
+        {
+            if (orbit.nextPatch == null || (!orbit.nextPatch.activePatch))
+                return false;
+            else
+                return true;
+        }
+        
         public override object GetSuffix(string suffixName)
         {
 
@@ -98,9 +122,12 @@ namespace kOS.Suffixed
                     return GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) );
                 case "VELOCITY":
                     return GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) );
+                case "NEXTPATCH":
+                    return GetNextPatch();
+                case "HASNEXTPATCH":
+                    return GetHasNextPatch();
                 case "PATCHES":
-                    return BuildPatchList();
-                    
+                    throw new KOSPatchesDeprecationException();
                 //TODO: Determine if these vectors are different than POSITION and VELOCITY
                 case "VSTATEVECTOR":
                     return orbit.vel;
@@ -109,28 +136,6 @@ namespace kOS.Suffixed
             }
             return base.GetSuffix(suffixName);
         }
-
-        private object BuildPatchList()
-        {
-            var list = new ListValue();
-            var orb = orbit;
-            while (true)
-            {
-                if (orb == null)
-                {
-                    break;
-                }
-
-                if (orb.nextPatch != null && !orb.nextPatch.activePatch)
-                {
-                    break;
-                }
-
-                list.Add(new OrbitInfo(orb, shared ));
-                orb = orb.nextPatch;
-            }
-            return list;
-        }             
 
         public override string ToString()
         {

@@ -202,7 +202,24 @@ namespace kOS.Suffixed
             Vector3d unityWorldPos = GetPosition() + Utils.Vector3ToVector3d(Shared.Vessel.findWorldCenterOfMass());
             return parent.GetAltitude(unityWorldPos);
         }
-        
+
+        private object BuildPatchList()
+        {
+            var list = new ListValue();
+            var orb = Orbit;
+            while (true)
+            {
+                if (orb == null || (!orb.activePatch))
+                {
+                    break;
+                }
+
+                list.Add(new OrbitInfo(orb, Shared));
+                orb = orb.nextPatch;
+            }
+            return list;
+        }
+
         public object GetOnlyOrbitableSuffixes( string suffixName )
         {
             // This is a separate call so that it is possible to distinguish
@@ -255,6 +272,8 @@ namespace kOS.Suffixed
                     return PositionToAltitude( GetPosition() );
                 case "GEOPOSITION":
                     return new GeoCoordinates(this, Shared);
+                case "PATCHES":
+                    return BuildPatchList();
             }
             return null;
         }
