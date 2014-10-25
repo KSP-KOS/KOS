@@ -1,10 +1,10 @@
-﻿using System;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Suffixed;
+using kOS.Suffixed.Part;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using kOS.Safe.Encapsulation;
-using kOS.Suffixed;
-using kOS.Suffixed.Part;
 
 namespace kOS.Utilities
 {
@@ -65,25 +65,6 @@ namespace kOS.Utilities
             return resourceIsFound;
         }
 
-        public static double GetResource(Vessel vessel, string resourceName)
-        {
-            double total = 0;
-            resourceName = resourceName.ToUpper();
-
-            foreach (var part in vessel.parts)
-            {
-                foreach (PartResource resource in part.Resources)
-                {
-                    if (String.Equals(resource.resourceName, resourceName, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        total += resource.amount;
-                    }
-                }
-            }
-
-            return total;
-        }
-
         public static ListValue PartList(this IShipconstruct vessel, string partType, SharedObjects sharedObj)
         {
             var list = new ListValue();
@@ -94,18 +75,23 @@ namespace kOS.Utilities
                 case "RESOURCES":
                     list = ResourceValue.PartsToList(partList);
                     break;
+
                 case "PARTS":
                     list = PartValue.PartsToList(partList, sharedObj);
                     break;
+
                 case "ENGINES":
                     list = EngineValue.PartsToList(partList, sharedObj);
                     break;
+
                 case "SENSORS":
                     list = SensorValue.PartsToList(partList, sharedObj);
                     break;
+
                 case "ELEMENTS":
                     list = ElementValue.PartsToList(partList);
                     break;
+
                 case "DOCKINGPORTS":
                     list = DockingPortValue.PartsToList(partList, sharedObj);
                     break;
@@ -144,14 +130,9 @@ namespace kOS.Utilities
             return thrust;
         }
 
-        public static Vessel TryGetVesselByName(string name, Vessel origin)
+        private static Vessel TryGetVesselByName(string name, Vessel origin)
         {
             return FlightGlobals.Vessels.FirstOrDefault(v => v != origin && v.vesselName.ToUpper() == name.ToUpper());
-        }
-
-        public static Vessel TryGetVesselByName(string name)
-        {
-            return FlightGlobals.Vessels.FirstOrDefault(v => v.vesselName.ToUpper() == name.ToUpper());
         }
 
         public static CelestialBody GetBodyByName(string name)
@@ -162,17 +143,6 @@ namespace kOS.Utilities
         public static Vessel GetVesselByName(string name, Vessel origin)
         {
             var vessel = TryGetVesselByName(name, origin);
-
-            if (vessel == null)
-            {
-                throw new Exception("Vessel '" + name + "' not found");
-            }
-            return vessel;
-        }
-
-        public static Vessel GetVesselByName(string name)
-        {
-            var vessel = TryGetVesselByName(name);
 
             if (vessel == null)
             {
@@ -195,27 +165,14 @@ namespace kOS.Utilities
 
         public static void SetTarget(ITargetable val)
         {
-           FlightGlobals.fetch.SetVesselTarget(val);
-        } 
-
-        public static double GetDistanceToHome(Vessel vessel)
-        {
-            foreach ( var body in FlightGlobals.fetch.bodies.Where( 
-                body => body.name.ToUpper() == "KERBIN" || 
-                body.name.ToUpper() == "EARTH"))
-            {
-                return Vector3d.Distance(body.position, vessel.findWorldCenterOfMass()) - body.Radius;
-                // Kerbin radius = 600,000
-            }
-
-            throw new Exception("Planet Kerbin or Earth not found!");
+            FlightGlobals.fetch.SetVesselTarget(val);
         }
 
         public static float AngleDelta(float a, float b)
         {
             var delta = b - a;
 
-            return (float) Utils.DegreeFix(delta,-180.0);
+            return (float)Utils.DegreeFix(delta, -180.0);
         }
 
         public static float GetHeading(Vessel vessel)
@@ -223,7 +180,7 @@ namespace kOS.Utilities
             var up = vessel.upAxis;
             var north = GetNorthVector(vessel);
             var headingQ =
-                Quaternion.Inverse(Quaternion.Euler(90, 0, 0)*Quaternion.Inverse(vessel.GetTransform().rotation)*
+                Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vessel.GetTransform().rotation) *
                                    Quaternion.LookRotation(north, up));
 
             return headingQ.eulerAngles.y;
@@ -234,7 +191,7 @@ namespace kOS.Utilities
             var up = vessel.upAxis;
             var north = GetNorthVector(vessel);
             var headingQ =
-                Quaternion.Inverse(Quaternion.Inverse(Quaternion.LookRotation(vessel.srf_velocity, up))*
+                Quaternion.Inverse(Quaternion.Inverse(Quaternion.LookRotation(vessel.srf_velocity, up)) *
                                    Quaternion.LookRotation(north, up));
 
             return headingQ.eulerAngles.y;
@@ -252,7 +209,7 @@ namespace kOS.Utilities
             var vector =
                 Vector3d.Exclude(vessel.upAxis, target.findWorldCenterOfMass() - vessel.findWorldCenterOfMass()).normalized;
             var headingQ =
-                Quaternion.Inverse(Quaternion.Euler(90, 0, 0)*Quaternion.Inverse(Quaternion.LookRotation(vector, up))*
+                Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(Quaternion.LookRotation(vector, up)) *
                                    Quaternion.LookRotation(north, up));
 
             return headingQ.eulerAngles.y;
@@ -293,7 +250,7 @@ namespace kOS.Utilities
 
                 var legs = p.FindModulesImplementing<ModuleLandingLeg>();
 
-                if (legs.Any(l => l.savedLegState != (int) (ModuleLandingLeg.LegStates.DEPLOYED)))
+                if (legs.Any(l => l.savedLegState != (int)(ModuleLandingLeg.LegStates.DEPLOYED)))
                 {
                     return false;
                 }
@@ -332,7 +289,7 @@ namespace kOS.Utilities
                 foreach (var c in p.FindModulesImplementing<ModuleParachute>())
                 {
                     if (c.deploymentState == ModuleParachute.deploymentStates.STOWED)
-                        //&& c.deployAltitude * 3 > vessel.heightFromTerrain)
+                    //&& c.deployAltitude * 3 > vessel.heightFromTerrain)
                     {
                         c.DeployAction(null);
                     }
@@ -366,20 +323,19 @@ namespace kOS.Utilities
             vessel.rootPart.SendEvent(state ? "Extend" : "Retract");
         }
 
-
-        public static double GetMassDrag(Vessel vessel)
+        private static double GetMassDrag(Vessel vessel)
         {
             return vessel.parts.Aggregate<Part, double>(0,
                                                         (current, p) =>
-                                                        current + (p.mass + p.GetResourceMass())*p.maximum_drag);
+                                                        current + (p.mass + p.GetResourceMass()) * p.maximum_drag);
         }
 
-        public static double RealMaxAtmosphereAltitude(CelestialBody body)
+        private static double RealMaxAtmosphereAltitude(CelestialBody body)
         {
             // This comes from MechJeb CelestialBodyExtensions.cs
             if (!body.atmosphere) return 0;
             //Atmosphere actually cuts out when exp(-altitude / scale height) = 1e-6
-            return -body.atmosphereScaleHeight*1000*Math.Log(1e-6);
+            return -body.atmosphereScaleHeight * 1000 * Math.Log(1e-6);
         }
 
         public static double GetTerminalVelocity(Vessel vessel)
@@ -390,13 +346,13 @@ namespace kOS.Utilities
                 FlightGlobals.getAtmDensity(FlightGlobals.getStaticPressure(vessel.findWorldCenterOfMass(),
                                                                             vessel.mainBody));
             return
-                Math.Sqrt(2*FlightGlobals.getGeeForceAtPosition(vessel.findWorldCenterOfMass()).magnitude*
-                          vessel.GetTotalMass()/(GetMassDrag(vessel)*FlightGlobals.DragMultiplier*densityOfAir));
+                Math.Sqrt(2 * FlightGlobals.getGeeForceAtPosition(vessel.findWorldCenterOfMass()).magnitude *
+                          vessel.GetTotalMass() / (GetMassDrag(vessel) * FlightGlobals.DragMultiplier * densityOfAir));
         }
 
         public static float GetVesselLattitude(Vessel vessel)
         {
-            var retVal = (float) vessel.latitude;
+            var retVal = (float)vessel.latitude;
 
             if (retVal > 90) return 90;
             if (retVal < -90) return -90;
@@ -408,12 +364,43 @@ namespace kOS.Utilities
         {
             var retVal = vessel.longitude;
 
-            return (float) Utils.DegreeFix(retVal, -180.0);
+            return (float)Utils.DegreeFix(retVal, -180.0);
         }
 
         public static void UnsetTarget()
         {
-           FlightGlobals.fetch.SetVesselTarget(null);
+            FlightGlobals.fetch.SetVesselTarget(null);
+        }
+
+        public static double GetAvailableThrust(Vessel vessel)
+        {
+            var thrust = 0.0;
+
+            foreach (var p in vessel.parts)
+            {
+                foreach (PartModule pm in p.Modules)
+                {
+                    if (!pm.isEnabled) continue;
+                    if (!(pm is ModuleEngines || pm is ModuleEnginesFX)) continue;
+
+                    var engine = pm as ModuleEngines;
+                    var enginefx = pm as ModuleEnginesFX;
+
+                    if (enginefx != null)
+                    {
+                        if (!enginefx.isOperational) continue;
+                        thrust += enginefx.maxThrust * enginefx.thrustPercentage / 100;
+                    }
+
+                    if (engine != null)
+                    {
+                        if (!engine.isOperational) continue;
+                        thrust += engine.maxThrust * engine.thrustPercentage / 100;
+                    }
+                }
+            }
+
+            return thrust;
         }
     }
 }
