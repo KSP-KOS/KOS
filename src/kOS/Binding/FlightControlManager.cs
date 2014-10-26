@@ -240,9 +240,6 @@ namespace kOS.Binding
                 Action<FlightCtrlState> action;
                 switch (name)
                 {
-                    case "defaultthrottle":
-                        action = UpdateDefaultThrottle;
-                        break;
                     case "throttle":
                         action = UpdateThrottle;
                         break;
@@ -260,16 +257,6 @@ namespace kOS.Binding
                         break;
                 }
                 return action;
-            }
-
-            private void UpdateDefaultThrottle(FlightCtrlState obj)
-            {
-                double doubleValue;
-                var isDouble = double.TryParse(value.ToString(), out doubleValue);
-                if (isDouble)
-                {
-                    control.Vessel.ctrlState.mainThrottle = (float)Utils.Clamp(doubleValue, 0, 1);
-                }
             }
 
             private void UpdateThrottle(FlightCtrlState c)

@@ -133,6 +133,10 @@ namespace kOS.Suffixed
                     break;
                 case "DEFAULTMAINTHROTTLE":
                     Vessel.ctrlState.mainThrottle = Utils.Clamp(floatValue, 0, 1);
+                    if (Vessel == FlightGlobals.ActiveVessel)
+                    {
+                        FlightInputHandler.state.mainThrottle = 0; 
+                    }
                     break;
                 case "WHEELTHROTTLE":
                     wheelThrottle = Utils.Clamp(floatValue, 0, 1);
