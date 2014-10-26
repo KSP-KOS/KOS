@@ -75,9 +75,7 @@ namespace kOS.Module
                 if (Path.GetExtension(fileName) == "txt")
                 {
                     var bareFilename = Path.GetFileNameWithoutExtension(fileName);
-                    //TODO: Chris we need to switch to *.ks before 0.15
-                    //const string NEW_EXTENSION = "ks";
-                    const string NEW_EXTENSION = "txt";
+                    const string NEW_EXTENSION = Archive.KERBOSCRIPT_EXTENSION;
                     newFileName = string.Format("{0}/{1}.{2}", legacyArchiveFolder, bareFilename, NEW_EXTENSION);
                 }
                 else

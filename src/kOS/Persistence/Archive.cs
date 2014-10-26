@@ -35,25 +35,26 @@ namespace kOS.Persistence
         {
             try
             {
+                byte[] fileBody;
                 using (var infile = new BinaryReader(File.Open(ArchiveFolder + name + ".txt", FileMode.Open)))
                 {
-                    byte[] fileBody = ProcessBinaryReader(infile);
-
-                    var retFile = new ProgramFile(name);
-                    FileCategory whatKind = ProgramFile.IdentifyCategory(fileBody);
-                    if (whatKind == FileCategory.KEXE)
-                        retFile.BinaryContent = fileBody;
-                    else
-                        retFile.StringContent = System.Text.Encoding.UTF8.GetString(fileBody);
-                    
-                    if (retFile.Category == FileCategory.ASCII || retFile.Category == FileCategory.KERBOSCRIPT)
-                        retFile.StringContent = retFile.StringContent.Replace("\r\n", "\n");
-
-                    base.DeleteByName(name);
-                    base.Add(retFile);
-
-                    return retFile;
+                    fileBody = ProcessBinaryReader(infile);
                 }
+
+                var retFile = new ProgramFile(name);
+                FileCategory whatKind = ProgramFile.IdentifyCategory(fileBody);
+                if (whatKind == FileCategory.KEXE)
+                    retFile.BinaryContent = fileBody;
+                else
+                    retFile.StringContent = System.Text.Encoding.UTF8.GetString(fileBody);
+                
+                if (retFile.Category == FileCategory.ASCII || retFile.Category == FileCategory.KERBOSCRIPT)
+                    retFile.StringContent = retFile.StringContent.Replace("\r\n", "\n");
+
+                base.DeleteByName(name);
+                base.Add(retFile);
+
+                return retFile;
             }
             catch (Exception e)
             {
