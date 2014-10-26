@@ -402,5 +402,11 @@ namespace kOS.Utilities
 
             return thrust;
         }
+        public static Direction GetFacing(Vessel vessel)
+        {
+            var vesselRotation = vessel.ReferenceTransform.rotation;
+            Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
+            return new Direction(vesselFacing);
+        }
     }
 }

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace kOS.Suffixed
 {
-    public class VesselTarget : Orbitable
+    public class VesselTarget : Orbitable, IKOSTargetable
     {
         override public Orbit Orbit { get{return Vessel.orbit;} }
 
@@ -208,13 +208,6 @@ namespace kOS.Suffixed
             return "SHIP(\"" + Vessel.vesselName + "\")";
         }
 
-        private Direction GetFacing()
-        {
-            var vesselRotation = Vessel.ReferenceTransform.rotation;
-            Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
-            return new Direction(vesselFacing);
-        }
-
         private ListValue GetPartsNamed(string partName)
         {
             string lowerName = partName.ToLower();
@@ -365,7 +358,7 @@ namespace kOS.Suffixed
                 case "MAXTHRUST":
                     return VesselUtils.GetMaxThrust(Vessel);
                 case "FACING":
-                    return GetFacing();
+                    return VesselUtils.GetFacing(Vessel);
                 case "ANGULARMOMENTUM":
                     return new Direction(Vessel.angularMomentum, true);
                 case "ANGULARVEL":

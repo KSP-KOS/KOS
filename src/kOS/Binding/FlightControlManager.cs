@@ -101,7 +101,7 @@ namespace kOS.Binding
             return flightControl;
         }
 
-        public static void UnbindUnloaded()
+        private static void UnbindUnloaded()
         {
             var toRemove = new List<uint>();
             foreach (var key in flightControls.Keys)
