@@ -8,6 +8,9 @@ namespace kOS.Persistence
 {
     public class Archive : Volume
     {
+        public const string KERBOSCRIPT_EXTENSION = "ks";
+        public const string KOS_MACHINELANGUAGE_EXTENSION = "ksm";
+
         public static string ArchiveFolder
         {
             get
