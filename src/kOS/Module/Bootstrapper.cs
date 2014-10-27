@@ -9,6 +9,7 @@ namespace kOS.Module
     public class Bootstrapper : MonoBehaviour
     {
         private readonly string legacyArchiveFolder = GameDatabase.Instance.PluginDataFolder + "/Plugins/PluginData/Archive/";
+        private const string LEGACY_KOS_EXTENSION = ".txt";
         private readonly string backupFolder = GameDatabase.Instance.PluginDataFolder + "/GameData/kOS/Backup_" + DateTime.Now.ToFileTimeUtc();
 
         private bool backup = true;
@@ -60,7 +61,7 @@ namespace kOS.Module
                 BackupScripts();
             }
 
-            Safe.Utilities.Debug.Logger.Log("kOS: ScriptMigrate START");
+            Safe.Utilities.Debug.Logger.Log("ScriptMigrate START");
             Directory.CreateDirectory(Archive.ArchiveFolder);
 
             var files = Directory.GetFiles(legacyArchiveFolder);
@@ -72,22 +73,24 @@ namespace kOS.Module
                 var fileInfo = new FileInfo(fileName);
 
                 string newFileName;
-                if (Path.GetExtension(fileName) == "txt")
+                var extension = Path.GetExtension(fileName);
+
+                if (extension == LEGACY_KOS_EXTENSION)
                 {
                     var bareFilename = Path.GetFileNameWithoutExtension(fileName);
                     const string NEW_EXTENSION = Archive.KERBOSCRIPT_EXTENSION;
-                    newFileName = string.Format("{0}/{1}.{2}", legacyArchiveFolder, bareFilename, NEW_EXTENSION);
+                    newFileName = string.Format("{0}/{1}.{2}", Archive.ArchiveFolder, bareFilename, NEW_EXTENSION);
                 }
                 else
                 {
-                    newFileName = Archive.ArchiveFolder + "/" + Path.GetFileName(fileName);
+                    newFileName = Archive.ArchiveFolder + Path.DirectorySeparatorChar + Path.GetFileName(fileName);
                 }
 
-                Safe.Utilities.Debug.Logger.Log("kOS: ScriptMigrate moving: " + fileName + " to: " + newFileName);
+                Safe.Utilities.Debug.Logger.Log("ScriptMigrate moving: " + fileName + " to: " + newFileName);
                 File.Move(fileInfo.FullName, newFileName);
             }
 
-            Safe.Utilities.Debug.Logger.Log("kOS: ScriptMigrate END");
+            Safe.Utilities.Debug.Logger.Log("ScriptMigrate END");
         }
 
         private void BackupScripts()
@@ -104,7 +107,7 @@ namespace kOS.Module
             {
                 var fileInfo = new FileInfo(fileName);
                 var newFileName = backupFolder + Path.DirectorySeparatorChar + fileInfo.Name;
-                Safe.Utilities.Debug.Logger.Log("kOS: copying: " + fileName + " to: " + newFileName);
+                Safe.Utilities.Debug.Logger.Log("copying: " + fileName + " to: " + newFileName);
                 File.Copy(fileName, newFileName);
             }
         }
