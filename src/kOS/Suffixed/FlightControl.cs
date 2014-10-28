@@ -9,15 +9,21 @@ namespace kOS.Suffixed
 {
     public class FlightControl : Structure , IDisposable
     {
+        private const float SETTING_EPILSON = 0.01f;
         // For rotation x = yaw, y = pitch, and z = roll
         private float yaw;
+        private float yawTrim;
         private float pitch;
+        private float pitchTrim;
         private float roll;
+        private float rollTrim;
         private float fore;
         private float starboard;
         private float top;
         private float wheelSteer;
+        private float wheelSteerTrim;
         private float wheelThrottle;
+        private float wheelThrottleTrim;
         private float mainThrottle;
         private readonly Flushable<bool> neutral;
         private readonly Flushable<bool> killRotation;
@@ -32,7 +38,15 @@ namespace kOS.Suffixed
             bound = false;
             Vessel = vessel;
 
-            floatSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
+            floatSuffixes = new List<string>
+            {
+                "YAW", "PITCH", "ROLL", 
+                "YAWTRIM", "PITCHTRIM", "ROLLTRIM", 
+                "STARBOARD", "TOP", "FORE", 
+                "MAINTHROTTLE", "DEFAULTMAINTHROTTLE",
+                "WHEELTHROTTLE", "WHEELSTEER",
+                "WHEELTHROTTLETRIM", "WHEELSTEERTRIM"
+            };
             vectorSuffixes = new List<string> { "ROTATION", "TRANSLATION" };
         }
 
@@ -44,10 +58,16 @@ namespace kOS.Suffixed
             {
                 case "YAW":
                     return yaw;
+                case "YAWTRIM":
+                    return yawTrim;
                 case "PITCH":
                     return pitch;
+                case "PITCHTRIM":
+                    return pitchTrim;
                 case "ROLL":
                     return roll;
+                case "ROLLTRIM":
+                    return rollTrim;
                 case "FORE":
                     return fore;
                 case "STARBOARD":
@@ -66,8 +86,12 @@ namespace kOS.Suffixed
                     return mainThrottle;
                 case "WHEELTHROTTLE":
                     return wheelThrottle;
+                case "WHEELTHROTTLETRIM":
+                    return wheelThrottleTrim;
                 case "WHEELSTEER":
                     return wheelSteer;
+                case "WHEELSTEERTRIM":
+                    return wheelSteerTrim;
                 case "BOUND":
                     return bound;
                 default:
@@ -113,6 +137,15 @@ namespace kOS.Suffixed
                 case "ROLL":
                     roll = Utils.Clamp(floatValue, -1, 1);
                     break;
+                case "YAWTRIM":
+                    yawTrim = Utils.Clamp(floatValue, -1, 1);
+                    break;
+                case "PITCHTRIM":
+                    pitchTrim = Utils.Clamp(floatValue, -1, 1);
+                    break;
+                case "ROLLTRIM":
+                    rollTrim = Utils.Clamp(floatValue, -1, 1);
+                    break;
                 case "STARBOARD":
                     starboard = Utils.Clamp(floatValue, -1, 1);
                     break;
@@ -143,6 +176,12 @@ namespace kOS.Suffixed
                     break;
                 case "WHEELSTEER":
                     wheelSteer = Utils.Clamp(floatValue, -1, 1);
+                    break;
+                case "WHEELTHROTTLETRIM":
+                    wheelThrottleTrim = Utils.Clamp(floatValue, 0, 1);
+                    break;
+                case "WHEELSTEERTRIM":
+                    wheelSteerTrim = Utils.Clamp(floatValue, -1, 1);
                     break;
                 default:
                     return false;
@@ -300,18 +339,25 @@ namespace kOS.Suffixed
 
         private void PushNewSetting(ref FlightCtrlState st)
         {
-            if(yaw != 0) st.yaw = yaw;
-            if(pitch != 0) st.pitch = pitch;
-            if(roll != 0) st.roll = roll;
+            if(Math.Abs(yaw) > SETTING_EPILSON) st.yaw = yaw;
+            if(Math.Abs(pitch) > SETTING_EPILSON) st.pitch = pitch;
+            if(Math.Abs(roll) > SETTING_EPILSON) st.roll = roll;
+
+            if(Math.Abs(yawTrim) > SETTING_EPILSON) st.yawTrim = yawTrim;
+            if(Math.Abs(pitchTrim) > SETTING_EPILSON) st.pitchTrim = pitchTrim;
+            if(Math.Abs(rollTrim) > SETTING_EPILSON) st.rollTrim = rollTrim;
 
             // starboard and fore are reversed in KSP so we invert them here
-            if(starboard != 0) st.X = starboard * -1;
-            if(top != 0) st.Y = top;
-            if(fore != 0) st.Z = fore * -1;
+            if(Math.Abs(starboard) > SETTING_EPILSON) st.X = starboard * -1;
+            if(Math.Abs(top) > SETTING_EPILSON) st.Y = top;
+            if(Math.Abs(fore) > SETTING_EPILSON) st.Z = fore * -1;
 
-            if(wheelSteer != 0) st.wheelSteer = wheelSteer;
-            if(wheelThrottle != 0) st.wheelThrottle = wheelThrottle;
-            if(mainThrottle != 0) st.mainThrottle = mainThrottle;
+            if(Math.Abs(wheelSteer) > SETTING_EPILSON) st.wheelSteer = wheelSteer;
+            if(Math.Abs(wheelThrottle) > SETTING_EPILSON) st.wheelThrottle = wheelThrottle;
+            if(Math.Abs(mainThrottle) > SETTING_EPILSON) st.mainThrottle = mainThrottle;
+
+            if(Math.Abs(wheelSteerTrim) > SETTING_EPILSON) st.wheelSteerTrim = wheelSteerTrim;
+            if(Math.Abs(wheelThrottleTrim) > SETTING_EPILSON) st.wheelThrottleTrim = wheelThrottleTrim;
 
         }
 
