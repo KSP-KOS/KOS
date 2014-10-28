@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace kOS.Suffixed
 {
-    public class VesselTarget : Orbitable
+    public class VesselTarget : Orbitable, IKOSTargetable
     {
         override public Orbit Orbit { get{return Vessel.orbit;} }
 
@@ -169,7 +169,7 @@ namespace kOS.Suffixed
             
             ShortCuttableShipSuffixes = new[]
                 {
-                    "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
+                    "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
                     "LONGITUDE",
                     "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED",
                     "AIRSPEED", "VESSELNAME", "SHIPNAME",
@@ -185,21 +185,11 @@ namespace kOS.Suffixed
 
         public VesselTarget(SharedObjects shared) : this(shared.Vessel, shared) { }
 
-        public Vessel CurrentVessel { get { return Shared.Vessel; } }
+        private Vessel CurrentVessel { get { return Shared.Vessel; } }
 
         public ITargetable Target
         {
             get { return Vessel; }
-        }
-
-        public Vessel Vessel { get; private set; }
-
-        public static string[] ShortCuttableShipSuffixes { get; private set; }
-
-
-        public bool IsInRange(double range)
-        {
-            return GetDistance() <= range;
         }
 
         // TODO: We will need to replace with the same thing Orbitable:DISTANCE does
@@ -209,16 +199,13 @@ namespace kOS.Suffixed
             return Vector3d.Distance(CurrentVessel.findWorldCenterOfMass(), Vessel.findWorldCenterOfMass());
         }
 
+        public Vessel Vessel { get; private set; }
+
+        public static string[] ShortCuttableShipSuffixes { get; private set; }
+
         public override string ToString()
         {
             return "SHIP(\"" + Vessel.vesselName + "\")";
-        }
-
-        public Direction GetFacing()
-        {
-            var vesselRotation = Vessel.ReferenceTransform.rotation;
-            Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
-            return new Direction(vesselFacing);
         }
 
         private ListValue GetPartsNamed(string partName)
@@ -227,7 +214,7 @@ namespace kOS.Suffixed
 
             List<global::Part> kspParts = Vessel.parts.FindAll(part => part.name.ToLower() == lowerName);
 
-            ListValue kScriptParts = new ListValue();
+            var kScriptParts = new ListValue();
             foreach (global::Part kspPart in kspParts)
                 kScriptParts.Add( new PartValue(kspPart,Shared));
             return kScriptParts;
@@ -237,7 +224,7 @@ namespace kOS.Suffixed
         {
             string lowerName = modName.ToLower();
             
-            ListValue kScriptParts = new ListValue();
+            var kScriptParts = new ListValue();
             // This is slow - maybe there should be a faster lookup string hash, but
             // KSP's data model seems to have not implemented it:
             foreach (global::Part p in Vessel.parts)
@@ -253,7 +240,7 @@ namespace kOS.Suffixed
         
         private ListValue GetPartsInGroup(string groupName)
         {
-            KSPActionGroup matchGroup = KSPActionGroup.None;
+            var matchGroup = KSPActionGroup.None;
             string upperName = groupName.ToUpper();
             
             // TODO: later refactor:  put this in a Dictionary lookup instead, and then share it
@@ -275,7 +262,7 @@ namespace kOS.Suffixed
             if (upperName == "AG9")    { matchGroup = KSPActionGroup.Custom09; }
             if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
             
-            ListValue kScriptParts = new ListValue();
+            var kScriptParts = new ListValue();
                         
             if (matchGroup != KSPActionGroup.None)
                 foreach (global::Part p in Vessel.parts)
@@ -295,7 +282,7 @@ namespace kOS.Suffixed
         
         private ListValue GetModulesInGroup(string groupName)
         {
-            KSPActionGroup matchGroup = KSPActionGroup.None;
+            var matchGroup = KSPActionGroup.None;
             string upperName = groupName.ToUpper();
             
             // TODO: later refactor:  put this in a Dictionary lookup instead, and then share it
@@ -317,7 +304,7 @@ namespace kOS.Suffixed
             if (upperName == "AG9")    { matchGroup = KSPActionGroup.Custom09; }
             if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
             
-            ListValue kScriptParts = new ListValue();
+            var kScriptParts = new ListValue();
             
             // This is almost identical to the logic in GetPartsInGroup and it might be a nice idea
             // later to merge them somehow:
@@ -348,10 +335,10 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue,string>((name) => GetPartsNamed(name)));
-            AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue,string>((name) => GetModulesNamed(name)));
-            AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>((name) => GetPartsInGroup(name)));
-            AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>((name) => GetModulesInGroup(name)));
+            AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue,string>(GetPartsNamed));
+            AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue,string>(GetModulesNamed));
+            AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>(GetPartsInGroup));
+            AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>(GetModulesInGroup));
         }
 
         public override object GetSuffix(string suffixName)
@@ -366,10 +353,12 @@ namespace kOS.Suffixed
                     return VesselUtils.GetTargetBearing(CurrentVessel, Vessel);
                 case "HEADING":
                     return VesselUtils.GetTargetHeading(CurrentVessel, Vessel);
+                case "AVAILABLETHRUST":
+                    return VesselUtils.GetAvailableThrust(Vessel);
                 case "MAXTHRUST":
                     return VesselUtils.GetMaxThrust(Vessel);
                 case "FACING":
-                    return GetFacing();
+                    return VesselUtils.GetFacing(Vessel);
                 case "ANGULARMOMENTUM":
                     return new Direction(Vessel.angularMomentum, true);
                 case "ANGULARVEL":
@@ -407,7 +396,7 @@ namespace kOS.Suffixed
                 case "LOADED":
                     return Vessel.loaded;
                 case "ROOTPART":
-                    return new Part.PartValue(Vessel.rootPart,Shared);
+                    return new PartValue(Vessel.rootPart,Shared);
             }
 
             // Is this a resource?
