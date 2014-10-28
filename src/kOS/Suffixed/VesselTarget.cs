@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using kOS.Binding;
+﻿using kOS.Binding;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -214,7 +213,7 @@ namespace kOS.Suffixed
 
             List<global::Part> kspParts = Vessel.parts.FindAll(part => part.name.ToLower() == lowerName);
 
-            var kScriptParts = new ListValue();
+            ListValue kScriptParts = new ListValue();
             foreach (global::Part kspPart in kspParts)
                 kScriptParts.Add( new PartValue(kspPart,Shared));
             return kScriptParts;
@@ -224,7 +223,7 @@ namespace kOS.Suffixed
         {
             string lowerName = modName.ToLower();
             
-            var kScriptParts = new ListValue();
+            ListValue kScriptParts = new ListValue();
             // This is slow - maybe there should be a faster lookup string hash, but
             // KSP's data model seems to have not implemented it:
             foreach (global::Part p in Vessel.parts)
@@ -262,7 +261,7 @@ namespace kOS.Suffixed
             if (upperName == "AG9")    { matchGroup = KSPActionGroup.Custom09; }
             if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
             
-            var kScriptParts = new ListValue();
+            ListValue kScriptParts = new ListValue();
                         
             if (matchGroup != KSPActionGroup.None)
                 foreach (global::Part p in Vessel.parts)
@@ -304,7 +303,7 @@ namespace kOS.Suffixed
             if (upperName == "AG9")    { matchGroup = KSPActionGroup.Custom09; }
             if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
             
-            var kScriptParts = new ListValue();
+            ListValue kScriptParts = new ListValue();
             
             // This is almost identical to the logic in GetPartsInGroup and it might be a nice idea
             // later to merge them somehow:
