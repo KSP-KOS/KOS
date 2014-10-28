@@ -243,19 +243,15 @@ namespace kOS.Binding
                     case "throttle":
                         action = UpdateThrottle;
                         break;
-
                     case "wheelthrottle":
                         action = UpdateWheelThrottle;
                         break;
-
                     case "steering":
                         action = SteerByWire;
                         break;
-
                     case "wheelsteering":
                         action = WheelSteer;
                         break;
-
                     default:
                         action = null;
                         break;
