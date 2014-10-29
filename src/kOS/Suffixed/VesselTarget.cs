@@ -206,6 +206,11 @@ namespace kOS.Suffixed
         {
             return "SHIP(\"" + Vessel.vesselName + "\")";
         }
+        
+        public ListValue GetAllParts()
+        {
+            return PartValue.PartsToList(Vessel.Parts, Shared);
+        }
 
         private ListValue GetPartsNamed(string partName)
         {
@@ -338,7 +343,8 @@ namespace kOS.Suffixed
             AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue,string>(GetModulesNamed));
             AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>(GetPartsInGroup));
             AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>(GetModulesInGroup));
-        }
+            AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
+       }
 
         public override object GetSuffix(string suffixName)
         {
