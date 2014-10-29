@@ -979,7 +979,6 @@ namespace kOS.Safe.Compilation.KS
 
                     bool isFunc = IsActualFunctionCall(subTerm);
                     bool isArray = IsActualArrayIndexing(subTerm);
-                    Console.WriteLine("term at index " +nodeIndex+" ("+subTerm.Text+") : isFunc="+isFunc+", isArray="+isArray);
                     if (isFunc || isArray)
                     {
                         // Don't parse it as a function/array call yet.  Just visit its leftmost
@@ -990,7 +989,6 @@ namespace kOS.Safe.Compilation.KS
 
                         bool rememberIsV = _identifierIsVariable;
                         _identifierIsVariable = false;
-                        Console.WriteLine("term text = " +identNode.Token.Text);
 
                         VisitNode(identNode);
 
@@ -998,7 +996,6 @@ namespace kOS.Safe.Compilation.KS
                     }
                     else
                     {
-                        Console.WriteLine("term text = " +subTerm.Token.Text);
                         VisitNode(subTermAfterColon);
                     }
 
@@ -1129,6 +1126,8 @@ namespace kOS.Safe.Compilation.KS
             {
                 if (child.Nodes.Count>1)
                     child = child.Nodes[1];
+                else if (child.Nodes.Count == 1)
+                    child = child.Nodes[0];
                 else
                     child = null;
             }
@@ -1157,6 +1156,8 @@ namespace kOS.Safe.Compilation.KS
             {
                 if (child.Nodes.Count>1)
                     child = child.Nodes[1];
+                else if (child.Nodes.Count == 1)
+                    child = child.Nodes[0];
                 else
                     child = null;
             }
