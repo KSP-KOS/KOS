@@ -16,18 +16,18 @@ namespace kOS.Safe.Exceptions
 
         public override string HelpURL { get{ return "";} }
 
-        private string operation;
-        private string suffixName;
-        private object obj;
+        private readonly string operation;
+        private readonly string suffixName;
+        private readonly object obj;
         
         /// <summary>
         /// Make an exception describing improper suffix usage.
         /// </summary>
         /// <param name="operation">"get" or "set"</param>
-        /// <param name="sufixName">name of suffix the operation was attempted on</param>
+        /// <param name="suffixName">name of suffix the operation was attempted on</param>
         /// <param name="obj">ref to the object on the left of the suffix colon.</param>
         public KOSSuffixUseException(string operation, string suffixName, object obj) :
-            base(String.Format(TERSE_MSG_FMT, operation.ToUpper(), suffixName.ToUpper(), obj.ToString()))
+            base(String.Format(TERSE_MSG_FMT, operation.ToUpper(), suffixName.ToUpper(), obj))
         {
             this.operation = operation;
             this.suffixName = suffixName;

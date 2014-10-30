@@ -60,6 +60,8 @@ namespace kOS.Suffixed
                     return new Vector(starboard , top , fore );
                 case "NEUTRAL":
                     return neutral;
+                case "DEFAULTMAINTHROTTLE":
+                    return Vessel.ctrlState.mainThrottle;
                 case "MAINTHROTTLE":
                     return mainThrottle;
                 case "WHEELTHROTTLE":
@@ -128,6 +130,13 @@ namespace kOS.Suffixed
                     break;
                 case "MAINTHROTTLE":
                     mainThrottle = Utils.Clamp(floatValue, 0, 1);
+                    break;
+                case "DEFAULTMAINTHROTTLE":
+                    Vessel.ctrlState.mainThrottle = Utils.Clamp(floatValue, 0, 1);
+                    if (Vessel == FlightGlobals.ActiveVessel)
+                    {
+                        FlightInputHandler.state.mainThrottle = 0; 
+                    }
                     break;
                 case "WHEELTHROTTLE":
                     wheelThrottle = Utils.Clamp(floatValue, 0, 1);

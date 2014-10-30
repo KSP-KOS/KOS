@@ -101,7 +101,7 @@ namespace kOS.Binding
             return flightControl;
         }
 
-        public static void UnbindUnloaded()
+        private static void UnbindUnloaded()
         {
             var toRemove = new List<uint>();
             foreach (var key in flightControls.Keys)
@@ -243,19 +243,15 @@ namespace kOS.Binding
                     case "throttle":
                         action = UpdateThrottle;
                         break;
-
                     case "wheelthrottle":
                         action = UpdateWheelThrottle;
                         break;
-
                     case "steering":
                         action = SteerByWire;
                         break;
-
                     case "wheelsteering":
                         action = WheelSteer;
                         break;
-
                     default:
                         action = null;
                         break;

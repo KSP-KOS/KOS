@@ -25,7 +25,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix(new[]{suffixName}, suffixToAdd);
         }
 
-        protected void AddSuffix(string[] suffixNames, ISuffix suffixToAdd)
+        protected void AddSuffix(IEnumerable<string> suffixNames, ISuffix suffixToAdd)
         {
             foreach (var suffixName in suffixNames)
             {
@@ -45,7 +45,7 @@ namespace kOS.Safe.Encapsulation
             AddGlobalSuffix<T>(new[]{suffixName}, suffixToAdd);
         }
 
-        protected static void AddGlobalSuffix<T>(string[] suffixNames, ISuffix suffixToAdd)
+        protected static void AddGlobalSuffix<T>(IEnumerable<string> suffixNames, ISuffix suffixToAdd)
         {
             var type = typeof (T);
             var typeSuffixes = GetStaticSuffixesForType(type);
@@ -99,6 +99,7 @@ namespace kOS.Safe.Encapsulation
                     settable.Set(value);
                     return true;
                 }
+                throw new KOSSuffixUseException("set", suffixName, this);
             }
             return false;
         }
