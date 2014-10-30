@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using kOS.Safe.Exceptions;
 using UnityEngine;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
@@ -8,6 +10,8 @@ namespace kOS.Persistence
 {
     public class Archive : Volume
     {
+        public const string KERBOSCRIPT_EXTENSION = "ks";
+        public const string KOS_MACHINELANGUAGE_EXTENSION = "ksm";
         public static string ArchiveFolder
         {
             get
@@ -32,7 +36,14 @@ namespace kOS.Persistence
         {
             try
             {
-                using (var infile = new BinaryReader(File.Open(ArchiveFolder + name + ".txt", FileMode.Open)))
+                Safe.Utilities.Debug.Logger.Log("Archive: Getting File By Name: " + name);
+                var fileInfo = FileSearch(name);
+                if (fileInfo == null)
+                {
+                    return null;
+                }
+
+                using (var infile = new BinaryReader(File.Open(fileInfo.FullName, FileMode.Open)))
                 {
                     byte[] fileBody = ProcessBinaryReader(infile);
 
@@ -42,7 +53,7 @@ namespace kOS.Persistence
                         retFile.BinaryContent = fileBody;
                     else
                         retFile.StringContent = System.Text.Encoding.UTF8.GetString(fileBody);
-                    
+
                     if (retFile.Category == FileCategory.ASCII || retFile.Category == FileCategory.KERBOSCRIPT)
                         retFile.StringContent = retFile.StringContent.Replace("\r\n", "\n");
 
@@ -80,14 +91,14 @@ namespace kOS.Persistence
 
             try
             {
-                using (var outfile = new BinaryWriter(File.Open(ArchiveFolder + file.Filename + ".txt",FileMode.Create)))
+                Safe.Utilities.Debug.Logger.Log("Archive: Saving File Name: " + file.Filename);
+                byte[] fileBody;
+                string fileExtension;
+                switch (file.Category)
                 {
-                    
-                    byte[] fileBody;
-                    if (file.Category == FileCategory.KEXE)
-                        fileBody = file.BinaryContent;
-                    else
-                    {
+                    case FileCategory.UNKNOWN:
+                    case FileCategory.ASCII:
+                    case FileCategory.KERBOSCRIPT:
                         string tempString = file.StringContent;
                         if (Application.platform == RuntimePlatform.WindowsPlayer)
                         {
@@ -95,8 +106,18 @@ namespace kOS.Persistence
                             tempString = tempString.Replace("\n", "\r\n");
                         }
                         fileBody = System.Text.Encoding.UTF8.GetBytes(tempString.ToCharArray());
-                    }
-
+                        fileExtension = KERBOSCRIPT_EXTENSION;
+                        break;
+                    case FileCategory.KEXE:
+                        fileBody = file.BinaryContent;
+                        fileExtension = KOS_MACHINELANGUAGE_EXTENSION;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                var fileName = string.Format("{0}{1}.{2}", ArchiveFolder, file.Filename, fileExtension);
+                using (var outfile = new BinaryWriter(File.Open(fileName, FileMode.Create)))
+                {
                     outfile.Write(fileBody);
                 }
             }
@@ -113,8 +134,15 @@ namespace kOS.Persistence
         {
             try
             {
-                base.DeleteByName(name);
-                File.Delete(string.Format("{0}{1}.txt", ArchiveFolder, name));
+                Safe.Utilities.Debug.Logger.Log("Archive: Deleting File Name: " + name);
+                var fullPath = FileSearch(name);
+                if (fullPath == null)
+                {
+                    return false;
+                }
+
+                base.DeleteByName(fullPath.FullName);
+                File.Delete(fullPath.FullName);
                 return true;
             }
             catch (Exception)
@@ -123,15 +151,54 @@ namespace kOS.Persistence
             }
         }
 
+        private System.IO.FileInfo FileSearch(string name)
+        {
+            var path = ArchiveFolder + name;
+            if (Path.HasExtension(path))
+            {
+                return File.Exists(path) ? new System.IO.FileInfo(path) : null;
+            }
+            var kerboscriptFile = new System.IO.FileInfo(string.Format("{0}.{1}", path, KERBOSCRIPT_EXTENSION));
+            var kosMlFile = new System.IO.FileInfo(string.Format("{0}.{1}", path, KOS_MACHINELANGUAGE_EXTENSION));
+
+            if (kerboscriptFile.Exists && kosMlFile.Exists)
+            {
+                return kerboscriptFile.LastWriteTime > kosMlFile.LastWriteTime
+                    ? kerboscriptFile : kosMlFile;
+            }
+            if (kerboscriptFile.Exists)
+            {
+                return kerboscriptFile;
+            }
+            if (kosMlFile.Exists)
+            {
+                return kosMlFile;
+            }
+            return null;
+        }
+
         public override bool RenameFile(string name, string newName)
         {
             try
             {
+                Safe.Utilities.Debug.Logger.Log(string.Format("Archive: Renaming: {0} To: {1}", name, newName));
+                var fullSourcePath = FileSearch(name);
+                if (fullSourcePath == null)
+                {
+                    return false;
+                }
 
-                var sourcePath = string.Format("{0}{1}.txt", ArchiveFolder, name);
-                var destinationPath = string.Format("{0}{1}.txt", ArchiveFolder, newName);
+                string destinationPath;
+                if (Path.HasExtension(newName))
+                {
+                    destinationPath = string.Format(ArchiveFolder + newName);
+                }
+                else
+                {
+                    destinationPath = string.Format(ArchiveFolder + newName + fullSourcePath.Extension);
+                }
 
-                File.Move(sourcePath,destinationPath);
+                File.Move(fullSourcePath.FullName, destinationPath);
                 return true;
             }
             catch (Exception)
@@ -146,10 +213,11 @@ namespace kOS.Persistence
 
             try
             {
-                foreach (var file in Directory.GetFiles(ArchiveFolder, "*.txt"))
+                Safe.Utilities.Debug.Logger.Log(string.Format("Archive: Listing Files"));
+                foreach (var file in Directory.GetFiles(ArchiveFolder).Where(f=>f.EndsWith('.' +KERBOSCRIPT_EXTENSION) || f.EndsWith('.' + KOS_MACHINELANGUAGE_EXTENSION)))
                 {
                     var sysFileInfo = new System.IO.FileInfo(file);
-                    var fileInfo = new FileInfo(sysFileInfo.Name.Substring(0, sysFileInfo.Name.Length - 4), (int)sysFileInfo.Length);
+                    var fileInfo = new FileInfo(sysFileInfo);
 
                     retList.Add(fileInfo);
                 }
@@ -167,6 +235,14 @@ namespace kOS.Persistence
             const float POWER_REQUIRED = BASE_POWER * MULTIPLIER;
 
             return POWER_REQUIRED;
+        }
+    }
+
+    public class KOSFileException : KOSException
+    {
+        public KOSFileException(string message)
+            : base(message)
+        {
         }
     }
 }

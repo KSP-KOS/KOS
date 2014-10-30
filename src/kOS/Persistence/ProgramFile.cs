@@ -50,7 +50,7 @@ namespace kOS.Persistence
             get 
             {
                 if (Category != FileCategory.ASCII && Category != FileCategory.KERBOSCRIPT)
-                    throw new Exception("File is not ASCII.  Should use BinaryContent instead.");
+                    throw new KOSFileException("File " + Filename + " is not ASCII.  Should use BinaryContent instead.");
                 return stringContent; 
             }
             set
@@ -66,7 +66,7 @@ namespace kOS.Persistence
             get
             {
                 if (Category == FileCategory.ASCII || Category == FileCategory.KERBOSCRIPT)
-                    throw new Exception("File is not Binary. Should use StringContent instead.");
+                    throw new KOSFileException("File " + Filename + " is not Binary. Should use StringContent instead.");
                 return binaryContent;
             }
             set 
