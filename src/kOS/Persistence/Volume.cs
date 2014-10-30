@@ -32,10 +32,10 @@ namespace kOS.Persistence
         }
 
 
-        protected Dictionary<string, ProgramFile> Files;
+        protected Dictionary<string, ProgramFile> Files { get; private set; }
         public string Name { get; set; }
-        public int Capacity { get; set; }
-        public bool Renameable { get; set; }
+        public int Capacity { get; protected set; }
+        public bool Renameable { get; protected set; }
 
 
         public virtual ProgramFile GetByName(string name)

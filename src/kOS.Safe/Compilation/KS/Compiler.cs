@@ -8,40 +8,38 @@ namespace kOS.Safe.Compilation.KS
 {
     class Compiler
     {
-        private CodePart _part;
-        private Context _context;
-        private List<Opcode> _currentCodeSection = null;
-        private bool _addBranchDestination = false;
-        private ParseNode _lastNode = null;
-        private int _startLineNum = 1;
-        private short _lastLine = 0;
-        private short _lastColumn = 0;
-        private List<List<Opcode>> _breakList = new List<List<Opcode>>();
-        private List<string> _triggerRemoveNames = new List<string>();
-        private bool _nowCompilingTrigger = false;
-        private bool _compilingSetDestination = false;
-        private bool _identifierIsVariable = false;
-        private bool _identifierIsSuffix = false;
-        private bool _nowInALoop = false;
-        private List<ParseNode> _programParameters = new List<ParseNode>();
-        private CompilerOptions _options;
-        private bool _traceParse = false; // set to true to Debug Log each ParseNode as it's visited.
+        private CodePart part;
+        private Context context;
+        private List<Opcode> currentCodeSection;
+        private bool addBranchDestination;
+        private ParseNode lastNode;
+        private int startLineNum = 1;
+        private short lastLine;
+        private short lastColumn;
+        private readonly List<List<Opcode>> breakList = new List<List<Opcode>>();
+        private readonly List<string> triggerRemoveNames = new List<string>();
+        private bool nowCompilingTrigger;
+        private bool compilingSetDestination;
+        private bool identifierIsVariable;
+        private bool identifierIsSuffix;
+        private bool nowInALoop;
+        private readonly List<ParseNode> programParameters = new List<ParseNode>();
+        private CompilerOptions options;
+        private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
 
-        private readonly Dictionary<string, string> _functionsOverloads = new Dictionary<string, string>() { { "round|1", "roundnearest" },
-            { "round|2", "round"} };
+        private readonly Dictionary<string, string> functionsOverloads = new Dictionary<string, string>
+        { 
+            { "round|1", "roundnearest" },
+            { "round|2", "round"} 
+        };
         
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
         {
-            _part = new CodePart();
-            _context = context;
-            _options = options;
-            _startLineNum = startLineNum;
+            part = new CodePart();
+            this.context = context;
+            this.options = options;
+            this.startLineNum = startLineNum;
             
-            // Set to true if you need to diagnose bugs in the compiler and turn off the catch-all
-            // exception suppression.
-            //
-            bool testingCompiler = true; // This appears to be not being used.  Either we change to use it, or remove it.
-
             try
             {
                 if (tree.Nodes.Count > 0)
@@ -52,7 +50,7 @@ namespace kOS.Safe.Compilation.KS
             }
             catch (KOSException kosException)
             {
-                if (_lastNode != null)
+                if (lastNode != null)
                 {
                     throw;  // TODO something more sophisticated will go here that will
                     // attach source/line information to the exception before throwing it upward.
@@ -63,16 +61,16 @@ namespace kOS.Safe.Compilation.KS
                 throw;  // throw it up in addition to logging the stack trace, so the kOS terminal will also give the user some message.
             }
 
-            return _part;
+            return part;
         }
 
         private void CompileProgram(ParseTree tree)
         {
-            _currentCodeSection = _part.MainCode;
+            currentCodeSection = part.MainCode;
             PushProgramParameters();
             VisitNode(tree.Nodes[0]);
 
-            if (_addBranchDestination)
+            if (addBranchDestination)
             {
                 AddOpcode(new OpcodeNOP());
             }
@@ -87,51 +85,45 @@ namespace kOS.Safe.Compilation.KS
         /// and can be safely ignored when this is called.</returns>
         private bool NodeStartHousekeeping(ParseNode node)
         {
-            if (_traceParse)
+            if (node == null) { throw new ArgumentNullException("node"); }
+
+            if (TRACE_PARSE)
                 Debug.Logger.Log( "traceParse: visiting node: " + node.Token.Type.ToString() + ", " + node.Token.Text );
 
-            if (node != null && node.Token != null && node.Token.Line > 0)
+            if (node.Token == null || node.Token.Line <= 0)
             {
-                _lastLine = (short) (node.Token.Line + (_startLineNum - 1));
-                _lastColumn = (short) (node.Token.Column);
-                return true;
+                // Only those nodes which are primitive tokens will have line number
+                // information.  So perform a leftmost search of the subtree of nodes
+                // until a node with a token with a line number is found:
+                return node.Nodes.Any(NodeStartHousekeeping);
             }
-            else
-            {
-                /// Only those nodes which are primitive tokens will have line number
-                /// information.  So perform a leftmost search of the subtree of nodes
-                /// until a node with a token with a line number is found:
-                foreach (ParseNode childNode in node.Nodes)
-                {
-                    if (NodeStartHousekeeping(childNode))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+
+            lastLine = (short) (node.Token.Line + (startLineNum - 1));
+            lastColumn = (short) (node.Token.Column);
+            return true;
+
         }
         
         private Opcode AddOpcode(Opcode opcode, string destinationLabel)
         {
             opcode.Label = GetNextLabel(true);
             opcode.DestinationLabel = destinationLabel;
-            opcode.SourceLine = _lastLine;
-            opcode.SourceColumn = _lastColumn;
-            _currentCodeSection.Add(opcode);
-            _addBranchDestination = false;
+            opcode.SourceLine = lastLine;
+            opcode.SourceColumn = lastColumn;
+            currentCodeSection.Add(opcode);
+            addBranchDestination = false;
             return opcode;
         }
 
         private Opcode AddOpcode(Opcode opcode)
         {
-            return AddOpcode(opcode, "");
+            return AddOpcode(opcode, string.Empty);
         }
 
         private string GetNextLabel(bool increment)
         {
-            string newLabel = string.Format("@{0:0000}", _context.LabelIndex + 1);
-            if (increment) _context.LabelIndex++;
+            string newLabel = string.Format("@{0:0000}", context.LabelIndex + 1);
+            if (increment) context.LabelIndex++;
             return newLabel;
         }
 
@@ -167,14 +159,14 @@ namespace kOS.Safe.Compilation.KS
                     action.Invoke(node);
                     break;
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
         private void PreProcessStatements(ParseNode node)
         {
             
-            _lastNode = node;
+            lastNode = node;
             
             NodeStartHousekeeping(node);
             
@@ -206,7 +198,7 @@ namespace kOS.Safe.Compilation.KS
                     PreProcessRunStatement(node);
                     break;
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -223,10 +215,10 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "on-" + expressionHash.ToString();
-            Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
+            Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
             triggerObject.SetTriggerVariable(GetIdentifierText(node));
 
-            _currentCodeSection = triggerObject.Code;
+            currentCodeSection = triggerObject.Code;
             AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
             AddOpcode(new OpcodePush(triggerObject.VariableName));
             AddOpcode(new OpcodeCompareEqual());
@@ -243,7 +235,7 @@ namespace kOS.Safe.Compilation.KS
 
             VisitNode(node.Nodes[2]);
 
-            // Reset the "old value" so the boolean has to change *again* to retrigger
+            // Reset the "old value" so the boolean has to change *again* to re-trigger
             AddOpcode(new OpcodePush(triggerObject.VariableNameOldValue));
             AddOpcode(new OpcodePush(triggerObject.VariableName));
             AddOpcode(new OpcodeStore());
@@ -265,9 +257,9 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "when-" + expressionHash.ToString();
-            Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
+            Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
-            _currentCodeSection = triggerObject.Code;
+            currentCodeSection = triggerObject.Code;
             VisitNode(node.Nodes[1]);
             Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
 
@@ -301,9 +293,9 @@ namespace kOS.Safe.Compilation.KS
                 // wait condition
                 int expressionHash = ConcatenateNodes(node).GetHashCode();
                 string triggerIdentifier = "wait-" + expressionHash.ToString();
-                Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
+                Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
-                _currentCodeSection = triggerObject.Code;
+                currentCodeSection = triggerObject.Code;
                 VisitNode(node.Nodes[2]);
                 Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
                 AddOpcode(new OpcodeEndWait());
@@ -318,12 +310,9 @@ namespace kOS.Safe.Compilation.KS
         {
             string concatenated = node.Token.Text;
 
-            if (node.Nodes.Count > 0)
+            if (node.Nodes.Any())
             {
-                foreach (ParseNode childNode in node.Nodes)
-                {
-                    concatenated += ConcatenateNodes(childNode);
-                }
+                return node.Nodes.Aggregate(concatenated, (current, childNode) => current + ConcatenateNodes(childNode));
             }
 
             return concatenated;
@@ -332,20 +321,20 @@ namespace kOS.Safe.Compilation.KS
         private void IdentifyLocks(ParseNode node)
         {
             string lockIdentifier = node.Nodes[1].Token.Text;
-            Lock lockObject = _context.Locks.GetLock(lockIdentifier);
+            context.Locks.GetLock(lockIdentifier);
         }
 
         private void PreProcessLockStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
             string lockIdentifier = node.Nodes[1].Token.Text;
-            Lock lockObject = _context.Locks.GetLock(lockIdentifier);
+            Lock lockObject = context.Locks.GetLock(lockIdentifier);
             int expressionHash = ConcatenateNodes(node.Nodes[3]).GetHashCode();
 
             if (!lockObject.IsInitialized())
             {
                 // initialization code
-                _currentCodeSection = lockObject.InitializationCode;
+                currentCodeSection = lockObject.InitializationCode;
                 AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
                 AddOpcode(new OpcodePushRelocateLater(null),lockObject.DefaultLabel);
                 AddOpcode(new OpcodeStore());
@@ -354,26 +343,26 @@ namespace kOS.Safe.Compilation.KS
                 {
                     // add trigger
                     string triggerIdentifier = "lock-" + lockObject.Identifier;
-                    Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
+                    Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
-                    short rememberLastLine = _lastLine;
-                    _lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
-                    _currentCodeSection = triggerObject.Code;
+                    short rememberLastLine = lastLine;
+                    lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
+                    currentCodeSection = triggerObject.Code;
                     AddOpcode(new OpcodePush("$" + lockObject.Identifier));
                     AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
                     AddOpcode(new OpcodeStore());
                     AddOpcode(new OpcodeEOF());
-                    _lastLine = rememberLastLine;
+                    lastLine = rememberLastLine;
                 }
 
                 // default function
-                _currentCodeSection = lockObject.GetLockFunction(0);
+                currentCodeSection = lockObject.GetLockFunction(0);
                 AddOpcode(new OpcodePush("$" + lockObject.Identifier)).Label = lockObject.DefaultLabel;
                 AddOpcode(new OpcodeReturn());
             }
 
             // function code
-            _currentCodeSection = lockObject.GetLockFunction(expressionHash);
+            currentCodeSection = lockObject.GetLockFunction(expressionHash);
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodeReturn());
         }
@@ -386,7 +375,7 @@ namespace kOS.Safe.Compilation.KS
             {
                 for (int index = 2; index < node.Nodes.Count; index += 2)
                 {
-                    _programParameters.Add(node.Nodes[index]);
+                    programParameters.Add(node.Nodes[index]);
                 }
             }
         }
@@ -394,17 +383,17 @@ namespace kOS.Safe.Compilation.KS
         private void PreProcessRunStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            if (_options.LoadProgramsInSameAddressSpace)
+            if (options.LoadProgramsInSameAddressSpace)
             {
                 bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
                 if (!hasON)
                 {
                     string subprogramName = node.Nodes[1].Token.Text;
-                    if (!_context.Subprograms.Contains(subprogramName))
+                    if (!context.Subprograms.Contains(subprogramName))
                     {
-                        Subprogram subprogramObject = _context.Subprograms.GetSubprogram(subprogramName);
+                        Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
                         // Function code
-                        _currentCodeSection = subprogramObject.FunctionCode;
+                        currentCodeSection = subprogramObject.FunctionCode;
                         // verify if the program has been loaded
                         Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
                         AddOpcode(new OpcodePush(0));
@@ -429,7 +418,7 @@ namespace kOS.Safe.Compilation.KS
                         subprogramObject.FunctionLabel = functionStart.Label;
 
                         // Initialization code
-                        _currentCodeSection = subprogramObject.InitializationCode;
+                        currentCodeSection = subprogramObject.InitializationCode;
                         // initialize the pointer to zero
                         AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
                         AddOpcode(new OpcodePush(0));
@@ -443,8 +432,8 @@ namespace kOS.Safe.Compilation.KS
         {
             // reverse the order of parameters so the stack
             // is popped in the correct order
-            _programParameters.Reverse();
-            foreach (ParseNode node in _programParameters)
+            programParameters.Reverse();
+            foreach (ParseNode node in programParameters)
             {
                 VisitNode(node);
                 AddOpcode(new OpcodeSwap());
@@ -454,16 +443,13 @@ namespace kOS.Safe.Compilation.KS
 
         private void PushTriggerRemoveName(string newLabel)
         {
-            _triggerRemoveNames.Add(newLabel);
-            _nowCompilingTrigger = true;
+            triggerRemoveNames.Add(newLabel);
+            nowCompilingTrigger = true;
         }
 
         private string PeekTriggerRemoveName()
         {
-            if( _nowCompilingTrigger)
-                return _triggerRemoveNames[_triggerRemoveNames.Count - 1];
-            else
-                return "";
+            return nowCompilingTrigger ? triggerRemoveNames[triggerRemoveNames.Count - 1] : string.Empty;
         }
 
         private string PopTriggerRemoveName()
@@ -471,36 +457,36 @@ namespace kOS.Safe.Compilation.KS
             // Will throw exception if list is empty, but that "should
             // never happen" as pushes and pops should be balanced in
             // the compiler's code.  If it throws exception we want to
-            // let the exception happen to highlight the bug:
-            string returnVal = _triggerRemoveNames[_triggerRemoveNames.Count - 1];
-            _triggerRemoveNames.RemoveAt(_triggerRemoveNames.Count - 1);
-            _nowCompilingTrigger = (_triggerRemoveNames.Count > 0);
+            // let the exception happen to highlight the bug
+            string returnVal = triggerRemoveNames[triggerRemoveNames.Count - 1];
+            triggerRemoveNames.RemoveAt(triggerRemoveNames.Count - 1);
+            nowCompilingTrigger = (triggerRemoveNames.Count > 0);
             return returnVal;
         }
 
         private void PushBreakList()
         {
             List<Opcode> list = new List<Opcode>();
-            _breakList.Add(list);
+            breakList.Add(list);
         }
 
         private void AddToBreakList(Opcode opcode)
         {
-            if (_breakList.Count > 0)
+            if (breakList.Count > 0)
             {
-                List<Opcode> list = _breakList[_breakList.Count - 1];
+                List<Opcode> list = breakList[breakList.Count - 1];
                 list.Add(opcode);
             }
         }
 
         private void PopBreakList(string label)
         {
-            if (_breakList.Count > 0)
+            if (breakList.Count > 0)
             {
-                List<Opcode> list = _breakList[_breakList.Count - 1];
+                List<Opcode> list = breakList[breakList.Count - 1];
                 if (list != null)
                 {
-                    _breakList.Remove(list);
+                    breakList.Remove(list);
                     foreach (Opcode opcode in list)
                     {
                         opcode.DestinationLabel = label;
@@ -511,7 +497,7 @@ namespace kOS.Safe.Compilation.KS
 
         private void VisitNode(ParseNode node)
         {
-            _lastNode = node;
+            lastNode = node;
 
             NodeStartHousekeeping(node);
 
@@ -668,11 +654,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.varidentifier:
                     VisitVarIdentifier(node);
                     break;
-                /* TODO remove after proving it isn't needed:
-                case TokenType.array:
-                    VisitArray(node);
-                    break;
-                */
                 case TokenType.suffixterm:
                     VisitSuffixTerm(node);
                     break;
@@ -701,7 +682,7 @@ namespace kOS.Safe.Compilation.KS
                     VisitIdentifierLedExpression(node);
                     break;
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -717,9 +698,9 @@ namespace kOS.Safe.Compilation.KS
         private void VisitVariableNode(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            _identifierIsVariable = true;
+            identifierIsVariable = true;
             VisitNode(node);
-            _identifierIsVariable = false;
+            identifierIsVariable = false;
         }
 
         private void VisitExpression(ParseNode node)
@@ -728,18 +709,17 @@ namespace kOS.Safe.Compilation.KS
             if (node.Nodes.Count > 1)
             {
                 // it should always be odd, two arguments and one operator
-                if ((node.Nodes.Count % 2) == 1)
-                {
-                    VisitNode(node.Nodes[0]);
+                if ((node.Nodes.Count%2) != 1) return;
 
-                    int nodeIndex = 2;
-                    while (nodeIndex < node.Nodes.Count)
-                    {
-                        VisitNode(node.Nodes[nodeIndex]);
-                        nodeIndex -= 1;
-                        VisitNode(node.Nodes[nodeIndex]);
-                        nodeIndex += 3;
-                    }
+                VisitNode(node.Nodes[0]);
+
+                int nodeIndex = 2;
+                while (nodeIndex < node.Nodes.Count)
+                {
+                    VisitNode(node.Nodes[nodeIndex]);
+                    nodeIndex -= 1;
+                    VisitNode(node.Nodes[nodeIndex]);
+                    nodeIndex += 3;
                 }
             }
             else
@@ -754,43 +734,42 @@ namespace kOS.Safe.Compilation.KS
         private void VisitAtom(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            if (node.Nodes.Count > 0)
+            if (node.Nodes.Count <= 0) return;
+
+            bool addNegation = false;
+            bool addNot = false;
+            int nodeIndex = 0;
+
+            if (node.Nodes[0].Token.Type == TokenType.PLUSMINUS)
             {
-                bool addNegation = false;
-                bool addNot = false;
-                int nodeIndex = 0;
-
-                if (node.Nodes[0].Token.Type == TokenType.PLUSMINUS)
+                nodeIndex++;
+                if (node.Nodes[0].Token.Text == "-")
                 {
-                    nodeIndex++;
-                    if (node.Nodes[0].Token.Text == "-")
-                    {
-                        addNegation = true;
-                    }
+                    addNegation = true;
                 }
-                else if (node.Nodes[0].Token.Type == TokenType.NOT)
-                {
-                    nodeIndex++;
-                    addNot = true;
-                }
+            }
+            else if (node.Nodes[0].Token.Type == TokenType.NOT)
+            {
+                nodeIndex++;
+                addNot = true;
+            }
                 
-                if (node.Nodes[nodeIndex].Token.Type == TokenType.BRACKETOPEN)
-                {
-                    VisitNode(node.Nodes[nodeIndex + 1]);
-                }
-                else
-                {
-                    VisitNode(node.Nodes[nodeIndex]);
-                }
+            if (node.Nodes[nodeIndex].Token.Type == TokenType.BRACKETOPEN)
+            {
+                VisitNode(node.Nodes[nodeIndex + 1]);
+            }
+            else
+            {
+                VisitNode(node.Nodes[nodeIndex]);
+            }
 
-                if (addNegation)
-                {
-                    AddOpcode(new OpcodeMathNegate());
-                }
-                if (addNot)
-                {
-                    AddOpcode(new OpcodeLogicNot());
-                }
+            if (addNegation)
+            {
+                AddOpcode(new OpcodeMathNegate());
+            }
+            if (addNot)
+            {
+                AddOpcode(new OpcodeLogicNot());
             }
         }
 
@@ -830,7 +809,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitInteger(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            object number = null;
+            object number;
             int integerNumber;
 
             if (int.TryParse(node.Token.Text, out integerNumber))
@@ -842,22 +821,15 @@ namespace kOS.Safe.Compilation.KS
                 number = double.Parse(node.Token.Text);
             }
 
-            if (number != null)
-            {
-                AddOpcode(new OpcodePush(number));
-            }
+            AddOpcode(new OpcodePush(number));
         }
 
         private void VisitDouble(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            object number = null;
-            number = double.Parse(node.Token.Text);
+            object number = double.Parse(node.Token.Text);
 
-            if (number != null)
-            {
-                AddOpcode(new OpcodePush(number));
-            }
+            AddOpcode(new OpcodePush(number));
         }
 
         private void VisitTrueFalse(ParseNode node)
@@ -882,8 +854,8 @@ namespace kOS.Safe.Compilation.KS
         /// <param name="node">parse node for the function term of the parse tree.</param>
         /// <param name="isDirect">true if it should make an OpcodeCall that is Direct, false if it should make an indirect one.
         /// See the documentation for OpcodeCall.Direct for the full explanation of the difference.  If isDirect is true, then
-        /// the name to the left of the parenthesss will be the name of the function call.  If isDirect is false, then it will
-        /// ignore the name to the left of the parenetheses and presume the function name, delegate, or branch index was
+        /// the name to the left of the parentheses will be the name of the function call.  If isDirect is false, then it will
+        /// ignore the name to the left of the parentheses and presume the function name, delegate, or branch index was
         /// already placed atop the stack by other parts of this compiler.</param>
         /// <param name="directName">In the case where it's a direct function, what's the name of it?  In the case
         /// where it's not direct, this argument doesn't matter.</param>
@@ -907,12 +879,12 @@ namespace kOS.Safe.Compilation.KS
                 
                 parameterCount = (trailerNode.Nodes[1].Nodes.Count / 2) + 1;
                 
-                bool remember = _identifierIsSuffix;
-                _identifierIsSuffix = false;
+                bool remember = identifierIsSuffix;
+                identifierIsSuffix = false;
                 
                 VisitNode(trailerNode.Nodes[1]);
 
-                _identifierIsSuffix = remember;
+                identifierIsSuffix = remember;
             }
             
             if (isDirect)
@@ -924,8 +896,7 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                OpcodeCall op = new OpcodeCall("");
-                op.Direct = false;
+                OpcodeCall op = new OpcodeCall(string.Empty) {Direct = false};
                 AddOpcode(op);
             }
         }
@@ -933,14 +904,11 @@ namespace kOS.Safe.Compilation.KS
         private string GetFunctionOverload(string functionName, int parameterCount)
         {
             string functionKey = string.Format("{0}|{1}", functionName, parameterCount);
-            if (_functionsOverloads.ContainsKey(functionKey))
+            if (functionsOverloads.ContainsKey(functionKey))
             {
-                return _functionsOverloads[functionKey];
+                return functionsOverloads[functionKey];
             }
-            else
-            {
-                return functionName;
-            }
+            return functionName;
         }
 
         private void VisitFileVol(ParseNode node)
@@ -967,12 +935,9 @@ namespace kOS.Safe.Compilation.KS
             // I might be called on a raw IDENTIFIER, in which case I have no
             // child nodes to descend into.  But if I *do* have a child node
             // to descend into, then do so:
-            if (node.Nodes.Count == 0)
-                VisitNode(node);
-            else
-                VisitNode(node.Nodes[0]);
+            VisitNode(node.Nodes.Count == 0 ? node : node.Nodes[0]);
         }
-        
+
         // Parses this rule:
         // suffix             -> suffixterm (suffix_trailer)*;
         // suffix_trailer     -> (COLON suffixterm);
@@ -984,10 +949,10 @@ namespace kOS.Safe.Compilation.KS
             for (int nodeIndex = 0 ; nodeIndex < node.Nodes.Count; ++nodeIndex)
             {
                 
-                bool remember = _identifierIsSuffix;
-                _identifierIsSuffix = (nodeIndex > 0);
+                bool remember = identifierIsSuffix;
+                identifierIsSuffix = (nodeIndex > 0);
 
-                ParseNode suffixTerm = null;
+                ParseNode suffixTerm;
                 if (nodeIndex == 0)
                     suffixTerm = node.Nodes[nodeIndex];
                 else
@@ -1003,14 +968,14 @@ namespace kOS.Safe.Compilation.KS
                 string firstIdentifier = "";
                 // The term starts with either an identifier or an expression.  If it's the start, then parse
                 // it as a variable, else parse it as a raw identifier:
-                bool rememberIsV = _identifierIsVariable;
-                _identifierIsVariable = (!startsWithFunc) && nodeIndex == 0;
+                bool rememberIsV = identifierIsVariable;
+                identifierIsVariable = (!startsWithFunc) && nodeIndex == 0;
 
                 // Push this term on the stack unless it's the name of the built-in-function (built-in-functions
-                // being called without any preceeding colon term, with methods on the other hand having suffixes):
+                // being called without any preceding colon term, with methods on the other hand having suffixes):
                 if (nodeIndex>0 || !startsWithFunc)
                     VisitNode(suffixTerm.Nodes[0]);
-                _identifierIsVariable = rememberIsV;
+                identifierIsVariable = rememberIsV;
                 if (nodeIndex==0)
                 {
                     firstIdentifier = GetIdentifierText(suffixTerm);                    
@@ -1019,7 +984,7 @@ namespace kOS.Safe.Compilation.KS
                 {
                     // when we are setting a member value we need to leave
                     // the last object and the last suffix in the stack
-                    bool usingSetMember = (suffixTerm.Nodes.Count>0) && (_compilingSetDestination && nodeIndex == (node.Nodes.Count -1));
+                    bool usingSetMember = (suffixTerm.Nodes.Count>0) && (compilingSetDestination && nodeIndex == (node.Nodes.Count -1));
     
                     if (! usingSetMember)
                     {
@@ -1049,7 +1014,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                 }
 
-                _identifierIsSuffix = remember;
+                identifierIsSuffix = remember;
 
             }
         }
@@ -1067,20 +1032,20 @@ namespace kOS.Safe.Compilation.KS
             int nodeIndex = 1;
             while (nodeIndex < trailerNode.Nodes.Count)
             {
-                // Skip two tokens instead of one bewteen dimensions if using the "[]" syntax:
+                // Skip two tokens instead of one between dimensions if using the "[]" syntax:
                 if (trailerNode.Nodes[nodeIndex].Token.Type == TokenType.SQUAREOPEN){
                     ++nodeIndex;
                 }
                 
-                bool remember = _identifierIsSuffix;
-                _identifierIsSuffix = false;
+                bool remember = identifierIsSuffix;
+                identifierIsSuffix = false;
                 
                 VisitNode(trailerNode.Nodes[nodeIndex]);
                 
-                _identifierIsSuffix = remember;
+                identifierIsSuffix = remember;
 
                 // Two ways to check if this is the last index (i.e. the 'k' in arr[i][j][k]'),
-                // depeding on whether using the "#" syntax or the "[..]" syntax:
+                // depending on whether using the "#" syntax or the "[..]" syntax:
                 bool isLastIndex = false;
                 var previousNodeType = trailerNode.Nodes[nodeIndex - 1].Token.Type;
                 switch (previousNodeType)
@@ -1097,7 +1062,7 @@ namespace kOS.Safe.Compilation.KS
                 // the last object and the last index in the stack
                 // the only exception is when we are setting a suffix of the indexed value
                 var hasSuffix = VarIdentifierPreceedsSuffix(node.Parent);
-                if (!(_compilingSetDestination && isLastIndex) || hasSuffix)
+                if (!(compilingSetDestination && isLastIndex) || hasSuffix)
                 {
                     AddOpcode(new OpcodeGetIndex());
                 }
@@ -1106,21 +1071,6 @@ namespace kOS.Safe.Compilation.KS
             }
             
         }
-        
-        /* TODO: Remove this after proving it's not needed anymore:         
-        private void VisitArray(ParseNode node)
-        {
-            SetLineNum(node);
-            _identifierIsVariable = true;
-            VisitNode(node.Nodes[0]);
-            _identifierIsVariable = false;
-
-            if (node.Nodes.Count > 1)
-            {
-                VisitActualArray(node);
-            }
-        }
-        */
 
         private string GetIdentifierText(ParseNode node)
         {
@@ -1128,14 +1078,11 @@ namespace kOS.Safe.Compilation.KS
             {
                 return node.Token.Text;
             }
-            else
+            foreach (ParseNode child in node.Nodes)
             {
-                foreach (ParseNode child in node.Nodes)
-                {
-                    string identifier = GetIdentifierText(child);
-                    if (identifier != string.Empty)
-                        return identifier;
-                }
+                string identifier = GetIdentifierText(child);
+                if (identifier != string.Empty)
+                    return identifier;
             }
 
             return string.Empty;
@@ -1146,7 +1093,7 @@ namespace kOS.Safe.Compilation.KS
         /// (with parentheses) and just plain vanilla terms.  This
         /// determines if it's REALLY a function call or not.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">the node to test</param>
         /// <returns>true if it's really a function call.  False otherwise.</returns>
         private bool IsActualFunctionCall(ParseNode node)
         {
@@ -1176,8 +1123,8 @@ namespace kOS.Safe.Compilation.KS
         /// (with index given) and just plain vanilla terms.  This
         /// determines if it's REALLY an array index call or not.
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns>true if it's really an array index referece call.  False otherwise.</returns>
+        /// <param name="node">The node to test</param>
+        /// <returns>true if it's really an array index reference call.  False otherwise.</returns>
         private bool IsActualArrayIndexing(ParseNode node)
         {
             // This can be called at the level of the parent of the array node, so get down to it first:
@@ -1220,13 +1167,13 @@ namespace kOS.Safe.Compilation.KS
         private void VisitIdentifier(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            bool isVariable = (_identifierIsVariable && !_identifierIsSuffix);
+            bool isVariable = (identifierIsVariable && !identifierIsSuffix);
             string prefix = isVariable ? "$" : String.Empty;
             string identifier = GetIdentifierText(node);
-            if (isVariable && _context.Locks.Contains(identifier))
+            if (isVariable && context.Locks.Contains(identifier))
             {
-                Lock lockObject = _context.Locks.GetLock(identifier);
-                if (_compilingSetDestination)
+                Lock lockObject = context.Locks.GetLock(identifier);
+                if (compilingSetDestination)
                 {
                     UnlockIdentifier(lockObject);
                     AddOpcode(new OpcodePush("$" + identifier));
@@ -1249,13 +1196,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         /// <summary>
-        /// Check for if the var_identifer node has a suffix term as its very next neighor
+        /// Check for if the var_identifer node has a suffix term as its very next neighbor
         /// to the right.  i.e. in the following syntax:<br/>
         ///     AAA:BBB:CCC[0]:DDD:EEE[0]<br/>
         /// This method should return true if called on the AAA, BBB, or DDD nodes,
         /// but not when called on the CCC or EEE nodes.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">The node to test</param>
         /// <returns></returns>
         private bool VarIdentifierPreceedsSuffix(ParseNode node)
         {
@@ -1318,7 +1265,7 @@ namespace kOS.Safe.Compilation.KS
         /// This method should return true if called on the CCC node or the EEE node,
         /// but not when called on the AAA, BBB, or DDD nodes.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">The node to test</param>
         /// <returns></returns>
         private bool VarIdentifierPreceedsIndex(ParseNode node)
         {
@@ -1398,16 +1345,13 @@ namespace kOS.Safe.Compilation.KS
             {
                 return node;
             }
-            else
+            foreach (ParseNode child in node.Nodes)
             {
-                foreach (ParseNode child in node.Nodes)
-                {
-                    ParseNode hit = DepthFirstLeftSearch(child, tokType);
-                    if (hit != null)
-                        return hit;
-                }
+                ParseNode hit = DepthFirstLeftSearch(child, tokType);
+                if (hit != null)
+                    return hit;
             }
-            
+
             return null; // not found.
         }
 
@@ -1425,9 +1369,9 @@ namespace kOS.Safe.Compilation.KS
         private void ProcessSetOperation(ParseNode setThis, ParseNode toThis)
         {
             // destination
-            _compilingSetDestination = true;
+            compilingSetDestination = true;
             VisitVarIdentifier(setThis);
-            _compilingSetDestination = false;
+            compilingSetDestination = false;
             // expression
             VisitNode(toThis);
 
@@ -1457,7 +1401,7 @@ namespace kOS.Safe.Compilation.KS
                 // No ELSE exists.
                 // Jump to after the IF BODY if false:
                 branchToFalse.DestinationLabel = GetNextLabel(false);
-                _addBranchDestination = true;
+                addBranchDestination = true;
             } else {
                 // The IF statement has an ELSE clause.
 
@@ -1469,7 +1413,7 @@ namespace kOS.Safe.Compilation.KS
                 VisitNode(node.Nodes[4]);
                 // End of Else body label:
                 branchPastElse.DestinationLabel = GetNextLabel(false);
-                _addBranchDestination = true;
+                addBranchDestination = true;
             }
         }
 
@@ -1477,8 +1421,8 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            bool remember = _nowInALoop;
-            _nowInALoop = true;
+            bool remember = nowInALoop;
+            nowInALoop = true;
             
             string conditionLabel = GetNextLabel(false);
             PushBreakList();
@@ -1490,9 +1434,9 @@ namespace kOS.Safe.Compilation.KS
             Opcode jump = AddOpcode(new OpcodeBranchJump());
             jump.DestinationLabel = conditionLabel;
             PopBreakList(GetNextLabel(false));
-            _addBranchDestination = true;
+            addBranchDestination = true;
 
-            _nowInALoop = remember;
+            nowInALoop = remember;
         }
 
         private void VisitPlusMinus(ParseNode node)
@@ -1562,7 +1506,7 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodeCompareEqual());
                     break;
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -1571,7 +1515,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             string lockIdentifier = node.Nodes[1].Token.Text;
             int expressionHash = ConcatenateNodes(node.Nodes[3]).GetHashCode();
-            Lock lockObject = _context.Locks.GetLock(lockIdentifier);
+            Lock lockObject = context.Locks.GetLock(lockIdentifier);
 
             if (lockObject.IsInitialized())
             {
@@ -1585,9 +1529,9 @@ namespace kOS.Safe.Compilation.KS
                 {
                     // add update trigger
                     string triggerIdentifier = "lock-" + lockIdentifier;
-                    if (_context.Triggers.Contains(triggerIdentifier))
+                    if (context.Triggers.Contains(triggerIdentifier))
                     {
-                        Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
+                        Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
                         AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
                         AddOpcode(new OpcodeAddTrigger(false));
                     }
@@ -1606,13 +1550,13 @@ namespace kOS.Safe.Compilation.KS
             if (node.Nodes[1].Token.Type == TokenType.ALL)
             {
                 // unlock all locks
-                foreach(Lock lockObject in _context.Locks.GetLockList())
+                foreach(Lock lockObject in context.Locks.GetLockList())
                     UnlockIdentifier(lockObject);
             }
             else
             {
                 string lockIdentifier = node.Nodes[1].Token.Text;
-                Lock lockObject = _context.Locks.GetLock(lockIdentifier);
+                Lock lockObject = context.Locks.GetLock(lockIdentifier);
                 UnlockIdentifier(lockObject);
             }
         }
@@ -1630,9 +1574,9 @@ namespace kOS.Safe.Compilation.KS
 
                     // remove update trigger
                     string triggerIdentifier = "lock-" + lockObject.Identifier;
-                    if (_context.Triggers.Contains(triggerIdentifier))
+                    if (context.Triggers.Contains(triggerIdentifier))
                     {
-                        Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
+                        Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
                         AddOpcode(new OpcodePushRelocateLater(null),triggerObject.GetFunctionLabel());
                         AddOpcode(new OpcodeRemoveTrigger());
                     }
@@ -1650,7 +1594,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "on-" + expressionHash.ToString();
-            Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
+            Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
             if (triggerObject.IsInitialized())
             {
@@ -1667,7 +1611,7 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             int expressionHash = ConcatenateNodes(node).GetHashCode();
             string triggerIdentifier = "when-" + expressionHash.ToString();
-            Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
+            Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
             if (triggerObject.IsInitialized())
             {
@@ -1680,7 +1624,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             
-            if (_nowCompilingTrigger)
+            if (nowCompilingTrigger)
                 throw new KOSWaitInvalidHereException();
             
             if (node.Nodes.Count == 3)
@@ -1694,7 +1638,7 @@ namespace kOS.Safe.Compilation.KS
                 // wait condition
                 int expressionHash = ConcatenateNodes(node).GetHashCode();
                 string triggerIdentifier = "wait-" + expressionHash.ToString();
-                Trigger triggerObject = _context.Triggers.GetTrigger(triggerIdentifier);
+                Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
 
                 if (triggerObject.IsInitialized())
                 {
@@ -1790,12 +1734,12 @@ namespace kOS.Safe.Compilation.KS
             }
 
             bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
-            if (!hasON && _options.LoadProgramsInSameAddressSpace)
+            if (!hasON && options.LoadProgramsInSameAddressSpace)
             {
                 string subprogramName = node.Nodes[1].Token.Text;
-                if (_context.Subprograms.Contains(subprogramName))
+                if (context.Subprograms.Contains(subprogramName))
                 {
-                    Subprogram subprogramObject = _context.Subprograms.GetSubprogram(subprogramName);
+                    Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
                     AddOpcode(new OpcodeCall(null)).DestinationLabel = subprogramObject.FunctionLabel;
                 }
             }
@@ -1835,12 +1779,9 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             VisitNode(node.Nodes[1]);
-            
-            if (node.Nodes[2].Token.Type == TokenType.FROM)
-                AddOpcode(new OpcodePush("from"));
-            else
-                AddOpcode(new OpcodePush("to"));
-            
+
+            AddOpcode(new OpcodePush(node.Nodes[2].Token.Type == TokenType.FROM ? "from" : "to"));
+
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodeCall("copy()"));
         }
@@ -1859,14 +1800,7 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                if (node.Nodes[1].Token.Type == TokenType.FILE)
-                {
-                    AddOpcode(new OpcodePush("file"));
-                }
-                else
-                {
-                    AddOpcode(new OpcodePush("volume"));
-                }
+                AddOpcode(new OpcodePush(node.Nodes[2].Token.Type == TokenType.FROM ? "file" : "volume"));
             }
 
             VisitNode(node.Nodes[oldNameIndex]);
@@ -1925,7 +1859,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            if (! _nowInALoop)
+            if (! nowInALoop)
                 throw new KOSBreakInvalidHereException();
 
             Opcode jump = AddOpcode(new OpcodeBranchJump());
@@ -1936,7 +1870,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            if (! _nowCompilingTrigger)
+            if (! nowCompilingTrigger)
                 throw new KOSPreserveInvalidHereException();
 
             string flagName = PeekTriggerRemoveName();
@@ -1961,8 +1895,8 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            bool remember = _nowInALoop;
-            _nowInALoop = true;
+            bool remember = nowInALoop;
+            nowInALoop = true;
             
             string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + "-iterator";
 
@@ -2003,7 +1937,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodeUnset());
             PopBreakList(endLoop.Label);
 
-            _nowInALoop = remember;
+            nowInALoop = remember;
         }
 
         private void VisitUnsetStatement(ParseNode node)

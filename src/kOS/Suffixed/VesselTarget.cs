@@ -30,7 +30,7 @@ namespace kOS.Suffixed
         /// <summary>
         ///   Calculates the position of this vessel at some future universal timestamp,
         ///   taking into account all currently predicted SOI transition patches, and also
-        ///   assuming that all the planned manuever nodes will actually be executed precisely
+        ///   assuming that all the planned maneuver nodes will actually be executed precisely
         ///   as planned.  Note that this cannot "see" into the future any farther than the
         ///   KSP orbit patches setting allows for.
         /// </summary>
@@ -64,7 +64,7 @@ namespace kOS.Suffixed
         /// <summary>
         ///   Calculates the velocities of this vessel at some future universal timestamp,
         ///   taking into account all currently predicted SOI transition patches, and also
-        ///   assuming that all the planned manuever nodes will actually be executed precisely
+        ///   assuming that all the planned maneuver nodes will actually be executed precisely
         ///   as planned.  Note that this cannot "see" into the future any farther than the
         ///   KSP orbit patches setting allows for.
         /// </summary>
@@ -120,7 +120,7 @@ namespace kOS.Suffixed
         }
         
         /// <summary>
-        ///   Calcualte which orbit patch contains the timestamp given.
+        ///   Calculate which orbit patch contains the timestamp given.
         /// </summary>
         /// <param name="desiredUT">The timestamp to look for</param>
         /// <returns>the orbit patch the vessel is expected to be in at the given time.</returns>
@@ -128,7 +128,7 @@ namespace kOS.Suffixed
         {            
             // After much trial and error this seems to be the only way to do this:
 
-            // Find the lastmost manuever node that occurs prior to timestamp:
+            // Find the lastmost maneuver node that occurs prior to timestamp:
             List<ManeuverNode> nodes = Vessel.patchedConicSolver.maneuverNodes;
             Orbit orbitPatch = Vessel.orbit;
             for (int nodeIndex = 0 ; nodeIndex < nodes.Count && nodes[nodeIndex].UT <= desiredUT ; ++nodeIndex)
