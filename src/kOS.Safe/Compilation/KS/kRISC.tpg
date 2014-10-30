@@ -160,30 +160,30 @@ deploy_stmt    -> DEPLOY EOI;
 
 // ---------- expressions ---------------------------
 
-arglist          -> expr (COMMA expr)*;
-expr             -> and_expr (OR and_expr)*;
-and_expr         -> compare_expr (AND compare_expr)*;
-compare_expr     -> arith_expr (COMPARATOR arith_expr)*;
-arith_expr       -> multdiv_expr (PLUSMINUS multdiv_expr)*;
-multdiv_expr     -> factor ((MULT|DIV) factor)*;
-factor           -> suffix (POWER suffix)*;
+arglist            -> expr (COMMA expr)*;
+expr               -> and_expr (OR and_expr)*;
+and_expr           -> compare_expr (AND compare_expr)*;
+compare_expr       -> arith_expr (COMPARATOR arith_expr)*;
+arith_expr         -> multdiv_expr (PLUSMINUS multdiv_expr)*;
+multdiv_expr       -> factor ((MULT|DIV) factor)*;
+factor             -> suffix (POWER suffix)*;
 
-suffix           -> function (suffix_trailer)*;
-suffix_trailer   -> (COLON function);
+suffix             -> suffixterm (suffix_trailer)*;
+suffix_trailer     -> (COLON suffixterm);
 
-function         -> array function_trailer?;
-function_trailer -> (BRACKETOPEN arglist? BRACKETCLOSE);
+suffixterm         -> atom suffixterm_trailer*;
+suffixterm_trailer -> (function_trailer | array_trailer);
 
-array            -> atom array_trailer*;
-array_trailer    -> ( (ARRAYINDEX (IDENTIFIER | INTEGER)) | (SQUAREOPEN expr SQUARECLOSE) );
+function_trailer   -> (BRACKETOPEN arglist? BRACKETCLOSE);
+array_trailer      -> ( (ARRAYINDEX (IDENTIFIER | INTEGER)) | (SQUAREOPEN expr SQUARECLOSE) );
 
-atom             -> (PLUSMINUS|NOT)? ( sci_number |
-                                       TRUEFALSE |
-                                       IDENTIFIER |
-                                       BRACKETOPEN expr BRACKETCLOSE
-                                     ) | STRING;
-sci_number       -> number (E PLUSMINUS? INTEGER)?;
-number           -> (INTEGER | DOUBLE);
+atom               -> (PLUSMINUS|NOT)? ( sci_number |
+                                         TRUEFALSE |
+                                         IDENTIFIER |
+                                         BRACKETOPEN expr BRACKETCLOSE
+                                       ) | STRING;
+sci_number         -> number (E PLUSMINUS? INTEGER)?;
+number             -> (INTEGER | DOUBLE);
 
 // varidentifier:
 // --------------
@@ -207,4 +207,4 @@ varidentifier  -> suffix;
 // expressions which are led by an identifier and are guaranteed to have SOMETHING
 // after the identifier - parens, colons, etc:
 identifier_led_stmt -> identifier_led_expr EOI;
-identifier_led_expr -> IDENTIFIER (onoff_trailer|suffix_trailer|function_trailer|array_trailer);
+identifier_led_expr -> suffix (onoff_trailer)?;
