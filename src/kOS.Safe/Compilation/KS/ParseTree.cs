@@ -319,14 +319,14 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.suffix_trailer:
                     Value = Evalsuffix_trailer(tree, paramlist);
                     break;
-                case TokenType.function:
-                    Value = Evalfunction(tree, paramlist);
+                case TokenType.suffixterm:
+                    Value = Evalsuffixterm(tree, paramlist);
+                    break;
+                case TokenType.suffixterm_trailer:
+                    Value = Evalsuffixterm_trailer(tree, paramlist);
                     break;
                 case TokenType.function_trailer:
                     Value = Evalfunction_trailer(tree, paramlist);
-                    break;
-                case TokenType.array:
-                    Value = Evalarray(tree, paramlist);
                     break;
                 case TokenType.array_trailer:
                     Value = Evalarray_trailer(tree, paramlist);
@@ -684,7 +684,14 @@ namespace kOS.Safe.Compilation.KS
             return null;
         }
 
-        protected virtual object Evalfunction(ParseTree tree, params object[] paramlist)
+        protected virtual object Evalsuffixterm(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalsuffixterm_trailer(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
@@ -692,13 +699,6 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evalfunction_trailer(ParseTree tree, params object[] paramlist)
-        {
-            foreach (var node in Nodes)
-                node.Eval(tree, paramlist);
-            return null;
-        }
-
-        protected virtual object Evalarray(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
