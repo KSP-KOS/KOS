@@ -4,7 +4,7 @@ namespace kOS.Safe.Compilation.KS
 {
     public class Lock
     {
-        private static readonly List<string> systemLocks = new List<string> { "throttle", "steering", "wheelthrottle", "wheelsteering", "defaultthrottle" };
+        private static readonly List<string> systemLocks = new List<string> { "throttle", "steering", "wheelthrottle", "wheelsteering" };
         
         private readonly CodePart codePart;
         private readonly Dictionary<int, LockFunction> functions;

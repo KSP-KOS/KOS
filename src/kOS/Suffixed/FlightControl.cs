@@ -32,7 +32,7 @@ namespace kOS.Suffixed
             bound = false;
             Vessel = vessel;
 
-            floatSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
+            floatSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "PILOTMAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
             vectorSuffixes = new List<string> { "ROTATION", "TRANSLATION" };
         }
 
@@ -60,7 +60,7 @@ namespace kOS.Suffixed
                     return new Vector(starboard , top , fore );
                 case "NEUTRAL":
                     return neutral;
-                case "DEFAULTMAINTHROTTLE":
+                case "PILOTMAINTHROTTLE":
                     return Vessel.ctrlState.mainThrottle;
                 case "MAINTHROTTLE":
                     return mainThrottle;
@@ -131,7 +131,7 @@ namespace kOS.Suffixed
                 case "MAINTHROTTLE":
                     mainThrottle = Utils.Clamp(floatValue, 0, 1);
                     break;
-                case "DEFAULTMAINTHROTTLE":
+                case "PILOTMAINTHROTTLE":
                     Vessel.ctrlState.mainThrottle = Utils.Clamp(floatValue, 0, 1);
                     if (Vessel == FlightGlobals.ActiveVessel)
                     {
