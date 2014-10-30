@@ -43,7 +43,7 @@ namespace kOS.Suffixed
                 "YAW", "PITCH", "ROLL", 
                 "YAWTRIM", "PITCHTRIM", "ROLLTRIM", 
                 "STARBOARD", "TOP", "FORE", 
-                "MAINTHROTTLE", "DEFAULTMAINTHROTTLE",
+                "MAINTHROTTLE", "USERMAINTHROTTLE",
                 "WHEELTHROTTLE", "WHEELSTEER",
                 "WHEELTHROTTLETRIM", "WHEELSTEERTRIM"
             };
@@ -80,8 +80,6 @@ namespace kOS.Suffixed
                     return new Vector(starboard , top , fore );
                 case "NEUTRAL":
                     return neutral;
-                case "DEFAULTMAINTHROTTLE":
-                    return Vessel.ctrlState.mainThrottle;
                 case "MAINTHROTTLE":
                     return mainThrottle;
                 case "WHEELTHROTTLE":
@@ -92,6 +90,46 @@ namespace kOS.Suffixed
                     return wheelSteer;
                 case "WHEELSTEERTRIM":
                     return wheelSteerTrim;
+                case "PILOTYAW":
+                    return Vessel.ctrlState.yaw;
+                case "PILOTYAWTRIM":
+                    return Vessel.ctrlState.yawTrim;
+                case "PILOTPITCH":
+                    return Vessel.ctrlState.pitch;
+                case "PILOTPITCHTRIM":
+                    return Vessel.ctrlState.pitchTrim;
+                case "PILOTROLL":
+                    return Vessel.ctrlState.roll;
+                case "PILOTROLLTRIM":
+                    return Vessel.ctrlState.rollTrim;
+                case "PILOTFORE":
+                    return Vessel.ctrlState.Z;
+                case "PILOTSTARBOARD":
+                    return Vessel.ctrlState.X;
+                case "PILOTTOP":
+                    return Vessel.ctrlState.Y;
+                case "PILOTROTATION":
+                    return new Vector(
+                        Vessel.ctrlState.yaw , 
+                        Vessel.ctrlState.pitch , 
+                        Vessel.ctrlState.roll 
+                        );
+                case "PILOTTRANSLATION":
+                    return new Vector(
+                        Vessel.ctrlState.X , 
+                        Vessel.ctrlState.Y , 
+                        Vessel.ctrlState.Z 
+                        );
+                case "PILOTMAINTHROTTLE":
+                    return Vessel.ctrlState.mainThrottle;
+                case "PILOTWHEELTHROTTLE":
+                    return Vessel.ctrlState.wheelThrottle;
+                case "PILOTWHEELTHROTTLETRIM":
+                    return Vessel.ctrlState.wheelThrottleTrim;
+                case "PILOTWHEELSTEER":
+                    return Vessel.ctrlState.wheelSteer;
+                case "PILOTWHEELSTEERTRIM":
+                    return Vessel.ctrlState.wheelSteerTrim;
                 case "BOUND":
                     return bound;
                 default:
@@ -164,7 +202,7 @@ namespace kOS.Suffixed
                 case "MAINTHROTTLE":
                     mainThrottle = Utils.Clamp(floatValue, 0, 1);
                     break;
-                case "DEFAULTMAINTHROTTLE":
+                case "PILOTMAINTHROTTLE":
                     Vessel.ctrlState.mainThrottle = Utils.Clamp(floatValue, 0, 1);
                     if (Vessel == FlightGlobals.ActiveVessel)
                     {
