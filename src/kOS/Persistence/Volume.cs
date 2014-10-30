@@ -3,10 +3,11 @@ using System.Linq;
 using System;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Persistence
 {
-    public abstract class Volume
+    public abstract class Volume : Structure
     {
         protected const int BASE_CAPACITY = 10000;
         protected const float BASE_POWER = 0.04f;
@@ -17,7 +18,19 @@ namespace kOS.Persistence
             Capacity = -1;
             Name = "";
             Files = new Dictionary<string, ProgramFile>();
+            InitializeVolumeSuffixes();
         }
+
+        private void InitializeVolumeSuffixes()
+        {
+            AddSuffix("FREESPACE" , new Suffix<float>(() => GetFreeSpace()));
+            AddSuffix("CAPACITY" , new Suffix<float>(() => Capacity));
+            AddSuffix("NAME" , new Suffix<string>(() => Name));
+            AddSuffix("RENAMEABLE" , new Suffix<string>(() => Name));
+            AddSuffix("FILES" , new Suffix<ListValue>(() => ListValue.CreateList(GetFileList())));
+            AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
+        }
+
 
         protected Dictionary<string, ProgramFile> Files;
         public string Name { get; set; }

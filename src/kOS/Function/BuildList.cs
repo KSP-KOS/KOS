@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Encapsulation;
+﻿using System;
+using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 using kOS.Utilities;
 
@@ -15,10 +16,7 @@ namespace kOS.Function
             switch (listType)
             {
                 case "bodies":
-                    foreach (var body in FlightGlobals.fetch.bodies)
-                    {
-                        list.Add(new BodyTarget(body, shared));
-                    }
+                    list = ListValue.CreateList(FlightGlobals.fetch.bodies);
                     break;
                 case "targets":
                     foreach (var vessel in FlightGlobals.Vessels)
@@ -36,11 +34,13 @@ namespace kOS.Function
                     list = shared.Vessel.PartList(listType, shared);
                     break;
                 case "files":
-                    foreach (var fileinfo in shared.VolumeMgr.CurrentVolume.GetFileList())
-                    {
-                        list.Add(fileinfo);
-                    }
+                    list = ListValue.CreateList(shared.VolumeMgr.CurrentVolume.GetFileList());
                     break;
+                case "volumes":
+                    list = ListValue.CreateList(shared.VolumeMgr.Volumes);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             shared.Cpu.PushStack(list);

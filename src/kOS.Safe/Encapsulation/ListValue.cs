@@ -25,6 +25,11 @@ namespace kOS.Safe.Encapsulation
             ListInitializeSuffixes();
         }
 
+        private ListValue(IList<object> list)
+        {
+            this.list = list;
+        }
+
         // This looks useful.  Why is it private?
         private ListValue(ListValue toCopy)
         {
@@ -207,6 +212,10 @@ namespace kOS.Safe.Encapsulation
             }
             --currentNestDepth;                
             return contents.ToString();
+        }
+        public static ListValue CreateList<T>(IEnumerable<T> sourceList)
+        {
+            return new ListValue(sourceList.Cast<object>().ToList());
         }
 
         #region IIndexable Members
