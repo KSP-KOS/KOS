@@ -35,6 +35,7 @@ namespace kOS.Safe.Encapsulation
         private void ListInitializeSuffixes()
         {
             AddSuffix("ADD",      new OneArgsSuffix<object>             (toAdd => list.Add(toAdd), Resources.ListAddDescription));
+            AddSuffix("INSERT",   new TwoArgsSuffix<int, int>           ((index,toAdd) => list.Insert(index,toAdd)));
             AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => list.RemoveAt(toRemove)));
             AddSuffix("CLEAR",    new NoArgsSuffix                      (() => list.Clear()));
             AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => list.Count));
