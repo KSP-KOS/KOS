@@ -17,7 +17,7 @@ namespace kOS.Safe.Encapsulation
 
         protected Structure()
         {
-            instanceSuffixes = new Dictionary<string, ISuffix>();
+            instanceSuffixes = new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
         }
 
         protected void AddSuffix(string suffixName, ISuffix suffixToAdd)
@@ -73,7 +73,7 @@ namespace kOS.Safe.Encapsulation
                 {
                     return typeSuffixes;
                 }
-                return new Dictionary<string, ISuffix>();
+                return new Dictionary<string, ISuffix>(StringComparer.OrdinalIgnoreCase);
             }
         }
 
