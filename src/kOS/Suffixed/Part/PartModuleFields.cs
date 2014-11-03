@@ -80,7 +80,7 @@ namespace kOS.Suffixed.Part
         /// <summary>
         /// Return true if the value given is allowed for the field given.  This uses the hints from the GUI
         /// system to decide what is and isn't allowed.  (For example if a GUI slider goes from 10 to 20 at
-        /// increments of 2, then a value of 17 is not something you could achive in the GUI, being only able
+        /// increments of 2, then a value of 17 is not something you could achieve in the GUI, being only able
         /// to go from 16 to 18 skipping over 17, and therefore this routine would return false for trying to
         /// set it to 17).
         /// </summary>
@@ -180,8 +180,8 @@ namespace kOS.Suffixed.Part
         /// </summary>
         /// <returns>List of all the strings.  NOTE, the GUI strings are used because
         /// that's all the kOS script writer can see - they don't know the real C# field
-        /// name behind the gui.
-        /// Also, because gui names can have spaces. any spaces are turned into underscores
+        /// name behind the GUI.
+        /// Also, because GUI names can have spaces. any spaces are turned into underscores
         /// for the sake of making them legal kOS identifiers.</returns>
         private ListValue AllFields(string formatter)
         {            
@@ -198,30 +198,27 @@ namespace kOS.Suffixed.Part
         }
         
         /// <summary>
-        /// Determine if the Partmodule has this KSPField on it, which is publically
+        /// Determine if the Partmodule has this KSPField on it, which is publicly
         /// usable by a kOS script:
         /// </summary>
         /// <param name="fieldName">The field to search for</param>
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public bool HasField(string fieldName)
         {
-            foreach (BaseField field in partModule.Fields)
-                if (field.guiName.ToLower() == fieldName.ToLower())
-                    return true;
-            return false;
+            return partModule.Fields.Cast<BaseField>().
+                Any(field => String.Equals(field.guiName, fieldName, StringComparison.CurrentCultureIgnoreCase));
         }
-        
+
         /// <summary>
         /// Return whatever the field's current value is in the PartModule.
         /// </summary>
         /// <param name="cookedGuiName">The guiName of the field, with spaces turned to underscores.
         /// Matching will be done case-insensitively.</param>
-        /// <returns>a BaseField - a KSP type that can be used to get the value, or its gui name or its reflection info.</returns>
+        /// <returns>a BaseField - a KSP type that can be used to get the value, or its GUI name or its reflection info.</returns>
         private BaseField GetField(string cookedGuiName)
         {            
-            string lowerName = cookedGuiName.ToLower();
-
-            return partModule.Fields.Cast<BaseField>().FirstOrDefault(field => field.guiName.ToLower() == lowerName);
+            return partModule.Fields.Cast<BaseField>().
+                FirstOrDefault(field => String.Equals(field.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -243,17 +240,15 @@ namespace kOS.Suffixed.Part
         }
         
         /// <summary>
-        /// Determine if the Partmodule has this KSPEvent on it, which is publically
+        /// Determine if the Partmodule has this KSPEvent on it, which is publicly
         /// usable by a kOS script:
         /// </summary>
         /// <param name="eventName">The event name to search for</param>
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public bool HasEvent(string eventName)
         {
-            foreach (BaseEvent kspEvent in partModule.Events)
-                if (kspEvent.guiName.ToLower() == eventName.ToLower())
-                    return true;
-            return false;
+            return partModule.Events.
+                Any(kspEvent => String.Equals(kspEvent.guiName, eventName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -264,9 +259,8 @@ namespace kOS.Suffixed.Part
         /// <returns></returns>
         private BaseEvent GetEvent(string cookedGuiName)
         {            
-            string lowerName = cookedGuiName.ToLower();
-
-            return partModule.Events.FirstOrDefault(kspEvent => kspEvent.guiName.ToLower() == lowerName);
+            return partModule.Events.
+                FirstOrDefault(kspEvent => String.Equals(kspEvent.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -288,17 +282,15 @@ namespace kOS.Suffixed.Part
         }
 
         /// <summary>
-        /// Determine if the Partmodule has this KSPAction on it, which is publically
+        /// Determine if the Partmodule has this KSPAction on it, which is publicly
         /// usable by a kOS script:
         /// </summary>
         /// <param name="actionName">The action name to search for</param>
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public bool HasAction(string actionName)
         {
-            foreach (BaseAction kspAction in partModule.Actions)
-                if (kspAction.guiName.ToLower() == actionName.ToLower())
-                    return true;
-            return false;
+            return partModule.Actions.
+                Any(kspAction => String.Equals(kspAction.guiName, actionName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -309,15 +301,11 @@ namespace kOS.Suffixed.Part
         /// <returns></returns>
         private BaseAction GetAction(string cookedGuiName)
         {            
-            string lowerName = cookedGuiName.ToLower();
-            
             foreach (BaseAction kspAction in partModule.Actions)
             {
-                if (kspAction.guiName.ToLower() == lowerName)
-                {
-                    Debug.Log("eraseme: yes");
-                    return kspAction;
-                }
+                if (!String.Equals(kspAction.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase)) continue;
+                Debug.Log("eraseme: yes");
+                return kspAction;
             }
             return null;
         }
