@@ -178,11 +178,7 @@ namespace kOS.Suffixed.Part
         /// <summary>
         /// Return a list of all the strings of all KSPfields registered to this PartModule.
         /// </summary>
-        /// <returns>List of all the strings.  NOTE, the GUI strings are used because
-        /// that's all the kOS script writer can see - they don't know the real C# field
-        /// name behind the GUI.
-        /// Also, because GUI names can have spaces. any spaces are turned into underscores
-        /// for the sake of making them legal kOS identifiers.</returns>
+        /// <returns>List of all the strings field names.</returns>
         private ListValue AllFields(string formatter)
         {            
             var returnValue = new ListValue();
@@ -212,8 +208,7 @@ namespace kOS.Suffixed.Part
         /// <summary>
         /// Return whatever the field's current value is in the PartModule.
         /// </summary>
-        /// <param name="cookedGuiName">The guiName of the field, with spaces turned to underscores.
-        /// Matching will be done case-insensitively.</param>
+        /// <param name="cookedGuiName">The case-insensitive guiName of the field.</param>
         /// <returns>a BaseField - a KSP type that can be used to get the value, or its GUI name or its reflection info.</returns>
         private BaseField GetField(string cookedGuiName)
         {            
@@ -254,8 +249,7 @@ namespace kOS.Suffixed.Part
         /// <summary>
         /// Return the KSP BaseEvent going with the given name.
         /// </summary>
-        /// <param name="cookedGuiName">The event's guiname in KOS terms (ie, spaces turned to underscores).
-        /// Matching will be done case-insensitively.</param>
+        /// <param name="cookedGuiName">The event's case-insensitive guiname.</param>
         /// <returns></returns>
         private BaseEvent GetEvent(string cookedGuiName)
         {            
@@ -296,8 +290,7 @@ namespace kOS.Suffixed.Part
         /// <summary>
         /// Return the KSP BaseAction going with the given name.
         /// </summary>
-        /// <param name="cookedGuiName">The event's guiname in KOS terms (ie, spaces turned to underscores).
-        /// Matching will be done case-insensitively.</param>
+        /// <param name="cookedGuiName">The event's case-insensitive guiname.</param>
         /// <returns></returns>
         private BaseAction GetAction(string cookedGuiName)
         {            
