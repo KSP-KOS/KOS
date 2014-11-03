@@ -198,6 +198,20 @@ namespace kOS.Suffixed.Part
         }
         
         /// <summary>
+        /// Determine if the Partmodule has this KSPField on it, which is publically
+        /// usable by a kOS script:
+        /// </summary>
+        /// <param name="fieldName">The field to search for</param>
+        /// <returns>true if it is on the PartModule, false if it is not</returns>
+        public bool HasField(string fieldName)
+        {
+            foreach (BaseField field in partModule.Fields)
+                if (field.guiName.ToLower() == fieldName.ToLower())
+                    return true;
+            return false;
+        }
+        
+        /// <summary>
         /// Return whatever the field's current value is in the PartModule.
         /// </summary>
         /// <param name="cookedGuiName">The guiName of the field, with spaces turned to underscores.
@@ -226,6 +240,20 @@ namespace kOS.Suffixed.Part
                                               "KSPEvent") );
             }
             return returnValue;
+        }
+        
+        /// <summary>
+        /// Determine if the Partmodule has this KSPEvent on it, which is publically
+        /// usable by a kOS script:
+        /// </summary>
+        /// <param name="eventName">The event name to search for</param>
+        /// <returns>true if it is on the PartModule, false if it is not</returns>
+        public bool HasEvent(string eventName)
+        {
+            foreach (BaseEvent kspEvent in partModule.Events)
+                if (kspEvent.guiName.ToLower() == eventName.ToLower())
+                    return true;
+            return false;
         }
 
         /// <summary>
@@ -257,6 +285,20 @@ namespace kOS.Suffixed.Part
                                               "KSPAction") );
             }
             return returnValue;
+        }
+
+        /// <summary>
+        /// Determine if the Partmodule has this KSPAction on it, which is publically
+        /// usable by a kOS script:
+        /// </summary>
+        /// <param name="actionName">The action name to search for</param>
+        /// <returns>true if it is on the PartModule, false if it is not</returns>
+        public bool HasAction(string actionName)
+        {
+            foreach (BaseAction kspAction in partModule.Actions)
+                if (kspAction.guiName.ToLower() == actionName.ToLower())
+                    return true;
+            return false;
         }
 
         /// <summary>
@@ -315,8 +357,11 @@ namespace kOS.Suffixed.Part
             AddSuffix("NAME",       new Suffix<string>(() => partModule.moduleName));
             AddSuffix("PART",       new Suffix<PartValue>(() => new PartValue(partModule.part,shared)));
             AddSuffix("ALLFIELDS",  new Suffix<ListValue>(() => AllFields("({0}) {1}, is {2}")));
+            AddSuffix("HASFIELD",   new OneArgsSuffix<bool, string>(HasField));
             AddSuffix("ALLEVENTS",  new Suffix<ListValue>(() => AllEvents("({0}) {1}, is {2}")));
+            AddSuffix("HASEVENT",   new OneArgsSuffix<bool, string>(HasEvent));
             AddSuffix("ALLACTIONS", new Suffix<ListValue>(() => AllActions("({0}) {1}, is {2}")));
+            AddSuffix("HASACTION",  new OneArgsSuffix<bool, string>(HasAction));
             AddSuffix("GETFIELD",   new OneArgsSuffix<object, string>(GetKSPFieldValue));
             AddSuffix("SETFIELD",   new TwoArgsSuffix<string, object>(SetKSPFieldValue));
             AddSuffix("DOEVENT",    new OneArgsSuffix<string>(CallKSPEvent));
