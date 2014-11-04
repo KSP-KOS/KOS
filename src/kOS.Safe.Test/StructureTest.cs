@@ -151,6 +151,30 @@ namespace kOS.Safe.Test
         }
 
         [Test]
+        public void InstanceSuffixesAreCaseInsensitive()
+        {
+            var testStructure = new TestStructure();
+
+            var testObject1 = new object();
+            var testSuffix1 = Substitute.For<ISuffix>();
+            testSuffix1.Get().Returns(testObject1);
+
+            var testObject2 = new object();
+            var testSuffix2 = Substitute.For<ISuffix>();
+            testSuffix2.Get().Returns(testObject2);
+
+            var suffixNameLower = Guid.NewGuid().ToString().ToLower();
+            var suffixNameUpper = suffixNameLower.ToUpper();
+
+            testStructure.TestAddInstanceSuffix(suffixNameUpper, testSuffix1);
+            Assert.AreEqual(testObject1, testStructure.GetSuffix(suffixNameUpper));
+            Assert.AreEqual(testObject1, testStructure.GetSuffix(suffixNameLower));
+            testStructure.TestAddInstanceSuffix(suffixNameLower, testSuffix2);
+            Assert.AreEqual(testObject2, testStructure.GetSuffix(suffixNameUpper));
+            Assert.AreEqual(testObject2, testStructure.GetSuffix(suffixNameLower));
+        }
+
+        [Test]
         public void CanSetInstanceSuffix()
         {
             var testObject = new object();
