@@ -108,8 +108,6 @@ namespace kOS
         
         private string BuildLocationString(string source, int line)
         {
-            string[] splitParts = source.Split('/');
-            
             if (line < 0)
             {
                 // Special exception - if line number is negative then this isn't from any
@@ -117,6 +115,12 @@ namespace kOS
                 // to recalculate LOCK THROTTLE and LOCK STEERING each time there's an Update).
                 return "(kOS built-in Update)";
             }
+            if (source==null || source==string.Empty)
+            {
+                return "<<probably internal kOS C# error>>";
+            }
+
+            string[] splitParts = source.Split('/');
 
             if (splitParts.Length <= 1)
                 return string.Format("{0}, line {1}", source, line);
@@ -128,9 +132,6 @@ namespace kOS
         private string GetSourceLine(string filePath, int line)
         {
             string returnVal = "(Can't show source line)";
-            string[] pathParts = filePath.Split('/');
-            string fileName = pathParts.Last();
-            Volume vol;
             if (line < 0 && (filePath==null || filePath == String.Empty))
             {
                 // Special exception - if line number is negative then this isn't from any
@@ -138,6 +139,13 @@ namespace kOS
                 // to recalculate LOCK THROTTLE and LOCK STEERING each time there's an Update).
                 return "<<System Built-In Flight Control Updater>>";
             }
+            else if (filePath==null || filePath == String.Empty)
+            {
+                return "<<Probably internal error within kOS C# code>>";
+            }
+            string[] pathParts = filePath.Split('/');
+            string fileName = pathParts.Last();
+            Volume vol;
             if (pathParts!=null && pathParts.Length > 1)
             {
                 string volName = pathParts.First();
