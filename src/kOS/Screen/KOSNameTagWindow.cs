@@ -22,7 +22,7 @@ namespace kOS.Screen
             float xPixel = screenPos.x * UnityEngine.Screen.width;
             float yPixel = (1-screenPos.y) * UnityEngine.Screen.height;
             
-            windowRect = new Rect(xPixel-60, yPixel-20, 120,40);
+            windowRect = new Rect(xPixel-60, yPixel-25, 130,50);
             enabled = true;
         }
         
@@ -46,7 +46,7 @@ namespace kOS.Screen
         {
             if (! enabled)
                 return;
-            GUILayout.Window((int) attachedModule.part.uid, windowRect, DrawWindow,"Name this " + attachedModule.part.name, GUILayout.Width(100));
+            GUILayout.Window(0, windowRect, DrawWindow,"nametag");
         }
         
         public void DrawWindow( int windowID )
@@ -64,8 +64,9 @@ namespace kOS.Screen
                     attachedModule.TypingDone(tagValue);
                 }
             }
-
-            tagValue = GUILayout.TextField( tagValue, GUILayout.MinWidth(150f));
+            GUILayout.Label(attachedModule.part.name);
+            GUILayout.Label("Enter the KOS nametag for this part:");
+            tagValue = GUILayout.TextField( tagValue, GUILayout.MinWidth(120f));
         }
         
         public void Close()

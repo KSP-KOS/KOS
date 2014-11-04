@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
+using kOS.Module;
 using System.Collections.Generic;
 
 namespace kOS.Suffixed
@@ -224,6 +225,40 @@ namespace kOS.Suffixed
             return kScriptParts;
         }
 
+        private ListValue GetPartsTagged(string tagName)
+        {
+            // TODO: instead of ToLower, use the method @erendrake was suggesting
+            // for case-insensitive checks.  I haven't done it because the ToLower()
+            // method is used throughout this whole file and it would make more
+            // sense to run through and catch them all in one go.
+            //
+            string lowerName = tagName.ToLower();
+            
+            ListValue kScriptParts = new ListValue();
+            
+            foreach (global::Part p in Vessel.parts)
+            {
+                bool addedThisPart = false;
+                // Sharpdevelop refuses to believe that there is such a thing as
+                // p.Modules.FindAll() which is why I'm doing it this way:
+                foreach (PartModule pMod in p.Modules)
+                {
+                    if (pMod is KOSNameTag)
+                    {
+                        if (((KOSNameTag)pMod).nameTag.ToLower() == lowerName)
+                        {
+                            kScriptParts.Add(new PartValue(p,Shared));
+                            addedThisPart = true;
+                            break;
+                        }
+                    }
+                    if (addedThisPart)
+                        break; // No sense in wasting time looking at the other partmodules - it's already been added.
+                }
+            }
+            return kScriptParts;
+        }
+
         private ListValue GetModulesNamed(string modName)
         {
             string lowerName = modName.ToLower();
@@ -343,6 +378,7 @@ namespace kOS.Suffixed
             AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue,string>(GetModulesNamed));
             AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>(GetPartsInGroup));
             AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>(GetModulesInGroup));
+            AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue,string>(GetPartsTagged));
             AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
        }
 

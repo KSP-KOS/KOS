@@ -159,7 +159,7 @@ namespace kOS.Safe.Compilation.KS
                     action.Invoke(node);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
         }
 
@@ -198,7 +198,7 @@ namespace kOS.Safe.Compilation.KS
                     PreProcessRunStatement(node);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
         }
 
@@ -682,7 +682,7 @@ namespace kOS.Safe.Compilation.KS
                     VisitIdentifierLedExpression(node);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
         }
 
@@ -1506,7 +1506,7 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodeCompareEqual());
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
         }
 

@@ -22,7 +22,7 @@ namespace kOS.Module
         {
             if (typingWindow != null)
                 typingWindow.Close();
-            GameObject gObj = new GameObject("Name This " + part.name, typeof(KOSNameTagWindow) );
+            GameObject gObj = new GameObject("nametag", typeof(KOSNameTagWindow) );
             DontDestroyOnLoad(gObj);
             typingWindow = (KOSNameTagWindow)gObj.GetComponent(typeof(KOSNameTagWindow));
             typingWindow.Invoke(this,nameTag);
