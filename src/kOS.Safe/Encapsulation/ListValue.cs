@@ -104,14 +104,14 @@ namespace kOS.Safe.Encapsulation
             // If toString is nested inside another object's toString that was
             // called from another list, then honor the verbosity of that
             // original topmost call by not explicitly saying it's shallow or
-            // nested here. otherwise explictly say it's shallow if it's the outermost
+            // nested here. otherwise explicitly say it's shallow if it's the outermost
             // ToString() call:
             return CalledFrom("ListDump") ? ListDump() : ListDumpShallow();
         }
 
         /// <summary>
         /// Returns whether or not the current method was called from the given method name
-        /// by examning the callstack downward from the current level's parent.  Assumes the
+        /// by examining the callstack downward from the current level's parent.  Assumes the
         /// method in question is a method of this class (ListValue) itself.  Examines all
         /// the nesting levels, so if A called B called C called D, then during D, a call to
         /// calledFrom("A") would still return true.
@@ -175,7 +175,7 @@ namespace kOS.Safe.Encapsulation
         }
         
         /// <summary>
-        /// Dump the contens of the list into a string, by descending through the
+        /// Dump the contents of the list into a string, by descending through the
         /// list and appending the "ToString"'s of all the elements in the list.<br/>
         /// </summary>
         /// Warning: If you Ever change the name of this, then change the value of the two

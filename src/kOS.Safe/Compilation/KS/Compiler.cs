@@ -158,8 +158,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.lock_stmt:
                     action.Invoke(node);
                     break;
-                default:
-                    break;
             }
         }
 
@@ -196,8 +194,6 @@ namespace kOS.Safe.Compilation.KS
                     break;
                 case TokenType.run_stmt:
                     PreProcessRunStatement(node);
-                    break;
-                default:
                     break;
             }
         }
@@ -680,8 +676,6 @@ namespace kOS.Safe.Compilation.KS
                     break;
                 case TokenType.identifier_led_expr:
                     VisitIdentifierLedExpression(node);
-                    break;
-                default:
                     break;
             }
         }
@@ -1504,8 +1498,6 @@ namespace kOS.Safe.Compilation.KS
                     break;
                 case "=":
                     AddOpcode(new OpcodeCompareEqual());
-                    break;
-                default:
                     break;
             }
         }

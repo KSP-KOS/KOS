@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using kOS.Module;
 
 namespace kOS.Screen
@@ -15,7 +14,7 @@ namespace kOS.Screen
             attachedModule = module;
             tagValue = oldValue;
             
-            Vector3 screenPos = GetViewportPosFor(this.attachedModule.part.transform.position);
+            Vector3 screenPos = GetViewportPosFor(attachedModule.part.transform.position);
 
             // screenPos is in coords from 0 to 1, 0 to 1, not screen pixel coords.
             // Transform it to pixel coords:

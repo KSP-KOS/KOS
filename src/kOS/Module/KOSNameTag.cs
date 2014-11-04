@@ -1,5 +1,4 @@
-﻿using System;
-using kOS.Screen;
+﻿using kOS.Screen;
 using UnityEngine;
 
 namespace kOS.Module
@@ -7,7 +6,7 @@ namespace kOS.Module
     public class KOSNameTag : PartModule
     {
         
-        KOSNameTagWindow typingWindow = null;
+        KOSNameTagWindow typingWindow;
 
         [KSPField(isPersistant = true,
                   guiActive = true,

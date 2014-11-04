@@ -1,4 +1,6 @@
-﻿using kOS.Binding;
+﻿using System;
+using System.Linq;
+using kOS.Binding;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -227,54 +229,22 @@ namespace kOS.Suffixed
 
         private ListValue GetPartsTagged(string tagName)
         {
-            // TODO: instead of ToLower, use the method @erendrake was suggesting
-            // for case-insensitive checks.  I haven't done it because the ToLower()
-            // method is used throughout this whole file and it would make more
-            // sense to run through and catch them all in one go.
-            //
-            string lowerName = tagName.ToLower();
-            
-            ListValue kScriptParts = new ListValue();
-            
-            foreach (global::Part p in Vessel.parts)
-            {
-                bool addedThisPart = false;
-                // Sharpdevelop refuses to believe that there is such a thing as
-                // p.Modules.FindAll() which is why I'm doing it this way:
-                foreach (PartModule pMod in p.Modules)
-                {
-                    if (pMod is KOSNameTag)
-                    {
-                        if (((KOSNameTag)pMod).nameTag.ToLower() == lowerName)
-                        {
-                            kScriptParts.Add(new PartValue(p,Shared));
-                            addedThisPart = true;
-                            break;
-                        }
-                    }
-                    if (addedThisPart)
-                        break; // No sense in wasting time looking at the other partmodules - it's already been added.
-                }
-            }
-            return kScriptParts;
+            IEnumerable<global::Part> partsWithName = Vessel.parts
+                .Where( p => p.Modules.OfType<KOSNameTag>()
+                .Any(tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase)));
+
+            return ListValue.CreateList(partsWithName);
         }
 
         private ListValue GetModulesNamed(string modName)
         {
-            string lowerName = modName.ToLower();
-            
-            ListValue kScriptParts = new ListValue();
             // This is slow - maybe there should be a faster lookup string hash, but
             // KSP's data model seems to have not implemented it:
-            foreach (global::Part p in Vessel.parts)
-            {
-                foreach (PartModule pMod in p.Modules)
-                {
-                    if (pMod.moduleName.ToLower() == lowerName)
-                        kScriptParts.Add(new PartModuleFields(pMod,Shared));
-                }
-            }
-            return kScriptParts;
+            IEnumerable<PartModule> modules = Vessel.parts
+                .SelectMany( p => p.Modules.Cast<PartModule>()
+                .Where( pMod => String.Equals(pMod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase)));
+
+            return ListValue.CreateList(modules);
         }
         
         private ListValue GetPartsInGroup(string groupName)
@@ -302,20 +272,25 @@ namespace kOS.Suffixed
             if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
             
             ListValue kScriptParts = new ListValue();
-                        
-            if (matchGroup != KSPActionGroup.None)
-                foreach (global::Part p in Vessel.parts)
+            if (matchGroup == KSPActionGroup.None) return kScriptParts;
+
+            foreach (global::Part p in Vessel.parts)
+            {
+                // See if any of the parts' actions are this action group:
+                bool hasPartAction = p.Actions.Any(a => a.actionGroup.Equals(matchGroup));
+                if (hasPartAction)
                 {
-                    // See if any of the parts' actions are this action group:
-                    foreach (BaseAction action in p.Actions)
-                        if (action.actionGroup.Equals(matchGroup))
-                            kScriptParts.Add(new PartValue(p,Shared));
-                    // See if any of the parts' partmodule actions are this action group:
-                    foreach (PartModule pm in p.Modules)
-                        foreach (BaseAction action in pm.Actions)
-                            if (action.actionGroup.Equals(matchGroup))
-                                kScriptParts.Add(new PartValue(p,Shared));
+                    kScriptParts.Add(new PartValue(p,Shared));
+                    continue;
                 }
+
+                var modules = p.Modules.Cast<PartModule>();
+                bool hasModuleAction = modules.Any(pm => pm.Actions.Any(a=>a.actionGroup.Equals(matchGroup)));
+                if (hasModuleAction)
+                {
+                        kScriptParts.Add(new PartValue(p,Shared));
+                }
+            }
             return kScriptParts;
         }
         
@@ -348,12 +323,17 @@ namespace kOS.Suffixed
             // This is almost identical to the logic in GetPartsInGroup and it might be a nice idea
             // later to merge them somehow:
             //
-            if (matchGroup != KSPActionGroup.None)
-                foreach (global::Part p in Vessel.parts)
-                    foreach (PartModule pm in p.Modules)
-                        foreach (BaseAction action in pm.Actions)
-                            if (action.actionGroup.Equals(matchGroup))
-                                kScriptParts.Add(new PartModuleFields(pm,Shared));
+            if (matchGroup == KSPActionGroup.None) return kScriptParts;
+
+            foreach (global::Part p in Vessel.parts)
+                foreach (PartModule pm in p.Modules)
+                {
+                    if (pm.Actions.Any(a => a.actionGroup.Equals(matchGroup)))
+                    {
+                        kScriptParts.Add(new PartModuleFields(pm, Shared));
+                    }
+                }
+
             return kScriptParts;
         }
         

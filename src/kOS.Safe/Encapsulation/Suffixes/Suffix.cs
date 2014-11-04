@@ -1,5 +1,3 @@
-using kOS.Safe.Utilities;
-
 namespace kOS.Safe.Encapsulation.Suffixes
 {
     public class Suffix<TReturn> : SuffixBase

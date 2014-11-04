@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using kOS.Persistence;
 using kOS.Safe.Compilation;
-using kOS.Safe.Exceptions;
 
 namespace kOS
 {
@@ -116,7 +115,7 @@ namespace kOS
                 // to recalculate LOCK THROTTLE and LOCK STEERING each time there's an Update).
                 return "(kOS built-in Update)";
             }
-            if (source==null || source==string.Empty)
+            if (string.IsNullOrEmpty(source))
             {
                 return "<<probably internal kOS C# error>>";
             }
@@ -133,21 +132,22 @@ namespace kOS
         private string GetSourceLine(string filePath, int line)
         {
             string returnVal = "(Can't show source line)";
-            if (line < 0 && (filePath==null || filePath == String.Empty))
+            if (line < 0 && string.IsNullOrEmpty(filePath))
             {
                 // Special exception - if line number is negative then this isn't from any
                 // line of user's code but from the system itself (like the triggers the compiler builds
                 // to recalculate LOCK THROTTLE and LOCK STEERING each time there's an Update).
                 return "<<System Built-In Flight Control Updater>>";
             }
-            else if (filePath==null || filePath == String.Empty)
+
+            if (string.IsNullOrEmpty(filePath))
             {
                 return "<<Probably internal error within kOS C# code>>";
             }
             string[] pathParts = filePath.Split('/');
             string fileName = pathParts.Last();
             Volume vol;
-            if (pathParts!=null && pathParts.Length > 1)
+            if (pathParts.Length > 1)
             {
                 string volName = pathParts.First();
                 if (Regex.IsMatch(volName, @"^\d+$"))
@@ -174,13 +174,11 @@ namespace kOS
             {
                 if (file.Category == FileCategory.KEXE)
                     return  "<<machine language file: can't show source line>>";
-                else
+
+                string[] splitLines = file.StringContent.Split('\n');
+                if (splitLines.Length >= line)
                 {
-                    string[] splitLines = file.StringContent.Split('\n');
-                    if (splitLines.Length >= line)
-                    {
-                        returnVal = splitLines[line-1];
-                    }
+                    returnVal = splitLines[line-1];
                 }
             }
             return returnVal;
