@@ -223,7 +223,7 @@ namespace kOS.Suffixed
 
             ListValue kScriptParts = new ListValue();
             foreach (global::Part kspPart in kspParts)
-                kScriptParts.Add( new PartValue(kspPart,Shared));
+                kScriptParts.Add(PartFactory.Construct(kspPart,Shared));
             return kScriptParts;
         }
 
@@ -233,7 +233,11 @@ namespace kOS.Suffixed
                 .Where( p => p.Modules.OfType<KOSNameTag>()
                 .Any(tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase)));
 
-            return ListValue.CreateList(partsWithName);
+            // The KSP Parts need to become KOS PartValues before becoming a ListValue:
+            ListValue kScriptParts = new ListValue();
+            foreach (global::Part kspPart in partsWithName)
+                kScriptParts.Add(PartFactory.Construct(kspPart,Shared));
+            return kScriptParts;
         }
 
         private ListValue GetModulesNamed(string modName)
@@ -280,7 +284,7 @@ namespace kOS.Suffixed
                 bool hasPartAction = p.Actions.Any(a => a.actionGroup.Equals(matchGroup));
                 if (hasPartAction)
                 {
-                    kScriptParts.Add(new PartValue(p,Shared));
+                    kScriptParts.Add(PartFactory.Construct(p,Shared));
                     continue;
                 }
 
@@ -288,7 +292,7 @@ namespace kOS.Suffixed
                 bool hasModuleAction = modules.Any(pm => pm.Actions.Any(a=>a.actionGroup.Equals(matchGroup)));
                 if (hasModuleAction)
                 {
-                        kScriptParts.Add(new PartValue(p,Shared));
+                        kScriptParts.Add(PartFactory.Construct(p,Shared));
                 }
             }
             return kScriptParts;
@@ -417,7 +421,7 @@ namespace kOS.Suffixed
                 case "LOADED":
                     return Vessel.loaded;
                 case "ROOTPART":
-                    return new PartValue(Vessel.rootPart,Shared);
+                    return PartFactory.Construct(Vessel.rootPart,Shared);
             }
 
             // Is this a resource?

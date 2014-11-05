@@ -37,7 +37,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>(GetModule));
             AddSuffix("MODULES", new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));            
-            AddSuffix("PARENT", new Suffix<PartValue>(() => new PartValue(Part.parent,shared), "The parent part of this part"));
+            AddSuffix("PARENT", new Suffix<PartValue>(() => PartFactory.Construct(Part.parent,shared), "The parent part of this part"));
             AddSuffix("HASPARENT", new Suffix<bool>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
             AddSuffix("CHILDREN", new Suffix<ListValue>(GetChildren, "A LIST() of the children parts of this part"));
         }
@@ -65,7 +65,7 @@ namespace kOS.Suffixed.Part
             var toReturn = new ListValue();
             foreach (var part in parts)
             {
-                toReturn.Add(new PartValue(part, sharedObj));
+                toReturn.Add(PartFactory.Construct(part, sharedObj));
             }
             return toReturn;
         }
@@ -121,7 +121,7 @@ namespace kOS.Suffixed.Part
             var kids = new ListValue();
             foreach (global::Part part in Part.children)
             {
-                kids.Add(new PartValue(part,shared));
+                kids.Add(PartFactory.Construct(part,shared));
             }
             return kids;
         }

@@ -336,7 +336,7 @@ namespace kOS.Suffixed.Part
         private void InitializeSuffixesAfterConstruction()
         {
             AddSuffix("NAME",       new Suffix<string>(() => partModule.moduleName));
-            AddSuffix("PART",       new Suffix<PartValue>(() => new PartValue(partModule.part,shared)));
+            AddSuffix("PART",       new Suffix<PartValue>(() => PartFactory.Construct(partModule.part,shared)));
             AddSuffix("ALLFIELDS",  new Suffix<ListValue>(() => AllFields("({0}) {1}, is {2}")));
             AddSuffix("HASFIELD",   new OneArgsSuffix<bool, string>(HasField));
             AddSuffix("ALLEVENTS",  new Suffix<ListValue>(() => AllEvents("({0}) {1}, is {2}")));
