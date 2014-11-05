@@ -36,7 +36,7 @@ namespace kOS.Suffixed
         // mod.  Until then it's not that much of an extra cost:
         private Vector3       shipCenterCoords;
         private Vector3       camPos;         // camera coordinates.
-        private Vector3       camLookVec;     // vector from camera to ship positon.
+        private Vector3       camLookVec;     // vector from camera to ship position.
         private Vector3       prevCamLookVec;
         private Quaternion    camRot;
         private Quaternion    prevCamRot;
@@ -132,7 +132,7 @@ namespace kOS.Suffixed
             {
                 PlanetariumCamera pc = MapView.MapCamera;
                 camPos = pc.transform.localPosition;
-                // the Distance coming from from MapView.MapCamera.Distance
+                // the Distance coming from MapView.MapCamera.Distance
                 // doesn't seem to work - calculating it myself below:
                 // _camdist = pc.Distance();
                 camRot = MapView.MapCamera.GetCameraTransform().rotation;
@@ -141,7 +141,7 @@ namespace kOS.Suffixed
             {
                 FlightCamera fc = FlightCamera.fetch;
                 camPos = fc.transform.localPosition;
-                // the Distance coming from from FlightCamera.Distance
+                // the Distance coming from FlightCamera.Distance
                 // doesn't seem to work - calculating it myself below:
                 // _camdist = fc.Distance();
                 camRot = FlightCamera.fetch.GetCameraTransform().rotation;
@@ -167,7 +167,7 @@ namespace kOS.Suffixed
 
         /// <summary>
         /// Position the origins of the objects that make up the arrow
-        /// such that they anchor relatove to current ship position.
+        /// such that they anchor relative to current ship position.
         /// </summary>
         private void PutAtShipRelativeCoords()
         {
@@ -450,7 +450,7 @@ namespace kOS.Suffixed
             
             Vector3 screenPos = GetViewportPosFor( shipCenterCoords + labelLocation );
             
-            // If the projected location is onscreen:
+            // If the projected location is on-screen:
             if ( screenPos.z > 0
                  && screenPos.x >= 0 && screenPos.x <= 1
                  && screenPos.y >= 0 && screenPos.y <= 1 )

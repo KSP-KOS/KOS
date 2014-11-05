@@ -77,7 +77,7 @@ namespace kOS.Utilities
                     break;
 
                 case "PARTS":
-                    list = PartValue.PartsToList(partList, sharedObj);
+                    list = PartValueFactory.Construct(partList, sharedObj);
                     break;
 
                 case "ENGINES":
