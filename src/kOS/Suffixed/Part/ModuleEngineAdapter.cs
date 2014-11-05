@@ -116,10 +116,10 @@ namespace kOS.Suffixed.Part
                 switch (engineType)
                 {
                     case EngineType.Engine:
-                        return engineModule.maxThrust;
+                        return engineModule.finalThrust;
 
                     case EngineType.EngineFx:
-                        return engineModuleFx.maxThrust;
+                        return engineModuleFx.finalThrust;
 
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -134,10 +134,10 @@ namespace kOS.Suffixed.Part
                 switch (engineType)
                 {
                     case EngineType.Engine:
-                        return engineModule.maxThrust;
+                        return engineModule.fuelFlowGui;
 
                     case EngineType.EngineFx:
-                        return engineModuleFx.maxThrust;
+                        return engineModuleFx.fuelFlowGui;
 
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -152,10 +152,10 @@ namespace kOS.Suffixed.Part
                 switch (engineType)
                 {
                     case EngineType.Engine:
-                        return engineModule.maxThrust;
+                        return engineModule.realIsp;
 
                     case EngineType.EngineFx:
-                        return engineModuleFx.maxThrust;
+                        return engineModuleFx.realIsp;
 
                     default:
                         throw new ArgumentOutOfRangeException();
