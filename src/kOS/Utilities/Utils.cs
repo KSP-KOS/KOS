@@ -9,8 +9,16 @@ namespace kOS.Utilities
 {
 
     public static class Utils
-    {        
-        
+    {
+        public static Camera GetCurrentCamera()
+        {
+            // man, KSP could really just use a simple "get whatever the current camera is" method:
+            return HighLogic.LoadedSceneIsEditor ?
+                       EditorLogic.fetch.editorCamera :
+                       (MapView.MapIsEnabled ?
+                           MapView.MapCamera.camera : FlightCamera.fetch.mainCamera);
+        }
+
         public static float Clamp(float input, float low, float high)
         {
             return (input > high ? high : (input < low ? low : input));

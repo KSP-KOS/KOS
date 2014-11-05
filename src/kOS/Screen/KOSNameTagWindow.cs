@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using kOS.Utilities;
+using UnityEngine;
 using kOS.Module;
 
 namespace kOS.Screen
@@ -52,20 +53,9 @@ namespace kOS.Screen
         /// </summary>
         private Vector3 GetViewportPosFor( Vector3 v )
         {
-            return GetCurrentCamera().WorldToViewportPoint(v);
+            return Utils.GetCurrentCamera().WorldToViewportPoint(v);
         }
         
-        
-        // I find myself needing this in more than one place.  Maybe it should be a utlity function.
-        private Camera GetCurrentCamera()
-        {
-            // man, KSP could really just use a simple "get whatever the current camera is" method:
-            return HighLogic.LoadedSceneIsEditor ?
-                       EditorLogic.fetch.editorCamera :
-                       (MapView.MapIsEnabled ?
-                           MapView.MapCamera.camera : FlightCamera.fetch.mainCamera);
-        }
-                
         public void OnGUI()
         {
             if (! enabled)
