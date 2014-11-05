@@ -27,6 +27,7 @@ namespace kOS.Suffixed
         private float mainThrottle;
         private readonly Flushable<bool> neutral;
         private readonly Flushable<bool> killRotation;
+        private readonly Flushable<bool> resetTrim;
         private bool bound;
         private readonly List<string> floatSuffixes;
         private readonly List<string> vectorSuffixes;
@@ -35,6 +36,7 @@ namespace kOS.Suffixed
         {
             neutral = new Flushable<bool>(); 
             killRotation = new Flushable<bool>(); 
+            resetTrim = new Flushable<bool>(); 
             bound = false;
             Vessel = vessel;
 
@@ -48,32 +50,40 @@ namespace kOS.Suffixed
         {
             switch (suffixName)
             {
+                //Rotation
                 case "YAW":
                     return yaw;
-                case "YAWTRIM":
-                    return yawTrim;
                 case "PITCH":
                     return pitch;
-                case "PITCHTRIM":
-                    return pitchTrim;
                 case "ROLL":
                     return roll;
+                case "YAWTRIM":
+                    return yawTrim;
+                case "PITCHTRIM":
+                    return pitchTrim;
                 case "ROLLTRIM":
                     return rollTrim;
+                case "ROTATION":
+                    return new Vector(yaw , pitch , roll );
+
+                //Translation
                 case "FORE":
                     return fore;
                 case "STARBOARD":
                     return starboard;
                 case "TOP":
                     return top;
-                case "ROTATION":
-                    return new Vector(yaw , pitch , roll );
                 case "TRANSLATION":
                     return new Vector(starboard , top , fore );
+
+                case "BOUND":
+                    return bound;
                 case "NEUTRAL":
                     return neutral;
                 case "MAINTHROTTLE":
                     return mainThrottle;
+
+                //Surface Only
                 case "WHEELTHROTTLE":
                     return wheelThrottle;
                 case "WHEELTHROTTLETRIM":
@@ -82,6 +92,8 @@ namespace kOS.Suffixed
                     return wheelSteer;
                 case "WHEELSTEERTRIM":
                     return wheelSteerTrim;
+
+                //Pilot
                 case "PILOTYAW":
                     return Vessel.ctrlState.yaw;
                 case "PILOTYAWTRIM":
@@ -94,24 +106,26 @@ namespace kOS.Suffixed
                     return Vessel.ctrlState.roll;
                 case "PILOTROLLTRIM":
                     return Vessel.ctrlState.rollTrim;
-                case "PILOTFORE":
-                    return Vessel.ctrlState.Z;
-                case "PILOTSTARBOARD":
-                    return Vessel.ctrlState.X;
-                case "PILOTTOP":
-                    return Vessel.ctrlState.Y;
                 case "PILOTROTATION":
                     return new Vector(
                         Vessel.ctrlState.yaw , 
                         Vessel.ctrlState.pitch , 
                         Vessel.ctrlState.roll 
                         );
+                case "PILOTFORE":
+                    return Vessel.ctrlState.Z;
+                case "PILOTSTARBOARD":
+                    return Vessel.ctrlState.X;
+                case "PILOTTOP":
+                    return Vessel.ctrlState.Y;
                 case "PILOTTRANSLATION":
                     return new Vector(
                         Vessel.ctrlState.X , 
                         Vessel.ctrlState.Y , 
                         Vessel.ctrlState.Z 
                         );
+                case "PILOTNEUTRAL":
+                    return Vessel.ctrlState.isNeutral;
                 case "PILOTMAINTHROTTLE":
                     return Vessel.ctrlState.mainThrottle;
                 case "PILOTWHEELTHROTTLE":
@@ -122,8 +136,6 @@ namespace kOS.Suffixed
                     return Vessel.ctrlState.wheelSteer;
                 case "PILOTWHEELSTEERTRIM":
                     return Vessel.ctrlState.wheelSteerTrim;
-                case "BOUND":
-                    return bound;
                 default:
                     return null;
             }
@@ -142,6 +154,11 @@ namespace kOS.Suffixed
             }
 
             if (CheckKillRotation(suffixName, value))
+            {
+                return true;
+            }
+
+            if (CheckResetTrim(suffixName, value))
             {
                 return true;
             }
@@ -204,11 +221,11 @@ namespace kOS.Suffixed
                 case "WHEELTHROTTLE":
                     wheelThrottle = Utils.Clamp(floatValue, 0, 1);
                     break;
-                case "WHEELSTEER":
-                    wheelSteer = Utils.Clamp(floatValue, -1, 1);
-                    break;
                 case "WHEELTHROTTLETRIM":
                     wheelThrottleTrim = Utils.Clamp(floatValue, 0, 1);
+                    break;
+                case "WHEELSTEER":
+                    wheelSteer = Utils.Clamp(floatValue, -1, 1);
                     break;
                 case "WHEELSTEERTRIM":
                     wheelSteerTrim = Utils.Clamp(floatValue, -1, 1);
@@ -327,6 +344,16 @@ namespace kOS.Suffixed
             killRotation.Value = false;
             return false;
         }
+        private bool CheckResetTrim(string suffixName, object value)
+        {
+            if (suffixName == "RESETTRIM")
+            {
+                resetTrim.Value = bool.Parse(value.ToString());
+                return true;
+            }
+            resetTrim.Value = false;
+            return false;
+        }
 
         private bool CheckNeutral(string suffix, object value)
         {
@@ -361,6 +388,14 @@ namespace kOS.Suffixed
                 if (neutral.FlushValue)
                 {
                     st.Neutralize();
+                }
+            }
+
+            if (resetTrim.IsStale)
+            {
+                if (resetTrim.FlushValue)
+                {
+                    st.ResetTrim();
                 }
             }
 
