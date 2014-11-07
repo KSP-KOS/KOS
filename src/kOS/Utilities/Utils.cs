@@ -88,7 +88,7 @@ namespace kOS.Utilities
             IEnumerable<FuelLine> lines;
             if (engines.Count > 0)
             {
-                // The recursinve algorithm is written to assume all the engines are on
+                // The recursive algorithm is written to assume all the engines are on
                 // the same vessel, so just use one of the engines to get the vessel:
                 lines = engines[0].vessel.parts.OfType<FuelLine>();
             }
