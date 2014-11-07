@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Utilities;
 using UnityEngine;
 using kOS.Execution;
 using kOS.Safe;
@@ -128,24 +129,14 @@ namespace kOS.Suffixed
             
             isOnMap = MapView.MapIsEnabled;
 
-            if (isOnMap)
-            {
-                PlanetariumCamera pc = MapView.MapCamera;
-                camPos = pc.transform.localPosition;
-                // the Distance coming from MapView.MapCamera.Distance
-                // doesn't seem to work - calculating it myself below:
-                // _camdist = pc.Distance();
-                camRot = MapView.MapCamera.GetCameraTransform().rotation;
-            }
-            else
-            {
-                FlightCamera fc = FlightCamera.fetch;
-                camPos = fc.transform.localPosition;
-                // the Distance coming from FlightCamera.Distance
-                // doesn't seem to work - calculating it myself below:
-                // _camdist = fc.Distance();
-                camRot = FlightCamera.fetch.GetCameraTransform().rotation;
-            }
+            var cam = Utils.GetCurrentCamera();
+            camPos = cam.transform.localPosition;
+
+            // the Distance coming from MapView.MapCamera.Distance
+            // doesn't seem to work - calculating it myself below:
+            // _camdist = pc.Distance();
+            camRot = cam.GetCameraTransform().rotation;
+
             camLookVec = camPos - shipCenterCoords;
         }
         
@@ -159,9 +150,7 @@ namespace kOS.Suffixed
         /// </summary>
         private Vector3 GetViewportPosFor( Vector3 v )
         {
-            Camera cam = isOnMap ? 
-                MapView.MapCamera.camera : 
-                FlightCamera.fetch.mainCamera;
+            var cam = Utils.GetCurrentCamera();
             return cam.WorldToViewportPoint( v );
         }
 
