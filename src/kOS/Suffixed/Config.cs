@@ -159,7 +159,7 @@ namespace kOS.Suffixed
         {
             return keys.Values.ToList();
         }
-
+                
         public override string ToString()
         {
             return "Use \"list config.\" to view all configurations";

@@ -1,4 +1,6 @@
-﻿namespace kOS.Safe.Encapsulation
+﻿using System.Collections.Generic;
+
+namespace kOS.Safe.Encapsulation
 {
     public interface ISuffixed
     {

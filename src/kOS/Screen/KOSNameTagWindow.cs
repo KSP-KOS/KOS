@@ -37,12 +37,25 @@ namespace kOS.Screen
             // tagLineRect = new Rect(xPixelPoint, yPixelPoint, tagLineWidth, 3);
             // Debug.Log("tagLineRect = " + tagLineRect );
 
-            enabled = true;
+            SetEnabled(true);
 
             if (HighLogic.LoadedSceneIsEditor)
                 EditorLogic.fetch.SetHighlightRecursive(false, attachedModule.part);
         }
-        
+
+        /// <summary>
+        /// If you try to set a Unity.Behaviour.enabled to false when it already IS false,
+        /// and Unity hasn't fully finined configuring the Monoboehvior yet, the Property's
+        /// "set" code throws a null ref error. How lame is that?
+        /// That's why I wrapped every attempt to set enabled's value with this check, because KSP
+        /// tries running my hooks in this class before Unity's ready for them.
+        /// </summary>
+        private void SetEnabled(bool newVal)
+        {
+            if (newVal != enabled)
+                enabled = newVal;
+        }
+
         /// <summary>
         /// Get the position in screen coordinates that the 3d world coordinates
         /// project onto, abstracting the two different ways KSP has to access
@@ -97,10 +110,12 @@ namespace kOS.Screen
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Cancel"))
             {
+                e.Use();
                 Close();
             }
             if (GUILayout.Button("Accept"))
             {
+                e.Use();
                 attachedModule.TypingDone(tagValue);
                 Close();
             }
@@ -116,7 +131,9 @@ namespace kOS.Screen
         {
             if (HighLogic.LoadedSceneIsEditor)
                 EditorLogic.fetch.Unlock("KOSNameTagLock");
-            enabled = false;
+            
+            SetEnabled(false);
+
             if (HighLogic.LoadedSceneIsEditor)
                 EditorLogic.fetch.SetHighlightRecursive(false, attachedModule.part);
         }

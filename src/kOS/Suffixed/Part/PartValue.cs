@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Encapsulation;
+﻿using kOS.Module;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("NAME", new Suffix<string>(() => Part.name));
             AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
             AddSuffix("UID", new Suffix<uint>(() => Part.uid));
+            AddSuffix("TAG", new NoArgsSuffix<string>(GetTagName));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.orgRot)));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.orgPos)));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
@@ -55,9 +57,23 @@ namespace kOS.Suffixed.Part
             }
             throw new KOSLookupFailException( "module", modName.ToUpper(), this );
         }
+        
+        public string GetTagName() // public because I picture this being a useful API method later
+        {
+            KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+            if (tagModule==null)
+                return "";
+            else
+                return tagModule.nameTag;
+        }
+        
         public override string ToString()
         {
-            return string.Format("PART({0},{1})", Part.name, Part.uid);
+            string tagName = GetTagName();
+            if (string.IsNullOrEmpty(tagName))
+                return string.Format("PART({0},uid={1})", Part.name, Part.uid);
+            else
+                return string.Format("PART({0},tag={1})", Part.name, tagName);
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)

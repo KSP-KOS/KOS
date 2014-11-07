@@ -239,6 +239,23 @@ namespace kOS.Suffixed
                 kScriptParts.Add(PartFactory.Construct(kspPart,Shared));
             return kScriptParts;
         }
+        
+        /// <summary>
+        /// Get all the parts which have at least SOME non-default name:
+        /// </summary>
+        /// <returns></returns>
+        private ListValue GetAllTaggedParts()
+        {
+            IEnumerable<global::Part> partsWithName = Vessel.parts
+                .Where( p => p.Modules.OfType<KOSNameTag>()
+                .Any(tag => !(String.Equals(tag.nameTag, "", StringComparison.CurrentCultureIgnoreCase))));
+
+            // The KSP Parts need to become KOS PartValues before becoming a ListValue:
+            ListValue kScriptParts = new ListValue();
+            foreach (global::Part kspPart in partsWithName)
+                kScriptParts.Add(PartFactory.Construct(kspPart,Shared));
+            return kScriptParts;
+        }
 
         private ListValue GetModulesNamed(string modName)
         {
@@ -363,6 +380,7 @@ namespace kOS.Suffixed
             AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>(GetPartsInGroup));
             AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>(GetModulesInGroup));
             AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue,string>(GetPartsTagged));
+            AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
             AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
        }
 

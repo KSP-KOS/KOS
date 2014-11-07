@@ -84,6 +84,7 @@
     <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSNameTagWindow.cs" />
     <Compile Include="Screen\KOSTextEditPopup.cs" />
+    <Compile Include="Screen\KOSToolBarWindow.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
     <Compile Include="Suffixed\Orbitable.cs" />
