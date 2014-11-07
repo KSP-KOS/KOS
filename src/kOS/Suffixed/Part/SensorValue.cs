@@ -23,7 +23,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("TOGGLE", new NoArgsSuffix(() => sensor.Toggle()));
         }
 
-        public new static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
+        public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
         {
             var toReturn = new ListValue();
             foreach (var part in parts)

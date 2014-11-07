@@ -135,7 +135,8 @@ namespace kOS.Suffixed
             // the Distance coming from MapView.MapCamera.Distance
             // doesn't seem to work - calculating it myself below:
             // _camdist = pc.Distance();
-            camRot = cam.GetCameraTransform().rotation;
+            // camRot = cam.GetCameraTransform().rotation;
+            camRot = cam.transform.rotation;
 
             camLookVec = camPos - shipCenterCoords;
         }
