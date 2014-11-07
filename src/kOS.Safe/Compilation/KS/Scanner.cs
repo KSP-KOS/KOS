@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
@@ -453,10 +454,10 @@ namespace kOS.Safe.Compilation.KS
                     var match = Patterns[tok.Type].Match(tok.Text);
                     var fileMatch = match.Groups["File"];
                     if (fileMatch.Success)
-                        currentFile = fileMatch.Value;
+                        currentFile = fileMatch.Value.Replace("\\\\", "\\");
                     var lineMatch = match.Groups["Line"];
                     if (lineMatch.Success)
-                        currentline = int.Parse(lineMatch.Value);
+                        currentline = int.Parse(lineMatch.Value, NumberStyles.Integer, CultureInfo.InvariantCulture);
                 }
             }
             while (SkipList.Contains(tok.Type));

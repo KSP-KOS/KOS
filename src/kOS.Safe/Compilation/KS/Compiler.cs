@@ -1753,10 +1753,19 @@ namespace kOS.Safe.Compilation.KS
         private void VisitCompileStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            string fileNameIn = node.Nodes[1].Token.Text;
-            string fileNameOut = node.Nodes[3].Token.Text;
-            AddOpcode(new OpcodePush(fileNameIn));
-            AddOpcode(new OpcodePush(fileNameOut));
+            switch (node.Nodes.Count)
+            {
+                case 2:
+                    string fileNameIn = node.Nodes[1].Token.Text;
+                    AddOpcode(new OpcodePush(fileNameIn));
+                    break;
+                case 4:
+                    string fileNameIn = node.Nodes[1].Token.Text;
+                    AddOpcode(new OpcodePush(fileNameIn));
+                    string fileNameOut = node.Nodes[3].Token.Text;
+                    AddOpcode(new OpcodePush(fileNameOut));
+                    break;
+            }
             AddOpcode(new OpcodeCall("load()"));
         }
 
