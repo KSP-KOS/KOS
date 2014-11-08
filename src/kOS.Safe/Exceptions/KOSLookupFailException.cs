@@ -9,7 +9,8 @@ namespace kOS.Safe.Exceptions
     /// </summary>
     public class KOSLookupFailException: KOSException
     {
-        private const string TERSE_MSG_FMT = "No {0} called {1} was found on {2}";
+        private const string TERSE_NOT_EXIST_MSG_FMT = "No {0} called {1} was found on {2}";
+        private const string TERSE_DOES_EXIST_MSG_FMT = "The {0} called {1} on {2} is not accessable right now";
 
         public override string VerboseMessage { get{ return BuildVerboseMessage(); } }
 
@@ -18,6 +19,7 @@ namespace kOS.Safe.Exceptions
         private string category;
         private string lookupName;
         private object obj;
+        private bool exist;
         
         /// <summary>
         /// Make an exception describing improper suffix usage.
@@ -25,12 +27,15 @@ namespace kOS.Safe.Exceptions
         /// <param name="category">category of thing being looked up, i.e "field" or "module"</param>
         /// <param name="lookupName">thing being looked up</param>
         /// <param name="obj">ref to the object on the left of the suffix colon.</param>
-        public KOSLookupFailException(string category, string lookupName, object obj) :
-            base(String.Format(TERSE_MSG_FMT, category, lookupName.ToUpper(), obj.ToString()))
+        /// <param name="exist">True if the reason for the message is that the thing exists at
+        ///   other times, but is just not available at the moment.</param>
+        public KOSLookupFailException(string category, string lookupName, object obj, bool exist = false) :
+            base(String.Format( (exist ? TERSE_NOT_EXIST_MSG_FMT : TERSE_NOT_EXIST_MSG_FMT), category, lookupName.ToUpper(), obj.ToString()) )
         {
             this.category = category;
             this.lookupName = lookupName;
-            this.obj = obj;            
+            this.obj = obj;           
+            this.exist = exist;
         }
         
         private string BuildVerboseMessage()
@@ -41,13 +46,13 @@ namespace kOS.Safe.Exceptions
                 "    {2}\n" +
                 "from an object of type:\n" +
                 "    {3}\n" +
-                "when that object does not have that\n" +
-                "{1} on it.\n" +
+                "but it {4}.\n" +
                 "\n" +
                 "A full list of all {1}S on the object can be\n" +
                 "found by using its :ALL{1}s suffix.\n";
 
-            return String.Format(VERBOSE_TEXT, Message, category.ToUpper(), lookupName, obj.GetType().Name);
+            return String.Format(VERBOSE_TEXT, Message, category.ToUpper(), lookupName, obj.GetType().Name,
+                                 (exist ? "isn't avaiable at the moment" : "doesn't exist"));
 
         }
     }
