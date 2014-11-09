@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Execution;
@@ -29,7 +29,7 @@ namespace kOS.Module
         private const int PROCESSOR_HARD_CAP = 655360;
 
         [KSPField(isPersistant = true, guiName = "Boot File", guiActive = false, guiActiveEditor = false)]
-        public string bootFile = "Boot";
+        public string bootFile = "boot";
 
         [KSPField(isPersistant = false, guiName = "Boot File Choice", guiActive = false, guiActiveEditor = true), UI_FloatRange(minValue=0f,maxValue=1f,stepIncrement=1f)]
         public float bootFileChoice = 0f;
