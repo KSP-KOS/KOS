@@ -32,13 +32,13 @@ namespace kOS.Suffixed
 
         private void BuildValuesDictionary()
         {
-            AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 150, typeof(int)));
-            AddConfigKey(PropId.UseCompressedPersistence, new ConfigKey("UseCompressedPersistence", "UCP", "Use compressed persistence", false, typeof(bool)));
-            AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, typeof(bool)));
-            AddConfigKey(PropId.EnableRT2Integration, new ConfigKey("EnableRT2Integration", "RT2", "Enable RT2 integration", false, typeof(bool)));
-            AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, typeof(bool)));
-            AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, typeof(bool)));
-            AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, typeof(bool)));
+            AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 150, 50, 2000, typeof(int)));
+            AddConfigKey(PropId.UseCompressedPersistence, new ConfigKey("UseCompressedPersistence", "UCP", "Use compressed persistence", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.EnableRT2Integration, new ConfigKey("EnableRT2Integration", "RT2", "Enable RT2 integration", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
+            AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -146,13 +146,13 @@ namespace kOS.Suffixed
 
             if (key == null) return false;
 
-            if (value.GetType() == key.Type)
+            if (value.GetType() == key.ValType)
             {
                 key.Value = value;
                 SaveConfigKey(key);
                 return true;
             }
-            throw new Exception(string.Format("The value of the configuration key '{0}' has to be of type '{1}'", key.Name, key.Type));
+            throw new Exception(string.Format("The value of the configuration key '{0}' has to be of type '{1}'", key.Name, key.ValType));
         }
 
         public List<ConfigKey> GetConfigKeys()
@@ -179,19 +179,59 @@ namespace kOS.Suffixed
 
     public class ConfigKey
     {
-        public string StringKey;
-        public string Alias;
-        public string Name;
-        public Type Type;
-        public object Value;
+        public string StringKey {get;set;}
+        public string Alias {get;set;}
+        public string Name {get;set;}
+        public Type ValType {get;set;}
+        private object val;
+        public object Value {get{return val;} set{ val = SafeSetValue(value);} }
+        public object MinValue {get;set;}
+        public object MaxValue {get;set;}
 
-        public ConfigKey(string stringKey, string alias, string name, object defaultValue, Type type)
+        public ConfigKey(string stringKey, string alias, string name, object defaultValue, object min, object max, Type type)
         {
             StringKey = stringKey;
             Alias = alias;
             Name = name;
-            Value = defaultValue;
-            Type = type;
+            val = defaultValue;
+            MinValue = min;
+            MaxValue = max;
+            ValType = type;
+        }
+        
+        /// <summary>
+        /// Return the new value after it's been altered or the change was denied.
+        /// </summary>
+        /// <param name="newValue">attempted new value</param>
+        /// <returns>new value to actually use, maybe constrained or even unchanged if the attempted value is disallowed</returns>
+        private object SafeSetValue(object newValue)
+        {
+            object returnValue = Value;
+            if (newValue==null || (! ValType.IsAssignableFrom(newValue.GetType())))
+                return returnValue;
+
+            if (Value is int)
+            {
+                if ((int)newValue < (int)MinValue)
+                    returnValue = MinValue;
+                else if ((int)newValue > (int)MaxValue)
+                    returnValue = MaxValue;
+                else
+                    returnValue = newValue;
+                
+                // TODO: If and when we end up making warning-level exceptions that don't break
+                // the execution but still get logged, then log such a warning here mentioning
+                // if the value attempted was denied and changed if it was.
+            }
+            else if (Value is bool)
+            {
+                returnValue = newValue;
+            }
+            else
+            {
+                throw new Exception( "kOS CONFIG has new type that wasn't supported yet:  contact kOS developers" );
+            }
+            return returnValue;
         }
     }
 }

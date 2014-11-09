@@ -37,8 +37,9 @@ namespace kOS.Screen
         private Texture2D launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
         
         private bool clickedOn = false;
-        private float height = 500f; // will need to be bigger when everything implemented later
-        private float width = 250f; // will need to be bigger when everything implemented later
+        private float height = 1f; // will be automatically resized by GUILayout.
+        private float width = 1f; // will be automatically resized by GUILayout.
+        private float minWidth = 220f; // keeps GUILayout from being stupid.
 
 /* -------------------------------------------
  * OLD WAY OF ADDING KOSNameTags, now abandoned
@@ -66,6 +67,11 @@ namespace kOS.Screen
  */         
         private Rect windowRect;
         private int uniqueId = 8675309; // Jenny, I've got your number.
+        private GUISkin panelSkin;
+        private GUIStyle headingLabelStyle;
+        private GUIStyle tooltipLabelStyle;
+        private GUIStyle smallToggleStyle;
+        private string versionString;
 
         
         // Some of these are for just debug messages, and others are
@@ -100,6 +106,8 @@ namespace kOS.Screen
             imageFromURL.LoadImageIntoTexture(launcherButtonTexture);
 
             windowRect = new Rect(0,0,width,height); // this origin point will move when opened/closed.
+            panelSkin = BuildPanelSkin();
+            versionString = Utils.GetAssemblyFileVersion();
             
             GameEvents.onGUIApplicationLauncherReady.Add(RunWhenReady);
             GameEvents.onGUIApplicationLauncherDestroyed.Add(GoAway);
@@ -237,7 +245,7 @@ namespace kOS.Screen
             // the screen bottom by enough room to hold the window height plus the 40 pixel icons):
             float topEdge = isTop ? (40f) : (UnityEngine.Screen.height - (height+40) );
             
-            windowRect = new Rect(leftEdge, topEdge, width, height);
+            windowRect = new Rect(leftEdge, topEdge, 0, 0); // will resize upon first GUILayout-ing.
             Debug.Log("KOSToolBarWindow: PROOF: Open(), windowRect = " + windowRect);
             
             isOpen = true;
@@ -312,8 +320,13 @@ namespace kOS.Screen
                 Debug.Log("KOSToolBarWindow: PROOF: OnGUI() was called while the window was supposed to be open at least once on instance number " + myInstanceNum);
                 onGUIWasOpenThisInstance = true;
             }
+            
+            GUI.skin = panelSkin;
+            
+            windowRect = GUILayout.Window(uniqueId, windowRect, DrawWindow,"kOS " + versionString, GUILayout.MinWidth(minWidth));
 
-            GUILayout.Window(uniqueId, windowRect, DrawWindow,"KOS Menu");
+            width = windowRect.width;
+            height = windowRect.height;
 
 /* -------------------------------------------
  * OLD WAY OF ADDING KOSNameTags, now abandoned
@@ -359,7 +372,6 @@ namespace kOS.Screen
         
         public void DrawWindow(int windowID)
         {
-            GUI.skin = HighLogic.Skin;
 /* -------------------------------------------
  * OLD WAY OF ADDING KOSNameTags, now abandoned
  * -------------------------------------------
@@ -373,21 +385,35 @@ namespace kOS.Screen
  * END Commented-out section
  * --------------------------
  */
- 
-            GUILayout.Label("CONFIG VALUES:");
+
+            GUILayout.Box("",GUILayout.ExpandWidth(true)); // Just draw an empty horizontal bar under the title.
+
+            GUILayout.BeginHorizontal();
+
+            GUILayout.BeginVertical();
+            GUILayout.Label("\n\nComing soon... \n  watch this space\n  for more content\n  in future versions.");
+            GUILayout.EndVertical();
+
+            GUILayout.Box("",GUILayout.ExpandHeight(true)); // just draw an empty vertical bar as a separator.
+            
+            GUILayout.BeginVertical();
+            GUILayout.Label("CONFIG VALUES", headingLabelStyle);
+            GUILayout.Label("Changes to these settings are saved and globally affect all saved games.", tooltipLabelStyle);
+
             foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
-                string labelText = key.Alias;
-                string explanatoryText = "(" + key.Name + ")";
-
                 GUILayout.BeginHorizontal();
+
+                string labelText = key.Alias;
+                string toolTipText = key.Name;
+
                 if (key.Value is bool)
                 {
                     key.Value = GUILayout.Toggle((bool)key.Value,"");
                 }
                 else if (key.Value is int)
                 {
-                    string newStringVal = GUILayout.TextField(key.Value.ToString(), 6);
+                    string newStringVal = GUILayout.TextField(key.Value.ToString(), 6, GUILayout.Width(50));
                     int newInt;
                     if (int.TryParse(newStringVal, out newInt))
                         key.Value = newInt;
@@ -397,12 +423,80 @@ namespace kOS.Screen
                 {
                     GUILayout.Label(key.Alias + " is a new type this dialog doesn't support.  Contact kOS devs.");
                 }
-                GUILayout.Label(labelText);
-                GUILayout.EndHorizontal();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(explanatoryText);
+                GUILayout.Label(new GUIContent(labelText,toolTipText));
+
                 GUILayout.EndHorizontal();
             }
+            GUILayout.EndVertical();
+
+            GUILayout.EndHorizontal();
+
+            // This is where tooltip hover text will show up, rather than in a hover box wherever the poiner is like normal.
+            // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
+            GUILayout.Label(GUI.tooltip, tooltipLabelStyle);
+        }
+        
+        private GUISkin BuildPanelSkin()
+        {
+            GUISkin theSkin = new GUISkin();
+
+            // If we just did something like this:
+            //     theSkin = HighLogic.Skin;
+            //     theSkin.label.fontSize=10;
+            // Then theSkin would have just been a reference to the same skin
+            // everybody else uses in KSP and therefore it would have altered
+            // the look of all the KSP windows from stock and all the other mods.
+            // (Yes, this is what happened the first time I tried this).
+            //
+            // Therefore we want to make theSkin a deep copy of HighLogic.Skin, then
+            // alter it after making the copy, but GUISkin has no copy constructor.
+            // The individual GUIStyle's inside it do, however, and that is what
+            // causes this next block of code.  It's starting off theSkin as a deep
+            // copy of HighLogic.Skin, at least as much as it can:
+            //
+            theSkin.window      = new GUIStyle(HighLogic.Skin.window);
+            theSkin.button      = new GUIStyle(HighLogic.Skin.button);
+            theSkin.box         = new GUIStyle(HighLogic.Skin.box);
+            theSkin.label       = new GUIStyle(HighLogic.Skin.label);
+            theSkin.toggle      = new GUIStyle(HighLogic.Skin.toggle);
+            theSkin.textArea    = new GUIStyle(HighLogic.Skin.textArea);
+            theSkin.textField   = new GUIStyle(HighLogic.Skin.textField);
+            theSkin.scrollView  = new GUIStyle(HighLogic.Skin.scrollView);
+
+            // Now alter the parts of theSkin that we want to change:
+            //
+            theSkin.window = new GUIStyle(HighLogic.Skin.window);
+            theSkin.box.fontSize = 11;
+            theSkin.box.padding = new RectOffset(5,3,3,5);
+            theSkin.box.margin = new RectOffset(1,1,1,1);
+            theSkin.label.fontSize = 11;
+            theSkin.label.padding = new RectOffset(2,2,2,2);
+            theSkin.label.margin = new RectOffset(1,1,1,1);
+            theSkin.textField.fontSize = 11;
+            theSkin.textField.padding = new RectOffset(0,0,0,0);
+            theSkin.textField.margin = new RectOffset(1,1,1,1);
+            theSkin.textArea.fontSize = 11;
+            theSkin.textArea.padding = new RectOffset(0,0,0,0);
+            theSkin.textArea.margin = new RectOffset(1,1,1,1);
+            theSkin.toggle.fontSize = 11;
+            theSkin.toggle.padding = new RectOffset(0,0,0,0);
+            theSkin.toggle.margin = new RectOffset(1,1,1,1);
+            theSkin.button.fontSize =11;
+            theSkin.button.padding = new RectOffset(0,0,0,0);
+            theSkin.button.margin = new RectOffset(1,1,1,1);
+
+            // And these are new styles for our own use in special cases:
+            //
+            headingLabelStyle = new GUIStyle(theSkin.label);
+            headingLabelStyle.fontSize = 13;
+            headingLabelStyle.padding = new RectOffset(2,2,2,2);
+            
+            tooltipLabelStyle = new GUIStyle(theSkin.label);
+            tooltipLabelStyle.fontSize = 11;
+            tooltipLabelStyle.padding = new RectOffset(0,2,0,2);
+            tooltipLabelStyle.normal.textColor = Color.white;
+                        
+            return theSkin;
         }
 
 /* -------------------------------------------

@@ -8,7 +8,6 @@ namespace kOS.Screen
     {
         private KOSNameTag attachedModule;
         private Rect windowRect;
-        private Rect tagLineRect;
         private string tagValue;
 
         public void Invoke(KOSNameTag module, string oldValue)
@@ -75,18 +74,11 @@ namespace kOS.Screen
                 return;
             if (HighLogic.LoadedSceneIsEditor)
                 EditorLogic.fetch.Lock(false, false, false, "KOSNameTagLock");
+
+            GUI.skin = HighLogic.Skin;
             GUILayout.Window(0, windowRect, DrawWindow,"KOS nametag");
         }
-        
-        public void DrawTagLineWindow( int windowID )
-        {
-            if (! enabled)
-                return;
-           // The window is just an empty line with no style.
-            GUI.skin = HighLogic.Skin;
-            GUI.Box( new Rect(0,0,tagLineRect.width-5,2), "" );
-        }
-        
+                
         public void DrawWindow( int windowID )
         {
             if (! enabled)
@@ -103,7 +95,6 @@ namespace kOS.Screen
                     Close();
                 }
             }
-            GUI.skin = HighLogic.Skin;
             GUILayout.Label(attachedModule.part.name);
             tagValue = GUILayout.TextField( tagValue, GUILayout.MinWidth(160f));
 
