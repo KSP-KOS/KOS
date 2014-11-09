@@ -29,8 +29,8 @@ namespace kOS.Suffixed.Part
             AddSuffix("NAME", new Suffix<string>(() => Part.name));
             AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
             AddSuffix("UID", new Suffix<uint>(() => Part.uid));
-            AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.orgRot)));
-            AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.orgPos)));
+            AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction( Part.transform.rotation) ));
+            AddSuffix("POSITION", new Suffix<Vector>(() => new Vector( Part.transform.position - shared.Vessel.findWorldCenterOfMass() )));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
