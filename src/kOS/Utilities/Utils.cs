@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Reflection;
 
 namespace kOS.Utilities
 {
@@ -17,6 +18,15 @@ namespace kOS.Utilities
                        EditorLogic.fetch.editorCamera :
                        (MapView.MapIsEnabled ?
                            MapView.MapCamera.camera : FlightCamera.fetch.mainCamera);
+        }
+        
+        public static string GetAssemblyFileVersion()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            // Fully qualified name used instead of "using" here because using System.Diagnostics causes ambiguities
+            // with all the Debug.Log's:
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fvi.FileVersion;            
         }
 
         public static float Clamp(float input, float low, float high)

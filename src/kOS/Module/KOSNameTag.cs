@@ -5,14 +5,13 @@ namespace kOS.Module
 {
     public class KOSNameTag : PartModule
     {
-        
-        KOSNameTagWindow typingWindow;
+        private KOSNameTagWindow typingWindow;
 
         [KSPField(isPersistant = true,
                   guiActive = true,
                   guiActiveEditor = true,
                   guiName = "name tag")]
-        public string nameTag = "<unassigned>";
+        public string nameTag = "";
 
         [KSPEvent(guiActive = true,
                   guiActiveEditor = true,
@@ -30,6 +29,11 @@ namespace kOS.Module
         public void TypingDone(string newValue)
         {
             nameTag = newValue;
+            TypingCancel();
+        }
+        
+        public void TypingCancel()
+        {
             typingWindow.Close();
             typingWindow = null;
         }

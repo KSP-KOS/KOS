@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Encapsulation;
+﻿using kOS.Module;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("UID", new Suffix<uint>(() => Part.uid));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction( Part.transform.rotation) ));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector( Part.transform.position - shared.Vessel.findWorldCenterOfMass() )));
+            AddSuffix("TAG", new NoArgsSuffix<string>(GetTagName));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
@@ -55,9 +57,19 @@ namespace kOS.Suffixed.Part
             }
             throw new KOSLookupFailException( "module", modName.ToUpper(), this );
         }
+        
+        public string GetTagName() // public because I picture this being a useful API method later
+        {
+            KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+            return tagModule == null ? string.Empty : tagModule.nameTag;
+        }
+        
         public override string ToString()
         {
-            return string.Format("PART({0},{1})", Part.name, Part.uid);
+            string tagName = GetTagName();
+            if (string.IsNullOrEmpty(tagName))
+                return string.Format("PART({0},uid={1})", Part.name, Part.uid);
+            return string.Format("PART({0},tag={1})", Part.name, tagName);
         }
 
         public virtual ITargetable Target
