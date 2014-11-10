@@ -120,6 +120,7 @@ namespace kOS.Screen
         {
             if (IsOpen())
             {
+                
                 CalcOuterCoords(); // force windowRect to lock to bottom edge of the parents
                 CalcInnerCoords();
 

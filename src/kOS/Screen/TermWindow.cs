@@ -163,6 +163,7 @@ namespace kOS.Screen
             }
             
             GUI.skin = HighLogic.Skin;
+            
             GUI.color = isLocked ? color : colorAlpha;
             
             windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, "");
