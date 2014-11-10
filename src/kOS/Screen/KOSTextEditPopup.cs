@@ -151,7 +151,7 @@ namespace kOS.Screen
 
             if (! volume.SaveFile(file) )
             {
-                // For some reason the normal trap that prints exeptions on
+                // For some reason the normal trap that prints exceptions on
                 // the terminal doesn't work here in this part of the code,
                 // thus the two messages:
                 term.Print("[File Save failed. Check space on device?]");
@@ -249,7 +249,7 @@ namespace kOS.Screen
         {
             me.volume = me.loadingVolume;
             me.fileName = me.loadingFileName;
-            ProgramFile file = me.volume.GetByName( me.fileName );
+            ProgramFile file = me.volume.GetByName( me.fileName + Archive.KERBOSCRIPT_EXTENSION );
             if ( file == null )
             {
                 me.term.Print("[New File]");
@@ -339,7 +339,7 @@ namespace kOS.Screen
             Event e = Event.current;
             if (e.type == EventType.mouseDown && e.button == 0)
             {
-                // Rememeber the fact that this mouseDown started on the resize button:
+                // Remember the fact that this mouseDown started on the resize button:
                 if (resizeButtonCoords.Contains(mouseButtonDownPosRelative))
                 {
                     resizeMouseDown = true;
@@ -356,7 +356,7 @@ namespace kOS.Screen
                 }
             }
             // For some reason the Event style of checking won't let you
-            // see drags extending outside the curent window, while the Input style
+            // see drags extending outside the current window, while the Input style
             // will.  That's why this looks different from the others.
             if (Input.GetMouseButton(0))
             {
@@ -485,7 +485,7 @@ namespace kOS.Screen
             // text widget that when the text cursor moves out of the viewport you
             // scroll to keep it in view.  Oh well, have to do it manually:
             //
-            // NOTE: This method is what is interferring with the scrollbar's ability
+            // NOTE: This method is what is interfering with the scrollbar's ability
             // to scroll with the mouse - this routine is locking the scrollbar
             // to only be allowed to move as far as the cursor is still in view.
             // Fixing that would take a bit of work.

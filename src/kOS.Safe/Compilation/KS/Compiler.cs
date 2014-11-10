@@ -1760,7 +1760,7 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePush(fileNameIn));
                     break;
                 case 4:
-                    string fileNameIn = node.Nodes[1].Token.Text;
+                    fileNameIn = node.Nodes[1].Token.Text;
                     AddOpcode(new OpcodePush(fileNameIn));
                     string fileNameOut = node.Nodes[3].Token.Text;
                     AddOpcode(new OpcodePush(fileNameOut));

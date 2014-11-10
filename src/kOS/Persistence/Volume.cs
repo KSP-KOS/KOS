@@ -17,7 +17,7 @@ namespace kOS.Persistence
             Renameable = true;
             Capacity = -1;
             Name = "";
-            Files = new Dictionary<string, ProgramFile>();
+            Files = new Dictionary<string, ProgramFile>(StringComparer.CurrentCultureIgnoreCase);
             InitializeVolumeSuffixes();
         }
 
@@ -40,7 +40,6 @@ namespace kOS.Persistence
 
         public virtual ProgramFile GetByName(string name)
         {
-            name = name.ToLower();
             if (Files.ContainsKey(name))
             {
                 return Files[name];
@@ -50,7 +49,6 @@ namespace kOS.Persistence
 
         public virtual bool DeleteByName(string name)
         {
-            name = name.ToLower();
             if (Files.ContainsKey(name))
             {
                 Files.Remove(name);
@@ -96,7 +94,7 @@ namespace kOS.Persistence
 
         public virtual void Add(ProgramFile file)
         {
-            Files.Add(file.Filename.ToLower(), file);
+            Files.Add(file.Filename, file);
         }
 
         public virtual bool SaveFile(ProgramFile file)
@@ -132,7 +130,7 @@ namespace kOS.Persistence
 
         public virtual List<FileInfo> GetFileList()
         {
-            return Files.Values.Select(file => new FileInfo(file.Filename, file.GetSize())).ToList();
+            return Files.Values.Select(file => new FileInfo(file.Filename, file.GetSize(), file.CreatedDate, file.ModifiedDate)).ToList();
         }
 
         public virtual bool CheckRange(Vessel vessel)

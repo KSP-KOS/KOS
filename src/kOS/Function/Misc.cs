@@ -131,11 +131,10 @@ namespace kOS.Function
 
             string fileName = null;
             topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
-            if (topStack!=null)
+            if (topStack == null)
+                fileName = fileNameOut; // one file argument means compile with the same name
+            else
                 fileName = topStack.ToString();
-
-            if (fileName != null && fileNameOut != null && fileName == fileNameOut)
-                throw new Exception("Input and output filenames must differ.");
 
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");

@@ -43,7 +43,12 @@ namespace kOS.Persistence
 
     public class ProgramFile
     {
+        private const string FILENAME_VALUE_STRING = "filename";
+        private const string CREATED_DATE_VALUE_STRING = "createdDate";
+        private const string MODIFIED_DATE_VALUE_STRING = "modifiedDate";
         public string Filename {get;set;}
+        public DateTime ModifiedDate {get;set;}
+        public DateTime CreatedDate {get;set;}
         public FileCategory Category {get;private set;}
         public string StringContent
         {
@@ -81,6 +86,8 @@ namespace kOS.Persistence
         {
             Filename = copy.Filename;
             Category = copy.Category;
+            ModifiedDate = copy.ModifiedDate;
+            CreatedDate = copy.CreatedDate;
             if (Category == FileCategory.KEXE)
                 BinaryContent = copy.BinaryContent;
             else
@@ -113,7 +120,9 @@ namespace kOS.Persistence
         public ConfigNode SaveEncoded(string nodeName)
         {
             var node = new ConfigNode(nodeName);
-            node.AddValue("filename", Filename);
+            node.AddValue(FILENAME_VALUE_STRING, Filename);
+            node.AddValue(MODIFIED_DATE_VALUE_STRING, ModifiedDate.ToString("s"));
+            node.AddValue(CREATED_DATE_VALUE_STRING, CreatedDate.ToString("s"));
 
             if (Category == FileCategory.KEXE)
             {
@@ -136,8 +145,26 @@ namespace kOS.Persistence
 
         internal void LoadEncoded(ConfigNode fileNode)
         {
-            Filename = fileNode.GetValue("filename");
+            Filename = fileNode.GetValue(FILENAME_VALUE_STRING);
             Decode(fileNode.GetValue("line"));
+
+            if (fileNode.HasValue(MODIFIED_DATE_VALUE_STRING))
+            {
+                ModifiedDate = Convert.ToDateTime(fileNode.GetValue(MODIFIED_DATE_VALUE_STRING));
+            }
+            else
+            {
+                ModifiedDate = DateTime.MinValue;
+            }
+
+            if (fileNode.HasValue(CREATED_DATE_VALUE_STRING))
+            {
+                ModifiedDate = Convert.ToDateTime(fileNode.GetValue(CREATED_DATE_VALUE_STRING));
+            }
+            else
+            {
+                CreatedDate = DateTime.MinValue;
+            }
         }
 
         private void Decode(string input)
