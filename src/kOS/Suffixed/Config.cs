@@ -179,11 +179,11 @@ namespace kOS.Suffixed
 
     public class ConfigKey
     {
-        public string StringKey {get;set;}
+        private object val;
+        public string StringKey {get;private set;}
         public string Alias {get;set;}
         public string Name {get;set;}
         public Type ValType {get;set;}
-        private object val;
         public object Value {get{return val;} set{ val = SafeSetValue(value);} }
         public object MinValue {get;set;}
         public object MaxValue {get;set;}
@@ -207,7 +207,7 @@ namespace kOS.Suffixed
         private object SafeSetValue(object newValue)
         {
             object returnValue = Value;
-            if (newValue==null || (! ValType.IsAssignableFrom(newValue.GetType())))
+            if (newValue==null || (! ValType.IsInstanceOfType(newValue)))
                 return returnValue;
 
             if (Value is int)
