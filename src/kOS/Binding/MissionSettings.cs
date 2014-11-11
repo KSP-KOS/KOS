@@ -1,4 +1,3 @@
-using kOS.Execution;
 using kOS.Safe.Binding;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
@@ -11,8 +10,7 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-
-            shared.BindingMgr.AddSetter("TARGET", delegate(CPU cpu, object val)
+            shared.BindingMgr.AddSetter("TARGET", delegate(object val)
                 {
                     var targetable = val as IKOSTargetable;
                     if (targetable != null)

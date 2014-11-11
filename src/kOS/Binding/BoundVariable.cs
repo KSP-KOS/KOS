@@ -21,7 +21,7 @@ namespace kOS.Binding
                 {
                     if (currentValue == null)
                     {
-                        currentValue = Get(Cpu);
+                        currentValue = Get();
                         if (currentValue is float)
                             // promote floats to doubles
                             currentValue = Convert.ToDouble(currentValue);
@@ -49,7 +49,7 @@ namespace kOS.Binding
         {
             if (wasUpdated && currentValue != null)
             {
-                Set(Cpu, currentValue);
+                Set(currentValue);
             }
         }
     }

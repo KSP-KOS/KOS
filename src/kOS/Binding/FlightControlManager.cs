@@ -1,5 +1,4 @@
 ﻿using kOS.AddOns.RemoteTech2;
-using kOS.Execution;
 using kOS.Safe.Binding;
 using kOS.Suffixed;
 using kOS.Utilities;
@@ -179,8 +178,8 @@ namespace kOS.Binding
 
             private void HookEvents()
             {
-                binding.AddGetter(name, c => value);
-                binding.AddSetter(name, delegate(CPU c, object val) { value = val; });
+                binding.AddGetter(name, () => value);
+                binding.AddSetter(name, delegate(object val) { value = val; });
             }
 
 

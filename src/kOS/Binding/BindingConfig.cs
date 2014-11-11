@@ -8,7 +8,7 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            shared.BindingMgr.AddGetter("CONFIG", cpu => Config.Instance);
+            shared.BindingMgr.AddGetter("CONFIG", () => Config.Instance);
         }
     }
 }
