@@ -1,4 +1,5 @@
 using kOS.Execution;
+using kOS.Safe.Binding;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
@@ -10,9 +11,8 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            Shared = shared;
 
-            Shared.BindingMgr.AddSetter("TARGET", delegate(CPU cpu, object val)
+            shared.BindingMgr.AddSetter("TARGET", delegate(CPU cpu, object val)
                 {
                     var targetable = val as IKOSTargetable;
                     if (targetable != null)
@@ -28,7 +28,7 @@ namespace kOS.Binding
                         return;
                     }
 
-                    var vessel = VesselUtils.GetVesselByName(val.ToString(), Shared.Vessel);
+                    var vessel = VesselUtils.GetVesselByName(val.ToString(), shared.Vessel);
                     if (vessel != null)
                     {
                         VesselUtils.SetTarget(vessel);
@@ -38,24 +38,24 @@ namespace kOS.Binding
                     VesselUtils.UnsetTarget();
                 });
 
-            Shared.BindingMgr.AddGetter("TARGET", delegate
+            shared.BindingMgr.AddGetter("TARGET", delegate
                 {
                     var currentTarget = FlightGlobals.fetch.VesselTarget;
 
                     var vessel = currentTarget as Vessel;
                     if (vessel != null)
                     {
-                        return new VesselTarget(vessel, Shared);
+                        return new VesselTarget(vessel, shared);
                     }
                     var body = currentTarget as CelestialBody;
                     if (body != null)
                     {
-                        return new BodyTarget(body, Shared);
+                        return new BodyTarget(body, shared);
                     }
                     var dockingNode = currentTarget as ModuleDockingNode;
                     if (dockingNode != null)
                     {
-                        return new DockingPortValue(dockingNode, Shared);
+                        return new DockingPortValue(dockingNode, shared);
                     }
 
                     return null;

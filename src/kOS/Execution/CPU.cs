@@ -95,10 +95,8 @@ namespace kOS.Execution
                         "# this, then read the error log.  It's important.#\n" +
                         "--------------------------------------------------\n";
 
-                    foreach (string msg in nags)
-                        bootMessage += msg + "\n";
-                    bootMessage +=
-                        "##################################################\n";
+                    bootMessage = nags.Aggregate(bootMessage, (current, msg) => current + (msg + "\n"));
+                    bootMessage += "##################################################\n";
                 }
                 shared.Screen.Print(bootMessage);
             }
@@ -262,7 +260,7 @@ namespace kOS.Execution
 
         public void BreakExecution(bool manual)
         {
-            UnityEngine.Debug.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automaticly", contexts.Count));
+            UnityEngine.Debug.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
             if (contexts.Count > 1)
             {
                 EndWait();
@@ -317,7 +315,7 @@ namespace kOS.Execution
         public List<int> GetCallTrace()
         {
             List<int> trace = stack.GetCallTrace();
-            trace.Insert(0, currentContext.InstructionPointer); // prepend current IP
+            trace.Insert(0, currentContext.InstructionPointer); // perpend current IP
             return trace;
         }
 
@@ -342,7 +340,8 @@ namespace kOS.Execution
             foreach (string ident in variables.Keys)
             {
                 Variable v = variables[ident];
-                string line = ident + "=" + (v.Value.ToString() ?? "<null>");
+                string line = ident;
+                line += v.Value == null ? "= <null>" : "= " + v.Value;
                 shared.Screen.Print(line);
                 UnityEngine.Debug.Log(line);
             }
@@ -552,7 +551,7 @@ namespace kOS.Execution
                 {
                     // break execution of all programs and pop interpreter context
                     PopFirstContext();
-                    stack.Clear(); // If breaking all exection, get rid of the cruft here too.
+                    stack.Clear(); // If breaking all execution, get rid of the cruft here too.
                 }
             }
 

@@ -1,4 +1,6 @@
-﻿namespace kOS.Binding
+﻿using kOS.Safe.Binding;
+
+namespace kOS.Binding
 {
     [kOSBinding("ksp")]
     public class RoverStats : Binding

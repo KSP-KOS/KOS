@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using kOS.Execution;
+using kOS.Safe.Binding;
 
 namespace kOS.Binding
 {
