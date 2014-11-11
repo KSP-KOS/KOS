@@ -136,7 +136,7 @@ namespace kOS.Module
             shared.Screen = shared.Interpreter;
             shared.ScriptHandler = new KSScript();
             shared.Logger = new KSPLogger(shared);
-            shared.VolumeMgr = new VolumeManager(shared);
+            shared.VolumeMgr = shared.Factory.CreateVolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();
             shared.Cpu = new CPU(shared);
 

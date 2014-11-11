@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using ICSharpCode.SharpZipLib.GZip;
+using kOS.AddOns.RemoteTech2;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
@@ -150,7 +151,7 @@ namespace kOS.Persistence
 
         public static bool CheckRange(this Volume volume, Vessel vessel)
         {
-            var archive = volume as Archive;
+            var archive = volume as RemoteTechArchive;
             return archive == null || archive.CheckRange(vessel);
         }
 

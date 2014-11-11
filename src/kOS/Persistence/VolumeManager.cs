@@ -8,28 +8,18 @@ namespace kOS.Persistence
     {
         private readonly Dictionary<int, Volume> volumes;
         private Volume currentVolume;
-        private readonly SharedObjects shared;
         private int lastId;
         
         public Dictionary<int, Volume> Volumes { get { return volumes; } }
-        public Volume CurrentVolume { get { return GetVolumeWithRangeCheck(currentVolume); } }
+        public virtual Volume CurrentVolume { get { return currentVolume; } }
         public float CurrentRequiredPower { get; private set; }
 
-        public VolumeManager(SharedObjects shared)
+        public VolumeManager()
         {
             volumes = new Dictionary<int, Volume>();
             currentVolume = null;
-            this.shared = shared;
         }
 
-        private Volume GetVolumeWithRangeCheck(Volume volume)
-        {
-            if (volume.CheckRange(shared.Vessel))
-            {
-                return volume;
-            }
-            throw new Exception("Volume is out of range");
-        }
 
         public bool VolumeIsCurrent(Volume volume)
         {
@@ -83,11 +73,11 @@ namespace kOS.Persistence
             return GetVolume(GetVolumeId(name));
         }
 
-        public Volume GetVolume(int id)
+        public virtual Volume GetVolume(int id)
         {
             if (volumes.ContainsKey(id))
             {
-                return GetVolumeWithRangeCheck(volumes[id]);
+                return volumes[id];
             }
             return null;
         }

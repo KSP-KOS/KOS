@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using kOS.Safe.Persistence;
 using UnityEngine;
+using Debug = kOS.Safe.Utilities.Debug;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Persistence
@@ -36,7 +37,7 @@ namespace kOS.Persistence
         {
             try
             {
-                Safe.Utilities.Debug.Logger.Log("Archive: Getting File By Name: " + name);
+                Debug.Logger.Log("Archive: Getting File By Name: " + name);
                 var fileInfo = FileSearch(name);
                 if (fileInfo == null)
                 {
@@ -65,7 +66,7 @@ namespace kOS.Persistence
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                Debug.Logger.Log(e);
                 return null;
             }
         }
@@ -83,11 +84,6 @@ namespace kOS.Persistence
             }
         }
 
-        public virtual bool CheckRange(Vessel vessel)
-        {
-            return true;
-        }
-
         public override bool SaveFile(ProgramFile file)
         {
             base.SaveFile(file);
@@ -96,7 +92,7 @@ namespace kOS.Persistence
 
             try
             {
-                Safe.Utilities.Debug.Logger.Log("Archive: Saving File Name: " + file.Filename);
+                Debug.Logger.Log("Archive: Saving File Name: " + file.Filename);
                 byte[] fileBody;
                 string fileExtension;
                 switch (file.Category)
@@ -128,7 +124,7 @@ namespace kOS.Persistence
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                Debug.Logger.Log(e);
                 return false;
             }
 
@@ -139,7 +135,7 @@ namespace kOS.Persistence
         {
             try
             {
-                Safe.Utilities.Debug.Logger.Log("Archive: Deleting File Name: " + name);
+                Debug.Logger.Log("Archive: Deleting File Name: " + name);
                 var fullPath = FileSearch(name);
                 if (fullPath == null)
                 {
@@ -186,7 +182,7 @@ namespace kOS.Persistence
         {
             try
             {
-                Safe.Utilities.Debug.Logger.Log(string.Format("Archive: Renaming: {0} To: {1}", name, newName));
+                Debug.Logger.Log(string.Format("Archive: Renaming: {0} To: {1}", name, newName));
                 var fullSourcePath = FileSearch(name);
                 if (fullSourcePath == null)
                 {
@@ -218,7 +214,7 @@ namespace kOS.Persistence
 
             try
             {
-                Safe.Utilities.Debug.Logger.Log(string.Format("Archive: Listing Files"));
+                Debug.Logger.Log(string.Format("Archive: Listing Files"));
                 foreach (var file in Directory.GetFiles(ArchiveFolder).Where(f=>f.EndsWith('.' +KERBOSCRIPT_EXTENSION) || f.EndsWith('.' + KOS_MACHINELANGUAGE_EXTENSION)))
                 {
                     var sysFileInfo = new System.IO.FileInfo(file);

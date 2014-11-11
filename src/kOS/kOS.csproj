@@ -54,6 +54,7 @@
     <Compile Include="AddOns\RemoteTech2\RemoteTechHook.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechUtility.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechInterpreter.cs" />
+    <Compile Include="AddOns\RemoteTech2\RemoteTechVolumeManager.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\Binding.cs" />
     <Compile Include="Binding\BindingConfig.cs" />
