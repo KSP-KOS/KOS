@@ -1,5 +1,4 @@
 ﻿using System;
-using kOS.Persistence;
 using kOS.Safe.Persistence;
 
 namespace kOS.Function

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using kOS.Execution;
-using kOS.Persistence;
-using kOS.Module;
 using kOS.Safe.Compilation;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
@@ -130,7 +128,7 @@ namespace kOS.Function
             if (topStack!=null)
                 fileNameOut = topStack.ToString();
 
-            string fileName = null;
+            string fileName;
             topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
             if (topStack == null)
                 fileName = fileNameOut; // one file argument means compile with the same name

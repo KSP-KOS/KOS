@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using kOS.Persistence;
 
 namespace kOS.Screen
 {
@@ -14,7 +12,7 @@ namespace kOS.Screen
     /// </summary>
     public abstract class KOSManagedWindow : MonoBehaviour
     {
-        // The staic values are for the way the windows keep track of each other:
+        // The static values are for the way the windows keep track of each other:
         
         // Give each instance of TermWindow a unique ID block to ensure it can create
         // Unity windows that don't clash:
@@ -43,7 +41,7 @@ namespace kOS.Screen
 
         protected bool isOpen = false;
 
-        public KOSManagedWindow()
+        protected KOSManagedWindow()
         {
             // mult by 50 so there's a range for future expansion for other GUI objects inside the window:
             uniqueId = termWindowIDRange + (windowsMadeSoFar * 50);
@@ -111,7 +109,7 @@ namespace kOS.Screen
         /// (Clicking outside the window takes focus away.  Clicking inside
         /// the window gives focus to the window and brings it to the front.)
         /// </summary>
-        /// <param name="absMousPos">Absolute position of mouse on whole screen</param>
+        /// <param name="absMousePos">Absolute position of mouse on whole screen</param>
         /// <returns>True if the window got focused, false if it didn't.</returns>
         public bool FocusClickLocationCheck(Vector2 absMousePos)
         {
@@ -135,7 +133,7 @@ namespace kOS.Screen
         public virtual void BringToFront()
         {
             // Remove me from where I was in the depth list, and put me at the front instead:
-            if (depthSort.Exists( delegate(KOSManagedWindow t){ return t==this; }))
+            if (depthSort.Exists(t => t == this))
             {
                 depthSort.Remove(this);
             }
@@ -149,14 +147,14 @@ namespace kOS.Screen
         }
 
         // Returns true only if the position is inside this window and NOT inside
-        // any terminal windows that are closer to the the front.
+        // any terminal windows that are closer to the front.
         // (This is the sort of basic checking that Unity's GUI *should* do itself
         // but it seems quite bad at it.)
         public bool IsInsideMyExposedPortion(Vector2 posAbsolute)
         {
             if (windowRect.Contains(posAbsolute))
             {
-                int myDepthIndex = depthSort.FindIndex(delegate(KOSManagedWindow t){ return t==this; });
+                int myDepthIndex = depthSort.FindIndex(t => t == this);
                 bool insideHigher = false;
                 for (int stackedIndex = myDepthIndex - 1 ; (!insideHigher) && stackedIndex >= 0 ; --stackedIndex)
                 {
@@ -169,7 +167,7 @@ namespace kOS.Screen
         }
 
         /// <summary>
-        /// Whne you subclass KOSManagedWindow, make sure that you call this
+        /// When you subclass KOSManagedWindow, make sure that you call this
         /// from inside your Update.  It does not use OnGUI because of the fact
         /// that the OnGUI event handler is broken - it only sends MouseDown 
         /// and MouseUp events when the mouse is OUTSIDE the window, which is
@@ -207,10 +205,7 @@ namespace kOS.Screen
                 }
                 return IsInsideMyExposedPortion(mousePosAbsolute) && clickUp;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }
