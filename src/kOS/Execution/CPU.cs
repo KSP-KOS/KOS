@@ -8,6 +8,7 @@ using kOS.Safe;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Function;
 
@@ -764,11 +765,11 @@ namespace kOS.Execution
                         {
                             if (kvp.Value.Value.GetType().ToString() == "System.String")  // if the variable is a string, enclose the value in ""
                             {
-                                varNode.AddValue(kvp.Key.TrimStart('$'), (char)34 + Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()) + (char)34);
+                                varNode.AddValue(kvp.Key.TrimStart('$'), (char)34 + PersistenceUtilities.EncodeLine(kvp.Value.Value.ToString()) + (char)34);
                             }
                             else
                             {
-                                varNode.AddValue(kvp.Key.TrimStart('$'), Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
+                                varNode.AddValue(kvp.Key.TrimStart('$'), PersistenceUtilities.EncodeLine(kvp.Value.Value.ToString()));
                             }
                         }
                     }
@@ -796,7 +797,7 @@ namespace kOS.Execution
                     {
                         foreach (ConfigNode.Value value in varNode.values)
                         {
-                            string varValue = Persistence.ProgramFile.DecodeLine(value.value);
+                            string varValue = PersistenceUtilities.DecodeLine(value.value);
                             scriptBuilder.AppendLine(string.Format("set {0} to {1}.", value.name, varValue));
                         }
                     }

@@ -4,6 +4,7 @@ using System;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Persistence;
 
 namespace kOS.Persistence
 {

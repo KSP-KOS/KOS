@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using kOS.Persistence;
 using kOS.Safe.Compilation;
+using kOS.Safe.Persistence;
 
 namespace kOS
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Execution;
 using kOS.Factories;
+using kOS.Safe.Persistence;
 using UnityEngine;
 using KSP.IO;
 using kOS.InterProcessor;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Safe.Persistence;
 
 namespace kOS.Persistence
 {
@@ -19,7 +20,7 @@ namespace kOS.Persistence
             
             foreach (ConfigNode fileNode in node.GetNodes("file"))
             {
-                Add(new ProgramFile(fileNode));
+                Add(fileNode.ToProgramFile());
             }
         }
 
@@ -62,7 +63,7 @@ namespace kOS.Persistence
 
             foreach (ProgramFile file in Files.Values)
             {
-                node.AddNode(file.SaveEncoded("file"));
+                node.AddNode(file.ToConfigNode("file"));
             }
             
             return node;

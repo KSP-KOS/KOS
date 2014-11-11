@@ -5,6 +5,7 @@ using kOS.Persistence;
 using kOS.Module;
 using kOS.Safe.Compilation;
 using kOS.Safe.Module;
+using kOS.Safe.Persistence;
 using kOS.Suffixed;
 
 namespace kOS.Function

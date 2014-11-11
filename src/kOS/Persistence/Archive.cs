@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using kOS.Safe.Exceptions;
+using kOS.Safe.Persistence;
 using UnityEngine;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
@@ -48,7 +48,7 @@ namespace kOS.Persistence
                     byte[] fileBody = ProcessBinaryReader(infile);
 
                     var retFile = new ProgramFile(name);
-                    FileCategory whatKind = ProgramFile.IdentifyCategory(fileBody);
+                    FileCategory whatKind = PersistenceUtilities.IdentifyCategory(fileBody);
                     if (whatKind == FileCategory.KEXE)
                         retFile.BinaryContent = fileBody;
                     else
@@ -235,14 +235,6 @@ namespace kOS.Persistence
             const float POWER_REQUIRED = BASE_POWER * MULTIPLIER;
 
             return POWER_REQUIRED;
-        }
-    }
-
-    public class KOSFileException : KOSException
-    {
-        public KOSFileException(string message)
-            : base(message)
-        {
         }
     }
 }

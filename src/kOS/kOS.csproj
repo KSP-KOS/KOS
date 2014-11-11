@@ -80,6 +80,7 @@
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
+    <Compile Include="Persistence\PersistenceExtensions.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSNameTagWindow.cs" />
@@ -111,7 +112,6 @@
     <Compile Include="Suffixed\OrbitInfo.cs" />
     <Compile Include="Persistence\Archive.cs" />
     <Compile Include="Execution\ProgramContext.cs" />
-    <Compile Include="Persistence\ProgramFile.cs" />
     <Compile Include="SharedObjects.cs" />
     <Compile Include="Suffixed\Part\DockingPortValue.cs" />
     <Compile Include="Suffixed\Part\EngineValue.cs" />
