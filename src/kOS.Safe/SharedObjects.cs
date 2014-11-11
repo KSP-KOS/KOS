@@ -1,5 +1,6 @@
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
+using kOS.Safe.Function;
 using kOS.Safe.Module;
 using kOS.Safe.Screen;
 
@@ -14,5 +15,6 @@ namespace kOS.Safe
         public ILogger Logger { get; set; }
         public IProcessor Processor { get; set; }
         public UpdateHandler UpdateHandler { get; set; }
+        public IFunctionManager FunctionManager { get; set; }
     }
 }

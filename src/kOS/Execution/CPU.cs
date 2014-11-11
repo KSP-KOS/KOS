@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Reflection;
 using System.Diagnostics;
 using kOS.Safe;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
-using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
-using kOS.Function;
 
 namespace kOS.Execution
 {
@@ -28,7 +25,6 @@ namespace kOS.Execution
         private Status currentStatus;
         private double currentTime;
         private double timeWaitUntil;
-        private Dictionary<string, FunctionBase> functions;
         private readonly SharedObjects shared;
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
@@ -63,26 +59,6 @@ namespace kOS.Execution
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddObserver(this);
         }
 
-        private void LoadFunctions()
-        {
-            functions = new Dictionary<string, FunctionBase>();
-
-            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                var attr = (FunctionAttribute)type.GetCustomAttributes(typeof(FunctionAttribute), true).FirstOrDefault();
-                if (attr == null) continue;
-
-                object functionObject = Activator.CreateInstance(type);
-                foreach (string functionName in attr.Names)
-                {
-                    if (functionName != string.Empty)
-                    {
-                        functions.Add(functionName, (FunctionBase)functionObject);
-                    }
-                }
-            }
-        }
-
         public void Boot()
         {
             // break all running programs
@@ -99,7 +75,7 @@ namespace kOS.Execution
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
-            LoadFunctions();
+            shared.FunctionManager.Load();
             // load bindings
             if (shared.BindingMgr != null) shared.BindingMgr.LoadBindings();
             // Booting message
@@ -706,13 +682,7 @@ namespace kOS.Execution
 
         public void CallBuiltinFunction(string functionName)
         {
-            if (!functions.ContainsKey(functionName))
-            {
-                throw new Exception("Call to non-existent function " + functionName);
-            }
-
-            FunctionBase function = functions[functionName];
-            function.Execute(shared);
+            shared.FunctionManager.CallFunction(functionName);
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Execution;
 using kOS.Factories;
+using kOS.Function;
 using kOS.Safe.Persistence;
 using UnityEngine;
 using KSP.IO;
@@ -138,6 +139,7 @@ namespace kOS.Module
             shared.Logger = new KSPLogger(shared);
             shared.VolumeMgr = shared.Factory.CreateVolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();
+            shared.FunctionManager = new FunctionManager(shared);
             shared.Cpu = new CPU(shared);
 
             // Make the window that is going to correspond to this kOS part:
