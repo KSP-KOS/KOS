@@ -5,8 +5,8 @@ namespace kOS.Safe.Compilation.KS
         public LockCollection Locks { get; private set; }
         public TriggerCollection Triggers { get; private set; }
         public SubprogramCollection Subprograms { get; private set; }
-        public int LabelIndex { get; private set; }
-        public string LastSourceName { get; private set; }
+        public int LabelIndex { get; set; }
+        public string LastSourceName { get; set; }
 
         public Context()
         {
