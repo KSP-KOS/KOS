@@ -103,6 +103,7 @@
     <Compile Include="Execution\ICpu.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\Variable.cs" />
+    <Compile Include="Function\FunctionAttribute.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IUpdateObserver.cs" />
     <Compile Include="Module\IProcessor.cs" />

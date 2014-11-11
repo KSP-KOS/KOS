@@ -1,11 +1,12 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Utilities;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("buildlist")]
+    [Function("buildlist")]
     public class FunctionBuildList : FunctionBase
     {
         public override void Execute(SharedObjects shared)

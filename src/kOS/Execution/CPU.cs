@@ -8,6 +8,7 @@ using kOS.Safe;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Function;

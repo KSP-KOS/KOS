@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using kOS.Execution;
 using kOS.Safe.Compilation;
+using kOS.Safe.Function;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("clearscreen")]
+    [Function("clearscreen")]
     public class FunctionClearScreen : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -17,7 +18,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("print")]
+    [Function("print")]
     public class FunctionPrint : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -27,7 +28,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("printat")]
+    [Function("printat")]
     public class FunctionPrintAt : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -39,7 +40,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("toggleflybywire")]
+    [Function("toggleflybywire")]
     public class FunctionToggleFlyByWire : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -51,7 +52,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("stage")]
+    [Function("stage")]
     public class FunctionStage : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -60,7 +61,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("run")]
+    [Function("run")]
     public class FunctionRun : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -118,7 +119,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("load")]
+    [Function("load")]
     public class FunctionLoad : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -171,7 +172,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("add")]
+    [Function("add")]
     public class FunctionAddNode : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -181,7 +182,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("remove")]
+    [Function("remove")]
     public class FunctionRemoveNode : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -191,7 +192,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("logfile")]
+    [Function("logfile")]
     public class FunctionLogFile : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -214,7 +215,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("reboot")]
+    [Function("reboot")]
     public class FunctionReboot : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -223,7 +224,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("shutdown")]
+    [Function("shutdown")]
     public class FunctionShutdown : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -232,7 +233,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("debugglobalvars")]
+    [Function("debugglobalvars")]
     public class DebugGlobalVars : FunctionBase
     {
         public override void Execute(SharedObjects shared)

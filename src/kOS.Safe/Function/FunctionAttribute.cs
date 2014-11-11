@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace kOS.Function
+namespace kOS.Safe.Function
 {
     public class FunctionAttribute : Attribute
     {

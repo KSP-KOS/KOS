@@ -1,9 +1,10 @@
 ﻿using System;
+using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("switch")]
+    [Function("switch")]
     public class FunctionSwitch : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -25,7 +26,7 @@ namespace kOS.Function
         }
     }
     
-    [FunctionAttribute("edit")]
+    [Function("edit")]
     public class FunctionEdit : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -40,7 +41,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("copy")]
+    [Function("copy")]
     public class FunctionCopy : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -93,7 +94,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("rename")]
+    [Function("rename")]
     public class FunctionRename : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -149,7 +150,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("delete")]
+    [Function("delete")]
     public class FunctionDelete : FunctionBase
     {
         public override void Execute(SharedObjects shared)
