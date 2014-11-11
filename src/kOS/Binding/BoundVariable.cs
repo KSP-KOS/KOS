@@ -1,5 +1,4 @@
 ﻿using System;
-using kOS.Execution;
 using kOS.Safe.Execution;
 
 namespace kOS.Binding
@@ -8,7 +7,6 @@ namespace kOS.Binding
     {
         public BindingManager.BindingSetDlg Set;
         public BindingManager.BindingGetDlg Get;
-        public CPU Cpu { get; set; }
 
         private object currentValue;
         private bool wasUpdated;

@@ -75,9 +75,9 @@ namespace kOS.Execution
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
-            shared.FunctionManager.Load();
+            if(shared.FunctionManager != null)shared.FunctionManager.Load();
             // load bindings
-            if (shared.BindingMgr != null) shared.BindingMgr.LoadBindings();
+            if (shared.BindingMgr != null) shared.BindingMgr.Load();
             // Booting message
             if (shared.Screen != null)
             {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using kOS.Execution;
 using kOS.Safe.Binding;
 
 namespace kOS.Binding
@@ -23,7 +22,7 @@ namespace kOS.Binding
             this.shared.BindingMgr = this;
         }
 
-        public void LoadBindings()
+        public void Load()
         {
             var contexts = new string[1];
             contexts[0] = "ksp";
@@ -62,7 +61,6 @@ namespace kOS.Binding
                 variable = new BoundVariable
                     {
                         Name = name, 
-                        Cpu = (CPU)shared.Cpu
                     };
                 vars.Add(name, variable);
                 shared.Cpu.AddVariable(variable, name);

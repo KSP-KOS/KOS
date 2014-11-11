@@ -1,6 +1,5 @@
 ﻿using kOS.Safe.Binding;
 using kOS.Suffixed;
-using kOS.Execution;
 
 namespace kOS.Binding
 {
