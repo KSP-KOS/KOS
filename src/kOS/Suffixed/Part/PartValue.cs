@@ -1,8 +1,8 @@
-﻿using kOS.Module;
+﻿using System;
+using kOS.Module;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -49,7 +49,7 @@ namespace kOS.Suffixed.Part
             foreach (PartModule mod in Part.Modules)
             {
                 Debug.Log("Does \"" + mod.moduleName.ToUpper() + "\" == \"" + modName.ToUpper() + "\"?");
-                if (mod.moduleName.ToUpper() == modName.ToUpper())
+                if (String.Equals(mod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     Debug.Log("yes it does");
                     return new PartModuleFields(mod,shared);

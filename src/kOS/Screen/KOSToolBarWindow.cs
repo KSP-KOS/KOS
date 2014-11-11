@@ -1,9 +1,5 @@
-﻿using System;
-using System.Linq;
-
-using UnityEngine;
+﻿using UnityEngine;
 using kOS.Utilities;
-using kOS.Module;
 using kOS.Suffixed;
 
 namespace kOS.Screen
@@ -27,19 +23,19 @@ namespace kOS.Screen
     public class KOSToolBarWindow : MonoBehaviour
     {
         private ApplicationLauncherButton launcherButton;
-        
-        private ApplicationLauncher.AppScenes appScenes = 
-            ApplicationLauncher.AppScenes.FLIGHT |
-            ApplicationLauncher.AppScenes.SPH |
-            ApplicationLauncher.AppScenes.VAB |
+
+        private const ApplicationLauncher.AppScenes APP_SCENES = 
+            ApplicationLauncher.AppScenes.FLIGHT | 
+            ApplicationLauncher.AppScenes.SPH | 
+            ApplicationLauncher.AppScenes.VAB | 
             ApplicationLauncher.AppScenes.MAPVIEW;
+
+        private readonly Texture2D launcherButtonTexture;
         
-        private Texture2D launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        
-        private bool clickedOn = false;
+        private bool clickedOn;
         private float height = 1f; // will be automatically resized by GUILayout.
         private float width = 1f; // will be automatically resized by GUILayout.
-        private float minWidth = 220f; // keeps GUILayout from being stupid.
+        private const float MIN_WIDTH = 220f; // keeps GUILayout from being stupid.
 
 /* -------------------------------------------
  * OLD WAY OF ADDING KOSNameTags, now abandoned
@@ -66,11 +62,10 @@ namespace kOS.Screen
  * --------------------------
  */         
         private Rect windowRect;
-        private int uniqueId = 8675309; // Jenny, I've got your number.
+        private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
         private GUISkin panelSkin;
         private GUIStyle headingLabelStyle;
         private GUIStyle tooltipLabelStyle;
-        private GUIStyle smallToggleStyle;
         private string versionString;
 
         
@@ -89,7 +84,12 @@ namespace kOS.Screen
         private bool isOpen = false;
         private bool onGUICalledThisInstance = false;
         private bool onGUIWasOpenThisInstance = false;
-        
+
+        public KOSToolBarWindow()
+        {
+            launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        }
+
         /// <summary>
         /// Unity hates it when a MonoBehaviour has a constructor,
         /// so all the construction work is here instead:
@@ -100,9 +100,9 @@ namespace kOS.Screen
             myInstanceNum = countInstances;
             Debug.Log("KOSToolBarWindow: Now making instance number "+myInstanceNum+" of KOSToolBarWindow");
 
-            string relPath = "GameData/kOS/GFX/launcher-button.png";
+            const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
 
-            WWW imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + relPath);
+            WWW imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
             imageFromURL.LoadImageIntoTexture(launcherButtonTexture);
 
             windowRect = new Rect(0,0,width,height); // this origin point will move when opened/closed.
@@ -144,7 +144,7 @@ namespace kOS.Screen
                 CallbackOnHoverOut,
                 CallbackOnEnable,
                 CallbackOnDisable,
-                appScenes,
+                APP_SCENES,
                 launcherButtonTexture);
                 
             launcher.AddOnShowCallback(CallbackOnShow);
@@ -275,31 +275,28 @@ namespace kOS.Screen
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
         
-        private global::Part GetPartFromRayCast(Ray ray)
+        private Part GetPartFromRayCast(Ray ray)
         {
             RaycastHit hit;
-            global::Part returnMe = null;
-            if (Physics.Raycast(ray, out hit, 999999f))
+            if (!Physics.Raycast(ray, out hit, 999999f)) return null;
+            if (hit.collider == null || hit.collider.gameObject == null) return null;
+
+            Part returnMe;
+            GameObject gObject = hit.collider.gameObject;
+            // That found the innermost hit - need to walk up chain of parents until
+            // hitting a Unity GameObject that is also a KSP part.
+            while (true) // (there is an explicit break in the loop).
             {
-                if (hit.collider != null && hit.collider.gameObject != null)
+                returnMe = Part.FromGO(gObject);
+                if (returnMe == null && gObject != null &&
+                    gObject.transform.parent != null &&
+                    gObject.transform.parent.gameObject != null)
                 {
-                    GameObject gObject = hit.collider.gameObject;
-                    // That found the innermost hit - need to walk up chain of parents until
-                    // hitting a Unity GameObject that is also a KSP part.
-                    while (true) // (there is an explicit break in the loop).
-                    {
-                        returnMe = Part.FromGO(gObject);
-                        if (returnMe == null && gObject != null &&
-                            gObject.transform.parent != null &&
-                            gObject.transform.parent.gameObject != null)
-                        {
-                            gObject = gObject.transform.parent.gameObject;
-                        }
-                        else
-                        {
-                            break; // quits when either returnMe is found, or a null was hit walking up the parent chain.
-                        }
-                    }
+                    gObject = gObject.transform.parent.gameObject;
+                }
+                else
+                {
+                    break; // quits when either returnMe is found, or a null was hit walking up the parent chain.
                 }
             }
             return returnMe;
@@ -323,7 +320,7 @@ namespace kOS.Screen
             
             GUI.skin = panelSkin;
             
-            windowRect = GUILayout.Window(uniqueId, windowRect, DrawWindow,"kOS " + versionString, GUILayout.MinWidth(minWidth));
+            windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow,"kOS " + versionString, GUILayout.MinWidth(MIN_WIDTH));
 
             width = windowRect.width;
             height = windowRect.height;
@@ -438,31 +435,7 @@ namespace kOS.Screen
         
         private GUISkin BuildPanelSkin()
         {
-            GUISkin theSkin = new GUISkin();
-
-            // If we just did something like this:
-            //     theSkin = HighLogic.Skin;
-            //     theSkin.label.fontSize=10;
-            // Then theSkin would have just been a reference to the same skin
-            // everybody else uses in KSP and therefore it would have altered
-            // the look of all the KSP windows from stock and all the other mods.
-            // (Yes, this is what happened the first time I tried this).
-            //
-            // Therefore we want to make theSkin a deep copy of HighLogic.Skin, then
-            // alter it after making the copy, but GUISkin has no copy constructor.
-            // The individual GUIStyle's inside it do, however, and that is what
-            // causes this next block of code.  It's starting off theSkin as a deep
-            // copy of HighLogic.Skin, at least as much as it can:
-            //
-            theSkin.window      = new GUIStyle(HighLogic.Skin.window);
-            theSkin.button      = new GUIStyle(HighLogic.Skin.button);
-            theSkin.box         = new GUIStyle(HighLogic.Skin.box);
-            theSkin.label       = new GUIStyle(HighLogic.Skin.label);
-            theSkin.toggle      = new GUIStyle(HighLogic.Skin.toggle);
-            theSkin.textArea    = new GUIStyle(HighLogic.Skin.textArea);
-            theSkin.textField   = new GUIStyle(HighLogic.Skin.textField);
-            theSkin.scrollView  = new GUIStyle(HighLogic.Skin.scrollView);
-
+            var theSkin = Utils.GetSkinCopy(HighLogic.Skin);
             // Now alter the parts of theSkin that we want to change:
             //
             theSkin.window = new GUIStyle(HighLogic.Skin.window);
@@ -487,15 +460,19 @@ namespace kOS.Screen
 
             // And these are new styles for our own use in special cases:
             //
-            headingLabelStyle = new GUIStyle(theSkin.label);
-            headingLabelStyle.fontSize = 13;
-            headingLabelStyle.padding = new RectOffset(2,2,2,2);
-            
-            tooltipLabelStyle = new GUIStyle(theSkin.label);
-            tooltipLabelStyle.fontSize = 11;
-            tooltipLabelStyle.padding = new RectOffset(0,2,0,2);
-            tooltipLabelStyle.normal.textColor = Color.white;
-                        
+            headingLabelStyle = new GUIStyle(theSkin.label)
+            {
+                fontSize = 13, 
+                padding = new RectOffset(2, 2, 2, 2)
+            };
+
+            tooltipLabelStyle = new GUIStyle(theSkin.label)
+            {
+                fontSize = 11,
+                padding = new RectOffset(0, 2, 0, 2),
+                normal = {textColor = Color.white}
+            };
+
             return theSkin;
         }
 

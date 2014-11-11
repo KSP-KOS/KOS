@@ -209,7 +209,7 @@ namespace kOS.Suffixed.Part
         {            
             var returnValue = new ListValue();
             
-            IEnumerable<BaseField> visibleFields = partModule.Fields.Cast<BaseField>().Where((field) => FieldIsVisible(field));
+            IEnumerable<BaseField> visibleFields = partModule.Fields.Cast<BaseField>().Where(FieldIsVisible);
 
             foreach (BaseField field in visibleFields)
             {
@@ -252,7 +252,7 @@ namespace kOS.Suffixed.Part
         {            
             var returnValue = new ListValue();
 
-            IEnumerable<BaseEvent> visibleEvents = partModule.Events.Cast<BaseEvent>().Where( (evt) => EventIsVisible(evt) );
+            IEnumerable<BaseEvent> visibleEvents = partModule.Events.Where( EventIsVisible );
    
             foreach (BaseEvent kspEvent in visibleEvents)
             {
@@ -380,19 +380,15 @@ namespace kOS.Suffixed.Part
         
         private static bool FieldIsVisible(BaseField field)
         {
-            return (field==null) ?
-                false :
-                (HighLogic.LoadedSceneIsEditor ? field.guiActiveEditor : field.guiActive);
+            return (field != null) && (HighLogic.LoadedSceneIsEditor ? field.guiActiveEditor : field.guiActive);
         }
 
         private static bool EventIsVisible(BaseEvent evt)
         {
-            return (evt==null) ?
-                false :
-                (
-                    (HighLogic.LoadedSceneIsEditor ? evt.guiActiveEditor : evt.guiActive) &&
-                    /* evt.externalToEVAOnly) && */ // this flag seems bugged.  It always returns true no matter what.
-                    evt.active
+            return (evt != null) && (
+                (HighLogic.LoadedSceneIsEditor ? evt.guiActiveEditor : evt.guiActive) &&
+                /* evt.externalToEVAOnly) && */ // this flag seems bugged.  It always returns true no matter what.
+                evt.active
                 );
         }
         

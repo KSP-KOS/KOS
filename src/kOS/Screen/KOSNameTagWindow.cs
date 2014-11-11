@@ -21,10 +21,10 @@ namespace kOS.Screen
             // Transform it to pixel coords:
             float xPixelPoint = screenPos.x * UnityEngine.Screen.width;
             float yPixelPoint = (1-screenPos.y) * UnityEngine.Screen.height;
-            float windowWidth = 200;
+            const float WINDOW_WIDTH = 200;
 
             // windowRect = new Rect(xPixelWindow, yPixelPoint, windowWidth, 130);
-            windowRect = new Rect(xPixelPoint, yPixelPoint, windowWidth, 130);
+            windowRect = new Rect(xPixelPoint, yPixelPoint, WINDOW_WIDTH, 130);
 
             // Please don't delete these.  They're not being used, but that's because we haven't
             // finished prettying up the interface with the tag line and so the coords aren't
@@ -44,13 +44,14 @@ namespace kOS.Screen
 
         /// <summary>
         /// If you try to set a Unity.Behaviour.enabled to false when it already IS false,
-        /// and Unity hasn't fully finined configuring the Monoboehvior yet, the Property's
+        /// and Unity hasn't fully finished configuring the MonoBehaviour yet, the Property's
         /// "set" code throws a null ref error. How lame is that?
         /// That's why I wrapped every attempt to set enabled's value with this check, because KSP
         /// tries running my hooks in this class before Unity's ready for them.
         /// </summary>
         private void SetEnabled(bool newVal)
         {
+            // ReSharper disable once RedundantCheckBeforeAssignment
             if (newVal != enabled)
                 enabled = newVal;
         }
