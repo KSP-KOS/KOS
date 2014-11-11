@@ -24,7 +24,7 @@ namespace kOS.Module
         public Harddisk HardDisk { get; private set; }
         private int vesselPartCount;
         private SharedObjects shared;
-        private static List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
+        private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
 
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
@@ -128,7 +128,7 @@ namespace kOS.Module
                     
             shared.Vessel = vessel;
             shared.Processor = this;
-            shared.KSPPart = this.part;
+            shared.KSPPart = part;
             shared.UpdateHandler = new UpdateHandler();
             shared.BindingMgr = new BindingManager(shared);
             shared.Interpreter = shared.Factory.CreateInterpreter(shared);
@@ -137,12 +137,12 @@ namespace kOS.Module
             shared.Logger = new KSPLogger(shared);
             shared.VolumeMgr = new VolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();
-            shared.Cpu = new Execution.CPU(shared);
+            shared.Cpu = new CPU(shared);
 
             // Make the window that is going to correspond to this kOS part:
-            var gObj = new GameObject("kOSTermWindow", typeof(kOS.Screen.TermWindow));
+            var gObj = new GameObject("kOSTermWindow", typeof(Screen.TermWindow));
             DontDestroyOnLoad(gObj);
-            shared.Window = (kOS.Screen.TermWindow)gObj.GetComponent(typeof(kOS.Screen.TermWindow));
+            shared.Window = (Screen.TermWindow)gObj.GetComponent(typeof(Screen.TermWindow));
             shared.Window.AttachTo(shared);
 
             // initialize archive
@@ -169,38 +169,42 @@ namespace kOS.Module
                 shared.VolumeMgr.SwitchTo(HardDisk);
             }
             
+            InitProcessorTracking();
+            shared.Cpu.Boot();
+        }
+
+        private void InitProcessorTracking()
+        {
             // Track a list of all instances of me that exist:
             if (! allMyInstances.Contains(this))
             {
                 allMyInstances.Add(this);
                 allMyInstances.Sort(delegate(kOSProcessor a, kOSProcessor b)
-                                    {
-                                        int compare;
-                                        // sort "nulls" first:
-                                        if (a.part==null || a.part.vessel==null)
-                                            return -1;
-                                        if (b.part==null || b.part.vessel==null)
-                                            return 1;
-                                        // If on different vessels, sort by vessel name next:
-                                        compare = String.Compare(a.part.vessel.vesselName, b.part.vessel.vesselName, StringComparison.CurrentCultureIgnoreCase);
-                                        // If on same vessel, sort by part UID last:
-                                        if (compare != 0)
-                                            return compare;
-                                        return (a.part.uid < b.part.uid) ? -1 : (a.part.uid > b.part.uid) ? 1 : 0;
-                                    } );
+                {
+                    // sort "nulls" first:
+                    if (a.part == null || a.part.vessel == null)
+                        return -1;
+                    if (b.part == null || b.part.vessel == null)
+                        return 1;
+                    // If on different vessels, sort by vessel name next:
+                    int compare = String.Compare(a.part.vessel.vesselName, b.part.vessel.vesselName,
+                        StringComparison.CurrentCultureIgnoreCase);
+                    // If on same vessel, sort by part UID last:
+                    if (compare != 0)
+                        return compare;
+                    return (a.part.uid < b.part.uid) ? -1 : (a.part.uid > b.part.uid) ? 1 : 0;
+                });
             }
             GameEvents.onPartDestroyed.Add(OnDestroyingMyHardware);
-
-            shared.Cpu.Boot();
         }
-        
+
         private void OnDestroyingMyHardware(Part p)
         {
             // This is technically called any time ANY part is destroyed, so ignore it if it's not MY part:
             if (p != part)
                 return;
             
-            allMyInstances.RemoveAll((m) => m==this);
+            allMyInstances.RemoveAll(m => m==this);
         }
         
         
@@ -264,63 +268,82 @@ namespace kOS.Module
         
         public void Update()
         {
-            if (bootFileChoice != bootFileChoiceLast)
-            {
-                var temp = new Archive();
-                var files = temp.GetFileList();
-                var maxchoice = 0;
-                for (var i = 0; i < files.Count; ++i)
-                {
-                    if (!files[i].Name.StartsWith("boot",StringComparison.InvariantCultureIgnoreCase)) continue;
-                    maxchoice++;
-                    if (bootFileChoiceLast < 0)
-                    {
-                        // find previous
-                        if (files[i].Name == bootFile) {
-                            bootFileChoice = i;
-                            bootFileChoiceLast = i;
-                        }
-                    }
-                    if (i == bootFileChoice) {
-                        bootFile = files[i].Name;
-                   }
-                }
-                var field = Fields["bootFileChoice"];
-                if (field != null)
-                {
-                    field.guiName = bootFile;
-                    var ui = field.uiControlEditor as UI_FloatRange;
-                        if (ui != null) {
-                            ui.maxValue = maxchoice;
-                            ui.controlEnabled = maxchoice > 0;
-                            field.guiActiveEditor = maxchoice > 0;
-                            bootFileChoiceLast = bootFileChoice;
-                        }
-                }
-            }
-             
-            if (shared == null) return;
+            ProcessBoot();
+            if (!IsAlive()) return;
+            UpdateVessel();
+            UpdateObservers();
+            ProcessElectricity(part, TimeWarp.fixedDeltaTime);
+        }
 
-            if (part.State == PartStates.DEAD)
-            {
-                ProcessorMode = ProcessorModes.OFF;
-                return;
-            }
-
+        private void UpdateVessel()
+        {
             if (shared != null && shared.Vessel != vessel)
             {
                 shared.Vessel = vessel;
             }
+        }
 
+        private void UpdateObservers()
+        {
             if (ProcessorMode == ProcessorModes.READY)
             {
                 if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(Time.deltaTime);
                 UpdateParts();
             }
-
-            ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
-        
+
+        private bool IsAlive()
+        {
+            if (shared == null) return false;
+
+            if (part.State == PartStates.DEAD)
+            {
+                ProcessorMode = ProcessorModes.OFF;
+                return false;
+            }
+            return true;
+        }
+
+        private void ProcessBoot()
+        {
+            if (bootFileChoice == bootFileChoiceLast) return;
+
+            var temp = new Archive();
+            var files = temp.GetFileList();
+            var maxchoice = 0;
+            for (var i = 0; i < files.Count; ++i)
+            {
+                if (!files[i].Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
+                maxchoice++;
+                if (bootFileChoiceLast < 0)
+                {
+                    // find previous
+                    if (files[i].Name == bootFile)
+                    {
+                        bootFileChoice = i;
+                        bootFileChoiceLast = i;
+                    }
+                }
+                if (i == bootFileChoice)
+                {
+                    bootFile = files[i].Name;
+                }
+            }
+            var field = Fields["bootFileChoice"];
+            if (field != null)
+            {
+                field.guiName = bootFile;
+                var ui = field.uiControlEditor as UI_FloatRange;
+                if (ui != null)
+                {
+                    ui.maxValue = maxchoice;
+                    ui.controlEnabled = maxchoice > 0;
+                    field.guiActiveEditor = maxchoice > 0;
+                    bootFileChoiceLast = bootFileChoice;
+                }
+            }
+        }
+
         public void UpdateParts()
         {
             // Trigger whenever the number of parts in the vessel changes (like when staging, docking or undocking)

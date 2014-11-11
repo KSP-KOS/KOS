@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 using kOS.Utilities;
 using kOS.Suffixed;
@@ -41,10 +40,9 @@ namespace kOS.Screen
         private float height = 1f; // will be automatically resized by GUILayout.
         private float width = 1f; // will be automatically resized by GUILayout.
         
-        private int verticalSectionCount = 0;
-        private int horizontalSectionCount = 0;
+        private int verticalSectionCount;
+        private int horizontalSectionCount;
         private Vector2 scrollPos = new Vector2(200,350);
-        private const float MIN_WIDTH = 220f; // keeps GUILayout from being stupid.
 
 /* -------------------------------------------
  * OLD WAY OF ADDING KOSNameTags, now abandoned
@@ -89,14 +87,14 @@ namespace kOS.Screen
         // can show in bug reports until I'm more confident this is working
         // perfectly:
         
-        private bool alreadyAwake = false;
-        private static int  countInstances = 0;
-        private int myInstanceNum = 0;
-        private bool thisInstanceHasHooks = false;
-        private static bool someInstanceHasHooks = false;
-        private bool isOpen = false;
-        private bool onGUICalledThisInstance = false;
-        private bool onGUIWasOpenThisInstance = false;
+        private bool alreadyAwake;
+        private static int  countInstances;
+        private int myInstanceNum;
+        private bool thisInstanceHasHooks;
+        private static bool someInstanceHasHooks;
+        private bool isOpen;
+        private bool onGUICalledThisInstance;
+        private bool onGUIWasOpenThisInstance;
 
         public KOSToolBarWindow()
         {
@@ -115,7 +113,7 @@ namespace kOS.Screen
 
             const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
 
-            WWW imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
+            var imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
             imageFromURL.LoadImageIntoTexture(launcherButtonTexture);
 
             windowRect = new Rect(0,0,width,height); // this origin point will move when opened/closed.
@@ -281,7 +279,7 @@ namespace kOS.Screen
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
         
-        /// <summary>Callback for when the button is hidden or dinabled by the application launcher</summary>
+        /// <summary>Callback for when the button is hidden or disabled by the application launcher</summary>
         public void CallbackOnDisable()
         {            
             Debug.Log("KOSToolBarWindow: PROOF: CallbackOnDisable()");
@@ -415,7 +413,7 @@ namespace kOS.Screen
  
             CountEndHorizontal();
 
-            // This is where tooltip hover text will show up, rather than in a hover box wherever the poiner is like normal.
+            // This is where tooltip hover text will show up, rather than in a hover box wherever the pointer is like normal.
             // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
             GUILayout.Label(GUI.tooltip, tooltipLabelStyle);
             CountEndVertical();
@@ -461,25 +459,30 @@ namespace kOS.Screen
             GUILayout.Label("  "); // indent each part row over slightly.
             DrawPart(part);
             
-            kOSProcessor kOSMod = part.Modules.OfType<kOSProcessor>().FirstOrDefault();
+            kOSProcessor processor = part.Modules.OfType<kOSProcessor>().FirstOrDefault();
 
-            GUIStyle windowButtonStyle = kOSMod.WindowIsOpen() ? buttonOnStyle : buttonOffStyle;
+            if (processor == null)
+            {
+                throw new ArgumentException("Part does not have a kOSProcessor module", "part");
+            }
+
+            GUIStyle windowButtonStyle = processor.WindowIsOpen() ? buttonOnStyle : buttonOffStyle;
             GUIStyle powerButtonStyle = 
-                (kOSMod.ProcessorMode == ProcessorModes.STARVED) ?
-                buttonDisabledStyle : ( (kOSMod.ProcessorMode == ProcessorModes.READY) ?
+                (processor.ProcessorMode == ProcessorModes.STARVED) ?
+                buttonDisabledStyle : ( (processor.ProcessorMode == ProcessorModes.READY) ?
                                          buttonOnStyle : buttonOffStyle);
             string powerButtonText = 
-                (kOSMod.ProcessorMode == ProcessorModes.STARVED) ?
+                (processor.ProcessorMode == ProcessorModes.STARVED) ?
                 "<Starved>" : "Power";
 
             CountBeginVertical();
             if (GUILayout.Button("Window", windowButtonStyle))
             {
-                kOSMod.ToggleWindow();
+                processor.ToggleWindow();
             }
             if (GUILayout.Button(powerButtonText, powerButtonStyle))
             {
-                kOSMod.TogglePower();
+                processor.TogglePower();
             }
             CountEndVertical();
             CountEndHorizontal();
@@ -488,7 +491,7 @@ namespace kOS.Screen
         private static void DrawPart(Part part)
         {
             // Someday we may work on making this into something that
-            // actualy draws out the part image like in the editor icons, however
+            // actually draws out the part image like in the editor icons, however
             // there appears to be no KSP API to do this for us, and it's a bit messy
             // and there's more important other stuff to do first.
             //
@@ -500,15 +503,15 @@ namespace kOS.Screen
             // called EZGui to render some sort of camera view of the gameobject inside the
             // button, and EZGui is even worse for online documentation than Unity itself,
             // so whatever the technique is, it's hidden behind a wall of impenetrable
-            // documentaion with zero examples.
+            // documentation with zero examples.
 
             // So for the meantime let's use our own text label and leave it at that.
             
-            KOSNameTag kOSTag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+            KOSNameTag partTag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
 
             string labelText = String.Format("{0}\n({1})",
                                              part.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
-                                             ((kOSTag==null) ? "" : kOSTag.nameTag)
+                                             ((partTag==null) ? "" : partTag.nameTag)
                                             );
             GUILayout.Box(labelText);
         }
