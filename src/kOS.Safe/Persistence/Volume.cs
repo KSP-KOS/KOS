@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Persistence;
 
-namespace kOS.Persistence
+namespace kOS.Safe.Persistence
 {
     public abstract class Volume : Structure
     {
@@ -34,6 +33,11 @@ namespace kOS.Persistence
 
 
         protected Dictionary<string, ProgramFile> Files { get; private set; }
+
+        public Dictionary<string, ProgramFile> FileList
+        {
+            get { return Files.ToDictionary(pair => pair.Key, pair => pair.Value); }
+        }
         public string Name { get; set; }
         public int Capacity { get; protected set; }
         public bool Renameable { get; protected set; }
@@ -107,8 +111,7 @@ namespace kOS.Persistence
         
         public virtual bool SaveObjectFile(string fileNameOut, List<CodePart> parts)
         {
-            ProgramFile newFile = new ProgramFile(fileNameOut);
-            newFile.BinaryContent = CompiledObject.Pack(parts);
+            var newFile = new ProgramFile(fileNameOut) {BinaryContent = CompiledObject.Pack(parts)};
             SaveFile(newFile);
             return true;
         }
@@ -127,16 +130,10 @@ namespace kOS.Persistence
         public virtual int GetFreeSpace() { return -1; }
         public virtual bool IsRoomFor(ProgramFile newFile) { return true; }
         public virtual void LoadPrograms(IEnumerable<ProgramFile> programsToLoad) { }
-        public virtual ConfigNode Save(string nodeName) { return new ConfigNode(nodeName); }
 
         public virtual List<FileInfo> GetFileList()
         {
             return Files.Values.Select(file => new FileInfo(file.Filename, file.GetSize(), file.CreatedDate, file.ModifiedDate)).ToList();
-        }
-
-        public virtual bool CheckRange(Vessel vessel)
-        {
-            return true;
         }
 
         public virtual float RequiredPower()

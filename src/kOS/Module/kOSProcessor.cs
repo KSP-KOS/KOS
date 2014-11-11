@@ -412,7 +412,7 @@ namespace kOS.Module
 
                 if (node.HasNode("harddisk"))
                 {
-                    var newDisk = new Harddisk(node.GetNode("harddisk"));
+                    var newDisk = node.GetNode("harddisk").ToHardDisk();
                     HardDisk = newDisk;
                 }
 
@@ -437,7 +437,7 @@ namespace kOS.Module
             {
                 if (HardDisk != null)
                 {
-                    ConfigNode hdNode = HardDisk.Save("harddisk");
+                    ConfigNode hdNode = HardDisk.ToConfigNode("harddisk");
                     node.AddNode(hdNode);
                 }
 

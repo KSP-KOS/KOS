@@ -6,8 +6,7 @@ namespace kOS.AddOns.RemoteTech2
     {
         public override bool CheckRange(Vessel vessel)
         {
-            //return vessel != null && RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
-            return vessel != null;
+            return vessel != null && RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
         }
     }
 }

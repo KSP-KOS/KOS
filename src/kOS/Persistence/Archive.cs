@@ -83,6 +83,11 @@ namespace kOS.Persistence
             }
         }
 
+        public virtual bool CheckRange(Vessel vessel)
+        {
+            return true;
+        }
+
         public override bool SaveFile(ProgramFile file)
         {
             base.SaveFile(file);

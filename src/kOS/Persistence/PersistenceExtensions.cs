@@ -13,6 +13,23 @@ namespace kOS.Persistence
         private const string FILENAME_VALUE_STRING = "filename";
         private const string MODIFIED_DATE_VALUE_STRING = "modifiedDate";
         private const string CREATED_DATE_VALUE_STRING = "createdDate";
+
+        public static Harddisk ToHardDisk(this ConfigNode configNode)
+        {
+            var capacity = 10000;
+            if (configNode.HasValue("capacity")) capacity = int.Parse(configNode.GetValue("capacity"));
+
+            var toReturn = new Harddisk(capacity);
+            
+            if (configNode.HasValue("volumeName")) toReturn.Name = configNode.GetValue("volumeName");
+            
+            foreach (ConfigNode fileNode in configNode.GetNodes("file"))
+            {
+                toReturn.Add(fileNode.ToProgramFile());
+            }
+            return toReturn;
+        }
+
         public static ProgramFile ToProgramFile(this ConfigNode configNode)
         {
             var filename = configNode.GetValue(FILENAME_VALUE_STRING);
@@ -38,6 +55,20 @@ namespace kOS.Persistence
                 toReturn.CreatedDate = DateTime.MinValue;
             }
             return toReturn;
+        }
+
+        public static ConfigNode ToConfigNode(this Harddisk harddisk, string nodeName)
+        {
+            var node = new ConfigNode(nodeName);
+            node.AddValue("capacity", harddisk.Capacity);
+            node.AddValue("volumeName", harddisk.Name);
+
+            foreach (ProgramFile file in harddisk.FileList.Values)
+            {
+                node.AddNode(file.ToConfigNode("file"));
+            }
+            
+            return node;
         }
 
         public static ConfigNode ToConfigNode(this ProgramFile programFile, string nodeName)
@@ -117,6 +148,11 @@ namespace kOS.Persistence
             }
         }
 
+        public static bool CheckRange(this Volume volume, Vessel vessel)
+        {
+            var archive = volume as Archive;
+            return archive == null || archive.CheckRange(vessel);
+        }
 
         private static byte[] DecodeBase64ToBinary(string input)
         {
