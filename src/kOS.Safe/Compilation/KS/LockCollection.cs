@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -5,8 +6,14 @@ namespace kOS.Safe.Compilation.KS
 {
     public class LockCollection
     {
-        private readonly Dictionary<string, Lock> locks = new Dictionary<string, Lock>();
-        private readonly List<Lock> newLocks = new List<Lock>();
+        private readonly Dictionary<string, Lock> locks;
+        private readonly List<Lock> newLocks;
+
+        public LockCollection()
+        {
+            locks = new Dictionary<string, Lock>(StringComparer.OrdinalIgnoreCase);
+            newLocks = new List<Lock>();
+        }
 
         public bool Contains(string lockIdentifier)
         {
