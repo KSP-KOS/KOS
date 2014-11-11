@@ -170,7 +170,8 @@ namespace kOS.Screen
 
             // Should probably make "gui screen name for my CPU part" into some sort of utility method:
             KOSNameTag kOSTag = shared.KSPPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
-            string labelText = String.Format("{0} ({1})",
+            string labelText = String.Format("{0} CPU: {1} ({2})",
+                                             shared.Vessel.vesselName,
                                              shared.KSPPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
                                              ((kOSTag==null) ? "" : kOSTag.nameTag)
                                             );

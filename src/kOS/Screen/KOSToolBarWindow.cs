@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-
+using System.Collections.Generic;
 using UnityEngine;
 using kOS.Utilities;
-using kOS.Module;
 using kOS.Suffixed;
+using kOS.Safe.Module;
+using kOS.Module;
 
 namespace kOS.Screen
 {
@@ -28,22 +28,23 @@ namespace kOS.Screen
     public class KOSToolBarWindow : MonoBehaviour
     {
         private ApplicationLauncherButton launcherButton;
-        
-        private ApplicationLauncher.AppScenes appScenes = 
-            ApplicationLauncher.AppScenes.FLIGHT |
-            ApplicationLauncher.AppScenes.SPH |
-            ApplicationLauncher.AppScenes.VAB |
+
+        private const ApplicationLauncher.AppScenes APP_SCENES = 
+            ApplicationLauncher.AppScenes.FLIGHT | 
+            ApplicationLauncher.AppScenes.SPH | 
+            ApplicationLauncher.AppScenes.VAB | 
             ApplicationLauncher.AppScenes.MAPVIEW;
+
+        private readonly Texture2D launcherButtonTexture;
         
-        private Texture2D launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
-        
-        private bool clickedOn = false;
+        private bool clickedOn;
         private float height = 1f; // will be automatically resized by GUILayout.
         private float width = 1f; // will be automatically resized by GUILayout.
         
         private int verticalSectionCount = 0;
         private int horizontalSectionCount = 0;
         private Vector2 scrollPos = new Vector2(200,350);
+        private const float MIN_WIDTH = 220f; // keeps GUILayout from being stupid.
 
 /* -------------------------------------------
  * OLD WAY OF ADDING KOSNameTags, now abandoned
@@ -70,10 +71,14 @@ namespace kOS.Screen
  * --------------------------
  */         
         private Rect windowRect;
-        private int uniqueId = 8675309; // Jenny, I've got your number.
+        private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
         private GUISkin panelSkin;
         private GUIStyle headingLabelStyle;
+        private GUIStyle vesselNameStyle;
         private GUIStyle tooltipLabelStyle;
+        private GUIStyle buttonDisabledStyle;
+        private GUIStyle buttonOffStyle;
+        private GUIStyle buttonOnStyle;
         private string versionString;
 
         
@@ -92,7 +97,12 @@ namespace kOS.Screen
         private bool isOpen = false;
         private bool onGUICalledThisInstance = false;
         private bool onGUIWasOpenThisInstance = false;
-        
+
+        public KOSToolBarWindow()
+        {
+            launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        }
+
         /// <summary>
         /// Unity hates it when a MonoBehaviour has a constructor,
         /// so all the construction work is here instead:
@@ -103,9 +113,9 @@ namespace kOS.Screen
             myInstanceNum = countInstances;
             Debug.Log("KOSToolBarWindow: Now making instance number "+myInstanceNum+" of KOSToolBarWindow");
 
-            string relPath = "GameData/kOS/GFX/launcher-button.png";
+            const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
 
-            WWW imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + relPath);
+            WWW imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
             imageFromURL.LoadImageIntoTexture(launcherButtonTexture);
 
             windowRect = new Rect(0,0,width,height); // this origin point will move when opened/closed.
@@ -147,7 +157,7 @@ namespace kOS.Screen
                 CallbackOnHoverOut,
                 CallbackOnEnable,
                 CallbackOnDisable,
-                appScenes,
+                APP_SCENES,
                 launcherButtonTexture);
                 
             launcher.AddOnShowCallback(CallbackOnShow);
@@ -278,6 +288,7 @@ namespace kOS.Screen
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
         
+
         public void OnGUI()
         {
             horizontalSectionCount = 0;
@@ -299,7 +310,7 @@ namespace kOS.Screen
             
             GUI.skin = panelSkin;
 
-            windowRect = GUILayout.Window(uniqueId, windowRect, DrawWindow, "kOS " + versionString);
+            windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
 
             width = windowRect.width;
             height = windowRect.height;
@@ -362,10 +373,11 @@ namespace kOS.Screen
  * --------------------------
  */
 
+            CountBeginVertical();
             CountBeginHorizontal();
 
             DrawActiveCPUsOnPanel();
-            
+
             CountBeginVertical();
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
             GUILayout.Label("Changes to these settings are saved and globally affect all saved games.", tooltipLabelStyle);
@@ -393,23 +405,26 @@ namespace kOS.Screen
                 {
                     GUILayout.Label(key.Alias + " is a new type this dialog doesn't support.  Contact kOS devs.");
                 }
+                GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
                 GUILayout.Label(new GUIContent(labelText,toolTipText));
+                GUILayout.EndHorizontal();
 
                 CountEndHorizontal();
             }
             CountEndVertical();
-
+ 
             CountEndHorizontal();
 
             // This is where tooltip hover text will show up, rather than in a hover box wherever the poiner is like normal.
             // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
             GUILayout.Label(GUI.tooltip, tooltipLabelStyle);
+            CountEndVertical();
         }
         
         private void DrawActiveCPUsOnPanel()
         {
+            scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.MinWidth(210), GUILayout.Height(height-60));
             
-            scrollPos = GUILayout.BeginScrollView(scrollPos, false, true, GUILayout.Width(300), GUILayout.Height(height-60));
             CountBeginVertical();
             Vessel prevVessel = null;
             bool atLeastOne = false;
@@ -423,14 +438,19 @@ namespace kOS.Screen
                 // For each new vessel in the list, start a new vessel section:
                 if (thisVessel != null && thisVessel != prevVessel)
                 {
-                    GUILayout.Box(thisVessel.GetName());
+                    GUILayout.Box(thisVessel.GetName(),vesselNameStyle);
                     prevVessel = thisVessel;
                 }
                 DrawPartRow(thisPart);
             }
             if (! atLeastOne)
-                GUILayout.Label("(No kOS CPUs in\nnearby range.)");
+                GUILayout.Label("No Loaded CPUs Found.\n" +
+                                "-------------------------\n" +
+                                "There are either no kOS CPU's\n" +
+                                "in this universe, or there are\n " +
+                                "but they are all \"on rails\"." );
             CountEndVertical();
+
             GUILayout.EndScrollView();
         }
         
@@ -438,15 +458,26 @@ namespace kOS.Screen
         {
             CountBeginHorizontal();
             
-            DrawPartIcon(part);
+            GUILayout.Label("  "); // indent each part row over slightly.
+            DrawPart(part);
             
             kOSProcessor kOSMod = part.Modules.OfType<kOSProcessor>().FirstOrDefault();
+
+            GUIStyle windowButtonStyle = kOSMod.WindowIsOpen() ? buttonOnStyle : buttonOffStyle;
+            GUIStyle powerButtonStyle = 
+                (kOSMod.ProcessorMode == ProcessorModes.STARVED) ?
+                buttonDisabledStyle : ( (kOSMod.ProcessorMode == ProcessorModes.READY) ?
+                                         buttonOnStyle : buttonOffStyle);
+            string powerButtonText = 
+                (kOSMod.ProcessorMode == ProcessorModes.STARVED) ?
+                "<Starved>" : "Power";
+
             CountBeginVertical();
-            if (GUILayout.Button("Terminal"))
+            if (GUILayout.Button("Window", windowButtonStyle))
             {
                 kOSMod.ToggleWindow();
             }
-            if (GUILayout.Button("Power"))
+            if (GUILayout.Button(powerButtonText, powerButtonStyle))
             {
                 kOSMod.TogglePower();
             }
@@ -454,7 +485,7 @@ namespace kOS.Screen
             CountEndHorizontal();
         }
         
-        private static void DrawPartIcon(Part part)
+        private static void DrawPart(Part part)
         {
             // Someday we may work on making this into something that
             // actualy draws out the part image like in the editor icons, however
@@ -529,31 +560,8 @@ namespace kOS.Screen
         
         private GUISkin BuildPanelSkin()
         {
-            GUISkin theSkin = new GUISkin();
-
-            // If we just did something like this:
-            //     theSkin = HighLogic.Skin;
-            //     theSkin.label.fontSize=10;
-            // Then theSkin would have just been a reference to the same skin
-            // everybody else uses in KSP and therefore it would have altered
-            // the look of all the KSP windows from stock and all the other mods.
-            // (Yes, this is what happened the first time I tried this).
-            //
-            // Therefore we want to make theSkin a deep copy of HighLogic.Skin, then
-            // alter it after making the copy, but GUISkin has no copy constructor.
-            // The individual GUIStyle's inside it do, however, and that is what
-            // causes this next block of code.  It's starting off theSkin as a deep
-            // copy of HighLogic.Skin, at least as much as it can:
-            //
-            theSkin.window      = new GUIStyle(HighLogic.Skin.window);
-            theSkin.button      = new GUIStyle(HighLogic.Skin.button);
-            theSkin.box         = new GUIStyle(HighLogic.Skin.box);
-            theSkin.label       = new GUIStyle(HighLogic.Skin.label);
-            theSkin.toggle      = new GUIStyle(HighLogic.Skin.toggle);
-            theSkin.textArea    = new GUIStyle(HighLogic.Skin.textArea);
-            theSkin.textField   = new GUIStyle(HighLogic.Skin.textField);
-            theSkin.scrollView  = new GUIStyle(HighLogic.Skin.scrollView);
-
+            GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
+            
             // Now alter the parts of theSkin that we want to change:
             //
             theSkin.window = new GUIStyle(HighLogic.Skin.window);
@@ -578,15 +586,34 @@ namespace kOS.Screen
 
             // And these are new styles for our own use in special cases:
             //
-            headingLabelStyle = new GUIStyle(theSkin.label);
-            headingLabelStyle.fontSize = 13;
-            headingLabelStyle.padding = new RectOffset(2,2,2,2);
-            
-            tooltipLabelStyle = new GUIStyle(theSkin.label);
-            tooltipLabelStyle.fontSize = 11;
-            tooltipLabelStyle.padding = new RectOffset(0,2,0,2);
-            tooltipLabelStyle.normal.textColor = Color.white;
-                        
+            headingLabelStyle = new GUIStyle(theSkin.label)
+            {
+                fontSize = 13, 
+                padding = new RectOffset(2, 2, 2, 2)
+            };
+            vesselNameStyle = new GUIStyle(theSkin.box)
+            {
+                fontSize = 12, 
+                normal = {textColor = Color.white}
+            };
+            tooltipLabelStyle = new GUIStyle(theSkin.label)
+            {
+                fontSize = 11,
+                padding = new RectOffset(0, 2, 0, 2),
+                normal = {textColor = Color.white}
+            };
+            buttonOnStyle = new GUIStyle(theSkin.button)
+            {
+                normal = {textColor = new Color(0.4f,1.0f,0.4f)} // brighter green, higher saturation.
+            };
+            buttonOffStyle = new GUIStyle(theSkin.button)
+            {
+                normal = {textColor = new Color(0.6f,0.7f,0.6f)} // dimmer green, more washed out and grey.
+            };
+            buttonDisabledStyle = new GUIStyle(theSkin.button)
+            {
+                normal = {textColor = Color.white}
+            };
             return theSkin;
         }
 

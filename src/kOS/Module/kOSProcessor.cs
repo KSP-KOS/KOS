@@ -175,11 +175,17 @@ namespace kOS.Module
                 allMyInstances.Add(this);
                 allMyInstances.Sort(delegate(kOSProcessor a, kOSProcessor b)
                                     {
+                                        int compare;
                                         // sort "nulls" first:
                                         if (a.part==null || a.part.vessel==null)
                                             return -1;
                                         if (b.part==null || b.part.vessel==null)
                                             return 1;
+                                        // If on different vessels, sort by vessel name next:
+                                        compare = String.Compare(a.part.vessel.vesselName, b.part.vessel.vesselName, StringComparison.CurrentCultureIgnoreCase);
+                                        // If on same vessel, sort by part UID last:
+                                        if (compare != 0)
+                                            return compare;
                                         return (a.part.uid < b.part.uid) ? -1 : (a.part.uid > b.part.uid) ? 1 : 0;
                                     } );
             }

@@ -214,6 +214,50 @@ namespace kOS.Utilities
             return outAngle;
         }
 
+        public static GUISkin GetSkinCopy(GUISkin toCopy)
+        {
+            // If we just did something like this:
+            //     theSkin = HighLogic.Skin;
+            //     theSkin.label.fontSize=10;
+            // Then theSkin would have just been a reference to the same skin
+            // everybody else uses in KSP and therefore it would have altered
+            // the look of all the KSP windows from stock and all the other mods.
+            // (Yes, this is what happened the first time I tried this).
+            //
+            // Therefore we want to make theSkin a deep copy of HighLogic.Skin, then
+            // alter it after making the copy, but GUISkin has no copy constructor.
+            // The individual GUIStyle's inside it do, however, and that is what
+            // causes this next block of code.  It's starting off theSkin as a deep
+            // copy of HighLogic.Skin, at least as much as it can:
+            //
+            return new GUISkin
+            {
+                // This is literally every GUISTyle mentioned in Unity's documention for
+                // GUISkin, as of 11/11/2014.  If Unity updates these, we could be screwed:
+                //
+                box = new GUIStyle(toCopy.box),
+                button = new GUIStyle(toCopy.button),
+                horizontalScrollbar = new GUIStyle(toCopy.horizontalScrollbar),
+                horizontalScrollbarLeftButton = new GUIStyle(toCopy.horizontalScrollbarLeftButton),
+                horizontalScrollbarRightButton = new GUIStyle(toCopy.horizontalScrollbarRightButton),
+                horizontalScrollbarThumb = new GUIStyle(toCopy.horizontalScrollbarThumb),
+                horizontalSlider = new GUIStyle(toCopy.horizontalSlider),
+                horizontalSliderThumb = new GUIStyle(toCopy.horizontalSliderThumb),
+                label = new GUIStyle(toCopy.label),
+                scrollView = new GUIStyle(toCopy.scrollView),
+                textArea = new GUIStyle(toCopy.textArea),
+                textField = new GUIStyle(toCopy.textField),
+                toggle = new GUIStyle(toCopy.toggle),
+                verticalScrollbar = new GUIStyle(toCopy.verticalScrollbar),
+                verticalScrollbarDownButton = new GUIStyle(toCopy.verticalScrollbarDownButton),
+                verticalScrollbarThumb = new GUIStyle(toCopy.verticalScrollbarThumb),
+                verticalScrollbarUpButton = new GUIStyle(toCopy.verticalScrollbarUpButton),
+                verticalSlider = new GUIStyle(toCopy.verticalSlider),
+                verticalSliderThumb = new GUIStyle(toCopy.verticalSliderThumb),
+                window = new GUIStyle(toCopy.window),
+            };
+        }
+
         /// <summary>
         /// Given a Vector3, construct a new Vector3D out of it.
         /// By all rights SQUAD should have had this as a constructor in their Vector3d class.  I don't know why they didn't.
@@ -222,7 +266,7 @@ namespace kOS.Utilities
         /// <returns>A Vector3d that has the same values as the Vector3 passed in.</returns>
         public static Vector3d Vector3ToVector3d(Vector3 convertFrom)
         {
-            return new Vector3d( (double)convertFrom.x, (double)convertFrom.y, (double)convertFrom.z);
+            return new Vector3d( convertFrom.x, convertFrom.y, convertFrom.z);
         }
 
         /// <summary>
@@ -234,7 +278,7 @@ namespace kOS.Utilities
         /// <returns>True if a orbits b.  </returns>
         public static Boolean BodyOrbitsBody(CelestialBody a, CelestialBody b)
         {
-            bool DEBUG_WALK = false;
+            const bool DEBUG_WALK = false;
             
             if (DEBUG_WALK) Debug.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
             if (DEBUG_WALK) Debug.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
@@ -280,7 +324,7 @@ namespace kOS.Utilities
             {
                 return "String";
             }
-            else if (type.IsSubclassOf(typeof(kOS.Safe.Encapsulation.Structure)) )
+            else if (type.IsSubclassOf(typeof(Safe.Encapsulation.Structure)) )
             {
                 // If it's one of our suffixed Types, then
                 // first chop it down to just the lastmost term
@@ -290,8 +334,8 @@ namespace kOS.Utilities
                 name = (lastDotPos < 0) ? name : name.Remove(0,lastDotPos);
                 
                 // Then drop the suffix "Target" or "Value", which we use a lot:
-                name.Replace("Value","");
-                name.Replace("Target","");
+                name = name.Replace("Value","");
+                name = name.Replace("Target","");
 
                 return name;
             }
@@ -326,10 +370,8 @@ namespace kOS.Utilities
                                                "DEST: " + (codes[index].DestinationLabel ?? "null" ),
                                                "" ) );
             }
-            
-            string returnVal = "";
-            foreach (string s in codeFragment) returnVal += s + "\n";
-            return returnVal;
+
+            return codeFragment.Aggregate(string.Empty, (current, s) => current + (s + "\n"));
         }
                 
     }

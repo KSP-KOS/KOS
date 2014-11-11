@@ -32,7 +32,7 @@ namespace kOS.Screen
         private readonly Texture2D resizeImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool resizeMouseDown;
         private Vector2 resizeOldSize; // width and height it had when the mouse button went down on the resize button.
-        private bool isDirty; // have any edits occured since last load or save?
+        private bool isDirty; // have any edits occurred since last load or save?
         private bool frozen;
         private DelegateDialog dialog;
         private Vector2 scrollPosition; // tracks where within the text box it's scrolled to.
@@ -118,21 +118,20 @@ namespace kOS.Screen
         
         public void OnGUI()
         {
-            if (IsOpen())
+            if (!IsOpen()) return;
+
+            CalcOuterCoords(); // force windowRect to lock to bottom edge of the parents
+            CalcInnerCoords();
+
+            windowRect = GUI.Window( uniqueId, windowRect, ProcessWindow, "" );
+            // Some mouse global state data used by several of the checks:
+            // TODO: we aren't using this, do we need it?
+            Event e = Event.current;
+
+            if (consumeEvent)
             {
-                
-                CalcOuterCoords(); // force windowRect to lock to bottom edge of the parents
-                CalcInnerCoords();
-
-                windowRect = GUI.Window( uniqueId, windowRect, ProcessWindow, "" );
-                // Some mouse global state data used by several of the checks:
-                Event e = Event.current;
-
-                if (consumeEvent)
-                {
-                    consumeEvent = false;
-                    Event.current.Use();  
-                }
+                consumeEvent = false;
+                Event.current.Use();  
             }
         }
 
