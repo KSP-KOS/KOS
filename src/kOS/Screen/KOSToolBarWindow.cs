@@ -36,12 +36,12 @@ namespace kOS.Screen
 
         private readonly Texture2D launcherButtonTexture;
         
-        private bool clickedOn;
+        private bool clickedOn /* = false */ ;
         private float height = 1f; // will be automatically resized by GUILayout.
         private float width = 1f; // will be automatically resized by GUILayout.
         
-        private int verticalSectionCount;
-        private int horizontalSectionCount;
+        private int verticalSectionCount /* = 0 */ ;
+        private int horizontalSectionCount /* = 0 */ ;
         private Vector2 scrollPos = new Vector2(200,350);
 
 /* -------------------------------------------
@@ -87,14 +87,14 @@ namespace kOS.Screen
         // can show in bug reports until I'm more confident this is working
         // perfectly:
         
-        private bool alreadyAwake;
-        private static int  countInstances;
-        private int myInstanceNum;
-        private bool thisInstanceHasHooks;
-        private static bool someInstanceHasHooks;
-        private bool isOpen;
-        private bool onGUICalledThisInstance;
-        private bool onGUIWasOpenThisInstance;
+        private bool alreadyAwake /* = false */ ;
+        private static int  countInstances /* = 0 */ ;
+        private int myInstanceNum /* = 0 */ ;
+        private bool thisInstanceHasHooks /* = false */ ;
+        private static bool someInstanceHasHooks /* = false */ ;
+        private bool isOpen /* = false */ ;
+        private bool onGUICalledThisInstance /* = false */ ;
+        private bool onGUIWasOpenThisInstance /* = false */ ;
 
         public KOSToolBarWindow()
         {
@@ -113,7 +113,7 @@ namespace kOS.Screen
 
             const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
 
-            var imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
+            WWW imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
             imageFromURL.LoadImageIntoTexture(launcherButtonTexture);
 
             windowRect = new Rect(0,0,width,height); // this origin point will move when opened/closed.
@@ -459,30 +459,30 @@ namespace kOS.Screen
             GUILayout.Label("  "); // indent each part row over slightly.
             DrawPart(part);
             
-            kOSProcessor processor = part.Modules.OfType<kOSProcessor>().FirstOrDefault();
+            kOSProcessor processorModule = part.Modules.OfType<kOSProcessor>().FirstOrDefault();
 
-            if (processor == null)
+            if (processorModule == null)
             {
                 throw new ArgumentException("Part does not have a kOSProcessor module", "part");
             }
 
-            GUIStyle windowButtonStyle = processor.WindowIsOpen() ? buttonOnStyle : buttonOffStyle;
+            GUIStyle windowButtonStyle = processorModule.WindowIsOpen() ? buttonOnStyle : buttonOffStyle;
             GUIStyle powerButtonStyle = 
-                (processor.ProcessorMode == ProcessorModes.STARVED) ?
-                buttonDisabledStyle : ( (processor.ProcessorMode == ProcessorModes.READY) ?
+                (processorModule.ProcessorMode == ProcessorModes.STARVED) ?
+                buttonDisabledStyle : ( (processorModule.ProcessorMode == ProcessorModes.READY) ?
                                          buttonOnStyle : buttonOffStyle);
             string powerButtonText = 
-                (processor.ProcessorMode == ProcessorModes.STARVED) ?
+                (processorModule.ProcessorMode == ProcessorModes.STARVED) ?
                 "<Starved>" : "Power";
 
             CountBeginVertical();
             if (GUILayout.Button("Window", windowButtonStyle))
             {
-                processor.ToggleWindow();
+                processorModule.ToggleWindow();
             }
             if (GUILayout.Button(powerButtonText, powerButtonStyle))
             {
-                processor.TogglePower();
+                processorModule.TogglePower();
             }
             CountEndVertical();
             CountEndHorizontal();
