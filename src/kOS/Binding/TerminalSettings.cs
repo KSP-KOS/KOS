@@ -2,7 +2,7 @@
 
 namespace kOS.Binding
 {
-    [kOSBinding]
+    [Binding]
     public class TerminalSettings : Binding
     {
         public override void AddTo(SharedObjects shared)

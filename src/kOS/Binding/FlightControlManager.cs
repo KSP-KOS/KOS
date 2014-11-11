@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class FlightControlManager : Binding , IDisposable
     {
         private Vessel currentVessel;

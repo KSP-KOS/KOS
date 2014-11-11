@@ -4,7 +4,7 @@ using kOS.Execution;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class ColorBinding : Binding
     {
         public override void AddTo(SharedObjects shared)

@@ -9,7 +9,7 @@ using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class FlightStats : Binding
     {
         public override void AddTo(SharedObjects shared)

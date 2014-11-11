@@ -6,7 +6,7 @@ using kOS.Utilities;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class MissionSettings : Binding
     {
         public override void AddTo(SharedObjects shared)

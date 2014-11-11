@@ -34,7 +34,7 @@ namespace kOS.Binding
 
             foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                var attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
+                var attr = (BindingAttribute)t.GetCustomAttributes(typeof(BindingAttribute), true).FirstOrDefault();
                 if (attr == null) continue;
                 if (attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
 

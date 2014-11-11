@@ -3,7 +3,7 @@ using kOS.Suffixed;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class BindingConfig : Binding
     {
         public override void AddTo(SharedObjects shared)

@@ -98,7 +98,6 @@
     <Compile Include="InterProcessor\InterProcCommand.cs" />
     <Compile Include="InterProcessor\ProcessorManager.cs" />
     <Compile Include="InterProcessor\RunCommand.cs" />
-    <Compile Include="Module\kOSIDModule.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Suffixed\ElementValue.cs" />
     <Compile Include="Suffixed\FlightControl.cs" />

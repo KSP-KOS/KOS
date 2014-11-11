@@ -2,7 +2,7 @@
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class RoverStats : Binding
     {
         public override void AddTo(SharedObjects shared)

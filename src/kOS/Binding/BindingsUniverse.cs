@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class BindingTimeWarp : Binding
     {
         private static readonly IList<string> reservedSaveNames = new List<string> { "persistence", "quicksave" };
