@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using kOS.Safe;
+using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
@@ -377,7 +378,7 @@ namespace kOS.Execution
 
         public bool VariableIsRemovable(Variable variable)
         {
-            return !(variable is Binding.BoundVariable);
+            return !(variable is BoundVariable);
         }
 
         public void RemoveVariable(string identifier)
@@ -730,7 +731,7 @@ namespace kOS.Execution
 
                     foreach (var kvp in variables)
                     {
-                        if (!(kvp.Value is Binding.BoundVariable) &&
+                        if (!(kvp.Value is BoundVariable) &&
                             (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
                         {
                             if (kvp.Value.Value.GetType().ToString() == "System.String")  // if the variable is a string, enclose the value in ""

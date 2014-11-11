@@ -1,12 +1,12 @@
 ﻿using System;
 using kOS.Safe.Execution;
 
-namespace kOS.Binding
+namespace kOS.Safe.Binding
 {
     public class BoundVariable : Variable
     {
-        public BindingManager.BindingSetDlg Set;
-        public BindingManager.BindingGetDlg Get;
+        public BindingSetDlg Set;
+        public BindingGetDlg Get;
 
         private object currentValue;
         private bool wasUpdated;

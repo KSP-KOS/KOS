@@ -13,8 +13,6 @@ namespace kOS.Binding
         private readonly Dictionary<string, BoundVariable> vars = new Dictionary<string, BoundVariable>();
         private FlightControlManager flightControl;
 
-        public delegate void BindingSetDlg(object val);
-        public delegate object BindingGetDlg();
 
         public BindingManager(SharedObjects shared)
         {
