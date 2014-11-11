@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
 using kOS.Persistence;
+using kOS.Module;
 
 namespace kOS.Screen
 {
@@ -19,7 +21,7 @@ namespace kOS.Screen
         private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
-        private static readonly Rect closeButtonRect = new Rect(398, 359, 59, 30);
+        private static readonly Rect closeButtonRect = new Rect(398, 370, 59, 30);
         
         
         private bool consumeEvent;
@@ -44,7 +46,7 @@ namespace kOS.Screen
         public TermWindow()
         {
             IsPowered = true;
-            windowRect = new Rect(60, 50, 470, 395);
+            windowRect = new Rect(60, 50, 470, 405);
         }
 
         public void Awake()
@@ -164,8 +166,15 @@ namespace kOS.Screen
             
             GUI.skin = HighLogic.Skin;
             GUI.color = isLocked ? color : colorAlpha;
-            
-            windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, "");
+
+            // Should probably make "gui screen name for my CPU part" into some sort of utility method:
+            KOSNameTag kOSTag = shared.KSPPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
+            string labelText = String.Format("{0} ({1})",
+                                             shared.KSPPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
+                                             ((kOSTag==null) ? "" : kOSTag.nameTag)
+                                            );
+
+            windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, labelText);
 
             if (consumeEvent)
             {
@@ -307,7 +316,7 @@ namespace kOS.Screen
             }
 
             GUI.color = isLocked ? color : colorAlpha;
-            GUI.DrawTexture(new Rect(10, 10, terminalImage.width, terminalImage.height), terminalImage);
+            GUI.DrawTexture(new Rect(10, 20, terminalImage.width, terminalImage.height), terminalImage);
 
             if (GUI.Button(closeButtonRect, "Close"))
             {

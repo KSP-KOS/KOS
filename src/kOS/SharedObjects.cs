@@ -22,6 +22,7 @@ namespace kOS
         public IFactory Factory { get; set; }
         #endregion
 
+        public Part KSPPart { get; set; }
         public ICpu Cpu { get; set; }
         public IScreenBuffer Screen { get; set; }
         public IInterpreter Interpreter { get; set; }

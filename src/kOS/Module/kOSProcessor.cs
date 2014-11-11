@@ -24,6 +24,7 @@ namespace kOS.Module
         public Harddisk HardDisk { get; private set; }
         private int vesselPartCount;
         private SharedObjects shared;
+        private static List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
 
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
@@ -100,6 +101,11 @@ namespace kOS.Module
         {
             shared.Window.Toggle();
         }
+        
+        public bool WindowIsOpen()
+        {
+            return shared.Window.IsOpen();
+        }
 
         public override void OnStart(StartState state)
         {
@@ -122,6 +128,7 @@ namespace kOS.Module
                     
             shared.Vessel = vessel;
             shared.Processor = this;
+            shared.KSPPart = this.part;
             shared.UpdateHandler = new UpdateHandler();
             shared.BindingMgr = new BindingManager(shared);
             shared.Interpreter = shared.Factory.CreateInterpreter(shared);
@@ -161,8 +168,50 @@ namespace kOS.Module
             {
                 shared.VolumeMgr.SwitchTo(HardDisk);
             }
+            
+            // Track a list of all instances of me that exist:
+            if (! allMyInstances.Contains(this))
+            {
+                allMyInstances.Add(this);
+                allMyInstances.Sort(delegate(kOSProcessor a, kOSProcessor b)
+                                    {
+                                        // sort "nulls" first:
+                                        if (a.part==null || a.part.vessel==null)
+                                            return -1;
+                                        if (b.part==null || b.part.vessel==null)
+                                            return 1;
+                                        return (a.part.uid < b.part.uid) ? -1 : (a.part.uid > b.part.uid) ? 1 : 0;
+                                    } );
+            }
+            GameEvents.onPartDestroyed.Add(OnDestroyingMyHardware);
 
             shared.Cpu.Boot();
+        }
+        
+        private void OnDestroyingMyHardware(Part p)
+        {
+            // This is technically called any time ANY part is destroyed, so ignore it if it's not MY part:
+            if (p != part)
+                return;
+            
+            allMyInstances.RemoveAll((m) => m==this);
+        }
+        
+        
+        /// <summary>
+        /// Return a list of all existing runtime instances of this PartModule.
+        /// The list is guaranteed to be ordered by the Vessel that it's on.
+        /// (i.e. all the instances of no vessel are first ,then all the module instances
+        /// on vessel A, then all the instances on vessel B, and so on)
+        /// </summary>
+        /// <returns></returns>
+        public static List<kOSProcessor> AllInstances()
+        {
+            // Doing it this way to force return value to be a shallow-level copy,
+            // rather than an exact reference to the internal private list.
+            // So if the caller adds/removes from it, it won't mess with the
+            // private list we're internally maintaining:
+            return allMyInstances.GetRange(0, allMyInstances.Count);
         }
 
         private void CreateFactory()

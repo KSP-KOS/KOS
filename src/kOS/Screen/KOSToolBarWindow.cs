@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
@@ -39,7 +40,10 @@ namespace kOS.Screen
         private bool clickedOn = false;
         private float height = 1f; // will be automatically resized by GUILayout.
         private float width = 1f; // will be automatically resized by GUILayout.
-        private float minWidth = 220f; // keeps GUILayout from being stupid.
+        
+        private int verticalSectionCount = 0;
+        private int horizontalSectionCount = 0;
+        private Vector2 scrollPos = new Vector2(200,350);
 
 /* -------------------------------------------
  * OLD WAY OF ADDING KOSNameTags, now abandoned
@@ -70,7 +74,6 @@ namespace kOS.Screen
         private GUISkin panelSkin;
         private GUIStyle headingLabelStyle;
         private GUIStyle tooltipLabelStyle;
-        private GUIStyle smallToggleStyle;
         private string versionString;
 
         
@@ -275,38 +278,11 @@ namespace kOS.Screen
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
         
-        private global::Part GetPartFromRayCast(Ray ray)
-        {
-            RaycastHit hit;
-            global::Part returnMe = null;
-            if (Physics.Raycast(ray, out hit, 999999f))
-            {
-                if (hit.collider != null && hit.collider.gameObject != null)
-                {
-                    GameObject gObject = hit.collider.gameObject;
-                    // That found the innermost hit - need to walk up chain of parents until
-                    // hitting a Unity GameObject that is also a KSP part.
-                    while (true) // (there is an explicit break in the loop).
-                    {
-                        returnMe = Part.FromGO(gObject);
-                        if (returnMe == null && gObject != null &&
-                            gObject.transform.parent != null &&
-                            gObject.transform.parent.gameObject != null)
-                        {
-                            gObject = gObject.transform.parent.gameObject;
-                        }
-                        else
-                        {
-                            break; // quits when either returnMe is found, or a null was hit walking up the parent chain.
-                        }
-                    }
-                }
-            }
-            return returnMe;
-        }
-
         public void OnGUI()
         {
+            horizontalSectionCount = 0;
+            verticalSectionCount = 0;
+            
             if (!onGUICalledThisInstance) // I want proof it was called, but without spamming the log:
             {
                 Debug.Log("KOSToolBarWindow: PROOF: OnGUI() was called at least once on instance number " + myInstanceNum);
@@ -322,8 +298,8 @@ namespace kOS.Screen
             }
             
             GUI.skin = panelSkin;
-            
-            windowRect = GUILayout.Window(uniqueId, windowRect, DrawWindow,"kOS " + versionString, GUILayout.MinWidth(minWidth));
+
+            windowRect = GUILayout.Window(uniqueId, windowRect, DrawWindow, "kOS " + versionString);
 
             width = windowRect.width;
             height = windowRect.height;
@@ -386,23 +362,17 @@ namespace kOS.Screen
  * --------------------------
  */
 
-            GUILayout.Box("",GUILayout.ExpandWidth(true)); // Just draw an empty horizontal bar under the title.
+            CountBeginHorizontal();
 
-            GUILayout.BeginHorizontal();
-
-            GUILayout.BeginVertical();
-            GUILayout.Label("\n\nComing soon... \n  watch this space\n  for more content\n  in future versions.");
-            GUILayout.EndVertical();
-
-            GUILayout.Box("",GUILayout.ExpandHeight(true)); // just draw an empty vertical bar as a separator.
+            DrawActiveCPUsOnPanel();
             
-            GUILayout.BeginVertical();
+            CountBeginVertical();
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
             GUILayout.Label("Changes to these settings are saved and globally affect all saved games.", tooltipLabelStyle);
 
             foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
-                GUILayout.BeginHorizontal();
+                CountBeginHorizontal();
 
                 string labelText = key.Alias;
                 string toolTipText = key.Name;
@@ -413,7 +383,7 @@ namespace kOS.Screen
                 }
                 else if (key.Value is int)
                 {
-                    string newStringVal = GUILayout.TextField(key.Value.ToString(), 6, GUILayout.Width(50));
+                    string newStringVal = GUILayout.TextField(key.Value.ToString(), 6, GUILayout.MinWidth(60));
                     int newInt;
                     if (int.TryParse(newStringVal, out newInt))
                         key.Value = newInt;
@@ -425,16 +395,137 @@ namespace kOS.Screen
                 }
                 GUILayout.Label(new GUIContent(labelText,toolTipText));
 
-                GUILayout.EndHorizontal();
+                CountEndHorizontal();
             }
-            GUILayout.EndVertical();
+            CountEndVertical();
 
-            GUILayout.EndHorizontal();
+            CountEndHorizontal();
 
             // This is where tooltip hover text will show up, rather than in a hover box wherever the poiner is like normal.
             // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
             GUILayout.Label(GUI.tooltip, tooltipLabelStyle);
         }
+        
+        private void DrawActiveCPUsOnPanel()
+        {
+            
+            scrollPos = GUILayout.BeginScrollView(scrollPos, false, true, GUILayout.Width(300), GUILayout.Height(height-60));
+            CountBeginVertical();
+            Vessel prevVessel = null;
+            bool atLeastOne = false;
+            
+            foreach (kOSProcessor kModule in kOSProcessor.AllInstances())
+            {
+                atLeastOne = true;   
+                Part thisPart = kModule.part;
+                Vessel thisVessel = (thisPart==null) ? null : thisPart.vessel;
+
+                // For each new vessel in the list, start a new vessel section:
+                if (thisVessel != null && thisVessel != prevVessel)
+                {
+                    GUILayout.Box(thisVessel.GetName());
+                    prevVessel = thisVessel;
+                }
+                DrawPartRow(thisPart);
+            }
+            if (! atLeastOne)
+                GUILayout.Label("(No kOS CPUs in\nnearby range.)");
+            CountEndVertical();
+            GUILayout.EndScrollView();
+        }
+        
+        private void DrawPartRow(Part part)
+        {
+            CountBeginHorizontal();
+            
+            DrawPartIcon(part);
+            
+            kOSProcessor kOSMod = part.Modules.OfType<kOSProcessor>().FirstOrDefault();
+            CountBeginVertical();
+            if (GUILayout.Button("Terminal"))
+            {
+                kOSMod.ToggleWindow();
+            }
+            if (GUILayout.Button("Power"))
+            {
+                kOSMod.TogglePower();
+            }
+            CountEndVertical();
+            CountEndHorizontal();
+        }
+        
+        private static void DrawPartIcon(Part part)
+        {
+            // Someday we may work on making this into something that
+            // actualy draws out the part image like in the editor icons, however
+            // there appears to be no KSP API to do this for us, and it's a bit messy
+            // and there's more important other stuff to do first.
+            //
+            // In the meantime, this is as far as my research has taken me:
+            // Step 1: get a Unity GameObject from the part prototype, like so:
+            //    GameObject prototypeGO = part.partInfo.iconPrefab;
+
+            // Also, it seems to be using some proprietary extension to Unity's GUI
+            // called EZGui to render some sort of camera view of the gameobject inside the
+            // button, and EZGui is even worse for online documentation than Unity itself,
+            // so whatever the technique is, it's hidden behind a wall of impenetrable
+            // documentaion with zero examples.
+
+            // So for the meantime let's use our own text label and leave it at that.
+            
+            KOSNameTag kOSTag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+
+            string labelText = String.Format("{0}\n({1})",
+                                             part.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
+                                             ((kOSTag==null) ? "" : kOSTag.nameTag)
+                                            );
+            GUILayout.Box(labelText);
+        }
+        
+        // Tracking the count to help detect when there's a mismatch:
+        // To help detect if a begin matches with an end, put the same
+        // string in both of them and see if they get the same count here.
+        private void CountBeginVertical(string debugHelp="")
+        {
+            if (! String.IsNullOrEmpty(debugHelp))
+                Debug.Log("BeginVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
+            GUILayout.BeginVertical();
+            ++verticalSectionCount;
+        }
+        
+        // Tracking the count to help detect when there's a mismatch:
+        // To help detect if a begin matches with an end, put the same
+        // string in both of them and see if they get the same count here.
+        private void CountEndVertical(string debugHelp="")
+        {
+            GUILayout.EndVertical();
+            --verticalSectionCount;            
+            if (! String.IsNullOrEmpty(debugHelp))
+                Debug.Log("EndVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
+        }
+        
+        // Tracking the count to help detect when there's a mismatch:
+        // To help detect if a begin matches with an end, put the same
+        // string in both of them and see if they get the same count here.
+        private void CountBeginHorizontal(string debugHelp="")
+        {
+            if (! String.IsNullOrEmpty(debugHelp))
+                Debug.Log("BeginHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
+            GUILayout.BeginHorizontal();
+            ++horizontalSectionCount;
+        }
+        
+        // Tracking the count to help detect when there's a mismatch:
+        // To help detect if a begin matches with an end, put the same
+        // string in both of them and see if they get the same count here.
+        private void CountEndHorizontal(string debugHelp="")
+        {
+            GUILayout.EndHorizontal();
+            --horizontalSectionCount;            
+            if (! String.IsNullOrEmpty(debugHelp))
+                Debug.Log("EndHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
+        }
+        
         
         private GUISkin BuildPanelSkin()
         {
