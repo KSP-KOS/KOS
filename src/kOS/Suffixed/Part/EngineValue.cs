@@ -32,7 +32,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("THROTTLELOCK", new Suffix<bool>(() => engine.ThrottleLock));
         }
 
-        public new static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
+        public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
         {
             var toReturn = new ListValue();
             foreach (var part in parts)

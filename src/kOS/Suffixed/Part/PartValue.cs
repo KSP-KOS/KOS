@@ -30,18 +30,18 @@ namespace kOS.Suffixed.Part
             AddSuffix("NAME", new Suffix<string>(() => Part.name));
             AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
             AddSuffix("UID", new Suffix<uint>(() => Part.uid));
+            AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction( Part.transform.rotation) ));
+            AddSuffix("POSITION", new Suffix<Vector>(() => new Vector( Part.transform.position - shared.Vessel.findWorldCenterOfMass() )));
             AddSuffix("TAG", new NoArgsSuffix<string>(GetTagName));
-            AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction(Part.orgRot)));
-            AddSuffix("POSITION", new Suffix<Vector>(() => new Vector(Part.orgPos)));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>(GetModule));
-            AddSuffix("MODULES", new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));            
-            AddSuffix("PARENT", new Suffix<PartValue>(() => PartFactory.Construct(Part.parent,shared), "The parent part of this part"));
+            AddSuffix(new [] {"MODULES","ALLMODULES"}, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
+            AddSuffix("PARENT", new Suffix<PartValue>(() => PartValueFactory.Construct(Part.parent,shared), "The parent part of this part"));
             AddSuffix("HASPARENT", new Suffix<bool>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
-            AddSuffix("CHILDREN", new Suffix<ListValue>(GetChildren, "A LIST() of the children parts of this part"));
+            AddSuffix("CHILDREN", new Suffix<ListValue>(() => PartValueFactory.Construct(Part.children, shared), "A LIST() of the children parts of this part"));
         }
         
         private PartModuleFields GetModule(string modName)
@@ -61,10 +61,7 @@ namespace kOS.Suffixed.Part
         public string GetTagName() // public because I picture this being a useful API method later
         {
             KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
-            if (tagModule==null)
-                return "";
-            else
-                return tagModule.nameTag;
+            return tagModule == null ? string.Empty : tagModule.nameTag;
         }
         
         public override string ToString()
@@ -72,18 +69,7 @@ namespace kOS.Suffixed.Part
             string tagName = GetTagName();
             if (string.IsNullOrEmpty(tagName))
                 return string.Format("PART({0},uid={1})", Part.name, Part.uid);
-            else
-                return string.Format("PART({0},tag={1})", Part.name, tagName);
-        }
-
-        public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
-        {
-            var toReturn = new ListValue();
-            foreach (var part in parts)
-            {
-                toReturn.Add(PartFactory.Construct(part, sharedObj));
-            }
-            return toReturn;
+            return string.Format("PART({0},tag={1})", Part.name, tagName);
         }
 
         public virtual ITargetable Target
@@ -130,16 +116,6 @@ namespace kOS.Suffixed.Part
                 resources.Add(new ResourceValue(resource));
             }
             return resources;
-        }
-
-        private ListValue GetChildren()
-        {
-            var kids = new ListValue();
-            foreach (global::Part part in Part.children)
-            {
-                kids.Add(PartFactory.Construct(part,shared));
-            }
-            return kids;
         }
 
         private ListValue GetAllModules()

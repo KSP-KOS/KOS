@@ -212,7 +212,7 @@ namespace kOS.Suffixed
         
         public ListValue GetAllParts()
         {
-            return PartValue.PartsToList(Vessel.Parts, Shared);
+            return PartValueFactory.Construct(Vessel.Parts, Shared);
         }
 
         private ListValue GetPartsNamed(string partName)
@@ -221,10 +221,7 @@ namespace kOS.Suffixed
 
             List<global::Part> kspParts = Vessel.parts.FindAll(part => part.name.ToLower() == lowerName);
 
-            ListValue kScriptParts = new ListValue();
-            foreach (global::Part kspPart in kspParts)
-                kScriptParts.Add(PartFactory.Construct(kspPart,Shared));
-            return kScriptParts;
+            return PartValueFactory.Construct(kspParts,Shared);
         }
 
         private ListValue GetPartsTagged(string tagName)
@@ -234,10 +231,7 @@ namespace kOS.Suffixed
                 .Any(tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase)));
 
             // The KSP Parts need to become KOS PartValues before becoming a ListValue:
-            ListValue kScriptParts = new ListValue();
-            foreach (global::Part kspPart in partsWithName)
-                kScriptParts.Add(PartFactory.Construct(kspPart,Shared));
-            return kScriptParts;
+            return PartValueFactory.Construct(partsWithName,Shared);
         }
         
         /// <summary>
@@ -250,11 +244,7 @@ namespace kOS.Suffixed
                 .Where( p => p.Modules.OfType<KOSNameTag>()
                 .Any(tag => !(String.Equals(tag.nameTag, "", StringComparison.CurrentCultureIgnoreCase))));
 
-            // The KSP Parts need to become KOS PartValues before becoming a ListValue:
-            ListValue kScriptParts = new ListValue();
-            foreach (global::Part kspPart in partsWithName)
-                kScriptParts.Add(PartFactory.Construct(kspPart,Shared));
-            return kScriptParts;
+            return PartValueFactory.Construct(partsWithName,Shared);
         }
 
         private ListValue GetModulesNamed(string modName)
@@ -301,7 +291,7 @@ namespace kOS.Suffixed
                 bool hasPartAction = p.Actions.Any(a => a.actionGroup.Equals(matchGroup));
                 if (hasPartAction)
                 {
-                    kScriptParts.Add(PartFactory.Construct(p,Shared));
+                    kScriptParts.Add(PartValueFactory.Construct(p,Shared));
                     continue;
                 }
 
@@ -309,7 +299,7 @@ namespace kOS.Suffixed
                 bool hasModuleAction = modules.Any(pm => pm.Actions.Any(a=>a.actionGroup.Equals(matchGroup)));
                 if (hasModuleAction)
                 {
-                        kScriptParts.Add(PartFactory.Construct(p,Shared));
+                        kScriptParts.Add(PartValueFactory.Construct(p,Shared));
                 }
             }
             return kScriptParts;
@@ -439,7 +429,7 @@ namespace kOS.Suffixed
                 case "LOADED":
                     return Vessel.loaded;
                 case "ROOTPART":
-                    return PartFactory.Construct(Vessel.rootPart,Shared);
+                    return PartValueFactory.Construct(Vessel.rootPart,Shared);
             }
 
             // Is this a resource?

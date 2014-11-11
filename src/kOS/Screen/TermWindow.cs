@@ -165,6 +165,7 @@ namespace kOS.Screen
             }
             
             GUI.skin = HighLogic.Skin;
+            
             GUI.color = isLocked ? color : colorAlpha;
 
             // Should probably make "gui screen name for my CPU part" into some sort of utility method:

@@ -83,12 +83,18 @@ namespace kOS.Suffixed.Part
         /// increments of 2, then a value of 17 is not something you could achieve in the GUI, being only able
         /// to go from 16 to 18 skipping over 17, and therefore this routine would return false for trying to
         /// set it to 17).
+        /// <br/><br/>
+        /// Note that the value passed in may be altered (which is why it's ref) when it's not
+        /// exactly legal, but it's CLOSE ENOUGH to be coerced into a legal value.  For example,
+        /// you set a slider to 10.45 and the slider only allows values on the 0.5 marks like 10, 10.5, 11. etc.
+        /// Rather than deny the attempt, the value will be nudged to the nearest legal value.
         /// </summary>
         /// <param name="field">Which KSPField is being checked?</param>
-        /// <param name="newVal">What is the value it's being set to?</param>
+        /// <param name="newVal">What is the value it's being set to?  It is possible to
+        ///    alter the value to an acceptable replacement which is why it passes by ref</param>
         /// <param name="except">An exception you can choose to throw if you want, or null if the value is legal.</param>
         /// <returns>Is it legal?</returns>
-        private bool IsLegalValue(BaseField field, object newVal, out KOSException except)
+        private bool IsLegalValue(BaseField field, ref object newVal, out KOSException except)
         {
             except = null;
             bool isLegal = true;
@@ -98,7 +104,7 @@ namespace kOS.Suffixed.Part
             
             if (!IsEditable(field))
             {
-                except = new KOSInvalidFieldValueException("Field is not editable");
+                except = new KOSInvalidFieldValueException("Field is read-only");
                 return false;
             }
             if (! newVal.GetType().IsSubclassOf(fType))
@@ -121,9 +127,7 @@ namespace kOS.Suffixed.Part
             // it's technically possible to have more than one according to the structure of
             // the API, this loop is here to check all of "them":
             foreach (UI_Control control in controls)
-            {
-                const float FLOAT_EPSILON = 0.0001f; // because using exact equality with floats is a bad idea.
-                
+            {                
                 // Some of these are subclasses of each other, so don't change this to an if/else.
                 // It's a series of if's on purpose so it checks all classes the control is derived from.
                 if (control is UI_Toggle)
@@ -155,35 +159,59 @@ namespace kOS.Suffixed.Part
                 if (range != null)
                 {
                     float val = Convert.ToSingle(convertedVal);
-                    float min = range.minValue;
-                    float max = range.maxValue;
-                    float inc = range.stepIncrement;
-                    if (val < min || val > max)
-                    {
-                        except = new KOSInvalidFieldValueException("Value is outside the allowed range ["+min+","+max+"]");
-                        isLegal = false;
-                    }
-                    else if (Math.Abs((val - min) % inc) > FLOAT_EPSILON)
-                    {
-                        except = new KOSInvalidFieldValueException("Value is not an exact integer multiple of allowed step increment "+inc);
-                        isLegal = false;
-                    }
+                    val = SliderClampRound(val, range.minValue, range.maxValue, range.stepIncrement);
+                    convertedVal = Convert.ToDouble(val);
                 }
                 if (! isLegal)
                     break;
             }
+            newVal = convertedVal;
             return isLegal;
+        }
+        
+        /// <summary>
+        /// Round the value to the nearest value the slider will allow if the slider starts
+        /// at min, ends at max, and has detents every inc.
+        /// </summary>
+        /// <param name="val">value to round</param>
+        /// <param name="min">minimun the slider allows</param>
+        /// <param name="max">maximum the slider allows</param>
+        /// <param name="inc">increment of the detents</param>
+        /// <returns></returns>
+        private float SliderClampRound(float val, float min, float max, float inc)
+        {
+            // First clamp the value to within min/max:
+            float outVal = Math.Max(min, Math.Min(val, max));
+            
+            // How many discrete increments up the slider gets us to the nearest detent less than or equal to the value:
+            int numIncs = Mathf.FloorToInt((outVal-min)/inc);
+
+            // get detent values just below and above the value:
+            float nearUnder = min + (numIncs*inc);
+            float nearOver = min + ((numIncs+1)*inc);
+            
+            // pick which one to round to:
+            float remainder = outVal - nearUnder;
+            if (remainder >= (inc/2f) && nearOver <= max)
+                outVal = nearOver;
+            else
+                outVal = nearUnder;
+
+            return outVal;
         }
 
         /// <summary>
-        /// Return a list of all the strings of all KSPfields registered to this PartModule.
+        /// Return a list of all the strings of all KSPfields registered to this PartModule
+        /// which are currently showing on the part's RMB menu.
         /// </summary>
         /// <returns>List of all the strings field names.</returns>
         private ListValue AllFields(string formatter)
         {            
             var returnValue = new ListValue();
             
-            foreach (BaseField field in partModule.Fields)
+            IEnumerable<BaseField> visibleFields = partModule.Fields.Cast<BaseField>().Where((field) => FieldIsVisible(field));
+
+            foreach (BaseField field in visibleFields)
             {
                 returnValue.Add(String.Format(formatter,
                                               (IsEditable(field)?"settable":"get-only"),
@@ -195,36 +223,38 @@ namespace kOS.Suffixed.Part
         
         /// <summary>
         /// Determine if the Partmodule has this KSPField on it, which is publicly
-        /// usable by a kOS script:
+        /// usable by a kOS script at the moment:
         /// </summary>
         /// <param name="fieldName">The field to search for</param>
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public bool HasField(string fieldName)
         {
-            return partModule.Fields.Cast<BaseField>().
-                Any(field => String.Equals(field.guiName, fieldName, StringComparison.CurrentCultureIgnoreCase));
+            return FieldIsVisible(GetField(fieldName));
         }
 
         /// <summary>
-        /// Return whatever the field's current value is in the PartModule.
+        /// Return the field itself that goes with the name (the BaseField, not the value).
         /// </summary>
         /// <param name="cookedGuiName">The case-insensitive guiName of the field.</param>
         /// <returns>a BaseField - a KSP type that can be used to get the value, or its GUI name or its reflection info.</returns>
         private BaseField GetField(string cookedGuiName)
-        {            
+        {
             return partModule.Fields.Cast<BaseField>().
                 FirstOrDefault(field => String.Equals(field.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
-        /// Return a list of all the KSPEvents the module has in it.
+        /// Return a list of all the KSPEvents the module has in it which are currently
+        /// visible on the RMB menu.
         /// </summary>
         /// <returns></returns>
         private ListValue AllEvents(string formatter)
         {            
             var returnValue = new ListValue();
-            
-            foreach (BaseEvent kspEvent  in partModule.Events)
+
+            IEnumerable<BaseEvent> visibleEvents = partModule.Events.Cast<BaseEvent>().Where( (evt) => EventIsVisible(evt) );
+   
+            foreach (BaseEvent kspEvent in visibleEvents)
             {
                 returnValue.Add(String.Format(formatter,
                                               "callable",
@@ -242,8 +272,7 @@ namespace kOS.Suffixed.Part
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public bool HasEvent(string eventName)
         {
-            return partModule.Events.
-                Any(kspEvent => String.Equals(kspEvent.guiName, eventName, StringComparison.CurrentCultureIgnoreCase));
+            return EventIsVisible(GetEvent(eventName));
         }
 
         /// <summary>
@@ -336,7 +365,7 @@ namespace kOS.Suffixed.Part
         private void InitializeSuffixesAfterConstruction()
         {
             AddSuffix("NAME",       new Suffix<string>(() => partModule.moduleName));
-            AddSuffix("PART",       new Suffix<PartValue>(() => PartFactory.Construct(partModule.part,shared)));
+            AddSuffix("PART",       new Suffix<PartValue>(() => PartValueFactory.Construct(partModule.part,shared)));
             AddSuffix("ALLFIELDS",  new Suffix<ListValue>(() => AllFields("({0}) {1}, is {2}")));
             AddSuffix("HASFIELD",   new OneArgsSuffix<bool, string>(HasField));
             AddSuffix("ALLEVENTS",  new Suffix<ListValue>(() => AllEvents("({0}) {1}, is {2}")));
@@ -349,6 +378,24 @@ namespace kOS.Suffixed.Part
             AddSuffix("DOACTION",   new TwoArgsSuffix<string, bool>(CallKSPAction));
         }
         
+        private static bool FieldIsVisible(BaseField field)
+        {
+            return (field==null) ?
+                false :
+                (HighLogic.LoadedSceneIsEditor ? field.guiActiveEditor : field.guiActive);
+        }
+
+        private static bool EventIsVisible(BaseEvent evt)
+        {
+            return (evt==null) ?
+                false :
+                (
+                    (HighLogic.LoadedSceneIsEditor ? evt.guiActiveEditor : evt.guiActive) &&
+                    /* evt.externalToEVAOnly) && */ // this flag seems bugged.  It always returns true no matter what.
+                    evt.active
+                );
+        }
+        
         /// <summary>
         /// Get a KSPField with the kOS suffix name given.
         /// </summary>
@@ -357,9 +404,10 @@ namespace kOS.Suffixed.Part
         private object GetKSPFieldValue(string suffixName)
         {
             BaseField field = GetField(suffixName);
-            if (field==null) {
+            if (field==null)
                 throw new KOSLookupFailException( "FIELD", suffixName, this);
-            }
+            if (! FieldIsVisible(field))
+                throw new KOSLookupFailException( "FIELD", suffixName, this, true);
             object obj = field.GetValue(partModule);
             return obj;
         }
@@ -374,9 +422,11 @@ namespace kOS.Suffixed.Part
             BaseField field = GetField(suffixName);
             if (field==null)
                 throw new KOSLookupFailException( "FIELD", suffixName, this);
+            if (! FieldIsVisible(field))
+                throw new KOSLookupFailException( "FIELD", suffixName, this, true);
 
             KOSException except;                
-            if (IsLegalValue(field, newValue, out except))
+            if (IsLegalValue(field, ref newValue, out except))
             {
                 object convertedValue = Convert.ChangeType(newValue,field.FieldInfo.FieldType);
                 field.SetValue(convertedValue, partModule);
@@ -396,6 +446,8 @@ namespace kOS.Suffixed.Part
             BaseEvent evt = GetEvent(suffixName);
             if (evt==null)
                 throw new KOSLookupFailException( "EVENT", suffixName, this);
+            if (! EventIsVisible(evt))
+                throw new KOSLookupFailException( "EVENT", suffixName, this, true);
             evt.Invoke();
         }
 

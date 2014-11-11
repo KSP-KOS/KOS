@@ -7,15 +7,28 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed.Part
 {
     /// <summary>
-    /// Description of PartFactory.
+    /// Description of PartValueFactory.
     /// </summary>
-    public class PartFactory 
-    {        
+    public class PartValueFactory 
+    {
+        public static ListValue Construct(IEnumerable<global::Part> parts, SharedObjects shared)
+        {
+            var list = new List<PartValue>();
+            foreach (var part in parts)
+            {
+                list.Add(Construct(part, shared));
+            }
+            return ListValue.CreateList(list);
+        } 
+
         public static PartValue Construct(global::Part part, SharedObjects shared)
         {
             foreach (PartModule module in part.Modules)
