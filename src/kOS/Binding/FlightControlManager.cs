@@ -179,7 +179,7 @@ namespace kOS.Binding
             private void HookEvents()
             {
                 binding.AddGetter(name, () => value);
-                binding.AddSetter(name, delegate(object val) { value = val; });
+                binding.AddSetter(name, val => value = val);
             }
 
 

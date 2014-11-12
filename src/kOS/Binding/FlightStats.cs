@@ -33,19 +33,20 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("STAGE", () => new StageValues(shared.Vessel));
 
             //DEPRICATED VESSELNAME
-            shared.BindingMgr.AddSetter("VESSELNAME", delegate { throw new KOSException("VESSELNAME is DEPRICATED, use SHIPNAME.");});
-            shared.BindingMgr.AddSetter("SHIPNAME", delegate(object value) { shared.Vessel.vesselName = value.ToString(); });
+            shared.BindingMgr.AddSetter("VESSELNAME",
+                val => { throw new KOSException("VESSELNAME is DEPRICATED, use SHIPNAME."); });
+            shared.BindingMgr.AddSetter("SHIPNAME", value => shared.Vessel.vesselName = value.ToString());
 
-            shared.BindingMgr.AddGetter("NEXTNODE", delegate
+            shared.BindingMgr.AddGetter("NEXTNODE", () =>
+            {
+                var vessel = shared.Vessel;
+                if (vessel.patchedConicSolver.maneuverNodes.Count == 0)
                 {
-                    var vessel = shared.Vessel;
-                    if (vessel.patchedConicSolver.maneuverNodes.Count == 0)
-                    {
-                        throw new Exception("No maneuver nodes present!");
-                    }
+                    throw new Exception("No maneuver nodes present!");
+                }
 
-                    return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0], shared);
-                });
+                return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0], shared);
+            });
 
             // These are now considered shortcuts to SHIP:suffix
             foreach (var scName in VesselTarget.ShortCuttableShipSuffixes)

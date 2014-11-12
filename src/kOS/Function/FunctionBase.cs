@@ -54,22 +54,17 @@ namespace kOS.Function
             throw new KOSCastException(argument.GetType(),typeof(RgbaColor));
         }
 
-        // Fully qualified name kos.Suffixed.TimeSpan used because the compiler
-        // was confusing it with System.TimeSpan:
-        protected kOS.Suffixed.TimeSpan GetTimeSpan(object argument)
-        { 
-            if (argument is kOS.Suffixed.TimeSpan)
+        protected Suffixed.TimeSpan GetTimeSpan(object argument)
+        {
+            if (argument is Suffixed.TimeSpan)
             {
-                return argument as kOS.Suffixed.TimeSpan;
+                return argument as Suffixed.TimeSpan;
             }
-            else if (argument is Double || argument is int || argument is long || argument is float)
+            if (argument is Double || argument is int || argument is long || argument is float)
             {
-                return new kOS.Suffixed.TimeSpan( Convert.ToDouble(argument) );
+                return new Suffixed.TimeSpan( Convert.ToDouble(argument) );
             }
-            else
-            {
-                throw new KOSCastException(argument.GetType(),typeof(kOS.Suffixed.TimeSpan));
-            }
+            throw new KOSCastException(argument.GetType(),typeof(Suffixed.TimeSpan));
         }
 
         protected Orbitable GetOrbitable(object argument)
@@ -78,10 +73,7 @@ namespace kOS.Function
             {
                 return argument as Orbitable;
             }
-            else
-            {
-                throw new KOSCastException(argument.GetType(),typeof(Orbitable));
-            }
+            throw new KOSCastException(argument.GetType(),typeof(Orbitable));
         }
 
         protected double DegreesToRadians(double degrees)

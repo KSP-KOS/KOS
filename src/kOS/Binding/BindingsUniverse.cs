@@ -55,12 +55,12 @@ namespace kOS.Binding
                 });
 
             shared.BindingMgr.AddGetter("LOADDISTANCE", () => Vessel.loadDistance);
-            shared.BindingMgr.AddSetter("LOADDISTANCE", delegate(object val)
-                {
-                    var distance = Convert.ToSingle(val);
-                    Vessel.loadDistance = distance;
-                    Vessel.unloadDistance = distance - 250;
-                });
+            shared.BindingMgr.AddSetter("LOADDISTANCE", val =>
+            {
+                var distance = Convert.ToSingle(val);
+                Vessel.loadDistance = distance;
+                Vessel.unloadDistance = distance - 250;
+            });
             shared.BindingMgr.AddGetter("WARPMODE", () =>
                 {
                     switch (TimeWarp.WarpMode)
@@ -96,26 +96,26 @@ namespace kOS.Binding
                     TimeWarp.fetch.Mode = toSet;
                 });
             shared.BindingMgr.AddGetter("WARP", () => TimeWarp.CurrentRateIndex);
-            shared.BindingMgr.AddSetter("WARP", delegate(object val)
+            shared.BindingMgr.AddSetter("WARP", val =>
+            {
+                int newRate;
+                if (int.TryParse(val.ToString(), out newRate))
                 {
-                    int newRate;
-                    if (int.TryParse(val.ToString(), out newRate))
-                    {
-                        TimeWarp.SetRate(newRate, false);
-                    }
-                });
+                    TimeWarp.SetRate(newRate, false);
+                }
+            });
             shared.BindingMgr.AddGetter("MAPVIEW", () => MapView.MapIsEnabled);
-            shared.BindingMgr.AddSetter("MAPVIEW", delegate(object val)
+            shared.BindingMgr.AddSetter("MAPVIEW", val =>
+            {
+                if (Convert.ToBoolean(val))
                 {
-                    if (Convert.ToBoolean(val))
-                    {
-                        MapView.EnterMapView();
-                    }
-                    else
-                    {
-                        MapView.ExitMapView();
-                    }
-                });
+                    MapView.EnterMapView();
+                }
+                else
+                {
+                    MapView.ExitMapView();
+                }
+            });
             foreach (var body in FlightGlobals.fetch.bodies)
             {
                 var cBody = body;
