@@ -36,38 +36,17 @@ namespace kOS.Screen
 
         private readonly Texture2D launcherButtonTexture;
         
-        private bool clickedOn /* = false */ ;
+        // ReSharper disable once RedundantDefaultFieldInitializer
+        private bool clickedOn = false;
         private float height = 1f; // will be automatically resized by GUILayout.
         private float width = 1f; // will be automatically resized by GUILayout.
         
-        private int verticalSectionCount /* = 0 */ ;
-        private int horizontalSectionCount /* = 0 */ ;
+        // ReSharper disable RedundantDefaultFieldInitializer
+        private int verticalSectionCount  = 0;
+        private int horizontalSectionCount = 0;
+        // ReSharper restore RedundantDefaultFieldInitializer
         private Vector2 scrollPos = new Vector2(200,350);
 
-/* -------------------------------------------
- * OLD WAY OF ADDING KOSNameTags, now abandoned
- * -------------------------------------------
- * Save these commented-out bits of code in a github commit so if you ever want to do
- * anything where you have to
- * click on a part and need to discover which part it is, you can look to this example
- * to see how that is done.
- * Once this commented section gets merged into at least one commit to develop, then
- * it can be removed in the future.  I just don't want this hard work forgotten.  This
- * is no longer necessary because we had to change the design of how KOSNameTag is used
- * so it now is ModuleManager'ed onto every part in the game.
- * -----------------------------------------------------------------------------------------
- * 
- * 
-        
-        private ScreenMessage partClickMsg = null;
-        private KOSNameTag nameTagModule = null;
-        private global::Part currentHoverPart = null;
-
-        private bool isAssigningPart = false;
-
- * END Commented-out section
- * --------------------------
- */         
         private Rect windowRect;
         private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
         private GUISkin panelSkin;
@@ -87,14 +66,16 @@ namespace kOS.Screen
         // can show in bug reports until I'm more confident this is working
         // perfectly:
         
-        private bool alreadyAwake /* = false */ ;
-        private static int  countInstances /* = 0 */ ;
-        private int myInstanceNum /* = 0 */ ;
-        private bool thisInstanceHasHooks /* = false */ ;
-        private static bool someInstanceHasHooks /* = false */ ;
-        private bool isOpen /* = false */ ;
-        private bool onGUICalledThisInstance /* = false */ ;
-        private bool onGUIWasOpenThisInstance /* = false */ ;
+        // ReSharper disable RedundantDefaultFieldInitializer
+        private bool alreadyAwake = false;
+        private static int  countInstances = 0;
+        private int myInstanceNum = 0;
+        private bool thisInstanceHasHooks = false;
+        private static bool someInstanceHasHooks = false;
+        private bool isOpen = false;
+        private bool onGUICalledThisInstance = false;
+        private bool onGUIWasOpenThisInstance = false;
+        // ReSharper enable RedundantDefaultFieldInitializer
 
         public KOSToolBarWindow()
         {
@@ -113,6 +94,7 @@ namespace kOS.Screen
 
             const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
 
+            // ReSharper disable once SuggestUseVarKeywordEvident
             WWW imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
             imageFromURL.LoadImageIntoTexture(launcherButtonTexture);
 
@@ -269,7 +251,6 @@ namespace kOS.Screen
                 return;
 
             isOpen = false;
-            /* isAssigningPart = false; */ // See comments further down that say: "OLD WAY OF ADDING KOSNameTags"
         }
 
         /// <summary>Callback for when the button is shown or enabled by the application launcher</summary>
@@ -313,63 +294,10 @@ namespace kOS.Screen
             width = windowRect.width;
             height = windowRect.height;
 
-/* -------------------------------------------
- * OLD WAY OF ADDING KOSNameTags, now abandoned
- * -------------------------------------------
-            
-            if (isAssigningPart)
-            {
-                Event e = Event.current;
-                
-                if (e.type == EventType.mouseDown)
-                {
-                    if (currentHoverPart != null)
-                    {
-                        // If it doesn't already have the module, add it on, else get the one
-                        // that's already on it.
-                        KOSNameTag nameTag = currentHoverPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
-                        if (nameTag==null)
-                        {
-                            currentHoverPart.AddModule("KOSNameTag");
-                            nameTag = currentHoverPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
-                        }
-                        
-                        // Invoke the name tag changer now that the part has the module on it:
-                        nameTag.PopupNameTagChanger();
-                    }
-                    EndAssignPartMode();
-
-                    // Tell the flags to stop looking for a click on a part:
-                    // NOTE this executes whether a part was hit or not,
-                    // because clicking the screen somwhere not on a part should cancel the mode.
-                    if (HighLogic.LoadedSceneIsEditor)
-                        EditorLogic.fetch.Unlock("KOSNameTagAddingLock");
-
-                    e.Use();
-                }
-            }
-
- * END Commented-out section
- * --------------------------
- */
-
         }
         
         public void DrawWindow(int windowID)
         {
-/* -------------------------------------------
- * OLD WAY OF ADDING KOSNameTags, now abandoned
- * -------------------------------------------
-            if (GUILayout.Button("Add KOS Nametag to a part"))
-            {
-                BeginAssignPartMode();
-                if (HighLogic.LoadedSceneIsEditor)
-                    EditorLogic.fetch.Lock(false,false,false,"KOSNameTagAddingLock");
-            }
-            GUILayout.Label("eraseme: I am instance number " + myInstanceNum);
- * END Commented-out section
- * --------------------------
- */
 
             CountBeginVertical();
             CountBeginHorizontal();
@@ -619,76 +547,6 @@ namespace kOS.Screen
             };
             return theSkin;
         }
-
-/* -------------------------------------------
- * OLD WAY OF ADDING KOSNameTags, now abandoned
- * -------------------------------------------
- * 
-        private void BeginAssignPartMode()
-        {
-            isAssigningPart = true;
-
-            List<global::Part> partsOnShip;
-            if (HighLogic.LoadedSceneIsEditor)
-                partsOnShip = EditorLogic.SortedShipList;
-            else if (HighLogic.LoadedSceneIsFlight)
-                partsOnShip = FlightGlobals.ActiveVessel.Parts;
-            else
-                return;
-
-            foreach (global::Part part in partsOnShip)
-            {
-                part.AddOnMouseEnter(MouseOverPartEnter);
-                part.AddOnMouseExit(MouseOverPartLeave);
-            }
-            partClickMsg = ScreenMessages.PostScreenMessage("Click on a part To apply a nametag",120,ScreenMessageStyle.UPPER_CENTER);            
-        }
-        
-        private void EndAssignPartMode()
-        {
-            isAssigningPart = false;
-
-            List<global::Part> partsOnShip;
-            if (HighLogic.LoadedSceneIsEditor)
-                partsOnShip = EditorLogic.SortedShipList;
-            else if (HighLogic.LoadedSceneIsFlight)
-                partsOnShip = FlightGlobals.ActiveVessel.Parts;
-            else
-                return;
-                
-            foreach (global::Part part in partSOnShip)
-            {
-                part.RemoveOnMouseEnter(MouseOverPartEnter);
-                part.RemoveOnMouseExit(MouseOverPartLeave);
-            }
-            ScreenMessages.RemoveMessage(partClickMsg);
-        }
-        
-        public void MouseOverPartEnter(global::Part p)
-        {
-            currentHoverPart = p;
-            
-            nameTagModule = p.Modules.OfType<KOSNameTag>().FirstOrDefault();
-            if (nameTagModule != null)
-            {
-                nameTagModule.PopupNameTagChanger();
-            }
-        }
-
-        public void MouseOverPartLeave(global::Part p)
-        {
-            currentHoverPart = null;
-            
-            if (nameTagModule != null)
-            {
-                nameTagModule.TypingCancel();
-                nameTagModule = null;
-            }
-        }
- *
- *  END Commented out section
- *  --------------------------
- */
  
     }
 }
