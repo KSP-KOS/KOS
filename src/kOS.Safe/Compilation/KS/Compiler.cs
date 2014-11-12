@@ -1755,11 +1755,11 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             switch (node.Nodes.Count)
             {
-                case 2:
+                case 3:
                     string fileNameIn = node.Nodes[1].Token.Text;
                     AddOpcode(new OpcodePush(fileNameIn));
                     break;
-                case 4:
+                case 5:
                     fileNameIn = node.Nodes[1].Token.Text;
                     AddOpcode(new OpcodePush(fileNameIn));
                     string fileNameOut = node.Nodes[3].Token.Text;
