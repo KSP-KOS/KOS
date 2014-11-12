@@ -32,13 +32,5 @@ namespace kOS.Safe.Persistence
 
             return ((Capacity - usedSpace) >= newFile.GetSize());
         }
-
-        public override void LoadPrograms(IEnumerable<ProgramFile> programsToLoad)
-        {
-            foreach (ProgramFile p in programsToLoad)
-            {
-                Add(p);
-            }
-        }
     }
 }

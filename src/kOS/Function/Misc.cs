@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Function;
@@ -126,15 +127,21 @@ namespace kOS.Function
         {
             string fileNameOut = null;
             object topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
-            if (topStack!=null)
+            if (topStack != null)
+            {
                 fileNameOut = topStack.ToString();
+            }
 
             string fileName;
             topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
             if (topStack == null)
+            {
                 fileName = fileNameOut; // one file argument means compile with the same name
+            }
             else
+            {
                 fileName = topStack.ToString();
+            }
 
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
