@@ -376,7 +376,7 @@ namespace kOS.Screen
         
         private void DrawActiveCPUsOnPanel()
         {
-            scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.MinWidth(210), GUILayout.Height(height-60));
+            scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.MinWidth(260), GUILayout.Height(height-60));
             
             CountBeginVertical();
             Vessel prevVessel = null;
@@ -422,25 +422,31 @@ namespace kOS.Screen
 
             GUIStyle powerBoxStyle;
             string powerLabelText;
+            string powerLabelTooltip;
             if (processorModule.ProcessorMode == ProcessorModes.STARVED)
             {
                  powerBoxStyle = boxDisabledStyle;
                  powerLabelText = "power\n<starved>";
+                 powerLabelTooltip = "Highlighted CPU has no ElectricCharge.";
             }
             else if (processorModule.ProcessorMode == ProcessorModes.READY)
             {
                  powerBoxStyle = boxOnStyle;
                  powerLabelText = "power\non";
+                 powerLabelTooltip = "Highlighted CPU is turned on and running.\n";
             }
             else
             {
                  powerBoxStyle = boxOffStyle;
                  powerLabelText = "power\noff";
+                 powerLabelTooltip = "Highlighted CPU is turned off.";
             }
 
-            GUILayout.Box(powerLabelText, powerBoxStyle);
+            GUILayout.Box( new GUIContent(powerLabelText, powerLabelTooltip), powerBoxStyle);
 
-            if (GUILayout.Button(processorModule.WindowIsOpen() ? terminalOpenIconTexture : terminalClosedIconTexture))
+            if (GUILayout.Button((processorModule.WindowIsOpen() ? 
+                                  new GUIContent(terminalOpenIconTexture, "Click to close terminal window.") :
+                                  new GUIContent(terminalClosedIconTexture, "Click to open terminal window."))))
                 processorModule.ToggleWindow();
 
             CountEndHorizontal();
@@ -473,7 +479,7 @@ namespace kOS.Screen
                                              part.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
                                              ((partTag==null) ? "" : partTag.nameTag)
                                             );
-            GUILayout.Box(labelText, partNameStyle);
+            GUILayout.Box(new GUIContent(labelText, "This is the currently highlighted part on the vessel"), partNameStyle);
         }
         
         public void BeginHoverHousekeeping()
