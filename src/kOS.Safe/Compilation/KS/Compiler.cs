@@ -839,7 +839,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitOnOffTrailer(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            VisitNode(node.Nodes[0]); // should drop into VisitTrueFalse().
+            AddOpcode(new OpcodePush((node.Nodes[0].Token.Type == TokenType.ON) ? true : false));
         }
 
         /// <summary>
@@ -1364,7 +1364,7 @@ namespace kOS.Safe.Compilation.KS
         {
             // destination
             compilingSetDestination = true;
-            VisitVarIdentifier(setThis);
+            VisitNode(setThis);
             compilingSetDestination = false;
             // expression
             VisitNode(toThis);
