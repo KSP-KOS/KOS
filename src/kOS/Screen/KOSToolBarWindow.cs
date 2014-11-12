@@ -35,6 +35,8 @@ namespace kOS.Screen
             ApplicationLauncher.AppScenes.MAPVIEW;
 
         private readonly Texture2D launcherButtonTexture;
+        private readonly Texture2D terminalClosedIconTexture;
+        private readonly Texture2D terminalOpenIconTexture;
         
         // ReSharper disable once RedundantDefaultFieldInitializer
         private bool clickedOn = false;
@@ -52,12 +54,25 @@ namespace kOS.Screen
         private GUISkin panelSkin;
         private GUIStyle headingLabelStyle;
         private GUIStyle vesselNameStyle;
+        private GUIStyle partNameStyle;
         private GUIStyle tooltipLabelStyle;
-        private GUIStyle buttonDisabledStyle;
-        private GUIStyle buttonOffStyle;
-        private GUIStyle buttonOnStyle;
+        private GUIStyle boxDisabledStyle;
+        private GUIStyle boxOffStyle;
+        private GUIStyle boxOnStyle;
         private string versionString;
+        
+        ///<summary>Which CPU part description in the gui panel was the mouse hovering over during the current OnGUI call?</summary>
+        private Part newHoverPart;
 
+        ///<summary>Which CPU part description was it hovering over prior to the current OnGUI call?</summary>
+        private Part prevHoverPart;
+
+        /// <summary>Use this to remember the part's previous highlight color before we messed with it.</summary>
+        private Color originalPartHighlightColor = new Color(1.0f, 1.0f, 1.0f); // Should get overwritten with the real color later.
+                                                                                // This first value is a safety in case we don't do that
+                                                                                // properly.  We don't want to "restore" the color to null.
+        /// <summary>Our highlight color for kOS panel's part highlighting.</summary>
+        private Color ourPartHighlightColor = new Color(1.0f, 0.5f, 1.0f); // Bright purple.
         
         // Some of these are for just debug messages, and others are
         // necessary for tracking things to make it not spawn too many
@@ -80,6 +95,8 @@ namespace kOS.Screen
         public KOSToolBarWindow()
         {
             launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalClosedIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalOpenIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
         }
 
         /// <summary>
@@ -93,10 +110,17 @@ namespace kOS.Screen
             Debug.Log("KOSToolBarWindow: Now making instance number "+myInstanceNum+" of KOSToolBarWindow");
 
             const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
+            const string TERMINAL_OPEN_ICON_PNG = "GameData/kOS/GFX/terminal-icon-open.png";
+            const string TERMINAL_CLOSED_ICON_PNG = "GameData/kOS/GFX/terminal-icon-closed.png";
 
-            // ReSharper disable once SuggestUseVarKeywordEvident
-            WWW imageFromURL = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
-            imageFromURL.LoadImageIntoTexture(launcherButtonTexture);
+            // ReSharper disable SuggestUseVarKeywordEvident
+            WWW launcherButtonImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
+            WWW terminalOpenIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_OPEN_ICON_PNG);
+            WWW terminalClosedIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_CLOSED_ICON_PNG);
+            // ReSharper enable SuggestUseVarKeywordEvident
+            launcherButtonImage.LoadImageIntoTexture(launcherButtonTexture);
+            terminalOpenIconImage.LoadImageIntoTexture(terminalOpenIconTexture);
+            terminalClosedIconImage.LoadImageIntoTexture(terminalClosedIconTexture);
 
             windowRect = new Rect(0,0,width,height); // this origin point will move when opened/closed.
             panelSkin = BuildPanelSkin();
@@ -298,6 +322,7 @@ namespace kOS.Screen
         
         public void DrawWindow(int windowID)
         {
+            BeginHoverHousekeeping();
 
             CountBeginVertical();
             CountBeginHorizontal();
@@ -345,6 +370,8 @@ namespace kOS.Screen
             // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
             GUILayout.Label(GUI.tooltip, tooltipLabelStyle);
             CountEndVertical();
+
+            EndHoverHousekeeping();
         }
         
         private void DrawActiveCPUsOnPanel()
@@ -384,7 +411,6 @@ namespace kOS.Screen
         {
             CountBeginHorizontal();
             
-            GUILayout.Label("  "); // indent each part row over slightly.
             DrawPart(part);
             
             kOSProcessor processorModule = part.Modules.OfType<kOSProcessor>().FirstOrDefault();
@@ -394,29 +420,35 @@ namespace kOS.Screen
                 throw new ArgumentException("Part does not have a kOSProcessor module", "part");
             }
 
-            GUIStyle windowButtonStyle = processorModule.WindowIsOpen() ? buttonOnStyle : buttonOffStyle;
-            GUIStyle powerButtonStyle = 
-                (processorModule.ProcessorMode == ProcessorModes.STARVED) ?
-                buttonDisabledStyle : ( (processorModule.ProcessorMode == ProcessorModes.READY) ?
-                                         buttonOnStyle : buttonOffStyle);
-            string powerButtonText = 
-                (processorModule.ProcessorMode == ProcessorModes.STARVED) ?
-                "<Starved>" : "Power";
+            GUIStyle powerBoxStyle;
+            string powerLabelText;
+            if (processorModule.ProcessorMode == ProcessorModes.STARVED)
+            {
+                 powerBoxStyle = boxDisabledStyle;
+                 powerLabelText = "power\n<starved>";
+            }
+            else if (processorModule.ProcessorMode == ProcessorModes.READY)
+            {
+                 powerBoxStyle = boxOnStyle;
+                 powerLabelText = "power\non";
+            }
+            else
+            {
+                 powerBoxStyle = boxOffStyle;
+                 powerLabelText = "power\noff";
+            }
 
-            CountBeginVertical();
-            if (GUILayout.Button("Window", windowButtonStyle))
-            {
+            GUILayout.Box(powerLabelText, powerBoxStyle);
+
+            if (GUILayout.Button(processorModule.WindowIsOpen() ? terminalOpenIconTexture : terminalClosedIconTexture))
                 processorModule.ToggleWindow();
-            }
-            if (GUILayout.Button(powerButtonText, powerButtonStyle))
-            {
-                processorModule.TogglePower();
-            }
-            CountEndVertical();
+
             CountEndHorizontal();
+
+            CheckHoverOnPreviousGUIElement(part);
         }
         
-        private static void DrawPart(Part part)
+        private void DrawPart(Part part)
         {
             // Someday we may work on making this into something that
             // actually draws out the part image like in the editor icons, however
@@ -441,8 +473,66 @@ namespace kOS.Screen
                                              part.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
                                              ((partTag==null) ? "" : partTag.nameTag)
                                             );
-            GUILayout.Box(labelText);
+            GUILayout.Box(labelText, partNameStyle);
         }
+        
+        public void BeginHoverHousekeeping()
+        {
+            // OnGUI() gets called many times in different modes for different reasons.
+            // This logic only works right when used during the Repaint pass of OnGUI().
+            if (Event.current.type != EventType.Repaint)
+                return;
+            
+            // Track whether or not the mouse is over the desired GUI element on *this* OnGUI
+            // by clearing out what it was before first:
+            newHoverPart = null;
+        }
+        
+        /// <summary>
+        /// Control the highlighting of parts in the vessel depending on whether or not
+        /// the mouse was hovering in the right spot to cause a highlight.
+        /// </summary>
+        public void EndHoverHousekeeping()
+        {
+            // OnGUI() gets called many times in different modes for different reasons.  
+            // This logic only works right when used during the Repaint pass of OnGUI().
+            if (Event.current.type != EventType.Repaint)
+                return;
+            
+            // If we were already highlighting a part, and are no longer hovering over
+            // that part area in the panel, then de-highlight it:
+            if (prevHoverPart != null && prevHoverPart != newHoverPart)
+            {
+                prevHoverPart.SetHighlightColor(originalPartHighlightColor);
+                prevHoverPart.SetHighlight(false);
+            }
+            
+            // If we are now hovering over a part area in the panel, then start highlighting it,
+            // remembering what it was before so it cab be set back again.
+            if (newHoverPart != null && prevHoverPart != newHoverPart)
+            {
+                originalPartHighlightColor = newHoverPart.highlightColor;
+                newHoverPart.SetHighlightColor(ourPartHighlightColor);
+                newHoverPart.SetHighlight(true);
+            }
+
+            prevHoverPart = newHoverPart;
+        }
+
+        /// <summary>Whatever the most recent GUILayout element was, remember the part it was for
+        /// if the mouse was hovering in it.</summary>
+        /// <param name="part">The part that just had info drawn for it</param>
+        public void CheckHoverOnPreviousGUIElement(Part part)
+        {
+            // OnGUI() gets called many times in different modes for different reasons.  
+            // This logic only works right when used during the Repaint pass of OnGUI().
+            if (Event.current.type != EventType.Repaint)
+                return;
+            
+            if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                newHoverPart = part;
+        }
+        
         
         // Tracking the count to help detect when there's a mismatch:
         // To help detect if a begin matches with an end, put the same
@@ -533,16 +623,23 @@ namespace kOS.Screen
                 padding = new RectOffset(0, 2, 0, 2),
                 normal = {textColor = Color.white}
             };
-            buttonOnStyle = new GUIStyle(theSkin.button)
+            partNameStyle = new GUIStyle(theSkin.box)
             {
+                hover = {textColor = new Color(0.6f,1.0f,1.0f)}
+            };
+            boxOnStyle = new GUIStyle(theSkin.box)
+            {
+                hover = {textColor = new Color(0.6f,1.0f,1.0f)},
                 normal = {textColor = new Color(0.4f,1.0f,0.4f)} // brighter green, higher saturation.
             };
-            buttonOffStyle = new GUIStyle(theSkin.button)
+            boxOffStyle = new GUIStyle(theSkin.box)
             {
+                hover = {textColor = new Color(0.6f,1.0f,1.0f)},
                 normal = {textColor = new Color(0.6f,0.7f,0.6f)} // dimmer green, more washed out and grey.
             };
-            buttonDisabledStyle = new GUIStyle(theSkin.button)
+            boxDisabledStyle = new GUIStyle(theSkin.box)
             {
+                hover = {textColor = new Color(0.6f,1.0f,1.0f)},
                 normal = {textColor = Color.white}
             };
             return theSkin;
