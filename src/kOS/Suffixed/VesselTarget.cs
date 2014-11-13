@@ -215,23 +215,49 @@ namespace kOS.Suffixed
             return PartValueFactory.Construct(Vessel.Parts, Shared);
         }
 
+        private ListValue GetPartsCalled(string searchTerm)
+        {
+            // Get the list of all the parts where the part's API name OR its GUI title or its tag name matches.
+            List<global::Part> kspParts = new List<global::Part>();
+            kspParts.AddRange(GetRawPartsNamed(searchTerm));
+            kspParts.AddRange(GetRawPartsTitled(searchTerm));
+            kspParts.AddRange(GetRawPartsTagged(searchTerm));
+
+            // The "Distinct" operation is there because it's possible for someone to use a tag name that matches the part name.
+            return PartValueFactory.Construct(kspParts.Distinct(), Shared);
+        }
+
         private ListValue GetPartsNamed(string partName)
         {
-            string lowerName = partName.ToLower();
+            return PartValueFactory.Construct(GetRawPartsNamed(partName), Shared);
+        }
+        private IEnumerable<global::Part> GetRawPartsNamed(string partName)
+        {
+            // Get the list of all the parts where the part's KSP API title matches:
+            return Vessel.parts.FindAll(
+                part =>  String.Equals(part.name, partName, StringComparison.CurrentCultureIgnoreCase));
+        }
 
-            List<global::Part> kspParts = Vessel.parts.FindAll(part => part.name.ToLower() == lowerName);
-
-            return PartValueFactory.Construct(kspParts,Shared);
+        private ListValue GetPartsTitled(string partTitle)
+        {
+            return PartValueFactory.Construct(GetRawPartsTitled(partTitle), Shared);
+        }
+        private IEnumerable<global::Part> GetRawPartsTitled(string partTitle)
+        {
+            // Get the list of all the parts where the part's GUI title matches:
+            return Vessel.parts.FindAll(
+                part => String.Equals(part.partInfo.title, partTitle, StringComparison.CurrentCultureIgnoreCase));
         }
 
         private ListValue GetPartsTagged(string tagName)
         {
-            IEnumerable<global::Part> partsWithName = Vessel.parts
+            return PartValueFactory.Construct(GetRawPartsTagged(tagName), Shared);
+        }
+        private IEnumerable<global::Part> GetRawPartsTagged(string tagName)
+        {
+            return Vessel.parts
                 .Where( p => p.Modules.OfType<KOSNameTag>()
                 .Any(tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase)));
-
-            // The KSP Parts need to become KOS PartValues before becoming a ListValue:
-            return PartValueFactory.Construct(partsWithName,Shared);
         }
         
         /// <summary>
@@ -366,6 +392,8 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue,string>(GetPartsNamed));
+            AddSuffix("PARTSTITLED", new OneArgsSuffix<ListValue,string>(GetPartsTitled));
+            AddSuffix("PARTSCALLED", new OneArgsSuffix<ListValue,string>(GetPartsCalled));
             AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue,string>(GetModulesNamed));
             AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>(GetPartsInGroup));
             AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>(GetModulesInGroup));
