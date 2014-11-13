@@ -34,9 +34,9 @@ namespace kOS.Safe.Encapsulation
                 case "SIZE":
                     return Size;
                 case "CREATED":
-                    return Modified.ToString("s");
+                    return Created.ToString("o");
                 case "MODIFIED":
-                    return Modified.ToString("s");
+                    return Modified.ToString("o");
             }
 
             return base.GetSuffix(suffixName);
