@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using kOS.Persistence;
 using kOS.Safe.Compilation;
+using kOS.Safe.Persistence;
 
 namespace kOS
 {
@@ -61,49 +61,59 @@ namespace kOS
         /// <returns></returns>
         private string TraceLog()
         {
-            List<int>trace = Shared.Cpu.GetCallTrace();
-            string msg = "";
-            for (int index = 0 ; index < trace.Count ; ++index)
+            const string BOGUS_MESSAGE = "(Cannot Show kOS Error Location - error might really be internal. See kOS devs.)";
+            try
             {
-                Opcode thisOpcode = Shared.Cpu.GetOpcodeAt(trace[index]);
-                if (thisOpcode is OpcodeBogus) 
+                List<int> trace = Shared.Cpu.GetCallTrace();
+                string msg = "";
+                for (int index = 0 ; index < trace.Count ; ++index)
                 {
-                    return "(Cannot Show kOS Error Location - error might really be internal. See kOS devs.)";
-                }
-                
-                // The statement "run program" actually causes TWO nested function calls,
-                // as the logic to check if the program needs compiling is implemented as a
-                // separate kRISC function that gets called from the main code.  Therefore to
-                // avoid the same RUN statement giving two nested levels on the call trace,
-                // only print the firstmost instance of a contiguous part of the call stack that
-                // comes from the same source line:
-                if (index > 0)
-                {
-                    Opcode prevOpcode = Shared.Cpu.GetOpcodeAt(trace[index-1]);
-                    if (prevOpcode.SourceName == thisOpcode.SourceName &&
-                        prevOpcode.SourceLine == thisOpcode.SourceLine)
+                    Opcode thisOpcode = Shared.Cpu.GetOpcodeAt(trace[index]);
+                    if (thisOpcode is OpcodeBogus)
                     {
-                        continue;
+                        return BOGUS_MESSAGE;
+                    }
+                    
+                    // The statement "run program" actually causes TWO nested function calls,
+                    // as the logic to check if the program needs compiling is implemented as a
+                    // separate kRISC function that gets called from the main code.  Therefore to
+                    // avoid the same RUN statement giving two nested levels on the call trace,
+                    // only print the firstmost instance of a contiguous part of the call stack that
+                    // comes from the same source line:
+                    if (index > 0)
+                    {
+                        Opcode prevOpcode = Shared.Cpu.GetOpcodeAt(trace[index-1]);
+                        if (prevOpcode.SourceName == thisOpcode.SourceName &&
+                            prevOpcode.SourceLine == thisOpcode.SourceLine)
+                        {
+                            continue;
+                        }
+                    }
+
+                    string textLine = GetSourceLine(thisOpcode.SourceName, thisOpcode.SourceLine);
+                    if (msg.Length == 0)
+                        msg += "At ";
+                    else
+                        msg += "Called from ";
+                    
+                    msg += BuildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine) + "\n";
+                    msg += textLine + "\n";
+                    if (thisOpcode.SourceColumn > 0)
+                    {
+                        int numPadSpaces = thisOpcode.SourceColumn-1;
+                        if (numPadSpaces < 0)
+                            numPadSpaces = 0;
+                        msg += new String(' ', numPadSpaces) + "^" + "\n";
                     }
                 }
-
-                string textLine = GetSourceLine(thisOpcode.SourceName, thisOpcode.SourceLine);
-                if (msg.Length == 0)
-                    msg += "At ";
-                else
-                    msg += "Called from ";
-                
-                msg += BuildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine) + "\n";
-                msg += textLine + "\n";
-                if (thisOpcode.SourceColumn > 0)
-                {
-                    int numPadSpaces = thisOpcode.SourceColumn-1;
-                    if (numPadSpaces < 0)
-                        numPadSpaces = 0;
-                    msg += new String(' ', numPadSpaces) + "^" + "\n";
-                }
+                return msg;
             }
-            return msg;
+            catch (Exception ex) //INTENTIONAL POKEMON
+            {
+                UnityEngine.Debug.Log("kOS: Logger: " + ex.Message);
+                UnityEngine.Debug.Log("kOS: Logger: " + ex.StackTrace);
+                return BOGUS_MESSAGE;
+            }
         }
         
         private string BuildLocationString(string source, int line)
@@ -172,7 +182,7 @@ namespace kOS
             ProgramFile file = vol.GetByName(fileName);
             if (file!=null)
             {
-                if (file.Category == FileCategory.KEXE)
+                if (file.Category == FileCategory.KSM)
                     return  "<<machine language file: can't show source line>>";
 
                 string[] splitLines = file.StringContent.Split('\n');

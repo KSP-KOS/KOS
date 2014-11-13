@@ -1,14 +1,12 @@
 ﻿using System;
-using kOS.Execution;
 using kOS.Safe.Execution;
 
-namespace kOS.Binding
+namespace kOS.Safe.Binding
 {
     public class BoundVariable : Variable
     {
-        public BindingManager.BindingSetDlg Set;
-        public BindingManager.BindingGetDlg Get;
-        public CPU Cpu { get; set; }
+        public BindingSetDlg Set;
+        public BindingGetDlg Get;
 
         private object currentValue;
         private bool wasUpdated;
@@ -21,7 +19,7 @@ namespace kOS.Binding
                 {
                     if (currentValue == null)
                     {
-                        currentValue = Get(Cpu);
+                        currentValue = Get();
                         if (currentValue is float)
                             // promote floats to doubles
                             currentValue = Convert.ToDouble(currentValue);
@@ -49,7 +47,7 @@ namespace kOS.Binding
         {
             if (wasUpdated && currentValue != null)
             {
-                Set(Cpu, currentValue);
+                Set(currentValue);
             }
         }
     }

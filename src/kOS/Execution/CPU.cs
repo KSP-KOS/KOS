@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Reflection;
 using System.Diagnostics;
 using kOS.Safe;
+using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Persistence;
 using kOS.Suffixed;
-using kOS.Function;
 
 namespace kOS.Execution
 {
@@ -26,7 +26,6 @@ namespace kOS.Execution
         private Status currentStatus;
         private double currentTime;
         private double timeWaitUntil;
-        private Dictionary<string, FunctionBase> functions;
         private readonly SharedObjects shared;
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
@@ -61,26 +60,6 @@ namespace kOS.Execution
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddObserver(this);
         }
 
-        private void LoadFunctions()
-        {
-            functions = new Dictionary<string, FunctionBase>();
-
-            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                var attr = (FunctionAttribute)type.GetCustomAttributes(typeof(FunctionAttribute), true).FirstOrDefault();
-                if (attr == null) continue;
-
-                object functionObject = Activator.CreateInstance(type);
-                foreach (string functionName in attr.Names)
-                {
-                    if (functionName != string.Empty)
-                    {
-                        functions.Add(functionName, (FunctionBase)functionObject);
-                    }
-                }
-            }
-        }
-
         public void Boot()
         {
             // break all running programs
@@ -97,9 +76,9 @@ namespace kOS.Execution
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
-            LoadFunctions();
+            if(shared.FunctionManager != null)shared.FunctionManager.Load();
             // load bindings
-            if (shared.BindingMgr != null) shared.BindingMgr.LoadBindings();
+            if (shared.BindingMgr != null) shared.BindingMgr.Load();
             // Booting message
             if (shared.Screen != null)
             {
@@ -117,10 +96,8 @@ namespace kOS.Execution
                         "# this, then read the error log.  It's important.#\n" +
                         "--------------------------------------------------\n";
 
-                    foreach (string msg in nags)
-                        bootMessage += msg + "\n";
-                    bootMessage +=
-                        "##################################################\n";
+                    bootMessage = nags.Aggregate(bootMessage, (current, msg) => current + (msg + "\n"));
+                    bootMessage += "##################################################\n";
                 }
                 shared.Screen.Print(bootMessage);
             }
@@ -284,7 +261,7 @@ namespace kOS.Execution
 
         public void BreakExecution(bool manual)
         {
-            UnityEngine.Debug.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automaticly", contexts.Count));
+            UnityEngine.Debug.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
             if (contexts.Count > 1)
             {
                 EndWait();
@@ -339,7 +316,7 @@ namespace kOS.Execution
         public List<int> GetCallTrace()
         {
             List<int> trace = stack.GetCallTrace();
-            trace.Insert(0, currentContext.InstructionPointer); // prepend current IP
+            trace.Insert(0, currentContext.InstructionPointer); // perpend current IP
             return trace;
         }
 
@@ -364,7 +341,8 @@ namespace kOS.Execution
             foreach (string ident in variables.Keys)
             {
                 Variable v = variables[ident];
-                string line = ident + "=" + (v.Value.ToString() ?? "<null>");
+                string line = ident;
+                line += v.Value == null ? "= <null>" : "= " + v.Value;
                 shared.Screen.Print(line);
                 UnityEngine.Debug.Log(line);
             }
@@ -400,7 +378,7 @@ namespace kOS.Execution
 
         public bool VariableIsRemovable(Variable variable)
         {
-            return !(variable is Binding.BoundVariable);
+            return !(variable is BoundVariable);
         }
 
         public void RemoveVariable(string identifier)
@@ -574,7 +552,7 @@ namespace kOS.Execution
                 {
                     // break execution of all programs and pop interpreter context
                     PopFirstContext();
-                    stack.Clear(); // If breaking all exection, get rid of the cruft here too.
+                    stack.Clear(); // If breaking all execution, get rid of the cruft here too.
                 }
             }
 
@@ -704,13 +682,7 @@ namespace kOS.Execution
 
         public void CallBuiltinFunction(string functionName)
         {
-            if (!functions.ContainsKey(functionName))
-            {
-                throw new Exception("Call to non-existent function " + functionName);
-            }
-
-            FunctionBase function = functions[functionName];
-            function.Execute(shared);
+            shared.FunctionManager.CallFunction(functionName);
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)
@@ -759,16 +731,16 @@ namespace kOS.Execution
 
                     foreach (var kvp in variables)
                     {
-                        if (!(kvp.Value is Binding.BoundVariable) &&
+                        if (!(kvp.Value is BoundVariable) &&
                             (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
                         {
                             if (kvp.Value.Value.GetType().ToString() == "System.String")  // if the variable is a string, enclose the value in ""
                             {
-                                varNode.AddValue(kvp.Key.TrimStart('$'), (char)34 + Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()) + (char)34);
+                                varNode.AddValue(kvp.Key.TrimStart('$'), (char)34 + PersistenceUtilities.EncodeLine(kvp.Value.Value.ToString()) + (char)34);
                             }
                             else
                             {
-                                varNode.AddValue(kvp.Key.TrimStart('$'), Persistence.ProgramFile.EncodeLine(kvp.Value.Value.ToString()));
+                                varNode.AddValue(kvp.Key.TrimStart('$'), PersistenceUtilities.EncodeLine(kvp.Value.Value.ToString()));
                             }
                         }
                     }
@@ -796,7 +768,7 @@ namespace kOS.Execution
                     {
                         foreach (ConfigNode.Value value in varNode.values)
                         {
-                            string varValue = Persistence.ProgramFile.DecodeLine(value.value);
+                            string varValue = PersistenceUtilities.DecodeLine(value.value);
                             scriptBuilder.AppendLine(string.Format("set {0} to {1}.", value.name, varValue));
                         }
                     }

@@ -1,27 +1,25 @@
-﻿using kOS.Execution;
+﻿using kOS.Safe.Binding;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class BindingTimeWarp : Binding
     {
         private static readonly IList<string> reservedSaveNames = new List<string> { "persistence", "quicksave" };
 
         public override void AddTo(SharedObjects shared)
         {
-            Shared = shared;
-
-            Shared.BindingMgr.AddGetter("QUICKSAVE", cpu =>
+            shared.BindingMgr.AddGetter("QUICKSAVE", () =>
             {
                 if (!HighLogic.CurrentGame.Parameters.Flight.CanQuickSave) return false;
                 QuickSaveLoad.QuickSave();
                 return true;
             });
             
-            Shared.BindingMgr.AddGetter("QUICKLOAD", cpu =>
+            shared.BindingMgr.AddGetter("QUICKLOAD", () =>
                 {
                     if (!HighLogic.CurrentGame.Parameters.Flight.CanQuickLoad) return false;
                     try
@@ -36,7 +34,7 @@ namespace kOS.Binding
                     return true;
                 });
 
-            Shared.BindingMgr.AddSetter("SAVETO", (cpu, val) =>
+            shared.BindingMgr.AddSetter("SAVETO", val =>
                 {
                     if (reservedSaveNames.Contains(val.ToString().ToLower())) return; 
 
@@ -45,7 +43,7 @@ namespace kOS.Binding
                     GamePersistence.SaveGame(game, val.ToString(), HighLogic.SaveFolder, SaveMode.OVERWRITE);
                 });
 
-            Shared.BindingMgr.AddSetter("LOADFROM", (cpu, val) =>
+            shared.BindingMgr.AddSetter("LOADFROM", val =>
                 {
                     if (reservedSaveNames.Contains(val.ToString().ToLower())) return;
 
@@ -56,14 +54,14 @@ namespace kOS.Binding
                     FlightDriver.StartAndFocusVessel(game, game.flightState.activeVesselIdx);
                 });
 
-            Shared.BindingMgr.AddGetter("LOADDISTANCE", cpu => Vessel.loadDistance);
-            Shared.BindingMgr.AddSetter("LOADDISTANCE", delegate(CPU cpu, object val)
-                {
-                    var distance = Convert.ToSingle(val);
-                    Vessel.loadDistance = distance;
-                    Vessel.unloadDistance = distance - 250;
-                });
-            Shared.BindingMgr.AddGetter("WARPMODE", cpu =>
+            shared.BindingMgr.AddGetter("LOADDISTANCE", () => Vessel.loadDistance);
+            shared.BindingMgr.AddSetter("LOADDISTANCE", val =>
+            {
+                var distance = Convert.ToSingle(val);
+                Vessel.loadDistance = distance;
+                Vessel.unloadDistance = distance - 250;
+            });
+            shared.BindingMgr.AddGetter("WARPMODE", () =>
                 {
                     switch (TimeWarp.WarpMode)
                     {
@@ -77,7 +75,7 @@ namespace kOS.Binding
                             throw new ArgumentOutOfRangeException();
                     }
                 });
-            Shared.BindingMgr.AddSetter("WARPMODE", (cpu, val) =>
+            shared.BindingMgr.AddSetter("WARPMODE", val =>
                 {
                     TimeWarp.Modes toSet;
 
@@ -97,31 +95,31 @@ namespace kOS.Binding
 
                     TimeWarp.fetch.Mode = toSet;
                 });
-            Shared.BindingMgr.AddGetter("WARP", cpu => TimeWarp.CurrentRateIndex);
-            Shared.BindingMgr.AddSetter("WARP", delegate(CPU cpu, object val)
+            shared.BindingMgr.AddGetter("WARP", () => TimeWarp.CurrentRateIndex);
+            shared.BindingMgr.AddSetter("WARP", val =>
+            {
+                int newRate;
+                if (int.TryParse(val.ToString(), out newRate))
                 {
-                    int newRate;
-                    if (int.TryParse(val.ToString(), out newRate))
-                    {
-                        TimeWarp.SetRate(newRate, false);
-                    }
-                });
-            Shared.BindingMgr.AddGetter("MAPVIEW", cpu => MapView.MapIsEnabled);
-            Shared.BindingMgr.AddSetter("MAPVIEW", delegate(CPU cpu, object val)
+                    TimeWarp.SetRate(newRate, false);
+                }
+            });
+            shared.BindingMgr.AddGetter("MAPVIEW", () => MapView.MapIsEnabled);
+            shared.BindingMgr.AddSetter("MAPVIEW", val =>
+            {
+                if (Convert.ToBoolean(val))
                 {
-                    if (Convert.ToBoolean(val))
-                    {
-                        MapView.EnterMapView();
-                    }
-                    else
-                    {
-                        MapView.ExitMapView();
-                    }
-                });
+                    MapView.EnterMapView();
+                }
+                else
+                {
+                    MapView.ExitMapView();
+                }
+            });
             foreach (var body in FlightGlobals.fetch.bodies)
             {
                 var cBody = body;
-                Shared.BindingMgr.AddGetter(body.name, cpu => new BodyTarget(cBody, Shared));
+                shared.BindingMgr.AddGetter(body.name, () => new BodyTarget(cBody, shared));
             }
         }
     }

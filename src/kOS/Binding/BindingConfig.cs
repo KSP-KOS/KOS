@@ -1,14 +1,14 @@
-﻿using kOS.Suffixed;
+﻿using kOS.Safe.Binding;
+using kOS.Suffixed;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class BindingConfig : Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            Shared = shared;
-            Shared.BindingMgr.AddGetter("CONFIG", cpu => Config.Instance);
+            shared.BindingMgr.AddGetter("CONFIG", () => Config.Instance);
         }
     }
 }

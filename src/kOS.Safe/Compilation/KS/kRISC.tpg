@@ -147,7 +147,7 @@ rename_stmt    -> RENAME (VOLUME | FILE)? filevol_name TO IDENTIFIER EOI;
 delete_stmt    -> DELETE IDENTIFIER (FROM filevol_name)? EOI;
 edit_stmt      -> EDIT IDENTIFIER EOI;
 run_stmt       -> RUN IDENTIFIER (BRACKETOPEN arglist BRACKETCLOSE)? (ON filevol_name)? EOI;
-compile_stmt   -> COMPILE IDENTIFIER TO IDENTIFIER EOI;
+compile_stmt   -> COMPILE IDENTIFIER (TO IDENTIFIER)? EOI;
 filevol_name   -> INTEGER | IDENTIFIER;
 list_stmt      -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
 reboot_stmt    -> REBOOT EOI;

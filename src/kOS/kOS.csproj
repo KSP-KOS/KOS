@@ -54,6 +54,7 @@
     <Compile Include="AddOns\RemoteTech2\RemoteTechHook.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechUtility.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechInterpreter.cs" />
+    <Compile Include="AddOns\RemoteTech2\RemoteTechVolumeManager.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\Binding.cs" />
     <Compile Include="Binding\BindingConfig.cs" />
@@ -65,13 +66,11 @@
     <Compile Include="Binding\RoverStats.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
-    <Compile Include="Binding\BoundVariable.cs" />
-    <Compile Include="Binding\KOSBinding.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
-    <Compile Include="Function\FunctionAttribute.cs" />
     <Compile Include="Function\BuildList.cs" />
+    <Compile Include="Function\FunctionManager.cs" />
     <Compile Include="Function\Math.cs" />
     <Compile Include="Function\Misc.cs" />
     <Compile Include="Function\Persistence.cs" />
@@ -80,6 +79,7 @@
     <Compile Include="KSPLogger.cs" />
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
+    <Compile Include="Persistence\PersistenceExtensions.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSNameTagWindow.cs" />
@@ -94,11 +94,9 @@
     <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />
     <Compile Include="Function\PrintList.cs" />
-    <Compile Include="Persistence\Harddisk.cs" />
     <Compile Include="InterProcessor\InterProcCommand.cs" />
     <Compile Include="InterProcessor\ProcessorManager.cs" />
     <Compile Include="InterProcessor\RunCommand.cs" />
-    <Compile Include="Module\kOSIDModule.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Suffixed\ElementValue.cs" />
     <Compile Include="Suffixed\FlightControl.cs" />
@@ -109,9 +107,7 @@
     <Compile Include="Suffixed\IKOSTargetable.cs" />
     <Compile Include="Suffixed\Node.cs" />
     <Compile Include="Suffixed\OrbitInfo.cs" />
-    <Compile Include="Persistence\Archive.cs" />
     <Compile Include="Execution\ProgramContext.cs" />
-    <Compile Include="Persistence\ProgramFile.cs" />
     <Compile Include="SharedObjects.cs" />
     <Compile Include="Suffixed\Part\DockingPortValue.cs" />
     <Compile Include="Suffixed\Part\EngineValue.cs" />
@@ -134,8 +130,6 @@
     <Compile Include="Suffixed\VesselTarget.cs" />
     <Compile Include="Utilities\VesselUtils.cs" />
     <Compile Include="Suffixed\OrbitableVelocity.cs" />
-    <Compile Include="Persistence\Volume.cs" />
-    <Compile Include="Persistence\VolumeManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

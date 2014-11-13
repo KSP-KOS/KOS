@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using kOS.Execution;
+using kOS.Safe.Binding;
 
 namespace kOS.Binding
 {
@@ -13,8 +13,6 @@ namespace kOS.Binding
         private readonly Dictionary<string, BoundVariable> vars = new Dictionary<string, BoundVariable>();
         private FlightControlManager flightControl;
 
-        public delegate void BindingSetDlg(CPU cpu, object val);
-        public delegate object BindingGetDlg(CPU cpu);
 
         public BindingManager(SharedObjects shared)
         {
@@ -22,7 +20,7 @@ namespace kOS.Binding
             this.shared.BindingMgr = this;
         }
 
-        public void LoadBindings()
+        public void Load()
         {
             var contexts = new string[1];
             contexts[0] = "ksp";
@@ -33,7 +31,7 @@ namespace kOS.Binding
 
             foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
             {
-                var attr = (kOSBinding)t.GetCustomAttributes(typeof(kOSBinding), true).FirstOrDefault();
+                var attr = (BindingAttribute)t.GetCustomAttributes(typeof(BindingAttribute), true).FirstOrDefault();
                 if (attr == null) continue;
                 if (attr.Contexts.Any() && !attr.Contexts.Intersect(contexts).Any()) continue;
 
@@ -61,7 +59,6 @@ namespace kOS.Binding
                 variable = new BoundVariable
                     {
                         Name = name, 
-                        Cpu = (CPU)shared.Cpu
                     };
                 vars.Add(name, variable);
                 shared.Cpu.AddVariable(variable, name);

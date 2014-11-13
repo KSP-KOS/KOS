@@ -1,8 +1,9 @@
 ﻿using System;
+using kOS.Safe.Function;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("sin")]
+    [Function("sin")]
     public class FunctionSin : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -14,7 +15,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("cos")]
+    [Function("cos")]
     public class FunctionCos : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -26,7 +27,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("tan")]
+    [Function("tan")]
     public class FunctionTan : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -38,7 +39,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("arcsin")]
+    [Function("arcsin")]
     public class FunctionArcSin : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -49,7 +50,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("arccos")]
+    [Function("arccos")]
     public class FunctionArcCos : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -60,7 +61,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("arctan")]
+    [Function("arctan")]
     public class FunctionArcTan : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -71,7 +72,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("arctan2")]
+    [Function("arctan2")]
     public class FunctionArcTan2 : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -83,7 +84,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("anglediff")]
+    [Function("anglediff")]
     public class FunctionAngleDiff : FunctionBase
     {
         public override void Execute(SharedObjects shared)

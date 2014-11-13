@@ -1,14 +1,15 @@
-﻿namespace kOS.Binding
+﻿using kOS.Safe.Binding;
+
+namespace kOS.Binding
 {
-    [kOSBinding]
+    [Binding]
     public class TerminalSettings : Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            Shared = shared;
-            Shared.BindingMgr.AddGetter("SESSIONTIME", cpu => cpu.SessionTime);
-            Shared.BindingMgr.AddGetter("VERSION", cpu => Core.VersionInfo);
-            Shared.BindingMgr.AddGetter("VOLUME:NAME", cpu => Shared.VolumeMgr.CurrentVolume.Name);
+            shared.BindingMgr.AddGetter("SESSIONTIME", () => shared.Cpu.SessionTime);
+            shared.BindingMgr.AddGetter("VERSION", () => Core.VersionInfo);
+            shared.BindingMgr.AddGetter("VOLUME:NAME", () => shared.VolumeMgr.CurrentVolume.Name);
         }
     }
 }

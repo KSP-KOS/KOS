@@ -5,7 +5,6 @@ using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
-using kOS.Utilities;
 
 namespace kOS.Screen
 {
@@ -15,12 +14,12 @@ namespace kOS.Screen
         private int commandHistoryIndex;
         private bool locked;
 
+        protected SharedObjects Shared { get; private set; }
+
         public Interpreter(SharedObjects shared)
         {
             Shared = shared;
         }
-
-        protected SharedObjects Shared { get; private set; }
 
         protected override void NewLine()
         {

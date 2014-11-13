@@ -61,6 +61,13 @@ namespace kOS
             ExceptionHistory.Add(e);
         }
 
+        public void SuperVerbose(string s)
+        {
+            #if DEBUG
+            Log(s);
+            #endif
+        }
+
         protected void LogToScreen(string text)
         {
             if (Shared != null && Shared.Screen != null)

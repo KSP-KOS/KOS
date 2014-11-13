@@ -1,9 +1,12 @@
 ﻿using System;
-using kOS.Persistence;
+using kOS.Safe.Function;
+using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
+using KSP.IO;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("switch")]
+    [Function("switch")]
     public class FunctionSwitch : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -25,7 +28,7 @@ namespace kOS.Function
         }
     }
     
-    [FunctionAttribute("edit")]
+    [Function("edit")]
     public class FunctionEdit : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -40,7 +43,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("copy")]
+    [Function("copy")]
     public class FunctionCopy : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -48,6 +51,8 @@ namespace kOS.Function
             object volumeId = shared.Cpu.PopValue();
             string direction = shared.Cpu.PopValue().ToString();
             string fileName = shared.Cpu.PopValue().ToString();
+
+            Debug.Logger.Log(string.Format("FunctionCopy: Volume: {0} Direction: {1} Filename: {2}", volumeId, direction, fileName));
 
             if (shared.VolumeMgr != null)
             {
@@ -93,7 +98,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("rename")]
+    [Function("rename")]
     public class FunctionRename : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -149,7 +154,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("delete")]
+    [Function("delete")]
     public class FunctionDelete : FunctionBase
     {
         public override void Execute(SharedObjects shared)

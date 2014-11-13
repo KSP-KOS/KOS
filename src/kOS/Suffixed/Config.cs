@@ -6,7 +6,7 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class Config : Structure
+    public class Config : Structure, IConfig
     {
         private static Config instance;
         private readonly Dictionary<string, ConfigKey> keys;

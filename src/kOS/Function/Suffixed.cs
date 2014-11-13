@@ -1,11 +1,12 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Utilities;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("node")]
+    [Function("node")]
     public class FunctionNode : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -20,7 +21,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("v")]
+    [Function("v")]
     public class FunctionVector : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -34,7 +35,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("r")]
+    [Function("r")]
     public class FunctionRotation : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -48,7 +49,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("q")]
+    [Function("q")]
     public class FunctionQuaternion : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -63,7 +64,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("latlng")]
+    [Function("latlng")]
     public class FunctionLatLng : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -76,7 +77,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("vessel")]
+    [Function("vessel")]
     public class FunctionVessel : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -87,7 +88,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("body")]
+    [Function("body")]
     public class FunctionBody : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -98,7 +99,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("bodyatmosphere")]
+    [Function("bodyatmosphere")]
     public class FunctionBodyAtmosphere : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -109,7 +110,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("heading")]
+    [Function("heading")]
     public class FunctionHeading : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -126,7 +127,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("list")]
+    [Function("list")]
     public class FunctionList : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -136,7 +137,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("rgb")]
+    [Function("rgb")]
     public class FunctionRgb : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -148,7 +149,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("rgba")]
+    [Function("rgba")]
     public class FunctionRgba : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -169,7 +170,7 @@ namespace kOS.Function
     // be done with just one fuction that counts how many args it
     // was given.
     //
-    [FunctionAttribute("vecdraw")]
+    [Function("vecdraw")]
     public class FunctionVecDrawNull : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -181,7 +182,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("vecdrawargs")]
+    [Function("vecdrawargs")]
     public class FunctionVecDraw : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -207,7 +208,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("positionat")]
+    [Function("positionat")]
     public class FunctionPositionAt : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -221,7 +222,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("velocityat")]
+    [Function("velocityat")]
     public class FunctionVelocityAt : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -235,7 +236,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("orbitat")]
+    [Function("orbitat")]
     public class FunctionOrbitAt : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -249,7 +250,7 @@ namespace kOS.Function
         }
     }
     
-    [FunctionAttribute("constant")]
+    [Function("constant")]
     public class FunctionConstant : FunctionBase
     {
         public override void Execute(SharedObjects shared)

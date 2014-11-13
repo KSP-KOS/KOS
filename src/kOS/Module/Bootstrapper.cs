@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using kOS.Persistence;
+using kOS.Safe.Persistence;
+using kOS.Suffixed;
 using UnityEngine;
 
 namespace kOS.Module
@@ -16,8 +18,19 @@ namespace kOS.Module
         
         public void Start()
         {
-            CheckForLegacyArchive();
+            BuildEnvironment();
             BuildLogger();
+
+            CheckForLegacyArchive();
+        }
+
+        private void BuildEnvironment()
+        {
+            Safe.Utilities.Environment.Init(
+                Config.Instance, 
+                Application.platform == RuntimePlatform.WindowsPlayer,
+                GameDatabase.Instance.PluginDataFolder + "/Ships/Script/"
+                );
         }
 
         private void BuildLogger()
@@ -34,7 +47,7 @@ namespace kOS.Module
                 return;
             }
 
-            if (Directory.Exists(Archive.ArchiveFolder))
+            if (Directory.Exists(Safe.Utilities.Environment.ArchiveFolder))
             {
                 return;
             }
@@ -62,7 +75,7 @@ namespace kOS.Module
             }
 
             Safe.Utilities.Debug.Logger.Log("ScriptMigrate START");
-            Directory.CreateDirectory(Archive.ArchiveFolder);
+            Directory.CreateDirectory(Safe.Utilities.Environment.ArchiveFolder);
 
             var files = Directory.GetFiles(legacyArchiveFolder);
 
@@ -79,11 +92,11 @@ namespace kOS.Module
                 {
                     var bareFilename = Path.GetFileNameWithoutExtension(fileName);
                     const string NEW_EXTENSION = Archive.KERBOSCRIPT_EXTENSION;
-                    newFileName = string.Format("{0}/{1}.{2}", Archive.ArchiveFolder, bareFilename, NEW_EXTENSION);
+                    newFileName = string.Format("{0}/{1}.{2}", Safe.Utilities.Environment.ArchiveFolder, bareFilename, NEW_EXTENSION);
                 }
                 else
                 {
-                    newFileName = Archive.ArchiveFolder + Path.DirectorySeparatorChar + Path.GetFileName(fileName);
+                    newFileName = Safe.Utilities.Environment.ArchiveFolder + Path.DirectorySeparatorChar + Path.GetFileName(fileName);
                 }
 
                 Safe.Utilities.Debug.Logger.Log("ScriptMigrate moving: " + fileName + " to: " + newFileName);

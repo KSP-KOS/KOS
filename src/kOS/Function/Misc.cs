@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using kOS.Execution;
-using kOS.Persistence;
-using kOS.Module;
 using kOS.Safe.Compilation;
+using kOS.Safe.Function;
 using kOS.Safe.Module;
+using kOS.Safe.Persistence;
 using kOS.Suffixed;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("clearscreen")]
+    [Function("clearscreen")]
     public class FunctionClearScreen : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -18,7 +19,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("print")]
+    [Function("print")]
     public class FunctionPrint : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -28,7 +29,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("printat")]
+    [Function("printat")]
     public class FunctionPrintAt : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -40,7 +41,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("toggleflybywire")]
+    [Function("toggleflybywire")]
     public class FunctionToggleFlyByWire : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -52,7 +53,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("stage")]
+    [Function("stage")]
     public class FunctionStage : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -61,7 +62,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("run")]
+    [Function("run")]
     public class FunctionRun : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -104,7 +105,7 @@ namespace kOS.Function
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                 List<CodePart> parts;
                 var programContext = ((CPU)shared.Cpu).GetProgramContext();
-                if (file.Category == FileCategory.KEXE)
+                if (file.Category == FileCategory.KSM)
                 {
                     string prefix = programContext.Program.Count.ToString();
                     parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
@@ -119,23 +120,24 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("load")]
+    [Function("load")]
     public class FunctionLoad : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
             string fileNameOut = null;
             object topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
-            if (topStack!=null)
+            if (topStack != null)
+            {
                 fileNameOut = topStack.ToString();
+            }
 
             string fileName = null;
             topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
-            if (topStack!=null)
+            if (topStack != null)
+            {
                 fileName = topStack.ToString();
-
-            if (fileName != null && fileNameOut != null && fileName == fileNameOut)
-                throw new Exception("Input and output filenames must differ.");
+            }
 
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
@@ -158,7 +160,7 @@ namespace kOS.Function
                 {
                     var programContext = ((CPU)shared.Cpu).GetProgramContext();
                     List<CodePart> parts;
-                    if (file.Category == FileCategory.KEXE)
+                    if (file.Category == FileCategory.KSM)
                     {
                         string prefix = programContext.Program.Count.ToString();
                         parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
@@ -173,7 +175,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("add")]
+    [Function("add")]
     public class FunctionAddNode : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -183,7 +185,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("remove")]
+    [Function("remove")]
     public class FunctionRemoveNode : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -193,7 +195,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("logfile")]
+    [Function("logfile")]
     public class FunctionLogFile : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -216,7 +218,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("reboot")]
+    [Function("reboot")]
     public class FunctionReboot : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -225,7 +227,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("shutdown")]
+    [Function("shutdown")]
     public class FunctionShutdown : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -234,7 +236,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("debugglobalvars")]
+    [Function("debugglobalvars")]
     public class DebugGlobalVars : FunctionBase
     {
         public override void Execute(SharedObjects shared)
