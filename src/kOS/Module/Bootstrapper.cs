@@ -18,9 +18,10 @@ namespace kOS.Module
         
         public void Start()
         {
-            CheckForLegacyArchive();
-            BuildLogger();
             BuildEnvironment();
+            BuildLogger();
+
+            CheckForLegacyArchive();
         }
 
         private void BuildEnvironment()
