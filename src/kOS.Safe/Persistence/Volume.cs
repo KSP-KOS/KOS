@@ -109,18 +109,21 @@ namespace kOS.Safe.Persistence
         public virtual void Add(ProgramFile file)
         {
             Debug.Logger.Log("Volume: Add: " + file.Filename);
-            files.Add(file.Filename, file);
+            ProgramFile existing;
+            if (files.TryGetValue(file.Filename, out existing))
+            {
+                files[file.Filename] = file;
+            }
+            else
+            {
+                files.Add(file.Filename, file);
+            }
         }
 
         public virtual bool SaveFile(ProgramFile file)
         {
             Debug.Logger.Log("Volume: SafeFile: " + file.Filename);
-            ProgramFile existing;
-            if (!files.TryGetValue(file.Filename, out existing))
-            {
-                files.Add(file.Filename, file);
-            }
-            DeleteByName(file.Filename);
+            Add(file);
             return true;
         }
         

@@ -58,7 +58,6 @@ namespace kOS.Persistence
                     if (retFile.Category == FileCategory.ASCII || retFile.Category == FileCategory.KERBOSCRIPT)
                         retFile.StringContent = retFile.StringContent.Replace("\r\n", "\n");
 
-                    base.DeleteByName(name);
                     base.Add(retFile);
 
                     return retFile;
@@ -74,6 +73,8 @@ namespace kOS.Persistence
         public override bool SaveFile(ProgramFile file)
         {
             Debug.Logger.Log("Archive: SaveFile: " + file.Filename);
+
+
             base.SaveFile(file);
 
             Directory.CreateDirectory(ArchiveFolder);

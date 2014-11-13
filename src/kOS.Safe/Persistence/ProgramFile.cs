@@ -1,13 +1,18 @@
 using System;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Persistence
 {
     public class ProgramFile
     {
+        private byte[] binaryContent;
+        private string stringContent;
+
         public string Filename {get;set;}
         public DateTime ModifiedDate {get;set;}
         public DateTime CreatedDate {get;set;}
         public FileCategory Category {get;private set;}
+
         public string StringContent
         {
             get 
@@ -22,7 +27,6 @@ namespace kOS.Safe.Persistence
                 stringContent = value;
             }
         }
-        private string stringContent;
 
         public byte[] BinaryContent
         {
@@ -38,10 +42,10 @@ namespace kOS.Safe.Persistence
                 binaryContent = value;
             }
         }
-        private byte[] binaryContent;
 
         public ProgramFile(ProgramFile copy)
         {
+            Debug.Logger.Log("ProgramFile: Copy Construct: " + copy.Filename);
             Filename = copy.Filename;
             Category = copy.Category;
             ModifiedDate = copy.ModifiedDate;
@@ -54,6 +58,7 @@ namespace kOS.Safe.Persistence
 
         public ProgramFile(string filename)
         {
+            Debug.Logger.Log("ProgramFile: Construct: " + filename);
             Filename = filename;
             Category = FileCategory.UNKNOWN;
             stringContent = string.Empty;

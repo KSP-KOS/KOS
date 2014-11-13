@@ -1,6 +1,8 @@
 ﻿using System;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
+using KSP.IO;
 
 namespace kOS.Function
 {
@@ -49,6 +51,8 @@ namespace kOS.Function
             object volumeId = shared.Cpu.PopValue();
             string direction = shared.Cpu.PopValue().ToString();
             string fileName = shared.Cpu.PopValue().ToString();
+
+            Debug.Logger.Log(string.Format("FunctionCopy: Volume: {0} Direction: {1} Filename: {2}", volumeId, direction, fileName));
 
             if (shared.VolumeMgr != null)
             {
