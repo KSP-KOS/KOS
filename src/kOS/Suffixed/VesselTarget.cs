@@ -215,7 +215,7 @@ namespace kOS.Suffixed
             return PartValueFactory.Construct(Vessel.Parts, Shared);
         }
 
-        private ListValue GetPartsCalled(string searchTerm)
+        private ListValue GetPartsDubbed(string searchTerm)
         {
             // Get the list of all the parts where the part's API name OR its GUI title or its tag name matches.
             List<global::Part> kspParts = new List<global::Part>();
@@ -393,7 +393,7 @@ namespace kOS.Suffixed
         {
             AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue,string>(GetPartsNamed));
             AddSuffix("PARTSTITLED", new OneArgsSuffix<ListValue,string>(GetPartsTitled));
-            AddSuffix("PARTSCALLED", new OneArgsSuffix<ListValue,string>(GetPartsCalled));
+            AddSuffix("PARTSDUBBED", new OneArgsSuffix<ListValue,string>(GetPartsDubbed));
             AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue,string>(GetModulesNamed));
             AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>(GetPartsInGroup));
             AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>(GetModulesInGroup));
