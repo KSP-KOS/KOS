@@ -82,7 +82,7 @@ namespace kOS.Safe.Persistence
                     return BinaryContent.Length;
                 case FileCategory.UNKNOWN:
                 case FileCategory.KERBOSCRIPT:
-                    throw new NotImplementedException("Cant Get Size for type: "+ CateGory);
+                    throw new NotImplementedException("Cant Get Size for type: "+ Category);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -172,7 +172,7 @@ namespace kOS.Safe.Persistence
         public virtual List<FileInfo> GetFileList()
         {
             Debug.Logger.SuperVerbose("Volume: GetFileList: " + files.Count);
-            return files.Values.Select(file => new FileInfo(file.Filename, file.GetSize(), file.CreatedDate, file.ModifiedDate)).ToList();
+            return files.Values.Select(file => new FileInfo(file.Filename, file.GetSize(), file.CreatedDate, file.ModifiedDate, file.Category)).ToList();
         }
 
         public virtual float RequiredPower()
