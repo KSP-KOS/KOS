@@ -10,6 +10,8 @@ namespace kOS.Safe.Persistence
 {
     public abstract class Volume : Structure
     {
+        public const string KERBOSCRIPT_EXTENSION = "ks";
+        public const string KOS_MACHINELANGUAGE_EXTENSION = "ksm";
         protected const int BASE_CAPACITY = 10000;
         protected const float BASE_POWER = 0.04f;
         private readonly Dictionary<string, ProgramFile> files;
@@ -162,6 +164,31 @@ namespace kOS.Safe.Persistence
             var powerRequired = BASE_POWER * multiplier;
 
             return powerRequired;
+        }
+
+        private ProgramFile FileSearch(string name)
+        {
+            var kerboscriptFilename = string.Format("{0}.{1}", name, KERBOSCRIPT_EXTENSION);
+            var kosMlFilename = string.Format("{0}.{1}", name, KOS_MACHINELANGUAGE_EXTENSION);
+
+            ProgramFile kerboscriptFile;
+            ProgramFile kosMlFile;
+            bool kerboscriptFileExists = files.TryGetValue(kerboscriptFilename, out kerboscriptFile);
+            bool kosMlFileExists = files.TryGetValue(kosMlFilename, out kosMlFile);
+            if (kerboscriptFileExists && kosMlFileExists)
+            {
+                return kerboscriptFile.ModifiedDate > kosMlFile.ModifiedDate
+                    ? kerboscriptFile : kosMlFile;
+            }
+            if (kerboscriptFile != null)
+            {
+                return kerboscriptFile;
+            }
+            if (kosMlFile != null)
+            {
+                return kosMlFile;
+            }
+            return null;
         }
     }    
 }

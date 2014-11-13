@@ -9,16 +9,14 @@ namespace kOS.Safe.Persistence
 {
     public class Archive : Volume
     {
-        public const string KERBOSCRIPT_EXTENSION = "ks";
-        public const string KOS_MACHINELANGUAGE_EXTENSION = "ksm";
         private static string ArchiveFolder
         {
-            get { return Safe.Utilities.Environment.ArchiveFolder; }
+            get { return Utilities.Environment.ArchiveFolder; }
         }
 
         public Archive()
         {
-            Directory.CreateDirectory(Safe.Utilities.Environment.ArchiveFolder);
+            Directory.CreateDirectory(Utilities.Environment.ArchiveFolder);
             Renameable = false;
             Name = "Archive";
         }
@@ -43,7 +41,7 @@ namespace kOS.Safe.Persistence
                 {
                     byte[] fileBody = ProcessBinaryReader(infile);
 
-                    var retFile = new ProgramFile(name);
+                    var retFile = new ProgramFile(fileInfo.Name);
                     FileCategory whatKind = PersistenceUtilities.IdentifyCategory(fileBody);
                     if (whatKind == FileCategory.KEXE)
                         retFile.BinaryContent = fileBody;
@@ -85,7 +83,7 @@ namespace kOS.Safe.Persistence
                     case FileCategory.ASCII:
                     case FileCategory.KERBOSCRIPT:
                         string tempString = file.StringContent;
-                        if (Safe.Utilities.Environment.IsWindows)
+                        if (Utilities.Environment.IsWindows)
                         {
                             // Only evil windows gets evil windows line breaks, and only if this is some sort of ascii:
                             tempString = tempString.Replace("\n", "\r\n");
