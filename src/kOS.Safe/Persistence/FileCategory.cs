@@ -29,6 +29,6 @@ namespace kOS.Safe.Persistence
         /// <summary>
         /// The ML compiled and packed file that came from a KerboScript.
         /// </summary>
-        KEXE
+        KSM
     }
 }

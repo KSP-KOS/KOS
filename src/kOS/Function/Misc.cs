@@ -105,7 +105,7 @@ namespace kOS.Function
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
                 List<CodePart> parts;
                 var programContext = ((CPU)shared.Cpu).GetProgramContext();
-                if (file.Category == FileCategory.KEXE)
+                if (file.Category == FileCategory.KSM)
                 {
                     string prefix = programContext.Program.Count.ToString();
                     parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
@@ -164,7 +164,7 @@ namespace kOS.Function
                 {
                     var programContext = ((CPU)shared.Cpu).GetProgramContext();
                     List<CodePart> parts;
-                    if (file.Category == FileCategory.KEXE)
+                    if (file.Category == FileCategory.KSM)
                     {
                         string prefix = programContext.Program.Count.ToString();
                         parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);

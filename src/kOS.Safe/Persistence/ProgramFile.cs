@@ -38,7 +38,7 @@ namespace kOS.Safe.Persistence
             }
             set 
             {
-                Category = FileCategory.KEXE;
+                Category = FileCategory.KSM;
                 binaryContent = value;
             }
         }
@@ -50,7 +50,7 @@ namespace kOS.Safe.Persistence
             Category = copy.Category;
             ModifiedDate = copy.ModifiedDate;
             CreatedDate = copy.CreatedDate;
-            if (Category == FileCategory.KEXE)
+            if (Category == FileCategory.KSM)
                 BinaryContent = copy.BinaryContent;
             else
                 StringContent = copy.StringContent;
@@ -72,7 +72,7 @@ namespace kOS.Safe.Persistence
 
         public int GetSize()
         {
-            return Category == FileCategory.KEXE ? BinaryContent.Length : StringContent.Length;
+            return Category == FileCategory.KSM ? BinaryContent.Length : StringContent.Length;
         }
     }
 }

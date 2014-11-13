@@ -37,6 +37,8 @@ namespace kOS.Safe.Encapsulation
                     return Created.ToString("o");
                 case "MODIFIED":
                     return Modified.ToString("o");
+                case "FILETYPE":
+                    throw new NotImplementedException();
             }
 
             return base.GetSuffix(suffixName);

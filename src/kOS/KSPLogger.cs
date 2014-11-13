@@ -182,7 +182,7 @@ namespace kOS
             ProgramFile file = vol.GetByName(fileName);
             if (file!=null)
             {
-                if (file.Category == FileCategory.KEXE)
+                if (file.Category == FileCategory.KSM)
                     return  "<<machine language file: can't show source line>>";
 
                 string[] splitLines = file.StringContent.Split('\n');

@@ -22,7 +22,7 @@ namespace kOS.Safe.Persistence
                         
             if (firstFour.SequenceEqual(CompiledObject.MagicId))
             {
-                returnCat = FileCategory.KEXE;
+                returnCat = FileCategory.KSM;
             }
             else
             {

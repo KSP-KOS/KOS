@@ -1,7 +1,5 @@
 ﻿using kOS.InterProcessor;
 using kOS.Binding;
-using kOS.Persistence;
-using kOS.Safe.Persistence;
 using kOS.Screen;
 using kOS.Factories;
 
@@ -11,7 +9,6 @@ namespace kOS
     {
         public Vessel Vessel { get; set; }
         public BindingManager BindingMgr { get; set; }  
-        public VolumeManager VolumeMgr { get; set; }
         public TermWindow Window { get; set; }
         public ProcessorManager ProcessorMgr { get; set; }
         public IFactory Factory { get; set; }

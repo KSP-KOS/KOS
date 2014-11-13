@@ -79,7 +79,7 @@ namespace kOS.Persistence
             node.AddValue(MODIFIED_DATE_VALUE_STRING, programFile.ModifiedDate.ToString("s"));
             node.AddValue(CREATED_DATE_VALUE_STRING, programFile.CreatedDate.ToString("s"));
 
-            if (programFile.Category == FileCategory.KEXE)
+            if (programFile.Category == FileCategory.KSM)
             {
                 node.AddValue("line", EncodeBase64(programFile.BinaryContent));
             }

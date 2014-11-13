@@ -43,7 +43,7 @@ namespace kOS.Safe.Persistence
 
                     var retFile = new ProgramFile(fileInfo.Name);
                     FileCategory whatKind = PersistenceUtilities.IdentifyCategory(fileBody);
-                    if (whatKind == FileCategory.KEXE)
+                    if (whatKind == FileCategory.KSM)
                         retFile.BinaryContent = fileBody;
                     else
                         retFile.StringContent = System.Text.Encoding.UTF8.GetString(fileBody);
@@ -91,7 +91,7 @@ namespace kOS.Safe.Persistence
                         fileBody = System.Text.Encoding.UTF8.GetBytes(tempString.ToCharArray());
                         fileExtension = KERBOSCRIPT_EXTENSION;
                         break;
-                    case FileCategory.KEXE:
+                    case FileCategory.KSM:
                         fileBody = file.BinaryContent;
                         fileExtension = KOS_MACHINELANGUAGE_EXTENSION;
                         break;
