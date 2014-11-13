@@ -16,5 +16,10 @@ namespace kOS.Safe.Test
         {
             throw new NotImplementedException();
         }
+
+        public void SuperVerbose(string s)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

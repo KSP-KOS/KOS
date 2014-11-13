@@ -11,7 +11,7 @@ namespace kOS.Safe.Persistence
         public string Filename {get;set;}
         public DateTime ModifiedDate {get;set;}
         public DateTime CreatedDate {get;set;}
-        public FileCategory Category {get;private set;}
+        public FileCategory Category {get; private set;}
 
         public string StringContent
         {
@@ -23,6 +23,7 @@ namespace kOS.Safe.Persistence
             }
             set
             {
+                Debug.Logger.Log("ProgramFile: File: " + Filename + " Set StringContent: " + value.Length);
                 Category = FileCategory.ASCII;
                 stringContent = value;
             }
@@ -38,6 +39,7 @@ namespace kOS.Safe.Persistence
             }
             set 
             {
+                Debug.Logger.Log("ProgramFile: File: " + Filename + " Set BinaryContent: " + value.Length);
                 Category = FileCategory.KSM;
                 binaryContent = value;
             }
@@ -72,7 +74,18 @@ namespace kOS.Safe.Persistence
 
         public int GetSize()
         {
-            return Category == FileCategory.KSM ? BinaryContent.Length : StringContent.Length;
+            switch (Category)
+            {
+                case FileCategory.ASCII:
+                    return StringContent.Length;
+                case FileCategory.KSM:
+                    return BinaryContent.Length;
+                case FileCategory.UNKNOWN:
+                case FileCategory.KERBOSCRIPT:
+                    throw new NotImplementedException("Cant Get Size for type: "+ CateGory);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

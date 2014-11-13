@@ -30,7 +30,7 @@ namespace kOS.Safe.Persistence
         {
             try
             {
-                Debug.Logger.Log("Archive: GetByName: " + name);
+                Debug.Logger.SuperVerbose("Archive: GetByName: " + name);
                 var fileInfo = FileSearch(name);
                 if (fileInfo == null)
                 {
@@ -65,7 +65,7 @@ namespace kOS.Safe.Persistence
 
         public override bool SaveFile(ProgramFile file)
         {
-            Debug.Logger.Log("Archive: SaveFile: " + file.Filename);
+            Debug.Logger.SuperVerbose("Archive: SaveFile: " + file.Filename);
 
 
             base.SaveFile(file);
@@ -74,7 +74,7 @@ namespace kOS.Safe.Persistence
 
             try
             {
-                Debug.Logger.Log("Archive: Saving File Name: " + file.Filename);
+                Debug.Logger.SuperVerbose("Archive: Saving File Name: " + file.Filename);
                 byte[] fileBody;
                 string fileExtension;
                 switch (file.Category)
@@ -117,7 +117,7 @@ namespace kOS.Safe.Persistence
         {
             try
             {
-                Debug.Logger.Log("Archive: DeleteByName: " + name);
+                Debug.Logger.SuperVerbose("Archive: DeleteByName: " + name);
                 var fullPath = FileSearch(name);
                 if (fullPath == null)
                 {
@@ -138,7 +138,7 @@ namespace kOS.Safe.Persistence
         {
             try
             {
-                Debug.Logger.Log(string.Format("Archive: RenameFile: {0} To: {1}", name, newName));
+                Debug.Logger.SuperVerbose(string.Format("Archive: RenameFile: {0} To: {1}", name, newName));
                 var fullSourcePath = FileSearch(name);
                 if (fullSourcePath == null)
                 {
@@ -170,7 +170,7 @@ namespace kOS.Safe.Persistence
 
             try
             {
-                Debug.Logger.Log(string.Format("Archive: GetFileList"));
+                Debug.Logger.SuperVerbose(string.Format("Archive: GetFileList"));
                 foreach (var file in Directory.GetFiles(ArchiveFolder).Where(f=>f.EndsWith('.' +KERBOSCRIPT_EXTENSION) || f.EndsWith('.' + KOS_MACHINELANGUAGE_EXTENSION)))
                 {
                     var sysFileInfo = new System.IO.FileInfo(file);
@@ -178,7 +178,7 @@ namespace kOS.Safe.Persistence
 
                     retList.Add(fileInfo);
                 }
-                Debug.Logger.Log(string.Format("Archive: GetFileList: Returned: " + retList.Count));
+                Debug.Logger.SuperVerbose(string.Format("Archive: GetFileList: Returned: " + retList.Count));
             }
             catch (DirectoryNotFoundException)
             {

@@ -132,13 +132,9 @@ namespace kOS.Function
                 fileNameOut = topStack.ToString();
             }
 
-            string fileName;
+            string fileName = null;
             topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
-            if (topStack == null)
-            {
-                fileName = fileNameOut; // one file argument means compile with the same name
-            }
-            else
+            if (topStack != null)
             {
                 fileName = topStack.ToString();
             }
