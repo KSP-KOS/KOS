@@ -16,7 +16,7 @@ namespace kOS.Safe.Persistence
 
         protected Volume()
         {
-            Debug.Logger.Log("Volume: CONSTRUCT: ");
+            Debug.Logger.Log("Volume: CONSTRUCT");
             Renameable = true;
             Capacity = -1;
             Name = "";
@@ -149,6 +149,7 @@ namespace kOS.Safe.Persistence
 
         public virtual List<FileInfo> GetFileList()
         {
+            Debug.Logger.Log("Volume: GetFileList: " + files.Count);
             return files.Values.Select(file => new FileInfo(file.Filename, file.GetSize(), file.CreatedDate, file.ModifiedDate)).ToList();
         }
 

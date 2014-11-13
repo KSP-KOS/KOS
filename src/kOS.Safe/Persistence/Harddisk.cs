@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Persistence
 {
@@ -12,6 +12,7 @@ namespace kOS.Safe.Persistence
 
         public override bool SaveFile(ProgramFile file)
         {
+            Debug.Logger.Log("HardDisk: SaveFile: " + file.Filename);
             return IsRoomFor(file) && base.SaveFile(file);
         }
 
