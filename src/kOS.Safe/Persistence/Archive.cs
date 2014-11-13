@@ -1,29 +1,24 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using kOS.Safe.Persistence;
-using UnityEngine;
-using Debug = kOS.Safe.Utilities.Debug;
+using kOS.Safe.Utilities;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
-namespace kOS.Persistence
+namespace kOS.Safe.Persistence
 {
     public class Archive : Volume
     {
         public const string KERBOSCRIPT_EXTENSION = "ks";
         public const string KOS_MACHINELANGUAGE_EXTENSION = "ksm";
-        public static string ArchiveFolder
+        private static string ArchiveFolder
         {
-            get
-            {
-                return GameDatabase.Instance.PluginDataFolder + "/Ships/Script/";
-            }
+            get { return Safe.Utilities.Environment.ArchiveFolder; }
         }
 
         public Archive()
         {
-            Directory.CreateDirectory(ArchiveFolder);
+            Directory.CreateDirectory(Safe.Utilities.Environment.ArchiveFolder);
             Renameable = false;
             Name = "Archive";
         }
@@ -90,7 +85,7 @@ namespace kOS.Persistence
                     case FileCategory.ASCII:
                     case FileCategory.KERBOSCRIPT:
                         string tempString = file.StringContent;
-                        if (Application.platform == RuntimePlatform.WindowsPlayer)
+                        if (Safe.Utilities.Environment.IsWindows)
                         {
                             // Only evil windows gets evil windows line breaks, and only if this is some sort of ascii:
                             tempString = tempString.Replace("\n", "\r\n");

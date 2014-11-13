@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using kOS.Safe.Persistence;
 
-namespace kOS.Persistence
+namespace kOS.Safe.Persistence
 {
     public class VolumeManager
     {
@@ -30,10 +29,9 @@ namespace kOS.Persistence
         {
             int volumeId = -1;
             
-            name = name.ToLower();
             foreach (KeyValuePair<int, Volume> kvp in volumes)
             {
-                if (kvp.Value.Name.ToLower() == name)
+                if (String.Equals(kvp.Value.Name, name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     volumeId = kvp.Key;
                     break;

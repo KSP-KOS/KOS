@@ -1,6 +1,7 @@
 ﻿using kOS.InterProcessor;
 using kOS.Binding;
 using kOS.Persistence;
+using kOS.Safe.Persistence;
 using kOS.Screen;
 using kOS.Factories;
 

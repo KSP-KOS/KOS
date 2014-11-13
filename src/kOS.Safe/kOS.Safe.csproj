@@ -66,6 +66,7 @@
     <Compile Include="Compilation\Script.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
+    <Compile Include="Encapsulation\IConfig.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
     <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
@@ -111,12 +112,14 @@
     <Compile Include="ILogger.cs" />
     <Compile Include="IUpdateObserver.cs" />
     <Compile Include="Module\IProcessor.cs" />
+    <Compile Include="Persistence\Archive.cs" />
     <Compile Include="Persistence\FileCategory.cs" />
     <Compile Include="Persistence\Harddisk.cs" />
     <Compile Include="Persistence\KOSFileException.cs" />
     <Compile Include="Persistence\PersistenceUtilities.cs" />
     <Compile Include="Persistence\ProgramFile.cs" />
     <Compile Include="Persistence\Volume.cs" />
+    <Compile Include="Persistence\VolumeManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -130,6 +133,7 @@
     <Compile Include="SharedObjects.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="Utilities\Debug.cs" />
+    <Compile Include="Utilities\Environment.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
   </ItemGroup>

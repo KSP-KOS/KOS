@@ -1,4 +1,5 @@
 ﻿using kOS.Persistence;
+using kOS.Safe.Persistence;
 
 namespace kOS.AddOns.RemoteTech2
 {

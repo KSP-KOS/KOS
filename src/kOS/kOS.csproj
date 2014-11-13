@@ -107,7 +107,6 @@
     <Compile Include="Suffixed\IKOSTargetable.cs" />
     <Compile Include="Suffixed\Node.cs" />
     <Compile Include="Suffixed\OrbitInfo.cs" />
-    <Compile Include="Persistence\Archive.cs" />
     <Compile Include="Execution\ProgramContext.cs" />
     <Compile Include="SharedObjects.cs" />
     <Compile Include="Suffixed\Part\DockingPortValue.cs" />
@@ -131,7 +130,6 @@
     <Compile Include="Suffixed\VesselTarget.cs" />
     <Compile Include="Utilities\VesselUtils.cs" />
     <Compile Include="Suffixed\OrbitableVelocity.cs" />
-    <Compile Include="Persistence\VolumeManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
