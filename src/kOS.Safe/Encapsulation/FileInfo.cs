@@ -29,7 +29,8 @@ namespace kOS.Safe.Encapsulation
                     Category = FileCategory.KSM;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("Unsupported File Extension" + fileInfo.Extension);
+                    Category = FileCategory.KSM;
+                    break;
             }
         }
 
