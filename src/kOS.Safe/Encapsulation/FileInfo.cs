@@ -7,16 +7,12 @@ namespace kOS.Safe.Encapsulation
     {
         public string Name { get; private set; }
         public int Size { get; private set; }
-        public DateTime Created { get; private set; }
-        public DateTime Modified { get; private set; }
         public FileCategory Category { get; private set; }
 
-        public FileInfo(string name, int size, DateTime created, DateTime modified, FileCategory category)
+        public FileInfo(string name, int size, FileCategory category)
         {
             Name = name;
             Size = size;
-            Created = created;
-            Modified = modified;
             Category = category;
         }
 
@@ -24,8 +20,6 @@ namespace kOS.Safe.Encapsulation
         {
             Name = fileInfo.Name;
             Size = (int) fileInfo.Length;
-            Created = fileInfo.CreationTime;
-            Modified = fileInfo.LastWriteTime;
             switch (fileInfo.Extension)
             {
                 case Volume.KERBOSCRIPT_EXTENSION:
@@ -47,10 +41,6 @@ namespace kOS.Safe.Encapsulation
                     return Name;
                 case "SIZE":
                     return Size;
-                case "CREATED":
-                    return Created.ToString("o");
-                case "MODIFIED":
-                    return Modified.ToString("o");
                 case "FILETYPE":
                     return Category;
             }

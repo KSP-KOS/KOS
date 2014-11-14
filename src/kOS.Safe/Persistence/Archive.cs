@@ -16,7 +16,7 @@ namespace kOS.Safe.Persistence
 
         public Archive()
         {
-            Directory.CreateDirectory(Utilities.Environment.ArchiveFolder);
+            Directory.CreateDirectory(ArchiveFolder);
             Renameable = false;
             Name = "Archive";
         }
@@ -30,7 +30,7 @@ namespace kOS.Safe.Persistence
         {
             try
             {
-                Debug.Logger.SuperVerbose("Archive: GetByName: " + name);
+                Debug.Logger.Log("Archive: Getting File By Name: " + name);
                 var fileInfo = FileSearch(name);
                 if (fileInfo == null)
                 {
@@ -41,7 +41,7 @@ namespace kOS.Safe.Persistence
                 {
                     byte[] fileBody = ProcessBinaryReader(infile);
 
-                    var retFile = new ProgramFile(fileInfo.Name);
+                    var retFile = new ProgramFile(name);
                     FileCategory whatKind = PersistenceUtilities.IdentifyCategory(fileBody);
                     if (whatKind == FileCategory.KSM)
                         retFile.BinaryContent = fileBody;
@@ -50,6 +50,9 @@ namespace kOS.Safe.Persistence
 
                     if (retFile.Category == FileCategory.ASCII || retFile.Category == FileCategory.KERBOSCRIPT)
                         retFile.StringContent = retFile.StringContent.Replace("\r\n", "\n");
+
+                    //TODO:Chris eraseme
+                    base.DeleteByName(name);
 
                     base.Add(retFile);
 
@@ -65,16 +68,13 @@ namespace kOS.Safe.Persistence
 
         public override bool SaveFile(ProgramFile file)
         {
-            Debug.Logger.SuperVerbose("Archive: SaveFile: " + file.Filename);
-
-
             base.SaveFile(file);
 
             Directory.CreateDirectory(ArchiveFolder);
 
             try
             {
-                Debug.Logger.SuperVerbose("Archive: Saving File Name: " + file.Filename);
+                Debug.Logger.Log("Archive: Saving File Name: " + file.Filename);
                 byte[] fileBody;
                 string fileExtension;
                 switch (file.Category)
@@ -117,7 +117,7 @@ namespace kOS.Safe.Persistence
         {
             try
             {
-                Debug.Logger.SuperVerbose("Archive: DeleteByName: " + name);
+                Debug.Logger.Log("Archive: Deleting File Name: " + name);
                 var fullPath = FileSearch(name);
                 if (fullPath == null)
                 {
@@ -134,25 +134,22 @@ namespace kOS.Safe.Persistence
             }
         }
 
+
         public override bool RenameFile(string name, string newName)
         {
             try
             {
-                Debug.Logger.SuperVerbose(string.Format("Archive: RenameFile: {0} To: {1}", name, newName));
+                Debug.Logger.Log(string.Format("Archive: Renaming: {0} To: {1}", name, newName));
                 var fullSourcePath = FileSearch(name);
                 if (fullSourcePath == null)
                 {
                     return false;
                 }
 
-                string destinationPath;
-                if (Path.HasExtension(newName))
+                string destinationPath = string.Format(ArchiveFolder + newName);
+                if (!Path.HasExtension(newName))
                 {
-                    destinationPath = string.Format(ArchiveFolder + newName);
-                }
-                else
-                {
-                    destinationPath = string.Format(ArchiveFolder + newName + fullSourcePath.Extension);
+                    destinationPath += fullSourcePath.Extension;
                 }
 
                 File.Move(fullSourcePath.FullName, destinationPath);
@@ -170,15 +167,14 @@ namespace kOS.Safe.Persistence
 
             try
             {
-                Debug.Logger.SuperVerbose(string.Format("Archive: GetFileList"));
-                foreach (var file in Directory.GetFiles(ArchiveFolder).Where(f=>f.EndsWith('.' +KERBOSCRIPT_EXTENSION) || f.EndsWith('.' + KOS_MACHINELANGUAGE_EXTENSION)))
-                {
-                    var sysFileInfo = new System.IO.FileInfo(file);
-                    var fileInfo = new FileInfo(sysFileInfo);
-
-                    retList.Add(fileInfo);
-                }
-                Debug.Logger.SuperVerbose(string.Format("Archive: GetFileList: Returned: " + retList.Count));
+                Debug.Logger.Log(string.Format("Archive: Listing Files"));
+                var kosFiles =
+                    Directory.GetFiles(ArchiveFolder)
+                        .Where(
+                            f =>
+                                f.EndsWith('.' + KERBOSCRIPT_EXTENSION) ||
+                                f.EndsWith('.' + KOS_MACHINELANGUAGE_EXTENSION));
+                retList.AddRange(kosFiles.Select(file => new System.IO.FileInfo(file)).Select(sysFileInfo => new FileInfo(sysFileInfo)));
             }
             catch (DirectoryNotFoundException)
             {
@@ -190,22 +186,9 @@ namespace kOS.Safe.Persistence
         public override float RequiredPower()
         {
             const int MULTIPLIER = 5;
-            const float POWER_REQUIRED = BASE_POWER * MULTIPLIER;
+            const float POWER_REQUIRED = BASE_POWER*MULTIPLIER;
 
             return POWER_REQUIRED;
-        }
-
-        private byte[] ProcessBinaryReader(BinaryReader infile)
-        {
-            const int BUFFER_SIZE = 4096;
-            using (var ms = new MemoryStream())
-            {
-                var buffer = new byte[BUFFER_SIZE];
-                int count;
-                while ((count = infile.Read(buffer, 0, buffer.Length)) != 0)
-                    ms.Write(buffer, 0, count);
-                return ms.ToArray();
-            }
         }
 
         private System.IO.FileInfo FileSearch(string name)
@@ -221,7 +204,8 @@ namespace kOS.Safe.Persistence
             if (kerboscriptFile.Exists && kosMlFile.Exists)
             {
                 return kerboscriptFile.LastWriteTime > kosMlFile.LastWriteTime
-                    ? kerboscriptFile : kosMlFile;
+                    ? kerboscriptFile
+                    : kosMlFile;
             }
             if (kerboscriptFile.Exists)
             {
@@ -232,6 +216,19 @@ namespace kOS.Safe.Persistence
                 return kosMlFile;
             }
             return null;
+        }
+
+        private byte[] ProcessBinaryReader(BinaryReader infile)
+        {
+            const int BUFFER_SIZE = 4096;
+            using (var ms = new MemoryStream())
+            {
+                var buffer = new byte[BUFFER_SIZE];
+                int count;
+                while ((count = infile.Read(buffer, 0, buffer.Length)) != 0)
+                    ms.Write(buffer, 0, count);
+                return ms.ToArray();
+            }
         }
     }
 }

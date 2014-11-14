@@ -12,8 +12,6 @@ namespace kOS.Persistence
     public static class PersistenceExtensions
     {
         private const string FILENAME_VALUE_STRING = "filename";
-        private const string MODIFIED_DATE_VALUE_STRING = "modifiedDate";
-        private const string CREATED_DATE_VALUE_STRING = "createdDate";
 
         public static Harddisk ToHardDisk(this ConfigNode configNode)
         {
@@ -37,24 +35,6 @@ namespace kOS.Persistence
             var toReturn = new ProgramFile(filename);
 
             Decode(toReturn, configNode.GetValue("line"));
-
-            if (configNode.HasValue(MODIFIED_DATE_VALUE_STRING))
-            {
-                toReturn.ModifiedDate = Convert.ToDateTime(configNode.GetValue(MODIFIED_DATE_VALUE_STRING));
-            }
-            else
-            {
-                toReturn.ModifiedDate = DateTime.MinValue;
-            }
-
-            if (configNode.HasValue(CREATED_DATE_VALUE_STRING))
-            {
-                toReturn.ModifiedDate = Convert.ToDateTime(configNode.GetValue(CREATED_DATE_VALUE_STRING));
-            }
-            else
-            {
-                toReturn.CreatedDate = DateTime.MinValue;
-            }
             return toReturn;
         }
 
@@ -76,8 +56,6 @@ namespace kOS.Persistence
         {
             var node = new ConfigNode(nodeName);
             node.AddValue(FILENAME_VALUE_STRING, programFile.Filename);
-            node.AddValue(MODIFIED_DATE_VALUE_STRING, programFile.ModifiedDate.ToString("s"));
-            node.AddValue(CREATED_DATE_VALUE_STRING, programFile.CreatedDate.ToString("s"));
 
             if (programFile.Category == FileCategory.KSM)
             {

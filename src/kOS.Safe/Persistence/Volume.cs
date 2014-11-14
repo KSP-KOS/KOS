@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
@@ -17,6 +16,18 @@ namespace kOS.Safe.Persistence
         protected const int BASE_CAPACITY = 10000;
         protected const float BASE_POWER = 0.04f;
         private readonly Dictionary<string, ProgramFile> files;
+
+        public Dictionary<string, ProgramFile> FileList
+        {
+            get
+            {
+                Debug.Logger.SuperVerbose("Volume: Get-FileList: " + files.Count);
+                return files.ToDictionary(pair => pair.Key, pair => pair.Value);
+            }
+        }
+        public string Name { get; set; }
+        public int Capacity { get; protected set; }
+        public bool Renameable { get; protected set; }
 
         protected Volume()
         {
@@ -38,30 +49,13 @@ namespace kOS.Safe.Persistence
             AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
         }
 
-        public Dictionary<string, ProgramFile> FileList
-        {
-            get
-            {
-                Debug.Logger.SuperVerbose("Volume: Get-FileList: " + files.Count);
-                return files.ToDictionary(pair => pair.Key, pair => pair.Value);
-            }
-        }
-        public string Name { get; set; }
-        public int Capacity { get; protected set; }
-        public bool Renameable { get; protected set; }
-
-
         public virtual ProgramFile GetByName(string name)
         {
             Debug.Logger.SuperVerbose("Volume: GetByName: " + name);
-            var fullPath = FileSearch(name);
-            if (fullPath == null)
+            name = name.ToLower();
+            if (files.ContainsKey(name))
             {
-                return null;
-            }
-            if (files.ContainsKey(fullPath.Filename))
-            {
-                return files[fullPath.Filename];
+                return files[name];
             }
             return null;
         }
@@ -69,14 +63,10 @@ namespace kOS.Safe.Persistence
         public virtual bool DeleteByName(string name)
         {
             Debug.Logger.SuperVerbose("Volume: DeleteByName: " + name);
-            var fullPath = FileSearch(name);
-            if (fullPath == null)
+            name = name.ToLower();
+            if (files.ContainsKey(name))
             {
-                return false;
-            }
-            if (files.ContainsKey(fullPath.Filename))
-            {
-                files.Remove(fullPath.Filename);
+                files.Remove(name);
                 return true;
             }
             return false;
@@ -123,32 +113,22 @@ namespace kOS.Safe.Persistence
         public virtual void Add(ProgramFile file)
         {
             Debug.Logger.SuperVerbose("Volume: Add: " + file.Filename);
-            ProgramFile existing;
-
-            if (files.TryGetValue(file.Filename, out existing))
-            {
-                files[file.Filename] = file;
-            }
-            else
-            {
-                files.Add(file.Filename, file);
-            }
+            files.Add(file.Filename.ToLower(), file);
         }
 
         public virtual bool SaveFile(ProgramFile file)
         {
             Debug.Logger.SuperVerbose("Volume: SafeFile: " + file.Filename);
+            
+            //TODO:Chris eraseme
+            DeleteByName(file.Filename);
+            
             Add(file);
             return true;
         }
         
         public virtual bool SaveObjectFile(string fileNameOut, List<CodePart> parts)
         {
-            Debug.Logger.SuperVerbose("Volume: SaveObjectFile: " + fileNameOut);
-            if (!fileNameOut.Contains('.'))
-            {
-                fileNameOut = string.Format("{0}.{1}", fileNameOut, KOS_MACHINELANGUAGE_EXTENSION);
-            }
             var newFile = new ProgramFile(fileNameOut) {BinaryContent = CompiledObject.Pack(parts)};
             SaveFile(newFile);
             return true;
@@ -157,7 +137,7 @@ namespace kOS.Safe.Persistence
         public List<CodePart> LoadObjectFile(string filePath, string prefix, byte[] content)
         {
             Debug.Logger.SuperVerbose("Volume: LoadObjectFile: " + filePath);
-            List<CodePart> parts = CompiledObject.UnPack(filePath, prefix , content);
+            List<CodePart> parts = CompiledObject.UnPack(filePath, prefix, content);
             return parts;
         }
 
@@ -172,7 +152,7 @@ namespace kOS.Safe.Persistence
         public virtual List<FileInfo> GetFileList()
         {
             Debug.Logger.SuperVerbose("Volume: GetFileList: " + files.Count);
-            return files.Values.Select(file => new FileInfo(file.Filename, file.GetSize(), file.CreatedDate, file.ModifiedDate, file.Category)).ToList();
+            return files.Values.Select(file => new FileInfo(file.Filename, file.GetSize(), file.Category)).ToList();
         }
 
         public virtual float RequiredPower()
@@ -181,32 +161,6 @@ namespace kOS.Safe.Persistence
             var powerRequired = BASE_POWER * multiplier;
 
             return powerRequired;
-        }
-
-        private ProgramFile FileSearch(string name)
-        {
-            Debug.Logger.SuperVerbose("Volume: FileSearch: " + files.Count);
-            var kerboscriptFilename = string.Format("{0}.{1}", name, KERBOSCRIPT_EXTENSION);
-            var kosMlFilename = string.Format("{0}.{1}", name, KOS_MACHINELANGUAGE_EXTENSION);
-
-            ProgramFile kerboscriptFile;
-            ProgramFile kosMlFile;
-            bool kerboscriptFileExists = files.TryGetValue(kerboscriptFilename, out kerboscriptFile);
-            bool kosMlFileExists = files.TryGetValue(kosMlFilename, out kosMlFile);
-            if (kerboscriptFileExists && kosMlFileExists)
-            {
-                return kerboscriptFile.ModifiedDate > kosMlFile.ModifiedDate
-                    ? kerboscriptFile : kosMlFile;
-            }
-            if (kerboscriptFile != null)
-            {
-                return kerboscriptFile;
-            }
-            if (kosMlFile != null)
-            {
-                return kosMlFile;
-            }
-            return null;
         }
     }    
 }
