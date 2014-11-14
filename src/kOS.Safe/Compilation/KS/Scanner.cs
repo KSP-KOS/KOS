@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
@@ -346,7 +345,7 @@ namespace kOS.Safe.Compilation.KS
             return t;
         }
 
-         /// <summary>
+        /// <summary>
         /// executes a lookahead of the next token
         /// and will advance the scan on the input string
         /// </summary>
@@ -379,8 +378,8 @@ namespace kOS.Safe.Compilation.KS
 
             // this prevents double scanning and matching
             // increased performance
-            if (LookAheadToken != null 
-                && LookAheadToken.Type != TokenType._UNDETERMINED_ 
+            if (LookAheadToken != null
+                && LookAheadToken.Type != TokenType._UNDETERMINED_
                 && LookAheadToken.Type != TokenType._NONE_) return LookAheadToken;
 
             // if no scantokens specified, then scan for all of them (= backward compatible)
@@ -405,10 +404,10 @@ namespace kOS.Safe.Compilation.KS
                 {
                     Regex r = Patterns[scantokens[i]];
                     Match m = r.Match(input);
-                    if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len )))
+                    if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
                     {
                         len = m.Length;
-                        index = scantokens[i];  
+                        index = scantokens[i];
                     }
                 }
 
@@ -454,10 +453,10 @@ namespace kOS.Safe.Compilation.KS
                     var match = Patterns[tok.Type].Match(tok.Text);
                     var fileMatch = match.Groups["File"];
                     if (fileMatch.Success)
-                        currentFile = fileMatch.Value.Replace("\\\\", "\\");
+                        currentFile = fileMatch.Value;
                     var lineMatch = match.Groups["Line"];
                     if (lineMatch.Success)
-                        currentline = int.Parse(lineMatch.Value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+                        currentline = int.Parse(lineMatch.Value);
                 }
             }
             while (SkipList.Contains(tok.Type));
@@ -474,140 +473,140 @@ namespace kOS.Safe.Compilation.KS
     public enum TokenType
     {
 
-            //Non terminal tokens:
-            _NONE_  = 0,
-            _UNDETERMINED_= 1,
+        //Non terminal tokens:
+        _NONE_ = 0,
+        _UNDETERMINED_ = 1,
 
-            //Non terminal tokens:
-            Start   = 2,
-            instruction_block= 3,
-            instruction= 4,
-            set_stmt= 5,
-            if_stmt = 6,
-            until_stmt= 7,
-            lock_stmt= 8,
-            unlock_stmt= 9,
-            print_stmt= 10,
-            on_stmt = 11,
-            toggle_stmt= 12,
-            wait_stmt= 13,
-            when_stmt= 14,
-            onoff_stmt= 15,
-            onoff_trailer= 16,
-            stage_stmt= 17,
-            clear_stmt= 18,
-            add_stmt= 19,
-            remove_stmt= 20,
-            log_stmt= 21,
-            break_stmt= 22,
-            preserve_stmt= 23,
-            declare_stmt= 24,
-            switch_stmt= 25,
-            copy_stmt= 26,
-            rename_stmt= 27,
-            delete_stmt= 28,
-            edit_stmt= 29,
-            run_stmt= 30,
-            compile_stmt= 31,
-            filevol_name= 32,
-            list_stmt= 33,
-            reboot_stmt= 34,
-            shutdown_stmt= 35,
-            for_stmt= 36,
-            unset_stmt= 37,
-            batch_stmt= 38,
-            deploy_stmt= 39,
-            arglist = 40,
-            expr    = 41,
-            and_expr= 42,
-            compare_expr= 43,
-            arith_expr= 44,
-            multdiv_expr= 45,
-            factor  = 46,
-            suffix  = 47,
-            suffix_trailer= 48,
-            suffixterm= 49,
-            suffixterm_trailer= 50,
-            function_trailer= 51,
-            array_trailer= 52,
-            atom    = 53,
-            sci_number= 54,
-            number  = 55,
-            varidentifier= 56,
-            identifier_led_stmt= 57,
-            identifier_led_expr= 58,
+        //Non terminal tokens:
+        Start = 2,
+        instruction_block = 3,
+        instruction = 4,
+        set_stmt = 5,
+        if_stmt = 6,
+        until_stmt = 7,
+        lock_stmt = 8,
+        unlock_stmt = 9,
+        print_stmt = 10,
+        on_stmt = 11,
+        toggle_stmt = 12,
+        wait_stmt = 13,
+        when_stmt = 14,
+        onoff_stmt = 15,
+        onoff_trailer = 16,
+        stage_stmt = 17,
+        clear_stmt = 18,
+        add_stmt = 19,
+        remove_stmt = 20,
+        log_stmt = 21,
+        break_stmt = 22,
+        preserve_stmt = 23,
+        declare_stmt = 24,
+        switch_stmt = 25,
+        copy_stmt = 26,
+        rename_stmt = 27,
+        delete_stmt = 28,
+        edit_stmt = 29,
+        run_stmt = 30,
+        compile_stmt = 31,
+        filevol_name = 32,
+        list_stmt = 33,
+        reboot_stmt = 34,
+        shutdown_stmt = 35,
+        for_stmt = 36,
+        unset_stmt = 37,
+        batch_stmt = 38,
+        deploy_stmt = 39,
+        arglist = 40,
+        expr = 41,
+        and_expr = 42,
+        compare_expr = 43,
+        arith_expr = 44,
+        multdiv_expr = 45,
+        factor = 46,
+        suffix = 47,
+        suffix_trailer = 48,
+        suffixterm = 49,
+        suffixterm_trailer = 50,
+        function_trailer = 51,
+        array_trailer = 52,
+        atom = 53,
+        sci_number = 54,
+        number = 55,
+        varidentifier = 56,
+        identifier_led_stmt = 57,
+        identifier_led_expr = 58,
 
-            //Terminal tokens:
-            PLUSMINUS= 59,
-            MULT    = 60,
-            DIV     = 61,
-            POWER   = 62,
-            E       = 63,
-            NOT     = 64,
-            AND     = 65,
-            OR      = 66,
-            TRUEFALSE= 67,
-            COMPARATOR= 68,
-            SET     = 69,
-            TO      = 70,
-            IF      = 71,
-            ELSE    = 72,
-            UNTIL   = 73,
-            LOCK    = 74,
-            UNLOCK  = 75,
-            PRINT   = 76,
-            AT      = 77,
-            ON      = 78,
-            TOGGLE  = 79,
-            WAIT    = 80,
-            WHEN    = 81,
-            THEN    = 82,
-            OFF     = 83,
-            STAGE   = 84,
-            CLEARSCREEN= 85,
-            ADD     = 86,
-            REMOVE  = 87,
-            LOG     = 88,
-            BREAK   = 89,
-            PRESERVE= 90,
-            DECLARE = 91,
-            PARAMETER= 92,
-            SWITCH  = 93,
-            COPY    = 94,
-            FROM    = 95,
-            RENAME  = 96,
-            VOLUME  = 97,
-            FILE    = 98,
-            DELETE  = 99,
-            EDIT    = 100,
-            RUN     = 101,
-            COMPILE = 102,
-            LIST    = 103,
-            REBOOT  = 104,
-            SHUTDOWN= 105,
-            FOR     = 106,
-            UNSET   = 107,
-            BATCH   = 108,
-            DEPLOY  = 109,
-            BRACKETOPEN= 110,
-            BRACKETCLOSE= 111,
-            CURLYOPEN= 112,
-            CURLYCLOSE= 113,
-            SQUAREOPEN= 114,
-            SQUARECLOSE= 115,
-            COMMA   = 116,
-            COLON   = 117,
-            IN      = 118,
-            ARRAYINDEX= 119,
-            ALL     = 120,
-            IDENTIFIER= 121,
-            INTEGER = 122,
-            DOUBLE  = 123,
-            STRING  = 124,
-            EOI     = 125,
-            EOF     = 126,
-            WHITESPACE= 127,
-            COMMENTLINE= 128
+        //Terminal tokens:
+        PLUSMINUS = 59,
+        MULT = 60,
+        DIV = 61,
+        POWER = 62,
+        E = 63,
+        NOT = 64,
+        AND = 65,
+        OR = 66,
+        TRUEFALSE = 67,
+        COMPARATOR = 68,
+        SET = 69,
+        TO = 70,
+        IF = 71,
+        ELSE = 72,
+        UNTIL = 73,
+        LOCK = 74,
+        UNLOCK = 75,
+        PRINT = 76,
+        AT = 77,
+        ON = 78,
+        TOGGLE = 79,
+        WAIT = 80,
+        WHEN = 81,
+        THEN = 82,
+        OFF = 83,
+        STAGE = 84,
+        CLEARSCREEN = 85,
+        ADD = 86,
+        REMOVE = 87,
+        LOG = 88,
+        BREAK = 89,
+        PRESERVE = 90,
+        DECLARE = 91,
+        PARAMETER = 92,
+        SWITCH = 93,
+        COPY = 94,
+        FROM = 95,
+        RENAME = 96,
+        VOLUME = 97,
+        FILE = 98,
+        DELETE = 99,
+        EDIT = 100,
+        RUN = 101,
+        COMPILE = 102,
+        LIST = 103,
+        REBOOT = 104,
+        SHUTDOWN = 105,
+        FOR = 106,
+        UNSET = 107,
+        BATCH = 108,
+        DEPLOY = 109,
+        BRACKETOPEN = 110,
+        BRACKETCLOSE = 111,
+        CURLYOPEN = 112,
+        CURLYCLOSE = 113,
+        SQUAREOPEN = 114,
+        SQUARECLOSE = 115,
+        COMMA = 116,
+        COLON = 117,
+        IN = 118,
+        ARRAYINDEX = 119,
+        ALL = 120,
+        IDENTIFIER = 121,
+        INTEGER = 122,
+        DOUBLE = 123,
+        STRING = 124,
+        EOI = 125,
+        EOF = 126,
+        WHITESPACE = 127,
+        COMMENTLINE = 128
     }
 
     public class Token
@@ -623,46 +622,55 @@ namespace kOS.Safe.Compilation.KS
         // contains all prior skipped symbols
         private List<Token> skipped;
 
-        public string File { 
-            get { return file; } 
+        public string File
+        {
+            get { return file; }
             set { file = value; }
         }
 
-        public int Line { 
-            get { return line; } 
+        public int Line
+        {
+            get { return line; }
             set { line = value; }
         }
 
-        public int Column {
-            get { return column; } 
+        public int Column
+        {
+            get { return column; }
             set { column = value; }
         }
 
-        public int StartPos { 
-            get { return startpos;} 
+        public int StartPos
+        {
+            get { return startpos; }
             set { startpos = value; }
         }
 
-        public int Length { 
-            get { return endpos - startpos;} 
+        public int Length
+        {
+            get { return endpos - startpos; }
         }
 
-        public int EndPos { 
-            get { return endpos;} 
+        public int EndPos
+        {
+            get { return endpos; }
             set { endpos = value; }
         }
 
-        public string Text { 
-            get { return text;} 
+        public string Text
+        {
+            get { return text; }
             set { text = value; }
         }
 
-        public List<Token> Skipped { 
-            get { return skipped;} 
+        public List<Token> Skipped
+        {
+            get { return skipped; }
             set { skipped = value; }
         }
-        public object Value { 
-            get { return value;} 
+        public object Value
+        {
+            get { return value; }
             set { this.value = value; }
         }
 

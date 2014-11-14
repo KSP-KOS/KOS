@@ -120,7 +120,7 @@ namespace kOS.Function
         }
     }
 
-    [Function("load")]
+    [FunctionAttribute("load")]
     public class FunctionLoad : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -128,16 +128,15 @@ namespace kOS.Function
             string fileNameOut = null;
             object topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
             if (topStack != null)
-            {
                 fileNameOut = topStack.ToString();
-            }
 
             string fileName = null;
             topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
             if (topStack != null)
-            {
                 fileName = topStack.ToString();
-            }
+
+            if (fileName != null && fileNameOut != null && fileName == fileNameOut)
+                throw new Exception("Input and output filenames must differ.");
 
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
@@ -147,14 +146,14 @@ namespace kOS.Function
 
             if (shared.ScriptHandler != null)
             {
-                var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
+                var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
+                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
                 // add this program to the address space of the parent program,
                 // or to a file to save:
                 if (fileNameOut != null)
                 {
                     List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, String.Empty, options);
-                    shared.VolumeMgr.CurrentVolume.SaveObjectFile(fileNameOut,compileParts);
+                    shared.VolumeMgr.CurrentVolume.SaveObjectFile(fileNameOut, compileParts);
                 }
                 else
                 {
@@ -169,7 +168,7 @@ namespace kOS.Function
                         parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
                     int programAddress = programContext.AddObjectParts(parts);
                     // push the entry point address of the new program onto the stack
-                    shared.Cpu.PushStack(programAddress);                    
+                    shared.Cpu.PushStack(programAddress);
                 }
             }
         }
