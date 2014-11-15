@@ -349,14 +349,26 @@ namespace kOS.Execution
             shared.Screen.Print("YOU CAN SEE THIS LOG IN THE DEBUG OUTPUT.");
         }
 
-        private Variable GetVariable(string identifier)
+        /// <summary>
+        /// Get the variable's contents, performing a lookup.
+        /// </summary>
+        /// <param name="identifier">variable to look for</param>
+        /// <param name="barewordOkay">Is it acceptable for the variable to
+        ///   not exist, in which case its bare name will be returned as the value.</param>
+        /// <returns>the value that was found</returns>
+        private Variable GetVariable(string identifier, bool barewordOkay = false)
         {
             identifier = identifier.ToLower();
             if (variables.ContainsKey(identifier))
             {
                 return variables[identifier];
             }
-            throw new Exception(string.Format("Variable {0} is not defined", identifier.TrimStart('$')));
+            if (barewordOkay)
+            {
+                string strippedIdent = identifier.TrimStart('$');
+                return new Variable {Name = strippedIdent, Value = strippedIdent};
+            }
+            throw new KOSUndefinedIdentifierException(identifier.TrimStart('$'),"");
         }
 
         public void AddVariable(Variable variable, string identifier)
@@ -412,7 +424,18 @@ namespace kOS.Execution
             }
         }
 
-        public object GetValue(object testValue)
+        /// <summary>
+        ///   Given a value which may or may not be a variable name, return the value
+        ///   back.  If it's not a variable, return it as-is.  If it's a variable,
+        ///   look it up and return that.
+        /// </summary>
+        /// <param name="barewordOkay">
+        ///   Is this a case in which it's acceptable for the
+        ///   variable not to exist, and if it doesn't exist then the variable name itself
+        ///   is the value?
+        /// </param>
+        /// <returns>The value after the steps described have been performed.</returns>
+        public object GetValue(object testValue, bool barewordOkay = false)
         {
             // $cos     cos named variable
             // cos()    cos trigonometric function
@@ -427,7 +450,7 @@ namespace kOS.Execution
                 ((string)testValue)[1] != '<' )
             {
                 var identifier = (string)testValue;
-                Variable variable = GetVariable(identifier);
+                Variable variable = GetVariable(identifier, barewordOkay);
                 return variable.Value;
             }
             return testValue;
@@ -439,14 +462,30 @@ namespace kOS.Execution
             variable.Value = value;
         }
 
-        public object PopValue()
+        /// <summary>
+        /// Pop a value off the stack, and if it's a variable name then get its value,
+        /// else just return it as it is.
+        /// </summary>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public object PopValue(bool barewordOkay = false)
         {
-            return GetValue(PopStack());
+            return GetValue(PopStack(), barewordOkay);
         }
         
-        public object PeekValue(int digDepth)
+        /// <summary>
+        /// Peek at a value atop the stack without popping it, and if it's a variable name then get its value,
+        /// else just return it as it is.
+        /// </summary>
+        /// <param name="barewordOkay">Is this a context in which it's acceptable for
+        ///   a variable not existing error to occur (in which case the identifier itself
+        ///   should therefore become a string object returned)?</param>
+        /// <returns>value off the stack</returns>
+        public object PeekValue(int digDepth, bool barewordOkay = false)
         {
-            return GetValue(stack.Peek(digDepth));
+            return GetValue(stack.Peek(digDepth), barewordOkay);
         }
         
         public int GetStackSize()

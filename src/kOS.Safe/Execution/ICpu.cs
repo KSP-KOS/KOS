@@ -8,9 +8,9 @@ namespace kOS.Safe.Execution
         void PushStack(object item);
         object PopStack();
         void MoveStackPointer(int delta);
-        object GetValue(object testValue);
-        object PopValue();
-        object PeekValue(int digDepth);        
+        object GetValue(object testValue, bool barewordOkay = false);
+        object PopValue(bool barewordOkay = false);
+        object PeekValue(int digDepth, bool barewordOkay = false);        
         int GetStackSize();
         void SetValue(string identifier, object value);
         void DumpVariables();

@@ -9,10 +9,13 @@ namespace kOS.Safe.Persistence
     public enum FileCategory
     {
         /// <summary>
-        /// either can't be identified, or file couldn't be opened to try to identify it.
+        /// File is so small that it has no real content yet to really
+        /// *be* a type.  i.e. a newly opened empty file.  This is distinguished
+        /// from "OTHER", because OTHER means the file *DOES* have enough content
+        /// to know for sure it's not one of the supported types.
         /// </summary>
-        UNKNOWN = 0,
-
+        TOOSHORT = 0,
+            
         /// <summary>
         /// The default the type identifier will always assume as long<br/>
         /// as the first few characters are printable ascii.
@@ -29,6 +32,11 @@ namespace kOS.Safe.Persistence
         /// <summary>
         /// The ML compiled and packed file that came from a KerboScript.
         /// </summary>
-        KSM
+        KSM,
+
+        /// <summary>
+        /// Is an unsupported type.
+        /// </summary>
+        OTHER
     }
 }

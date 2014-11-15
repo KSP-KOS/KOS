@@ -26,12 +26,18 @@ namespace kOS.Safe.Persistence
             return true;
         }
 
-        public override ProgramFile GetByName(string name)
+        /// <summary>
+        /// Get a file given its name
+        /// </summary>
+        /// <param name="name">filename to get.  if it has no filename extension, one will be guessed at, ".ks" usually.</param>
+        /// <param name="timeStampFirst">Is the timestamp more important than the extension (should it go for the newer file first?)</param>
+        /// <returns>the file</returns>
+        public override ProgramFile GetByName(string name, bool timeStampFirst = false )
         {
             try
             {
                 Debug.Logger.Log("Archive: Getting File By Name: " + name);
-                var fileInfo = FileSearch(name);
+                var fileInfo = FileSearch(name, timeStampFirst);
                 if (fileInfo == null)
                 {
                     return null;
@@ -52,6 +58,10 @@ namespace kOS.Safe.Persistence
                         retFile.StringContent = retFile.StringContent.Replace("\r\n", "\n");
 
                     //TODO:Chris eraseme
+                    //  |
+                    //  |
+                    //  `--- Actually I seem to have gotten it working such that it expects this DeleteByName to be here now and depends on it - steven
+                    //
                     base.DeleteByName(name);
 
                     base.Add(retFile);
@@ -79,7 +89,8 @@ namespace kOS.Safe.Persistence
                 string fileExtension;
                 switch (file.Category)
                 {
-                    case FileCategory.UNKNOWN:
+                    case FileCategory.OTHER:
+                    case FileCategory.TOOSHORT:
                     case FileCategory.ASCII:
                     case FileCategory.KERBOSCRIPT:
                         string tempString = file.StringContent;
@@ -98,9 +109,11 @@ namespace kOS.Safe.Persistence
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                var fileName = string.Format("{0}{1}.{2}", ArchiveFolder, file.Filename, fileExtension);
+                var fileName = string.Format("{0}{1}", ArchiveFolder, PersistenceUtilities.CookedFilename(file.Filename, fileExtension, true));
+                Debug.Logger.Log("Archive: eraseme: trying to log to a file called \""+fileName+"\".");
                 using (var outfile = new BinaryWriter(File.Open(fileName, FileMode.Create)))
                 {
+                    Debug.Logger.Log("Archive: eraseme:   about to run Write(\""+fileBody+"\").");
                     outfile.Write(fileBody);
                 }
             }
@@ -119,12 +132,13 @@ namespace kOS.Safe.Persistence
             {
                 Debug.Logger.Log("Archive: Deleting File Name: " + name);
                 var fullPath = FileSearch(name);
+                Debug.Logger.Log("Archive:  eraseme: Deleting full path name: " + (fullPath==null ? "<null>" : fullPath.FullName));
                 if (fullPath == null)
                 {
                     return false;
                 }
-
-                base.DeleteByName(fullPath.FullName);
+                Debug.Logger.Log("Archive:  eraseme: Calling base delete full path name.");
+                base.DeleteByName(name);
                 File.Delete(fullPath.FullName);
                 return true;
             }
@@ -168,12 +182,7 @@ namespace kOS.Safe.Persistence
             try
             {
                 Debug.Logger.Log(string.Format("Archive: Listing Files"));
-                var kosFiles =
-                    Directory.GetFiles(ArchiveFolder)
-                        .Where(
-                            f =>
-                                f.EndsWith('.' + KERBOSCRIPT_EXTENSION) ||
-                                f.EndsWith('.' + KOS_MACHINELANGUAGE_EXTENSION));
+                var kosFiles = Directory.GetFiles(ArchiveFolder);
                 retList.AddRange(kosFiles.Select(file => new System.IO.FileInfo(file)).Select(sysFileInfo => new FileInfo(sysFileInfo)));
             }
             catch (DirectoryNotFoundException)
@@ -191,17 +200,24 @@ namespace kOS.Safe.Persistence
             return POWER_REQUIRED;
         }
 
-        private System.IO.FileInfo FileSearch(string name)
+        /// <summary>
+        /// Get the file from the OS.
+        /// </summary>
+        /// <param name="name">filename to look for</param>
+        /// <param name="timeStampFirst">in the case of having to guess which file to pick because there's more than 1 extension,
+        /// if this is true, it will pick the newer one, else it will decide on the KS file over the KSM file.</param>
+        /// <returns></returns>
+        private System.IO.FileInfo FileSearch(string name, bool timeStampFirst = false)
         {
             var path = ArchiveFolder + name;
             if (Path.HasExtension(path))
             {
                 return File.Exists(path) ? new System.IO.FileInfo(path) : null;
             }
-            var kerboscriptFile = new System.IO.FileInfo(string.Format("{0}.{1}", path, KERBOSCRIPT_EXTENSION));
-            var kosMlFile = new System.IO.FileInfo(string.Format("{0}.{1}", path, KOS_MACHINELANGUAGE_EXTENSION));
+            var kerboscriptFile = new System.IO.FileInfo(PersistenceUtilities.CookedFilename(path, KERBOSCRIPT_EXTENSION, true));
+            var kosMlFile = new System.IO.FileInfo(PersistenceUtilities.CookedFilename(path, KOS_MACHINELANGUAGE_EXTENSION, true));
 
-            if (kerboscriptFile.Exists && kosMlFile.Exists)
+            if (kerboscriptFile.Exists && kosMlFile.Exists && timeStampFirst)
             {
                 return kerboscriptFile.LastWriteTime > kosMlFile.LastWriteTime
                     ? kerboscriptFile

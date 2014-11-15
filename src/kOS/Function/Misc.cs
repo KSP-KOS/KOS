@@ -67,8 +67,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = shared.Cpu.PopValue();
-            string fileName = shared.Cpu.PopValue().ToString();
+            object volumeId = shared.Cpu.PopValue(true);
+            string fileName = shared.Cpu.PopValue(true).ToString();
             
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
@@ -126,14 +126,14 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string fileNameOut = null;
-            object topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
+            object topStack = shared.Cpu.PopValue(true); // null if there's no output file (output file means compile, not run).
             if (topStack != null)
-                fileNameOut = topStack.ToString();
+                fileNameOut = PersistenceUtilities.CookedFilename(topStack.ToString(), Volume.KOS_MACHINELANGUAGE_EXTENSION);
 
             string fileName = null;
-            topStack = shared.Cpu.PopValue(); // null if there's no output file (output file means compile, not run).
+            topStack = shared.Cpu.PopValue(true); // null if there's no output file (output file means compile, not run).
             if (topStack != null)
-                fileName = topStack.ToString();
+                fileName = PersistenceUtilities.CookedFilename(topStack.ToString(), Volume.KERBOSCRIPT_EXTENSION);
 
             if (fileName != null && fileNameOut != null && fileName == fileNameOut)
                 throw new Exception("Input and output filenames must differ.");
@@ -199,7 +199,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = shared.Cpu.PopValue().ToString();
+            string fileName = shared.Cpu.PopValue(true).ToString();
             string expressionResult = shared.Cpu.PopValue().ToString();
 
             if (shared.VolumeMgr != null)

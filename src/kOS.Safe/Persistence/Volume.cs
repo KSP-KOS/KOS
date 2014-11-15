@@ -11,6 +11,7 @@ namespace kOS.Safe.Persistence
 {
     public abstract class Volume : Structure
     {
+        public const string TEXT_EXTENSION = "txt";
         public const string KERBOSCRIPT_EXTENSION = "ks";
         public const string KOS_MACHINELANGUAGE_EXTENSION = "ksm";
         protected const int BASE_CAPACITY = 10000;
@@ -49,8 +50,24 @@ namespace kOS.Safe.Persistence
             AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
         }
 
-        public virtual ProgramFile GetByName(string name)
+        /// <summary>
+        /// Get a file given its name
+        /// </summary>
+        /// <param name="name">filename to get.  if it has no filename extension, one will be guessed at, ".ks" usually.</param>
+        /// <param name="timeStampFirst">Is the timestamp more important than the extension (should it go for the newer file first?)</param>
+        /// <returns>the file</returns>
+        public virtual ProgramFile GetByName(string name, bool timeStampFirst = false )
         {
+            // TODO: At the moment timeStampFirst is being utterly ignored because local Volumes don't
+            // store the timestamp of changes to the files.  That should be fairly easy to implement.
+            // TODO: Also, the logic of checking for filename extensions seems to be different between
+            // Archive and Local volumes.  The try-several-ways-to-pick-implicit-extension logic of the
+            // Archive's version of GetByName needs to be made universal and put here.
+            // Solving that probably means storing the created and modified timestamps inside
+            // ProgramFile's local fields, and populating it from the OS clock (not KSP game clock) when
+            // saving/creating those files, so that even on local volumes it can exist and the logic can
+            // work.
+            
             Debug.Logger.SuperVerbose("Volume: GetByName: " + name);
             name = name.ToLower();
             if (files.ContainsKey(name))
@@ -64,8 +81,10 @@ namespace kOS.Safe.Persistence
         {
             Debug.Logger.SuperVerbose("Volume: DeleteByName: " + name);
             name = name.ToLower();
+            Debug.Logger.SuperVerbose("Volume:  eraseme:  DeleteByName modified name: " + name);
             if (files.ContainsKey(name))
             {
+                Debug.Logger.SuperVerbose("Volume:  eraseme:  will remove name.");
                 files.Remove(name);
                 return true;
             }
@@ -118,9 +137,14 @@ namespace kOS.Safe.Persistence
 
         public virtual bool SaveFile(ProgramFile file)
         {
-            Debug.Logger.SuperVerbose("Volume: SafeFile: " + file.Filename);
+            Debug.Logger.SuperVerbose("Volume: SaveFile: " + file.Filename);
             
             //TODO:Chris eraseme
+            //  |
+            //  |
+            //  |
+            //  `---- Actually I got it working with this DeleteByName in place, and I think it became integral to the design - Steven
+            //
             DeleteByName(file.Filename);
             
             Add(file);

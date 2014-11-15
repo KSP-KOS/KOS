@@ -11,7 +11,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = shared.Cpu.PopValue();
+            object volumeId = shared.Cpu.PopValue(true);
 
             if (shared.VolumeMgr != null)
             {
@@ -33,7 +33,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = shared.Cpu.PopValue().ToString();
+            string fileName = shared.Cpu.PopValue(true).ToString();
 
             if (shared.VolumeMgr != null)
             {
@@ -48,9 +48,9 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = shared.Cpu.PopValue();
+            object volumeId = shared.Cpu.PopValue(true);
             string direction = shared.Cpu.PopValue().ToString();
-            string fileName = shared.Cpu.PopValue().ToString();
+            string fileName = shared.Cpu.PopValue(true).ToString();
 
             Debug.Logger.Log(string.Format("FunctionCopy: Volume: {0} Direction: {1} Filename: {2}", volumeId, direction, fileName));
 
@@ -103,8 +103,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string newName = shared.Cpu.PopValue().ToString();
-            object oldName = shared.Cpu.PopValue();
+            string newName = shared.Cpu.PopValue(true).ToString();
+            object oldName = shared.Cpu.PopValue(true);
             string objectToRename = shared.Cpu.PopValue().ToString();
 
             if (shared.VolumeMgr != null)
@@ -159,8 +159,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = shared.Cpu.PopValue();
-            string fileName = shared.Cpu.PopValue().ToString();
+            object volumeId = shared.Cpu.PopValue(true);
+            string fileName = shared.Cpu.PopValue(true).ToString();
 
             if (shared.VolumeMgr != null)
             {

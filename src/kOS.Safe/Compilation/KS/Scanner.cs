@@ -345,7 +345,7 @@ namespace kOS.Safe.Compilation.KS
             return t;
         }
 
-        /// <summary>
+         /// <summary>
         /// executes a lookahead of the next token
         /// and will advance the scan on the input string
         /// </summary>
@@ -378,8 +378,8 @@ namespace kOS.Safe.Compilation.KS
 
             // this prevents double scanning and matching
             // increased performance
-            if (LookAheadToken != null
-                && LookAheadToken.Type != TokenType._UNDETERMINED_
+            if (LookAheadToken != null 
+                && LookAheadToken.Type != TokenType._UNDETERMINED_ 
                 && LookAheadToken.Type != TokenType._NONE_) return LookAheadToken;
 
             // if no scantokens specified, then scan for all of them (= backward compatible)
@@ -404,10 +404,10 @@ namespace kOS.Safe.Compilation.KS
                 {
                     Regex r = Patterns[scantokens[i]];
                     Match m = r.Match(input);
-                    if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len)))
+                    if (m.Success && m.Index == 0 && ((m.Length > len) || (scantokens[i] < index && m.Length == len )))
                     {
                         len = m.Length;
-                        index = scantokens[i];
+                        index = scantokens[i];  
                     }
                 }
 
@@ -473,140 +473,139 @@ namespace kOS.Safe.Compilation.KS
     public enum TokenType
     {
 
-        //Non terminal tokens:
-        _NONE_ = 0,
-        _UNDETERMINED_ = 1,
+            //Non terminal tokens:
+            _NONE_  = 0,
+            _UNDETERMINED_= 1,
 
-        //Non terminal tokens:
-        Start = 2,
-        instruction_block = 3,
-        instruction = 4,
-        set_stmt = 5,
-        if_stmt = 6,
-        until_stmt = 7,
-        lock_stmt = 8,
-        unlock_stmt = 9,
-        print_stmt = 10,
-        on_stmt = 11,
-        toggle_stmt = 12,
-        wait_stmt = 13,
-        when_stmt = 14,
-        onoff_stmt = 15,
-        onoff_trailer = 16,
-        stage_stmt = 17,
-        clear_stmt = 18,
-        add_stmt = 19,
-        remove_stmt = 20,
-        log_stmt = 21,
-        break_stmt = 22,
-        preserve_stmt = 23,
-        declare_stmt = 24,
-        switch_stmt = 25,
-        copy_stmt = 26,
-        rename_stmt = 27,
-        delete_stmt = 28,
-        edit_stmt = 29,
-        run_stmt = 30,
-        compile_stmt = 31,
-        filevol_name = 32,
-        list_stmt = 33,
-        reboot_stmt = 34,
-        shutdown_stmt = 35,
-        for_stmt = 36,
-        unset_stmt = 37,
-        batch_stmt = 38,
-        deploy_stmt = 39,
-        arglist = 40,
-        expr = 41,
-        and_expr = 42,
-        compare_expr = 43,
-        arith_expr = 44,
-        multdiv_expr = 45,
-        factor = 46,
-        suffix = 47,
-        suffix_trailer = 48,
-        suffixterm = 49,
-        suffixterm_trailer = 50,
-        function_trailer = 51,
-        array_trailer = 52,
-        atom = 53,
-        sci_number = 54,
-        number = 55,
-        varidentifier = 56,
-        identifier_led_stmt = 57,
-        identifier_led_expr = 58,
+            //Non terminal tokens:
+            Start   = 2,
+            instruction_block= 3,
+            instruction= 4,
+            set_stmt= 5,
+            if_stmt = 6,
+            until_stmt= 7,
+            lock_stmt= 8,
+            unlock_stmt= 9,
+            print_stmt= 10,
+            on_stmt = 11,
+            toggle_stmt= 12,
+            wait_stmt= 13,
+            when_stmt= 14,
+            onoff_stmt= 15,
+            onoff_trailer= 16,
+            stage_stmt= 17,
+            clear_stmt= 18,
+            add_stmt= 19,
+            remove_stmt= 20,
+            log_stmt= 21,
+            break_stmt= 22,
+            preserve_stmt= 23,
+            declare_stmt= 24,
+            switch_stmt= 25,
+            copy_stmt= 26,
+            rename_stmt= 27,
+            delete_stmt= 28,
+            edit_stmt= 29,
+            run_stmt= 30,
+            compile_stmt= 31,
+            list_stmt= 32,
+            reboot_stmt= 33,
+            shutdown_stmt= 34,
+            for_stmt= 35,
+            unset_stmt= 36,
+            batch_stmt= 37,
+            deploy_stmt= 38,
+            arglist = 39,
+            expr    = 40,
+            and_expr= 41,
+            compare_expr= 42,
+            arith_expr= 43,
+            multdiv_expr= 44,
+            factor  = 45,
+            suffix  = 46,
+            suffix_trailer= 47,
+            suffixterm= 48,
+            suffixterm_trailer= 49,
+            function_trailer= 50,
+            array_trailer= 51,
+            atom    = 52,
+            sci_number= 53,
+            number  = 54,
+            varidentifier= 55,
+            identifier_led_stmt= 56,
+            identifier_led_expr= 57,
 
-        //Terminal tokens:
-        PLUSMINUS = 59,
-        MULT = 60,
-        DIV = 61,
-        POWER = 62,
-        E = 63,
-        NOT = 64,
-        AND = 65,
-        OR = 66,
-        TRUEFALSE = 67,
-        COMPARATOR = 68,
-        SET = 69,
-        TO = 70,
-        IF = 71,
-        ELSE = 72,
-        UNTIL = 73,
-        LOCK = 74,
-        UNLOCK = 75,
-        PRINT = 76,
-        AT = 77,
-        ON = 78,
-        TOGGLE = 79,
-        WAIT = 80,
-        WHEN = 81,
-        THEN = 82,
-        OFF = 83,
-        STAGE = 84,
-        CLEARSCREEN = 85,
-        ADD = 86,
-        REMOVE = 87,
-        LOG = 88,
-        BREAK = 89,
-        PRESERVE = 90,
-        DECLARE = 91,
-        PARAMETER = 92,
-        SWITCH = 93,
-        COPY = 94,
-        FROM = 95,
-        RENAME = 96,
-        VOLUME = 97,
-        FILE = 98,
-        DELETE = 99,
-        EDIT = 100,
-        RUN = 101,
-        COMPILE = 102,
-        LIST = 103,
-        REBOOT = 104,
-        SHUTDOWN = 105,
-        FOR = 106,
-        UNSET = 107,
-        BATCH = 108,
-        DEPLOY = 109,
-        BRACKETOPEN = 110,
-        BRACKETCLOSE = 111,
-        CURLYOPEN = 112,
-        CURLYCLOSE = 113,
-        SQUAREOPEN = 114,
-        SQUARECLOSE = 115,
-        COMMA = 116,
-        COLON = 117,
-        IN = 118,
-        ARRAYINDEX = 119,
-        ALL = 120,
-        IDENTIFIER = 121,
-        INTEGER = 122,
-        DOUBLE = 123,
-        STRING = 124,
-        EOI = 125,
-        EOF = 126,
-        WHITESPACE = 127,
-        COMMENTLINE = 128
+            //Terminal tokens:
+            PLUSMINUS= 58,
+            MULT    = 59,
+            DIV     = 60,
+            POWER   = 61,
+            E       = 62,
+            NOT     = 63,
+            AND     = 64,
+            OR      = 65,
+            TRUEFALSE= 66,
+            COMPARATOR= 67,
+            SET     = 68,
+            TO      = 69,
+            IF      = 70,
+            ELSE    = 71,
+            UNTIL   = 72,
+            LOCK    = 73,
+            UNLOCK  = 74,
+            PRINT   = 75,
+            AT      = 76,
+            ON      = 77,
+            TOGGLE  = 78,
+            WAIT    = 79,
+            WHEN    = 80,
+            THEN    = 81,
+            OFF     = 82,
+            STAGE   = 83,
+            CLEARSCREEN= 84,
+            ADD     = 85,
+            REMOVE  = 86,
+            LOG     = 87,
+            BREAK   = 88,
+            PRESERVE= 89,
+            DECLARE = 90,
+            PARAMETER= 91,
+            SWITCH  = 92,
+            COPY    = 93,
+            FROM    = 94,
+            RENAME  = 95,
+            VOLUME  = 96,
+            FILE    = 97,
+            DELETE  = 98,
+            EDIT    = 99,
+            RUN     = 100,
+            COMPILE = 101,
+            LIST    = 102,
+            REBOOT  = 103,
+            SHUTDOWN= 104,
+            FOR     = 105,
+            UNSET   = 106,
+            BATCH   = 107,
+            DEPLOY  = 108,
+            BRACKETOPEN= 109,
+            BRACKETCLOSE= 110,
+            CURLYOPEN= 111,
+            CURLYCLOSE= 112,
+            SQUAREOPEN= 113,
+            SQUARECLOSE= 114,
+            COMMA   = 115,
+            COLON   = 116,
+            IN      = 117,
+            ARRAYINDEX= 118,
+            ALL     = 119,
+            IDENTIFIER= 120,
+            INTEGER = 121,
+            DOUBLE  = 122,
+            STRING  = 123,
+            EOI     = 124,
+            EOF     = 125,
+            WHITESPACE= 126,
+            COMMENTLINE= 127
     }
 
     public class Token
@@ -622,55 +621,46 @@ namespace kOS.Safe.Compilation.KS
         // contains all prior skipped symbols
         private List<Token> skipped;
 
-        public string File
-        {
-            get { return file; }
+        public string File { 
+            get { return file; } 
             set { file = value; }
         }
 
-        public int Line
-        {
-            get { return line; }
+        public int Line { 
+            get { return line; } 
             set { line = value; }
         }
 
-        public int Column
-        {
-            get { return column; }
+        public int Column {
+            get { return column; } 
             set { column = value; }
         }
 
-        public int StartPos
-        {
-            get { return startpos; }
+        public int StartPos { 
+            get { return startpos;} 
             set { startpos = value; }
         }
 
-        public int Length
-        {
-            get { return endpos - startpos; }
+        public int Length { 
+            get { return endpos - startpos;} 
         }
 
-        public int EndPos
-        {
-            get { return endpos; }
+        public int EndPos { 
+            get { return endpos;} 
             set { endpos = value; }
         }
 
-        public string Text
-        {
-            get { return text; }
+        public string Text { 
+            get { return text;} 
             set { text = value; }
         }
 
-        public List<Token> Skipped
-        {
-            get { return skipped; }
+        public List<Token> Skipped { 
+            get { return skipped;} 
             set { skipped = value; }
         }
-        public object Value
-        {
-            get { return value; }
+        public object Value { 
+            get { return value;} 
             set { this.value = value; }
         }
 

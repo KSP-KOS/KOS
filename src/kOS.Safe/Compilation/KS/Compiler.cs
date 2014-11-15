@@ -384,8 +384,8 @@ namespace kOS.Safe.Compilation.KS
                 bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
                 if (!hasON)
                 {
-                    string subprogramName = node.Nodes[1].Token.Text;
-                    if (!context.Subprograms.Contains(subprogramName))
+                    string subprogramName = node.Nodes[1].Token.Text; // !!!OH CRUD: It assumes it can know the program name at compile time!! 
+                    if (!context.Subprograms.Contains(subprogramName))  // !!OH CRUD: And it makes use of that assumption to decide what has and hasn't been compiled.
                     {
                         Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
                         // Function code
@@ -603,9 +603,11 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.deploy_stmt:
                     VisitDeployStatement(node);
                     break;
-                case TokenType.filevol_name:
-                    VisitFileVol(node);
-                    break;
+                // eraseme: Remove this after verifying it works without it:
+                // ----------------------------
+                // case TokenType.filevol_name:
+                //     VisitFileVol(node);
+                //    break;
                 case TokenType.arglist:
                     VisitArgList(node);
                     break;
@@ -905,12 +907,15 @@ namespace kOS.Safe.Compilation.KS
             return functionName;
         }
 
+        /* eraseme - Remove this after verifying it works without it:
+         * ---------
         private void VisitFileVol(ParseNode node)
         {
             NodeStartHousekeeping(node);
             VisitNode(node.Nodes[0]);
         }
-
+        *
+        */
         private void VisitArgList(ParseNode node)
         {
             NodeStartHousekeeping(node);
@@ -1712,8 +1717,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitEditStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            string fileName = node.Nodes[1].Token.Text;
-            AddOpcode(new OpcodePush(fileName));
+            VisitNode(node.Nodes[1]);
             AddOpcode(new OpcodeCall("edit()"));
         }
 
@@ -1732,8 +1736,8 @@ namespace kOS.Safe.Compilation.KS
             bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
             if (!hasON && options.LoadProgramsInSameAddressSpace)
             {
-                string subprogramName = node.Nodes[1].Token.Text;
-                if (context.Subprograms.Contains(subprogramName))
+                string subprogramName = node.Nodes[1].Token.Text; // !!!OH CRUD: It assumes it can know the program name at compile time!! 
+                if (context.Subprograms.Contains(subprogramName))  // !!OH CRUD: And it makes use of that assumption to decide what has and hasn't been compiled.
                 {
                     Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
                     AddOpcode(new OpcodeCall(null)).DestinationLabel = subprogramObject.FunctionLabel;
@@ -1757,10 +1761,9 @@ namespace kOS.Safe.Compilation.KS
         private void VisitCompileStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            string fileNameIn = node.Nodes[1].Token.Text;
+            VisitNode(node.Nodes[1]);
+            VisitNode(node.Nodes[3]);
             string fileNameOut = node.Nodes[3].Token.Text;
-            AddOpcode(new OpcodePush(fileNameIn));
-            AddOpcode(new OpcodePush(fileNameOut));
             AddOpcode(new OpcodeCall("load()"));
         }
 

@@ -8,8 +8,8 @@ namespace kOS.Safe.Persistence
         {
             get
             {
-                if (Category != FileCategory.ASCII && Category != FileCategory.KERBOSCRIPT)
-                    throw new KOSFileException("File " + Filename + " is not ASCII.  Should use BinaryContent instead.");
+                if (Category != FileCategory.ASCII && Category != FileCategory.KERBOSCRIPT && Category != FileCategory.TOOSHORT)
+                    throw new KOSFileException("File " + Filename + " is " + Category.ToString() + ", not ASCII.  Should use BinaryContent instead.");
                 return stringContent;
             }
             set
@@ -24,8 +24,8 @@ namespace kOS.Safe.Persistence
         {
             get
             {
-                if (Category == FileCategory.ASCII || Category == FileCategory.KERBOSCRIPT)
-                    throw new KOSFileException("File " + Filename + " is not Binary. Should use StringContent instead.");
+                if (Category == FileCategory.ASCII || Category == FileCategory.KERBOSCRIPT && Category != FileCategory.TOOSHORT)
+                    throw new KOSFileException("File " + Filename + " is " + Category.ToString() + ", not Binary. Should use StringContent instead.");
                 return binaryContent;
             }
             set
@@ -49,7 +49,7 @@ namespace kOS.Safe.Persistence
         public ProgramFile(string filename)
         {
             Filename = filename;
-            Category = FileCategory.UNKNOWN;
+            Category = FileCategory.TOOSHORT;
             stringContent = string.Empty;
             binaryContent = new byte[0];
         }

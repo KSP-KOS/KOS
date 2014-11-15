@@ -22,6 +22,12 @@ namespace kOS.Safe.Encapsulation
             Size = (int) fileInfo.Length;
             switch (fileInfo.Extension)
             {
+                // This isn't really quite correct usage of the FileCategory system,
+                // which was meant to be about the content inside the files, not what
+                // the filename extension claims it is.
+                case Volume.TEXT_EXTENSION:
+                    Category = FileCategory.ASCII;
+                    break;
                 case Volume.KERBOSCRIPT_EXTENSION:
                     Category = FileCategory.ASCII;
                     break;
@@ -29,7 +35,7 @@ namespace kOS.Safe.Encapsulation
                     Category = FileCategory.KSM;
                     break;
                 default:
-                    Category = FileCategory.KSM;
+                    Category = FileCategory.OTHER;
                     break;
             }
         }
