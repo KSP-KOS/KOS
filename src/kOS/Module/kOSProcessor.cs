@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Execution;
 using kOS.Factories;
+using kOS.Function;
+using kOS.Safe.Persistence;
 using UnityEngine;
 using KSP.IO;
 using kOS.InterProcessor;
@@ -135,8 +137,9 @@ namespace kOS.Module
             shared.Screen = shared.Interpreter;
             shared.ScriptHandler = new KSScript();
             shared.Logger = new KSPLogger(shared);
-            shared.VolumeMgr = new VolumeManager(shared);
+            shared.VolumeMgr = shared.Factory.CreateVolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();
+            shared.FunctionManager = new FunctionManager(shared);
             shared.Cpu = new CPU(shared);
 
             // Make the window that is going to correspond to this kOS part:
@@ -411,7 +414,7 @@ namespace kOS.Module
 
                 if (node.HasNode("harddisk"))
                 {
-                    var newDisk = new Harddisk(node.GetNode("harddisk"));
+                    var newDisk = node.GetNode("harddisk").ToHardDisk();
                     HardDisk = newDisk;
                 }
 
@@ -436,7 +439,7 @@ namespace kOS.Module
             {
                 if (HardDisk != null)
                 {
-                    ConfigNode hdNode = HardDisk.Save("harddisk");
+                    ConfigNode hdNode = HardDisk.ToConfigNode("harddisk");
                     node.AddNode(hdNode);
                 }
 

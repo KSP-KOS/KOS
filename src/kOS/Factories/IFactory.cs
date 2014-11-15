@@ -1,4 +1,5 @@
-﻿using kOS.Safe.Screen;
+﻿using kOS.Safe.Persistence;
+using kOS.Safe.Screen;
 using kOS.Persistence;
 
 namespace kOS.Factories
@@ -7,5 +8,6 @@ namespace kOS.Factories
     {
         IInterpreter CreateInterpreter(SharedObjects shared);
         Archive CreateArchive();
+        VolumeManager CreateVolumeManager(SharedObjects sharedObjects);
     }
 }

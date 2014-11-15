@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using kOS.Persistence;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Function;
+using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Utilities;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("printlist")]
+    [Function("printlist")]
     public class FunctionPrintList : FunctionBase
     {
         public override void Execute(SharedObjects shared)

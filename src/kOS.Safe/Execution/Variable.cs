@@ -2,23 +2,23 @@ namespace kOS.Safe.Execution
 {
     public class Variable
     {
-        public string Name;
-        private object _value;
+        public string Name { get; set; }
+        private object value;
         public virtual object Value
         {
-            get { return _value; }
+            get { return value; }
             set
             {
                 // Be very careful here to notice the difference
                 // between _value and value:
-                object oldValue = _value;
+                object oldValue = this.value;
                 
-                _value = value;
+                this.value = value;
 
                 // Alter link count of my new value:
-                if (_value is IKOSScopeObserver)
+                if (this.value is IKOSScopeObserver)
                 {
-                    ((IKOSScopeObserver)_value).LinkCount++;
+                    ((IKOSScopeObserver)this.value).LinkCount++;
                 }
                 // Alter link count of my previous value:
                 if (oldValue is IKOSScopeObserver)
@@ -52,11 +52,11 @@ namespace kOS.Safe.Execution
             // cleaning it up, or because a script crashed, this last check
             // will eventually catch that fact, but it might not happen
             // immediately.  Sometimes it takes 10-20 seconds:
-            if (_value is IKOSScopeObserver)
+            if (value is IKOSScopeObserver)
             {
-                ((IKOSScopeObserver)_value).LinkCount--;
-                if ( ((IKOSScopeObserver)_value).LinkCount <= 0 ) {
-                    ((IKOSScopeObserver)_value).ScopeLost();
+                ((IKOSScopeObserver)value).LinkCount--;
+                if ( ((IKOSScopeObserver)value).LinkCount <= 0 ) {
+                    ((IKOSScopeObserver)value).ScopeLost();
                 }
             }
         }

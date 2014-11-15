@@ -37,15 +37,18 @@ namespace kOS.Safe.Compilation.KS
         {
         }
 
-        public ParseError(string message, int code, ParseNode node) : this(message, code, node.Token)
+        public ParseError(string message, int code, ParseNode node)
+            : this(message, code, node.Token)
         {
         }
 
-        public ParseError(string message, int code, Token token) : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length)
+        public ParseError(string message, int code, Token token)
+            : this(message, code, token.File, token.Line, token.Column, token.StartPos, token.Length)
         {
         }
 
-        public ParseError(string message, int code) : this(message, code, string.Empty, 0, 0, 0, 0)
+        public ParseError(string message, int code)
+            : this(message, code, string.Empty, 0, 0, 0, 0)
         {
         }
 
@@ -69,7 +72,8 @@ namespace kOS.Safe.Compilation.KS
 
         public List<Token> Skipped;
 
-        public ParseTree() : base(new Token(), "ParseTree")
+        public ParseTree()
+            : base(new Token(), "ParseTree")
         {
             Token.Type = TokenType.Start;
             Token.Text = "Root";
@@ -86,7 +90,7 @@ namespace kOS.Safe.Compilation.KS
 
         private void PrintNode(StringBuilder sb, ParseNode node, int indent)
         {
-            
+
             string space = "".PadLeft(indent, ' ');
 
             sb.Append(space);
@@ -95,7 +99,7 @@ namespace kOS.Safe.Compilation.KS
             foreach (ParseNode n in node.Nodes)
                 PrintNode(sb, n, indent + 2);
         }
-        
+
         /// <summary>
         /// this is the entry point for executing and evaluating the parse tree.
         /// </summary>
@@ -113,18 +117,19 @@ namespace kOS.Safe.Compilation.KS
     {
         protected string text;
         protected List<ParseNode> nodes;
-        
-        public List<ParseNode> Nodes { get {return nodes;} }
-        
+
+        public List<ParseNode> Nodes { get { return nodes; } }
+
         [XmlIgnore] // avoid circular references when serializing
         public ParseNode Parent;
         public Token Token; // the token/rule
 
         [XmlIgnore] // skip redundant text (is part of Token)
-        public string Text { // text to display in parse tree 
-            get { return text;} 
+        public string Text
+        { // text to display in parse tree 
+            get { return text; }
             set { text = value; }
-        } 
+        }
 
         public virtual ParseNode CreateNode(Token token, string text)
         {
@@ -756,6 +761,6 @@ namespace kOS.Safe.Compilation.KS
 
 
     }
-    
+
     #endregion ParseTree
 }

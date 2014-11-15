@@ -1,5 +1,5 @@
 ﻿using kOS.AddOns.RemoteTech2;
-using kOS.Execution;
+using kOS.Safe.Binding;
 using kOS.Suffixed;
 using kOS.Utilities;
 using System;
@@ -8,38 +8,41 @@ using UnityEngine;
 
 namespace kOS.Binding
 {
-    [kOSBinding("ksp")]
+    [Binding("ksp")]
     public class FlightControlManager : Binding , IDisposable
     {
         private Vessel currentVessel;
         private readonly Dictionary<string, FlightCtrlParam> flightParameters = new Dictionary<string, FlightCtrlParam>();
         private static readonly Dictionary<uint, FlightControl> flightControls = new Dictionary<uint, FlightControl>();
+        public SharedObjects Shared { get; set; }
 
         public override void AddTo(SharedObjects shared)
         {
-            if (shared.Vessel == null)
+            Shared = shared;
+
+            if (Shared.Vessel == null)
             {
                 Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel== null");
                 return;
             }
 
-            if (shared.Vessel.rootPart == null)
+            if (Shared.Vessel.rootPart == null)
             {
                 Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel.rootPart == null");
                 return;
             }
 
-            Debug.Log("kOS: FlightControlManager.AddTo " + shared.Vessel.id);
-            Shared = shared;
+            Debug.Log("kOS: FlightControlManager.AddTo " + Shared.Vessel.id);
 
             currentVessel = shared.Vessel;
             currentVessel.OnFlyByWire += OnFlyByWire;
 
-            AddNewFlightParam("throttle", shared);
-            AddNewFlightParam("steering", shared);
-            AddNewFlightParam("wheelthrottle", shared);
-            AddNewFlightParam("wheelsteering", shared);
+            AddNewFlightParam("throttle", Shared);
+            AddNewFlightParam("steering", Shared);
+            AddNewFlightParam("wheelthrottle", Shared);
+            AddNewFlightParam("wheelsteering", Shared);
         }
+
 
         private void OnFlyByWire(FlightCtrlState c)
         {
@@ -175,8 +178,8 @@ namespace kOS.Binding
 
             private void HookEvents()
             {
-                binding.AddGetter(name, c => value);
-                binding.AddSetter(name, delegate(CPU c, object val) { value = val; });
+                binding.AddGetter(name, () => value);
+                binding.AddSetter(name, val => value = val);
             }
 
 

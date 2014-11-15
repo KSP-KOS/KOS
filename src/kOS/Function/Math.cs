@@ -1,10 +1,11 @@
 ﻿using System;
 using kOS.Safe.Compilation;
+using kOS.Safe.Function;
 using kOS.Suffixed;
 
 namespace kOS.Function
 {
-    [FunctionAttribute("abs")]
+    [Function("abs")]
     public class FunctionAbs : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -15,7 +16,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("mod")]
+    [Function("mod")]
     public class FunctionMod : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -27,7 +28,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("floor")]
+    [Function("floor")]
     public class FunctionFloor : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -38,7 +39,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("ceiling")]
+    [Function("ceiling")]
     public class FunctionCeiling : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -49,7 +50,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("roundnearest")]
+    [Function("roundnearest")]
     public class FunctionRoundNearest : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -60,7 +61,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("round")]
+    [Function("round")]
     public class FunctionRound : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -72,7 +73,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("sqrt")]
+    [Function("sqrt")]
     public class FunctionSqrt : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -83,7 +84,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("ln")]
+    [Function("ln")]
     public class FunctionLn : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -94,7 +95,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("log10")]
+    [Function("log10")]
     public class FunctionLog10 : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -105,7 +106,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("min")]
+    [Function("min")]
     public class FunctionMin : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -119,7 +120,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("max")]
+    [Function("max")]
     public class FunctionMax : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -133,7 +134,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("random")]
+    [Function("random")]
     public class FunctionRandom : FunctionBase
     {
         private readonly Random random = new Random();
@@ -144,7 +145,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("vcrs", "vectorcrossproduct")]
+    [Function("vcrs", "vectorcrossproduct")]
     public class FunctionVectorCross : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -160,7 +161,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("vdot", "vectordotproduct")]
+    [Function("vdot", "vectordotproduct")]
     public class FunctionVectorDot : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -176,7 +177,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("vxcl", "vectorexclude")]
+    [Function("vxcl", "vectorexclude")]
     public class FunctionVectorExclude : FunctionBase
     {
         public override void Execute(SharedObjects shared)
@@ -192,7 +193,7 @@ namespace kOS.Function
         }
     }
 
-    [FunctionAttribute("vang", "vectorangle")]
+    [Function("vang", "vectorangle")]
     public class FunctionVectorAngle : FunctionBase
     {
         public override void Execute(SharedObjects shared)

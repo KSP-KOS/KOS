@@ -1,6 +1,6 @@
 ﻿using kOS.Factories;
+using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
-using kOS.Screen;
 using kOS.Persistence;
 
 namespace kOS.AddOns.RemoteTech2
@@ -15,6 +15,11 @@ namespace kOS.AddOns.RemoteTech2
         public Archive CreateArchive()
         {
             return new RemoteTechArchive();
+        }
+
+        public VolumeManager CreateVolumeManager(SharedObjects sharedObjects)
+        {
+            return new RemoteTechVolumeManager(sharedObjects);
         }
     }
 }
