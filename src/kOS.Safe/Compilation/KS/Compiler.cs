@@ -384,9 +384,9 @@ namespace kOS.Safe.Compilation.KS
                 bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
                 if (!hasON)
                 {
-                    string subprogramName = node.Nodes[1].Token.Text; // !!!OH CRUD: It assumes it can know the program name at compile time!! 
-                    if (!context.Subprograms.Contains(subprogramName))  // !!OH CRUD: And it makes use of that assumption to decide what has and hasn't been compiled.
-                    {
+                    string subprogramName = node.Nodes[1].Token.Text; // It assumes it already knows at compile-time how many unique program filenames exist, 
+                    if (!context.Subprograms.Contains(subprogramName)) // which it uses to decide how many of these blocks to make,
+                    {                                                   // which is why we can't defer run filenames until runtime like we can with the others.
                         Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
                         // Function code
                         currentCodeSection = subprogramObject.FunctionCode;
@@ -657,6 +657,9 @@ namespace kOS.Safe.Compilation.KS
                     break;
                 case TokenType.IDENTIFIER:
                     VisitIdentifier(node);
+                    break;
+                case TokenType.FILEIDENT:
+                    VisitFileIdent(node);
                     break;
                 case TokenType.STRING:
                     VisitString(node);
@@ -1074,7 +1077,7 @@ namespace kOS.Safe.Compilation.KS
 
         private string GetIdentifierText(ParseNode node)
         {
-            if (node.Token.Type == TokenType.IDENTIFIER)
+            if (node.Token.Type == TokenType.IDENTIFIER || node.Token.Type == TokenType.FILEIDENT)
             {
                 return node.Token.Text;
             }
@@ -1187,6 +1190,13 @@ namespace kOS.Safe.Compilation.KS
             {
                 AddOpcode(new OpcodePush(prefix + identifier));
             }
+        }
+
+        private void VisitFileIdent(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            string identifier = GetIdentifierText(node);
+            AddOpcode(new OpcodePush(identifier));
         }
 
         private void VisitString(ParseNode node)
@@ -1736,8 +1746,8 @@ namespace kOS.Safe.Compilation.KS
             bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
             if (!hasON && options.LoadProgramsInSameAddressSpace)
             {
-                string subprogramName = node.Nodes[1].Token.Text; // !!!OH CRUD: It assumes it can know the program name at compile time!! 
-                if (context.Subprograms.Contains(subprogramName))  // !!OH CRUD: And it makes use of that assumption to decide what has and hasn't been compiled.
+                string subprogramName = node.Nodes[1].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
+                if (context.Subprograms.Contains(subprogramName))  // and instead have to do RUN FILEIDENT, in the parser def.
                 {
                     Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
                     AddOpcode(new OpcodeCall(null)).DestinationLabel = subprogramObject.FunctionLabel;

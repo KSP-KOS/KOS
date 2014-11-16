@@ -30,14 +30,14 @@ namespace kOS.Safe.Persistence
         /// Get a file given its name
         /// </summary>
         /// <param name="name">filename to get.  if it has no filename extension, one will be guessed at, ".ks" usually.</param>
-        /// <param name="timeStampFirst">Is the timestamp more important than the extension (should it go for the newer file first?)</param>
+        /// <param name="ksmDefault">true if a filename of .ksm is preferred in contexts where the extension was left off.  The default is to prefer .ks</param>
         /// <returns>the file</returns>
-        public override ProgramFile GetByName(string name, bool timeStampFirst = false )
+        public override ProgramFile GetByName(string name, bool ksmDefault = false)
         {
             try
             {
                 Debug.Logger.Log("Archive: Getting File By Name: " + name);
-                var fileInfo = FileSearch(name, timeStampFirst);
+                var fileInfo = FileSearch(name, ksmDefault);
                 if (fileInfo == null)
                 {
                     return null;
@@ -204,10 +204,9 @@ namespace kOS.Safe.Persistence
         /// Get the file from the OS.
         /// </summary>
         /// <param name="name">filename to look for</param>
-        /// <param name="timeStampFirst">in the case of having to guess which file to pick because there's more than 1 extension,
-        /// if this is true, it will pick the newer one, else it will decide on the KS file over the KSM file.</param>
+        /// <param name="ksmDefault">if true, it prefers to use the KSM filename over the KS.  The default is to prefer KS.</param>
         /// <returns></returns>
-        private System.IO.FileInfo FileSearch(string name, bool timeStampFirst = false)
+        private System.IO.FileInfo FileSearch(string name, bool ksmDefault = false)
         {
             var path = ArchiveFolder + name;
             if (Path.HasExtension(path))
@@ -217,11 +216,9 @@ namespace kOS.Safe.Persistence
             var kerboscriptFile = new System.IO.FileInfo(PersistenceUtilities.CookedFilename(path, KERBOSCRIPT_EXTENSION, true));
             var kosMlFile = new System.IO.FileInfo(PersistenceUtilities.CookedFilename(path, KOS_MACHINELANGUAGE_EXTENSION, true));
 
-            if (kerboscriptFile.Exists && kosMlFile.Exists && timeStampFirst)
+            if (kerboscriptFile.Exists && kosMlFile.Exists)
             {
-                return kerboscriptFile.LastWriteTime > kosMlFile.LastWriteTime
-                    ? kerboscriptFile
-                    : kosMlFile;
+                return ksmDefault ? kosMlFile : kerboscriptFile;
             }
             if (kerboscriptFile.Exists)
             {

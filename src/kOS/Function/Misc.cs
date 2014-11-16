@@ -73,7 +73,7 @@ namespace kOS.Function
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
 
-            ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName);
+            ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName, true);
             if (file == null) throw new Exception(string.Format("File '{0}' not found", fileName));
             if (shared.ScriptHandler == null) return;
 

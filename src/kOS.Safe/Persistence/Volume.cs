@@ -54,19 +54,19 @@ namespace kOS.Safe.Persistence
         /// Get a file given its name
         /// </summary>
         /// <param name="name">filename to get.  if it has no filename extension, one will be guessed at, ".ks" usually.</param>
-        /// <param name="timeStampFirst">Is the timestamp more important than the extension (should it go for the newer file first?)</param>
+        /// <param name="ksmDefault">in the scenario where there is no filename extension, do we prefer the .ksm over the .ks?  The default is to prefer .ks</param>
         /// <returns>the file</returns>
-        public virtual ProgramFile GetByName(string name, bool timeStampFirst = false )
+        public virtual ProgramFile GetByName(string name, bool ksmDefault = false )
         {
-            // TODO: At the moment timeStampFirst is being utterly ignored because local Volumes don't
-            // store the timestamp of changes to the files.  That should be fairly easy to implement.
-            // TODO: Also, the logic of checking for filename extensions seems to be different between
-            // Archive and Local volumes.  The try-several-ways-to-pick-implicit-extension logic of the
-            // Archive's version of GetByName needs to be made universal and put here.
-            // Solving that probably means storing the created and modified timestamps inside
-            // ProgramFile's local fields, and populating it from the OS clock (not KSP game clock) when
-            // saving/creating those files, so that even on local volumes it can exist and the logic can
-            // work.
+            // TODO for @erendrake:
+            // ----------------------
+            // ksmDefault is currently unused here because local volumes don't
+            // seem to have analogies to what's in Archive volumes.  The archive
+            // class has a FileSearch() method that does the logic needed to
+            // use the ksmDefault argument, and the Volume class doesn't.
+            // That's why I didn't implement this but just left that argument in
+            // there as a stub, so you can fill this out when the Volume class 
+            // gets some of that logic put back into it again.
             
             Debug.Logger.SuperVerbose("Volume: GetByName: " + name);
             name = name.ToLower();

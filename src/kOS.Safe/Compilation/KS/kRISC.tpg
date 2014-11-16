@@ -69,6 +69,7 @@ IN           -> @"in";
 ARRAYINDEX   -> @"#";
 ALL          -> @"all";
 IDENTIFIER   -> @"[a-z_][a-z0-9_]*";
+FILEIDENT    -> @"[a-z_][a-z0-9_]*(\.[a-z0-9_][a-z0-9_]*)*";
 INTEGER      -> @"[0-9]+";
 DOUBLE       -> @"[0-9]*\.[0-9]+";
 STRING       -> @"@?\""(\""\""|[^\""])*\""";
@@ -146,7 +147,7 @@ copy_stmt      -> COPY expr (FROM | TO) expr EOI;
 rename_stmt    -> RENAME (VOLUME | FILE)? expr TO expr EOI;
 delete_stmt    -> DELETE expr (FROM expr)? EOI;
 edit_stmt      -> EDIT expr EOI;
-run_stmt       -> RUN expr (BRACKETOPEN arglist BRACKETCLOSE)? (ON expr)? EOI;
+run_stmt       -> RUN FILEIDENT (BRACKETOPEN arglist BRACKETCLOSE)? (ON expr)? EOI;
 compile_stmt   -> COMPILE expr TO expr EOI;
 list_stmt      -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
 reboot_stmt    -> REBOOT EOI;
@@ -179,6 +180,7 @@ array_trailer      -> ( (ARRAYINDEX (IDENTIFIER | INTEGER)) | (SQUAREOPEN expr S
 atom               -> (PLUSMINUS|NOT)? ( sci_number |
                                          TRUEFALSE |
                                          IDENTIFIER |
+                                         FILEIDENT |
                                          BRACKETOPEN expr BRACKETCLOSE
                                        ) | STRING;
 sci_number         -> number (E PLUSMINUS? INTEGER)?;

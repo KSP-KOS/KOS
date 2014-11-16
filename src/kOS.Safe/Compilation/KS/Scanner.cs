@@ -290,6 +290,10 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.IDENTIFIER, regex);
             Tokens.Add(TokenType.IDENTIFIER);
 
+            regex = new Regex(@"[a-z_][a-z0-9_]*(\.[a-z0-9_][a-z0-9_]*)*");
+            Patterns.Add(TokenType.FILEIDENT, regex);
+            Tokens.Add(TokenType.FILEIDENT);
+
             regex = new Regex(@"[0-9]+");
             Patterns.Add(TokenType.INTEGER, regex);
             Tokens.Add(TokenType.INTEGER);
@@ -599,13 +603,14 @@ namespace kOS.Safe.Compilation.KS
             ARRAYINDEX= 118,
             ALL     = 119,
             IDENTIFIER= 120,
-            INTEGER = 121,
-            DOUBLE  = 122,
-            STRING  = 123,
-            EOI     = 124,
-            EOF     = 125,
-            WHITESPACE= 126,
-            COMMENTLINE= 127
+            FILEIDENT= 121,
+            INTEGER = 122,
+            DOUBLE  = 123,
+            STRING  = 124,
+            EOI     = 125,
+            EOF     = 126,
+            WHITESPACE= 127,
+            COMMENTLINE= 128
     }
 
     public class Token

@@ -35,6 +35,9 @@ namespace kOS.Function
         {
             string fileName = shared.Cpu.PopValue(true).ToString();
 
+            // If no filename extension, then give it one:
+            fileName = PersistenceUtilities.CookedFilename(fileName, Volume.KERBOSCRIPT_EXTENSION);
+            
             if (shared.VolumeMgr != null)
             {
                 Volume vol = shared.VolumeMgr.CurrentVolume;
