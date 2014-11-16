@@ -90,17 +90,20 @@ namespace kOS
                         }
                     }
 
-                    string textLine = GetSourceLine(thisOpcode.SourceName, thisOpcode.SourceLine);
+                    string textLine = (thisOpcode is OpcodeEOF) ? "<<--EOF" : GetSourceLine(thisOpcode.SourceName, thisOpcode.SourceLine);
+                    
                     if (msg.Length == 0)
                         msg += "At ";
                     else
                         msg += "Called from ";
                     
-                    msg += BuildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine) + "\n";
-                    msg += textLine + "\n";
-                    if (thisOpcode.SourceColumn > 0)
+                    msg += (thisOpcode is OpcodeEOF) ? "interpreter" : BuildLocationString(thisOpcode.SourceName, thisOpcode.SourceLine);
+                    msg += "\n" + textLine + "\n";
+
+                    int useColumn = (thisOpcode is OpcodeEOF) ? 1 : thisOpcode.SourceColumn;
+                    if (useColumn > 0)
                     {
-                        int numPadSpaces = thisOpcode.SourceColumn-1;
+                        int numPadSpaces = useColumn-1;
                         if (numPadSpaces < 0)
                             numPadSpaces = 0;
                         msg += new String(' ', numPadSpaces) + "^" + "\n";
