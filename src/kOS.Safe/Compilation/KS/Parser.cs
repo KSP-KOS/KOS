@@ -1674,17 +1674,23 @@ namespace kOS.Safe.Compilation.KS
             Parseexpr(node);
 
             
-            tok = scanner.Scan(TokenType.TO);
-            n = node.CreateNode(tok, tok.ToString() );
-            node.Token.UpdateRange(tok);
-            node.Nodes.Add(n);
-            if (tok.Type != TokenType.TO) {
-                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.TO.ToString(), 0x1001, tok));
-                return;
-            }
+            tok = scanner.LookAhead(TokenType.TO);
+            if (tok.Type == TokenType.TO)
+            {
 
-            
-            Parseexpr(node);
+                
+                tok = scanner.Scan(TokenType.TO);
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.TO) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.TO.ToString(), 0x1001, tok));
+                    return;
+                }
+
+                
+                Parseexpr(node);
+            }
 
             
             tok = scanner.Scan(TokenType.EOI);

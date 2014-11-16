@@ -1772,8 +1772,18 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             VisitNode(node.Nodes[1]);
-            VisitNode(node.Nodes[3]);
-            string fileNameOut = node.Nodes[3].Token.Text;
+            if (node.Nodes.Count > 3)
+            {
+                // It has a "TO outputfile" clause:
+                VisitNode(node.Nodes[3]);
+            }
+            else
+            {
+                // It lacks a "TO outputfile" clause, so put a dummy string there for it to
+                // detect later during the "load()" function as a flag telling it to
+                // calculate the output name:
+                AddOpcode(new OpcodePush("-default-compile-out-"));
+            }
             AddOpcode(new OpcodeCall("load()"));
         }
 

@@ -125,15 +125,25 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            bool defaultOutput = false;
             string fileNameOut = null;
             object topStack = shared.Cpu.PopValue(true); // null if there's no output file (output file means compile, not run).
             if (topStack != null)
-                fileNameOut = PersistenceUtilities.CookedFilename(topStack.ToString(), Volume.KOS_MACHINELANGUAGE_EXTENSION);
+            {
+                string outputArg = topStack.ToString();
+                if (outputArg != null && outputArg.Equals("-default-compile-out-"))
+                    defaultOutput = true;
+                else
+                    fileNameOut = PersistenceUtilities.CookedFilename(outputArg, Volume.KOS_MACHINELANGUAGE_EXTENSION);
+            }
 
             string fileName = null;
-            topStack = shared.Cpu.PopValue(true); // null if there's no output file (output file means compile, not run).
+            topStack = shared.Cpu.PopValue(true);
             if (topStack != null)
                 fileName = PersistenceUtilities.CookedFilename(topStack.ToString(), Volume.KERBOSCRIPT_EXTENSION);
+            
+            if (defaultOutput)
+                fileNameOut = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + Volume.KOS_MACHINELANGUAGE_EXTENSION;
 
             if (fileName != null && fileNameOut != null && fileName == fileNameOut)
                 throw new Exception("Input and output filenames must differ.");
