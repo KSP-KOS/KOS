@@ -3,53 +3,40 @@ kOS Mod Changelog
 
 # v0.15
 
-** Major Changes this Release. **
-
-
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
----------------------------------------------------------
-    Before actual release, go through
-    here and change all the URL's in the
-    links to use KOS_DOC instead of
-    KOS_DOC_DEV!!
-    They currently point to _DEV so that it's possible to test the
-    links before the documention gets migrated.
-
-
 ## NEW FEATURES:
 
 Please follow the links to see the full information on the new features.
 
-* [Added new kOS GUI panel to the KSP Applauncher system](http://ksp-kos.github.io/KOS_DOC_DEV/summary_topics/applauncher_panel/index.html).  With this you can alter config values, and open/close terminals from one common panel.  Just click the little kOS logo button in either the editors (VAB/SPH) or in flight view.
+* [Added new kOS GUI panel to the KSP Applauncher system](http://ksp-kos.github.io/KOS_DOC/summary_topics/applauncher_panel/index.html).  With this you can alter config values, and open/close terminals from one common panel.  Just click the little kOS logo button in either the editors (VAB/SPH) or in flight view.
 
-* [Added pilot input to flight controls](http://ksp-kos.github.io/KOS_DOC_DEV/structure/control/index.html#pilot-commands) which lets you read/write the users control state, you can use this to set the exit behavior for the mainthrottle.
+* [Added pilot input to flight controls](http://ksp-kos.github.io/KOS_DOC/structure/control/index.html#pilot-commands) which lets you read/write the users control state, you can use this to set the exit behavior for the mainthrottle.
 
-* Several suffixes are now [methods that you can call](ksp-kos.github.io/KOS_DOC_DEV/#structure_methods) with arguments.
+* Several suffixes are now [methods that you can call](ksp-kos.github.io/KOS_DOC/#structure_methods) with arguments.
     * eg before to add to a list it was SET LIST:ADD TO "FOO". Now it would be LIST:ADD("FOO").
 
 * Suffix methods that perform an action do not need to be assigned to anything.  No more having to say *SET DUMMY TO MYLIST:CLEAR.*  You can now just say *MYLIST:CLEAR.* like it was a statement.
 
-* Added suffixes to OBT for [walking orbit conic patches](http://ksp-kos.github.io/KOS_DOC_DEV/structure/orbit/index.html)
+* Added suffixes to OBT for [walking orbit conic patches](http://ksp-kos.github.io/KOS_DOC/structure/orbit/index.html)
     * ORB:HASNEXTPATCH - A boolean that shows the presence of a future patch
     * ORB:NEXTPATCH - The next OBT patch 
 
 * Added better techniques for selecting the Part you want from a Vessel:
-  * Ability to give any part any name you like with the [new nametag feature](http://ksp-kos.github.io/KOS_DOC_DEV/summary_topics/nametag/index.html).
-  * [Directly querying a vessel for parts](http://ksp-kos.github.io/KOS_DOC_DEV/summary_topics/ship_parts_and_modules/index.html#parts), searching for [nametags](http://ksp-kos.github.io/KOS_DOC_DEV/summary_topics/nametag/index.html), or part names or part titles.
+  * Ability to give any part any name you like with the [new nametag feature](http://ksp-kos.github.io/KOS_DOC/summary_topics/nametag/index.html).
+  * [Directly querying a vessel for parts](http://ksp-kos.github.io/KOS_DOC/summary_topics/ship_parts_and_modules/index.html#parts), searching for [nametags](http://ksp-kos.github.io/KOS_DOC/summary_topics/nametag/index.html), or part names or part titles.
     * SHIP:PARTSDUBBED(string)
     * SHIP:PARTSNAMED(string)
     * SHIP:PARTSTAGGED(string)
     * SHIP:PARTSTITLED(string)
     * SHIP:PARTSINGROUP(string)
     * SHIP:MODULESNAMED(string)
-  * [Walking the parts Tree](http://ksp-kos.github.io/KOS_DOC_DEV/structure/part/index.html):
+  * [Walking the parts Tree](http://ksp-kos.github.io/KOS_DOC/structure/part/index.html):
     * PART:CHILDREN - A ListValue of parts that are descendant from the current part
     * PART:PARENT - A PART that is the ancestor of the current part
     * PART:HASPARENT - A boolean that shows the presence of a Parent PART
     * SHIP:ROOTPART - The first part of a ship.  The start of the tree of parts.  identical to SHIP:PARTS[0].
   * *SET MyList TO SHIP:PARTS.* now does the same thing as *LIST PARTS IN MyList.*
 
-* A [new system lets you access the PartModules](http://ksp-kos.github.io/KOS_DOC_DEV/structure/partmodule/index.html) that the stock game and modders put on the various parts.  Through this, you now have the ability to manipulate a lot of the things that are on the rightclick menus of parts:
+* A [new system lets you access the PartModules](http://ksp-kos.github.io/KOS_DOC/structure/partmodule/index.html) that the stock game and modders put on the various parts.  Through this, you now have the ability to manipulate a lot of the things that are on the rightclick menus of parts:
   * PART Suffixes:
     * GETMODULE(string)
     * ALLMODULES.
@@ -60,7 +47,7 @@ Please follow the links to see the full information on the new features.
     * DOEVENT(event_name) - "presses a button" on the rightclick part menu.
     * Several others..
 
-* [Lists are now saner to work with](http://ksp-kos.github.io/KOS_DOC_DEV/structure/list/index.html) with no longer needing to use weird side effects to get things done, now that there's proper methods available:
+* [Lists are now saner to work with](http://ksp-kos.github.io/KOS_DOC/structure/list/index.html) with no longer needing to use weird side effects to get things done, now that there's proper methods available:
   * :ADD has changed:
     * Old Way: *SET MyList:ADD TO NewVal.*
     * New Way: *MyList:ADD(NewVal).*
@@ -75,9 +62,9 @@ Please follow the links to see the full information on the new features.
 
 * Added SHIP:AVAILABLETHRUST suffix. A sum of all of the ship's thrust that respects thrust limiters
 
-* Added a [new experimental COMPILE command](http://ksp-kos.github.io/KOS_DOC_DEV/command/file/index.html#compile-1-to-2), for making smaller executable-only programs to put on your probes without punishing you for writing legible code with comments and indenting.
+* Added a [new experimental COMPILE command](http://ksp-kos.github.io/KOS_DOC/command/file/index.html#compile-1-to-2), for making smaller executable-only programs to put on your probes without punishing you for writing legible code with comments and indenting.
 
-* [Filename convention changes](http://ksp-kos.github.io/KOS_DOC_DEV/command/file/index.html#volume-and-filename-arguments):
+* [Filename convention changes](http://ksp-kos.github.io/KOS_DOC/command/file/index.html#volume-and-filename-arguments):
   * Commands that deal with filenames will now allow any arbitrary expressions as the filename, except for the RUN command.
   * *Exception*: The above does NOT apply to the ```RUN``` command.  The run command requires that the filenames are known at compile time, and it cannot allow arbitrary expressions evaluated later at runtime.
   * Program files are now called *.ks instead of *.txt.  When you first run the new version, it will give you an option to rename your files to the new name for you as they are moved to the new location.
