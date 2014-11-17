@@ -13,7 +13,6 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-
             shared.BindingMgr.AddGetter("ALT_APOAPSIS", () => shared.Vessel.orbit.ApA);
             shared.BindingMgr.AddGetter("ALT_PERIAPSIS", () => shared.Vessel.orbit.PeA);
             shared.BindingMgr.AddGetter("ALT_RADAR", () => Convert.ToDouble(shared.Vessel.heightFromTerrain > 0 ? Mathf.Min(shared.Vessel.heightFromTerrain, (float)shared.Vessel.altitude) : (float)shared.Vessel.altitude));

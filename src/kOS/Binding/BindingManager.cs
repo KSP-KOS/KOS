@@ -10,12 +10,13 @@ namespace kOS.Binding
     {
         private readonly SharedObjects shared;
         private readonly List<Binding> bindings = new List<Binding>();
-        private readonly Dictionary<string, BoundVariable> vars = new Dictionary<string, BoundVariable>();
+        private readonly Dictionary<string, BoundVariable> variables;
         private FlightControlManager flightControl;
 
 
         public BindingManager(SharedObjects shared)
         {
+            variables = new Dictionary<string, BoundVariable>(StringComparer.OrdinalIgnoreCase);
             this.shared = shared;
             this.shared.BindingMgr = this;
         }
@@ -26,7 +27,7 @@ namespace kOS.Binding
             contexts[0] = "ksp";
 
             bindings.Clear();
-            vars.Clear();
+            variables.Clear();
             flightControl = null;
 
             foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
@@ -50,9 +51,9 @@ namespace kOS.Binding
         public void AddBoundVariable(string name, BindingGetDlg getDelegate, BindingSetDlg setDelegate)
         {
             BoundVariable variable;
-            if (vars.ContainsKey(name))
+            if (variables.ContainsKey(name))
             {
-                variable = vars[name];
+                variable = variables[name];
             }
             else
             {
@@ -60,7 +61,7 @@ namespace kOS.Binding
                     {
                         Name = name, 
                     };
-                vars.Add(name, variable);
+                variables.Add(name, variable);
                 shared.Cpu.AddVariable(variable, name);
             }
 
@@ -90,7 +91,7 @@ namespace kOS.Binding
             }
 
             // clear bound variables values
-            foreach (var variable in vars.Values)
+            foreach (var variable in variables.Values)
             {
                 variable.ClearValue();
             }
@@ -99,7 +100,7 @@ namespace kOS.Binding
         public void PostUpdate()
         {
             // save bound variables values
-            foreach (BoundVariable variable in vars.Values)
+            foreach (BoundVariable variable in variables.Values)
             {
                 variable.SaveValue();
             }
