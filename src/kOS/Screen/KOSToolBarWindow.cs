@@ -72,7 +72,7 @@ namespace kOS.Screen
                                                                                 // This first value is a safety in case we don't do that
                                                                                 // properly.  We don't want to "restore" the color to null.
         /// <summary>Our highlight color for kOS panel's part highlighting.</summary>
-        private Color ourPartHighlightColor = new Color(1.0f, 0.5f, 1.0f); // Bright purple.
+        private readonly Color ourPartHighlightColor = new Color(1.0f, 0.5f, 1.0f); // Bright purple.
         
         // Some of these are for just debug messages, and others are
         // necessary for tracking things to make it not spawn too many
@@ -591,7 +591,7 @@ namespace kOS.Screen
         {
             GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
             // theSkin won't actually be used directly anymore because GetSkinCopy is missing a few key
-            // fields.  Isntead we'll have to set all the GUIStyle's manually everywhere - ugly.
+            // fields.  Instead we'll have to set all the GUIStyle's manually everywhere - ugly.
             
             // Now alter the parts of theSkin that we want to change:
             //

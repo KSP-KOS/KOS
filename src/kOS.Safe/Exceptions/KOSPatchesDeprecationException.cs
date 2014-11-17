@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace kOS.Safe.Exceptions
+﻿namespace kOS.Safe.Exceptions
 {
     public class KOSPatchesDeprecationException : KOSDeprecationException
     {
