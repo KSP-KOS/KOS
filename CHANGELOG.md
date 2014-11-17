@@ -1,6 +1,13 @@
 kOS Mod Changelog
 =================
 
+# v0.15.1
+
+BugFixes:
+* All Lists have suffixes again
+* in the config panel, IPU no longer gets stuck at 50
+
+
 # v0.15
 
 ## NEW FEATURES:
