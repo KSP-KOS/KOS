@@ -13,7 +13,7 @@ namespace kOS.Safe.Persistence
                 filename = value;
 
                 var fileParts = filename.Split('.');
-                Extension = fileParts.Count() > 1 ? filename.Split('.').Last() : string.Empty;
+                Extension = fileParts.Count() > 1 ? fileParts.Last() : string.Empty;
             }
         }
 
@@ -80,11 +80,11 @@ namespace kOS.Safe.Persistence
         {
             switch (Category)
             {
-                case FileCategory.OTHER:
                 case FileCategory.TOOSHORT:
                     return 0;
                 case FileCategory.KSM:
                     return BinaryContent.Length;
+                case FileCategory.OTHER:
                 case FileCategory.ASCII:
                 case FileCategory.KERBOSCRIPT:
                     return StringContent.Length;

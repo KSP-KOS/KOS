@@ -14,7 +14,7 @@ namespace kOS.Safe.Encapsulation
                 name = value;
 
                 var fileParts = name.Split('.');
-                Extension = fileParts.Count() > 1 ? name.Split('.').Last() : string.Empty;
+                Extension = fileParts.Count() > 1 ? fileParts.Last() : string.Empty;
             }
         }
 
