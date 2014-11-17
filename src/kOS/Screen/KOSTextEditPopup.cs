@@ -250,7 +250,6 @@ namespace kOS.Screen
         {
             me.volume = me.loadingVolume;
             me.fileName = me.loadingFileName;
-            //CHRIS: Hack Alert!
             ProgramFile file = me.volume.GetByName( me.fileName );
             if ( file == null )
             {

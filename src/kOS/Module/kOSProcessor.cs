@@ -426,7 +426,7 @@ namespace kOS.Module
                 }
                 base.OnLoad(node);
             }
-            catch (Exception ex) //Chris: Intentional Pokemon, if exceptions get out of here it can kill the craft
+            catch (Exception ex) //Intentional Pokemon, if exceptions get out of here it can kill the craft
             {
                 Debug.Log("kOS: ONLOAD Exception: " + ex.TargetSite);
                 Debug.LogException(ex);
@@ -451,7 +451,7 @@ namespace kOS.Module
 
                 base.OnSave(node);
             }
-            catch (Exception ex) //Chris: Intentional Pokemon, if exceptions get out of here it can kill the craft
+            catch (Exception ex) //Intentional Pokemon, if exceptions get out of here it can kill the craft
             {
                 Debug.Log("kOS: ONSAVE Exception: " + ex.TargetSite);
                 Debug.LogException(ex);

@@ -112,7 +112,6 @@ namespace kOS.Screen
 
             try
             {
-                Debug.Logger.Log("eraseme: trying to execute the following:\n{"+commandText+"}\n");
                 List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter");
                 if (commandParts == null) return;
 

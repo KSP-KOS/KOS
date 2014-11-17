@@ -110,10 +110,8 @@ namespace kOS.Safe.Persistence
                         throw new ArgumentOutOfRangeException();
                 }
                 var fileName = string.Format("{0}{1}", ArchiveFolder, PersistenceUtilities.CookedFilename(file.Filename, fileExtension, true));
-                Debug.Logger.Log("Archive: eraseme: trying to log to a file called \""+fileName+"\".");
                 using (var outfile = new BinaryWriter(File.Open(fileName, FileMode.Create)))
                 {
-                    Debug.Logger.Log("Archive: eraseme:   about to run Write(\""+fileBody+"\").");
                     outfile.Write(fileBody);
                 }
             }
@@ -132,12 +130,10 @@ namespace kOS.Safe.Persistence
             {
                 Debug.Logger.Log("Archive: Deleting File Name: " + name);
                 var fullPath = FileSearch(name);
-                Debug.Logger.Log("Archive:  eraseme: Deleting full path name: " + (fullPath==null ? "<null>" : fullPath.FullName));
                 if (fullPath == null)
                 {
                     return false;
                 }
-                Debug.Logger.Log("Archive:  eraseme: Calling base delete full path name.");
                 base.DeleteByName(name);
                 File.Delete(fullPath.FullName);
                 return true;

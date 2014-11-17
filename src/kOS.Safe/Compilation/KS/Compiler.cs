@@ -603,11 +603,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.deploy_stmt:
                     VisitDeployStatement(node);
                     break;
-                // eraseme: Remove this after verifying it works without it:
-                // ----------------------------
-                // case TokenType.filevol_name:
-                //     VisitFileVol(node);
-                //    break;
                 case TokenType.arglist:
                     VisitArgList(node);
                     break;
@@ -910,15 +905,6 @@ namespace kOS.Safe.Compilation.KS
             return functionName;
         }
 
-        /* eraseme - Remove this after verifying it works without it:
-         * ---------
-        private void VisitFileVol(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            VisitNode(node.Nodes[0]);
-        }
-        *
-        */
         private void VisitArgList(ParseNode node)
         {
             NodeStartHousekeeping(node);
