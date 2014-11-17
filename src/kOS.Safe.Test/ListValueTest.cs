@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using kOS.Safe.Encapsulation.Suffixes;
 using NUnit.Framework;
 using kOS.Safe.Encapsulation;
 
@@ -182,6 +184,23 @@ namespace kOS.Safe.Test
             return list;
         }
         
+        [Test]
+        public void EachListConstructor()
+        {
+            var baseList = new ListValue();
+            var baseDelegate = ((NoArgsSuffix<int>.Del<int>)baseList.GetSuffix("LENGTH"));
+            Assert.AreEqual(0, baseDelegate.Invoke());
+
+            var castList = ListValue.CreateList(new List<object>());
+            var castDelegate = ((NoArgsSuffix<int>.Del<int>)castList.GetSuffix("LENGTH"));
+            Assert.AreEqual(0, castDelegate.Invoke());
+
+            var copyDelegate = (NoArgsSuffix<ListValue>.Del<ListValue>)baseList.GetSuffix("COPY");
+            var copyList = copyDelegate.Invoke();
+
+            Assert.AreEqual(0, ((NoArgsSuffix<int>.Del<int>)copyList.GetSuffix("LENGTH")).Invoke());
+        }
+
         [Test]
         public void CanShallowToString()
         {

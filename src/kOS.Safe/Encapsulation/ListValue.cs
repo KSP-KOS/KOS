@@ -28,6 +28,7 @@ namespace kOS.Safe.Encapsulation
         private ListValue(IList<object> list)
         {
             this.list = list;
+            ListInitializeSuffixes();
         }
 
         // This looks useful.  Why is it private?
