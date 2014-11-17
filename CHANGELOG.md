@@ -106,7 +106,7 @@ Please follow the links to see the full information on the new features.
 * [Compiler should throw exception on trying to put a WAIT in a trigger.](https://github.com/KSP-KOS/KOS/issues/254)
 
 
-~~~~
+- - -
 
 
 ## V0.14.2
