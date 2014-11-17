@@ -296,7 +296,7 @@ namespace kOS.Screen
         {
             horizontalSectionCount = 0;
             verticalSectionCount = 0;
-            
+
             if (!onGUICalledThisInstance) // I want proof it was called, but without spamming the log:
             {
                 Debug.Log("KOSToolBarWindow: PROOF: OnGUI() was called at least once on instance number " + myInstanceNum);
@@ -311,7 +311,7 @@ namespace kOS.Screen
                 onGUIWasOpenThisInstance = true;
             }
             
-            GUI.skin = panelSkin;
+            GUI.skin = HighLogic.Skin;
 
             windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
 
@@ -342,13 +342,14 @@ namespace kOS.Screen
 
                 if (key.Value is bool)
                 {
-                    key.Value = GUILayout.Toggle((bool)key.Value,"");
+                    key.Value = GUILayout.Toggle((bool)key.Value,"", panelSkin.toggle);
                 }
                 else if (key.Value is int)
                 {
-                    string newStringVal = GUILayout.TextField(key.Value.ToString(), 6, GUILayout.MinWidth(60));
+                    string fieldValue = key.Value.ToString();
+                    fieldValue  = GUILayout.TextField(fieldValue, 6, panelSkin.textField, GUILayout.MinWidth(60));
                     int newInt;
-                    if (int.TryParse(newStringVal, out newInt))
+                    if (int.TryParse(fieldValue, out newInt))
                         key.Value = newInt;
                     // else it reverts to what it was and wipes the typing if you don't assign it to anything.
                 }
@@ -357,7 +358,7 @@ namespace kOS.Screen
                     GUILayout.Label(key.Alias + " is a new type this dialog doesn't support.  Contact kOS devs.");
                 }
                 GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
-                GUILayout.Label(new GUIContent(labelText,toolTipText));
+                GUILayout.Label(new GUIContent(labelText,toolTipText), panelSkin.label);
                 GUILayout.EndHorizontal();
 
                 CountEndHorizontal();
@@ -376,7 +377,7 @@ namespace kOS.Screen
         
         private void DrawActiveCPUsOnPanel()
         {
-            scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.MinWidth(260), GUILayout.Height(height-60));
+            scrollPos = GUILayout.BeginScrollView(scrollPos, panelSkin.scrollView, GUILayout.MinWidth(260), GUILayout.Height(height-60));
             
             CountBeginVertical();
             Vessel prevVessel = null;
@@ -401,7 +402,7 @@ namespace kOS.Screen
                                 "-------------------------\n" +
                                 "There are either no kOS CPU's\n" +
                                 "in this universe, or there are\n " +
-                                "but they are all \"on rails\"." );
+                                "but they are all \"on rails\".", panelSkin.label );
             CountEndVertical();
 
             GUILayout.EndScrollView();
@@ -446,7 +447,8 @@ namespace kOS.Screen
 
             if (GUILayout.Button((processorModule.WindowIsOpen() ? 
                                   new GUIContent(terminalOpenIconTexture, "Click to close terminal window.") :
-                                  new GUIContent(terminalClosedIconTexture, "Click to open terminal window."))))
+                                  new GUIContent(terminalClosedIconTexture, "Click to open terminal window.")),
+                                  panelSkin.button))
                 processorModule.ToggleWindow();
 
             CountEndHorizontal();
@@ -588,6 +590,8 @@ namespace kOS.Screen
         private GUISkin BuildPanelSkin()
         {
             GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
+            // theSkin won't actually be used directly anymore because GetSkinCopy is missing a few key
+            // fields.  Isntead we'll have to set all the GUIStyle's manually everywhere - ugly.
             
             // Now alter the parts of theSkin that we want to change:
             //
