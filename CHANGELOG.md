@@ -22,9 +22,10 @@ Please follow the links to see the full information on the new features.
 
 * [Added new kOS GUI panel to the KSP Applauncher system](http://ksp-kos.github.io/KOS_DOC_DEV/summary_topics/applauncher_panel/index.html).  With this you can alter config values, and open/close terminals from one common panel.  Just click the little kOS logo button in either the editors (VAB/SPH) or in flight view.
 
-* [Added PILOTMAINTHROTTLE](http://ksp-kos.github.io/KOS_DOC_DEV/structure/control/index.html#pilot-commands) which lets you read/write the users throttle, you can use this to set the exit behavior for the throttle.
+* [Added pilot input to flight controls](http://ksp-kos.github.io/KOS_DOC_DEV/structure/control/index.html#pilot-commands) which lets you read/write the users control state, you can use this to set the exit behavior for the mainthrottle.
 
 * Several suffixes are now [methods that you can call](ksp-kos.github.io/KOS_DOC_DEV/#structure_methods) with arguments.
+    * eg before to add to a list it was SET LIST:ADD TO "FOO". Now it would be LIST:ADD("FOO").
 
 * Suffix methods that perform an action do not need to be assigned to anything.  No more having to say *SET DUMMY TO MYLIST:CLEAR.*  You can now just say *MYLIST:CLEAR.* like it was a statement.
 
