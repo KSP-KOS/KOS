@@ -23,7 +23,7 @@ namespace kOS.Safe.Persistence
             get
             {
                 Debug.Logger.SuperVerbose("Volume: Get-FileList: " + files.Count);
-                return files.ToDictionary(pair => pair.Key, pair => pair.Value);
+                return files.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
             }
         }
         public string Name { get; set; }
@@ -36,7 +36,7 @@ namespace kOS.Safe.Persistence
             Renameable = true;
             Capacity = -1;
             Name = "";
-            files = new Dictionary<string, ProgramFile>(StringComparer.CurrentCultureIgnoreCase);
+            files = new Dictionary<string, ProgramFile>(StringComparer.OrdinalIgnoreCase);
             InitializeVolumeSuffixes();
         }
 
@@ -129,25 +129,24 @@ namespace kOS.Safe.Persistence
             SaveFile(file);
         }
 
-        public virtual void Add(ProgramFile file)
+        public virtual void Add(ProgramFile file, bool withReplacement = false)
         {
             Debug.Logger.SuperVerbose("Volume: Add: " + file.Filename);
-            files.Add(file.Filename.ToLower(), file);
+            if (withReplacement)
+            {
+                files[file.Filename] = file;
+            }
+            else
+            {
+                files.Add(file.Filename, file);
+            }
         }
 
         public virtual bool SaveFile(ProgramFile file)
         {
             Debug.Logger.SuperVerbose("Volume: SaveFile: " + file.Filename);
             
-            //TODO:Chris eraseme
-            //  |
-            //  |
-            //  |
-            //  `---- Actually I got it working with this DeleteByName in place, and I think it became integral to the design - Steven
-            //
-            DeleteByName(file.Filename);
-            
-            Add(file);
+            Add(file, true);
             return true;
         }
         
@@ -176,7 +175,7 @@ namespace kOS.Safe.Persistence
         public virtual List<FileInfo> GetFileList()
         {
             Debug.Logger.SuperVerbose("Volume: GetFileList: " + files.Count);
-            return files.Values.Select(file => new FileInfo(file.Filename, file.GetSize(), file.Category)).ToList();
+            return files.Values.Select(file => new FileInfo(file.Filename, file.GetSize())).ToList();
         }
 
         public virtual float RequiredPower()

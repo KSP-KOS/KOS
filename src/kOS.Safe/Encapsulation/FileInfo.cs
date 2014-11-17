@@ -1,43 +1,36 @@
-using System;
-using kOS.Safe.Persistence;
+using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
     public class FileInfo : Structure
     {
-        public string Name { get; private set; }
-        public int Size { get; private set; }
-        public FileCategory Category { get; private set; }
+        private string name;
 
-        public FileInfo(string name, int size, FileCategory category)
+        public string Name
+        {
+            get { return name; }
+            private set
+            {
+                name = value;
+
+                var fileParts = name.Split('.');
+                Extension = fileParts.Count() > 1 ? name.Split('.').Last() : string.Empty;
+            }
+        }
+
+        public int Size { get; private set; }
+        public string Extension { get; private set; }
+
+        public FileInfo(string name, int size)
         {
             Name = name;
             Size = size;
-            Category = category;
         }
 
         public FileInfo(System.IO.FileInfo fileInfo)
         {
             Name = fileInfo.Name;
             Size = (int) fileInfo.Length;
-            switch (fileInfo.Extension)
-            {
-                // This isn't really quite correct usage of the FileCategory system,
-                // which was meant to be about the content inside the files, not what
-                // the filename extension claims it is.
-                case Volume.TEXT_EXTENSION:
-                    Category = FileCategory.ASCII;
-                    break;
-                case Volume.KERBOSCRIPT_EXTENSION:
-                    Category = FileCategory.ASCII;
-                    break;
-                case Volume.KOS_MACHINELANGUAGE_EXTENSION:
-                    Category = FileCategory.KSM;
-                    break;
-                default:
-                    Category = FileCategory.OTHER;
-                    break;
-            }
         }
 
         public override object GetSuffix(string suffixName)
@@ -49,7 +42,7 @@ namespace kOS.Safe.Encapsulation
                 case "SIZE":
                     return Size;
                 case "FILETYPE":
-                    return Category;
+                    return Extension;
             }
 
             return base.GetSuffix(suffixName);

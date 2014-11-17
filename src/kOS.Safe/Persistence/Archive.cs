@@ -57,14 +57,7 @@ namespace kOS.Safe.Persistence
                     if (retFile.Category == FileCategory.ASCII || retFile.Category == FileCategory.KERBOSCRIPT)
                         retFile.StringContent = retFile.StringContent.Replace("\r\n", "\n");
 
-                    //TODO:Chris eraseme
-                    //  |
-                    //  |
-                    //  `--- Actually I seem to have gotten it working such that it expects this DeleteByName to be here now and depends on it - steven
-                    //
-                    base.DeleteByName(name);
-
-                    base.Add(retFile);
+                    base.Add(retFile, true);
 
                     return retFile;
                 }

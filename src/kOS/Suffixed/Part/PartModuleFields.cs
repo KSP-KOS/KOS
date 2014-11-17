@@ -312,8 +312,7 @@ namespace kOS.Suffixed.Part
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public bool HasAction(string actionName)
         {
-            return partModule.Actions.
-                Any(kspAction => String.Equals(kspAction.guiName, actionName, StringComparison.CurrentCultureIgnoreCase));
+            return partModule.Actions.Any(kspAction => String.Equals(kspAction.guiName, actionName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -322,16 +321,10 @@ namespace kOS.Suffixed.Part
         /// <param name="cookedGuiName">The event's case-insensitive guiname.</param>
         /// <returns></returns>
         private BaseAction GetAction(string cookedGuiName)
-        {            
-            foreach (BaseAction kspAction in partModule.Actions)
-            {
-                if (!String.Equals(kspAction.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase)) continue;
-                Debug.Log("eraseme: yes");
-                return kspAction;
-            }
-            return null;
+        {
+            return partModule.Actions.FirstOrDefault(kspAction => String.Equals(kspAction.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
-        
+
         /// <summary>
         /// Build a list of all the KSP things (fields, events, actions) that
         /// this class will support as a suffix on this instance.

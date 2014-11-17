@@ -1,15 +1,31 @@
+using System;
+using System.Linq;
+
 namespace kOS.Safe.Persistence
 {
     public class ProgramFile
     {
-        public string Filename { get; set; }
+        public string Filename
+        {
+            get { return filename; }
+            set
+            {
+                filename = value;
+
+                var fileParts = filename.Split('.');
+                Extension = fileParts.Count() > 1 ? filename.Split('.').Last() : string.Empty;
+            }
+        }
+
         public FileCategory Category { get; private set; }
+        public string Extension { get; private set; }
+
         public string StringContent
         {
             get
             {
                 if (Category != FileCategory.ASCII && Category != FileCategory.KERBOSCRIPT && Category != FileCategory.TOOSHORT)
-                    throw new KOSFileException("File " + Filename + " is " + Category.ToString() + ", not ASCII.  Should use BinaryContent instead.");
+                    throw new KOSFileException(string.Format("File {0} is {1}, not ASCII.  Should use BinaryContent instead.", Filename, Category));
                 return stringContent;
             }
             set
@@ -25,7 +41,7 @@ namespace kOS.Safe.Persistence
             get
             {
                 if (Category == FileCategory.ASCII || Category == FileCategory.KERBOSCRIPT && Category != FileCategory.TOOSHORT)
-                    throw new KOSFileException("File " + Filename + " is " + Category.ToString() + ", not Binary. Should use StringContent instead.");
+                    throw new KOSFileException(string.Format("File {0} is {1}, not Binary. Should use StringContent instead.", Filename, Category));
                 return binaryContent;
             }
             set
@@ -35,6 +51,7 @@ namespace kOS.Safe.Persistence
             }
         }
         private byte[] binaryContent;
+        private string filename;
 
         public ProgramFile(ProgramFile copy)
         {
@@ -61,7 +78,20 @@ namespace kOS.Safe.Persistence
 
         public int GetSize()
         {
-            return Category == FileCategory.KSM ? BinaryContent.Length : StringContent.Length;
+            switch (Category)
+            {
+                case FileCategory.OTHER:
+                case FileCategory.TOOSHORT:
+                    return 0;
+                case FileCategory.KSM:
+                    return BinaryContent.Length;
+                case FileCategory.ASCII:
+                case FileCategory.KERBOSCRIPT:
+                    return StringContent.Length;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
         }
     }
 }
