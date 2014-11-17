@@ -16,5 +16,19 @@
             "file"       : "GameData/kOS",
             "install_to" : "GameData"
         }
-    ]
+    ],
+	"recommends": [
+		{
+			"name": "ModuleManager",
+			"min_version": "2.3.1",
+			"comment": "Earlier versions of MM have forward compatibility problems, according to the MM release notes."
+		}
+	],
+	"suggests": [
+		{
+			"name": "RemoteTech",
+			"min_version": "1.5.1",
+			"comment": "RT gives incentive to having local control of craft, even unmanned ones"
+		}
+	],
 }
