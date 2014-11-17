@@ -94,7 +94,7 @@ namespace kOS.Function
                 }
                 else
                 {
-                    throw new Exception("Volume not found");
+                    throw new KOSFileException("Volume not found");
                 }
             }
             else
@@ -126,10 +126,12 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             bool defaultOutput = false;
+            bool justCompiling = false; // is this load() happening to compile, or to run?
             string fileNameOut = null;
             object topStack = shared.Cpu.PopValue(true); // null if there's no output file (output file means compile, not run).
             if (topStack != null)
             {
+                justCompiling = true;
                 string outputArg = topStack.ToString();
                 if (outputArg != null && outputArg.Equals("-default-compile-out-"))
                     defaultOutput = true;
@@ -140,19 +142,25 @@ namespace kOS.Function
             string fileName = null;
             topStack = shared.Cpu.PopValue(true);
             if (topStack != null)
-                fileName = PersistenceUtilities.CookedFilename(topStack.ToString(), Volume.KERBOSCRIPT_EXTENSION);
+                fileName = topStack.ToString();
             
+            if (fileName == null)
+                throw new KOSFileException("No filename to load was given.");
+            
+            ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName, (! justCompiling)); // if running, look for KSM first.  If compiling look for KS first.
+            fileName = file.Filename; // just in case GetByName picked an extension that changed it.
+
+            // filename is now guaranteed to have an extension.  To make default output name, replace the extension with KSM:
             if (defaultOutput)
                 fileNameOut = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + Volume.KOS_MACHINELANGUAGE_EXTENSION;
 
-            if (fileName != null && fileNameOut != null && fileName == fileNameOut)
-                throw new Exception("Input and output filenames must differ.");
+            if (fileNameOut != null && fileName == fileNameOut)
+                throw new KOSFileException("Input and output filenames must differ.");
 
             if (shared.VolumeMgr == null) return;
-            if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
+            if (shared.VolumeMgr.CurrentVolume == null) throw new KOSFileException("Volume not found");
 
-            ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName);
-            if (file == null) throw new Exception(string.Format("File '{0}' not found", fileName));
+            if (file == null) throw new KOSFileException(string.Format("File '{0}' not found", fileName));
 
             if (shared.ScriptHandler != null)
             {
@@ -160,7 +168,7 @@ namespace kOS.Function
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
                 // add this program to the address space of the parent program,
                 // or to a file to save:
-                if (fileNameOut != null)
+                if (justCompiling)
                 {
                     List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, String.Empty, options);
                     shared.VolumeMgr.CurrentVolume.SaveObjectFile(fileNameOut, compileParts);
@@ -221,7 +229,7 @@ namespace kOS.Function
                 }
                 else
                 {
-                    throw new Exception("Volume not found");
+                    throw new KOSFileException("Volume not found");
                 }
             }
         }

@@ -47,7 +47,7 @@ namespace kOS.Safe.Persistence
                 {
                     byte[] fileBody = ProcessBinaryReader(infile);
 
-                    var retFile = new ProgramFile(name);
+                    var retFile = new ProgramFile(fileInfo.Name);
                     FileCategory whatKind = PersistenceUtilities.IdentifyCategory(fileBody);
                     if (whatKind == FileCategory.KSM)
                         retFile.BinaryContent = fileBody;

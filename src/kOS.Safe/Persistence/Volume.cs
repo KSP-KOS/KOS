@@ -169,7 +169,14 @@ namespace kOS.Safe.Persistence
         public virtual List<FileInfo> GetFileList()
         {
             Debug.Logger.SuperVerbose("Volume: GetFileList: " + files.Count);
-            return files.Values.Select(file => new FileInfo(file.Filename, file.GetSize())).ToList();
+            List<FileInfo> returnList = files.Values.Select(file => new FileInfo(file.Filename, file.GetSize())).ToList();
+            returnList.Sort(FileInfoComparer); // make sure files will print in sorted form.
+            return returnList;
+        }
+        
+        private int FileInfoComparer(FileInfo a, FileInfo b)
+        {
+            return String.Compare(a.Name,b.Name);
         }
 
         public virtual float RequiredPower()
@@ -184,7 +191,7 @@ namespace kOS.Safe.Persistence
         {
             Debug.Logger.SuperVerbose("Volume: FileSearch: " + files.Count);
             var kerboscriptFilename = PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true);
-            var kosMlFilename = PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true);
+            var kosMlFilename = PersistenceUtilities.CookedFilename(name, KOS_MACHINELANGUAGE_EXTENSION, true);
 
             ProgramFile kerboscriptFile;
             ProgramFile kosMlFile;
