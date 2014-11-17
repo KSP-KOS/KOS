@@ -58,34 +58,28 @@ namespace kOS.Safe.Persistence
         /// <returns>the file</returns>
         public virtual ProgramFile GetByName(string name, bool ksmDefault = false )
         {
-            // TODO for @erendrake:
-            // ----------------------
-            // ksmDefault is currently unused here because local volumes don't
-            // seem to have analogies to what's in Archive volumes.  The archive
-            // class has a FileSearch() method that does the logic needed to
-            // use the ksmDefault argument, and the Volume class doesn't.
-            // That's why I didn't implement this but just left that argument in
-            // there as a stub, so you can fill this out when the Volume class 
-            // gets some of that logic put back into it again.
-            
             Debug.Logger.SuperVerbose("Volume: GetByName: " + name);
-            name = name.ToLower();
-            if (files.ContainsKey(name))
+            var fullPath = FileSearch(name, ksmDefault);
+            if (fullPath == null)
             {
-                return files[name];
+                return null;
             }
-            return null;
+
+            return files.ContainsKey(fullPath.Filename) ? files[fullPath.Filename] : null;
         }
 
         public virtual bool DeleteByName(string name)
         {
             Debug.Logger.SuperVerbose("Volume: DeleteByName: " + name);
-            name = name.ToLower();
-            Debug.Logger.SuperVerbose("Volume:  eraseme:  DeleteByName modified name: " + name);
-            if (files.ContainsKey(name))
+
+            var fullPath = FileSearch(name);
+            if (fullPath == null)
             {
-                Debug.Logger.SuperVerbose("Volume:  eraseme:  will remove name.");
-                files.Remove(name);
+                return false;
+            }
+            if (files.ContainsKey(fullPath.Filename))
+            {
+                files.Remove(fullPath.Filename);
                 return true;
             }
             return false;
@@ -184,6 +178,31 @@ namespace kOS.Safe.Persistence
             var powerRequired = BASE_POWER * multiplier;
 
             return powerRequired;
+        }
+
+        private ProgramFile FileSearch(string name, bool ksmDefault = false)
+        {
+            Debug.Logger.SuperVerbose("Volume: FileSearch: " + files.Count);
+            var kerboscriptFilename = string.Format("{0}.{1}", name, KERBOSCRIPT_EXTENSION);
+            var kosMlFilename = string.Format("{0}.{1}", name, KOS_MACHINELANGUAGE_EXTENSION);
+
+            ProgramFile kerboscriptFile;
+            ProgramFile kosMlFile;
+            bool kerboscriptFileExists = files.TryGetValue(kerboscriptFilename, out kerboscriptFile);
+            bool kosMlFileExists = files.TryGetValue(kosMlFilename, out kosMlFile);
+            if (kerboscriptFileExists && kosMlFileExists)
+            {
+                return ksmDefault ? kosMlFile : kerboscriptFile;
+            }
+            if (kerboscriptFile != null)
+            {
+                return kerboscriptFile;
+            }
+            if (kosMlFile != null)
+            {
+                return kosMlFile;
+            }
+            return null;
         }
     }    
 }
