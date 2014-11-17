@@ -183,8 +183,8 @@ namespace kOS.Safe.Persistence
         private ProgramFile FileSearch(string name, bool ksmDefault = false)
         {
             Debug.Logger.SuperVerbose("Volume: FileSearch: " + files.Count);
-            var kerboscriptFilename = string.Format("{0}.{1}", name, KERBOSCRIPT_EXTENSION);
-            var kosMlFilename = string.Format("{0}.{1}", name, KOS_MACHINELANGUAGE_EXTENSION);
+            var kerboscriptFilename = PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true);
+            var kosMlFilename = PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true);
 
             ProgramFile kerboscriptFile;
             ProgramFile kosMlFile;
