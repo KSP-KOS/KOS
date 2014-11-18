@@ -53,7 +53,7 @@ namespace kOS.Suffixed.Part
                 if (String.Equals(mod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     Debug.Log("yes it does");
-                    return new PartModuleFields(mod,shared);
+                    return PartModuleFieldsFactory.Construct(mod,shared);
                 }
             }
             throw new KOSLookupFailException( "module", modName.ToUpper(), this );

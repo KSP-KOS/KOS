@@ -281,7 +281,7 @@ namespace kOS.Suffixed
                 .SelectMany( p => p.Modules.Cast<PartModule>()
                 .Where( pMod => String.Equals(pMod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase)));
 
-            return ListValue.CreateList(modules);
+            return PartModuleFieldsFactory.Construct(modules,Shared);
         }
         
         private ListValue GetPartsInGroup(string groupName)
@@ -367,7 +367,7 @@ namespace kOS.Suffixed
                 {
                     if (pm.Actions.Any(a => a.actionGroup.Equals(matchGroup)))
                     {
-                        kScriptParts.Add(new PartModuleFields(pm, Shared));
+                        kScriptParts.Add(PartModuleFieldsFactory.Construct(pm, Shared));
                     }
                 }
 
