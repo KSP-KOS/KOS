@@ -103,7 +103,7 @@ namespace kOS.Suffixed
             Vector surfVel;
             if (parent != null)
             {
-                Vector3d pos = GetPositionAtUT( timeStamp ).ToVector3D();
+                Vector3d pos = GetPositionAtUT( timeStamp );
                 surfVel = new Vector( orbVel - parent.getRFrmVel( pos + Shared.Vessel.findWorldCenterOfMass()) );
             }
             else

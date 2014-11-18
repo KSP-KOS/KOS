@@ -306,7 +306,7 @@ namespace kOS.Suffixed
             {
                 case "VEC":
                 case "VECTOR":
-                    Vector = vectorValue.ToVector3D();
+                    Vector = vectorValue;
                     RenderPointCoords();
                     return true;
                 case "SHOW":
@@ -318,7 +318,7 @@ namespace kOS.Suffixed
                     RenderColor();
                     return true;
                 case "START":
-                    Start = vectorValue.ToVector3D();
+                    Start = vectorValue;
                     RenderPointCoords();
                     return true;
                 case "SCALE":

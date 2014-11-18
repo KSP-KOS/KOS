@@ -60,7 +60,7 @@ namespace kOS.Suffixed
         override public Vector GetNorthVector()
         {
             CelestialBody parent = Body.referenceBody ?? Body;
-            return new Vector( Vector3d.Exclude(GetUpVector().ToVector3D(), parent.transform.up) );
+            return new Vector( Vector3d.Exclude(GetUpVector(), parent.transform.up) );
         }
 
         public BodyTarget(string name, SharedObjects shareObj) : this(VesselUtils.GetBodyByName(name),shareObj)

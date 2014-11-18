@@ -259,17 +259,6 @@ namespace kOS.Utilities
         }
 
         /// <summary>
-        /// Given a Vector3, construct a new Vector3D out of it.
-        /// By all rights SQUAD should have had this as a constructor in their Vector3d class.  I don't know why they didn't.
-        /// </summary>
-        /// <param name="convertFrom">The Vector3 to convert</param>
-        /// <returns>A Vector3d that has the same values as the Vector3 passed in.</returns>
-        public static Vector3d Vector3ToVector3d(Vector3 convertFrom)
-        {
-            return new Vector3d( convertFrom.x, convertFrom.y, convertFrom.z);
-        }
-
-        /// <summary>
         ///   Returns true if body a orbits body b, either directly or through
         ///   a grandparent chain.
         /// </summary>
