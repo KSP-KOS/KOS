@@ -83,11 +83,9 @@ namespace kOS.Suffixed.Part
 
         private Direction GetFacing(global::Part part)
         {
-            Vector3d up = part.vessel.upAxis;
-            var partVec = part.partTransform.forward;
-
-            var d = new Direction { Rotation = Quaternion.LookRotation(partVec, up) };
-            return d;
+            Vector3 partUp = part.transform.rotation * Vector3.up;
+            Vector3d partUpDoubles = new Vector3d(partUp.x, partUp.y, partUp.z);
+            return new Direction(partUpDoubles,false);
         }
 
         private void ControlFrom()
