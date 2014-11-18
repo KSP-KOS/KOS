@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using UnityEngine;
 
 namespace kOS.Suffixed.Part
 {
@@ -25,6 +26,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("TARGETABLE", new Suffix<bool>(() => true));
             AddSuffix("UNDOCK", new NoArgsSuffix(() => module.Undock()));
             AddSuffix("TARGET", new NoArgsSuffix(() => module.SetAsTarget()));
+            AddSuffix("PORTFACING", new NoArgsSuffix<Direction>(() => GetPortFacing()));
         }
 
         public override ITargetable Target
@@ -48,6 +50,18 @@ namespace kOS.Suffixed.Part
                 }
             }
             return toReturn;
+        }
+        
+        private Direction GetPortFacing()
+        {
+            // module.nodeTransform describes the transform representing the facing of
+            // the docking node as opposed to the facing of the part itself.  In the
+            // case of a docking port facing out the side of the part (the in-line
+            // docking node for example) they can differ.
+            //
+            Vector3 unityVector = module.nodeTransform.rotation * Vector3.forward;
+            Vector3d kspVector = new Vector3d(unityVector.x, unityVector.y, unityVector.z); // grr why didn't squad make a constructor that does this?
+            return new Direction(kspVector, false);
         }
     }
 }
