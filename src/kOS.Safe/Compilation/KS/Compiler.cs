@@ -1050,8 +1050,8 @@ namespace kOS.Safe.Compilation.KS
                 // when we are setting a member value we need to leave
                 // the last object and the last index in the stack
                 // the only exception is when we are setting a suffix of the indexed value
-                var hasSuffix = VarIdentifierPreceedsSuffix(node.Parent);
-                if (!(compilingSetDestination && isLastIndex) || hasSuffix)
+                bool atEnd = IsLastmostTrailerInTerm(node);
+                if (!(compilingSetDestination && isLastIndex) || (!atEnd))
                 {
                     AddOpcode(new OpcodeGetIndex());
                 }
@@ -1059,6 +1059,29 @@ namespace kOS.Safe.Compilation.KS
                 nodeIndex += 2;
             }
 
+        }
+        
+        /// <summary>
+        /// Returns true if this is the last most trailer term (array_trailer, suffix_trailer, or function_trailer)
+        /// in a term inside a suffix rule of the parser.  Does this by a tree walk to look for siblings to
+        /// the right of me.
+        /// </summary>
+        /// <param name="node">Node to check</param>
+        /// <returns>true if I am the rightmost thing in the parse tree all the way up to the suffix term above me.</returns>
+        private bool IsLastmostTrailerInTerm(ParseNode node)
+        {
+            ParseNode current = node;
+            ParseNode parent = node.Parent;
+            
+            while (parent != null && current.Token.Type != TokenType.suffix && current.Token.Type != TokenType.varidentifier)
+            {
+                if (parent.Nodes.LastIndexOf(current) < parent.Nodes.Count - 1)
+                    return false; // there is a child to the right of me.  I am not lastmost.
+
+                current = parent;
+                parent = current.Parent;
+            }
+            return true;
         }
 
         private string GetIdentifierText(ParseNode node)
@@ -1244,14 +1267,24 @@ namespace kOS.Safe.Compilation.KS
             // was a suffix_trailer, return true, else it's false.
             ParseNode prevChild = node;
             ParseNode thisChild = node.Nodes.Last();
+            
+            bool descendedThroughAColon = false; // eeeewwww, sounds disgusting.
+                
             while (thisChild.Token.Type == TokenType.suffix_trailer ||
+                   thisChild.Token.Type == TokenType.suffix || 
+                   thisChild.Token.Type == TokenType.suffixterm || 
+                   thisChild.Token.Type == TokenType.suffixterm_trailer || 
                    thisChild.Token.Type == TokenType.array_trailer ||
                    thisChild.Token.Type == TokenType.function_trailer)
             {
+                if (thisChild.Token.Type == TokenType.suffix_trailer)
+                    descendedThroughAColon = true;
                 prevChild = thisChild;
                 thisChild = thisChild.Nodes.Last();
             }
-            return prevChild.Token.Type == TokenType.suffix_trailer;
+            return descendedThroughAColon && 
+                (prevChild.Token.Type == TokenType.suffix_trailer ||
+                 prevChild.Token.Type == TokenType.suffixterm);
         }
 
         /// <summary>
@@ -1308,6 +1341,9 @@ namespace kOS.Safe.Compilation.KS
             ParseNode prevChild = node;
             ParseNode thisChild = node.Nodes.Last();
             while (thisChild.Token.Type == TokenType.suffix_trailer ||
+                   thisChild.Token.Type == TokenType.suffix || 
+                   thisChild.Token.Type == TokenType.suffixterm || 
+                   thisChild.Token.Type == TokenType.suffixterm_trailer || 
                    thisChild.Token.Type == TokenType.array_trailer ||
                    thisChild.Token.Type == TokenType.function_trailer)
             {
