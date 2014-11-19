@@ -1,6 +1,14 @@
 kOS Mod Changelog
 =================
 
+# v0.15.2
+
+BugFixes:
+* :MODULESNAMED returns something useful now #392
+* array syntax bugs #387
+* Added :PORTFACING to docking ports that should always have the correct facing for the port itself #398
+* BREAKING: Partfacing should now come out of the top rather than the side #394
+
 # v0.15.1
 
 BugFixes:
