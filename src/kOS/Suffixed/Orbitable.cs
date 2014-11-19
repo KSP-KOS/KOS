@@ -42,7 +42,7 @@ namespace kOS.Suffixed
         ///   Subclasses must override this method to return the velocity of this object right now.
         /// </summary>
         /// <returns>
-        ///   A OrbitableVelocity object containing both the oribtal and surface velocities of the object in the
+        ///   A OrbitableVelocity object containing both the orbital and surface velocities of the object in the
         ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (soi-body-origin)
         ///   </a>
@@ -51,7 +51,7 @@ namespace kOS.Suffixed
         abstract public OrbitableVelocity GetVelocities();
 
         /// <summary>
-        ///   Subclasses must orverride this method to return the position of this object at some
+        ///   Subclasses must override this method to return the position of this object at some
         ///   arbitrary future time.  It must take into account any orbital transfers to other SOI's
         ///   and any planned maneuver nodes (It should return the predicted location under the
         ///   assumption that the maneuver nodes currently planned will be executed as planned.)
@@ -76,7 +76,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="timeStamp">The universal time of the future prediction</param>
         /// <returns>
-        ///   A OrbitableVelocity object containing both the oribtal and surface velocities of the object in the
+        ///   A OrbitableVelocity object containing both the orbital and surface velocities of the object in the
         ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (soi-body-origin)
         ///   </a>
@@ -116,7 +116,7 @@ namespace kOS.Suffixed
         abstract public string GetName();
 
         /// <summary>
-        ///   Get the OrbitInfo object assocaited with this Orbitable.
+        ///   Get the OrbitInfo object associated with this Orbitable.
         /// </summary>
         /// <returns>same as using the :ORB suffix term.</returns>
         public OrbitInfo GetOrbitInfo()

@@ -267,7 +267,7 @@ namespace kOS.Binding
                 if (!Enabled) return;
                 double doubleValue = Convert.ToDouble(value);
                 if (!double.IsNaN(doubleValue))
-                    c.mainThrottle = (float)Utils.Clamp(doubleValue, 0, 1);
+                    c.mainThrottle = (float)Safe.Utilities.Math.Clamp(doubleValue, 0, 1);
             }
 
             private void UpdateWheelThrottle(FlightCtrlState c)
@@ -275,7 +275,7 @@ namespace kOS.Binding
                 if (!Enabled) return;
                 double doubleValue = Convert.ToDouble(value);
                 if (!double.IsNaN(doubleValue))
-                    c.wheelThrottle = (float)Utils.Clamp(doubleValue, -1, 1);
+                    c.wheelThrottle = (float)Safe.Utilities.Math.Clamp(doubleValue, -1, 1);
             }
 
             private void SteerByWire(FlightCtrlState c)

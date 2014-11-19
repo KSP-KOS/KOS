@@ -137,6 +137,7 @@
     <Compile Include="Utilities\Environment.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
+    <Compile Include="Utilities\Math.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

@@ -4,7 +4,6 @@ using kOS.Safe;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
 using kOS.Screen;
-using kOS.Utilities;
 
 namespace kOS.AddOns.RemoteTech2
 {
@@ -131,7 +130,7 @@ namespace kOS.AddOns.RemoteTech2
                     signalLossWarning = false;
                 }
 
-                waitElapsed += Math.Min(deltaTime, waitTotal - waitElapsed);
+                waitElapsed += System.Math.Min(deltaTime, waitTotal - waitElapsed);
                 DrawProgressBar(waitElapsed, waitTotal);
 
                 if (waitElapsed == waitTotal)
