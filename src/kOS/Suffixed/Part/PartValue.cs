@@ -126,6 +126,33 @@ namespace kOS.Suffixed.Part
             }
             return returnValue;
         }
-        
+
+        protected bool Equals(PartValue other)
+        {
+            return Equals(Part, other.Part);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((PartValue) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Part != null ? Part.GetHashCode() : 0);
+        }
+
+        public static bool operator ==(PartValue left, PartValue right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(PartValue left, PartValue right)
+        {
+            return !Equals(left, right);
+        }
     }
 }
