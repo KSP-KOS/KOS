@@ -6,15 +6,16 @@ namespace kOS.Safe.Encapsulation.Suffixes
     {
         private readonly SuffixSetDlg<TValue> setter;
 
-        public SetSuffix(SuffixGetDlg<TValue> getter, SuffixSetDlg<TValue> setter, string description = "") : base(getter, description)
+        public SetSuffix(SuffixGetDlg<TValue> getter, SuffixSetDlg<TValue> setter, string description = "")
+            : base(getter, description)
         {
             this.setter = setter;
         }
 
-        public void Set(object value)
+        public virtual void Set(object value)
         {
-            var test = (TValue)Convert.ChangeType(value, typeof(TValue));
-            setter.Invoke(test);
+            var toSet = (TValue)Convert.ChangeType(value, typeof(TValue));
+            setter.Invoke(toSet);
         }
     }
 }

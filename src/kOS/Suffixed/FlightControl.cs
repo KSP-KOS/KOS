@@ -44,104 +44,62 @@ namespace kOS.Suffixed
 
             floatSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "PILOTMAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
             vectorSuffixes = new List<string> { "ROTATION", "TRANSLATION" };
+            InitializeSuffixes();
+        }
+
+        private void InitializeSuffixes()
+        {
+            //ROTATION
+            AddSuffix(new[] { "YAW" }, new ClampSetSuffix<float>(() => yaw, value => yaw = value, -1, 1));
+            AddSuffix(new[] { "YAWTRIM" }, new ClampSetSuffix<float>(() => yawTrim, value => yawTrim = value, -1, 1));
+            AddSuffix(new[] { "ROLL" }, new ClampSetSuffix<float>(() => roll, value => roll = value, -1, 1));
+            AddSuffix(new[] { "ROLLTRIM" }, new ClampSetSuffix<float>(() => rollTrim, value => rollTrim = value, -1, 1));
+            AddSuffix(new[] { "PITCH" }, new ClampSetSuffix<float>(() => pitch, value => pitch = value, -1, 1));
+            AddSuffix(new[] { "PITCHTRIM" }, new ClampSetSuffix<float>(() => pitchTrim, value => pitchTrim = value, -1, 1));
+            AddSuffix(new[] { "ROTATION" }, new SetSuffix<Vector>(() => new Vector(yaw, pitch, roll), SetRotation));
+
+            AddSuffix(new[] { "PILOTYAW" }, new Suffix<float>(() => Vessel.ctrlState.yaw));
+            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<float>(() => Vessel.ctrlState.yawTrim));
+            AddSuffix(new[] { "PILOTROLL" }, new Suffix<float>(() => Vessel.ctrlState.roll));
+            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<float>(() => Vessel.ctrlState.rollTrim));
+            AddSuffix(new[] { "PILOTPITCH" }, new Suffix<float>(() => Vessel.ctrlState.pitch));
+            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<float>(() => Vessel.ctrlState.pitchTrim));
+            AddSuffix(new[] { "PILOTROTATION" }, new Suffix<Vector>(() => new Vector(Vessel.ctrlState.yaw, Vessel.ctrlState.pitch, Vessel.ctrlState.roll)));
+
+            //TRANSLATION
+            AddSuffix(new[] { "FORE" }, new ClampSetSuffix<float>(() => fore, value => fore = value, -1, 1));
+            AddSuffix(new[] { "STARBOARD" }, new ClampSetSuffix<float>(() => starboard, value => starboard = value, -1, 1));
+            AddSuffix(new[] { "TOP" }, new ClampSetSuffix<float>(() => top, value => top = value, -1, 1));
+            AddSuffix(new[] { "TRANSLATION" }, new SetSuffix<Vector>(() => new Vector(starboard, top, fore) , SetTranslation));
+
+            AddSuffix(new[] { "PILOTFORE" }, new Suffix<float>(() => Vessel.ctrlState.Z));
+            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<float>(() => Vessel.ctrlState.X));
+            AddSuffix(new[] { "PILOTTOP" }, new Suffix<float>(() => Vessel.ctrlState.Y));
+            AddSuffix(new[] { "PILOTTRANSLATION" }, new Suffix<Vector>(() => new Vector( Vessel.ctrlState.X , Vessel.ctrlState.Y , Vessel.ctrlState.Z )));
+
+            //ROVER
+            AddSuffix(new[] { "WHEELSTEER" }, new ClampSetSuffix<float>(() => wheelSteer, value => wheelSteer = value, -1, 1));
+            AddSuffix(new[] { "WHEELSTEERTRIM" }, new ClampSetSuffix<float>(() => wheelSteerTrim, value => wheelSteerTrim = value, -1, 1));
+            AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<float>(() => Vessel.ctrlState.wheelSteer));
+            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<float>(() => Vessel.ctrlState.wheelSteerTrim));
+            
+
+            //THROTTLE
+            AddSuffix(new[] { "MAINTHROTTLE" }, new ClampSetSuffix<float>(() => mainThrottle, value => mainThrottle = value, 0, 1));
+            AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<float>(() => Vessel.ctrlState.mainThrottle, SetPilotMainThrottle, 0, 1));
+            AddSuffix(new[] { "WHEELTHROTTLE" }, new ClampSetSuffix<float>(() => wheelThrottle, value => wheelThrottle = value, 0, 1));
+            AddSuffix(new[] { "WHEELTHROTTLETRIM" }, new ClampSetSuffix<float>(() => wheelThrottleTrim, value => wheelThrottleTrim = value, 0, 1));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<float>(() => Vessel.ctrlState.wheelThrottle));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<float>(() => Vessel.ctrlState.wheelThrottleTrim));
+
+            //OTHER
+            AddSuffix(new[] { "BOUND" }, new SetSuffix<bool>(() => bound, value => bound = value));
+            AddSuffix(new[] { "NEUTRAL" }, new Suffix<Flushable<bool>>(() => neutral));
+            AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<bool>(() => Vessel.ctrlState.isNeutral));
+
         }
 
         public Vessel Vessel { get; private set; }
-
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                //Rotation
-                case "YAW":
-                    return yaw;
-                case "PITCH":
-                    return pitch;
-                case "ROLL":
-                    return roll;
-                case "YAWTRIM":
-                    return yawTrim;
-                case "PITCHTRIM":
-                    return pitchTrim;
-                case "ROLLTRIM":
-                    return rollTrim;
-                case "ROTATION":
-                    return new Vector(yaw , pitch , roll );
-
-                //Translation
-                case "FORE":
-                    return fore;
-                case "STARBOARD":
-                    return starboard;
-                case "TOP":
-                    return top;
-                case "TRANSLATION":
-                    return new Vector(starboard , top , fore );
-
-                case "BOUND":
-                    return bound;
-                case "NEUTRAL":
-                    return neutral;
-                case "MAINTHROTTLE":
-                    return mainThrottle;
-
-                //Surface Only
-                case "WHEELTHROTTLE":
-                    return wheelThrottle;
-                case "WHEELTHROTTLETRIM":
-                    return wheelThrottleTrim;
-                case "WHEELSTEER":
-                    return wheelSteer;
-                case "WHEELSTEERTRIM":
-                    return wheelSteerTrim;
-
-                //Pilot
-                case "PILOTYAW":
-                    return Vessel.ctrlState.yaw;
-                case "PILOTYAWTRIM":
-                    return Vessel.ctrlState.yawTrim;
-                case "PILOTPITCH":
-                    return Vessel.ctrlState.pitch;
-                case "PILOTPITCHTRIM":
-                    return Vessel.ctrlState.pitchTrim;
-                case "PILOTROLL":
-                    return Vessel.ctrlState.roll;
-                case "PILOTROLLTRIM":
-                    return Vessel.ctrlState.rollTrim;
-                case "PILOTROTATION":
-                    return new Vector(
-                        Vessel.ctrlState.yaw , 
-                        Vessel.ctrlState.pitch , 
-                        Vessel.ctrlState.roll 
-                        );
-                case "PILOTFORE":
-                    return Vessel.ctrlState.Z;
-                case "PILOTSTARBOARD":
-                    return Vessel.ctrlState.X;
-                case "PILOTTOP":
-                    return Vessel.ctrlState.Y;
-                case "PILOTTRANSLATION":
-                    return new Vector(
-                        Vessel.ctrlState.X , 
-                        Vessel.ctrlState.Y , 
-                        Vessel.ctrlState.Z 
-                        );
-                case "PILOTNEUTRAL":
-                    return Vessel.ctrlState.isNeutral;
-                case "PILOTMAINTHROTTLE":
-                    return Vessel.ctrlState.mainThrottle;
-                case "PILOTWHEELTHROTTLE":
-                    return Vessel.ctrlState.wheelThrottle;
-                case "PILOTWHEELTHROTTLETRIM":
-                    return Vessel.ctrlState.wheelThrottleTrim;
-                case "PILOTWHEELSTEER":
-                    return Vessel.ctrlState.wheelSteer;
-                case "PILOTWHEELSTEERTRIM":
-                    return Vessel.ctrlState.wheelSteerTrim;
-                default:
-                    return null;
-            }
-        }
 
         public override bool SetSuffix(string suffixName, object value)
         {
@@ -175,67 +133,16 @@ namespace kOS.Suffixed
                 if (!ValueToVector(value, ref vectorValue)) return true;
             }
 
-            switch (suffixName)
+            return base.SetSuffix(suffixName, value);
+        }
+
+        private void SetPilotMainThrottle(float floatValue)
+        {
+            Vessel.ctrlState.mainThrottle = floatValue;
+            if (Vessel == FlightGlobals.ActiveVessel)
             {
-                case "YAW":
-                    yaw = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "PITCH":
-                    pitch = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "ROLL":
-                    roll = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "YAWTRIM":
-                    yawTrim = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "PITCHTRIM":
-                    pitchTrim = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "ROLLTRIM":
-                    rollTrim = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "STARBOARD":
-                    starboard = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "TOP":
-                    top = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "FORE":
-                    fore = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "ROTATION":
-                    SetRotation(vectorValue);
-                    break;
-                case "TRANSLATION":
-                    SetTranslation(vectorValue);
-                    break;
-                case "MAINTHROTTLE":
-                    mainThrottle = Utils.Clamp(floatValue, 0, 1);
-                    break;
-                case "PILOTMAINTHROTTLE":
-                    Vessel.ctrlState.mainThrottle = Utils.Clamp(floatValue, 0, 1);
-                    if (Vessel == FlightGlobals.ActiveVessel)
-                    {
-                        FlightInputHandler.state.mainThrottle = 0; 
-                    }
-                    break;
-                case "WHEELTHROTTLE":
-                    wheelThrottle = Utils.Clamp(floatValue, 0, 1);
-                    break;
-                case "WHEELTHROTTLETRIM":
-                    wheelThrottleTrim = Utils.Clamp(floatValue, 0, 1);
-                    break;
-                case "WHEELSTEER":
-                    wheelSteer = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                case "WHEELSTEERTRIM":
-                    wheelSteerTrim = Utils.Clamp(floatValue, -1, 1);
-                    break;
-                default:
-                    return false;
+                FlightInputHandler.state.mainThrottle = floatValue;
             }
-            return true;
         }
 
         private void SetTranslation(Vector vectorValue)
