@@ -21,12 +21,12 @@ namespace kOS.Suffixed.Part
             AddSuffix("AQUIREFORCE", new Suffix<float>(() => module.acquireForce));
             AddSuffix("AQUIRETORQUE", new Suffix<float>(() => module.acquireTorque));
             AddSuffix("REENGAGEDISTANCE", new Suffix<float>(() => module.minDistanceToReEngage));
-            AddSuffix("DOCKEDSHIPNAME", new Suffix<string>(() => module.vesselInfo != null ? (string) module.vesselInfo.name : string.Empty));
+            AddSuffix("DOCKEDSHIPNAME", new Suffix<string>(() => module.vesselInfo != null ? module.vesselInfo.name : string.Empty));
             AddSuffix("STATE", new Suffix<string>(() => module.state));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => true));
             AddSuffix("UNDOCK", new NoArgsSuffix(() => module.Undock()));
             AddSuffix("TARGET", new NoArgsSuffix(() => module.SetAsTarget()));
-            AddSuffix("PORTFACING", new NoArgsSuffix<Direction>(() => GetPortFacing()));
+            AddSuffix("PORTFACING", new NoArgsSuffix<Direction>(GetPortFacing));
         }
 
         public override ITargetable Target
@@ -41,7 +41,7 @@ namespace kOS.Suffixed.Part
             {
                 foreach (PartModule module in part.Modules)
                 {
-                    UnityEngine.Debug.Log("Module Found: "+ module);
+                    Debug.Log("Module Found: "+ module);
                     var dockingNode = module as ModuleDockingNode;
                     if (dockingNode != null)
                     {
@@ -60,8 +60,7 @@ namespace kOS.Suffixed.Part
             // docking node for example) they can differ.
             //
             Vector3 unityVector = module.nodeTransform.rotation * Vector3.forward;
-            Vector3d kspVector = new Vector3d(unityVector.x, unityVector.y, unityVector.z); // grr why didn't squad make a constructor that does this?
-            return new Direction(kspVector, false);
+            return new Direction(unityVector, false);
         }
     }
 }

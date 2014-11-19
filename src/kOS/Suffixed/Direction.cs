@@ -103,7 +103,7 @@ namespace kOS.Suffixed
             var otherVector = other as Vector;
             if (otherVector != null)
             {
-                Vector3d vec = otherVector.ToVector3D();
+                Vector3d vec = otherVector;
                 return new Vector(Rotation*vec);
             }
 

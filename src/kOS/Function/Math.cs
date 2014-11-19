@@ -155,7 +155,7 @@ namespace kOS.Function
 
             if (vector1 != null && vector2 != null)
             {
-                object result = new Vector(Vector3d.Cross(vector1.ToVector3D(), vector2.ToVector3D()));
+                object result = new Vector(Vector3d.Cross(vector1, vector2));
                 shared.Cpu.PushStack(result);
             }
         }
@@ -171,7 +171,7 @@ namespace kOS.Function
 
             if (vector1 != null && vector2 != null)
             {
-                object result = Vector3d.Dot(vector1.ToVector3D(), vector2.ToVector3D());
+                object result = Vector3d.Dot(vector1, vector2);
                 shared.Cpu.PushStack(result);
             }
         }
@@ -187,7 +187,7 @@ namespace kOS.Function
 
             if (vector1 != null && vector2 != null)
             {
-                object result = new Vector(Vector3d.Exclude(vector1.ToVector3D(), vector2.ToVector3D()));
+                object result = new Vector(Vector3d.Exclude(vector1, vector2));
                 shared.Cpu.PushStack(result);
             }
         }
@@ -203,7 +203,7 @@ namespace kOS.Function
 
             if (vector1 != null && vector2 != null)
             {
-                object result = Vector3d.Angle(vector1.ToVector3D(), vector2.ToVector3D());
+                object result = Vector3d.Angle(vector1, vector2);
                 shared.Cpu.PushStack(result);
             }
         }

@@ -84,8 +84,7 @@ namespace kOS.Suffixed.Part
         private Direction GetFacing(global::Part part)
         {
             Vector3 partUp = part.transform.rotation * Vector3.up;
-            Vector3d partUpDoubles = new Vector3d(partUp.x, partUp.y, partUp.z);
-            return new Direction(partUpDoubles,false);
+            return new Direction(partUp,false);
         }
 
         private void ControlFrom()
