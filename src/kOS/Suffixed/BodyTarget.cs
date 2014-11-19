@@ -113,5 +113,33 @@ namespace kOS.Suffixed
         {
             get { return Body; }
         }
+
+        protected bool Equals(BodyTarget other)
+        {
+            return Body.Equals(other.Body);
+        }
+
+        public static bool operator ==(BodyTarget left, BodyTarget right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(BodyTarget left, BodyTarget right)
+        {
+            return !Equals(left, right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((BodyTarget) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Body.name.GetHashCode();
+        }
     }
 }

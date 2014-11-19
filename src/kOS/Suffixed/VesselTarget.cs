@@ -469,5 +469,33 @@ namespace kOS.Suffixed
 
             return base.GetSuffix(suffixName);
         }
+
+        protected bool Equals(VesselTarget other)
+        {
+            return Vessel.Equals(other.Vessel);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((VesselTarget) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Vessel.rootPart.flightID.GetHashCode();
+        }
+
+        public static bool operator ==(VesselTarget left, VesselTarget right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(VesselTarget left, VesselTarget right)
+        {
+            return !Equals(left, right);
+        }
     }
 }
