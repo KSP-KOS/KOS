@@ -789,7 +789,7 @@ namespace kOS.Safe.Compilation.KS
                 }
 
                 int exponent = exponentSign * int.Parse(node.Nodes[exponentIndex].Token.Text);
-                double number = mantissa * Math.Pow(10, exponent);
+                double number = mantissa * System.Math.Pow(10, exponent);
                 AddOpcode(new OpcodePush(number));
             }
         }

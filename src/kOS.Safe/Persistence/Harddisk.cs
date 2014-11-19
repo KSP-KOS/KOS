@@ -18,7 +18,7 @@ namespace kOS.Safe.Persistence
 
         public override int GetFreeSpace()
         {
-            return Math.Max(Capacity - GetUsedSpace(), 0);
+            return System.Math.Max(Capacity - GetUsedSpace(), 0);
         }
 
         public override bool IsRoomFor(ProgramFile newFile)
