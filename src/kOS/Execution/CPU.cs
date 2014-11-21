@@ -338,14 +338,25 @@ namespace kOS.Execution
 
         public void DumpVariables()
         {
+            StringBuilder msg = new StringBuilder();
             foreach (string ident in variables.Keys)
             {
-                Variable v = variables[ident];
-                string line = ident;
-                line += v.Value == null ? "= <null>" : "= " + v.Value;
+                string line;
+                try {
+                    Variable v = variables[ident];
+                    line = ident;
+                    line += v.Value == null ? "= <null>" : "= " + v.Value;
+                }
+                catch (Exception e)
+                {
+                    // This is necessary because of the deprecation exceptions that
+                    // get raised by FlightStats when you try to print all of them out:
+                    line = ident + "= <value caused exception>\n    " + e.Message;
+                }
                 shared.Screen.Print(line);
-                UnityEngine.Debug.Log(line);
+                msg.AppendLine(line);
             }
+            UnityEngine.Debug.Log(msg.ToString());
             shared.Screen.Print("YOU CAN SEE THIS LOG IN THE DEBUG OUTPUT.");
         }
 
@@ -579,7 +590,7 @@ namespace kOS.Execution
                 if (shared.Logger != null)
                 {
                     shared.Logger.Log(e);
-                    UnityEngine.Debug.Log(stack.Dump(15));
+                    UnityEngine.Debug.Log(stack.Dump());
                 }
 
                 if (contexts.Count == 1)

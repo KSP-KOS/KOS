@@ -115,7 +115,7 @@ namespace kOS.Execution
             stackPointer = -1;
         }
 
-        public string Dump(int lineCount)
+        public string Dump()
         {
             var builder = new StringBuilder();
             builder.AppendLine("Stack dump:");

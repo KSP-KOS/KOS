@@ -83,8 +83,10 @@ namespace kOS.Suffixed.Part
 
         private Direction GetFacing(global::Part part)
         {
-            Vector3 partUp = part.transform.rotation * Vector3.up;
-            return new Direction(partUp,false);
+            // Our normal facings use Z for forward, but parts use Y for forward:
+            Quaternion rotateZToY = Quaternion.FromToRotation(Vector3.forward, Vector3.up);
+            Quaternion newRotation = part.transform.rotation * rotateZToY;
+            return new Direction(newRotation);
         }
 
         private void ControlFrom()

@@ -26,7 +26,10 @@ namespace kOS.Suffixed.Part
             AddSuffix("TARGETABLE", new Suffix<bool>(() => true));
             AddSuffix("UNDOCK", new NoArgsSuffix(() => module.Undock()));
             AddSuffix("TARGET", new NoArgsSuffix(() => module.SetAsTarget()));
-            AddSuffix("PORTFACING", new NoArgsSuffix<Direction>(GetPortFacing));
+            AddSuffix("PORTFACING", new NoArgsSuffix<Direction>(GetPortFacing,
+                                                               "The direction facing inward into the docking port.  This " +
+                                                               "can differ from :FACING in the case of sideways-facing " +
+                                                               "docking ports like the inline docking port."));
         }
 
         public override ITargetable Target
@@ -59,8 +62,7 @@ namespace kOS.Suffixed.Part
             // case of a docking port facing out the side of the part (the in-line
             // docking node for example) they can differ.
             //
-            Vector3 unityVector = module.nodeTransform.rotation * Vector3.forward;
-            return new Direction(unityVector, false);
+            return new Direction(module.nodeTransform.rotation);
         }
     }
 }
