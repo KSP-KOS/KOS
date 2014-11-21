@@ -27,7 +27,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("UNDOCK", new NoArgsSuffix(() => module.Undock()));
             AddSuffix("TARGET", new NoArgsSuffix(() => module.SetAsTarget()));
             AddSuffix("PORTFACING", new NoArgsSuffix<Direction>(GetPortFacing,
-                                                               "The direction facing inward into the docking port.  This " +
+                                                               "The direction facing outward from the docking port.  This " +
                                                                "can differ from :FACING in the case of sideways-facing " +
                                                                "docking ports like the inline docking port."));
         }
