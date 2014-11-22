@@ -429,6 +429,7 @@ namespace kOS.Execution
         ///   back.  If it's not a variable, return it as-is.  If it's a variable,
         ///   look it up and return that.
         /// </summary>
+        /// <param name="testvalue">the object which might be a variable name</param>
         /// <param name="barewordOkay">
         ///   Is this a case in which it's acceptable for the
         ///   variable not to exist, and if it doesn't exist then the variable name itself
@@ -479,6 +480,7 @@ namespace kOS.Execution
         /// Peek at a value atop the stack without popping it, and if it's a variable name then get its value,
         /// else just return it as it is.
         /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
         /// <param name="barewordOkay">Is this a context in which it's acceptable for
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
