@@ -1,6 +1,13 @@
 kOS Mod Changelog
 =================
 
+# v0.15.3
+BugFixes:
+* Issue #417: No error message on nonexistent function.
+* Issue #413: Name tag window should get keyboard focus when invoked.
+* Issue #405: Equality operator is broken for Wrapped structure objects.
+* Issue #393: Files on local volume do not persist through save/load.
+
 # v0.15.2
 
 BugFixes:
