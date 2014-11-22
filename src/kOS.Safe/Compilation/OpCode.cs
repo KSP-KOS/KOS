@@ -1362,7 +1362,15 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            cpu.PopStack();
+            // Even though this value is being thrown away it's still important to attempt to
+            // process it (with cpu.PopValue()) rather than ignore it (with cpu.PopStack()).  This
+            // is just in case it's an unknown variable name in need of an error message
+            // to the user.  Detecting that a variable name is unknown occurs during the popping
+            // of the value, not the pushing of it.  (This is necessary because SET and DECLARE
+            // statements have to be allowed to push undefined variable references onto the stack
+            // for new variables that they are going to create.)
+
+            cpu.PopValue();
         }
     }
 
