@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
 using kOS.Safe.Compilation;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Persistence
 {
@@ -88,32 +90,62 @@ namespace kOS.Safe.Persistence
 
         public static string DecodeLine(string input)
         {
-            // This could probably be re-coded into something more algorithmic and less hardcoded,
-            // as in "any time there is [ampersand,hash,digits,semicolon], replace with the Unicode
-            // char for the digits' number."
-            return input
-                .Replace("&#123;", "{")
-                .Replace("&#125;", "}")
-                .Replace("&#32;", " ")
-                .Replace("&#92;", @"\") 
-                .Replace("&#47;", "/")
-                .Replace("&#8;", "\t")
-                .Replace("&#10", "\n");
+            StringBuilder output = new StringBuilder();
+            for (int inputPos = 0; inputPos < input.Length ; ++inputPos )
+            {
+                char ch = input[inputPos];
+                if (ch == '&')
+                {
+                    // The reason for catching all these exception cases is because people might use this
+                    // new code to try to read files that the old buggy code wrote out incorrectly:
+                    if (input[inputPos+1] != '#')
+                        throw new KOSPersistenceException("Improperly encoded saved file contains '&' without '#'");
+                    int semicolonPos = input.IndexOf(';',inputPos);
+                    if (semicolonPos < 0)
+                        throw new KOSPersistenceException("Improperly encoded saved file contains '&' without closing ';'");
+                    int charOrdinal;
+                    if ( ! int.TryParse(input.Substring(inputPos+2, (semicolonPos-(inputPos+3))),out charOrdinal) )
+                        throw new KOSPersistenceException("Improperly encoded saved file contains non-digits between the '&#' and the ';'");
+                    output.Append((char)charOrdinal);
+                    inputPos = semicolonPos; // skip to the end of the encoding section, as if everything between '&' and ';' was one char of input.
+                }
+                else
+                {
+                    output.Append(ch);
+                }
+            }
+            return output.ToString();
         }
 
         public static string EncodeLine(string input)
-        {
-            // This could probably be re-coded into something more algorithmic and less hardcoded,
-            // as in "For any of the characters in this blacklist, if the character exists then
-            // replace it with [ampersand,hash,unicode_num,semicolon] for the char's Unicode value."
-            return input
-                .Replace("{", "&#123;")
-                .Replace("}", "&#125;")
-                .Replace(" ", "&#32;")
-                .Replace(@"\", "&#92;") 
-                .Replace("//", "&#47;&#47;") // a double slash is also a comment in the persistence file's syntax.
-                .Replace("\t", "&#8;") // protect tabs, if there are any
-                .Replace("\n", "&#10");     // Stops universe from imploding
+        {            
+            StringBuilder output = new StringBuilder();
+            for (int inputPos = 0; inputPos < input.Length ; ++inputPos )
+            {
+                char ch = input[inputPos];
+                if (CharNeedsEncoding(ch))
+                    output.Append("&#"+(uint)ch+";"); // Casting to uint will get the unicode number of the character
+                else
+                    output.Append(ch);
+            }
+            return output.ToString();
         }
+
+        /// <summary>
+        /// Returns true if the character has to be encoded and cannot be dumped into a persistence file as-is.
+        /// </summary>
+        /// <param name="test">character to test</param>
+        /// <returns>true if the character needs protective encoding</returns>
+        public static bool CharNeedsEncoding(char ch)
+        {
+            return ! (Char.IsLetterOrDigit(ch) || whitelistedSymbols.Contains(ch));
+        }
+        
+        // Note: deliberately missing from the whitelist are:
+        //  '&' - because it's the marker used to start an encoding.
+        //  '/' - because while one is safe, two of them consecutively would start a comment,
+        //          and it's just easier to encode all of them than write the special logic that tracks
+        //          the context of prev char or next char.
+        private const string whitelistedSymbols = "~`!@#$%^*()_-+=[]|:;\"'<>,.?";
     }
 }
