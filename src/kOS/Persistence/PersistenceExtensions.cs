@@ -119,6 +119,7 @@ namespace kOS.Persistence
                 {
                     // standard encoding
                     decodedString = PersistenceUtilities.DecodeLine(input);
+                    programFile.StringContent = decodedString;
                 }
             }
             catch (Exception e)
