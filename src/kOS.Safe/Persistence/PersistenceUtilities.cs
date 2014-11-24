@@ -104,7 +104,7 @@ namespace kOS.Safe.Persistence
                     if (semicolonPos < 0)
                         throw new KOSPersistenceException("Improperly encoded saved file contains '&' without closing ';'");
                     int charOrdinal;
-                    if ( ! int.TryParse(input.Substring(inputPos+2, (semicolonPos-(inputPos+3))),out charOrdinal) )
+                    if ( ! int.TryParse(input.Substring(inputPos+2, (semicolonPos-(inputPos+2))),out charOrdinal) )
                         throw new KOSPersistenceException("Improperly encoded saved file contains non-digits between the '&#' and the ';'");
                     output.Append((char)charOrdinal);
                     inputPos = semicolonPos; // skip to the end of the encoding section, as if everything between '&' and ';' was one char of input.
