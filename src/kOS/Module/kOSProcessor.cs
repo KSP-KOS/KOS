@@ -32,7 +32,7 @@ namespace kOS.Module
         private const int PROCESSOR_HARD_CAP = 655360;
 
         [KSPField(isPersistant = true, guiName = "Boot File", guiActive = false, guiActiveEditor = false)]
-        public string bootFile = "boot";
+        public string bootFile = "boot.ks";
 
         [KSPField(isPersistant = false, guiName = "Boot File Choice", guiActive = false, guiActiveEditor = true), UI_FloatRange(minValue=0f,maxValue=1f,stepIncrement=1f)]
         public float bootFileChoice = 0f;
@@ -160,7 +160,7 @@ namespace kOS.Module
                 if (bootProgramFile != null)
                 {
                     // Copy to HardDisk as "boot".
-                    var boot = new ProgramFile(bootProgramFile) {Filename = "boot"};
+                    var boot = new ProgramFile(bootProgramFile) {Filename = "boot.ks"};
                     HardDisk.Add(boot);
                 }
             }
