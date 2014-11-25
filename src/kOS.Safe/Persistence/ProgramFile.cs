@@ -10,7 +10,7 @@ namespace kOS.Safe.Persistence
             get { return filename; }
             set
             {
-                filename = value;
+                filename = PersistenceUtilities.CookedFilename(value, "ks");
 
                 var fileParts = filename.Split('.');
                 Extension = fileParts.Count() > 1 ? fileParts.Last() : string.Empty;
