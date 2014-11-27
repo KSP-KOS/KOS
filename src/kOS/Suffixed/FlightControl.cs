@@ -5,6 +5,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
 using kOS.Utilities;
+using UnityEngine;
 using Math = System.Math;
 
 namespace kOS.Suffixed
@@ -58,13 +59,13 @@ namespace kOS.Suffixed
             AddSuffix(new[] { "PITCHTRIM" }, new ClampSetSuffix<float>(() => pitchTrim, value => pitchTrim = value, -1, 1));
             AddSuffix(new[] { "ROTATION" }, new SetSuffix<Vector>(() => new Vector(yaw, pitch, roll), SetRotation));
 
-            AddSuffix(new[] { "PILOTYAW" }, new Suffix<float>(() => Vessel.ctrlState.yaw));
-            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<float>(() => Vessel.ctrlState.yawTrim));
-            AddSuffix(new[] { "PILOTROLL" }, new Suffix<float>(() => Vessel.ctrlState.roll));
-            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<float>(() => Vessel.ctrlState.rollTrim));
-            AddSuffix(new[] { "PILOTPITCH" }, new Suffix<float>(() => Vessel.ctrlState.pitch));
-            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<float>(() => Vessel.ctrlState.pitchTrim));
-            AddSuffix(new[] { "PILOTROTATION" }, new Suffix<Vector>(() => new Vector(Vessel.ctrlState.yaw, Vessel.ctrlState.pitch, Vessel.ctrlState.roll)));
+            AddSuffix(new[] { "PILOTYAW" }, new Suffix<float>(() => FlightInputHandler.state.yaw));
+            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<float>(() => FlightInputHandler.state.yawTrim));
+            AddSuffix(new[] { "PILOTROLL" }, new Suffix<float>(() => FlightInputHandler.state.roll));
+            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<float>(() => FlightInputHandler.state.rollTrim));
+            AddSuffix(new[] { "PILOTPITCH" }, new Suffix<float>(() => FlightInputHandler.state.pitch));
+            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<float>(() => FlightInputHandler.state.pitchTrim));
+            AddSuffix(new[] { "PILOTROTATION" }, new Suffix<Vector>(() => new Vector(FlightInputHandler.state.yaw, FlightInputHandler.state.pitch, FlightInputHandler.state.roll)));
 
             //TRANSLATION
             AddSuffix(new[] { "FORE" }, new ClampSetSuffix<float>(() => fore, value => fore = value, -1, 1));
@@ -72,30 +73,30 @@ namespace kOS.Suffixed
             AddSuffix(new[] { "TOP" }, new ClampSetSuffix<float>(() => top, value => top = value, -1, 1));
             AddSuffix(new[] { "TRANSLATION" }, new SetSuffix<Vector>(() => new Vector(starboard, top, fore) , SetTranslation));
 
-            AddSuffix(new[] { "PILOTFORE" }, new Suffix<float>(() => Vessel.ctrlState.Z));
-            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<float>(() => Vessel.ctrlState.X));
-            AddSuffix(new[] { "PILOTTOP" }, new Suffix<float>(() => Vessel.ctrlState.Y));
-            AddSuffix(new[] { "PILOTTRANSLATION" }, new Suffix<Vector>(() => new Vector( Vessel.ctrlState.X , Vessel.ctrlState.Y , Vessel.ctrlState.Z )));
+            AddSuffix(new[] { "PILOTFORE" }, new Suffix<float>(() => FlightInputHandler.state.Z));
+            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<float>(() => FlightInputHandler.state.X));
+            AddSuffix(new[] { "PILOTTOP" }, new Suffix<float>(() => FlightInputHandler.state.Y));
+            AddSuffix(new[] { "PILOTTRANSLATION" }, new Suffix<Vector>(() => new Vector( FlightInputHandler.state.X , FlightInputHandler.state.Y , FlightInputHandler.state.Z )));
 
             //ROVER
             AddSuffix(new[] { "WHEELSTEER" }, new ClampSetSuffix<float>(() => wheelSteer, value => wheelSteer = value, -1, 1));
             AddSuffix(new[] { "WHEELSTEERTRIM" }, new ClampSetSuffix<float>(() => wheelSteerTrim, value => wheelSteerTrim = value, -1, 1));
-            AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<float>(() => Vessel.ctrlState.wheelSteer));
-            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<float>(() => Vessel.ctrlState.wheelSteerTrim));
+            AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<float>(() => FlightInputHandler.state.wheelSteer));
+            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<float>(() => FlightInputHandler.state.wheelSteerTrim));
             
 
             //THROTTLE
             AddSuffix(new[] { "MAINTHROTTLE" }, new ClampSetSuffix<float>(() => mainThrottle, value => mainThrottle = value, 0, 1));
-            AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<float>(() => Vessel.ctrlState.mainThrottle, SetPilotMainThrottle, 0, 1));
+            AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<float>(() => FlightInputHandler.state.mainThrottle, SetPilotMainThrottle, 0, 1));
             AddSuffix(new[] { "WHEELTHROTTLE" }, new ClampSetSuffix<float>(() => wheelThrottle, value => wheelThrottle = value, 0, 1));
             AddSuffix(new[] { "WHEELTHROTTLETRIM" }, new ClampSetSuffix<float>(() => wheelThrottleTrim, value => wheelThrottleTrim = value, 0, 1));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<float>(() => Vessel.ctrlState.wheelThrottle));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<float>(() => Vessel.ctrlState.wheelThrottleTrim));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<float>(() => FlightInputHandler.state.wheelThrottle));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<float>(() => FlightInputHandler.state.wheelThrottleTrim));
 
             //OTHER
             AddSuffix(new[] { "BOUND" }, new SetSuffix<bool>(() => bound, value => bound = value));
             AddSuffix(new[] { "NEUTRAL" }, new Suffix<Flushable<bool>>(() => neutral));
-            AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<bool>(() => Vessel.ctrlState.isNeutral));
+            AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<bool>(() => FlightInputHandler.state.isNeutral));
 
         }
 
