@@ -5,7 +5,6 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
 using kOS.Utilities;
-using UnityEngine;
 using Math = System.Math;
 
 namespace kOS.Suffixed
@@ -41,63 +40,13 @@ namespace kOS.Suffixed
             killRotation = new Flushable<bool>(); 
             resetTrim = new Flushable<bool>(); 
             bound = false;
+            lockoutPilot = false;
             Vessel = vessel;
 
             floatSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "PILOTMAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
             vectorSuffixes = new List<string> { "ROTATION", "TRANSLATION" };
             InitializeSuffixes();
-        }
-
-        private void InitializeSuffixes()
-        {
-            //ROTATION
-            AddSuffix(new[] { "YAW" }, new ClampSetSuffix<float>(() => yaw, value => yaw = value, -1, 1));
-            AddSuffix(new[] { "YAWTRIM" }, new ClampSetSuffix<float>(() => yawTrim, value => yawTrim = value, -1, 1));
-            AddSuffix(new[] { "ROLL" }, new ClampSetSuffix<float>(() => roll, value => roll = value, -1, 1));
-            AddSuffix(new[] { "ROLLTRIM" }, new ClampSetSuffix<float>(() => rollTrim, value => rollTrim = value, -1, 1));
-            AddSuffix(new[] { "PITCH" }, new ClampSetSuffix<float>(() => pitch, value => pitch = value, -1, 1));
-            AddSuffix(new[] { "PITCHTRIM" }, new ClampSetSuffix<float>(() => pitchTrim, value => pitchTrim = value, -1, 1));
-            AddSuffix(new[] { "ROTATION" }, new SetSuffix<Vector>(() => new Vector(yaw, pitch, roll), SetRotation));
-
-            AddSuffix(new[] { "PILOTYAW" }, new Suffix<float>(() => FlightInputHandler.state.yaw));
-            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<float>(() => FlightInputHandler.state.yawTrim));
-            AddSuffix(new[] { "PILOTROLL" }, new Suffix<float>(() => FlightInputHandler.state.roll));
-            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<float>(() => FlightInputHandler.state.rollTrim));
-            AddSuffix(new[] { "PILOTPITCH" }, new Suffix<float>(() => FlightInputHandler.state.pitch));
-            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<float>(() => FlightInputHandler.state.pitchTrim));
-            AddSuffix(new[] { "PILOTROTATION" }, new Suffix<Vector>(() => new Vector(FlightInputHandler.state.yaw, FlightInputHandler.state.pitch, FlightInputHandler.state.roll)));
-
-            //TRANSLATION
-            AddSuffix(new[] { "FORE" }, new ClampSetSuffix<float>(() => fore, value => fore = value, -1, 1));
-            AddSuffix(new[] { "STARBOARD" }, new ClampSetSuffix<float>(() => starboard, value => starboard = value, -1, 1));
-            AddSuffix(new[] { "TOP" }, new ClampSetSuffix<float>(() => top, value => top = value, -1, 1));
-            AddSuffix(new[] { "TRANSLATION" }, new SetSuffix<Vector>(() => new Vector(starboard, top, fore) , SetTranslation));
-
-            AddSuffix(new[] { "PILOTFORE" }, new Suffix<float>(() => FlightInputHandler.state.Z));
-            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<float>(() => FlightInputHandler.state.X));
-            AddSuffix(new[] { "PILOTTOP" }, new Suffix<float>(() => FlightInputHandler.state.Y));
-            AddSuffix(new[] { "PILOTTRANSLATION" }, new Suffix<Vector>(() => new Vector( FlightInputHandler.state.X , FlightInputHandler.state.Y , FlightInputHandler.state.Z )));
-
-            //ROVER
-            AddSuffix(new[] { "WHEELSTEER" }, new ClampSetSuffix<float>(() => wheelSteer, value => wheelSteer = value, -1, 1));
-            AddSuffix(new[] { "WHEELSTEERTRIM" }, new ClampSetSuffix<float>(() => wheelSteerTrim, value => wheelSteerTrim = value, -1, 1));
-            AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<float>(() => FlightInputHandler.state.wheelSteer));
-            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<float>(() => FlightInputHandler.state.wheelSteerTrim));
-            
-
-            //THROTTLE
-            AddSuffix(new[] { "MAINTHROTTLE" }, new ClampSetSuffix<float>(() => mainThrottle, value => mainThrottle = value, 0, 1));
-            AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<float>(() => FlightInputHandler.state.mainThrottle, SetPilotMainThrottle, 0, 1));
-            AddSuffix(new[] { "WHEELTHROTTLE" }, new ClampSetSuffix<float>(() => wheelThrottle, value => wheelThrottle = value, 0, 1));
-            AddSuffix(new[] { "WHEELTHROTTLETRIM" }, new ClampSetSuffix<float>(() => wheelThrottleTrim, value => wheelThrottleTrim = value, 0, 1));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<float>(() => FlightInputHandler.state.wheelThrottle));
-            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<float>(() => FlightInputHandler.state.wheelThrottleTrim));
-
-            //OTHER
-            AddSuffix(new[] { "BOUND" }, new SetSuffix<bool>(() => bound, value => bound = value));
-            AddSuffix(new[] { "NEUTRAL" }, new Suffix<Flushable<bool>>(() => neutral));
-            AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<bool>(() => FlightInputHandler.state.isNeutral));
-
+            InitializePilotSuffixes();
         }
 
         public Vessel Vessel { get; private set; }
@@ -137,13 +86,236 @@ namespace kOS.Suffixed
             return base.SetSuffix(suffixName, value);
         }
 
-        private void SetPilotMainThrottle(float floatValue)
+        public void Unbind()
         {
-            Vessel.ctrlState.mainThrottle = floatValue;
+            UnityEngine.Debug.Log("kOS: FlightControl Unbinding");
+            if (!bound) return;
+
+            if (RemoteTechHook.IsAvailable())
+            {
+                RemoteTechHook.Instance.RemoveSanctionedPilot(Vessel.id, OnFlyByWire);
+            }
+            else
+            {
+                Vessel.OnFlyByWire -= OnFlyByWire;
+            }
+            bound = false;
+            UnityEngine.Debug.Log("kOS: FlightControl Unbound");
+        }
+
+        public void UpdateVessel(Vessel toUpdate)
+        {
+            Vessel = toUpdate;
+        }
+
+        public void Dispose()
+        {
+            Unbind();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} FlightControl for {1}", base.ToString(), Vessel.vesselName);
+        }
+
+        private void InitializePilotSuffixes()
+        {
+            AddSuffix(new[] { "PILOTYAW" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.yaw;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.yawTrim;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTROLL" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.roll;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.rollTrim;
+                }
+                return 0f;
+            }));
+            
+            AddSuffix(new[] { "PILOTPITCH" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.pitch;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.pitchTrim;
+                }
+                return 0f;
+            }));
+            
+            AddSuffix(new[] { "PILOTROTATION" }, new Suffix<Vector>(GetPilotRotation));
+
+            AddSuffix(new[] { "PILOTFORE" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.Z;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.X;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTTOP" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.Y;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTTRANSLATION" }, new Suffix<Vector>(GetPilotTranslation));
+
+            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.wheelThrottle;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.wheelThrottleTrim;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.mainThrottle;
+                }
+                return 0f;
+            }, value =>
+            {
+                Vessel.ctrlState.mainThrottle = value;
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    FlightInputHandler.state.mainThrottle = value;
+                }
+            }, 0, 1));
+
+            AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<bool>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.isNeutral;
+                }
+                return false;
+            }));
+
+            AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.wheelSteer;
+                }
+                return 0f;
+            }));
+
+            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<float>(() =>
+            {
+                if (Vessel == FlightGlobals.ActiveVessel)
+                {
+                    return FlightInputHandler.state.wheelSteerTrim;
+                }
+                return 0f;
+            }));
+        }
+
+        private void InitializeSuffixes()
+        {
+            //ROTATION
+            AddSuffix(new[] { "YAW" }, new ClampSetSuffix<float>(() => yaw, value => yaw = value, -1, 1));
+            AddSuffix(new[] { "YAWTRIM" }, new ClampSetSuffix<float>(() => yawTrim, value => yawTrim = value, -1, 1));
+            AddSuffix(new[] { "ROLL" }, new ClampSetSuffix<float>(() => roll, value => roll = value, -1, 1));
+            AddSuffix(new[] { "ROLLTRIM" }, new ClampSetSuffix<float>(() => rollTrim, value => rollTrim = value, -1, 1));
+            AddSuffix(new[] { "PITCH" }, new ClampSetSuffix<float>(() => pitch, value => pitch = value, -1, 1));
+            AddSuffix(new[] { "PITCHTRIM" }, new ClampSetSuffix<float>(() => pitchTrim, value => pitchTrim = value, -1, 1));
+            AddSuffix(new[] { "ROTATION" }, new SetSuffix<Vector>(() => new Vector(yaw, pitch, roll), SetRotation));
+
+            //TRANSLATION
+            AddSuffix(new[] { "FORE" }, new ClampSetSuffix<float>(() => fore, value => fore = value, -1, 1));
+            AddSuffix(new[] { "STARBOARD" }, new ClampSetSuffix<float>(() => starboard, value => starboard = value, -1, 1));
+            AddSuffix(new[] { "TOP" }, new ClampSetSuffix<float>(() => top, value => top = value, -1, 1));
+            AddSuffix(new[] { "TRANSLATION" }, new SetSuffix<Vector>(() => new Vector(starboard, top, fore) , SetTranslation));
+
+            //ROVER
+            AddSuffix(new[] { "WHEELSTEER" }, new ClampSetSuffix<float>(() => wheelSteer, value => wheelSteer = value, -1, 1));
+            AddSuffix(new[] { "WHEELSTEERTRIM" }, new ClampSetSuffix<float>(() => wheelSteerTrim, value => wheelSteerTrim = value, -1, 1));
+            
+
+            //THROTTLE
+            AddSuffix(new[] { "MAINTHROTTLE" }, new ClampSetSuffix<float>(() => mainThrottle, value => mainThrottle = value, 0, 1));
+            AddSuffix(new[] { "WHEELTHROTTLE" }, new ClampSetSuffix<float>(() => wheelThrottle, value => wheelThrottle = value, 0, 1));
+            AddSuffix(new[] { "WHEELTHROTTLETRIM" }, new ClampSetSuffix<float>(() => wheelThrottleTrim, value => wheelThrottleTrim = value, 0, 1));
+
+            //OTHER
+            AddSuffix(new[] { "BOUND" }, new SetSuffix<bool>(() => bound, value => bound = value));
+            AddSuffix(new[] { "NEUTRAL" }, new Suffix<Flushable<bool>>(() => neutral));
+
+        }
+
+        private Vector GetPilotTranslation()
+        {
             if (Vessel == FlightGlobals.ActiveVessel)
             {
-                FlightInputHandler.state.mainThrottle = floatValue;
+                return new Vector(FlightInputHandler.state.X, FlightInputHandler.state.Y, FlightInputHandler.state.Z);
             }
+            return Vector.Zero;
+        }
+
+        private Vector GetPilotRotation()
+        {
+            if (Vessel == FlightGlobals.ActiveVessel)
+            {
+                return new Vector(FlightInputHandler.state.yaw, FlightInputHandler.state.pitch, FlightInputHandler.state.roll);
+            }
+            return Vector.Zero;
         }
 
         private void SetTranslation(Vector vectorValue)
@@ -225,23 +397,6 @@ namespace kOS.Suffixed
             }
             bound = true;
             UnityEngine.Debug.Log("kOS: FlightControl Bound");
-        }
-
-        public void Unbind()
-        {
-            UnityEngine.Debug.Log("kOS: FlightControl Unbinding");
-            if (!bound) return;
-
-            if (RemoteTechHook.IsAvailable())
-            {
-                RemoteTechHook.Instance.RemoveSanctionedPilot(Vessel.id, OnFlyByWire);
-            }
-            else
-            {
-                Vessel.OnFlyByWire -= OnFlyByWire;
-            }
-            bound = false;
-            UnityEngine.Debug.Log("kOS: FlightControl Unbound");
         }
 
         private bool CheckKillRotation(string suffixName, object value)
@@ -334,21 +489,6 @@ namespace kOS.Suffixed
             if(Math.Abs(wheelSteerTrim) > SETTING_EPILSON) st.wheelSteerTrim = wheelSteerTrim;
             if(Math.Abs(wheelThrottleTrim) > SETTING_EPILSON) st.wheelThrottleTrim = wheelThrottleTrim;
 
-        }
-
-        public void UpdateVessel(Vessel toUpdate)
-        {
-            Vessel = toUpdate;
-        }
-
-        public void Dispose()
-        {
-            Unbind();
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0} FlightControl for {1}", base.ToString(), Vessel.vesselName);
         }
     }
 }

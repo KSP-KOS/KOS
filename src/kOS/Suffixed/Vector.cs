@@ -196,6 +196,11 @@ namespace kOS.Suffixed
             return base.SetSuffix(suffixName, value);
         }
 
+        public static Vector Zero
+        {
+            get { return new Vector(Vector3d.zero);}
+        }
+
         public Vector3d ToVector3D()
         {
             return new Vector3d(X, Y, Z);
