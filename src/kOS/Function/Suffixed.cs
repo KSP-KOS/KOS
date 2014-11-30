@@ -64,6 +64,45 @@ namespace kOS.Function
         }
     }
 
+    [Function("rotatefromto")]
+    public class FunctionRotateFromTo : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Vector toVector = GetVector(shared.Cpu.PopValue());
+            Vector fromVector = GetVector(shared.Cpu.PopValue());
+
+            var result = Direction.FromVectorToVector(fromVector, toVector);
+            shared.Cpu.PushStack(result);
+        }
+    }
+
+    [Function("lookdirup")]
+    public class FunctionLookDirUp : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Vector topVector = GetVector(shared.Cpu.PopValue());
+            Vector lookVector = GetVector(shared.Cpu.PopValue());
+
+            var result = Direction.LookRotation(lookVector, topVector);
+            shared.Cpu.PushStack(result);
+        }
+    }
+
+    [Function("angleaxis")]
+    public class FunctionAngleAxis : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            Vector axisVector = GetVector(shared.Cpu.PopValue());
+            double degrees = GetDouble(shared.Cpu.PopValue());
+
+            var result = Direction.AngleAxis(degrees, axisVector);
+            shared.Cpu.PushStack(result);
+        }
+    }
+
     [Function("latlng")]
     public class FunctionLatLng : FunctionBase
     {
