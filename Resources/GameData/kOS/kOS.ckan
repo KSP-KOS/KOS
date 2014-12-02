@@ -1,0 +1,34 @@
+{
+    "spec_version"   : 1,
+    "identifier"     : "kOS",
+    "$kref"          : "#/ckan/kerbalstuff",
+    "license"        : "GPL-3.0",
+    "release_status" : "stable",
+    "resources"      : {
+        "manual"       : "http://ksp-kos.github.io/KOS_DOC/",
+        "github"       : {
+            "url"      : "https://github.com/KSP-KOS/KOS",
+            "releases" : true
+        }
+    },
+    "install" : [
+        {
+            "file"       : "GameData/kOS",
+            "install_to" : "GameData"
+        }
+    ],
+	"recommends": [
+		{
+			"name": "ModuleManager",
+			"min_version": "2.3.1",
+			"comment": "Earlier versions of MM have forward compatibility problems, according to the MM release notes."
+		}
+	],
+	"suggests": [
+		{
+			"name": "RemoteTech",
+			"min_version": "1.5.1",
+			"comment": "RT gives incentive to having local control of craft, even unmanned ones"
+		}
+	],
+}
