@@ -139,9 +139,9 @@ namespace kOS.Suffixed
             AddSuffix(new string[] {"STARVECTOR","RIGHTVECTOR"},
                       new Suffix<Vector>(() => new Vector(rotation*Vector3.right),
                                          "This direction's starboard direction expressed as a unit vector."));
-            AddSuffix("FROM",
-                      new OneArgsSuffix<Direction,Direction>(RelativeFrom,
-                                                             "Returns the Direction that would rotate from this input Direction to this direction."));
+            AddSuffix("INVERSE",
+                      new Suffix<Direction>(() => new Direction(rotation.Inverse()),
+                                            "Returns the inverse of this direction - meaning the rotation that would go FROM this direction TO the universe's raw orientation."));
         }
 
         public static Direction operator *(Direction a, Direction b)
