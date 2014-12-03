@@ -440,7 +440,7 @@ namespace kOS.Execution
         ///   back.  If it's not a variable, return it as-is.  If it's a variable,
         ///   look it up and return that.
         /// </summary>
-        /// <param name="testvalue">the object which might be a variable name</param>
+        /// <param name="testValue">the object which might be a variable name</param>
         /// <param name="barewordOkay">
         ///   Is this a case in which it's acceptable for the
         ///   variable not to exist, and if it doesn't exist then the variable name itself
@@ -826,24 +826,23 @@ namespace kOS.Execution
                     }
                 }
 
-                if (shared.ScriptHandler != null && scriptBuilder.Length > 0)
+                if (shared.ScriptHandler == null || scriptBuilder.Length <= 0) return;
+
+                var programBuilder = new ProgramBuilder();
+                // TODO: figure out how to store the filename and reload it for arg 1 below:
+                // (Possibly all of OnLoad needs work because it never seemed to bring
+                // back the context fully right anyway, which is why this hasn't been
+                // addressed yet).
+                try
                 {
-                    var programBuilder = new ProgramBuilder();
-                    // TODO: figure out how to store the filename and reload it for arg 1 below:
-                    // (Possibly all of OnLoad needs work because it never seemed to bring
-                    // back the context fully right anyway, which is why this hasn't been
-                    // addressed yet).
-                    try
-                    {
-                        UnityEngine.Debug.LogWarning("kOS: Parsing Context:\n\n" + scriptBuilder.ToString());
-                        programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
-                        List<Opcode> program = programBuilder.BuildProgram();
-                        RunProgram(program, true);
-                    }
-                    catch (NullReferenceException ex)
-                    {
-                        UnityEngine.Debug.LogError("kOS: program builder failed on load. " + ex.Message);
-                    }
+                    UnityEngine.Debug.LogWarning("kOS: Parsing Context:\n\n" + scriptBuilder);
+                    programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
+                    List<Opcode> program = programBuilder.BuildProgram();
+                    RunProgram(program, true);
+                }
+                catch (NullReferenceException ex)
+                {
+                    UnityEngine.Debug.LogError("kOS: program builder failed on load. " + ex.Message);
                 }
             }
             catch (Exception e)

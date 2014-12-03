@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using kOS.Module;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;

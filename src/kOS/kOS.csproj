@@ -80,6 +80,11 @@
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
     <Compile Include="Persistence\PersistenceExtensions.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSNameTagWindow.cs" />
@@ -137,6 +142,12 @@
       <Project>{590ffda8-7b44-4bc3-a12a-5ffe2bb7d8fd}</Project>
       <Name>kOS.Safe</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

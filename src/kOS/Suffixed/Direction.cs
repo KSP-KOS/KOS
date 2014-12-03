@@ -1,7 +1,7 @@
-﻿using System;
-using UnityEngine;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using System;
+using UnityEngine;
 
 namespace kOS.Suffixed
 {
@@ -17,14 +17,15 @@ namespace kOS.Suffixed
         }
 
         public Direction(Quaternion q)
+            : this()
         {
             rotation = q;
             euler = q.eulerAngles;
             vector = rotation * Vector3d.forward;
-            DirectionInitializeSuffixes();
         }
 
         public Direction(Vector3d v3D, bool isEuler)
+            : this()
         {
             if (isEuler)
             {
@@ -34,7 +35,6 @@ namespace kOS.Suffixed
             {
                 Vector = v3D;
             }
-            DirectionInitializeSuffixes();
         }
 
         // The following two are effectively constructors, but because they have
@@ -55,7 +55,7 @@ namespace kOS.Suffixed
         /// <returns></returns>
         public static Direction FromVectorToVector(Vector3d v1, Vector3d v2)
         {
-            return new Direction( Quaternion.FromToRotation(v1, v2));
+            return new Direction(Quaternion.FromToRotation(v1, v2));
         }
 
         /// <summary>
@@ -69,12 +69,12 @@ namespace kOS.Suffixed
         /// <returns>new direction.</returns>
         public static Direction LookRotation(Vector3d lookDirection, Vector3d upDirection)
         {
-            return new Direction( Quaternion.LookRotation(lookDirection, upDirection));
+            return new Direction(Quaternion.LookRotation(lookDirection, upDirection));
         }
-        
+
         // This next one doesn't have a common signature, but it's kept as a static
         // instead of a constructor because it's coherent with the other ones that way:
-        
+
         /// <summary>
         /// Make a rotation of a given angle around a given axis vector.
         /// <param name="degrees">The angle around the axis to rotate, in degrees.</param>
@@ -84,7 +84,6 @@ namespace kOS.Suffixed
         {
             return new Direction(Quaternion.AngleAxis((float)degrees, axis));
         }
-
 
         public Vector3d Vector
         {
@@ -118,26 +117,26 @@ namespace kOS.Suffixed
                 vector = rotation * Vector3d.forward;
             }
         }
-        
+
         private void DirectionInitializeSuffixes()
         {
             AddSuffix("PITCH",
                       new Suffix<double>(() => euler.x,
-                                         "The rotation around the universe's X axis.  The word 'PITCH' is a misnowmer."));
+                                         "The rotation around the universe's X axis.  The word 'PITCH' is a misnomer."));
             AddSuffix("YAW",
                       new Suffix<double>(() => euler.y,
-                                         "The rotation around the universe's Y axis.  The word 'YAW' is a misnowmer."));
+                                         "The rotation around the universe's Y axis.  The word 'YAW' is a misnomer."));
             AddSuffix("ROLL",
                       new Suffix<double>(() => euler.z,
-                                         "The rotation around the universe's Z axis.  The word 'ROLL' is a misnowmer."));
-            AddSuffix(new string[] {"FOREVECTOR","VECTOR"},
+                                         "The rotation around the universe's Z axis.  The word 'ROLL' is a misnomer."));
+            AddSuffix(new[] { "FOREVECTOR", "VECTOR" },
                       new Suffix<Vector>(() => new Vector(vector),
                                          "This direction's forward direction expressed as a unit vector."));
-            AddSuffix(new string[] {"TOPVECTOR","UPVECTOR"},
-                      new Suffix<Vector>(() => new Vector(rotation*Vector3.up),
+            AddSuffix(new[] { "TOPVECTOR", "UPVECTOR" },
+                      new Suffix<Vector>(() => new Vector(rotation * Vector3.up),
                                          "This direction's top direction expressed as a unit vector."));
-            AddSuffix(new string[] {"STARVECTOR","RIGHTVECTOR"},
-                      new Suffix<Vector>(() => new Vector(rotation*Vector3.right),
+            AddSuffix(new[] { "STARVECTOR", "RIGHTVECTOR" },
+                      new Suffix<Vector>(() => new Vector(rotation * Vector3.right),
                                          "This direction's starboard direction expressed as a unit vector."));
             AddSuffix("INVERSE",
                       new Suffix<Direction>(() => new Direction(rotation.Inverse()),
@@ -146,12 +145,12 @@ namespace kOS.Suffixed
 
         public static Direction operator *(Direction a, Direction b)
         {
-            return new Direction(a.Rotation*b.Rotation);
+            return new Direction(a.Rotation * b.Rotation);
         }
-        
+
         public static Direction operator +(Direction a, Direction b)
         {
-            return new Direction(a.Euler+ b.Euler, true);
+            return new Direction(a.Euler + b.Euler, true);
         }
 
         public static Direction operator -(Direction a, Direction b)
@@ -165,30 +164,30 @@ namespace kOS.Suffixed
             if (otherVector != null)
             {
                 Vector3d vec = otherVector;
-                return new Vector(Rotation*vec);
+                return new Vector(Rotation * vec);
             }
 
             if (op == "*" && other is Direction)
             {
                 // If I remember correctly, order of multiplication DOES matter with quaternions
-                return !reverseOrder ? this*(Direction) other : (Direction) other*this;
+                return !reverseOrder ? this * (Direction)other : (Direction)other * this;
             }
 
             if (op == "+" && other is Direction)
             {
-                return this + (Direction) other;
+                return this + (Direction)other;
             }
 
             if (op == "-" && other is Direction)
             {
-                return !reverseOrder ? this - (Direction) other : (Direction) other - this;
+                return !reverseOrder ? this - (Direction)other : (Direction)other - this;
             }
 
             return null;
         }
-        
+
         /// <summary>
-        /// Returns this rotation relative to a starting rotation - ie.. how you woukld
+        /// Returns this rotation relative to a starting rotation - ie.. how you would
         /// have to rotate from that start rotation to get to this one.
         /// </summary>
         /// <param name="fromDir">start rotation.</param>
