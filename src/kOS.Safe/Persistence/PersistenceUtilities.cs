@@ -20,19 +20,26 @@ namespace kOS.Safe.Persistence
             var firstFour = new Byte[4];
             int atMostFour = Math.Min(4, firstBytes.Length);
             Array.Copy(firstBytes, 0, firstFour, 0, atMostFour);
+            
+            System.Console.WriteLine("identifying category of file:\n" + firstFour[0] + ", " + firstFour[1] + ", " + firstFour[2] + ", " + firstFour[3]); //eraseme
 
             var returnCat = (atMostFour < 4) ? FileCategory.TOOSHORT : FileCategory.OTHER; // default if none of the conditions pass
 
             if (firstFour.SequenceEqual(CompiledObject.MagicId))
             {
+                System.Console.WriteLine(" returning type of KSM."); // eraseme
                 returnCat = FileCategory.KSM;
             }
             else
             {
                 bool isAscii = firstFour.All(b => b == (byte)'\n' || b == (byte)'\t' || b == (byte)'\r' || (b >= (byte)32 && b <= (byte)127));
                 if (isAscii)
+                {
+                    System.Console.WriteLine(" returning type of ASCII."); // eraseme
                     returnCat = FileCategory.ASCII;
+                }
             }
+            System.Console.WriteLine(" returning type of " + returnCat); // eraseme
             return returnCat;
 
             // There is not currently an explicit test for KERBOSRIPT versus other types of ASCII.

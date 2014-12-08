@@ -100,10 +100,12 @@ namespace kOS.Persistence
             try
             {
                 string decodedString;
+                UnityEngine.Debug.Log("Working on decoding file: " + programFile.Filename ); //eraseme
                 try
                 {
                     // base64 encoding
                     byte[] decodedBuffer = DecodeBase64ToBinary(input);
+                    UnityEngine.Debug.Log("Decoding base 64 worked.  Now trying to decipher the kind."); // eraseme
                     FileCategory whatKind = PersistenceUtilities.IdentifyCategory(decodedBuffer);
                     if (whatKind == FileCategory.ASCII || whatKind == FileCategory.KERBOSCRIPT)
                     {
@@ -112,12 +114,14 @@ namespace kOS.Persistence
                     }
                     else
                     {
+                        UnityEngine.Debug.Log("Binary content has " + decodedBuffer.Length + " bytes in it."); // eraseme
                         programFile.BinaryContent = decodedBuffer;
                     }
                 }
                 catch (FormatException)
                 {
                     // standard encoding
+                    UnityEngine.Debug.Log("Decoding base64 didn't work."); // eraseme
                     decodedString = PersistenceUtilities.DecodeLine(input);
                     programFile.StringContent = decodedString;
                 }
