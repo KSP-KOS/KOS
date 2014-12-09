@@ -421,9 +421,9 @@ namespace kOS.Suffixed
                 case "FACING":
                     return VesselUtils.GetFacing(Vessel);
                 case "ANGULARMOMENTUM":
-                    return new Direction(Vessel.angularMomentum, true);
+                    return new Vector(Vessel.angularMomentum);
                 case "ANGULARVEL":
-                    return new Direction(Vessel.angularVelocity, true);
+                    return new Vector(Vessel.angularVelocity);
                 case "MASS":
                     return Vessel.GetTotalMass();
                 case "VERTICALSPEED":
