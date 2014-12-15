@@ -72,7 +72,6 @@ namespace kOS.Persistence
                     node.AddValue("line", PersistenceUtilities.EncodeLine(programFile.StringContent));
                 }
             }
-                
             return node;
         }
 
@@ -92,20 +91,37 @@ namespace kOS.Persistence
                     csStream.Write(input, 0, input.Length);
                 }
 
-                return Convert.ToBase64String(compressedStream.ToArray());
+                string returnValue = Convert.ToBase64String(compressedStream.ToArray());
+                
+                // Added the following to fix issue #429:  Base64 content can include the slash character '/', and
+                // if it happens to have two of them contiguously, it forms a comment in the persistence file and
+                // truncates the value.  So change them to a different character to protect the file.
+                // The comma ',' char is not used by base64 so it's a safe alternative to use as we'll be able to
+                // swap all of the commas back to slashes on reading, knowing that commas can only appear as the
+                // result of this swap on writing:
+                returnValue = returnValue.Replace('/',',');
+
+                // To erendrake: this should remain in the code, but be changed to use SuperVerbose. But I
+                // can't figure out how I'm supposed to call SuperVerbose from this file, since it's in the SharedObjects:
+                UnityEngine.Debug.Log("About to store the following Base64 string:\n" + returnValue);
+
+                return returnValue;
             }
         }
+
         private static void Decode(ProgramFile programFile, string input)
         {
             try
             {
                 string decodedString;
-                UnityEngine.Debug.Log("Working on decoding file: " + programFile.Filename ); //eraseme
                 try
                 {
                     // base64 encoding
-                    byte[] decodedBuffer = DecodeBase64ToBinary(input);
-                    UnityEngine.Debug.Log("Decoding base 64 worked.  Now trying to decipher the kind."); // eraseme
+
+                    // Fix for issue #429.  See comment up in EncodeBase64() method above for an explanation:
+                    string massagedInput = input.Replace(',','/');
+                    
+                    byte[] decodedBuffer = DecodeBase64ToBinary(massagedInput);
                     FileCategory whatKind = PersistenceUtilities.IdentifyCategory(decodedBuffer);
                     if (whatKind == FileCategory.ASCII || whatKind == FileCategory.KERBOSCRIPT)
                     {
@@ -114,14 +130,12 @@ namespace kOS.Persistence
                     }
                     else
                     {
-                        UnityEngine.Debug.Log("Binary content has " + decodedBuffer.Length + " bytes in it."); // eraseme
                         programFile.BinaryContent = decodedBuffer;
                     }
                 }
                 catch (FormatException)
                 {
                     // standard encoding
-                    UnityEngine.Debug.Log("Decoding base64 didn't work."); // eraseme
                     decodedString = PersistenceUtilities.DecodeLine(input);
                     programFile.StringContent = decodedString;
                 }

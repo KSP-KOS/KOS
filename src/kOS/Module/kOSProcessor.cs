@@ -153,9 +153,11 @@ namespace kOS.Module
             shared.VolumeMgr.Add(archive);
 
             // initialize harddisk
-            if (HardDisk == null && archive.CheckRange(vessel))
-            {
+            if (HardDisk == null)
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+            // populate it with the boot file, but only if in range:
+            if (archive.CheckRange(vessel))
+            {
                 var bootProgramFile = archive.GetByName(bootFile);
                 if (bootProgramFile != null)
                 {

@@ -111,11 +111,10 @@ namespace kOS.Function
                     parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
                 }
                 else
+                {
                     parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
-                programContext.AddParts(parts);
-                
-                string erasemeString = Utilities.Utils.GetCodeFragment(programContext.Program);  // eraaseme - remove after debugging is done.
-                UnityEngine.Debug.Log("(PROGRAM DUMP OF " + filePath + ")\n"+erasemeString);     // eraaseme - remove after debugging is done.
+                }
+                programContext.AddParts(parts);                
             }
         }
     }
@@ -143,7 +142,7 @@ namespace kOS.Function
             topStack = shared.Cpu.PopValue(true);
             if (topStack != null)
                 fileName = topStack.ToString();
-            
+
             if (fileName == null)
                 throw new KOSFileException("No filename to load was given.");
             
@@ -183,7 +182,9 @@ namespace kOS.Function
                         parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
                     }
                     else
+                    {
                         parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
+                    }
                     int programAddress = programContext.AddObjectParts(parts);
                     // push the entry point address of the new program onto the stack
                     shared.Cpu.PushStack(programAddress);
