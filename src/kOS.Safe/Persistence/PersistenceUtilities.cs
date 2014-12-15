@@ -20,7 +20,6 @@ namespace kOS.Safe.Persistence
             var firstFour = new Byte[4];
             int atMostFour = Math.Min(4, firstBytes.Length);
             Array.Copy(firstBytes, 0, firstFour, 0, atMostFour);
-
             var returnCat = (atMostFour < 4) ? FileCategory.TOOSHORT : FileCategory.OTHER; // default if none of the conditions pass
 
             if (firstFour.SequenceEqual(CompiledObject.MagicId))

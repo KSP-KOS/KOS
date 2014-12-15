@@ -1,7 +1,6 @@
 ﻿using kOS.Factories;
 using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
-using kOS.Persistence;
 
 namespace kOS.AddOns.RemoteTech2
 {
