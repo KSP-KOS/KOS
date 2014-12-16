@@ -5,7 +5,7 @@ namespace kOS
 {
     public class Core : MonoBehaviour
     {
-        public static VersionInfo VersionInfo = new VersionInfo(0, 15, 3);
+        public static VersionInfo VersionInfo = new VersionInfo(0, 15, 4);
 
         public static Core Fetch; 
         

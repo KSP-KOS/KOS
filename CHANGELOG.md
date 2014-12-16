@@ -1,6 +1,20 @@
 kOS Mod Changelog
 =================
 
+# v0.15.4
+###BREAKING CHANGES
+* Issue #431: SHIP:ANGULARMOMENTUM and SHIP:ANGULARVEL have been changed from directions to vectors to me more consistant with their nature
+
+#### New Stuff:
+* Should now be compatible with KSP 0.90
+
+#### Bug Fixes:
+* Issue #421: some local files are corrupt
+* Issue #423: its possible to create a file with no extension
+* Issue #424: additional bootfile suffix protection
+* Issue #429: files sent to persistence file no longer get truncated
+
+
 # v0.15.3
 BugFixes:
 * Issue #417: No error message on nonexistent function.
