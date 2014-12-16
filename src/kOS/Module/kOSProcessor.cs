@@ -5,6 +5,7 @@ using kOS.Execution;
 using kOS.Factories;
 using kOS.Function;
 using kOS.Safe.Persistence;
+using kOS.Utilities;
 using UnityEngine;
 using KSP.IO;
 using kOS.InterProcessor;
@@ -197,7 +198,7 @@ namespace kOS.Module
                     // If on same vessel, sort by part UID last:
                     if (compare != 0)
                         return compare;
-                    return (a.part.uid < b.part.uid) ? -1 : (a.part.uid > b.part.uid) ? 1 : 0;
+                    return (a.part.uid() < b.part.uid()) ? -1 : (a.part.uid() > b.part.uid()) ? 1 : 0;
                 });
             }
             GameEvents.onPartDestroyed.Add(OnDestroyingMyHardware);

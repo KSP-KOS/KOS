@@ -97,7 +97,7 @@ namespace kOS.Utilities
             const bool DEBUG_WALK = false; // set to true to enable the logging of the recursive walk.
             var indent = new String(',', rDepth);
 
-            if (DEBUG_WALK) Debug.Log(indent + "ProspectForResource( " + resourceName + ", " + part.uid + ":" + part.name + ", ...)");
+            if (DEBUG_WALK) Debug.Log(indent + "ProspectForResource( " + resourceName + ", " + part.uid() + ":" + part.name + ", ...)");
             double ret = 0;
 
             if (visited.Contains(part))

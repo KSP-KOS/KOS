@@ -43,7 +43,8 @@ namespace kOS.Screen
             SetEnabled(true);
 
             if (HighLogic.LoadedSceneIsEditor)
-                EditorLogic.fetch.SetHighlightRecursive(false, attachedModule.part);
+                //TODO: POST 0.90 REVIEW
+                attachedModule.part.SetHighlight(false, true);
         }
 
         /// <summary>
@@ -146,7 +147,8 @@ namespace kOS.Screen
             SetEnabled(false);
 
             if (HighLogic.LoadedSceneIsEditor)
-                EditorLogic.fetch.SetHighlightRecursive(false, attachedModule.part);
+                //TODO: POST 0.90 REVIEW
+                attachedModule.part.SetHighlight(false, true);
         }
     }
 }

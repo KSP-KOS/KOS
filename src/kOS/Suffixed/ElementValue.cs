@@ -2,6 +2,7 @@
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
@@ -17,7 +18,7 @@ namespace kOS.Suffixed
             name = vessel.vesselName;
 
             AddSuffix("NAME", new Suffix<string>(() => vessel.vesselName));
-            AddSuffix("UID", new Suffix<uint>(() => vessel.rootPart.uid));
+            AddSuffix("UID", new Suffix<uint>(() => vessel.rootPart.uid()));
             AddSuffix("PARTCOUNT", new Suffix<int>(() => parts.Count()));
             AddSuffix("PARTS", new Suffix<ListValue>(() => PartsToList(parts)));
         }

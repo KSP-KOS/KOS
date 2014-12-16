@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Net;
 using kOS.Module;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Linq;
+using kOS.Utilities;
 using UnityEngine;
 
 namespace kOS.Suffixed.Part
@@ -31,7 +31,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("NAME", new Suffix<string>(() => Part.name));
             AddSuffix("TITLE", new Suffix<string>(() => Part.partInfo.title));
             AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
-            AddSuffix("UID", new Suffix<uint>(() => Part.uid));
+            AddSuffix("UID", new Suffix<uint>(() => Part.uid()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction( Part.transform.rotation) ));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector( Part.transform.position - shared.Vessel.findWorldCenterOfMass() )));
             AddSuffix("TAG", new NoArgsSuffix<string>(GetTagName));
@@ -70,7 +70,7 @@ namespace kOS.Suffixed.Part
         {
             string tagName = GetTagName();
             if (string.IsNullOrEmpty(tagName))
-                return string.Format("PART({0},uid={1})", Part.name, Part.uid);
+                return string.Format("PART({0},uid={1})", Part.name, Part.uid());
             return string.Format("PART({0},tag={1})", Part.name, tagName);
         }
 

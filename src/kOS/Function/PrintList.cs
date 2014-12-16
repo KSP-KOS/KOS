@@ -186,7 +186,7 @@ namespace kOS.Function
 
             foreach (Part part in shared.Vessel.Parts)
             {
-                list.AddItem(part.ConstructID, part.partInfo.name);
+                list.AddItem(part.ConstructID(), part.partInfo.name);
             }
 
             return list;
@@ -205,12 +205,12 @@ namespace kOS.Function
                 {
                     var engineMod = module as ModuleEngines;
                     if (engineMod != null) {
-                        list.AddItem(part.uid, part.inverseStage, engineMod.moduleName);
+                        list.AddItem(part.uid(), part.inverseStage, engineMod.moduleName);
                     }
 
                     var engineModFx = module as ModuleEnginesFX;
                     if (engineModFx != null) {
-                        list.AddItem(part.uid, part.inverseStage, engineModFx.moduleName);
+                        list.AddItem(part.uid(), part.inverseStage, engineModFx.moduleName);
                     }
                 }
             }
