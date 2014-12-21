@@ -153,7 +153,7 @@ namespace kOS.Binding
 
         private bool VesselIsValid(Vessel vessel)
         {
-            return currentVessel != null && currentVessel.rootPart != null;
+            return vessel != null && vessel.rootPart != null;
         }
 
         private class FlightCtrlParam : IDisposable
