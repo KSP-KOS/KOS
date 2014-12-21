@@ -87,8 +87,8 @@ namespace kOS.Suffixed
             //THROTTLE
             AddSuffix(new[] { "MAINTHROTTLE" }, new ClampSetSuffix<float>(() => mainThrottle, value => mainThrottle = value, 0, 1));
             AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<float>(() => Vessel.ctrlState.mainThrottle, SetPilotMainThrottle, 0, 1));
-            AddSuffix(new[] { "WHEELTHROTTLE" }, new ClampSetSuffix<float>(() => wheelThrottle, value => wheelThrottle = value, 0, 1));
-            AddSuffix(new[] { "WHEELTHROTTLETRIM" }, new ClampSetSuffix<float>(() => wheelThrottleTrim, value => wheelThrottleTrim = value, 0, 1));
+            AddSuffix(new[] { "WHEELTHROTTLE" }, new ClampSetSuffix<float>(() => wheelThrottle, value => wheelThrottle = value, -1, 1));
+            AddSuffix(new[] { "WHEELTHROTTLETRIM" }, new ClampSetSuffix<float>(() => wheelThrottleTrim, value => wheelThrottleTrim = value, -1, 1));
             AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<float>(() => Vessel.ctrlState.wheelThrottle));
             AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<float>(() => Vessel.ctrlState.wheelThrottleTrim));
 

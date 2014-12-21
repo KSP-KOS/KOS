@@ -512,8 +512,7 @@ namespace kOS.Screen
             if (prevHoverPart != null && prevHoverPart != newHoverPart)
             {
                 prevHoverPart.SetHighlightColor(originalPartHighlightColor);
-                //TODO: POST 0.90 REVIEW
-                prevHoverPart.SetHighlight(false, true);
+                prevHoverPart.SetHighlight(false, false);
             }
             
             // If we are now hovering over a part area in the panel, then start highlighting it,
@@ -522,8 +521,7 @@ namespace kOS.Screen
             {
                 originalPartHighlightColor = newHoverPart.highlightColor;
                 newHoverPart.SetHighlightColor(ourPartHighlightColor);
-                //TODO: POST 0.90 REVIEW
-                newHoverPart.SetHighlight(true, true);
+                newHoverPart.SetHighlight(true, false);
             }
 
             prevHoverPart = newHoverPart;

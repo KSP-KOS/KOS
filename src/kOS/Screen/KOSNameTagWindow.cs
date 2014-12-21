@@ -43,8 +43,7 @@ namespace kOS.Screen
             SetEnabled(true);
 
             if (HighLogic.LoadedSceneIsEditor)
-                //TODO: POST 0.90 REVIEW
-                attachedModule.part.SetHighlight(false, true);
+                attachedModule.part.SetHighlight(false, false);
         }
 
         /// <summary>
@@ -147,8 +146,7 @@ namespace kOS.Screen
             SetEnabled(false);
 
             if (HighLogic.LoadedSceneIsEditor)
-                //TODO: POST 0.90 REVIEW
-                attachedModule.part.SetHighlight(false, true);
+                attachedModule.part.SetHighlight(false, false);
         }
     }
 }
