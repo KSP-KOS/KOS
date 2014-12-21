@@ -220,7 +220,7 @@ namespace kOS.Suffixed
             }
             else
             {
-                Vessel.OnFlyByWire += OnFlyByWire;
+                Vessel.OnPreAutopilotUpdate += OnFlyByWire;
             }
             bound = true;
             UnityEngine.Debug.Log("kOS: FlightControl Bound");
@@ -237,7 +237,7 @@ namespace kOS.Suffixed
             }
             else
             {
-                Vessel.OnFlyByWire -= OnFlyByWire;
+                Vessel.OnPreAutopilotUpdate -= OnFlyByWire;
             }
             bound = false;
             UnityEngine.Debug.Log("kOS: FlightControl Unbound");
