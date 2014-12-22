@@ -9,6 +9,10 @@ namespace kOS.Screen
         private KOSNameTag attachedModule;
         private Rect windowRect;
         private string tagValue;
+        // ReSharper disable RedundantDefaultFieldInitializer
+        private bool wasFocusedOnce = false; // "explicit", not "redundant".
+        private int numberOfRepaints = 0; // "explicit", not "redundant".
+        // ReSharper enable RedundantDefaultFieldInitializer
 
         public void Invoke(KOSNameTag module, string oldValue)
         {
@@ -39,7 +43,8 @@ namespace kOS.Screen
             SetEnabled(true);
 
             if (HighLogic.LoadedSceneIsEditor)
-                EditorLogic.fetch.SetHighlightRecursive(false, attachedModule.part);
+                //TODO: POST 0.90 REVIEW
+                attachedModule.part.SetHighlight(false, true);
         }
 
         /// <summary>
@@ -71,6 +76,9 @@ namespace kOS.Screen
         
         public void OnGUI()
         {
+            if (Event.current.type != EventType.Repaint)
+                ++numberOfRepaints;
+            
             if (! enabled)
                 return;
             if (HighLogic.LoadedSceneIsEditor)
@@ -78,8 +86,19 @@ namespace kOS.Screen
 
             GUI.skin = HighLogic.Skin;
             GUILayout.Window(0, windowRect, DrawWindow,"KOS nametag");
+            
+            // Ensure that the first time the window is made, it gets keybaord focus,
+            // but allow the focus to leave the window after that:
+            // The reason for the "number of repaints" check is that OnGUI has to run
+            // through several initial passes before all the components are present,
+            // and if you call FocusControl on the first few passes, it has no effect.
+            if (numberOfRepaints >= 2 && ! wasFocusedOnce)
+            {
+                GUI.FocusControl("NameTagField");
+                wasFocusedOnce = true;
+            }
         }
-                
+
         public void DrawWindow( int windowID )
         {
             if (! enabled)
@@ -97,6 +116,7 @@ namespace kOS.Screen
                 }
             }
             GUILayout.Label(attachedModule.part.name);
+            GUI.SetNextControlName("NameTagField");
             tagValue = GUILayout.TextField( tagValue, GUILayout.MinWidth(160f));
 
             GUILayout.BeginHorizontal();
@@ -127,7 +147,8 @@ namespace kOS.Screen
             SetEnabled(false);
 
             if (HighLogic.LoadedSceneIsEditor)
-                EditorLogic.fetch.SetHighlightRecursive(false, attachedModule.part);
+                //TODO: POST 0.90 REVIEW
+                attachedModule.part.SetHighlight(false, true);
         }
     }
 }

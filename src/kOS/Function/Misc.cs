@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Function;
@@ -103,19 +102,19 @@ namespace kOS.Function
                 shared.ScriptHandler.ClearContext("program");
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
-                List<CodePart> parts;
                 var programContext = ((CPU)shared.Cpu).GetProgramContext();
+
+                List<CodePart> codeParts;
                 if (file.Category == FileCategory.KSM)
                 {
                     string prefix = programContext.Program.Count.ToString();
-                    parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
+                    codeParts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
                 }
                 else
-                    parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
-                programContext.AddParts(parts);
-                
-                string erasemeString = Utilities.Utils.GetCodeFragment(programContext.Program);  // eraaseme - remove after debugging is done.
-                UnityEngine.Debug.Log("(PROGRAM DUMP OF " + filePath + ")\n"+erasemeString);     // eraaseme - remove after debugging is done.
+                {
+                    codeParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
+                }
+                programContext.AddParts(codeParts);                
             }
         }
     }
@@ -133,7 +132,7 @@ namespace kOS.Function
             {
                 justCompiling = true;
                 string outputArg = topStack.ToString();
-                if (outputArg != null && outputArg.Equals("-default-compile-out-"))
+                if (outputArg.Equals("-default-compile-out-"))
                     defaultOutput = true;
                 else
                     fileNameOut = PersistenceUtilities.CookedFilename(outputArg, Volume.KOS_MACHINELANGUAGE_EXTENSION);
@@ -143,7 +142,7 @@ namespace kOS.Function
             topStack = shared.Cpu.PopValue(true);
             if (topStack != null)
                 fileName = topStack.ToString();
-            
+
             if (fileName == null)
                 throw new KOSFileException("No filename to load was given.");
             
@@ -183,7 +182,9 @@ namespace kOS.Function
                         parts = shared.VolumeMgr.CurrentVolume.LoadObjectFile(filePath, prefix, file.BinaryContent);
                     }
                     else
+                    {
                         parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
+                    }
                     int programAddress = programContext.AddObjectParts(parts);
                     // push the entry point address of the new program onto the stack
                     shared.Cpu.PushStack(programAddress);

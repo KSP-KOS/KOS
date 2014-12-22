@@ -29,34 +29,6 @@ namespace kOS.Utilities
             return fvi.FileVersion;            
         }
 
-        public static float Clamp(float input, float low, float high)
-        {
-            return (input > high ? high : (input < low ? low : input));
-        }
-
-        public static double Clamp(double input, double low, double high)
-        {
-            return (input > high ? high : (input < low ? low : input));
-        }
-
-        public static double? Clamp(double? input, double low, double high)
-        {
-            if (!input.HasValue)
-            {
-                return null;
-            }
-            return Clamp(input.Value, low, high);
-        }
-
-        public static float? Clamp(float? input, float low, float high)
-        {
-            if (!input.HasValue)
-            {
-                return null;
-            }
-            return Clamp(input.Value, low, high);
-        }
-
         public static bool IsValidNumber(double input)
         {
             return !(double.IsInfinity(input) || double.IsNaN(input));
@@ -125,7 +97,7 @@ namespace kOS.Utilities
             const bool DEBUG_WALK = false; // set to true to enable the logging of the recursive walk.
             var indent = new String(',', rDepth);
 
-            if (DEBUG_WALK) Debug.Log(indent + "ProspectForResource( " + resourceName + ", " + part.uid + ":" + part.name + ", ...)");
+            if (DEBUG_WALK) Debug.Log(indent + "ProspectForResource( " + resourceName + ", " + part.uid() + ":" + part.name + ", ...)");
             double ret = 0;
 
             if (visited.Contains(part))
@@ -256,17 +228,6 @@ namespace kOS.Utilities
                 verticalSliderThumb = new GUIStyle(toCopy.verticalSliderThumb),
                 window = new GUIStyle(toCopy.window),
             };
-        }
-
-        /// <summary>
-        /// Given a Vector3, construct a new Vector3D out of it.
-        /// By all rights SQUAD should have had this as a constructor in their Vector3d class.  I don't know why they didn't.
-        /// </summary>
-        /// <param name="convertFrom">The Vector3 to convert</param>
-        /// <returns>A Vector3d that has the same values as the Vector3 passed in.</returns>
-        public static Vector3d Vector3ToVector3d(Vector3 convertFrom)
-        {
-            return new Vector3d( convertFrom.x, convertFrom.y, convertFrom.z);
         }
 
         /// <summary>

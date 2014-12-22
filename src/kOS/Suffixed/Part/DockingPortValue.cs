@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using UnityEngine;
 
 namespace kOS.Suffixed.Part
 {
@@ -20,11 +21,15 @@ namespace kOS.Suffixed.Part
             AddSuffix("AQUIREFORCE", new Suffix<float>(() => module.acquireForce));
             AddSuffix("AQUIRETORQUE", new Suffix<float>(() => module.acquireTorque));
             AddSuffix("REENGAGEDISTANCE", new Suffix<float>(() => module.minDistanceToReEngage));
-            AddSuffix("DOCKEDSHIPNAME", new Suffix<string>(() => module.vesselInfo != null ? (string) module.vesselInfo.name : string.Empty));
+            AddSuffix("DOCKEDSHIPNAME", new Suffix<string>(() => module.vesselInfo != null ? module.vesselInfo.name : string.Empty));
             AddSuffix("STATE", new Suffix<string>(() => module.state));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => true));
             AddSuffix("UNDOCK", new NoArgsSuffix(() => module.Undock()));
             AddSuffix("TARGET", new NoArgsSuffix(() => module.SetAsTarget()));
+            AddSuffix("PORTFACING", new NoArgsSuffix<Direction>(GetPortFacing,
+                                                               "The direction facing outward from the docking port.  This " +
+                                                               "can differ from :FACING in the case of sideways-facing " +
+                                                               "docking ports like the inline docking port."));
         }
 
         public override ITargetable Target
@@ -39,7 +44,7 @@ namespace kOS.Suffixed.Part
             {
                 foreach (PartModule module in part.Modules)
                 {
-                    UnityEngine.Debug.Log("Module Found: "+ module);
+                    Debug.Log("Module Found: "+ module);
                     var dockingNode = module as ModuleDockingNode;
                     if (dockingNode != null)
                     {
@@ -48,6 +53,16 @@ namespace kOS.Suffixed.Part
                 }
             }
             return toReturn;
+        }
+        
+        private Direction GetPortFacing()
+        {
+            // module.nodeTransform describes the transform representing the facing of
+            // the docking node as opposed to the facing of the part itself.  In the
+            // case of a docking port facing out the side of the part (the in-line
+            // docking node for example) they can differ.
+            //
+            return new Direction(module.nodeTransform.rotation);
         }
     }
 }

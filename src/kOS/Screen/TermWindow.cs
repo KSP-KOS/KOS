@@ -115,7 +115,8 @@ namespace kOS.Screen
 
             // Prevent editor keys from being pressed while typing
             EditorLogic editor = EditorLogic.fetch;
-            if (editor != null && !EditorLogic.softLock) editor.Lock(true, true, true, "kOSTerminal");
+                //TODO: POST 0.90 REVIEW
+            if (editor != null && InputLockManager.IsUnlocked(ControlTypes.All)) editor.Lock(true, true, true, "kOSTerminal");
 
             // This seems to be the only way to force KSP to let me lock out the "X" throttle
             // key.  It seems to entirely bypass the logic of every other keypress in the game,

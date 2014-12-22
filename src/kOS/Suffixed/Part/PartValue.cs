@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Linq;
+using kOS.Utilities;
 using UnityEngine;
 
 namespace kOS.Suffixed.Part
@@ -30,7 +31,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("NAME", new Suffix<string>(() => Part.name));
             AddSuffix("TITLE", new Suffix<string>(() => Part.partInfo.title));
             AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
-            AddSuffix("UID", new Suffix<uint>(() => Part.uid));
+            AddSuffix("UID", new Suffix<uint>(() => Part.uid()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction( Part.transform.rotation) ));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector( Part.transform.position - shared.Vessel.findWorldCenterOfMass() )));
             AddSuffix("TAG", new NoArgsSuffix<string>(GetTagName));
@@ -53,7 +54,7 @@ namespace kOS.Suffixed.Part
                 if (String.Equals(mod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     Debug.Log("yes it does");
-                    return new PartModuleFields(mod,shared);
+                    return PartModuleFieldsFactory.Construct(mod,shared);
                 }
             }
             throw new KOSLookupFailException( "module", modName.ToUpper(), this );
@@ -69,7 +70,7 @@ namespace kOS.Suffixed.Part
         {
             string tagName = GetTagName();
             if (string.IsNullOrEmpty(tagName))
-                return string.Format("PART({0},uid={1})", Part.name, Part.uid);
+                return string.Format("PART({0},uid={1})", Part.name, Part.uid());
             return string.Format("PART({0},tag={1})", Part.name, tagName);
         }
 
@@ -83,11 +84,10 @@ namespace kOS.Suffixed.Part
 
         private Direction GetFacing(global::Part part)
         {
-            Vector3d up = part.vessel.upAxis;
-            var partVec = part.partTransform.forward;
-
-            var d = new Direction { Rotation = Quaternion.LookRotation(partVec, up) };
-            return d;
+            // Our normal facings use Z for forward, but parts use Y for forward:
+            Quaternion rotateZToY = Quaternion.FromToRotation(Vector3.forward, Vector3.up);
+            Quaternion newRotation = part.transform.rotation * rotateZToY;
+            return new Direction(newRotation);
         }
 
         private void ControlFrom()
@@ -128,6 +128,33 @@ namespace kOS.Suffixed.Part
             }
             return returnValue;
         }
-        
+
+        protected bool Equals(PartValue other)
+        {
+            return Equals(Part, other.Part);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((PartValue) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Part != null ? Part.GetHashCode() : 0);
+        }
+
+        public static bool operator ==(PartValue left, PartValue right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(PartValue left, PartValue right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

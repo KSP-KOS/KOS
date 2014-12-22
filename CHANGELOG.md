@@ -1,6 +1,35 @@
 kOS Mod Changelog
 =================
 
+# v0.15.4
+###BREAKING CHANGES
+* Issue #431: SHIP:ANGULARMOMENTUM and SHIP:ANGULARVEL have been changed from directions to vectors to me more consistant with their nature
+
+#### New Stuff:
+* Should now be compatible with KSP 0.90
+
+#### Bug Fixes:
+* Issue #421: some local files are corrupt
+* Issue #423: its possible to create a file with no extension
+* Issue #424: additional bootfile suffix protection
+* Issue #429: files sent to persistence file no longer get truncated
+
+
+# v0.15.3
+BugFixes:
+* Issue #417: No error message on nonexistent function.
+* Issue #413: Name tag window should get keyboard focus when invoked.
+* Issue #405: Equality operator is broken for Wrapped structure objects.
+* Issue #393: Files on local volume do not persist through save/load.
+
+# v0.15.2
+
+BugFixes:
+* :MODULESNAMED returns something useful now #392
+* array syntax bugs #387
+* Added :PORTFACING to docking ports that should always have the correct facing for the port itself #398
+* BREAKING: Partfacing should now come out of the top rather than the side #394
+
 # v0.15.1
 
 BugFixes:

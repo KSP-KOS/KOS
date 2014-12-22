@@ -60,7 +60,7 @@ namespace kOS.Suffixed
         override public Vector GetNorthVector()
         {
             CelestialBody parent = Body.referenceBody ?? Body;
-            return new Vector( Vector3d.Exclude(GetUpVector().ToVector3D(), parent.transform.up) );
+            return new Vector( Vector3d.Exclude(GetUpVector(), parent.transform.up) );
         }
 
         public BodyTarget(string name, SharedObjects shareObj) : this(VesselUtils.GetBodyByName(name),shareObj)
@@ -112,6 +112,34 @@ namespace kOS.Suffixed
         public ITargetable Target
         {
             get { return Body; }
+        }
+
+        protected bool Equals(BodyTarget other)
+        {
+            return Body.Equals(other.Body);
+        }
+
+        public static bool operator ==(BodyTarget left, BodyTarget right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(BodyTarget left, BodyTarget right)
+        {
+            return !Equals(left, right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((BodyTarget) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Body.name.GetHashCode();
         }
     }
 }

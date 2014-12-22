@@ -42,7 +42,7 @@ namespace kOS.Suffixed
         ///   Subclasses must override this method to return the velocity of this object right now.
         /// </summary>
         /// <returns>
-        ///   A OrbitableVelocity object containing both the oribtal and surface velocities of the object in the
+        ///   A OrbitableVelocity object containing both the orbital and surface velocities of the object in the
         ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (soi-body-origin)
         ///   </a>
@@ -51,7 +51,7 @@ namespace kOS.Suffixed
         abstract public OrbitableVelocity GetVelocities();
 
         /// <summary>
-        ///   Subclasses must orverride this method to return the position of this object at some
+        ///   Subclasses must override this method to return the position of this object at some
         ///   arbitrary future time.  It must take into account any orbital transfers to other SOI's
         ///   and any planned maneuver nodes (It should return the predicted location under the
         ///   assumption that the maneuver nodes currently planned will be executed as planned.)
@@ -76,7 +76,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="timeStamp">The universal time of the future prediction</param>
         /// <returns>
-        ///   A OrbitableVelocity object containing both the oribtal and surface velocities of the object in the
+        ///   A OrbitableVelocity object containing both the orbital and surface velocities of the object in the
         ///   <a href='http://ksp-kos.github.io/KOS_DOC/summary_topics/coordframe/raw/'>
         ///     raw (soi-body-origin)
         ///   </a>
@@ -116,7 +116,7 @@ namespace kOS.Suffixed
         abstract public string GetName();
 
         /// <summary>
-        ///   Get the OrbitInfo object assocaited with this Orbitable.
+        ///   Get the OrbitInfo object associated with this Orbitable.
         /// </summary>
         /// <returns>same as using the :ORB suffix term.</returns>
         public OrbitInfo GetOrbitInfo()
@@ -140,9 +140,9 @@ namespace kOS.Suffixed
         
         public Direction GetPrograde()
         {
-            Vector3d up = GetUpVector().ToVector3D();
+            Vector3d up = GetUpVector();
             OrbitableVelocity vels = GetVelocities();
-            Vector3d normOrbVec = vels.Orbital.Normalized().ToVector3D();
+            Vector3d normOrbVec = vels.Orbital.Normalized();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normOrbVec, up)};
             return d;
@@ -150,9 +150,9 @@ namespace kOS.Suffixed
 
         public Direction GetRetrograde()
         {
-            Vector3d up = GetUpVector().ToVector3D();
+            Vector3d up = GetUpVector();
             OrbitableVelocity vels = GetVelocities();
-            Vector3d normOrbVec = vels.Orbital.Normalized().ToVector3D();
+            Vector3d normOrbVec = vels.Orbital.Normalized();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normOrbVec*(-1), up)};
             return d;
@@ -160,9 +160,9 @@ namespace kOS.Suffixed
 
         public Direction GetSurfacePrograde()
         {
-            Vector3d up = GetUpVector().ToVector3D();
+            Vector3d up = GetUpVector();
             OrbitableVelocity vels = GetVelocities();
-            Vector3d normSrfVec = vels.Surface.Normalized().ToVector3D();
+            Vector3d normSrfVec = vels.Surface.Normalized();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normSrfVec, up)};
             return d;
@@ -170,9 +170,9 @@ namespace kOS.Suffixed
 
         public Direction GetSurfaceRetrograde()
         {
-            Vector3d up = GetUpVector().ToVector3D();
+            Vector3d up = GetUpVector();
             OrbitableVelocity vels = GetVelocities();
-            Vector3d normSrfVec = vels.Surface.Normalized().ToVector3D();
+            Vector3d normSrfVec = vels.Surface.Normalized();
 
             var d = new Direction {Rotation = Quaternion.LookRotation(normSrfVec*(-1), up)};
             return d;
@@ -183,7 +183,7 @@ namespace kOS.Suffixed
             CelestialBody parent = Orbit.referenceBody;
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
-            Vector3d unityWorldPos = GetPosition() + Utils.Vector3ToVector3d(Shared.Vessel.findWorldCenterOfMass());
+            Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
             return parent.GetLatitude(unityWorldPos);
         }
         public double PositionToLongitude( Vector pos )
@@ -191,7 +191,7 @@ namespace kOS.Suffixed
             CelestialBody parent = Orbit.referenceBody;
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
-            Vector3d unityWorldPos = GetPosition() + Utils.Vector3ToVector3d(Shared.Vessel.findWorldCenterOfMass());
+            Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
             return Utils.DegreeFix( parent.GetLongitude(unityWorldPos), -180.0 );
         }
         public double PositionToAltitude( Vector pos )
@@ -199,7 +199,7 @@ namespace kOS.Suffixed
             CelestialBody parent = Orbit.referenceBody;
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
-            Vector3d unityWorldPos = GetPosition() + Utils.Vector3ToVector3d(Shared.Vessel.findWorldCenterOfMass());
+            Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
             return parent.GetAltitude(unityWorldPos);
         }
 
@@ -243,9 +243,9 @@ namespace kOS.Suffixed
                 case "BODY":
                     return new BodyTarget(Orbit.referenceBody, Shared); 
                 case "UP":
-                    return new Direction(GetUpVector().ToVector3D(), false);
+                    return new Direction(GetUpVector(), false);
                 case "NORTH":
-                    return new Direction(GetNorthVector().ToVector3D(), false);
+                    return new Direction(GetNorthVector(), false);
                 case "PROGRADE":
                     return GetPrograde();
                 case "RETROGRADE":

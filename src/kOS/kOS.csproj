@@ -80,6 +80,11 @@
     <Compile Include="Module\Bootstrapper.cs" />
     <Compile Include="Module\KOSNameTag.cs" />
     <Compile Include="Persistence\PersistenceExtensions.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSNameTagWindow.cs" />
@@ -89,6 +94,7 @@
     <Compile Include="Suffixed\BodyTarget.cs" />
     <Compile Include="Suffixed\Orbitable.cs" />
     <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
+    <Compile Include="Suffixed\Part\PartModuleFieldsFactory.cs" />
     <Compile Include="Suffixed\Part\PartValueFactory.cs" />
     <Compile Include="Suffixed\Part\PartModuleFields.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
@@ -116,6 +122,7 @@
     <Compile Include="Suffixed\ResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
+    <Compile Include="Utilities\BetaShim.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Screen\TermWindow.cs" />
     <Compile Include="Suffixed\Timespan.cs" />
@@ -136,6 +143,12 @@
       <Project>{590ffda8-7b44-4bc3-a12a-5ffe2bb7d8fd}</Project>
       <Name>kOS.Safe</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

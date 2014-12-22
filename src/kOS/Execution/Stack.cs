@@ -14,9 +14,7 @@ namespace kOS.Execution
 
         public void Push(object item)
         {
-            string message = string.Empty;
-
-            ThrowIfInvalid(item, ref message);
+            ThrowIfInvalid(item);
 
             stackPointer++;
             if (stackPointer < MAX_STACK_SIZE)
@@ -28,26 +26,21 @@ namespace kOS.Execution
                 throw new Exception("Stack overflow!!");
         }
 
-        private void ThrowIfInvalid(object item, ref string message)
+        private void ThrowIfInvalid(object item)
         {
-            if (Config.Instance.EnableSafeMode)
-            {
-                if (item is double)
-                {
-                    if (Double.IsNaN((double)item))
-                    {
-                        // TODO: make an IKOSException for this:
-                        throw new Exception("Tried to push NaN into the stack.");
-                    }
-                    if (Double.IsInfinity((double)item))
-                    {
-                        // TODO: make an IKOSException for this:
-                        throw new Exception("Tried to push Infinity into the stack.");
-                    }
-                }
-            }
+            if (!Config.Instance.EnableSafeMode) return;
+            if (!(item is double)) return;
 
-            return;
+            if (Double.IsNaN((double)item))
+            {
+                // TODO: make an IKOSException for this:
+                throw new Exception("Tried to push NaN into the stack.");
+            }
+            if (Double.IsInfinity((double)item))
+            {
+                // TODO: make an IKOSException for this:
+                throw new Exception("Tried to push Infinity into the stack.");
+            }
         }
 
         /// <summary>
@@ -89,14 +82,11 @@ namespace kOS.Execution
         /// big enough to dig that deep.</returns>
         public object Peek(int digDepth)
         {
-            if (digDepth > stackPointer)
-                return null;
-            else
-                return stack[stackPointer - digDepth];
+            return digDepth > stackPointer ? null : stack[stackPointer - digDepth];
         }
-        
+
         /// <summary>
-        /// Returns the logical size of the curent stack (not its potentially larger storage size).
+        /// Returns the logical size of the current stack (not its potentially larger storage size).
         /// </summary>
         /// <returns>How many items are currently on the stack.</returns>
         public int GetLogicalSize()
@@ -115,7 +105,7 @@ namespace kOS.Execution
             stackPointer = -1;
         }
 
-        public string Dump(int lineCount)
+        public string Dump()
         {
             var builder = new StringBuilder();
             builder.AppendLine("Stack dump:");

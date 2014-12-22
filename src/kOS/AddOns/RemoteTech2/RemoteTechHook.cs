@@ -59,6 +59,7 @@ namespace kOS.AddOns.RemoteTech2
             var type = loadedAssembly.assembly.GetTypes().FirstOrDefault(t => t.FullName.Equals(REMOTE_TECH_API));
             if (type == null) return null;
 
+            Safe.Utilities.Debug.Logger.Log(string.Format("Found API! {0} Version: {1}.{2}", type.Name, loadedAssembly.versionMajor, loadedAssembly.versionMinor)); 
             var methods = type.GetMethods();
             var api = new RemoteTechAPI();
 
@@ -66,19 +67,32 @@ namespace kOS.AddOns.RemoteTech2
             {
                 foreach (var property in api.GetType().GetProperties())
                 {
-                    var method = methods.FirstOrDefault(m => { UnityEngine.Debug.Log(m.Name); return m.Name.Equals(property.Name); });
-                    if (method == null) throw new ArgumentNullException(property.Name);
+                    var method = methods.FirstOrDefault(m =>
+                    {
+                        if (m.Name.Equals(property.Name))
+                        {
+                            Safe.Utilities.Debug.Logger.Log(string.Format("Found Endpoint: {0}", m.Name)); 
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    if (method == null)
+                    {
+                        throw new ArgumentNullException(property.Name);
+                    }
+
                     var del = Delegate.CreateDelegate(property.PropertyType, type, method.Name);
                     property.SetValue(api, del, null);
                 }
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.Log("kOS: Error creating RemoteTech2 interface: " + e);
+                Safe.Utilities.Debug.Logger.Log("kOS: Error creating RemoteTech2 interface: " + e); 
                 return null;
             }
 
-            UnityEngine.Debug.Log("kOS: RemoteTech2 interface successfully created.");
+            Safe.Utilities.Debug.Logger.Log("kOS: RemoteTech2 interface successfully created."); 
             return api;
         }
     }

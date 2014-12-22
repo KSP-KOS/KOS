@@ -72,7 +72,6 @@ namespace kOS.Persistence
                     node.AddValue("line", PersistenceUtilities.EncodeLine(programFile.StringContent));
                 }
             }
-                
             return node;
         }
 
@@ -92,9 +91,22 @@ namespace kOS.Persistence
                     csStream.Write(input, 0, input.Length);
                 }
 
-                return Convert.ToBase64String(compressedStream.ToArray());
+                string returnValue = Convert.ToBase64String(compressedStream.ToArray());
+                
+                // Added the following to fix issue #429:  Base64 content can include the slash character '/', and
+                // if it happens to have two of them contiguously, it forms a comment in the persistence file and
+                // truncates the value.  So change them to a different character to protect the file.
+                // The comma ',' char is not used by base64 so it's a safe alternative to use as we'll be able to
+                // swap all of the commas back to slashes on reading, knowing that commas can only appear as the
+                // result of this swap on writing:
+                returnValue = returnValue.Replace('/',',');
+
+                Debug.Logger.SuperVerbose("About to store the following Base64 string:\n" + returnValue);
+
+                return returnValue;
             }
         }
+
         private static void Decode(ProgramFile programFile, string input)
         {
             try
@@ -103,7 +115,11 @@ namespace kOS.Persistence
                 try
                 {
                     // base64 encoding
-                    byte[] decodedBuffer = DecodeBase64ToBinary(input);
+
+                    // Fix for issue #429.  See comment up in EncodeBase64() method above for an explanation:
+                    string massagedInput = input.Replace(',','/');
+                    
+                    byte[] decodedBuffer = DecodeBase64ToBinary(massagedInput);
                     FileCategory whatKind = PersistenceUtilities.IdentifyCategory(decodedBuffer);
                     if (whatKind == FileCategory.ASCII || whatKind == FileCategory.KERBOSCRIPT)
                     {
@@ -119,6 +135,7 @@ namespace kOS.Persistence
                 {
                     // standard encoding
                     decodedString = PersistenceUtilities.DecodeLine(input);
+                    programFile.StringContent = decodedString;
                 }
             }
             catch (Exception e)

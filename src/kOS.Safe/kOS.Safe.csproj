@@ -75,6 +75,7 @@
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
+    <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\NoArgsSuffix.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Exceptions\KOSLookupFailException.cs" />
     <Compile Include="Exceptions\KOSParseException.cs" />
     <Compile Include="Exceptions\KOSPatchesDeprecationException.cs" />
+    <Compile Include="Exceptions\KOSPersistenceException.cs" />
     <Compile Include="Exceptions\KOSPreserveInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSSuffixUseException.cs" />
     <Compile Include="Exceptions\KOSUndefinedIdentifierException.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Utilities\Environment.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
+    <Compile Include="Utilities\Math.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />

@@ -5,6 +5,7 @@ using kOS.Execution;
 using kOS.Factories;
 using kOS.Function;
 using kOS.Safe.Persistence;
+using kOS.Utilities;
 using UnityEngine;
 using KSP.IO;
 using kOS.InterProcessor;
@@ -32,7 +33,7 @@ namespace kOS.Module
         private const int PROCESSOR_HARD_CAP = 655360;
 
         [KSPField(isPersistant = true, guiName = "Boot File", guiActive = false, guiActiveEditor = false)]
-        public string bootFile = "boot";
+        public string bootFile = "boot.ks";
 
         [KSPField(isPersistant = false, guiName = "Boot File Choice", guiActive = false, guiActiveEditor = true), UI_FloatRange(minValue=0f,maxValue=1f,stepIncrement=1f)]
         public float bootFileChoice = 0f;
@@ -153,14 +154,16 @@ namespace kOS.Module
             shared.VolumeMgr.Add(archive);
 
             // initialize harddisk
-            if (HardDisk == null && archive.CheckRange(vessel))
-            {
+            if (HardDisk == null)
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+            // populate it with the boot file, but only if in range:
+            if (archive.CheckRange(vessel))
+            {
                 var bootProgramFile = archive.GetByName(bootFile);
                 if (bootProgramFile != null)
                 {
                     // Copy to HardDisk as "boot".
-                    var boot = new ProgramFile(bootProgramFile) {Filename = "boot"};
+                    var boot = new ProgramFile(bootProgramFile) {Filename = "boot.ks"};
                     HardDisk.Add(boot);
                 }
             }
@@ -195,7 +198,7 @@ namespace kOS.Module
                     // If on same vessel, sort by part UID last:
                     if (compare != 0)
                         return compare;
-                    return (a.part.uid < b.part.uid) ? -1 : (a.part.uid > b.part.uid) ? 1 : 0;
+                    return (a.part.uid() < b.part.uid()) ? -1 : (a.part.uid() > b.part.uid()) ? 1 : 0;
                 });
             }
             GameEvents.onPartDestroyed.Add(OnDestroyingMyHardware);

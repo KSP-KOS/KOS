@@ -338,14 +338,25 @@ namespace kOS.Execution
 
         public void DumpVariables()
         {
+            StringBuilder msg = new StringBuilder();
             foreach (string ident in variables.Keys)
             {
-                Variable v = variables[ident];
-                string line = ident;
-                line += v.Value == null ? "= <null>" : "= " + v.Value;
+                string line;
+                try {
+                    Variable v = variables[ident];
+                    line = ident;
+                    line += v.Value == null ? "= <null>" : "= " + v.Value;
+                }
+                catch (Exception e)
+                {
+                    // This is necessary because of the deprecation exceptions that
+                    // get raised by FlightStats when you try to print all of them out:
+                    line = ident + "= <value caused exception>\n    " + e.Message;
+                }
                 shared.Screen.Print(line);
-                UnityEngine.Debug.Log(line);
+                msg.AppendLine(line);
             }
+            UnityEngine.Debug.Log(msg.ToString());
             shared.Screen.Print("YOU CAN SEE THIS LOG IN THE DEBUG OUTPUT.");
         }
 
@@ -429,6 +440,7 @@ namespace kOS.Execution
         ///   back.  If it's not a variable, return it as-is.  If it's a variable,
         ///   look it up and return that.
         /// </summary>
+        /// <param name="testValue">the object which might be a variable name</param>
         /// <param name="barewordOkay">
         ///   Is this a case in which it's acceptable for the
         ///   variable not to exist, and if it doesn't exist then the variable name itself
@@ -479,6 +491,7 @@ namespace kOS.Execution
         /// Peek at a value atop the stack without popping it, and if it's a variable name then get its value,
         /// else just return it as it is.
         /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
         /// <param name="barewordOkay">Is this a context in which it's acceptable for
         ///   a variable not existing error to occur (in which case the identifier itself
         ///   should therefore become a string object returned)?</param>
@@ -579,7 +592,7 @@ namespace kOS.Execution
                 if (shared.Logger != null)
                 {
                     shared.Logger.Log(e);
-                    UnityEngine.Debug.Log(stack.Dump(15));
+                    UnityEngine.Debug.Log(stack.Dump());
                 }
 
                 if (contexts.Count == 1)
@@ -813,24 +826,23 @@ namespace kOS.Execution
                     }
                 }
 
-                if (shared.ScriptHandler != null && scriptBuilder.Length > 0)
+                if (shared.ScriptHandler == null || scriptBuilder.Length <= 0) return;
+
+                var programBuilder = new ProgramBuilder();
+                // TODO: figure out how to store the filename and reload it for arg 1 below:
+                // (Possibly all of OnLoad needs work because it never seemed to bring
+                // back the context fully right anyway, which is why this hasn't been
+                // addressed yet).
+                try
                 {
-                    var programBuilder = new ProgramBuilder();
-                    // TODO: figure out how to store the filename and reload it for arg 1 below:
-                    // (Possibly all of OnLoad needs work because it never seemed to bring
-                    // back the context fully right anyway, which is why this hasn't been
-                    // addressed yet).
-                    try
-                    {
-                        UnityEngine.Debug.LogWarning("kOS: Parsing Context:\n\n" + scriptBuilder.ToString());
-                        programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
-                        List<Opcode> program = programBuilder.BuildProgram();
-                        RunProgram(program, true);
-                    }
-                    catch (NullReferenceException ex)
-                    {
-                        UnityEngine.Debug.LogError("kOS: program builder failed on load. " + ex.Message);
-                    }
+                    UnityEngine.Debug.LogWarning("kOS: Parsing Context:\n\n" + scriptBuilder);
+                    programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
+                    List<Opcode> program = programBuilder.BuildProgram();
+                    RunProgram(program, true);
+                }
+                catch (NullReferenceException ex)
+                {
+                    UnityEngine.Debug.LogError("kOS: program builder failed on load. " + ex.Message);
                 }
             }
             catch (Exception e)
