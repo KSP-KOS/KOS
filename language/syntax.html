@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>KerboScript Syntax Specification &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="up" title="The KerboScript Language" href="../language.html"/>
+        <link rel="next" title="Flow Control" href="flow.html"/>
+        <link rel="prev" title="General Features of the KerboScript Language" href="features.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> kOS</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../language.html">Language</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="features.html">General Features</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../language.html">The <strong>KerboScript</strong> Language</a> &raquo;</li>
+      
+    <li><strong>KerboScript</strong> Syntax Specification</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/language/syntax.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="kerboscript-syntax-specification">
+<span id="syntax"></span><h1><strong>KerboScript</strong> Syntax Specification<a class="headerlink" href="#kerboscript-syntax-specification" title="Permalink to this headline">¶</a></h1>
+<p>This describes what is and is not a syntax error in the <strong>KerboScript</strong> programming language. It does not describe what function calls exist or which commands and built-in variables are present. Those are contained in other documents.</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#general-rules" id="id1">General Rules</a></li>
+<li><a class="reference internal" href="#functions" id="id2">Functions</a></li>
+<li><a class="reference internal" href="#suffixes-as-functions-methods" id="id3">Suffixes as Functions (Methods)</a></li>
+<li><a class="reference internal" href="#built-in-special-variable-names" id="id4">Built-In Special Variable Names</a></li>
+<li><a class="reference internal" href="#what-does-not-exist-yet" id="id5">What does not exist (yet?)</a></li>
+</ul>
+</div>
+<div class="section" id="general-rules">
+<h2><a class="toc-backref" href="#id1">General Rules</a><a class="headerlink" href="#general-rules" title="Permalink to this headline">¶</a></h2>
+<p><em>Whitespace</em> consisting of consecutive spaces, tabs, and line breaks are all considered identical to each other. Because of this, indentation is up to you. You may indent however you like.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Statements are ended with a <strong>period</strong> character (&#8221;.&#8221;).</p>
+</div>
+<p>The following are <strong>reserved command keywords</strong> and special
+operator symbols:</p>
+<p><strong>Arithmetic Operators</strong>:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="o">+</span>  <span class="o">-</span>  <span class="o">*</span>  <span class="o">/</span>  <span class="o">^</span>  <span class="n">e</span>  <span class="p">(</span>  <span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Logic Operators</strong>:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">not</span>  <span class="n">and</span>  <span class="n">or</span>  <span class="nb">true</span>  <span class="nb">false</span>  <span class="o">&lt;&gt;</span>  <span class="o">&gt;=</span>  <span class="o">&lt;=</span>  <span class="o">=</span>  <span class="o">&gt;</span>  <span class="o">&lt;</span>
+</pre></div>
+</div>
+<p><strong>Instructions and keywords</strong>:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span>  <span class="n">to</span>  <span class="k">if</span>  <span class="k">else</span>  <span class="n">until</span>  <span class="n">lock</span>  <span class="n">unlock</span>  <span class="n">print</span>  <span class="n">at</span>  <span class="n">on</span>  <span class="n">toggle</span>
+<span class="n">wait</span>  <span class="n">when</span>  <span class="n">then</span>  <span class="n">off</span>  <span class="n">stage</span>  <span class="n">clearscreen</span>  <span class="n">add</span>  <span class="n">remove</span>  <span class="n">log</span>
+<span class="k">break</span>  <span class="n">preserve</span>  <span class="n">declare</span>  <span class="n">parameter</span>  <span class="k">switch</span>  <span class="n">copy</span>  <span class="n">from</span>  <span class="n">rename</span>
+<span class="n">volume</span>  <span class="n">file</span>  <span class="n">delete</span>  <span class="n">edit</span>  <span class="n">run</span>  <span class="n">compile</span>  <span class="n">list</span>  <span class="n">reboot</span>  <span class="n">shutdown</span>
+<span class="k">for</span>  <span class="n">unset</span>  <span class="n">batch</span>  <span class="n">deploy</span>  <span class="n">in</span>  <span class="n">all</span>
+</pre></div>
+</div>
+<p><strong>Other symbols</strong>:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="p">{</span>  <span class="p">}</span>  <span class="p">[</span>  <span class="p">]</span>  <span class="p">,</span>  <span class="o">:</span>  <span class="c1">//</span>
+</pre></div>
+</div>
+<p><em>Comments</em> consist of everything from a &#8220;//&#8221; symbol to the end of the line:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">x</span> <span class="n">to</span> <span class="mf">1.</span> <span class="c1">// this is a comment.</span>
+</pre></div>
+</div>
+<p><strong>Identifiers</strong>: Identifiers consist of: a string of (letter, digit, or
+underscore). The first character must be a letter. The rest may be letters, digits or underscores. <strong>Identifiers are case-insensitive</strong>. The following are identical identifiers:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">My_Variable</span>  <span class="n">my_varible</span>  <span class="n">MY_VARAIBLE</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt><strong>case-insensitivity</strong></dt>
+<dd><p class="first">The same case-insensitivity applies throughout the entire language, with all keywords except when comparing literal strings. The values inside the strings are still case-sensitive, for example, the following will print &#8220;unequal&#8221;:</p>
+<div class="last highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="s">&quot;hello&quot;</span> <span class="o">=</span> <span class="s">&quot;HELLO&quot;</span> <span class="p">{</span>
+    <span class="n">print</span> <span class="s">&quot;equal&quot;</span><span class="p">.</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">print</span> <span class="s">&quot;unequal&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>Suffixes</strong></dt>
+<dd><p class="first">Some variable types are structures that contain sub-portions. The separator between the main variable and the item inside it is a colon character (<tt class="docutils literal"><span class="pre">:</span></tt>). When this symbol is used, the part on the right-hand side of the colon is called the &#8220;suffix&#8221;:</p>
+<div class="last highlight-c"><div class="highlight"><pre><span class="n">list</span> <span class="n">parts</span> <span class="n">in</span> <span class="n">mylist</span><span class="p">.</span>
+<span class="n">print</span> <span class="n">mylist</span><span class="o">:</span><span class="n">length</span><span class="p">.</span> <span class="c1">// length is a suffix of mylist</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>Suffixes can be chained together, as in this example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="n">ship</span><span class="o">:</span><span class="n">velocity</span><span class="o">:</span><span class="n">orbit</span><span class="o">:</span><span class="n">x</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>In the above example you&#8217;d say &#8220;<tt class="docutils literal"><span class="pre">velocity</span></tt> is a suffix of <tt class="docutils literal"><span class="pre">ship</span></tt>&#8221;, and &#8220;<tt class="docutils literal"><span class="pre">orbit</span></tt> is a suffix of <tt class="docutils literal"><span class="pre">ship:velocity</span></tt>&#8221;, and &#8220;<tt class="docutils literal"><span class="pre">x</span></tt> is a suffix of <tt class="docutils literal"><span class="pre">ship:velocity:orbit</span></tt>&#8221;.</p>
+</div>
+<div class="section" id="functions">
+<h2><a class="toc-backref" href="#id2">Functions</a><a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<p>There exist a number of built-in functions you can call using their names. When you do so, you can do it like so:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">functionName</span><span class="p">(</span> <span class="o">*</span><span class="n">arguments</span> <span class="n">with</span> <span class="n">commas</span> <span class="n">between</span> <span class="n">them</span><span class="o">*</span> <span class="p">).</span>
+</pre></div>
+</div>
+<p>For example, the <tt class="docutils literal"><span class="pre">ROUND</span></tt> function takes 2 arguments:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="n">ROUND</span><span class="p">(</span><span class="mf">1230.12312</span><span class="p">,</span> <span class="mi">2</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">SIN</span></tt> function takes 1 argument:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="n">SIN</span><span class="p">(</span><span class="mi">45</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>When a function requires zero arguments, it is legal to call it using the parentheses or not using them. You can pick either way:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// These both work:</span>
+<span class="n">CLEARSCREEN</span><span class="p">.</span>
+<span class="n">CLEARSCREEN</span><span class="p">().</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="suffixes-as-functions-methods">
+<h2><a class="toc-backref" href="#id3">Suffixes as Functions (Methods)</a><a class="headerlink" href="#suffixes-as-functions-methods" title="Permalink to this headline">¶</a></h2>
+<p>Some suffixes are actually functions you can call. When that is the case, these suffixes are called &#8220;method suffixes&#8221;. Here are some examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">x</span> <span class="n">to</span> <span class="n">ship</span><span class="o">:</span><span class="n">partsnamed</span><span class="p">(</span><span class="s">&quot;rtg&quot;</span><span class="p">).</span>
+<span class="n">print</span> <span class="n">x</span><span class="o">:</span><span class="n">length</span><span class="p">().</span>
+<span class="nl">x:</span><span class="n">remove</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span>
+<span class="nl">x:</span><span class="n">clear</span><span class="p">().</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="built-in-special-variable-names">
+<h2><a class="toc-backref" href="#id4">Built-In Special Variable Names</a><a class="headerlink" href="#built-in-special-variable-names" title="Permalink to this headline">¶</a></h2>
+<p>Some variable names have special meaning and will not work as identifiers. Understanding this list is crucial to using kOS effectively, as these special variables are the usual way to query flight state information. <a class="reference internal" href="../bindings.html#bindings"><em>The full list of reserved variable names is on its own page</em></a>.</p>
+</div>
+<div class="section" id="what-does-not-exist-yet">
+<h2><a class="toc-backref" href="#id5">What does not exist (yet?)</a><a class="headerlink" href="#what-does-not-exist-yet" title="Permalink to this headline">¶</a></h2>
+<p>Concepts that many other languages have, that are missing from <strong>KerboScript</strong>, are listed below. Many of these are things that could be supported some day, but at the moment with the limited amount of developer time available they haven&#8217;t become essential enough to spend the time on supporting them.</p>
+<dl class="docutils">
+<dt><strong>user-made functions</strong></dt>
+<dd>There are built-in functions you can call, but you can&#8217;t make your own in the script. The closest you can come to this is to make a separate script file and you can <tt class="docutils literal"><span class="pre">RUN</span></tt> the script file from another script file.</dd>
+<dt><strong>local variables</strong></dt>
+<dd>All variables are in the same global namespace. You can&#8217;t make local variables. If homemade functions are ever supported, that is when local variables would become useful.</dd>
+<dt><strong>user-made structures or classes</strong></dt>
+<dd>Several of the built-in variables of <strong>kOS</strong> are essentially &#8220;classes&#8221; with methods and fields, however there&#8217;s currently no way for user code to create its own classes or structures. Supporting this would open up a <em>large</em> can of worms, as it would then make the <strong>kOS</strong> system more complex.</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="flow.html" class="btn btn-neutral float-right" title="Flow Control"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="features.html" class="btn btn-neutral" title="General Features of the KerboScript Language"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Files and Volumes &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="up" title="General Topics" href="../general.html"/>
+        <link rel="next" title="KerboScript Machine Code" href="compiling.html"/>
+        <link rel="prev" title="kOS Control Panel" href="applauncher_panel.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> kOS</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../general.html">General Topics</a> &raquo;</li>
+      
+    <li>Files and Volumes</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/general/volumes.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="files-and-volumes">
+<span id="volumes"></span><h1>Files and Volumes<a class="headerlink" href="#files-and-volumes" title="Permalink to this headline">¶</a></h1>
+<p>Using the COPY, SWITCH, DELETE, and RENAME commands, you can manipulate the archive and the volumes as described in the <a class="reference internal" href="../commands/files.html#files"><em>File I/O page</em></a>. But before you do that, it&#8217;s useful to know how kOS manages the archive and the volumes, and what they mean.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#script-files" id="id1">Script Files</a></li>
+<li><a class="reference internal" href="#file-storage-behind-the-scenes" id="id2">File Storage Behind the Scenes</a></li>
+<li><a class="reference internal" href="#multiple-volumes-on-one-vessel" id="id3">Multiple Volumes on One Vessel</a></li>
+<li><a class="reference internal" href="#naming-volumes" id="id4">Naming Volumes</a></li>
+<li><a class="reference internal" href="#archive" id="id5">Archive</a></li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<div class="last versionchanged">
+<p><span class="versionmodified">Changed in version 0.15: </span><strong>Archive location and file extension change</strong></p>
+<p>The Archive where KerboScript files are kept has been changed from <tt class="docutils literal"><span class="pre">Plugins/PluginData/Archive</span></tt> to <tt class="docutils literal"><span class="pre">Ships/Script</span></tt>, but still under the top-level <strong>KSP</strong> installation directory. The file name extensions have also changes from <tt class="docutils literal"><span class="pre">.txt</span></tt> to <tt class="docutils literal"><span class="pre">.ks</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="script-files">
+<h2><a class="toc-backref" href="#id1">Script Files</a><a class="headerlink" href="#script-files" title="Permalink to this headline">¶</a></h2>
+<p>There is one file per program. You can use the words &#8220;file&#8221; and &#8220;program&#8221; interchangeably in your thinking for the most part. Files are stored in volumes and there can be more than one file in a volume provided there&#8217;s enough room. Volumes have small storage and there&#8217;s no way to span a file across two volumes, so the limit to the size of a volume is also effectively a limit to the size of a program.</p>
+</div>
+<div class="section" id="file-storage-behind-the-scenes">
+<h2><a class="toc-backref" href="#id2">File Storage Behind the Scenes</a><a class="headerlink" href="#file-storage-behind-the-scenes" title="Permalink to this headline">¶</a></h2>
+<p>In the Archive:</p>
+<ul class="simple">
+<li>If a file is stored on the volume called &#8220;Archive&#8221; (or volume number
+zero to put it another way), then behind the scenes it&#8217;s really
+stored as an actual file, with the extension <tt class="docutils literal"><span class="pre">.ks</span></tt>, on your
+computer (As of right now it&#8217;s located in <tt class="docutils literal"><span class="pre">Ships/Script</span></tt> but that
+location is likely to change to somewhere in GameData in a future
+version.) Each program is a simple text file you can edit with any
+text editor, and your edits will be seen immediately by KOS the next
+time it tries running that program from the archive volume.</li>
+<li>Historical note: older versions of kOS (0.14 and earlier) used the
+directory <tt class="docutils literal"><span class="pre">Plugins/PluginData/Archive</span></tt> for the archive.</li>
+</ul>
+<p>In any other volume besides Archive:</p>
+<ul class="simple">
+<li>If a file is stored on any volume other than archive, then behind the
+scenes it&#8217;s stored actually inside the saved game&#8217;s persistence file
+in the section for the KOS part on the vessel.
+What&#8217;s a Volume</li>
+</ul>
+<p>A Volume is a small unit of disk storage that contains a single hard
+drive with very limited storage capacity. It can store more than one
+program on it. To simulate the sense that this game takes place at the
+dawn of the space race with 1960&#8217;s and 1970&#8217;s technology, the storage
+capacity of a volume is very limited. It can only store 10,000 bytes of
+program text - less than 10 Kb The byte count of a program is just the
+count of the characters in the source code text. Writing programs with
+short cryptic variable names instead of long descriptive ones does save
+space. This is old school programming, where squeezing every byte out
+matters.</p>
+</div>
+<div class="section" id="multiple-volumes-on-one-vessel">
+<h2><a class="toc-backref" href="#id3">Multiple Volumes on One Vessel</a><a class="headerlink" href="#multiple-volumes-on-one-vessel" title="Permalink to this headline">¶</a></h2>
+<p>Each kOS CX-4181 Scriptable Control System part contains &#8216;&#8217;&#8216;one&#8217;&#8216;&#8217; such
+volume inside it. Therefore to send a craft into space with more storage
+capacity than 10,000 bytes requires putting multiple CX-4181 Scriptable
+Control System parts on the craft.</p>
+<p>If you have multiple CX-4181 parts on the same craft, they are assumed
+to be networked together on the same system, and capable of reading each
+other&#8217;s hard drives. Their disk drives each have a different Volume, and
+by default they are simply numbered 1,2,3, … unless you rename them with
+the RENAME command.</p>
+<p>For example, if you have two CX-4181&#8217;s on the same craft, called 1 and
+2, with volumes on them called 1 and 2, respectively, it is possible for
+CPU 1 to run code stored on volume 2 by just having CPU number 1 issue
+the command &#8216;&#8217;SWITCH TO 2.&#8217;&#8216;</p>
+</div>
+<div class="section" id="naming-volumes">
+<h2><a class="toc-backref" href="#id4">Naming Volumes</a><a class="headerlink" href="#naming-volumes" title="Permalink to this headline">¶</a></h2>
+<p>It&#8217;s important to note that if you have multiple volumes on the same
+vessel, the numbering conventions for the volumes will differ on
+different CPUs. The same volume which was called &#8216;2&#8217; when one CPU was
+looking at it might instead be called &#8216;1&#8217; when a different CPU is
+looking at it. Each CPU thinks of its OWN volume as number &#8216;1&#8217;.</p>
+<p>Therefore using the RENAME command on the volumes is useful when dealing
+with multiple CX-4181&#8217;s on the same vessel, so they all will refer to
+the volumes using the same names.</p>
+</div>
+<div class="section" id="archive">
+<h2><a class="toc-backref" href="#id5">Archive</a><a class="headerlink" href="#archive" title="Permalink to this headline">¶</a></h2>
+<p>The &#8220;archive&#8221; is a special volume that behaves much like any other
+volume but with the following exceptions:</p>
+<ul class="simple">
+<li>It is globally the same even across save games.</li>
+<li>The archive represents the large bank of disk storage back at mission
+control&#8217;s mainframe, rather than the storage on an indivdual craft.
+While &#8220;Volume 1&#8221; on one vessel might be a different disk than &#8220;Volume
+1&#8221; on another vessel, there is only volume called &#8220;archive&#8221; in the
+entire solar system. Also, there&#8217;s only one &#8220;archive&#8221; across all
+saved universes. If you play a new campaign from scratch, your
+archive in that new game will still have all the files in it from
+your previous saved game. This is because behid the scenes it&#8217;s
+stored in the plugin&#8217;s directory, not the save game directory.</li>
+<li>It is infinitely large.</li>
+<li>Unlike the other volumes, the archive volume does not have a byte
+limit. This is because the mainframe back at home base can store a
+lot more than the special drives sent on the vessels - so much so
+that it may as well be infinite by comparison.</li>
+<li>Files saved there do not revert when you &#8220;revert flight&#8221;.</li>
+<li>When you revert a flight, you are going back to a previous saved
+state of the game, and therefore any disk data on the vessels
+themselves also reverts to what it was at the time of the saved game.
+Because the archive is saved outside the normal game save, changes
+made there are retained even when reverting a flight.</li>
+<li>It&#8217;s not always reachable if you are out in space, unless you have
+antennae.</li>
+<li>Once a vessel is more than 100,000 meters away from mission control,
+by default it cannot access the files on the archive. Commands such
+as SWITCH TO , and COPY FROM will fail to work when trying to access
+the archive volume while out of range. This can be changed by putting
+antennae on the vessel. With enough
+<a class="reference external" href="/KOS_DOC/summary_topics/commrange">antennae</a> it becomes possible
+to reach the archive drive from farther away. Using this method it is
+possible to alter the software stored on a vessel after launch.</li>
+<li>Files in Archive are editable with a text editor directly and they
+will have the <tt class="docutils literal"><span class="pre">.ks</span></tt> extension.</li>
+<li>Files in the Archive are stored on your computer in the subdirectory:
+<tt class="docutils literal"><span class="pre">Ships/Script</span></tt>. You can pull them up in a text editor of your
+choice and edit them directly, and the KOS Mod will see those changes
+in its archive immediately. Files stored in other volumes, on the
+other hand, are stored inside the vessel&#8217;s data in the persistence
+file of the saved game and are quite a bit bit harder to edit there.
+Editing the files in the Archive directory is allowed and in fact is
+an officially accepted way to use the plugin. Editing the section in
+a persistence file, on the other hand, is a bad idea and probably
+constitutes a form of cheating similar to any other edit of the
+persistence file.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="compiling.html" class="btn btn-neutral float-right" title="KerboScript Machine Code"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="applauncher_panel.html" class="btn btn-neutral" title="kOS Control Panel"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

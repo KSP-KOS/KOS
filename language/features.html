@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>General Features of the KerboScript Language &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="up" title="The KerboScript Language" href="../language.html"/>
+        <link rel="next" title="KerboScript Syntax Specification" href="syntax.html"/>
+        <link rel="prev" title="The KerboScript Language" href="../language.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> kOS</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../language.html">Language</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../language.html">The <strong>KerboScript</strong> Language</a> &raquo;</li>
+      
+    <li>General Features of the <strong>KerboScript</strong> Language</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/language/features.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="general-features-of-the-kerboscript-language">
+<span id="features"></span><h1>General Features of the <strong>KerboScript</strong> Language<a class="headerlink" href="#general-features-of-the-kerboscript-language" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#case-insensitivity" id="id2">Case Insensitivity</a></li>
+<li><a class="reference internal" href="#expressions" id="id3">Expressions</a><ul>
+<li><a class="reference internal" href="#numbers" id="id4">1. Numbers</a></li>
+<li><a class="reference internal" href="#strings" id="id5">2. Strings</a></li>
+<li><a class="reference internal" href="#structures" id="id6">3. Structures</a></li>
+<li><a class="reference internal" href="#structure-methods" id="id7">4. Structure Methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#language-structures" id="id8">Structures</a></li>
+</ul>
+</div>
+<div class="section" id="case-insensitivity">
+<h2><a class="toc-backref" href="#id2">Case Insensitivity</a><a class="headerlink" href="#case-insensitivity" title="Permalink to this headline">¶</a></h2>
+<p>Everything in <strong>KerboScript</strong> is case-insensitive, including your own variable names and filenames. The only exception is when you perform a string comparison, (<tt class="docutils literal"><span class="pre">&quot;Hello&quot;=&quot;HELLO&quot;</span></tt> will return false.)</p>
+<p>Most of the examples here will show the syntax in all-uppercase to help make it stand out from the explanatory text.</p>
+</div>
+<div class="section" id="expressions">
+<h2><a class="toc-backref" href="#id3">Expressions</a><a class="headerlink" href="#expressions" title="Permalink to this headline">¶</a></h2>
+<p>KerboScript uses an expression evaluation system that allows you to perform math operations on variables. Some variables are defined by you. Others are defined by the system. There are four basic types:</p>
+<div class="section" id="numbers">
+<h3><a class="toc-backref" href="#id4">1. Numbers</a><a class="headerlink" href="#numbers" title="Permalink to this headline">¶</a></h3>
+<p>You can use mathematical operations on numbers, like this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="mi">4</span> <span class="o">+</span> <span class="mf">2.5</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="n">X</span><span class="p">.</span>             <span class="c1">// Outputs 6.5</span>
+</pre></div>
+</div>
+<p>The system follows the order of operations, but currently the implementation is imperfect. For example, multiplication will always be performed before division, regardless of the order they come in. This will be fixed in a future release.</p>
+</div>
+<div class="section" id="strings">
+<h3><a class="toc-backref" href="#id5">2. Strings</a><a class="headerlink" href="#strings" title="Permalink to this headline">¶</a></h3>
+<p>Strings are pieces of text that are generally meant to be printed to the screen. For example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;Hello World!&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>To concatenate strings, you can use the + operator. This works with mixtures of numbers and strings as well:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;4 plus 3 is: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span><span class="o">+</span><span class="mi">3</span><span class="p">).</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="structures">
+<span id="features-structures"></span><h3><a class="toc-backref" href="#id6">3. Structures</a><a class="headerlink" href="#structures" title="Permalink to this headline">¶</a></h3>
+<p>Structures are variables that contain more than one piece of information. For example, a Vector has an X, a Y, and a Z component. Structures can be used with SET.. TO just like any other variable. To access the sub-elements of a structure, you use the colon operator (&#8221;:&#8221;). Here are some examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;The Mun&#39;s periapsis altitude is: &quot;</span> <span class="o">+</span> <span class="n">MUN</span><span class="o">:</span><span class="n">PERIAPSIS</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;The ship&#39;s surface velocity is: &quot;</span> <span class="o">+</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Many structures also let you set a specific component of them, for example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">VEC</span> <span class="n">TO</span> <span class="n">V</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">).</span>  <span class="c1">// A vector with x,y,z components</span>
+                         <span class="c1">// all set to 10.</span>
+<span class="n">SET</span> <span class="n">VEC</span><span class="o">:</span><span class="n">X</span> <span class="n">to</span> <span class="n">VEC</span><span class="o">:</span><span class="n">X</span> <span class="o">*</span> <span class="mf">4.</span>  <span class="c1">// multiply just the X part of VEC by 4.</span>
+<span class="n">PRINT</span> <span class="n">VEC</span><span class="p">.</span>               <span class="c1">// Results in V(40,10,10).</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="structure-methods">
+<span id="features-methods"></span><h3><a class="toc-backref" href="#id7">4. Structure Methods</a><a class="headerlink" href="#structure-methods" title="Permalink to this headline">¶</a></h3>
+<p>Structures also often contain methods. A method is a suffix of a structure that actually performs an activity when you mention it, and can sometimes take parameters. The following are examples of calling methods of a structure:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">PLIST</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTSDUBBED</span><span class="p">(</span><span class="s">&quot;my engines&quot;</span><span class="p">).</span> <span class="c1">// calling a suffix</span>
+                                             <span class="c1">// method with one</span>
+                                             <span class="c1">// argument that</span>
+                                             <span class="c1">// returns a list.</span>
+<span class="nl">PLIST:</span><span class="n">REMOVE</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span> <span class="c1">// calling a suffix method with one argument that</span>
+                 <span class="c1">// doesn&#39;t return anything.</span>
+<span class="n">PRINT</span> <span class="n">PLIST</span><span class="o">:</span><span class="n">SUBLIST</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">).</span> <span class="c1">// calling a suffix method with 2</span>
+                          <span class="c1">// arguments that returns a list.</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.15: </span>Methods now perform the activity when the interpreter comes up to it. Prior to this version, execution was sometimes delayed until some later time depending on the trigger setup or flow-control.</p>
+</div>
+</div>
+<p>For more information, see the <a class="reference internal" href="#language-structures"><em>Structures Section</em></a>. A full list of structure types can be found on the <tt class="xref doc docutils literal"><span class="pre">Structures</span></tt> page. For a more detailed breakdown of the language, see the <a class="reference internal" href="syntax.html"><em>Language Syntax Constructs</em></a> page.</p>
+</div>
+</div>
+<div class="section" id="language-structures">
+<span id="id1"></span><h2><a class="toc-backref" href="#id8">Structures</a><a class="headerlink" href="#language-structures" title="Permalink to this headline">¶</a></h2>
+<p>Structures, <a class="reference internal" href="#features-structures"><em>introduced above</em></a>, are variable <em>types</em> that contain more than one piece of information. All structures contain sub-values or <a class="reference internal" href="#features-methods"><em>methods</em></a> that can be accessed with a colon (<tt class="docutils literal"><span class="pre">:</span></tt>) operator. Multiple structures can be chained together with more than one colon (<tt class="docutils literal"><span class="pre">:</span></tt>) operator:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myCraft</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">myMass</span> <span class="n">TO</span> <span class="n">myCraft</span><span class="o">:</span><span class="n">MASS</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">myVel</span> <span class="n">TO</span> <span class="n">myCraft</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">ORBIT</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>These terms are referred to as &#8220;suffixes&#8221;. For example <tt class="docutils literal"><span class="pre">Velocity</span></tt> is a suffix of <tt class="docutils literal"><span class="pre">Vessel</span></tt>. It is possible to <strong>set</strong> some suffixes as well. The second line in the following example sets the <tt class="docutils literal"><span class="pre">ETA</span></tt> of a <tt class="docutils literal"><span class="pre">NODE</span></tt> 500 seconds into the future:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">n</span> <span class="n">TO</span> <span class="n">Node</span><span class="p">(</span> <span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span> <span class="o">+</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">).</span>
+<span class="n">SET</span> <span class="n">n</span><span class="o">:</span><span class="n">ETA</span> <span class="n">to</span> <span class="mf">500.</span>
+</pre></div>
+</div>
+<p>The full list of available suffixes for each type <a class="reference internal" href="../structures.html#structures"><em>can be found here</em></a>.</p>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="syntax.html" class="btn btn-neutral float-right" title="KerboScript Syntax Specification"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../language.html" class="btn btn-neutral" title="The KerboScript Language"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

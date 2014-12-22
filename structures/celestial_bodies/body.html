@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Body &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
+        <link rel="next" title="Vessels and Parts" href="../vessels.html"/>
+        <link rel="prev" title="Atmosphere" href="atmosphere.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../celestial_bodies.html">Celestial Bodies</a> &raquo;</li>
+      
+    <li>Body</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/structures/celestial_bodies/body.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="body">
+<span id="id1"></span><h1>Body<a class="headerlink" href="#body" title="Permalink to this headline">¶</a></h1>
+<p>This is any sort of planet or moon. To get a variable referring to a Body, you can do this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// &quot;name&quot; is the name of the body,</span>
+<span class="c1">// like &quot;Mun&quot; for example.</span>
+<span class="n">SET</span> <span class="n">MY_VAR</span> <span class="n">TO</span> <span class="n">BODY</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>Also, all bodies have hard-coded variable names as well. You can use the variable <tt class="docutils literal"><span class="pre">Mun</span></tt> to mean the same thing as <tt class="docutils literal"><span class="pre">BODY(&quot;Mun&quot;)</span></tt>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionchanged">
+<p><span class="versionmodified">Changed in version 0.13: </span>A Celestial Body is now also an <a class="reference internal" href="../orbits/orbitable.html#orbitable"><em>Orbitable</em></a>, and can use all the terms described for these objects too.</p>
+</div>
+</div>
+<div class="section" id="predefined-celestial-bodies">
+<h2>Predefined Celestial Bodies<a class="headerlink" href="#predefined-celestial-bodies" title="Permalink to this headline">¶</a></h2>
+<p>All of the main celestial bodies in the game are reserved variable names. The following two lines do the exactly the same thing:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">the_mun</span> <span class="n">TO</span> <span class="n">Mun</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">the_mun</span> <span class="n">TO</span> <span class="n">Body</span><span class="p">(</span><span class="s">&quot;Mun&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">Sun</p>
+</li>
+<li><p class="first">Moho</p>
+</li>
+<li><dl class="first docutils">
+<dt>Eve</dt>
+<dd><ul class="first last simple">
+<li>Gilly</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Kerbin</dt>
+<dd><ul class="first last simple">
+<li>Mun</li>
+<li>Minmus</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Duna</dt>
+<dd><ul class="first last simple">
+<li>Ike</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Jool</dt>
+<dd><ul class="first last simple">
+<li>Laythe</li>
+<li>Vall</li>
+<li>Tylo</li>
+<li>Bop</li>
+<li>Pol</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Eeloo</p>
+</li>
+</ul>
+<dl class="structure">
+<dt id="BODY">
+<em class="property">structure </em><tt class="descname">Body</tt><a class="headerlink" href="#BODY" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type (units)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="2">Every Suffix of <a class="reference internal" href="../orbits/orbitable.html#ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:NAME" title="BODY:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#BODY:DESCRIPTION" title="BODY:DESCRIPTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DESCRIPTION</span></tt></a></td>
+<td>string</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:MASS" title="BODY:MASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></tt></a></td>
+<td>scalar (kg)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#BODY:ALTITUDE" title="BODY:ALTITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></tt></a></td>
+<td>scalar (m)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:ROTATIONPERIOD" title="BODY:ROTATIONPERIOD attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONPERIOD</span></tt></a></td>
+<td>scalar (s)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#BODY:RADIUS" title="BODY:RADIUS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RADIUS</span></tt></a></td>
+<td>scalar (m)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:MU" title="BODY:MU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MU</span></tt></a></td>
+<td>scalar (<span class="math">\(m^3 s^{−2}\)</span>)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#BODY:ATM" title="BODY:ATM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ATM</span></tt></a></td>
+<td><a class="reference internal" href="atmosphere.html#ATMOSPHERE" title="ATMOSPHERE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Atmosphere</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:ANGULARVEL" title="BODY:ANGULARVEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP-RAW</em></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:NAME">
+Body:<tt class="descname">NAME</tt><a class="headerlink" href="#BODY:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the body. Example: &#8220;Mun&#8221;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:DESCRIPTION">
+Body:<tt class="descname">DESCRIPTION</tt><a class="headerlink" href="#BODY:DESCRIPTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Longer description of the body, often just a duplicate of the name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:MASS">
+Body:<tt class="descname">MASS</tt><a class="headerlink" href="#BODY:MASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mass of the body in kilograms.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:ALTITUDE">
+Body:<tt class="descname">ALTITUDE</tt><a class="headerlink" href="#BODY:ALTITUDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The altitude of this body above the sea level surface of its parent body. I.e. the altitude of Mun above Kerbin.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:ROTATIONPERIOD">
+Body:<tt class="descname">ROTATIONPERIOD</tt><a class="headerlink" href="#BODY:ROTATIONPERIOD" title="Permalink to this definition">¶</a></dt>
+<dd><p>The length of the body&#8217;s day in seconds. I.e. how long it takes for it to make one rotation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:RADIUS">
+Body:<tt class="descname">RADIUS</tt><a class="headerlink" href="#BODY:RADIUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The radius from the body&#8217;s center to its sea level.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:MU">
+Body:<tt class="descname">MU</tt><a class="headerlink" href="#BODY:MU" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference external" href="http://en.wikipedia.org/wiki/Standard_gravitational_parameter">Gravitational Parameter</a> of the body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:ATM">
+Body:<tt class="descname">ATM</tt><a class="headerlink" href="#BODY:ATM" title="Permalink to this definition">¶</a></dt>
+<dd><p>A variable that describes the atmosphere of this body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:ANGULARVEL">
+Body:<tt class="descname">ANGULARVEL</tt><a class="headerlink" href="#BODY:ANGULARVEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Despite the name, this is technically not a velocity. It only tells you the axis of rotation, not the speed of rotation around that axis.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../vessels.html" class="btn btn-neutral float-right" title="Vessels and Parts"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="atmosphere.html" class="btn btn-neutral" title="Atmosphere"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
