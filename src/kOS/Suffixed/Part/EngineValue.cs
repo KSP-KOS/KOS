@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Part;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed.Part
 {
@@ -20,7 +21,7 @@ namespace kOS.Suffixed.Part
         {
             AddSuffix("ACTIVATE", new NoArgsSuffix(() => engine.Activate()));
             AddSuffix("SHUTDOWN", new NoArgsSuffix(() => engine.Shutdown()));
-            AddSuffix("THRUSTLIMIT", new SetSuffix<float>(() => engine.ThrustPercentage, value => engine.ThrustPercentage = value));
+            AddSuffix("THRUSTLIMIT", new ClampSetSuffix<float>(() => engine.ThrustPercentage, value => engine.ThrustPercentage = value, 0, 1));
             AddSuffix("MAXTHRUST", new Suffix<float>(() => engine.MaxThrust));
             AddSuffix("THRUST", new Suffix<float>(() => engine.FinalThrust));
             AddSuffix("FUELFLOW", new Suffix<float>(() => engine.FuelFlow));
