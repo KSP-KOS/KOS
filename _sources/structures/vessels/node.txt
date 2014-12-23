@@ -1,0 +1,188 @@
+.. _maneuver node:
+
+Maneuver Node
+=============
+
+*Contents*
+
+    - :func:`NODE()`
+    - :global:`ADD`
+    - :global:`REMOVE`
+    - :global:`NEXTNODE`
+    - :struct:`ManeuverNode`
+
+A planned velocity change along an orbit. These are the nodes that you can set in the KSP user interface. Setting one through kOS will make it appear on the in-game map view, and creating one manually on the in-game map view will cause it to be visible to kOS.
+
+Creation
+--------
+
+.. function:: NODE(utime, radial, normal, prograde)
+
+    :parameter utime: (sec) Time of this maneuver
+    :parameter radial: (m/s) Delta-V in radial-out direction
+    :parameter normal: (m/s) Delta-V normal to orbital plane
+    :parameter prograde: (m/s) Delta-V in prograde direction
+    :returns: :struct:`ManeuverNode`
+
+    You can make a maneuver node in a variable using the :func:`NODE` function::
+
+        SET myNode to NODE( TIME:SECONDS+200, 0, 50, 10 ).
+
+    Once you have a maneuver node in a variable, you use the :global:`ADD` and :global:`REMOVE` commands to attach it to your vessel's flight plan. A kOS CPU can only manipulate the flight plan of its :ref:`CPU vessel <cpu vessel>`.
+
+    .. warning::
+
+        When *constructing* a new node using the :func:`NODE` function call, you use the universal time (you must add the ETA time to the current time to arrive at the value to pass in), but when using the suffix :attr:`ManeuverNode:ETA`, you do NOT use universal time, instead just giving the number of seconds from now.
+
+    Once you have created a node, it's just a hypothetical node that hasn't
+    been attached to anything yet. To attach a node to the flight path, you must use the command :global:`ADD` to attach it to the ship.
+
+.. global:: ADD
+
+    To put a maneuver node into the flight plan of the current :ref:`CPU vessel <cpu vessel>` (i.e. ``SHIP``), just :global:`ADD` it like so::
+
+        SET myNode to NODE( TIME:SECONDS+200, 0, 50, 10 ).
+        ADD myNode.
+
+    You should immediately see it appear on the map view when you do this. The :global:`ADD` command can add nodes anywhere within the flight plan. To insert a node earlier in the flight than an existing node, simply give it a smaller :attr:`ETA <ManeuverNode:ETA>` time and then :global:`ADD` it.
+
+.. global:: REMOVE
+
+    To remove a maneuver node from the flight path of the cur:rent :ref:`CPU vessel <cpu vessel>` (i.e. ``SHIP``), just :global:`REMOVE` it like so::
+
+        REMOVE myNode.
+
+.. global:: NEXTNODE
+
+    :global:`NEXTNODE` is a built-in variable that always refers to the next upcoming node that has been added to your flight plan::
+
+        SET MyNode to :global:`NEXTNODE`.
+        PRINT :global:`NEXTNODE`:PROGRADE.
+        REMOVE :global:`NEXTNODE`.
+
+    Currently, if you attempt to query :global:`NEXTNODE` and there is no node on your flight plan, it produces a run-time error. (This needs to be fixed in a future release so it is possible to query whether or not you have a next node).
+
+    If you need to query whether or not you have a :global:`NEXTNODE`, the following has been suggested as a workaround in the meantime: Set a node really far into the future, beyond any reasonable amount of time. Add it to your flight plan. Then check :global:`NEXTNODE` to see if it returns THAT node, or an earlier one. If it returns an earlier one, then that earlier one was there all along and is the real :global:`NEXTNODE`. If it returns the fake far-future node you made instead, then there were no nodes before that point. In either case, remove the far-future node after you perform the test.
+
+    The special identifier :global:`NEXTNODE` is a euphemism for "whichever node is coming up soonest on my flight path". Therefore you can remove a node even if you no longer have the maneuver node variable around, by doing this::
+
+        REMOVE :global:`NEXTNODE`.
+
+Structure
+---------
+
+.. structure:: ManeuverNode
+
+
+    Here are some examples of accessing the suffixes of a :struct:`ManeuverNode`::
+
+        // creates a node 60 seconds from now with
+        // prograde = 100 m/s
+        SET X TO NODE(TIME:SECONDS+60, 0, 0, 100).
+
+        ADD X.            // adds maneuver to flight plan
+
+        PRINT X:PROGRADE. // prints 100.
+        PRINT X:ETA.      // prints seconds till maneuver
+        PRINT X:DELTAV    // prints delta-v vector
+
+        REMOVE X.         // remove node from flight plan
+
+        // Create a blank node
+        SET X TO NODE(0, 0, 0, 0).
+
+        ADD X.                 // add Node to flight plan
+        SET X:PROGRADE to 500. // set prograde dV to 500 m/s
+        SET X:ETA to 30.       // Set to 30 sec from now
+
+        PRINT X:ORBIT:APOAPSIS.  // apoapsis after maneuver
+        PRINT X:ORBIT:PERIAPSIS. // periapsis after maneuver
+
+
+    .. list-table:: Members
+        :header-rows: 1
+        :widths: 1 1 1 2
+
+        * - Suffix
+          - Type (units)
+          - Access
+          - Description
+
+        * - :attr:`DELTAV`
+          - :struct:`Vector` (m/s)
+          - Get only
+          - The burn vector with magnitude equal to delta-V
+        * - :attr:`BURNVECTOR`
+          - :struct:`Vector` (m/s)
+          - Get only
+          - Alias for :attr:`DELTAV`
+        * - :attr:`ETA`
+          - scalar (s)
+          - Get/Set
+          - Time until this maneuver
+        * - :attr:`PROGRADE`
+          - scalar (m/s)
+          - Get/Set
+          - Delta-V along prograde
+        * - :attr:`RADIALOUT`
+          - scalar (m/s)
+          - Get/Set
+          - Delta-V along radial to orbited :struct:`Body`
+        * - :attr:`NORMAL`
+          - scalar (m/s)
+          - Get/Set
+          - Delta-V along normal to the :struct:`Vessel`'s :struct:`Orbit`
+        * - :attr:`ORBIT`
+          - :struct:`Orbit`
+          - Get only
+          - Expected :struct:`Orbit` after this maneuver
+
+
+.. attribute:: ManeuverNode:DELTAV
+
+    :access: Get only
+    :type: :struct:`Vector`
+
+    The vector giving the total burn of the node. The vector can be used to steer with, and its magnitude is the delta V of the burn.
+
+.. attribute:: ManeuverNode:BURNVECTOR
+
+    Alias for :attr:`ManeuverNode:DELTAV`.
+
+.. attribute:: ManeuverNode:ETA
+
+    :access: Get/Set
+    :type: scalar
+
+    The number of seconds until the expected burn time. If you SET this, it will actually move the maneuver node along the path in the map view, identically to grabbing the maneuver node and dragging it.
+
+.. attribute:: ManeuverNode:PROGRADE
+
+    :access: Get/Set
+    :type: scalar
+
+    The delta V in (meters/s) along just the prograde direction (the yellow and green 'knobs' of the maneuver node). A positive value is a prograde burn and a negative value is a retrograde burn.
+
+.. attribute:: ManeuverNode:RADIALOUT
+
+    :access: Get/Set
+    :type: scalar
+
+    The delta V in (meters/s) along just the radial direction (the cyan knobs' of the maneuver node). A positive value is a radial out burn and a negative value is a radial in burn.
+
+.. attribute:: ManeuverNode:NORMAL
+
+    :access: Get/Set
+    :type: scalar
+
+    The delta V in (meters/s) along just the normal direction (the purple knobs' of the maneuver node). A positive value is a normal burn and a negative value is an anti-normal burn.
+
+.. attribute:: ManeuverNode:ORBIT
+
+    :access: Get only
+    :type: :struct:`Orbit`
+
+    The new orbit patch that will begin starting with the burn of this node, under the assumption that the burn will occur exactly as planned.
+
+
+

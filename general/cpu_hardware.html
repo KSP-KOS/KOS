@@ -1,0 +1,375 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The kOS CPU hardware &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="up" title="General Topics" href="../general.html"/>
+        <link rel="next" title="kOS Control Panel" href="applauncher_panel.html"/>
+        <link rel="prev" title="CPU Vessel (SHIP)" href="cpu_vessel.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="fa fa-home"> kOS</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../general.html">General Topics</a> &raquo;</li>
+      
+    <li>The kOS CPU hardware</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/general/cpu_hardware.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="the-kos-cpu-hardware">
+<span id="cpu-hardware"></span><h1>The kOS CPU hardware<a class="headerlink" href="#the-kos-cpu-hardware" title="Permalink to this headline">¶</a></h1>
+<p>While it&#8217;s possible to write some software without knowing anything about the underlying computer hardware, and there are good design principles that state one should never make assumptions about the computer hardware when writing software, there are still some basic things about how computers work in general that a good programmer needs to be aware of to write good code. Along those lines, the KSP player writing a Kerboscript program needs to know a few basic things about how the simulated kOS CPU operates in order to be able to write more advanced scripts. This page contains that type of information.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#update-ticks-and-physics-ticks" id="id1">Update Ticks and Physics Ticks</a></li>
+<li><a class="reference internal" href="#triggers" id="id2">Triggers</a><ul>
+<li><a class="reference internal" href="#do-not-loop-a-long-time-in-a-trigger-body" id="id3">Do Not Loop a Long Time in a Trigger Body!</a></li>
+<li><a class="reference internal" href="#but-i-want-a-loop" id="id4">But I Want a Loop!!</a></li>
+<li><a class="reference internal" href="#wait" id="id5">Wait!!!</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-frozen-universe" id="id6">The Frozen Universe</a><ul>
+<li><a class="reference internal" href="#so-why-does-this-matter" id="id7">So Why Does This Matter?</a></li>
+<li><a class="reference internal" href="#the-fix-wait-for-time-to-change" id="id8">The Fix: Wait for Time to Change</a></li>
+<li><a class="reference internal" href="#a-more-elegant-solution" id="id9">A More Elegant Solution</a></li>
+<li><a class="reference internal" href="#an-even-better-solution" id="id10">An Even Better Solution</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="update-ticks-and-physics-ticks">
+<h2><a class="toc-backref" href="#id1">Update Ticks and Physics Ticks</a><a class="headerlink" href="#update-ticks-and-physics-ticks" title="Permalink to this headline">¶</a></h2>
+<p>Kerbal Space Program simulates the universe by running the universe in small incremental time intervals that for the purpose of this document, we will call &#8220;<strong>physics ticks</strong>&#8221;. The exact length of time for a physics tick varies as the program runs. One physics tick might take 0.09 seconds while the next one might take 0.085 seconds. (The default setting for the rate of physics ticks is 25 ticks per second, just to give a ballpark figure, but you <strong>must not</strong> write any scripts that depend on this assumption because it&#8217;s a setting the user can change, and it can also vary a bit during play depending on system load. The setting is a target goal for the game to try to achieve, not a guarantee. If it&#8217;s a fast computer with a speedy animation frame rate, it will try to run physics ticks less often than it runs animation frame updates, to try to make the physics tick rate match this setting. On the other hand, If it&#8217;s a slow computer, it will try to sacrifice animation frame rate to archive this number (meaning physics get calculated faster than you can see the effects.) The game will try as hard as it can to keep the physics rate matched to the setting, not faster and not slower, because when the physics rate isn&#8217;t steady, the simulation breaks down and starts making erroneous things happen, like miscalculating forces on part joints and breaking ships. But however hard the game tries to stick to the setting, it can&#8217;t do it 100% the same every single moment, thus the need to actually measure elapsed time in the TIME variable in your scripts.</p>
+<p>The entire simulated universe is utterly frozen during the duration of a physics tick. For example, if one physics tick occurs at timestamp 10.51 seconds, and the next physics tick occurs 0.08 seconds later at timestamp 10.59 seconds, then during the entire intervening time, at timestamp 10.52 seconds, 10.53 seconds, and so on, nothing moves. The clock is frozen at 10.51 seconds, and the fuel isn&#8217;t being consumed, and the vessel is at the same position. On the next physics tick at 10.59 seconds, then all the numbers are updated.  The full details of the physics ticks system are more complex than that, but that quick description is enough to describe what you need to know about how kOS&#8217;s CPU works.</p>
+<p>There is another kind of time tick called an <strong>Update tick</strong>. It is similar to, but different from, a <strong>physics tick</strong>. <em>Update ticks</em> often occur a bit more often than <em>physics ticks</em>. Update ticks are exactly the same thing as your game&#8217;s Frame Rate. Each time your game renders another animation frame, it performs another Update tick. On a good gaming computer with fast speed and a good graphics card, It is typical to have about 2 or even 3 <em>Update ticks</em> happen within the time it takes to have one <em>physics tick</em> happen. On a slower computer, it is also possible to go the other way and have <em>Update ticks</em> happening <em>less</em> frequently than <em>physics tics</em>. Basically, look at your frame rate. Is it higher than 25 fps? If so, then your <em>update ticks</em> happen faster than your <em>physics ticks</em>, otherwise its the other way around.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The kOS CPU runs every <strong>update tick</strong> rather than every <strong>physics tick</strong>.</p>
+</div>
+<p>On each update tick, each kOS CPU that&#8217;s within physics range (i.e. 2.5 km), wakes up and performs the following steps, in this order:</p>
+<ol class="arabic simple">
+<li>Run the conditional checks of all TRIGGERS (see below)</li>
+<li>For any TRIGGERS who&#8217;s conditional checks are true, execute the entire body of the trigger.</li>
+<li>If there&#8217;s a pending WAIT statement, check if it&#8217;s done. If so wake up.</li>
+<li>If awake, then execute the next <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> number of instructions of the main program.</li>
+</ol>
+<p>Note that the number of instructions being executed (CONFIG:IPU) are NOT lines of code or kerboscript statements, but rather the smaller instruction opcodes that they are compiled into behind the scenes. A single kerboscript statement might become anywhere from one to ten or so instructions when compiled.</p>
+</div>
+<div class="section" id="triggers">
+<h2><a class="toc-backref" href="#id2">Triggers</a><a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h2>
+<p>There are multiple things within kerboscript that run &#8220;in the background&#8221; always updating, while the main script continues on. The way these work is a bit like a real computer&#8217;s multithreading, but not <em>quite</em>. Collectively all of these things are called &#8220;triggers&#8221;.</p>
+<p>Triggers are all of the following:</p>
+<ul class="simple">
+<li>LOCKS which are attached to flight controls (THROTTLE, STEERING,
+etc), but not other LOCKS.</li>
+<li>ON condition { some commands }.</li>
+<li>WHEN condition THEN { some commands }.</li>
+</ul>
+<p>The way these work is that once per <strong>update tick</strong>, all the LOCK expressions which directly affect flight control are re-executed, and then each conditional trigger&#8217;s condition is checked, and if true, then the entire body of the trigger is executed all the way to the bottom *before any more instructions of the main body are executed*. This means that execution of a trigger never gets interleaved with the main code. Once a trigger happens, the entire trigger occurs all in one go before the rest of the main body continues.</p>
+<div class="section" id="do-not-loop-a-long-time-in-a-trigger-body">
+<h3><a class="toc-backref" href="#id3">Do Not Loop a Long Time in a Trigger Body!</a><a class="headerlink" href="#do-not-loop-a-long-time-in-a-trigger-body" title="Permalink to this headline">¶</a></h3>
+<p>Because the entire body of a trigger will execute all the way to the bottom on <em>within a single</em> <strong>update tick</strong>, <em>before</em> any other code continues, it is vital that you not write code in a trigger body that takes a long time to execute. The body of a trigger must be kept quick. An infinite loop in a trigger body could literally freeze all of KSP, because the kOS mod will never finish executing its update.</p>
+<p><em>As of kOS version 0.14 and higher, this condition is now being checked for</em> and the script will be <strong>terminated with a runtime error</strong> if the triggers like WHEN/THEN and ON take more than <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> instructions to execute. The sum total of all the code within your WHEN/THEN and ON code blocks MUST be designed to complete within one update tick.</p>
+<p><strong>This may seem harsh</strong>. Ideally, kOS would only generate a runtime error if it thought your script was stuck in an <strong>infinite loop</strong>, and allow it to exceed the <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> number of instructions if it was going to finish and just needed a little longer to to finish its work. But, because of a well known problem in computer science called <strong>`the halting problem &lt;http://en.wikipedia.org/wiki/Halting_problem&gt;`__</strong>, it&#8217;s literally impossible for kOS, or any other software for that matter, to detect the difference between another program&#8217;s infinite loop versus another program&#8217;s loop that will end soon. kOS only knows how long your triggers have taken so far, not how long they&#8217;re going to take before they&#8217;re done, or even if they&#8217;ll be done.</p>
+<p>If you suspect that your trigger body would have ended if it was allowed to run a little longer, try setting your <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> setting a bit higher and see if that makes the error go away.</p>
+<p>If it does not make the error go away, then you will need to redesign your script to not depend on running a long-lasting amount of code inside triggers.</p>
+</div>
+<div class="section" id="but-i-want-a-loop">
+<h3><a class="toc-backref" href="#id4">But I Want a Loop!!</a><a class="headerlink" href="#but-i-want-a-loop" title="Permalink to this headline">¶</a></h3>
+<p>If you want a trigger body that is meant to loop, the only acceptable way to do it is to design it to execute just once, but then use the PRESERVE keyword to keep the trigger around for the next update. Thus your trigger becomes a sort of &#8220;loop&#8221; that executes one iteration per <strong>update tick</strong>.</p>
+<p>It is also important to consider the way triggers execute for performance reasons too. Every time you write an expression for a trigger, you are creating a bit of code that gets executed fully to the end before your main body will continue, once each <strong>update tick</strong>. A complex expression in a trigger condition, which in turn calls other complex LOCK expressions, which call other complex LOCK expressions, and so on, may cause kOS to bog itself down during each update. (And as of version 0.14, it may cause kOS to stop your program and issue a runtime error if it&#8217;s taking too long.)</p>
+<p>Because of how WAIT works, you cannot put a WAIT statement inside a trigger. If you try, it will have no effect. This is because WAIT requires the ability of the program to go to sleep and then in a later update tick, continue from where it left off. Because triggers run to the bottom entirely within one update tick, they can&#8217;t do that.</p>
+</div>
+<div class="section" id="wait">
+<h3><a class="toc-backref" href="#id5">Wait!!!</a><a class="headerlink" href="#wait" title="Permalink to this headline">¶</a></h3>
+<p>Any WAIT statement causes the kerboscript program to immediately stop executing the main program where it is, even if far fewer than <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> instructions have been executed in this <strong>update tick</strong>. It will not continue the execution until at least the next <strong>update tick</strong>, when it will check to see if the WAIT condition is satisfied and it&#8217;s time to wake up and continue.</p>
+<p>Therefore ANY WAIT of any kind will guarantee that your program will allow at least one <strong>update tick</strong> to have happened before continuing. If you attempt to:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>But the duration of the next update tick is actually 0.09 seconds, then you will actually end up waiting at least 0.09 seconds. It is impossible to wait a unit of time smaller than one update tick. Using a very small unit of time in a WAIT statement is an effective way to force the CPU to allow a update tick to occur before continuing to the next line of code. Similarly, if you just say:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">WAIT</span> <span class="n">UNTIL</span> <span class="n">TRUE</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Then even though the condition is immediately true, it will still wait one update tick to discover this fact and continue.</p>
+</div>
+</div>
+<div class="section" id="the-frozen-universe">
+<h2><a class="toc-backref" href="#id6">The Frozen Universe</a><a class="headerlink" href="#the-frozen-universe" title="Permalink to this headline">¶</a></h2>
+<p>Each <strong>update</strong> <em>tick</em>, the kOS mod wakes up and runs through all the currently loaded CPU parts that are in &#8220;physics range&#8221; (i.e. 2.5 km), and executes a batch of instructions from your script code that&#8217;s on them. It is important to note that during the running of this batch of instructions, because no <strong>physics ticks</strong> are happening during it, none of the values that you might query from the KSP system will change. The clock time returned from the TIME variable will keep the same value throughout. The amount of fuel left will remain fixed throughout. The position and velocity of the vessel will remaining fixed throughout. It&#8217;s not until the next physics tick occurs that those values will change to new numbers. It&#8217;s typical that several lines of your kerboscript code will run during a single update tick.</p>
+<p>Effectively, as far as the <em>simulated</em> universe can tell, it&#8217;s as if your script runs several instructions in literally zero amount of time, and then pauses for a fraction of a second, and then runs more instructions in literally zero amount of time, then pauses for a fraction of a second, and so on, rather than running the program in a smoothed out continuous way.</p>
+<p>If your animation rate is slow enough, it gets even weirder. If your animation <em>update ticks</em> occur less often than your <em>physics ticks</em>, then it&#8217;s as if your program spends the majority of the time paused, and only occasionally wakes up to execute a short burst of instructions.</p>
+<p>Because of the difference between <em>update ticks</em> and <em>physics ticks</em>, it&#8217;s entirely possible that your kOS script runs multiple updates in a row while the universe is still frozen, or it&#8217;s possible to go the other way around and have the universe move more than one physics tick before your program has time to notice and react. A well written kOS script should be able to handle both cases.</p>
+<p>This is a vital difference between how a kOS CPU behaves versus how a real world computer behaves. In a real world computer, you would know for certain that time will pass, even if it&#8217;s just a few picoseconds, between the execution of one statement and the next.</p>
+<div class="section" id="so-why-does-this-matter">
+<h3><a class="toc-backref" href="#id7">So Why Does This Matter?</a><a class="headerlink" href="#so-why-does-this-matter" title="Permalink to this headline">¶</a></h3>
+<p>The reason this matters is because of code that tries to do things like this: Imagine something like this inside a script designed to hover in place:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;Waiting until altitude is&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;holding stable within 0.1 meters.&quot;</span><span class="p">.</span>
+
+<span class="n">SET</span> <span class="n">PREV_ALT</span> <span class="n">TO</span> <span class="o">-</span><span class="mf">99999.</span> <span class="c1">// bogus start value</span>
+<span class="n">UNTIL</span> <span class="n">ABS</span><span class="p">(</span> <span class="n">PREV_ALT</span> <span class="o">-</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ALTITUDE</span> <span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="p">{</span>
+
+  <span class="n">SET</span> <span class="n">PREV_ALT</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ALTITUDE</span><span class="p">.</span>
+
+  <span class="c1">// Assume there&#39;s fancy PID controller</span>
+  <span class="c1">// commands here, omitted for this example.</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This bit of code, if you assume you&#8217;ve written a nice bit of code where the comment is, looks like it would make sense at first. It looks like it should work. It records the previous altitude at the start of the loop body, and if the altitude hasn&#8217;t changed by much by the start of the next loop, it assumes the altitude has become stable and it stops.</p>
+<p>BUT, due to the frozen nature of the measurements during a <strong>physics tick</strong>, it&#8217;s entirely possible, and quite likely, that the loop would exit prematurely because no simulation time has passed between the two altitude measurements. The previous altitude and the current altitude are the same. Not because the vessel has no vertical motion, but because the loop is executing fast enough to finish more than one iteration within the same <strong>physics tick</strong>. The two altitude measurements are the same because no time has passed in the simulated universe.</p>
+</div>
+<div class="section" id="the-fix-wait-for-time-to-change">
+<h3><a class="toc-backref" href="#id8">The Fix: Wait for Time to Change</a><a class="headerlink" href="#the-fix-wait-for-time-to-change" title="Permalink to this headline">¶</a></h3>
+<p>If you are executing a loop like the one above in which it is absolutely vital that the next iteration of the loop must occur in a <em>different</em> <strong>physics tick</strong> than the previous one, so that it can take <em>new</em> measurements that are different, the solution is to use a WAIT statement that will delay until there&#8217;s evidence that the physics clock has moved a tick.</p>
+<p>The most effective way to do that is to check the <a class="reference external" href="../../structure/timespan/index.html">TIME</a> and see if it&#8217;s different than it was before. As long as you are still within the same <em>physics tick</em>, the TIME will not move:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;Waiting until altitude is holding stable within 0.1 meters.&quot;</span><span class="p">.</span>
+
+<span class="n">SET</span> <span class="n">PREV_ALT</span> <span class="n">TO</span> <span class="o">-</span><span class="mf">99999.</span> <span class="c1">// bogus start value</span>
+<span class="n">UNTIL</span> <span class="n">ABS</span><span class="p">(</span> <span class="n">PREV_ALT</span> <span class="o">-</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ALTITUDE</span> <span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="p">{</span>
+
+  <span class="n">SET</span> <span class="n">PREV_ALT</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ALTITUDE</span><span class="p">.</span>
+
+  <span class="c1">// Assume there&#39;s fancy PID controller</span>
+  <span class="c1">// commands here, omitted for this example.</span>
+
+  <span class="n">SET</span> <span class="n">TIMESTAMP</span> <span class="n">TO</span> <span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span><span class="p">.</span>
+  <span class="n">WAIT</span> <span class="n">UNTIL</span> <span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span> <span class="o">&gt;</span> <span class="n">TIMESTAMP</span><span class="p">.</span> <span class="c1">// clock will not move</span>
+                                       <span class="c1">// until we are in a new</span>
+                                       <span class="c1">// physics tick.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-more-elegant-solution">
+<h3><a class="toc-backref" href="#id9">A More Elegant Solution</a><a class="headerlink" href="#a-more-elegant-solution" title="Permalink to this headline">¶</a></h3>
+<p>Thanks to user <em>Cairan</em>, who suggested this very good idea in the
+forums. You may put this code up near the top of your script:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// force it to trigger immediately the first time through</span>
+<span class="n">SET</span> <span class="n">LASTPHYS</span> <span class="n">TO</span> <span class="o">-</span><span class="mf">99999.</span>
+
+<span class="n">LOCK</span> <span class="n">PHYSICS</span> <span class="n">TO</span> <span class="n">MIN</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">FLOOR</span><span class="p">((</span><span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span><span class="o">-</span><span class="n">LASTPHYS</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.04</span> <span class="p">)).</span>
+
+<span class="n">WHEN</span> <span class="n">PHYSICS</span> <span class="n">THEN</span> <span class="p">{</span>
+  <span class="n">SET</span> <span class="n">LASTPHYS</span> <span class="n">TO</span> <span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span><span class="p">.</span>
+
+  <span class="c1">// Store your measurements from</span>
+  <span class="c1">// the physical world here during</span>
+  <span class="c1">// the body of this WHEN</span>
+
+  <span class="n">PRESERVE</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="an-even-better-solution">
+<h3><a class="toc-backref" href="#id10">An Even Better Solution</a><a class="headerlink" href="#an-even-better-solution" title="Permalink to this headline">¶</a></h3>
+<p>There has been talk of instituting a special command: WAIT UNTIL PHYSICS that will sleep until there has been a physics update, and it&#8217;s a good idea but it hasn&#8217;t been implemented yet.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="applauncher_panel.html" class="btn btn-neutral float-right" title="kOS Control Panel"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cpu_vessel.html" class="btn btn-neutral" title="CPU Vessel (SHIP)"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Ship Systems &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="up" title="Flight Control" href="../flight.html"/>
+        <link rel="next" title="Time Warping" href="warp.html"/>
+        <link rel="prev" title="Pilot Input" href="pilot.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../commands.html">Commands</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../commands.html">Command Reference</a> &raquo;</li>
+      
+          <li><a href="../flight.html">Flight Control</a> &raquo;</li>
+      
+    <li>Ship Systems</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/commands/flight/systems.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <div class="section" id="ship-systems">
+<h1>Ship Systems<a class="headerlink" href="#ship-systems" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="controlfrom"></span><dl class="object">
+<dt>
+<tt class="descname">SET somepart:CONTROLFROM TO (true|false).</tt></dt>
+<dd><p>If you have a handle on a part, from <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span></tt>, you can select that part to set the orientation of the craft, just like using the &#8220;control from here&#8221; in the right-click menu in the game. For more information see <a class="reference internal" href="../../structures/vessels/part.html#PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Part:CONTROLFROM</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="RCS">
+<tt class="descname">RCS</tt><a class="headerlink" href="#RCS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF</td>
+</tr>
+</tbody>
+</table>
+<p>Turns the RCS <strong>on</strong> or <strong>off</strong>, like using <tt class="docutils literal"><span class="pre">R</span></tt> at the keyboard:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">ON</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="SAS">
+<tt class="descname">SAS</tt><a class="headerlink" href="#SAS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF</td>
+</tr>
+</tbody>
+</table>
+<p>Turns the SAS <strong>on</strong> or <strong>off</strong>, like using <tt class="docutils literal"><span class="pre">T</span></tt> at the keybaord:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SAS</span> <span class="n">ON</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="LIGHTS">
+<tt class="descname">LIGHTS</tt><a class="headerlink" href="#LIGHTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF</td>
+</tr>
+</tbody>
+</table>
+<p>Turns the lights <strong>on</strong> or <strong>off</strong>, like using the <tt class="docutils literal"><span class="pre">U</span></tt> key at the keyboard:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">LIGHTS</span> <span class="n">ON</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="BRAKES">
+<tt class="descname">BRAKES</tt><a class="headerlink" href="#BRAKES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Toggle ON/OFF</td>
+</tr>
+</tbody>
+</table>
+<p>Turns the brakes <strong>on</strong> or <strong>off</strong>, like clicking the brakes button, though <em>not</em> like using the <tt class="docutils literal"><span class="pre">B</span></tt> key, because they stay on:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">BRAKES</span> <span class="n">ON</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="global">
+<dt id="TARGET">
+<tt class="descname">TARGET</tt><a class="headerlink" href="#TARGET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<p>Where <tt class="docutils literal"><span class="pre">name</span></tt> is the name of a target vessel or planet, this will set the current target:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">TARGET</span> <span class="n">TO</span> <span class="n">name</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Note that the above options also can refer to a different vessel besides the current ship, for example, <tt class="docutils literal"><span class="pre">TARGET:THROTTLE</span></tt> to read the target&#8217;s throttle. But not all &#8220;set&#8221; or &#8220;lock&#8221; options will work with a different vessel other than the current one, because there&#8217;s no authority to control a craft the current program is not attached to.</p>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="warp.html" class="btn btn-neutral float-right" title="Time Warping"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pilot.html" class="btn btn-neutral" title="Pilot Input"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
