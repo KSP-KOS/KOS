@@ -1,0 +1,108 @@
+.. _list command:
+
+.. index:: LIST (command)
+
+``LIST`` Command
+================
+
+A :struct:`List` is a type of :ref:`Structure <features structures>` that stores a list of variables in it. The ``LIST`` command either prints or crates a :struct:`List` object containing items queried from the game. For more information, see the :ref:`page about the List structure <list>`.
+
+``FOR`` Loop
+------------
+
+Lists need to be iterated over sometimes, to help with this we have the :ref:`FOR loop, explained on the flow control page <for>`. The ``LIST`` Command comes in 4 forms:
+
+1. ``LIST.``
+    When no parameters are given, the LIST command is exactly equivalent to the command::
+
+        LIST FILES.
+        
+2. ``LIST ListKeyword.``
+    This variant prints items to the termianl sceen. Depending on the *ListKeyword* used (see below), different values are printed.
+    
+3. ``LIST ListKeyword IN YourVariable.``
+    This variant takes the items that would otherwise have been printed to the terminal screen, and instead makes a :struct:`List` of them in ``YourVariable``, that you can then iterate over with a :ref:`FOR loop <for>` if you like.
+    
+4. ``LIST ListKeyword FROM SomeVessel IN YourVariable.``
+    This variant is just like variant (3), except that it gives a list of the items that exist on some other vessel that might not necessarily be the current :ref:`CPU_vessel <cpu vessel>`.
+
+Available Listable Keywords
+---------------------------
+
+The *ListKeyword* in the above command variants can be any of the
+following:
+
+Universal Lists
+^^^^^^^^^^^^^^^
+
+These generate :struct:`lists <List>` that are not dependent on which :struct:`Vessel`:
+
+``Bodies``
+    :struct:`List` of :struct:`Celestial Bodies <Body>`
+    
+``Targets``
+    :struct:`List` of possible target :struct:`Vessels <Vessel>`
+
+Vessel Lists
+^^^^^^^^^^^^
+
+These generate :struct:`lists <List>` of items on the :struct:`Vessel`:
+
+``Resources``
+    :struct:`List` of :struct:`Resources <Resource>`
+``Parts``
+    :struct:`List` of :struct:`Parts <Part>`
+``Engines``
+    :struct:`List` of :struct:`Engines <Engine>`
+``Sensors``
+    :struct:`List` of :struct:`Sensors <Sensor>`
+``Elements``
+    ??
+``DockingPorts``
+    list of `DockingPorts <DockingPort>`
+
+File System Lists
+^^^^^^^^^^^^^^^^^
+
+These generate :struct:`lists <List>` about the files in the system:
+
+``Files``
+    :struct:`List` the :struct:`files <FileInfo>` on the current Volume. (note below)
+``Volumes``
+    :struct:`List` all the :ref:`volumes` that exist.
+
+.. note::
+
+    ``LIST FILES.`` is the default if you give the ``LIST`` command no parameters.
+
+Examples::
+
+    LIST.  // Prints the list of files on current volume.
+    LIST FILES.  // Does the same exact thing, but more explicitly.
+    LIST VOLUMES. // which volumes can be seen by this CPU?
+    LIST FILES IN fileList. // fileList is now a LIST() containing file structures.
+
+The file structures returned by ``LIST FILES IN fileList.`` are documented :ref:`on a separate page <fileinfo>`.
+
+Here are some more examples::
+
+    // Prints the list of all
+    // Celestial bodies in the system.
+    LIST BODIES. 
+
+    // Puts the list of bodies into a variable.
+    LIST BODIES IN bodList. 
+    // Iterate over everything in the list:
+    SET totMass to 0.
+    FOR bod in bodList {
+        SET totMass to totMass + bod:MASS.
+    }.
+    PRINT "The mass of the whole solar system is " + totMass.
+
+    // Adds variable foo that contains a list of 
+    // resources for my currently target vessel
+    LIST RESOURCES FROM TARGET IN foo.
+    FOR res IN foo {
+        PRINT res:NAME. // Will print the name of every
+                        // resource in the vessel
+    }.
