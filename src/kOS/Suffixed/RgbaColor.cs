@@ -21,10 +21,10 @@ namespace kOS.Suffixed
         }
         private void InitializeSuffixColor()
         {
-            AddSuffix(new [] { "R", "RED" } , new SetSuffix<float>(() => color.r, value => color.r = value));
-            AddSuffix(new [] { "G", "GREEN" } , new SetSuffix<float>(() => color.g, value => color.g = value));
-            AddSuffix(new [] { "B", "BLUE" } , new SetSuffix<float>(() => color.b, value => color.b = value));
-            AddSuffix(new [] { "A", "ALPHA" } , new SetSuffix<float>(() => color.a, value => color.a = value));
+            AddSuffix(new [] { "R", "RED" } , new ClampSetSuffix<float>(() => color.r, value => color.r = value, 0, 255));
+            AddSuffix(new [] { "G", "GREEN" } , new ClampSetSuffix<float>(() => color.g, value => color.g = value, 0, 255));
+            AddSuffix(new [] { "B", "BLUE" } , new ClampSetSuffix<float>(() => color.b, value => color.b = value, 0, 255));
+            AddSuffix(new [] { "A", "ALPHA" } , new ClampSetSuffix<float>(() => color.a, value => color.a = value, 0, 1));
         }
         
         public Color Color()

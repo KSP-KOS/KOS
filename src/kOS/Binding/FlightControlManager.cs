@@ -35,7 +35,7 @@ namespace kOS.Binding
             Debug.Log("kOS: FlightControlManager.AddTo " + Shared.Vessel.id);
 
             currentVessel = shared.Vessel;
-            currentVessel.OnFlyByWire += OnFlyByWire;
+            currentVessel.OnPreAutopilotUpdate += OnFlyByWire;
 
             AddNewFlightParam("throttle", Shared);
             AddNewFlightParam("steering", Shared);
@@ -76,14 +76,14 @@ namespace kOS.Binding
             // Try to re-establish connection to vessel
             if (VesselIsValid(currentVessel))
             {
-                currentVessel.OnFlyByWire -= OnFlyByWire;
+                currentVessel.OnPreAutopilotUpdate -= OnFlyByWire;
                 currentVessel = null;
             }
 
             if (VesselIsValid(Shared.Vessel)) return;
 
             currentVessel = Shared.Vessel;
-            currentVessel.OnFlyByWire += OnFlyByWire;
+            currentVessel.OnPreAutopilotUpdate += OnFlyByWire;
 
             foreach (var param in flightParameters.Values)
                 param.UpdateFlightControl(currentVessel);
@@ -153,7 +153,7 @@ namespace kOS.Binding
 
         private bool VesselIsValid(Vessel vessel)
         {
-            return currentVessel != null && currentVessel.rootPart != null;
+            return vessel != null && vessel.rootPart != null;
         }
 
         private class FlightCtrlParam : IDisposable
