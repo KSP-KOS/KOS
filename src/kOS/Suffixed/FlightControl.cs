@@ -155,9 +155,9 @@ namespace kOS.Suffixed
             }
             else
             {
-                starboard = (float)Safe.Utilities.Math.Clamp(vectorValue.X, 0, 1);
-                top = (float)Safe.Utilities.Math.Clamp(vectorValue.X, 0, 1);
-                fore = (float)Safe.Utilities.Math.Clamp(vectorValue.X, 0, 1);
+                starboard = (float)Safe.Utilities.Math.Clamp(vectorValue.X, -1, 1);
+                top = (float)Safe.Utilities.Math.Clamp(vectorValue.Y, -1, 1);
+                fore = (float)Safe.Utilities.Math.Clamp(vectorValue.Z, -1, 1);
             }
         }
 
@@ -171,9 +171,9 @@ namespace kOS.Suffixed
             }
             else
             {
-                yaw = (float)Safe.Utilities.Math.Clamp(vectorValue.X, 0, 1);
-                pitch = (float)Safe.Utilities.Math.Clamp(vectorValue.Y, 0, 1);
-                roll = (float)Safe.Utilities.Math.Clamp(vectorValue.Z, 0, 1);
+                yaw = (float)Safe.Utilities.Math.Clamp(vectorValue.X, -1, 1);
+                pitch = (float)Safe.Utilities.Math.Clamp(vectorValue.Y, -1, 1);
+                roll = (float)Safe.Utilities.Math.Clamp(vectorValue.Z, -1, 1);
             }
         }
 
