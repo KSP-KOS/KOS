@@ -281,8 +281,8 @@ namespace kOS.Module
             if (firstUpdate)
             {
                 Debug.LogWarning("[kOS] First Update()");
-                shared.Cpu.Boot();
                 firstUpdate = false;
+                shared.Cpu.Boot();
             }
             UpdateVessel();
             UpdateObservers();
