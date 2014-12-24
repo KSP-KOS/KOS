@@ -28,6 +28,7 @@ namespace kOS.Module
         private int vesselPartCount;
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
+        private bool firstUpdate = true;
 
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
@@ -176,7 +177,8 @@ namespace kOS.Module
             }
             
             InitProcessorTracking();
-            shared.Cpu.Boot();
+            // move Cpu.Boot() to within the first Update() to prevent boot script errors from killing OnStart
+            // shared.Cpu.Boot();
         }
 
         private void InitProcessorTracking()
@@ -276,6 +278,12 @@ namespace kOS.Module
         {
             ProcessBoot();
             if (!IsAlive()) return;
+            if (firstUpdate)
+            {
+                Debug.LogWarning("[kOS] First Update()");
+                shared.Cpu.Boot();
+                firstUpdate = false;
+            }
             UpdateVessel();
             UpdateObservers();
             ProcessElectricity(part, TimeWarp.fixedDeltaTime);
