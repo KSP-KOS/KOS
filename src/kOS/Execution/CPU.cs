@@ -10,6 +10,7 @@ using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
+using kOS.Persistence;
 
 namespace kOS.Execution
 {
@@ -101,8 +102,9 @@ namespace kOS.Execution
                 }
                 shared.Screen.Print(bootMessage);
             }
-            
+
             if (shared.VolumeMgr == null) { UnityEngine.Debug.Log("kOS: No volume mgr"); }
+            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { UnityEngine.Debug.LogWarning("kOS: Boot volume not in range"); }
             else if (shared.VolumeMgr.CurrentVolume == null) { UnityEngine.Debug.Log("kOS: No current volume"); }
             else if (shared.ScriptHandler == null) { UnityEngine.Debug.Log("kOS: No script handler"); }
             else if (shared.VolumeMgr.CurrentVolume.GetByName("boot") != null)

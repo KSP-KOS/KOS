@@ -156,16 +156,18 @@ namespace kOS.Module
 
             // initialize harddisk
             if (HardDisk == null)
-                HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
-            // populate it with the boot file, but only if in range:
-            if (archive.CheckRange(vessel))
             {
-                var bootProgramFile = archive.GetByName(bootFile);
-                if (bootProgramFile != null)
+                HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+                // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
+                if (vessel.situation == Vessel.Situations.PRELAUNCH)
                 {
-                    // Copy to HardDisk as "boot".
-                    var boot = new ProgramFile(bootProgramFile) {Filename = "boot.ks"};
-                    HardDisk.Add(boot);
+                    var bootProgramFile = archive.GetByName(bootFile);
+                    if (bootProgramFile != null)
+                    {
+                        // Copy to HardDisk as "boot".
+                        var boot = new ProgramFile(bootProgramFile) { Filename = "boot.ks" };
+                        HardDisk.Add(boot);
+                    }
                 }
             }
             shared.VolumeMgr.Add(HardDisk);

@@ -28,5 +28,11 @@ namespace kOS.AddOns.RemoteTech2
             }
             throw new Exception("Volume is out of range");
         }
+
+        // check the range on the current volume without calling GetVolumeWithRangeCheck
+        public bool CheckCurrentVolumeRange(Vessel vessel)
+        {
+            return base.CurrentVolume.CheckRange(vessel);
+        }
     }
 }
