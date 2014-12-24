@@ -19,6 +19,7 @@ import os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- General configuration ------------------------------------------------
 
@@ -105,10 +106,12 @@ highlight_language = 'c'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 # default, sphinxdoc, scrolls, agogo, traditional, nature, haiku, pyramid
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme' # original from Johann that is a PITA to set up.
+html_theme = 'default'
 
-import sphinx_rtd_theme
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# I had to suppress these to make it work:
+# import sphinx_rtd_theme
+# html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
