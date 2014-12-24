@@ -164,7 +164,7 @@ namespace kOS.Module
                 {
                     // Copy to HardDisk as "boot".
                     var boot = new ProgramFile(bootProgramFile) {Filename = "boot.ks"};
-                    HardDisk.Add(boot);
+                    HardDisk.Add(boot, true);
                 }
             }
             shared.VolumeMgr.Add(HardDisk);
