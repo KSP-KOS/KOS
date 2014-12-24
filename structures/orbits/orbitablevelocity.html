@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OrbitableVelocity &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html" />
+    <link rel="up" title="Orbits" href="../orbits.html" />
+    <link rel="next" title="Celestial Bodies" href="../celestial_bodies.html" />
+    <link rel="prev" title="Orbitable (Vessels and Bodies)" href="orbitable.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../celestial_bodies.html" title="Celestial Bodies"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="orbitable.html" title="Orbitable (Vessels and Bodies)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../orbits.html" accesskey="U">Orbits</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="orbitablevelocity">
+<span id="id1"></span><h1>OrbitableVelocity<a class="headerlink" href="#orbitablevelocity" title="Permalink to this headline">¶</a></h1>
+<p>When any <a class="reference internal" href="orbitable.html#ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> object returns its <a class="reference internal" href="orbitable.html#ORBITABLE:VELOCITY" title="ORBITABLE:VELOCITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VELOCITY</span></tt></a> suffix, it returns it as a structure containing a pair of both its orbit-frame velocity and its surface-frame velocity at the same instant of time. To obtain its velocity as a vector you must pick whether you want the oribtal or surface velocities by giving a further suffix:</p>
+<dl class="structure">
+<dt id="ORBITABLEVELOCITY">
+<em class="property">structure </em><tt class="descname">OrbitableVelocity</tt><a class="headerlink" href="#ORBITABLEVELOCITY" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<caption>Members</caption>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLEVELOCITY:ORBIT" title="ORBITABLEVELOCITY:ORBIT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ORBIT</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLEVELOCITY:SURFACE" title="ORBITABLEVELOCITY:SURFACE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SURFACE</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLEVELOCITY:ORBIT">
+OrbitableVelocity:<tt class="descname">ORBIT</tt><a class="headerlink" href="#ORBITABLEVELOCITY:ORBIT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the orbital velocity.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLEVELOCITY:SURFACE">
+OrbitableVelocity:<tt class="descname">SURFACE</tt><a class="headerlink" href="#ORBITABLEVELOCITY:SURFACE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the surface-frame velocity. Note that this is the surface velocity relative to the surface of the SOI body, not the orbiting object itself. (i.e. Mun:VELOCITY:SURFACE returns the Mun&#8217;s velocity relative to the surface of its SOI body, Kerbin).</p>
+</dd></dl>
+
+<p>Examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">VORB</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">ORBIT</span>
+<span class="n">SET</span> <span class="n">VSRF</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span>
+<span class="n">SET</span> <span class="n">MUNORB</span> <span class="n">TO</span> <span class="n">MUN</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">ORBIT</span>
+<span class="n">SET</span> <span class="n">MUNSRF</span> <span class="n">TO</span> <span class="n">MUN</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">SURFACE</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">At first glance it may seem that <tt class="docutils literal"><span class="pre">Mun:VELOCITY:SURFACE</span></tt> is wrong because it creates a vector in the opposite direction from <tt class="docutils literal"><span class="pre">Mun:VELOCITY:ORBIT</span></tt>, but this is actually correct. Kerbin&#8217;s surface rotates once every 6 hours, and the Mun takes a lot longer than 6 hours to orbit Kerbin. Therefore, relative to Kerbin&#8217;s surface, the Mun is going backward.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="orbitable.html"
+                        title="previous chapter">Orbitable (Vessels and Bodies)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../celestial_bodies.html"
+                        title="next chapter">Celestial Bodies</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/structures/orbits/orbitablevelocity.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../celestial_bodies.html" title="Celestial Bodies"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="orbitable.html" title="Orbitable (Vessels and Bodies)"
+             >previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../orbits.html" >Orbits</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

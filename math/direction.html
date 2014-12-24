@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Directions &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html" />
+    <link rel="up" title="Mathematics and Basic Geometry" href="../math.html" />
+    <link rel="next" title="Geographic Coordinates" href="geocoordinates.html" />
+    <link rel="prev" title="Vectors" href="vector.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="geocoordinates.html" title="Geographic Coordinates"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vector.html" title="Vectors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../math.html" accesskey="U">Mathematics and Basic Geometry</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="directions">
+<span id="direction"></span><h1>Directions<a class="headerlink" href="#directions" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#creation" id="id1">Creation</a></li>
+<li><a class="reference internal" href="#structure" id="id2">Structure</a></li>
+<li><a class="reference internal" href="#operations-and-methods" id="id3">Operations and Methods</a></li>
+<li><a class="reference internal" href="#vectors-and-directions" id="id4">Vectors and Directions</a></li>
+</ul>
+</div>
+<p><a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> objects represent a rotation starting from an initial point in <strong>KSP</strong>&#8216;s coordinate system where the initial state was looking down the <span class="math">\(+z\)</span> axis, with the camera &#8220;up&#8221; being the <span class="math">\(+y\)</span> axis. This exists primarily to enable automated steering.</p>
+<p>In your thinking, you can largely think of Directions as being Rotations and Rotations as being Directions.  The two concepts can be used interchangably.  Used on its own to steer by, a rotation from the default XYZ axes of the universe into a new rotation does in fact provide an absolute direction, thus the name Direction for these objects even though in reality they are just Rotations.  It&#8217;s important to know that Directions are just rotations because you can use them to modify other directions or vectors.</p>
+<div class="section" id="creation">
+<h2><a class="toc-backref" href="#id1">Creation</a><a class="headerlink" href="#creation" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="42%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Method</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#R" title="R function"><tt class="xref ks ks-func docutils literal"><span class="pre">R(pitch,yaw,roll)</span></tt></a></td>
+<td>Euler rotation</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#Q" title="Q function"><tt class="xref ks ks-func docutils literal"><span class="pre">Q(x,y,z,rot)</span></tt></a></td>
+<td>Quaternion</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#HEADING" title="HEADING function"><tt class="xref ks ks-func docutils literal"><span class="pre">HEADING(dir,pitch)</span></tt></a></td>
+<td>Compass heading</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LOOKDIRUP" title="LOOKDIRUP function"><tt class="xref ks ks-func docutils literal"><span class="pre">LOOKDIRUP(lookAt,lookUp)</span></tt></a></td>
+<td>Looking along vector <em>lookAt</em>, rolled so that <em>lookUp</em> is upward.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ANGLEAXIS" title="ANGLEAXIS function"><tt class="xref ks ks-func docutils literal"><span class="pre">ANGLEAXIS(degress,axisVector)</span></tt></a></td>
+<td>A rotation that would rotate the universe around an axis</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ROTATEFROMTO" title="ROTATEFROMTO function"><tt class="xref ks ks-func docutils literal"><span class="pre">ROTATEFROMTO(fromVec,toVec)</span></tt></a></td>
+<td>A rotation that would go from vectors fromVec to toVec</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#direction-from-suffix"><em>FACING</em></a></td>
+<td>From SHIP or TARGET</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#direction-from-suffix"><em>UP</em></a></td>
+<td>From SHIP</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#direction-from-suffix"><em>PROGRADE, etc.</em></a></td>
+<td>From SHIP, TARGET or BODY</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="R">
+<tt class="descname">R</tt><big>(</big>pitch,yaw,roll<big>)</big><a class="headerlink" href="#R" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> can be created out of a Euler Rotation, indicated with the <a class="reference internal" href="#R" title="R function"><tt class="xref ks ks-func docutils literal"><span class="pre">R()</span></tt></a> function, as shown below where the <tt class="docutils literal"><span class="pre">pitch</span></tt>, <tt class="docutils literal"><span class="pre">yaw</span></tt> and <tt class="docutils literal"><span class="pre">roll</span></tt> values are in degrees:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myDir</span> <span class="n">TO</span> <span class="n">R</span><span class="p">(</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="p">).</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="Q">
+<tt class="descname">Q</tt><big>(</big>x,y,z,rot<big>)</big><a class="headerlink" href="#Q" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> can also be created out of a <em>Quaternion</em> tuple, indicated with the <a class="reference internal" href="#Q" title="Q function"><tt class="xref ks ks-func docutils literal"><span class="pre">Q()</span></tt></a> function, as shown below where <tt class="docutils literal"><span class="pre">x</span></tt>, <tt class="docutils literal"><span class="pre">y</span></tt>, and <tt class="docutils literal"><span class="pre">z</span></tt> are a <a class="reference internal" href="vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> to rotate around, and <tt class="docutils literal"><span class="pre">rot</span></tt> is how many degrees to rotate:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myDir</span> <span class="n">TO</span> <span class="n">Q</span><span class="p">(</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">rot</span> <span class="p">).</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="HEADING">
+<tt class="descname">HEADING</tt><big>(</big>dir,pitch<big>)</big><a class="headerlink" href="#HEADING" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> can be created out of a <a class="reference internal" href="#HEADING" title="HEADING function"><tt class="xref ks ks-func docutils literal"><span class="pre">HEADING()</span></tt></a> function. The first parameter is the compass heading, and the second parameter is the pitch above the horizon:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myDir</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="n">degreesFromNorth</span><span class="p">,</span> <span class="n">pitchAboveHorizon</span><span class="p">).</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="LOOKDIRUP">
+<tt class="descname">LOOKDIRUP</tt><big>(</big>lookAt,lookUp<big>)</big><a class="headerlink" href="#LOOKDIRUP" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> can be created with the LOOKDIRUP function by using two vectors.   This is like converting a vector to a direction directly, except that it also provides roll information, which a single vector lacks.   <em>lookAt</em> is a vector describing the Direction&#8217;s FORE orientation (its local Z axis), and <em>lookUp</em> is a vector describing the direction&#8217;s TOP orientation (its local Y axis).  Note that <em>lookAt</em> and <em>lookUp</em> need not actually be perpendicualr to each other - they just need to be non-parallel in some way.  When they are not perpendicular, then a vector resulting from projecting <em>lookUp</em> into the plane that is normal to <em>lookAt</em> will be used as the effective <em>lookUp</em> instead:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Aim up the SOI&#39;s north axis (V(0,1,0)), rolling the roof to point to the sun.</span>
+<span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">LOOKDIRUP</span><span class="p">(</span> <span class="n">V</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">SUN</span><span class="o">:</span><span class="n">POSITION</span> <span class="p">).</span>
+<span class="c1">//</span>
+<span class="c1">// A direction that aims normal to orbit, with the roof pointed down toward the planet:</span>
+<span class="n">LOCK</span> <span class="n">normVec</span> <span class="n">to</span> <span class="n">VCRS</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">BODY</span><span class="o">:</span><span class="n">POSITION</span><span class="p">,</span><span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">ORBIT</span><span class="p">).</span>  <span class="c1">// Cross-product these for a normal vector</span>
+<span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">LOOKDIRUP</span><span class="p">(</span> <span class="n">normVec</span><span class="p">,</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">BODY</span><span class="o">:</span><span class="n">POSITION</span><span class="p">).</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ANGLEAXIS">
+<tt class="descname">ANGLEAXIS</tt><big>(</big>degress,axisVector<big>)</big><a class="headerlink" href="#ANGLEAXIS" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> can be created with the ANGLEAXIS function.  It represents a rotation of <em>degrees</em> around an axis of <em>axisVector</em>.  To know which way a positive or negative number of degrees rotates, remember this is a left-handed coordinate system:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Pick a new rotation that is pitched 30 degrees from the current one, taking into account</span>
+<span class="c1">// the ship&#39;s current orientation to decide which direction is the &#39;pitch&#39; rotation:</span>
+<span class="c1">//</span>
+<span class="n">SET</span> <span class="n">pitchUp30</span> <span class="n">to</span> <span class="n">ANGLEAXIS</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="n">SHIP</span><span class="o">:</span><span class="n">STARFACING</span><span class="p">).</span>
+<span class="n">SET</span> <span class="n">newDir</span> <span class="n">to</span> <span class="n">pitchUp30</span><span class="o">*</span><span class="n">SHIP</span><span class="o">:</span><span class="n">FACING</span><span class="p">.</span>
+<span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">newDir</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ROTATEFROMTO">
+<tt class="descname">ROTATEFROMTO</tt><big>(</big>fromVec,toVec<big>)</big><a class="headerlink" href="#ROTATEFROMTO" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> can be created with the ROTATEFROMTO function.  It is <em>one of the infinite number of</em> rotatations that could rotate vector <em>fromVec</em> to become vector <em>toVec</em> (or at least pointing in the same direction as toVec, since fromVec and toVec need not be the same magnitude).  Note the use of the phrase &#8220;<strong>infinite number of</strong>&#8221;.  Because there&#8217;s no guarantee about the roll information, there are an infinite number of rotations that could qualify as getting you from one vector to another, because there&#8217;s an infinite number of roll angles that could result and all still fit the requirement:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myDir</span> <span class="n">to</span> <span class="n">ROTATEFROMTO</span><span class="p">(</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span> <span class="p">).</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<span class="target" id="direction-from-suffix"></span><dl class="object">
+<dt>
+<tt class="descname">Suffix terms from other structures</tt></dt>
+<dd><p>A <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> can be made from many suffix terms of other structures, as shown below:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myDir</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">FACING</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">myDir</span> <span class="n">TO</span> <span class="n">TARGET</span><span class="o">:</span><span class="n">FACING</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">myDir</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">UP</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Whenever a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> is printed, it always comes out showing its Euler Rotation, regardless of how it was created:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Initializes a direction to prograde</span>
+<span class="c1">// plus a relative pitch of 90</span>
+<span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PROGRADE</span> <span class="o">+</span> <span class="n">R</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">).</span>
+
+<span class="c1">// Steer the vessel in the direction</span>
+<span class="c1">// suggested by direction X.</span>
+<span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">X</span><span class="p">.</span>
+
+<span class="c1">// Create a rotation facing northeast,</span>
+<span class="c1">// 10 degrees above horizon</span>
+<span class="n">SET</span> <span class="n">Y</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">10</span><span class="p">).</span>
+
+<span class="c1">// Steer the vessel in the direction</span>
+<span class="c1">// suggested by direction X.</span>
+<span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">Y</span><span class="p">.</span>
+
+<span class="c1">// Set by a rotation in degrees</span>
+<span class="n">SET</span> <span class="n">Direction</span> <span class="n">TO</span> <span class="n">R</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">0</span><span class="p">).</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="structure">
+<h2><a class="toc-backref" href="#id2">Structure</a><a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
+<dl class="structure">
+<dt id="DIRECTION">
+<em class="property">structure </em><tt class="descname">Direction</tt><a class="headerlink" href="#DIRECTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>The suffixes of a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> cannot be altered, so to get a new <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> you must construct a new one.</p>
+<p>The <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> object exists primarily to enable automated steering. You can initialize a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> using a <a class="reference internal" href="vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> or a <tt class="docutils literal"><span class="pre">Rotation</span></tt>. <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> objects represent a rotation starting from an initial point in <strong>KSP</strong>&#8216;s coordinate system where the initial state was looking down the <span class="math">\(+z\)</span> axis, with the camera &#8220;up&#8221; being the <span class="math">\(+y\)</span> axis. So for example, a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> pointing along the <span class="math">\(x\)</span> axis might be represented as <tt class="docutils literal"><span class="pre">R(0,90,0)</span></tt>, meaning the initial <span class="math">\(z\)</span>-axis direction was rotated <em>90 degrees</em> around the <span class="math">\(y\)</span> axis.</p>
+<p>If you are going to manipulate directions a lot, it&#8217;s important to note that the order in which the rotations occur is:</p>
+<ol class="arabic simple">
+<li>First rotate around <span class="math">\(z\)</span> axis.</li>
+<li>Then rotate around <span class="math">\(x\)</span> axis.</li>
+<li>Then rotate around <span class="math">\(y\)</span> axis.</li>
+</ol>
+<p>What this means is that if you try to <tt class="docutils literal"><span class="pre">ROLL</span></tt> and <tt class="docutils literal"><span class="pre">YAW</span></tt> in the same tuple, like so: <tt class="docutils literal"><span class="pre">R(0,45,45)</span></tt>, you&#8217;ll end up <strong>rolling first and then yawing</strong>, which might not be what you expected. There is little that can be done to change this as it&#8217;s the native way things are represented in the underlying <strong>Unity engine</strong>.</p>
+<p>Also, if you are going to manipulate directions a lot, it&#8217;s important to note how <strong>KSP</strong>&#8216;s <a class="reference external" href="ref_frame">native coord system works</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DIRECTION:PITCH">
+Direction:<tt class="descname">PITCH</tt><a class="headerlink" href="#DIRECTION:PITCH" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Rotation around the <span class="math">\(x\)</span> axis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DIRECTION:YAW">
+Direction:<tt class="descname">YAW</tt><a class="headerlink" href="#DIRECTION:YAW" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Rotation around the <span class="math">\(y\)</span> axis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DIRECTION:ROLL">
+Direction:<tt class="descname">ROLL</tt><a class="headerlink" href="#DIRECTION:ROLL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Rotation around the <span class="math">\(z\)</span> axis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DIRECTION:FOREVECTOR">
+Direction:<tt class="descname">FOREVECTOR</tt><a class="headerlink" href="#DIRECTION:FOREVECTOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference internal" href="vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> of length 1 that is in the same direction as the &#8220;look-at&#8221; of this Direction.  Note that it is the same meaning as &#8220;what the Z axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe&#8221;.  When you LOCK STEERING to a direction, that direction&#8217;s FOREVECTOR is the vector the nose of the ship will orient to.  SHIP:FACING:FOREVECTOR is the way the ship&#8217;s nose is aimed right now.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DIRECTION:TOPVECTOR">
+Direction:<tt class="descname">TOPVECTOR</tt><a class="headerlink" href="#DIRECTION:TOPVECTOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference internal" href="vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> of length 1 that is in the same direction as the &#8220;look-up&#8221; of this Direction.  Note that it is the same meaning as &#8220;what the Y axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe&#8221;. When you LOCK STEERING to a direction, that direction&#8217;s TOPVECTOR is the vector the roof of the ship will orient to.  SHIP:FACING:TOPVECTOR is the way the ship&#8217;s roof is aimed right now.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DIRECTION:STARVECTOR">
+Direction:<tt class="descname">STARVECTOR</tt><a class="headerlink" href="#DIRECTION:STARVECTOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference internal" href="vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> of length 1 that is in the same direction as the &#8220;starboard side&#8221; of this Direction.  Note that it is the same meaning as &#8220;what the X axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe&#8221;. When you LOCK STEERING to a direction, that direction&#8217;s STARVECTOR is the vector the right wing of the ship will orient to.  SHIP:FACING:STARVECTOR is the way the ship&#8217;s right wing is aimed right now.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>The difference between a :struct:`Direction` and a ``Vector``</strong></p>
+<p class="last"><tt class="docutils literal"><span class="pre">Vector</span></tt> and a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> can be represented with the exact same amount of information: a tuple of 3 floating point numbers. So you might wonder why it is that a <tt class="docutils literal"><span class="pre">Vector</span></tt> can hold information about the magnitude of the line segment, while a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> cannot, given that both have the same amount of information. The answer is that a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> does contain one thing a <tt class="docutils literal"><span class="pre">Vector</span></tt> does not. A <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> knows which way is &#8220;up&#8221;, while a <tt class="docutils literal"><span class="pre">Vector</span></tt> does not. If you tell <strong>kOS</strong> to <tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></tt> to a <tt class="docutils literal"><span class="pre">Vector</span></tt>, it will be able to point the nose of the vessel in the correct direction, but won&#8217;t know which way you want the roof of the craft rotated to. This works fine for axial symmetrical rockets but can be a problem for airplanes.</p>
+</div>
+</div>
+<div class="section" id="operations-and-methods">
+<h2><a class="toc-backref" href="#id3">Operations and Methods</a><a class="headerlink" href="#operations-and-methods" title="Permalink to this headline">¶</a></h2>
+<p>You can use math operations on <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> objects as well. The next example uses a rotation of &#8220;UP&#8221; which is a system variable describing a vector directly away from the celestial body you are under the influence of:</p>
+<p>Supported Direction Operators:</p>
+<blockquote>
+<div><p><strong>Direction Multiplied by Direction</strong> <tt class="docutils literal"><span class="pre">Dir1</span> <span class="pre">*</span> <span class="pre">Dir2</span></tt> - This operator returns the result of rotating Dir2 by the rotation of Dir1.  Note that the order of operations matters here.  <tt class="docutils literal"><span class="pre">Dir1*Dir2</span></tt> is not the same as <tt class="docutils literal"><span class="pre">Dir2*Dir1</span></tt>.  Example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// A direction pointing along compass heading 330, by rotating NORTH by 30 degrees around UP axis:</span>
+<span class="n">SET</span> <span class="n">newDir</span> <span class="n">TO</span> <span class="n">ANGLEAXIS</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="n">SHIP</span><span class="o">:</span><span class="n">UP</span><span class="p">)</span> <span class="o">*</span> <span class="n">NORTH</span><span class="p">.</span>
+</pre></div>
+</div>
+<p><strong>Direction Multiplied by Vector</strong> <tt class="docutils literal"><span class="pre">Dir</span> <span class="pre">*</span> <span class="pre">Vec</span></tt> - This operator returns the result of rotating the vector by Dir:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// What would the velocity of your ship be if it was angled 20 degrees to your left?</span>
+<span class="n">SET</span> <span class="n">Vel</span> <span class="n">to</span> <span class="n">ANGLEAXIS</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="n">SHIP</span><span class="o">:</span><span class="n">TOPVECTOR</span><span class="p">)</span> <span class="o">*</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">ORBIT</span><span class="p">.</span>
+<span class="c1">// At this point Vel:MAG and SHIP:VELOCITY:MAG should be the same, but they don&#39;t point the same way</span>
+</pre></div>
+</div>
+<p><strong>Direction Added to Direction</strong> <tt class="docutils literal"><span class="pre">Dir1</span> <span class="pre">+</span> <span class="pre">Dir2</span></tt> - This operator is less reliable because its exact behavior depends on the order of operations of the UnityEngine&#8217;s X Y and Z axis rotations, and it can result in gimbal lock.  It&#8217;s supposed to perform a Euler rotation of one direction by another, but it&#8217;s preferred to use Dir*Dir instead, as that doesn&#8217;t experience gimbal lock, and does not require that you know the exact transformation order of Unity.</p>
+</div></blockquote>
+<p>For vector operations, you may use the <tt class="docutils literal"><span class="pre">:VECTOR</span></tt> suffix in combination with the regular vector methods:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">dir</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">UP</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">newdir</span> <span class="n">TO</span> <span class="n">VCRS</span><span class="p">(</span><span class="n">SHIP</span><span class="o">:</span><span class="n">PROGRADE</span><span class="o">:</span><span class="n">VECTOR</span><span class="p">,</span> <span class="n">dir</span><span class="o">:</span><span class="n">VECTOR</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="vectors-and-directions">
+<h2><a class="toc-backref" href="#id4">Vectors and Directions</a><a class="headerlink" href="#vectors-and-directions" title="Permalink to this headline">¶</a></h2>
+<p>There are some consequences when converting from a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> to a <tt class="docutils literal"><span class="pre">Vector</span></tt> and vice versa which should not be overlooked.</p>
+<p>A <tt class="docutils literal"><span class="pre">Vector</span></tt> and a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> can be represented with the exact same amount of information: a tuple of 3 floating point numbers. So you might wonder why it is that a <tt class="docutils literal"><span class="pre">Vector</span></tt> can hold information about the magnitude of the line segment, while a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> cannot, given that both have the same amount of information. The answer is that a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> does contain one thing a <tt class="docutils literal"><span class="pre">Vector</span></tt> does not. A <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> knows which way is &#8220;up&#8221;, while a <tt class="docutils literal"><span class="pre">Vector</span></tt> does not. If you tell <strong>kOS</strong> to <tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></tt> to a <tt class="docutils literal"><span class="pre">Vector</span></tt>, it will be able to point the nose of the vessel in the correct direction, but won&#8217;t know which way you want the roof of the craft rotated to. This works fine for axial symmetrical rockets but can be a problem for airplanes.</p>
+<p>Therefore if you do this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">MyVec</span> <span class="n">to</span> <span class="n">V</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">300</span><span class="p">).</span>
+<span class="n">SET</span> <span class="n">MyDir</span> <span class="n">to</span> <span class="n">MyVec</span><span class="o">:</span><span class="n">DIRECTION</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Then <tt class="docutils literal"><span class="pre">MyDir</span></tt> will be a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a>, but it will be a <a class="reference internal" href="#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> where you have no control over which way is &#8220;up&#8221; for it.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Directions</a><ul>
+<li><a class="reference internal" href="#creation">Creation</a></li>
+<li><a class="reference internal" href="#structure">Structure</a></li>
+<li><a class="reference internal" href="#operations-and-methods">Operations and Methods</a></li>
+<li><a class="reference internal" href="#vectors-and-directions">Vectors and Directions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="vector.html"
+                        title="previous chapter">Vectors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="geocoordinates.html"
+                        title="next chapter">Geographic Coordinates</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/math/direction.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="geocoordinates.html" title="Geographic Coordinates"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vector.html" title="Vectors"
+             >previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../math.html" >Mathematics and Basic Geometry</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

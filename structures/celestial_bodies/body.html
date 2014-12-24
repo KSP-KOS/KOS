@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Body &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html" />
+    <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html" />
+    <link rel="next" title="Vessels and Parts" href="../vessels.html" />
+    <link rel="prev" title="Atmosphere" href="atmosphere.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../vessels.html" title="Vessels and Parts"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="atmosphere.html" title="Atmosphere"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../celestial_bodies.html" accesskey="U">Celestial Bodies</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="body">
+<span id="id1"></span><h1>Body<a class="headerlink" href="#body" title="Permalink to this headline">¶</a></h1>
+<p>This is any sort of planet or moon. To get a variable referring to a Body, you can do this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// &quot;name&quot; is the name of the body,</span>
+<span class="c1">// like &quot;Mun&quot; for example.</span>
+<span class="n">SET</span> <span class="n">MY_VAR</span> <span class="n">TO</span> <span class="n">BODY</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>Also, all bodies have hard-coded variable names as well. You can use the variable <tt class="docutils literal"><span class="pre">Mun</span></tt> to mean the same thing as <tt class="docutils literal"><span class="pre">BODY(&quot;Mun&quot;)</span></tt>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionchanged">
+<p><span class="versionmodified">Changed in version 0.13: </span>A Celestial Body is now also an <a class="reference internal" href="../orbits/orbitable.html#orbitable"><em>Orbitable</em></a>, and can use all the terms described for these objects too.</p>
+</div>
+</div>
+<div class="section" id="predefined-celestial-bodies">
+<h2>Predefined Celestial Bodies<a class="headerlink" href="#predefined-celestial-bodies" title="Permalink to this headline">¶</a></h2>
+<p>All of the main celestial bodies in the game are reserved variable names. The following two lines do the exactly the same thing:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">the_mun</span> <span class="n">TO</span> <span class="n">Mun</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">the_mun</span> <span class="n">TO</span> <span class="n">Body</span><span class="p">(</span><span class="s">&quot;Mun&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">Sun</p>
+</li>
+<li><p class="first">Moho</p>
+</li>
+<li><dl class="first docutils">
+<dt>Eve</dt>
+<dd><ul class="first last simple">
+<li>Gilly</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Kerbin</dt>
+<dd><ul class="first last simple">
+<li>Mun</li>
+<li>Minmus</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Duna</dt>
+<dd><ul class="first last simple">
+<li>Ike</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Jool</dt>
+<dd><ul class="first last simple">
+<li>Laythe</li>
+<li>Vall</li>
+<li>Tylo</li>
+<li>Bop</li>
+<li>Pol</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Eeloo</p>
+</li>
+</ul>
+<dl class="structure">
+<dt id="BODY">
+<em class="property">structure </em><tt class="descname">Body</tt><a class="headerlink" href="#BODY" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type (units)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="2">Every Suffix of <a class="reference internal" href="../orbits/orbitable.html#ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:NAME" title="BODY:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#BODY:DESCRIPTION" title="BODY:DESCRIPTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DESCRIPTION</span></tt></a></td>
+<td>string</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:MASS" title="BODY:MASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></tt></a></td>
+<td>scalar (kg)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#BODY:ALTITUDE" title="BODY:ALTITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></tt></a></td>
+<td>scalar (m)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:ROTATIONPERIOD" title="BODY:ROTATIONPERIOD attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONPERIOD</span></tt></a></td>
+<td>scalar (s)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#BODY:RADIUS" title="BODY:RADIUS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RADIUS</span></tt></a></td>
+<td>scalar (m)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:MU" title="BODY:MU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MU</span></tt></a></td>
+<td>scalar (<span class="math">\(m^3 s^{−2}\)</span>)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#BODY:ATM" title="BODY:ATM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ATM</span></tt></a></td>
+<td><a class="reference internal" href="atmosphere.html#ATMOSPHERE" title="ATMOSPHERE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Atmosphere</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#BODY:ANGULARVEL" title="BODY:ANGULARVEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP-RAW</em></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:NAME">
+Body:<tt class="descname">NAME</tt><a class="headerlink" href="#BODY:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the body. Example: &#8220;Mun&#8221;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:DESCRIPTION">
+Body:<tt class="descname">DESCRIPTION</tt><a class="headerlink" href="#BODY:DESCRIPTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Longer description of the body, often just a duplicate of the name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:MASS">
+Body:<tt class="descname">MASS</tt><a class="headerlink" href="#BODY:MASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mass of the body in kilograms.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:ALTITUDE">
+Body:<tt class="descname">ALTITUDE</tt><a class="headerlink" href="#BODY:ALTITUDE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The altitude of this body above the sea level surface of its parent body. I.e. the altitude of Mun above Kerbin.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:ROTATIONPERIOD">
+Body:<tt class="descname">ROTATIONPERIOD</tt><a class="headerlink" href="#BODY:ROTATIONPERIOD" title="Permalink to this definition">¶</a></dt>
+<dd><p>The length of the body&#8217;s day in seconds. I.e. how long it takes for it to make one rotation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:RADIUS">
+Body:<tt class="descname">RADIUS</tt><a class="headerlink" href="#BODY:RADIUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The radius from the body&#8217;s center to its sea level.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:MU">
+Body:<tt class="descname">MU</tt><a class="headerlink" href="#BODY:MU" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference external" href="http://en.wikipedia.org/wiki/Standard_gravitational_parameter">Gravitational Parameter</a> of the body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:ATM">
+Body:<tt class="descname">ATM</tt><a class="headerlink" href="#BODY:ATM" title="Permalink to this definition">¶</a></dt>
+<dd><p>A variable that describes the atmosphere of this body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="BODY:ANGULARVEL">
+Body:<tt class="descname">ANGULARVEL</tt><a class="headerlink" href="#BODY:ANGULARVEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Despite the name, this is technically not a velocity. It only tells you the axis of rotation, not the speed of rotation around that axis.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Body</a><ul>
+<li><a class="reference internal" href="#predefined-celestial-bodies">Predefined Celestial Bodies</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="atmosphere.html"
+                        title="previous chapter">Atmosphere</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../vessels.html"
+                        title="next chapter">Vessels and Parts</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/structures/celestial_bodies/body.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../vessels.html" title="Vessels and Parts"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="atmosphere.html" title="Atmosphere"
+             >previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../celestial_bodies.html" >Celestial Bodies</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

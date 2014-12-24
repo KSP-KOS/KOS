@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Command Reference &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="index.html" />
+    <link rel="next" title="Flight Control" href="commands/flight.html" />
+    <link rel="prev" title="Reference Frames" href="math/ref_frame.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="commands/flight.html" title="Flight Control"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="math/ref_frame.html" title="Reference Frames"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">kOS 0.15.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="command-reference">
+<span id="commands"></span><h1>Command Reference<a class="headerlink" href="#command-reference" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="commands/flight.html">Flight Control</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="commands/flight.html#cooked-control">Cooked Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/flight.html#raw-control">Raw Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/flight.html#pilot-input">Pilot Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/flight.html#ship-systems">Ship Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/flight.html#time-warping">Time Warping</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="commands/prediction.html">Prediction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands/list.html">Listing Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="commands/list.html#for-loop"><tt class="docutils literal"><span class="pre">FOR</span></tt> Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/list.html#available-listable-keywords">Available Listable Keywords</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands/files.html">File I/O</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#volume-and-filename-arguments">Volume and Filename arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#compile-program-to-compiledprogram"><tt class="docutils literal"><span class="pre">COMPILE</span> <span class="pre">program</span> <span class="pre">(TO</span> <span class="pre">compiledProgram).</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#copy-programfile-from-to-voumenumber"><tt class="docutils literal"><span class="pre">COPY</span> <span class="pre">programFile</span> <span class="pre">FROM/TO</span> <span class="pre">voumeNumber.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#delete-filename-from-volumenumber"><tt class="docutils literal"><span class="pre">DELETE</span> <span class="pre">filename</span> <span class="pre">FROM</span> <span class="pre">volumeNumber.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#edit-program"><tt class="docutils literal"><span class="pre">EDIT</span> <span class="pre">program.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#log-text-to-filename"><tt class="docutils literal"><span class="pre">LOG</span> <span class="pre">text</span> <span class="pre">TO</span> <span class="pre">filename.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#rename-name1-to-name2"><tt class="docutils literal"><span class="pre">RENAME</span> <span class="pre">name1</span> <span class="pre">TO</span> <span class="pre">name2.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#run-program"><tt class="docutils literal"><span class="pre">RUN</span> <span class="pre">&lt;program&gt;.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#switch-to-volumenumber"><tt class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span> <span class="pre">&lt;volumeNumber&gt;.</span></tt></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="commands/terminal.html">Terminal</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="math/ref_frame.html"
+                        title="previous chapter">Reference Frames</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="commands/flight.html"
+                        title="next chapter">Flight Control</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/commands.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="commands/flight.html" title="Flight Control"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="math/ref_frame.html" title="Reference Frames"
+             >previous</a> |</li>
+        <li><a href="index.html">kOS 0.15.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Atmosphere &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html" />
+    <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html" />
+    <link rel="next" title="Body" href="body.html" />
+    <link rel="prev" title="Celestial Bodies" href="../celestial_bodies.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="body.html" title="Body"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../celestial_bodies.html" title="Celestial Bodies"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../celestial_bodies.html" accesskey="U">Celestial Bodies</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="atmosphere">
+<span id="id1"></span><h1>Atmosphere<a class="headerlink" href="#atmosphere" title="Permalink to this headline">¶</a></h1>
+<p>A Structure closely tied to <a class="reference internal" href="body.html#BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a> A variable of type <a class="reference internal" href="#ATMOSPHERE" title="ATMOSPHERE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Atmosphere</span></tt></a> usually is obtained by the <a class="reference internal" href="body.html#BODY:ATM" title="BODY:ATM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">:ATM</span></tt></a> suffix of a <a class="reference internal" href="body.html#BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a>. ALL The following values are read-only. You can&#8217;t change the value of a body&#8217;s atmosphere.</p>
+<dl class="structure">
+<dt id="ATMOSPHERE">
+<em class="property">structure </em><tt class="descname">Atmosphere</tt><a class="headerlink" href="#ATMOSPHERE" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="17%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#ATMOSPHERE:BODY" title="ATMOSPHERE:BODY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">BODY</span></tt></a></td>
+<td>string</td>
+<td>Name of the celestial body</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ATMOSPHERE:EXISTS" title="ATMOSPHERE:EXISTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">EXISTS</span></tt></a></td>
+<td>bool</td>
+<td>True if this body has an atmosphere</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ATMOSPHERE:OXYGEN" title="ATMOSPHERE:OXYGEN attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OXYGEN</span></tt></a></td>
+<td>bool</td>
+<td>True if oxygen is present</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ATMOSPHERE:SCALE" title="ATMOSPHERE:SCALE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SCALE</span></tt></a></td>
+<td>scalar</td>
+<td>Used to find atmospheric density</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ATMOSPHERE:SEALEVELPRESSURE" title="ATMOSPHERE:SEALEVELPRESSURE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SEALEVELPRESSURE</span></tt></a></td>
+<td>scalar (atm)</td>
+<td>pressure at sea level</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ATMOSPHERE:HEIGHT" title="ATMOSPHERE:HEIGHT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HEIGHT</span></tt></a></td>
+<td>scalar (m)</td>
+<td>advertised atmospheric height</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ATMOSPHERE:BODY">
+Atmosphere:<tt class="descname">BODY</tt><a class="headerlink" href="#ATMOSPHERE:BODY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The Body that this atmosphere is around - as a STRING NAME, not a Body object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ATMOSPHERE:EXISTS">
+Atmosphere:<tt class="descname">EXISTS</tt><a class="headerlink" href="#ATMOSPHERE:EXISTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>True if this atmosphere is &#8220;real&#8221; and not just a dummy placeholder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ATMOSPHERE:OXYGEN">
+Atmosphere:<tt class="descname">OXYGEN</tt><a class="headerlink" href="#ATMOSPHERE:OXYGEN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>True if the air has oxygen and could therefore be used by a jet engine&#8217;s intake.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ATMOSPHERE:SCALE">
+Atmosphere:<tt class="descname">SCALE</tt><a class="headerlink" href="#ATMOSPHERE:SCALE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>A math constant plugged into a formula to find atmosphere density (see below).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ATMOSPHERE:SEALEVELPRESSURE">
+Atmosphere:<tt class="descname">SEALEVELPRESSURE</tt><a class="headerlink" href="#ATMOSPHERE:SEALEVELPRESSURE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (atm)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Number of Atm&#8217;s at planet&#8217;s sea level 1.0 Atm&#8217;s = same as Kerbin.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ATMOSPHERE:HEIGHT">
+Atmosphere:<tt class="descname">HEIGHT</tt><a class="headerlink" href="#ATMOSPHERE:HEIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (m)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The altitude at which the atmosphere is &#8220;officially&#8221; advertised as ending. (actual ending value differs, see below).</p>
+</dd></dl>
+
+<div class="section" id="atmospheric-math">
+<h2>Atmospheric Math<a class="headerlink" href="#atmospheric-math" title="Permalink to this headline">¶</a></h2>
+<p>The atmospheric effects of a planet&#8217;s air need to be calculated using some formulas. First off, be aware that atmosphere can be measured three different ways:</p>
+<dl class="docutils">
+<dt>Atm</dt>
+<dd>A multiple of the pressure at Kerbin sea level. An atmosphere of 0.5 is half as much air pressure as at Kerbin&#8217;s sea level. This is the measure used by :SEALEVELPRESSURE</dd>
+<dt>pressure</dt>
+<dd>A measure of the force the air pushes on a surface with. In SI units, it&#8217;s Newtons per Square Meter. <em>This value is almost never used directly in any calculation. Instead you just calculate everything in terms of multiples of Atm&#8217;s.</em></dd>
+<dt>density</dt>
+<dd>A measure of how much mass of air there is in a volume of space. In SI units, it&#8217;s Kilograms per Cubic Meter.</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>The following only applies to the STOCK KSP atmosphere.</strong></p>
+<p class="last">If you have installed a mod such as <a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/20451-0-25-Ferram-Aerospace-Research-v0-14-3-2-10-21-14">FAR</a>, that changes the atmosphere, then much of what is said below will not apply.</p>
+</div>
+<p>The level of atmosphere can be calculated for any altitude as follows:</p>
+<ul class="simple">
+<li>Number of <strong>Atm&#8217;s</strong> = (Atm&#8217;s at sea level) * ( e ^ ( -
+sea_level_alt / scale ) )</li>
+</ul>
+<p>The <strong>TRUE</strong> maximum height of the atmosphere is NOT the value returned by :HEIGHT, but rather it&#8217;s the altitude at which the number of Atm&#8217;s returned by the above formula is 0.000001. :HEIGHT is just the value as advertised by the game to the user. On some worlds it can be quite a ways off.</p>
+<p>And once you have that number, then density can be calculated from it with this conversion factor:</p>
+<ul class="simple">
+<li>air density = Number of Atm&#8217;s * 1.2230948554874.</li>
+</ul>
+<p>Further information about the math formulas that Kerbal Space Program uses to calculate the atmosphere <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Atmosphere">can be found here</a>.</p>
+<p>Examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ORBIT</span><span class="o">:</span><span class="n">BODY</span><span class="o">:</span><span class="n">ATM</span><span class="o">:</span><span class="n">EXISTS</span> <span class="p">{</span>
+    <span class="n">SET</span> <span class="n">thisAtmo</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ORBIT</span><span class="o">:</span><span class="n">BODY</span><span class="o">:</span><span class="n">ATM</span><span class="p">.</span>
+    <span class="n">PRINT</span> <span class="s">&quot;The planet you are orbiting has an atmosphere.&quot;</span><span class="p">.</span>
+    <span class="n">PRINT</span> <span class="s">&quot;It&#39;s scale is &quot;</span> <span class="o">+</span> <span class="n">thisAtmo</span><span class="o">:</span><span class="n">SCALE</span><span class="p">.</span>
+    <span class="n">PRINT</span> <span class="s">&quot;It&#39;s height is &quot;</span> <span class="o">+</span> <span class="n">thisAtmo</span><span class="o">:</span><span class="n">HEIGHT</span><span class="p">.</span>
+    <span class="n">SET</span> <span class="n">atmos</span> <span class="n">TO</span> <span class="n">thisAtmo</span><span class="o">:</span><span class="n">SEALEVELPRESSURE</span> <span class="o">+</span> <span class="p">(</span> <span class="n">CONSTANT</span><span class="p">()</span><span class="o">:</span><span class="n">E</span> <span class="o">^</span> <span class="p">(</span> <span class="o">-</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ALTITUDE</span> <span class="o">/</span> <span class="n">thisAtmo</span><span class="o">:</span><span class="n">SCALE</span> <span class="p">)</span> <span class="p">).</span>
+    <span class="n">PRINT</span> <span class="s">&quot;At this altitude the atmosphere is &quot;</span> <span class="o">+</span> <span class="n">atmos</span> <span class="o">+</span> <span class="s">&quot; Atm&#39;s.&quot;</span><span class="p">.</span>
+<span class="p">}</span> <span class="n">ELSE</span> <span class="p">{</span>
+    <span class="n">PRINT</span> <span class="s">&quot;The planet you are orbiting has no atmosphere.&quot;</span><span class="p">.</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Atmosphere</a><ul>
+<li><a class="reference internal" href="#atmospheric-math">Atmospheric Math</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../celestial_bodies.html"
+                        title="previous chapter">Celestial Bodies</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="body.html"
+                        title="next chapter">Body</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/structures/celestial_bodies/atmosphere.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="body.html" title="Body"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../celestial_bodies.html" title="Celestial Bodies"
+             >previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../celestial_bodies.html" >Celestial Bodies</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

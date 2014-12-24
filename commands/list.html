@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LIST Command &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html" />
+    <link rel="up" title="Command Reference" href="../commands.html" />
+    <link rel="next" title="Querying a vessel’s parts" href="parts.html" />
+    <link rel="prev" title="Predictions of Flight Path" href="prediction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="parts.html" title="Querying a vessel’s parts"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="prediction.html" title="Predictions of Flight Path"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" accesskey="U">Command Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="list-command"></span><div class="section" id="index-0">
+<span id="id1"></span><h1><tt class="docutils literal"><span class="pre">LIST</span></tt> Command<a class="headerlink" href="#index-0" title="Permalink to this headline">¶</a></h1>
+<p>A <a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> is a type of <a class="reference internal" href="../language/features.html#features-structures"><em>Structure</em></a> that stores a list of variables in it. The <tt class="docutils literal"><span class="pre">LIST</span></tt> command either prints or crates a <a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> object containing items queried from the game. For more information, see the <a class="reference internal" href="../structures/misc/list.html#list"><em>page about the List structure</em></a>.</p>
+<div class="section" id="for-loop">
+<h2><tt class="docutils literal"><span class="pre">FOR</span></tt> Loop<a class="headerlink" href="#for-loop" title="Permalink to this headline">¶</a></h2>
+<p>Lists need to be iterated over sometimes, to help with this we have the <a class="reference internal" href="../language/flow.html#for"><em>FOR loop, explained on the flow control page</em></a>. The <tt class="docutils literal"><span class="pre">LIST</span></tt> Command comes in 4 forms:</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">LIST.</span></tt></dt>
+<dd><p class="first">When no parameters are given, the LIST command is exactly equivalent to the command:</p>
+<div class="last highlight-c"><div class="highlight"><pre><span class="n">LIST</span> <span class="n">FILES</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">ListKeyword.</span></tt></dt>
+<dd><p class="first last">This variant prints items to the termianl sceen. Depending on the <em>ListKeyword</em> used (see below), different values are printed.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">ListKeyword</span> <span class="pre">IN</span> <span class="pre">YourVariable.</span></tt></dt>
+<dd><p class="first last">This variant takes the items that would otherwise have been printed to the terminal screen, and instead makes a <a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of them in <tt class="docutils literal"><span class="pre">YourVariable</span></tt>, that you can then iterate over with a <a class="reference internal" href="../language/flow.html#for"><em>FOR loop</em></a> if you like.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">ListKeyword</span> <span class="pre">FROM</span> <span class="pre">SomeVessel</span> <span class="pre">IN</span> <span class="pre">YourVariable.</span></tt></dt>
+<dd><p class="first last">This variant is just like variant (3), except that it gives a list of the items that exist on some other vessel that might not necessarily be the current <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><em>CPU_vessel</em></a>.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="available-listable-keywords">
+<h2>Available Listable Keywords<a class="headerlink" href="#available-listable-keywords" title="Permalink to this headline">¶</a></h2>
+<p>The <em>ListKeyword</em> in the above command variants can be any of the
+following:</p>
+<div class="section" id="universal-lists">
+<h3>Universal Lists<a class="headerlink" href="#universal-lists" title="Permalink to this headline">¶</a></h3>
+<p>These generate <a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">lists</span></tt></a> that are not dependent on which <a class="reference internal" href="../structures/vessels/vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Bodies</span></tt></dt>
+<dd><a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="../structures/celestial_bodies/body.html#BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Celestial</span> <span class="pre">Bodies</span></tt></a></dd>
+<dt><tt class="docutils literal"><span class="pre">Targets</span></tt></dt>
+<dd><a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of possible target <a class="reference internal" href="../structures/vessels/vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessels</span></tt></a></dd>
+</dl>
+</div>
+<div class="section" id="vessel-lists">
+<h3>Vessel Lists<a class="headerlink" href="#vessel-lists" title="Permalink to this headline">¶</a></h3>
+<p>These generate <a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">lists</span></tt></a> of items on the <a class="reference internal" href="../structures/vessels/vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Resources</span></tt></dt>
+<dd><a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="../structures/vessels/resource.html#RESOURCE" title="RESOURCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Resources</span></tt></a></dd>
+<dt><tt class="docutils literal"><span class="pre">Parts</span></tt></dt>
+<dd><a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="../structures/vessels/part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></tt></a></dd>
+<dt><tt class="docutils literal"><span class="pre">Engines</span></tt></dt>
+<dd><a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="../structures/vessels/engine.html#ENGINE" title="ENGINE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Engines</span></tt></a></dd>
+<dt><tt class="docutils literal"><span class="pre">Sensors</span></tt></dt>
+<dd><a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="../structures/vessels/sensor.html#SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensors</span></tt></a></dd>
+<dt><tt class="docutils literal"><span class="pre">Elements</span></tt></dt>
+<dd>??</dd>
+<dt><tt class="docutils literal"><span class="pre">DockingPorts</span></tt></dt>
+<dd>list of <cite>DockingPorts &lt;DockingPort&gt;</cite></dd>
+</dl>
+</div>
+<div class="section" id="file-system-lists">
+<h3>File System Lists<a class="headerlink" href="#file-system-lists" title="Permalink to this headline">¶</a></h3>
+<p>These generate <a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">lists</span></tt></a> about the files in the system:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Files</span></tt></dt>
+<dd><a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> the <a class="reference internal" href="../structures/misc/fileinfo.html#FILEINFO" title="FILEINFO structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">files</span></tt></a> on the current Volume. (note below)</dd>
+<dt><tt class="docutils literal"><span class="pre">Volumes</span></tt></dt>
+<dd><a class="reference internal" href="../structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> all the <a class="reference internal" href="../general/volumes.html#volumes"><em>Files and Volumes</em></a> that exist.</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">FILES.</span></tt> is the default if you give the <tt class="docutils literal"><span class="pre">LIST</span></tt> command no parameters.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">LIST</span><span class="p">.</span>  <span class="c1">// Prints the list of files on current volume.</span>
+<span class="n">LIST</span> <span class="n">FILES</span><span class="p">.</span>  <span class="c1">// Does the same exact thing, but more explicitly.</span>
+<span class="n">LIST</span> <span class="n">VOLUMES</span><span class="p">.</span> <span class="c1">// which volumes can be seen by this CPU?</span>
+<span class="n">LIST</span> <span class="n">FILES</span> <span class="n">IN</span> <span class="n">fileList</span><span class="p">.</span> <span class="c1">// fileList is now a LIST() containing file structures.</span>
+</pre></div>
+</div>
+<p>The file structures returned by <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">FILES</span> <span class="pre">IN</span> <span class="pre">fileList.</span></tt> are documented <em class="xref std std-ref">on a separate page</em>.</p>
+<p>Here are some more examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Prints the list of all</span>
+<span class="c1">// Celestial bodies in the system.</span>
+<span class="n">LIST</span> <span class="n">BODIES</span><span class="p">.</span>
+
+<span class="c1">// Puts the list of bodies into a variable.</span>
+<span class="n">LIST</span> <span class="n">BODIES</span> <span class="n">IN</span> <span class="n">bodList</span><span class="p">.</span>
+<span class="c1">// Iterate over everything in the list:</span>
+<span class="n">SET</span> <span class="n">totMass</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">FOR</span> <span class="n">bod</span> <span class="n">in</span> <span class="n">bodList</span> <span class="p">{</span>
+    <span class="n">SET</span> <span class="n">totMass</span> <span class="n">to</span> <span class="n">totMass</span> <span class="o">+</span> <span class="n">bod</span><span class="o">:</span><span class="n">MASS</span><span class="p">.</span>
+<span class="p">}.</span>
+<span class="n">PRINT</span> <span class="s">&quot;The mass of the whole solar system is &quot;</span> <span class="o">+</span> <span class="n">totMass</span><span class="p">.</span>
+
+<span class="c1">// Adds variable foo that contains a list of</span>
+<span class="c1">// resources for my currently target vessel</span>
+<span class="n">LIST</span> <span class="n">RESOURCES</span> <span class="n">FROM</span> <span class="n">TARGET</span> <span class="n">IN</span> <span class="n">foo</span><span class="p">.</span>
+<span class="n">FOR</span> <span class="n">res</span> <span class="n">IN</span> <span class="n">foo</span> <span class="p">{</span>
+    <span class="n">PRINT</span> <span class="n">res</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span> <span class="c1">// Will print the name of every</span>
+                    <span class="c1">// resource in the vessel</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">LIST</span></tt> Command</a><ul>
+<li><a class="reference internal" href="#for-loop"><tt class="docutils literal"><span class="pre">FOR</span></tt> Loop</a></li>
+<li><a class="reference internal" href="#available-listable-keywords">Available Listable Keywords</a><ul>
+<li><a class="reference internal" href="#universal-lists">Universal Lists</a></li>
+<li><a class="reference internal" href="#vessel-lists">Vessel Lists</a></li>
+<li><a class="reference internal" href="#file-system-lists">File System Lists</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="prediction.html"
+                        title="previous chapter">Predictions of Flight Path</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="parts.html"
+                        title="next chapter">Querying a vessel&#8217;s parts</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/commands/list.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="parts.html" title="Querying a vessel’s parts"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="prediction.html" title="Predictions of Flight Path"
+             >previous</a> |</li>
+        <li><a href="../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" >Command Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Orbitable (Vessels and Bodies) &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html" />
+    <link rel="up" title="Orbits" href="../orbits.html" />
+    <link rel="next" title="OrbitableVelocity" href="orbitablevelocity.html" />
+    <link rel="prev" title="Orbit" href="orbit.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="orbitablevelocity.html" title="OrbitableVelocity"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="orbit.html" title="Orbit"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../orbits.html" accesskey="U">Orbits</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="orbitable-vessels-and-bodies">
+<span id="orbitable"></span><h1>Orbitable (Vessels and Bodies)<a class="headerlink" href="#orbitable-vessels-and-bodies" title="Permalink to this headline">¶</a></h1>
+<p>All objects that can move in orbit around other objects share some similar structure. To help keep things as consistent as possible, that similar structure is defined here. Everything you see here works for both <a class="reference internal" href="../vessels/vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessels</span></tt></a> and <a class="reference internal" href="../celestial_bodies/body.html#BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Bodies</span></tt></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>SOI Body</strong></p>
+<p class="last">Every where you see the term <strong>SOI Body</strong> in the descriptions below, it refers to the body at the center of the orbit of this object - the body in who&#8217;s sphere of influence this object is located. It is important to make the distinction that if this object is itself a Body, the <strong>SOI body</strong> is the body being orbited, not the body doing the orbiting. I.e. When talking about the Mun, the <strong>SOI body</strong> means &#8220;Kerbin&#8221;. When talking about Kerbin, the <strong>SOI body</strong> means &#8220;Sun&#8221;.</p>
+</div>
+<dl class="structure">
+<dt id="ORBITABLE">
+<em class="property">structure </em><tt class="descname">Orbitable</tt><a class="headerlink" href="#ORBITABLE" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>These terms are all read-only.</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type (units)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:NAME" title="ORBITABLE:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:BODY" title="ORBITABLE:BODY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">BODY</span></tt></a></td>
+<td><a class="reference internal" href="../celestial_bodies/body.html#BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:OBT" title="ORBITABLE:OBT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OBT</span></tt></a></td>
+<td><a class="reference internal" href="orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:UP" title="ORBITABLE:UP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UP</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:NORTH" title="ORBITABLE:NORTH attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NORTH</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:PROGRADE" title="ORBITABLE:PROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PROGRADE</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:SRFPROGRADE" title="ORBITABLE:SRFPROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SRFPROGRADE</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:RETROGRADE" title="ORBITABLE:RETROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RETROGRADE</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:SRFRETROGRADE" title="ORBITABLE:SRFRETROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SRFRETROGRADE</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:POSITION" title="ORBITABLE:POSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:VELOCITY" title="ORBITABLE:VELOCITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VELOCITY</span></tt></a></td>
+<td><a class="reference internal" href="orbitablevelocity.html#ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">OrbitableVelocity</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:DISTANCE" title="ORBITABLE:DISTANCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DISTANCE</span></tt></a></td>
+<td>scalar (m)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:DIRECTION" title="ORBITABLE:DIRECTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DIRECTION</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:LATITUDE" title="ORBITABLE:LATITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LATITUDE</span></tt></a></td>
+<td>scalar (deg)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:LONGITUDE" title="ORBITABLE:LONGITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LONGITUDE</span></tt></a></td>
+<td>scalar (deg)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:ALTITUDE" title="ORBITABLE:ALTITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></tt></a></td>
+<td>scalar (m)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:GEOPOSITION" title="ORBITABLE:GEOPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITION</span></tt></a></td>
+<td><a class="reference internal" href="../../math/geocoordinates.html#GEOCOORDINATES" title="GEOCOORDINATES structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:PATCHES" title="ORBITABLE:PATCHES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PATCHES</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbits</span></tt></a></td>
+</tr>
+<tr class="row-even"><td colspan="2">The Following are deprecated (use <a class="reference internal" href="#ORBITABLE:OBT" title="ORBITABLE:OBT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OBT</span></tt></a>)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLE:APOAPSIS" title="ORBITABLE:APOAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">APOAPSIS</span></tt></a></td>
+<td>scalar (m)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ORBITABLE:PERIAPSIS" title="ORBITABLE:PERIAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PERIAPSIS</span></tt></a></td>
+<td>scalar (m)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:NAME">
+Orbitable:<tt class="descname">NAME</tt><a class="headerlink" href="#ORBITABLE:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Name of this vessel or body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:BODY">
+Orbitable:<tt class="descname">BODY</tt><a class="headerlink" href="#ORBITABLE:BODY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../celestial_bodies/body.html#BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The <a class="reference internal" href="../celestial_bodies/body.html#BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a> that this object is orbiting. I.e. <tt class="docutils literal"><span class="pre">Mun:BODY</span></tt> returns <tt class="docutils literal"><span class="pre">Kerbin</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:OBT">
+Orbitable:<tt class="descname">OBT</tt><a class="headerlink" href="#ORBITABLE:OBT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The current single orbit &#8220;patch&#8221; that this object is on (not the future orbits it might be expected to achieve after maneuver nodes or encounter transitions, but what the current orbit would be if nothing changed and no encounters perturbed the orbit.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:UP">
+Orbitable:<tt class="descname">UP</tt><a class="headerlink" href="#ORBITABLE:UP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>pointing straight up away from the SOI body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:NORTH">
+Orbitable:<tt class="descname">NORTH</tt><a class="headerlink" href="#ORBITABLE:NORTH" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>pointing straight north on the SOI body, parallel to the surface of the SOI body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:PROGRADE">
+Orbitable:<tt class="descname">PROGRADE</tt><a class="headerlink" href="#ORBITABLE:PROGRADE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>pointing in the direction of this object&#8217;s <strong>orbitable-frame</strong> velocity</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:SRFPROGRADE">
+Orbitable:<tt class="descname">SRFPROGRADE</tt><a class="headerlink" href="#ORBITABLE:SRFPROGRADE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>pointing in the direction of this object&#8217;s <strong>surface-frame</strong> velocity. Note that if this Orbitable is itself a body, remember that this is relative to the surface of the SOI body, not this body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:RETROGRADE">
+Orbitable:<tt class="descname">RETROGRADE</tt><a class="headerlink" href="#ORBITABLE:RETROGRADE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>pointing in the opposite of the direction of this object&#8217;s <strong>orbitable-frame</strong> velocity</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:SRFRETROGRADE">
+Orbitable:<tt class="descname">SRFRETROGRADE</tt><a class="headerlink" href="#ORBITABLE:SRFRETROGRADE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>pointing in the opposite of the direction of this object&#8217;s <strong>surface-frame</strong> velocity. Note that this is relative to the surface of the SOI body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:POSITION">
+Orbitable:<tt class="descname">POSITION</tt><a class="headerlink" href="#ORBITABLE:POSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The position of this object in the <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP-RAW reference frame</em></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:VELOCITY">
+Orbitable:<tt class="descname">VELOCITY</tt><a class="headerlink" href="#ORBITABLE:VELOCITY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="orbitablevelocity.html#ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">OrbitableVelocity</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The <a class="reference internal" href="orbitablevelocity.html#ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">orbitable</span> <span class="pre">velocity</span></tt></a> of this object in the <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP-RAW reference frame</em></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:DISTANCE">
+Orbitable:<tt class="descname">DISTANCE</tt><a class="headerlink" href="#ORBITABLE:DISTANCE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (m)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The scalar distance between this object and the center of <tt class="xref ks ks-struct docutils literal"><span class="pre">SHIP</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:DIRECTION">
+Orbitable:<tt class="descname">DIRECTION</tt><a class="headerlink" href="#ORBITABLE:DIRECTION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>pointing in the direction of this object from <tt class="xref ks ks-struct docutils literal"><span class="pre">SHIP</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:LATITUDE">
+Orbitable:<tt class="descname">LATITUDE</tt><a class="headerlink" href="#ORBITABLE:LATITUDE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The latitude in degrees of the spot on the surface of the SOI body directly under this object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:LONGITUDE">
+Orbitable:<tt class="descname">LONGITUDE</tt><a class="headerlink" href="#ORBITABLE:LONGITUDE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The longitude in degrees of the spot on the surface of the SOI body directly under this object. Longitude returned will always be normalized to be in the range [-180,180].</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:ALTITUDE">
+Orbitable:<tt class="descname">ALTITUDE</tt><a class="headerlink" href="#ORBITABLE:ALTITUDE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (m)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The altitude in meters above the <em>sea level</em> surface of the SOI body (not the center of the SOI body. To get the true radius of the orbit for proper math calculations remember to add altitude to the SOI body&#8217;s radius.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:GEOPOSITION">
+Orbitable:<tt class="descname">GEOPOSITION</tt><a class="headerlink" href="#ORBITABLE:GEOPOSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/geocoordinates.html#GEOCOORDINATES" title="GEOCOORDINATES structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>A combined structure of the latitude and longitude numbers.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:PATCHES">
+Orbitable:<tt class="descname">PATCHES</tt><a class="headerlink" href="#ORBITABLE:PATCHES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a> &#8220;patches&#8221;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The list of all the orbit patches that this object will transition to, not taking into account maneuver nodes. The zero-th patch of the list is the current orbit.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:APOAPSIS">
+Orbitable:<tt class="descname">APOAPSIS</tt><a class="headerlink" href="#ORBITABLE:APOAPSIS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.15: </span>Use <a class="reference internal" href="orbit.html#ORBIT:APOAPSIS" title="ORBIT:APOAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OBT:APOAPSIS</span></tt></a> instead.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ORBITABLE:PERIAPSIS">
+Orbitable:<tt class="descname">PERIAPSIS</tt><a class="headerlink" href="#ORBITABLE:PERIAPSIS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 0.15: </span>Use <a class="reference internal" href="orbit.html#ORBIT:PERIAPSIS" title="ORBIT:PERIAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OBT:PERIAPSIS</span></tt></a> instead.</p>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="orbit.html"
+                        title="previous chapter">Orbit</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="orbitablevelocity.html"
+                        title="next chapter">OrbitableVelocity</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/structures/orbits/orbitable.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="orbitablevelocity.html" title="OrbitableVelocity"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="orbit.html" title="Orbit"
+             >previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../orbits.html" >Orbits</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

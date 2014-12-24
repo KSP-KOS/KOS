@@ -1,0 +1,513 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Part &mdash; kOS 0.15.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.15.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html" />
+    <link rel="up" title="Vessels and Parts" href="../vessels.html" />
+    <link rel="next" title="PartModule" href="partmodule.html" />
+    <link rel="prev" title="Maneuver Node" href="node.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="partmodule.html" title="PartModule"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="node.html" title="Maneuver Node"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../vessels.html" accesskey="U">Vessels and Parts</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="part">
+<span id="id1"></span><h1>Part<a class="headerlink" href="#part" title="Permalink to this headline">¶</a></h1>
+<p>These are the generic properties every PART has. You can obtain a list of values of type Part using the <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST PARTS command</em></a>.</p>
+<dl class="structure">
+<dt id="PART">
+<em class="property">structure </em><tt class="descname">Part</tt><a class="headerlink" href="#PART" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<caption>Members</caption>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#PART:NAME" title="PART:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+<td>Name of this part</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:TITLE" title="PART:TITLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TITLE</span></tt></a></td>
+<td>string</td>
+<td>Title as it appears in KSP</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:TAG" title="PART:TAG attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TAG</span></tt></a></td>
+<td>string</td>
+<td>Name-tag if assigned by the player</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CONTROLFROM</span></tt></a></td>
+<td>boolean</td>
+<td>Set control-from to this part</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:STAGE" title="PART:STAGE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">STAGE</span></tt></a></td>
+<td>scalar</td>
+<td>The stage this is associated with</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:UID" title="PART:UID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UID</span></tt></a></td>
+<td>scalar</td>
+<td>Unique identifying number</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:ROTATION" title="PART:ROTATION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROTATION</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+<td>The rotation of this part&#8217;s <span class="math">\(x\)</span>-axis</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:POSITION" title="PART:POSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<td>The location of this part in the universe</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:FACING" title="PART:FACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FACING</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+<td>the direction that this part is facing</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:RESOURCES" title="PART:RESOURCES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RESOURCES</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<td>list of the <a class="reference internal" href="resource.html#RESOURCE" title="RESOURCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Resource</span></tt></a> in this part</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:TARGETABLE" title="PART:TARGETABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TARGETABLE</span></tt></a></td>
+<td>boolean</td>
+<td>true if this part can be selected as a target</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:SHIP" title="PART:SHIP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHIP</span></tt></a></td>
+<td><a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+<td>the vessel that contains this part</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:GETMODULE" title="PART:GETMODULE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">GETMODULE(name)</span></tt></a></td>
+<td><a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a></td>
+<td>Get one of the <a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></tt></a> by name</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:MODULES" title="PART:MODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MODULES</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<td>Names (string) of all <a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:ALLMODULES" title="PART:ALLMODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLMODULES</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<td>Same as <a class="reference internal" href="#PART:MODULES" title="PART:MODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MODULES</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:PARENT" title="PART:PARENT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PARENT</span></tt></a></td>
+<td><a class="reference internal" href="#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+<td>Adjacent <a class="reference internal" href="#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> on this <a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:HASPARENT" title="PART:HASPARENT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HASPARENT</span></tt></a></td>
+<td>boolean</td>
+<td>Check if this part has a parent <a class="reference internal" href="#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:CHILDREN" title="PART:CHILDREN attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CHILDREN</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<td>List of attached <a class="reference internal" href="#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:NAME">
+Part:<tt class="descname">NAME</tt><a class="headerlink" href="#PART:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<p>Name of part as it is used behind the scenes in the game&#8217;s API code.</p>
+<p>A part&#8217;s <em>name</em> is the name it is given behind the scenes in KSP. It never appears in the normal GUI for the user to see, but it is used in places like Part.cfg files, the saved game persistence file, the ModuleManager mod, and so on.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:TITLE">
+Part:<tt class="descname">TITLE</tt><a class="headerlink" href="#PART:TITLE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<p>The title of the part as it appears on-screen in the gui.</p>
+<p>A part&#8217;s <em>title</em> is the name it has inside the GUI interface on the screen that you see as the user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:TAG">
+Part:<tt class="descname">TAG</tt><a class="headerlink" href="#PART:TAG" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<p>The name tag value that may exist on this part if you have given the part a name via the <a class="reference internal" href="../../general/nametag.html#nametag"><em>name-tag system</em></a>.</p>
+<p>A part&#8217;s <em>tag</em> is whatever custom name you have given it using the <a class="reference internal" href="../../general/nametag.html#nametag"><em>name-tag system described here</em></a>. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.</p>
+<p>This example assumes you have a target vessel picked, and that the target vessel is loaded into full-physics range and not &#8220;on rails&#8221;. vessels that are &#8220;on rails&#8221; do not have their full list of parts entirely populated at the moment:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">LIST</span> <span class="n">PARTS</span> <span class="n">FROM</span> <span class="n">TARGET</span> <span class="n">IN</span> <span class="n">tParts</span><span class="p">.</span>
+
+<span class="n">PRINT</span> <span class="s">&quot;The target vessel has a&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;partcount of &quot;</span> <span class="o">+</span> <span class="n">tParts</span><span class="o">:</span><span class="n">LENGTH</span><span class="p">.</span>
+
+<span class="n">SET</span> <span class="n">totTargetable</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">FOR</span> <span class="n">part</span> <span class="n">in</span> <span class="n">tParts</span> <span class="p">{</span>
+    <span class="n">IF</span> <span class="n">part</span><span class="o">:</span><span class="n">TARGETABLE</span> <span class="p">{</span>
+        <span class="n">SET</span> <span class="n">totTargetable</span> <span class="n">TO</span> <span class="n">totTargetable</span> <span class="o">+</span> <span class="mf">1.</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">PRINT</span> <span class="s">&quot;...and &quot;</span> <span class="o">+</span> <span class="n">totTargetable</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot; of them are targetable parts.&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:CONTROLFROM">
+Part:<tt class="descname">CONTROLFROM</tt><a class="headerlink" href="#PART:CONTROLFROM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Set to TRUE to cause the game to do the same thing as when you right-click a part on a vessel and select &#8220;control from here&#8221; on the menu. It rotates the control orientation so that fore/aft/left/right/up/down now match the orientation of this part. NOTE that this will not work for every type of part. It only works for those parts that KSP itself allows this for (control cores and docking ports).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:STAGE">
+Part:<tt class="descname">STAGE</tt><a class="headerlink" href="#PART:STAGE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>the stage this part is part of.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:UID">
+Part:<tt class="descname">UID</tt><a class="headerlink" href="#PART:UID" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>All parts have a unique ID number. Test if two parts are the same part by seeing if this is the same between them.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:ROTATION">
+Part:<tt class="descname">ROTATION</tt><a class="headerlink" href="#PART:ROTATION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The rotation of this part&#8217;s X-axis, which points out of its side and is probably not what you want. You probably want the <a class="reference internal" href="#PART:FACING" title="PART:FACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Part:FACING</span></tt></a> suffix instead.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:POSITION">
+Part:<tt class="descname">POSITION</tt><a class="headerlink" href="#PART:POSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>The location of this part in the universe. It is expressed in the same frame of reference as all the other positions in kOS, and thus can be used to help do things like navigate toward the position of a docking port.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:FACING">
+Part:<tt class="descname">FACING</tt><a class="headerlink" href="#PART:FACING" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>the direction that this part is facing.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:RESOURCES">
+Part:<tt class="descname">RESOURCES</tt><a class="headerlink" href="#PART:RESOURCES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>list of the <a class="reference internal" href="resource.html#RESOURCE" title="RESOURCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Resource</span></tt></a> in this part.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:TARGETABLE">
+Part:<tt class="descname">TARGETABLE</tt><a class="headerlink" href="#PART:TARGETABLE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>true if this part can be selected by KSP as a target.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:SHIP">
+Part:<tt class="descname">SHIP</tt><a class="headerlink" href="#PART:SHIP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>the vessel that contains this part.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PART:GETMODULE">
+Part:<tt class="descname">GETMODULE</tt><big>(</big>name<big>)</big><a class="headerlink" href="#PART:GETMODULE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; (string) Name of the part module</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Get one of the <a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></tt></a> attached to this part, given the name of the module. (See <a class="reference internal" href="#PART:MODULES" title="PART:MODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Part:MODULES</span></tt></a> for a list of all the names available).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:MODULES">
+Part:<tt class="descname">MODULES</tt><a class="headerlink" href="#PART:MODULES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+</tr>
+</tbody>
+</table>
+<p>list of the names of <a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></tt></a> enabled for this part.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:ALLMODULES">
+Part:<tt class="descname">ALLMODULES</tt><a class="headerlink" href="#PART:ALLMODULES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#PART:MODULES" title="PART:MODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Part:MODULES</span></tt></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:PARENT">
+Part:<tt class="descname">PARENT</tt><a class="headerlink" href="#PART:PARENT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>tree of parts</em></a>, this is the part that this part is attached to on the way &#8220;up&#8221; toward the root part.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:HASPARENT">
+Part:<tt class="descname">HASPARENT</tt><a class="headerlink" href="#PART:HASPARENT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>tree of parts</em></a>, this is true as long as there is a parent part to this part, and is false if this part has no parent (which can only happen on the root part).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:CHILDREN">
+Part:<tt class="descname">CHILDREN</tt><a class="headerlink" href="#PART:CHILDREN" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>When walking the <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>tree of parts</em></a>, this is all the parts that are attached as children of this part. It returns a list of zero length when this part is a &#8220;leaf&#8221; of the parts tree.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="node.html"
+                        title="previous chapter">Maneuver Node</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="partmodule.html"
+                        title="next chapter">PartModule</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/structures/vessels/part.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="partmodule.html" title="PartModule"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="node.html" title="Maneuver Node"
+             >previous</a> |</li>
+        <li><a href="../../index.html">kOS 0.15.3 documentation</a> &raquo;</li>
+          <li><a href="../../structures.html" >Structure Reference</a> &raquo;</li>
+          <li><a href="../vessels.html" >Vessels and Parts</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
