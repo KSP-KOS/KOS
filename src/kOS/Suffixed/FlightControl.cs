@@ -40,7 +40,6 @@ namespace kOS.Suffixed
             killRotation = new Flushable<bool>(); 
             resetTrim = new Flushable<bool>(); 
             bound = false;
-            lockoutPilot = false;
             Vessel = vessel;
 
             floatSuffixes = new List<string> { "YAW", "PITCH", "ROLL", "STARBOARD", "TOP", "FORE", "MAINTHROTTLE", "PILOTMAINTHROTTLE", "WHEELTHROTTLE", "WHEELSTEER" };
@@ -97,7 +96,7 @@ namespace kOS.Suffixed
             }
             else
             {
-                Vessel.OnFlyByWire -= OnFlyByWire;
+                Vessel.OnPreAutopilotUpdate -= OnFlyByWire;
             }
             bound = false;
             UnityEngine.Debug.Log("kOS: FlightControl Unbound");
