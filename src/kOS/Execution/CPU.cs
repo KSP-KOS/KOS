@@ -103,12 +103,12 @@ namespace kOS.Execution
                 shared.Screen.Print(bootMessage);
             }
 
-            if (shared.VolumeMgr == null) { UnityEngine.Debug.Log("kOS: No volume mgr"); }
-            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { UnityEngine.Debug.LogWarning("kOS: Boot volume not in range"); }
-            else if (shared.VolumeMgr.CurrentVolume == null) { UnityEngine.Debug.Log("kOS: No current volume"); }
-            else if (shared.ScriptHandler == null) { UnityEngine.Debug.Log("kOS: No script handler"); }
-            else if (shared.VolumeMgr.CurrentVolume.GetByName("boot") != null)
-            {
+            if (shared.VolumeMgr == null) { Safe.Utilities.Debug.Logger.Log("No volume mgr"); }
+            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { Safe.Utilities.Debug.Logger.Log("Boot volume not in range"); }
+            else if (shared.VolumeMgr.CurrentVolume == null) { Safe.Utilities.Debug.Logger.Log("No current volume"); }
+            else if (shared.ScriptHandler == null) { Safe.Utilities.Debug.Logger.Log("No script handler"); }
+            else if (shared.VolumeMgr.CurrentVolume.GetByName("boot") == null) { Safe.Utilities.Debug.Logger.Log("Boot File is Missing"); }
+            else {
                 shared.ScriptHandler.ClearContext("program");
 
                 var programContext = ((CPU)shared.Cpu).GetProgramContext();
@@ -130,7 +130,7 @@ namespace kOS.Execution
 
         private void PushContext(ProgramContext context)
         {
-            UnityEngine.Debug.Log("kOS: Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
+            Safe.Utilities.Debug.Logger.Log("kOS: Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
@@ -143,21 +143,21 @@ namespace kOS.Execution
 
         private void PopContext()
         {
-            UnityEngine.Debug.Log("kOS: Popping context " + contexts.Count);
+            Safe.Utilities.Debug.Logger.Log("kOS: Popping context " + contexts.Count);
             if (contexts.Any())
             {
                 // remove the last context
                 var contextRemove = contexts.Last();
                 contexts.Remove(contextRemove);
                 contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
-                UnityEngine.Debug.Log("kOS: Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
+                Safe.Utilities.Debug.Logger.Log("kOS: Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
 
                 if (contexts.Any())
                 {
                     currentContext = contexts.Last();
                     currentContext.EnableActiveFlyByWire(shared.BindingMgr);
                     RestorePointers();
-                    UnityEngine.Debug.Log("kOS: New current context " + currentContext.GetCodeFragment(0).FirstOrDefault());
+                    Safe.Utilities.Debug.Logger.Log("kOS: New current context " + currentContext.GetCodeFragment(0).FirstOrDefault());
                 }
                 else
                 {
@@ -218,7 +218,7 @@ namespace kOS.Execution
                 savedPointers.Add(pointerName, variables[pointerName]);
                 variables.Remove(pointerName);
             }
-            UnityEngine.Debug.Log(string.Format("kOS: Saving and removing {0} pointers", pointers.Count));
+            Safe.Utilities.Debug.Logger.Log(string.Format("kOS: Saving and removing {0} pointers", pointers.Count));
         }
 
         private void RestorePointers()
@@ -245,7 +245,7 @@ namespace kOS.Execution
                 }
             }
 
-            UnityEngine.Debug.Log(string.Format("kOS: Deleting {0} pointers and restoring {1} pointers", deletedPointers, restoredPointers));
+            Safe.Utilities.Debug.Logger.Log(string.Format("kOS: Deleting {0} pointers and restoring {1} pointers", deletedPointers, restoredPointers));
         }
 
         public void RunProgram(List<Opcode> program)
@@ -263,7 +263,7 @@ namespace kOS.Execution
 
         public void BreakExecution(bool manual)
         {
-            UnityEngine.Debug.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
+            Safe.Utilities.Debug.Logger.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
             if (contexts.Count > 1)
             {
                 EndWait();
@@ -358,7 +358,7 @@ namespace kOS.Execution
                 shared.Screen.Print(line);
                 msg.AppendLine(line);
             }
-            UnityEngine.Debug.Log(msg.ToString());
+            Safe.Utilities.Debug.Logger.Log(msg.ToString());
             shared.Screen.Print("YOU CAN SEE THIS LOG IN THE DEBUG OUTPUT.");
         }
 
@@ -594,7 +594,7 @@ namespace kOS.Execution
                 if (shared.Logger != null)
                 {
                     shared.Logger.Log(e);
-                    UnityEngine.Debug.Log(stack.Dump());
+                    Safe.Utilities.Debug.Logger.Log(stack.Dump());
                 }
 
                 if (contexts.Count == 1)
@@ -703,7 +703,7 @@ namespace kOS.Execution
             Opcode opcode = context.Program[context.InstructionPointer];
             if (DEBUG_EACH_OPCODE)
             {
-                UnityEngine.Debug.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count +
+                Safe.Utilities.Debug.Logger.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count +
                                       "\n                   Opcode is: " + opcode.ToString() );
             }
             
@@ -716,7 +716,7 @@ namespace kOS.Execution
             if (opcode is OpcodeEOP)
             {
                 BreakExecution(false);
-                UnityEngine.Debug.LogWarning("kOS: Execution Broken");
+                Safe.Utilities.Debug.Logger.Log("kOS: Execution Broken");
             }
             return false;
         }
@@ -837,14 +837,14 @@ namespace kOS.Execution
                 // addressed yet).
                 try
                 {
-                    UnityEngine.Debug.LogWarning("kOS: Parsing Context:\n\n" + scriptBuilder);
+                    Safe.Utilities.Debug.Logger.Log("kOS: Parsing Context:\n\n" + scriptBuilder);
                     programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);
                 }
                 catch (NullReferenceException ex)
                 {
-                    UnityEngine.Debug.LogError("kOS: program builder failed on load. " + ex.Message);
+                    Safe.Utilities.Debug.Logger.Log("kOS: program builder failed on load. " + ex.Message);
                 }
             }
             catch (Exception e)
