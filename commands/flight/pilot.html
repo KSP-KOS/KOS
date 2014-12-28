@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Pilot Input &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="up" title="Flight Control" href="../flight.html"/>
+        <link rel="next" title="Ship Systems" href="systems.html"/>
+        <link rel="prev" title="Raw Control" href="raw.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../commands.html">Commands</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../commands.html">Command Reference</a> &raquo;</li>
+      
+          <li><a href="../flight.html">Flight Control</a> &raquo;</li>
+      
+    <li>Pilot Input</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/commands/flight/pilot.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="pilot-input">
+<h1>Pilot Input<a class="headerlink" href="#pilot-input" title="Permalink to this headline">¶</a></h1>
+<p>This is not, strictly speaking, a method of controlling the craft. &#8220;Pilot&#8221; controls are a way to read the input from the pilot. Most of these controls share the same name as their flight control, prefixed with <tt class="docutils literal"><span class="pre">PILOT</span></tt> (eg <tt class="docutils literal"><span class="pre">YAW</span></tt> and <tt class="docutils literal"><span class="pre">PILOTYAW</span></tt>)  the one exception to this is the <tt class="docutils literal"><span class="pre">PILOTMAINTHROTTLE</span></tt>. This suffix has a setter and allows you to change the behavior of the throttle that persists even after the current program ends:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">CONTROL</span><span class="o">:</span><span class="n">PILOTMAINTHROTTLE</span> <span class="n">TO</span> <span class="mf">0.</span>
+</pre></div>
+</div>
+<p>Will ensure that the throttle will be 0 when execution stops. These suffixes allow you to read the input given to the system by the user.</p>
+<dl class="structure">
+<dt id="CONTROL">
+<em class="property">structure </em><tt class="descname">Control</tt><a class="headerlink" href="#CONTROL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type, Range</th>
+<th class="head">Equivalent Key</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#ship-control-pilotmainthrottle"><em>PILOTMAINTHROTTLE</em></a></td>
+<td>scalar [0,1]</td>
+<td><tt class="docutils literal"><span class="pre">LEFT-CTRL</span></tt>, <tt class="docutils literal"><span class="pre">LEFT-SHIFT</span></tt></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ship-control-pilotyaw"><em>PILOTYAW</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">D</span></tt>, <tt class="docutils literal"><span class="pre">A</span></tt></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ship-control-pilotpitch"><em>PILOTPITCH</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">W</span></tt>, <tt class="docutils literal"><span class="pre">S</span></tt></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ship-control-pilotroll"><em>PILOTROLL</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">Q</span></tt>, <tt class="docutils literal"><span class="pre">E</span></tt></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ship-control-pilotrotation"><em>PILOTROTATION</em></a></td>
+<td><em class="xref std std-ref">Vector</em></td>
+<td><tt class="docutils literal"><span class="pre">(YAW,PITCH,ROLL)</span></tt></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ship-control-pilotyawtrim"><em>PILOTYAWTRIM</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">ALT+D</span></tt>, <tt class="docutils literal"><span class="pre">ALT+A</span></tt></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ship-control-pilotpitchtrim"><em>PILOTPITCHTRIM</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">ALT+W</span></tt>, <tt class="docutils literal"><span class="pre">ALT+S</span></tt></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ship-control-pilotrolltrim"><em>PILOTROLLTRIM</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">ALT+Q</span></tt>, <tt class="docutils literal"><span class="pre">ALT+E</span></tt></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ship-control-pilotfore"><em>PILOTFORE</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">N</span></tt>, <tt class="docutils literal"><span class="pre">H</span></tt></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ship-control-pilotstarboard"><em>PILOTSTARBOARD</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">L</span></tt>, <tt class="docutils literal"><span class="pre">J</span></tt></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ship-control-pilottop"><em>PILOTTOP</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">I</span></tt>, <tt class="docutils literal"><span class="pre">K</span></tt></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ship-control-pilottranslation"><em>PILOTTRANSLATION</em></a></td>
+<td><em class="xref std std-ref">Vector</em></td>
+<td><tt class="docutils literal"><span class="pre">(FORE,STARBOARD,TOP)</span></tt></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ship-control-pilotwheelsteer"><em>PILOTWHEELSTEER</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">A</span></tt>, <tt class="docutils literal"><span class="pre">D</span></tt></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ship-control-pilotwheelthrottle"><em>PILOTWHEELTHROTTLE</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">W</span></tt>, <tt class="docutils literal"><span class="pre">S</span></tt></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ship-control-pilotwheelsteertrim"><em>PILOTWHEELSTEERTRIM</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">ALT+A</span></tt>, <tt class="docutils literal"><span class="pre">ALT+D</span></tt></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ship-control-pilotwheelthrottletrim"><em>PILOTWHEELTHROTTLETRIM</em></a></td>
+<td>scalar [-1,1]</td>
+<td><tt class="docutils literal"><span class="pre">ALT+W</span></tt>, <tt class="docutils literal"><span class="pre">ALT+S</span></tt></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ship-control-pilotneutral"><em>PILOTNEUTRAL</em></a></td>
+<td>boolean</td>
+<td>Is <strong>kOS</strong> Controlling?</td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="ship-control-pilotmainthrottle"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:MAINTHROTTLE</tt></dt>
+<dd><p>Returns the pilot&#8217;s input for the throttle. This is the only <tt class="docutils literal"><span class="pre">PILOT</span></tt> variable that is settable and is used to set the throttle upon termination of the current <strong>kOS</strong> program.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotyaw"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:YAW</tt></dt>
+<dd><p>Returns the pilot&#8217;s rotation input about the &#8220;up&#8221; vector as the pilot faces forward. Essentially left <span class="math">\((-1)\)</span> or right <span class="math">\((+1)\)</span>.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotpitch"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:PITCH</tt></dt>
+<dd><p>Returns the pilot&#8217;s rotation input  about the starboard vector up <span class="math">\((+1)\)</span> or down <span class="math">\((-1)\)</span>.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotroll"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:ROLL</tt></dt>
+<dd><p>Returns the pilot&#8217;s rotation input  about the logintudinal axis of the ship left-wing-down <span class="math">\((-1)\)</span> or left-wing-up <span class="math">\((+1)\)</span>.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotrotation"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:ROTATION</tt></dt>
+<dd><p>Returns the pilot&#8217;s rotation input as a <em class="xref std std-ref">Vector</em> object containing <tt class="docutils literal"><span class="pre">(YAW,</span> <span class="pre">PITCH,</span> <span class="pre">ROLL)</span></tt> in that order.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotyawtrim"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:YAWTRIM</tt></dt>
+<dd><p>Returns the pilot&#8217;s input for the <tt class="docutils literal"><span class="pre">YAW</span></tt> of the rotational trim.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotpitchtrim"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:PITCHTRIM</tt></dt>
+<dd><p>Returns the pilot&#8217;s input for the <tt class="docutils literal"><span class="pre">PITCH</span></tt> of the rotational trim.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotrolltrim"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:ROLLTRIM</tt></dt>
+<dd><p>Returns the pilot&#8217;s input for the <tt class="docutils literal"><span class="pre">ROLL</span></tt> of the rotational trim.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotfore"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:FORE</tt></dt>
+<dd><p>Returns the the pilot&#8217;s input for the translation of the ship forward <span class="math">\((+1)\)</span> or backward <span class="math">\((-1)\)</span>.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotstarboard"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:STARBOARD</tt></dt>
+<dd><p>Returns the the pilot&#8217;s input for the translation of the ship to the right <span class="math">\((+1)\)</span> or left <span class="math">\((-1)\)</span> from the pilot&#8217;s perspective.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilottop"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:TOP</tt></dt>
+<dd><p>Returns the the pilot&#8217;s input for the translation of the ship up <span class="math">\((+1)\)</span> or down <span class="math">\((-1)\)</span> from the pilot&#8217;s perspective.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilottranslation"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:TRANSLATION</tt></dt>
+<dd><p>Returns the the pilot&#8217;s input for translation as a <em class="xref std std-ref">Vector</em> <tt class="docutils literal"><span class="pre">(FORE,</span> <span class="pre">STARBOARD,</span> <span class="pre">TOP)</span></tt>.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotwheelsteer"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:WHEELSTEER</tt></dt>
+<dd><p>Returns the the pilot&#8217;s input for wheel steering left <span class="math">\((-1)\)</span> or right <span class="math">\((+1)\)</span>.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotwheelthrottle"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:WHEELTHROTTLE</tt></dt>
+<dd><p>Returns the the pilot&#8217;s input for the wheels to move the ship forward <span class="math">\((+1)\)</span> or backward <span class="math">\((-1)\)</span> while on the ground.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotwheelsteertrim"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:WHEELSTEERTRIM</tt></dt>
+<dd><p>Returns the the pilot&#8217;s input for the trim of the wheel steering.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotwheelthrottletrim"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:WHEELTHROTTLETRIM</tt></dt>
+<dd><p>Returns the the pilot&#8217;s input for the trim of the wheel throttle.</p>
+</dd></dl>
+
+<span class="target" id="ship-control-pilotneutral"></span><dl class="object">
+<dt>
+<tt class="descname">SHIP:CONTROL:NEUTRAL</tt></dt>
+<dd><p>Returns true or false if the pilot is active or not.</p>
+</dd></dl>
+
+<p>Be aware that <strong>kOS</strong> can&#8217;t control a control at the same time that a player controls it. If <strong>kOS</strong> is taking control of the yoke, then the player can&#8217;t manually control it. Remember to run:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">CONTROL</span><span class="o">:</span><span class="n">NEUTRALIZE</span> <span class="n">TO</span> <span class="n">TRUE</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>after the script is done using the controls, or the player will be locked out of control.</p>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="systems.html" class="btn btn-neutral float-right" title="Ship Systems">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="raw.html" class="btn btn-neutral" title="Raw Control"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

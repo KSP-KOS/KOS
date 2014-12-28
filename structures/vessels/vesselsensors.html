@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>VesselSensors &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
+        <link rel="next" title="Configurations and Miscellany" href="../misc.html"/>
+        <link rel="prev" title="Vessel" href="vessel.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
+      
+    <li>VesselSensors</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/structures/vessels/vesselsensors.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="vesselsensors">
+<h1>VesselSensors<a class="headerlink" href="#vesselsensors" title="Permalink to this headline">¶</a></h1>
+<p>When you ask a Vessel to tell you its <a class="reference internal" href="vessel.html#VESSEL:SENSORS" title="VESSEL:SENSORS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Vessel:SENSORS</span></tt></a> suffix, it returns an object of this type. It is a snapshot of sensor data taken at the moment the sensor reading was requested.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These values are only enabled if you have the proper type of sensor on board the vessel. If you don&#8217;t have a thermometer, for example, then the <tt class="xref ks ks-attr docutils literal"><span class="pre">:TEMP</span></tt> suffix will always read zero.</p>
+</div>
+<p>If you store this in a variable and wait, the numbers are frozen in time and won&#8217;t change as the vessel&#8217;s condition changes.</p>
+<dl class="structure">
+<dt id="VESSELSENSORS">
+<em class="property">structure </em><tt class="descname">VesselSensors</tt><a class="headerlink" href="#VESSELSENSORS" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p><strong>BUG</strong></p>
+<p class="last">This information is currenlty being read from the Active Vessel even when the Active Vessel is not the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a>. This comment will be removed when that bug is fixed.</p>
+</div>
+<table border="1" class="docutils">
+<caption>Members</caption>
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#VESSELSENSORS:ACC" title="VESSELSENSORS:ACC attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ACC</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<td>Acceleration experienced by the <a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#VESSELSENSORS:PRES" title="VESSELSENSORS:PRES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PRES</span></tt></a></td>
+<td>scalar</td>
+<td>Atmospheric Pressure outside this <a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#VESSELSENSORS:TEMP" title="VESSELSENSORS:TEMP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TEMP</span></tt></a></td>
+<td>scalar</td>
+<td>Temperature outside this <a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#VESSELSENSORS:GRAV" title="VESSELSENSORS:GRAV attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GRAV</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> (g&#8217;s)</td>
+<td>Gravitational acceleration</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#VESSELSENSORS:LIGHT" title="VESSELSENSORS:LIGHT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LIGHT</span></tt></a></td>
+<td>scalar</td>
+<td>Sun exposure on the solar panels of this <a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSELSENSORS:ACC">
+VesselSensors:<tt class="descname">ACC</tt><a class="headerlink" href="#VESSELSENSORS:ACC" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>Accelleration the vessel is undergoing. A combination of both the gravitational pull and the engine thrust.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSELSENSORS:PRES">
+VesselSensors:<tt class="descname">PRES</tt><a class="headerlink" href="#VESSELSENSORS:PRES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>The current pressure of this ship.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSELSENSORS:TEMP">
+VesselSensors:<tt class="descname">TEMP</tt><a class="headerlink" href="#VESSELSENSORS:TEMP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>The current temperature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSELSENSORS:GRAV">
+VesselSensors:<tt class="descname">GRAV</tt><a class="headerlink" href="#VESSELSENSORS:GRAV" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p>Magnitude and direction of gravity acceleration where the vessel currently is. Magnitude is expressed in &#8220;G&#8220;&#8216;s (multiples of 9.802 m/s^2).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSELSENSORS:LIGHT">
+VesselSensors:<tt class="descname">LIGHT</tt><a class="headerlink" href="#VESSELSENSORS:LIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>The total amount of sun exposure that exists here - only readable if there are solar panels on the vessel.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../misc.html" class="btn btn-neutral float-right" title="Configurations and Miscellany">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vessel.html" class="btn btn-neutral" title="Vessel"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
