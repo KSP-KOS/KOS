@@ -119,7 +119,8 @@
     <Compile Include="Suffixed\Part\EngineValue.cs" />
     <Compile Include="Suffixed\Part\PartValue.cs" />
     <Compile Include="Suffixed\Part\SensorValue.cs" />
-    <Compile Include="Suffixed\ResourceValue.cs" />
+    <Compile Include="Suffixed\AggregateResourceValue.cs" />
+    <Compile Include="Suffixed\SingleResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Utilities\BetaShim.cs" />

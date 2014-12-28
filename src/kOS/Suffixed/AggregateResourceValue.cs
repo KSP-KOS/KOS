@@ -3,23 +3,19 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class ResourceValue : Structure
+    public class AggregateResourceValue : Structure
     {
         private readonly string name;
         private double amount;
         private double capacity;
+        private int containerCount;
 
-        public ResourceValue(PartResource partResource) : this(partResource.resourceName)
-        {
-            amount = partResource.amount;
-            capacity = partResource.maxAmount;
-        }
-
-        public ResourceValue(string name)
+        public AggregateResourceValue(string name)
         {
             this.name = name;
             amount = 0;
             capacity = 0;
+            containerCount = 0;
         }
 
         public override object GetSuffix(string suffixName)
@@ -32,6 +28,8 @@ namespace kOS.Suffixed
                     return amount;
                 case "CAPACITY":
                     return capacity;
+                case "CONTAINERCOUNT":
+                    return containerCount;
             }
             return base.GetSuffix(suffixName);
         }
@@ -40,28 +38,29 @@ namespace kOS.Suffixed
         {
             amount += resource.amount;
             capacity += resource.maxAmount;
+            containerCount++;
         }
 
         public override string ToString()
         {
-            return string.Format("RESOURCE({0},{1},{2}", name, amount, capacity);
+            return string.Format("SHIPRESOURCE({0},{1},{2}", name, amount, capacity);
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts)
         {
             var list = new ListValue();
-            var resources = new Dictionary<string, ResourceValue>();
+            var resources = new Dictionary<string, AggregateResourceValue>();
             foreach (var part in parts)
             {
                 foreach (PartResource module in part.Resources)
                 {
-                    ResourceValue resourceAmount;
-                    if (!resources.TryGetValue(module.resourceName, out resourceAmount))
+                    AggregateResourceValue aggregateResourceAmount;
+                    if (!resources.TryGetValue(module.resourceName, out aggregateResourceAmount))
                     {
-                        resourceAmount = new ResourceValue(module.resourceName);
+                        aggregateResourceAmount = new AggregateResourceValue(module.resourceName);
                     }
-                    resourceAmount.AddResource(module);
-                    resources[module.resourceName] = resourceAmount;
+                    aggregateResourceAmount.AddResource(module);
+                    resources[module.resourceName] = aggregateResourceAmount;
                 }
             }
             foreach (var resource in resources)
