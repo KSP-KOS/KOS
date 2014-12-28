@@ -44,8 +44,24 @@ namespace kOS.Suffixed.Part
             AddSuffix("PARENT", new Suffix<PartValue>(() => PartValueFactory.Construct(Part.parent,shared), "The parent part of this part"));
             AddSuffix("HASPARENT", new Suffix<bool>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
             AddSuffix("CHILDREN", new Suffix<ListValue>(() => PartValueFactory.Construct(Part.children, shared), "A LIST() of the children parts of this part"));
+            AddSuffix("DRYMASS", new Suffix<float>(() => Part.mass));
+            AddSuffix("MASS", new Suffix<float>(() => Part.mass + Part.GetResourceMass()));
+            AddSuffix("WETMASS", new Suffix<float>(GetWetMass));
         }
-        
+
+        private float GetWetMass()
+        {
+            float mass = Part.mass;
+
+            for (int index = 0; index < Part.Resources.Count; ++index)
+            {
+              PartResource partResource = Part.Resources[index];
+              mass += (float)partResource.maxAmount * partResource.info.density;
+            }
+
+            return mass;
+        }
+
         private PartModuleFields GetModule(string modName)
         {
             foreach (PartModule mod in Part.Modules)
