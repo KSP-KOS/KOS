@@ -28,6 +28,7 @@ namespace kOS.Module
         private int vesselPartCount;
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
+        private bool firstUpdate = true;
 
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
@@ -155,16 +156,18 @@ namespace kOS.Module
 
             // initialize harddisk
             if (HardDisk == null)
-                HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
-            // populate it with the boot file, but only if in range:
-            if (archive.CheckRange(vessel))
             {
-                var bootProgramFile = archive.GetByName(bootFile);
-                if (bootProgramFile != null)
+                HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+                // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
+                if (vessel.situation == Vessel.Situations.PRELAUNCH)
                 {
-                    // Copy to HardDisk as "boot".
-                    var boot = new ProgramFile(bootProgramFile) {Filename = "boot.ks"};
-                    HardDisk.Add(boot);
+                    var bootProgramFile = archive.GetByName(bootFile);
+                    if (bootProgramFile != null)
+                    {
+                        // Copy to HardDisk as "boot".
+                        var boot = new ProgramFile(bootProgramFile) { Filename = "boot.ks" };
+                        HardDisk.Add(boot);
+                    }
                 }
             }
             shared.VolumeMgr.Add(HardDisk);
@@ -176,7 +179,8 @@ namespace kOS.Module
             }
             
             InitProcessorTracking();
-            shared.Cpu.Boot();
+            // move Cpu.Boot() to within the first Update() to prevent boot script errors from killing OnStart
+            // shared.Cpu.Boot();
         }
 
         private void InitProcessorTracking()
@@ -276,6 +280,12 @@ namespace kOS.Module
         {
             ProcessBoot();
             if (!IsAlive()) return;
+            if (firstUpdate)
+            {
+                Debug.LogWarning("[kOS] First Update()");
+                firstUpdate = false;
+                shared.Cpu.Boot();
+            }
             UpdateVessel();
             UpdateObservers();
             ProcessElectricity(part, TimeWarp.fixedDeltaTime);

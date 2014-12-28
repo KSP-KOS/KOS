@@ -121,7 +121,10 @@ namespace kOS.Binding
 
         public void Dispose()
         {
-            flightControl.Dispose();
+            if (flightControl != null)
+            {
+                flightControl.Dispose();
+            }
         }
     }
 }
