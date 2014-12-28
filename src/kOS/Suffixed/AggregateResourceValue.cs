@@ -8,14 +8,14 @@ namespace kOS.Suffixed
         private readonly string name;
         private double amount;
         private double capacity;
-        private int containerCount;
+        private readonly ListValue parts;
 
         public AggregateResourceValue(string name)
         {
             this.name = name;
             amount = 0;
             capacity = 0;
-            containerCount = 0;
+            parts = new ListValue();
         }
 
         public override object GetSuffix(string suffixName)
@@ -28,8 +28,8 @@ namespace kOS.Suffixed
                     return amount;
                 case "CAPACITY":
                     return capacity;
-                case "CONTAINERCOUNT":
-                    return containerCount;
+                case "PARTS":
+                    return parts;
             }
             return base.GetSuffix(suffixName);
         }
@@ -38,12 +38,12 @@ namespace kOS.Suffixed
         {
             amount += resource.amount;
             capacity += resource.maxAmount;
-            containerCount++;
+            parts.Add(resource.part);
         }
 
         public override string ToString()
         {
-            return string.Format("SHIPRESOURCE({0},{1},{2}", name, amount, capacity);
+            return string.Format("SHIPRESOURCE({0},{1},{2})", name, amount, capacity);
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts)
