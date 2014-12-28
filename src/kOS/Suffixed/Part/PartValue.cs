@@ -114,7 +114,7 @@ namespace kOS.Suffixed.Part
             var resources = new ListValue();
             foreach (PartResource resource in part.Resources)
             {
-                resources.Add(new ResourceValue(resource));
+                resources.Add(new SingleResourceValue(resource));
             }
             return resources;
         }

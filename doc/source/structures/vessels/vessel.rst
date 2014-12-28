@@ -42,8 +42,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`AIRSPEED`                      scalar (m/s)              How fast the ship is moving relative to the air
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
      :attr:`VESSELNAME`                    string                    The name of the vessel
-     :attr:`ANGULARMOMENTUM`               :struct:`Direction`       In :ref:`SHIP_RAW <ship-raw>`
-     :attr:`ANGULARVEL`                    :struct:`Direction`       In :ref:`SHIP_RAW <ship-raw>`
+     :attr:`ANGULARMOMENTUM`               :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
+     :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
      :attr:`LOADED`                        Boolean                   loaded into KSP physics engine or "on rails"
      :attr:`PATCHES`                       :struct:`List`            :struct:`Orbit` patches
@@ -141,14 +141,14 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :struct:`Direction`
     :access: Get only
 
-    Given in [SHIP-RAW reference frame]](../../ref\_frame/index.html). Despite the name, this is technically not momentum information because it has no magnitude.
+    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. *As of* ``kOS 0.15.4`` *this has been changed to a vector, as it should have been all along.*  The vector represents the axis of the rotation, and its magnitude is the angular momentum of the rotation, which varies not only with the speed of the rotation, but also with the angular inertia of the vessel.
 
 .. attribute:: Vessel:ANGULARVEL
 
     :type: :struct:`Direction`
     :access: Get only
 
-    Given in [SHIP-RAW reference frame]](../../ref\_frame/index.html). Despite the name, this is technically not a velocity. It only tells you the axis of rotation, not the speed of rotation around that axis.
+    Given in :ref:`SHIP_RAW <ship-raw>` reference frame.  *As of* ``kOS 0.15.4`` *this has been changed to a vector, as it should have been all along.*  The vector represents the axis of the rotation, and its magnitude is the speed of that rotation (Presumably in degrees per second?  This is not documented in the KSP API and may take some experimentation to discover if it's radians or degrees).
 
 .. attribute:: Vessel:SENSORS
 

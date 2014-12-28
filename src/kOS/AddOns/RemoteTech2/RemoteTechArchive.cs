@@ -7,7 +7,12 @@ namespace kOS.AddOns.RemoteTech2
     {
         public bool CheckRange(Vessel vessel)
         {
-            return vessel != null && RemoteTechHook.Instance.HasConnectionToKSC(vessel.id);
+            if (vessel == null)
+            {
+                return false;
+            }
+            // return true if RemoteTech reports a connection to KSC, or if the vessel is currently in "PRELAUNCH" situation
+            return RemoteTechHook.Instance.HasConnectionToKSC(vessel.id) || vessel.situation == Vessel.Situations.PRELAUNCH;
         }
     }
 }

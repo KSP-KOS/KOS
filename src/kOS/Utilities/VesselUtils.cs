@@ -73,7 +73,7 @@ namespace kOS.Utilities
             switch (partType.ToUpper())
             {
                 case "RESOURCES":
-                    list = ResourceValue.PartsToList(partList);
+                    list = AggregateResourceValue.PartsToList(partList);
                     break;
 
                 case "PARTS":
