@@ -124,6 +124,7 @@
     <Compile Include="Suffixed\StageValues.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Utilities\BetaShim.cs" />
+    <Compile Include="Utilities\PartUtilities.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Screen\TermWindow.cs" />
     <Compile Include="Suffixed\Timespan.cs" />

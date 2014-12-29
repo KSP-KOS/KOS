@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using kOS.Binding;
-using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
 using kOS.Module;
@@ -400,64 +400,106 @@ namespace kOS.Suffixed
             AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue,string>(GetPartsTagged));
             AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
             AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
+
+            AddSuffix("CONTROL", new Suffix<FlightControl>(() => FlightControlManager.GetControllerByVessel(Vessel)));
+            AddSuffix("BEARING", new Suffix<float>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));
+            AddSuffix("HEADING", new Suffix<float>(() => VesselUtils.GetTargetHeading(CurrentVessel, Vessel)));
+            AddSuffix("AVAILABLETHRUST", new Suffix<double>(() => VesselUtils.GetAvailableThrust(Vessel)));
+            AddSuffix("MAXTHRUST", new Suffix<double>(() => VesselUtils.GetMaxThrust(Vessel)));
+            AddSuffix("FACING", new Suffix<Direction>(() => VesselUtils.GetFacing(Vessel)));
+            AddSuffix("ANGULARMOMENTUM", new Suffix<Vector>(() => new Vector(Vessel.angularMomentum)));
+            AddSuffix("ANGULARVEL", new Suffix<Vector>(() => new Vector(Vessel.angularVelocity)));
+            AddSuffix("MASS", new Suffix<float>(() => Vessel.GetTotalMass()));
+            AddSuffix("VERTICALSPEED", new Suffix<double>(() => Vessel.verticalSpeed));
+            AddSuffix("SURFACESPEED", new Suffix<double>(() => Vessel.horizontalSrfSpeed));
+            AddSuffix("AIRSPEED", new Suffix<double>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude,"the velocity of the vessel relative to the air"));
+            AddSuffix(new[] {"SHIPNAME", "NAME"}, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel));
+            AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel));
+            AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
+            AddSuffix("TERMVELOCITY", new Suffix<double>(() => VesselUtils.GetTerminalVelocity(Vessel)));
+            AddSuffix("LOADED", new Suffix<bool>(() => Vessel.loaded));
+            AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
+            AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass()));
+            AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass));
+
+            //// Although there is an implementation of lat/long/alt in Orbitible,
+            //// it's better to use the methods for vessels that are faster if they're
+            //// available:
+            AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLattitude(Vessel)));
+            AddSuffix("LONGITUDE", new Suffix<double>(() => VesselUtils.GetVesselLongitude(Vessel)));
+            AddSuffix("ALTITUDE", new Suffix<double>(() => Vessel.altitude));
        }
+
+
+        private void RetypeVessel(string value)
+        {
+            Vessel.vesselType = value.ToEnum<VesselType>();
+        }
+
+        private void RenameVessel(string value)
+        {
+            if (Vessel.IsValidVesselName(value))
+            {
+                Vessel.vesselName = value;
+            }
+        }
 
         public override object GetSuffix(string suffixName)
         {
             switch (suffixName)
             {
-                // TODO: These need to be moved into InitializeSuffixes() at some point:
+                // TODO: I left this code in commented to let the reviewer check my work for yank put mistakes, after that it should be removed
 
-                case "CONTROL":
-                    return FlightControlManager.GetControllerByVessel(Vessel);
-                case "BEARING":
-                    return VesselUtils.GetTargetBearing(CurrentVessel, Vessel);
-                case "HEADING":
-                    return VesselUtils.GetTargetHeading(CurrentVessel, Vessel);
-                case "AVAILABLETHRUST":
-                    return VesselUtils.GetAvailableThrust(Vessel);
-                case "MAXTHRUST":
-                    return VesselUtils.GetMaxThrust(Vessel);
-                case "FACING":
-                    return VesselUtils.GetFacing(Vessel);
-                case "ANGULARMOMENTUM":
-                    return new Vector(Vessel.angularMomentum);
-                case "ANGULARVEL":
-                    return new Vector(Vessel.angularVelocity);
-                case "MASS":
-                    return Vessel.GetTotalMass();
-                case "VERTICALSPEED":
-                    return Vessel.verticalSpeed;
-                case "SURFACESPEED":
-                    return Vessel.horizontalSrfSpeed;
-                case "AIRSPEED":
-                    return
-                        (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass()))
-                            .magnitude; //the velocity of the vessel relative to the air);
-                //DEPRICATED VESSELNAME
-                case "VESSELNAME":
-                    throw new KOSException("VESSELNAME is DEPRICATED, use SHIPNAME.");
-                case "SHIPNAME":
-                    return Vessel.vesselName;
+                //case "CONTROL":
+                //    return FlightControlManager.GetControllerByVessel(Vessel);
+                //case "BEARING":
+                //    return VesselUtils.GetTargetBearing(CurrentVessel, Vessel);
+                //case "HEADING":
+                //    return VesselUtils.GetTargetHeading(CurrentVessel, Vessel);
+                //case "AVAILABLETHRUST":
+                //    return VesselUtils.GetAvailableThrust(Vessel);
+                //case "MAXTHRUST":
+                //    return VesselUtils.GetMaxThrust(Vessel);
+                //case "FACING":
+                //    return VesselUtils.GetFacing(Vessel);
+                //case "ANGULARMOMENTUM":
+                //    return new Vector(Vessel.angularMomentum);
+                //case "ANGULARVEL":
+                //    return new Vector(Vessel.angularVelocity);
+                //case "MASS":
+                //    return Vessel.GetTotalMass();
+                //case "VERTICALSPEED":
+                //    return Vessel.verticalSpeed;
+                //case "SURFACESPEED":
+                //    return Vessel.horizontalSrfSpeed;
+                //case "AIRSPEED":
+                //    return
+                //        (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass()))
+                //            .magnitude; //the velocity of the vessel relative to the air);
+                ////DEPRICATED VESSELNAME
+                //case "VESSELNAME":
+                //    throw new KOSException("VESSELNAME is DEPRICATED, use SHIPNAME.");
+                //case "SHIPNAME":
+                //    return Vessel.vesselName;
 
-                // Although there is an implementation of lat/long/alt in Orbitible,
-                // it's better to use the methods for vessels that are faster if they're
-                // available:
-                case "LATITUDE":
-                    return VesselUtils.GetVesselLattitude(Vessel);
-                case "LONGITUDE":
-                    return VesselUtils.GetVesselLongitude(Vessel);
-                case "ALTITUDE":
-                    return Vessel.altitude;
+                //// Although there is an implementation of lat/long/alt in Orbitible,
+                //// it's better to use the methods for vessels that are faster if they're
+                //// available:
+                //case "LATITUDE":
+                //    return VesselUtils.GetVesselLattitude(Vessel);
+                //case "LONGITUDE":
+                //    return VesselUtils.GetVesselLongitude(Vessel);
+                //case "ALTITUDE":
+                //    return Vessel.altitude;
 
-                case "SENSORS":
-                    return new VesselSensors(Vessel);
-                case "TERMVELOCITY":
-                    return VesselUtils.GetTerminalVelocity(Vessel);
-                case "LOADED":
-                    return Vessel.loaded;
-                case "ROOTPART":
-                    return PartValueFactory.Construct(Vessel.rootPart,Shared);
+                //case "SENSORS":
+                //    return new VesselSensors(Vessel);
+                //case "TERMVELOCITY":
+                //    return VesselUtils.GetTerminalVelocity(Vessel);
+                //case "LOADED":
+                //    return Vessel.loaded;
+                //case "ROOTPART":
+                //    return PartValueFactory.Construct(Vessel.rootPart,Shared);
             }
 
             // Is this a resource?

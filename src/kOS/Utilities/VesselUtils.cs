@@ -330,6 +330,16 @@ namespace kOS.Utilities
                                                         current + (p.mass + p.GetResourceMass()) * p.maximum_drag);
         }
 
+        public static float GetDryMass(this Vessel vessel)
+        {
+            return vessel.parts.Sum(part => part.GetDryMass());
+        }
+
+        public static float GetWetMass(this Vessel vessel)
+        {
+            return vessel.parts.Sum(part => part.GetWetMass());
+        }
+
         private static double RealMaxAtmosphereAltitude(CelestialBody body)
         {
             // This comes from MechJeb CelestialBodyExtensions.cs
