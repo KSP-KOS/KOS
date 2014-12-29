@@ -38,6 +38,12 @@ namespace kOS.Utilities
             var target = targetDir.Rotation;
             var vesselRotation = vessel.ReferenceTransform.rotation;
 
+            if (vessel.ActionGroups[KSPActionGroup.SAS])
+            {
+                vessel.Autopilot.SAS.LockHeading(target * Quaternion.Euler(90, 0, 0), true);
+                return;
+            }
+
             // some validations
             if (!Utils.IsValidNumber(c.mainThrottle) ||
                 !Utils.IsValidVector(centerOfMass) ||

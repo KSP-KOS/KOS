@@ -41,6 +41,8 @@ namespace kOS.Binding
             AddNewFlightParam("steering", Shared);
             AddNewFlightParam("wheelthrottle", Shared);
             AddNewFlightParam("wheelsteering", Shared);
+            AddNewFlightParam("maneuver", Shared);
+            AddNewFlightParam("prograde", Shared);
         }
 
 
@@ -55,12 +57,51 @@ namespace kOS.Binding
             }
         }
 
+        private void clearStockAutopilot(string enabledMode)
+        {
+            if (enabledMode != "maneuver") flightParameters["maneuver"].Enabled = false;
+            if (enabledMode != "prograde") flightParameters["prograde"].Enabled = false;
+        }
+
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
             Debug.Log(string.Format("kOS: FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
-            if (!flightParameters.ContainsKey(paramName)) return;
+            if (!flightParameters.ContainsKey(paramName)) { UnityEngine.Debug.LogError("kOS: no such flybywire parameter " + paramName); return; }
 
             flightParameters[paramName].Enabled = enabled;
+            UnityEngine.Debug.LogWarning("kOS: flybywire parameter " + paramName);
+            UnityEngine.Debug.LogWarning("kOS: parameter enabled " + enabled.ToString());
+            switch (paramName.ToLower())
+            {
+                case "maneuver":
+                    if (enabled)
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Maneuver);
+                        currentVessel.Autopilot.Enable();
+                    }
+                    else
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        currentVessel.Autopilot.Disable();
+                    }
+                    clearStockAutopilot("maneuver");
+                    break;
+                case "prograde":
+                    if (enabled)
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Prograde);
+                        currentVessel.Autopilot.Enable();
+                    }
+                    else
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        currentVessel.Autopilot.Disable();
+                    }
+                    clearStockAutopilot("prograde");
+                    break;
+                default:
+                    break;
+            }
             if (!enabled)
             {
                 flightParameters[paramName].ClearValue();
