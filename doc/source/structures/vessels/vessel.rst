@@ -37,11 +37,14 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`MAXTHRUST`                     scalar                    Sum of active maximum thrusts
      :attr:`FACING`                        :struct:`Direction`       The way the vessel is pointed
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
+     :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
+     :attr:`DRYMASS`                       scalar (metric tons)      Mass of the ship with no resources
      :attr:`VERTICALSPEED`                 scalar (m/s)              How fast the ship is moving "up"
      :attr:`SURFACESPEED`                  scalar (m/s)              How fast the ship is moving "horizontally"
      :attr:`AIRSPEED`                      scalar (m/s)              How fast the ship is moving relative to the air
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
-     :attr:`VESSELNAME`                    string                    The name of the vessel
+     :attr:`SHIPNAME`                      string                    The name of the vessel
+     :attr:`NAME`                          string                    Synomym for SHIPNAME
      :attr:`ANGULARMOMENTUM`               :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
@@ -100,6 +103,20 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     The mass of the ship
+	
+.. attribute:: Vessel:WETMASS
+
+    :type: scalar (metric tons)
+    :access: Get only
+
+    The mass of the ship if all resources were full
+	
+.. attribute:: Vessel:DRYMASS
+
+    :type: scalar (metric tons)
+    :access: Get only
+
+    The mass of the ship if all resources were empty
 
 .. attribute:: Vessel:VERTICALSPEED
 
@@ -129,12 +146,20 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
 
-.. attribute:: Vessel:VESSELNAME
+.. attribute:: Vessel:SHIPNAME
 
     :type: string
-    :access: Get only
+    :access: Get/Set
+    :synomym: NAME
 
-    The name of the vessel as it appears in the tracking station.
+    The name of the vessel as it appears in the tracking station. When you set this, it cannot be empty.
+	
+.. attribute:: Vessel:TYPE
+
+    :type: string
+    :access: Get/Set
+
+    The ship's type as described here: http://wiki.kerbalspaceprogram.com/wiki/Craft#Vessel_types
 
 .. attribute:: Vessel:ANGULARMOMENTUM
 

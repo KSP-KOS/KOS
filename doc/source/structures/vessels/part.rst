@@ -21,6 +21,15 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`TITLE`
           - string
           - Title as it appears in KSP
+		* - :attr:`MASS`
+          - scalar
+          - Current mass of part and its resources
+		* - :attr:`DRYMASS`
+          - scalar
+          - Mass of part if all resources were empty
+		* - :attr:`WETMASS`
+          - scalar
+          - Mass of part if all resources were full
         * - :attr:`TAG`
           - string
           - Name-tag if assigned by the player
@@ -66,6 +75,9 @@ These are the generic properties every PART has. You can obtain a list of values
         * - :attr:`HASPARENT`
           - boolean
           - Check if this part has a parent :struct:`Part`
+        * - :attr:`HASPHYSICS`
+          - boolean
+          - Does this part have mass or drag
         * - :attr:`CHILDREN`
           - :struct:`List`
           - List of attached :struct:`Parts <Part>`
@@ -158,7 +170,28 @@ These are the generic properties every PART has. You can obtain a list of values
     :type: :struct:`Direction`
 
     the direction that this part is facing.
+	
+.. attribute:: Part:MASS
 
+    :access: Get only
+    :type: scalar
+
+    The current mass or the part and its resources. If the part has no physics this will always be 0.
+	
+.. attribute:: Part:WETMASS
+
+    :access: Get only
+    :type: scalar
+
+    The mass of the part if all of its resources were full. If the part has no physics this will always be 0.
+		
+.. attribute:: Part:DRYMASS
+
+    :access: Get only
+    :type: scalar
+
+    The mass of the part if all of its resources were empty. If the part has no physics this will always be 0.
+	
 .. attribute:: Part:RESOURCES
 
     :access: Get only
@@ -205,6 +238,15 @@ These are the generic properties every PART has. You can obtain a list of values
 
     When walking the :ref:`tree of parts <parts and partmodules>`, this is the part that this part is attached to on the way "up" toward the root part.
 
+.. attribute:: Part:HASPHYSICS
+
+    :access: Get only
+    :type: bool
+
+    This comes from a part's configuration and is an artifact of the KSP simulation. 
+	
+	For a list of stock parts that have this attribute and a fuller explanation see: http://wiki.kerbalspaceprogram.com/wiki/Massless_part 
+	
 .. attribute:: Part:HASPARENT
 
     :access: Get only
