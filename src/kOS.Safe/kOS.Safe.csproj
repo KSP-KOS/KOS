@@ -59,7 +59,7 @@
     <Compile Include="Compilation\KS\SubprogramCollection.cs" />
     <Compile Include="Compilation\KS\Trigger.cs" />
     <Compile Include="Compilation\KS\TriggerCollection.cs" />
-    <Compile Include="Compilation\OpCode.cs" />
+    <Compile Include="Compilation\Opcode.cs" />
     <Compile Include="Compilation\ProgramBuilder.cs" />
     <Compile Include="Compilation\ProgramBuilderInterpreter.cs" />
     <Compile Include="Compilation\PseudoNull.cs" />
