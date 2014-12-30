@@ -446,62 +446,10 @@ namespace kOS.Suffixed
 
         public override object GetSuffix(string suffixName)
         {
-            switch (suffixName)
-            {
-                // TODO: I left this code in commented to let the reviewer check my work for yank put mistakes, after that it should be removed
-
-                //case "CONTROL":
-                //    return FlightControlManager.GetControllerByVessel(Vessel);
-                //case "BEARING":
-                //    return VesselUtils.GetTargetBearing(CurrentVessel, Vessel);
-                //case "HEADING":
-                //    return VesselUtils.GetTargetHeading(CurrentVessel, Vessel);
-                //case "AVAILABLETHRUST":
-                //    return VesselUtils.GetAvailableThrust(Vessel);
-                //case "MAXTHRUST":
-                //    return VesselUtils.GetMaxThrust(Vessel);
-                //case "FACING":
-                //    return VesselUtils.GetFacing(Vessel);
-                //case "ANGULARMOMENTUM":
-                //    return new Vector(Vessel.angularMomentum);
-                //case "ANGULARVEL":
-                //    return new Vector(Vessel.angularVelocity);
-                //case "MASS":
-                //    return Vessel.GetTotalMass();
-                //case "VERTICALSPEED":
-                //    return Vessel.verticalSpeed;
-                //case "SURFACESPEED":
-                //    return Vessel.horizontalSrfSpeed;
-                //case "AIRSPEED":
-                //    return
-                //        (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass()))
-                //            .magnitude; //the velocity of the vessel relative to the air);
-                ////DEPRICATED VESSELNAME
-                //case "VESSELNAME":
-                //    throw new KOSException("VESSELNAME is DEPRICATED, use SHIPNAME.");
-                //case "SHIPNAME":
-                //    return Vessel.vesselName;
-
-                //// Although there is an implementation of lat/long/alt in Orbitible,
-                //// it's better to use the methods for vessels that are faster if they're
-                //// available:
-                //case "LATITUDE":
-                //    return VesselUtils.GetVesselLattitude(Vessel);
-                //case "LONGITUDE":
-                //    return VesselUtils.GetVesselLongitude(Vessel);
-                //case "ALTITUDE":
-                //    return Vessel.altitude;
-
-                //case "SENSORS":
-                //    return new VesselSensors(Vessel);
-                //case "TERMVELOCITY":
-                //    return VesselUtils.GetTerminalVelocity(Vessel);
-                //case "LOADED":
-                //    return Vessel.loaded;
-                //case "ROOTPART":
-                //    return PartValueFactory.Construct(Vessel.rootPart,Shared);
-            }
-
+            // Most suffixes are handled by the newer AddSuffix system, except for the
+            // resource levels, which have to use this older technique as a fallback because
+            // the AddSuffix system doesn't support this type of late-binding string matching:
+            
             // Is this a resource?
             double dblValue;
             if (VesselUtils.TryGetResource(Vessel, suffixName, out dblValue))
