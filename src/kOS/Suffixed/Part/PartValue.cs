@@ -44,7 +44,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("PARENT", new Suffix<PartValue>(() => PartValueFactory.Construct(Part.parent,shared), "The parent part of this part"));
             AddSuffix("HASPARENT", new Suffix<bool>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
             AddSuffix("CHILDREN", new Suffix<ListValue>(() => PartValueFactory.Construct(Part.children, shared), "A LIST() of the children parts of this part"));
-            AddSuffix("DRYMASS", new Suffix<float>(() => Part.HasPhysics() ? Part.mass : 0));
+            AddSuffix("DRYMASS", new Suffix<float>(Part.GetDryMass));
             AddSuffix("MASS", new Suffix<float>(Part.CalculateCurrentMass));
             AddSuffix("WETMASS", new Suffix<float>(Part.GetWetMass));
             AddSuffix("HASPHYSICS", new Suffix<bool>(Part.HasPhysics));
