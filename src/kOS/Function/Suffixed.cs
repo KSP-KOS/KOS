@@ -289,6 +289,16 @@ namespace kOS.Function
         }
     }
     
+    [Function("career")]
+    public class FunctionCareer : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var career = new Career();
+            shared.Cpu.PushStack(career);
+        }
+    }
+    
     [Function("constant")]
     public class FunctionConstant : FunctionBase
     {

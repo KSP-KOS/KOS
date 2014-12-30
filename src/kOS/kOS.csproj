@@ -92,6 +92,7 @@
     <Compile Include="Screen\KOSToolBarWindow.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
+    <Compile Include="Suffixed\Career.cs" />
     <Compile Include="Suffixed\Orbitable.cs" />
     <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
     <Compile Include="Suffixed\Part\PartModuleFieldsFactory.cs" />
