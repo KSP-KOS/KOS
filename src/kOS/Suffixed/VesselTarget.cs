@@ -413,14 +413,14 @@ namespace kOS.Suffixed
             AddSuffix("VERTICALSPEED", new Suffix<double>(() => Vessel.verticalSpeed));
             AddSuffix("SURFACESPEED", new Suffix<double>(() => Vessel.horizontalSrfSpeed));
             AddSuffix("AIRSPEED", new Suffix<double>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude,"the velocity of the vessel relative to the air"));
-            AddSuffix(new[] {"SHIPNAME", "NAME"}, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel));
-            AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel));
+            AddSuffix(new[] {"SHIPNAME", "NAME"}, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
+            AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
             AddSuffix("TERMVELOCITY", new Suffix<double>(() => VesselUtils.GetTerminalVelocity(Vessel)));
             AddSuffix("LOADED", new Suffix<bool>(() => Vessel.loaded));
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
-            AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass()));
-            AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass));
+            AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
+            AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass, "The Ship's mass when full"));
 
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
