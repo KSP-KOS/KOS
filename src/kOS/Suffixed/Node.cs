@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
@@ -54,6 +55,10 @@ namespace kOS.Suffixed
         public void AddToVessel(Vessel v)
         {
             if (nodeRef != null) throw new Exception("Node has already been added");
+
+            string careerReason;
+            if (! Career.CanMakeNodes(out careerReason))
+                throw new KOSLowTechException("use manuever nodes", careerReason);
 
             vesselRef = v;
             nodeRef = v.patchedConicSolver.AddManeuverNode(time);
@@ -139,6 +144,10 @@ namespace kOS.Suffixed
         public void Remove()
         {
             if (nodeRef == null) return;
+
+            string careerReason;
+            if (! Career.CanMakeNodes(out careerReason))
+                throw new KOSLowTechException("use manuever nodes", careerReason);
 
             nodeLookup.Remove(nodeRef);
 

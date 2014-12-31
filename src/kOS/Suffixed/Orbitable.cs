@@ -207,7 +207,9 @@ namespace kOS.Suffixed
         {
             var list = new ListValue();
             var orb = Orbit;
-            while (true)
+            int index = 0;
+            int highestAllowedIndex = Career.PatchLimit();
+            while (index <= highestAllowedIndex)
             {
                 if (orb == null || (!orb.activePatch))
                 {
@@ -216,6 +218,7 @@ namespace kOS.Suffixed
 
                 list.Add(new OrbitInfo(orb, Shared));
                 orb = orb.nextPatch;
+                ++index;
             }
             return list;
         }

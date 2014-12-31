@@ -444,6 +444,8 @@ namespace kOS.Suffixed.Part
         /// Trigger whatever action the PartModule has attached to this Action, given the kOS name for the action.
         /// Warning - it probably triggers the entire action group that is attached to this action if there is one,
         /// not just the action on this one part.
+        /// <br/><br/>
+        /// NOTE: After kOS 0.15.5, this ability is limited by career progress of the VAB/SPH.
         /// </summary>
         /// <param name="suffixName"></param>
         /// <param name="param">true = activate, false = de-activate</param>
@@ -452,6 +454,9 @@ namespace kOS.Suffixed.Part
             BaseAction act = GetAction(suffixName);
             if (act==null)
                 throw new KOSLookupFailException( "ACTION", suffixName, this);
+            string careerReason;
+            if (! Career.CanDoActions(out careerReason))
+                throw new KOSLowTechException("use :DOACTION", careerReason);
             act.Invoke( new KSPActionParam( act.actionGroup, (param ? KSPActionType.Activate : KSPActionType.Deactivate) ));
         }
     }
