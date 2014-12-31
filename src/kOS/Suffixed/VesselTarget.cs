@@ -3,6 +3,7 @@ using System.Linq;
 using kOS.Binding;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
@@ -42,6 +43,10 @@ namespace kOS.Suffixed
         /// <returns>The position as a user-readable Vector in Shared.Vessel-origin raw rotation coordinates.</returns>
         override public Vector GetPositionAtUT(TimeSpan timeStamp)
         {
+            string blockingTech;
+            if (! Career.CanMakeNodes(out blockingTech))
+                throw new KOSLowTechException("use POSITIONAT on a vessel", blockingTech);
+
             double desiredUT = timeStamp.ToUnixStyleTime();
 
             Orbit patch = GetOrbitAtUT( desiredUT );
@@ -76,6 +81,10 @@ namespace kOS.Suffixed
         /// <returns>The orbit/surface velocity pair as a user-readable Vector in raw rotation coordinates.</returns>
         override public OrbitableVelocity GetVelocitiesAtUT(TimeSpan timeStamp)
         {
+            string blockingTech;
+            if (! Career.CanMakeNodes(out blockingTech))
+                throw new KOSLowTechException("use VELOCITYAT on a vessel", blockingTech);
+
             double desiredUT = timeStamp.ToUnixStyleTime();
 
             Orbit patch = GetOrbitAtUT( desiredUT );
