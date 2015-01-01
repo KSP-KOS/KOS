@@ -63,90 +63,6 @@ namespace kOS.Utilities
                    IsValidNumber(quaternion.w);
         }
 
-        public static double ProspectForResource(string resourceName, List<Part> engines)
-        {
-            var visited = new List<Part>();
-
-            IEnumerable<FuelLine> lines;
-            if (engines.Count > 0)
-            {
-                // The recursive algorithm is written to assume all the engines are on
-                // the same vessel, so just use one of the engines to get the vessel:
-                lines = engines[0].vessel.parts.OfType<FuelLine>();
-            }
-            else
-            {
-                // Uhh... no engines in engine list - no point in doing the work.
-                return 0.0;
-            }
-            return engines.Sum(part => ProspectForResource(resourceName, part, lines, 0, ref visited));
-        }
-
-        public static double ProspectForResource(string resourceName, Part engine)
-        {
-            var visited = new List<Part>();
-
-            IEnumerable<FuelLine> lines = engine.vessel.parts.OfType<FuelLine>();
-
-            return ProspectForResource(resourceName, engine, lines, 0, ref visited);
-        }
-
-        public static double ProspectForResource(string resourceName, Part part, IEnumerable<FuelLine> lines, int rDepth, ref List<Part> visited)
-        {
-#pragma warning disable 162
-            const bool DEBUG_WALK = false; // set to true to enable the logging of the recursive walk.
-            var indent = new String(',', rDepth);
-
-            if (DEBUG_WALK) Debug.Log(indent + "ProspectForResource( " + resourceName + ", " + part.uid() + ":" + part.name + ", ...)");
-            double ret = 0;
-
-            if (visited.Contains(part))
-            {
-                if (DEBUG_WALK) Debug.Log(indent + "- Already visited, truncate recurse branch here.");
-                return 0;
-            }
-
-            visited.Add(part);
-
-            foreach (PartResource resource in part.Resources)
-            {
-                if (String.Equals(resource.resourceName, resourceName, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    ret += resource.amount;
-                }
-            }
-
-            foreach (var attachNode in GetActualAttachedNodes(part))
-            {
-                if (DEBUG_WALK) Debug.Log(indent + "- AttachNode " + attachNode.id);
-                if (!attachNode.ResourceXFeed) continue;
-
-                if (DEBUG_WALK) Debug.Log(indent + "- - It is an xfeed-able attachnode.");
-                if (attachNode.attachedPart == null || (!attachNode.attachedPart.fuelCrossFeed)) continue;
-
-                if (DEBUG_WALK) Debug.Log(indent + "- - AttachNode's other part allows crossfeed in general.");
-                if (part.NoCrossFeedNodeKey.Length > 0 && attachNode.id.Contains(part.NoCrossFeedNodeKey)) continue;
-
-                if (DEBUG_WALK) Debug.Log(indent + "- - This part allows crossfeed through specifically through this AttachNode.");
-                if (attachNode.attachedPart.NoCrossFeedNodeKey.Length > 0 && attachNode.id.Contains(attachNode.attachedPart.NoCrossFeedNodeKey)) continue;
-
-                if (DEBUG_WALK) Debug.Log(indent + "- -  Part on other side allows flow specifically through this AttachNode.");
-                ret += ProspectForResource(resourceName, attachNode.attachedPart, lines, rDepth + 1, ref visited);
-            }
-
-            // Fuel lines have to be handled specially because they are not in the normal parts tree
-            // and are not connected via AttachNodes:
-            foreach (var fuelLine in lines.Where(fuelLine => part == fuelLine.target && fuelLine.fuelLineOpen && fuelLine.fuelCrossFeed))
-            {
-                if (DEBUG_WALK) Debug.Log(indent + "- Part is target of a fuel line, traversing fuel line upstream.");
-                ret += ProspectForResource(resourceName, fuelLine.parent, lines, rDepth + 1, ref visited);
-            }
-
-            if (DEBUG_WALK) Debug.Log(indent + "Sum from this branch of the recurse tree is " + ret);
-            return ret;
-#pragma warning restore 162
-        }
-
         /// <summary>
         /// Gets the *actual* list of attachnodes for a part.  Use as a replacement
         /// for the KSP API property part.attachNodes because that doesn't seem to
@@ -277,15 +193,15 @@ namespace kOS.Utilities
             {
                 return "Number";
             }
-            else if (type.IsSubclassOf(typeof(Boolean)))
+            if (type.IsSubclassOf(typeof(Boolean)))
             {
                 return "Boolean";
             }
-            else if (type.IsSubclassOf(typeof(String)))
+            if (type.IsSubclassOf(typeof(String)))
             {
                 return "String";
             }
-            else if (type.IsSubclassOf(typeof(Safe.Encapsulation.Structure)) )
+            if (type.IsSubclassOf(typeof(Safe.Encapsulation.Structure)) )
             {
                 // If it's one of our suffixed Types, then
                 // first chop it down to just the lastmost term
@@ -300,11 +216,8 @@ namespace kOS.Utilities
 
                 return name;
             }
-            else // fallback to use the System's native type name:
-            {
-                return type.Name;
-            }
-                
+            // fallback to use the System's native type name:
+            return type.Name;
         }
 
         /// <summary>
@@ -334,6 +247,18 @@ namespace kOS.Utilities
 
             return codeFragment.Aggregate(string.Empty, (current, s) => current + (s + "\n"));
         }
-                
+
+        public static double ProspectForResource(Vessel.ActiveResource resource, List<Part> activeEngines)
+        {
+            double toReturn = 0.0;
+            foreach (var activeEngine in activeEngines)
+            {
+                var attachedResources = new List<PartResource>();
+                activeEngine.GetConnectedResources(resource.info.id,resource.info.resourceFlowMode, attachedResources);
+
+                toReturn += attachedResources.Sum(ar => ar.amount);
+            }
+            return toReturn;
+        }
     }
 }

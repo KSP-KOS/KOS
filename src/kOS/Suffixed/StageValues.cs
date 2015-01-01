@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Utilities;
 
@@ -21,7 +22,8 @@ namespace kOS.Suffixed
         private object GetResourceOfCurrentStage(string resourceName)
         {
             var activeEngines = VesselUtils.GetListOfActivatedEngines(vessel);
-            var total = Utils.ProspectForResource(resourceName, activeEngines);
+            var resource = vessel.GetActiveResources().First(r => r.info.name == resourceName);
+            var total = Utils.ProspectForResource(resource, activeEngines);
             return Math.Round(total, 2);
         }
 
