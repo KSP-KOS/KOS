@@ -26,29 +26,27 @@ namespace kOS.Module
                 EditorFacility whichEditor = EditorLogic.fetch.ship.shipFacility;
                 if (!(Career.CanTagInEditor(whichEditor)))
                 {
-                    ScreenMessages.PostScreenMessage("The "+whichEditor.ToString()+" requires an upgrade to assign name tags",
-                                                     6,
-                                                     ScreenMessageStyle.UPPER_CENTER);
+                    var formattedString = string.Format("The {0} requires an upgrade to assign name tags", whichEditor);
+                    ScreenMessages.PostScreenMessage(formattedString, 6, ScreenMessageStyle.UPPER_CENTER);
                     return;
                 }
             }
-            GameObject gObj = new GameObject("nametag", typeof(KOSNameTagWindow) );
+            GameObject gObj = new GameObject("nametag", typeof(KOSNameTagWindow));
             DontDestroyOnLoad(gObj);
             typingWindow = (KOSNameTagWindow)gObj.GetComponent(typeof(KOSNameTagWindow));
-            typingWindow.Invoke(this,nameTag);
+            typingWindow.Invoke(this, nameTag);
         }
-        
+
         public void TypingDone(string newValue)
         {
             nameTag = newValue;
             TypingCancel();
         }
-        
+
         public void TypingCancel()
         {
             typingWindow.Close();
             typingWindow = null;
         }
-        
     }
 }

@@ -58,7 +58,7 @@ namespace kOS.Suffixed
 
             string careerReason;
             if (! Career.CanMakeNodes(out careerReason))
-                throw new KOSLowTechException("use manuever nodes", careerReason);
+                throw new KOSLowTechException("use maneuver nodes", careerReason);
 
             vesselRef = v;
             nodeRef = v.patchedConicSolver.AddManeuverNode(time);
@@ -147,7 +147,7 @@ namespace kOS.Suffixed
 
             string careerReason;
             if (! Career.CanMakeNodes(out careerReason))
-                throw new KOSLowTechException("use manuever nodes", careerReason);
+                throw new KOSLowTechException("use maneuver nodes", careerReason);
 
             nodeLookup.Remove(nodeRef);
 
@@ -185,7 +185,7 @@ namespace kOS.Suffixed
 
         private void UpdateValues()
         {
-            // If this node is attached, and the values on the attached node have chaged, I need to reflect that
+            // If this node is attached, and the values on the attached node have changed, I need to reflect that
             if (nodeRef == null) return;
 
             time = nodeRef.UT;

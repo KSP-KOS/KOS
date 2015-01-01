@@ -8,13 +8,13 @@ namespace kOS.Suffixed
     {
         static Career()
         {
-            AddGlobalSuffix<Career>("CANTRACKOBJECTS", new StaticSuffix<bool>(() => CanTrackObjects(),
+            AddGlobalSuffix<Career>("CANTRACKOBJECTS", new StaticSuffix<bool>(CanTrackObjects,
                                                                               "Can the Tracking Center track small space objects (asteroids)?"));
-            AddGlobalSuffix<Career>("PATCHLIMIT", new StaticSuffix<int>(() => PatchLimit(),
+            AddGlobalSuffix<Career>("PATCHLIMIT", new StaticSuffix<int>(PatchLimit,
                                                                         "The Tracking Center's orbit patch prediction limit (an integer)"));
-            AddGlobalSuffix<Career>("CANMAKENODES", new StaticSuffix<bool>(() => CanMakeNodes(),
+            AddGlobalSuffix<Career>("CANMAKENODES", new StaticSuffix<bool>(CanMakeNodes,
                                                                            "Can the Mission Control support maneuver nodes yet?"));
-            AddGlobalSuffix<Career>("CANDOACTIONS", new StaticSuffix<bool>(() => CanDoActions(),
+            AddGlobalSuffix<Career>("CANDOACTIONS", new StaticSuffix<bool>(CanDoActions,
                                                                            "Can either the VAB or SPH allow custom action groups? " +
                                                                            "If either one allows it, then you are allowed to call " +
                                                                            "the :DOACTION suffix of a PartModule." ));
@@ -28,8 +28,8 @@ namespace kOS.Suffixed
         public static bool CanTrackObjects(out string reason)
         {
             reason = "tracking station building";
-            float building_level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation);
-            return GameVariables.Instance.UnlockedSpaceObjectDiscovery(building_level);
+            float buildingLevel = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation);
+            return GameVariables.Instance.UnlockedSpaceObjectDiscovery(buildingLevel);
             
             // TODO: This isn't really being used anywhere yet because it's supposed to apply to the ability to track
             // and name asteroids.  So far I don't know yet where that would be used in kOS.  I guess it might be
@@ -56,8 +56,8 @@ namespace kOS.Suffixed
         public static int PatchLimit(out string reason)
         {
             reason = "tracking station building";
-            float building_level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation);
-            return GameVariables.Instance.GetPatchesAheadLimit(building_level);
+            float buildingLevel = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation);
+            return GameVariables.Instance.GetPatchesAheadLimit(buildingLevel);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace kOS.Suffixed
         }
 
         /// <summary>
-        /// Detect whether mission control is capable of manuever node creation yet.
+        /// Detect whether mission control is capable of maneuver node creation yet.
         /// </summary>
         /// <param name="reason">returns a string describing what would need upgrading to change the answer.</param>
         /// <returns>true if it can. false if it cannot.</returns>
@@ -80,10 +80,10 @@ namespace kOS.Suffixed
         {
             // This one is a weird check.  It requires TWO building conditions, as far as I can tell:
             reason = "mission control building";
-            float building_level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl);
-            if (! GameVariables.Instance.UnlockedFlightPlanning(building_level))
+            float buildingLevel = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl);
+            if (! GameVariables.Instance.UnlockedFlightPlanning(buildingLevel))
                 return false;
-            return (PatchLimit(out reason) > 0); // if the tracking center isn't good enough then that ALSO prevents manuever nodes.
+            return (PatchLimit(out reason) > 0); // if the tracking center isn't good enough then that ALSO prevents maneuver nodes.
         }
 
         /// <summary>
@@ -105,10 +105,10 @@ namespace kOS.Suffixed
         /// <returns>true if it can. false if it cannot.</returns>
         public static bool CanDoActions(out string reason)
         {
-            reason = "vehicle assembly building or spaceplane hangar";
-            float building_level = Math.Max(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding),
+            reason = "vehicle assembly building or space plane hangar";
+            float buildingLevel = Math.Max(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding),
                                             ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar));
-            return GameVariables.Instance.UnlockedActionGroupsCustom(building_level);
+            return GameVariables.Instance.UnlockedActionGroupsCustom(buildingLevel);
         }
 
         /// <summary>
@@ -134,23 +134,23 @@ namespace kOS.Suffixed
         /// <returns>true if it can. false if it cannot.</returns>
         public static bool CanTagInEditor(EditorFacility whichEditor, out string reason)
         {
-            float building_level;
+            float buildingLevel;
             switch (whichEditor)
             {
                 case EditorFacility.VAB:
                     reason = "vehicle assembly building";
-                    building_level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
+                    buildingLevel = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                     break;
                 case EditorFacility.SPH:
-                    reason = "spaceplane hangar";
-                    building_level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar);
+                    reason = "space plane hangar";
+                    buildingLevel = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar);
                     break;
                 default:
                     reason = "unknown editor building";
                     return false; // not even sure how you could get here.
             }
             // We'll attach it to the same point where the game starts unlocking basic action groups:
-            return GameVariables.Instance.UnlockedActionGroupsStock(building_level);
+            return GameVariables.Instance.UnlockedActionGroupsStock(buildingLevel);
         }
 
         /// <summary>
