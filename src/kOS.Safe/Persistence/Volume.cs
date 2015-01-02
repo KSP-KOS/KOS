@@ -46,7 +46,7 @@ namespace kOS.Safe.Persistence
             AddSuffix("CAPACITY" , new Suffix<float>(() => Capacity));
             AddSuffix("NAME" , new Suffix<string>(() => Name));
             AddSuffix("RENAMEABLE" , new Suffix<string>(() => Name));
-            AddSuffix("FILES" , new Suffix<ListValue>(() => ListValue.CreateList(GetFileList())));
+            AddSuffix("FILES" , new Suffix<ListValue<FileInfo>>(() => new ListValue<FileInfo>(GetFileList())));
             AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
         }
 
@@ -176,7 +176,7 @@ namespace kOS.Safe.Persistence
         
         private int FileInfoComparer(FileInfo a, FileInfo b)
         {
-            return String.Compare(a.Name,b.Name);
+            return String.CompareOrdinal(a.Name, b.Name);
         }
 
         public virtual float RequiredPower()

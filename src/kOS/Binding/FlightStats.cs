@@ -29,7 +29,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("SHIP", () => new VesselTarget(shared));
             shared.BindingMgr.AddGetter("ACTIVESHIP", () => new VesselTarget(FlightGlobals.ActiveVessel, shared));
             shared.BindingMgr.AddGetter("STATUS", () => shared.Vessel.situation.ToString());
-            shared.BindingMgr.AddGetter("STAGE", () => new StageValues(shared.Vessel));
+            shared.BindingMgr.AddGetter("STAGE", () => new StageValues(shared));
 
             //DEPRICATED VESSELNAME
             shared.BindingMgr.AddSetter("VESSELNAME",

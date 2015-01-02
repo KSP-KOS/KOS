@@ -62,17 +62,16 @@ namespace kOS.Safe.Test
             var length = InvokeDelegate(list, "LENGTH");
             Assert.AreEqual(4,length);
 
-            IIndexable indexable = list;
-            Assert.AreSame(zedObject, indexable.GetIndex(0));
-            Assert.AreSame(firstObject, indexable.GetIndex(1));
-            Assert.AreSame(secondObject, indexable.GetIndex(2));
-            Assert.AreSame(thirdObject, indexable.GetIndex(3));
-            Assert.AreNotSame(indexable.GetIndex(0),indexable.GetIndex(1));
-            Assert.AreNotSame(indexable.GetIndex(0),indexable.GetIndex(2));
-            Assert.AreNotSame(indexable.GetIndex(0),indexable.GetIndex(3));
-            Assert.AreNotSame(indexable.GetIndex(1),indexable.GetIndex(2));
-            Assert.AreNotSame(indexable.GetIndex(1),indexable.GetIndex(3));
-            Assert.AreNotSame(indexable.GetIndex(2),indexable.GetIndex(3));
+            Assert.AreSame(zedObject, list[0]);
+            Assert.AreSame(firstObject, list[1]);
+            Assert.AreSame(secondObject, list[2]);
+            Assert.AreSame(thirdObject, list[3]);
+            Assert.AreNotSame(list[0],list[1]);
+            Assert.AreNotSame(list[0],list[2]);
+            Assert.AreNotSame(list[0],list[3]);
+            Assert.AreNotSame(list[1],list[2]);
+            Assert.AreNotSame(list[1],list[3]);
+            Assert.AreNotSame(list[2],list[3]);
         }
 
         [Test]

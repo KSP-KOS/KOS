@@ -43,7 +43,7 @@ namespace kOS.Suffixed.Part
             AddSuffix(new [] {"MODULES","ALLMODULES"}, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
             AddSuffix("PARENT", new Suffix<PartValue>(() => PartValueFactory.Construct(Part.parent,shared), "The parent part of this part"));
             AddSuffix("HASPARENT", new Suffix<bool>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
-            AddSuffix("CHILDREN", new Suffix<ListValue>(() => PartValueFactory.Construct(Part.children, shared), "A LIST() of the children parts of this part"));
+            AddSuffix("CHILDREN", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(Part.children, shared), "A LIST() of the children parts of this part"));
             AddSuffix("DRYMASS", new Suffix<float>(Part.GetDryMass, "The Part's mass when empty"));
             AddSuffix("MASS", new Suffix<float>(Part.CalculateCurrentMass, "The Part's current mass"));
             AddSuffix("WETMASS", new Suffix<float>(Part.GetWetMass, "The Part's mass when full"));
