@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using kOS.Module;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
@@ -160,6 +161,16 @@ namespace kOS.Suffixed.Part
         public static bool operator !=(PartValue left, PartValue right)
         {
             return !Equals(left, right);
+        }
+
+        public static SuffixedList<PartValue> PartsToList(IEnumerable<global::Part> parts, SharedObjects shared)
+        {
+            var toReturn = new SuffixedList<PartValue>();
+            foreach (var part in parts)
+            {
+                toReturn.Add(new PartValue(part, shared));
+            }
+            return toReturn;
         }
     }
 }
