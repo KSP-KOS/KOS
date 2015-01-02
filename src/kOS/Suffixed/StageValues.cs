@@ -21,10 +21,8 @@ namespace kOS.Suffixed
 
         private object GetResourceOfCurrentStage(string resourceName)
         {
-            var activeEngines = VesselUtils.GetListOfActivatedEngines(vessel);
             var resource = vessel.GetActiveResources().First(r => r.info.name == resourceName);
-            var total = Utils.ProspectForResource(resource, activeEngines);
-            return Math.Round(total, 2);
+            return Math.Round(resource.amount, 2);
         }
 
         public override string ToString()
