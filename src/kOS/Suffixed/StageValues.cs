@@ -18,17 +18,17 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("RESOURCES", new Suffix<SuffixedList<AggregateResourceValue>>(GetResourceManifest));
+            AddSuffix("RESOURCES", new Suffix<SuffixedList<ActiveResourceValue>>(GetResourceManifest));
         }
 
-        private SuffixedList<AggregateResourceValue> GetResourceManifest()
+        private SuffixedList<ActiveResourceValue> GetResourceManifest()
         {
             var resources = shared.Vessel.GetActiveResources();
-            var toReturn = new SuffixedList<AggregateResourceValue>();
+            var toReturn = new SuffixedList<ActiveResourceValue>();
 
             foreach (var resource in resources)
             {
-                toReturn.Add(new AggregateResourceValue(resource, shared));
+                toReturn.Add(new ActiveResourceValue(resource, shared));
             }
 
             return toReturn;
@@ -47,11 +47,7 @@ namespace kOS.Suffixed
 
         private double? GetResourceOfCurrentStage(string resourceName)
         {
-            Safe.Utilities.Debug.Logger.Log("GetResourceOfCurrentStage: " + resourceName);
-            var resource = shared.Vessel.GetActiveResources().FirstOrDefault(r => r.info.name == resourceName);
-
-            Safe.Utilities.Debug.Logger.Log("GetResourceOfCurrentStage: " + resourceName);
-
+            var resource = shared.Vessel.GetActiveResources().FirstOrDefault(r => string.Equals(r.info.name, resourceName, StringComparison.OrdinalIgnoreCase));
             return resource == null ? null : (double?) Math.Round(resource.amount, 2);
         }
 

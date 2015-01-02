@@ -7,7 +7,6 @@ namespace kOS.Suffixed
 {
     public class AggregateResourceValue : Structure
     {
-        private readonly Vessel.ActiveResource activeResource;
         private readonly string name;
         private readonly SharedObjects shared;
         private double amount;
@@ -30,21 +29,6 @@ namespace kOS.Suffixed
             AddSuffix("AMOUNT", new Suffix<double>(() => amount));
             AddSuffix("CAPICITY", new Suffix<double>(() => capacity));
             AddSuffix("PARTS", new Suffix<SuffixedList<PartValue>>(() => parts));
-        }
-
-        public AggregateResourceValue(Vessel.ActiveResource activeResource, SharedObjects shared)
-        {
-            this.activeResource = activeResource;
-            this.shared = shared;
-            InitializeActiveResourceSuffixes();
-        }
-
-        private void InitializeActiveResourceSuffixes()
-        {
-            AddSuffix("NAME", new Suffix<string>(() => activeResource.info.name));
-            AddSuffix("AMOUNT", new Suffix<double>(() => activeResource.amount));
-            AddSuffix("CAPICITY", new Suffix<double>(() => activeResource.maxAmount));
-            AddSuffix("PARTS", new Suffix<SuffixedList<PartValue>>(() => PartValue.PartsToList(activeResource.parts, shared)));
         }
 
         public void AddResource(PartResource resource)
