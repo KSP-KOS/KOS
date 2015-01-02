@@ -9,7 +9,7 @@ using System.Text;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class ListValue<T> : Structure, IList<T>
+    public class ListValue<T> : Structure, IList<T> 
     {
         private readonly IList<T> internalList;
 
@@ -92,17 +92,17 @@ namespace kOS.Safe.Encapsulation
 
         private void ListInitializeSuffixes()
         {
-            AddSuffix("ADD", new OneArgsSuffix<T>(toAdd => internalList.Add(toAdd), Resources.ListAddDescription));
-            AddSuffix("INSERT", new TwoArgsSuffix<int, T>((index, toAdd) => internalList.Insert(index, toAdd)));
-            AddSuffix("REMOVE", new OneArgsSuffix<int>(toRemove => internalList.RemoveAt(toRemove)));
-            AddSuffix("CLEAR", new NoArgsSuffix(() => internalList.Clear()));
-            AddSuffix("LENGTH", new NoArgsSuffix<int>(() => internalList.Count));
-            AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>(() => new Enumerator(internalList.GetEnumerator())));
-            AddSuffix("COPY", new NoArgsSuffix<ListValue<T>>(() => new ListValue<T>(this)));
-            AddSuffix("CONTAINS", new OneArgsSuffix<bool, T>(item => internalList.Contains(item)));
-            AddSuffix("SUBLIST", new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
-            AddSuffix("EMPTY", new NoArgsSuffix<bool>(() => !internalList.Any()));
-            AddSuffix("DUMP", new NoArgsSuffix<string>(ListDumpDeep));
+            AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => internalList.Add(toAdd), Resources.ListAddDescription));
+            AddSuffix("INSERT",   new TwoArgsSuffix<int, T>             ((index, toAdd) => internalList.Insert(index, toAdd)));
+            AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => internalList.RemoveAt(toRemove)));
+            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => internalList.Clear()));
+            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => internalList.Count));
+            AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>          (() => new Enumerator(internalList.GetEnumerator())));
+            AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
+            AddSuffix("CONTAINS", new OneArgsSuffix<bool, T>            (item => internalList.Contains(item)));
+            AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
+            AddSuffix("EMPTY",    new NoArgsSuffix<bool>                (() => !internalList.Any()));
+            AddSuffix("DUMP",     new NoArgsSuffix<string>              (ListDumpDeep));
         }
 
         // This test case was added to ensure there was an example method with more than 1 argument.
@@ -145,7 +145,6 @@ namespace kOS.Safe.Encapsulation
         // TODO: find a better way later to track the nesting level through all the messy
         // calls of nested objects' ToStrings.
         private static int currentNestDepth;
-
         private static int maxVerboseDepth;
 
         public override string ToString()
@@ -262,6 +261,11 @@ namespace kOS.Safe.Encapsulation
             }
             --currentNestDepth;
             return contents.ToString();
+        }
+
+        public static ListValue<T> CreateList<TU>(IEnumerable<TU> list)
+        {
+            return new ListValue<T>(list.Cast<T>());
         }
     }
 

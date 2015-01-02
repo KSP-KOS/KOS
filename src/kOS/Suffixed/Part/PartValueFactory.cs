@@ -1,32 +1,21 @@
-﻿/*
- * Created by SharpDevelop.
- * User: Dunbaratu
- * Date: 11/5/2014
- * Time: 3:13 AM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed.Part
 {
-    /// <summary>
-    /// Description of PartValueFactory.
-    /// </summary>
     public class PartValueFactory 
     {
         public static ListValue Construct(IEnumerable<global::Part> parts, SharedObjects shared)
         {
-            var list = new List<PartValue>();
-            foreach (var part in parts)
-            {
-                list.Add(Construct(part, shared));
-            }
-            return ListValue.CreateList(list);
+            var partList = parts.Select(part => Construct(part, shared)).ToList();
+            return ListValue.CreateList(partList);
+        } 
+
+        public static ListValue<PartValue> ConstructGeneric(IEnumerable<global::Part> parts, SharedObjects shared)
+        {
+            var partList = parts.Select(part => Construct(part, shared)).ToList();
+            return ListValue<PartValue>.CreateList(partList);
         } 
 
         public static PartValue Construct(global::Part part, SharedObjects shared)

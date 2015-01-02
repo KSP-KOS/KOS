@@ -11,7 +11,7 @@ namespace kOS.Suffixed
         private readonly SharedObjects shared;
         private double amount;
         private double capacity;
-        private readonly SuffixedList<PartValue> parts;
+        private readonly ListValue<PartValue> parts;
 
         public AggregateResourceValue(string name, SharedObjects shared)
         {
@@ -19,7 +19,7 @@ namespace kOS.Suffixed
             this.shared = shared;
             amount = 0;
             capacity = 0;
-            parts = new SuffixedList<PartValue>();
+            parts = new ListValue<PartValue>();
             InitializeAggregateResourceSuffixes();
         }
 
@@ -28,7 +28,7 @@ namespace kOS.Suffixed
             AddSuffix("NAME", new Suffix<string>(() => name));
             AddSuffix("AMOUNT", new Suffix<double>(() => amount));
             AddSuffix("CAPICITY", new Suffix<double>(() => capacity));
-            AddSuffix("PARTS", new Suffix<SuffixedList<PartValue>>(() => parts));
+            AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => parts));
         }
 
         public void AddResource(PartResource resource)

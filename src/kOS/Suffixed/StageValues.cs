@@ -18,13 +18,13 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("RESOURCES", new Suffix<SuffixedList<ActiveResourceValue>>(GetResourceManifest));
+            AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
         }
 
-        private SuffixedList<ActiveResourceValue> GetResourceManifest()
+        private ListValue<ActiveResourceValue> GetResourceManifest()
         {
             var resources = shared.Vessel.GetActiveResources();
-            var toReturn = new SuffixedList<ActiveResourceValue>();
+            var toReturn = new ListValue<ActiveResourceValue>();
 
             foreach (var resource in resources)
             {

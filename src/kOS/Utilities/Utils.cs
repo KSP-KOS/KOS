@@ -247,18 +247,5 @@ namespace kOS.Utilities
 
             return codeFragment.Aggregate(string.Empty, (current, s) => current + (s + "\n"));
         }
-
-        public static double ProspectForResource(Vessel.ActiveResource resource, List<Part> activeEngines)
-        {
-            double toReturn = 0.0;
-            foreach (var activeEngine in activeEngines)
-            {
-                var attachedResources = new List<PartResource>();
-                activeEngine.GetConnectedResources(resource.info.id,resource.info.resourceFlowMode, attachedResources);
-
-                toReturn += attachedResources.Sum(ar => ar.amount);
-            }
-            return toReturn;
-        }
     }
 }

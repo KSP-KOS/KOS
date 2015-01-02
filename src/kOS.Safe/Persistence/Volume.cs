@@ -46,7 +46,7 @@ namespace kOS.Safe.Persistence
             AddSuffix("CAPACITY" , new Suffix<float>(() => Capacity));
             AddSuffix("NAME" , new Suffix<string>(() => Name));
             AddSuffix("RENAMEABLE" , new Suffix<string>(() => Name));
-            AddSuffix("FILES" , new Suffix<SuffixedList<FileInfo>>(() => new SuffixedList<FileInfo>(GetFileList())));
+            AddSuffix("FILES" , new Suffix<ListValue<FileInfo>>(() => new ListValue<FileInfo>(GetFileList())));
             AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
         }
 
