@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
@@ -65,6 +66,25 @@ namespace kOS.Suffixed
                 list.Add(resource.Value);
             }
             return list;
+        }
+
+        public static ListValue<AggregateResourceValue> FromVessel(Vessel vessel, SharedObjects shared)
+        {
+            var resources = new Dictionary<string, AggregateResourceValue>();
+
+            foreach (var resource in vessel.parts.SelectMany(part => part.Resources.list))
+            {
+                AggregateResourceValue resourceValue;
+                if (resources.TryGetValue(resource.name, out resourceValue))
+                {
+                    resourceValue.AddResource(resource);
+                }
+                else
+                {
+                    resources.Add(resource.name, new AggregateResourceValue(resource.name, shared));
+                }
+            }
+            return ListValue<AggregateResourceValue>.CreateList(resources.Values);
         }
     }
 }
