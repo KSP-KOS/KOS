@@ -1,6 +1,37 @@
 kOS Mod Changelog
 =================
 
+# v0.15.5
+The KSP 0.90 compatibility release.
+(The full thematic following of KSP 0.90's new way of
+thinking will come in a future version. This is just
+to make sure everything works.)
+
+###BREAKING CHANGES
+* 
+
+###New Stuff
+* Thanks to a new dev team volunteer (username theodoregoetz on github), we have a new, much better and cleaner looking [documentation site](http://ksp-kos.github.io/KOS/)
+* Better flight input handling to detect the pilot controls and keep them isolated.
+* "plays nice" with other autopilots a bit better, using KSP 0.90's new autopiloting hooks.
+* Ability to read [more data about a ship resource](TODO - Are these in the docs?  Put URL here if so.) TODO:  i.e. SingleResourceValue:FLOWMODE, for example - see PR #452)
+* New [suffixes to handle directions better](http://ksp-kos.github.io/KOS/math/direction.html) as mentioned in [long detail in this video](https://www.youtube.com/watch?v=7byYiZZBBVc)
+* Separate Dry Mass, Wet Mass, and Current Mass readings for parts and for the vessel as a whole (TODO: Link here, but the public gh-pages hasn't be regenned yet so I don't know the link yet)
+* Now respects the limitations of [0.90 career mode upgrades](http://ksp-kos.github.io/KOS/general/career_limits.html).
+*
+
+###Bug Fixes
+* Better handling of range checking and loading the boot file when remotetech is installed (thanks to hvacengi for this contribution)
+* Boot file overwrite fix (thanks to pakrym)
+* (For developers) fixed compile error on UNIX platforms that was due to filename case-sensitivity differences.
+* LOG command to the Archive now appends to the file properly instead of rewriting the entire contents each time just to tack on one line.  It is now possible to read its output from outside KSP using a tool like the UNIX "tail -f" program.
+* Better calculations of stage resource values, using SQUAD'S provided API for it instead of trying to walk the tree ourselves (which broke in 0.90).
+
+###Small maintenence issues
+* Bundling a newer version of ModuleManager
+* Better use of the "skin" system for the app panel.  Should see no obvious effect on the surface.
+
+
 # v0.15.4
 ###BREAKING CHANGES
 * Issue #431: SHIP:ANGULARMOMENTUM and SHIP:ANGULARVEL have been changed from directions to vectors to me more consistant with their nature
