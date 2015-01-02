@@ -81,7 +81,10 @@ namespace kOS.Suffixed
                 }
                 else
                 {
-                    resources.Add(resource.info.name, new AggregateResourceValue(resource.info.name, shared));
+                    var newResource = new AggregateResourceValue(resource.info.name, shared);
+                    newResource.AddResource(resource);
+
+                    resources.Add(resource.info.name, newResource);
                 }
             }
             return ListValue<AggregateResourceValue>.CreateList(resources.Values);
