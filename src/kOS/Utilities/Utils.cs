@@ -202,32 +202,32 @@ namespace kOS.Utilities
             // causes this next block of code.  It's starting off theSkin as a deep
             // copy of HighLogic.Skin, at least as much as it can:
             //
-            return new GUISkin
-            {
-                // This is literally every GUISTyle mentioned in Unity's documention for
-                // GUISkin, as of 11/11/2014.  If Unity updates these, we could be screwed:
-                //
-                box = new GUIStyle(toCopy.box),
-                button = new GUIStyle(toCopy.button),
-                horizontalScrollbar = new GUIStyle(toCopy.horizontalScrollbar),
-                horizontalScrollbarLeftButton = new GUIStyle(toCopy.horizontalScrollbarLeftButton),
-                horizontalScrollbarRightButton = new GUIStyle(toCopy.horizontalScrollbarRightButton),
-                horizontalScrollbarThumb = new GUIStyle(toCopy.horizontalScrollbarThumb),
-                horizontalSlider = new GUIStyle(toCopy.horizontalSlider),
-                horizontalSliderThumb = new GUIStyle(toCopy.horizontalSliderThumb),
-                label = new GUIStyle(toCopy.label),
-                scrollView = new GUIStyle(toCopy.scrollView),
-                textArea = new GUIStyle(toCopy.textArea),
-                textField = new GUIStyle(toCopy.textField),
-                toggle = new GUIStyle(toCopy.toggle),
-                verticalScrollbar = new GUIStyle(toCopy.verticalScrollbar),
-                verticalScrollbarDownButton = new GUIStyle(toCopy.verticalScrollbarDownButton),
-                verticalScrollbarThumb = new GUIStyle(toCopy.verticalScrollbarThumb),
-                verticalScrollbarUpButton = new GUIStyle(toCopy.verticalScrollbarUpButton),
-                verticalSlider = new GUIStyle(toCopy.verticalSlider),
-                verticalSliderThumb = new GUIStyle(toCopy.verticalSliderThumb),
-                window = new GUIStyle(toCopy.window),
-            };
+            var skin = ScriptableObject.CreateInstance<GUISkin>();
+
+            // This is literally every GUISTyle mentioned in Unity's documention for
+            // GUISkin, as of 11/11/2014.  If Unity updates these, we could be screwed:
+            //
+            skin.box = new GUIStyle(toCopy.box);
+            skin.button = new GUIStyle(toCopy.button);
+            skin.horizontalScrollbar = new GUIStyle(toCopy.horizontalScrollbar);
+            skin.horizontalScrollbarLeftButton = new GUIStyle(toCopy.horizontalScrollbarLeftButton);
+            skin.horizontalScrollbarRightButton = new GUIStyle(toCopy.horizontalScrollbarRightButton);
+            skin.horizontalScrollbarThumb = new GUIStyle(toCopy.horizontalScrollbarThumb);
+            skin.horizontalSlider = new GUIStyle(toCopy.horizontalSlider);
+            skin.horizontalSliderThumb = new GUIStyle(toCopy.horizontalSliderThumb);
+            skin.label = new GUIStyle(toCopy.label);
+            skin.scrollView = new GUIStyle(toCopy.scrollView);
+            skin.textArea = new GUIStyle(toCopy.textArea);
+            skin.textField = new GUIStyle(toCopy.textField);
+            skin.toggle = new GUIStyle(toCopy.toggle);
+            skin.verticalScrollbar = new GUIStyle(toCopy.verticalScrollbar);
+            skin.verticalScrollbarDownButton = new GUIStyle(toCopy.verticalScrollbarDownButton);
+            skin.verticalScrollbarThumb = new GUIStyle(toCopy.verticalScrollbarThumb);
+            skin.verticalScrollbarUpButton = new GUIStyle(toCopy.verticalScrollbarUpButton);
+            skin.verticalSlider = new GUIStyle(toCopy.verticalSlider);
+            skin.verticalSliderThumb = new GUIStyle(toCopy.verticalSliderThumb);
+            skin.window = new GUIStyle(toCopy.window);
+            return skin;
         }
 
         /// <summary>
