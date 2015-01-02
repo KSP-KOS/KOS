@@ -65,6 +65,7 @@
     <Compile Include="Compilation\PseudoNull.cs" />
     <Compile Include="Compilation\Script.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
+    <Compile Include="Encapsulation\Enumerator.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
+    <Compile Include="Encapsulation\SuffixedList.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />

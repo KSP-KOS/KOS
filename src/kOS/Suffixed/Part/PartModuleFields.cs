@@ -340,17 +340,17 @@ namespace kOS.Suffixed.Part
             ListValue fields  = AllFields(FORMATTER);
             ListValue events  = AllEvents(FORMATTER);
             ListValue actions = AllActions(FORMATTER);
-            for (int i = 0; i < fields.Count ; ++i)
+            foreach (object t in fields)
             {
-                all.Add(fields.GetIndex(i));
+                all.Add(t);
             }
-            for (int i = 0; i < events.Count ; ++i)
+            foreach (object t in events)
             {
-                all.Add(events.GetIndex(i));
+                all.Add(t);
             }
-            for (int i = 0; i < actions.Count ; ++i)
+            foreach (object t in actions)
             {
-                all.Add(actions.GetIndex(i));
+                all.Add(t);
             }
             return all;
         }
