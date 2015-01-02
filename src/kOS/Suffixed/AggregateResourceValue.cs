@@ -75,13 +75,13 @@ namespace kOS.Suffixed
             foreach (var resource in vessel.parts.SelectMany(part => part.Resources.list))
             {
                 AggregateResourceValue resourceValue;
-                if (resources.TryGetValue(resource.name, out resourceValue))
+                if (resources.TryGetValue(resource.info.name, out resourceValue))
                 {
                     resourceValue.AddResource(resource);
                 }
                 else
                 {
-                    resources.Add(resource.name, new AggregateResourceValue(resource.name, shared));
+                    resources.Add(resource.info.name, new AggregateResourceValue(resource.info.name, shared));
                 }
             }
             return ListValue<AggregateResourceValue>.CreateList(resources.Values);
