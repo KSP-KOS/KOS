@@ -24,7 +24,7 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :struct:`Control`
     * :struct:`ManeuverNode`
     * :struct:`Engine`
-    * :struct:`Resource`
+    * :struct:`AggregateResource`
     * :struct:`DockingPort`
     * :struct:`Part`
     * :struct:`PartModule`
