@@ -8,7 +8,7 @@ thinking will come in a future version. This is just
 to make sure everything works.)
 
 ###BREAKING CHANGES
-* 
+* Now respects the limitations of [0.90 career mode upgrades](http://ksp-kos.github.io/KOS/general/career_limits.html), which may make a few features not work anymore in career mode until you get further progressed along in your building upgrades.
 
 ###New Stuff
 * Thanks to a new dev team volunteer (username theodoregoetz on github), we have a new, much better and cleaner looking [documentation site](http://ksp-kos.github.io/KOS/)
@@ -17,7 +17,6 @@ to make sure everything works.)
 * Ability to read [more data about a ship resource](TODO - Are these in the docs?  Put URL here if so.) TODO:  i.e. SingleResourceValue:FLOWMODE, for example - see PR #452)
 * New [suffixes to handle directions better](http://ksp-kos.github.io/KOS/math/direction.html) as mentioned in [long detail in this video](https://www.youtube.com/watch?v=7byYiZZBBVc)
 * Separate Dry Mass, Wet Mass, and Current Mass readings for parts and for the vessel as a whole (TODO: Link here, but the public gh-pages hasn't be regenned yet so I don't know the link yet)
-* Now respects the limitations of [0.90 career mode upgrades](http://ksp-kos.github.io/KOS/general/career_limits.html).
 * Added new [WAYPOINT object](http://ksp-kos.github.io/structures/waypoint.html) to help with locations of some contracts.
 * Added new :POSITION and :ALTITUDEPOSITION suffixes to [Geocoordinates](http://ksp-kos.github.io/math/geocoordinates.html) to obtain 3D vectors of their positions in ship-raw coordinate space.
 
