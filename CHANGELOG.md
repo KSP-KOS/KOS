@@ -18,7 +18,8 @@ to make sure everything works.)
 * New [suffixes to handle directions better](http://ksp-kos.github.io/KOS/math/direction.html) as mentioned in [long detail in this video](https://www.youtube.com/watch?v=7byYiZZBBVc)
 * Separate Dry Mass, Wet Mass, and Current Mass readings for parts and for the vessel as a whole (TODO: Link here, but the public gh-pages hasn't be regenned yet so I don't know the link yet)
 * Now respects the limitations of [0.90 career mode upgrades](http://ksp-kos.github.io/KOS/general/career_limits.html).
-*
+* Added new [WAYPOINT object](http://ksp-kos.github.io/structures/waypoint.html) to help with locations of some contracts.
+* Added new :POSITION and :ALTITUDEPOSITION suffixes to [Geocoordinates](http://ksp-kos.github.io/math/geocoordinates.html) to obtain 3D vectors of their positions in ship-raw coordinate space.
 
 ###Bug Fixes
 * Better handling of range checking and loading the boot file when remotetech is installed (thanks to hvacengi for this contribution)
@@ -26,6 +27,7 @@ to make sure everything works.)
 * (For developers) fixed compile error on UNIX platforms that was due to filename case-sensitivity differences.
 * LOG command to the Archive now appends to the file properly instead of rewriting the entire contents each time just to tack on one line.  It is now possible to read its output from outside KSP using a tool like the UNIX "tail -f" program.
 * Better calculations of stage resource values, using SQUAD'S provided API for it instead of trying to walk the tree ourselves (which broke in 0.90).
+* Fixed lonstanding [bug with geocoordinates:TERRAINHEIGHT](https://github.com/KSP-KOS/KOS/issues/478)
 
 ###Small maintenence issues
 * Bundling a newer version of ModuleManager
