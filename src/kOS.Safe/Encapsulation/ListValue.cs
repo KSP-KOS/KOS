@@ -9,7 +9,7 @@ using System.Text;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class ListValue<T> : Structure, IList<T> 
+    public class ListValue<T> : Structure, IList<T>, IIndexable
     {
         private readonly IList<T> internalList;
 
@@ -266,6 +266,16 @@ namespace kOS.Safe.Encapsulation
         public static ListValue<T> CreateList<TU>(IEnumerable<TU> list)
         {
             return new ListValue<T>(list.Cast<T>());
+        }
+
+        public object GetIndex(int index)
+        {
+            return internalList[index];
+        }
+
+        public void SetIndex(int index, object value)
+        {
+            internalList[index] = (T)value;
         }
     }
 
