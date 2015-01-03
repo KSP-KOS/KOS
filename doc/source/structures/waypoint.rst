@@ -24,7 +24,7 @@ Creation
     The name match is case-insensitive.
 
 .. function:: ALLWAYPOINTS()
-    :return: :struct:`Waypoint`
+    :return: :struct: `List` of `Waypoint`s
 
     This creates a `List` of `Waypoint` structures for all accepted contracts.  Waypoints for proposed contracts you haven't accepted yet do not appear in the list.
 
