@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Encapsulation;
+using FinePrint; // waypoints are defined here.
 
 namespace kOS.Suffixed
 {
     public class Career : Structure
-    {
+    {        
         static Career()
         {
             AddGlobalSuffix<Career>("CANTRACKOBJECTS", new StaticSuffix<bool>(CanTrackObjects,
@@ -163,6 +165,7 @@ namespace kOS.Suffixed
             string dummy;
             return CanTagInEditor(whichEditor, out dummy);
         }
+        
 
         public override string ToString()
         {

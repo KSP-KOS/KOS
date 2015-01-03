@@ -34,16 +34,28 @@ namespace kOS.Suffixed
         /// <summary>
         ///   Build a GeoCoordinates from any arbitrary lat/long pair of floats.
         /// </summary>
+        /// <param name="body">A different celestial body to select a lat/long for that might not be the curent one</param>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         /// <param name="lat">latitude</param>
         /// <param name="lng">longitude</param>
-        public GeoCoordinates(SharedObjects sharedObj, float lat, float lng)
+        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double lat, double lng)
         {
             Lat = lat;
             Lng = lng;
             Shared = sharedObj;
-            Body = Shared.Vessel.GetOrbit().referenceBody;
+            Body = body;
             GeoCoordsInitializeSuffixes();
+        }
+
+        /// <summary>
+        ///   Build a GeoCoordinates from any arbitrary lat/long pair of floats.
+        /// </summary>
+        /// <param name="sharedObj">to know the current CPU's running vessel</param>
+        /// <param name="lat">latitude</param>
+        /// <param name="lng">longitude</param>
+        public GeoCoordinates(SharedObjects sharedObj, float lat, float lng) :
+            this(sharedObj.Vessel.GetOrbit().referenceBody, sharedObj, lat, lng)
+        {
         }
 
         /// <summary>
@@ -75,7 +87,7 @@ namespace kOS.Suffixed
         ///  Returns the ground's altitude above sea level at this geo position.
         /// </summary>
         /// <returns></returns>
-        private double GetTerrainAltitude()
+        public double GetTerrainAltitude()
         {
             double alt = 0.0;
             PQS bodyPQS = Body.pqsController;
