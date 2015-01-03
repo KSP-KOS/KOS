@@ -118,7 +118,7 @@ namespace kOS.Suffixed
                 // a point a bit below it, to aim down to the terrain:
                 Vector3d worldRayCastStop = Body.GetWorldSurfacePosition( Lat, Lng, alt+POINT_AGL );
                 RaycastHit hit;
-                if (Physics.Raycast(worldRayCastStart, (worldRayCastStop - worldRayCastStart), out hit, 1<<TERRAIN_MASK_BIT ))
+                if (Physics.Raycast(worldRayCastStart, (worldRayCastStop - worldRayCastStart), out hit, float.MaxValue, 1<<TERRAIN_MASK_BIT ))
                 {
                     // Ensure hit is on the topside of planet, near the worldRayCastStart, not on the far side.
                     if (Mathf.Abs(hit.distance) < 3000)
@@ -158,9 +158,30 @@ namespace kOS.Suffixed
         /// <returns>distance scalar</returns>
         private double GetDistanceFrom()
         {
-            Vector3d latLongCoords = Body.GetWorldSurfacePosition( Lat, Lng, GetTerrainAltitude() );
+            return GetPosition().Magnitude();
+        }
+        
+        /// <summary>
+        ///   The surface point of this LAT/LONG from where
+        ///   the current CPU vessel is now.
+        /// </summary>
+        /// <returns>position vector</returns>
+        public Vector GetPosition()
+        {
+            return GetAltitudePosition(GetTerrainAltitude());
+        }
+        
+        /// <summary>
+        ///   The point above or below the surface of this LAT/LONG from where
+        ///   the current CPU vessel is now.
+        /// </summary>
+        /// <param name="altitude">The (sea level) altitude to get a position for</param>>
+        /// <returns>position vector</returns>
+        public Vector GetAltitudePosition(double altitude)
+        {
+            Vector3d latLongCoords = Body.GetWorldSurfacePosition(Lat, Lng, altitude);
             Vector3d hereCoords = Shared.Vessel.findWorldCenterOfMass();
-            return Vector3d.Distance( latLongCoords, hereCoords );
+            return new Vector(latLongCoords - hereCoords);
         }
 
         private void GeoCoordsInitializeSuffixes()
@@ -172,6 +193,12 @@ namespace kOS.Suffixed
             AddSuffix("DISTANCE", new Suffix<double>(GetDistanceFrom));
             AddSuffix("HEADING", new Suffix<double>(GetHeadingFrom));
             AddSuffix("BEARING", new Suffix<double>(GetBearing));
+            AddSuffix("POSITION", new Suffix<Vector>(GetPosition,
+                                                     "Get the 3-D space position relative to the ship center, of this lat/long, " +
+                                                     "at a point on the terrain surface"));
+            AddSuffix("ALTITUDEPOSITION", new OneArgsSuffix<Vector,double>(GetAltitudePosition,
+                                                                           "Get the 3-D space position relative to the ship center, " +
+                                                                           "of this lat/long, at this (sea level) altitude"));
         }
 
         public override string ToString()
