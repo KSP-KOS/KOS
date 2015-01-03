@@ -8,14 +8,14 @@ namespace kOS.Suffixed
 {
     public class WaypointValue : Structure
     {
-        protected Waypoint wayPoint;
-        protected CelestialBody cachedBody;
-        protected SharedObjects shared;
+        protected Waypoint WayPoint { get; set; }
+        protected CelestialBody CachedBody { get; set; }
+        protected SharedObjects Shared { get; set; }
         
         public WaypointValue(Waypoint wayPoint, SharedObjects shared)
         {
-            this.wayPoint = wayPoint;
-            this.shared = shared;
+            WayPoint = wayPoint;
+            Shared = shared;
             AddSuffix("DUMP", new NoArgsSuffix<string>(ToVerboseString)); // for debugging
             AddSuffix("NAME", new NoArgsSuffix<string>(() => wayPoint.name, "Name of waypoint as it appears on the map and contract"));
             AddSuffix("BODY", new NoArgsSuffix<BodyTarget>(() => new BodyTarget(GetBody(),shared), "Celestial body the waypoint is attached to"));
@@ -32,25 +32,23 @@ namespace kOS.Suffixed
         
         public CelestialBody GetBody()
         {
-            if (cachedBody == null)
-                cachedBody = VesselUtils.GetBodyByName(wayPoint.celestialName);
-            return cachedBody;
+            return CachedBody ?? (CachedBody = VesselUtils.GetBodyByName(WayPoint.celestialName));
         }
-        
+
         public GeoCoordinates BuildGeoCoordinates()
         {
-            return new GeoCoordinates(GetBody(), shared, wayPoint.latitude, wayPoint.longitude);
+            return new GeoCoordinates(GetBody(), Shared, WayPoint.latitude, WayPoint.longitude);
         }
         
         public double BuildSeaLevelAltitude()
         {
             GeoCoordinates gCoord = BuildGeoCoordinates();
-            return gCoord.GetTerrainAltitude() + wayPoint.altitude;
+            return gCoord.GetTerrainAltitude() + WayPoint.altitude;
         }
         
         public override string ToString()
         {
-            return String.Format("Waypoint \"{0}\"", wayPoint.name);
+            return String.Format("Waypoint \"{0}\"", WayPoint.name);
         }
         
         public string ToVerboseString()
@@ -61,18 +59,18 @@ namespace kOS.Suffixed
                                  "  body= {1}\n" +
                                  "  latitude= {2}\n" +
                                  "  longitude= {3}\n" +
-                                 "  altitutde= {4}\n" +
+                                 "  altitude= {4}\n" +
                                  "  height= {5}\n" +
                                  "  isOnSurface= {6}\n" +
                                  "  worldPosition= {7}\n",
-                                 wayPoint.name,
-                                 wayPoint.celestialName,
-                                 wayPoint.latitude,
-                                 wayPoint.longitude,
-                                 wayPoint.altitude, // A location inside the contract range's altitude range - and NOT the edge of it.
-                                 wayPoint.height,
-                                 wayPoint.isOnSurface,
-                                 wayPoint.worldPosition);
+                                 WayPoint.name,
+                                 WayPoint.celestialName,
+                                 WayPoint.latitude,
+                                 WayPoint.longitude,
+                                 WayPoint.altitude, // A location inside the contract range's altitude range - and NOT the edge of it.
+                                 WayPoint.height,
+                                 WayPoint.isOnSurface,
+                                 WayPoint.worldPosition);
         }
             
     }
