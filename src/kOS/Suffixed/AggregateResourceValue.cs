@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
@@ -44,9 +45,8 @@ namespace kOS.Suffixed
             return string.Format("SHIPRESOURCE({0},{1},{2})", name, amount, capacity);
         }
 
-        public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects shared)
+        private static Dictionary<string, AggregateResourceValue> ProspectResources(IEnumerable<global::Part> parts, SharedObjects shared)
         {
-            var list = new ListValue();
             var resources = new Dictionary<string, AggregateResourceValue>();
             foreach (var part in parts)
             {
@@ -61,6 +61,13 @@ namespace kOS.Suffixed
                     resources[module.resourceName] = aggregateResourceAmount;
                 }
             }
+            return resources;
+        }
+
+        public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects shared)
+        {
+            var list = new ListValue();
+            var resources = ProspectResources(parts, shared);
             foreach (var resource in resources)
             {
                 list.Add(resource.Value);
@@ -70,23 +77,7 @@ namespace kOS.Suffixed
 
         public static ListValue<AggregateResourceValue> FromVessel(Vessel vessel, SharedObjects shared)
         {
-            var resources = new Dictionary<string, AggregateResourceValue>();
-
-            foreach (var resource in vessel.parts.SelectMany(part => part.Resources.list))
-            {
-                AggregateResourceValue resourceValue;
-                if (resources.TryGetValue(resource.info.name, out resourceValue))
-                {
-                    resourceValue.AddResource(resource);
-                }
-                else
-                {
-                    var newResource = new AggregateResourceValue(resource.info.name, shared);
-                    newResource.AddResource(resource);
-
-                    resources.Add(resource.info.name, newResource);
-                }
-            }
+            var resources = ProspectResources(vessel.parts, shared);
             return ListValue<AggregateResourceValue>.CreateList(resources.Values);
         }
     }

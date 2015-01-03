@@ -19,11 +19,9 @@ namespace kOS.Suffixed
             AddSuffix("NAME", new Suffix<string>(() => partResource.resourceName));
             AddSuffix("AMOUNT", new Suffix<double>(() => partResource.amount));
             AddSuffix("DENSITY", new Suffix<double>(() => partResource.info.density));
-            AddSuffix("UNITCOST", new Suffix<double>(() => partResource.info.unitCost));
             AddSuffix("CAPACITY", new Suffix<double>(() => partResource.maxAmount));
-            AddSuffix("TWEAKABLE", new Suffix<bool>(() => partResource.isTweakable));
-            AddSuffix("FLOWMODE", new Suffix<string>(() => partResource.flowMode.ToString()));
-            AddSuffix("FLOWSTATE", new SetSuffix<bool>(() => partResource.flowState, value =>
+            AddSuffix("TOGGLEABLE", new Suffix<bool>(() => partResource.isTweakable));
+            AddSuffix("ENABLED", new SetSuffix<bool>(() => partResource.flowState, value =>
             {
                 if (partResource.isTweakable)
                 {
