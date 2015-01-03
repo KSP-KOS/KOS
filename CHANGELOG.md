@@ -11,7 +11,7 @@ to make sure everything works.)
 * Now respects the limitations of [0.90 career mode upgrades](http://ksp-kos.github.io/KOS/general/career_limits.html), which may make a few features not work anymore in career mode until you get further progressed along in your building upgrades.
 
 ###New Stuff
-* Thanks to a new dev team volunteer (username theodoregoetz on github), we have a new, much better and cleaner looking [documentation site](http://ksp-kos.github.io/KOS_DOC/)
+* Thanks to a new dev team contributer Johann Goetz (@theodoregoetz on github), we have a new, much better and cleaner looking [documentation site](http://ksp-kos.github.io/KOS_DOC/)
 * Better flight input handling to detect the pilot controls and keep them isolated.
 * "plays nice" with other autopilots a bit better, using KSP 0.90's new autopiloting hooks.
 * Ability to read [more data about a ship resource](TODO - Are these in the docs?  Put URL here if so.) TODO:  i.e. SingleResourceValue:FLOWMODE, for example - see PR #452)
