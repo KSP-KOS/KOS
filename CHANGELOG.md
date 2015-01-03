@@ -11,7 +11,7 @@ to make sure everything works.)
 * Now respects the limitations of [0.90 career mode upgrades](http://ksp-kos.github.io/KOS/general/career_limits.html), which may make a few features not work anymore in career mode until you get further progressed along in your building upgrades.
 
 ###New Stuff
-* Thanks to a new dev team volunteer (username theodoregoetz on github), we have a new, much better and cleaner looking [documentation site](http://ksp-kos.github.io/KOS/)
+* Thanks to a new dev team volunteer (username theodoregoetz on github), we have a new, much better and cleaner looking [documentation site](http://ksp-kos.github.io/KOS_DOC/)
 * Better flight input handling to detect the pilot controls and keep them isolated.
 * "plays nice" with other autopilots a bit better, using KSP 0.90's new autopiloting hooks.
 * Ability to read [more data about a ship resource](TODO - Are these in the docs?  Put URL here if so.) TODO:  i.e. SingleResourceValue:FLOWMODE, for example - see PR #452)
@@ -19,6 +19,10 @@ to make sure everything works.)
 * Separate Dry Mass, Wet Mass, and Current Mass readings for parts and for the vessel as a whole (TODO: Link here, but the public gh-pages hasn't be regenned yet so I don't know the link yet)
 * Added new [WAYPOINT object](http://ksp-kos.github.io/KOS/structures/waypoint.html) to help with locations of some contracts.
 * Added new :POSITION and :ALTITUDEPOSITION suffixes to [Geocoordinates](http://ksp-kos.github.io/KOS/math/geocoordinates.html) to obtain 3D vectors of their positions in ship-raw coordinate space.
+
+* ADDED muliple new ways to deal with resources.
+    * STAGE:RESOURCES, SHIP:RESOURCES and TARGET:RESOURCES will let you get a list of the resources for the craft, the difference being that SHIP: and TARGET: includes all resources and STAGE: includes only the resoures that are for "this stage". All three of these will let you get a list of :PARTS that can contain that resource.
+    * Part resources now gives you access to the resource's tweakable :ENABLE and :TOGGLEABLE can let you remove add a resource to the normal resource flow.
 
 ###Bug Fixes
 * Better handling of range checking and loading the boot file when remotetech is installed (thanks to hvacengi for this contribution)
