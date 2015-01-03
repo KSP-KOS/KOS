@@ -79,12 +79,12 @@ namespace kOS.Suffixed
         {
             double alt = 0.0;
             PQS bodyPQS = Body.pqsController;
-            if (bodyPQS != null) // The sun has no terrain.  Everthing else has a PQScontroller.
+            if (bodyPQS != null) // The sun has no terrain.  Everything else has a PQScontroller.
             {
                 // The PQS controller gives the theoretical ideal smooth surface curve terrain.
                 // The actual ground that exists in-game that you land on, however, is the terrain
                 // polygon mesh which is built dynamically from the PQS controller's altitude values,
-                // and it only approximates the PQS controller.  The discrepency between the two
+                // and it only approximates the PQS controller.  The discrepancy between the two
                 // can be as high as 20 meters on relatively mild rolling terrain and is probably worse
                 // in mountainous terrain with steeper slopes.  It also varies with the user terrain detail
                 // graphics setting.
