@@ -323,7 +323,11 @@ namespace kOS.Function
 
             WaypointManager wpm = WaypointManager.Instance();
             if (wpm == null)
+            {
                 shared.Cpu.PushStack(returnList); // When no waypoints exist, there isn't even a waypoint manager at all.
+                return;
+            }
+
 
             List<Waypoint> points = wpm.AllWaypoints();
 
@@ -344,13 +348,14 @@ namespace kOS.Function
         {
             string pointName = shared.Cpu.PopValue().ToString();
 
-            FinePrint.WaypointManager wpm = WaypointManager.Instance();
+            WaypointManager wpm = WaypointManager.Instance();
             if (wpm == null)
             {
                 shared.Cpu.PushStack(null); // When no waypoints exist, there isn't even a waypoint manager.
                 // I don't like returning null here without the user being able to test for that, but
                 // we don't have another way to communicate "no such waypoint".  We really need to address
                 // that problem once and for all.
+                return;
             }
 
             Waypoint point = wpm.AllWaypoints().FirstOrDefault(p => String.Equals(p.name, pointName,StringComparison.OrdinalIgnoreCase));
