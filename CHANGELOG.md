@@ -1,6 +1,20 @@
 kOS Mod Changelog
 =================
 
+# v0.15.5
+The KSP 0.90 compatibility release.
+(The full thematic following of KSP 0.90's new way of 
+thinking will come in a future version.  This is just
+to make sure everything works.)
+
+###BREAKING CHANGES
+* TODO
+###New Stuff
+* TODO
+###Bug Fixes
+* TODO
+
+
 # v0.15.4
 ###BREAKING CHANGES
 * Issue #431: SHIP:ANGULARMOMENTUM and SHIP:ANGULARVEL have been changed from directions to vectors to me more consistant with their nature
