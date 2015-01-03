@@ -17,8 +17,8 @@ to make sure everything works.)
 * Ability to read [more data about a ship resource](TODO - Are these in the docs?  Put URL here if so.) TODO:  i.e. SingleResourceValue:FLOWMODE, for example - see PR #452)
 * New [suffixes to handle directions better](http://ksp-kos.github.io/KOS/math/direction.html) as mentioned in [long detail in this video](https://www.youtube.com/watch?v=7byYiZZBBVc)
 * Separate Dry Mass, Wet Mass, and Current Mass readings for parts and for the vessel as a whole (TODO: Link here, but the public gh-pages hasn't be regenned yet so I don't know the link yet)
-* Added new [WAYPOINT object](http://ksp-kos.github.io/structures/waypoint.html) to help with locations of some contracts.
-* Added new :POSITION and :ALTITUDEPOSITION suffixes to [Geocoordinates](http://ksp-kos.github.io/math/geocoordinates.html) to obtain 3D vectors of their positions in ship-raw coordinate space.
+* Added new [WAYPOINT object](http://ksp-kos.github.io/KOS/structures/waypoint.html) to help with locations of some contracts.
+* Added new :POSITION and :ALTITUDEPOSITION suffixes to [Geocoordinates](http://ksp-kos.github.io/KOS/math/geocoordinates.html) to obtain 3D vectors of their positions in ship-raw coordinate space.
 
 ###Bug Fixes
 * Better handling of range checking and loading the boot file when remotetech is installed (thanks to hvacengi for this contribution)
