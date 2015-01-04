@@ -93,8 +93,8 @@ Pre-compiles a script into an :ref:`Kerboscript ML Exceutable
 image <compiling>` that can be used
 instead of executing the program discript directly.
 
-The RUN command (elsewhere on this page) can work with either *.ks
-script files or *.ksm compiled files.
+The RUN command (elsewhere on this page) can work with either \*.ks
+script files or \*.ksm compiled files.
 
 The full details of this process are long and complex enough to be
 placed on a separate page.

@@ -52,6 +52,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`PATCHES`                       :struct:`List`            :struct:`Orbit` patches
      :attr:`ROOTPART`                      :struct:`Part`            Root :struct:`Part` of this vessel
      :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
+     :attr:`RESOURCES`                     :struct:`List`            all :struct:`AggrgateResources <AggregateResource>`
      :meth:`PARTSNAMED(name)`              :struct:`List`            :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>`
      :meth:`PARTSTITLED(title)`            :struct:`List`            :struct:`Parts <Part>` by :attr:`TITLE <Part:TITLE>`
      :meth:`PARTSTAGGED(tag)`              :struct:`List`            :struct:`Parts <Part>` by :attr:`TAG <Part:TAG>`
@@ -224,6 +225,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     A List of all the :ref:`parts <part>` on the vessel. ``SET FOO TO SHIP:PARTS.`` has exactly the same effect as ``LIST PARTS IN FOO.``. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
+.. attribute:: Vessel:RESOURCES
+
+    :type: :struct:`List` of :struct:`AggregateResource` objects
+    :access: Get only
+
+    A List of all the :ref:`AggregateResources <AggregateResource>` on the vessel. ``SET FOO TO SHIP:RESOURCES.`` has exactly the same effect as ``LIST RESOURCES IN FOO.``.
 
 
 .. method:: Vessel:PARTSNAMED(name)

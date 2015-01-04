@@ -131,7 +131,7 @@ Structure
     :type: scalar (degree)
     :access: Get only
 
-    `orbital_inclination`_
+    `orbital inclination`_
 
 .. attribute:: Orbit:ECCENTRICITY
 
@@ -232,7 +232,7 @@ Structure
 .. _true anomaly: http://en.wikipedia.org/wiki/True_anomaly
 .. _mean anomaly: http://en.wikipedia.org/wiki/Mean_anomaly
 
-:attr:`Orbit:NEXTPATCH` and :attr:`Orbit:HASNEXTPATCH` both only operate on the **current** momentum of the object, and do **not** take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the manuever node, by looking at the :ref:`maneuver node's :ORBIT suffix <node>`_, and then look at **it's** :attr:`Orbit:NEXTPATCH` and :attr:`Orbit:HASNEXTPATCH`.
+Both ``:NEXTPATCH`` and ``:HASNEXTPATCH`` both only operate on the **current** momentum of the object, and do **not** take into account any potential changes planned with maneuver nodes. To see the possible new path you would have if a maneuver node gets executed exactly as planned, you need to first get the orbit that follows the manuever node, by looking at the maneuver node's :ORBIT suffix <node>, and then look at **it's** ``:NEXTPATCH` and ``:HASNEXTPATCH``.
 
 Deprecated Suffix
 -----------------

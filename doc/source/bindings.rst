@@ -114,6 +114,8 @@ Any other resources that you have added using other mods should be
 query-able this way, provided that you spell
 the term exactly as it appears in the resources window.
 
+You can also get a list of all resources, either in SHIP: or STAGE: with the :RESOURCES suffix. 
+
 ALT ALIAS
 ---------
 

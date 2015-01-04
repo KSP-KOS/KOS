@@ -19,12 +19,13 @@ A general discussion of structures :ref:`can be found here <language structures>
 * :ref:`Celestial Bodies <celestial bodies>`
     * :struct:`Body`
     * :struct:`Atmosphere`
+    * :struct:`Waypoint`
 * :ref:`Vessels <vessels>`
     * :struct:`Vessel`
     * :struct:`Control`
     * :struct:`ManeuverNode`
     * :struct:`Engine`
-    * :struct:`Resource`
+    * :struct:`AggregateResource`
     * :struct:`DockingPort`
     * :struct:`Part`
     * :struct:`PartModule`
@@ -45,4 +46,6 @@ A general discussion of structures :ref:`can be found here <language structures>
     Orbits           <structures/orbits>
     Celestial Bodies <structures/celestial_bodies>
     Vessels & Parts  <structures/vessels>
+    Maneuvering      <structures/maneuvering>
+    Waypoints        <structures/waypoint>
     Miscellaneous    <structures/misc>

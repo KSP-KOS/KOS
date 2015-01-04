@@ -49,7 +49,7 @@ Vessel Lists
 These generate :struct:`lists <List>` of items on the :struct:`Vessel`:
 
 ``Resources``
-    :struct:`List` of :struct:`Resources <Resource>`
+    :struct:`List` of :struct:`AggregateResources <Resource>`
 ``Parts``
     :struct:`List` of :struct:`Parts <Part>`
 ``Engines``
