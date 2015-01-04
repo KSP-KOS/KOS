@@ -15,7 +15,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -45,7 +45,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -67,6 +69,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
@@ -75,6 +78,7 @@
 <li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language.html">Language</a><ul>
@@ -106,6 +110,8 @@
 <li class="toctree-l2"><a class="reference internal" href="structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/maneuvering.html">Maneuvering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc.html">Miscellaneous</a></li>
 </ul>
 </li>
@@ -143,7 +149,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
 
 <h1 id="index">Index</h1>
@@ -185,6 +191,14 @@
   </dt>
 
       
+  <dt><a href="structures/waypoint.html#ALLWAYPOINTS">ALLWAYPOINTS()</a>
+  </dt>
+
+      
+  <dt><a href="math/direction.html#ANGLEAXIS">ANGLEAXIS()</a>
+  </dt>
+
+      
   <dt><a href="math/basic.html#ARCCOS">ARCCOS()</a>
   </dt>
 
@@ -200,12 +214,12 @@
   <dt><a href="math/basic.html#ARCTAN2">ARCTAN2()</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="commands/terminal.html#AT">AT()</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/celestial_bodies/atmosphere.html#ATMOSPHERE">Atmosphere [struct]</a>
   </dt>
@@ -309,6 +323,26 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="general/career_limits.html#CAREER">Career [struct]</a>
+  </dt>
+
+      
+  <dt><a href="general/career_limits.html#CAREER:CANDOACTIONS">Career:CANDOACTIONS</a>
+  </dt>
+
+      
+  <dt><a href="general/career_limits.html#CAREER:CANMAKENODES">Career:CANMAKENODES</a>
+  </dt>
+
+      
+  <dt><a href="general/career_limits.html#CAREER:CANTRACKOBJECTS">Career:CANTRACKOBJECTS</a>
+  </dt>
+
+      
+  <dt><a href="general/career_limits.html#CAREER:PATCHLIMIT">Career:PATCHLIMIT</a>
+  </dt>
+
+      
   <dt><a href="math/basic.html#CEILING">CEILING()</a>
   </dt>
 
@@ -324,6 +358,8 @@
   <dt><a href="structures/misc/config.html#CONFIG:ARCH">Config:ARCH</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/config.html#CONFIG:IPU">Config:IPU</a>
   </dt>
@@ -336,8 +372,6 @@
   <dt><a href="structures/misc/config.html#CONFIG:SAFE">Config:SAFE</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/config.html#CONFIG:STAT">Config:STAT</a>
   </dt>
@@ -373,6 +407,10 @@
   </dt>
 
       
+  <dt><a href="math/direction.html#DIRECTION:FOREVECTOR">Direction:FOREVECTOR</a>
+  </dt>
+
+      
   <dt><a href="math/direction.html#DIRECTION:PITCH">Direction:PITCH</a>
   </dt>
 
@@ -381,7 +419,11 @@
   </dt>
 
       
-  <dt><a href="math/direction.html#DIRECTION:VECTOR">Direction:VECTOR</a>
+  <dt><a href="math/direction.html#DIRECTION:STARVECTOR">Direction:STARVECTOR</a>
+  </dt>
+
+      
+  <dt><a href="math/direction.html#DIRECTION:TOPVECTOR">Direction:TOPVECTOR</a>
   </dt>
 
       
@@ -396,12 +438,12 @@
   <dt><a href="structures/vessels/dockingport.html#DOCKINGPORT:AQUIREFORCE">DockingPort:AQUIREFORCE</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/dockingport.html#DOCKINGPORT:AQUIRERANGE">DockingPort:AQUIRERANGE</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/dockingport.html#DOCKINGPORT:AQUIRETORQUE">DockingPort:AQUIRETORQUE</a>
   </dt>
@@ -553,6 +595,10 @@
   </dt>
 
       
+  <dt><a href="math/geocoordinates.html#GEOCOORDINATES:ALTITUDEPOSITION">GeoCoordinates:ALTITUDEPOSITION</a>
+  </dt>
+
+      
   <dt><a href="math/geocoordinates.html#GEOCOORDINATES:BEARING">GeoCoordinates:BEARING</a>
   </dt>
 
@@ -572,6 +618,10 @@
 
       
   <dt><a href="math/geocoordinates.html#GEOCOORDINATES:LNG">GeoCoordinates:LNG</a>
+  </dt>
+
+      
+  <dt><a href="math/geocoordinates.html#GEOCOORDINATES:POSITION">GeoCoordinates:POSITION</a>
   </dt>
 
       
@@ -670,12 +720,12 @@
   <dt><a href="structures/misc/list.html#LIST:DUMP">List:DUMP</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/list.html#LIST:EMPTY">List:EMPTY</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/list.html#LIST:INSERT">List:INSERT()</a>
   </dt>
@@ -706,6 +756,10 @@
 
       
   <dt><a href="math/basic.html#LOG10">LOG10()</a>
+  </dt>
+
+      
+  <dt><a href="math/direction.html#LOOKDIRUP">LOOKDIRUP()</a>
   </dt>
 
   </dl></td>
@@ -1007,6 +1061,10 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/part.html#PART:DRYMASS">Part:DRYMASS</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/part.html#PART:FACING">Part:FACING</a>
   </dt>
 
@@ -1016,6 +1074,14 @@
 
       
   <dt><a href="structures/vessels/part.html#PART:HASPARENT">Part:HASPARENT</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/part.html#PART:HASPHYSICS">Part:HASPHYSICS</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/part.html#PART:MASS">Part:MASS</a>
   </dt>
 
       
@@ -1062,12 +1128,16 @@
   <dt><a href="structures/vessels/part.html#PART:TITLE">Part:TITLE</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/part.html#PART:UID">Part:UID</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="structures/vessels/part.html#PART:WETMASS">Part:WETMASS</a>
+  </dt>
+
       
   <dt><a href="structures/vessels/partmodule.html#PARTMODULE">PartModule [struct]</a>
   </dt>
@@ -1181,21 +1251,33 @@
   </dt>
 
       
-  <dt><a href="structures/vessels/resource.html#RESOURCE">Resource [struct]</a>
+  <dt><a href="structures/vessels/resource.html#RESOURCE">Resource [struct]</a>, <a href="structures/vessels/aggregateresource.html#RESOURCE">[1]</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/resource.html#RESOURCE:AMOUNT">Resource:AMOUNT</a>, <a href="structures/vessels/aggregateresource.html#RESOURCE:AMOUNT">[1]</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/resource.html#RESOURCE:CAPACITY">Resource:CAPACITY</a>, <a href="structures/vessels/aggregateresource.html#RESOURCE:CAPACITY">[1]</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="structures/vessels/resource.html#RESOURCE:AMOUNT">Resource:AMOUNT</a>
+  <dt><a href="structures/vessels/resource.html#RESOURCE:ENABLED">Resource:ENABLED</a>
   </dt>
 
       
-  <dt><a href="structures/vessels/resource.html#RESOURCE:CAPACITY">Resource:CAPACITY</a>
+  <dt><a href="structures/vessels/resource.html#RESOURCE:NAME">Resource:NAME</a>, <a href="structures/vessels/aggregateresource.html#RESOURCE:NAME">[1]</a>
   </dt>
 
       
-  <dt><a href="structures/vessels/resource.html#RESOURCE:NAME">Resource:NAME</a>
+  <dt><a href="structures/vessels/aggregateresource.html#RESOURCE:PARTS">Resource:PARTS</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/resource.html#RESOURCE:TOGGLEABLE">Resource:TOGGLEABLE</a>
   </dt>
 
       
@@ -1204,6 +1286,10 @@
 
       
   <dt><a href="structures/misc/rgba.html#RGBA">RGBA()</a>
+  </dt>
+
+      
+  <dt><a href="math/direction.html#ROTATEFROMTO">ROTATEFROMTO()</a>
   </dt>
 
       
@@ -1484,8 +1570,6 @@
   <dt><a href="structures/vessels/vessel.html#VESSEL:AIRSPEED">Vessel:AIRSPEED</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/vessel.html#VESSEL:ALLPARTSTAGGED">Vessel:ALLPARTSTAGGED()</a>
   </dt>
@@ -1494,6 +1578,8 @@
   <dt><a href="structures/vessels/vessel.html#VESSEL:ANGULARMOMENTUM">Vessel:ANGULARMOMENTUM</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/vessel.html#VESSEL:ANGULARVEL">Vessel:ANGULARVEL</a>
   </dt>
@@ -1504,6 +1590,10 @@
 
       
   <dt><a href="structures/vessels/vessel.html#VESSEL:CONTROL">Vessel:CONTROL</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/vessel.html#VESSEL:DRYMASS">Vessel:DRYMASS</a>
   </dt>
 
       
@@ -1535,6 +1625,10 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/vessel.html#VESSEL:NAME">Vessel:NAME</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/vessel.html#VESSEL:PARTS">Vessel:PARTS</a>
   </dt>
 
@@ -1563,11 +1657,19 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/vessel.html#VESSEL:RESOURCES">Vessel:RESOURCES</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/vessel.html#VESSEL:ROOTPART">Vessel:ROOTPART</a>
   </dt>
 
       
   <dt><a href="structures/vessels/vessel.html#VESSEL:SENSORS">Vessel:SENSORS</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/vessel.html#VESSEL:SHIPNAME">Vessel:SHIPNAME</a>
   </dt>
 
       
@@ -1579,11 +1681,15 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/vessel.html#VESSEL:TYPE">Vessel:TYPE</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/vessel.html#VESSEL:VERTICALSPEED">Vessel:VERTICALSPEED</a>
   </dt>
 
       
-  <dt><a href="structures/vessels/vessel.html#VESSEL:VESSELNAME">Vessel:VESSELNAME</a>
+  <dt><a href="structures/vessels/vessel.html#VESSEL:WETMASS">Vessel:WETMASS</a>
   </dt>
 
       
@@ -1628,8 +1734,44 @@
   <dt><a href="commands/flight/warp.html#WARP">WARP</a>, <a href="commands/flight.html#WARP">[1]</a>
   </dt>
 
+      
+  <dt><a href="structures/waypoint.html#WAYPOINT">Waypoint [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/waypoint.html#WAYPOINT">WAYPOINT()</a>
+  </dt>
+
+      
+  <dt><a href="structures/waypoint.html#WAYPOINT:AGL">Waypoint:AGL</a>
+  </dt>
+
+      
+  <dt><a href="structures/waypoint.html#WAYPOINT:ALTITUDE">Waypoint:ALTITUDE</a>
+  </dt>
+
+      
+  <dt><a href="structures/waypoint.html#WAYPOINT:BODY">Waypoint:BODY</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="structures/waypoint.html#WAYPOINT:GEOPOSITION">Waypoint:GEOPOSITION</a>
+  </dt>
+
+      
+  <dt><a href="structures/waypoint.html#WAYPOINT:GROUNDED">Waypoint:GROUNDED</a>
+  </dt>
+
+      
+  <dt><a href="structures/waypoint.html#WAYPOINT:NAME">Waypoint:NAME</a>
+  </dt>
+
+      
+  <dt><a href="structures/waypoint.html#WAYPOINT:NEARSURFACE">Waypoint:NEARSURFACE</a>
+  </dt>
+
       
   <dt><a href="language/flow.html#index-7">WHEN</a>
   </dt>
@@ -1665,7 +1807,8 @@
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,7 +47,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -69,6 +71,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
@@ -77,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
@@ -108,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/maneuvering.html">Maneuvering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/misc.html">Miscellaneous</a></li>
 </ul>
 </li>
@@ -151,7 +157,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="raw-control">
 <h1>Raw Control<a class="headerlink" href="#raw-control" title="Permalink to this headline">¶</a></h1>
@@ -193,7 +199,7 @@
 <p>These &#8220;Raw&#8221; controls allow you the direct control of flight parameters while the current program is running.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The <tt class="docutils literal"><span class="pre">MAINTHROTTLE</span></tt> requires active engines and, of course, sufficient and appropriate fuel. The rotational controls <tt class="docutils literal"><span class="pre">YAW</span></tt>, <tt class="docutils literal"><span class="pre">PITCH</span></tt> and <tt class="docutils literal"><span class="pre">ROW</span></tt> require active reaction wheels with sufficient energy or <em>RCS</em> to be <tt class="docutils literal"><span class="pre">ON</span></tt> with properly placed thrusters and appropriate fuel. The translational controls <tt class="docutils literal"><span class="pre">FORE</span></tt>, <tt class="docutils literal"><span class="pre">STARBOARD</span></tt> and <tt class="docutils literal"><span class="pre">TOP</span></tt> require <em>RCS</em> to be <tt class="docutils literal"><span class="pre">ON</span></tt> with properly placed thrusters and appropriate fuel.</p>
+<p class="last">The <tt class="docutils literal"><span class="pre">MAINTHROTTLE</span></tt> requires active engines and, of course, sufficient and appropriate fuel. The rotational controls <tt class="docutils literal"><span class="pre">YAW</span></tt>, <tt class="docutils literal"><span class="pre">PITCH</span></tt> and <tt class="docutils literal"><span class="pre">ROW</span></tt> require active reaction wheels with sufficient energy or <em>RCS</em> to be ON with properly placed thrusters and appropriate fuel. The translational controls <tt class="docutils literal"><span class="pre">FORE</span></tt>, <tt class="docutils literal"><span class="pre">STARBOARD</span></tt> and <tt class="docutils literal"><span class="pre">TOP</span></tt> require <em>RCS</em> to be ON with properly placed thrusters and appropriate fuel.</p>
 </div>
 <table border="1" class="docutils">
 <colgroup>
@@ -410,7 +416,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pilot.html" class="btn btn-neutral float-right" title="Pilot Input"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pilot.html" class="btn btn-neutral float-right" title="Pilot Input">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="cooked.html" class="btn btn-neutral" title="Cooked Control"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -426,7 +432,8 @@
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

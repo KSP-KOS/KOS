@@ -77,7 +77,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 
 .. attribute:: Engine:THRUSTLIMIT
 
-    :access: Get only
+    :access: Get/Set
     :type: scalar (%)
 
     If this an engine with a thrust limiter (tweakable) enabled, what percentage is it limited to?

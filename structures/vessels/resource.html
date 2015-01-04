@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,7 +47,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -69,6 +71,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
@@ -77,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
@@ -108,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 </ul>
 </li>
@@ -151,23 +157,11 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="resource">
 <span id="id1"></span><h1>Resource<a class="headerlink" href="#resource" title="Permalink to this headline">¶</a></h1>
-<p>A single resource value a thing holds (i.e. fuel, electric charge, etc). This is the type returned as the elements of the list in <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST RESOURCES
-IN MyList</em></a>:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;THESE ARE ALL THE RESOURCES ON THE SHIP:&quot;</span><span class="p">.</span>
-<span class="n">LIST</span> <span class="n">RESOURCES</span> <span class="n">IN</span> <span class="n">RESLIST</span><span class="p">.</span>
-<span class="n">FOR</span> <span class="n">RES</span> <span class="n">IN</span> <span class="n">RESLIST</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;Resource &quot;</span> <span class="o">+</span> <span class="n">RES</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>
-    <span class="n">PRINT</span> <span class="s">&quot;    value = &quot;</span> <span class="o">+</span> <span class="n">AMOUNT</span><span class="p">.</span>
-    <span class="n">PRINT</span> <span class="s">&quot;    which is &quot;</span>
-          <span class="o">+</span> <span class="n">ROUND</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">RES</span><span class="o">:</span><span class="n">AMOUNT</span><span class="o">/</span><span class="n">RES</span><span class="o">:</span><span class="n">CAPACITY</span><span class="p">)</span>
-          <span class="o">+</span> <span class="s">&quot;% full.&quot;</span><span class="p">.</span>
-<span class="p">}.</span>
-</pre></div>
-</div>
+<p>A single resource value a thing holds (i.e. fuel, electric charge, etc). This is the type returned by the <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>:RESOURCES suffix</p>
 <dl class="structure">
 <dt id="RESOURCE">
 <em class="property">structure </em><tt class="descname">Resource</tt><a class="headerlink" href="#RESOURCE" title="Permalink to this definition">¶</a></dt>
@@ -195,6 +189,14 @@ IN MyList</em></a>:</p>
 <tr class="row-even"><td><a class="reference internal" href="#RESOURCE:CAPACITY" title="RESOURCE:CAPACITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></tt></a></td>
 <td>scalar</td>
 <td>Maximum amount of this resource</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#RESOURCE:TOGGLEABLE" title="RESOURCE:TOGGLEABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TOGGLEABLE</span></tt></a></td>
+<td>boolean</td>
+<td>Can this tank be removed from the fuel flow</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#RESOURCE:ENABLED" title="RESOURCE:ENABLED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></tt></a></td>
+<td>boolean</td>
+<td>Is this tank currently in the fuel flow</td>
 </tr>
 </tbody>
 </table>
@@ -248,6 +250,38 @@ Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#RESOURCE
 <p>What AMOUNT would be if the resource was filled to the top.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="RESOURCE:TOGGLEABLE">
+Resource:<tt class="descname">TOGGLEABLE</tt><a class="headerlink" href="#RESOURCE:TOGGLEABLE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Many, but not all, resources can be turned on and off, this removes them from the fuel flow.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="RESOURCE:ENABLED">
+Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#RESOURCE:ENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>If the resource is TOGGLEABLE, setting this to false will prevent the resource from being taken out normally.</p>
+</dd></dl>
+
 </div>
 
 
@@ -256,7 +290,7 @@ Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#RESOURCE
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="sensor.html" class="btn btn-neutral float-right" title="Sensor"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="sensor.html" class="btn btn-neutral float-right" title="Sensor">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="partmodule.html" class="btn btn-neutral" title="PartModule"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -272,7 +306,8 @@ Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#RESOURCE
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,7 +47,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -69,6 +71,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
@@ -77,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
@@ -108,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 </ul>
 </li>
@@ -151,7 +157,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="vessel">
 <span id="id1"></span><h1>Vessel<a class="headerlink" href="#vessel" title="Permalink to this headline">¶</a></h1>
@@ -217,6 +223,14 @@
 <td>scalar (metric tons)</td>
 <td>Mass of the ship</td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:WETMASS" title="VESSEL:WETMASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">WETMASS</span></tt></a></td>
+<td>scalar (metric tons)</td>
+<td>Mass of the ship fully fuelled</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#VESSEL:DRYMASS" title="VESSEL:DRYMASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DRYMASS</span></tt></a></td>
+<td>scalar (metric tons)</td>
+<td>Mass of the ship with no resources</td>
+</tr>
 <tr class="row-odd"><td><a class="reference internal" href="#VESSEL:VERTICALSPEED" title="VESSEL:VERTICALSPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VERTICALSPEED</span></tt></a></td>
 <td>scalar (m/s)</td>
 <td>How fast the ship is moving &#8220;up&#8221;</td>
@@ -233,37 +247,45 @@
 <td>scalar (m/s)</td>
 <td>terminal velocity of the vessel</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:VESSELNAME" title="VESSEL:VESSELNAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VESSELNAME</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:SHIPNAME" title="VESSEL:SHIPNAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHIPNAME</span></tt></a></td>
 <td>string</td>
 <td>The name of the vessel</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#VESSEL:ANGULARMOMENTUM" title="VESSEL:ANGULARMOMENTUM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARMOMENTUM</span></tt></a></td>
-<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#VESSEL:NAME" title="VESSEL:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+<td>Synomym for SHIPNAME</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:ANGULARMOMENTUM" title="VESSEL:ANGULARMOMENTUM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARMOMENTUM</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 <td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP_RAW</em></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:ANGULARVEL" title="VESSEL:ANGULARVEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></tt></a></td>
-<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#VESSEL:ANGULARVEL" title="VESSEL:ANGULARVEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 <td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP_RAW</em></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#VESSEL:SENSORS" title="VESSEL:SENSORS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SENSORS</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:SENSORS" title="VESSEL:SENSORS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SENSORS</span></tt></a></td>
 <td><a class="reference internal" href="vesselsensors.html#VESSELSENSORS" title="VESSELSENSORS structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">VesselSensors</span></tt></a></td>
 <td>Sensor data</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:LOADED" title="VESSEL:LOADED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOADED</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#VESSEL:LOADED" title="VESSEL:LOADED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOADED</span></tt></a></td>
 <td>Boolean</td>
 <td>loaded into KSP physics engine or &#8220;on rails&#8221;</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#VESSEL:PATCHES" title="VESSEL:PATCHES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PATCHES</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:PATCHES" title="VESSEL:PATCHES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PATCHES</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td><a class="reference internal" href="../orbits/orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a> patches</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:ROOTPART" title="VESSEL:ROOTPART attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROOTPART</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#VESSEL:ROOTPART" title="VESSEL:ROOTPART attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROOTPART</span></tt></a></td>
 <td><a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
 <td>Root <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> of this vessel</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#VESSEL:PARTS" title="VESSEL:PARTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PARTS</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#VESSEL:PARTS" title="VESSEL:PARTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PARTS</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td>all <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#VESSEL:RESOURCES" title="VESSEL:RESOURCES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RESOURCES</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<td>all <tt class="xref ks ks-struct docutils literal"><span class="pre">AggrgateResources</span></tt></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#VESSEL:PARTSNAMED" title="VESSEL:PARTSNAMED method"><tt class="xref ks ks-meth docutils literal"><span class="pre">PARTSNAMED(name)</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
@@ -330,7 +352,7 @@ Vessel:<tt class="descname">BEARING</tt><a class="headerlink" href="#VESSEL:BEAR
 </tr>
 </tbody>
 </table>
-<p><em>relative</em> compass heading (degrees) to this vessel from the <a class="reference external" href="../../summary_topics/CPU_Vessel/index.html">CPU Vessel</a>, taking into account the CPU Vessel&#8217;s own heading.</p>
+<p><em>relative</em> compass heading (degrees) to this vessel from the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a>, taking into account the CPU Vessel&#8217;s own heading.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -346,7 +368,7 @@ Vessel:<tt class="descname">HEADING</tt><a class="headerlink" href="#VESSEL:HEAD
 </tr>
 </tbody>
 </table>
-<p><em>absolute</em> compass heading (degrees) to this vessel from the <a class="reference external" href="../../summary_topics/CPU_Vessel/index.html">CPU Vessel</a></p>
+<p><em>absolute</em> compass heading (degrees) to this vessel from the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -395,6 +417,38 @@ Vessel:<tt class="descname">MASS</tt><a class="headerlink" href="#VESSEL:MASS" t
 </tbody>
 </table>
 <p>The mass of the ship</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSEL:WETMASS">
+Vessel:<tt class="descname">WETMASS</tt><a class="headerlink" href="#VESSEL:WETMASS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (metric tons)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The mass of the ship if all resources were full</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSEL:DRYMASS">
+Vessel:<tt class="descname">DRYMASS</tt><a class="headerlink" href="#VESSEL:DRYMASS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (metric tons)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The mass of the ship if all resources were empty</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -462,19 +516,41 @@ Vessel:<tt class="descname">TERMVELOCITY</tt><a class="headerlink" href="#VESSEL
 </dd></dl>
 
 <dl class="attribute">
-<dt id="VESSEL:VESSELNAME">
-Vessel:<tt class="descname">VESSELNAME</tt><a class="headerlink" href="#VESSEL:VESSELNAME" title="Permalink to this definition">¶</a></dt>
+<dt id="VESSEL:SHIPNAME">
+Vessel:<tt class="descname">SHIPNAME</tt><a class="headerlink" href="#VESSEL:SHIPNAME" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
 </tbody>
 </table>
-<p>The name of the vessel as it appears in the tracking station.</p>
+<p>The name of the vessel as it appears in the tracking station. When you set this, it cannot be empty.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSEL:NAME">
+Vessel:<tt class="descname">NAME</tt><a class="headerlink" href="#VESSEL:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#VESSEL:SHIPNAME" title="VESSEL:SHIPNAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Vessel:SHIPNAME</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSEL:TYPE">
+Vessel:<tt class="descname">TYPE</tt><a class="headerlink" href="#VESSEL:TYPE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The ship&#8217;s type as described <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Craft#Vessel_types">on the KSP wiki</a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -490,7 +566,13 @@ Vessel:<tt class="descname">ANGULARMOMENTUM</tt><a class="headerlink" href="#VES
 </tr>
 </tbody>
 </table>
-<p>Given in [SHIP-RAW reference frame]](../../ref_frame/index.html). Despite the name, this is technically not momentum information because it has no magnitude.</p>
+<p>Given in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP_RAW</em></a> reference frame. The vector represents the axis of the rotation, and its magnitude is the angular momentum of the rotation, which varies not only with the speed of the rotation, but also with the angular inertia of the vessel.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionchanged">
+<p><span class="versionmodified">Changed in version 0.15.4: </span>This has been changed to a vector, as it should have been all along.</p>
+</div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -506,7 +588,13 @@ Vessel:<tt class="descname">ANGULARVEL</tt><a class="headerlink" href="#VESSEL:A
 </tr>
 </tbody>
 </table>
-<p>Given in [SHIP-RAW reference frame]](../../ref_frame/index.html). Despite the name, this is technically not a velocity. It only tells you the axis of rotation, not the speed of rotation around that axis.</p>
+<p>Given in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP_RAW</em></a> reference frame. The vector represents the axis of the rotation, and its magnitude is the speed of that rotation (Presumably in degrees per second?  This is not documented in the KSP API and may take some experimentation to discover if it&#8217;s radians or degrees).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionchanged">
+<p><span class="versionmodified">Changed in version 0.15.4: </span>This has been changed to a vector, as it should have been all along.</p>
+</div>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -554,7 +642,7 @@ Vessel:<tt class="descname">PATCHES</tt><a class="headerlink" href="#VESSEL:PATC
 </tr>
 </tbody>
 </table>
-<p>The list of <a class="reference external" href="../orbit/index.html">orbit patches</a> that describe this vessel&#8217;s current travel path based on momentum alone with no thrusting changes. If the current path has no transitions to other bodies, then this will be a list of only one orbit. If the current path intersects other bodies, then this will be a list describing the transitions into and out of the intersecting body&#8217;s sphere of influence. SHIP:PATCHES[0] is always exactly the same as SHIP:OBT, SHIP:PATCHES[1] is the same as SHIP:OBT:NEXTPATCH, SHIP:PATCHES[2] is the same as SHIP:OBT:NEXTPATCH:NEXTPATCH, and so on. Note that you will only see as far into the future as your KSP settings allow. (See the setting CONIC_PATCH_LIMIT in your settings.cfg file)</p>
+<p>The list of <a class="reference internal" href="../orbits/orbit.html#orbit"><em>orbit patches</em></a> that describe this vessel&#8217;s current travel path based on momentum alone with no thrusting changes. If the current path has no transitions to other bodies, then this will be a list of only one orbit. If the current path intersects other bodies, then this will be a list describing the transitions into and out of the intersecting body&#8217;s sphere of influence. SHIP:PATCHES[0] is always exactly the same as SHIP:OBT, SHIP:PATCHES[1] is the same as SHIP:OBT:NEXTPATCH, SHIP:PATCHES[2] is the same as SHIP:OBT:NEXTPATCH:NEXTPATCH, and so on. Note that you will only see as far into the future as your KSP settings allow. (See the setting CONIC_PATCH_LIMIT in your settings.cfg file)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -570,7 +658,7 @@ Vessel:<tt class="descname">ROOTPART</tt><a class="headerlink" href="#VESSEL:ROO
 </tr>
 </tbody>
 </table>
-<p>The first <a class="reference external" href="../part/index.html">part</a> that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree.</p>
+<p>The first <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -586,7 +674,23 @@ Vessel:<tt class="descname">PARTS</tt><a class="headerlink" href="#VESSEL:PARTS"
 </tr>
 </tbody>
 </table>
-<p>A List of all the <a class="reference external" href="../part/index.html">parts</a> on the vessel. SET FOO TO SHIP:PARTS has exactly the same effect as LIST PARTS IN FOO. For more information, see <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">ship parts and modules</a></p>
+<p>A List of all the <a class="reference internal" href="part.html#part"><em>parts</em></a> on the vessel. <tt class="docutils literal"><span class="pre">SET</span> <span class="pre">FOO</span> <span class="pre">TO</span> <span class="pre">SHIP:PARTS.</span></tt> has exactly the same effect as <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span> <span class="pre">IN</span> <span class="pre">FOO.</span></tt>. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="VESSEL:RESOURCES">
+Vessel:<tt class="descname">RESOURCES</tt><a class="headerlink" href="#VESSEL:RESOURCES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <tt class="xref ks ks-struct docutils literal"><span class="pre">AggregateResource</span></tt> objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>A List of all the <a class="reference internal" href="aggregateresource.html#aggregateresource"><em>AggregateResources</em></a> on the vessel. <tt class="docutils literal"><span class="pre">SET</span> <span class="pre">FOO</span> <span class="pre">TO</span> <span class="pre">SHIP:RESOURCES.</span></tt> has exactly the same effect as <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">RESOURCES</span> <span class="pre">IN</span> <span class="pre">FOO.</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -606,7 +710,7 @@ Vessel:<tt class="descname">PARTSNAMED</tt><big>(</big>name<big>)</big><a class=
 </tr>
 </tbody>
 </table>
-<p>Part:NAME. The matching is done case-insensitively. For more information, see <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">ship parts and modules</a></p>
+<p>Part:NAME. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -626,7 +730,7 @@ Vessel:<tt class="descname">PARTSTITLED</tt><big>(</big>title<big>)</big><a clas
 </tr>
 </tbody>
 </table>
-<p>Part:TITLE. The matching is done case-insensitively. For more information, see <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">ship parts and modules</a></p>
+<p>Part:TITLE. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -646,7 +750,7 @@ Vessel:<tt class="descname">PARTSTAGGED</tt><big>(</big>tag<big>)</big><a class=
 </tr>
 </tbody>
 </table>
-<p>Part:TAG value. The matching is done case-insensitively. For more information, see <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">ship parts and modules</a></p>
+<p>Part:TAG value. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -666,7 +770,7 @@ Vessel:<tt class="descname">PARTSDUBBED</tt><big>(</big>name<big>)</big><a class
 </tr>
 </tbody>
 </table>
-<p>name regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMED(val), :PARTSTITLED(val), :PARTSTAGGED(val). The matching is done case-insensitively. For more information, see <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">ship parts and modules</a></p>
+<p>name regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMED(val), :PARTSTITLED(val), :PARTSTAGGED(val). The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -686,7 +790,7 @@ Vessel:<tt class="descname">MODULESNAMED</tt><big>(</big>name<big>)</big><a clas
 </tr>
 </tbody>
 </table>
-<p>match the given name. The matching is done case-insensitively. For more information, see <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">ship parts and modules</a></p>
+<p>match the given name. The matching is done case-insensitively. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -706,7 +810,7 @@ Vessel:<tt class="descname">PARTSINGROUP</tt><big>(</big>group<big>)</big><a cla
 </tr>
 </tbody>
 </table>
-<p>one action triggered by the given action group. For more information, see <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">ship parts and modules</a></p>
+<p>one action triggered by the given action group. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -726,7 +830,7 @@ Vessel:<tt class="descname">MODULESINGROUP</tt><big>(</big>group<big>)</big><a c
 </tr>
 </tbody>
 </table>
-<p>have at least one action triggered by the given action group. For more information, see <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">ship parts and modules</a></p>
+<p>have at least one action triggered by the given action group. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -740,7 +844,7 @@ Vessel:<tt class="descname">ALLPARTSTAGGED</tt><big>(</big><big>)</big><a class=
 </tr>
 </tbody>
 </table>
-<p>nametag on them of any sort that is nonblank. For more information, see <a class="reference external" href="../../summary_topics/ship_parts_and_modules/index.html">ship parts and modules</a></p>
+<p>nametag on them of any sort that is nonblank. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
 </dd></dl>
 
 </div>
@@ -751,7 +855,7 @@ Vessel:<tt class="descname">ALLPARTSTAGGED</tt><big>(</big><big>)</big><a class=
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="vesselsensors.html" class="btn btn-neutral float-right" title="VesselSensors"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="vesselsensors.html" class="btn btn-neutral float-right" title="VesselSensors">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="sensor.html" class="btn btn-neutral" title="Sensor"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -767,7 +871,8 @@ Vessel:<tt class="descname">ALLPARTSTAGGED</tt><big>(</big><big>)</big><a class=
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -32,7 +32,7 @@
               href="../about.html"/>
     <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
         <link rel="up" title="General Topics" href="../general.html"/>
-        <link rel="next" title="The KerboScript Language" href="../language.html"/>
+        <link rel="next" title="Career Limits" href="career_limits.html"/>
         <link rel="prev" title="Ship Parts and PartModules" href="parts_and_partmodules.html"/> 
 
   
@@ -47,7 +47,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -69,6 +71,7 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
@@ -77,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
@@ -108,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/maneuvering.html">Maneuvering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
 </ul>
 </li>
@@ -149,7 +155,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="communication-range-for-remote-updates">
 <span id="comm-range"></span><h1>Communication Range For Remote Updates<a class="headerlink" href="#communication-range-for-remote-updates" title="Permalink to this headline">¶</a></h1>
@@ -191,7 +197,7 @@ you are in range.</li>
 <li>commDish: (The Communotron 88-88)</li>
 </ul>
 <p>The number of meters of range is decided by this formula:</p>
-<p>max range = ( (100,000 + L<a href="#id1"><span class="problematic" id="id2">*</span></a>1,000,000) <a href="#id3"><span class="problematic" id="id4">*</span></a>100^M * 200^D ) meters Where: * L = number of longAntenna&#8217;s on the vessel. * M = number of mediumDishAntenna&#8217;s on the vessel. * D = number of commDish&#8217;s on the vessel.</p>
+<p>max range = ( (100,000 + L*1,000,000) *100^M * 200^D ) meters Where: * L = number of longAntenna&#8217;s on the vessel. * M = number of mediumDishAntenna&#8217;s on the vessel. * D = number of commDish&#8217;s on the vessel.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="6%" />
@@ -319,7 +325,7 @@ Kerbal system</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../language.html" class="btn btn-neutral float-right" title="The KerboScript Language"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="career_limits.html" class="btn btn-neutral float-right" title="Career Limits">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="parts_and_partmodules.html" class="btn btn-neutral" title="Ship Parts and PartModules"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -335,7 +341,8 @@ Kerbal system</td>
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>
