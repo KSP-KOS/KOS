@@ -8,6 +8,7 @@ Variables & Statements
     :depth: 1
     
 .. _declare:
+
 ``DECLARE``
 -----------
 
@@ -16,6 +17,7 @@ Declares a global variable. Alternatively, a variable can be implicitly declared
     DECLARE X.
 
 .. _declare parameter:
+
 ``DECLARE PARAMETER``
 ---------------------
 
@@ -64,6 +66,7 @@ The ``DECLARE PARAMETER`` statements can appear anywhere in a program as long as
     At the moment the only kind of parameter supported is a pass-by-value parameter, and pass-by reference parameters don't exist. Be aware, however, that due to the way kOS is implemented on top of a reference-using object-oriented language (CSharp), if you pass an argument which is a complex aggregate structure (i.e. a Vector, or a List - anything that kOS lets you use a colon suffix with), then the parameters will behave exactly like being passed by reference because all you're passing is the handle to the object rather than the object itself. This should be familiar behavior to anyone who has written software in Java or C# before.
 
 .. _set:
+
 ``SET``
 -------
 
@@ -72,6 +75,7 @@ Sets the value of a variable. Declares a global variable if it doesn’t already
     SET X TO 1.
 
 .. _lock:
+
 ``LOCK``
 --------
 
@@ -84,6 +88,7 @@ Declares that the idenifier will refer to an expression that is always re-evalua
     PRINT X.    // prints "3"
 
 .. _toggle:
+
 ``TOGGLE``
 ----------
 
@@ -93,6 +98,7 @@ Toggles a variable between ``TRUE`` or ``FALSE``. If the variable in question st
     TOGGLE SAS. // Toggles SAS on or off.
 
 .. _on:
+
 ``ON``
 ------
 
@@ -101,6 +107,7 @@ Sets a variable to ``TRUE``. This is useful for the ``RCS`` and ``SAS`` bindings
     RCS ON.  // Turns on the RCS
 
 .. _off:
+
 ``OFF``
 -------
 

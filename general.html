@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -31,7 +31,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
     <link rel="top" title="kOS 0.15.3 documentation" href="index.html"/>
-        <link rel="next" title="CPU Vessel (SHIP)" href="general/cpu_vessel.html"/>
+        <link rel="next" title="Catalog of Bound Variable Names" href="bindings.html"/>
         <link rel="prev" title="PID Loops in kOS" href="tutorials/pidloops.html"/> 
 
   
@@ -46,7 +46,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -68,6 +70,7 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
@@ -76,6 +79,7 @@
 <li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language.html">Language</a><ul>
@@ -107,6 +111,8 @@
 <li class="toctree-l2"><a class="reference internal" href="structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/maneuvering.html">Maneuvering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc.html">Miscellaneous</a></li>
 </ul>
 </li>
@@ -146,13 +152,27 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="general-topics">
 <span id="general"></span><h1>General Topics<a class="headerlink" href="#general-topics" title="Permalink to this headline">¶</a></h1>
 <p>These topics discuss the interfacing between <strong>kOS</strong> and <strong>Kerbal Space Program</strong>.</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="bindings.html">Bound Variables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#named-vessels-and-bodies">NAMED VESSELS AND BODIES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#alias-shortcuts-for-ship-fields">Alias shortcuts for SHIP fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#resource-types">Resource Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#alt-alias">ALT ALIAS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#eta-alias">ETA ALIAS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#encounter">ENCOUNTER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#boolean-toggle-fields">BOOLEAN TOGGLE FIELDS:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#flight-control">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#system-variables">System Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#config">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html#game-state">Game State</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html#update-ticks-and-physics-ticks">Update Ticks and Physics Ticks</a></li>
@@ -196,6 +216,11 @@
 <li class="toctree-l2"><a class="reference internal" href="general/comm_range.html#communication-range-deprecated">Communication Range (Deprecated)</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="general/career_limits.html#the-rules-being-enforced">The rules being enforced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/career_limits.html#structure">Structure</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -206,7 +231,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="general/cpu_vessel.html" class="btn btn-neutral float-right" title="CPU Vessel (SHIP)"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="bindings.html" class="btn btn-neutral float-right" title="Catalog of Bound Variable Names">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="tutorials/pidloops.html" class="btn btn-neutral" title="PID Loops in kOS"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -222,7 +247,8 @@
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,7 +47,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -69,6 +71,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
@@ -77,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
@@ -108,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
 </ul>
 </li>
@@ -151,7 +157,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="part">
 <span id="id1"></span><h1>Part<a class="headerlink" href="#part" title="Permalink to this headline">¶</a></h1>
@@ -181,65 +187,81 @@
 <td>string</td>
 <td>Title as it appears in KSP</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#PART:TAG" title="PART:TAG attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TAG</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#PART:MASS" title="PART:MASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></tt></a></td>
+<td>scalar</td>
+<td>Current mass of part and its resources</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:DRYMASS" title="PART:DRYMASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DRYMASS</span></tt></a></td>
+<td>scalar</td>
+<td>Mass of part if all resources were empty</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:WETMASS" title="PART:WETMASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">WETMASS</span></tt></a></td>
+<td>scalar</td>
+<td>Mass of part if all resources were full</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:TAG" title="PART:TAG attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TAG</span></tt></a></td>
 <td>string</td>
 <td>Name-tag if assigned by the player</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CONTROLFROM</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CONTROLFROM</span></tt></a></td>
 <td>boolean</td>
 <td>Set control-from to this part</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#PART:STAGE" title="PART:STAGE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">STAGE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:STAGE" title="PART:STAGE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">STAGE</span></tt></a></td>
 <td>scalar</td>
 <td>The stage this is associated with</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#PART:UID" title="PART:UID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UID</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#PART:UID" title="PART:UID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UID</span></tt></a></td>
 <td>scalar</td>
 <td>Unique identifying number</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#PART:ROTATION" title="PART:ROTATION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROTATION</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:ROTATION" title="PART:ROTATION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROTATION</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 <td>The rotation of this part&#8217;s <span class="math">\(x\)</span>-axis</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#PART:POSITION" title="PART:POSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#PART:POSITION" title="PART:POSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></tt></a></td>
 <td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 <td>The location of this part in the universe</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#PART:FACING" title="PART:FACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FACING</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:FACING" title="PART:FACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FACING</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 <td>the direction that this part is facing</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#PART:RESOURCES" title="PART:RESOURCES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RESOURCES</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#PART:RESOURCES" title="PART:RESOURCES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RESOURCES</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td>list of the <a class="reference internal" href="resource.html#RESOURCE" title="RESOURCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Resource</span></tt></a> in this part</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#PART:TARGETABLE" title="PART:TARGETABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TARGETABLE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:TARGETABLE" title="PART:TARGETABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TARGETABLE</span></tt></a></td>
 <td>boolean</td>
 <td>true if this part can be selected as a target</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#PART:SHIP" title="PART:SHIP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHIP</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#PART:SHIP" title="PART:SHIP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHIP</span></tt></a></td>
 <td><a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
 <td>the vessel that contains this part</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#PART:GETMODULE" title="PART:GETMODULE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">GETMODULE(name)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:GETMODULE" title="PART:GETMODULE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">GETMODULE(name)</span></tt></a></td>
 <td><a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a></td>
 <td>Get one of the <a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></tt></a> by name</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#PART:MODULES" title="PART:MODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MODULES</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#PART:MODULES" title="PART:MODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MODULES</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td>Names (string) of all <a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModules</span></tt></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#PART:ALLMODULES" title="PART:ALLMODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLMODULES</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:ALLMODULES" title="PART:ALLMODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLMODULES</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td>Same as <a class="reference internal" href="#PART:MODULES" title="PART:MODULES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MODULES</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#PART:PARENT" title="PART:PARENT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PARENT</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#PART:PARENT" title="PART:PARENT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PARENT</span></tt></a></td>
 <td><a class="reference internal" href="#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
 <td>Adjacent <a class="reference internal" href="#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> on this <a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#PART:HASPARENT" title="PART:HASPARENT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HASPARENT</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#PART:HASPARENT" title="PART:HASPARENT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HASPARENT</span></tt></a></td>
 <td>boolean</td>
 <td>Check if this part has a parent <a class="reference internal" href="#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#PART:HASPHYSICS" title="PART:HASPHYSICS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HASPHYSICS</span></tt></a></td>
+<td>boolean</td>
+<td>Does this part have mass or drag</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#PART:CHILDREN" title="PART:CHILDREN attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CHILDREN</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
@@ -414,6 +436,54 @@ Part:<tt class="descname">FACING</tt><a class="headerlink" href="#PART:FACING" t
 </dd></dl>
 
 <dl class="attribute">
+<dt id="PART:MASS">
+Part:<tt class="descname">MASS</tt><a class="headerlink" href="#PART:MASS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>The current mass or the part and its resources. If the part has no physics this will always be 0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:WETMASS">
+Part:<tt class="descname">WETMASS</tt><a class="headerlink" href="#PART:WETMASS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>The mass of the part if all of its resources were full. If the part has no physics this will always be 0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PART:DRYMASS">
+Part:<tt class="descname">DRYMASS</tt><a class="headerlink" href="#PART:DRYMASS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+</tbody>
+</table>
+<p>The mass of the part if all of its resources were empty. If the part has no physics this will always be 0.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="PART:RESOURCES">
 Part:<tt class="descname">RESOURCES</tt><a class="headerlink" href="#PART:RESOURCES" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -520,6 +590,23 @@ Part:<tt class="descname">PARENT</tt><a class="headerlink" href="#PART:PARENT" t
 </dd></dl>
 
 <dl class="attribute">
+<dt id="PART:HASPHYSICS">
+Part:<tt class="descname">HASPHYSICS</tt><a class="headerlink" href="#PART:HASPHYSICS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p>This comes from a part&#8217;s configuration and is an artifact of the KSP simulation.</p>
+<p>For a list of stock parts that have this attribute and a fuller explanation see <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Massless_part">the KSP wiki page about massless parts</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="PART:HASPARENT">
 Part:<tt class="descname">HASPARENT</tt><a class="headerlink" href="#PART:HASPARENT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -559,7 +646,7 @@ Part:<tt class="descname">CHILDREN</tt><a class="headerlink" href="#PART:CHILDRE
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="partmodule.html" class="btn btn-neutral float-right" title="PartModule"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="partmodule.html" class="btn btn-neutral float-right" title="PartModule">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="node.html" class="btn btn-neutral" title="Maneuver Node"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -575,7 +662,8 @@ Part:<tt class="descname">CHILDREN</tt><a class="headerlink" href="#PART:CHILDRE
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

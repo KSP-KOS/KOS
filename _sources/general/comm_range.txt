@@ -45,7 +45,7 @@ Communications range is decided by how many antennae are installed, and of what 
 
 The number of meters of range is decided by this formula:
 
-max range = ( (100,000 + L\ *1,000,000) *\ 100^M \* 200^D ) meters Where: \* L = number of longAntenna's on the vessel. \* M = number of mediumDishAntenna's on the vessel. \* D = number of commDish's on the vessel.
+max range = ( (100,000 + L\ \*1,000,000) \*\ 100^M \* 200^D ) meters Where: \* L = number of longAntenna's on the vessel. \* M = number of mediumDishAntenna's on the vessel. \* D = number of commDish's on the vessel.
 
 
 +----------------+----------------+-----------------------------------+

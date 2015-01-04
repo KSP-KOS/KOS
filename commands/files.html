@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,7 +47,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -69,6 +71,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
@@ -77,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
@@ -108,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/maneuvering.html">Maneuvering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
 </ul>
 </li>
@@ -149,7 +155,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="file-i-o">
 <span id="files"></span><h1>File I/O<a class="headerlink" href="#file-i-o" title="Permalink to this headline">¶</a></h1>
@@ -237,8 +243,8 @@ example:</p>
 <p>Pre-compiles a script into an <a class="reference internal" href="../general/compiling.html#compiling"><em>Kerboscript ML Exceutable
 image</em></a> that can be used
 instead of executing the program discript directly.</p>
-<p>The RUN command (elsewhere on this page) can work with either <a href="#id1"><span class="problematic" id="id2">*</span></a>.ks
-script files or <a href="#id3"><span class="problematic" id="id4">*</span></a>.ksm compiled files.</p>
+<p>The RUN command (elsewhere on this page) can work with either *.ks
+script files or *.ksm compiled files.</p>
 <p>The full details of this process are long and complex enough to be
 placed on a separate page.</p>
 <p>Please see <a class="reference internal" href="../general/compiling.html#compiling"><em>the details of the Kerboscript ML
@@ -273,8 +279,8 @@ understanding this command.</p>
 <div class="section" id="delete-filename-from-volumenumber">
 <h2><tt class="docutils literal"><span class="pre">DELETE</span> <span class="pre">filename</span> <span class="pre">FROM</span> <span class="pre">volumeNumber.</span></tt><a class="headerlink" href="#delete-filename-from-volumenumber" title="Permalink to this headline">¶</a></h2>
 <p>Deletes a file. You can delete a file from the current volume, or from a named volume.</p>
-<div class="section" id="id5">
-<h3>Arguments<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>Arguments<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>argument 1: Name of target file.</li>
 <li>argument 2: (optional) Target volume.</li>
@@ -292,8 +298,8 @@ understanding this command.</p>
 <div class="section" id="edit-program">
 <h2><tt class="docutils literal"><span class="pre">EDIT</span> <span class="pre">program.</span></tt><a class="headerlink" href="#edit-program" title="Permalink to this headline">¶</a></h2>
 <p>Edits a program on the currently selected volume.</p>
-<div class="section" id="id6">
-<h3>Arguments<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Arguments<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>argument 1: Name of file for editing.</li>
 </ul>
@@ -314,8 +320,8 @@ understanding this command.</p>
 <div class="section" id="log-text-to-filename">
 <h2><tt class="docutils literal"><span class="pre">LOG</span> <span class="pre">text</span> <span class="pre">TO</span> <span class="pre">filename.</span></tt><a class="headerlink" href="#log-text-to-filename" title="Permalink to this headline">¶</a></h2>
 <p>Logs the selected text to a file on the local volume. Can print strings, or the result of an expression.</p>
-<div class="section" id="id7">
-<h3>Arguments<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Arguments<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>argument 1: Value you would like to log.</li>
 <li>argument 2: Name of file to log into.</li>
@@ -331,8 +337,8 @@ LOG “4 times 8 is: “ + (4*8) to mylog.   // logs to mylog.ks because .ks is 
 <div class="section" id="rename-name1-to-name2">
 <h2><tt class="docutils literal"><span class="pre">RENAME</span> <span class="pre">name1</span> <span class="pre">TO</span> <span class="pre">name2.</span></tt><a class="headerlink" href="#rename-name1-to-name2" title="Permalink to this headline">¶</a></h2>
 <p>Renames a file or volume.</p>
-<div class="section" id="id8">
-<h3>Arguments<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Arguments<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>argument 1: Volume/File Name you would like to change.</li>
 <li>argument 2: New name for $1.</li>
@@ -347,8 +353,8 @@ LOG “4 times 8 is: “ + (4*8) to mylog.   // logs to mylog.ks because .ks is 
 <div class="section" id="run-program">
 <h2><tt class="docutils literal"><span class="pre">RUN</span> <span class="pre">&lt;program&gt;.</span></tt><a class="headerlink" href="#run-program" title="Permalink to this headline">¶</a></h2>
 <p>Runs the specified file as a program, optionally passing information to the program in the form of a comma-separated list of arguments in parentheses.</p>
-<div class="section" id="id9">
-<h3>Arguments<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Arguments<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>&lt;program&gt;: File to run.</li>
 <li>comma-separagted-args: a list of values to pass into the program.</li>
@@ -363,7 +369,7 @@ LOG “4 times 8 is: “ + (4*8) to mylog.   // logs to mylog.ks because .ks is 
 </pre></div>
 </div>
 <p>The program that is reading the arguments sees them in the variables it
-mentions in <em class="xref std std-ref">DECLARE PARAMETER</em>.</p>
+mentions in <a class="reference internal" href="../language/variables.html#declare-parameter"><em>DECLARE PARAMETER</em></a>.</p>
 </div>
 <div class="section" id="important-exceptions-to-the-usual-filename-rules-for-run">
 <h3>Important exceptions to the usual filename rules for RUN<a class="headerlink" href="#important-exceptions-to-the-usual-filename-rules-for-run" title="Permalink to this headline">¶</a></h3>
@@ -413,7 +419,7 @@ to understanding this command.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="terminal.html" class="btn btn-neutral float-right" title="Terminal and game environment"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="terminal.html" class="btn btn-neutral float-right" title="Terminal and game environment">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="parts.html" class="btn btn-neutral" title="Querying a vessel’s parts"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -429,7 +435,8 @@ to understanding this command.</p>
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>
