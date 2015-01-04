@@ -1,0 +1,453 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Waypoints &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="up" title="Structure Reference" href="../structures.html"/>
+        <link rel="next" title="Configurations and Miscellany" href="misc.html"/>
+        <link rel="prev" title="Orbits and Maneuver Nodes" href="maneuvering.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maneuvering.html">Maneuvering</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Waypoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../structures.html">Structure Reference</a> &raquo;</li>
+      
+    <li>Waypoints</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/structures/waypoint.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="waypoints">
+<h1>Waypoints<a class="headerlink" href="#waypoints" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#creation" id="id1">Creation</a></li>
+<li><a class="reference internal" href="#structure" id="id2">Structure</a></li>
+</ul>
+</div>
+<p>Waypoints are the location markers you can see on the map view showing
+you where contracts are targeted for.  With this strucure, you can obtain
+coordinate data for the locations of these waypoints.</p>
+<div class="section" id="creation">
+<h2><a class="toc-backref" href="#id1">Creation</a><a class="headerlink" href="#creation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="WAYPOINT">
+<tt class="descname">WAYPOINT</tt><big>(</big>name<big>)</big><a class="headerlink" href="#WAYPOINT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; (string) Name of the waypoint as it appears on the map or in the contract description</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref ks ks-struct docutils literal"><span class="pre">Waypoint</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This creates a new Waypoint from a name of a waypoint you read from the contract paramters.  Note that this only works on contracts you&#8217;ve accpted.  Waypoints for proposed contracts haven&#8217;t accepted yet  do not actually work in kOS.</p>
+<p>SET spot TO WAYPOINT(&#8220;herman&#8217;s folly beta&#8221;).</p>
+<p>The name match is case-insensitive.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ALLWAYPOINTS">
+<tt class="descname">ALLWAYPOINTS</tt><big>(</big><big>)</big><a class="headerlink" href="#ALLWAYPOINTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <tt class="xref ks ks-struct docutils literal"><span class="pre">Waypoint</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>This creates a <a class="reference internal" href="misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <tt class="xref ks ks-struct docutils literal"><span class="pre">Waypoint</span></tt> structures for all accepted contracts.  Waypoints for proposed contracts you haven&#8217;t accepted yet do not appear in the list.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="structure">
+<h2><a class="toc-backref" href="#id2">Structure</a><a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
+<dl class="structure">
+<dt>
+<em class="property">structure </em><tt class="descname">Waypoint</tt></dt>
+<dd><table border="1" class="docutils">
+<caption><strong>Members</strong></caption>
+<colgroup>
+<col width="50%" />
+<col width="25%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Get</th>
+<th class="head">Set</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#WAYPOINT:NAME" title="WAYPOINT:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#WAYPOINT:BODY" title="WAYPOINT:BODY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">BODY</span></tt></a></td>
+<td><cite>BodyTarget</cite></td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#WAYPOINT:GEOPOSITION" title="WAYPOINT:GEOPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITION</span></tt></a></td>
+<td><cite>GeoCoordinates</cite></td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#WAYPOINT:ALTITUDE" title="WAYPOINT:ALTITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></tt></a></td>
+<td>scalar</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#WAYPOINT:AGL" title="WAYPOINT:AGL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AGL</span></tt></a></td>
+<td>scalar</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#WAYPOINT:NEARSURFACE" title="WAYPOINT:NEARSURFACE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NEARSURFACE</span></tt></a></td>
+<td>boolean</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#WAYPOINT:GROUNDED" title="WAYPOINT:GROUNDED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GROUNDED</span></tt></a></td>
+<td>boolean</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="WAYPOINT:NAME">
+Waypoint:<tt class="descname">NAME</tt><a class="headerlink" href="#WAYPOINT:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Name of waypoint as it appears on the map and contract</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="WAYPOINT:BODY">
+Waypoint:<tt class="descname">BODY</tt><a class="headerlink" href="#WAYPOINT:BODY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><cite>BodyTarget</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Celestial body the waypoint is attached to</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="WAYPOINT:GEOPOSITION">
+Waypoint:<tt class="descname">GEOPOSITION</tt><a class="headerlink" href="#WAYPOINT:GEOPOSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">GeoCoordinates</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>The LATLNG of this waypoint</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="WAYPOINT:ALTITUDE">
+Waypoint:<tt class="descname">ALTITUDE</tt><a class="headerlink" href="#WAYPOINT:ALTITUDE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Altitude of waypoint <strong>above &#8220;sea&#8221; level</strong>.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds towhere the marker tip hovers on the map, which is not actually at the very edge of the contract condition&#8217;s range.  It represents a typical midling location inside the contract&#8217;s altitude range.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="WAYPOINT:AGL">
+Waypoint:<tt class="descname">AGL</tt><a class="headerlink" href="#WAYPOINT:AGL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Altitude of waypoint <strong>above ground</strong>.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds to where the marker tip hovers on the map, which is not actually at the very edge of the contract condition&#8217;s range.  It represents a typical midling location inside the contract&#8217;s altitude range.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="WAYPOINT:NEARSURFACE">
+Waypoint:<tt class="descname">NEARSURFACE</tt><a class="headerlink" href="#WAYPOINT:NEARSURFACE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>True if waypoint is a point near or on the body rather than high in orbit.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="WAYPOINT:GROUNDED">
+Waypoint:<tt class="descname">GROUNDED</tt><a class="headerlink" href="#WAYPOINT:GROUNDED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>True if waypoint is actually glued to the ground.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="misc.html" class="btn btn-neutral float-right" title="Configurations and Miscellany">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="maneuvering.html" class="btn btn-neutral" title="Orbits and Maneuver Nodes"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
