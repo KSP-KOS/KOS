@@ -53,7 +53,7 @@ namespace kOS.AddOns.ActionGroupsExtended
         /// </summary>
         /// <param name="vessel">The vessel that will catch the action</param>
         /// <param name="group">A ActionGroup number from 11-251</param>
-        /// <returns>The Action group state</returns>
+        /// <returns>Did the action execute? If yes, return True</returns>
         public bool GetGroupState(Vessel vessel, int group)
         {
             var args = new System.Object[] {vessel.rootPart.flightID, group};
