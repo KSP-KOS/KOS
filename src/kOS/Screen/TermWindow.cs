@@ -13,6 +13,7 @@ namespace kOS.Screen
     public class TermWindow : KOSManagedWindow
     {
         private const int CHARSIZE = 8;
+        private const string CONTROL_LOCKOUT = "kOSTerminal";
         private const int CHARS_PER_ROW = 16;
         private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private static readonly Color color = new Color(1, 1, 1, 1);
@@ -111,12 +112,12 @@ namespace kOS.Screen
             cameraManager = CameraManager.Instance;
             cameraManager.enabled = false;
 
-            InputLockManager.SetControlLock("kOSTerminal");
+            InputLockManager.SetControlLock(CONTROL_LOCKOUT);
 
             // Prevent editor keys from being pressed while typing
             EditorLogic editor = EditorLogic.fetch;
                 //TODO: POST 0.90 REVIEW
-            if (editor != null && InputLockManager.IsUnlocked(ControlTypes.All)) editor.Lock(true, true, true, "kOSTerminal");
+            if (editor != null && InputLockManager.IsUnlocked(ControlTypes.All)) editor.Lock(true, true, true, CONTROL_LOCKOUT);
 
             // This seems to be the only way to force KSP to let me lock out the "X" throttle
             // key.  It seems to entirely bypass the logic of every other keypress in the game,
@@ -135,13 +136,13 @@ namespace kOS.Screen
             
             isLocked = false;
 
-            InputLockManager.RemoveControlLock("kOSTerminal");
+            InputLockManager.RemoveControlLock(CONTROL_LOCKOUT);
 
             cameraManager.enabled = true;
 
 
             EditorLogic editor = EditorLogic.fetch;
-            if (editor != null) editor.Unlock("kOSTerminal");
+            if (editor != null) editor.Unlock(CONTROL_LOCKOUT);
 
             // This seems to be the only way to force KSP to let me lock out the "X" throttle
             // key.  It seems to entirely bypass the logic of every other keypress in the game:
