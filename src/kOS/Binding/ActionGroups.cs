@@ -47,45 +47,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("AG8", () => shared.Vessel.ActionGroups[KSPActionGroup.Custom08]);
             shared.BindingMgr.AddGetter("AG9", () => shared.Vessel.ActionGroups[KSPActionGroup.Custom09]);
             shared.BindingMgr.AddGetter("AG10", () => shared.Vessel.ActionGroups[KSPActionGroup.Custom10]);
-
-            if (AGExtInstalled())
-            {
-                for (int i2 = 11; i2 <= 250; i2++)
-                {
-                    int i = i2;
-                    shared.BindingMgr.AddSetter("AG"+i.ToString(), val => AGX2VslActivateGroup(shared.Vessel.rootPart.flightID, i, (bool)val));
-                    shared.BindingMgr.AddGetter("AG"+i.ToString(), () => AGX2VslGroupState(shared.Vessel.rootPart.flightID, i));
-                }
-            }
-
         }
 
-        public static bool AGExtInstalled() //is AGX installed?
-        {
-            try //try-catch is required as the below code returns a NullRef if AGX is not present.
-            {
-                System.Type calledType = System.Type.GetType("ActionGroupsExtended.AGExtExternal, AGExt");
-                return (bool)calledType.InvokeMember("AGXInstalled", System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static, null, null, null);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public static bool AGX2VslActivateGroup(uint FlightID, int group, bool forceDir) //activate/deactivate an action group
-        {
-            
-            System.Type calledType = System.Type.GetType("ActionGroupsExtended.AGExtExternal, AGExt");
-            bool GroupAct = (bool)calledType.InvokeMember("AGX2VslActivateGroup", System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static, null, null, new System.Object[] { FlightID, group, forceDir });
-            return GroupAct;
-        }
-
-        public static bool AGX2VslGroupState(uint FlightID, int group)
-        {
-            System.Type calledType = System.Type.GetType("ActionGroupsExtended.AGExtExternal, AGExt");
-            bool GroupAct = (bool)calledType.InvokeMember("AGX2VslGroupState", System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static, null, null, new System.Object[] { FlightID, group });
-            return GroupAct;
-        }
     }
 }

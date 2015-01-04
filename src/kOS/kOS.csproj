@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
+    <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
     <Compile Include="AddOns\RemoteTech2\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechAPI.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechArchive.cs" />
