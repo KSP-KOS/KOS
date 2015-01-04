@@ -29,7 +29,7 @@ A single resource value a thing holds (i.e. fuel, electric charge, etc). This is
           - Can this tank be removed from the fuel flow
         * - :attr:`ENABLED`
           - boolean
-		  - Is this tank currently in the fuel flow
+          - Is this tank currently in the fuel flow
         
 		
 .. attribute:: Resource:NAME

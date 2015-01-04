@@ -196,7 +196,7 @@ Example::
 A ``WHEN``/``THEN`` trigger is removed when the program that created it exits, even if it has not occurred yet. The ``PRESERVE`` can be used inside the ``THEN`` clause of a ``WHEN`` statement. If you are going to make extensive use of ``WHEN``/``THEN`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu_hardware>`.
 
 .. index:: ON
-.. _on:
+.. _on_trigger:
 
 ``ON``
 ------
