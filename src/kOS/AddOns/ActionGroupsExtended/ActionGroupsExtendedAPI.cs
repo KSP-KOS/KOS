@@ -41,7 +41,7 @@ namespace kOS.AddOns.ActionGroupsExtended
         /// <param name="vessel">The vessel that will catch the action</param>
         /// <param name="group">A ActionGroup number from 11-251</param>
         /// <param name="forceDir">The value you want to set the action group to</param>
-        /// <returns>The Action group state</returns>
+        /// <returns>Did the action execute? If yes, return True</returns>
         public bool ActivateGroup(Vessel vessel, int group, bool forceDir) //activate/deactivate an action group
         {
             var args = new System.Object[] {vessel.rootPart.flightID, group, forceDir};
