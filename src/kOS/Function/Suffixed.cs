@@ -358,7 +358,7 @@ namespace kOS.Function
                 return;
             }
 
-            Waypoint point = wpm.AllWaypoints().FirstOrDefault(p => String.Equals(p.name, pointName,StringComparison.OrdinalIgnoreCase));
+            Waypoint point = wpm.AllWaypoints().FirstOrDefault(p => String.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase));
 
             shared.Cpu.PushStack(new WaypointValue(point, shared));
         }

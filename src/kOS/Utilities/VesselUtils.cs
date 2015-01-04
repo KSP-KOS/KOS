@@ -47,7 +47,7 @@ namespace kOS.Utilities
             total = 0;
             PartResourceDefinition resourceDefinition =
                 PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(
-                    rd => rd.name.Equals(resourceName, StringComparison.OrdinalIgnoreCase));
+                    rd => rd.name.Equals(resourceName, StringComparison.CurrentCultureIgnoreCase));
             // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
             if (resourceDefinition != null)
                 resourceIsFound = true;

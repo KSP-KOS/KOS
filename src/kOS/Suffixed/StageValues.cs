@@ -36,19 +36,26 @@ namespace kOS.Suffixed
 
         public override object GetSuffix(string suffixName)
         {
-            var resourceAmount = GetResourceOfCurrentStage(suffixName);
-            if (resourceAmount.HasValue)
+            if (!IsResource(suffixName))
             {
-                return resourceAmount.Value;
+                return base.GetSuffix(suffixName);
             }
 
-            return base.GetSuffix(suffixName);
+            var resourceAmount = GetResourceOfCurrentStage(suffixName);
+            return resourceAmount.HasValue ? resourceAmount.Value : 0.0;
+        }
+
+        private bool IsResource(string suffixName)
+        {
+            return PartResourceLibrary.Instance.resourceDefinitions.Any(
+                pr => string.Equals(pr.name, suffixName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         private double? GetResourceOfCurrentStage(string resourceName)
         {
-            var resource = shared.Vessel.GetActiveResources().FirstOrDefault(r => string.Equals(r.info.name, resourceName, StringComparison.OrdinalIgnoreCase));
-            return resource == null ? null : (double?) Math.Round(resource.amount, 2);
+            var resource = shared.Vessel.GetActiveResources();
+            var match = resource.FirstOrDefault(r => string.Equals(r.info.name, resourceName, StringComparison.InvariantCultureIgnoreCase));
+            return match == null ? null : (double?) Math.Round(match.amount, 2);
         }
 
         public override string ToString()
