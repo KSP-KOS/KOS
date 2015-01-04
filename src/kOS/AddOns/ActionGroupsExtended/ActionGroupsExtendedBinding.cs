@@ -9,11 +9,14 @@ namespace kOS.AddOns.ActionGroupsExtended
         {
             if (!ActionGroupsExtendedAPI.Instance.Installed()) return;
 
+            var flightId = shared.Vessel.rootPart.flightID;
+            var api = ActionGroupsExtendedAPI.Instance;
+
             for (int outerIndex = 11; outerIndex <= 250; outerIndex++)
             {
                 int i = outerIndex;
-                shared.BindingMgr.AddSetter("AG" + i, val => ActionGroupsExtendedAPI.Instance.ActivateGroup(shared.Vessel.rootPart.flightID, i, (bool) val));
-                shared.BindingMgr.AddGetter("AG" + i, () => ActionGroupsExtendedAPI.Instance.GetGroupState(shared.Vessel.rootPart.flightID, i));
+                shared.BindingMgr.AddSetter("AG" + i, val => api.ActivateGroup(flightId, i, (bool) val));
+                shared.BindingMgr.AddGetter("AG" + i, () => api.GetGroupState(flightId, i));
             }
         }
     }
