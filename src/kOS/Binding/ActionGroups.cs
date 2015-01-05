@@ -47,7 +47,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("AG8", () => shared.Vessel.ActionGroups[KSPActionGroup.Custom08]);
             shared.BindingMgr.AddGetter("AG9", () => shared.Vessel.ActionGroups[KSPActionGroup.Custom09]);
             shared.BindingMgr.AddGetter("AG10", () => shared.Vessel.ActionGroups[KSPActionGroup.Custom10]);
-            
         }
+
     }
 }
