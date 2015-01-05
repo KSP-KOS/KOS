@@ -19,14 +19,15 @@ Creation
 
     This creates a new Waypoint from a name of a waypoint you read from the contract paramters.  Note that this only works on contracts you've accpted.  Waypoints for proposed contracts haven't accepted yet  do not actually work in kOS.
 
-        SET spot TO WAYPOINT("herman's folly beta").
+    SET spot TO WAYPOINT("herman's folly beta").
 
     The name match is case-insensitive.
 
 .. function:: ALLWAYPOINTS()
-    :return: :struct: `List` of `Waypoint`s
 
-    This creates a `List` of `Waypoint` structures for all accepted contracts.  Waypoints for proposed contracts you haven't accepted yet do not appear in the list.
+    :return: :struct:`List` of :struct:`Waypoint`
+
+    This creates a :struct:`List` of :struct:`Waypoint` structures for all accepted contracts.  Waypoints for proposed contracts you haven't accepted yet do not appear in the list.
 
 Structure
 ---------

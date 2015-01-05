@@ -125,7 +125,7 @@ Structure
      :attr:`STARVECTOR`       :struct:`Vector`    This Direction's starboard vector (z axis after rotation).
      RIGHTVECTOR              :struct:`Vector`    Alias synonym for :attr:`STARVECTOR`
      :attr:`INVERSE`          :struct:`Direction` The inverse of this direction.
-    ================          =================== ================================
+    ========================= =================== ================================
     
     The :struct:`Direction` object exists primarily to enable automated steering. You can initialize a :struct:`Direction` using a :struct:`Vector` or a ``Rotation``. :struct:`Direction` objects represent a rotation starting from an initial point in **KSP**'s coordinate system where the initial state was looking down the :math:`+z` axis, with the camera "up" being the :math:`+y` axis. So for example, a :struct:`Direction` pointing along the :math:`x` axis might be represented as ``R(0,90,0)``, meaning the initial :math:`z`-axis direction was rotated *90 degrees* around the :math:`y` axis.
 
@@ -192,7 +192,7 @@ Structure
 Operations and Methods
 ----------------------
 
-You can use math operations on :struct:`Direction` objects as well. The next example uses a rotation of "UP" which is a system variable describing a vector directly away from the celestial body you are under the influence of::
+You can use math operations on :struct:`Direction` objects as well. The next example uses a rotation of "UP" which is a system variable describing a vector directly away from the celestial body you are under the influence of:
 
 Supported Direction Operators:
 

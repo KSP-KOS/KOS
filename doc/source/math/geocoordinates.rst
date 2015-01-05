@@ -30,7 +30,7 @@ Structure
 .. structure:: GeoCoordinates
         
     .. list-table::
-        :widths: 2 1 4
+        :widths: 2 1 2 4
         :header-rows: 1
 
         * - Suffix

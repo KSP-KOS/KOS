@@ -1,13 +1,13 @@
 .. _aggregateresource:
 
 AggregateResource
-========
+=================
 
 A ship can have many parts that contain resources (i.e. fuel, electric charge, etc). kOS has several tools for getting the summation of each resource.
 
-This is the type returned as the elements of the list in :ref:`LIST RESOURCES
+This is the type returned as the elements of the list in :ref:`LIST RESOURCES`
 
-IN MyList <list command>`::
+IN MyList <list command> ::
 
     PRINT "THESE ARE ALL THE RESOURCES ON THE SHIP:".
     LIST RESOURCES IN RESLIST.
@@ -19,7 +19,7 @@ IN MyList <list command>`::
               + "% full.".
     }.
 	
-This is also the type returned by STAGE:RESOURCES
+This is also the type returned by STAGE:RESOURCES ::
 
     PRINT "THESE ARE ALL THE RESOURCES active in this stage:".
     SET RESLIST TO STAGE:RESOURCES.
@@ -50,7 +50,7 @@ This is also the type returned by STAGE:RESOURCES
         * - :attr:`CAPACITY`
           - scalar
           - Maximum amount of this resource
-		* - :attr:`PARTS`
+        * - :attr:`PARTS`
           - List
           - A collection of the parts that can contain this resource
         
