@@ -11,6 +11,12 @@ Includes a Script Trigger action that can be used to control a running program a
 **Usage:** 
 Adds action groups AG11 through AG250 to kOS that are interacted with the same way as the AG1 through AG10 bindings in base kOS are.
 
+- ``AG15 on.``  Activate action group 13.
+- ``AG15 off.`` Deactivate action group 13.
+- ``print AG15.`` Prints True or False based on action group 15's state.
+- And however else you used AG1 can be used for AG15.
+- Note: When you issue the ``AG15 on.`` command, all actions in action group 15 are trigged in the activate direction regardless of the current state of the action group. How an action handles being activated when already activated will depend on how the original creator of the action set things up.
+
 **Basic Quick Start:**
 ![](http://members.shaw.ca/diazo/AGExtQuickStart1.jpg)
 ![](http://members.shaw.ca/diazo/AGExtQuickStart2.jpg)
