@@ -4,7 +4,7 @@ Action Groups Extended
 - Download: https://github.com/SirDiazo/AGExt/releases  
 - Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/threads/74195
 
-Increase the action groups available to kOS from 10 to 250 and add the ability to edit actions in flight and the ability to name action groups so you describe what a group does.
+Increase the action groups available to kOS from 10 to 250 and add the ability to edit actions in flight as well as the ability to name action groups so you describe what a group does.
 
 Includes a Script Trigger action that can be used to control a running program and visual feedback if an action group is currently activated.
 
@@ -15,7 +15,23 @@ Adds action groups AG11 through AG250 to kOS that are interacted with the same w
 - ``AG15 off.`` Deactivate action group 13.
 - ``print AG15.`` Prints True or False based on action group 15's state.
 - And however else you used AG1 can be used for AG15.
-- Note: When you issue the ``AG15 on.`` command, all actions in action group 15 are trigged in the activate direction regardless of the current state of the action group. How an action handles being activated when already activated will depend on how the original creator of the action set things up.
+- Note: When you issue the ``AG15 on.`` command, all actions in action group 15 are trigged in the activate direction regardless of the current state of the action group. How an action handles being activated when already activated will depend on how the original creator of the action set things up. 
+
+Caution:
+ 
+
+    ON AG15 {
+    print"AG15 triggered!".
+    preserve.
+    }
+    
+will behave unexpected if a action triggered by action group 15 has an animation. Because AGX montiors group state per action, the above code will most likely trigger three times (assuming AG15 has a Solar Panel Toggle Action in it):
+  1. AG15 is triggered by the player somehow. (AG15 Off -> On)
+  2. Panel starts deploying, but AGX sees the action as off while the animation plays and turns the action back off. (AG15 On -> Off)
+  3. Animation finishes playing, AGX now sees the action as on and turns the action on (AG15 Off -> On)
+If you need to do this, you have to add a delay that is long then the animation time as so:
+``Add code snippet``
+
 
 **Basic Quick Start:**
 ![](http://members.shaw.ca/diazo/AGExtQuickStart1.jpg)
@@ -40,5 +56,5 @@ Note that the state of action groups is tracked on a per-action basis, rather th
 - This can result in an action group have actions in a mixed state where some actions are on and some are off. In this case querying the group state will result in a state of False. For the purposes of the group state being True or False, if *all* actions in the action group are true, the group state will return true. If *any* actions in the group are false,the group state with return False.
 - When an action triggers an animation, the state of the action will be uncertain until the animation finishes playing. Some parts will report True during the animation and some will report False. It depends on how the part creator set things up and not something AGX can control.
 - For clarity, visual feedback can be provided of the current state of an action group. When editing action groups, find the "Toggle Grp." button just below the text entry field for the group name in the main AGX window and enable it. (It is enabled/disabled for the current action group when you click the button.) Once you do this, the text displaying that group will change from gray to colored. Green: Group is activated (state True). Red: Group is deactivated (state False). Yellow: Group is in a mixed state, will return a state False when queried.
-- It is okay to activate an already activated group and deactivate a non-activated group. Actions in the group will stil try to execute as normal.
+- It is okay to activate an already activated group and deactivate a non-activated group. Actions in the group will stil try to execute as normal. Exact behavior of a specific action will depend on how the action's creator set things up.
 
