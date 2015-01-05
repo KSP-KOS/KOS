@@ -22,7 +22,13 @@ Adds action groups AG11 through AG250 to kOS that are interacted with the same w
 
 - The following limitations apply only to AG11 through AG250. AG1 through AG10 will as they have regardless of whether AGX is installed or not.
 - For an action group to be useable, it must have an action assigned to it. When installed, AGX adds a "Script Trigger" action to the kOS computer part that serves this purpose if you want an "empty" action group to trigger kOS scripts with.
-- Be aware that if you query an emtpy action group, it will always return a state of False and trying to turn an emtpy action group On will do nothing and silently fail without any sort of error message.
-- The state of action groups is tracked on a per-action basis, rather then on a per-group basis. Note the following for actions that are assigned to multiple action groups:
--- The state of actions are monitored on the part. 
+- Be aware that if you query an empty action group, it will always return a state of False and trying to turn an emtpy action group On will do nothing and silently fail without any sort of error message.
+- At this point, AG11 through AG250 do not support RemoteTech. Triggering those action groups will bypass the signal delay and execute those actions immediately. (On the immediate fix list.)
+
+**Action state monitoring**
+Note that the state of action groups is tracked on a per-action basis, rather then on a per-group basis. This results in the group state being handled differently. (Note the following applies only to AG11 through AG250, AG1 through AG10 are not affected by this.)
+
+- The Script Trigger action found on the kOS computer module is not subject to the below considerations and is the recommended action to use when interacting with a running kOS script.
+- The state of actions are monitored on the part and updated automatically. A closed solar panel will return a state of false for all it's actions. (Extend Panels, Retract Panels, Toggle Panels) When you extend the solar panel with either the Extend Panels or Toggle Panels action, all three actions will change to a state of True. Retract the panels and the state of all three actions will become False.
+- This can result in an action group have actions in a mixed state where some actions are on and some are off. In this case querying the group state will result in a state of False. For the purposes of the group state being True or False, if *all* actions in the action group are true, the group state will return true. If *any* actions in the group are false,the group state with return False.
 
