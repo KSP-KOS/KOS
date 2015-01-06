@@ -6,7 +6,7 @@ General Features of the **KerboScript** Language
 .. contents::
     :local:
     :depth: 2
-    
+
 Case Insensitivity
 ------------------
 
@@ -72,12 +72,12 @@ Structures also often contain methods. A method is a suffix of a structure that 
                      // doesn't return anything.
     PRINT PLIST:SUBLIST(0,4). // calling a suffix method with 2
                               // arguments that returns a list.
-                              
+
 .. note::
     .. versionadded:: 0.15
         Methods now perform the activity when the interpreter comes up to it. Prior to this version, execution was sometimes delayed until some later time depending on the trigger setup or flow-control.
 
-For more information, see the :ref:`Structures Section <language structures>`. A full list of structure types can be found on the :doc:`Structures <structures>` page. For a more detailed breakdown of the language, see the :doc:`Language Syntax Constructs <syntax>` page.
+For more information, see the :ref:`Structures Section <language structures>`. A full list of structure types can be found on the :ref:`Structures <structures>` page. For a more detailed breakdown of the language, see the :ref:`Language Syntax Constructs <syntax>` page.
 
 .. _language structures:
 

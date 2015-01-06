@@ -6,7 +6,7 @@ Variables & Statements
 .. contents::
     :local:
     :depth: 1
-    
+
 .. _declare:
 
 ``DECLARE``
@@ -62,7 +62,7 @@ The ``DECLARE PARAMETER`` statements can appear anywhere in a program as long as
     **Pass By Value**
 
     The following paragraph is important for people familiar with other programming languages. If you are new to programming and don't understand what it is saying, that's okay you can ignore it.
-    
+
     At the moment the only kind of parameter supported is a pass-by-value parameter, and pass-by reference parameters don't exist. Be aware, however, that due to the way kOS is implemented on top of a reference-using object-oriented language (CSharp), if you pass an argument which is a complex aggregate structure (i.e. a Vector, or a List - anything that kOS lets you use a colon suffix with), then the parameters will behave exactly like being passed by reference because all you're passing is the handle to the object rather than the object itself. This should be familiar behavior to anyone who has written software in Java or C# before.
 
 .. _set:
@@ -74,12 +74,10 @@ Sets the value of a variable. Declares a global variable if it doesn’t already
 
     SET X TO 1.
 
-.. _lock:
-
 ``LOCK``
 --------
 
-Declares that the idenifier will refer to an expression that is always re-evaluated on the fly every time it is used::
+Declares that the idenifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also :ref:`Flow Control documentation <lock>`)::
 
     SET Y TO 1.
     LOCK X TO Y + 1.

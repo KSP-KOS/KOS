@@ -1,4 +1,6 @@
-Action Groups Extended
-=======
+.. _agx:
 
-Stub for action groups extended documentation.	
+Action Groups Extended
+======================
+
+Stub for action groups extended documentation.

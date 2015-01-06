@@ -1,4 +1,4 @@
-.. fileinfo:
+.. _fileinfo:
 
 File Information
 ================

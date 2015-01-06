@@ -17,6 +17,7 @@ Welcome to the **kOS** Documentation Website!
     Mathematics <math>
     Commands <commands>
     Structures <structures>
+    Addons <addons>
     Contribute <contribute>
     About <about>
 

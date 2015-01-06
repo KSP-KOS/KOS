@@ -1,3 +1,5 @@
+.. _cooked:
+
 Cooked Control
 ==============
 
@@ -11,7 +13,7 @@ In this style of controlling the craft, you do not steer the craft directly, but
 .. _LOCK STEERING:
 .. object:: LOCK STEERING TO value.
 
-   This sets the direction **kOS** should point the ship where *value* is a :ref:`Vector <vector>` or a :ref:`Direction <direction>` created from a :ref:`Rotation <rotation>` or :ref:`Heading <heading>`:
+   This sets the direction **kOS** should point the ship where *value* is a :struct:`Vector` or a :ref:`Direction <direction>` created from a :ref:`Rotation <rotation>` or :ref:`Heading <heading>`:
 
     :ref:`Rotation <rotation>`
 
@@ -22,18 +24,18 @@ In this style of controlling the craft, you do not steer the craft directly, but
             LOCK STEERING TO Up + R(20,0,0).
 
         To select a direction that is due east, aimed at the horizon::
-        
+
             LOCK STEERING TO North + R(0,90,0).
-           
+
         ``UP`` and ``NORTH`` are the only two predefined rotations.
-            
+
     :ref:`Heading <heading>`
-     
+
         A heading expressed as ``HEADING(compass, pitch)``. This will aim 30 degrees above the horizon, due south::
 
             LOCK STEERING TO HEADING(180, 30).
 
-    :ref:`Vector <vector>`
+    :struct:`Vector`
 
         Any vector can also be used to lock steering::
 

@@ -33,7 +33,7 @@ Checks if the expression supplied returns true. If it does, ``IF`` executes the 
     SET X TO 1.
     IF X = 1 { PRINT "X equals one.". }     // Prints "X equals one."
     IF X > 10 { PRINT "X is greater than ten.". }  // Does nothing
-    
+
     // IF-ELSE structure:
     IF X > 10 { PRINT "X is large".  } ELSE { PRINT "X is small".  }
 
@@ -60,7 +60,7 @@ Checks if the expression supplied returns true. If it does, ``IF`` executes the 
 
         // syntax error - ELSE without IF.
         IF X > 10 { PRINT "Large". }. ELSE { PRINT "Small". }.
-        
+
 .. index:: LOCK
 .. _lock:
 
@@ -78,7 +78,7 @@ Locks an identifier to an expression. Each time the identifier is used in an exp
 Unlike variables created with the ``SET`` or ``DECLARE`` commands, ``LOCK`` variables are local to the current program. If program **A** calls program **B**, and program **B** issues a ``LOCK`` command, program **A** will not be able to read that ``LOCK`` variable's result.
 
 .. note::
-    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each update tick <cpu_hardware>`.
+    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each update tick <cpu hardware>`.
 
 .. index:: UNLOCK
 .. _unlock:
@@ -120,7 +120,7 @@ Note that if you are creating a loop in which you are watching a physical value 
     }
 
 The full explanation why is :ref:`in the CPU hardware description
-page <cpu_hardware>`.
+page <cpu hardware>`.
 
 .. index:: FOR
 .. _for:
@@ -161,7 +161,7 @@ Halts execution for a specified amount of time, or until a specific set of crite
     WAIT UNTIL X > 40.            // Wait until X is greater than 40
     WAIT UNTIL APOAPSIS > 150000. // You can see where this is going
 
-Note that any ``WAIT`` statement, no matter what the actual expression is, will always result in a wait time that lasts at least :ref:`one physics tick <cpu_hardware>`.
+Note that any ``WAIT`` statement, no matter what the actual expression is, will always result in a wait time that lasts at least :ref:`one physics tick <cpu hardware>`.
 
 .. index:: WHEN
 .. _when:
@@ -175,7 +175,7 @@ does not halt execution. It starts a check in the background that will keep acti
 The body of a ``THEN`` or an ``ON`` statement interrupts the normal flow of a **kOS** program. When the event that triggers the body happens, the main **kOS** program is paused until the body of the ``THEN`` completes.
 
 .. warning::
-    Do not make the body of a ``WHEN``/``THEN`` take a long time to execute. If you attempt to run code that lasts too long in the body of your ``WHEN``/``THEN`` statement, :ref:`it will cause an error <cpu_hardware>`. Avoid looping during ``WHEN``/``THEN`` if you can. For details on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
+    Do not make the body of a ``WHEN``/``THEN`` take a long time to execute. If you attempt to run code that lasts too long in the body of your ``WHEN``/``THEN`` statement, :ref:`it will cause an error <cpu hardware>`. Avoid looping during ``WHEN``/``THEN`` if you can. For details on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
 
 .. note::
     .. versionchanged:: 0.12
@@ -193,7 +193,7 @@ Example::
         AG1 ON.
     }
 
-A ``WHEN``/``THEN`` trigger is removed when the program that created it exits, even if it has not occurred yet. The ``PRESERVE`` can be used inside the ``THEN`` clause of a ``WHEN`` statement. If you are going to make extensive use of ``WHEN``/``THEN`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu_hardware>`.
+A ``WHEN``/``THEN`` trigger is removed when the program that created it exits, even if it has not occurred yet. The ``PRESERVE`` can be used inside the ``THEN`` clause of a ``WHEN`` statement. If you are going to make extensive use of ``WHEN``/``THEN`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu hardware>`.
 
 .. index:: ON
 .. _on_trigger:
@@ -219,9 +219,9 @@ The body of an ``ON`` statement can be a list of commands inside curly braces, j
     }
 
 .. warning::
-    DO NOT make the body of an ``ON`` statement take a long time to execute. If you attempt to run code that lasts too long in the body of your ``ON`` statement, :ref:`it will cause an error <cpu_hardware>`. For general help on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
+    DO NOT make the body of an ``ON`` statement take a long time to execute. If you attempt to run code that lasts too long in the body of your ``ON`` statement, :ref:`it will cause an error <cpu hardware>`. For general help on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
 
-Avoid looping during ``ON`` code blocks if you can. If you are going to make extensive use of ``ON`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu_hardware>`.
+Avoid looping during ``ON`` code blocks if you can. If you are going to make extensive use of ``ON`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu hardware>`.
 
 .. index:: PRESERVE
 .. _preserve:
