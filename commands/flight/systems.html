@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,19 +161,19 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="ship-systems">
-<h1>Ship Systems<a class="headerlink" href="#ship-systems" title="Permalink to this headline">¶</a></h1>
+<span id="systems"></span><h1>Ship Systems<a class="headerlink" href="#ship-systems" title="Permalink to this headline">¶</a></h1>
 <span class="target" id="controlfrom"></span><dl class="object">
 <dt>
 <tt class="descname">SET somepart:CONTROLFROM TO (true|false).</tt></dt>
-<dd><p>If you have a handle on a part, from <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span></tt>, you can select that part to set the orientation of the craft, just like using the &#8220;control from here&#8221; in the right-click menu in the game. For more information see <a class="reference internal" href="../../structures/vessels/part.html#PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Part:CONTROLFROM</span></tt></a>.</p>
+<dd><p>If you have a handle on a part, from <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span></tt>, you can select that part to set the orientation of the craft, just like using the &#8220;control from here&#8221; in the right-click menu in the game. For more information see <a class="reference internal" href="../../structures/vessels/part.html#attribute:PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Part:CONTROLFROM</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="global">
-<dt id="RCS">
-<tt class="descname">RCS</tt><a class="headerlink" href="#RCS" title="Permalink to this definition">¶</a></dt>
+<dt id="global:RCS">
+<tt class="descname">RCS</tt><a class="headerlink" href="#global:RCS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -185,8 +189,8 @@
 </dd></dl>
 
 <dl class="global">
-<dt id="SAS">
-<tt class="descname">SAS</tt><a class="headerlink" href="#SAS" title="Permalink to this definition">¶</a></dt>
+<dt id="global:SAS">
+<tt class="descname">SAS</tt><a class="headerlink" href="#global:SAS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -202,8 +206,8 @@
 </dd></dl>
 
 <dl class="global">
-<dt id="LIGHTS">
-<tt class="descname">LIGHTS</tt><a class="headerlink" href="#LIGHTS" title="Permalink to this definition">¶</a></dt>
+<dt id="global:LIGHTS">
+<tt class="descname">LIGHTS</tt><a class="headerlink" href="#global:LIGHTS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -219,8 +223,8 @@
 </dd></dl>
 
 <dl class="global">
-<dt id="BRAKES">
-<tt class="descname">BRAKES</tt><a class="headerlink" href="#BRAKES" title="Permalink to this definition">¶</a></dt>
+<dt id="global:BRAKES">
+<tt class="descname">BRAKES</tt><a class="headerlink" href="#global:BRAKES" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -236,8 +240,8 @@
 </dd></dl>
 
 <dl class="global">
-<dt id="TARGET">
-<tt class="descname">TARGET</tt><a class="headerlink" href="#TARGET" title="Permalink to this definition">¶</a></dt>
+<dt id="global:TARGET">
+<tt class="descname">TARGET</tt><a class="headerlink" href="#global:TARGET" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -263,7 +267,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="warp.html" class="btn btn-neutral float-right" title="Time Warping">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="warp.html" class="btn btn-neutral float-right" title="Time Warping"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="pilot.html" class="btn btn-neutral" title="Pilot Input"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -279,8 +283,7 @@
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

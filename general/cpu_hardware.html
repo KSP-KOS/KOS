@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -155,7 +159,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="the-kos-cpu-hardware">
 <span id="cpu-hardware"></span><h1>The kOS CPU hardware<a class="headerlink" href="#the-kos-cpu-hardware" title="Permalink to this headline">¶</a></h1>
@@ -192,7 +196,7 @@
 <li>Run the conditional checks of all TRIGGERS (see below)</li>
 <li>For any TRIGGERS who&#8217;s conditional checks are true, execute the entire body of the trigger.</li>
 <li>If there&#8217;s a pending WAIT statement, check if it&#8217;s done. If so wake up.</li>
-<li>If awake, then execute the next <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> number of instructions of the main program.</li>
+<li>If awake, then execute the next <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> number of instructions of the main program.</li>
 </ol>
 <p>Note that the number of instructions being executed (CONFIG:IPU) are NOT lines of code or kerboscript statements, but rather the smaller instruction opcodes that they are compiled into behind the scenes. A single kerboscript statement might become anywhere from one to ten or so instructions when compiled.</p>
 </div>
@@ -210,9 +214,9 @@ etc), but not other LOCKS.</li>
 <div class="section" id="do-not-loop-a-long-time-in-a-trigger-body">
 <h3><a class="toc-backref" href="#id3">Do Not Loop a Long Time in a Trigger Body!</a><a class="headerlink" href="#do-not-loop-a-long-time-in-a-trigger-body" title="Permalink to this headline">¶</a></h3>
 <p>Because the entire body of a trigger will execute all the way to the bottom on <em>within a single</em> <strong>update tick</strong>, <em>before</em> any other code continues, it is vital that you not write code in a trigger body that takes a long time to execute. The body of a trigger must be kept quick. An infinite loop in a trigger body could literally freeze all of KSP, because the kOS mod will never finish executing its update.</p>
-<p><em>As of kOS version 0.14 and higher, this condition is now being checked for</em> and the script will be <strong>terminated with a runtime error</strong> if the triggers like WHEN/THEN and ON take more than <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> instructions to execute. The sum total of all the code within your WHEN/THEN and ON code blocks MUST be designed to complete within one update tick.</p>
-<p><strong>This may seem harsh</strong>. Ideally, kOS would only generate a runtime error if it thought your script was stuck in an <strong>infinite loop</strong>, and allow it to exceed the <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> number of instructions if it was going to finish and just needed a little longer to to finish its work. But, because of a well known problem in computer science called <strong>`the halting problem &lt;http://en.wikipedia.org/wiki/Halting_problem&gt;`__</strong>, it&#8217;s literally impossible for kOS, or any other software for that matter, to detect the difference between another program&#8217;s infinite loop versus another program&#8217;s loop that will end soon. kOS only knows how long your triggers have taken so far, not how long they&#8217;re going to take before they&#8217;re done, or even if they&#8217;ll be done.</p>
-<p>If you suspect that your trigger body would have ended if it was allowed to run a little longer, try setting your <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> setting a bit higher and see if that makes the error go away.</p>
+<p><em>As of kOS version 0.14 and higher, this condition is now being checked for</em> and the script will be <strong>terminated with a runtime error</strong> if the triggers like WHEN/THEN and ON take more than <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> instructions to execute. The sum total of all the code within your WHEN/THEN and ON code blocks MUST be designed to complete within one update tick.</p>
+<p><strong>This may seem harsh</strong>. Ideally, kOS would only generate a runtime error if it thought your script was stuck in an <strong>infinite loop</strong>, and allow it to exceed the <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> number of instructions if it was going to finish and just needed a little longer to to finish its work. But, because of a well known problem in computer science called <a class="reference external" href="http://en.wikipedia.org/wiki/Halting_problem">the halting problem</a>, it&#8217;s literally impossible for kOS, or any other software for that matter, to detect the difference between another program&#8217;s infinite loop versus another program&#8217;s loop that will end soon. kOS only knows how long your triggers have taken so far, not how long they&#8217;re going to take before they&#8217;re done, or even if they&#8217;ll be done.</p>
+<p>If you suspect that your trigger body would have ended if it was allowed to run a little longer, try setting your <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> setting a bit higher and see if that makes the error go away.</p>
 <p>If it does not make the error go away, then you will need to redesign your script to not depend on running a long-lasting amount of code inside triggers.</p>
 </div>
 <div class="section" id="but-i-want-a-loop">
@@ -223,7 +227,7 @@ etc), but not other LOCKS.</li>
 </div>
 <div class="section" id="wait">
 <h3><a class="toc-backref" href="#id5">Wait!!!</a><a class="headerlink" href="#wait" title="Permalink to this headline">¶</a></h3>
-<p>Any WAIT statement causes the kerboscript program to immediately stop executing the main program where it is, even if far fewer than <a class="reference internal" href="../structures/misc/config.html#CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> instructions have been executed in this <strong>update tick</strong>. It will not continue the execution until at least the next <strong>update tick</strong>, when it will check to see if the WAIT condition is satisfied and it&#8217;s time to wake up and continue.</p>
+<p>Any WAIT statement causes the kerboscript program to immediately stop executing the main program where it is, even if far fewer than <a class="reference internal" href="../structures/misc/config.html#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Config:IPU</span></tt></a> instructions have been executed in this <strong>update tick</strong>. It will not continue the execution until at least the next <strong>update tick</strong>, when it will check to see if the WAIT condition is satisfied and it&#8217;s time to wake up and continue.</p>
 <p>Therefore ANY WAIT of any kind will guarantee that your program will allow at least one <strong>update tick</strong> to have happened before continuing. If you attempt to:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span>
 </pre></div>
@@ -265,7 +269,7 @@ etc), but not other LOCKS.</li>
 <div class="section" id="the-fix-wait-for-time-to-change">
 <h3><a class="toc-backref" href="#id8">The Fix: Wait for Time to Change</a><a class="headerlink" href="#the-fix-wait-for-time-to-change" title="Permalink to this headline">¶</a></h3>
 <p>If you are executing a loop like the one above in which it is absolutely vital that the next iteration of the loop must occur in a <em>different</em> <strong>physics tick</strong> than the previous one, so that it can take <em>new</em> measurements that are different, the solution is to use a WAIT statement that will delay until there&#8217;s evidence that the physics clock has moved a tick.</p>
-<p>The most effective way to do that is to check the <a class="reference external" href="../../structure/timespan/index.html">TIME</a> and see if it&#8217;s different than it was before. As long as you are still within the same <em>physics tick</em>, the TIME will not move:</p>
+<p>The most effective way to do that is to check the <a class="reference internal" href="../structures/misc/time.html#time"><em>Time Span</em></a> and see if it&#8217;s different than it was before. As long as you are still within the same <em>physics tick</em>, the TIME will not move:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;Waiting until altitude is holding stable within 0.1 meters.&quot;</span><span class="p">.</span>
 
 <span class="n">SET</span> <span class="n">PREV_ALT</span> <span class="n">TO</span> <span class="o">-</span><span class="mf">99999.</span> <span class="c1">// bogus start value</span>
@@ -318,7 +322,7 @@ forums. You may put this code up near the top of your script:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="applauncher_panel.html" class="btn btn-neutral float-right" title="kOS Control Panel">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="applauncher_panel.html" class="btn btn-neutral float-right" title="kOS Control Panel"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="cpu_vessel.html" class="btn btn-neutral" title="CPU Vessel (SHIP)"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -334,8 +338,7 @@ forums. You may put this code up near the top of your script:</p>
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

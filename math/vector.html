@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -155,7 +159,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="vectors">
 <h1>Vectors<a class="headerlink" href="#vectors" title="Permalink to this headline">¶</a></h1>
@@ -170,8 +174,8 @@
 <div class="section" id="creation">
 <h2><a class="toc-backref" href="#id3">Creation</a><a class="headerlink" href="#creation" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="V">
-<tt class="descname">V</tt><big>(</big>x,y,z<big>)</big><a class="headerlink" href="#V" title="Permalink to this definition">¶</a></dt>
+<dt id="function:V">
+<tt class="descname">V</tt><big>(</big>x,y,z<big>)</big><a class="headerlink" href="#function:V" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -183,7 +187,7 @@
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -192,15 +196,15 @@
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">vec</span> <span class="n">TO</span> <span class="n">V</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">).</span>
 </pre></div>
 </div>
-<p>Here, a new <a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> called <tt class="docutils literal"><span class="pre">vec</span></tt> is created . The object <a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> represents a <a class="reference external" href="http://en.wikipedia.org/wiki/Euclidean_vector">three-dimensional euclidean vector</a> To deeply understand most vectors in kOS, you have to understand a bit about the <a class="reference internal" href="ref_frame.html#ref-frame"><em>underlying coordinate system of KSP</em></a>. If you are having trouble making sense of the direction the axes point in, go read that page.</p>
+<p>Here, a new <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> called <tt class="docutils literal"><span class="pre">vec</span></tt> is created . The object <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> represents a <a class="reference external" href="http://en.wikipedia.org/wiki/Euclidean_vector">three-dimensional euclidean vector</a> To deeply understand most vectors in kOS, you have to understand a bit about the <a class="reference internal" href="ref_frame.html#ref-frame"><em>underlying coordinate system of KSP</em></a>. If you are having trouble making sense of the direction the axes point in, go read that page.</p>
 </dd></dl>
 
 </div>
 <div class="section" id="structure">
 <h2><a class="toc-backref" href="#id4">Structure</a><a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
-<dt id="VECTOR">
-<em class="property">structure </em><tt class="descname">Vector</tt><a class="headerlink" href="#VECTOR" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:VECTOR">
+<em class="property">structure </em><tt class="descname">Vector</tt><a class="headerlink" href="#structure:VECTOR" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <caption><strong>Members</strong></caption>
 <colgroup>
@@ -217,43 +221,43 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#VECTOR:X" title="VECTOR:X attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">X</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VECTOR:X" title="VECTOR:X attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">X</span></tt></a></td>
 <td>scalar</td>
 <td>yes</td>
 <td>yes</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VECTOR:Y" title="VECTOR:Y attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Y</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECTOR:Y" title="VECTOR:Y attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Y</span></tt></a></td>
 <td>scalar</td>
 <td>yes</td>
 <td>yes</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#VECTOR:Y" title="VECTOR:Y attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Y</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VECTOR:Y" title="VECTOR:Y attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Y</span></tt></a></td>
 <td>scalar</td>
 <td>yes</td>
 <td>yes</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VECTOR:MAG" title="VECTOR:MAG attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MAG</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECTOR:MAG" title="VECTOR:MAG attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MAG</span></tt></a></td>
 <td>scalar</td>
 <td>yes</td>
 <td>yes</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#VECTOR:NORMALIZED" title="VECTOR:NORMALIZED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NORMALIZED</span></tt></a></td>
-<td><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VECTOR:NORMALIZED" title="VECTOR:NORMALIZED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NORMALIZED</span></tt></a></td>
+<td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 <td>yes</td>
 <td>no</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VECTOR:SQRMAGNITUDE" title="VECTOR:SQRMAGNITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SQRMAGNITUDE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECTOR:SQRMAGNITUDE" title="VECTOR:SQRMAGNITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SQRMAGNITUDE</span></tt></a></td>
 <td>scalar</td>
 <td>yes</td>
 <td>no</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#VECTOR:DIRECTION" title="VECTOR:DIRECTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DIRECTION</span></tt></a></td>
-<td><a class="reference internal" href="direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VECTOR:DIRECTION" title="VECTOR:DIRECTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DIRECTION</span></tt></a></td>
+<td><a class="reference internal" href="direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 <td>yes</td>
 <td>yes</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VECTOR:VEC" title="VECTOR:VEC attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VEC</span></tt></a></td>
-<td><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VECTOR:VEC" title="VECTOR:VEC attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VEC</span></tt></a></td>
+<td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 <td>yes</td>
 <td>no</td>
 </tr>
@@ -262,8 +266,8 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="VECTOR:X">
-Vector:<tt class="descname">X</tt><a class="headerlink" href="#VECTOR:X" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VECTOR:X">
+Vector:<tt class="descname">X</tt><a class="headerlink" href="#attribute:VECTOR:X" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -278,8 +282,8 @@ Vector:<tt class="descname">X</tt><a class="headerlink" href="#VECTOR:X" title="
 </dd></dl>
 
 <dl class="attribute">
-<dt id="VECTOR:Y">
-Vector:<tt class="descname">Y</tt><a class="headerlink" href="#VECTOR:Y" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VECTOR:Y">
+Vector:<tt class="descname">Y</tt><a class="headerlink" href="#attribute:VECTOR:Y" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -294,8 +298,8 @@ Vector:<tt class="descname">Y</tt><a class="headerlink" href="#VECTOR:Y" title="
 </dd></dl>
 
 <dl class="attribute">
-<dt id="VECTOR:Z">
-Vector:<tt class="descname">Z</tt><a class="headerlink" href="#VECTOR:Z" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VECTOR:Z">
+Vector:<tt class="descname">Z</tt><a class="headerlink" href="#attribute:VECTOR:Z" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -310,8 +314,8 @@ Vector:<tt class="descname">Z</tt><a class="headerlink" href="#VECTOR:Z" title="
 </dd></dl>
 
 <dl class="attribute">
-<dt id="VECTOR:MAG">
-Vector:<tt class="descname">MAG</tt><a class="headerlink" href="#VECTOR:MAG" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VECTOR:MAG">
+Vector:<tt class="descname">MAG</tt><a class="headerlink" href="#attribute:VECTOR:MAG" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -326,13 +330,13 @@ Vector:<tt class="descname">MAG</tt><a class="headerlink" href="#VECTOR:MAG" tit
 </dd></dl>
 
 <dl class="attribute">
-<dt id="VECTOR:NORMALIZED">
-Vector:<tt class="descname">NORMALIZED</tt><a class="headerlink" href="#VECTOR:NORMALIZED" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VECTOR:NORMALIZED">
+Vector:<tt class="descname">NORMALIZED</tt><a class="headerlink" href="#attribute:VECTOR:NORMALIZED" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -342,8 +346,8 @@ Vector:<tt class="descname">NORMALIZED</tt><a class="headerlink" href="#VECTOR:N
 </dd></dl>
 
 <dl class="attribute">
-<dt id="VECTOR:SQRMAGNITUDE">
-Vector:<tt class="descname">SQRMAGNITUDE</tt><a class="headerlink" href="#VECTOR:SQRMAGNITUDE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VECTOR:SQRMAGNITUDE">
+Vector:<tt class="descname">SQRMAGNITUDE</tt><a class="headerlink" href="#attribute:VECTOR:SQRMAGNITUDE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -358,13 +362,13 @@ Vector:<tt class="descname">SQRMAGNITUDE</tt><a class="headerlink" href="#VECTOR
 </dd></dl>
 
 <dl class="attribute">
-<dt id="VECTOR:DIRECTION">
-Vector:<tt class="descname">DIRECTION</tt><a class="headerlink" href="#VECTOR:DIRECTION" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VECTOR:DIRECTION">
+Vector:<tt class="descname">DIRECTION</tt><a class="headerlink" href="#attribute:VECTOR:DIRECTION" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
@@ -379,13 +383,13 @@ Vector:<tt class="descname">DIRECTION</tt><a class="headerlink" href="#VECTOR:DI
 </dd></dl>
 
 <dl class="attribute">
-<dt id="VECTOR:VEC">
-Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#VECTOR:VEC" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VECTOR:VEC">
+Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#attribute:VECTOR:VEC" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -409,32 +413,32 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#VECTOR:VEC" tit
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#vector"><em>* (asterisk)</em></a></td>
-<td>scalar or <a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<td>scalar or <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#id1"><em>+ (plus)</em></a></td>
-<td><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#id1"><em>- (minus)</em></a></td>
-<td><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VDOT" title="VDOT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VDOT</span></tt></a>, <a class="reference internal" href="#VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT</span></tt></a>, <a class="reference internal" href="#vector"><em>*</em></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#function:VDOT" title="VDOT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VDOT</span></tt></a>, <a class="reference internal" href="#function:VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT</span></tt></a>, <a class="reference internal" href="#vector"><em>*</em></a></td>
 <td>scalar</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#VCRS" title="VCRS function"><tt class="xref ks ks-func docutils literal"><span class="pre">VCRS</span></tt></a>, <a class="reference internal" href="#VECTORCROSSPRODUCT" title="VECTORCROSSPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORCROSSPRODUCT</span></tt></a></td>
-<td><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#function:VCRS" title="VCRS function"><tt class="xref ks ks-func docutils literal"><span class="pre">VCRS</span></tt></a>, <a class="reference internal" href="#function:VECTORCROSSPRODUCT" title="VECTORCROSSPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORCROSSPRODUCT</span></tt></a></td>
+<td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#VANG" title="VANG function"><tt class="xref ks ks-func docutils literal"><span class="pre">VANG</span></tt></a>, <a class="reference internal" href="#VECTORANGLE" title="VECTORANGLE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORANGLE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#function:VANG" title="VANG function"><tt class="xref ks ks-func docutils literal"><span class="pre">VANG</span></tt></a>, <a class="reference internal" href="#function:VECTORANGLE" title="VECTORANGLE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORANGLE</span></tt></a></td>
 <td>scalar (deg)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#VXCL" title="VXCL function"><tt class="xref ks ks-func docutils literal"><span class="pre">VXCL</span></tt></a>, <a class="reference internal" href="#VECTOREXCLUDE" title="VECTOREXCLUDE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTOREXCLUDE</span></tt></a></td>
-<td><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#function:VXCL" title="VXCL function"><tt class="xref ks ks-func docutils literal"><span class="pre">VXCL</span></tt></a>, <a class="reference internal" href="#function:VECTOREXCLUDE" title="VECTOREXCLUDE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTOREXCLUDE</span></tt></a></td>
+<td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 </tbody>
 </table>
 <span class="target" id="vector"><span id="index-0"></span></span><dl class="object">
 <dt>
 <tt class="descname">*</tt></dt>
-<dd><p><a class="reference external" href="vecsmul">Scalar multiplication</a> or <a class="reference external" href="vecdot">dot product</a> of two <tt class="docutils literal"><span class="pre">Vectors</span></tt>. See also <a class="reference internal" href="#VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT</span></tt></a>:</p>
+<dd><p><a class="reference external" href="vecsmul">Scalar multiplication</a> or <a class="reference external" href="vecdot">dot product</a> of two <tt class="docutils literal"><span class="pre">Vectors</span></tt>. See also <a class="reference internal" href="#function:VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT</span></tt></a>:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">a</span> <span class="n">TO</span> <span class="mf">2.</span>
 <span class="n">SET</span> <span class="n">vec1</span> <span class="n">TO</span> <span class="n">V</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">).</span>
 <span class="n">SET</span> <span class="n">vec2</span> <span class="n">TO</span> <span class="n">V</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">).</span>
@@ -447,7 +451,7 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#VECTOR:VEC" tit
 <span class="target" id="index-1"></span><span class="target" id="id1"><span id="index-2"></span></span><dl class="object">
 <dt>
 <tt class="descname">+, -</tt></dt>
-<dd><p><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> <a class="reference external" href="vecadd">addition and subtraction</a> by a scalar or another <a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>:</p>
+<dd><p><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> <a class="reference external" href="vecadd">addition and subtraction</a> by a scalar or another <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">a</span> <span class="n">TO</span> <span class="mf">2.</span>
 <span class="n">SET</span> <span class="n">vec1</span> <span class="n">TO</span> <span class="n">V</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">).</span>
 <span class="n">SET</span> <span class="n">vec2</span> <span class="n">TO</span> <span class="n">V</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">).</span>
@@ -458,21 +462,21 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#VECTOR:VEC" tit
 </dd></dl>
 
 <dl class="function">
-<dt id="VDOT">
-<tt class="descname">VDOT</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#VDOT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as <a class="reference internal" href="#VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT(v1,v2)</span></tt></a> and <a class="reference internal" href="#vector"><em>v1 * v2</em></a>.</p>
+<dt id="function:VDOT">
+<tt class="descname">VDOT</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#function:VDOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#function:VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT(v1,v2)</span></tt></a> and <a class="reference internal" href="#vector"><em>v1 * v2</em></a>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="VECTORDOTPRODUCT">
-<tt class="descname">VECTORDOTPRODUCT</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#VECTORDOTPRODUCT" title="Permalink to this definition">¶</a></dt>
+<dt id="function:VECTORDOTPRODUCT">
+<tt class="descname">VECTORDOTPRODUCT</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#function:VECTORDOTPRODUCT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>v1</strong> &#8211; (<a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
-<li><strong>v2</strong> &#8211; (<a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
+<li><strong>v1</strong> &#8211; (<a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
+<li><strong>v2</strong> &#8211; (<a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
 </ul>
 </td>
 </tr>
@@ -497,28 +501,28 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#VECTOR:VEC" tit
 </dd></dl>
 
 <dl class="function">
-<dt id="VCRS">
-<tt class="descname">VCRS</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#VCRS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as <a class="reference internal" href="#VECTORCROSSPRODUCT" title="VECTORCROSSPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORCROSSPRODUCT(v1,v2)</span></tt></a></p>
+<dt id="function:VCRS">
+<tt class="descname">VCRS</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#function:VCRS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#function:VECTORCROSSPRODUCT" title="VECTORCROSSPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORCROSSPRODUCT(v1,v2)</span></tt></a></p>
 </dd></dl>
 
 <dl class="function">
-<dt id="VECTORCROSSPRODUCT">
-<tt class="descname">VECTORCROSSPRODUCT</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#VECTORCROSSPRODUCT" title="Permalink to this definition">¶</a></dt>
+<dt id="function:VECTORCROSSPRODUCT">
+<tt class="descname">VECTORCROSSPRODUCT</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#function:VECTORCROSSPRODUCT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>v1</strong> &#8211; (<a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
-<li><strong>v2</strong> &#8211; (<a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
+<li><strong>v1</strong> &#8211; (<a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
+<li><strong>v2</strong> &#8211; (<a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The <a class="reference external" href="veccross">vector cross-product</a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -535,21 +539,21 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#VECTOR:VEC" tit
 </dd></dl>
 
 <dl class="function">
-<dt id="VANG">
-<tt class="descname">VANG</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#VANG" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as <a class="reference internal" href="#VECTORANGLE" title="VECTORANGLE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORANGLE(v1,v2)</span></tt></a>.</p>
+<dt id="function:VANG">
+<tt class="descname">VANG</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#function:VANG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#function:VECTORANGLE" title="VECTORANGLE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORANGLE(v1,v2)</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="VECTORANGLE">
-<tt class="descname">VECTORANGLE</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#VECTORANGLE" title="Permalink to this definition">¶</a></dt>
+<dt id="function:VECTORANGLE">
+<tt class="descname">VECTORANGLE</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#function:VECTORANGLE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>v1</strong> &#8211; (<a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
-<li><strong>v2</strong> &#8211; (<a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
+<li><strong>v1</strong> &#8211; (<a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
+<li><strong>v2</strong> &#8211; (<a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a>)</li>
 </ul>
 </td>
 </tr>
@@ -577,18 +581,18 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#VECTOR:VEC" tit
 </dd></dl>
 
 <dl class="function">
-<dt id="VXCL">
-<tt class="descname">VXCL</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#VXCL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Same as <a class="reference internal" href="#VECTOREXCLUDE" title="VECTOREXCLUDE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTOREXCLUDE(v1,v2)</span></tt></a></p>
+<dt id="function:VXCL">
+<tt class="descname">VXCL</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#function:VXCL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#function:VECTOREXCLUDE" title="VECTOREXCLUDE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTOREXCLUDE(v1,v2)</span></tt></a></p>
 </dd></dl>
 
 <dl class="function">
-<dt id="VECTOREXCLUDE">
-<tt class="descname">VECTOREXCLUDE</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#VECTOREXCLUDE" title="Permalink to this definition">¶</a></dt>
+<dt id="function:VECTOREXCLUDE">
+<tt class="descname">VECTOREXCLUDE</tt><big>(</big>v1,v2<big>)</big><a class="headerlink" href="#function:VECTOREXCLUDE" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a vector, <tt class="docutils literal"><span class="pre">v2</span></tt> with all of <tt class="docutils literal"><span class="pre">v1</span></tt> excluded from it. In other words, the projection of <tt class="docutils literal"><span class="pre">v2</span></tt> onto the plane that is normal to <tt class="docutils literal"><span class="pre">v1</span></tt>.</p>
 </dd></dl>
 
-<p>Some examples of using the <a class="reference internal" href="#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> object:</p>
+<p>Some examples of using the <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> object:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// initializes a vector with x=100, y=5, z=0</span>
 <span class="n">SET</span> <span class="n">varname</span> <span class="n">TO</span> <span class="n">V</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">).</span>
 
@@ -621,7 +625,7 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#VECTOR:VEC" tit
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="direction.html" class="btn btn-neutral float-right" title="Directions">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="direction.html" class="btn btn-neutral float-right" title="Directions"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="basic.html" class="btn btn-neutral" title="Fundamental Constants"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -637,8 +641,7 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#VECTOR:VEC" tit
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

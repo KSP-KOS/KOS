@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -155,13 +159,13 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="terminal-and-game-environment">
 <span id="terminal"></span><h1>Terminal and game environment<a class="headerlink" href="#terminal-and-game-environment" title="Permalink to this headline">¶</a></h1>
 <dl class="global">
-<dt id="CLEARSCREEN">
-<tt class="descname">CLEARSCREEN</tt><a class="headerlink" href="#CLEARSCREEN" title="Permalink to this definition">¶</a></dt>
+<dt id="global:CLEARSCREEN">
+<tt class="descname">CLEARSCREEN</tt><a class="headerlink" href="#global:CLEARSCREEN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears the screen and places the cursor at the top left:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">CLEARSCREEN</span><span class="p">.</span>
 </pre></div>
@@ -169,8 +173,8 @@
 </dd></dl>
 
 <dl class="global">
-<dt id="PRINT">
-<tt class="descname">PRINT</tt><a class="headerlink" href="#PRINT" title="Permalink to this definition">¶</a></dt>
+<dt id="global:PRINT">
+<tt class="descname">PRINT</tt><a class="headerlink" href="#global:PRINT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints the selected text to the screen. Can print strings, or the result of an expression:</p>
 <div class="highlight-c"><div class="highlight"><pre>PRINT “Hello”.
 PRINT 4+1.
@@ -180,8 +184,8 @@ PRINT “4 times 8 is: “ + (4*8).
 </dd></dl>
 
 <dl class="function">
-<dt id="AT">
-<tt class="descname">AT</tt><big>(</big>col,line<big>)</big><a class="headerlink" href="#AT" title="Permalink to this definition">¶</a></dt>
+<dt id="function:AT">
+<tt class="descname">AT</tt><big>(</big>col,line<big>)</big><a class="headerlink" href="#function:AT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -194,7 +198,7 @@ PRINT “4 times 8 is: “ + (4*8).
 </tr>
 </tbody>
 </table>
-<p>Used in combination with <a class="reference internal" href="#PRINT" title="PRINT global"><tt class="xref ks ks-global docutils literal"><span class="pre">PRINT</span></tt></a>. Prints the selected text to the screen at specified location. Can print strings, or the result of an expression:</p>
+<p>Used in combination with <a class="reference internal" href="#global:PRINT" title="PRINT global"><tt class="xref ks ks-global docutils literal"><span class="pre">PRINT</span></tt></a>. Prints the selected text to the screen at specified location. Can print strings, or the result of an expression:</p>
 <div class="highlight-c"><div class="highlight"><pre>PRINT “Hello” AT(0,10).
 PRINT 4+1 AT(0,10).
 PRINT “4 times 8 is: “ + (4*8) AT(0,10).
@@ -203,8 +207,8 @@ PRINT “4 times 8 is: “ + (4*8) AT(0,10).
 </dd></dl>
 
 <dl class="global">
-<dt id="MAPVIEW">
-<tt class="descname">MAPVIEW</tt><a class="headerlink" href="#MAPVIEW" title="Permalink to this definition">¶</a></dt>
+<dt id="global:MAPVIEW">
+<tt class="descname">MAPVIEW</tt><a class="headerlink" href="#global:MAPVIEW" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -231,14 +235,14 @@ PRINT “4 times 8 is: “ + (4*8) AT(0,10).
 </dd></dl>
 
 <dl class="global">
-<dt id="REBOOT">
-<tt class="descname">REBOOT</tt><a class="headerlink" href="#REBOOT" title="Permalink to this definition">¶</a></dt>
+<dt id="global:REBOOT">
+<tt class="descname">REBOOT</tt><a class="headerlink" href="#global:REBOOT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reboots the kOS module.</p>
 </dd></dl>
 
 <dl class="global">
-<dt id="SHUTDOWN">
-<tt class="descname">SHUTDOWN</tt><a class="headerlink" href="#SHUTDOWN" title="Permalink to this definition">¶</a></dt>
+<dt id="global:SHUTDOWN">
+<tt class="descname">SHUTDOWN</tt><a class="headerlink" href="#global:SHUTDOWN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Causes kOS module to shutdown.</p>
 </dd></dl>
 
@@ -250,7 +254,7 @@ PRINT “4 times 8 is: “ + (4*8) AT(0,10).
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../structures.html" class="btn btn-neutral float-right" title="Structure Reference">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../structures.html" class="btn btn-neutral float-right" title="Structure Reference"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="files.html" class="btn btn-neutral" title="File I/O"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -266,8 +270,7 @@ PRINT “4 times 8 is: “ + (4*8) AT(0,10).
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

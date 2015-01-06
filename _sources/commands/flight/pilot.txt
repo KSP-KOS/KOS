@@ -1,3 +1,5 @@
+.. _pilot:
+
 Pilot Input
 ===========
 
@@ -16,11 +18,11 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
     * - Suffix
       - Type, Range
       - Equivalent Key
-      
+
     * - :ref:`PILOTMAINTHROTTLE <SHIP CONTROL PILOTMAINTHROTTLE>`
       - scalar [0,1]
       - ``LEFT-CTRL``, ``LEFT-SHIFT``
-      
+
     * - :ref:`PILOTYAW <SHIP CONTROL PILOTYAW>`
       - scalar [-1,1]
       - ``D``, ``A``
@@ -31,9 +33,9 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
       - scalar [-1,1]
       - ``Q``, ``E``
     * - :ref:`PILOTROTATION <SHIP CONTROL PILOTROTATION>`
-      - :ref:`Vector <vector>`
+      - :struct:`Vector`
       - ``(YAW,PITCH,ROLL)``
-      
+
     * - :ref:`PILOTYAWTRIM <SHIP CONTROL PILOTYAWTRIM>`
       - scalar [-1,1]
       - ``ALT+D``, ``ALT+A``
@@ -54,7 +56,7 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
       - scalar [-1,1]
       - ``I``, ``K``
     * - :ref:`PILOTTRANSLATION <SHIP CONTROL PILOTTRANSLATION>`
-      - :ref:`Vector <vector>`
+      - :struct:`Vector`
       - ``(FORE,STARBOARD,TOP)``
 
     * - :ref:`PILOTWHEELSTEER <SHIP CONTROL PILOTWHEELSTEER>`
@@ -63,7 +65,7 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
     * - :ref:`PILOTWHEELTHROTTLE <SHIP CONTROL PILOTWHEELTHROTTLE>`
       - scalar [-1,1]
       - ``W``, ``S``
-      
+
     * - :ref:`PILOTWHEELSTEERTRIM <SHIP CONTROL PILOTWHEELSTEERTRIM>`
       - scalar [-1,1]
       - ``ALT+A``, ``ALT+D``
@@ -99,7 +101,7 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
 .. _SHIP CONTROL PILOTROTATION:
 .. object:: SHIP:CONTROL:ROTATION
 
-    Returns the pilot's rotation input as a :ref:`Vector <vector>` object containing ``(YAW, PITCH, ROLL)`` in that order.
+    Returns the pilot's rotation input as a :struct:`Vector` object containing ``(YAW, PITCH, ROLL)`` in that order.
 
 
 
@@ -107,12 +109,12 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
 .. object:: SHIP:CONTROL:YAWTRIM
 
     Returns the pilot's input for the ``YAW`` of the rotational trim.
-    
+
 .. _SHIP CONTROL PILOTPITCHTRIM:
 .. object:: SHIP:CONTROL:PITCHTRIM
 
     Returns the pilot's input for the ``PITCH`` of the rotational trim.
-    
+
 .. _SHIP CONTROL PILOTROLLTRIM:
 .. object:: SHIP:CONTROL:ROLLTRIM
 
@@ -139,7 +141,7 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
 .. _SHIP CONTROL PILOTTRANSLATION:
 .. object:: SHIP:CONTROL:TRANSLATION
 
-    Returns the the pilot's input for translation as a :ref:`Vector <vector>` ``(FORE, STARBOARD, TOP)``.
+    Returns the the pilot's input for translation as a :struct:`Vector` ``(FORE, STARBOARD, TOP)``.
 
 .. _SHIP CONTROL PILOTWHEELSTEER:
 .. object:: SHIP:CONTROL:WHEELSTEER

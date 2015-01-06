@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,10 +161,10 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="raw-control">
-<h1>Raw Control<a class="headerlink" href="#raw-control" title="Permalink to this headline">¶</a></h1>
+<span id="raw"></span><h1>Raw Control<a class="headerlink" href="#raw-control" title="Permalink to this headline">¶</a></h1>
 <p>If you wish to have your kOS script manipulate a vessel&#8217;s flight controls directly in a raw way, rather than relying on kOS to handle the flying for you, then this is the type of structure you will need to use to do it. This is offered as an alternative to using the combination of <tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></tt> and <tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">THROTTLE</span></tt> commands. To obtain the CONTROL variable for a vessel, use its :CONTROL suffix:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">controlStick</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">CONTROL</span><span class="p">.</span>
 <span class="n">SET</span> <span class="n">controlStick</span><span class="o">:</span><span class="n">PITCH</span> <span class="n">to</span> <span class="mf">0.2</span><span class="p">.</span>
@@ -231,7 +235,7 @@
 <td><tt class="docutils literal"><span class="pre">Q</span></tt>, <tt class="docutils literal"><span class="pre">E</span></tt></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#ship-control-rotation"><em>ROTATION</em></a></td>
-<td><em class="xref std std-ref">Vector</em></td>
+<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 <td><tt class="docutils literal"><span class="pre">(YAW,PITCH,ROLL)</span></tt></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#ship-control-yawtrim"><em>YAWTRIM</em></a></td>
@@ -259,7 +263,7 @@
 <td><tt class="docutils literal"><span class="pre">I</span></tt>, <tt class="docutils literal"><span class="pre">K</span></tt></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#ship-control-translation"><em>TRANSLATION</em></a></td>
-<td><em class="xref std std-ref">Vector</em></td>
+<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 <td><tt class="docutils literal"><span class="pre">(FORE,STARBOARD,TOP)</span></tt></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#ship-control-wheelsteer"><em>WHEELSTEER</em></a></td>
@@ -315,7 +319,7 @@
 <span class="target" id="ship-control-rotation"></span><dl class="object">
 <dt>
 <tt class="descname">SHIP:CONTROL:ROTATION</tt></dt>
-<dd><p>This is a <em class="xref std std-ref">Vector</em> object containing <tt class="docutils literal"><span class="pre">(YAW,</span> <span class="pre">PITCH,</span> <span class="pre">ROLL)</span></tt> in that order.</p>
+<dd><p>This is a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> object containing <tt class="docutils literal"><span class="pre">(YAW,</span> <span class="pre">PITCH,</span> <span class="pre">ROLL)</span></tt> in that order.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-yawtrim"></span><dl class="object">
@@ -357,7 +361,7 @@
 <span class="target" id="ship-control-translation"></span><dl class="object">
 <dt>
 <tt class="descname">SHIP:CONTROL:TRANSLATION</tt></dt>
-<dd><p>Controls the translation as a <em class="xref std std-ref">Vector</em> <tt class="docutils literal"><span class="pre">(FORE,</span> <span class="pre">STARBOARD,</span> <span class="pre">TOP)</span></tt>.</p>
+<dd><p>Controls the translation as a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> <tt class="docutils literal"><span class="pre">(FORE,</span> <span class="pre">STARBOARD,</span> <span class="pre">TOP)</span></tt>.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-wheelsteer"></span><dl class="object">
@@ -416,7 +420,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pilot.html" class="btn btn-neutral float-right" title="Pilot Input">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pilot.html" class="btn btn-neutral float-right" title="Pilot Input"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="cooked.html" class="btn btn-neutral" title="Cooked Control"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -432,8 +436,7 @@
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

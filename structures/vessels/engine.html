@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,7 +161,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="engine">
 <span id="id1"></span><h1>Engine<a class="headerlink" href="#engine" title="Permalink to this headline">¶</a></h1>
@@ -169,8 +173,8 @@
 </pre></div>
 </div>
 <dl class="structure">
-<dt id="ENGINE">
-<em class="property">structure </em><tt class="descname">Engine</tt><a class="headerlink" href="#ENGINE" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:ENGINE">
+<em class="property">structure </em><tt class="descname">Engine</tt><a class="headerlink" href="#structure:ENGINE" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <caption>Members</caption>
 <colgroup>
@@ -185,55 +189,55 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>All suffixes of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+<tr class="row-even"><td>All suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#ENGINE:ACTIVATE" title="ENGINE:ACTIVATE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">ACTIVATE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:ENGINE:ACTIVATE" title="ENGINE:ACTIVATE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">ACTIVATE</span></tt></a></td>
 <td>&nbsp;</td>
 <td>Turn engine on</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#ENGINE:SHUTDOWN" title="ENGINE:SHUTDOWN method"><tt class="xref ks ks-meth docutils literal"><span class="pre">SHUTDOWN</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:ENGINE:SHUTDOWN" title="ENGINE:SHUTDOWN method"><tt class="xref ks ks-meth docutils literal"><span class="pre">SHUTDOWN</span></tt></a></td>
 <td>&nbsp;</td>
 <td>Turn engine off</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#ENGINE:THRUSTLIMIT" title="ENGINE:THRUSTLIMIT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">THRUSTLIMIT</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:THRUSTLIMIT" title="ENGINE:THRUSTLIMIT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">THRUSTLIMIT</span></tt></a></td>
 <td>scalar (%)</td>
 <td>Tweaked thrust limit</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#ENGINE:MAXTHRUST" title="ENGINE:MAXTHRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MAXTHRUST</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:MAXTHRUST" title="ENGINE:MAXTHRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MAXTHRUST</span></tt></a></td>
 <td>scalar (kN)</td>
 <td>Untweaked thrust limit</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#ENGINE:THRUST" title="ENGINE:THRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">THRUST</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:THRUST" title="ENGINE:THRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">THRUST</span></tt></a></td>
 <td>scalar (kN)</td>
 <td>Current thrust</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#ENGINE:FUELFLOW" title="ENGINE:FUELFLOW attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FUELFLOW</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:FUELFLOW" title="ENGINE:FUELFLOW attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FUELFLOW</span></tt></a></td>
 <td>scalar (l/s maybe)</td>
 <td>Rate of fuel burn</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#ENGINE:ISP" title="ENGINE:ISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ISP</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:ISP" title="ENGINE:ISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ISP</span></tt></a></td>
 <td>scalar</td>
 <td><a class="reference external" href="isp">Specific impulse</a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#ENGINE:FLAMEOUT" title="ENGINE:FLAMEOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FLAMEOUT</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:FLAMEOUT" title="ENGINE:FLAMEOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FLAMEOUT</span></tt></a></td>
 <td>boolean</td>
 <td>Check if no more fuel</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#ENGINE:IGNITION" title="ENGINE:IGNITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">IGNITION</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:IGNITION" title="ENGINE:IGNITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">IGNITION</span></tt></a></td>
 <td>boolean</td>
 <td>Check if engine is active</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#ENGINE:ALLOWRESTART" title="ENGINE:ALLOWRESTART attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLOWRESTART</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:ALLOWRESTART" title="ENGINE:ALLOWRESTART attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLOWRESTART</span></tt></a></td>
 <td>boolean</td>
 <td>Check if engine can be reactivated</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#ENGINE:ALLOWSHUTDOWN" title="ENGINE:ALLOWSHUTDOWN attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLOWSHUTDOWN</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:ALLOWSHUTDOWN" title="ENGINE:ALLOWSHUTDOWN attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLOWSHUTDOWN</span></tt></a></td>
 <td>boolean</td>
 <td>Check if engine can be shutdown</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#ENGINE:THROTTLELOCK" title="ENGINE:THROTTLELOCK attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">THROTTLELOCK</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:THROTTLELOCK" title="ENGINE:THROTTLELOCK attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">THROTTLELOCK</span></tt></a></td>
 <td>boolean</td>
 <td>Check if throttle can not be changed</td>
 </tr>
@@ -243,23 +247,23 @@
 
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last"><a class="reference internal" href="#ENGINE" title="ENGINE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Engine</span></tt></a> is a type of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>. Shown below are only the suffixes that are unique to <a class="reference internal" href="#ENGINE" title="ENGINE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Engine</span></tt></a>.</p>
+<p class="last"><a class="reference internal" href="#structure:ENGINE" title="ENGINE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Engine</span></tt></a> is a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>. Shown below are only the suffixes that are unique to <a class="reference internal" href="#structure:ENGINE" title="ENGINE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Engine</span></tt></a>.</p>
 </div>
 <dl class="method">
-<dt id="ENGINE:ACTIVATE">
-Engine:<tt class="descname">ACTIVATE</tt><big>(</big><big>)</big><a class="headerlink" href="#ENGINE:ACTIVATE" title="Permalink to this definition">¶</a></dt>
+<dt id="method:ENGINE:ACTIVATE">
+Engine:<tt class="descname">ACTIVATE</tt><big>(</big><big>)</big><a class="headerlink" href="#method:ENGINE:ACTIVATE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call to make the engine turn on.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ENGINE:SHUTDOWN">
-Engine:<tt class="descname">SHUTDOWN</tt><big>(</big><big>)</big><a class="headerlink" href="#ENGINE:SHUTDOWN" title="Permalink to this definition">¶</a></dt>
+<dt id="method:ENGINE:SHUTDOWN">
+Engine:<tt class="descname">SHUTDOWN</tt><big>(</big><big>)</big><a class="headerlink" href="#method:ENGINE:SHUTDOWN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call to make the engine turn off.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:THRUSTLIMIT">
-Engine:<tt class="descname">THRUSTLIMIT</tt><a class="headerlink" href="#ENGINE:THRUSTLIMIT" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:THRUSTLIMIT">
+Engine:<tt class="descname">THRUSTLIMIT</tt><a class="headerlink" href="#attribute:ENGINE:THRUSTLIMIT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -274,8 +278,8 @@ Engine:<tt class="descname">THRUSTLIMIT</tt><a class="headerlink" href="#ENGINE:
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:MAXTHRUST">
-Engine:<tt class="descname">MAXTHRUST</tt><a class="headerlink" href="#ENGINE:MAXTHRUST" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:MAXTHRUST">
+Engine:<tt class="descname">MAXTHRUST</tt><a class="headerlink" href="#attribute:ENGINE:MAXTHRUST" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -290,8 +294,8 @@ Engine:<tt class="descname">MAXTHRUST</tt><a class="headerlink" href="#ENGINE:MA
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:THRUST">
-Engine:<tt class="descname">THRUST</tt><a class="headerlink" href="#ENGINE:THRUST" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:THRUST">
+Engine:<tt class="descname">THRUST</tt><a class="headerlink" href="#attribute:ENGINE:THRUST" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -306,8 +310,8 @@ Engine:<tt class="descname">THRUST</tt><a class="headerlink" href="#ENGINE:THRUS
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:FUELFLOW">
-Engine:<tt class="descname">FUELFLOW</tt><a class="headerlink" href="#ENGINE:FUELFLOW" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:FUELFLOW">
+Engine:<tt class="descname">FUELFLOW</tt><a class="headerlink" href="#attribute:ENGINE:FUELFLOW" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -322,8 +326,8 @@ Engine:<tt class="descname">FUELFLOW</tt><a class="headerlink" href="#ENGINE:FUE
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:ISP">
-Engine:<tt class="descname">ISP</tt><a class="headerlink" href="#ENGINE:ISP" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:ISP">
+Engine:<tt class="descname">ISP</tt><a class="headerlink" href="#attribute:ENGINE:ISP" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -338,8 +342,8 @@ Engine:<tt class="descname">ISP</tt><a class="headerlink" href="#ENGINE:ISP" tit
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:FLAMEOUT">
-Engine:<tt class="descname">FLAMEOUT</tt><a class="headerlink" href="#ENGINE:FLAMEOUT" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:FLAMEOUT">
+Engine:<tt class="descname">FLAMEOUT</tt><a class="headerlink" href="#attribute:ENGINE:FLAMEOUT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -354,8 +358,8 @@ Engine:<tt class="descname">FLAMEOUT</tt><a class="headerlink" href="#ENGINE:FLA
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:IGNITION">
-Engine:<tt class="descname">IGNITION</tt><a class="headerlink" href="#ENGINE:IGNITION" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:IGNITION">
+Engine:<tt class="descname">IGNITION</tt><a class="headerlink" href="#attribute:ENGINE:IGNITION" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -366,12 +370,12 @@ Engine:<tt class="descname">IGNITION</tt><a class="headerlink" href="#ENGINE:IGN
 </tr>
 </tbody>
 </table>
-<p>Has this engine been ignited? If both <a class="reference internal" href="#ENGINE:IGNITION" title="ENGINE:IGNITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Engine:IGNITION</span></tt></a> and <a class="reference internal" href="#ENGINE:FLAMEOUT" title="ENGINE:FLAMEOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Engine:FLAMEOUT</span></tt></a> are true, that means the engine could start up again immediately if more resources were made available to it.</p>
+<p>Has this engine been ignited? If both <a class="reference internal" href="#attribute:ENGINE:IGNITION" title="ENGINE:IGNITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Engine:IGNITION</span></tt></a> and <a class="reference internal" href="#attribute:ENGINE:FLAMEOUT" title="ENGINE:FLAMEOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Engine:FLAMEOUT</span></tt></a> are true, that means the engine could start up again immediately if more resources were made available to it.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:ALLOWRESTART">
-Engine:<tt class="descname">ALLOWRESTART</tt><a class="headerlink" href="#ENGINE:ALLOWRESTART" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:ALLOWRESTART">
+Engine:<tt class="descname">ALLOWRESTART</tt><a class="headerlink" href="#attribute:ENGINE:ALLOWRESTART" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -386,8 +390,8 @@ Engine:<tt class="descname">ALLOWRESTART</tt><a class="headerlink" href="#ENGINE
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:ALLOWSHUTDOWN">
-Engine:<tt class="descname">ALLOWSHUTDOWN</tt><a class="headerlink" href="#ENGINE:ALLOWSHUTDOWN" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:ALLOWSHUTDOWN">
+Engine:<tt class="descname">ALLOWSHUTDOWN</tt><a class="headerlink" href="#attribute:ENGINE:ALLOWSHUTDOWN" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -402,8 +406,8 @@ Engine:<tt class="descname">ALLOWSHUTDOWN</tt><a class="headerlink" href="#ENGIN
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ENGINE:THROTTLELOCK">
-Engine:<tt class="descname">THROTTLELOCK</tt><a class="headerlink" href="#ENGINE:THROTTLELOCK" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ENGINE:THROTTLELOCK">
+Engine:<tt class="descname">THROTTLELOCK</tt><a class="headerlink" href="#attribute:ENGINE:THROTTLELOCK" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -425,7 +429,7 @@ Engine:<tt class="descname">THROTTLELOCK</tt><a class="headerlink" href="#ENGINE
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="node.html" class="btn btn-neutral float-right" title="Maneuver Node">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="node.html" class="btn btn-neutral float-right" title="Maneuver Node"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="dockingport.html" class="btn btn-neutral" title="DockingPort"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -441,8 +445,7 @@ Engine:<tt class="descname">THROTTLELOCK</tt><a class="headerlink" href="#ENGINE
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

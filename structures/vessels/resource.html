@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,14 +161,14 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="resource">
 <span id="id1"></span><h1>Resource<a class="headerlink" href="#resource" title="Permalink to this headline">¶</a></h1>
-<p>A single resource value a thing holds (i.e. fuel, electric charge, etc). This is the type returned by the <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>:RESOURCES suffix</p>
+<p>A single resource value a thing holds (i.e. fuel, electric charge, etc). This is the type returned by the <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>:RESOURCES suffix</p>
 <dl class="structure">
-<dt id="RESOURCE">
-<em class="property">structure </em><tt class="descname">Resource</tt><a class="headerlink" href="#RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:RESOURCE">
+<em class="property">structure </em><tt class="descname">Resource</tt><a class="headerlink" href="#structure:RESOURCE" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="29%" />
@@ -178,23 +182,23 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#RESOURCE:NAME" title="RESOURCE:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:NAME" title="RESOURCE:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
 <td>string</td>
 <td>Resource name</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#RESOURCE:AMOUNT" title="RESOURCE:AMOUNT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AMOUNT</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:AMOUNT" title="RESOURCE:AMOUNT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AMOUNT</span></tt></a></td>
 <td>scalar</td>
 <td>Amount of this resource left</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#RESOURCE:CAPACITY" title="RESOURCE:CAPACITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:CAPACITY" title="RESOURCE:CAPACITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></tt></a></td>
 <td>scalar</td>
 <td>Maximum amount of this resource</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#RESOURCE:TOGGLEABLE" title="RESOURCE:TOGGLEABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TOGGLEABLE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:TOGGLEABLE" title="RESOURCE:TOGGLEABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TOGGLEABLE</span></tt></a></td>
 <td>boolean</td>
 <td>Can this tank be removed from the fuel flow</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#RESOURCE:ENABLED" title="RESOURCE:ENABLED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:ENABLED" title="RESOURCE:ENABLED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></tt></a></td>
 <td>boolean</td>
 <td>Is this tank currently in the fuel flow</td>
 </tr>
@@ -203,8 +207,8 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="RESOURCE:NAME">
-Resource:<tt class="descname">NAME</tt><a class="headerlink" href="#RESOURCE:NAME" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:RESOURCE:NAME">
+Resource:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:RESOURCE:NAME" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -219,8 +223,8 @@ Resource:<tt class="descname">NAME</tt><a class="headerlink" href="#RESOURCE:NAM
 </dd></dl>
 
 <dl class="attribute">
-<dt id="RESOURCE:AMOUNT">
-Resource:<tt class="descname">AMOUNT</tt><a class="headerlink" href="#RESOURCE:AMOUNT" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:RESOURCE:AMOUNT">
+Resource:<tt class="descname">AMOUNT</tt><a class="headerlink" href="#attribute:RESOURCE:AMOUNT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -235,8 +239,8 @@ Resource:<tt class="descname">AMOUNT</tt><a class="headerlink" href="#RESOURCE:A
 </dd></dl>
 
 <dl class="attribute">
-<dt id="RESOURCE:CAPACITY">
-Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#RESOURCE:CAPACITY" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:RESOURCE:CAPACITY">
+Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#attribute:RESOURCE:CAPACITY" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -251,8 +255,8 @@ Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#RESOURCE
 </dd></dl>
 
 <dl class="attribute">
-<dt id="RESOURCE:TOGGLEABLE">
-Resource:<tt class="descname">TOGGLEABLE</tt><a class="headerlink" href="#RESOURCE:TOGGLEABLE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:RESOURCE:TOGGLEABLE">
+Resource:<tt class="descname">TOGGLEABLE</tt><a class="headerlink" href="#attribute:RESOURCE:TOGGLEABLE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -267,8 +271,8 @@ Resource:<tt class="descname">TOGGLEABLE</tt><a class="headerlink" href="#RESOUR
 </dd></dl>
 
 <dl class="attribute">
-<dt id="RESOURCE:ENABLED">
-Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#RESOURCE:ENABLED" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:RESOURCE:ENABLED">
+Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#attribute:RESOURCE:ENABLED" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -290,7 +294,7 @@ Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#RESOURCE:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="sensor.html" class="btn btn-neutral float-right" title="Sensor">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="sensor.html" class="btn btn-neutral float-right" title="Sensor"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="partmodule.html" class="btn btn-neutral" title="PartModule"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -306,8 +310,7 @@ Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#RESOURCE:
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

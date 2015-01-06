@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,14 +161,14 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="file-information">
-<h1>File Information<a class="headerlink" href="#file-information" title="Permalink to this headline">¶</a></h1>
+<span id="fileinfo"></span><h1>File Information<a class="headerlink" href="#file-information" title="Permalink to this headline">¶</a></h1>
 <p>File name and size information. You can obtain a list of values of type FileInfo using the <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST FILES</em></a> command.</p>
 <dl class="structure">
-<dt id="FILEINFO">
-<em class="property">structure </em><tt class="descname">FileInfo</tt><a class="headerlink" href="#FILEINFO" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:FILEINFO">
+<em class="property">structure </em><tt class="descname">FileInfo</tt><a class="headerlink" href="#structure:FILEINFO" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <caption>Members</caption>
 <colgroup>
@@ -179,23 +183,23 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#FILEINFO:NAME" title="FILEINFO:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:FILEINFO:NAME" title="FILEINFO:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
 <td>string</td>
 <td>Name of the file including extension</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#FILEINFO:FILETYPE" title="FILEINFO:FILETYPE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FILETYPE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:FILEINFO:FILETYPE" title="FILEINFO:FILETYPE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FILETYPE</span></tt></a></td>
 <td>string</td>
 <td>Type of the file</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#FILEINFO:SIZE" title="FILEINFO:SIZE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SIZE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:FILEINFO:SIZE" title="FILEINFO:SIZE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SIZE</span></tt></a></td>
 <td>integer (bytes)</td>
 <td>Size of the file</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#FILEINFO:MODIFIED" title="FILEINFO:MODIFIED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MODIFIED</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:FILEINFO:MODIFIED" title="FILEINFO:MODIFIED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MODIFIED</span></tt></a></td>
 <td>string</td>
 <td>The date the file was last modified</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#FILEINFO:CREATED" title="FILEINFO:CREATED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CREATED</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:FILEINFO:CREATED" title="FILEINFO:CREATED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CREATED</span></tt></a></td>
 <td>string</td>
 <td>The date the file was first created</td>
 </tr>
@@ -204,8 +208,8 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="FILEINFO:NAME">
-FileInfo:<tt class="descname">NAME</tt><a class="headerlink" href="#FILEINFO:NAME" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:FILEINFO:NAME">
+FileInfo:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:FILEINFO:NAME" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -220,8 +224,8 @@ FileInfo:<tt class="descname">NAME</tt><a class="headerlink" href="#FILEINFO:NAM
 </dd></dl>
 
 <dl class="attribute">
-<dt id="FILEINFO:FILETYPE">
-FileInfo:<tt class="descname">FILETYPE</tt><a class="headerlink" href="#FILEINFO:FILETYPE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:FILEINFO:FILETYPE">
+FileInfo:<tt class="descname">FILETYPE</tt><a class="headerlink" href="#attribute:FILEINFO:FILETYPE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -246,8 +250,8 @@ FileInfo:<tt class="descname">FILETYPE</tt><a class="headerlink" href="#FILEINFO
 </dd></dl>
 
 <dl class="attribute">
-<dt id="FILEINFO:SIZE">
-FileInfo:<tt class="descname">SIZE</tt><a class="headerlink" href="#FILEINFO:SIZE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:FILEINFO:SIZE">
+FileInfo:<tt class="descname">SIZE</tt><a class="headerlink" href="#attribute:FILEINFO:SIZE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -262,8 +266,8 @@ FileInfo:<tt class="descname">SIZE</tt><a class="headerlink" href="#FILEINFO:SIZ
 </dd></dl>
 
 <dl class="attribute">
-<dt id="FILEINFO:MODIFIED">
-FileInfo:<tt class="descname">MODIFIED</tt><a class="headerlink" href="#FILEINFO:MODIFIED" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:FILEINFO:MODIFIED">
+FileInfo:<tt class="descname">MODIFIED</tt><a class="headerlink" href="#attribute:FILEINFO:MODIFIED" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -278,8 +282,8 @@ FileInfo:<tt class="descname">MODIFIED</tt><a class="headerlink" href="#FILEINFO
 </dd></dl>
 
 <dl class="attribute">
-<dt id="FILEINFO:CREATED">
-FileInfo:<tt class="descname">CREATED</tt><a class="headerlink" href="#FILEINFO:CREATED" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:FILEINFO:CREATED">
+FileInfo:<tt class="descname">CREATED</tt><a class="headerlink" href="#attribute:FILEINFO:CREATED" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -345,7 +349,7 @@ FileInfo:<tt class="descname">CREATED</tt><a class="headerlink" href="#FILEINFO:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="iterator.html" class="btn btn-neutral float-right" title="Iterator">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="iterator.html" class="btn btn-neutral float-right" title="Iterator"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="config.html" class="btn btn-neutral" title="Configuration of kOS"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -361,8 +365,7 @@ FileInfo:<tt class="descname">CREATED</tt><a class="headerlink" href="#FILEINFO:
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -155,62 +159,62 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="predictions-of-flight-path">
 <h1>Predictions of Flight Path<a class="headerlink" href="#predictions-of-flight-path" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p><strong>Manipulating the maneuver nodes</strong></p>
-<p>To alter the maneuver nodes on a vessel&#8217;s flight plan, use the ADD and REMOVE commands as described on the <em class="xref std std-ref">maneuver node manipulation page</em>.</p>
+<p>To alter the maneuver nodes on a vessel&#8217;s flight plan, use the ADD and REMOVE commands as described on the <a class="reference internal" href="../structures/vessels/node.html#maneuver-node"><em>maneuver node manipulation page</em></a>.</p>
 <p class="last">Using the Add and Remove commands as described on that page, you may alter the flight plan of the CPU_vessel, however kOS does not automatically execute the nodes. You still have to write the code to decide how to successfully execute a planned maneuver node.</p>
 </div>
 <p>The following prediction functions do take into account the future maneuver nodes planned, and operate under the assumption that they will be executed as planned.</p>
 <p>These return predicted information about the future position and velocity of an object.</p>
 <dl class="function">
-<dt id="POSITIONAT">
-<tt class="descname">POSITIONAT</tt><big>(</big>orbitable,time<big>)</big><a class="headerlink" href="#POSITIONAT" title="Permalink to this definition">¶</a></dt>
+<dt id="function:POSITIONAT">
+<tt class="descname">POSITIONAT</tt><big>(</big>orbitable,time<big>)</big><a class="headerlink" href="#function:POSITIONAT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>orbitable</strong> &#8211; A <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a>, <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><em>Body</em></a> or other <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a> object</li>
+<li><strong>orbitable</strong> &#8211; A <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>, <a class="reference internal" href="../structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a> or other <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> object</li>
 <li><strong>time</strong> &#8211; Time of prediction</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type orbitable:</th><td class="field-body"><p class="first"><a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a></p>
+<tr class="field-even field"><th class="field-name">Type orbitable:</th><td class="field-body"><p class="first"><a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Type time:</th><td class="field-body"><p class="first"><em class="xref std std-ref">Timestamp</em></p>
+<tr class="field-odd field"><th class="field-name">Type time:</th><td class="field-body"><p class="first"><a class="reference internal" href="../structures/misc/time.html#structure:TIMESPAN" title="TIMESPAN structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></tt></a></p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A position <em class="xref std std-ref">Vector</em> expressed as the coordinates in the <a class="reference internal" href="../math/ref_frame.html#ship-raw"><em>ship-center-raw-rotation</em></a> frame</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A position <a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> expressed as the coordinates in the <a class="reference internal" href="../math/ref_frame.html#ship-raw"><em>ship-center-raw-rotation</em></a> frame</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Returns a prediction of where the <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a> will be at some <em class="xref std std-ref">universal Timestamp</em>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a> has planned <em class="xref std std-ref">maneuver nodes</em>, the prediction assumes they will be executed exactly as planned.</p>
+<p>Returns a prediction of where the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> will be at some <a class="reference internal" href="../structures/misc/time.html#timestamp"><em>universal Timestamp</em></a>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a> has planned <a class="reference internal" href="../structures/vessels/node.html#maneuver-node"><em>maneuver nodes</em></a>, the prediction assumes they will be executed exactly as planned.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="VELOCITYAT">
-<tt class="descname">VELOCITYAT</tt><big>(</big>orbitable,time<big>)</big><a class="headerlink" href="#VELOCITYAT" title="Permalink to this definition">¶</a></dt>
+<dt id="function:VELOCITYAT">
+<tt class="descname">VELOCITYAT</tt><big>(</big>orbitable,time<big>)</big><a class="headerlink" href="#function:VELOCITYAT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>orbitable</strong> &#8211; A <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a>, <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><em>Body</em></a> or other <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a> object</li>
+<li><strong>orbitable</strong> &#8211; A <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>, <a class="reference internal" href="../structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a> or other <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> object</li>
 <li><strong>time</strong> &#8211; Time of prediction</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type orbitable:</th><td class="field-body"><p class="first"><a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a></p>
+<tr class="field-even field"><th class="field-name">Type orbitable:</th><td class="field-body"><p class="first"><a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Type time:</th><td class="field-body"><p class="first"><em class="xref std std-ref">Timestamp</em></p>
+<tr class="field-odd field"><th class="field-name">Type time:</th><td class="field-body"><p class="first"><a class="reference internal" href="../structures/misc/time.html#structure:TIMESPAN" title="TIMESPAN structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></tt></a></p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An <a class="reference internal" href="../structures/orbits/orbitablevelocity.html#orbitablevelocity"><em>ObitalVelocity</em></a> structure.</p>
@@ -218,34 +222,34 @@
 </tr>
 </tbody>
 </table>
-<p>Returns a prediction of what the <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable&#8217;s</em></a> velocity will be at some <em class="xref std std-ref">universal Timestamp</em>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a> has planned <em class="xref std std-ref">maneuver nodes</em>, the prediction assumes they will be executed exactly as planned.</p>
+<p>Returns a prediction of what the <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable&#8217;s</em></a> velocity will be at some <a class="reference internal" href="../structures/misc/time.html#timestamp"><em>universal Timestamp</em></a>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a> has planned <tt class="xref ks ks-struct docutils literal"><span class="pre">maneuver</span> <span class="pre">nodes</span></tt>, the prediction assumes they will be executed exactly as planned.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="ORBITAT">
-<tt class="descname">ORBITAT</tt><big>(</big>orbitable,time<big>)</big><a class="headerlink" href="#ORBITAT" title="Permalink to this definition">¶</a></dt>
+<dt id="function:ORBITAT">
+<tt class="descname">ORBITAT</tt><big>(</big>orbitable,time<big>)</big><a class="headerlink" href="#function:ORBITAT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>orbitable</strong> &#8211; A <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a>, <a class="reference internal" href="../structures/celestial_bodies/body.html#body"><em>Body</em></a> or other <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a> object</li>
+<li><strong>orbitable</strong> &#8211; A <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a>, <a class="reference internal" href="../structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a> or other <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> object</li>
 <li><strong>time</strong> &#8211; Time of prediction</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type orbitable:</th><td class="field-body"><p class="first"><a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a></p>
+<tr class="field-even field"><th class="field-name">Type orbitable:</th><td class="field-body"><p class="first"><a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Type time:</th><td class="field-body"><p class="first"><em class="xref std std-ref">Timestamp</em></p>
+<tr class="field-odd field"><th class="field-name">Type time:</th><td class="field-body"><p class="first"><a class="reference internal" href="../structures/misc/time.html#structure:TIMESPAN" title="TIMESPAN structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></tt></a></p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An <a class="reference internal" href="../structures/orbits/orbit.html#orbit"><em>Orbit</em></a> structure.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An <a class="reference internal" href="../structures/orbits/orbit.html#structure:ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a> structure.</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Returns the <a class="reference internal" href="../structures/orbits/orbit.html#orbit"><em>Orbit patch</em></a> where the <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a> object is predicted to be at some <em class="xref std std-ref">universal Timestamp</em>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#orbitable"><em>Orbitable</em></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#vessel"><em>Vessel</em></a> has planned <em class="xref std std-ref">maneuver nodes</em>, the prediction assumes they will be executed exactly as planned.</p>
+<p>Returns the <a class="reference internal" href="../structures/orbits/orbit.html#orbit"><em>Orbit patch</em></a> where the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> object is predicted to be at some <a class="reference internal" href="../structures/misc/time.html#timestamp"><em>universal Timestamp</em></a>. If the <a class="reference internal" href="../structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> is a <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>, and the <a class="reference internal" href="../structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a> has planned <a class="reference internal" href="../structures/vessels/node.html#maneuver-node"><em>maneuver nodes</em></a>, the prediction assumes they will be executed exactly as planned.</p>
 </dd></dl>
 
 <p>Examples:</p>
@@ -278,7 +282,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="list.html" class="btn btn-neutral float-right" title="LIST Command">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="list.html" class="btn btn-neutral float-right" title="LIST Command"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="flight/warp.html" class="btn btn-neutral" title="Time Warping"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -294,8 +298,7 @@
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

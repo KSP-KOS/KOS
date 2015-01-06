@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,14 +161,14 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="orbitablevelocity">
 <span id="id1"></span><h1>OrbitableVelocity<a class="headerlink" href="#orbitablevelocity" title="Permalink to this headline">¶</a></h1>
-<p>When any <a class="reference internal" href="orbitable.html#ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> object returns its <a class="reference internal" href="orbitable.html#ORBITABLE:VELOCITY" title="ORBITABLE:VELOCITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VELOCITY</span></tt></a> suffix, it returns it as a structure containing a pair of both its orbit-frame velocity and its surface-frame velocity at the same instant of time. To obtain its velocity as a vector you must pick whether you want the oribtal or surface velocities by giving a further suffix:</p>
+<p>When any <a class="reference internal" href="orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a> object returns its <a class="reference internal" href="orbitable.html#attribute:ORBITABLE:VELOCITY" title="ORBITABLE:VELOCITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VELOCITY</span></tt></a> suffix, it returns it as a structure containing a pair of both its orbit-frame velocity and its surface-frame velocity at the same instant of time. To obtain its velocity as a vector you must pick whether you want the oribtal or surface velocities by giving a further suffix:</p>
 <dl class="structure">
-<dt id="ORBITABLEVELOCITY">
-<em class="property">structure </em><tt class="descname">OrbitableVelocity</tt><a class="headerlink" href="#ORBITABLEVELOCITY" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:ORBITABLEVELOCITY">
+<em class="property">structure </em><tt class="descname">OrbitableVelocity</tt><a class="headerlink" href="#structure:ORBITABLEVELOCITY" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <caption>Members</caption>
 <colgroup>
@@ -177,24 +181,24 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#ORBITABLEVELOCITY:ORBIT" title="ORBITABLEVELOCITY:ORBIT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ORBIT</span></tt></a></td>
-<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLEVELOCITY:ORBIT" title="ORBITABLEVELOCITY:ORBIT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ORBIT</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#ORBITABLEVELOCITY:SURFACE" title="ORBITABLEVELOCITY:SURFACE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SURFACE</span></tt></a></td>
-<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLEVELOCITY:SURFACE" title="ORBITABLEVELOCITY:SURFACE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SURFACE</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ORBITABLEVELOCITY:ORBIT">
-OrbitableVelocity:<tt class="descname">ORBIT</tt><a class="headerlink" href="#ORBITABLEVELOCITY:ORBIT" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ORBITABLEVELOCITY:ORBIT">
+OrbitableVelocity:<tt class="descname">ORBIT</tt><a class="headerlink" href="#attribute:ORBITABLEVELOCITY:ORBIT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -204,13 +208,13 @@ OrbitableVelocity:<tt class="descname">ORBIT</tt><a class="headerlink" href="#OR
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ORBITABLEVELOCITY:SURFACE">
-OrbitableVelocity:<tt class="descname">SURFACE</tt><a class="headerlink" href="#ORBITABLEVELOCITY:SURFACE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:ORBITABLEVELOCITY:SURFACE">
+OrbitableVelocity:<tt class="descname">SURFACE</tt><a class="headerlink" href="#attribute:ORBITABLEVELOCITY:SURFACE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -238,7 +242,7 @@ OrbitableVelocity:<tt class="descname">SURFACE</tt><a class="headerlink" href="#
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../celestial_bodies.html" class="btn btn-neutral float-right" title="Celestial Bodies">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../celestial_bodies.html" class="btn btn-neutral float-right" title="Celestial Bodies"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="orbitable.html" class="btn btn-neutral" title="Orbitable (Vessels and Bodies)"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -254,8 +258,7 @@ OrbitableVelocity:<tt class="descname">SURFACE</tt><a class="headerlink" href="#
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

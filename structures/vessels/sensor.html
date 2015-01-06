@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,11 +161,11 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="sensor">
 <span id="id1"></span><h1>Sensor<a class="headerlink" href="#sensor" title="Permalink to this headline">¶</a></h1>
-<p>The type of structures returned by <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST SENSORS IN SOMEVARIABLE</em></a>. This is not fully understood because the type of <a class="reference internal" href="partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a> in the KSP API called <tt class="docutils literal"><span class="pre">ModuleEnviroSensor</span></tt>, which all Sensors are a kind of, is not well documented. Here is an example of using <a class="reference internal" href="#SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></tt></a>:</p>
+<p>The type of structures returned by <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST SENSORS IN SOMEVARIABLE</em></a>. This is not fully understood because the type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a> in the KSP API called <tt class="docutils literal"><span class="pre">ModuleEnviroSensor</span></tt>, which all Sensors are a kind of, is not well documented. Here is an example of using <a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></tt></a>:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;Full Sensor Dump:&quot;</span><span class="p">.</span>
 <span class="n">LIST</span> <span class="n">SENSORS</span> <span class="n">IN</span> <span class="n">SENSELIST</span><span class="p">.</span>
 
@@ -179,8 +183,8 @@
 </pre></div>
 </div>
 <dl class="structure">
-<dt id="SENSOR">
-<em class="property">structure </em><tt class="descname">Sensor</tt><a class="headerlink" href="#SENSOR" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:SENSOR">
+<em class="property">structure </em><tt class="descname">Sensor</tt><a class="headerlink" href="#structure:SENSOR" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="29%" />
@@ -194,27 +198,27 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>All suffixes of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+<tr class="row-even"><td>All suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
 <td>&nbsp;</td>
-<td><a class="reference internal" href="#SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></tt></a> objects are a type of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+<td><a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></tt></a> objects are a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#SENSOR:ACTIVE" title="SENSOR:ACTIVE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ACTIVE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SENSOR:ACTIVE" title="SENSOR:ACTIVE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ACTIVE</span></tt></a></td>
 <td>boolean</td>
 <td>Check if this sensor is active</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#SENSOR:TYPE" title="SENSOR:TYPE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TYPE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SENSOR:TYPE" title="SENSOR:TYPE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TYPE</span></tt></a></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#SENSOR:READOUT" title="SENSOR:READOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">READOUT</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SENSOR:READOUT" title="SENSOR:READOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">READOUT</span></tt></a></td>
 <td>varies</td>
 <td>Value of the readout</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#SENSOR:POWERCONSUMPTION" title="SENSOR:POWERCONSUMPTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POWERCONSUMPTION</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SENSOR:POWERCONSUMPTION" title="SENSOR:POWERCONSUMPTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POWERCONSUMPTION</span></tt></a></td>
 <td>scalar</td>
 <td>Rate of required electric charge</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#SENSOR:TOGGLE" title="SENSOR:TOGGLE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">TOGGLE()</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:SENSOR:TOGGLE" title="SENSOR:TOGGLE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">TOGGLE()</span></tt></a></td>
 <td>&nbsp;</td>
 <td>Call to activate/deactivate</td>
 </tr>
@@ -224,11 +228,11 @@
 
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">A <a class="reference internal" href="#SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></tt></a> is a type of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>.</p>
+<p class="last">A <a class="reference internal" href="#structure:SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></tt></a> is a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>.</p>
 </div>
 <dl class="attribute">
-<dt id="SENSOR:ACTIVE">
-Sensor:<tt class="descname">ACTIVE</tt><a class="headerlink" href="#SENSOR:ACTIVE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:SENSOR:ACTIVE">
+Sensor:<tt class="descname">ACTIVE</tt><a class="headerlink" href="#attribute:SENSOR:ACTIVE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -243,8 +247,8 @@ Sensor:<tt class="descname">ACTIVE</tt><a class="headerlink" href="#SENSOR:ACTIV
 </dd></dl>
 
 <dl class="attribute">
-<dt id="SENSOR:TYPE">
-Sensor:<tt class="descname">TYPE</tt><a class="headerlink" href="#SENSOR:TYPE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:SENSOR:TYPE">
+Sensor:<tt class="descname">TYPE</tt><a class="headerlink" href="#attribute:SENSOR:TYPE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -256,8 +260,8 @@ Sensor:<tt class="descname">TYPE</tt><a class="headerlink" href="#SENSOR:TYPE" t
 </dd></dl>
 
 <dl class="attribute">
-<dt id="SENSOR:READOUT">
-Sensor:<tt class="descname">READOUT</tt><a class="headerlink" href="#SENSOR:READOUT" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:SENSOR:READOUT">
+Sensor:<tt class="descname">READOUT</tt><a class="headerlink" href="#attribute:SENSOR:READOUT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -272,8 +276,8 @@ Sensor:<tt class="descname">READOUT</tt><a class="headerlink" href="#SENSOR:READ
 </dd></dl>
 
 <dl class="attribute">
-<dt id="SENSOR:POWERCONSUMPTION">
-Sensor:<tt class="descname">POWERCONSUMPTION</tt><a class="headerlink" href="#SENSOR:POWERCONSUMPTION" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:SENSOR:POWERCONSUMPTION">
+Sensor:<tt class="descname">POWERCONSUMPTION</tt><a class="headerlink" href="#attribute:SENSOR:POWERCONSUMPTION" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -288,8 +292,8 @@ Sensor:<tt class="descname">POWERCONSUMPTION</tt><a class="headerlink" href="#SE
 </dd></dl>
 
 <dl class="method">
-<dt id="SENSOR:TOGGLE">
-Sensor:<tt class="descname">TOGGLE</tt><big>(</big><big>)</big><a class="headerlink" href="#SENSOR:TOGGLE" title="Permalink to this definition">¶</a></dt>
+<dt id="method:SENSOR:TOGGLE">
+Sensor:<tt class="descname">TOGGLE</tt><big>(</big><big>)</big><a class="headerlink" href="#method:SENSOR:TOGGLE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call this method to cause the sensor to switch between active and deactivated or visa versa.</p>
 </dd></dl>
 
@@ -301,7 +305,7 @@ Sensor:<tt class="descname">TOGGLE</tt><big>(</big><big>)</big><a class="headerl
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="vessel.html" class="btn btn-neutral float-right" title="Vessel">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="vessel.html" class="btn btn-neutral float-right" title="Vessel"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="resource.html" class="btn btn-neutral" title="Resource"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -317,8 +321,7 @@ Sensor:<tt class="descname">TOGGLE</tt><big>(</big><big>)</big><a class="headerl
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

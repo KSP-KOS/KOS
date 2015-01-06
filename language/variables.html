@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -155,30 +159,30 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="variables-statements">
 <span id="variables"></span><h1>Variables &amp; Statements<a class="headerlink" href="#variables-statements" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#declare" id="id8"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
-<li><a class="reference internal" href="#declare-parameter" id="id9"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
-<li><a class="reference internal" href="#set" id="id10"><tt class="docutils literal"><span class="pre">SET</span></tt></a></li>
-<li><a class="reference internal" href="#lock" id="id11"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a></li>
-<li><a class="reference internal" href="#toggle" id="id12"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
-<li><a class="reference internal" href="#on" id="id13"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
-<li><a class="reference internal" href="#off" id="id14"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
+<li><a class="reference internal" href="#declare" id="id7"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
+<li><a class="reference internal" href="#declare-parameter" id="id8"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
+<li><a class="reference internal" href="#set" id="id9"><tt class="docutils literal"><span class="pre">SET</span></tt></a></li>
+<li><a class="reference internal" href="#lock" id="id10"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a></li>
+<li><a class="reference internal" href="#toggle" id="id11"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
+<li><a class="reference internal" href="#on" id="id12"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
+<li><a class="reference internal" href="#off" id="id13"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
 </ul>
 </div>
 <div class="section" id="declare">
-<span id="id1"></span><h2><a class="toc-backref" href="#id8"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a><a class="headerlink" href="#declare" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2><a class="toc-backref" href="#id7"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a><a class="headerlink" href="#declare" title="Permalink to this headline">¶</a></h2>
 <p>Declares a global variable. Alternatively, a variable can be implicitly declared by any <tt class="docutils literal"><span class="pre">SET</span></tt> or <tt class="docutils literal"><span class="pre">LOCK</span></tt> statement:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">X</span><span class="p">.</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="declare-parameter">
-<span id="id2"></span><h2><a class="toc-backref" href="#id9"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id8"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
 <p>Declares variables to be used as a parameter that can be passed in using the <tt class="docutils literal"><span class="pre">RUN</span></tt> command.</p>
 <p>Program 1:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// This is the contents of program1:</span>
@@ -221,15 +225,15 @@
 </div>
 </div>
 <div class="section" id="set">
-<span id="id3"></span><h2><a class="toc-backref" href="#id10"><tt class="docutils literal"><span class="pre">SET</span></tt></a><a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2><a class="toc-backref" href="#id9"><tt class="docutils literal"><span class="pre">SET</span></tt></a><a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
 <p>Sets the value of a variable. Declares a global variable if it doesn’t already exist:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="lock">
-<span id="id4"></span><h2><a class="toc-backref" href="#id11"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
-<p>Declares that the idenifier will refer to an expression that is always re-evaluated on the fly every time it is used:</p>
+<h2><a class="toc-backref" href="#id10"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
+<p>Declares that the idenifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also <a class="reference internal" href="flow.html#lock"><em>Flow Control documentation</em></a>):</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">Y</span> <span class="n">TO</span> <span class="mf">1.</span>
 <span class="n">LOCK</span> <span class="n">X</span> <span class="n">TO</span> <span class="n">Y</span> <span class="o">+</span> <span class="mf">1.</span>
 <span class="n">PRINT</span> <span class="n">X</span><span class="p">.</span>    <span class="c1">// prints &quot;2&quot;</span>
@@ -239,7 +243,7 @@
 </div>
 </div>
 <div class="section" id="toggle">
-<span id="id5"></span><h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a><a class="headerlink" href="#toggle" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id11"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a><a class="headerlink" href="#toggle" title="Permalink to this headline">¶</a></h2>
 <p>Toggles a variable between <tt class="docutils literal"><span class="pre">TRUE</span></tt> or <tt class="docutils literal"><span class="pre">FALSE</span></tt>. If the variable in question starts out as a number, it will be converted to a boolean and then toggled. This is useful for setting action groups, which are activated whenever their values are inverted:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">TOGGLE</span> <span class="n">AG1</span><span class="p">.</span> <span class="c1">// Fires action group 1.</span>
 <span class="n">TOGGLE</span> <span class="n">SAS</span><span class="p">.</span> <span class="c1">// Toggles SAS on or off.</span>
@@ -247,14 +251,14 @@
 </div>
 </div>
 <div class="section" id="on">
-<span id="id6"></span><h2><a class="toc-backref" href="#id13"><tt class="docutils literal"><span class="pre">ON</span></tt></a><a class="headerlink" href="#on" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">ON</span></tt></a><a class="headerlink" href="#on" title="Permalink to this headline">¶</a></h2>
 <p>Sets a variable to <tt class="docutils literal"><span class="pre">TRUE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">ON</span><span class="p">.</span>  <span class="c1">// Turns on the RCS</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="off">
-<span id="id7"></span><h2><a class="toc-backref" href="#id14"><tt class="docutils literal"><span class="pre">OFF</span></tt></a><a class="headerlink" href="#off" title="Permalink to this headline">¶</a></h2>
+<span id="id6"></span><h2><a class="toc-backref" href="#id13"><tt class="docutils literal"><span class="pre">OFF</span></tt></a><a class="headerlink" href="#off" title="Permalink to this headline">¶</a></h2>
 <p>Sets a variable to <tt class="docutils literal"><span class="pre">FALSE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">OFF</span><span class="p">.</span>  <span class="c1">// Turns off the RCS</span>
 </pre></div>
@@ -268,7 +272,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../math.html" class="btn btn-neutral float-right" title="Mathematics and Basic Geometry">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../math.html" class="btn btn-neutral float-right" title="Mathematics and Basic Geometry"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="flow.html" class="btn btn-neutral" title="Flow Control"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -284,8 +288,7 @@
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -32,7 +34,7 @@
               href="../../about.html"/>
     <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Colors" href="rgba.html"/>
+        <link rel="next" title="Time Span" href="time.html"/>
         <link rel="prev" title="Iterator" href="iterator.html"/> 
 
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,16 +161,16 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="list">
 <span id="id1"></span><h1>List<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h1>
-<p>A <a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> is a collection of any type in kOS. Many places throughout the system return variables of the <a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> type, and you can create your own <a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> variables as well. One of the places you are likely to find that kOS gives you a <a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> is when you use the <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST command</em></a> to list some query into one of your variables.</p>
+<p>A <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> is a collection of any type in kOS. Many places throughout the system return variables of the <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> type, and you can create your own <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> variables as well. One of the places you are likely to find that kOS gives you a <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> is when you use the <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST command</em></a> to list some query into one of your variables.</p>
 <div class="section" id="structure">
 <h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
-<dt id="LIST">
-<em class="property">structure </em><tt class="descname">List</tt><a class="headerlink" href="#LIST" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:LIST">
+<em class="property">structure </em><tt class="descname">List</tt><a class="headerlink" href="#structure:LIST" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <caption>Members</caption>
 <colgroup>
@@ -181,47 +185,47 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#LIST:ADD" title="LIST:ADD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">ADD(item)</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:LIST:ADD" title="LIST:ADD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">ADD(item)</span></tt></a></td>
 <td>None</td>
 <td>append an item</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#LIST:INSERT" title="LIST:INSERT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">INSERT(index,item)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:LIST:INSERT" title="LIST:INSERT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">INSERT(index,item)</span></tt></a></td>
 <td>None</td>
 <td>insert item at index</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#LIST:REMOVE" title="LIST:REMOVE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">REMOVE(index)</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:LIST:REMOVE" title="LIST:REMOVE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">REMOVE(index)</span></tt></a></td>
 <td>None</td>
 <td>remove item by index</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#LIST:CLEAR" title="LIST:CLEAR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CLEAR</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:LIST:CLEAR" title="LIST:CLEAR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CLEAR</span></tt></a></td>
 <td>None</td>
 <td>remove all elements</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#LIST:LENGTH" title="LIST:LENGTH attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:LIST:LENGTH" title="LIST:LENGTH attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LENGTH</span></tt></a></td>
 <td>integer</td>
 <td>number of elements in list</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#LIST:ITERATOR" title="LIST:ITERATOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ITERATOR</span></tt></a></td>
-<td><a class="reference internal" href="iterator.html#ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:LIST:ITERATOR" title="LIST:ITERATOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ITERATOR</span></tt></a></td>
+<td><a class="reference internal" href="iterator.html#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a></td>
 <td>for iterating over the list</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#LIST:COPY" title="LIST:COPY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">COPY</span></tt></a></td>
-<td><a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:LIST:COPY" title="LIST:COPY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">COPY</span></tt></a></td>
+<td><a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td>a new copy of this list</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#LIST:CONTAINS" title="LIST:CONTAINS method"><tt class="xref ks ks-meth docutils literal"><span class="pre">CONTAINS(item)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:LIST:CONTAINS" title="LIST:CONTAINS method"><tt class="xref ks ks-meth docutils literal"><span class="pre">CONTAINS(item)</span></tt></a></td>
 <td>boolean</td>
 <td>check if list contains an item</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#LIST:SUBLIST" title="LIST:SUBLIST method"><tt class="xref ks ks-meth docutils literal"><span class="pre">SUBLIST(index,length)</span></tt></a></td>
-<td><a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:LIST:SUBLIST" title="LIST:SUBLIST method"><tt class="xref ks ks-meth docutils literal"><span class="pre">SUBLIST(index,length)</span></tt></a></td>
+<td><a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td>new list of given length starting with index</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#LIST:EMPTY" title="LIST:EMPTY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">EMPTY</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:LIST:EMPTY" title="LIST:EMPTY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">EMPTY</span></tt></a></td>
 <td>boolean</td>
 <td>check if list if empty</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#LIST:DUMP" title="LIST:DUMP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DUMP</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:LIST:DUMP" title="LIST:DUMP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DUMP</span></tt></a></td>
 <td>string</td>
 <td>verbose dump of all contained elements</td>
 </tr>
@@ -230,8 +234,8 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="LIST:ADD">
-List:<tt class="descname">ADD</tt><big>(</big>item<big>)</big><a class="headerlink" href="#LIST:ADD" title="Permalink to this definition">¶</a></dt>
+<dt id="method:LIST:ADD">
+List:<tt class="descname">ADD</tt><big>(</big>item<big>)</big><a class="headerlink" href="#method:LIST:ADD" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -247,8 +251,8 @@ List:<tt class="descname">ADD</tt><big>(</big>item<big>)</big><a class="headerli
 </dd></dl>
 
 <dl class="method">
-<dt id="LIST:INSERT">
-List:<tt class="descname">INSERT</tt><big>(</big>index,item<big>)</big><a class="headerlink" href="#LIST:INSERT" title="Permalink to this definition">¶</a></dt>
+<dt id="method:LIST:INSERT">
+List:<tt class="descname">INSERT</tt><big>(</big>index,item<big>)</big><a class="headerlink" href="#method:LIST:INSERT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -265,8 +269,8 @@ List:<tt class="descname">INSERT</tt><big>(</big>index,item<big>)</big><a class=
 </dd></dl>
 
 <dl class="method">
-<dt id="LIST:REMOVE">
-List:<tt class="descname">REMOVE</tt><big>(</big>index<big>)</big><a class="headerlink" href="#LIST:REMOVE" title="Permalink to this definition">¶</a></dt>
+<dt id="method:LIST:REMOVE">
+List:<tt class="descname">REMOVE</tt><big>(</big>index<big>)</big><a class="headerlink" href="#method:LIST:REMOVE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -282,8 +286,8 @@ List:<tt class="descname">REMOVE</tt><big>(</big>index<big>)</big><a class="head
 </dd></dl>
 
 <dl class="attribute">
-<dt id="LIST:CLEAR">
-List:<tt class="descname">CLEAR</tt><a class="headerlink" href="#LIST:CLEAR" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:LIST:CLEAR">
+List:<tt class="descname">CLEAR</tt><a class="headerlink" href="#attribute:LIST:CLEAR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use this for its side-effect. Whenever <tt class="docutils literal"><span class="pre">myList:CLEAR</span></tt> exists in an expression, <tt class="docutils literal"><span class="pre">myList</span></tt> will be zeroed out, regardless of what you do with the value of the expression:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">dummy</span> <span class="n">TO</span> <span class="n">myList</span><span class="o">:</span><span class="n">CLEAR</span><span class="p">.</span>
 </pre></div>
@@ -291,8 +295,8 @@ List:<tt class="descname">CLEAR</tt><a class="headerlink" href="#LIST:CLEAR" tit
 </dd></dl>
 
 <dl class="attribute">
-<dt id="LIST:LENGTH">
-List:<tt class="descname">LENGTH</tt><a class="headerlink" href="#LIST:LENGTH" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:LIST:LENGTH">
+List:<tt class="descname">LENGTH</tt><a class="headerlink" href="#attribute:LIST:LENGTH" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -307,29 +311,29 @@ List:<tt class="descname">LENGTH</tt><a class="headerlink" href="#LIST:LENGTH" t
 </dd></dl>
 
 <dl class="attribute">
-<dt id="LIST:ITERATOR">
-List:<tt class="descname">ITERATOR</tt><a class="headerlink" href="#LIST:ITERATOR" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:LIST:ITERATOR">
+List:<tt class="descname">ITERATOR</tt><a class="headerlink" href="#attribute:LIST:ITERATOR" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="iterator.html#ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="iterator.html#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>An alternate means of iterating over a list. See: <a class="reference internal" href="iterator.html#ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a>.</p>
+<p>An alternate means of iterating over a list. See: <a class="reference internal" href="iterator.html#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="LIST:COPY">
-List:<tt class="descname">COPY</tt><a class="headerlink" href="#LIST:COPY" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:LIST:COPY">
+List:<tt class="descname">COPY</tt><a class="headerlink" href="#attribute:LIST:COPY" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -339,8 +343,8 @@ List:<tt class="descname">COPY</tt><a class="headerlink" href="#LIST:COPY" title
 </dd></dl>
 
 <dl class="method">
-<dt id="LIST:CONTAINS">
-List:<tt class="descname">CONTAINS</tt><big>(</big>item<big>)</big><a class="headerlink" href="#LIST:CONTAINS" title="Permalink to this definition">¶</a></dt>
+<dt id="method:LIST:CONTAINS">
+List:<tt class="descname">CONTAINS</tt><big>(</big>item<big>)</big><a class="headerlink" href="#method:LIST:CONTAINS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -359,19 +363,19 @@ List:<tt class="descname">CONTAINS</tt><big>(</big>item<big>)</big><a class="hea
 </dd></dl>
 
 <dl class="method">
-<dt id="LIST:SUBLIST">
-List:<tt class="descname">SUBLIST</tt><big>(</big>index,length<big>)</big><a class="headerlink" href="#LIST:SUBLIST" title="Permalink to this definition">¶</a></dt>
+<dt id="method:LIST:SUBLIST">
+List:<tt class="descname">SUBLIST</tt><big>(</big>index,length<big>)</big><a class="headerlink" href="#method:LIST:SUBLIST" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>index</strong> &#8211; (integer) starting index (from zero)</li>
-<li><strong>length</strong> &#8211; (integer) resulting length of returned <a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></li>
+<li><strong>length</strong> &#8211; (integer) resulting length of returned <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -380,8 +384,8 @@ List:<tt class="descname">SUBLIST</tt><big>(</big>index,length<big>)</big><a cla
 </dd></dl>
 
 <dl class="attribute">
-<dt id="LIST:EMPTY">
-List:<tt class="descname">EMPTY</tt><a class="headerlink" href="#LIST:EMPTY" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:LIST:EMPTY">
+List:<tt class="descname">EMPTY</tt><a class="headerlink" href="#attribute:LIST:EMPTY" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -396,8 +400,8 @@ List:<tt class="descname">EMPTY</tt><a class="headerlink" href="#LIST:EMPTY" tit
 </dd></dl>
 
 <dl class="attribute">
-<dt id="LIST:DUMP">
-List:<tt class="descname">DUMP</tt><a class="headerlink" href="#LIST:DUMP" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:LIST:DUMP">
+List:<tt class="descname">DUMP</tt><a class="headerlink" href="#attribute:LIST:DUMP" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -421,7 +425,7 @@ List:<tt class="descname">DUMP</tt><a class="headerlink" href="#LIST:DUMP" title
 <dt><tt class="docutils literal"><span class="pre">FOR</span> <span class="pre">VAR</span> <span class="pre">IN</span> <span class="pre">LIST</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}.</span></tt></dt>
 <dd><a class="reference internal" href="../../language/flow.html#flow"><em>A type of loop</em></a> in which var iterates over all the items of list from item 0 to item LENGTH-1.</dd>
 <dt><tt class="docutils literal"><span class="pre">ITERATOR</span></tt></dt>
-<dd>An alternate means of iterating over a list. See <a class="reference internal" href="iterator.html#ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a>.</dd>
+<dd>An alternate means of iterating over a list. See <a class="reference internal" href="iterator.html#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a>.</dd>
 <dt><tt class="docutils literal"><span class="pre">list#x</span></tt> <em>(deprecated)</em></dt>
 <dd>operator: access the element at postion x. Works for get or set. X must be a hardcoded number or a variable name. This is here for backward compatibility. The syntax in the next bullet point is preferred over this.</dd>
 </dl>
@@ -482,7 +486,7 @@ FOR var in BAR {         // --.
 </div>
 <div class="section" id="multidimensional-arrays">
 <h2>Multidimensional Arrays<a class="headerlink" href="#multidimensional-arrays" title="Permalink to this headline">¶</a></h2>
-<p>A 2-D array is a <a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> who&#8217;s elements are themselves also <tt class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></tt>. A 3-D array is a <a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></tt></a> of <a class="reference internal" href="#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></tt></a>. Any number of dimensions is possible.</p>
+<p>A 2-D array is a <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> who&#8217;s elements are themselves also <tt class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></tt>. A 3-D array is a <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></tt></a> of <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></tt></a>. Any number of dimensions is possible.</p>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">list[x][y]</span></tt> (or <tt class="docutils literal"><span class="pre">list#x#y</span></tt>)</dt>
 <dd>Access the element at position x,y of the 2-D array (list of lists). The use of the &#8216;#&#8217; syntax is deprecated and exists for backward compatibility only. The newer &#8216;[]&#8217; square-bracket syntax is preferred.</dd>
@@ -541,7 +545,7 @@ PRINT FOO#2#0.   // Prints 3.14159, using deprecated syntax.
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="rgba.html" class="btn btn-neutral float-right" title="Colors">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="time.html" class="btn btn-neutral float-right" title="Time Span"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="iterator.html" class="btn btn-neutral" title="Iterator"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -557,8 +561,7 @@ PRINT FOO#2#0.   // Prints 3.14159, using deprecated syntax.
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

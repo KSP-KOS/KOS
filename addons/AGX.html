@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CPU Vessel (SHIP) &mdash; kOS 0.15.3 documentation</title>
+  <title>Action Groups Extended &mdash; kOS 0.15.3 documentation</title>
   
 
   
@@ -33,9 +33,9 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
     <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
-        <link rel="up" title="General Topics" href="../general.html"/>
-        <link rel="next" title="The kOS CPU hardware" href="cpu_hardware.html"/>
-        <link rel="prev" title="Catalog of Bound Variable Names" href="../bindings.html"/> 
+        <link rel="up" title="Addon Reference" href="../addons.html"/>
+        <link rel="next" title="RemoteTech" href="RemoteTech.html"/>
+        <link rel="prev" title="Addon Reference" href="../addons.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -70,17 +70,17 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../general.html">General</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">CPU Vessel (SHIP)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
-<li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="comm_range.html">Communication Range</a></li>
-<li class="toctree-l2"><a class="reference internal" href="career_limits.html">Respecting Career Limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
@@ -116,9 +116,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -148,12 +148,12 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-          <li><a href="../general.html">General Topics</a> &raquo;</li>
+          <li><a href="../addons.html">Addon Reference</a> &raquo;</li>
       
-    <li>CPU Vessel (SHIP)</li>
+    <li>Action Groups Extended</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/general/cpu_vessel.txt" rel="nofollow"> View page source</a>
+          <a href="../_sources/addons/AGX.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
@@ -161,22 +161,9 @@
 </div>
           <div role="main">
             
-  <div class="section" id="cpu-vessel-ship">
-<span id="cpu-vessel"></span><h1>CPU Vessel (SHIP)<a class="headerlink" href="#cpu-vessel-ship" title="Permalink to this headline">¶</a></h1>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>When kOS documentation refers to the &#8220;CPU vessel&#8221;, it has the following definition:</p>
-<ul class="last simple">
-<li>The &#8220;CPU Vessel&#8221; is whichever vessel happens to currently contain the CPU in which the executing code is running.</li>
-</ul>
-</div>
-<p>It&#8217;s important to distinguish this from &#8220;active vessel&#8221;, which is a KSP term referring to whichever vessel the camera is centered on, and therefore the vessel that will receive the keyboard controls for <tt class="docutils literal"><span class="pre">W</span></tt> <tt class="docutils literal"><span class="pre">A</span></tt> <tt class="docutils literal"><span class="pre">S</span></tt> <tt class="docutils literal"><span class="pre">D</span></tt> and so on.</p>
-<p>The two terms can differ when you are in a situation where there are two vessels near each other, both of them within full physics range (i.e. 2.5 km), such as would happen during a docking operation. In such a situation it is possible for kOS programs to be running on one, both, or neither of the two vessels. The vessel on which a program is executing is not necessarily the vessel the KSP game is currently considering the &#8220;active&#8221; one.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The built-in variable called <tt class="docutils literal"><span class="pre">SHIP</span></tt> is always set to the current CPU vessel. Whenever you see the documentation refer to CPU vessel, you can think of that as being &#8220;the <tt class="docutils literal"><span class="pre">SHIP</span></tt> variable&#8221;.</p>
-</div>
-<p>For all places where a kOS program needs to do something with <em>this vessel</em>, for the sake of centering <a class="reference internal" href="../math/ref_frame.html#ship-raw"><em>SHIP-RAW</em></a> coordinates, for the sake of deciding which ship is having maneuver nodes added to it and for the sake of deciding which vessel is being controlled by the autopilot. The vessel it is referring to is itself the <strong>CPU vessel</strong> and not necessarily what KSP thinks of as the &#8220;active vessel&#8221;.</p>
+  <div class="section" id="action-groups-extended">
+<span id="agx"></span><h1>Action Groups Extended<a class="headerlink" href="#action-groups-extended" title="Permalink to this headline">¶</a></h1>
+<p>Stub for action groups extended documentation.</p>
 </div>
 
 
@@ -185,10 +172,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="cpu_hardware.html" class="btn btn-neutral float-right" title="The kOS CPU hardware"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="RemoteTech.html" class="btn btn-neutral float-right" title="RemoteTech"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../bindings.html" class="btn btn-neutral" title="Catalog of Bound Variable Names"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../addons.html" class="btn btn-neutral" title="Addon Reference"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

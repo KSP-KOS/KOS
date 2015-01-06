@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,14 +161,14 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="dockingport">
 <span id="id1"></span><h1>DockingPort<a class="headerlink" href="#dockingport" title="Permalink to this headline">¶</a></h1>
-<p>Some of the Parts returned by <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST PARTS</em></a> will be of type <a class="reference internal" href="#DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a>.</p>
+<p>Some of the Parts returned by <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST PARTS</em></a> will be of type <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a>.</p>
 <dl class="structure">
-<dt id="DOCKINGPORT">
-<em class="property">structure </em><tt class="descname">DockingPort</tt><a class="headerlink" href="#DOCKINGPORT" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:DOCKINGPORT">
+<em class="property">structure </em><tt class="descname">DockingPort</tt><a class="headerlink" href="#structure:DOCKINGPORT" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="29%" />
@@ -178,43 +182,43 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>All suffixes of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+<tr class="row-even"><td>All suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
 <td>&nbsp;</td>
-<td>A <a class="reference internal" href="#DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a> is a kind of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+<td>A <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a> is a kind of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#DOCKINGPORT:AQUIRERANGE" title="DOCKINGPORT:AQUIRERANGE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AQUIRERANGE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:AQUIRERANGE" title="DOCKINGPORT:AQUIRERANGE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AQUIRERANGE</span></tt></a></td>
 <td>scalar</td>
 <td>active range of the port</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#DOCKINGPORT:AQUIREFORCE" title="DOCKINGPORT:AQUIREFORCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AQUIREFORCE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:DOCKINGPORT:AQUIREFORCE" title="DOCKINGPORT:AQUIREFORCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AQUIREFORCE</span></tt></a></td>
 <td>scalar</td>
 <td>force experienced when docking</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#DOCKINGPORT:AQUIRETORQUE" title="DOCKINGPORT:AQUIRETORQUE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AQUIRETORQUE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:AQUIRETORQUE" title="DOCKINGPORT:AQUIRETORQUE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AQUIRETORQUE</span></tt></a></td>
 <td>scalar</td>
 <td>torque experienced when docking</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#DOCKINGPORT:REENGAGEDDISTANCE" title="DOCKINGPORT:REENGAGEDDISTANCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">REENGAGEDDISTANCE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:DOCKINGPORT:REENGAGEDDISTANCE" title="DOCKINGPORT:REENGAGEDDISTANCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">REENGAGEDDISTANCE</span></tt></a></td>
 <td>scalar</td>
 <td>distance at which the port is reset</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#DOCKINGPORT:DOCKEDSHIPNAME" title="DOCKINGPORT:DOCKEDSHIPNAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DOCKEDSHIPNAME</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:DOCKEDSHIPNAME" title="DOCKINGPORT:DOCKEDSHIPNAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DOCKEDSHIPNAME</span></tt></a></td>
 <td>string</td>
 <td>name of vessel the port is docked to</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#DOCKINGPORT:PORTFACING" title="DOCKINGPORT:PORTFACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PORTFACING</span></tt></a></td>
-<td><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:DOCKINGPORT:PORTFACING" title="DOCKINGPORT:PORTFACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PORTFACING</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 <td>facing of the port</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#DOCKINGPORT:STATE" title="DOCKINGPORT:STATE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">STATE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:STATE" title="DOCKINGPORT:STATE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">STATE</span></tt></a></td>
 <td>string</td>
 <td>current state of the port</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#DOCKINGPORT:UNDOCK" title="DOCKINGPORT:UNDOCK method"><tt class="xref ks ks-meth docutils literal"><span class="pre">UNDOCK</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:DOCKINGPORT:UNDOCK" title="DOCKINGPORT:UNDOCK method"><tt class="xref ks ks-meth docutils literal"><span class="pre">UNDOCK</span></tt></a></td>
 <td>&nbsp;</td>
 <td>callable to release the dock</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#DOCKINGPORT:TARGETABLE" title="DOCKINGPORT:TARGETABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TARGETABLE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:TARGETABLE" title="DOCKINGPORT:TARGETABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TARGETABLE</span></tt></a></td>
 <td>boolean</td>
 <td>check if this port can be targeted</td>
 </tr>
@@ -224,11 +228,11 @@
 
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last"><a class="reference internal" href="#DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a> is a type of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>. Shown below are only the suffixes that are unique to <a class="reference internal" href="#DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a>.</p>
+<p class="last"><a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a> is a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>. Shown below are only the suffixes that are unique to <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a>.</p>
 </div>
 <dl class="attribute">
-<dt id="DOCKINGPORT:AQUIRERANGE">
-DockingPort:<tt class="descname">AQUIRERANGE</tt><a class="headerlink" href="#DOCKINGPORT:AQUIRERANGE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:AQUIRERANGE">
+DockingPort:<tt class="descname">AQUIRERANGE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:AQUIRERANGE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -243,8 +247,8 @@ DockingPort:<tt class="descname">AQUIRERANGE</tt><a class="headerlink" href="#DO
 </dd></dl>
 
 <dl class="attribute">
-<dt id="DOCKINGPORT:AQUIREFORCE">
-DockingPort:<tt class="descname">AQUIREFORCE</tt><a class="headerlink" href="#DOCKINGPORT:AQUIREFORCE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:AQUIREFORCE">
+DockingPort:<tt class="descname">AQUIREFORCE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:AQUIREFORCE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -259,8 +263,8 @@ DockingPort:<tt class="descname">AQUIREFORCE</tt><a class="headerlink" href="#DO
 </dd></dl>
 
 <dl class="attribute">
-<dt id="DOCKINGPORT:AQUIRETORQUE">
-DockingPort:<tt class="descname">AQUIRETORQUE</tt><a class="headerlink" href="#DOCKINGPORT:AQUIRETORQUE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:AQUIRETORQUE">
+DockingPort:<tt class="descname">AQUIRETORQUE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:AQUIRETORQUE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -275,8 +279,8 @@ DockingPort:<tt class="descname">AQUIRETORQUE</tt><a class="headerlink" href="#D
 </dd></dl>
 
 <dl class="attribute">
-<dt id="DOCKINGPORT:REENGAGEDDISTANCE">
-DockingPort:<tt class="descname">REENGAGEDDISTANCE</tt><a class="headerlink" href="#DOCKINGPORT:REENGAGEDDISTANCE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:REENGAGEDDISTANCE">
+DockingPort:<tt class="descname">REENGAGEDDISTANCE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:REENGAGEDDISTANCE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -291,8 +295,8 @@ DockingPort:<tt class="descname">REENGAGEDDISTANCE</tt><a class="headerlink" hre
 </dd></dl>
 
 <dl class="attribute">
-<dt id="DOCKINGPORT:DOCKEDSHIPNAME">
-DockingPort:<tt class="descname">DOCKEDSHIPNAME</tt><a class="headerlink" href="#DOCKINGPORT:DOCKEDSHIPNAME" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:DOCKEDSHIPNAME">
+DockingPort:<tt class="descname">DOCKEDSHIPNAME</tt><a class="headerlink" href="#attribute:DOCKINGPORT:DOCKEDSHIPNAME" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -307,13 +311,13 @@ DockingPort:<tt class="descname">DOCKEDSHIPNAME</tt><a class="headerlink" href="
 </dd></dl>
 
 <dl class="attribute">
-<dt id="DOCKINGPORT:PORTFACING">
-DockingPort:<tt class="descname">PORTFACING</tt><a class="headerlink" href="#DOCKINGPORT:PORTFACING" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:PORTFACING">
+DockingPort:<tt class="descname">PORTFACING</tt><a class="headerlink" href="#attribute:DOCKINGPORT:PORTFACING" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
@@ -323,8 +327,8 @@ DockingPort:<tt class="descname">PORTFACING</tt><a class="headerlink" href="#DOC
 </dd></dl>
 
 <dl class="attribute">
-<dt id="DOCKINGPORT:STATE">
-DockingPort:<tt class="descname">STATE</tt><a class="headerlink" href="#DOCKINGPORT:STATE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:STATE">
+DockingPort:<tt class="descname">STATE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:STATE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -353,14 +357,14 @@ DockingPort:<tt class="descname">STATE</tt><a class="headerlink" href="#DOCKINGP
 </dd></dl>
 
 <dl class="method">
-<dt id="DOCKINGPORT:UNDOCK">
-DockingPort:<tt class="descname">UNDOCK</tt><big>(</big><big>)</big><a class="headerlink" href="#DOCKINGPORT:UNDOCK" title="Permalink to this definition">¶</a></dt>
+<dt id="method:DOCKINGPORT:UNDOCK">
+DockingPort:<tt class="descname">UNDOCK</tt><big>(</big><big>)</big><a class="headerlink" href="#method:DOCKINGPORT:UNDOCK" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call this to cause the docking port to detach.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="DOCKINGPORT:TARGETABLE">
-DockingPort:<tt class="descname">TARGETABLE</tt><a class="headerlink" href="#DOCKINGPORT:TARGETABLE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:TARGETABLE">
+DockingPort:<tt class="descname">TARGETABLE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:TARGETABLE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -382,7 +386,7 @@ DockingPort:<tt class="descname">TARGETABLE</tt><a class="headerlink" href="#DOC
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="engine.html" class="btn btn-neutral float-right" title="Engine">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="engine.html" class="btn btn-neutral float-right" title="Engine"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="aggregateresource.html" class="btn btn-neutral" title="AggregateResource"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -398,8 +402,7 @@ DockingPort:<tt class="descname">TARGETABLE</tt><a class="headerlink" href="#DOC
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

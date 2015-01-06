@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -157,26 +161,26 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="maneuver-node">
 <span id="id1"></span><h1>Maneuver Node<a class="headerlink" href="#maneuver-node" title="Permalink to this headline">¶</a></h1>
 <p><em>Contents</em></p>
 <blockquote>
 <div><ul class="simple">
-<li><a class="reference internal" href="#NODE" title="NODE function"><tt class="xref ks ks-func docutils literal"><span class="pre">NODE()</span></tt></a></li>
-<li><a class="reference internal" href="#ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a></li>
-<li><a class="reference internal" href="#REMOVE" title="REMOVE global"><tt class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></tt></a></li>
-<li><a class="reference internal" href="#NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a></li>
-<li><a class="reference internal" href="#MANEUVERNODE" title="MANEUVERNODE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></tt></a></li>
+<li><a class="reference internal" href="#function:NODE" title="NODE function"><tt class="xref ks ks-func docutils literal"><span class="pre">NODE()</span></tt></a></li>
+<li><a class="reference internal" href="#global:ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a></li>
+<li><a class="reference internal" href="#global:REMOVE" title="REMOVE global"><tt class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></tt></a></li>
+<li><a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a></li>
+<li><a class="reference internal" href="#structure:MANEUVERNODE" title="MANEUVERNODE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></tt></a></li>
 </ul>
 </div></blockquote>
 <p>A planned velocity change along an orbit. These are the nodes that you can set in the KSP user interface. Setting one through kOS will make it appear on the in-game map view, and creating one manually on the in-game map view will cause it to be visible to kOS.</p>
 <div class="section" id="creation">
 <h2>Creation<a class="headerlink" href="#creation" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="NODE">
-<tt class="descname">NODE</tt><big>(</big>utime, radial, normal, prograde<big>)</big><a class="headerlink" href="#NODE" title="Permalink to this definition">¶</a></dt>
+<dt id="function:NODE">
+<tt class="descname">NODE</tt><big>(</big>utime, radial, normal, prograde<big>)</big><a class="headerlink" href="#function:NODE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -189,56 +193,56 @@
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#MANEUVERNODE" title="MANEUVERNODE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#structure:MANEUVERNODE" title="MANEUVERNODE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></tt></a></p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>You can make a maneuver node in a variable using the <a class="reference internal" href="#NODE" title="NODE function"><tt class="xref ks ks-func docutils literal"><span class="pre">NODE</span></tt></a> function:</p>
+<p>You can make a maneuver node in a variable using the <a class="reference internal" href="#function:NODE" title="NODE function"><tt class="xref ks ks-func docutils literal"><span class="pre">NODE</span></tt></a> function:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myNode</span> <span class="n">to</span> <span class="n">NODE</span><span class="p">(</span> <span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span><span class="o">+</span><span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10</span> <span class="p">).</span>
 </pre></div>
 </div>
-<p>Once you have a maneuver node in a variable, you use the <a class="reference internal" href="#ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> and <a class="reference internal" href="#REMOVE" title="REMOVE global"><tt class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></tt></a> commands to attach it to your vessel&#8217;s flight plan. A kOS CPU can only manipulate the flight plan of its <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU vessel</em></a>.</p>
+<p>Once you have a maneuver node in a variable, you use the <a class="reference internal" href="#global:ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> and <a class="reference internal" href="#global:REMOVE" title="REMOVE global"><tt class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></tt></a> commands to attach it to your vessel&#8217;s flight plan. A kOS CPU can only manipulate the flight plan of its <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU vessel</em></a>.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">When <em>constructing</em> a new node using the <a class="reference internal" href="#NODE" title="NODE function"><tt class="xref ks ks-func docutils literal"><span class="pre">NODE</span></tt></a> function call, you use the universal time (you must add the ETA time to the current time to arrive at the value to pass in), but when using the suffix <a class="reference internal" href="#MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ManeuverNode:ETA</span></tt></a>, you do NOT use universal time, instead just giving the number of seconds from now.</p>
+<p class="last">When <em>constructing</em> a new node using the <a class="reference internal" href="#function:NODE" title="NODE function"><tt class="xref ks ks-func docutils literal"><span class="pre">NODE</span></tt></a> function call, you use the universal time (you must add the ETA time to the current time to arrive at the value to pass in), but when using the suffix <a class="reference internal" href="#attribute:MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ManeuverNode:ETA</span></tt></a>, you do NOT use universal time, instead just giving the number of seconds from now.</p>
 </div>
 <p>Once you have created a node, it&#8217;s just a hypothetical node that hasn&#8217;t
-been attached to anything yet. To attach a node to the flight path, you must use the command <a class="reference internal" href="#ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> to attach it to the ship.</p>
+been attached to anything yet. To attach a node to the flight path, you must use the command <a class="reference internal" href="#global:ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> to attach it to the ship.</p>
 </dd></dl>
 
 <dl class="global">
-<dt id="ADD">
-<tt class="descname">ADD</tt><a class="headerlink" href="#ADD" title="Permalink to this definition">¶</a></dt>
-<dd><p>To put a maneuver node into the flight plan of the current <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU vessel</em></a> (i.e. <tt class="docutils literal"><span class="pre">SHIP</span></tt>), just <a class="reference internal" href="#ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> it like so:</p>
+<dt id="global:ADD">
+<tt class="descname">ADD</tt><a class="headerlink" href="#global:ADD" title="Permalink to this definition">¶</a></dt>
+<dd><p>To put a maneuver node into the flight plan of the current <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU vessel</em></a> (i.e. <tt class="docutils literal"><span class="pre">SHIP</span></tt>), just <a class="reference internal" href="#global:ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> it like so:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myNode</span> <span class="n">to</span> <span class="n">NODE</span><span class="p">(</span> <span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span><span class="o">+</span><span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10</span> <span class="p">).</span>
 <span class="n">ADD</span> <span class="n">myNode</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>You should immediately see it appear on the map view when you do this. The <a class="reference internal" href="#ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> command can add nodes anywhere within the flight plan. To insert a node earlier in the flight than an existing node, simply give it a smaller <a class="reference internal" href="#MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ETA</span></tt></a> time and then <a class="reference internal" href="#ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> it.</p>
+<p>You should immediately see it appear on the map view when you do this. The <a class="reference internal" href="#global:ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> command can add nodes anywhere within the flight plan. To insert a node earlier in the flight than an existing node, simply give it a smaller <a class="reference internal" href="#attribute:MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ETA</span></tt></a> time and then <a class="reference internal" href="#global:ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> it.</p>
 </dd></dl>
 
 <dl class="global">
-<dt id="REMOVE">
-<tt class="descname">REMOVE</tt><a class="headerlink" href="#REMOVE" title="Permalink to this definition">¶</a></dt>
-<dd><p>To remove a maneuver node from the flight path of the cur:rent <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU vessel</em></a> (i.e. <tt class="docutils literal"><span class="pre">SHIP</span></tt>), just <a class="reference internal" href="#REMOVE" title="REMOVE global"><tt class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></tt></a> it like so:</p>
+<dt id="global:REMOVE">
+<tt class="descname">REMOVE</tt><a class="headerlink" href="#global:REMOVE" title="Permalink to this definition">¶</a></dt>
+<dd><p>To remove a maneuver node from the flight path of the cur:rent <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU vessel</em></a> (i.e. <tt class="docutils literal"><span class="pre">SHIP</span></tt>), just <a class="reference internal" href="#global:REMOVE" title="REMOVE global"><tt class="xref ks ks-global docutils literal"><span class="pre">REMOVE</span></tt></a> it like so:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">REMOVE</span> <span class="n">myNode</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="global">
-<dt id="NEXTNODE">
-<tt class="descname">NEXTNODE</tt><a class="headerlink" href="#NEXTNODE" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> is a built-in variable that always refers to the next upcoming node that has been added to your flight plan:</p>
+<dt id="global:NEXTNODE">
+<tt class="descname">NEXTNODE</tt><a class="headerlink" href="#global:NEXTNODE" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> is a built-in variable that always refers to the next upcoming node that has been added to your flight plan:</p>
 <div class="highlight-c"><div class="highlight"><pre>SET MyNode to :global:`NEXTNODE`.
 PRINT :global:`NEXTNODE`:PROGRADE.
 REMOVE :global:`NEXTNODE`.
 </pre></div>
 </div>
-<p>Currently, if you attempt to query <a class="reference internal" href="#NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> and there is no node on your flight plan, it produces a run-time error. (This needs to be fixed in a future release so it is possible to query whether or not you have a next node).</p>
-<p>If you need to query whether or not you have a <a class="reference internal" href="#NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a>, the following has been suggested as a workaround in the meantime: Set a node really far into the future, beyond any reasonable amount of time. Add it to your flight plan. Then check <a class="reference internal" href="#NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> to see if it returns THAT node, or an earlier one. If it returns an earlier one, then that earlier one was there all along and is the real <a class="reference internal" href="#NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a>. If it returns the fake far-future node you made instead, then there were no nodes before that point. In either case, remove the far-future node after you perform the test.</p>
-<p>The special identifier <a class="reference internal" href="#NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> is a euphemism for &#8220;whichever node is coming up soonest on my flight path&#8221;. Therefore you can remove a node even if you no longer have the maneuver node variable around, by doing this:</p>
+<p>Currently, if you attempt to query <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> and there is no node on your flight plan, it produces a run-time error. (This needs to be fixed in a future release so it is possible to query whether or not you have a next node).</p>
+<p>If you need to query whether or not you have a <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a>, the following has been suggested as a workaround in the meantime: Set a node really far into the future, beyond any reasonable amount of time. Add it to your flight plan. Then check <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> to see if it returns THAT node, or an earlier one. If it returns an earlier one, then that earlier one was there all along and is the real <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a>. If it returns the fake far-future node you made instead, then there were no nodes before that point. In either case, remove the far-future node after you perform the test.</p>
+<p>The special identifier <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> is a euphemism for &#8220;whichever node is coming up soonest on my flight path&#8221;. Therefore you can remove a node even if you no longer have the maneuver node variable around, by doing this:</p>
 <div class="highlight-c"><div class="highlight"><pre>REMOVE :global:`NEXTNODE`.
 </pre></div>
 </div>
@@ -248,9 +252,9 @@ REMOVE :global:`NEXTNODE`.
 <div class="section" id="structure">
 <h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
-<dt id="MANEUVERNODE">
-<em class="property">structure </em><tt class="descname">ManeuverNode</tt><a class="headerlink" href="#MANEUVERNODE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Here are some examples of accessing the suffixes of a <a class="reference internal" href="#MANEUVERNODE" title="MANEUVERNODE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></tt></a>:</p>
+<dt id="structure:MANEUVERNODE">
+<em class="property">structure </em><tt class="descname">ManeuverNode</tt><a class="headerlink" href="#structure:MANEUVERNODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Here are some examples of accessing the suffixes of a <a class="reference internal" href="#structure:MANEUVERNODE" title="MANEUVERNODE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></tt></a>:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// creates a node 60 seconds from now with</span>
 <span class="c1">// prograde = 100 m/s</span>
 <span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="n">NODE</span><span class="p">(</span><span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span><span class="o">+</span><span class="mi">60</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">).</span>
@@ -290,55 +294,55 @@ REMOVE :global:`NEXTNODE`.
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#MANEUVERNODE:DELTAV" title="MANEUVERNODE:DELTAV attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DELTAV</span></tt></a></td>
-<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> (m/s)</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:MANEUVERNODE:DELTAV" title="MANEUVERNODE:DELTAV attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DELTAV</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> (m/s)</td>
 <td>Get only</td>
 <td>The burn vector with magnitude equal to delta-V</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#MANEUVERNODE:BURNVECTOR" title="MANEUVERNODE:BURNVECTOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">BURNVECTOR</span></tt></a></td>
-<td><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> (m/s)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:MANEUVERNODE:BURNVECTOR" title="MANEUVERNODE:BURNVECTOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">BURNVECTOR</span></tt></a></td>
+<td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> (m/s)</td>
 <td>Get only</td>
-<td>Alias for <a class="reference internal" href="#MANEUVERNODE:DELTAV" title="MANEUVERNODE:DELTAV attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DELTAV</span></tt></a></td>
+<td>Alias for <a class="reference internal" href="#attribute:MANEUVERNODE:DELTAV" title="MANEUVERNODE:DELTAV attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DELTAV</span></tt></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ETA</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ETA</span></tt></a></td>
 <td>scalar (s)</td>
 <td>Get/Set</td>
 <td>Time until this maneuver</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#MANEUVERNODE:PROGRADE" title="MANEUVERNODE:PROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PROGRADE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:MANEUVERNODE:PROGRADE" title="MANEUVERNODE:PROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PROGRADE</span></tt></a></td>
 <td>scalar (m/s)</td>
 <td>Get/Set</td>
 <td>Delta-V along prograde</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#MANEUVERNODE:RADIALOUT" title="MANEUVERNODE:RADIALOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RADIALOUT</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:MANEUVERNODE:RADIALOUT" title="MANEUVERNODE:RADIALOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RADIALOUT</span></tt></a></td>
 <td>scalar (m/s)</td>
 <td>Get/Set</td>
-<td>Delta-V along radial to orbited <a class="reference internal" href="../celestial_bodies/body.html#BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a></td>
+<td>Delta-V along radial to orbited <a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#MANEUVERNODE:NORMAL" title="MANEUVERNODE:NORMAL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NORMAL</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:MANEUVERNODE:NORMAL" title="MANEUVERNODE:NORMAL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NORMAL</span></tt></a></td>
 <td>scalar (m/s)</td>
 <td>Get/Set</td>
-<td>Delta-V along normal to the <a class="reference internal" href="vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>&#8216;s <a class="reference internal" href="../orbits/orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></td>
+<td>Delta-V along normal to the <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>&#8216;s <a class="reference internal" href="../orbits/orbit.html#structure:ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#MANEUVERNODE:ORBIT" title="MANEUVERNODE:ORBIT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ORBIT</span></tt></a></td>
-<td><a class="reference internal" href="../orbits/orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:MANEUVERNODE:ORBIT" title="MANEUVERNODE:ORBIT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ORBIT</span></tt></a></td>
+<td><a class="reference internal" href="../orbits/orbit.html#structure:ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></td>
 <td>Get only</td>
-<td>Expected <a class="reference internal" href="../orbits/orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a> after this maneuver</td>
+<td>Expected <a class="reference internal" href="../orbits/orbit.html#structure:ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a> after this maneuver</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="MANEUVERNODE:DELTAV">
-ManeuverNode:<tt class="descname">DELTAV</tt><a class="headerlink" href="#MANEUVERNODE:DELTAV" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:MANEUVERNODE:DELTAV">
+ManeuverNode:<tt class="descname">DELTAV</tt><a class="headerlink" href="#attribute:MANEUVERNODE:DELTAV" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -346,14 +350,14 @@ ManeuverNode:<tt class="descname">DELTAV</tt><a class="headerlink" href="#MANEUV
 </dd></dl>
 
 <dl class="attribute">
-<dt id="MANEUVERNODE:BURNVECTOR">
-ManeuverNode:<tt class="descname">BURNVECTOR</tt><a class="headerlink" href="#MANEUVERNODE:BURNVECTOR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#MANEUVERNODE:DELTAV" title="MANEUVERNODE:DELTAV attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ManeuverNode:DELTAV</span></tt></a>.</p>
+<dt id="attribute:MANEUVERNODE:BURNVECTOR">
+ManeuverNode:<tt class="descname">BURNVECTOR</tt><a class="headerlink" href="#attribute:MANEUVERNODE:BURNVECTOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for <a class="reference internal" href="#attribute:MANEUVERNODE:DELTAV" title="MANEUVERNODE:DELTAV attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ManeuverNode:DELTAV</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="MANEUVERNODE:ETA">
-ManeuverNode:<tt class="descname">ETA</tt><a class="headerlink" href="#MANEUVERNODE:ETA" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:MANEUVERNODE:ETA">
+ManeuverNode:<tt class="descname">ETA</tt><a class="headerlink" href="#attribute:MANEUVERNODE:ETA" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -368,8 +372,8 @@ ManeuverNode:<tt class="descname">ETA</tt><a class="headerlink" href="#MANEUVERN
 </dd></dl>
 
 <dl class="attribute">
-<dt id="MANEUVERNODE:PROGRADE">
-ManeuverNode:<tt class="descname">PROGRADE</tt><a class="headerlink" href="#MANEUVERNODE:PROGRADE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:MANEUVERNODE:PROGRADE">
+ManeuverNode:<tt class="descname">PROGRADE</tt><a class="headerlink" href="#attribute:MANEUVERNODE:PROGRADE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -384,8 +388,8 @@ ManeuverNode:<tt class="descname">PROGRADE</tt><a class="headerlink" href="#MANE
 </dd></dl>
 
 <dl class="attribute">
-<dt id="MANEUVERNODE:RADIALOUT">
-ManeuverNode:<tt class="descname">RADIALOUT</tt><a class="headerlink" href="#MANEUVERNODE:RADIALOUT" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:MANEUVERNODE:RADIALOUT">
+ManeuverNode:<tt class="descname">RADIALOUT</tt><a class="headerlink" href="#attribute:MANEUVERNODE:RADIALOUT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -400,8 +404,8 @@ ManeuverNode:<tt class="descname">RADIALOUT</tt><a class="headerlink" href="#MAN
 </dd></dl>
 
 <dl class="attribute">
-<dt id="MANEUVERNODE:NORMAL">
-ManeuverNode:<tt class="descname">NORMAL</tt><a class="headerlink" href="#MANEUVERNODE:NORMAL" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:MANEUVERNODE:NORMAL">
+ManeuverNode:<tt class="descname">NORMAL</tt><a class="headerlink" href="#attribute:MANEUVERNODE:NORMAL" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -416,15 +420,15 @@ ManeuverNode:<tt class="descname">NORMAL</tt><a class="headerlink" href="#MANEUV
 </dd></dl>
 
 <dl class="attribute">
-<dt id="MANEUVERNODE:ORBIT">
-ManeuverNode:<tt class="descname">ORBIT</tt><a class="headerlink" href="#MANEUVERNODE:ORBIT" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:MANEUVERNODE:ORBIT">
+ManeuverNode:<tt class="descname">ORBIT</tt><a class="headerlink" href="#attribute:MANEUVERNODE:ORBIT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../orbits/orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../orbits/orbit.html#structure:ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -440,7 +444,7 @@ ManeuverNode:<tt class="descname">ORBIT</tt><a class="headerlink" href="#MANEUVE
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="part.html" class="btn btn-neutral float-right" title="Part">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="part.html" class="btn btn-neutral float-right" title="Part"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="engine.html" class="btn btn-neutral" title="Engine"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -456,8 +460,7 @@ ManeuverNode:<tt class="descname">ORBIT</tt><a class="headerlink" href="#MANEUVE
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

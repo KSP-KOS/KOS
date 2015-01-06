@@ -5,7 +5,7 @@ AggregateResource
 
 A ship can have many parts that contain resources (i.e. fuel, electric charge, etc). kOS has several tools for getting the summation of each resource.
 
-This is the type returned as the elements of the list in :ref:`LIST RESOURCES`
+This is the type returned as the elements of the list from ``LIST RESOURCES.``
 
 IN MyList <list command> ::
 
@@ -18,7 +18,7 @@ IN MyList <list command> ::
               + ROUND(100*RES:AMOUNT/RES:CAPACITY)
               + "% full.".
     }.
-	
+
 This is also the type returned by STAGE:RESOURCES ::
 
     PRINT "THESE ARE ALL THE RESOURCES active in this stage:".
@@ -31,7 +31,7 @@ This is also the type returned by STAGE:RESOURCES ::
               + "% full.".
     }.
 
-.. structure:: Resource
+.. structure:: AggregateResource
 
     .. list-table::
         :header-rows: 1
@@ -46,39 +46,39 @@ This is also the type returned by STAGE:RESOURCES ::
           - Resource name
         * - :attr:`AMOUNT`
           - scalar
-          - Amount of this resource left
+          - Total amount remaining
         * - :attr:`CAPACITY`
           - scalar
-          - Maximum amount of this resource
+          - Total amount when full
         * - :attr:`PARTS`
           - List
-          - A collection of the parts that can contain this resource
-        
-		
-.. attribute:: Resource:NAME
+          - Parts containing this resource
+
+
+.. attribute:: AggregateResource:NAME
 
     :access: Get only
     :type: string
 
     The name of the resource, i.e. "LIQUIDFUEL", "ELECTRICCHARGE", "MONOPROP".
 
-.. attribute:: Resource:AMOUNT
+.. attribute:: AggregateResource:AMOUNT
 
     :access: Get only
     :type: scalar
 
     The value of how much resource is left.
 
-.. attribute:: Resource:CAPACITY
+.. attribute:: AggregateResource:CAPACITY
 
     :access: Get only
     :type: scalar
 
     What AMOUNT would be if the resource was filled to the top.
 
-.. attribute:: Resource:PARTS
+.. attribute:: AggregateResource:PARTS
 
     :access: Get only
     :type: List
 
-	Because this is a summation of the resources from many parts. kOS gives you the list of all parts that do or could contain the resource.
+    Because this is a summation of the resources from many parts. kOS gives you the list of all parts that do or could contain the resource.

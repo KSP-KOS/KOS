@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -46,9 +48,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -111,9 +111,13 @@
 <li class="toctree-l2"><a class="reference internal" href="structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structures/maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
@@ -152,31 +156,33 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="structure-reference">
 <span id="structures"></span><h1>Structure Reference<a class="headerlink" href="#structure-reference" title="Permalink to this headline">¶</a></h1>
 <p>A general discussion of structures <a class="reference internal" href="language/features.html#language-structures"><em>can be found here</em></a>.</p>
 <ul>
 <li><dl class="first docutils">
-<dt><a class="reference internal" href="math/basic.html#math"><em>Mathematics</em></a></dt>
+<dt><a class="reference internal" href="math.html#math"><em>Mathematics</em></a></dt>
 <dd><ul class="first last simple">
 <li><a class="reference internal" href="math/basic.html#constants"><em>Fundamental Constants</em></a></li>
 <li><a class="reference internal" href="math/basic.html#math-functions"><em>Mathematical Functions</em></a></li>
 <li><a class="reference internal" href="math/basic.html#trig"><em>Trigonometric Functions</em></a></li>
-<li><a class="reference internal" href="math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></li>
-<li><a class="reference internal" href="math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></li>
-<li><a class="reference internal" href="math/geocoordinates.html#GEOCOORDINATES" title="GEOCOORDINATES structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></tt></a></li>
+<li><a class="reference internal" href="math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></li>
+<li><a class="reference internal" href="math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></li>
+<li><a class="reference internal" href="math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></tt></a></li>
 </ul>
 </dd>
 </dl>
 </li>
+<li><p class="first"><a class="reference internal" href="structures/waypoint.html#structure:WAYPOINT" title="WAYPOINT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Waypoint</span></tt></a></p>
+</li>
 <li><dl class="first docutils">
 <dt><a class="reference internal" href="structures/orbits.html#orbits"><em>Orbits</em></a></dt>
 <dd><ul class="first last simple">
-<li><a class="reference internal" href="structures/orbits/orbit.html#ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></li>
-<li><a class="reference internal" href="structures/orbits/orbitable.html#ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a></li>
-<li><a class="reference internal" href="structures/orbits/orbitablevelocity.html#ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">OrbitableVelocity</span></tt></a></li>
+<li><a class="reference internal" href="structures/orbits/orbit.html#structure:ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></li>
+<li><a class="reference internal" href="structures/orbits/orbitable.html#structure:ORBITABLE" title="ORBITABLE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbitable</span></tt></a></li>
+<li><a class="reference internal" href="structures/orbits/orbitablevelocity.html#structure:ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">OrbitableVelocity</span></tt></a></li>
 </ul>
 </dd>
 </dl>
@@ -184,9 +190,8 @@
 <li><dl class="first docutils">
 <dt><a class="reference internal" href="structures/celestial_bodies.html#celestial-bodies"><em>Celestial Bodies</em></a></dt>
 <dd><ul class="first last simple">
-<li><a class="reference internal" href="structures/celestial_bodies/body.html#BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a></li>
-<li><a class="reference internal" href="structures/celestial_bodies/atmosphere.html#ATMOSPHERE" title="ATMOSPHERE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Atmosphere</span></tt></a></li>
-<li><tt class="xref ks ks-struct docutils literal"><span class="pre">Waypoint</span></tt></li>
+<li><a class="reference internal" href="structures/celestial_bodies/body.html#structure:BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a></li>
+<li><a class="reference internal" href="structures/celestial_bodies/atmosphere.html#structure:ATMOSPHERE" title="ATMOSPHERE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Atmosphere</span></tt></a></li>
 </ul>
 </dd>
 </dl>
@@ -194,16 +199,16 @@
 <li><dl class="first docutils">
 <dt><a class="reference internal" href="structures/vessels.html#vessels"><em>Vessels</em></a></dt>
 <dd><ul class="first last simple">
-<li><a class="reference internal" href="structures/vessels/vessel.html#VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></li>
-<li><a class="reference internal" href="commands/flight/pilot.html#CONTROL" title="CONTROL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Control</span></tt></a></li>
-<li><a class="reference internal" href="structures/vessels/node.html#MANEUVERNODE" title="MANEUVERNODE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></tt></a></li>
-<li><a class="reference internal" href="structures/vessels/engine.html#ENGINE" title="ENGINE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Engine</span></tt></a></li>
-<li><tt class="xref ks ks-struct docutils literal"><span class="pre">AggregateResource</span></tt></li>
-<li><a class="reference internal" href="structures/vessels/dockingport.html#DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a></li>
-<li><a class="reference internal" href="structures/vessels/part.html#PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></li>
-<li><a class="reference internal" href="structures/vessels/partmodule.html#PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a></li>
-<li><a class="reference internal" href="structures/vessels/sensor.html#SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></tt></a></li>
-<li><a class="reference internal" href="structures/vessels/vesselsensors.html#VESSELSENSORS" title="VESSELSENSORS structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">VesselSensors</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></li>
+<li><a class="reference internal" href="commands/flight/pilot.html#structure:CONTROL" title="CONTROL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Control</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/node.html#structure:MANEUVERNODE" title="MANEUVERNODE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ManeuverNode</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/engine.html#structure:ENGINE" title="ENGINE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Engine</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">AggregateResource</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/dockingport.html#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/sensor.html#structure:SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/vesselsensors.html#structure:VESSELSENSORS" title="VESSELSENSORS structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">VesselSensors</span></tt></a></li>
 </ul>
 </dd>
 </dl>
@@ -211,11 +216,11 @@
 <li><dl class="first docutils">
 <dt><a class="reference internal" href="structures/misc.html#misc"><em>Configuration and Misc</em></a></dt>
 <dd><ul class="first last simple">
-<li><a class="reference internal" href="structures/misc/config.html#CONFIG" title="CONFIG structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Config</span></tt></a></li>
-<li><a class="reference internal" href="structures/misc/fileinfo.html#FILEINFO" title="FILEINFO structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">FileInfo</span></tt></a></li>
-<li><a class="reference internal" href="structures/misc/list.html#LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></li>
-<li><a class="reference internal" href="structures/misc/iterator.html#ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a></li>
-<li><a class="reference internal" href="structures/misc/rgba.html#colors"><em>Colors</em></a></li>
+<li><a class="reference internal" href="structures/misc/config.html#structure:CONFIG" title="CONFIG structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Config</span></tt></a></li>
+<li><a class="reference internal" href="structures/misc/fileinfo.html#structure:FILEINFO" title="FILEINFO structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">FileInfo</span></tt></a></li>
+<li><a class="reference internal" href="structures/misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></li>
+<li><a class="reference internal" href="structures/misc/iterator.html#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a></li>
+<li><a class="reference internal" href="structures/misc/colors.html#colors"><em>Colors</em></a></li>
 <li><a class="reference internal" href="structures/misc/time.html#time"><em>Time</em></a></li>
 <li><a class="reference internal" href="structures/misc/vecdraw.html#vecdraw"><em>Drawing Vectors</em></a></li>
 </ul>
@@ -233,7 +238,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="structures/orbits.html" class="btn btn-neutral float-right" title="Orbits">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="structures/orbits.html" class="btn btn-neutral float-right" title="Orbits"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="commands/terminal.html" class="btn btn-neutral" title="Terminal and game environment"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -249,8 +254,7 @@
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>

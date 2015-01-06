@@ -12,9 +12,11 @@
 
   
   
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,9 +49,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> kOS</a>
-        
+        <a href="../index.html" class="fa fa-home"> kOS</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -112,9 +112,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../structures/maneuvering.html">Maneuvering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -155,7 +159,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main">
             
   <div class="section" id="quick-start-tutorial">
 <span id="quickstart"></span><h1>Quick Start Tutorial<a class="headerlink" href="#quick-start-tutorial" title="Permalink to this headline">¶</a></h1>
@@ -288,8 +292,9 @@
 <p>If a file is stored inside the archive, it can actually be edited <em>by an external text editor of your choice</em> instead of using <strong>kOS</strong>&#8216;s in-game editor. This is usually a much better practice once you start doing more complex things with <strong>kOS</strong>. You can also make new files in the archive folder. Just make sure that all the files end with a <tt class="docutils literal"><span class="pre">.ks</span></tt> file name suffix or <strong>kOS</strong> won&#8217;t use them.</p>
 <p>Further reading about files and volumes:</p>
 <ul class="simple">
-<li><a class="reference internal" href="../general/volumes.html#volumes"><em>Files and Volumes</em></a></li>
-<li><em class="xref std std-ref">File Control</em></li>
+<li><a class="reference internal" href="../general/volumes.html#volumes"><em>Volumes</em></a></li>
+<li><a class="reference internal" href="../commands/files.html#files"><em>File Control</em></a></li>
+<li><a class="reference internal" href="../structures/misc/fileinfo.html#fileinfo"><em>File Information</em></a></li>
 </ul>
 </div>
 </div>
@@ -391,7 +396,7 @@
 <p>So to fix that problem, let&#8217;s add steering control to the script.</p>
 <p>The easy way to control steering is to use the <tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></tt> command.</p>
 <p>Once you have mastered the basics of <strong>kOS</strong>, you should go and read <a class="reference external" href="../ship_control/index.html">the documentation on ship steering techniques</a>, but that&#8217;s a more advanced topic for later.</p>
-<p>The way to use the <tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></tt> command is to set it to a thing called a <a class="reference internal" href="../math/vector.html#VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> or a <a class="reference internal" href="../math/direction.html#DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a>. There are several Directions built-in to <strong>kOS</strong>, one of which is called &#8220;UP&#8221;. &#8220;UP&#8221; is a Direction that always aims directly toward the sky (the center of the blue part of the navball).</p>
+<p>The way to use the <tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">STEERING</span></tt> command is to set it to a thing called a <a class="reference internal" href="../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> or a <a class="reference internal" href="../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a>. There are several Directions built-in to <strong>kOS</strong>, one of which is called &#8220;UP&#8221;. &#8220;UP&#8221; is a Direction that always aims directly toward the sky (the center of the blue part of the navball).</p>
 <p>So to steer always UP, just do this:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">UP</span><span class="p">.</span>
 </pre></div>
@@ -589,7 +594,7 @@ gravity turn?</em></p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="designpatterns.html" class="btn btn-neutral float-right" title="Design Patterns and Considerations with kOS">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="designpatterns.html" class="btn btn-neutral float-right" title="Design Patterns and Considerations with kOS"/>Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../tutorials.html" class="btn btn-neutral" title="Tutorials"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -605,8 +610,7 @@ gravity turn?</em></p>
     </p>
   </div>
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
 </footer>
         </div>
       </div>
