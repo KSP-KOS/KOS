@@ -50,6 +50,7 @@ Note that the state of action groups is tracked on a per-action basis, rather th
 - ``print "Action group 15 clicked!".``
 - ``preserve.``
 - ``}`` Print to the terminal anytime you activate action group 15. Use this to change variables within a running kOS script and the "Script Trigger" action found on the kOS computer part.
+
 - If you want to use the ``on AG15`` command to monitor a part that has an animation, a cool down is required.
 - ``on AG15 {``
 - ``print "Solar Panel Toggled!".``
