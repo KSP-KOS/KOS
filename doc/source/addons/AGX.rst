@@ -64,15 +64,16 @@ If you want to use the ``on AG15`` command to monitor a part that has an animati
 
 As a workaround, you need to add a cooldown:
 
+- ``declare cooldownTimeAG15
 - ``on AG15 {``
-- ``if(cooldownTimeAG15 + 7 >= currentTime) {``
+- ``if cooldownTimeAG15 + 10 < time {``
 - ``print "Solar Panel Toggled!".``
-- ``cooldownTimeAG15 = currentTime.``
+- ``set cooldownTimeAG15 to time.``
 - ``}``
 - ``preserve.``
 - ``}``
 
-Note the 7 in the second line, that is your cooldown time in seconds. The above code will limit AG15 so it can only activate after 7 seconds have passed since the previous activation.
+Note the 10 in the second line, that is your cooldown time in seconds. Set this to a number of seconds that is longer then your animation time and the above code will limit AG15 so it can only activate after 10 seconds have passed since the previous activation and not activate multiple times on the same activation.
 
 
 
