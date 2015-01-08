@@ -42,4 +42,33 @@ Note that the state of action groups is tracked on a per-action basis, rather th
 - For clarity, visual feedback can be provided of the current state of an action group. When editing action groups, find the "Toggle Grp." button just below the text entry field for the group name in the main AGX window and enable it. (It is enabled/disabled for the current action group when you click the button.) Once you do this, the text displaying that group will change from gray to colored. Green: Group is activated (state True). Red: Group is deactivated (state False). Yellow: Group is in a mixed state, will return a state False when queried.
 - It is okay to activate an already activated group and deactivate a non-activated group. Actions in the group will stil try to execute as normal. Exact behavior of a specific action will depend on how the action's creator set things up.
 
+**Example code:**
+- ``AG15 on.`` Activate action group 15.
+- ``print AG15.`` Print action group 15's state to the terminal. (True/False)
+- ``on AG15 {``
+- ``print "Action group 15 clicked!".``
+- ``preserve.``
+- ``}`` Print to the terminal anytime you activate action group 15. Use this to change variables within a running kOS script and the "Script Trigger" action found on the kOS computer part.
+- If you want to use the ``on AG15`` command to monitor a part that has an animation, a cool down is required.
+
+``on AG15 { print "Solar Panel Toggled!". preserve. }`` will print to the terminal 3 times when the solar panel is extened.
+
+- Player activates AG15, AG15's state goes from false to true and the actions are triggered. ``AG15 False -> True`` and prints to the terminal.
+- On it's next update pass (100ms to 250ms later), AGX checks AG15's state and sees the solar panel is still deploying which means that AG15's state is false and so sets it that way. ``AG15 True -> False`` and prints to the terminal.
+- A few seconds later, the solar panel finishes it's deployment animation. On it's next update pass AGX checks AG15's state and sees the solar panel is now deployed which means that AG15's state is now true and so sets it that way. ``AG15 False -> True`` and prints to the terminal a third time.
+
+As a workaround, you need to add a cooldown:
+
+- ``on AG15 {``
+- ``if(cooldownTimeAG15 + 7 >= currentTime) {``
+- ``print "Solar Panel Toggled!".``
+- ``cooldownTimeAG15 = currentTime.``
+- ``}``
+- ``preserve.``
+- ``}``
+
+Note the 7 in the second line, that is your cooldown time in seconds. The above code will limit AG15 so it can only activate after 7 seconds have passed since the previous activation.
+
+
+
 
