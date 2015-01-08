@@ -4,7 +4,7 @@ Action Groups Extended
 - Download: https://github.com/SirDiazo/AGExt/releases  
 - Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/threads/74195
 
-Increase the action groups available to kOS from 10 to 250 and add the ability to edit actions in flight as well as the ability to name action groups so you describe what a group does.
+Increase the action groups available to kOS from 10 to 250. Also adds the ability to edit actions in flight as well as the ability to name action groups so you can describe what a group does.
 
 Includes a Script Trigger action that can be used to control a running program and visual feedback if an action group is currently activated.
 
