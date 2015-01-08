@@ -64,7 +64,7 @@ If you want to use the ``on AG15`` command to monitor a part that has an animati
 
 As a workaround, you need to add a cooldown:
 
-- ``declare cooldownTimeAG15
+- ``declare cooldownTimeAG15``
 - ``on AG15 {``
 - ``if cooldownTimeAG15 + 10 < time {``
 - ``print "Solar Panel Toggled!".``
