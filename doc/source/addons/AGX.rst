@@ -43,6 +43,7 @@ Note that the state of action groups is tracked on a per-action basis, rather th
 - It is okay to activate an already activated group and deactivate a non-activated group. Actions in the group will stil try to execute as normal. Exact behavior of a specific action will depend on how the action's creator set things up.
 
 **Example code:**
+
 - ``AG15 on.`` Activate action group 15.
 - ``print AG15.`` Print action group 15's state to the terminal. (True/False)
 - ``on AG15 {``
