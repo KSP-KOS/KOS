@@ -51,8 +51,10 @@ Note that the state of action groups is tracked on a per-action basis, rather th
 - ``preserve.``
 - ``}`` Print to the terminal anytime you activate action group 15. Use this to change variables within a running kOS script and the "Script Trigger" action found on the kOS computer part.
 - If you want to use the ``on AG15`` command to monitor a part that has an animation, a cool down is required.
-
-``on AG15 { print "Solar Panel Toggled!". preserve. }`` will print to the terminal 3 times when the solar panel is extened.
+- ``on AG15 {``
+- ``print "Solar Panel Toggled!".``
+- ``preserve.``
+- ``}`` will print to the terminal 3 times when the solar panel is extened.
 
 - Player activates AG15, AG15's state goes from false to true and the actions are triggered. ``AG15 False -> True`` and prints to the terminal.
 - On it's next update pass (100ms to 250ms later), AGX checks AG15's state and sees the solar panel is still deploying which means that AG15's state is false and so sets it that way. ``AG15 True -> False`` and prints to the terminal.
