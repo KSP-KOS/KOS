@@ -17,9 +17,9 @@ Caution: Sometimes, AGX will return an unexpected value for a group's state (On/
  
 **Basic Quick Start:**
 
-.. figure:: /develop/doc/source/addons/AGExtQuickStart.jpg
+.. figure:: /develop/doc/source/addons/AGExtQuickStart1.jpg
+.. figure:: /develop/doc/source/addons/AGExtQuickStart2.jpg
 
-http://members.shaw.ca/diazo/AGExtQuickStart2.jpg
 
 **Overview Walkthrough:** (Video, imagur album, animated gif, something)
 
