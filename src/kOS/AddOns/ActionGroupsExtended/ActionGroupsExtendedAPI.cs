@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace kOS.AddOns.ActionGroupsExtended
 {
@@ -78,7 +79,7 @@ namespace kOS.AddOns.ActionGroupsExtended
         /// <param name="vessel">The vessel that will catch the action</param>
         /// <param name="group">A ActionGroup number from 11-251</param>
         /// <returns>List of partModules with actions in the group </returns>
-        public List<PartModule> GetPartsInGroup(Vessel vessel, int group)
+        public List<PartModule> GetModulesInGroup(Vessel vessel, int group)
         {
             var args = new System.Object[] { vessel.rootPart.flightID, group };
             return (List<PartModule>)calledType.InvokeMember("AGX2VslListOfPartModulesInGroup", BINDINGS, null, null, args);
