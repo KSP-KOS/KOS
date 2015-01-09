@@ -25,10 +25,10 @@ namespace kOS.Suffixed
 
         private void InitializeAggregateResourceSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => name));
-            AddSuffix("AMOUNT", new Suffix<double>(() => amount));
-            AddSuffix("CAPICITY", new Suffix<double>(() => capacity));
-            AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => parts));
+            AddSuffix("name", new Suffix<string>(() => name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
+            AddSuffix("amount", new Suffix<double>(() => amount, "The resources currently available"));
+            AddSuffix("capacity", new Suffix<double>(() => capacity, "The total storage capacity currently available"));
+            AddSuffix("parts", new Suffix<ListValue<PartValue>>(() => parts, "The containers for this resource"));
         }
 
         public void AddResource(PartResource resource)
