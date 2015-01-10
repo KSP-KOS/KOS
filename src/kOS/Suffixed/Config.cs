@@ -189,12 +189,11 @@ namespace kOS.Suffixed
     public class ConfigKey
     {
         private object val;
-        private bool valChanged;
         public string StringKey {get;private set;}
         public string Alias {get;set;}
         public string Name {get;set;}
         public Type ValType {get;set;}
-        public object Value {get{return val;} set{ valChanged = (val != value) ; val = SafeSetValue(value); PostChangeTriggers();} }
+        public object Value {get{return val;} set{ val = SafeSetValue(value); } }
         public object MinValue {get;set;}
         public object MaxValue {get;set;}
 
@@ -243,24 +242,5 @@ namespace kOS.Suffixed
             }
             return returnValue;
         }
-
-        private void PostChangeTriggers()
-        {
-            if (!valChanged)
-                return;
-            
-            // I don't like doing this this way, but I had to put the catch this low-level or else some
-            // cases of changing the values skips past it:
-            if (String.Equals(Alias,"TELNET",StringComparison.CurrentCultureIgnoreCase))
-            {
-                if ((bool)Value)
-                    kOS.UserIO.TelnetMainServer.Instance.StartListening();
-                else
-                    kOS.UserIO.TelnetMainServer.Instance.StopListening();
-            }
-            
-            valChanged = false; // reset for next time
-        }
-
     }
 }

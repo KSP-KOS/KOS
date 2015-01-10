@@ -8,6 +8,8 @@ using UnityEngine;
 
 namespace kOS.UserIO
 {
+    [KSPAddon(KSPAddon.Startup.Instantly, true)]
+
     /// <summary>
     /// A single instance of the telnet server embedded into kOS.
     /// Presents clients with the initial choices and connects
@@ -26,14 +28,33 @@ namespace kOS.UserIO
         private Int32 port;
         private List<TelnetSingletonServer> telnets;
         private bool isListening;
+        private static TelnetMainServer instance;
         
         public TelnetMainServer()
         {
+            instance = this;
             isListening = false;
-            gameObject.SetActive(false); // Should prevent the Update() from triggering until we turn it on.
             telnets = new List<TelnetSingletonServer>();
+            
+            DontDestroyOnLoad(transform.gameObject); // Otherwise Unity will stop calling my Update() on the next scene change because my gameObject went away.
 
-            kOS.Safe.Utilities.Debug.Logger.Log("kOS TelnetMainServer class exists.");
+            Console.WriteLine("kOS TelnetMainServer class exists."); // Console.Writeline used because this occurs before kSP's logger is set up.
+        }
+        
+        public static TelnetMainServer Instance()
+        {
+            return instance ?? (instance = new TelnetMainServer());
+        }
+        
+        public void SetConfigEnable(bool newVal)
+        {
+            if (newVal == isListening)
+                return;
+            
+            if (newVal)
+                StartListening();
+            else
+                StopListening();
         }
         
         public void StartListening()
@@ -53,7 +74,6 @@ namespace kOS.UserIO
             server = new TcpListener(bindAddr, port);
             server.Start();
             kOS.Safe.Utilities.Debug.Logger.Log("kOS TelnetMainServer started listening on " + bindAddr + " " + port);
-            gameObject.SetActive(true);
             isListening = true;
         }
 
@@ -62,39 +82,34 @@ namespace kOS.UserIO
             // calling StopListening when already stopped can cause problems, so quit if already stopped:
             if (!isListening)
                 return;
+            isListening = false;
 
-            gameObject.SetActive(false);
             kOS.Safe.Utilities.Debug.Logger.Log("kOS TelnetMainServer stopped listening on " + bindAddr + " " + port);
             server.Stop();
             foreach (TelnetSingletonServer telnet in telnets)
                 telnet.StopListening();
-    }
+        }
         
         public void Update()
         {
-            Console.WriteLine("PROOF UPDATE IS CALLED A");
+            SetConfigEnable(Config.Instance.EnableTelnet);
+
             if (!isListening)
                 return;
-            Console.WriteLine("PROOF UPDATE IS CALLED B");
             
             // .NET's TCP handler only gives you blocking socket accepting, but for the Unity
             // Update(), we need to always finish quickly and never block, so check if anything
             // is pending first to simulate the effect of a nonblocking socket accept check:
             if (!server.Pending())
                 return;
-            Console.WriteLine("PROOF UPDATE IS CALLED C");
 
             TcpClient incomingClient = server.AcceptTcpClient();
-            Console.WriteLine("PROOF UPDATE IS CALLED D");
             
             string remoteIdent = ((IPEndPoint)(incomingClient.Client.RemoteEndPoint)).Address.ToString();
             kOS.Safe.Utilities.Debug.Logger.Log("kOS telnet server got an incoming connection from " + remoteIdent);
-            Console.WriteLine("PROOF UPDATE IS CALLED E");
             
-            // Perform something akin to a 'fork', but in Unity by making a new MonoBehavior to handle this
-            // single client and talk to it, while the main server goes back to just listening to new clients:
             telnets.Add(new TelnetSingletonServer(incomingClient));
-            telnets[telnets.Count].StartListening();
+            telnets[telnets.Count-1].StartListening();
         }
     }
 }
