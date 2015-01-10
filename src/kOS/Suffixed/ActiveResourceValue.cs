@@ -18,10 +18,10 @@ namespace kOS.Suffixed
 
         private void InitializeActiveResourceSuffixes()
         {
-            AddSuffix("name", new Suffix<string>(() => activeResource.info.name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
-            AddSuffix("amount", new Suffix<double>(() => activeResource.amount, "The resources currently available"));
-            AddSuffix("capacity", new Suffix<double>(() => activeResource.maxAmount, "The total storage capacity currently available"));
-            AddSuffix("parts", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(activeResource.parts, shared), "The containers for this resource"));
+            AddSuffix("NAME", new Suffix<string>(() => activeResource.info.name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
+            AddSuffix("AMOUNT", new Suffix<double>(() => activeResource.amount, "The resources currently available"));
+            AddSuffix("CAPACITY", new Suffix<double>(() => activeResource.maxAmount, "The total storage capacity currently available"));
+            AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(activeResource.parts, shared), "The containers for this resource"));
         }
 
         public override string ToString()
