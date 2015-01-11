@@ -24,12 +24,12 @@ namespace kOS.Suffixed.Part
                 {
                     gimbal.FreeGimbal();
                 }
-            }));
-            AddSuffix("RANGE", new Suffix<float>(() => gimbal.gimbalRange ));
-            AddSuffix("RESPONSESPEED", new Suffix<float>(() => gimbal.gimbalResponseSpeed ));
-            AddSuffix("PITCHANGLE", new Suffix<float>(() => gimbal.gimbalAnglePitch ));
-            AddSuffix("YAWANGLE", new Suffix<float>(() => gimbal.gimbalAngleYaw ));
-            AddSuffix("ROLLANGLE", new Suffix<float>(() => gimbal.gimbalAngleRoll ));
+            }, "Is the Gimbal free to travel?"));
+            AddSuffix("RANGE", new Suffix<float>(() => gimbal.gimbalRange ,"The Gimbal's Possible Range of movement"));
+            AddSuffix("RESPONSESPEED", new Suffix<float>(() => gimbal.gimbalResponseSpeed, "The Gimbal's Possible Rate of travel"));
+            AddSuffix("PITCHANGLE", new Suffix<float>(() =>  gimbal.gimbalLock ? 0 : gimbal.gimbalAnglePitch, "Current Gimbal Pitch"));
+            AddSuffix("YAWANGLE", new Suffix<float>(() =>  gimbal.gimbalLock ? 0 : gimbal.gimbalAngleYaw, "Current Gimbal Yaw" ));
+            AddSuffix("ROLLANGLE", new Suffix<float>(() => gimbal.gimbalLock ? 0 : gimbal.gimbalAngleRoll, "Current Gimbal Roll"));
         }
     }
 }
