@@ -454,6 +454,18 @@ namespace kOS.Suffixed
             }
         }
 
+        public override bool KOSEquals(object other)
+        {
+            VectorRenderer that = other as VectorRenderer;
+            if (that == null) return false;
+            return
+                this.Vector.Equals(that.Vector) &&
+                this.Color.Equals(that.Color) &&
+                this.Start.Equals(that.Start) &&
+                this.Scale.Equals(that.Scale) &&
+                this.Width.Equals(that.Width);
+        } 
+
         public override string ToString()
         {
             return string.Format("{0} VectorRenderer", base.ToString());

@@ -70,7 +70,14 @@ namespace kOS.Suffixed.Part
             KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
             return tagModule == null ? string.Empty : tagModule.nameTag;
         }
-        
+
+        public override bool KOSEquals(object other)
+        {
+            PartValue that = other as PartValue;
+            if (that == null) return false;
+            return this.Part.Equals(that.Part);
+        } 
+
         public override string ToString()
         {
             string tagName = GetTagName();

@@ -1,5 +1,6 @@
 using System;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -16,6 +17,11 @@ namespace kOS.Safe.Encapsulation
         public override string ToString()
         {
             return string.Format("{0} Constants", base.ToString());
+        }
+        
+        public override bool KOSEquals(object other)
+        {
+            throw new KOSBinaryOperandTypeException(this.GetType(),"=","and",other.GetType());
         }
     }
 

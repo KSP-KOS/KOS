@@ -32,6 +32,13 @@ namespace kOS.Suffixed
             return new Color(color.r,color.g,color.b,color.a); 
         }
 
+        public override bool KOSEquals(object other)
+        {
+            RgbaColor that = other as RgbaColor;
+            if (that == null) return false;
+            return this.color.Equals(that.color);
+        } 
+
         public override string ToString()
         {
             return "RGBA(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")";

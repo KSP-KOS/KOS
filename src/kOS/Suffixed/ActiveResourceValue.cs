@@ -24,6 +24,13 @@ namespace kOS.Suffixed
             AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(activeResource.parts, shared), "The containers for this resource"));
         }
 
+        public override bool KOSEquals(object other)
+        {
+            ActiveResourceValue that = other as ActiveResourceValue;
+            if (that == null) return false;
+            return this.activeResource.Equals(that.activeResource);
+        } 
+
         public override string ToString()
         {
             return string.Format("ACTIVERESOURCE({0},{1},{2})", activeResource.info.name, activeResource.amount, activeResource.maxAmount);

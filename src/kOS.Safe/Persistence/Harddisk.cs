@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Utilities;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Persistence
 {
@@ -33,5 +34,12 @@ namespace kOS.Safe.Persistence
 
             return ((Capacity - usedSpace) >= newFile.GetSize());
         }
-    }
+
+        public override bool KOSEquals(object other)
+        {
+            // Harddisk attaches to a real filesystem directory.  Not sure how we'd ever have more than one to compare anyway:
+            throw new KOSBinaryOperandTypeException(this.GetType(),"=","and",other.GetType());
+        } 
+
+   }
 }

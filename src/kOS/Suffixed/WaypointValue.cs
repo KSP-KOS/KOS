@@ -45,7 +45,14 @@ namespace kOS.Suffixed
             GeoCoordinates gCoord = BuildGeoCoordinates();
             return gCoord.GetTerrainAltitude() + WayPoint.altitude;
         }
-        
+
+        public override bool KOSEquals(object other)
+        {
+            WaypointValue that = other as WaypointValue;
+            if (that == null) return false;
+            return this.WayPoint.Equals(that.WayPoint);
+        } 
+
         public override string ToString()
         {
             return String.Format("Waypoint \"{0}\"", WayPoint.name);

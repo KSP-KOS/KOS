@@ -157,6 +157,13 @@ namespace kOS.Suffixed
             vesselRef = null;
         }
 
+        public override bool KOSEquals(object other)
+        {
+            Node that = other as Node;
+            if (that == null) return false;
+            return this.nodeRef.Equals(that.nodeRef) && this.vesselRef.Equals(that.vesselRef);
+        } 
+
         public override string ToString()
         {
             UpdateValues();

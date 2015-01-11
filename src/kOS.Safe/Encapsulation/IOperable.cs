@@ -3,5 +3,6 @@
     public interface IOperable
     {
         object TryOperation(string op, object other, bool reverseOrder);
+        bool KOSEquals(object other);
     }
 }

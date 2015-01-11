@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KSP.IO;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
@@ -159,7 +160,12 @@ namespace kOS.Suffixed
         {
             return keys.Values.ToList();
         }
-                
+
+        public override bool KOSEquals(object other)
+        {
+            throw new KOSBinaryOperandTypeException(this.GetType(),"=","and",other.GetType());
+        }
+
         public override string ToString()
         {
             return "Use \"list config.\" to view all configurations";

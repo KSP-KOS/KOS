@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using kOS.Safe.Utilities;
+using kOS.Safe.Exceptions;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Safe.Persistence
@@ -262,5 +263,12 @@ namespace kOS.Safe.Persistence
                 outfile.Write(bytesToAppend);
             }
         }
+
+        public override bool KOSEquals(object other)
+        {
+            // Archive attaches to a real filesystem directory.  Not sure how we'd ever have more than one to compare anyway:
+            throw new KOSBinaryOperandTypeException(this.GetType(),"=","and",other.GetType());
+        } 
+
     }
 }

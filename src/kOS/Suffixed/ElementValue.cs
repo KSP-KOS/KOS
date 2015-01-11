@@ -34,6 +34,16 @@ namespace kOS.Suffixed
             return toReturn;
         }
 
+        public override bool KOSEquals(object other)
+        {
+            ElementValue that = other as ElementValue;
+            if (that == null) return false;
+            return this.name.Equals(that.name) && this.parts.Equals(that.parts);
+            // @erendrake - I'm not sure if this is correct, because I have no clue what
+            // LIST ELEMENTS IN FOO, which is what this is, is actually supposed to mean.
+            // So I just made it compare all the member fields, not knowing what it means.
+        } 
+
         public override string ToString()
         {
             return "ELEMENT(" + name + ", " + parts.Count + ")";

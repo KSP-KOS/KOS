@@ -197,6 +197,19 @@ namespace kOS.Suffixed
             return new Direction(Quaternion.RotateTowards(fromDir.rotation, rotation, 99999.0f));
         }
 
+        /// <summary>
+        /// Comparing for exact equality with floating point structures is usually a bad thing,
+        /// but it's worthwhile for things like unit vectors where it will come out exact.
+        /// </summary>
+        /// <param name="other">the other rotation being compared to</param>
+        /// <returns>true if they are exactly identical according to their quaternion representations</returns>
+        public override bool KOSEquals(object other)
+        {
+            Direction that = other as Direction;
+            if (that == null) return false;
+            return this.rotation.Equals(that.rotation);
+        } 
+
         public override string ToString()
         {
             return "R(" + Math.Round(euler.x, 3) + "," + Math.Round(euler.y, 3) + "," + Math.Round(euler.z, 3) + ")";

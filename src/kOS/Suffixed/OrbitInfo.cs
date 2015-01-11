@@ -137,6 +137,13 @@ namespace kOS.Suffixed
             return base.GetSuffix(suffixName);
         }
 
+        public override bool KOSEquals(object other)
+        {
+            OrbitInfo that = other as OrbitInfo;
+            if (that == null) return false;
+            return this.orbit.Equals(that.orbit);
+        } 
+
         public override string ToString()
         {
             return "ORBIT of " + name;

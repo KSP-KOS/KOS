@@ -23,6 +23,13 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("BUILD", new StaticSuffix<int>(() => build));
         }
 
+        public override bool KOSEquals(object other)
+        {
+            VersionInfo otherVInfo = other as VersionInfo;
+            if (otherVInfo == null) return false;
+            return this.major == otherVInfo.major && this.minor == otherVInfo.minor && this.build == otherVInfo.build;
+        } 
+
         public override string ToString()
         {
             return string.Format("{0}.{1}.{2}", major, minor, build);

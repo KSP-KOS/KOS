@@ -48,6 +48,13 @@ namespace kOS.Safe.Encapsulation
             return base.GetSuffix(suffixName);
         }
 
+        public override bool KOSEquals(object other)
+        {
+            FileInfo otherFileInfo = other as FileInfo;
+            if (otherFileInfo == null) return false;
+            return this.Name == otherFileInfo.Name && this.Extension == otherFileInfo.Extension && this.Size == otherFileInfo.Size;
+        } 
+
         public override string ToString()
         {
             return Name;

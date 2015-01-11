@@ -33,6 +33,13 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("INDEX", new NoArgsSuffix<int>(() => index));
             AddSuffix("VALUE", new NoArgsSuffix<object>(() => enumerator.Current));
         }
+        
+        public override bool KOSEquals(object other)
+        {
+            Enumerator otherEnum = other as Enumerator;
+            if (otherEnum == null) return false;
+            return this.enumerator.Equals(otherEnum.enumerator);
+        } 
 
         public override string ToString()
         {

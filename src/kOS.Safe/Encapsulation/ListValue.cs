@@ -141,6 +141,13 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
+        public override bool KOSEquals(object other)
+        {
+            ListValue<T> otherList = other as ListValue<T>;
+            if (otherList == null) return false;
+            return this.internalList.Equals(otherList.internalList);
+        } 
+
         // Using Statics for this is not thread-safe, but kOS doesn't do threads at the moment.
         // TODO: find a better way later to track the nesting level through all the messy
         // calls of nested objects' ToStrings.

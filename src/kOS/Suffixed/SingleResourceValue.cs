@@ -30,6 +30,13 @@ namespace kOS.Suffixed
             }));
         }
 
+        public override bool KOSEquals(object other)
+        {
+            SingleResourceValue that = other as SingleResourceValue;
+            if (that == null) return false;
+            return this.partResource.Equals(that.partResource);
+        } 
+
         public override string ToString()
         {
             return string.Format("RESOURCE({0},{1},{2}", partResource.resourceName, partResource.amount, partResource.maxAmount);
