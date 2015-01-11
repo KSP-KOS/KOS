@@ -18,8 +18,7 @@ namespace kOS.Suffixed
             name = vessel.vesselName;
 
             AddSuffix("NAME", new Suffix<string>(() => vessel.vesselName));
-            AddSuffix("UID", new Suffix<uint>(() => vessel.rootPart.uid()));
-            AddSuffix("PARTCOUNT", new Suffix<int>(() => parts.Count()));
+            AddSuffix("UID", new Suffix<string>(() => vessel.rootPart.uid().ToString()));
             AddSuffix("PARTS", new Suffix<ListValue>(() => PartsToList(parts)));
         }
 

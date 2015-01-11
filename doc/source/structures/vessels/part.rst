@@ -40,7 +40,7 @@ These are the generic properties every PART has. You can obtain a list of values
           - scalar
           - The stage this is associated with
         * - :attr:`UID`
-          - scalar
+          - string
           - Unique identifying number
         * - :attr:`ROTATION`
           - :struct:`Direction`
@@ -146,7 +146,7 @@ These are the generic properties every PART has. You can obtain a list of values
 .. attribute:: Part:UID
 
     :access: Get only
-    :type: scalar
+    :type: string
 
     All parts have a unique ID number. Test if two parts are the same part by seeing if this is the same between them.
 
