@@ -214,6 +214,13 @@ namespace kOS.Suffixed
 
         public static string[] ShortCuttableShipSuffixes { get; private set; }
 
+        public override bool KOSEquals(object other)
+        {
+            VesselTarget that = other as VesselTarget;
+            if (that == null) return false;
+            return this.Vessel.Equals(that.Vessel);
+        } 
+
         public override string ToString()
         {
             return "SHIP(\"" + Vessel.vesselName + "\")";

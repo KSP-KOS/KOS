@@ -19,6 +19,13 @@ namespace kOS.Suffixed
             AddSuffix("HEIGHT", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.maxAtmosphereAltitude : 0));
         }
 
+        public override bool KOSEquals(object other)
+        {
+            BodyAtmosphere that = other as BodyAtmosphere;
+            if (that == null) return false;
+            return this.celestialBody.Equals(that.celestialBody);
+        } 
+
         public override string ToString()
         {
             return "BODYATMOSPHERE(\"" + celestialBody.bodyName + "\")";

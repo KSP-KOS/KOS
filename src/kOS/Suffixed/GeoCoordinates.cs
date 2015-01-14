@@ -213,6 +213,13 @@ namespace kOS.Suffixed
                                                                            "of this lat/long, at this (sea level) altitude"));
         }
 
+        public override bool KOSEquals(object other)
+        {
+            GeoCoordinates that = other as GeoCoordinates;
+            if (that == null) return false;
+            return this.Lat.Equals(that.Lat) && this.Lng.Equals(that.Lng) && this.Body.Equals(that.Body);
+        } 
+
         public override string ToString()
         {
             return "LATLNG(" + Lat + ", " + Lng + ")";

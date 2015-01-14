@@ -121,9 +121,29 @@ namespace kOS.Safe.Encapsulation
             return suffix.Get();
         }
 
+        /// <summary>
+        /// All types of Structure must implement this equals check that a kOS script can use
+        /// to compare, given then kOS tends to wrap C# objects inside a kOS wrapper such that
+        /// the default reference comparison for equallity does not suffice.
+        /// This will be called by the default TryOperator implementation.  If you override
+        /// TryOperation that will bypass the user of this and you will need to call this manually.
+        /// <br/>
+        /// This is NOT the C# IEquatable interface, so that it is still possible to distinguish underlying
+        /// equality from script-level equality.
+        /// </summary>
+        /// <param name="other">the other Structure object you are comparing with</param>
+        /// <returns>true if a kos script should consider these two objects identical</returns>
+        public abstract bool KOSEquals(object other);
+
         public virtual object TryOperation(string op, object other, bool reverseOrder)
         {
-            return null;
+            // Force all Structures to have to implement an Equality checker to be used if they don't override TryOperation.
+            if (op == "==")
+                return KOSEquals(other);
+            else if (op == "<>")
+                return !(KOSEquals(other));
+            else
+                throw new KOSBinaryOperandTypeException(this,"perform '"+op+"' between", "and", other);
         }
 
         protected object ConvertToDoubleIfNeeded(object value)

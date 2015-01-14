@@ -1,6 +1,7 @@
 ﻿using System;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
@@ -164,6 +165,10 @@ namespace kOS.Suffixed
             return CanTagInEditor(whichEditor, out dummy);
         }
         
+        public override bool KOSEquals(object other)
+        {
+            throw new KOSBinaryOperandTypeException(this.GetType(),"=","and",other.GetType());
+        }
 
         public override string ToString()
         {

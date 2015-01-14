@@ -33,6 +33,8 @@ namespace kOS.Safe.Compilation
             if (argument2 is float) argument2 = Convert.ToDouble(argument2);
 
             if (argument1 is int) intCount++;
+            if (argument1 is Int32) intCount++;
+            if (argument1 is Int64) intCount++;
             if (argument1 is double) doubleCount++;
             if (argument1 is string) stringCount++;
             if (argument1 is ISuffixed) specialCount++;
@@ -50,7 +52,7 @@ namespace kOS.Safe.Compilation
             if (boolCount > 0) return new CalculatorBool();
             if (specialCount > 0) return new CalculatorStructure();
 
-            throw new NotImplementedException(string.Format("Can't operate types {0} and {1}", argument1.GetType(), argument2.GetType()));
+            throw new KOSBinaryOperandTypeException(argument1,"perform opeations between", "and", argument2);
         }
     }
 

@@ -147,6 +147,13 @@ namespace kOS.Suffixed
             return base.TryOperation(op, other, reverseOrder);
         }
 
+        public override bool KOSEquals(object other)
+        {
+            kOS.Suffixed.TimeSpan that = other as kOS.Suffixed.TimeSpan;
+            if (that == null) return false;
+            return this.span.Equals(that.span) && this.kerbinTimeSetting.Equals(that.kerbinTimeSetting);
+        } 
+
         public override string ToString()
         {
             return string.Format("TIME({0:0})", span);

@@ -38,6 +38,13 @@ namespace kOS.Suffixed
             parts.Add(new PartValue(resource.part, shared));
         }
 
+        public override bool KOSEquals(object other)
+        {
+            // AggregateResourceValue is not just a wrapper around a simple single C# object.  It's something invented
+            // by kOS, and so it doesn't need to pass equality through to the inner objects - just a ref equals is good enough:
+            return this.Equals(other);
+        } 
+
         public override string ToString()
         {
             return string.Format("SHIPRESOURCE({0},{1},{2})", name, amount, capacity);

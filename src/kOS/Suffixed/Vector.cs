@@ -211,6 +211,13 @@ namespace kOS.Suffixed
             return new Vector3((float)X, (float)Y, (float)Z);
         }
 
+        public override bool KOSEquals(object other)
+        {
+            Vector that = other as Vector;
+            if (that == null) return false;
+            return this.X.Equals(that.X) && this.Y.Equals(that.Y) && this.Z.Equals(that.Z);
+        } 
+
         public override string ToString()
         {
             return "V(" + X + ", " + Y + ", " + Z + ")";

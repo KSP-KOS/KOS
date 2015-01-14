@@ -2,6 +2,7 @@
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
@@ -57,6 +58,10 @@ namespace kOS.Suffixed
             var match = resource.FirstOrDefault(r => string.Equals(r.info.name, resourceName, StringComparison.InvariantCultureIgnoreCase));
             return match == null ? null : (double?) Math.Round(match.amount, 2);
         }
+        public override bool KOSEquals(object other)
+        {
+            throw new KOSBinaryOperandTypeException(this.GetType(),"=","and",other.GetType());
+        } 
 
         public override string ToString()
         {

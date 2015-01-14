@@ -45,6 +45,13 @@ namespace kOS.Suffixed.Part
             return partModule.moduleName;
         }
 
+        public override bool KOSEquals(object other)
+        {
+            PartModuleFields that = other as PartModuleFields;
+            if (that == null) return false;
+            return this.partModule.Equals(that.partModule);
+        } 
+
         public override string ToString()
         {
             var returnValue = new StringBuilder();

@@ -489,5 +489,12 @@ namespace kOS.Suffixed
             if(Math.Abs(wheelThrottleTrim) > SETTING_EPILSON) st.wheelThrottleTrim = wheelThrottleTrim;
 
         }
+
+        public override bool KOSEquals(object other)
+        {
+            FlightControl that = other as FlightControl;
+            if (that == null) return false;
+            return this.Vessel.Equals(that.Vessel); // call them the same if the vessel they are on is the same
+        } 
     }
 }

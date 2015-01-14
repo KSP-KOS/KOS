@@ -55,6 +55,13 @@ namespace kOS.Suffixed
             return base.GetSuffix(suffixName);
         }
 
+        public override bool KOSEquals(object other)
+        {
+            OrbitableVelocity that = other as OrbitableVelocity;
+            if (that == null) return false;
+            return this.Orbital.Equals(that.Orbital) && this.Surface.Equals(that.Surface);
+        } 
+
         public override string ToString()
         {
             return "OrbitableVelocity(\n" +

@@ -31,6 +31,11 @@ namespace kOS.Safe.Test
             {
                 AddSuffix(name,suffix);
             }
+            
+            public override bool KOSEquals(object other)
+            {
+                return false; // dummy because it's required for all structures.
+            } 
         }
 
         [TestFixtureSetUp]

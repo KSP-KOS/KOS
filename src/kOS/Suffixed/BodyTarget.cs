@@ -99,6 +99,13 @@ namespace kOS.Suffixed
             return base.GetSuffix(suffixName);
         }
 
+        public override bool KOSEquals(object other)
+        {
+            BodyTarget that = other as BodyTarget;
+            if (that == null) return false;
+            return this.Body.Equals(that.Body);
+        } 
+
         public override string ToString()
         {
             if (Body != null)
