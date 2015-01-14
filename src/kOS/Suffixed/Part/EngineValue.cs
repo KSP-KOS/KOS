@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Part;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed.Part
 {

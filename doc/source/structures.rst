@@ -27,6 +27,7 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :struct:`Engine`
     * :struct:`AggregateResource`
     * :struct:`DockingPort`
+    * :struct:`Gimbal`
     * :struct:`Part`
     * :struct:`PartModule`
     * :struct:`Sensor`
