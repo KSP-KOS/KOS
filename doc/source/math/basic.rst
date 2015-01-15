@@ -1,4 +1,4 @@
-.. _math:
+.. _basic math:
 
 .. _constants:
 .. index:: Fundamental Constants
@@ -179,18 +179,18 @@ Trigonometric Functions
 
     :parameter x: (scalar)
     :return: (deg) angle whose sine is x
-    
+
     ::
-    
+
         PRINT ARCSIN(0.67). // prints 42.0670648
 
 .. function:: ARCCOS(x)
 
     :parameter x: (scalar)
     :return: (deg) angle whose cosine is x
-    
+
     ::
-    
+
         PRINT ARCCOS(0.67). // prints 47.9329352
 
 .. function:: ARCTAN(x)
@@ -207,7 +207,7 @@ Trigonometric Functions
     :parameter y: (scalar)
     :parameter x: (scalar)
     :return: (deg) angle whose tangent is :math:`\frac{y}{x}`
-    
+
     ::
 
         PRINT ARCTAN2(0.67, 0.89). // prints 36.9727625

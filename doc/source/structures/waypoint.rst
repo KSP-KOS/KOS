@@ -1,16 +1,13 @@
+.. _waypoint:
+
 Waypoints
 =========
 
-.. contents:: Contents
+.. contents::
     :local:
-    :depth: 1
+    :depth: 2
 
-Waypoints are the location markers you can see on the map view showing
-you where contracts are targeted for.  With this strucure, you can obtain
-coordinate data for the locations of these waypoints.
-
-Creation
---------
+Waypoints are the location markers you can see on the map view showing you where contracts are targeted for.  With this structure, you can obtain coordinate data for the locations of these waypoints.
 
 .. function:: WAYPOINT(name)
 
@@ -29,61 +26,42 @@ Creation
 
     This creates a :struct:`List` of :struct:`Waypoint` structures for all accepted contracts.  Waypoints for proposed contracts you haven't accepted yet do not appear in the list.
 
-Structure
----------
-
 .. structure:: Waypoint
 
     .. list-table:: **Members**
-        :widths: 4 2 1 1
+        :widths: 1 1
         :header-rows: 1
-        
+
         * - Suffix
           - Type
-          - Get
-          - Set
-          
+
         * - :attr:`NAME`
           - string
-          - yes
-          - no
         * - :attr:`BODY`
           - `BodyTarget`
-          - yes
-          - no
         * - :attr:`GEOPOSITION`
           - `GeoCoordinates`
-          - yes
-          - no
         * - :attr:`ALTITUDE`
           - scalar
-          - yes
-          - no
         * - :attr:`AGL`
           - scalar
-          - yes
-          - no
         * - :attr:`NEARSURFACE`
           - boolean
-          - yes
-          - no
         * - :attr:`GROUNDED`
           - boolean
-          - yes
-          - no
 
 
 .. attribute:: Waypoint:NAME
 
     :type: string
-    :access: Get
+    :access: Get only
 
     Name of waypoint as it appears on the map and contract
 
 .. attribute:: Waypoint:BODY
 
     :type: `BodyTarget`
-    :access: Get
+    :access: Get only
 
     Celestial body the waypoint is attached to
 
@@ -91,14 +69,14 @@ Structure
 .. attribute:: Waypoint:GEOPOSITION
 
     :type: GeoCoordinates
-    :access: Get
+    :access: Get only
 
     The LATLNG of this waypoint
 
 .. attribute:: Waypoint:ALTITUDE
 
     :type: scalar
-    :access: Get
+    :access: Get only
 
     Altitude of waypoint **above "sea" level**.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds towhere the marker tip hovers on the map, which is not actually at the very edge of the contract condition's range.  It represents a typical midling location inside the contract's altitude range.
 
@@ -106,7 +84,7 @@ Structure
 .. attribute:: Waypoint:AGL
 
     :type: scalar
-    :access: Get
+    :access: Get only
 
     Altitude of waypoint **above ground**.  Warning, this a point somewhere in the midst of the contract altitude range, not the edge of the altitude range.  It corresponds to where the marker tip hovers on the map, which is not actually at the very edge of the contract condition's range.  It represents a typical midling location inside the contract's altitude range.
 
@@ -114,7 +92,7 @@ Structure
 .. attribute:: Waypoint:NEARSURFACE
 
     :type: boolean
-    :access: Get
+    :access: Get only
 
     True if waypoint is a point near or on the body rather than high in orbit.
 
@@ -122,7 +100,7 @@ Structure
 .. attribute:: Waypoint:GROUNDED
 
     :type: boolean
-    :access: Get
+    :access: Get only
 
     True if waypoint is actually glued to the ground.
 

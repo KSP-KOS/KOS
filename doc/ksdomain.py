@@ -35,7 +35,7 @@ ks_sig_re = re.compile(r'''
 
 class KOSObject(ObjectDescription):
     def add_target_and_index(self, name, sig, signode):
-        targetname = name.upper()
+        targetname = self.objtype + ':' + name.upper()
         if targetname not in self.state.document.ids:
             signode['names'].append(targetname)
             signode['ids'].append(targetname)
@@ -43,14 +43,15 @@ class KOSObject(ObjectDescription):
             self.state.document.note_explicit_target(signode)
 
             objects = self.env.domaindata['ks']['objects']
-            key = (self.objtype, targetname)
+            key = (self.objtype, name.upper())
             if key in objects:
                 self.env.warn(self.env.docname,
                               'duplicate description of %s %s, ' %
-                              (self.objtype, name) +
+                              (self.objtype, name.upper()) +
                               'other instance in ' +
                               self.env.doc2path(objects[key]),
                               self.lineno)
+
             objects[key] = self.env.docname
         indextext = self.get_index_text(self.objtype, name)
         if indextext:
@@ -86,7 +87,7 @@ class KOSFunction(KOSObject):
         Field('returntype', label=l_('Return type'), has_arg=False,
               names=('rtype','type')),
     ]
-    
+
     def handle_signature(self, sig, signode):
         m = ks_sig_re.match(sig)
         name = m.group('object')
@@ -177,7 +178,7 @@ class KOSMethod(KOSObject):
         if struct is not None:
             if struct != '':
                 signode += addnodes.desc_type(struct,struct+':')
-                
+
         signode += addnodes.desc_name(fullname, name)
 
         args = m.group('args')
@@ -202,7 +203,7 @@ class KOSXRefRole(XRefRole):
             struct = m.group('prefix').split(':')[-1]
             target = ':'.join([struct,target])
         return title, target.upper()
-        
+
 class KOSAttrXRefRole(XRefRole):
 
     def process_link(self, env, *args):
@@ -252,10 +253,10 @@ class KOSDomain(Domain):
         objects = self.data['objects']
         objtypes = self.objtypes_for_role(typ)
         for objtype in objtypes:
-            if (objtype, target) in objects:
+            if (objtype, target.upper()) in objects:
                 return make_refnode(builder, fromdocname,
                                     objects[objtype, target],
-                                    target.upper(),
+                                    objtype + ':' + target.upper(),
                                     contnode, target + ' ' + objtype)
 
     def get_objects(self):

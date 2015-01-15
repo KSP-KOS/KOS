@@ -9,7 +9,7 @@ Predictions of Flight Path
 
     **Manipulating the maneuver nodes**
 
-    To alter the maneuver nodes on a vessel's flight plan, use the ADD and REMOVE commands as described on the :ref:`maneuver node manipulation page <node>`.
+    To alter the maneuver nodes on a vessel's flight plan, use the ADD and REMOVE commands as described on the :ref:`maneuver node manipulation page <maneuver node>`.
 
     Using the Add and Remove commands as described on that page, you may alter the flight plan of the CPU\_vessel, however kOS does not automatically execute the nodes. You still have to write the code to decide how to successfully execute a planned maneuver node.
 
@@ -19,33 +19,33 @@ These return predicted information about the future position and velocity of an 
 
 .. function:: POSITIONAT(orbitable,time)
 
-    :param orbitable: A :Ref:`Vessel <vessel>`, :ref:`Body <body>` or other :ref:`Orbitable <orbitable>` object
-    :type orbitable:  :ref:`Orbitable <orbitable>`
+    :param orbitable: A :struct:`Vessel`, :struct:`Body` or other :struct:`Orbitable` object
+    :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
-    :type time:     :ref:`Timestamp <timestamp>`
-    :return:        A position :ref:`Vector <vector>` expressed as the coordinates in the :ref:`ship-center-raw-rotation <ship-raw>` frame
+    :type time:     :struct:`TimeSpan`
+    :return:        A position :struct:`Vector` expressed as the coordinates in the :ref:`ship-center-raw-rotation <ship-raw>` frame
 
-    Returns a prediction of where the :ref:`Orbitable <orbitable>` will be at some :ref:`universal Timestamp <timestamp>`. If the :ref:`Orbitable <orbitable>` is a :ref:`Vessel <vessel>`, and the :ref:`Vessel <vessel>` has planned :ref:`maneuver nodes <node>`, the prediction assumes they will be executed exactly as planned.
+    Returns a prediction of where the :struct:`Orbitable` will be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
 
 .. function:: VELOCITYAT(orbitable,time)
 
-    :param orbitable: A :Ref:`Vessel <vessel>`, :ref:`Body <body>` or other :ref:`Orbitable <orbitable>` object
-    :type orbitable:  :ref:`Orbitable <orbitable>`
+    :param orbitable: A :struct:`Vessel`, :struct:`Body` or other :struct:`Orbitable` object
+    :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
-    :type time:     :ref:`Timestamp <timestamp>`
+    :type time:     :struct:`TimeSpan`
     :return: An :ref:`ObitalVelocity <orbitablevelocity>` structure.
 
-    Returns a prediction of what the :ref:`Orbitable's <orbitable>` velocity will be at some :ref:`universal Timestamp <timestamp>`. If the :ref:`Orbitable <orbitable>` is a :ref:`Vessel <vessel>`, and the :ref:`Vessel <vessel>` has planned :ref:`maneuver nodes <node>`, the prediction assumes they will be executed exactly as planned.
+    Returns a prediction of what the :ref:`Orbitable's <orbitable>` velocity will be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :struct:`maneuver nodes <Node>`, the prediction assumes they will be executed exactly as planned.
 
 .. function:: ORBITAT(orbitable,time)
 
-    :param orbitable: A :Ref:`Vessel <vessel>`, :ref:`Body <body>` or other :ref:`Orbitable <orbitable>` object
-    :type orbitable:  :ref:`Orbitable <orbitable>`
+    :param orbitable: A :Ref:`Vessel <vessel>`, :struct:`Body` or other :struct:`Orbitable` object
+    :type orbitable:  :struct:`Orbitable`
     :param time:    Time of prediction
-    :type time:     :ref:`Timestamp <timestamp>`
-    :return: An :ref:`Orbit <orbit>` structure.
-        
-    Returns the :ref:`Orbit patch <orbit>` where the :ref:`Orbitable <orbitable>` object is predicted to be at some :ref:`universal Timestamp <timestamp>`. If the :ref:`Orbitable <orbitable>` is a :ref:`Vessel <vessel>`, and the :ref:`Vessel <vessel>` has planned :ref:`maneuver nodes <node>`, the prediction assumes they will be executed exactly as planned.
+    :type time:     :struct:`TimeSpan`
+    :return: An :struct:`Orbit` structure.
+
+    Returns the :ref:`Orbit patch <orbit>` where the :struct:`Orbitable` object is predicted to be at some :ref:`universal Timestamp <timestamp>`. If the :struct:`Orbitable` is a :struct:`Vessel`, and the :struct:`Vessel` has planned :ref:`maneuver nodes <maneuver node>`, the prediction assumes they will be executed exactly as planned.
 
 Examples::
 

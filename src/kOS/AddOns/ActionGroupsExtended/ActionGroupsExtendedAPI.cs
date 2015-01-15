@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace kOS.AddOns.ActionGroupsExtended
 {
@@ -59,5 +60,30 @@ namespace kOS.AddOns.ActionGroupsExtended
             var args = new System.Object[] {vessel.rootPart.flightID, group};
             return (bool)calledType.InvokeMember("AGX2VslGroupState", BINDINGS, null, null, args);
         }
+
+        /// <summary>
+        /// Gets a list of Parts with actions in the specified group
+        /// </summary>
+        /// <param name="vessel">The vessel that will catch the action</param>
+        /// <param name="group">A ActionGroup number from 11-251</param>
+        /// <returns>List of Parts with actions in the group </returns>
+        public List<Part> GetPartsInGroup(Vessel vessel, int group)
+        {
+            var args = new System.Object[] { vessel.rootPart.flightID, group };
+            return (List<Part>)calledType.InvokeMember("AGX2VslListOfPartsInGroup", BINDINGS, null, null, args);
+        }
+
+        /// <summary>
+        /// Gets a list of partModules with actions in the specified group
+        /// </summary>
+        /// <param name="vessel">The vessel that will catch the action</param>
+        /// <param name="group">A ActionGroup number from 11-251</param>
+        /// <returns>List of partModules with actions in the group </returns>
+        public List<PartModule> GetModulesInGroup(Vessel vessel, int group)
+        {
+            var args = new System.Object[] { vessel.rootPart.flightID, group };
+            return (List<PartModule>)calledType.InvokeMember("AGX2VslListOfPartModulesInGroup", BINDINGS, null, null, args);
+        }
+        
     }
 }

@@ -1,4 +1,5 @@
 .. _time:
+.. _timestamp:
 
 Time Span
 =========
