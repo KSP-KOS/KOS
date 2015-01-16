@@ -40,7 +40,8 @@ namespace kOS.Utilities
 
             if (vessel.ActionGroups[KSPActionGroup.SAS])
             {
-                vessel.Autopilot.SAS.LockHeading(target * Quaternion.Euler(90, 0, 0), true);
+                target = target * Quaternion.Euler(90, 0, 0);
+                if (vessel.Autopilot.SAS.lockedHeading != target) vessel.Autopilot.SAS.LockHeading(target, true);
                 return;
             }
 

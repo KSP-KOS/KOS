@@ -41,8 +41,17 @@ namespace kOS.Binding
             AddNewFlightParam("steering", Shared);
             AddNewFlightParam("wheelthrottle", Shared);
             AddNewFlightParam("wheelsteering", Shared);
+            // Add built in SAS targeting functions
             AddNewFlightParam("maneuver", Shared);
             AddNewFlightParam("prograde", Shared);
+            AddNewFlightParam("retrograde", Shared);
+            AddNewFlightParam("normal", Shared);
+            AddNewFlightParam("antinormal", Shared);
+            AddNewFlightParam("radialin", Shared);
+            AddNewFlightParam("radialout", Shared);
+            AddNewFlightParam("target", Shared);
+            AddNewFlightParam("antitarget", Shared);
+            AddNewFlightParam("damping", Shared);
         }
 
 
@@ -59,49 +68,157 @@ namespace kOS.Binding
 
         private void clearStockAutopilot(string enabledMode)
         {
-            if (enabledMode != "maneuver") flightParameters["maneuver"].Enabled = false;
-            if (enabledMode != "prograde") flightParameters["prograde"].Enabled = false;
+            // Use the cpu ToggleFlyByWire method to ensure that we properly unload the autopilot from the other parts of kOS
+            if (enabledMode != "maneuver" && flightParameters["maneuver"].Enabled) ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("maneuver", false); ;
+            if (enabledMode != "prograde" && flightParameters["prograde"].Enabled) ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("prograde", false); ;
+            if (enabledMode != "retrograde" && flightParameters["retrograde"].Enabled) ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("retrograde", false); ;
+            if (enabledMode != "normal" && flightParameters["normal"].Enabled) ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("normal", false); ;
+            if (enabledMode != "antinormal" && flightParameters["antinormal"].Enabled) ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("antinormal", false); ;
+            if (enabledMode != "radialin" && flightParameters["radialin"].Enabled) ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("radialin", false); ;
+            if (enabledMode != "radialout" && flightParameters["radialout"].Enabled) ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("radialout", false); ;
+            if (enabledMode != "target" && flightParameters["target"].Enabled) ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("target", false); ;
+            if (enabledMode != "antitarget" && flightParameters["antitarget"].Enabled) ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("antitarget", false); ;
+            if (enabledMode != "steering" && flightParameters["steering"].Enabled) { ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("steering", false); }
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
             Debug.Log(string.Format("kOS: FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
-            if (!flightParameters.ContainsKey(paramName)) { UnityEngine.Debug.LogError("kOS: no such flybywire parameter " + paramName); return; }
+            if (!flightParameters.ContainsKey(paramName.ToLower())) { UnityEngine.Debug.LogError("kOS: no such flybywire parameter " + paramName); return; }
 
-            flightParameters[paramName].Enabled = enabled;
-            UnityEngine.Debug.LogWarning("kOS: flybywire parameter " + paramName);
-            UnityEngine.Debug.LogWarning("kOS: parameter enabled " + enabled.ToString());
             switch (paramName.ToLower())
             {
                 case "maneuver":
                     if (enabled)
                     {
+                        clearStockAutopilot("maneuver");
+                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Maneuver);
                         currentVessel.Autopilot.Enable();
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
-                        currentVessel.Autopilot.Disable();
                     }
-                    clearStockAutopilot("maneuver");
                     break;
                 case "prograde":
                     if (enabled)
                     {
+                        clearStockAutopilot("prograde");
+                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Prograde);
                         currentVessel.Autopilot.Enable();
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
-                        currentVessel.Autopilot.Disable();
                     }
-                    clearStockAutopilot("prograde");
+                    break;
+                case "retrograde":
+                    if (enabled)
+                    {
+                        clearStockAutopilot("retrograde");
+                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Retrograde);
+                        currentVessel.Autopilot.Enable();
+                    }
+                    else
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                    }
+                    break;
+                case "normal":
+                    if (enabled)
+                    {
+                        clearStockAutopilot("normal");
+                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Normal);
+                        currentVessel.Autopilot.Enable();
+                    }
+                    else
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                    }
+                    break;
+                case "antinormal":
+                    if (enabled)
+                    {
+                        clearStockAutopilot("antinormal");
+                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Antinormal);
+                        currentVessel.Autopilot.Enable();
+                    }
+                    else
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                    }
+                    break;
+                case "radialin":
+                    if (enabled)
+                    {
+                        clearStockAutopilot("radialin");
+                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.RadialIn);
+                        currentVessel.Autopilot.Enable();
+                    }
+                    else
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                    }
+                    break;
+                case "radialout":
+                    if (enabled)
+                    {
+                        clearStockAutopilot("radialout");
+                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.RadialOut);
+                        currentVessel.Autopilot.Enable();
+                    }
+                    else
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                    }
+                    break;
+                case "target":
+                    if (enabled)
+                    {
+                        clearStockAutopilot("target");
+                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Target);
+                        currentVessel.Autopilot.Enable();
+                    }
+                    else
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                    }
+                    break;
+                case "antitarget":
+                    if (enabled)
+                    {
+                        clearStockAutopilot("antitarget");
+                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.AntiTarget);
+                        currentVessel.Autopilot.Enable();
+                    }
+                    else
+                    {
+                        currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                    }
+                    break;
+                case "steering":
+                    // Must also do this when using steering, so that the steering doesn't fight the autopilot
+                    // We do this regardless of whether or not enabled is true so that "unlock steering" clears the autopilot mode too
+                    clearStockAutopilot("steering");
+                    break;
+                case "damping":
+                    currentVessel.Autopilot.SAS.SetDampingMode(enabled);
                     break;
                 default:
                     break;
             }
+            // this needs to be switched to true only after any other active autopilot settings are cleared.
+            flightParameters[paramName.ToLower()].Enabled = enabled;
+
             if (!enabled)
             {
                 flightParameters[paramName].ClearValue();
@@ -229,7 +346,7 @@ namespace kOS.Binding
                 get { return enabled; }
                 set
                 {
-                    Debug.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1}", name, enabled));
+                    Debug.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
                     enabled = value;
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
