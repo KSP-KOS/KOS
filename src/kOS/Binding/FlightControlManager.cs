@@ -221,7 +221,7 @@ namespace kOS.Binding
 
             if (!enabled)
             {
-                flightParameters[paramName].ClearValue();
+                flightParameters[paramName.ToLower()].ClearValue();
             }
         }
 
