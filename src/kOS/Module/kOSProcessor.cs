@@ -530,5 +530,11 @@ namespace kOS.Module
                 command.Execute(shared);
             }
         }
+
+        public void SetSASUI(int mode)
+        {
+            RUIToggleButton[] SASbtns = FindObjectOfType<VesselAutopilotUI>().modeButtons;
+            SASbtns.ElementAt<RUIToggleButton>(mode).SetTrue(true, true);
+        }
     }
 }

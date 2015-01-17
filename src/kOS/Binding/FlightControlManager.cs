@@ -100,10 +100,12 @@ namespace kOS.Binding
                         if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Maneuver);
                         currentVessel.Autopilot.Enable();
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.Maneuver);
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.StabilityAssist);
                     }
                     break;
                 case "prograde":
@@ -118,10 +120,12 @@ namespace kOS.Binding
                         if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Prograde);
                         currentVessel.Autopilot.Enable();
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.Prograde);
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.StabilityAssist);
                     }
                     break;
                 case "retrograde":
@@ -136,10 +140,12 @@ namespace kOS.Binding
                         if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Retrograde);
                         currentVessel.Autopilot.Enable();
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.Retrograde);
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.StabilityAssist);
                     }
                     break;
                 case "normal":
@@ -154,10 +160,12 @@ namespace kOS.Binding
                         if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Normal);
                         currentVessel.Autopilot.Enable();
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.Normal);
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.StabilityAssist);
                     }
                     break;
                 case "antinormal":
@@ -172,10 +180,12 @@ namespace kOS.Binding
                         if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Antinormal);
                         currentVessel.Autopilot.Enable();
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.Antinormal);
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.StabilityAssist);
                     }
                     break;
                 case "radialin":
@@ -190,10 +200,12 @@ namespace kOS.Binding
                         if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.RadialIn);
                         currentVessel.Autopilot.Enable();
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.RadialIn);
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.StabilityAssist);
                     }
                     break;
                 case "radialout":
@@ -208,10 +220,12 @@ namespace kOS.Binding
                         if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.RadialOut);
                         currentVessel.Autopilot.Enable();
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.RadialOut);
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.StabilityAssist);
                     }
                     break;
                 case "target":
@@ -226,10 +240,12 @@ namespace kOS.Binding
                         if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Target);
                         currentVessel.Autopilot.Enable();
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.Target);
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.StabilityAssist);
                     }
                     break;
                 case "antitarget":
@@ -244,10 +260,12 @@ namespace kOS.Binding
                         if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.AntiTarget);
                         currentVessel.Autopilot.Enable();
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.AntiTarget);
                     }
                     else
                     {
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)VesselAutopilot.AutopilotMode.StabilityAssist);
                     }
                     break;
                 case "steering":
