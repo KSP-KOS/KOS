@@ -91,8 +91,13 @@ namespace kOS.Binding
                 case "maneuver":
                     if (enabled)
                     {
+                        if (!currentVessel.Autopilot.CanSetMode(VesselAutopilot.AutopilotMode.Maneuver))
+                        {
+                            throw new kOS.Safe.Exceptions.KOSException(
+                                string.Format("Cannot set autopilot value, pilot/probe does not support {0}", paramName));
+                        }
                         clearStockAutopilot("maneuver");
-                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Maneuver);
                         currentVessel.Autopilot.Enable();
                     }
@@ -104,8 +109,13 @@ namespace kOS.Binding
                 case "prograde":
                     if (enabled)
                     {
+                        if (!currentVessel.Autopilot.CanSetMode(VesselAutopilot.AutopilotMode.Prograde))
+                        {
+                            throw new kOS.Safe.Exceptions.KOSException(
+                                string.Format("Cannot set autopilot value, pilot/probe does not support {0}", paramName));
+                        }
                         clearStockAutopilot("prograde");
-                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Prograde);
                         currentVessel.Autopilot.Enable();
                     }
@@ -117,8 +127,13 @@ namespace kOS.Binding
                 case "retrograde":
                     if (enabled)
                     {
+                        if (!currentVessel.Autopilot.CanSetMode(VesselAutopilot.AutopilotMode.Retrograde))
+                        {
+                            throw new kOS.Safe.Exceptions.KOSException(
+                                string.Format("Cannot set autopilot value, pilot/probe does not support {0}", paramName));
+                        }
                         clearStockAutopilot("retrograde");
-                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Retrograde);
                         currentVessel.Autopilot.Enable();
                     }
@@ -130,8 +145,13 @@ namespace kOS.Binding
                 case "normal":
                     if (enabled)
                     {
+                        if (!currentVessel.Autopilot.CanSetMode(VesselAutopilot.AutopilotMode.Normal))
+                        {
+                            throw new kOS.Safe.Exceptions.KOSException(
+                                string.Format("Cannot set autopilot value, pilot/probe does not support {0}", paramName));
+                        }
                         clearStockAutopilot("normal");
-                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Normal);
                         currentVessel.Autopilot.Enable();
                     }
@@ -143,8 +163,13 @@ namespace kOS.Binding
                 case "antinormal":
                     if (enabled)
                     {
+                        if (!currentVessel.Autopilot.CanSetMode(VesselAutopilot.AutopilotMode.Antinormal))
+                        {
+                            throw new kOS.Safe.Exceptions.KOSException(
+                                string.Format("Cannot set autopilot value, pilot/probe does not support {0}", paramName));
+                        }
                         clearStockAutopilot("antinormal");
-                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Antinormal);
                         currentVessel.Autopilot.Enable();
                     }
@@ -156,8 +181,13 @@ namespace kOS.Binding
                 case "radialin":
                     if (enabled)
                     {
+                        if (!currentVessel.Autopilot.CanSetMode(VesselAutopilot.AutopilotMode.RadialIn))
+                        {
+                            throw new kOS.Safe.Exceptions.KOSException(
+                                string.Format("Cannot set autopilot value, pilot/probe does not support {0}", paramName));
+                        }
                         clearStockAutopilot("radialin");
-                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.RadialIn);
                         currentVessel.Autopilot.Enable();
                     }
@@ -169,8 +199,13 @@ namespace kOS.Binding
                 case "radialout":
                     if (enabled)
                     {
+                        if (!currentVessel.Autopilot.CanSetMode(VesselAutopilot.AutopilotMode.RadialOut))
+                        {
+                            throw new kOS.Safe.Exceptions.KOSException(
+                                string.Format("Cannot set autopilot value, pilot/probe does not support {0}", paramName));
+                        }
                         clearStockAutopilot("radialout");
-                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.RadialOut);
                         currentVessel.Autopilot.Enable();
                     }
@@ -182,8 +217,13 @@ namespace kOS.Binding
                 case "target":
                     if (enabled)
                     {
+                        if (!currentVessel.Autopilot.CanSetMode(VesselAutopilot.AutopilotMode.Target))
+                        {
+                            throw new kOS.Safe.Exceptions.KOSException(
+                                string.Format("Cannot set autopilot value, pilot/probe does not support {0}", paramName));
+                        }
                         clearStockAutopilot("target");
-                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.Target);
                         currentVessel.Autopilot.Enable();
                     }
@@ -195,8 +235,13 @@ namespace kOS.Binding
                 case "antitarget":
                     if (enabled)
                     {
+                        if (!currentVessel.Autopilot.CanSetMode(VesselAutopilot.AutopilotMode.AntiTarget))
+                        {
+                            throw new kOS.Safe.Exceptions.KOSException(
+                                string.Format("Cannot set autopilot value, pilot/probe does not support {0}", paramName));
+                        }
                         clearStockAutopilot("antitarget");
-                        if (!Shared.Vessel.ActionGroups[KSPActionGroup.SAS]) Shared.Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                        if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
                         currentVessel.Autopilot.SetMode(VesselAutopilot.AutopilotMode.AntiTarget);
                         currentVessel.Autopilot.Enable();
                     }
