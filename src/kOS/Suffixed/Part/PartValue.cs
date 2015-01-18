@@ -40,7 +40,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>(GetModule));
-            AddSuffix("GETMODULEINDEX", new OneArgsSuffix<PartModuleFields, int>(GetModuleIndex));
+            AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, int>(GetModuleIndex));
             AddSuffix(new[] { "MODULES", "ALLMODULES" }, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
             AddSuffix("PARENT", new Suffix<PartValue>(() => PartValueFactory.Construct(Part.parent,shared), "The parent part of this part"));
             AddSuffix("HASPARENT", new Suffix<bool>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
