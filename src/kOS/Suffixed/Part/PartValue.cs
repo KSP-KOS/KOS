@@ -31,7 +31,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("NAME", new Suffix<string>(() => Part.name));
             AddSuffix("TITLE", new Suffix<string>(() => Part.partInfo.title));
             AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
-            AddSuffix("UID", new Suffix<uint>(() => Part.uid()));
+            AddSuffix("UID", new Suffix<string>(() => Part.uid().ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction( Part.transform.rotation) ));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector( Part.transform.position - shared.Vessel.findWorldCenterOfMass() )));
             AddSuffix("TAG", new NoArgsSuffix<string>(GetTagName));
