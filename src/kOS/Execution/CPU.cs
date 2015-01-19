@@ -747,6 +747,11 @@ namespace kOS.Execution
             currentContext.ToggleFlyByWire(paramName, enabled);
         }
 
+        public void SelectAutopilotMode(string autopilotMode)
+        {
+            shared.BindingMgr.SelectAutopilotMode(autopilotMode);
+        }
+
         public List<string> GetCodeFragment(int contextLines)
         {
             return currentContext.GetCodeFragment(contextLines);
