@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
+using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using kOS.Module;
 using System.Collections.Generic;

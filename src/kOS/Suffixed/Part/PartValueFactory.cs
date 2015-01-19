@@ -34,9 +34,9 @@ namespace kOS.Suffixed.Part
                 ModuleEnviroSensor mSense = module as ModuleEnviroSensor;
                 if (mSense != null)
                     return new SensorValue(part, mSense, shared);
-                var moduleGimbal = module as ModuleGimbal;
-                if (moduleGimbal != null)
-                    return new GimbalValue(moduleGimbal, shared);
+                var gimbalModule  = module as ModuleGimbal;
+                if (gimbalModule != null)
+                    return new GimbalValue(gimbalModule,shared);
                 
             }
             

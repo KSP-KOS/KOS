@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Linq;
+using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using UnityEngine;
 
