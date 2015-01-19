@@ -8,6 +8,8 @@ using System.Text;
 using kOS.Safe.Utilities;
 using kOS.Module;
 using UnityEngine;
+using System.IO;
+using System.IO.Pipes;
 
 namespace kOS.UserIO
 {
@@ -20,18 +22,34 @@ namespace kOS.UserIO
     {
         // ReSharper disable SuggestUseVarKeywordEvident
         // ReSharper disable RedundantDefaultFieldInitializer
-        private volatile TcpClient client;
-        private volatile NetworkStream stream;
+        private TcpClient client;
         
-        private List<kOSProcessor> availableCPUs;
-        private DateTime lastMenuQueryTime;
+        /// <summary>
+        /// The raw socket stream used to talk directly to the client across the network.
+        /// It is bidirectional - handling both the input from and output to the client.
+        /// </summary>
+        private NetworkStream rawStream;
+        
+        /// <summary>
+        /// The queue that other parts of KOS can use to read characters from the telnet client.
+        /// </summary>
+        private volatile Queue<char> inQueue;
 
-        private kOSProcessor connectedCPU = null; // when not connected, it will be on the local menu.
+        /// <summary>
+        /// The queue that other parts of kOS can use to write characters to the telent client.
+        /// </summary>
+        private volatile Queue<char> outQueue;
+
+        public kOSProcessor ConnectedProcessor { get; private set; }
         
-        private volatile byte[] rawReadBuffer = new byte[128]; // use small chunks
-        private string localMenuBuffer = "";
+        private byte[] rawReadBuffer = new byte[128]; // use small chunks
+        private byte[] rawWriteBuffer = new byte[128]; // use small chunks
         
         private Thread inThread;
+        private Thread outThread;
+        
+        private TelnetWelcomeMenu welcomeMenu;
+
         // ReSharper enable RedundantDefaultFieldInitializer
         // ReSharper enable SuggestUseVarKeywordEvident
 
@@ -83,36 +101,107 @@ namespace kOS.UserIO
         private const byte RFC1184_TRAPSIG  = 2;
         private const byte RFC1184_MODE_ACK = 4;
         private const byte RFC1184_SOFT_TAB = 8;
-        private const byte RFC1184_LIT_ECHO = 16;  
+        private const byte RFC1184_LIT_ECHO = 16;
+        
         
         public TelnetSingletonServer(TcpClient client)
         {
             this.client = client;
-            stream = client.GetStream();
+            rawStream = client.GetStream();
             inThread = new Thread(DoInThread);
-            
+            outThread = new Thread(DoOutThread);
+            outQueue = new Queue<char>();
+            inQueue = new Queue<char>();
         }
         
-        public void SendText(string str)
+        public void ConnectToProcessor(kOSProcessor processor)
+        {
+            ConnectedProcessor = processor;
+            // TODO: Write the part of the mod that listens to this telnet inside termwindow, and at this point
+            // tell it to connect to this telnet server.
+        }
+
+        /// <summary>
+        /// Get the next available char from the client.
+        /// Can throw exception if there is no such char.  Check ahead of time to see if
+        /// there's at least one character available using InputWaiting().
+        /// </summary>
+        /// <returns>one character read</returns>
+        public char ReadChar()
+        {
+            return inQueue.Dequeue();
+        }
+        
+        /// <summary>
+        /// Get a string of all available charactesr from the client.
+        /// If no such chars are available it will not throw an exception.  Instead it just returns a zero length string.
+        /// </summary>
+        /// <returns>All currently available input characters returned in one string.</returns>
+        public string ReadAll()
+        {
+            if (inQueue.Count == 0)
+                return String.Empty;
+            StringBuilder sb = new StringBuilder();
+            while (inQueue.Count > 0)
+                sb.Append(inQueue.Dequeue());
+            return sb.ToString();
+        }
+        
+        /// <summary>
+        /// Determine if the input queue has pending chars to read.  If it isn't, then attempts to call ReadOneChar will throw an exception.
+        /// </summary>true if input is currently Queued</returns>
+        public bool InputWaiting()
+        {
+            return inQueue.Count > 0;
+        }
+        
+        /// <summary>
+        /// Write one character out to the telnet client.
+        /// <param name="ch">character to write</param>
+        /// </summary>
+        public void Write(char ch)
+        {
+            rawStream.Write(Encoding.UTF8.GetBytes(new String(ch,1)),0,1);
+        }
+
+        /// <summary>
+        /// Write a string out to the telnet client.
+        /// <param name="str">string to write</param>
+        /// </summary>
+        public void Write(string str)
+        {
+            byte[] buf = Encoding.UTF8.GetBytes(str);
+            rawStream.Write(buf,0,buf.Length);
+        }
+        
+        /// <summary>
+        /// Bypasses the Queues and just sends text directly to the socket stream.
+        /// </summary>
+        /// <param name="str"></param>
+        private void SendTextRaw(string str)
         {
             byte[] outBuff = System.Text.Encoding.UTF8.GetBytes(str);
-            stream.Write(outBuff, 0, outBuff.Length);
+            rawStream.Write(outBuff, 0, outBuff.Length);
         }
         
         public void StopListening()
         {
             inThread.Abort();
             inThread = null; // dispose old thread.
-            stream.Close();
+            outThread.Abort();
+            outThread = null; // dispose old thread.
+            
+            rawStream.Close();
         }
 
         public void StartListening()
         {
+            SendTextRaw("Connected to the kOS Terminal Server.\r\n");
+            
             inThread.Start();
-            SendText("Connected to kOS Telnet Server.\r\n");
+            outThread.Start();
             
-            LineAtATime(false);
-            
+            LineAtATime(false);            
             // The proper protocol demands that we pay attention to whether or not the client telnet session actually knows how to
             // do those requested settings, and negotiate back to it.  But nobody makes telnet clients anymore that are that bad
             // that they can't do these things so I'll be lazy and just assume they worked without paying attention to the responses sent back.
@@ -123,64 +212,19 @@ namespace kOS.UserIO
             if (buffered)
             {
                 // Send some telnet protocol stuff telling the other side how I'd like it to behave:
-                stream.Write( new byte[] {RFC854_IAC, RFC854_DO, RFC857_ECHO},0, 3); // don't local-echo.
-                stream.Write( new byte[] {RFC854_IAC, RFC854_DONT, RFC858_SUPPRESS_GOAHEAD}, 0, 3); // send one char at a time without buffering lines.
+                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DO, RFC857_ECHO},0, 3); // don't local-echo.
+                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DONT, RFC858_SUPPRESS_GOAHEAD}, 0, 3); // send one char at a time without buffering lines.
             }
             else
             {
                 // Send some telnet protocol stuff telling the other side how I'd like it to behave:
-                stream.Write( new byte[] {RFC854_IAC, RFC854_DONT, RFC857_ECHO},0, 3); // don't local-echo.
-                stream.Write( new byte[] {RFC854_IAC, RFC854_DO, RFC858_SUPPRESS_GOAHEAD}, 0, 3); // send one char at a time without buffering lines.
+                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DONT, RFC857_ECHO},0, 3); // don't local-echo.
+                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DO, RFC858_SUPPRESS_GOAHEAD}, 0, 3); // send one char at a time without buffering lines.
             }
         }
         
-        private bool CPUListChanged()
-        {
-            List<kOSProcessor> newList = kOSProcessor.AllInstances();
-            bool itChanged = false;
 
-            if (newList.Count != availableCPUs.Count)
-                itChanged = true;
-            else
-                for( int i = 0; i < newList.Count ; ++i)
-                    if (newList[i] != availableCPUs[i])
-                        itChanged = true;
 
-            availableCPUs = newList;
-
-            return itChanged;
-        }
-
-        private void PrintCPUMenu()
-        {
-            SendText("______________________________\r\n");
-            SendText("Available CPUS for Connection:\r\n");
-            
-            int userPickNum = 1; 
-            bool atLeastOne = false;
-            foreach (kOSProcessor kModule in availableCPUs)
-            {
-                atLeastOne = true;
-                Part thisPart = kModule.part;
-                KOSNameTag partTag = thisPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
-                string partLabel = String.Format("{0}({1})",
-                                             thisPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
-                                             ((partTag == null) ? "" : partTag.nameTag)
-                                            );
-                Vessel vessel = (thisPart == null) ? null/*can this even happen?*/ : thisPart.vessel;
-                string vesselLabel = (vessel == null) ? "<no vessel>"/*can this even happen?*/ : vessel.GetName();
-                
-                SendText(String.Format("  [{0}] Vessel({1}), CPU({2})\r\n",userPickNum, vesselLabel, partLabel));
-                ++userPickNum;
-            }
-            if (atLeastOne)
-                SendText("Type a selection number and press return/enter.\r\n" +
-                         "Or enter [Q] to quit.\r\n" +
-                         "> ");
-            else
-                SendText("<NONE>\r\n");
-        }
-        
         private void DoInThread()
         {
             // All threads in a KSP mod must be careful NOT to access any KSP or Unity methods
@@ -196,63 +240,62 @@ namespace kOS.UserIO
                     break;
                 }
                 
-                if (connectedCPU == null)
+                if (welcomeMenu == null)
                 {
-                    DoMenu();
+                    if (ConnectedProcessor == null)
+                        SpawnWelcomeMenu();
                 }
-                else
+                else if (ConnectedProcessor != null) // welcome menu is attached but we now have a processor picked, so detach it.
                 {
-                    int numRead = stream.Read(rawReadBuffer, 0, rawReadBuffer.Length); // This is blocking, so this thread will be idle when client isn't typing.
-                    string cleanedText = TelnetProtocolScrape(rawReadBuffer, numRead);
-                    // TODO - make this better - right now I'm ignoring the inBuffer and just echoing this out
-                    // to the out buffer to print it back to the user for a test.  In future this should attach to the CPU:
-                    SendText("["+cleanedText+"]");
-                }                
+                    welcomeMenu.Quit();
+                    welcomeMenu = null ; // let it get garbage collected.
+                }
+                
+                int numRead = rawStream.Read(rawReadBuffer, 0, rawReadBuffer.Length); // This is blocking, so this thread will be idle when client isn't typing.
+                if (numRead > 0 )
+                {
+                    string sendOut = TelnetProtocolScrape(rawReadBuffer, numRead);
+                    foreach (char ch in sendOut)
+                    {
+                        inQueue.Enqueue(ch);
+                    }
+                }
             }
         }
         
-        private void DoMenu()
+        private void DoOutThread()
         {
-                    
-            if (System.DateTime.Now > lastMenuQueryTime.AddMilliseconds(500))
-            {
-                lastMenuQueryTime = System.DateTime.Now;
-                if( CPUListChanged() )
-                    PrintCPUMenu();
-            }
-            int numRead = stream.Read(rawReadBuffer, 0, rawReadBuffer.Length); // This is blocking, so this thread will be idle when client isn't typing.
-            string cleanedText = TelnetProtocolScrape(rawReadBuffer, numRead);
-            SendText(cleanedText);
-            localMenuBuffer = localMenuBuffer + cleanedText;
-            int firstEOLN = localMenuBuffer.IndexOfAny(new char[] {'\r','\n'});
+            // All threads in a KSP mod must be careful NOT to access any KSP or Unity methods
+            // from inside their execution, because KSP and Unity are not threadsafe
 
-            // end of line hasn't been pressed
-            if (firstEOLN < 0)
-                return;
-
-            if(localMenuBuffer.Substring(0,1).Equals("Q",StringComparison.CurrentCultureIgnoreCase))
+            while (true)
             {
-                StopListening();
-                stream.Close();
-                localMenuBuffer = "";
-                return;
+                // Detect if the client closed from its end:
+                if (!client.Connected)
+                {
+                    outThread.Abort();
+                    StopListening();
+                    break;
+                }
+                
+                StringBuilder sb = new StringBuilder();
+                while (outQueue.Count > 0)
+                    sb.Append(outQueue.Dequeue());
+                if (sb.Length > 0)
+                {
+                    SendTextRaw(sb.ToString());
+                }
             }
-        
-            int endOfNumbers = cleanedText.LastIndexOfAny(new char[] {'0','1','2','3','4','5','6','7','8','9'});
-            int pick;
-            if( int.TryParse(localMenuBuffer.Substring(0,endOfNumbers+1),out pick) )
-            {
-                SendText("Connecting...");
-                connectedCPU = availableCPUs[pick-1];
-            }
-            else
-            {
-                SendText("Garbled answer.  Try Again.\r\n");
-                availableCPUs = new List<kOSProcessor>(); // resetting the list forces it to recalc and reprint the menu next time.
-            }
-            localMenuBuffer = "";
         }
         
+        private void SpawnWelcomeMenu()
+        {
+            var gObj = new GameObject( "TelnetWelcomeMenu_" + this.GetInstanceID(), typeof(TelnetWelcomeMenu) );
+            DontDestroyOnLoad(gObj);
+            welcomeMenu = (TelnetWelcomeMenu)gObj.GetComponent(typeof(TelnetWelcomeMenu));
+            welcomeMenu.Setup(this);
+        }
+
         private string TelnetProtocolScrape(byte[] inRawBuff, int rawLength)
         {
             // At max the cooked version will be the same size as the raw.  It might be a little less:
@@ -284,8 +327,8 @@ namespace kOS.UserIO
                 }
             }
             
-            // Convert the cooked buffer into a string to passing back:
-            return System.Text.Encoding.UTF8.GetString(inCookedBuff,0,cookedIndex);
+            // Convert the cooked buffer into a shorter buff to pass back:
+            return Encoding.UTF8.GetString(inCookedBuff, 0, cookedIndex);
         }
         
         private int TelnetConsumeDo( byte[] remainingBuff, int index)
@@ -295,13 +338,15 @@ namespace kOS.UserIO
             switch (option)
             {
                 // If other side wants me to echo, agree
-                case RFC857_ECHO:  stream.Write( new byte[] {RFC854_IAC, RFC854_WILL, RFC857_ECHO}, 0, 3);
+                case RFC857_ECHO:  rawStream.Write( new byte[] {RFC854_IAC, RFC854_WILL, RFC857_ECHO}, 0, 3);
                     break;
                 // If other side wants me to go char-at-a-atime, agree
                 case RFC858_SUPPRESS_GOAHEAD:
-                    stream.Write( new byte[] {RFC854_IAC, RFC854_WILL, RFC858_SUPPRESS_GOAHEAD}, 0, 3);
+                    rawStream.Write( new byte[] {RFC854_IAC, RFC854_WILL, RFC858_SUPPRESS_GOAHEAD}, 0, 3);
                     break;
-                default: break;
+                default:
+                    offset += TelnetConsumeOther(RFC854_DO, remainingBuff, 0);
+                    break;
             }
 
             // Everything below here is to help debug:

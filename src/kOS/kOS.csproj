@@ -131,6 +131,7 @@
     <Compile Include="Suffixed\WaypointValue.cs" />
     <Compile Include="UserIO\TelnetMainServer.cs" />
     <Compile Include="UserIO\TelnetSingletonServer.cs" />
+    <Compile Include="UserIO\TelnetWelcomeMenu.cs" />
     <Compile Include="Utilities\BetaShim.cs" />
     <Compile Include="Utilities\PartUtilities.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />
