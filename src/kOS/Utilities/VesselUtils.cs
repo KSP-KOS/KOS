@@ -47,7 +47,7 @@ namespace kOS.Utilities
             total = 0;
             PartResourceDefinition resourceDefinition =
                 PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(
-                    rd => rd.name.Equals(resourceName, StringComparison.OrdinalIgnoreCase));
+                    rd => rd.name.Equals(resourceName, StringComparison.CurrentCultureIgnoreCase));
             // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
             if (resourceDefinition != null)
                 resourceIsFound = true;
@@ -73,7 +73,7 @@ namespace kOS.Utilities
             switch (partType.ToUpper())
             {
                 case "RESOURCES":
-                    list = AggregateResourceValue.PartsToList(partList);
+                    list = AggregateResourceValue.PartsToList(partList, sharedObj);
                     break;
 
                 case "PARTS":
@@ -328,6 +328,16 @@ namespace kOS.Utilities
             return vessel.parts.Aggregate<Part, double>(0,
                                                         (current, p) =>
                                                         current + (p.mass + p.GetResourceMass()) * p.maximum_drag);
+        }
+
+        public static float GetDryMass(this Vessel vessel)
+        {
+            return vessel.parts.Sum(part => part.GetDryMass());
+        }
+
+        public static float GetWetMass(this Vessel vessel)
+        {
+            return vessel.parts.Sum(part => part.GetWetMass());
         }
 
         private static double RealMaxAtmosphereAltitude(CelestialBody body)

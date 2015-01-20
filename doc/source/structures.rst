@@ -12,6 +12,7 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :struct:`Vector`
     * :struct:`Direction`
     * :struct:`GeoCoordinates`
+* :struct:`Waypoint`
 * :ref:`Orbits <orbits>`
     * :struct:`Orbit`
     * :struct:`Orbitable`
@@ -24,8 +25,9 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :struct:`Control`
     * :struct:`ManeuverNode`
     * :struct:`Engine`
-    * :struct:`Resource`
+    * :struct:`AggregateResource`
     * :struct:`DockingPort`
+    * :struct:`Gimbal`
     * :struct:`Part`
     * :struct:`PartModule`
     * :struct:`Sensor`
@@ -45,4 +47,5 @@ A general discussion of structures :ref:`can be found here <language structures>
     Orbits           <structures/orbits>
     Celestial Bodies <structures/celestial_bodies>
     Vessels & Parts  <structures/vessels>
+    Waypoints        <structures/waypoint>
     Miscellaneous    <structures/misc>

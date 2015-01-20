@@ -2,3 +2,4 @@ bin/
 obj/
 *.suo
 packages/
+/src/kOS.sln.ide

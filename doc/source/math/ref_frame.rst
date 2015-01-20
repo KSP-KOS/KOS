@@ -44,7 +44,7 @@ Origin Position
 
 The origin position of the :math:`(x,y,z)` coordinate grid in **KSP** is also a bit messy. It's usually *near* but not exactly *on* the current ship. **kOS** performs some conversions for you to make this a bit simpler and keep everything consistent.
 
-Regardless of where the origin of the underlying **KSP** system is, in **kOS**, whenever a POSITION is reported, it will always be reported in a frame of reference where the origin is located at the :ref:`CPU Vessel <cpu_vessel>`.
+Regardless of where the origin of the underlying **KSP** system is, in **kOS**, whenever a POSITION is reported, it will always be reported in a frame of reference where the origin is located at the :ref:`CPU Vessel <cpu vessel>`.
 
 However, for the sake of VELOCITY, the origin point of all vectors is usually not SHIP, but rather it's the SOI body's center. This is because if the origin point was the SHIP, then the ship's velocity would always be zero in that frame of reference, and that would not be useful.
 

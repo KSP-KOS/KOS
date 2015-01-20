@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using kOS.Binding;
-using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
+using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using kOS.Module;
 using System.Collections.Generic;
@@ -42,6 +44,10 @@ namespace kOS.Suffixed
         /// <returns>The position as a user-readable Vector in Shared.Vessel-origin raw rotation coordinates.</returns>
         override public Vector GetPositionAtUT(TimeSpan timeStamp)
         {
+            string blockingTech;
+            if (! Career.CanMakeNodes(out blockingTech))
+                throw new KOSLowTechException("use POSITIONAT on a vessel", blockingTech);
+
             double desiredUT = timeStamp.ToUnixStyleTime();
 
             Orbit patch = GetOrbitAtUT( desiredUT );
@@ -76,6 +82,10 @@ namespace kOS.Suffixed
         /// <returns>The orbit/surface velocity pair as a user-readable Vector in raw rotation coordinates.</returns>
         override public OrbitableVelocity GetVelocitiesAtUT(TimeSpan timeStamp)
         {
+            string blockingTech;
+            if (! Career.CanMakeNodes(out blockingTech))
+                throw new KOSLowTechException("use VELOCITYAT on a vessel", blockingTech);
+
             double desiredUT = timeStamp.ToUnixStyleTime();
 
             Orbit patch = GetOrbitAtUT( desiredUT );
@@ -400,66 +410,57 @@ namespace kOS.Suffixed
             AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue,string>(GetPartsTagged));
             AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
             AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
+
+            AddSuffix("CONTROL", new Suffix<FlightControl>(() => FlightControlManager.GetControllerByVessel(Vessel)));
+            AddSuffix("BEARING", new Suffix<float>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));
+            AddSuffix("HEADING", new Suffix<float>(() => VesselUtils.GetTargetHeading(CurrentVessel, Vessel)));
+            AddSuffix("AVAILABLETHRUST", new Suffix<double>(() => VesselUtils.GetAvailableThrust(Vessel)));
+            AddSuffix("MAXTHRUST", new Suffix<double>(() => VesselUtils.GetMaxThrust(Vessel)));
+            AddSuffix("FACING", new Suffix<Direction>(() => VesselUtils.GetFacing(Vessel)));
+            AddSuffix("ANGULARMOMENTUM", new Suffix<Vector>(() => new Vector(Vessel.angularMomentum)));
+            AddSuffix("ANGULARVEL", new Suffix<Vector>(() => new Vector(Vessel.angularVelocity)));
+            AddSuffix("MASS", new Suffix<float>(() => Vessel.GetTotalMass()));
+            AddSuffix("VERTICALSPEED", new Suffix<double>(() => Vessel.verticalSpeed));
+            AddSuffix("SURFACESPEED", new Suffix<double>(() => Vessel.horizontalSrfSpeed));
+            AddSuffix("AIRSPEED", new Suffix<double>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude,"the velocity of the vessel relative to the air"));
+            AddSuffix(new[] {"SHIPNAME", "NAME"}, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
+            AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
+            AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
+            AddSuffix("TERMVELOCITY", new Suffix<double>(() => VesselUtils.GetTerminalVelocity(Vessel)));
+            AddSuffix("LOADED", new Suffix<bool>(() => Vessel.loaded));
+            AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
+            AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
+            AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass, "The Ship's mass when full"));
+            AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
+
+            //// Although there is an implementation of lat/long/alt in Orbitible,
+            //// it's better to use the methods for vessels that are faster if they're
+            //// available:
+            AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLattitude(Vessel)));
+            AddSuffix("LONGITUDE", new Suffix<double>(() => VesselUtils.GetVesselLongitude(Vessel)));
+            AddSuffix("ALTITUDE", new Suffix<double>(() => Vessel.altitude));
        }
+
+
+        private void RetypeVessel(string value)
+        {
+            Vessel.vesselType = value.ToEnum<VesselType>();
+        }
+
+        private void RenameVessel(string value)
+        {
+            if (Vessel.IsValidVesselName(value))
+            {
+                Vessel.vesselName = value;
+            }
+        }
 
         public override object GetSuffix(string suffixName)
         {
-            switch (suffixName)
-            {
-                // TODO: These need to be moved into InitializeSuffixes() at some point:
-
-                case "CONTROL":
-                    return FlightControlManager.GetControllerByVessel(Vessel);
-                case "BEARING":
-                    return VesselUtils.GetTargetBearing(CurrentVessel, Vessel);
-                case "HEADING":
-                    return VesselUtils.GetTargetHeading(CurrentVessel, Vessel);
-                case "AVAILABLETHRUST":
-                    return VesselUtils.GetAvailableThrust(Vessel);
-                case "MAXTHRUST":
-                    return VesselUtils.GetMaxThrust(Vessel);
-                case "FACING":
-                    return VesselUtils.GetFacing(Vessel);
-                case "ANGULARMOMENTUM":
-                    return new Vector(Vessel.angularMomentum);
-                case "ANGULARVEL":
-                    return new Vector(Vessel.angularVelocity);
-                case "MASS":
-                    return Vessel.GetTotalMass();
-                case "VERTICALSPEED":
-                    return Vessel.verticalSpeed;
-                case "SURFACESPEED":
-                    return Vessel.horizontalSrfSpeed;
-                case "AIRSPEED":
-                    return
-                        (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass()))
-                            .magnitude; //the velocity of the vessel relative to the air);
-                //DEPRICATED VESSELNAME
-                case "VESSELNAME":
-                    throw new KOSException("VESSELNAME is DEPRICATED, use SHIPNAME.");
-                case "SHIPNAME":
-                    return Vessel.vesselName;
-
-                // Although there is an implementation of lat/long/alt in Orbitible,
-                // it's better to use the methods for vessels that are faster if they're
-                // available:
-                case "LATITUDE":
-                    return VesselUtils.GetVesselLattitude(Vessel);
-                case "LONGITUDE":
-                    return VesselUtils.GetVesselLongitude(Vessel);
-                case "ALTITUDE":
-                    return Vessel.altitude;
-
-                case "SENSORS":
-                    return new VesselSensors(Vessel);
-                case "TERMVELOCITY":
-                    return VesselUtils.GetTerminalVelocity(Vessel);
-                case "LOADED":
-                    return Vessel.loaded;
-                case "ROOTPART":
-                    return PartValueFactory.Construct(Vessel.rootPart,Shared);
-            }
-
+            // Most suffixes are handled by the newer AddSuffix system, except for the
+            // resource levels, which have to use this older technique as a fallback because
+            // the AddSuffix system doesn't support this type of late-binding string matching:
+            
             // Is this a resource?
             double dblValue;
             if (VesselUtils.TryGetResource(Vessel, suffixName, out dblValue))

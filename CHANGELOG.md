@@ -1,6 +1,61 @@
 kOS Mod Changelog
 =================
 
+# v0.15.6
+
+### BREAKING
+* PART:UID is now a string. This will only break you if you were doing math on UIDs?
+* ELEMENT:PARTCOUNT was poorly named and duplicated by ELEMENT:PARTS:LENGTH so it was removed.
+
+### New Features
+* (AGX) Action Groups Extended Support! Thanks @SirDiazo
+    * Getting or setting groups 11-250 should behave the same as the stock groups if you have AGX installed.
+    * Groundwork is laid for getting parts and modules by the new action groups.	
+* Gimbals are now a well known module. providing read access to its state
+* Added PART:GETMODULEBYINDEX(int). This is most useful when you have a part with the same module twice. Thanks @jwvanderbeck
+* More documentation work. http://ksp-kos.github.io/KOS_DOC/
+
+### Bug Fixes
+* Fixes RemoteTech Integration
+* Structures can now be correctly ==, <> and concatenated with + 
+* STAGE:RESOURCE[?]:CAPACITY is now spell correctly :P
+
+# v0.15.5
+The KSP 0.90 compatibility release.
+(The full thematic following of KSP 0.90's new way of
+thinking will come in a future version. This is just
+to make sure everything works.)
+
+###BREAKING CHANGES
+* Now respects the limitations of [0.90 career mode upgrades](http://ksp-kos.github.io/KOS/general/career_limits.html), which may make a few features not work anymore in career mode until you get further progressed along in your building upgrades.
+
+###New Stuff
+* Thanks to a new dev team contributer Johann Goetz (@theodoregoetz on github), we have a new, much better and cleaner looking [documentation site](http://ksp-kos.github.io/KOS_DOC/)
+* Better flight input handling to detect the pilot controls and keep them isolated.
+* "plays nice" with other autopilots a bit better, using KSP 0.90's new autopiloting hooks.
+* Ability to read [more data about a ship resource](TODO - Are these in the docs?  Put URL here if so.) TODO:  i.e. SingleResourceValue:FLOWMODE, for example - see PR #452)
+* New [suffixes to handle directions better](http://ksp-kos.github.io/KOS/math/direction.html) as mentioned in [long detail in this video](https://www.youtube.com/watch?v=7byYiZZBBVc)
+* Separate Dry Mass, Wet Mass, and Current Mass readings for parts and for the vessel as a whole (TODO: Link here, but the public gh-pages hasn't be regenned yet so I don't know the link yet)
+* Added new [WAYPOINT object](http://ksp-kos.github.io/KOS/structures/waypoint.html) to help with locations of some contracts.
+* Added new :POSITION and :ALTITUDEPOSITION suffixes to [Geocoordinates](http://ksp-kos.github.io/KOS/math/geocoordinates.html) to obtain 3D vectors of their positions in ship-raw coordinate space.
+
+* ADDED muliple new ways to deal with resources.
+    * STAGE:RESOURCES, SHIP:RESOURCES and TARGET:RESOURCES will let you get a list of the resources for the craft, the difference being that SHIP: and TARGET: includes all resources and STAGE: includes only the resoures that are for "this stage". All three of these will let you get a list of :PARTS that can contain that resource.
+    * Part resources now gives you access to the resource's tweakable :ENABLE and :TOGGLEABLE can let you remove add a resource to the normal resource flow.
+
+###Bug Fixes
+* Better handling of range checking and loading the boot file when remotetech is installed (thanks to hvacengi for this contribution)
+* Boot file overwrite fix (thanks to pakrym)
+* (For developers) fixed compile error on UNIX platforms that was due to filename case-sensitivity differences.
+* LOG command to the Archive now appends to the file properly instead of rewriting the entire contents each time just to tack on one line.  It is now possible to read its output from outside KSP using a tool like the UNIX "tail -f" program.
+* Better calculations of stage resource values, using SQUAD'S provided API for it instead of trying to walk the tree ourselves (which broke in 0.90).
+* Fixed lonstanding [bug with geocoordinates:TERRAINHEIGHT](https://github.com/KSP-KOS/KOS/issues/478)
+
+###Small maintenence issues
+* Bundling a newer version of ModuleManager
+* Better use of the "skin" system for the app panel.  Should see no obvious effect on the surface.
+
+
 # v0.15.4
 ###BREAKING CHANGES
 * Issue #431: SHIP:ANGULARMOMENTUM and SHIP:ANGULARVEL have been changed from directions to vectors to me more consistant with their nature

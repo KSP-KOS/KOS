@@ -1,15 +1,14 @@
-﻿using System.Linq;
-using kOS.Safe.Encapsulation;
-using kOS.Safe.Exceptions;
-using kOS.Safe.Encapsulation.Suffixes;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
+using kOS.Suffixed.Part;
 using UnityEngine;
 
-using System;
-
-
-namespace kOS.Suffixed.Part
+namespace kOS.Suffixed.PartModuleField
 {
     /// <summary>
     /// An abstraction of a part module attached to a PartValue, that allows
@@ -26,6 +25,7 @@ namespace kOS.Suffixed.Part
         /// Create a kOS-user variable wrapper around a KSP PartModule attached to a part.
         /// </summary>
         /// <param name="partModule">the KSP PartModule to make a wrapper for</param>
+        /// <param name="shared">The omnipresent shared data</param>
         public PartModuleFields(PartModule partModule, SharedObjects shared)
         {
             this.partModule = partModule;
@@ -340,17 +340,17 @@ namespace kOS.Suffixed.Part
             ListValue fields  = AllFields(FORMATTER);
             ListValue events  = AllEvents(FORMATTER);
             ListValue actions = AllActions(FORMATTER);
-            for (int i = 0; i < fields.Count ; ++i)
+            foreach (object t in fields)
             {
-                all.Add(fields.GetIndex(i));
+                all.Add(t);
             }
-            for (int i = 0; i < events.Count ; ++i)
+            foreach (object t in events)
             {
-                all.Add(events.GetIndex(i));
+                all.Add(t);
             }
-            for (int i = 0; i < actions.Count ; ++i)
+            foreach (object t in actions)
             {
-                all.Add(actions.GetIndex(i));
+                all.Add(t);
             }
             return all;
         }
@@ -444,6 +444,8 @@ namespace kOS.Suffixed.Part
         /// Trigger whatever action the PartModule has attached to this Action, given the kOS name for the action.
         /// Warning - it probably triggers the entire action group that is attached to this action if there is one,
         /// not just the action on this one part.
+        /// <br/><br/>
+        /// NOTE: After kOS 0.15.5, this ability is limited by career progress of the VAB/SPH.
         /// </summary>
         /// <param name="suffixName"></param>
         /// <param name="param">true = activate, false = de-activate</param>
@@ -452,6 +454,9 @@ namespace kOS.Suffixed.Part
             BaseAction act = GetAction(suffixName);
             if (act==null)
                 throw new KOSLookupFailException( "ACTION", suffixName, this);
+            string careerReason;
+            if (! Career.CanDoActions(out careerReason))
+                throw new KOSLowTechException("use :DOACTION", careerReason);
             act.Invoke( new KSPActionParam( act.actionGroup, (param ? KSPActionType.Activate : KSPActionType.Deactivate) ));
         }
     }

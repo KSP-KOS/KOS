@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Linq;
+using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("NAME", new Suffix<string>(() => Part.name));
             AddSuffix("TITLE", new Suffix<string>(() => Part.partInfo.title));
             AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
-            AddSuffix("UID", new Suffix<uint>(() => Part.uid()));
+            AddSuffix("UID", new Suffix<string>(() => Part.uid().ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction( Part.transform.rotation) ));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector( Part.transform.position - shared.Vessel.findWorldCenterOfMass() )));
             AddSuffix("TAG", new NoArgsSuffix<string>(GetTagName));
@@ -40,12 +41,18 @@ namespace kOS.Suffixed.Part
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>(GetModule));
-            AddSuffix(new [] {"MODULES","ALLMODULES"}, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
+            AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, int>(GetModuleIndex));
+            AddSuffix(new[] { "MODULES", "ALLMODULES" }, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
             AddSuffix("PARENT", new Suffix<PartValue>(() => PartValueFactory.Construct(Part.parent,shared), "The parent part of this part"));
             AddSuffix("HASPARENT", new Suffix<bool>(() => Part.parent != null, "Tells you if this part has a parent, is used to avoid null exception from PARENT"));
-            AddSuffix("CHILDREN", new Suffix<ListValue>(() => PartValueFactory.Construct(Part.children, shared), "A LIST() of the children parts of this part"));
+            AddSuffix("CHILDREN", new Suffix<ListValue<PartValue>>(() => PartValueFactory.ConstructGeneric(Part.children, shared), "A LIST() of the children parts of this part"));
+            AddSuffix("DRYMASS", new Suffix<float>(Part.GetDryMass, "The Part's mass when empty"));
+            AddSuffix("MASS", new Suffix<float>(Part.CalculateCurrentMass, "The Part's current mass"));
+            AddSuffix("WETMASS", new Suffix<float>(Part.GetWetMass, "The Part's mass when full"));
+            AddSuffix("HASPHYSICS", new Suffix<bool>(Part.HasPhysics, "Is this a strange 'massless' part"));
         }
-        
+
+
         private PartModuleFields GetModule(string modName)
         {
             foreach (PartModule mod in Part.Modules)
@@ -58,6 +65,15 @@ namespace kOS.Suffixed.Part
                 }
             }
             throw new KOSLookupFailException( "module", modName.ToUpper(), this );
+        }
+
+        private PartModuleFields GetModuleIndex(int moduleIndex)
+        {
+            if (moduleIndex < Part.Modules.Count)
+            {
+                return PartModuleFieldsFactory.Construct(Part.Modules.GetModule(moduleIndex), shared);
+            }
+            throw new KOSLookupFailException("module", String.Format("MODULEINDEX[{0}]", moduleIndex), this);
         }
         
         public string GetTagName() // public because I picture this being a useful API method later

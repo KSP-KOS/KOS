@@ -28,6 +28,7 @@ Creation
  :ref:`PROGRADE, etc. <Direction from suffix>`   From SHIP, TARGET or BODY
 =============================================== ===================================
 
+.. _rotation:
 .. function:: R(pitch,yaw,roll)
 
     A :struct:`Direction` can be created out of a Euler Rotation, indicated with the :func:`R()` function, as shown below where the ``pitch``, ``yaw`` and ``roll`` values are in degrees::
@@ -40,7 +41,7 @@ Creation
 
         SET myDir TO Q( x, y, z, rot ).
 
-
+.. _heading:
 .. function:: HEADING(dir,pitch)
 
     A :struct:`Direction` can be created out of a :func:`HEADING()` function. The first parameter is the compass heading, and the second parameter is the pitch above the horizon::
@@ -92,7 +93,7 @@ Whenever a :struct:`Direction` is printed, it always comes out showing its Euler
 
     // Steer the vessel in the direction
     // suggested by direction X.
-    LOCK STEERING TO X.                 
+    LOCK STEERING TO X.
 
     // Create a rotation facing northeast,
     // 10 degrees above horizon
@@ -100,10 +101,10 @@ Whenever a :struct:`Direction` is printed, it always comes out showing its Euler
 
     // Steer the vessel in the direction
     // suggested by direction X.
-    LOCK STEERING TO Y.                 
+    LOCK STEERING TO Y.
 
     // Set by a rotation in degrees
-    SET Direction TO R(0,90,0).        
+    SET Direction TO R(0,90,0).
 
 Structure
 ---------
@@ -125,8 +126,8 @@ Structure
      :attr:`STARVECTOR`       :struct:`Vector`    This Direction's starboard vector (z axis after rotation).
      RIGHTVECTOR              :struct:`Vector`    Alias synonym for :attr:`STARVECTOR`
      :attr:`INVERSE`          :struct:`Direction` The inverse of this direction.
-    ================          =================== ================================
-    
+    ========================= =================== ================================
+
     The :struct:`Direction` object exists primarily to enable automated steering. You can initialize a :struct:`Direction` using a :struct:`Vector` or a ``Rotation``. :struct:`Direction` objects represent a rotation starting from an initial point in **KSP**'s coordinate system where the initial state was looking down the :math:`+z` axis, with the camera "up" being the :math:`+y` axis. So for example, a :struct:`Direction` pointing along the :math:`x` axis might be represented as ``R(0,90,0)``, meaning the initial :math:`z`-axis direction was rotated *90 degrees* around the :math:`y` axis.
 
     If you are going to manipulate directions a lot, it's important to note that the order in which the rotations occur is:
@@ -146,14 +147,14 @@ Structure
 
 
     Rotation around the :math:`x` axis.
-    
+
 .. attribute:: Direction:YAW
 
     :type: scalar (deg)
     :access: Get only
 
     Rotation around the :math:`y` axis.
-    
+
 .. attribute:: Direction:ROLL
 
     :type: scalar (deg)
@@ -161,7 +162,7 @@ Structure
 
 
     Rotation around the :math:`z` axis.
-    
+
 .. attribute:: Direction:FOREVECTOR
 
     :type: :struct:`Vector`
@@ -192,7 +193,7 @@ Structure
 Operations and Methods
 ----------------------
 
-You can use math operations on :struct:`Direction` objects as well. The next example uses a rotation of "UP" which is a system variable describing a vector directly away from the celestial body you are under the influence of::
+You can use math operations on :struct:`Direction` objects as well. The next example uses a rotation of "UP" which is a system variable describing a vector directly away from the celestial body you are under the influence of:
 
 Supported Direction Operators:
 

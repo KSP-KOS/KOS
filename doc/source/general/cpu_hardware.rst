@@ -52,7 +52,7 @@ Because the entire body of a trigger will execute all the way to the bottom on *
 
 *As of kOS version 0.14 and higher, this condition is now being checked for* and the script will be **terminated with a runtime error** if the triggers like WHEN/THEN and ON take more than :attr:`Config:IPU` instructions to execute. The sum total of all the code within your WHEN/THEN and ON code blocks MUST be designed to complete within one update tick.
 
-**This may seem harsh**. Ideally, kOS would only generate a runtime error if it thought your script was stuck in an **infinite loop**, and allow it to exceed the :attr:`Config:IPU` number of instructions if it was going to finish and just needed a little longer to to finish its work. But, because of a well known problem in computer science called **`the halting problem <http://en.wikipedia.org/wiki/Halting_problem>`__**, it's literally impossible for kOS, or any other software for that matter, to detect the difference between another program's infinite loop versus another program's loop that will end soon. kOS only knows how long your triggers have taken so far, not how long they're going to take before they're done, or even if they'll be done.
+**This may seem harsh**. Ideally, kOS would only generate a runtime error if it thought your script was stuck in an **infinite loop**, and allow it to exceed the :attr:`Config:IPU` number of instructions if it was going to finish and just needed a little longer to to finish its work. But, because of a well known problem in computer science called `the halting problem <http://en.wikipedia.org/wiki/Halting_problem>`__, it's literally impossible for kOS, or any other software for that matter, to detect the difference between another program's infinite loop versus another program's loop that will end soon. kOS only knows how long your triggers have taken so far, not how long they're going to take before they're done, or even if they'll be done.
 
 If you suspect that your trigger body would have ended if it was allowed to run a little longer, try setting your :attr:`Config:IPU` setting a bit higher and see if that makes the error go away.
 
@@ -122,7 +122,7 @@ The Fix: Wait for Time to Change
 
 If you are executing a loop like the one above in which it is absolutely vital that the next iteration of the loop must occur in a *different* **physics tick** than the previous one, so that it can take *new* measurements that are different, the solution is to use a WAIT statement that will delay until there's evidence that the physics clock has moved a tick.
 
-The most effective way to do that is to check the `TIME <../../structure/timespan/index.html>`__ and see if it's different than it was before. As long as you are still within the same *physics tick*, the TIME will not move::
+The most effective way to do that is to check the :ref:`time` and see if it's different than it was before. As long as you are still within the same *physics tick*, the TIME will not move::
 
     PRINT "Waiting until altitude is holding stable within 0.1 meters.".
 
@@ -165,5 +165,3 @@ An Even Better Solution
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 There has been talk of instituting a special command: WAIT UNTIL PHYSICS that will sleep until there has been a physics update, and it's a good idea but it hasn't been implemented yet.
-
-.. |CONFIG:IPU| replace:: :ref:`CONFIG:IPU <config:ipu>`

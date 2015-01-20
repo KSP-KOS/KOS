@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Utilities;
+using FinePrint;
 
 namespace kOS.Function
 {
@@ -289,6 +292,16 @@ namespace kOS.Function
         }
     }
     
+    [Function("career")]
+    public class FunctionCareer : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var career = new Career();
+            shared.Cpu.PushStack(career);
+        }
+    }
+    
     [Function("constant")]
     public class FunctionConstant : FunctionBase
     {
@@ -298,4 +311,56 @@ namespace kOS.Function
             shared.Cpu.PushStack(constants);
         }
     }
+    
+    [Function("allwaypoints")]
+    public class FunctionAllWaypoints : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            // ReSharper disable SuggestUseVarKeywordEvident
+            ListValue<WaypointValue> returnList = new ListValue<WaypointValue>();
+            // ReSharper ensable SuggestUseVarKeywordEvident
+
+            WaypointManager wpm = WaypointManager.Instance();
+            if (wpm == null)
+            {
+                shared.Cpu.PushStack(returnList); // When no waypoints exist, there isn't even a waypoint manager at all.
+                return;
+            }
+
+
+            List<Waypoint> points = wpm.AllWaypoints();
+
+            // If the code below gets used in more places it may be worth moving into a factory method
+            // akin to how PartValueFactory makes a ListValue<PartValue> from a List<Part>.
+            // But for now, this is the only place it's done:
+
+            foreach (Waypoint point in points)
+                returnList.Add(new WaypointValue(point, shared));
+            shared.Cpu.PushStack(returnList);
+        }
+    }
+    
+    [Function("waypoint")]
+    public class FunctionWaypoint : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string pointName = shared.Cpu.PopValue().ToString();
+
+            WaypointManager wpm = WaypointManager.Instance();
+            if (wpm == null)
+            {
+                shared.Cpu.PushStack(null); // When no waypoints exist, there isn't even a waypoint manager.
+                // I don't like returning null here without the user being able to test for that, but
+                // we don't have another way to communicate "no such waypoint".  We really need to address
+                // that problem once and for all.
+                return;
+            }
+
+            Waypoint point = wpm.AllWaypoints().FirstOrDefault(p => String.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase));
+
+            shared.Cpu.PushStack(new WaypointValue(point, shared));
+        }
+    }    
 }

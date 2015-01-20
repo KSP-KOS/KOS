@@ -48,6 +48,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
+    <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
     <Compile Include="AddOns\RemoteTech2\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechAPI.cs" />
     <Compile Include="AddOns\RemoteTech2\RemoteTechArchive.cs" />
@@ -90,13 +92,17 @@
     <Compile Include="Screen\KOSNameTagWindow.cs" />
     <Compile Include="Screen\KOSTextEditPopup.cs" />
     <Compile Include="Screen\KOSToolBarWindow.cs" />
+    <Compile Include="Suffixed\ActiveResourceValue.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
+    <Compile Include="Suffixed\Career.cs" />
     <Compile Include="Suffixed\Orbitable.cs" />
+    <Compile Include="Suffixed\PartModuleField\PartModuleFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\PartModuleFieldsFactory.cs" />
+    <Compile Include="Suffixed\PartModuleField\GimbalFields.cs" />
+    <Compile Include="Suffixed\Part\GimbalValue.cs" />
     <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
-    <Compile Include="Suffixed\Part\PartModuleFieldsFactory.cs" />
     <Compile Include="Suffixed\Part\PartValueFactory.cs" />
-    <Compile Include="Suffixed\Part\PartModuleFields.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />
     <Compile Include="Function\PrintList.cs" />
@@ -123,7 +129,9 @@
     <Compile Include="Suffixed\SingleResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
+    <Compile Include="Suffixed\WaypointValue.cs" />
     <Compile Include="Utilities\BetaShim.cs" />
+    <Compile Include="Utilities\PartUtilities.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Screen\TermWindow.cs" />
     <Compile Include="Suffixed\Timespan.cs" />
@@ -151,6 +159,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

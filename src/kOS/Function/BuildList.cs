@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Function;
+using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Utilities;
 
@@ -38,7 +40,7 @@ namespace kOS.Function
                     list = ListValue.CreateList(shared.VolumeMgr.CurrentVolume.GetFileList());
                     break;
                 case "volumes":
-                    list = ListValue.CreateList(shared.VolumeMgr.Volumes);
+                    list = ListValue.CreateList(shared.VolumeMgr.Volumes.Values.ToList());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

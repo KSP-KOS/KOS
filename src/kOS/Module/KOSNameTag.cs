@@ -1,4 +1,5 @@
 ﻿using kOS.Screen;
+using kOS.Suffixed;
 using UnityEngine;
 
 namespace kOS.Module
@@ -20,23 +21,32 @@ namespace kOS.Module
         {
             if (typingWindow != null)
                 typingWindow.Close();
-            GameObject gObj = new GameObject("nametag", typeof(KOSNameTagWindow) );
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                EditorFacility whichEditor = EditorLogic.fetch.ship.shipFacility;
+                if (!(Career.CanTagInEditor(whichEditor)))
+                {
+                    var formattedString = string.Format("The {0} requires an upgrade to assign name tags", whichEditor);
+                    ScreenMessages.PostScreenMessage(formattedString, 6, ScreenMessageStyle.UPPER_CENTER);
+                    return;
+                }
+            }
+            GameObject gObj = new GameObject("nametag", typeof(KOSNameTagWindow));
             DontDestroyOnLoad(gObj);
             typingWindow = (KOSNameTagWindow)gObj.GetComponent(typeof(KOSNameTagWindow));
-            typingWindow.Invoke(this,nameTag);
+            typingWindow.Invoke(this, nameTag);
         }
-        
+
         public void TypingDone(string newValue)
         {
             nameTag = newValue;
             TypingCancel();
         }
-        
+
         public void TypingCancel()
         {
             typingWindow.Close();
             typingWindow = null;
         }
-        
     }
 }

@@ -1,3 +1,5 @@
+.. _raw:
+
 Raw Control
 ===========
 
@@ -41,7 +43,7 @@ Raw Flight Controls Reference
 These "Raw" controls allow you the direct control of flight parameters while the current program is running.
 
 .. note::
-    The ``MAINTHROTTLE`` requires active engines and, of course, sufficient and appropriate fuel. The rotational controls ``YAW``, ``PITCH`` and ``ROW`` require active reaction wheels with sufficient energy or *RCS* to be ``ON`` with properly placed thrusters and appropriate fuel. The translational controls ``FORE``, ``STARBOARD`` and ``TOP`` require *RCS* to be ``ON`` with properly placed thrusters and appropriate fuel.
+    The ``MAINTHROTTLE`` requires active engines and, of course, sufficient and appropriate fuel. The rotational controls ``YAW``, ``PITCH`` and ``ROW`` require active reaction wheels with sufficient energy or *RCS* to be ON with properly placed thrusters and appropriate fuel. The translational controls ``FORE``, ``STARBOARD`` and ``TOP`` require *RCS* to be ON with properly placed thrusters and appropriate fuel.
 
 
 .. list-table::
@@ -51,11 +53,11 @@ These "Raw" controls allow you the direct control of flight parameters while the
     * - Suffix
       - Type, Range
       - Equivalent Key
-      
+
     * - :ref:`MAINTHROTTLE <SHIP CONTROL MAINTHROTTLE>`
       - scalar [0,1]
       - ``LEFT-CTRL``, ``LEFT-SHIFT``
-      
+
     * - :ref:`YAW <SHIP CONTROL YAW>`
       - scalar [-1,1]
       - ``D``, ``A``
@@ -66,9 +68,9 @@ These "Raw" controls allow you the direct control of flight parameters while the
       - scalar [-1,1]
       - ``Q``, ``E``
     * - :ref:`ROTATION <SHIP CONTROL ROTATION>`
-      - :ref:`Vector <vector>`
+      - :struct:`Vector`
       - ``(YAW,PITCH,ROLL)``
-      
+
     * - :ref:`YAWTRIM <SHIP CONTROL YAWTRIM>`
       - scalar [-1,1]
       - ``ALT+D``, ``ALT+A``
@@ -89,7 +91,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
       - scalar [-1,1]
       - ``I``, ``K``
     * - :ref:`TRANSLATION <SHIP CONTROL TRANSLATION>`
-      - :ref:`Vector <vector>`
+      - :struct:`Vector`
       - ``(FORE,STARBOARD,TOP)``
 
     * - :ref:`WHEELSTEER <SHIP CONTROL WHEELSTEER>`
@@ -98,7 +100,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
     * - :ref:`WHEELTHROTTLE <SHIP CONTROL WHEELTHROTTLE>`
       - scalar [-1,1]
       - ``W``, ``S``
-      
+
     * - :ref:`WHEELSTEERTRIM <SHIP CONTROL WHEELSTEERTRIM>`
       - scalar [-1,1]
       - ``ALT+A``, ``ALT+D``
@@ -139,7 +141,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL ROTATION:
 .. object:: SHIP:CONTROL:ROTATION
 
-    This is a :ref:`Vector <vector>` object containing ``(YAW, PITCH, ROLL)`` in that order.
+    This is a :struct:`Vector` object containing ``(YAW, PITCH, ROLL)`` in that order.
 
 
 
@@ -147,12 +149,12 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. object:: SHIP:CONTROL:YAWTRIM
 
     Controls the ``YAW`` of the rotational trim.
-    
+
 .. _SHIP CONTROL PITCHTRIM:
 .. object:: SHIP:CONTROL:PITCHTRIM
 
     Controls the ``PITCH`` of the rotational trim.
-    
+
 .. _SHIP CONTROL ROLLTRIM:
 .. object:: SHIP:CONTROL:ROLLTRIM
 
@@ -179,7 +181,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL TRANSLATION:
 .. object:: SHIP:CONTROL:TRANSLATION
 
-    Controls the translation as a :ref:`Vector <vector>` ``(FORE, STARBOARD, TOP)``.
+    Controls the translation as a :struct:`Vector` ``(FORE, STARBOARD, TOP)``.
 
 .. _SHIP CONTROL WHEELSTEER:
 .. object:: SHIP:CONTROL:WHEELSTEER

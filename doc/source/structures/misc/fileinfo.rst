@@ -1,4 +1,4 @@
-.. fileinfo:
+.. _fileinfo:
 
 File Information
 ================
@@ -82,6 +82,7 @@ File name and size information. You can obtain a list of values of type FileInfo
 
 
 .. _real world timestamp:
+
 Real World Timestamp
 --------------------
 

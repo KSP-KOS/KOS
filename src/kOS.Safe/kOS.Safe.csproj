@@ -65,6 +65,7 @@
     <Compile Include="Compilation\PseudoNull.cs" />
     <Compile Include="Compilation\Script.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
+    <Compile Include="Encapsulation\Enumerator.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSLowTechException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
     <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
     <Compile Include="Exceptions\KOSCompileException.cs" />
@@ -136,6 +138,7 @@
     <Compile Include="SharedObjects.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="Utilities\Debug.cs" />
+    <Compile Include="Utilities\EnumUtilities.cs" />
     <Compile Include="Utilities\Environment.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />

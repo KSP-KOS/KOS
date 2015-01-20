@@ -194,7 +194,7 @@ namespace kOS.Safe.Persistence
         /// </summary>
         /// <param name="name">filename to look for</param>
         /// <param name="ksmDefault">if true, it prefers to use the KSM filename over the KS.  The default is to prefer KS.</param>
-        /// <returns></returns>
+        /// <returns>the full fileinfo of the filename if found</returns>
         private System.IO.FileInfo FileSearch(string name, bool ksmDefault = false)
         {
             var path = ArchiveFolder + name;
@@ -230,6 +230,36 @@ namespace kOS.Safe.Persistence
                 while ((count = infile.Read(buffer, 0, buffer.Length)) != 0)
                     ms.Write(buffer, 0, count);
                 return ms.ToArray();
+            }
+        }
+        
+        public override void AppendToFile(string name, string textToAppend)
+        {
+            Debug.Logger.SuperVerbose("Archive: AppendToFile: " + name);
+            System.IO.FileInfo info = FileSearch(name);
+
+            string fullPath = info == null ? string.Format("{0}{1}", ArchiveFolder, PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true)) : info.FullName;
+
+            // Using binary writer so we can bypass the OS behavior about ASCII end-of-lines and always use \n's no matter the OS:
+            // Deliberately not catching potential I/O exceptions from this, so they will percolate upward and be seen by the user:
+            using (var outfile = new BinaryWriter(File.Open(fullPath, FileMode.Append, FileAccess.Write,FileShare.ReadWrite)))
+            {
+                byte[] binaryLine = System.Text.Encoding.UTF8.GetBytes((textToAppend+"\n").ToCharArray());
+                outfile.Write(binaryLine);
+            }
+        }
+
+        public override void AppendToFile(string name, byte[] bytesToAppend)
+        {
+            Debug.Logger.SuperVerbose("Archive: AppendToFile: " + name);
+            System.IO.FileInfo info = FileSearch(name);
+
+            string fullPath = info == null ? string.Format("{0}{1}", ArchiveFolder, PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true)) : info.FullName;
+
+            // Deliberately not catching potential I/O exceptions from this, so they will percolate upward and be seen by the user:
+            using (var outfile = new BinaryWriter(File.Open(fullPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))
+            {
+                outfile.Write(bytesToAppend);
             }
         }
     }
