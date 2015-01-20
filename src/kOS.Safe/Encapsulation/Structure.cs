@@ -127,6 +127,10 @@ namespace kOS.Safe.Encapsulation
             {
                 return Equals(other);
             }
+            if (op == "<>")
+            {
+                return !Equals(other);
+            }
             if (op == "+")
             {
                 return ToString() + other;
