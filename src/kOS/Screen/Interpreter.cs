@@ -32,6 +32,9 @@ namespace kOS.Screen
                                                      // the command is present in the history to be found and printed in the
                                                      // error message.
                 ProcessCommand(commandText);
+                int numRows = LineSubBuffer.RowCount;
+                LineSubBuffer.Wipe();
+                LineSubBuffer.SetSize(numRows,ColumnCount); // refill it to its previous size
             }
             else
             {

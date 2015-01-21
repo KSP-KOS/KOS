@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.Utilities;
+using System;
 
 namespace kOS.Safe.Screen
 {
@@ -128,7 +129,7 @@ namespace kOS.Safe.Screen
         {
             string commandText = LineBuilder.ToString();
             List<string> lines = SplitIntoLinesPreserveNewLine(commandText);
-
+                        
             if (lines.Count != LineSubBuffer.RowCount)
                 LineSubBuffer.SetSize(lines.Count, LineSubBuffer.ColumnCount);
 
@@ -159,7 +160,7 @@ namespace kOS.Safe.Screen
                 lineCursorIndex -= lines[lineIndex].Length;
                 // if the line is shorter than the width of the screen then move
                 // the cursor another position to compensate for the newline character
-                if (lines[lineIndex].Length < MAX_COLUMNS)
+                if (lines[lineIndex].Length < ColumnCount)
                     lineCursorIndex--;
                 lineIndex++;
             }
@@ -174,15 +175,15 @@ namespace kOS.Safe.Screen
         {
             // Check to see if wrapping or scrolling needs to be done
             // because the cursor went off the screen, and if so, do it:
-            if (CursorColumnShow >= MAX_COLUMNS)
+            if (CursorColumnShow >= ColumnCount)
             {
                 int tooBigColumn = CursorColumnShow;
-                cursorColumnBuffer = (tooBigColumn % MAX_COLUMNS);
-                cursorRowBuffer += (tooBigColumn / MAX_COLUMNS); // truncating integer division.
+                cursorColumnBuffer = (tooBigColumn % ColumnCount);
+                cursorRowBuffer += (tooBigColumn / ColumnCount); // truncating integer division.
             }
-            if (CursorRowShow >= MAX_ROWS)
+            if (CursorRowShow >= RowCount)
             {
-                int rowsToScroll = (CursorRowShow-MAX_ROWS) + 1;
+                int rowsToScroll = (CursorRowShow-RowCount) + 1;
                 CursorRow -= rowsToScroll;
                 ScrollVertical(rowsToScroll);
                 AddNewBufferLines(rowsToScroll);

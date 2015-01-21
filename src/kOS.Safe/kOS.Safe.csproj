@@ -87,6 +87,7 @@
     <Compile Include="Encapsulation\Suffixes\Suffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixDelegates.cs" />
     <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
+    <Compile Include="Encapsulation\TerminalStruct.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
