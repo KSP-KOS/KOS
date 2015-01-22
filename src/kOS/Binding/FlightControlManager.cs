@@ -41,6 +41,9 @@ namespace kOS.Binding
             AddNewFlightParam("steering", Shared);
             AddNewFlightParam("wheelthrottle", Shared);
             AddNewFlightParam("wheelsteering", Shared);
+
+            shared.BindingMgr.AddSetter("AUTOPILOT", value => this.SelectAutopilotMode((string)value));
+            shared.BindingMgr.AddGetter("AUTOPILOT", () => currentVessel.Autopilot.Mode.ToString().ToUpper());
         }
 
 
@@ -160,60 +163,76 @@ namespace kOS.Binding
         public void SelectAutopilotMode(string autopilotMode)
         {
             VesselAutopilot.AutopilotMode selectedMode;
-            // determine the AutopilotMode to use
-            switch (autopilotMode.ToLower())
+            // handle a null/empty value in case of an unset command or setting to empty string to clear.
+            if (string.IsNullOrEmpty(autopilotMode))
             {
-                case "maneuver":
-                    selectedMode = VesselAutopilot.AutopilotMode.Maneuver;
-                    break;
-                case "prograde":
-                    selectedMode = VesselAutopilot.AutopilotMode.Prograde;
-                    break;
-                case "retrograde":
-                    selectedMode = VesselAutopilot.AutopilotMode.Retrograde;
-                    break;
-                case "normal":
-                    selectedMode = VesselAutopilot.AutopilotMode.Normal;
-                    break;
-                case "antinormal":
-                    selectedMode = VesselAutopilot.AutopilotMode.Antinormal;
-                    break;
-                case "radialin":
-                    selectedMode = VesselAutopilot.AutopilotMode.RadialIn;
-                    break;
-                case "radialout":
-                    selectedMode = VesselAutopilot.AutopilotMode.RadialOut;
-                    break;
-                case "target":
-                    selectedMode = VesselAutopilot.AutopilotMode.Target;
-                    break;
-                case "antitarget":
-                    selectedMode = VesselAutopilot.AutopilotMode.AntiTarget;
-                    break;
-                case "stability":
-                case "stabilityassist":
-                    selectedMode = VesselAutopilot.AutopilotMode.StabilityAssist;
-                    break;
-                default:
-                    // If the mode is not recognised, thrown an exception rather than continuing or using a default setting
+                selectedMode = VesselAutopilot.AutopilotMode.StabilityAssist;
+                // set the autopilot mode if allowed
+                if (currentVessel.Autopilot.CanSetMode(selectedMode))
+                {
+                    currentVessel.Autopilot.SetMode(selectedMode);
+                    // change the autopilot indicator
+                    ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)selectedMode);
+                }
+            }
+            else
+            {
+                // determine the AutopilotMode to use
+                switch (autopilotMode.ToLower())
+                {
+                    case "maneuver":
+                        selectedMode = VesselAutopilot.AutopilotMode.Maneuver;
+                        break;
+                    case "prograde":
+                        selectedMode = VesselAutopilot.AutopilotMode.Prograde;
+                        break;
+                    case "retrograde":
+                        selectedMode = VesselAutopilot.AutopilotMode.Retrograde;
+                        break;
+                    case "normal":
+                        selectedMode = VesselAutopilot.AutopilotMode.Normal;
+                        break;
+                    case "antinormal":
+                        selectedMode = VesselAutopilot.AutopilotMode.Antinormal;
+                        break;
+                    case "radialin":
+                        selectedMode = VesselAutopilot.AutopilotMode.RadialIn;
+                        break;
+                    case "radialout":
+                        selectedMode = VesselAutopilot.AutopilotMode.RadialOut;
+                        break;
+                    case "target":
+                        selectedMode = VesselAutopilot.AutopilotMode.Target;
+                        break;
+                    case "antitarget":
+                        selectedMode = VesselAutopilot.AutopilotMode.AntiTarget;
+                        break;
+                    case "stability":
+                    case "stabilityassist":
+                        selectedMode = VesselAutopilot.AutopilotMode.StabilityAssist;
+                        break;
+                    default:
+                        // If the mode is not recognised, thrown an exception rather than continuing or using a default setting
+                        throw new kOS.Safe.Exceptions.KOSException(
+                            string.Format("kOS does not recognize the SAS mode setting of {0}", autopilotMode));
+                }
+                if (!currentVessel.Autopilot.CanSetMode(selectedMode))
+                {
+                    // throw an exception if the mode is not available
                     throw new kOS.Safe.Exceptions.KOSException(
-                        string.Format("kOS does not recognize the SAS mode setting of {0}", autopilotMode));
-            }
-            if (!currentVessel.Autopilot.CanSetMode(selectedMode))
-            {
-                throw new kOS.Safe.Exceptions.KOSException(
-                    string.Format("Cannot set autopilot value, pilot/probe does not support {0}, or there is no node/target", autopilotMode));
-            }
-            // turn on sas if it isn't already on
-            if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
-            currentVessel.Autopilot.SetMode(selectedMode);
-            currentVessel.Autopilot.Enable();
-            // change the autopilot indicator
-            ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)selectedMode);
-            // disable any kOS steering parameters when autopilot is turned on, but only if the mode is not StabilityAssist
-            if (flightParameters["steering"].Enabled && selectedMode != VesselAutopilot.AutopilotMode.StabilityAssist)
-            {
-                ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("steering", false);
+                        string.Format("Cannot set autopilot value, pilot/probe does not support {0}, or there is no node/target", autopilotMode));
+                }
+                // turn on sas if it isn't already on
+                if (!currentVessel.ActionGroups[KSPActionGroup.SAS]) currentVessel.ActionGroups.SetGroup(KSPActionGroup.SAS, true);
+                currentVessel.Autopilot.SetMode(selectedMode);
+                currentVessel.Autopilot.Enable();
+                // change the autopilot indicator
+                ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)selectedMode);
+                // disable any kOS steering parameters when autopilot is turned on, but only if the mode is not StabilityAssist
+                if (flightParameters["steering"].Enabled && selectedMode != VesselAutopilot.AutopilotMode.StabilityAssist)
+                {
+                    ((kOS.Execution.CPU)Shared.Cpu).ToggleFlyByWire("steering", false);
+                }
             }
             if (RemoteTechHook.IsAvailable(currentVessel.id))
             {
