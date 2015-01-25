@@ -153,8 +153,11 @@ namespace kOS.Utilities
             var centerOfMass = vessel.findWorldCenterOfMass();
             var rollaxis = vessel.transform.up;
             rollaxis.Normalize ();
+            var pitchaxis = vessel.GetFwdVector ();
+            pitchaxis.Normalize ();
             
-            float pitchYaw = 0.0f;
+            float pitch = 0.0f;
+            float yaw = 0.0f;
             float roll = 0.0f;
 
             foreach (Part part in vessel.parts)
@@ -164,7 +167,8 @@ namespace kOS.Utilities
                 var pod = part as CommandPod;
                 if (pod != null)
                 {
-                    pitchYaw += Math.Abs(pod.rotPower);
+                    pitch += Math.Abs(pod.rotPower);
+                    yaw += Math.Abs(pod.rotPower);
                     roll += Math.Abs(pod.rotPower);
                 }
                 /*
@@ -183,46 +187,45 @@ namespace kOS.Utilities
                     var wheel = module as ModuleReactionWheel;
                     if (wheel == null) continue;
 
-                    pitchYaw += wheel.PitchTorque;
+                    pitch += wheel.PitchTorque;
+                    yaw += wheel.YawTorque;
                     roll += wheel.RollTorque;
                 }
                 if (vessel.ActionGroups [KSPActionGroup.RCS])
                 {
-                    int numrcs = 0;
-                    float max = 0.0f;
                     foreach (PartModule module in part.Modules) {
                         var rcs = module as ModuleRCS;
                         if (rcs == null) continue;
 
                         if (rcs.rcsEnabled == true)
                         {
-                            int enoughfuel = 1;
+                            bool enoughfuel = true;
                             foreach (Propellant p in rcs.propellants)
                             {
                                 if ((int)(p.totalResourceAvailable)==0)
                                 {
-                                    enoughfuel = 0;
+                                    enoughfuel = false;
                                 }
                             }
-                            if (enoughfuel == 1)
+                            if (enoughfuel == true)
                             {
-                                max = Mathf.Max(max, rcs.thrusterPower);
-                                numrcs++;
+                                foreach (Transform thrustdir in rcs.thrusterTransforms)
+                                {
+                                    float rcsthrust = rcs.thrusterPower;
+                                    //just counting positive contributions in one direction. This is incorrect for asymmetric thruster placements.
+                                    roll += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(relCoM, thrustdir.up), rollaxis), 0.0f);
+                                    pitch += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(Vector3.Cross(relCoM, thrustdir.up), rollaxis), pitchaxis), 0.0f);
+                                    yaw += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(Vector3.Cross(relCoM, thrustdir.up), rollaxis), Vector3.Cross(rollaxis,pitchaxis)),0.0f);
+                                }
                             }
                         }
                     }
-                    if (numrcs > 0) {
-                        max = max/numrcs;
-                        //This is a rough approximation - assuming full pivoting of the RCS.
-                        //To fix this, this whole function would need to be rewritten.
-                        roll += max * (Vector3.Cross (relCoM, rollaxis)).magnitude;
-                        pitchYaw += max * Mathf.Abs(Vector3.Dot (relCoM, rollaxis));
-                    }
                 }
-                pitchYaw += (float)GetThrustTorque(part, vessel) * thrust;
+                pitch += (float)GetThrustTorque(part, vessel) * thrust;
+                yaw += (float)GetThrustTorque (part, vessel) * thrust;
             }
             
-            return new Vector3d(pitchYaw, roll, pitchYaw);
+            return new Vector3d(pitch, roll, yaw);
         }
 
         public static double GetThrustTorque(Part p, Vessel vessel)
