@@ -186,23 +186,39 @@ namespace kOS.Utilities
                     pitchYaw += wheel.PitchTorque;
                     roll += wheel.RollTorque;
                 }
-                int numrcs = 0;
-                float max = 0.0f;
-                foreach (PartModule module in part.Modules) {
-                    var rcs = module as ModuleRCS;
-                    if (rcs == null) continue;
+                if (vessel.ActionGroups [KSPActionGroup.RCS])
+                {
+                    int numrcs = 0;
+                    float max = 0.0f;
+                    foreach (PartModule module in part.Modules) {
+                        var rcs = module as ModuleRCS;
+                        if (rcs == null) continue;
 
-                    max = Mathf.Max(max, rcs.thrusterPower);
-                    numrcs++;
+                        if (rcs.rcsEnabled == true)
+                        {
+                            int enoughfuel = 1;
+                            foreach (Propellant p in rcs.propellants)
+                            {
+                                if ((int)(p.totalResourceAvailable)==0)
+                                {
+                                    enoughfuel = 0;
+                                }
+                            }
+                            if (enoughfuel == 1)
+                            {
+                                max = Mathf.Max(max, rcs.thrusterPower);
+                                numrcs++;
+                            }
+                        }
+                    }
+                    if (numrcs > 0) {
+                        max = max/numrcs;
+                        //This is a rough approximation - assuming full pivoting of the RCS.
+                        //To fix this, this whole function would need to be rewritten.
+                        roll += max * (Vector3.Cross (relCoM, rollaxis)).magnitude;
+                        pitchYaw += max * Mathf.Abs(Vector3.Dot (relCoM, rollaxis));
+                    }
                 }
-                if (numrcs > 0) {
-                    max = max/numrcs;
-                    //This is a rough approximation - assuming full pivoting of the RCS.
-                    //To fix this, this whole function would need to be rewritten.
-                    roll += max * (Vector3.Cross (relCoM, rollaxis)).magnitude;
-                    pitchYaw += max * Vector3.Dot (relCoM, rollaxis);
-                }
-
                 pitchYaw += (float)GetThrustTorque(part, vessel) * thrust;
             }
             
