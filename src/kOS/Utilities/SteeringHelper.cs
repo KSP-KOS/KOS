@@ -151,9 +151,11 @@ namespace kOS.Utilities
         public static Vector3d GetTorque(Vessel vessel, float thrust)
         {
             var centerOfMass = vessel.findWorldCenterOfMass();
+            var rollaxis = vessel.transform.up;
+            rollaxis.Normalize ();
             
-            float pitchYaw = 0;
-            float roll = 0;
+            float pitchYaw = 0.0f;
+            float roll = 0.0f;
 
             foreach (Part part in vessel.parts)
             {
@@ -165,15 +167,17 @@ namespace kOS.Utilities
                     pitchYaw += Math.Abs(pod.rotPower);
                     roll += Math.Abs(pod.rotPower);
                 }
-
+                /*
+                //This is probably useless - commented out.
                 var rcsModule = part as RCSModule;
                 if (rcsModule != null)
                 {
                     float max = rcsModule.thrusterPowers.Aggregate<float, float>(0, Mathf.Max);
 
-                    pitchYaw += max * relCoM.magnitude;
+                    roll += max * (Vector3.Cross(relCoM, rollaxis)).magnitude;
+                    pitchYaw += max * Vector3.Dot(relCoM, rollaxis);
                 }
-
+                */
                 foreach (PartModule module in part.Modules)
                 {
                     var wheel = module as ModuleReactionWheel;
@@ -181,6 +185,22 @@ namespace kOS.Utilities
 
                     pitchYaw += wheel.PitchTorque;
                     roll += wheel.RollTorque;
+                }
+                int numrcs = 0;
+                float max = 0.0f;
+                foreach (PartModule module in part.Modules) {
+                    var rcs = module as ModuleRCS;
+                    if (rcs == null) continue;
+
+                    max = Mathf.Max(max, rcs.thrusterPower);
+                    numrcs++;
+                }
+                if (numrcs > 0) {
+                    max = max/numrcs;
+                    //This is a rough approximation - assuming full pivoting of the RCS.
+                    //To fix this, this whole function would need to be rewritten.
+                    roll += max * (Vector3.Cross (relCoM, rollaxis)).magnitude;
+                    pitchYaw += max * Vector3.Dot (relCoM, rollaxis);
                 }
 
                 pitchYaw += (float)GetThrustTorque(part, vessel) * thrust;
