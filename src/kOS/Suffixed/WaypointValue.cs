@@ -91,20 +91,18 @@ namespace kOS.Suffixed
             return String.Format("A Waypoint consisting of\n" +
                                  "  name= {0}\n" +
                                  "  body= {1}\n" +
-                                 "  latitude= {2}\n" +
-                                 "  longitude= {3}\n" +
+                                 "  geoposition= {2}\n" +
+                                 "  agl= {3}\n" +
                                  "  altitude= {4}\n" +
-                                 "  height= {5}\n" +
-                                 "  isOnSurface= {6}\n" +
-                                 "  worldPosition= {7}\n" +
-                                 "  index= {8}\n" +
-                                 "  clustered= {9}\n",
+                                 "  nearsurface= {5}\n" +
+                                 "  position= {6}\n" +
+                                 "  index= {7}\n" +
+                                 "  clustered= {8}\n",
                                  CookedName(),
                                  WrappedWaypoint.celestialName,
-                                 WrappedWaypoint.latitude,
-                                 WrappedWaypoint.longitude,
+                                 new GeoCoordinates(GetBody(), Shared, WrappedWaypoint.latitude, WrappedWaypoint.longitude),
                                  WrappedWaypoint.altitude, // A location inside the contract range's altitude range - and NOT the edge of it.
-                                 WrappedWaypoint.height,
+                                 BuildSeaLevelAltitude(),
                                  WrappedWaypoint.isOnSurface,
                                  GetPosition(),
                                  WrappedWaypoint.index,
