@@ -41,6 +41,8 @@ Waypoints are the location markers you can see on the map view showing you where
           - `BodyTarget`
         * - :attr:`GEOPOSITION`
           - `GeoCoordinates`
+        * - :attr:`POSITION`
+          - `Vector`
         * - :attr:`ALTITUDE`
           - scalar
         * - :attr:`AGL`
@@ -48,6 +50,10 @@ Waypoints are the location markers you can see on the map view showing you where
         * - :attr:`NEARSURFACE`
           - boolean
         * - :attr:`GROUNDED`
+          - boolean
+        * - :attr:`INDEX`
+          - scalar
+        * - :attr:`CLUSTERED`
           - boolean
 
 
@@ -72,6 +78,13 @@ Waypoints are the location markers you can see on the map view showing you where
     :access: Get only
 
     The LATLNG of this waypoint
+
+.. attribute:: Waypoint:POSITION
+
+    :type: Vector
+    :access: Get only
+
+    The Vector position of this waypoint in 3D space, in ship-raw coords.
 
 .. attribute:: Waypoint:ALTITUDE
 
@@ -103,4 +116,18 @@ Waypoints are the location markers you can see on the map view showing you where
     :access: Get only
 
     True if waypoint is actually glued to the ground.
+
+.. attribute:: Waypoint:INDEX
+
+    :type: scalar
+    :access: Get only
+
+    The integer index of this waypoint amongst its cluster of sibling waypoints.  In other words, when you have a cluster of waypoints called "Somewhere Alpha", "Somewhere Beta", and "Somewhere Gamma", then the alpha site has index 0, the beta site has index 1 and the gamma site has index 2. When Waypoint:CLUSTERED is false, this value is zero but meaningless.
+
+.. attribute:: Waypoint:CLUSTERED
+
+    :type: boolean
+    :access: Get only
+
+    True if this waypoint is part of a set of clustered waypoints with greek letter names appended (Alpha, Beta, Gamma, etc).  If true, there should be a one-to-one correspondence with the greek letter name and the :INDEX suffix. (0 = Alpha, 1 = Beta, 2 = Gamma, etc).
 
