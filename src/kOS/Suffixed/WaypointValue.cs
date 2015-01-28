@@ -100,7 +100,7 @@ namespace kOS.Suffixed
                                  "  clustered= {8}\n",
                                  CookedName(),
                                  WrappedWaypoint.celestialName,
-                                 new GeoCoordinates(GetBody(), Shared, WrappedWaypoint.latitude, WrappedWaypoint.longitude),
+                                 BuildGeoCoordinates(),
                                  WrappedWaypoint.altitude, // A location inside the contract range's altitude range - and NOT the edge of it.
                                  BuildSeaLevelAltitude(),
                                  WrappedWaypoint.isOnSurface,
