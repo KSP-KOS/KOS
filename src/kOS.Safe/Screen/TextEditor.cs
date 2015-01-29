@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.Utilities;
-using System;
 
 namespace kOS.Safe.Screen
 {

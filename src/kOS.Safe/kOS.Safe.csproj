@@ -133,6 +133,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Screen\IInterpreter.cs" />
+    <Compile Include="Screen\IScreenBuffer.cs" />
     <Compile Include="Screen\ITermWindow.cs" />
     <Compile Include="Screen\ScreenBuffer.cs" />
     <Compile Include="Screen\SubBuffer.cs" />

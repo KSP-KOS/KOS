@@ -4,30 +4,6 @@ using System.Text;
 
 namespace kOS.Safe.Screen
 {
-    public interface IScreenBuffer
-    {
-        int CursorRowShow { get; }
-        int CursorColumnShow { get; }
-        int RowCount { get; }
-        int ColumnCount { get; }
-        int AbsoluteCursorRow { get; set; }
-        void SetSize(int rowCount, int columnCount);
-        int ScrollVertical(int deltaRows);
-        void MoveCursor(int row, int column);
-        void MoveToNextLine();
-        void PrintAt(string textToPrint, int row, int column);
-        void Print(string textToPrint);
-        void Print(string textToPrint, bool addNewLine);
-        void ClearScreen();
-        void AddSubBuffer(SubBuffer subBuffer);
-        void RemoveSubBuffer(SubBuffer subBuffer);
-        List<char[]> GetBuffer();
-        void AddResizeNotifier(ScreenBuffer.ResizeNotifier notifier);
-        void RemoveResizeNotifier(ScreenBuffer.ResizeNotifier notifier);
-        string DebugDump();
-    }
-    
-
     public class ScreenBuffer : IScreenBuffer
     {
         private const int DEFAULT_ROWS = 36;
@@ -43,12 +19,12 @@ namespace kOS.Safe.Screen
         public virtual int CursorColumnShow { get { return CursorColumn; } }
         public int RowCount { get; private set; }
         public int ColumnCount { get; private set; }
+        protected List<ResizeNotifier> Notifyees { get; set; }
 
         /// <summary>Delegate prototype expected by AddResizeNotifier</summary>
         /// <param name="sb">This screenbuffer telling the callback who it is</param>
         /// <returns>telling this screenbuffer how many vertical rows to scroll as a result of the resize.</returns>
         public delegate int ResizeNotifier(IScreenBuffer sb);
-        protected List<ResizeNotifier> notifyees;
 
         public int AbsoluteCursorRow
         {
@@ -57,10 +33,11 @@ namespace kOS.Safe.Screen
         }
 
 
+
         public ScreenBuffer()
         {
             buffer = new List<char[]>();
-            notifyees = new List<ResizeNotifier>();
+            Notifyees = new List<ResizeNotifier>();
             
             subBuffers = new List<SubBuffer>();
 
@@ -87,13 +64,13 @@ namespace kOS.Safe.Screen
 
         public void AddResizeNotifier(ScreenBuffer.ResizeNotifier notifier)
         {
-            if (notifyees.IndexOf(notifier) < 0)
-                notifyees.Add(notifier);
+            if (Notifyees.IndexOf(notifier) < 0)
+                Notifyees.Add(notifier);
         }
 
         public void RemoveResizeNotifier(ScreenBuffer.ResizeNotifier notifier)
         {
-            notifyees.Remove(notifier);
+            Notifyees.Remove(notifier);
         }
 
         public void SetSize(int rows, int columns)
@@ -102,7 +79,7 @@ namespace kOS.Safe.Screen
             ColumnCount = columns;
             ResizeBuffer();
             int scrollDiff = 0;
-            foreach (ResizeNotifier notifier in notifyees)
+            foreach (ResizeNotifier notifier in Notifyees)
             {
                 if (notifier != null)
                     scrollDiff += notifier(this);

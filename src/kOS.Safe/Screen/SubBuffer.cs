@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System;
 using System.Text;
 
 namespace kOS.Safe.Screen
@@ -102,8 +101,10 @@ namespace kOS.Safe.Screen
 
             // Because Buffer is readonly, copy the data from newBuffer into it rather than just resetting the reference to newBuffer:
             Buffer.Clear();
-            for (int i = 0 ; i < newBuffer.Count ; ++i)
-                Buffer.Add(newBuffer[i]);
+            foreach (var t in newBuffer)
+            {
+                Buffer.Add(t);
+            }
 
             // return Fixed ? 0 : scrollDiff; - this logic not quite working - disabled for now.
             return 0;

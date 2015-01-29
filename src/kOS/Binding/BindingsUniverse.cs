@@ -121,6 +121,8 @@ namespace kOS.Binding
                 var cBody = body;
                 shared.BindingMgr.AddGetter(body.name, () => new BodyTarget(cBody, shared));
             }
+
+            shared.BindingMgr.AddGetter("VERSION", () => Core.VersionInfo);
         }
     }
 }
