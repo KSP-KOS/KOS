@@ -164,24 +164,6 @@ namespace kOS.Utilities
             {
                 var relCoM = part.Rigidbody.worldCenterOfMass - centerOfMass;
 
-                var pod = part as CommandPod;
-                if (pod != null)
-                {
-                    pitch += Math.Abs(pod.rotPower);
-                    yaw += Math.Abs(pod.rotPower);
-                    roll += Math.Abs(pod.rotPower);
-                }
-                /*
-                //This is probably useless - commented out.
-                var rcsModule = part as RCSModule;
-                if (rcsModule != null)
-                {
-                    float max = rcsModule.thrusterPowers.Aggregate<float, float>(0, Mathf.Max);
-
-                    roll += max * (Vector3.Cross(relCoM, rollaxis)).magnitude;
-                    pitchYaw += max * Vector3.Dot(relCoM, rollaxis);
-                }
-                */
                 foreach (PartModule module in part.Modules)
                 {
                     var wheel = module as ModuleReactionWheel;
@@ -195,29 +177,17 @@ namespace kOS.Utilities
                 {
                     foreach (PartModule module in part.Modules) {
                         var rcs = module as ModuleRCS;
-                        if (rcs == null) continue;
+                        if (rcs == null || !rcs.rcsEnabled) continue;
 
-                        if (rcs.rcsEnabled == true)
+                        bool enoughfuel = rcs.propellants.All(p => (int) (p.totalResourceAvailable) != 0);
+                        if (!enoughfuel) continue;
+                        foreach (Transform thrustdir in rcs.thrusterTransforms)
                         {
-                            bool enoughfuel = true;
-                            foreach (Propellant p in rcs.propellants)
-                            {
-                                if ((int)(p.totalResourceAvailable)==0)
-                                {
-                                    enoughfuel = false;
-                                }
-                            }
-                            if (enoughfuel == true)
-                            {
-                                foreach (Transform thrustdir in rcs.thrusterTransforms)
-                                {
-                                    float rcsthrust = rcs.thrusterPower;
-                                    //just counting positive contributions in one direction. This is incorrect for asymmetric thruster placements.
-                                    roll += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(relCoM, thrustdir.up), rollaxis), 0.0f);
-                                    pitch += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(Vector3.Cross(relCoM, thrustdir.up), rollaxis), pitchaxis), 0.0f);
-                                    yaw += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(Vector3.Cross(relCoM, thrustdir.up), rollaxis), Vector3.Cross(rollaxis,pitchaxis)),0.0f);
-                                }
-                            }
+                            float rcsthrust = rcs.thrusterPower;
+                            //just counting positive contributions in one direction. This is incorrect for asymmetric thruster placements.
+                            roll += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(relCoM, thrustdir.up), rollaxis), 0.0f);
+                            pitch += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(Vector3.Cross(relCoM, thrustdir.up), rollaxis), pitchaxis), 0.0f);
+                            yaw += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(Vector3.Cross(relCoM, thrustdir.up), rollaxis), Vector3.Cross(rollaxis,pitchaxis)),0.0f);
                         }
                     }
                 }
@@ -230,33 +200,7 @@ namespace kOS.Utilities
 
         public static double GetThrustTorque(Part p, Vessel vessel)
         {
-            var centerOfMass = vessel.CoM;
-
-            if (p.State == PartStates.ACTIVE)
-            {
-                if (p is LiquidEngine)
-                {
-                    if (((LiquidEngine)p).thrustVectoringCapable)
-                    {
-                        return Math.Sin(Math.Abs(((LiquidEngine)p).gimbalRange) * Math.PI / 180) * ((LiquidEngine)p).maxThrust * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
-                    }
-                }
-                else if (p is LiquidFuelEngine)
-                {
-                    if (((LiquidFuelEngine)p).thrustVectoringCapable)
-                    {
-                        return Math.Sin(Math.Abs(((LiquidFuelEngine)p).gimbalRange) * Math.PI / 180) * ((LiquidFuelEngine)p).maxThrust * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
-                    }
-                }
-                else if (p is AtmosphericEngine)
-                {
-                    if (((AtmosphericEngine)p).thrustVectoringCapable)
-                    {
-                        return Math.Sin(Math.Abs(((AtmosphericEngine)p).gimbalRange) * Math.PI / 180) * ((AtmosphericEngine)p).maximumEnginePower * ((AtmosphericEngine)p).totalEfficiency * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
-                    }
-                }
-            }
-
+            //TODO: implement gimbalthrust Torque calculation
             return 0;
         }
 
