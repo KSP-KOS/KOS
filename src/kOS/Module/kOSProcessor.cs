@@ -509,13 +509,13 @@ namespace kOS.Module
                     case ProcessorModes.READY:
                         if (ProcessorMode == ProcessorModes.STARVED && shared.Cpu != null) shared.Cpu.Boot();
                         if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
-                        if (shared.Window != null) shared.Window.SetPowered(true);
+                        if (shared.Window != null) shared.Window.IsPowered = true;
                         break;
 
                     case ProcessorModes.OFF:
                     case ProcessorModes.STARVED:
                         if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
-                        if (shared.Window != null) shared.Window.SetPowered(false);
+                        if (shared.Window != null) shared.Window.IsPowered = false;
                         break;
                 }
 

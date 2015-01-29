@@ -1,16 +1,15 @@
-﻿using System;
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe;
+﻿using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
     public class TerminalStruct : Structure
     {
-        protected SharedObjects shared;
-        
+        private readonly SharedObjects shared;
+
         // Some sanity values to prevent the terminal display from getting garbled up:
         // They may have to change after experimentation.
         protected const int MINROWS = 3;
+
         protected const int MAXROWS = 80;
         protected const int MINCOLUMNS = 15;
         protected const int MAXCOLUMNS = 160;
@@ -23,24 +22,29 @@ namespace kOS.Safe.Encapsulation
         public TerminalStruct(SharedObjects shared)
         {
             this.shared = shared;
-            
+
             InitializeSuffixes();
         }
-        
+
+        protected internal SharedObjects Shared
+        {
+            get { return shared; }
+        }
+
         private void InitializeSuffixes()
         {
             // TODO: Uncomment the following if IsOpen gets implemented later:
             // AddSuffix("ISOPEN", new SetSuffix<bool>(() => IsOpen, Isopen = value, "true=open, false=closed.  You can set it to open/close the window."));
-            AddSuffix("HEIGHT",  new ClampSetSuffix<int>(() => shared.Screen.RowCount,
-                                                         value => shared.Screen.SetSize(value, shared.Screen.ColumnCount),
+            AddSuffix("HEIGHT", new ClampSetSuffix<int>(() => Shared.Screen.RowCount,
+                                                         value => Shared.Screen.SetSize(value, Shared.Screen.ColumnCount),
                                                          MINROWS,
                                                          MAXROWS,
-                                                         "Get or Set the number of rows on the screen.  Value is limited to the range ["+MINROWS+","+MAXROWS+"]"));
-            AddSuffix("WIDTH",  new ClampSetSuffix<int>(() => shared.Screen.ColumnCount,
-                                                        value => shared.Screen.SetSize(shared.Screen.RowCount, value),
+                                                         "Get or Set the number of rows on the screen.  Value is limited to the range [" + MINROWS + "," + MAXROWS + "]"));
+            AddSuffix("WIDTH", new ClampSetSuffix<int>(() => Shared.Screen.ColumnCount,
+                                                        value => Shared.Screen.SetSize(Shared.Screen.RowCount, value),
                                                         MINCOLUMNS,
                                                         MAXCOLUMNS,
-                                                        "Get or Set the number of columns on the screen.  Value is limited to the range ["+MINCOLUMNS+","+MAXCOLUMNS+"]"));
+                                                        "Get or Set the number of columns on the screen.  Value is limited to the range [" + MINCOLUMNS + "," + MAXCOLUMNS + "]"));
         }
 
         public override string ToString()
@@ -48,5 +52,4 @@ namespace kOS.Safe.Encapsulation
             return string.Format("{0} Terminal", base.ToString());
         }
     }
-
 }

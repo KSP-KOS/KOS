@@ -133,7 +133,7 @@ namespace kOS.Screen
         public void SetInputLock(bool isLocked)
         {
             locked = isLocked;
-            if (Shared.Window != null) Shared.Window.SetShowCursor(!isLocked);
+            if (Shared.Window != null) Shared.Window.ShowCursor = !isLocked;
             LineSubBuffer.Enabled = !isLocked;
         }
 

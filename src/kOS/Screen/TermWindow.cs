@@ -6,12 +6,11 @@ using UnityEngine;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
 using kOS.Module;
-using kOS.Safe.Encapsulation;
 
 namespace kOS.Screen
 {
     // Blockotronix 550 Computor Monitor
-    public class TermWindow : KOSManagedWindow
+    public class TermWindow : KOSManagedWindow , ITermWindow
     {
         private const int CHARSIZE = 8;
         private const string CONTROL_LOCKOUT = "kOSTerminal";
@@ -43,10 +42,7 @@ namespace kOS.Screen
         private Texture2D resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
 
         private SharedObjects shared;
-        private bool showCursor = true;
         private KOSTextEditPopup popupEditor;
-
-        public bool IsPowered { get; protected set; }
 
 
         public TermWindow()
@@ -54,6 +50,8 @@ namespace kOS.Screen
             IsPowered = true;
             windowRect = new Rect(50, 60, 0, 0); // will get resized later in AttachTo().
         }
+
+        public bool ShowCursor { get; set; }
 
         public void Awake()
         {
@@ -379,7 +377,7 @@ namespace kOS.Screen
             bool blinkOn = cursorBlinkTime < 0.5f &&
                            screen.CursorRowShow < screen.RowCount &&
                            IsPowered &&
-                           showCursor;
+                           ShowCursor;
             if (blinkOn)
             {
                 ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor);
@@ -472,14 +470,5 @@ namespace kOS.Screen
             return (int)(windowRect.width - 65) / CHARSIZE;
         }
 
-        public void SetPowered(bool isPowered)
-        {
-            IsPowered = isPowered;
-        }
-
-        public void SetShowCursor(bool showCursor)
-        {
-            this.showCursor = showCursor;
-        }
     }
 }
