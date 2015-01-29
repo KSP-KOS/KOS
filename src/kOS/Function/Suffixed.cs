@@ -349,16 +349,20 @@ namespace kOS.Function
             string pointName = shared.Cpu.PopValue().ToString();
 
             WaypointManager wpm = WaypointManager.Instance();
-            if (wpm == null)
+            if (wpm == null) // When zero waypoints exist, there might not even be a waypoint manager.
             {
-                shared.Cpu.PushStack(null); // When no waypoints exist, there isn't even a waypoint manager.
+                shared.Cpu.PushStack(null);
                 // I don't like returning null here without the user being able to test for that, but
                 // we don't have another way to communicate "no such waypoint".  We really need to address
                 // that problem once and for all.
                 return;
             }
-
-            Waypoint point = wpm.AllWaypoints().FirstOrDefault(p => String.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase));
+            
+            string baseName;
+            int index;
+            bool hasGreek = WaypointValue.GreekToInteger(pointName, out index, out baseName);
+            Waypoint point = wpm.AllWaypoints().FirstOrDefault(
+                p => String.Equals(p.name, baseName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
 
             shared.Cpu.PushStack(new WaypointValue(point, shared));
         }
