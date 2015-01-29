@@ -18,28 +18,30 @@ namespace kOS.Suffixed
         {
             WrappedWaypoint = wayPoint;
             Shared = shared;
-            AddSuffix("DUMP", new NoArgsSuffix<string>(ToVerboseString)); // for debugging
-            AddSuffix("NAME", new NoArgsSuffix<string>(() => CookedName(), "Name of waypoint as it appears on the map and contract"));
-            AddSuffix("BODY", new NoArgsSuffix<BodyTarget>(() => new BodyTarget(GetBody(),Shared), "Celestial body the waypoint is attached to"));
-            AddSuffix("GEOPOSITION", new NoArgsSuffix<GeoCoordinates>(BuildGeoCoordinates, "the LATLNG of this waypoint"));
-            AddSuffix("POSITION", new NoArgsSuffix<Vector>(() => GetPosition() - new Vector( Shared.Vessel.findWorldCenterOfMass())));
-            AddSuffix("ALTITUDE", new NoArgsSuffix<double>(BuildSeaLevelAltitude,
-                                                           "Altitude of waypoint above sea level.  Warning, this a point somewhere in the " +
-                                                           "midst of the contract altitude range, not the edge of the altitude range."));
-            AddSuffix("AGL", new NoArgsSuffix<double>(() => WrappedWaypoint.altitude,
-                                                      "Altitude of waypoint above ground.  Warning, this a point somewhere" +
-                                                      "in the midst of the contract altitude range, not the edge of the altitude range."));
-            AddSuffix("NEARSURFACE", new NoArgsSuffix<bool>(() => WrappedWaypoint.isOnSurface, "True if waypoint is a point near or on the body rather than high in orbit."));
-            AddSuffix("GROUNDED", new NoArgsSuffix<bool>(() => WrappedWaypoint.landLocked, "True if waypoint is actually glued to the ground."));
-            AddSuffix("INDEX", new NoArgsSuffix<int>(() => WrappedWaypoint.index, "Number of this waypoint if this is a grouped waypoint (i.e. alpha/beta/gamma.."));
-            AddSuffix("CLUSTERED", new NoArgsSuffix<bool>(() => WrappedWaypoint.isClustered, "True if this is a member of a cluster of waypoints (i.e. alpha/beta/gamma.."));
+            InitializeSuffixes();
+
             // greekMap is static, so whichever waypoint instance's constructor happens to
             // get called first will make it, and from then on other waypoints don't need to
             // keep re-initializing it:
             if (greekMap == null)
                 InitializeGreekMap();
         }
-        
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("DUMP", new NoArgsSuffix<string>(ToVerboseString)); // for debugging
+            AddSuffix("NAME", new NoArgsSuffix<string>(CookedName, "Name of waypoint as it appears on the map and contract"));
+            AddSuffix("BODY", new NoArgsSuffix<BodyTarget>(() => new BodyTarget(GetBody(), Shared), "Celestial body the waypoint is attached to"));
+            AddSuffix("GEOPOSITION", new NoArgsSuffix<GeoCoordinates>(BuildGeoCoordinates, "the LATLNG of this waypoint"));
+            AddSuffix("POSITION", new NoArgsSuffix<Vector>(() => GetPosition() - new Vector(Shared.Vessel.findWorldCenterOfMass())));
+            AddSuffix("ALTITUDE", new NoArgsSuffix<double>(BuildSeaLevelAltitude, "Altitude of waypoint above sea level.  Warning, this a point somewhere in the " + "midst of the contract altitude range, not the edge of the altitude range."));
+            AddSuffix("AGL", new NoArgsSuffix<double>(() => WrappedWaypoint.altitude, "Altitude of waypoint above ground.  Warning, this a point somewhere" + "in the midst of the contract altitude range, not the edge of the altitude range."));
+            AddSuffix("NEARSURFACE", new NoArgsSuffix<bool>(() => WrappedWaypoint.isOnSurface, "True if waypoint is a point near or on the body rather than high in orbit."));
+            AddSuffix("GROUNDED", new NoArgsSuffix<bool>(() => WrappedWaypoint.landLocked, "True if waypoint is actually glued to the ground.")); 
+            AddSuffix("INDEX", new NoArgsSuffix<int>(() => WrappedWaypoint.index, "Number of this waypoint if this is a grouped waypoint (i.e. alpha/beta/gamma..")); 
+            AddSuffix("CLUSTERED", new NoArgsSuffix<bool>(() => WrappedWaypoint.isClustered, "True if this is a member of a cluster of waypoints (i.e. alpha/beta/gamma.."));
+        }
+
         private static void InitializeGreekMap()
         {
             greekMap = new Dictionary<string, int>();
