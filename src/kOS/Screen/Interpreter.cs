@@ -94,6 +94,7 @@ namespace kOS.Screen
                     LineBuilder = new StringBuilder();
                     LineBuilder.Append(commandHistory[commandHistoryIndex]);
                     LineCursorIndex = LineBuilder.Length;
+                    LineSubBuffer.Wipe();
                     UpdateLineSubBuffer();
                 }
             }
