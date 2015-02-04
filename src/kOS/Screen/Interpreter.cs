@@ -32,6 +32,9 @@ namespace kOS.Screen
                                                      // the command is present in the history to be found and printed in the
                                                      // error message.
                 ProcessCommand(commandText);
+                int numRows = LineSubBuffer.RowCount;
+                LineSubBuffer.Wipe();
+                LineSubBuffer.SetSize(numRows,ColumnCount); // refill it to its previous size
             }
             else
             {
@@ -130,7 +133,7 @@ namespace kOS.Screen
         public void SetInputLock(bool isLocked)
         {
             locked = isLocked;
-            if (Shared.Window != null) Shared.Window.SetShowCursor(!isLocked);
+            if (Shared.Window != null) Shared.Window.ShowCursor = !isLocked;
             LineSubBuffer.Enabled = !isLocked;
         }
 

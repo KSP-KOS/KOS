@@ -1,15 +1,14 @@
-﻿using System.Linq;
-using kOS.Safe.Encapsulation;
-using kOS.Safe.Exceptions;
-using kOS.Safe.Encapsulation.Suffixes;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
+using kOS.Suffixed.Part;
 using UnityEngine;
 
-using System;
-
-
-namespace kOS.Suffixed.Part
+namespace kOS.Suffixed.PartModuleField
 {
     /// <summary>
     /// An abstraction of a part module attached to a PartValue, that allows
@@ -26,6 +25,7 @@ namespace kOS.Suffixed.Part
         /// Create a kOS-user variable wrapper around a KSP PartModule attached to a part.
         /// </summary>
         /// <param name="partModule">the KSP PartModule to make a wrapper for</param>
+        /// <param name="shared">The omnipresent shared data</param>
         public PartModuleFields(PartModule partModule, SharedObjects shared)
         {
             this.partModule = partModule;

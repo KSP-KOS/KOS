@@ -47,7 +47,9 @@ namespace kOS.Screen
             uniqueId = termWindowIDRange + (windowsMadeSoFar * 50);
             ++windowsMadeSoFar;            
         }
-        
+
+        public bool IsPowered { get; set; }
+
         /// <summary>
         /// Implement this for how to make your widget get the keyboard focus:
         /// </summary>

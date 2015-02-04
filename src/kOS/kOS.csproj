@@ -97,11 +97,12 @@
     <Compile Include="Suffixed\BodyTarget.cs" />
     <Compile Include="Suffixed\Career.cs" />
     <Compile Include="Suffixed\Orbitable.cs" />
+    <Compile Include="Suffixed\PartModuleField\PartModuleFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\PartModuleFieldsFactory.cs" />
+    <Compile Include="Suffixed\PartModuleField\GimbalFields.cs" />
     <Compile Include="Suffixed\Part\GimbalValue.cs" />
     <Compile Include="Suffixed\Part\ModuleEngineAdapter.cs" />
-    <Compile Include="Suffixed\Part\PartModuleFieldsFactory.cs" />
     <Compile Include="Suffixed\Part\PartValueFactory.cs" />
-    <Compile Include="Suffixed\Part\PartModuleFields.cs" />
     <Compile Include="Suffixed\RgbaColor.cs" />
     <Compile Include="Suffixed\Config.cs" />
     <Compile Include="Function\PrintList.cs" />

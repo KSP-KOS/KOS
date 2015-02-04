@@ -1,31 +1,13 @@
 using System.Collections.Generic;
+using System;
+using System.Text;
 
 namespace kOS.Safe.Screen
 {
-    public interface IScreenBuffer
-    {
-        int CursorRowShow { get; }
-        int CursorColumnShow { get; }
-        int RowCount { get; }
-        int ColumnCount { get; }
-        int AbsoluteCursorRow { get; set; }
-        void SetSize(int rowCount, int columnCount);
-        int ScrollVertical(int deltaRows);
-        void MoveCursor(int row, int column);
-        void MoveToNextLine();
-        void PrintAt(string textToPrint, int row, int column);
-        void Print(string textToPrint);
-        void Print(string textToPrint, bool addNewLine);
-        void ClearScreen();
-        void AddSubBuffer(SubBuffer subBuffer);
-        void RemoveSubBuffer(SubBuffer subBuffer);
-        List<char[]> GetBuffer();
-    }
-
     public class ScreenBuffer : IScreenBuffer
     {
-        public const int MAX_ROWS = 36;
-        public const int MAX_COLUMNS = 50;
+        private const int DEFAULT_ROWS = 36;
+        private const int DEFAULT_COLUMNS = 50;
         
         private int topRow;
         private readonly List<char[]> buffer;
@@ -37,6 +19,12 @@ namespace kOS.Safe.Screen
         public virtual int CursorColumnShow { get { return CursorColumn; } }
         public int RowCount { get; private set; }
         public int ColumnCount { get; private set; }
+        protected List<ResizeNotifier> Notifyees { get; set; }
+
+        /// <summary>Delegate prototype expected by AddResizeNotifier</summary>
+        /// <param name="sb">This screenbuffer telling the callback who it is</param>
+        /// <returns>telling this screenbuffer how many vertical rows to scroll as a result of the resize.</returns>
+        public delegate int ResizeNotifier(IScreenBuffer sb);
 
         public int AbsoluteCursorRow
         {
@@ -45,18 +33,22 @@ namespace kOS.Safe.Screen
         }
 
 
+
         public ScreenBuffer()
         {
             buffer = new List<char[]>();
+            Notifyees = new List<ResizeNotifier>();
+            
             subBuffers = new List<SubBuffer>();
 
-            RowCount = MAX_ROWS;
-            ColumnCount = MAX_COLUMNS;
+            RowCount = DEFAULT_ROWS;
+            ColumnCount = DEFAULT_COLUMNS;
             InitializeBuffer();
         }
 
         private void InitializeBuffer()
         {
+            buffer.Clear();
             AddNewBufferLines(RowCount);
 
             topRow = 0;
@@ -70,15 +62,45 @@ namespace kOS.Safe.Screen
                 buffer.Add(new char[ColumnCount]);
         }
 
-        public void SetSize(int rowCount, int columnCount)
+        public void AddResizeNotifier(ScreenBuffer.ResizeNotifier notifier)
         {
-            if (rowCount <= MAX_ROWS && columnCount <= MAX_COLUMNS)
+            if (Notifyees.IndexOf(notifier) < 0)
+                Notifyees.Add(notifier);
+        }
+
+        public void RemoveResizeNotifier(ScreenBuffer.ResizeNotifier notifier)
+        {
+            Notifyees.Remove(notifier);
+        }
+
+        public void SetSize(int rows, int columns)
+        {
+            RowCount = rows;
+            ColumnCount = columns;
+            ResizeBuffer();
+            int scrollDiff = 0;
+            foreach (ResizeNotifier notifier in Notifyees)
             {
-                RowCount = rowCount;
-                ColumnCount = columnCount;
-                buffer.Clear();
-                InitializeBuffer();
+                if (notifier != null)
+                    scrollDiff += notifier(this);
             }
+            ScrollVertical(scrollDiff);
+        }
+        
+        protected void ResizeBuffer()
+        {
+            // Grow or shrink the width of the buffer lines to match the new
+            // value.  Note that this does not (yet) account for preserving lines and wrapping them.
+            for (int row = 0 ; row < buffer.Count ; ++row)
+            {
+                char[] newRow = new char[ColumnCount];
+                Array.Copy(buffer[row], 0, newRow, 0, Math.Min(buffer[row].Length, ColumnCount));
+                buffer[row] = newRow;
+            }
+            
+            // Add more buffer lines if needed to pad out the rest of the screen:
+            while (buffer.Count - topRow < RowCount)
+                buffer.Add(new char[ColumnCount]);
         }
 
         private int ScrollVerticalInternal(int deltaRows = 1)
@@ -212,6 +234,7 @@ namespace kOS.Safe.Screen
         public void AddSubBuffer(SubBuffer subBuffer)
         {
             subBuffers.Add(subBuffer);
+            AddResizeNotifier(subBuffer.NotifyOfParentResize);
         }
 
         public void RemoveSubBuffer(SubBuffer subBuffer)
@@ -221,16 +244,8 @@ namespace kOS.Safe.Screen
 
         public List<char[]> GetBuffer()
         {
-            
             // base buffer
             var mergedBuffer = new List<char[]>(buffer.GetRange(topRow, RowCount));
-
-            // The screen may be scrolled such that the bottom of the text content doesn't
-            // go all the way to the bottom of the screen.  If so, pad it for display:
-            while (mergedBuffer.Count < RowCount)
-            {
-                mergedBuffer.Add(new char[ColumnCount]);
-            }
 
             // merge sub buffers
             UpdateSubBuffers();
@@ -257,6 +272,27 @@ namespace kOS.Safe.Screen
 
             return mergedBuffer;
         }
+
+        // This was handy when trying to figure out what was going on.  
+        public string DebugDump()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("DebugDump ScreenBuffer: RowCount="+RowCount+", ColumnCount="+ColumnCount+", topRow="+topRow+", buffer.count="+buffer.Count+"\n");
+            for (int i = 0; i < buffer.Count ; ++i)
+            {
+                sb.Append(" line "+i+" = [");
+                for (int j = 0 ; j < buffer[i].Length ; ++j)
+                {
+                    char ch = buffer[i][j];
+                    sb.Append((int)ch < 32 ? (" \\"+(int)ch) : (" "+ch) );
+                }
+                sb.Append("]\n");
+            }
+            foreach (SubBuffer sub in subBuffers)
+                sb.Append(sub.DebugDump());
+            return sb.ToString();
+        }
+        
 
         protected virtual void UpdateSubBuffers()
         {

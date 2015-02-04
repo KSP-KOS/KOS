@@ -10,11 +10,12 @@ using kOS.Module;
 namespace kOS.Screen
 {
     // Blockotronix 550 Computor Monitor
-    public class TermWindow : KOSManagedWindow
+    public class TermWindow : KOSManagedWindow , ITermWindow
     {
         private const int CHARSIZE = 8;
         private const string CONTROL_LOCKOUT = "kOSTerminal";
-        private const int CHARS_PER_ROW = 16;
+        private const int FONTIMAGE_CHARS_PER_ROW = 16;
+        
         private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private static readonly Color color = new Color(1, 1, 1, 1);
         private static readonly Color colorAlpha = new Color(0.9f, 0.9f, 0.9f, 0.6f);
@@ -22,8 +23,10 @@ namespace kOS.Screen
         private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
-        private static readonly Rect closeButtonRect = new Rect(398, 370, 59, 30);
-        
+        private Rect closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.        
+        private Rect resizeButtonCoords = new Rect(0,0,0,0); // will be resized later.
+        private Vector2 resizeOldSize;
+        private bool resizeMouseDown;
         
         private bool consumeEvent;
 
@@ -36,24 +39,25 @@ namespace kOS.Screen
         private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool isLocked;
         private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
 
         private SharedObjects shared;
-        private bool showCursor = true;
         private KOSTextEditPopup popupEditor;
-
-        public bool IsPowered { get; protected set; }
 
 
         public TermWindow()
         {
             IsPowered = true;
-            windowRect = new Rect(60, 50, 470, 405);
+            windowRect = new Rect(50, 60, 0, 0); // will get resized later in AttachTo().
         }
+
+        public bool ShowCursor { get; set; }
 
         public void Awake()
         {
             LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
+            LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
             var gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
             DontDestroyOnLoad(gObj);
             popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
@@ -179,12 +183,13 @@ namespace kOS.Screen
                                             );
 
             windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, labelText);
-
+            
             if (consumeEvent)
             {
                 consumeEvent = false;
                 Event.current.Use();
             }
+
         }
         
         void Update()
@@ -318,9 +323,25 @@ namespace kOS.Screen
             {
                 return;
             }
+            IScreenBuffer screen = shared.Screen;
 
             GUI.color = isLocked ? color : colorAlpha;
-            GUI.DrawTexture(new Rect(10, 20, terminalImage.width, terminalImage.height), terminalImage);
+            GUI.DrawTexture(new Rect(15, 20, windowRect.width-30, windowRect.height-55), terminalImage);
+            closeButtonRect = new Rect(windowRect.width-75, windowRect.height-30, 50, 25);
+
+            resizeButtonCoords = new Rect(windowRect.width-resizeButtonImage.width,
+                                          windowRect.height-resizeButtonImage.height,
+                                          resizeButtonImage.width,
+                                          resizeButtonImage.height);
+            if (GUI.RepeatButton(resizeButtonCoords, resizeButtonImage ))
+            {
+                if (! resizeMouseDown)
+                {
+                    // Remember the fact that this mouseDown started on the resize button:
+                    resizeMouseDown = true;
+                    resizeOldSize = new Vector2(windowRect.width, windowRect.height);
+                }
+            }
 
             if (GUI.Button(closeButtonRect, "Close"))
             {
@@ -328,7 +349,6 @@ namespace kOS.Screen
                 Event.current.Use();
             }
 
-            GUI.DragWindow(new Rect(0, 0, 10000, 500));
 
             Color currentTextColor;
             if (IsPowered)
@@ -340,9 +360,8 @@ namespace kOS.Screen
                 currentTextColor = isLocked ? textColorOff : textColorOffAlpha;
             }
 
-            GUI.BeginGroup(new Rect(31, 38, 420, 340));
+            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount*CHARSIZE, screen.RowCount*CHARSIZE));
 
-            IScreenBuffer screen = shared.Screen;
             List<char[]> buffer = screen.GetBuffer();
 
             for (int row = 0; row < screen.RowCount; row++)
@@ -358,19 +377,53 @@ namespace kOS.Screen
             bool blinkOn = cursorBlinkTime < 0.5f &&
                            screen.CursorRowShow < screen.RowCount &&
                            IsPowered &&
-                           showCursor;
+                           ShowCursor;
             if (blinkOn)
             {
                 ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor);
             }
             GUI.EndGroup();
+            
+            GUI.Label(new Rect(windowRect.width/2-40,windowRect.height-20,100,10),screen.ColumnCount+"x"+screen.RowCount);
 
+            CheckResizeDrag(); // Has to occur before DragWindow or else DragWindow will consume the event and prevent drags from being seen by the resize icon.
+            GUI.DragWindow();
         }
-
+        
+        protected void CheckResizeDrag()
+        {
+            if (Input.GetMouseButton(0)) // mouse button is down
+            {
+                if (resizeMouseDown) // and it's in the midst of a drag.
+                {
+                    Vector2 dragDelta = mousePosAbsolute - mouseButtonDownPosAbsolute;
+                    windowRect = new Rect(windowRect.xMin,
+                                          windowRect.yMin,
+                                          System.Math.Max(resizeOldSize.x + dragDelta.x, 200),
+                                          System.Math.Max(resizeOldSize.y + dragDelta.y, 200));
+                }
+            }
+            else // mouse button is up
+            {
+                if (resizeMouseDown) // and it had been dragging a resize before.
+                {
+                    resizeMouseDown = false;
+                    // Resize by integer character cells, not by actual x/y pixels:
+                    // Note I wanted to call this dynamically as it's resizing, but there's some weird issue
+                    // with the timing of it, where the windowRect is temporarily set to a bogus value during the
+                    // time it was trying to run this, and thus it created exception-throwing code unless it waits
+                    // until the drag is done before trying to calculate this.
+                    // The effect the user sees is that the text can float in space past the edge of the window (when
+                    // shrinking the size) until the resize drag is done, and then it redraws itself.
+                    shared.Screen.SetSize(HowManyRowsFit(), HowManyColumnsFit());
+                }
+            }
+        }
+        
         void ShowCharacterByAscii(char ch, int x, int y, Color textColor)
         {
-            int tx = ch % CHARS_PER_ROW;
-            int ty = ch / CHARS_PER_ROW;
+            int tx = ch % FONTIMAGE_CHARS_PER_ROW;
+            int ty = ch / FONTIMAGE_CHARS_PER_ROW;
 
             ShowCharacterByXY(x, y, tx, ty, textColor);
         }
@@ -397,16 +450,25 @@ namespace kOS.Screen
         {
             this.shared = shared;
             this.shared.Window = this;
+            NotifyOfScreenResize(this.shared.Screen);
+            this.shared.Screen.AddResizeNotifier(NotifyOfScreenResize);
+        }
+        
+        internal int NotifyOfScreenResize(IScreenBuffer sb)
+        {
+            windowRect = new Rect(windowRect.xMin, windowRect.yMin, sb.ColumnCount*CHARSIZE + 65, sb.RowCount*CHARSIZE + 100);
+            return 0;
+        }
+        
+        private int HowManyRowsFit()
+        {
+            return (int)(windowRect.height - 100) / CHARSIZE;
         }
 
-        public void SetPowered(bool isPowered)
+        private int HowManyColumnsFit()
         {
-            IsPowered = isPowered;
+            return (int)(windowRect.width - 65) / CHARSIZE;
         }
 
-        public void SetShowCursor(bool showCursor)
-        {
-            this.showCursor = showCursor;
-        }
     }
 }

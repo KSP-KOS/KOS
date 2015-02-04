@@ -1,6 +1,25 @@
 kOS Mod Changelog
 =================
 
+# v0.15.6
+
+### BREAKING
+* PART:UID is now a string. This will only break you if you were doing math on UIDs?
+* ELEMENT:PARTCOUNT was poorly named and duplicated by ELEMENT:PARTS:LENGTH so it was removed.
+
+### New Features
+* (AGX) Action Groups Extended Support! Thanks @SirDiazo
+    * Getting or setting groups 11-250 should behave the same as the stock groups if you have AGX installed.
+    * Groundwork is laid for getting parts and modules by the new action groups.	
+* Gimbals are now a well known module. providing read access to its state
+* Added PART:GETMODULEBYINDEX(int). This is most useful when you have a part with the same module twice. Thanks @jwvanderbeck
+* More documentation work. http://ksp-kos.github.io/KOS_DOC/
+
+### Bug Fixes
+* Fixes RemoteTech Integration
+* Structures can now be correctly ==, <> and concatenated with + 
+* STAGE:RESOURCE[?]:CAPACITY is now spell correctly :P
+
 # v0.15.5
 The KSP 0.90 compatibility release.
 (The full thematic following of KSP 0.90's new way of
