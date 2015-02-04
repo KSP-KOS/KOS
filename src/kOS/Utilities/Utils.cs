@@ -247,5 +247,48 @@ namespace kOS.Utilities
 
             return codeFragment.Aggregate(string.Empty, (current, s) => current + (s + "\n"));
         }
+        
+        /// <summary>
+        /// Meant to be an override for stock KSP's CelestialBody.GetObtVelocity(), which (literally) always
+        /// stack overflows because it's implemented as just infinite recursion without a base case.
+        /// <br/>
+        /// Returns the celestial body's velocity relative to the current universe's SOI body.  It's
+        /// identical to body.orbit.GetVel() except that it also works for The Sun, which
+        /// normally can't call that because it's orbit is null.
+        /// </summary>
+        /// <param name="body">The body to get the value for. (this will be hidden when this is an extension method of CelestialBody).</param>
+        /// <returns>body position in current unity world coords</returns>
+        public static Vector3d KOSExtensionGetObtVelocity(this CelestialBody body, SharedObjects shared)
+        {
+            if (body.orbit != null)
+                return body.orbit.GetVel();
+            
+            // When we can't use body.orbit, then manually perform the work that (probably) body.orbit.GetVel()
+            // is doing itself.  This isn't DRY, but SQUAD made it impossible to be DRY when they didn't implement
+            // the algorithm for the Sun so we have to repeat it again ourselves:
+            
+            CelestialBody soiBody = shared.Vessel.mainBody;
+            if (soiBody.orbit != null)
+                return soiBody.orbit.GetFrameVel();
+            else
+                return (-1)*shared.Vessel.obt_velocity;
+        }
+
+        /// <summary>
+        /// Return the parent body of this body, just like KSP's built-in referenceBody, except that
+        /// it exhibits more sane behavior in the case of the Sun where there is no parent.  Default
+        /// KSP's referenceBody will sometimes return null and sometimes return the Sun itself as
+        /// the parent of the Sun.  This makes it always return null as the parent of the Sun no matter
+        /// what.
+        /// </summary>
+        /// <param name="body">Body to get parent of (this will be hidden when called as an extension method)</param>
+        /// <returns>parent body or null</returns>
+        public static CelestialBody KOSExtensionGetParentBody(this CelestialBody body)
+        {
+            CelestialBody parent = body.referenceBody;            
+            if (parent == body)
+                parent = null;
+            return parent;
+        }
     }
 }
