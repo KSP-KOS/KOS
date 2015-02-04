@@ -135,7 +135,7 @@ namespace kOS.Suffixed
         
         public CelestialBody GetParentBody()
         {
-            return Orbit.referenceBody;
+            return (Orbit == null) ? null : Orbit.referenceBody;
         }
         
         public Direction GetPrograde()
@@ -180,7 +180,7 @@ namespace kOS.Suffixed
 
         public double PositionToLatitude( Vector pos )
         {
-            CelestialBody parent = Orbit.referenceBody;
+            CelestialBody parent = GetParentBody();
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
             Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
@@ -188,7 +188,7 @@ namespace kOS.Suffixed
         }
         public double PositionToLongitude( Vector pos )
         {
-            CelestialBody parent = Orbit.referenceBody;
+            CelestialBody parent = GetParentBody();
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
             Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
@@ -196,7 +196,7 @@ namespace kOS.Suffixed
         }
         public double PositionToAltitude( Vector pos )
         {
-            CelestialBody parent = Orbit.referenceBody;
+            CelestialBody parent = GetParentBody();
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
             Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
@@ -244,7 +244,11 @@ namespace kOS.Suffixed
                     
                 // The cases after this point were added to Orbitable from either VesselTarget or BodyTarget:
                 case "BODY":
-                    return new BodyTarget(Orbit.referenceBody, Shared); 
+                    return new BodyTarget(GetParentBody(), Shared);
+                case "HASBODY":
+                case "HASOBT":
+                case "HASORBIT":
+                    return (Orbit != null);
                 case "UP":
                     return new Direction(GetUpVector(), false);
                 case "NORTH":
