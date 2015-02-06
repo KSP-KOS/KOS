@@ -95,8 +95,21 @@ namespace kOS.UserIO
             SetConfigEnable(Config.Instance.EnableTelnet);
 
             if (!isListening)
+            {
+                // Doing the command:
+                //     SET CONFIG:TELNET TO FALSE.
+                // should kill any singleton telnet servers that may have been started in the past
+                // when it was true.  This does that:
+                foreach (TelnetSingletonServer singleServer in telnets)
+                {
+                    singleServer.StopListening();
+                    telnets.Remove(singleServer);
+                }
+                
+                // disabled, so don't listen for connections.
                 return;
-            
+            }
+
             // .NET's TCP handler only gives you blocking socket accepting, but for the Unity
             // Update(), we need to always finish quickly and never block, so check if anything
             // is pending first to simulate the effect of a nonblocking socket accept check:

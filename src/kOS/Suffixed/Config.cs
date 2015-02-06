@@ -43,7 +43,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableTelnet, new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
-            AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number", 5410, 1024, 32767, typeof(bool)));
+            AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number", 5410, 1024, 32767, typeof(int)));
             AddConfigKey(PropId.TelnetUsesLoopback, new ConfigKey("TelnetUsesLoopback", "LOOPBACK", "Force telnet to use 127.0.0.1", true, false, true, typeof(bool)));
         }
 

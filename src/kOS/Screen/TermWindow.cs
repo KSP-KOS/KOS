@@ -6,6 +6,7 @@ using UnityEngine;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
 using kOS.Module;
+using kOS.UserIO;
 
 namespace kOS.Screen
 {
@@ -45,11 +46,18 @@ namespace kOS.Screen
         private KOSTextEditPopup popupEditor;
         private Color currentTextColor = new Color(1,1,1,1); // a dummy color at first just so it won't crash before TerminalGUI() where it's *really* set.
 
+        private List<TelnetSingletonServer> Telnets {get;set;} // support exists for more than one telnet client to be attached to the same terminal, thus this is a list.
+        
+        private ExpectNextChar inputExpected = ExpectNextChar.NORMAL;
+        private int pendingWidth; // width to come from a resize combo.
+        
+        public string TitleText {get; private set;}
 
         public TermWindow()
         {
             IsPowered = true;
             windowRect = new Rect(50, 60, 0, 0); // will get resized later in AttachTo().
+            Telnets = new List<TelnetSingletonServer>();
         }
 
         public bool ShowCursor { get; set; }
@@ -184,13 +192,9 @@ namespace kOS.Screen
 
             // Should probably make "gui screen name for my CPU part" into some sort of utility method:
             KOSNameTag partTag = shared.KSPPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
-            string labelText = String.Format("{0} CPU: {1} ({2})",
-                                             shared.Vessel.vesselName,
-                                             shared.KSPPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
-                                             ((partTag==null) ? "" : partTag.nameTag)
-                                            );
+            ChangeTitle(CalcualteTitle());
 
-            windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, labelText);
+            windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, TitleText);
             
             if (consumeEvent)
             {
@@ -207,6 +211,7 @@ namespace kOS.Screen
                 // Holding onto a vessel instance that no longer exists?
                 Close();
             }
+            ProcessTelnetInput(); // want to do this even when the terminal isn't actually displaying.
 
             if (!IsOpen() ) return;
          
@@ -220,6 +225,10 @@ namespace kOS.Screen
 
         void ProcessKeyStrokes()
         {
+            // TODO - switch this to instead send input through ProcessOneInputChar() once
+            // ProcessOneInputChar() is better fleshed out with all these keycodes.
+            //
+            
             Event e = Event.current;
             if (e.type == EventType.KeyDown)
             {
@@ -234,7 +243,7 @@ namespace kOS.Screen
                     consumeEvent = true;
                     return;
                 }
-                if (e.keyCode == KeyCode.X && e.control && e.shift) // Ctrl+Shift+X
+                if (e.keyCode == KeyCode.X && e.control && e.shift) // Ctrl+Shift+X - TODO: Change to support sending control-D too.
                 {
                     Close();
                     consumeEvent = true;
@@ -254,6 +263,111 @@ namespace kOS.Screen
 
                 cursorBlinkTime = 0.0f;
             }
+        }
+        
+        /// <summary>
+        /// Read all pending input from all telnet clients attached and process it all.
+        /// Hopefully this won't bog down anything, as we don't expect to get lots
+        /// of chars at once from keyboard input in a single update.  The amount of
+        /// characters pending in the queues should be very small since this is flushing it out
+        /// every update.  It could potentially be large if someone does a big cut-n-paste
+        /// into their terminal window and their telnet client therefore sends a wall of
+        /// text within the span of one Update().  Premature optimization is bad, so we'll
+        /// wait to see if that is a problem later.
+        /// </summary>
+        private void ProcessTelnetInput()
+        {
+            foreach (TelnetSingletonServer telnet in Telnets)
+            {
+                while (telnet.InputWaiting())
+                {
+                    System.Console.WriteLine("eraseme:ProcessTelnetInput: now calling ProcessOneInputChar, with telnet = " + (telnet==null ? "null" : "NOT null"));
+                    ProcessOneInputChar(telnet.ReadChar(), telnet);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Respond to one single input character in unicode, using the pretend
+        /// virtual unicode terminal keycodes described in the UnicodeCommand enum.
+        /// To keep things simple, all key input is coerced into single unicode chars
+        /// even if the actual keypress takes multiple characters to express in its
+        /// native form (i.e. ESC [ A means left-arrow on a VT100 terminal.  If
+        /// a telnet is talking via VT100 codes, that ESC [ A will get converted into
+        /// a single UnicdeCommand.LEFTCURSORONE character before being sent here.)
+        /// <br/>
+        /// This method is public because it is also how other mods should send input
+        /// to the terminal if they want some other soruce to send simulated keystrokes.
+        /// </summary>
+        /// <param name="ch">The character, which might be a UnicodeCommand char</param>
+        /// <param name="whichTelnet">If this came from a telnet session, which one did it come from?
+        /// Set to null in order to say it wasn't from a telnet but was from the interactive GUI</param>
+        public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet)
+        {
+            System.Console.WriteLine("eraseme:ProcessOneInputChar( "+(char)ch+", "+ (whichTelnet==null ? "null" : "NOT null") + ")");
+            // Weird exceptions for multi-char data combos that would have been begun on previous calls to this method
+            switch (inputExpected)
+            {
+                case ExpectNextChar.RESIZEWIDTH:
+                    pendingWidth = (int)ch;
+                    inputExpected = ExpectNextChar.RESIZEHEIGHT;
+                    return;
+                case ExpectNextChar.RESIZEHEIGHT:
+                    int height = (int)ch;
+                    shared.Screen.SetSize(height, pendingWidth);
+                    inputExpected = ExpectNextChar.NORMAL;
+                    return;
+                default:
+                    break;
+            }
+
+            // Printable ascii section of unicode - the common vanila situation
+            // (Idea: Since this is all unicode anyway, should we allow a wider range to
+            // include multi-language accent characters and so on?  Answer: to do so we'd
+            // first need to expand the font pictures in the fontimage file, so it's a
+            // bigger task than it may first seem.)
+            if (0x0020 <= ch && ch <= 0x007f)
+            {
+                 Type(ch);
+            }
+            else
+            {
+                switch(ch)
+                {
+                    case (char)UnicodeCommand.BREAK:           Keydown(KeyCode.Break);       break;
+                    case (char)UnicodeCommand.DELETELEFT:      Keydown(KeyCode.Backspace);   break;
+                    case (char)UnicodeCommand.DELETERIGHT:     Keydown(KeyCode.Delete);      break;
+                    case (char)UnicodeCommand.NEWLINERETURN:   Keydown(KeyCode.Return);      break;
+                    case (char)UnicodeCommand.UPCURSORONE:     Keydown(KeyCode.UpArrow);     break;
+                    case (char)UnicodeCommand.DOWNCURSORONE:   Keydown(KeyCode.DownArrow);   break;
+                    case (char)UnicodeCommand.LEFTCURSORONE:   Keydown(KeyCode.LeftArrow);   break;
+                    case (char)UnicodeCommand.RIGHTCURSORONE:  Keydown(KeyCode.RightArrow);  break;
+                    case (char)UnicodeCommand.HOMECURSOR:      Keydown(KeyCode.Home);        break;
+                    case (char)UnicodeCommand.ENDCURSOR:       Keydown(KeyCode.End);         break;
+                    case (char)UnicodeCommand.PAGEUPCURSOR:    Keydown(KeyCode.PageUp);      break;
+                    case (char)UnicodeCommand.PAGEDOWNCURSOR:  Keydown(KeyCode.PageDown);    break;
+                    // TODO - fill in the rest of the chars. 
+                    case (char)UnicodeCommand.RESIZESCREEN:    inputExpected = ExpectNextChar.RESIZEWIDTH; break; // next expected char is the width.
+
+                    case (char)0x04/*control-D*/:
+                        if (shared.Interpreter.IsAtStartOfCommand())
+                        {
+                            if (whichTelnet == null)
+                            {
+                                System.Console.WriteLine("eraseme:ProcessOneInputChar: in whichTelnet=null condition.");
+                                Close();
+                            }
+                            else
+                            {
+                                System.Console.WriteLine("eraseme:ProcessOneInputChar: in whichTelnet=NOT null condition.");
+                                whichTelnet.DisconnectFromProcessor();
+                            }
+                        }
+                        break;
+                }
+            }
+
+            // else ignore it - unimplemented char.
         }
 
         private void Keydown(KeyCode code)
@@ -460,12 +574,60 @@ namespace kOS.Screen
             this.shared.Window = this;
             NotifyOfScreenResize(this.shared.Screen);
             this.shared.Screen.AddResizeNotifier(NotifyOfScreenResize);
+            ChangeTitle(CalcualteTitle());
+        }
+        
+        internal string CalcualteTitle()
+        {
+           KOSNameTag partTag = shared.KSPPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
+           return String.Format("{0} CPU: {1} ({2})",
+                                shared.Vessel.vesselName,
+                                shared.KSPPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
+                                ((partTag==null) ? "" : partTag.nameTag)
+                                );
+        }
+        
+        internal void AttachTelnet(TelnetSingletonServer server)
+        {
+            Telnets.AddUnique(server);
+        }
+
+        internal void DetachTelnet(TelnetSingletonServer server)
+        {
+            Telnets.Remove(server);
         }
         
         internal int NotifyOfScreenResize(IScreenBuffer sb)
         {
             windowRect = new Rect(windowRect.xMin, windowRect.yMin, sb.ColumnCount*CHARSIZE + 65, sb.RowCount*CHARSIZE + 100);
+            
+            // Make all the connected telnet clients resize themselves to match:
+            string resizeCmd = new string( new [] {(char)UnicodeCommand.RESIZESCREEN, (char)sb.ColumnCount, (char)sb.RowCount} );
+            foreach (TelnetSingletonServer telnet in Telnets)
+                telnet.Write(resizeCmd);
             return 0;
+        }
+        
+        internal void ChangeTitle(string newTitle)
+        {
+            if (TitleText != newTitle) // For once, a direct simple reference-equals is really what we want.  Immutable strings should make this work quickly.
+            {
+                TitleText = newTitle;
+                foreach (TelnetSingletonServer telnet in Telnets)
+                    SendTitleToTelnet(telnet);
+            }
+        }
+
+        internal void SendTitleToTelnet(TelnetSingletonServer telnet)
+        {
+            // Make the telnet client learn about the new title:
+            string changeTitleCmd = String.Format("{0}{1}{2}",
+                                                  (char)UnicodeCommand.TITLEBEGIN,
+                                                  TitleText,
+                                                  (char)UnicodeCommand.TITLEEND);
+            System.Console.WriteLine("eraseme: debug: sendTitleToTelnet is sending this:");
+            for (int i=0; i<changeTitleCmd.Length; ++i) { System.Console.WriteLine("eraseme: changeTitleCmd["+i+"] = (int)" + (int)changeTitleCmd[i] + ", (char)"+ (char)changeTitleCmd[i]); }
+            telnet.Write(changeTitleCmd);
         }
         
         private int HowManyRowsFit()

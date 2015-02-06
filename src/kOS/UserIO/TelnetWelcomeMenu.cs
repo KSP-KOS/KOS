@@ -36,7 +36,9 @@ namespace kOS.UserIO
         public void Setup(TelnetSingletonServer tserver)
         {
             telnetServer = tserver;
-            lastMenuQueryTime = System.DateTime.MinValue; // Force a stale timestamp the first time so it will print the menu.
+            lastMenuQueryTime = System.DateTime.MinValue; // Force a stale timestamp the first time.
+            telnetServer.Write( (char)UnicodeCommand.TITLEBEGIN + "kOS Terminal Server Welcome Menu" + (char)UnicodeCommand.TITLEEND );
+            forceMenuReprint = true; // force it to print the menu once the first time regardless of the state of the CPU list.
         }
         
         public void Quit()
@@ -44,8 +46,7 @@ namespace kOS.UserIO
             telnetServer.StopListening();
             enabled = false;
         }
-            
-        
+                           
         public virtual void Update()
         {
             
@@ -56,7 +57,7 @@ namespace kOS.UserIO
             {
                 bool listChanged = CPUListChanged();
                 if (!firstTime && listChanged)
-                    telnetServer.Write("\r\n--(List of CPU's has Changed)--\r\n\r\n");
+                    telnetServer.Write("--(List of CPU's has Changed)--\r\n");
                 firstTime = false;
                 if (listChanged || forceMenuReprint )
                     PrintCPUMenu();
@@ -68,13 +69,12 @@ namespace kOS.UserIO
                 
                 switch (ch)
                 {
-                    case '\r':
-                    case '\n':
+                    case (char)UnicodeCommand.NEWLINERETURN:
                         LineEntered();
                         break;
-                    // Implement crude input editing (backspace only) in this menu prompt:
-                    case (char)0x08: // ascii backspace.
-                    case (char)0x127: // ascii del.
+                    // Implement crude input editing (backspace only - map delete to the same as backspace) in this menu prompt:
+                    case (char)UnicodeCommand.DELETELEFT:
+                    case (char)UnicodeCommand.DELETERIGHT:
                         if (localMenuBuffer.Length > 0)
                             localMenuBuffer.Remove(localMenuBuffer.Length-1,1);
                         telnetServer.Write((char)0x08+" "+(char)0x08); // backspace space backspace.
@@ -91,7 +91,6 @@ namespace kOS.UserIO
         {
             if (localMenuBuffer.Length == 0)
                 return;
-            telnetServer.Write("\r\n");
             string cmd = localMenuBuffer.ToString();
             kOS.Safe.Utilities.Debug.Logger.SuperVerbose( "TelnetWelcomeMenu.LineEntered(): String from client was: [" + cmd.ToString() + "]");
             localMenuBuffer.Remove(0,localMenuBuffer.Length); // clear the buffer for next line.
@@ -115,7 +114,7 @@ namespace kOS.UserIO
                 return;
             }
             telnetServer.ConnectToProcessor(availableCPUs[pickNumber-1]);
-            Quit();
+            // Quit(); - uncomment to make it so that the TelnetWelcomeMenu aborts telnet when done - for testing purposes.
         }
         
         private bool CPUListChanged()
@@ -143,7 +142,9 @@ namespace kOS.UserIO
 
             forceMenuReprint = false;
 
-            telnetServer.Write("    Available CPUS for Connection:\r\n");
+            telnetServer.Write("Terminal: type = " + telnetServer.ClientTerminalType + ", size = " + telnetServer.ClientWidth + "x" + telnetServer.ClientHeight + "\r\n");
+            telnetServer.Write("    Available CPUS for Connection:\r\n" +
+                               "+---------------------------------------+\r\n");
             
             int userPickNum = 1; 
             bool atLeastOne = false;
@@ -159,12 +160,19 @@ namespace kOS.UserIO
                 Vessel vessel = (thisPart == null) ? null/*can this even happen?*/ : thisPart.vessel;
                 string vesselLabel = (vessel == null) ? "<no vessel>"/*can this even happen?*/ : vessel.GetName();
                 
-                telnetServer.Write(String.Format("\t[{0}] Vessel({1}), CPU({2})\r\n",userPickNum, vesselLabel, partLabel));
+                telnetServer.Write(String.Format("[{0}] Vessel({1}), CPU({2})\r\n",userPickNum, vesselLabel, partLabel));
                 ++userPickNum;
             }
             if (atLeastOne)
-                telnetServer.Write("Type a selection number and press return/enter.\r\n" +
+                telnetServer.Write("+---------------------------------------+\r\n" +
+                                   "Choose a CPU to attach to by typing a\r\n" +
+                                   "selection number and pressing return/enter.\r\n" +
                                    "Or enter [Q] to quit terminal server.\r\n" +
+                                   "\r\n" +
+                                   "(After attaching, you can (D)etach and return\r\n" +
+                                   "to this menu by pressing Control-D as the first\r\n" +
+                                   "character on a new command line.)\r\n" +
+                                   "+---------------------------------------+\r\n" +
                                    "> ");
             else
                 telnetServer.Write("\t<NONE>\r\n");

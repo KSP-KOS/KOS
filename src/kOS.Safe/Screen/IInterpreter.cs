@@ -8,6 +8,7 @@ namespace kOS.Safe.Screen
         void SpecialKey(kOSKeys key);
         string GetCommandHistoryAbsolute(int absoluteIndex);
         void SetInputLock(bool isLocked);
+        bool IsAtStartOfCommand();
         void Reset();
     }
 }

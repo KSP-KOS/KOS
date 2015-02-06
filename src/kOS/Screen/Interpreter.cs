@@ -41,6 +41,15 @@ namespace kOS.Screen
                 InsertChar('\n');
             }
         }
+        
+        /// <summary>
+        /// Detect if the interpreter happens to be right at the start of a new command line.
+        /// </summary>
+        /// <returns>true if it's at the start of a new line</returns>
+        public bool IsAtStartOfCommand()
+        {
+            return LineBuilder == null || LineBuilder.Length == 0;
+        }
 
         public override void Type(char ch)
         {
