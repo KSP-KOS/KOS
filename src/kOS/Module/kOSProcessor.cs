@@ -112,6 +112,11 @@ namespace kOS.Module
             return shared.Window.IsOpen();
         }
         
+        public bool TelnetIsAttached()
+        {
+            return shared.Window.IsTelnetted();
+        }
+
         public IScreenBuffer GetScreen()
         {
             return shared.Screen;

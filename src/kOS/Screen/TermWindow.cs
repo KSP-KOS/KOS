@@ -631,6 +631,12 @@ namespace kOS.Screen
             for (int i=0; i<changeTitleCmd.Length; ++i) { System.Console.WriteLine("eraseme: changeTitleCmd["+i+"] = (int)" + (int)changeTitleCmd[i] + ", (char)"+ (char)changeTitleCmd[i]); }
             telnet.Write(changeTitleCmd);
         }
+
+        public virtual bool IsTelnetted()
+        {
+            return Telnets.Count > 0;
+        }
+
         
         private int HowManyRowsFit()
         {

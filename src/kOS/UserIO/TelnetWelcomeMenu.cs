@@ -33,9 +33,9 @@ namespace kOS.UserIO
             availableCPUs = new List<kOSProcessor>();
         }
         
-        public void Setup(TelnetSingletonServer tserver)
+        public void Setup(TelnetSingletonServer tServer)
         {
-            telnetServer = tserver;
+            telnetServer = tServer;
             lastMenuQueryTime = System.DateTime.MinValue; // Force a stale timestamp the first time.
             telnetServer.Write( (char)UnicodeCommand.TITLEBEGIN + "kOS Terminal Server Welcome Menu" + (char)UnicodeCommand.TITLEEND );
             forceMenuReprint = true; // force it to print the menu once the first time regardless of the state of the CPU list.

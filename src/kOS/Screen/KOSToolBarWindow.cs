@@ -37,6 +37,8 @@ namespace kOS.Screen
         private readonly Texture2D launcherButtonTexture;
         private readonly Texture2D terminalClosedIconTexture;
         private readonly Texture2D terminalOpenIconTexture;
+        private readonly Texture2D terminalClosedTelnetIconTexture;
+        private readonly Texture2D terminalOpenTelnetIconTexture;
         
         // ReSharper disable once RedundantDefaultFieldInitializer
         private bool clickedOn = false;
@@ -99,6 +101,8 @@ namespace kOS.Screen
             launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalClosedIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalOpenIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalClosedTelnetIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            terminalOpenTelnetIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
         }
 
         /// <summary>
@@ -114,15 +118,21 @@ namespace kOS.Screen
             const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
             const string TERMINAL_OPEN_ICON_PNG = "GameData/kOS/GFX/terminal-icon-open.png";
             const string TERMINAL_CLOSED_ICON_PNG = "GameData/kOS/GFX/terminal-icon-closed.png";
+            const string TERMINAL_OPEN_TELNET_ICON_PNG = "GameData/kOS/GFX/terminal-icon-open-telnet.png";
+            const string TERMINAL_CLOSED_TELNET_ICON_PNG = "GameData/kOS/GFX/terminal-icon-closed-telnet.png";
 
             // ReSharper disable SuggestUseVarKeywordEvident
             WWW launcherButtonImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
             WWW terminalOpenIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_OPEN_ICON_PNG);
             WWW terminalClosedIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_CLOSED_ICON_PNG);
+            WWW terminalOpenTelnetIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_OPEN_TELNET_ICON_PNG);
+            WWW terminalClosedTelnetIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_CLOSED_TELNET_ICON_PNG);
             // ReSharper enable SuggestUseVarKeywordEvident
             launcherButtonImage.LoadImageIntoTexture(launcherButtonTexture);
             terminalOpenIconImage.LoadImageIntoTexture(terminalOpenIconTexture);
             terminalClosedIconImage.LoadImageIntoTexture(terminalClosedIconTexture);
+            terminalOpenTelnetIconImage.LoadImageIntoTexture(terminalOpenTelnetIconTexture);
+            terminalClosedTelnetIconImage.LoadImageIntoTexture(terminalClosedTelnetIconTexture);
 
             windowRect = new Rect(0,0,width,height); // this origin point will move when opened/closed.
             panelSkin = BuildPanelSkin();
@@ -448,8 +458,10 @@ namespace kOS.Screen
             GUILayout.Box( new GUIContent(powerLabelText, powerLabelTooltip), powerBoxStyle);
 
             if (GUILayout.Button((processorModule.WindowIsOpen() ? 
-                                  new GUIContent(terminalOpenIconTexture, "Click to close terminal window.") :
-                                  new GUIContent(terminalClosedIconTexture, "Click to open terminal window.")),
+                                  new GUIContent((processorModule.TelnetIsAttached() ? terminalOpenTelnetIconTexture : terminalOpenIconTexture),
+                                                 "Click to close terminal window.") :
+                                  new GUIContent((processorModule.TelnetIsAttached() ? terminalClosedTelnetIconTexture : terminalClosedIconTexture),
+                                                 "Click to open terminal window.")),
                                   panelSkin.button))
                 processorModule.ToggleWindow();
 
