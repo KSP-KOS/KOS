@@ -27,13 +27,13 @@ namespace kOS.UserIO
         // actually part of the algorithm:
         // ReSharper disable RedundantDefaultFieldInitializer
         
-        private volatile TcpClient client;
+        private TcpClient client;
         
         /// <summary>
         /// The raw socket stream used to talk directly to the client across the network.
         /// It is bidirectional - handling both the input from and output to the client.
         /// </summary>
-        private volatile NetworkStream rawStream;
+        private NetworkStream rawStream;
         
         /// <summary>
         /// The queue that other parts of KOS can use to read characters from the telnet client.
@@ -52,9 +52,9 @@ namespace kOS.UserIO
         private Thread inThread;
         private Thread outThread;
         
-        private volatile TelnetWelcomeMenu welcomeMenu;
+        private TelnetWelcomeMenu welcomeMenu;
         
-        private volatile TerminalUnicodeMapper terminalMapper;
+        private TerminalUnicodeMapper terminalMapper;
         
         /// <summary>
         /// What order was I launched in?  Was I the 1st TelnetSingletonServer? The 2nd?  The 423rd?
