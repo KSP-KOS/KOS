@@ -26,6 +26,8 @@ namespace kOS.UserIO
         /// </summary>
         public string TerminalTypeString {get; protected set;}
         
+        protected readonly object lockAccess = new object(); // to ensure that multiple threads use the mapper atomicly, to avoid messing up it's state variables.
+        
         // Note that it's essential that these remain private and not get changed to protected or public.
         // Some of the derived classes of this class also use the same identifier name for their own
         // fields that have a very similar purpose, and in those cases there actually needs to be two

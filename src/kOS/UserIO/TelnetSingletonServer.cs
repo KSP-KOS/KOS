@@ -18,7 +18,7 @@ namespace kOS.UserIO
     /// single telnet client, leaving the main server free to go back to listening
     /// to other new connecting clients.
     /// </summary>
-    public class TelnetSingletonServer : MonoBehaviour
+    public class TelnetSingletonServer
     {
         // ReSharper disable SuggestUseVarKeywordEvident
         
@@ -27,13 +27,13 @@ namespace kOS.UserIO
         // actually part of the algorithm:
         // ReSharper disable RedundantDefaultFieldInitializer
         
-        private TcpClient client;
+        private volatile TcpClient client;
         
         /// <summary>
         /// The raw socket stream used to talk directly to the client across the network.
         /// It is bidirectional - handling both the input from and output to the client.
         /// </summary>
-        private NetworkStream rawStream;
+        private volatile NetworkStream rawStream;
         
         /// <summary>
         /// The queue that other parts of KOS can use to read characters from the telnet client.
@@ -46,18 +46,20 @@ namespace kOS.UserIO
         /// </summary>
         private volatile Queue<char> outQueue;
         private readonly object outQueueAccess = new object(); // To make all access of the outQueue atomic between threads.
-
-        public kOSProcessor ConnectedProcessor { get; private set; }
         
-        private byte[] rawReadBuffer = new byte[4096];
-        private byte[] rawWriteBuffer = new byte[4096];
+        public kOSProcessor ConnectedProcessor { get; private set; }
         
         private Thread inThread;
         private Thread outThread;
         
-        private TelnetWelcomeMenu welcomeMenu;
+        private volatile TelnetWelcomeMenu welcomeMenu;
         
-        private TerminalUnicodeMapper terminalMapper;
+        private volatile TerminalUnicodeMapper terminalMapper;
+        
+        /// <summary>
+        /// What order was I launched in?  Was I the 1st TelnetSingletonServer? The 2nd?  The 423rd?
+        /// </summary>
+        private int MySpawnOrder { get; set; }
         
         private bool isLineAtATime;
         private bool allowResize;
@@ -136,8 +138,9 @@ namespace kOS.UserIO
 
         private const byte RFC1073_NAWS     = 31;
         
-        public TelnetSingletonServer(TcpClient client)
+        public TelnetSingletonServer(TcpClient client, int spawnOrder)
         {
+            MySpawnOrder = spawnOrder;
             this.client = client;
             rawStream = client.GetStream();
             inThread = new Thread(DoInThread);
@@ -375,6 +378,8 @@ namespace kOS.UserIO
             // All threads in a KSP mod must be careful NOT to access any KSP or Unity methods
             // from inside their execution, because KSP and Unity are not threadsafe
 
+            byte[] rawReadBuffer = new byte[4096];
+
             while (true)
             {
                 // Detect if the client closed from its end:
@@ -459,8 +464,8 @@ namespace kOS.UserIO
         /// </summary>
         private void SpawnWelcomeMenu()
         {
-            var gObj = new GameObject( "TelnetWelcomeMenu_" + this.GetInstanceID(), typeof(TelnetWelcomeMenu) );
-            DontDestroyOnLoad(gObj);
+            var gObj = new GameObject( "TelnetWelcomeMenu_" + MySpawnOrder, typeof(TelnetWelcomeMenu) );
+            MonoBehaviour.DontDestroyOnLoad(gObj);
             welcomeMenu = (TelnetWelcomeMenu)gObj.GetComponent(typeof(TelnetWelcomeMenu));
             welcomeMenu.Setup(this);
         }

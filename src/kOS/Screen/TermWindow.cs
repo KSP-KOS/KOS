@@ -46,7 +46,7 @@ namespace kOS.Screen
         private KOSTextEditPopup popupEditor;
         private Color currentTextColor = new Color(1,1,1,1); // a dummy color at first just so it won't crash before TerminalGUI() where it's *really* set.
 
-        private List<TelnetSingletonServer> Telnets {get;set;} // support exists for more than one telnet client to be attached to the same terminal, thus this is a list.
+        private List<TelnetSingletonServer> Telnets; // support exists for more than one telnet client to be attached to the same terminal, thus this is a list.
         
         private ExpectNextChar inputExpected = ExpectNextChar.NORMAL;
         private int pendingWidth; // width to come from a resize combo.
@@ -277,8 +277,10 @@ namespace kOS.Screen
         /// </summary>
         private void ProcessTelnetInput()
         {
-            foreach (TelnetSingletonServer telnet in Telnets)
+            for( int i = 0 ; i < Telnets.Count ; ++i)
             {
+                TelnetSingletonServer telnet = Telnets[i];
+                System.Console.WriteLine("eraseme:ProcessTelnetInput: working on a telnet number ["+i+"] which is "+(telnet==null?"null":"NOT null"));
                 while (telnet.InputWaiting())
                 {
                     System.Console.WriteLine("eraseme:ProcessTelnetInput: now calling ProcessOneInputChar, with telnet = " + (telnet==null ? "null" : "NOT null"));

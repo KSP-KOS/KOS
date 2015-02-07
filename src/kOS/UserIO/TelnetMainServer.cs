@@ -28,22 +28,15 @@ namespace kOS.UserIO
         private Int32 port;
         private List<TelnetSingletonServer> telnets;
         private bool isListening;
-        private static TelnetMainServer instance;
         
         public TelnetMainServer()
         {
-            instance = this;
             isListening = false;
             telnets = new List<TelnetSingletonServer>();
             
             DontDestroyOnLoad(transform.gameObject); // Otherwise Unity will stop calling my Update() on the next scene change because my gameObject went away.
 
             Console.WriteLine("kOS TelnetMainServer class exists."); // Console.Writeline used because this occurs before kSP's logger is set up.
-        }
-        
-        public static TelnetMainServer Instance()
-        {
-            return instance ?? (instance = new TelnetMainServer());
         }
         
         public void SetConfigEnable(bool newVal)
@@ -93,6 +86,8 @@ namespace kOS.UserIO
         public void Update()
         {
             SetConfigEnable(Config.Instance.EnableTelnet);
+            
+            int howManySpawned = 0;
 
             if (!isListening)
             {
@@ -121,8 +116,9 @@ namespace kOS.UserIO
             string remoteIdent = ((IPEndPoint)(incomingClient.Client.RemoteEndPoint)).Address.ToString();
             kOS.Safe.Utilities.Debug.Logger.Log("kOS telnet server got an incoming connection from " + remoteIdent);
             
-            telnets.Add(new TelnetSingletonServer(incomingClient));
-            telnets[telnets.Count-1].StartListening();
+            TelnetSingletonServer newServer = new TelnetSingletonServer(incomingClient, ++howManySpawned);
+            telnets.Add(newServer);
+            newServer.StartListening();
         }
     }
 }
