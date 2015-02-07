@@ -39,11 +39,13 @@ namespace kOS.UserIO
         /// The queue that other parts of KOS can use to read characters from the telnet client.
         /// </summary>
         private volatile Queue<char> inQueue;
+        private readonly object inQueueAccess = new object(); // To make all access of the inQueue atomic between threads.
 
         /// <summary>
         /// The queue that other parts of kOS can use to write characters to the telent client.
         /// </summary>
         private volatile Queue<char> outQueue;
+        private readonly object outQueueAccess = new object(); // To make all access of the outQueue atomic between threads.
 
         public kOSProcessor ConnectedProcessor { get; private set; }
         
@@ -144,7 +146,7 @@ namespace kOS.UserIO
             inQueue = new Queue<char>();
             ClientWidth = 80; // common default for a lot of terminal progs.  Will allow resize via RFC1073.
             ClientHeight = 24; // common default for a lot of terminal progs.  Will allow resize via RFC1073.
-            ClientTerminalType = "UNKNOWN"; // will be set by telnet client as described by RFC 1091
+            ClientTerminalType = "INITIAL_UNSET"; // will be set by telnet client as described by RFC 1091
         }
 
         /// <summary>
@@ -179,11 +181,13 @@ namespace kOS.UserIO
         /// <returns>one character read</returns>
         public char ReadChar()
         {
+            System.Console.WriteLine("eraseme:TelnetSingletonServer.ReadChar(): My 'this' is " + (this==null ? "null" : "not null"));
             char ch;
-            lock (inQueue) // all access to inQueue and outQueue needs to be atomic.
+            lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic.
             {
                 ch = inQueue.Dequeue();
             }
+            System.Console.WriteLine("eraseme:TelnetSingletonServer.ReadChar(): I am going to return the char with value " + (int)ch);
             return ch;
         }
         
@@ -195,7 +199,7 @@ namespace kOS.UserIO
         public string ReadAll()
         {
             StringBuilder sb = new StringBuilder();
-            lock (inQueue) // all access to inQueue and outQueue needs to be atomic.
+            lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic.
             {
                 while (inQueue.Count > 0)
                     sb.Append(inQueue.Dequeue());
@@ -208,8 +212,9 @@ namespace kOS.UserIO
         /// </summary>true if input is currently Queued</returns>
         public bool InputWaiting()
         {
+            System.Console.WriteLine("eraseme:TelnetSingletonServer.InputWaiting(): My 'this' is " + (this==null ? "null" : "not null"));
             bool returnVal;
-            lock (inQueue)
+            lock (inQueueAccess)
             {
                 returnVal = inQueue.Count > 0;
             }
@@ -230,7 +235,7 @@ namespace kOS.UserIO
         /// <param name="ch">character to write</param>
         public void Write(char ch)
         {
-            lock(outQueue) // all access to inQueue and outQueue needs to be atomic.
+            lock(outQueueAccess) // all access to inQueue and outQueue needs to be atomic.
             {
                 outQueue.Enqueue(ch);
             }
@@ -250,7 +255,7 @@ namespace kOS.UserIO
         /// <param name="str">string to write</param>
         public void Write(string str)
         {
-            lock(outQueue) // all access to inQueue and outQueue needs to be atomic.
+            lock(outQueueAccess) // all access to inQueue and outQueue needs to be atomic.
             {
                 foreach (char ch in str)
                     outQueue.Enqueue(ch);
@@ -290,8 +295,8 @@ namespace kOS.UserIO
         public void StopListening()
         {
             SendTextRaw("\r\nDisconnecting from the kOS Terminal Server.\r\n");
-            // Must use SendTextRaw, not Write, because we're about to kill the outThread before it has time to process the Write chars:
-            SendTextRaw(terminalMapper.OutputConvert( (char)UnicodeCommand.TITLEBEGIN + "disconnected from kOS terminal server" + (char)UnicodeCommand.TITLEEND ));
+            // Must use SendTextRaw, not Write, because we're about to kill the outThread before it has time to process the queue that Write uses:
+            SendTextRaw(terminalMapper.OutputConvert( (char)UnicodeCommand.TITLEBEGIN + "Thank you for using kOS terminal server" + (char)UnicodeCommand.TITLEEND ));
             
             inThread.Abort();
             inThread = null; // dispose old thread.
@@ -304,16 +309,13 @@ namespace kOS.UserIO
 
         public void StartListening()
         {
-            // Must use SendTextRaw, not Write, because the outThread needs to be started for Write() to work:
-            SendTextRaw("Connected to the kOS Terminal Server.\r\n");
-            SendTextRaw(terminalMapper.OutputConvert( (char)UnicodeCommand.TITLEBEGIN + "Connected from kOS terminal server" + (char)UnicodeCommand.TITLEEND ));
-            
             inThread.Start();
             outThread.Start();
-            
             LineAtATime(false); 
             AllowTerminalResize(true);
             AllowTerminalTypeInfo(true);
+
+            SendTextRaw("Connected to the kOS Terminal Server.\r\n");
         }
         
         /// <summary>
@@ -405,7 +407,7 @@ namespace kOS.UserIO
                 {
                     char[] scrapedBytes = Encoding.UTF8.GetChars(TelnetProtocolScrape(rawReadBuffer, numRead));
                     string sendOut = (terminalMapper == null) ? (new string(scrapedBytes)) : terminalMapper.InputConvert(scrapedBytes);
-                    lock (inQueue) // all access to inQueue and outQueue needs to be atomic
+                    lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic
                     {
                         foreach (char ch in sendOut)
                         {
@@ -428,7 +430,7 @@ namespace kOS.UserIO
             while (true)
             {
                 sb.Remove(0,sb.Length); // clear the whole thing.
-                lock(outQueue) // all access to inQueue and outQueue needs to be atomic.
+                lock(outQueueAccess) // all access to inQueue and outQueue needs to be atomic.
                 {
                     while (outQueue.Count > 0)
                     {
@@ -510,7 +512,7 @@ namespace kOS.UserIO
                             case RFC854_IAC:
                                 break; // pass through to normal behaviour when two IAC's are back to back - that's how a real IAC char is encoded.
                             case RFC854_BREAK:
-                                lock (inQueue) { inQueue.Enqueue((char)UnicodeCommand.BREAK); } // async send it out of order, right now.
+                                lock (inQueueAccess) { inQueue.Enqueue((char)UnicodeCommand.BREAK); } // async send it out of order, right now.
                                 ++rawIndex;
                                 break;
                             default:
@@ -726,7 +728,7 @@ namespace kOS.UserIO
             if (width > 0) ClientWidth = width;
             if (height > 0) ClientHeight = height;
 
-            lock (inQueue) // all access to inQueue and outQueue needs to be atomic
+            lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic
             {
                 inQueue.Enqueue( (char)UnicodeCommand.RESIZESCREEN );
                 inQueue.Enqueue( (char)ClientWidth );
