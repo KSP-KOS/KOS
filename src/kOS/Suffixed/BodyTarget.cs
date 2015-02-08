@@ -86,6 +86,38 @@ namespace kOS.Suffixed
             AddSuffix("ROTATIONPERIOD", new Suffix<double>(()=> Body.rotationPeriod));
             AddSuffix("ATM", new Suffix<BodyAtmosphere>(()=> new BodyAtmosphere(Body)));
             AddSuffix("ANGULARVEL", new Suffix<Direction>(()=> new Direction(Body.angularVelocity, true)));
+            AddSuffix("GEOPOSITIONOF",
+                      new OneArgsSuffix<GeoCoordinates,Vector>(
+                              GeoCoordinatesFromPosition,
+                              "Interpret the vector given as a 3D position, and return the geocoordinates directly underneath it on this body."));
+            AddSuffix("ALTITUDEOF",
+                      new OneArgsSuffix<double,Vector>(
+                              AltitudeFromPosition,
+                              "Interpret the vector given as a 3D position, and return its altitude above 'sea level' of this body."));
+        }
+
+        /// <summary>
+        /// Interpret the vector given as a 3D position, and return the geocoordinates directly underneath it on this body.
+        /// </summary>
+        /// <param name="position">Vector to use as the 3D position in ship-raw coords</param>
+        /// <returns>The GeoCoordinates under the position.</returns>
+        public GeoCoordinates GeoCoordinatesFromPosition(Vector position)
+        {
+            Vector3d unityWorldPosition = Shared.Vessel.findWorldCenterOfMass() + position.ToVector3D();
+            double lat = Body.GetLatitude(unityWorldPosition);
+            double lng = Body.GetLongitude(unityWorldPosition);
+            return new GeoCoordinates(Body, Shared, lat, lng);
+        }
+        
+        /// <summary>
+        /// Interpret the vector given as a 3D position, and return the altitude above sea level of this body.
+        /// </summary>
+        /// <param name="position">Vector to use as the 3D position in ship-raw coords</param>
+        /// <returns>The altitude above 'sea level'.</returns>
+        public double AltitudeFromPosition(Vector position)
+        {
+            Vector3d unityWorldPosition = Shared.Vessel.findWorldCenterOfMass() + position.ToVector3D();
+            return Body.GetAltitude(unityWorldPosition);
         }
         
         public double GetDistance()

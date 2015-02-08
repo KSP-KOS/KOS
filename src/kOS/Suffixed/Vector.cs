@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 
 namespace kOS.Suffixed
