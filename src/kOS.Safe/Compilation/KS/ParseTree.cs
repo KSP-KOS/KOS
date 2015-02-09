@@ -289,6 +289,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.deploy_stmt:
                     Value = Evaldeploy_stmt(tree, paramlist);
                     break;
+                case TokenType.hudtxt_stmt:
+                    Value = Evalhudtxt_stmt(tree, paramlist);
+                    break;
                 case TokenType.arglist:
                     Value = Evalarglist(tree, paramlist);
                     break;
@@ -605,6 +608,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evaldeploy_stmt(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalhudtxt_stmt(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
