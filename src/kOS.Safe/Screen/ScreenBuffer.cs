@@ -15,7 +15,8 @@ namespace kOS.Safe.Screen
         void MoveToNextLine();
         void PrintAt(string textToPrint, int row, int column);
         void Print(string textToPrint);
-        void Print(string textToPrint, bool addNewLine);
+-       void Print(string textToPrint, bool addNewLine);
+		void HudTxt(string textToHud, int delay, int style, int size, string color, int mirror );
         void ClearScreen();
         void AddSubBuffer(SubBuffer subBuffer);
         void RemoveSubBuffer(SubBuffer subBuffer);
@@ -37,8 +38,7 @@ namespace kOS.Safe.Screen
         public virtual int CursorColumnShow { get { return CursorColumn; } }
         public int RowCount { get; private set; }
         public int ColumnCount { get; private set; }
-
-        public int AbsoluteCursorRow
+		public int AbsoluteCursorRow
         {
             get { return CursorRow + topRow; }
             set { CursorRow = value - topRow; }
@@ -154,7 +154,6 @@ namespace kOS.Safe.Screen
         {
             Print(textToPrint, true);
         }
-
         public void Print(string textToPrint, bool addNewLine)
         {
             List<string> lines = SplitIntoLines(textToPrint);
@@ -203,12 +202,17 @@ namespace kOS.Safe.Screen
             MoveColumn(textToPrint.Length);
         }
 
+		public void HudTxt(string textToHud, int delay, int style, int size, string color, int mirror)
+		{
+		}
+
         public void ClearScreen()
         {
             buffer.Clear();
             InitializeBuffer();
         }
 
+	
         public void AddSubBuffer(SubBuffer subBuffer)
         {
             subBuffers.Add(subBuffer);
