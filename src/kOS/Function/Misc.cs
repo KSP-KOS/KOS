@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using kOS.Execution;
 using kOS.Safe.Compilation;
@@ -17,6 +17,51 @@ namespace kOS.Function
             shared.Screen.ClearScreen();
         }
     }
+
+	[Function("hudtxt")]
+	public class FunctionHudTxt : FunctionBase
+	{
+
+		public override void Execute(SharedObjects shared)
+
+		{
+			int mirror 			= Convert.ToInt32(shared.Cpu.PopValue());
+			string color 		= shared.Cpu.PopValue().ToString();
+			int size 			= Convert.ToInt32(shared.Cpu.PopValue());	
+			int style 			= Convert.ToInt32(shared.Cpu.PopValue());
+			int delay 			= Convert.ToInt32(shared.Cpu.PopValue());	
+			string textToHud 	= shared.Cpu.PopValue().ToString();
+
+			if (style == 1)
+				{
+				ScreenMessages.PostScreenMessage("<color="+color+"><size="+size+">"+textToHud+"</size></color>", delay, ScreenMessageStyle.UPPER_LEFT);
+				}
+			else if (style == 2)
+				{
+				ScreenMessages.PostScreenMessage("<color="+color+"><size="+size+">"+textToHud+"</size></color>", delay, ScreenMessageStyle.UPPER_CENTER);
+				}
+			else if (style == 3)
+				{
+				ScreenMessages.PostScreenMessage("<color="+color+"><size="+size+">"+textToHud+"</size></color>", delay, ScreenMessageStyle.UPPER_RIGHT);
+				}
+			else if (style == 4)
+				{
+				ScreenMessages.PostScreenMessage("<color="+color+"><size="+size+">"+textToHud+"</size></color>", delay, ScreenMessageStyle.LOWER_CENTER);
+				}
+			else 
+				{
+				ScreenMessages.PostScreenMessage("*"+textToHud, 3f, ScreenMessageStyle.UPPER_CENTER);
+				}
+			if (mirror == 1) 
+				{
+				shared.Screen.Print ("HUD: " + textToHud);
+				shared.Screen.Print ("delay " + delay);
+				shared.Screen.Print ("color " + color);
+				shared.Screen.Print ("size " + size);
+				}
+		}
+	} 
+
 
     [Function("print")]
     public class FunctionPrint : FunctionBase
