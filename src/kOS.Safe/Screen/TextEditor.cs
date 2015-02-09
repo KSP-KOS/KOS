@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.Utilities;
+using kOS.Safe.UserIO;
 
 namespace kOS.Safe.Screen
 {
@@ -49,31 +50,31 @@ namespace kOS.Safe.Screen
             }
         }
 
-        public virtual void SpecialKey(kOSKeys key)
+        public virtual void SpecialKey(char key)
         {
             switch (key)
             {
-                case kOSKeys.LEFT:
+                case (char)UnicodeCommand.LEFTCURSORONE:
                     TryMoveCursor(-1);
                     break;
-                case kOSKeys.RIGHT:
+                case (char)UnicodeCommand.RIGHTCURSORONE:
                     TryMoveCursor(1);
                     break;
-                case kOSKeys.HOME:
+                case (char)UnicodeCommand.HOMECURSOR:
                     LineCursorIndex = 0;
                     UpdateSubBufferCursor();
                     break;
-                case kOSKeys.END:
+                case (char)UnicodeCommand.ENDCURSOR:
                     LineCursorIndex = LineBuilder.Length;
                     UpdateSubBufferCursor();
                     break;
-                case kOSKeys.DEL:
+                case (char)UnicodeCommand.DELETERIGHT:
                     RemoveChar();
                     break;
-                case kOSKeys.PGUP:
+                case (char)UnicodeCommand.PAGEUPCURSOR:
                     ScrollVertical(-10);
                     break;
-                case kOSKeys.PGDN:
+                case (char)UnicodeCommand.PAGEDOWNCURSOR:
                     ScrollVertical(10);
                     break;
             }

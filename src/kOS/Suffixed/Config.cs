@@ -22,7 +22,6 @@ namespace kOS.Suffixed
         public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
         public bool EnableTelnet { get { return GetPropValue<bool>(PropId.EnableTelnet); } set { SetPropValue(PropId.EnableTelnet, value); } }
         public int TelnetPort { get { return GetPropValue<int>(PropId.TelnetPort); } set { SetPropValue(PropId.TelnetPort, value); } }
-        public bool TelnetUsesLoopback { get { return GetPropValue<bool>(PropId.TelnetUsesLoopback); } set { SetPropValue(PropId.TelnetUsesLoopback, value); } }
         
         private Config()
         {
@@ -44,7 +43,6 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableTelnet, new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
             AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number", 5410, 1024, 32767, typeof(int)));
-            AddConfigKey(PropId.TelnetUsesLoopback, new ConfigKey("TelnetUsesLoopback", "LOOPBACK", "Force telnet to use 127.0.0.1", true, false, true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -181,8 +179,7 @@ namespace kOS.Suffixed
             EnableSafeMode = 6,
             VerboseExceptions = 7,
             EnableTelnet = 8,
-            TelnetPort = 9,
-            TelnetUsesLoopback = 10
+            TelnetPort = 9
         }
     }
 

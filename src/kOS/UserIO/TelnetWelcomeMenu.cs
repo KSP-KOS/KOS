@@ -5,6 +5,7 @@ using System.Text;
 using System.Linq;
 using UnityEngine;
 using kOS.Module;
+using kOS.Safe.UserIO;
 
 namespace kOS.UserIO
 {
@@ -22,7 +23,7 @@ namespace kOS.UserIO
         private DateTime lastMenuQueryTime;
         private StringBuilder localMenuBuffer;
         private bool firstTime;
-        private bool forceMenuReprint;
+        private volatile bool forceMenuReprint;
         
         // Because this will be created as a Unity Gameobject, it has to have a parameterless constructor.
         // Actual setup args will be in the Setup() method below.
@@ -46,6 +47,15 @@ namespace kOS.UserIO
             telnetServer.StopListening();
             enabled = false;
         }
+        
+        /// <summary>
+        /// The telnet server should tell me when the client got resized by calling this.
+        /// I will reprint my menu in that case, since it is calculated by terminal width.
+        /// </summary>
+        public void NotifyResize()
+        {
+            forceMenuReprint = true;
+        }
                            
         public virtual void Update()
         {
@@ -55,6 +65,8 @@ namespace kOS.UserIO
             // Querying the list of CPU's can be a little expensive, so don't do it too often:
             if (System.DateTime.Now > lastMenuQueryTime + TimeSpan.FromMilliseconds(1000))
             {
+                if (forceMenuReprint)
+                    telnetServer.Write((char)UnicodeCommand.CLEARSCREEN); // if we HAVE to reprint - do so on a clear screen.
                 bool listChanged = CPUListChanged();
                 if (!firstTime && listChanged)
                     telnetServer.Write("--(List of CPU's has Changed)--\r\n");
@@ -69,7 +81,7 @@ namespace kOS.UserIO
                 
                 switch (ch)
                 {
-                    case (char)UnicodeCommand.NEWLINERETURN:
+                    case (char)UnicodeCommand.STARTNEXTLINE:
                         LineEntered();
                         break;
                     // Implement crude input editing (backspace only - map delete to the same as backspace) in this menu prompt:
@@ -143,14 +155,13 @@ namespace kOS.UserIO
             forceMenuReprint = false;
 
             telnetServer.Write("Terminal: type = " + telnetServer.ClientTerminalType + ", size = " + telnetServer.ClientWidth + "x" + telnetServer.ClientHeight + "\r\n");
-            telnetServer.Write("    Available CPUS for Connection:\r\n" +
-                               "+---------------------------------------+\r\n");
+            telnetServer.Write(CenterPadded(" Available CPUs for Connection: ",'=') + "\r\n");
             
-            int userPickNum = 1; 
-            bool atLeastOne = false;
+            int userPickNum = 1;
+            int longestLength = 0;
+            List<string> displayChoices = new List<string>();
             foreach (kOSProcessor kModule in availableCPUs)
             {
-                atLeastOne = true;
                 Part thisPart = kModule.part;
                 KOSNameTag partTag = thisPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
                 string partLabel = String.Format("{0}({1})",
@@ -160,23 +171,47 @@ namespace kOS.UserIO
                 Vessel vessel = (thisPart == null) ? null/*can this even happen?*/ : thisPart.vessel;
                 string vesselLabel = (vessel == null) ? "<no vessel>"/*can this even happen?*/ : vessel.GetName();
                 
-                telnetServer.Write(String.Format("[{0}] Vessel({1}), CPU({2})\r\n",userPickNum, vesselLabel, partLabel));
+                string choice = String.Format("[{0}] Vessel({1}), CPU({2})",userPickNum, vesselLabel, partLabel);
+                displayChoices.Add(choice);
+                longestLength = Math.Max(choice.Length, longestLength);
                 ++userPickNum;
             }
-            if (atLeastOne)
-                telnetServer.Write("+---------------------------------------+\r\n" +
-                                   "Choose a CPU to attach to by typing a\r\n" +
-                                   "selection number and pressing return/enter.\r\n" +
+            foreach (string choice in displayChoices)
+            {
+                string choicePaddedToLongest = choice + new String(' ',(longestLength - choice.Length));
+                telnetServer.Write(CenterPadded(choicePaddedToLongest, ' ') + "\r\n" );
+            }
+            
+            if (displayChoices.Count > 0)
+                telnetServer.Write(CenterPadded("",'-')/*line of '-' chars*/ + "\r\n" +
+                                   "Choose a CPU to attach to by typing a " +
+                                   "selection number and pressing return/enter. " +
                                    "Or enter [Q] to quit terminal server.\r\n" +
                                    "\r\n" +
-                                   "(After attaching, you can (D)etach and return\r\n" +
-                                   "to this menu by pressing Control-D as the first\r\n" +
+                                   "(After attaching, you can (D)etach and return " +
+                                   "to this menu by pressing Control-D as the first " +
                                    "character on a new command line.)\r\n" +
-                                   "+---------------------------------------+\r\n" +
+                                   CenterPadded("", '-')/*line of '-' chars*/ + "\r\n" +
                                    "> ");
             else
                 telnetServer.Write("\t<NONE>\r\n");
 
+        }
+        
+        
+        /// <summary>
+        /// For writing out a message to the screen, trying to center it according to
+        /// what the telnet client claimed its current width is:
+        /// </summary>
+        /// <param name="msg">message to center</param>
+        /// <param name="padChar">character to pad with. ' ' for space, '=' or '-' to draw a line across.</param>
+        /// <returns>the padded version of the string</returns>
+        private string CenterPadded(string msg, char padChar)
+        {
+            int width = telnetServer.ClientWidth;
+            int halfPadWidth = (width - msg.Length)/2;
+            string padString = new String(padChar, halfPadWidth);
+            return padString + msg + padString;
         }
         
     }

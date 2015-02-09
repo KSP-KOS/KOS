@@ -8,7 +8,7 @@
  */
 using System;
 
-namespace kOS.UserIO
+namespace kOS.Safe.UserIO
 {
     /// <summary>
     /// A list of extra unicode command characters we use to genericize command codes, abstracting away
@@ -48,6 +48,11 @@ namespace kOS.UserIO
         CLEARSCREEN,
         
         /// <summary>
+        /// (input only) keypress that means "please do a full redraw for me".
+        /// </summary>
+        REQUESTREPAINT,
+        
+        /// <summary>
         /// Tell the terminal to resize itself to a new row/col size.  Not all terminals will be capable of doing this.
         /// This can be communicated in either direction - for the client telling the server it has been resized, or
         /// for the server telling the client to it needs to resize itself.
@@ -75,6 +80,9 @@ namespace kOS.UserIO
         /// Begins a cursor move to an exact position.  Expects exactly 2 more
         /// unicode chars to follow, interpreted as binary number data (not as characters)
         /// for the row num and column num, respectively.
+        /// <br/>
+        /// Note that the pretend Unicode terminal counts rows and columns starting from 0.  When converting
+        /// for a terminal type that counts starting at 1, you may need to add 1 to these numbers.
         /// </summary>
         TELEPORTCURSOR,
 
@@ -171,12 +179,27 @@ namespace kOS.UserIO
         /// this one.  This character means go to the start of the next line.
         /// Also used on input to represent hitting either the return or the enter key.
         /// </summary>
-        NEWLINERETURN
+        STARTNEXTLINE,
+        
+        /// <summary>
+        /// Perform a linefeed straight down (the official ASCII definition of a LF char,
+        /// where it doesn't go to the start of a line).  You can probably just map this
+        /// directly to a LF in most cases and in fact the base mapper class will do that.
+        /// </summary>
+        LINEFEEDKEEPCOL,
+        
+        /// <summary>
+        /// Go to the start of the current line. withiout line-feeding.  (the official ASCII
+        /// definition of the CR character).  You can probably just map this directly
+        /// to a CR in most cases, and in fact the base mapper class will do that.
+        /// </summary>
+        GOTOLEFTEDGE,
+        
     }
 
     // For tracking multiple-character input sequences to remember where it is in the sequence:
     public enum ExpectNextChar {
-        NORMAL, RESIZEWIDTH, RESIZEHEIGHT, INTITLE,
+        NORMAL, RESIZEWIDTH, RESIZEHEIGHT, INTITLE, TELEPORTCURSORCOL, TELEPORTCURSORROW
     }
 
 }

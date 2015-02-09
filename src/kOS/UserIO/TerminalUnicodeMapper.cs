@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using kOS.Safe.UserIO;
 
 namespace kOS.UserIO
 {
@@ -120,6 +121,15 @@ namespace kOS.UserIO
                             case (char)(UnicodeCommand.TITLEBEGIN):
                                 outputExpected = ExpectNextChar.INTITLE;
                                 break;
+                            case (char)(UnicodeCommand.STARTNEXTLINE):
+                                sb.Append("\r\n");
+                                break;
+                            case (char)(UnicodeCommand.LINEFEEDKEEPCOL):
+                                sb.Append("\n");
+                                break;
+                            case (char)(UnicodeCommand.GOTOLEFTEDGE):
+                                sb.Append("\r");
+                                break;
                             default: 
                                 sb.Append(str[index]); // default passhtrough
                                 break;
@@ -154,19 +164,23 @@ namespace kOS.UserIO
                         outChars.Add((char)UnicodeCommand.DELETELEFT);
                         break;
                     case (char)0x7f: // ascii 127 = the delete character
-                        outChars.Add(((char)UnicodeCommand.DELETERIGHT));
+                        outChars.Add((char)UnicodeCommand.DELETERIGHT);
                         break;
                     case '\r':
                         if (prevCh == '\n') // A \r after a \n should be ignored - we already got it from the \n:
                             outChars.Add(ch); // passthrough as-is.
                         else
-                            outChars.Add(((char)UnicodeCommand.NEWLINERETURN));
+                            outChars.Add((char)UnicodeCommand.STARTNEXTLINE);
                         break;
                     case '\n':
                         if (prevCh == '\r') // A \n after a \r should be ignored - we already got it from the \r:
                             outChars.Add(ch); // passthrough as-is.
                         else
-                            outChars.Add(((char)UnicodeCommand.NEWLINERETURN));
+                            outChars.Add((char)UnicodeCommand.STARTNEXTLINE);
+                        break;
+                    case (char)0x0c: // control-L.
+                    case (char)0x12: // control-R.
+                        outChars.Add((char)UnicodeCommand.REQUESTREPAINT);
                         break;
                     case (char)0x03: // Control-C. map to BREAK just as if the telnet client had sent a hard break in the protocol.
                         outChars.Add((char)UnicodeCommand.BREAK);

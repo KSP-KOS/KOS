@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using kOS.Safe.UserIO;
 
 namespace kOS.UserIO
 {
@@ -15,6 +16,57 @@ namespace kOS.UserIO
             TerminalTypeID = TerminalType.XTERM;
         }
         
+        private ExpectNextChar outputExpected = ExpectNextChar.NORMAL;
+        private int pendingCol;
+        
+        /// <summary>
+        /// Map the unicode chars (and the fake control codes we made) into bytes.
+        /// In this base class, all it does is just mostly passthru things as-is with no
+        /// conversions.<br/>
+        /// Subclasses of this should perform their own manipulations, then fallthrough
+        /// to this base class inmplementation at the bottom, to allow chains of
+        /// subclasses to all operate on the data.
+        /// </summary>
+        /// <param name="ch">unicode char</param>
+        /// <returns>raw byte stream to send to the terminal</returns>
+        public override char[] OutputConvert(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int index = 0 ; index < str.Length ; ++index)
+            {
+                switch (outputExpected)
+                {
+                    case ExpectNextChar.TELEPORTCURSORCOL:
+                        pendingCol = (int)(str[index]);
+                        outputExpected = ExpectNextChar.TELEPORTCURSORROW;
+                        break;
+                    case ExpectNextChar.TELEPORTCURSORROW:
+                        int row = (int)(str[index]);
+                        // VT100 counts rows and cols starting at 1, not 0, thus the +1's below:
+                        System.Console.WriteLine("eraseme: TELEPORTCURSOR to " + pendingCol + " by " + row);
+                        sb.Append(((char)0x1b)/*ESC*/ + "[" + (row+1) + ";" + (pendingCol+1) + "H");
+                        outputExpected = ExpectNextChar.NORMAL;
+                        break;
+                    default:
+                        switch (str[index])
+                        {
+                            case (char)(UnicodeCommand.TELEPORTCURSOR):
+                                outputExpected = ExpectNextChar.TELEPORTCURSORCOL;
+                                break;
+                            case (char)(UnicodeCommand.CLEARSCREEN):
+                                sb.Append((char)0x1b/*ESC*/ + "[2J" + (char)0x1b/*ESC*/ + "[H");
+                                break;
+                            default: 
+                                sb.Append(str[index]); // default passhtrough
+                                break;
+                        }
+                        break;
+                }
+            }
+            return base.OutputConvert(sb.ToString());
+        }
+
         /// <summary>
         /// Provide the VT100 specific mappings of input chars, then fallback to the
         /// base class's mapping to see if there's other conversions to do.
@@ -85,6 +137,7 @@ namespace kOS.UserIO
                 switch (inChars[offset])
                 {
                     case '1': returnChar = (char)UnicodeCommand.HOMECURSOR;      numConsumed = 2; break;
+                    case '3': returnChar = (char)UnicodeCommand.DELETERIGHT;     numConsumed = 2; break;
                     case '4': returnChar = (char)UnicodeCommand.ENDCURSOR;       numConsumed = 2; break;
                     case '5': returnChar = (char)UnicodeCommand.PAGEUPCURSOR;    numConsumed = 2; break;
                     case '6': returnChar = (char)UnicodeCommand.PAGEDOWNCURSOR;  numConsumed = 2; break;

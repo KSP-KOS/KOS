@@ -10,6 +10,7 @@ using kOS.Module;
 using UnityEngine;
 using System.IO;
 using System.IO.Pipes;
+using kOS.Safe.UserIO;
 
 namespace kOS.UserIO
 {
@@ -27,7 +28,7 @@ namespace kOS.UserIO
         // actually part of the algorithm:
         // ReSharper disable RedundantDefaultFieldInitializer
         
-        private TcpClient client;
+        private volatile TcpClient client;
         
         /// <summary>
         /// The raw socket stream used to talk directly to the client across the network.
@@ -71,6 +72,14 @@ namespace kOS.UserIO
                                              // so as to prevent accidentally typing this name instead of the property.  It's essential
                                              // that all the access even inside this class itself, be done via the property to
                                              // force it to keep the terminalMapper updated to match.
+
+        private readonly object keepAliveAccess = new object(); // because the timestamps can be seen by both in and out threads.
+
+        private bool gotSomeRecentTraffic = true; // start off assumig it's alive.
+        private DateTime keepAliveSendTimeStamp;
+        private double hungCheckInterval = 10; // Seconds that a keepalive must have failed to give a response before assuming telnet client is dead.
+        private bool deadSocket = false;
+
         public string ClientTerminalType
         {
             get{ return termTypeBackingField;}
@@ -94,7 +103,7 @@ namespace kOS.UserIO
         private const byte RFC854_BREAK    = 243; //  NVT character BRK.
         private const byte RFC854_IP       = 244; //  The function IP.
         private const byte RFC854_AO       = 245; //  The function AO.
-        private const byte RFC854_AYT      = 246; //  The function AYT.
+        private const byte RFC854_AYT      = 246; //  The function AYT. ("Are you There"). Used to check for keepalive timings.
         private const byte RFC854_EC       = 247; //  The function EC.
         private const byte RFC854_EL       = 248; // The function EL.
         private const byte RFC864_GA       = 249; //  The GA signal.
@@ -143,6 +152,8 @@ namespace kOS.UserIO
             MySpawnOrder = spawnOrder;
             this.client = client;
             rawStream = client.GetStream();
+            lock (keepAliveAccess)
+                gotSomeRecentTraffic = true;
             inThread = new Thread(DoInThread);
             outThread = new Thread(DoOutThread);
             outQueue = new Queue<char>();
@@ -159,9 +170,10 @@ namespace kOS.UserIO
         public void ConnectToProcessor(kOSProcessor processor)
         {
             ConnectedProcessor = processor;
-            ConnectedProcessor.GetScreen().SetSize(ClientHeight, ClientWidth);
-            ConnectedProcessor.GetWindow().AttachTelnet(this);
+            ConnectedProcessor.GetScreen().SetSize(ClientHeight, ClientWidth); // Reset the GUI terminal to match the telnet window.
+            ConnectedProcessor.GetWindow().AttachTelnet(this); // Tell the GUI window that I am one of its telnets now (even when closed, it still does the heavy lifting).
             ConnectedProcessor.GetWindow().SendTitleToTelnet(this);
+            ConnectedProcessor.GetWindow().RepaintTelnet(this, true); // Need to start with a full paint of the terminal.
         }
 
         public void DisconnectFromProcessor()
@@ -290,28 +302,60 @@ namespace kOS.UserIO
         /// <param name="str"></param>
         private void SendTextRaw(byte[] buff)
         {
-            rawStream.Write(buff, 0, buff.Length);
-            System.Console.WriteLine("eraseme: Just wrote the following buffer chunk out to the client:");
-            for (int i=0; i<buff.Length; ++i) { System.Console.WriteLine("eraseme: buff["+i+"] = (int)"+ (int)buff[i] + " = '" + (char)buff[i] + "'"); }
+            bool verboseDebugSend = true;
+            try
+            {
+                rawStream.Write(buff, 0, buff.Length);
+            }
+            catch (Exception e)
+            {
+                // If the client closed its side just before we were about to write something out, the above write can fail and
+                // cause an exception that would have killed the DoOutThread() before it had a chance to do its cleanup.
+                if (e is System.IO.IOException || e is System.ObjectDisposedException)
+                    deadSocket = true;
+                else
+                    throw; // Not one of the expected thread-closed IO exceptions, so don't hide it - let it get reported.
+            }
+            if (verboseDebugSend)
+            {
+                for (int i=0; i<buff.Length; ++i)
+                {
+                    // Not using SuperVerbose because it's flagged by verboseDebugSend and maybe we want to ask users
+                    // to be able to send us logs when they issue bug reports:
+                    kOS.Safe.Utilities.Debug.Logger.Log("eraseme: Just wrote the following buffer chunk out to the client:");
+                    kOS.Safe.Utilities.Debug.Logger.Log("kOS: Telnet send buff["+i+"] = (int)"+ (int)buff[i] + " = '" + (char)buff[i] + "'\n");
+                    
+                    //    ----  Note to Erendrake: -----
+                    // Can we at some point change the naming convention in such a way that we stop getting the following
+                    // error messages from the compiler? 
+                    //       'Debug' is an ambiguous reference between 'kOS.Safe.Utilities.Debug' and 'UnityEngine.Debug'.
+                    // That message is the reason I have the long fully qualified name for the Log() method above.
+                }
+            }
         }
-        
+
         public void StopListening()
         {
-            SendTextRaw("\r\nDisconnecting from the kOS Terminal Server.\r\n");
-            // Must use SendTextRaw, not Write, because we're about to kill the outThread before it has time to process the queue that Write uses:
-            SendTextRaw(terminalMapper.OutputConvert( (char)UnicodeCommand.TITLEBEGIN + "Thank you for using kOS terminal server" + (char)UnicodeCommand.TITLEEND ));
+            DisconnectFromProcessor();
+            if (!deadSocket)
+            {
+                SendTextRaw("\r\nDisconnecting from the kOS Terminal Server.\r\n");
+                // Must use SendTextRaw, not Write, because we're about to kill the outThread before it has time to process the queue that Write uses:
+                SendTextRaw(terminalMapper.OutputConvert( (char)UnicodeCommand.TITLEBEGIN + "Thank you for using kOS terminal server" + (char)UnicodeCommand.TITLEEND ));
+            }
             
             inThread.Abort();
-            inThread = null; // dispose old thread.
             outThread.Abort();
+            inThread = null; // dispose old thread.
             outThread = null; // dispose old thread.
             
             rawStream.Close();
-            DisconnectFromProcessor();
         }
 
         public void StartListening()
         {
+            lock (keepAliveAccess)
+                gotSomeRecentTraffic = true; // Just in case it's been a long time between construction and StartListening.
             inThread.Start();
             outThread.Start();
             LineAtATime(false); 
@@ -332,14 +376,14 @@ namespace kOS.UserIO
             if (modeOn)
             {
                 // Send some telnet protocol stuff telling the other side how I'd like it to behave:
-                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DO, RFC857_ECHO},0, 3); // do local-echo.
-                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DONT, RFC858_SUPPRESS_GOAHEAD}, 0, 3); // don't send one char at a time without buffering lines.
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DO, RFC857_ECHO}); // do local-echo.
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DONT, RFC858_SUPPRESS_GOAHEAD}); // don't send one char at a time without buffering lines.
             }
             else
             {
                 // Send some telnet protocol stuff telling the other side how I'd like it to behave:
-                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DONT, RFC857_ECHO},0, 3); // don't local-echo.
-                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DO, RFC858_SUPPRESS_GOAHEAD}, 0, 3); // do send one char at a time without buffering lines.
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DONT, RFC857_ECHO}); // don't local-echo.
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DO, RFC858_SUPPRESS_GOAHEAD}); // do send one char at a time without buffering lines.
             }
         }
         
@@ -352,9 +396,9 @@ namespace kOS.UserIO
         {
             allowResize = modeOn;
             if (modeOn)
-                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DO, RFC1073_NAWS},0, 3); // do allow Negotiate About Window Size
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DO, RFC1073_NAWS}); // do allow Negotiate About Window Size
             else
-                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DONT, RFC1073_NAWS},0, 3); // dont allow Negotiate About Window Size                
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DONT, RFC1073_NAWS}); // dont allow Negotiate About Window Size                
         }
         
         /// <summary>
@@ -364,9 +408,44 @@ namespace kOS.UserIO
         public void AllowTerminalTypeInfo(bool modeOn)
         {
             if (modeOn)
-                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DO, RFC1091_TERMTYPE},0, 3); // do request terminal type info negotiations from client
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DO, RFC1091_TERMTYPE}); // do request terminal type info negotiations from client
             else
-                rawStream.Write( new byte[] {RFC854_IAC, RFC854_DONT, RFC1091_TERMTYPE},0, 3); // dont request terminal type info from client              
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DONT, RFC1091_TERMTYPE}); // dont request terminal type info from client              
+        }
+        
+        /// <summary>
+        /// Detect if the client is stuck, using some dummy sends.
+        /// The low level TCP keepalive would be another way to do this, but .NET did a little bit TOO much abstraction
+        /// of network sockets, and hid the abilty to change that setting.   It's stuck at its default value of 2 hours.
+        /// To change it from 2 hours would requre dropping into the Windows OS-specific libraries and we're trying to
+        /// avoid that so KOS can run on Mac and Linux.  (Rant: The ability to choose the TCP/IP keepalive interval
+        /// is old bog-standard internet stuff and in no way is it Windows-specific so there's no reason to restrict
+        /// it to the windows-specific part of the API, dammit!  It should be part of .NET because every OS can do it!!)
+        /// </summary>
+        private bool IsHung()
+        {
+            bool returnValue = false;
+            lock (keepAliveAccess)
+            {
+                if (DateTime.Now > keepAliveSendTimeStamp)
+                {
+                    System.Console.WriteLine("eraseme: IsHung() is sending another keepalive message.");
+                    // By the time it's time to send a second keepalive, we had better have gotten the reply from the previous one:
+                    returnValue = !(gotSomeRecentTraffic);
+
+                    // The telnet protocol has no keepalive from server to client message in the protocol, so
+                    // we'll use the terminal type request as a make-do version of a keepalive.  It should force the
+                    // telnet client to send some sort of bytes back to us as it answers the terminal type request:
+                    TelnetAskForTerminalType();
+                    keepAliveSendTimeStamp = DateTime.Now + System.TimeSpan.FromSeconds(hungCheckInterval);
+
+                    // This will get set to true when we receive any bytes at all from the client,
+                    // whether they're the answer to our query, or something else like user typing.
+                    gotSomeRecentTraffic = false;
+                }
+            }
+            System.Console.WriteLine("eraseme: At " + DateTime.Now + ", IsHung() is about to return " + returnValue + ".");
+            return returnValue;
         }
 
         /// <summary>
@@ -382,34 +461,14 @@ namespace kOS.UserIO
 
             while (true)
             {
-                // Detect if the client closed from its end:
-                if (!client.Connected)
-                {
-                    StopListening();
-                    outThread.Abort();
-                    
-                    // If you add code to this clause, remember to insert it above this
-                    // point, not after it.  The next line probably prevents the execution
-                    // of any code that comes after it.
-                    inThread.Abort();
-                    break; // It probably never reaches this line, but it's here just in case.
-                }
-                
-                if (welcomeMenu == null)
-                {
-                    if (ConnectedProcessor == null)
-                        SpawnWelcomeMenu();
-                }
-                else if (ConnectedProcessor != null) // welcome menu is attached but we now have a processor picked, so detach it.
-                {
-                    welcomeMenu.enabled = false; // turn it off so it stops trying to read the input in its Update().
-                    welcomeMenu = null ; // let it get garbage collected.  Now it's the ConnectedProcessor's turn to do the work.
-                    // If ConnectedProcessor gets disconnected again, a new welcomeMenu instance should get spawned by the check above.
-                }
-                
+
                 int numRead = rawStream.Read(rawReadBuffer, 0, rawReadBuffer.Length); // This is blocking, so this thread will be idle when client isn't typing.
                 if (numRead > 0 )
                 {
+                    lock (keepAliveAccess)
+                        gotSomeRecentTraffic = true; // don't care what we got back.  As long as it's SOMETHING it proves the client is alive.
+                    keepAliveSendTimeStamp = DateTime.Now; // As long as some input came recently, no matter what it is, we don't need to bother sending the keepalive.
+                    
                     char[] scrapedBytes = Encoding.UTF8.GetChars(TelnetProtocolScrape(rawReadBuffer, numRead));
                     string sendOut = (terminalMapper == null) ? (new string(scrapedBytes)) : terminalMapper.InputConvert(scrapedBytes);
                     lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic
@@ -431,9 +490,27 @@ namespace kOS.UserIO
         {
             // All threads in a KSP mod must be careful NOT to access any KSP or Unity methods
             // from inside their execution, because KSP and Unity are not threadsafe
+            
             StringBuilder sb = new StringBuilder();
+            
+            // Unlike the DoInThread, this thread doesn't have a blocking stream read to operate on.  Instead
+            // it has to busy-poll the outQueue looking for new content.  Because of this, ContinuousChecks()
+            // has to be called from here, not the In thread:
+            //
+            // To prevent the busy polling from being too busy, the loop sleeps longer and longer while there's
+            // no activity, up to a slowest rate of sleepTimeMax.  Once there's queue activity, it goes back to
+            // running fast without sleep again.
+
+            // Tweakable settings:
+            int sleepTimeInc = 20;
+            int sleepTimeMax = 200; // Don't let this get too slow, because ContinuousChecks() needs to run.
+            int sleepTime = sleepTimeMax; // At first - will speed up once there's something in the queue.
+
             while (true)
             {
+                System.Console.WriteLine("eraseme: DoOutThread(): Loop iteration starting at time " + DateTime.Now );
+                ContinuousChecks();
+
                 sb.Remove(0,sb.Length); // clear the whole thing.
                 lock(outQueueAccess) // all access to inQueue and outQueue needs to be atomic.
                 {
@@ -446,11 +523,41 @@ namespace kOS.UserIO
                 }
                 if (sb.Length > 0)
                 {
+                    sleepTime = 0; // Saw at least one char, so reset the sleep-slowdown.
                     if (terminalMapper == null)
                         SendTextRaw(sb.ToString());
                     else
                         SendTextRaw(terminalMapper.OutputConvert(sb.ToString()));
                 }
+                
+                if (sleepTime > 0)
+                {
+                    Thread.Sleep(sleepTime);
+                    if (sleepTime < sleepTimeMax)
+                        sleepTime += sleepTimeInc;
+                }
+            }
+        }
+        
+        private void ContinuousChecks()
+        {
+            // Detect if the client closed from its end:
+            if ( (!client.Connected) || IsHung() || deadSocket)
+            {
+                deadSocket = true;
+                StopListening();                    
+            }
+
+            if (welcomeMenu == null)
+            {
+                if (ConnectedProcessor == null)
+                    SpawnWelcomeMenu();
+            }
+            else if (ConnectedProcessor != null) // welcome menu is attached but we now have a processor picked, so detach it.
+            {
+                welcomeMenu.enabled = false; // turn it off so it stops trying to read the input in its Update().
+                welcomeMenu = null ; // let it get garbage collected.  Now it's the ConnectedProcessor's turn to do the work.
+                // If ConnectedProcessor gets disconnected again, a new welcomeMenu instance should get spawned by the check above.
             }
         }
         
@@ -476,7 +583,8 @@ namespace kOS.UserIO
         /// </summary>
         private void TelnetAskForTerminalType()
         {
-            rawStream.Write(new byte[] {RFC854_IAC, RFC854_SB, RFC1091_TERMTYPE, RFC1091_SEND, RFC854_IAC, RFC854_SE}, 0, 6);
+            SendTextRaw(new byte[] {RFC854_IAC, RFC854_SB, RFC1091_TERMTYPE, RFC1091_SEND, RFC854_IAC, RFC854_SE});
+            System.Console.WriteLine("eraseme: TelnetAskFoTerminalType sent.");
         }
 
         /// <summary>
@@ -563,15 +671,15 @@ namespace kOS.UserIO
                 
                 // If other side orders me to go char-at-a-time, agree:
                 case RFC857_ECHO:
-                    rawStream.Write(new byte[] {RFC854_IAC, RFC854_WILL, RFC857_ECHO}, 0, 3);
+                    SendTextRaw(new byte[] {RFC854_IAC, RFC854_WILL, RFC857_ECHO});
                     break;
                 // If other side orders me to go char-at-a-time, agree:
                 case RFC858_SUPPRESS_GOAHEAD:
-                    rawStream.Write(new byte[] {RFC854_IAC, RFC854_WILL, RFC858_SUPPRESS_GOAHEAD}, 0, 3);
+                    SendTextRaw(new byte[] {RFC854_IAC, RFC854_WILL, RFC858_SUPPRESS_GOAHEAD});
                     break;
                 // if other side orders me to allow resizes, agree:
                 case RFC1073_NAWS:
-                    rawStream.Write(new byte[] {RFC854_IAC, RFC854_WILL, RFC1073_NAWS}, 0, 3);                    
+                    SendTextRaw(new byte[] {RFC854_IAC, RFC854_WILL, RFC1073_NAWS});                    
                     break;
                 // if other side orders me to accept terminal ident strings, agree, and send it back the signal that it
                 // should tell me its ident right away.
@@ -738,6 +846,8 @@ namespace kOS.UserIO
                 inQueue.Enqueue( (char)UnicodeCommand.RESIZESCREEN );
                 inQueue.Enqueue( (char)ClientWidth );
                 inQueue.Enqueue( (char)ClientHeight );
+                if (welcomeMenu != null)
+                    welcomeMenu.NotifyResize();
             }
             
             handled = true;
@@ -789,7 +899,15 @@ namespace kOS.UserIO
             // If it ended properly with the delimiter, then we have the string:
             if (penultimate == RFC854_IAC && last == RFC854_SE)
             {
-                ClientTerminalType = sb.ToString().Substring(0, sb.Length - 1); // -1 because it will have the RFC854_IAC byte still stuck on the end.
+                string newTermType = sb.ToString().Substring(0, sb.Length - 1); // -1 because it will have the RFC854_IAC byte still stuck on the end.
+
+                if (ClientTerminalType != newTermType)
+                {
+                    // The above check may seem like a redundant check but it's not.
+                    // It's to avoid reconstructing the terminal mapper every time there's a keepalive heartbeat response.
+                    ClientTerminalType = newTermType;
+                }
+
                 kOS.Safe.Utilities.Debug.Logger.SuperVerbose("kOS: Telnet client just told us its terminal type is: \""+ClientTerminalType+"\".");
                 handled = true;
             }

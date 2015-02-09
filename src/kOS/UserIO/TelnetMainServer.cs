@@ -59,10 +59,7 @@ namespace kOS.UserIO
             // Build the server settings here, not in the constructor, because the settings might have been altered by the user post-init:
 
             port = Config.Instance.TelnetPort;
-            if (Config.Instance.TelnetUsesLoopback)
-                bindAddr = IPAddress.Parse("127.0.0.1");
-            else
-                bindAddr = IPAddress.Any;
+            bindAddr = IPAddress.Parse("127.0.0.1"); // Only allow loopback for now unless better security can be worked out.
             
             server = new TcpListener(bindAddr, port);
             server.Start();
@@ -81,6 +78,16 @@ namespace kOS.UserIO
             server.Stop();
             foreach (TelnetSingletonServer telnet in telnets)
                 telnet.StopListening();
+        }
+
+        /// <summary>
+        /// Kill listener and all spawned singleton servers when the game is quitting and making me go away.
+        /// Without this the game can hang forever when attempting to do a hard-quit,
+        /// because the threads of the child singleton servers are still running.
+        /// </summary>
+        void OnDestroy()
+        {
+            StopListening();
         }
         
         public void Update()

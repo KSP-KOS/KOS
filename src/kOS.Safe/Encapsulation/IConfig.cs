@@ -11,7 +11,6 @@ namespace kOS.Safe.Encapsulation
         bool VerboseExceptions { get; set; }
         bool EnableTelnet { get; set; }
         int TelnetPort { get; set; }
-        bool TelnetUsesLoopback { get; set; }
         void SaveConfig();
     }
 }

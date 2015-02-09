@@ -137,7 +137,6 @@
     <Compile Include="UserIO\TerminalUnicodeMapper.cs" />
     <Compile Include="UserIO\TerminalVT100Mapper.cs" />
     <Compile Include="UserIO\TerminalXtermMapper.cs" />
-    <Compile Include="UserIO\UnicodeCommand.cs" />
     <Compile Include="Utilities\BetaShim.cs" />
     <Compile Include="Utilities\PartUtilities.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using kOS.Safe;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
+using kOS.Safe.UserIO;
 using kOS.Screen;
 
 namespace kOS.AddOns.RemoteTech2
@@ -187,9 +188,9 @@ namespace kOS.AddOns.RemoteTech2
             bars.ToCharArray().CopyTo(progressBarSubBuffer.Buffer[2], 0);
         }
 
-        public override void SpecialKey(kOSKeys key)
+        public override void SpecialKey(char key)
         {
-            if (key == kOSKeys.BREAK && deploymentInProgress)
+            if (key == (char)UnicodeCommand.BREAK && deploymentInProgress)
             {
                 if (deployingBatch) batchQueue.Clear();
                 else commandQueue.Clear();
