@@ -606,6 +606,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.arglist:
                     VisitArgList(node);
                     break;
+				case TokenType.hudtxt_stmt:
+					VisitHudtxtStatement(node);
+					break;
                 case TokenType.expr:
                 case TokenType.compare_expr: // for issue #20
                 case TokenType.and_expr:
@@ -1703,6 +1706,20 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodeStore());
         }
 
+		private void VisitHudtxtStatement(ParseNode node)
+		{
+			NodeStartHousekeeping(node);
+			{
+				VisitNode(node.Nodes[2]);
+				VisitNode(node.Nodes[4]);
+				VisitNode(node.Nodes[6]);
+				VisitNode(node.Nodes[8]);
+				VisitNode(node.Nodes[10]);
+				VisitNode(node.Nodes[12]);
+				AddOpcode(new OpcodeCall("hudtxt()"));
+			}
+		}
+
         private void VisitPrintStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
@@ -2008,6 +2025,8 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             throw new Exception("Batch mode can only be used when in immediate mode.");
         }
+
+
 
         private void VisitIdentifierLedStatement(ParseNode node)
         {
