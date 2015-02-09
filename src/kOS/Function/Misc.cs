@@ -55,9 +55,9 @@ namespace kOS.Function
 			if (mirror == 1) 
 				{
 				shared.Screen.Print ("HUD: " + textToHud);
-				shared.Screen.Print ("delay " + delay);
+				/*shared.Screen.Print ("delay " + delay);
 				shared.Screen.Print ("color " + color);
-				shared.Screen.Print ("size " + size);
+				shared.Screen.Print ("size " + size);*/
 				}
 		}
 	} 
