@@ -1,5 +1,5 @@
 ﻿using kOS.Safe.Encapsulation;
-using kOS.Safe.Exceptions;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
@@ -14,6 +14,7 @@ namespace kOS.Suffixed
             orbit = orb.Orbit;
             shared = sharedObj;
             name = orb.GetName();
+            InitializeSuffixes();
         }
         
         public OrbitInfo( Orbit orb, SharedObjects sharedObj )
@@ -21,12 +22,41 @@ namespace kOS.Suffixed
             shared = sharedObj;
             orbit = orb;
             name = "<unnamed>";
+            InitializeSuffixes();
         }
-        
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("NAME", new Suffix<string>(() => name));
+            AddSuffix("APOAPSIS", new Suffix<double>(() => orbit.ApA));
+            AddSuffix("PERIAPSIS", new Suffix<double>(() => orbit.PeA));
+            AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(orbit.referenceBody, shared)));
+            AddSuffix("PERIOD", new Suffix<double>(() => orbit.period));
+            AddSuffix("INCLINATION", new Suffix<double>(() => orbit.inclination));
+            AddSuffix("ECCENTRICITY", new Suffix<double>(() => orbit.eccentricity));
+            AddSuffix("SEMIMAJORAXIS", new Suffix<double>(() => orbit.semiMajorAxis));
+            AddSuffix("SEMIMINORAXIS", new Suffix<double>(() => orbit.semiMinorAxis));
+            AddSuffix(new[]{"LAN", "LONGITUDEOFASCENDINGNODE"}, new Suffix<double>(() => orbit.LAN));
+            AddSuffix("ARGUMENTOFPERIAPSIS", new Suffix<double>(() => orbit.argumentOfPeriapsis));
+            AddSuffix("TRUEANOMALY", new Suffix<double>(() => orbit.trueAnomaly));
+            AddSuffix("MEANANOMALYATEPOCH", new Suffix<double>(() => orbit.meanAnomalyAtEpoch));
+            AddSuffix("TRANSITION", new Suffix<string>(() => orbit.patchEndTransition.ToString()));
+            AddSuffix("POSITION", new Suffix<Vector>(() => GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
+            AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
+            AddSuffix("NEXTPATCH", new Suffix<OrbitInfo>(GetNextPatch));
+            AddSuffix("HASNEXTPATCH", new Suffix<bool>(GetHasNextPatch));
+            AddSuffix("TRANSITION", new Suffix<string>(() => orbit.patchEndTransition.ToString()));
+
+            //TODO: Determine if these vectors are different than POSITION and VELOCITY
+            AddSuffix("VSTATEVECTOR", new Suffix<Vector>(() => new Vector(orbit.vel)));
+            AddSuffix("RSTATEVECTOR", new Suffix<Vector>(() => new Vector(orbit.pos)));
+
+        }
+
         /// <summary>
         ///   Get the position of this thing in this orbit at the given
         ///   time.  Note that it does NOT take into account any
-        ///   encounters or manuever nodes - it assumes the current
+        ///   encounters or maneuver nodes - it assumes the current
         ///   orbit patch remains followed forever.
         /// </summary>
         /// <param name="timeStamp">The universal time to query for</param>
@@ -39,7 +69,7 @@ namespace kOS.Suffixed
         /// <summary>
         ///   Get the velocity pairing of this thing in this orbit at the given
         ///   time.  Note that it does NOT take into account any
-        ///   encounters or manuever nodes - it assumes the current
+        ///   encounters or maneuver nodes - it assumes the current
         ///   orbit patch remains followed forever.
         /// </summary>
         /// <param name="timeStamp">The universal time to query for</param>
@@ -67,74 +97,16 @@ namespace kOS.Suffixed
         /// <returns>an OrbitInfo, or a null if there isn't any.</returns>
         private OrbitInfo GetNextPatch()
         {
-            if (! GetHasNextPatch())
-                return null;
-            return new OrbitInfo(orbit.nextPatch,shared);
+            return ! GetHasNextPatch() ? null : new OrbitInfo(orbit.nextPatch,shared);
         }
-        
+
         /// <summary>
         /// Find out whether or not the orbit has a next patch.
         /// </summary>
         /// <returns>true if the :NEXTPATCH suffix will return a real suffix.</returns>
         private bool GetHasNextPatch()
         {
-            if (orbit.nextPatch == null || (!orbit.nextPatch.activePatch))
-                return false;
-            else
-                return true;
-        }
-        
-        public override object GetSuffix(string suffixName)
-        {
-
-            switch (suffixName)
-            {
-                case "NAME":
-                    return name;
-                case "APOAPSIS":
-                    return orbit.ApA;
-                case "PERIAPSIS":
-                    return orbit.PeA;
-                case "BODY":
-                    return new BodyTarget(orbit.referenceBody, shared);
-                case "PERIOD":
-                    return orbit.period;
-                case "INCLINATION":
-                    return orbit.inclination;
-                case "ECCENTRICITY":
-                    return orbit.eccentricity;
-                case "SEMIMAJORAXIS":
-                    return orbit.semiMajorAxis;
-                case "SEMIMINORAXIS":
-                    return orbit.semiMinorAxis;
-                case "LAN":
-                case "LONGITUDEOFASCENDINGNODE":
-                    return orbit.LAN;
-                case "ARGUMENTOFPERIAPSIS":
-                    return orbit.argumentOfPeriapsis;
-                case "TRUEANOMALY":
-                    return orbit.trueAnomaly;
-                case "MEANANOMALYATEPOCH":
-                    return orbit.meanAnomalyAtEpoch;
-                case "TRANSITION":
-                    return orbit.patchEndTransition.ToString();
-                case "POSITION":
-                    return GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) );
-                case "VELOCITY":
-                    return GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) );
-                case "NEXTPATCH":
-                    return GetNextPatch();
-                case "HASNEXTPATCH":
-                    return GetHasNextPatch();
-                case "PATCHES":
-                    throw new KOSPatchesDeprecationException();
-                //TODO: Determine if these vectors are different than POSITION and VELOCITY
-                case "VSTATEVECTOR":
-                    return orbit.vel;
-                case "RSTATEVECTOR":
-                    return orbit.pos;
-            }
-            return base.GetSuffix(suffixName);
+            return orbit.nextPatch != null && (orbit.nextPatch.activePatch);
         }
 
         public override string ToString()
