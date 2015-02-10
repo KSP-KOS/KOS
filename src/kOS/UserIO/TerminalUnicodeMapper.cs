@@ -18,14 +18,25 @@ namespace kOS.UserIO
     public class TerminalUnicodeMapper
     {
         /// <summary>
+        /// This is the type as a raw string, without any data tokenizing:
+        /// </summary>
+        public string TerminalTypeString {get; protected set;}
+
+        /// <summary>
         /// This should be used when trying to get the exact match for conditional checks:
         /// </summary>
         public TerminalType TerminalTypeID {get; protected set;}
         
         /// <summary>
-        /// This is the type as a raw string, without any data tokenizing:
+        /// Subclasses should set this to false in order to communicate to the base class
+        /// that they are a kind of terminal that really doesn't understand our made-up
+        /// UnicodeCommands directly (i.e. a real telnet terminal, rather than one of
+        /// our GUI in-game terminals).  If they do so, then the base class will cull out
+        /// all UnicodeCommmand chars that happen to still be left in the stream after all
+        /// the Mappers have had their shot at converting them.  Thus any un-implemented
+        /// UnicodeCommand chars won't end up writing gibberish to the terminal.
         /// </summary>
-        public string TerminalTypeString {get; protected set;}
+        protected bool AllowNativeUnicodeCommands {get; set;}
         
         protected readonly object lockAccess = new object(); // to ensure that multiple threads use the mapper atomicly, to avoid messing up it's state variables.
         
@@ -42,6 +53,7 @@ namespace kOS.UserIO
         {
             TerminalTypeString = typeString;
             TerminalTypeID = TerminalType.UNKNOWN;
+            AllowNativeUnicodeCommands = true;
         }
 
         public static TerminalType GuessTypeId(string typeString)
@@ -49,6 +61,8 @@ namespace kOS.UserIO
             if (typeString.Substring(0,5).Equals("xterm", StringComparison.CurrentCultureIgnoreCase))
                 return TerminalType.XTERM;
             else if (typeString.Substring(0,4).Equals("ansi", StringComparison.CurrentCultureIgnoreCase))
+                return TerminalType.XTERM;
+            else if (typeString.Substring(0,4).Equals("vt100", StringComparison.CurrentCultureIgnoreCase))
                 return TerminalType.XTERM;
             // Add more cases here if more subclasses of this class are created later.
             else
@@ -76,7 +90,8 @@ namespace kOS.UserIO
         }
         
         /// <summary>
-        /// Map the unicode chars (and the fake control codes we made) into bytes.
+        /// Map the unicode chars (and the fake control codes we made) into what the terminal
+        /// wants to see.
         /// In this base class, all it does is just mostly passthru things as-is with no
         /// conversions.
         /// Subclasses of this should perform their own manipulations, then fallthrough
@@ -114,20 +129,20 @@ namespace kOS.UserIO
                     default:
                         switch (str[index])
                         {
-                            case (char)(UnicodeCommand.RESIZESCREEN):
+                            case (char)UnicodeCommand.RESIZESCREEN:
                                 outputExpected = ExpectNextChar.RESIZEWIDTH;
                                 System.Console.WriteLine("eraseme: TerminalUnicodeMapper: found RESIZESCREEN.");
                                 break;
-                            case (char)(UnicodeCommand.TITLEBEGIN):
+                            case (char)UnicodeCommand.TITLEBEGIN:
                                 outputExpected = ExpectNextChar.INTITLE;
                                 break;
-                            case (char)(UnicodeCommand.STARTNEXTLINE):
+                            case (char)UnicodeCommand.STARTNEXTLINE:
                                 sb.Append("\r\n");
                                 break;
-                            case (char)(UnicodeCommand.LINEFEEDKEEPCOL):
+                            case (char)UnicodeCommand.LINEFEEDKEEPCOL:
                                 sb.Append("\n");
                                 break;
-                            case (char)(UnicodeCommand.GOTOLEFTEDGE):
+                            case (char)UnicodeCommand.GOTOLEFTEDGE:
                                 sb.Append("\r");
                                 break;
                             default: 
@@ -137,6 +152,11 @@ namespace kOS.UserIO
                         break;
                 }
             }
+
+            // By this point, any UnicodeCommand chars still left must be un-mapped by any of the mappers:
+            if (!AllowNativeUnicodeCommands)
+                StripUnicodeCommands(sb);
+
             return sb.ToString().ToCharArray();
         }
 
@@ -167,15 +187,11 @@ namespace kOS.UserIO
                         outChars.Add((char)UnicodeCommand.DELETERIGHT);
                         break;
                     case '\r':
-                        if (prevCh == '\n') // A \r after a \n should be ignored - we already got it from the \n:
-                            outChars.Add(ch); // passthrough as-is.
-                        else
+                        if (prevCh != '\n') // A \r after a \n should be ignored - we already got it from the \n:
                             outChars.Add((char)UnicodeCommand.STARTNEXTLINE);
                         break;
                     case '\n':
-                        if (prevCh == '\r') // A \n after a \r should be ignored - we already got it from the \r:
-                            outChars.Add(ch); // passthrough as-is.
-                        else
+                        if (prevCh != '\r') // A \n after a \r should be ignored - we already got it from the \r:
                             outChars.Add((char)UnicodeCommand.STARTNEXTLINE);
                         break;
                     case (char)0x0c: // control-L.
@@ -185,6 +201,8 @@ namespace kOS.UserIO
                     case (char)0x03: // Control-C. map to BREAK just as if the telnet client had sent a hard break in the protocol.
                         outChars.Add((char)UnicodeCommand.BREAK);
                         break;
+                    case (char)0x00: // null char - dummy input that should be gone by the time everything got processed by the other mappers.
+                        break; // skip over and do nothing with it.
                     default:
                         outChars.Add(ch); // dummy passthrough
                         break;
@@ -193,12 +211,39 @@ namespace kOS.UserIO
             }
             return new string(outChars.ToArray());
         }
+        
+        private void StripUnicodeCommands(StringBuilder sb)
+        {
+            for (int i = 0 ; i < sb.Length ; ++i)
+            {
+                if (sb[i] >= (char)0xE000 && sb[i] <= (char)0xF8FF) // Unicode "Private Use" range.
+                {
+                    int charsToStrip = 1;
+                    switch (sb[i])
+                    {
+                        // TODO: come up with a better way?  Maybe have the UnicodeCommands "know" their size?
+                        case (char)UnicodeCommand.TELEPORTCURSOR:
+                        case (char)UnicodeCommand.RESIZESCREEN:
+                            charsToStrip = 2;
+                            break;
+                        case (char)UnicodeCommand.TITLEBEGIN:
+                            for (int j = i ; j < sb.Length ; ++j)
+                                if (sb[j] == (char)UnicodeCommand.TITLEEND)
+                                    charsToStrip = 1 + j - i;
+                            break;
+                    }
+                    sb.Remove(i,charsToStrip);
+                    --i; // Start the scan from the current position next iteration.  Don't advance the index.
+                }
+            }
+        }
     }
 
     /// <summary>tokenization of the many different strings that might be returned as ID's from telnet clients</summary>    
     public enum TerminalType
     {
         UNKNOWN,
+        VT100,
         XTERM,
         ANSI // Add more values here if more subclasses of this class are created later.
     }

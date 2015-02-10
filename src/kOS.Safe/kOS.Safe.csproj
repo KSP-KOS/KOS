@@ -134,8 +134,12 @@
     </Compile>
     <Compile Include="Screen\IInterpreter.cs" />
     <Compile Include="Screen\IScreenBuffer.cs" />
+    <Compile Include="Screen\IScreenBufferLine.cs" />
+    <Compile Include="Screen\IScreenSnapshot.cs" />
     <Compile Include="Screen\ITermWindow.cs" />
     <Compile Include="Screen\ScreenBuffer.cs" />
+    <Compile Include="Screen\ScreenBufferLine.cs" />
+    <Compile Include="Screen\ScreenSnapshot.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
     <Compile Include="SharedObjects.cs" />

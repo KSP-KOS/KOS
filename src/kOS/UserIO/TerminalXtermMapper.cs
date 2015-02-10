@@ -20,6 +20,7 @@ namespace kOS.UserIO
         public TerminalXtermMapper(string typeString) : base(typeString)
         {
             TerminalTypeID = TerminalType.XTERM;
+            AllowNativeUnicodeCommands = false;
         }
 
         private ExpectNextChar outputExpected = ExpectNextChar.NORMAL;
@@ -51,9 +52,8 @@ namespace kOS.UserIO
         }
 
         /// <summary>
-        /// Map the unicode chars (and the fake control codes we made) into bytes.
-        /// In this base class, all it does is just mostly passthru things as-is with no
-        /// conversions.<br/>
+        /// Map the unicode chars (and the fake control codes we made) into what the
+        /// terminal wants to see.
         /// Subclasses of this should perform their own manipulations, then fallthrough
         /// to this base class inmplementation at the bottom, to allow chains of
         /// subclasses to all operate on the data.
@@ -106,14 +106,18 @@ namespace kOS.UserIO
                     default:
                         switch (str[index])
                         {
-                            case (char)(UnicodeCommand.RESIZESCREEN):
+                            case (char)UnicodeCommand.RESIZESCREEN:
                                 outputExpected = ExpectNextChar.RESIZEWIDTH;
                                 System.Console.WriteLine("eraseme: TerminalXtermMapper: Detected RESIZESCREEN, going into RESIZEWIDTH mode.");
                                 break;
-                            case (char)(UnicodeCommand.TITLEBEGIN):
+                            case (char)UnicodeCommand.TITLEBEGIN:
                                 outputExpected = ExpectNextChar.INTITLE;
                                 pendingTitle = new StringBuilder();
                                 System.Console.WriteLine("eraseme: TerminalXtermMapper: Detected TITLEBEGIN, going into INTITLE mode.");
+                                break;
+                            case (char)UnicodeCommand.CLEARSCREEN:
+                                sb.Append((char)0x1b/*ESC*/ + "?47h" +                            // <-- Tells xterm to use fixed-buffer mode, not saving in scrollback.
+                                          (char)0x1b/*ESC*/ + "[2J" + (char)0x1b/*ESC*/ + "[H");  // <-- The normal clear screen char from vt100.
                                 break;
                             default: 
                                 sb.Append(str[index]); // default passhtrough

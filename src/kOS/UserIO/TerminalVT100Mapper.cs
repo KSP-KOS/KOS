@@ -14,15 +14,15 @@ namespace kOS.UserIO
         public TerminalVT100Mapper(string typeString) : base(typeString)
         {
             TerminalTypeID = TerminalType.XTERM;
+            AllowNativeUnicodeCommands = false;
         }
         
         private ExpectNextChar outputExpected = ExpectNextChar.NORMAL;
         private int pendingCol;
         
         /// <summary>
-        /// Map the unicode chars (and the fake control codes we made) into bytes.
-        /// In this base class, all it does is just mostly passthru things as-is with no
-        /// conversions.<br/>
+        /// Map the unicode chars (and the fake control codes we made) on output to what the terminal
+        /// wants to see.
         /// Subclasses of this should perform their own manipulations, then fallthrough
         /// to this base class inmplementation at the bottom, to allow chains of
         /// subclasses to all operate on the data.
@@ -51,11 +51,38 @@ namespace kOS.UserIO
                     default:
                         switch (str[index])
                         {
-                            case (char)(UnicodeCommand.TELEPORTCURSOR):
+                            case (char)UnicodeCommand.TELEPORTCURSOR:
                                 outputExpected = ExpectNextChar.TELEPORTCURSORCOL;
                                 break;
-                            case (char)(UnicodeCommand.CLEARSCREEN):
+                            case (char)UnicodeCommand.CLEARSCREEN:
                                 sb.Append((char)0x1b/*ESC*/ + "[2J" + (char)0x1b/*ESC*/ + "[H");
+                                break;
+                            case (char)UnicodeCommand.SCROLLSCREENUPONE:
+                                sb.Append((char)0x1b/*ESC*/ + "[S");
+                                break;
+                            case (char)UnicodeCommand.SCROLLSCREENDOWNONE:
+                                sb.Append((char)0x1b/*ESC*/ + "[T");
+                                break;
+                            case (char)UnicodeCommand.HOMECURSOR:
+                                sb.Append((char)0x1b/*ESC*/ + "[H");
+                                break;
+                            case (char)UnicodeCommand.UPCURSORONE:
+                                sb.Append((char)0x1b/*ESC*/ + "[A");
+                                break;
+                            case (char)UnicodeCommand.DOWNCURSORONE:
+                                sb.Append((char)0x1b/*ESC*/ + "[B");
+                                break;
+                            case (char)UnicodeCommand.RIGHTCURSORONE:
+                                sb.Append((char)0x1b/*ESC*/ + "[C");
+                                break;
+                            case (char)UnicodeCommand.LEFTCURSORONE:
+                                sb.Append((char)0x1b/*ESC*/ + "[D");
+                                break;
+                            case (char)UnicodeCommand.DELETELEFT:
+                                sb.Append((char)0x1b/*ESC*/ + "[K");
+                                break;
+                            case (char)UnicodeCommand.DELETERIGHT:
+                                sb.Append((char)0x1b/*ESC*/ + "[1K");
                                 break;
                             default: 
                                 sb.Append(str[index]); // default passhtrough

@@ -5,7 +5,7 @@ namespace kOS.Safe.Screen
 {
     public class SubBuffer
     {
-        public readonly List<char[]> Buffer = new List<char[]>();
+        public readonly List<IScreenBufferLine> Buffer = new List<IScreenBufferLine>();
 
         public int RowCount { get; private set; }
         public int ColumnCount { get; private set; }
@@ -64,7 +64,7 @@ namespace kOS.Safe.Screen
             // the assumption that the entire subbuffer was meant to 'flow' and wrap as one long line.
             // That assumption may be very different for other cases, if any exist in the future.
 
-            List<char[]> newBuffer = new List<char[]>();
+            List<IScreenBufferLine> newBuffer = new List<IScreenBufferLine>();
             
             int newRow = 0;
             int oldRow = 0;
@@ -82,7 +82,7 @@ namespace kOS.Safe.Screen
                         newCol = 0;
                     }
                     if (newRow >= newBuffer.Count) // grow to required size.
-                        newBuffer.Add(new char[ColumnCount]);
+                        newBuffer.Add(new ScreenBufferLine(ColumnCount));
                     newBuffer[newRow][newCol] = Buffer[oldRow][oldCol];
                     ++newCol;
                     ++oldCol;
@@ -92,7 +92,7 @@ namespace kOS.Safe.Screen
             
             // Then maybe append more empty rows if the above wasn't enough to fill the new size:
             while (newBuffer.Count < RowCount)
-                newBuffer.Add(new char[ColumnCount]);
+                newBuffer.Add(new ScreenBufferLine(ColumnCount));
             
             // Reset the subbuffer row size since the new size might have had to grow (i.e. shrinking the width of a 80 col to 60 col so wrap text added a row.)
             // int scrollDiff = (newBuffer.Count - RowCount); - this logic not quite working - disabled for now.

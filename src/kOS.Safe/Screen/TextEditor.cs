@@ -136,7 +136,7 @@ namespace kOS.Safe.Screen
             for (int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
             {
                 char[] lineCharArray = lines[lineIndex].PadRight(LineSubBuffer.ColumnCount, ' ').ToCharArray();
-                lineCharArray.CopyTo(LineSubBuffer.Buffer[lineIndex], 0);   
+                LineSubBuffer.Buffer[lineIndex].ArrayCopyFrom(lineCharArray, 0, 0);
             }
 
             UpdateSubBufferCursor(lines);

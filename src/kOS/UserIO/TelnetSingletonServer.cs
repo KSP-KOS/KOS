@@ -196,13 +196,11 @@ namespace kOS.UserIO
         /// <returns>one character read</returns>
         public char ReadChar()
         {
-            System.Console.WriteLine("eraseme:TelnetSingletonServer.ReadChar(): My 'this' is " + (this==null ? "null" : "not null"));
             char ch;
             lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic.
             {
                 ch = inQueue.Dequeue();
             }
-            System.Console.WriteLine("eraseme:TelnetSingletonServer.ReadChar(): I am going to return the char with value " + (int)ch);
             return ch;
         }
         
@@ -318,12 +316,13 @@ namespace kOS.UserIO
             }
             if (verboseDebugSend)
             {
+                StringBuilder logMessage = new StringBuilder();
+                logMessage.Append("kOS Telnet server:  Just wrote the following buffer chunk out to the client:");
                 for (int i=0; i<buff.Length; ++i)
                 {
                     // Not using SuperVerbose because it's flagged by verboseDebugSend and maybe we want to ask users
                     // to be able to send us logs when they issue bug reports:
-                    kOS.Safe.Utilities.Debug.Logger.Log("eraseme: Just wrote the following buffer chunk out to the client:");
-                    kOS.Safe.Utilities.Debug.Logger.Log("kOS: Telnet send buff["+i+"] = (int)"+ (int)buff[i] + " = '" + (char)buff[i] + "'\n");
+                    logMessage.Append("Send buff["+i+"] = (int)"+ (int)buff[i] + " = '" + (char)buff[i] + "'\n");
                     
                     //    ----  Note to Erendrake: -----
                     // Can we at some point change the naming convention in such a way that we stop getting the following
@@ -331,6 +330,7 @@ namespace kOS.UserIO
                     //       'Debug' is an ambiguous reference between 'kOS.Safe.Utilities.Debug' and 'UnityEngine.Debug'.
                     // That message is the reason I have the long fully qualified name for the Log() method above.
                 }
+                kOS.Safe.Utilities.Debug.Logger.Log(logMessage.ToString());
             }
         }
 
@@ -431,7 +431,7 @@ namespace kOS.UserIO
                 {
                     System.Console.WriteLine("eraseme: IsHung() is sending another keepalive message.");
                     // By the time it's time to send a second keepalive, we had better have gotten the reply from the previous one:
-                    returnValue = !(gotSomeRecentTraffic);
+                    returnValue = ! gotSomeRecentTraffic;
 
                     // The telnet protocol has no keepalive from server to client message in the protocol, so
                     // we'll use the terminal type request as a make-do version of a keepalive.  It should force the
@@ -444,7 +444,6 @@ namespace kOS.UserIO
                     gotSomeRecentTraffic = false;
                 }
             }
-            System.Console.WriteLine("eraseme: At " + DateTime.Now + ", IsHung() is about to return " + returnValue + ".");
             return returnValue;
         }
 
@@ -465,10 +464,12 @@ namespace kOS.UserIO
                 int numRead = rawStream.Read(rawReadBuffer, 0, rawReadBuffer.Length); // This is blocking, so this thread will be idle when client isn't typing.
                 if (numRead > 0 )
                 {
+                    // As long as some input came recently, no matter what it is, we don't need to bother sending the keepalive:
                     lock (keepAliveAccess)
-                        gotSomeRecentTraffic = true; // don't care what we got back.  As long as it's SOMETHING it proves the client is alive.
-                    keepAliveSendTimeStamp = DateTime.Now; // As long as some input came recently, no matter what it is, we don't need to bother sending the keepalive.
+                        gotSomeRecentTraffic = true;
+                    keepAliveSendTimeStamp = DateTime.Now + System.TimeSpan.FromSeconds(hungCheckInterval);
                     
+                    // Process the input bytes that arrived:
                     char[] scrapedBytes = Encoding.UTF8.GetChars(TelnetProtocolScrape(rawReadBuffer, numRead));
                     string sendOut = (terminalMapper == null) ? (new string(scrapedBytes)) : terminalMapper.InputConvert(scrapedBytes);
                     lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic
@@ -529,8 +530,7 @@ namespace kOS.UserIO
                     else
                         SendTextRaw(terminalMapper.OutputConvert(sb.ToString()));
                 }
-                
-                if (sleepTime > 0)
+                else
                 {
                     Thread.Sleep(sleepTime);
                     if (sleepTime < sleepTimeMax)
@@ -556,6 +556,7 @@ namespace kOS.UserIO
             else if (ConnectedProcessor != null) // welcome menu is attached but we now have a processor picked, so detach it.
             {
                 welcomeMenu.enabled = false; // turn it off so it stops trying to read the input in its Update().
+                welcomeMenu.Detach();
                 welcomeMenu = null ; // let it get garbage collected.  Now it's the ConnectedProcessor's turn to do the work.
                 // If ConnectedProcessor gets disconnected again, a new welcomeMenu instance should get spawned by the check above.
             }
@@ -843,11 +844,13 @@ namespace kOS.UserIO
 
             lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic
             {
-                inQueue.Enqueue( (char)UnicodeCommand.RESIZESCREEN );
-                inQueue.Enqueue( (char)ClientWidth );
-                inQueue.Enqueue( (char)ClientHeight );
+                inQueue.Enqueue((char)UnicodeCommand.RESIZESCREEN);
+                inQueue.Enqueue((char)ClientWidth);
+                inQueue.Enqueue((char)ClientHeight);
                 if (welcomeMenu != null)
                     welcomeMenu.NotifyResize();
+                if (ConnectedProcessor != null)
+                    inQueue.Enqueue((char)UnicodeCommand.REQUESTREPAINT);
             }
             
             handled = true;

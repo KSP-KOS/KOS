@@ -44,8 +44,14 @@ namespace kOS.UserIO
         
         public void Quit()
         {
-            telnetServer.StopListening();
             enabled = false;
+            telnetServer.StopListening();
+        }
+        
+        public void Detach()
+        {
+            enabled = false;
+            telnetServer = null;
         }
         
         /// <summary>
@@ -59,6 +65,11 @@ namespace kOS.UserIO
                            
         public virtual void Update()
         {
+            if (telnetServer == null)
+            {
+                enabled = false; // turn me off.  I'm done.  I should get garbage collected shortly.
+                return;
+            }
             
             // Regularly check to see if the CPU list has changed while the user was sitting
             // on the menu.  If so, reprint it:
@@ -69,7 +80,7 @@ namespace kOS.UserIO
                     telnetServer.Write((char)UnicodeCommand.CLEARSCREEN); // if we HAVE to reprint - do so on a clear screen.
                 bool listChanged = CPUListChanged();
                 if (!firstTime && listChanged)
-                    telnetServer.Write("--(List of CPU's has Changed)--\r\n");
+                    telnetServer.Write("--(List of CPU's has Changed)--" + (char)UnicodeCommand.STARTNEXTLINE);
                 firstTime = false;
                 if (listChanged || forceMenuReprint )
                     PrintCPUMenu();
@@ -78,7 +89,6 @@ namespace kOS.UserIO
             while (telnetServer.InputWaiting())
             {
                 char ch = telnetServer.ReadChar();
-                
                 switch (ch)
                 {
                     case (char)UnicodeCommand.STARTNEXTLINE:
@@ -115,13 +125,13 @@ namespace kOS.UserIO
             int pickNumber;
             if (!int.TryParse(cmd, out pickNumber) )
             {
-                telnetServer.Write("Garbled selection. Try again.\r\n");
+                telnetServer.Write("Garbled selection. Try again." + (char)UnicodeCommand.STARTNEXTLINE);
                 forceMenuReprint = true;
                 return;
             }
             if (pickNumber <= 0 || pickNumber > availableCPUs.Count)
             {
-                telnetServer.Write("No such number (" + pickNumber + ") on the menu.\r\n");
+                telnetServer.Write("No such number (" + pickNumber + ") on the menu." + (char)UnicodeCommand.STARTNEXTLINE);
                 forceMenuReprint = true;
                 return;
             }
@@ -154,8 +164,12 @@ namespace kOS.UserIO
 
             forceMenuReprint = false;
 
-            telnetServer.Write("Terminal: type = " + telnetServer.ClientTerminalType + ", size = " + telnetServer.ClientWidth + "x" + telnetServer.ClientHeight + "\r\n");
-            telnetServer.Write(CenterPadded(" Available CPUs for Connection: ",'=') + "\r\n");
+            telnetServer.Write("Terminal: type = " +
+                               telnetServer.ClientTerminalType +
+                               ", size = "
+                               + telnetServer.ClientWidth + "x" + telnetServer.ClientHeight +
+                               (char)UnicodeCommand.STARTNEXTLINE);
+            telnetServer.Write(CenterPadded(" Available CPUs for Connection: ",'=') + (char)UnicodeCommand.STARTNEXTLINE);
             
             int userPickNum = 1;
             int longestLength = 0;
@@ -179,22 +193,25 @@ namespace kOS.UserIO
             foreach (string choice in displayChoices)
             {
                 string choicePaddedToLongest = choice + new String(' ',(longestLength - choice.Length));
-                telnetServer.Write(CenterPadded(choicePaddedToLongest, ' ') + "\r\n" );
+                telnetServer.Write(CenterPadded(choicePaddedToLongest, ' ') + (char)UnicodeCommand.STARTNEXTLINE);
             }
             
             if (displayChoices.Count > 0)
-                telnetServer.Write(CenterPadded("",'-')/*line of '-' chars*/ + "\r\n" +
-                                   "Choose a CPU to attach to by typing a " +
-                                   "selection number and pressing return/enter. " +
-                                   "Or enter [Q] to quit terminal server.\r\n" +
-                                   "\r\n" +
-                                   "(After attaching, you can (D)etach and return " +
-                                   "to this menu by pressing Control-D as the first " +
-                                   "character on a new command line.)\r\n" +
-                                   CenterPadded("", '-')/*line of '-' chars*/ + "\r\n" +
+                telnetServer.Write(CenterPadded("",'-')/*line of '-' chars*/ + (char)UnicodeCommand.STARTNEXTLINE +
+                                   WordBreak("Choose a CPU to attach to by typing a " +
+                                             "selection number and pressing return/enter. " +
+                                             "Or enter [Q] to quit terminal server.") +
+                                   (char)UnicodeCommand.STARTNEXTLINE +
+                                   (char)UnicodeCommand.STARTNEXTLINE +
+                                   WordBreak("(After attaching, you can (D)etach and return " +
+                                             "to this menu by pressing Control-D as the first " +
+                                             "character on a new command line.)") +
+                                   (char)UnicodeCommand.STARTNEXTLINE +
+                                   CenterPadded("", '-')/*line of '-' chars*/ +
+                                   (char)UnicodeCommand.STARTNEXTLINE +
                                    "> ");
             else
-                telnetServer.Write("\t<NONE>\r\n");
+                telnetServer.Write(CenterPadded("<NONE>", ' ') + (char)UnicodeCommand.STARTNEXTLINE);
 
         }
         
@@ -211,7 +228,35 @@ namespace kOS.UserIO
             int width = telnetServer.ClientWidth;
             int halfPadWidth = (width - msg.Length)/2;
             string padString = new String(padChar, halfPadWidth);
-            return padString + msg + padString;
+            
+            return padString + msg + (padChar == ' ' ? "" : padString);
+        }
+        
+        /// <summary>
+        /// Break up a potentially long line so it only breaks on spaces and not
+        /// in the middle of a word.  Looks at the telnet client's width to decide
+        /// how to break.
+        /// </summary>
+        /// <param name="msg">string to attempt to print.</param>
+        /// <returns>new string that has the linebreaks added as \r\n</returns>
+        private string WordBreak(string msg)
+        {
+            char[] msgAsArray = msg.ToCharArray();
+
+            int width = telnetServer.ClientWidth;            
+            int lineStartPos = 0;
+            int lastSpacePos = -1;
+            for (int i = 0 ; i < msgAsArray.Length ; ++i)
+            {
+                if (msgAsArray[i] == ' ')
+                    lastSpacePos = i;
+                if ( (i - lineStartPos) >= width)
+                {
+                    msgAsArray[lastSpacePos] = (char)UnicodeCommand.STARTNEXTLINE;
+                    lineStartPos = lastSpacePos+1;
+                }
+            }
+            return new string(msgAsArray);
         }
         
     }

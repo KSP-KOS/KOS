@@ -35,6 +35,15 @@ namespace kOS.Safe.UserIO
     /// </summary>
     public enum UnicodeCommand
     {
+        //          NOTE ON COMMENTED OUT CODES:
+        //          ----------------------------
+        // NOTE: Several of these are here for future expansion ideas but are not yet implemented
+        // in the individual terminal-specific mappers (TerminalXtermMapper, TerminalVt100Mapper, etc).
+        //
+        // To avoid the confusion of accidentally using the ones that are not implmented, the unused
+        // ones are commented out.  But they're still here for possible future plans.
+        //
+        
         /// <summary>
         /// Indicates an emergency low-level break signal.  Often a telnet client will send this
         /// character out-of-band immediately, queue-barging in front of whatever else is in the
@@ -51,38 +60,30 @@ namespace kOS.Safe.UserIO
         /// (input only) keypress that means "please do a full redraw for me".
         /// </summary>
         REQUESTREPAINT,
+
         
         /// <summary>
-        /// Tell the terminal to resize itself to a new row/col size.  Not all terminals will be capable of doing this.
-        /// This can be communicated in either direction - for the client telling the server it has been resized, or
-        /// for the server telling the client to it needs to resize itself.
-        /// Expects a sequence of 3 characters as follows: <br/>
-        ///     RESIZESCREEN Binary_Width_Num Binary_Height_Num <br/>
-        /// Where Width_num and Height_num are the numbers directly transcoded into unicode chars in a binary way.
-        /// (For example a height of 66, which is hex 0x32 would end up being sent as the capital letter 'B' which is unicode 0x0032.).
+        /// This begin/end character pair indicates that a string is to follow which is meant to be used to tell the terminal
+        /// what it should set its titlebar to.  Output-only.<br/>
+        ///     Example:  To set the terminal's title to "Vessel A, CPU 1":<br/>
+        ///         TITLEBEGIN V e s s e l   A ,   C P U   1 TITLEEND<br/>
         /// </summary>
-        RESIZESCREEN,
-        
-        /// <summary>
-        /// This character indicates that a string is to follow which is meant to be used to tell the terminal
-        /// what it should set its titlebar to.  Output-only.
-        ///     Example:  To set the terminal's title to "Vessel A, CPU 1":
-        ///         TITLEBEGIN V e s s e l   A ,   C P U   1 TITLEEND
-        /// </summary>
-        TITLEBEGIN,
+        TITLEBEGIN, TITLEEND,
 
         /// <summary>
-        /// This character indicates that the string that tells the terminal its title has finished.  Output-only.
-        /// </summary>
-        TITLEEND,
-
-        /// <summary>
-        /// Begins a cursor move to an exact position.  Expects exactly 2 more
-        /// unicode chars to follow, interpreted as binary number data (not as characters)
-        /// for the row num and column num, respectively.
+        /// Begins a cursor move to an exact position.  Expects exactly 2 more<br/>
+        /// unicode chars to follow, interpreted as binary number data (not as characters)<br/>
+        /// for the column num and row num, respectively.<br/>
         /// <br/>
-        /// Note that the pretend Unicode terminal counts rows and columns starting from 0.  When converting
-        /// for a terminal type that counts starting at 1, you may need to add 1 to these numbers.
+        /// Example:   To move the cursor to the 33rd column, 16th row:<br/>
+        ///     TELEPORTCURSOR  (char)0x20  (char)0x0f<br/>
+        /// Remember that they start counting at zero so col 0x20 is the 33rd column, not the 32nd.<br/>
+        /// similarly, row 0x0f is the 16th row, not the 15th.<br/>
+        /// 
+        /// <br/>
+        /// The pretend Unicode terminal counts rows and columns starting from 0.  Many commercial<br/>
+        /// terminals use a reckoning starting at 1, so you may have to offset this value when<br/>
+        /// implementing a TerminalMapper class.
         /// </summary>
         TELEPORTCURSOR,
 
@@ -91,48 +92,27 @@ namespace kOS.Safe.UserIO
         /// move the cursor, or on input to encode that the arrow key was pressed.
         /// </summary>
         UPCURSORONE,
-        /// <summary>
-        /// Indicates moving a cursor [count] rows up.  Expects exactly 1 more unicode
-        /// char to follow, interpreted as binary number data (not as character) for
-        /// the number of spaces to move.
-        /// </summary>
-        UPCURSORNUM,
-        
+
         /// <summary>
         /// Indicates moving a cursor down one row.  Can be used both on output to
         /// move the cursor, or on input to encode that the arrow key was pressed.
         /// </summary>
         DOWNCURSORONE, 
-        /// <summary>
-        /// Indicates moving a cursor [count] rows down.  Expects exactly 1 more unicode
-        /// char to follow, interpreted as binary number data (not as character) for
-        /// the number of spaces to move.
-        /// </summary>
-        DOWNCURSORNUM,
+
 
         /// <summary>
         /// Indicates moving a cursor left one column.  Can be used both on output to
         /// move the cursor, or on input to encode that the arrow key was pressed.
         /// </summary>
         LEFTCURSORONE, 
-        /// <summary>
-        /// Indicates moving a cursor [count] spaces left.  Expects exactly 1 more unicode
-        /// char to follow, interpreted as binary number data (not as character) for
-        /// the number of spaces to move.
-        /// </summary>
-        LEFTCURSORNUM,
+
 
         /// <summary>
         /// Indicates moving a cursor right one column.  Can be used both on output to
         /// move the cursor, or on input to encode that the arrow key was pressed.
         /// </summary>
         RIGHTCURSORONE, 
-        /// <summary>
-        /// Indicates moving a cursor [count] spaces right.  Expects exactly 1 more unicode
-        /// char to follow, interpreted as binary number data (not as character) for
-        /// the number of spaces to move.
-        /// </summary>
-        RIGHTCURSORNUM,
+
         
         /// <summary>
         /// Indicates moving a cursor to the home position of the row.  Also can be seen
@@ -195,8 +175,58 @@ namespace kOS.Safe.UserIO
         /// </summary>
         GOTOLEFTEDGE,
         
-    }
+        /// <summary>
+        /// Scroll the screen up one line (like what happens when you hit 'return' when
+        /// the cursor is at the bottomleft of the screen), but leave the cursor where it is.
+        /// </summary>
+        SCROLLSCREENUPONE,
+        
+        /// <summary>
+        /// Scroll the screen down one line (like what might happen in a text editor when
+        /// you push the cursor up past the top row), but leave the cursor where it is.
+        /// </summary>
+        SCROLLSCREENDOWNONE,
+        
+        // /// <summary>
+        // /// Indicates moving a cursor [count] rows up.  Expects exactly 1 more unicode
+        // /// char to follow, interpreted as binary number data (not as character) for
+        // /// the number of spaces to move.
+        // /// </summary>
+        // UPCURSORNUM,
+        
+        // /// <summary>
+        // /// Indicates moving a cursor [count] rows down.  Expects exactly 1 more unicode
+        // /// char to follow, interpreted as binary number data (not as character) for
+        // /// the number of spaces to move.
+        // /// </summary>
+        // DOWNCURSORNUM,
+        
+        // /// <summary>
+        // /// Indicates moving a cursor [count] spaces left.  Expects exactly 1 more unicode
+        // /// char to follow, interpreted as binary number data (not as character) for
+        // /// the number of spaces to move.
+        // /// </summary>
+        // LEFTCURSORNUM,
+        
+        // /// <summary>
+        // /// Indicates moving a cursor [count] spaces right.  Expects exactly 1 more unicode
+        // /// char to follow, interpreted as binary number data (not as character) for
+        // /// the number of spaces to move.
+        // /// </summary>
+        // RIGHTCURSORNUM,        
 
+        /// <summary>
+        /// Tell the terminal to resize itself to a new row/col size.  Not all terminals will be capable of doing this.
+        /// This can be communicated in either direction - for the client telling the server it has been resized, or
+        /// for the server telling the client to it needs to resize itself.
+        /// Expects a sequence of 3 characters as follows: <br/>
+        ///     RESIZESCREEN Binary_Width_Num Binary_Height_Num <br/>
+        /// Where Width_num and Height_num are the numbers directly transcoded into unicode chars in a binary way.
+        /// (For example a height of 66, which is hex 0x32 would end up being sent as the capital letter 'B' which is unicode 0x0032.).
+        /// </summary>
+        RESIZESCREEN,        
+    }
+    
     // For tracking multiple-character input sequences to remember where it is in the sequence:
     public enum ExpectNextChar {
         NORMAL, RESIZEWIDTH, RESIZEHEIGHT, INTITLE, TELEPORTCURSORCOL, TELEPORTCURSORROW
