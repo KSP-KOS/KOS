@@ -4,7 +4,7 @@ namespace kOS.Safe.Screen
 {
     public interface IScreenBufferLine
     {
-        DateTime LastChangeTime {get;}
+        ulong LastChangeTick {get;}
         char[] ToArray();
         char this[int i] {get; set;}
         int Length {get;}

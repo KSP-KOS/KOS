@@ -5,7 +5,7 @@ using kOS.Utilities;
 using kOS.Suffixed;
 using kOS.Safe.Module;
 using kOS.Module;
-
+using kOS.UserIO;
 namespace kOS.Screen
 {
     /// <summary>
@@ -27,7 +27,7 @@ namespace kOS.Screen
     public class KOSToolBarWindow : MonoBehaviour
     {
         private ApplicationLauncherButton launcherButton;
-
+        
         private const ApplicationLauncher.AppScenes APP_SCENES = 
             ApplicationLauncher.AppScenes.FLIGHT | 
             ApplicationLauncher.AppScenes.SPH | 
@@ -178,7 +178,7 @@ namespace kOS.Screen
                 
             launcher.AddOnShowCallback(CallbackOnShow);
             launcher.AddOnHideCallback(CallbackOnHide);
-            launcher.EnableMutuallyExclusive(launcherButton);
+            launcher.EnableMutuallyExclusive(launcherButton);            
         }
         
         public void GoAway()
@@ -378,13 +378,30 @@ namespace kOS.Screen
             CountEndVertical();
  
             CountEndHorizontal();
-
+            
+            
             // This is where tooltip hover text will show up, rather than in a hover box wherever the pointer is like normal.
             // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
-            GUILayout.Label(GUI.tooltip, tooltipLabelStyle);
+            string whichMessage = (GUI.tooltip.Length > 0 ? GUI.tooltip : TelnetStatusMessage()); // when tooltip isn't showing, show telnet status instead.
+            GUILayout.Label(whichMessage, tooltipLabelStyle);
             CountEndVertical();
 
             EndHoverHousekeeping();
+        }
+        
+        private string TelnetStatusMessage()
+        {
+            if (TelnetMainServer.Instance == null) // We can't control the order in which monobeavhiors are loaded, so TelnetMainServer might not be there yet. 
+                return "TelnetMainServer object not found"; // hopefully the user never sees this.  It should stop happening the the time the loading screen is over.
+            bool isOn = TelnetMainServer.Instance.IsListening;
+            if (!isOn)
+                return "Telnet server disabled.";
+            
+            string addr = TelnetMainServer.Instance.BindAddr.ToString();
+            int numClients = TelnetMainServer.Instance.ClientCount;
+            
+            return String.Format("Telnet server listening on {0}. ({1} client{2} connected).",
+                                 addr, (numClients == 0 ? "no" : numClients.ToString()), (numClients == 1 ? "" : "s"));
         }
         
         private void DrawActiveCPUsOnPanel()

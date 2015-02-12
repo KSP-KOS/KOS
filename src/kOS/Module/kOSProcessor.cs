@@ -114,7 +114,7 @@ namespace kOS.Module
         
         public bool TelnetIsAttached()
         {
-            return shared.Window.IsTelnetted();
+            return shared.Window.NumTelnets() > 0;
         }
 
         public IScreenBuffer GetScreen()
@@ -230,6 +230,8 @@ namespace kOS.Module
             // This is technically called any time ANY part is destroyed, so ignore it if it's not MY part:
             if (p != part)
                 return;
+            
+            GetWindow().DetachAllTelnets();
             
             allMyInstances.RemoveAll(m => m==this);
         }

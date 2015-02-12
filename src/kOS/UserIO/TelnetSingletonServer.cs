@@ -30,6 +30,8 @@ namespace kOS.UserIO
         
         private volatile TcpClient client;
         
+        private TelnetMainServer whoLaunchedMe;
+        
         /// <summary>
         /// The raw socket stream used to talk directly to the client across the network.
         /// It is bidirectional - handling both the input from and output to the client.
@@ -58,6 +60,11 @@ namespace kOS.UserIO
         private TerminalUnicodeMapper terminalMapper;
         
         /// <summary>
+        /// If true, then all input should get consumed and ignored the next time inThread checks, until the input stream is empty again.
+        /// </summary>
+        private bool flushPendingInput;
+                        
+        /// <summary>
         /// What order was I launched in?  Was I the 1st TelnetSingletonServer? The 2nd?  The 423rd?
         /// </summary>
         private int MySpawnOrder { get; set; }
@@ -79,6 +86,8 @@ namespace kOS.UserIO
         private DateTime keepAliveSendTimeStamp;
         private double hungCheckInterval = 10; // Seconds that a keepalive must have failed to give a response before assuming telnet client is dead.
         private bool deadSocket = false;
+        
+        private bool alreadyDisconnecting = false;
 
         public string ClientTerminalType
         {
@@ -147,8 +156,9 @@ namespace kOS.UserIO
 
         private const byte RFC1073_NAWS     = 31;
         
-        public TelnetSingletonServer(TcpClient client, int spawnOrder)
+        public TelnetSingletonServer(TelnetMainServer mainServer, TcpClient client, int spawnOrder)
         {
+            whoLaunchedMe = mainServer;
             MySpawnOrder = spawnOrder;
             this.client = client;
             rawStream = client.GetStream();
@@ -178,13 +188,18 @@ namespace kOS.UserIO
 
         public void DisconnectFromProcessor()
         {
-            if (ConnectedProcessor != null)
+            if (ConnectedProcessor != null && !alreadyDisconnecting)
             {
+                alreadyDisconnecting = true; // telnet tells window to disconnect, window tells telnet to disconnect.  This stops an infinite recursion.
                 string detachMessage = "Detaching from " + ConnectedProcessor.GetWindow().TitleText;
                 SendTextRaw( (char)UnicodeCommand.TITLEBEGIN + detachMessage + (char)UnicodeCommand.TITLEEND );
                 SendTextRaw("\r\n{" + detachMessage + "}\r\n");
                 ConnectedProcessor.GetWindow().DetachTelnet(this);
+
+                // Very important, else CPU parts that go away (from explosion, load distance, scene switch ,etc) refuse to be orphaned and won't garbage collect.
+                // That can cause subsequent reconnections from the TelnetWelcomeMenu to end up connecting you to the now dead CPU, with confusing results:
                 ConnectedProcessor = null;
+                alreadyDisconnecting = false;
             }
         }
 
@@ -343,6 +358,7 @@ namespace kOS.UserIO
                 // Must use SendTextRaw, not Write, because we're about to kill the outThread before it has time to process the queue that Write uses:
                 SendTextRaw(terminalMapper.OutputConvert( (char)UnicodeCommand.TITLEBEGIN + "Thank you for using kOS terminal server" + (char)UnicodeCommand.TITLEEND ));
             }
+            whoLaunchedMe.SingletonStopped(this);
             
             inThread.Abort();
             outThread.Abort();
@@ -375,15 +391,15 @@ namespace kOS.UserIO
             isLineAtATime = modeOn;
             if (modeOn)
             {
-                // Send some telnet protocol stuff telling the other side how I'd like it to behave:
-                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DO, RFC857_ECHO}); // do local-echo.
-                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DONT, RFC858_SUPPRESS_GOAHEAD}); // don't send one char at a time without buffering lines.
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_WONT, RFC857_ECHO}); // we will not be echoing the client input back to it.
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DO, RFC857_ECHO}); // so the client should do its own local echoing.
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_WONT, RFC858_SUPPRESS_GOAHEAD}); // don't send one char at a time, buffer the lines.
             }
             else
             {
-                // Send some telnet protocol stuff telling the other side how I'd like it to behave:
-                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DONT, RFC857_ECHO}); // don't local-echo.
-                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DO, RFC858_SUPPRESS_GOAHEAD}); // do send one char at a time without buffering lines.
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_WILL, RFC857_ECHO}); // we will echo the client's input back to it.
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_DONT, RFC857_ECHO}); // so the client shouldn't be doing a local echo (or the user would see text twice).
+                SendTextRaw( new byte[] {RFC854_IAC, RFC854_WILL, RFC858_SUPPRESS_GOAHEAD}); // do send one char at a time without buffering lines.
             }
         }
         
@@ -460,6 +476,17 @@ namespace kOS.UserIO
 
             while (true)
             {
+                if (flushPendingInput) // When an async interrupt (like CTRL-C) is used, ignore whatever else was typed and throw it away:
+                {
+                    while (rawStream.DataAvailable)
+                    {
+                        // This is blocking, so the rawStream.DataAvailable check is vital to prevent hang:
+                        rawStream.Read(rawReadBuffer, 0, rawReadBuffer.Length);
+                        // But still remember the traffic counts as keepalive proof, even if we ignore it:
+                        keepAliveSendTimeStamp = DateTime.Now + System.TimeSpan.FromSeconds(hungCheckInterval);
+                    }
+                    flushPendingInput = false;
+                }
 
                 int numRead = rawStream.Read(rawReadBuffer, 0, rawReadBuffer.Length); // This is blocking, so this thread will be idle when client isn't typing.
                 if (numRead > 0 )
@@ -477,6 +504,8 @@ namespace kOS.UserIO
                         foreach (char ch in sendOut)
                         {
                             inQueue.Enqueue(ch);
+                            if (flushPendingInput)
+                                break; // stop processing the rest of this data chunk.
                         }
                     }
                 }
@@ -525,10 +554,14 @@ namespace kOS.UserIO
                 if (sb.Length > 0)
                 {
                     sleepTime = 0; // Saw at least one char, so reset the sleep-slowdown.
+                    string content = sb.ToString(); // instead of calling ToString() over and over.
                     if (terminalMapper == null)
-                        SendTextRaw(sb.ToString());
+                        SendTextRaw(content);
                     else
-                        SendTextRaw(terminalMapper.OutputConvert(sb.ToString()));
+                        SendTextRaw(terminalMapper.OutputConvert(content));
+                    
+                    if (content.IndexOf((char)UnicodeCommand.DIE) >= 0)
+                        StopListening();
                 }
                 else
                 {
@@ -546,6 +579,15 @@ namespace kOS.UserIO
             {
                 deadSocket = true;
                 StopListening();                    
+            }
+            
+            // Detect if the terminal type has been negotiated to be a type we can't deal with:
+            if (ClientTerminalType != "INITIAL_UNSET" && (terminalMapper != null && terminalMapper.TerminalTypeID == TerminalType.UNKNOWN))
+            {
+                Write("{YOUR TELNET CLIENT CLAIMS TO BE TERMINAL TYPE " +
+                      ClientTerminalType + 
+                      ", WHICH kOS HASN'T IMPLEMENTED A MAPPING FOR.}" +
+                      (char)UnicodeCommand.DIE);
             }
 
             if (welcomeMenu == null)
@@ -620,13 +662,18 @@ namespace kOS.UserIO
                             case RFC854_DO:
                                 rawIndex += TelnetConsumeDo(inRawBuff, rawIndex);
                                 break;
+                            case RFC854_DONT:
+                                rawIndex += TelnetConsumeDont(inRawBuff, rawIndex);
+                                break;
                             case RFC854_WILL:
                                 rawIndex += TelnetConsumeWill(inRawBuff, rawIndex);
                                 break;
                             case RFC854_IAC:
                                 break; // pass through to normal behaviour when two IAC's are back to back - that's how a real IAC char is encoded.
                             case RFC854_BREAK:
-                                lock (inQueueAccess) { inQueue.Enqueue((char)UnicodeCommand.BREAK); } // async send it out of order, right now.
+                            case RFC854_IP:
+                                lock (inQueueAccess) { inQueue.Enqueue((char)UnicodeCommand.BREAK); } // async send it out of order, right now
+                                flushPendingInput = true; // and ignore anything in the type-ahead buffer that was entered prior to the break.
                                 ++rawIndex;
                                 break;
                             default:
@@ -650,7 +697,7 @@ namespace kOS.UserIO
         }
         
         /// <summary>
-        /// Whenever an IAC DO command is seen (see RFC 854), this reads through it and undrstands some parts of it.
+        /// Whenever an IAC DO command is seen (see RFC 854), this reads through it and understands some parts of it.
         /// </summary>
         /// <param name="remainingBuff"> the buffer of raw stuff</param>
         /// <param name="index">the offset into the buffer where the RFC654_DO byte started</param>
@@ -670,13 +717,21 @@ namespace kOS.UserIO
                 // I'll do these things, it sometimes won't listen and demands that I respond to it's DO's instead.
                 // That's what this section of code is for:
                 
-                // If other side orders me to go char-at-a-time, agree:
+                // If other side orders me to go char-at-a-time, agree or disagree depending on setting:
+                // TODO: maybe some day alter this to obey the other side's wishes.
                 case RFC857_ECHO:
-                    SendTextRaw(new byte[] {RFC854_IAC, RFC854_WILL, RFC857_ECHO});
+                    if (isLineAtATime)
+                        SendTextRaw(new byte[] {RFC854_IAC, RFC854_WONT, RFC857_ECHO});
+                    else
+                        SendTextRaw(new byte[] {RFC854_IAC, RFC854_WILL, RFC857_ECHO});
                     break;
-                // If other side orders me to go char-at-a-time, agree:
+                // If other side orders me to go char-at-a-time, agree or disagree depending on setting:
+                // TODO: maybe some day alter this to obey the other side's wishes.
                 case RFC858_SUPPRESS_GOAHEAD:
-                    SendTextRaw(new byte[] {RFC854_IAC, RFC854_WILL, RFC858_SUPPRESS_GOAHEAD});
+                    if (isLineAtATime)
+                        SendTextRaw(new byte[] {RFC854_IAC, RFC854_WONT, RFC858_SUPPRESS_GOAHEAD});
+                    else
+                        SendTextRaw(new byte[] {RFC854_IAC, RFC854_WILL, RFC858_SUPPRESS_GOAHEAD});
                     break;
                 // if other side orders me to allow resizes, agree:
                 case RFC1073_NAWS:
@@ -700,13 +755,100 @@ namespace kOS.UserIO
 
             return offset;
         }
+        /// <summary>
+        /// Whenever an IAC DONT command is seen (see RFC 854), this reads through it and understands some parts of it.
+        /// </summary>
+        /// <param name="remainingBuff"> the buffer of raw stuff</param>
+        /// <param name="index">the offset into the buffer where the RFC654_DONT byte started</param>
+        /// <returns>how many bytes of the buffer should get skipped over because I dealt with them.</returns>
+        private int TelnetConsumeDont( byte[] remainingBuff, int index)
+        {
+            int offset = 0;
+            byte option = remainingBuff[index + (++offset)];
+            switch (option)
+            {
+                // Note, for some infuriating reason, in my testing I often found that telnet clients ignored
+                // the fact that I am the server and I'm supposed to send the DO's while they are supposed to reply
+                // with the WILL or WONT codes.  Some clients (I'm looking at YOU, Putty) sometimes take on the 
+                // active side of the negotiation (the DO/DONT) and sometimes take on the passive side of it (the
+                // WILL/WONT responses to the DO's), mixed up all willy-nilly and not in adherence with the RFC's
+                // rules about which side does which part.  Therefore even though I JUST got done telling the client
+                // I'll do these things, it sometimes won't listen and demands that I respond to it's DO's instead.
+                // That's what this section of code is for:
+                
+                // If other side orders me to go char-at-a-time, agree or disagree depending on my setting:
+                // TODO: maybe some day alter this to obey the other side's wishes.
+                case RFC857_ECHO:
+                    if (isLineAtATime)
+                        SendTextRaw(new byte[] {RFC854_IAC, RFC854_WONT, RFC857_ECHO});
+                    else
+                        SendTextRaw(new byte[] {RFC854_IAC, RFC854_WILL, RFC857_ECHO});
+                    break;
+                // If other side orders me to go char-at-a-time, agree or disagree depending on my setting:
+                // TODO: maybe some day alter this to obey the other side's wishes.
+                case RFC858_SUPPRESS_GOAHEAD:
+                    if (isLineAtATime)
+                        SendTextRaw(new byte[] {RFC854_IAC, RFC854_WONT, RFC858_SUPPRESS_GOAHEAD});
+                    else
+                        SendTextRaw(new byte[] {RFC854_IAC, RFC854_WILL, RFC858_SUPPRESS_GOAHEAD});
+                    break;
+                default:
+                    offset += TelnetConsumeOther(RFC854_DONT, remainingBuff, offset);
+                    break;
+            }
+
+            // Everything below here is to help debug:
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{"+RFC854_DO+"}");
+            sb.Append("{"+option+"}");
+            kOS.Safe.Utilities.Debug.Logger.SuperVerbose( "kOS: telnet protocol DO message from client: " + sb.ToString());
+
+            return offset;
+        }
 
         
         /// <summary>
-        /// Whenever an IAC WILL command is seen (see RFC 854), this reads through it and undrstands some parts of it.
+        /// Whenever an IAC WONT command is seen (see RFC 854), this reads through it and understands some parts of it.
         /// </summary>
         /// <param name="remainingBuff"> the buffer of raw stuff</param>
-        /// <param name="index">the offset into the buffer where the RFC654_DO byte started</param>
+        /// <param name="index">the offset into the buffer where the RFC654_WILL byte started</param>
+        /// <returns>how many bytes of the buffer should get skipped over because I dealt with them.</returns>
+        private int TelnetConsumeWont( byte[] remainingBuff, int index)
+        {
+            int offset = 0;
+            byte option = remainingBuff[index + (++offset)];
+            switch (option)
+            {
+                case RFC1091_TERMTYPE:
+                    // Bad- other side responded negative to terminal type negotiations.
+                    // Issue complaint and quit - this depends on this working right:
+                    Write("{YOUR TELNET CLIENT WONT IMPLEMENT RFC1091 (Terminal type).  kOS CANNOT WORK WITH IT.}" +
+                          UnicodeCommand.DIE);
+                    break;
+                // if other side cannot to allow resizes, give up:
+                case RFC1073_NAWS:
+                    Write("{YOUR TELNET CLIENT WONT IMPLEMENT RFC1073 (Terminal dimensions).  kOS CANNOT WORK WITH IT.}" +
+                          UnicodeCommand.DIE);
+                    break;
+                default:
+                    offset += TelnetConsumeOther(RFC854_WONT, remainingBuff, offset);
+                    break;
+            }
+            
+            // Everything below here is to help debug:
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{"+RFC854_DO+"}");
+            sb.Append("{"+option+"}");
+            kOS.Safe.Utilities.Debug.Logger.SuperVerbose( "kOS: telnet protocol WILL message from client: " + sb.ToString());
+
+            return offset;
+        }
+
+                /// <summary>
+        /// Whenever an IAC WILL command is seen (see RFC 854), this reads through it and understands some parts of it.
+        /// </summary>
+        /// <param name="remainingBuff"> the buffer of raw stuff</param>
+        /// <param name="index">the offset into the buffer where the RFC654_WILL byte started</param>
         /// <returns>how many bytes of the buffer should get skipped over because I dealt with them.</returns>
         private int TelnetConsumeWill( byte[] remainingBuff, int index)
         {
@@ -731,7 +873,6 @@ namespace kOS.UserIO
 
             return offset;
         }
-
         /// <summary>
         /// Consume any other RFC854_IAC - initiated protocol message that isn't caught by something
         /// more specific.
@@ -839,19 +980,30 @@ namespace kOS.UserIO
             // client to send one or the other as zero, which does not really mean zero but rather "ignore this field".
             // It's doubtful any terminal program uses this feature, but just in case it does, this protects us from
             // trying to set a zero height or zero width screen, which would likely cause a crash somewhere in ScreenBuffer:
-            if (width > 0) ClientWidth = width;
-            if (height > 0) ClientHeight = height;
-
-            lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic
+            bool widthChange = false;
+            bool heightChange = false;
+            if (width > 0 && ClientWidth != width)
             {
-                inQueue.Enqueue((char)UnicodeCommand.RESIZESCREEN);
-                inQueue.Enqueue((char)ClientWidth);
-                inQueue.Enqueue((char)ClientHeight);
-                if (welcomeMenu != null)
-                    welcomeMenu.NotifyResize();
-                if (ConnectedProcessor != null)
-                    inQueue.Enqueue((char)UnicodeCommand.REQUESTREPAINT);
+                widthChange = true;
+                ClientWidth = width;
             }
+            if (height > 0 && ClientHeight != height)
+            {
+                heightChange = true;
+                ClientHeight = height;
+            }
+
+            if (widthChange || heightChange)                
+                lock (inQueueAccess) // all access to inQueue and outQueue needs to be atomic
+                {
+                    inQueue.Enqueue((char)UnicodeCommand.RESIZESCREEN);
+                    inQueue.Enqueue((char)ClientWidth);
+                    inQueue.Enqueue((char)ClientHeight);
+                    if (welcomeMenu != null)
+                         welcomeMenu.NotifyResize();
+                   if (ConnectedProcessor != null)
+                        inQueue.Enqueue((char)UnicodeCommand.REQUESTREPAINT);
+                }
             
             handled = true;
             return offset;

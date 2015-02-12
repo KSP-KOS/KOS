@@ -27,30 +27,6 @@ namespace kOS.UserIO
         private int pendingWidth;
         private StringBuilder pendingTitle;
 
-        private enum CommDirection { TO_CLIENT, FROM_CLIENT }
-
-        // These flags exist to stop the following infinite back-and-forth looping that
-        // was occurring:
-        //     The client sends a resize message to the server, causing the ScreenBuffer to SetSize() itself.
-        //     The in-game GUI terminal notices that its ScreenBuffer did a SetSize().
-        //     So the in-game GUI terminal sends a resize message to the client.
-        //     Although the client's new size is the same as its old, it still goes through the motions of sending its new size notification to the server.
-        //     Thus starting the whole thing over again.
-        // When doing an active drag, where the client tries to redraw itself the whole time, it got messy.
-        private CommDirection prevResizeDirection = CommDirection.TO_CLIENT;
-        private DateTime prevResizeTimestamp = DateTime.Now;
-        private TimeSpan resizeSanityCooldown = TimeSpan.FromMilliseconds((double)250);
-        private bool IsResizeSane(CommDirection resizeDirection)
-        {
-            return (prevResizeDirection == resizeDirection ||
-                    DateTime.Now > prevResizeTimestamp + resizeSanityCooldown);
-        }
-        private void SetResizeTimestamp(CommDirection resizeDirection)
-        {
-            prevResizeDirection = resizeDirection;
-            prevResizeTimestamp = DateTime.Now;
-        }
-
         /// <summary>
         /// Map the unicode chars (and the fake control codes we made) into what the
         /// terminal wants to see.
@@ -77,18 +53,7 @@ namespace kOS.UserIO
                     case ExpectNextChar.RESIZEHEIGHT:
                         int height = (int)(str[index]);
                         System.Console.WriteLine("eraseme: TerminalXtermMapper: In RESIZEHEIGHT mode, just read value = " + height);
-                        if (IsResizeSane(CommDirection.TO_CLIENT))
-                        {
-                            System.Console.WriteLine("eraseme: TerminalXtermMapper: In RESIZEHEIGHT mode, just read value = " + height + " and decided it's sane to send it.");
-                            sb.Append(((char)0x1b)/*ESC*/ + "[8;" + height + ";" + pendingWidth + "t");
-                        }
-                        // else ignore it and don't pass it on.
-                        else
-                        {
-                            System.Console.WriteLine("eraseme: TerminalXtermMapper: In RESIZEHEIGHT mode, just read value = " + height + " and decided NOT to send it.");
-                        }
-                        // But whether ignoring it or not, still do remember the attempt was made and reset the timestamp:
-                        SetResizeTimestamp(CommDirection.TO_CLIENT);
+                        sb.Append(((char)0x1b)/*ESC*/ + "[8;" + height + ";" + pendingWidth + "t");
                         outputExpected = ExpectNextChar.NORMAL;
                         break;
                     case ExpectNextChar.INTITLE:
@@ -98,7 +63,6 @@ namespace kOS.UserIO
                             sb.Append(((char)0x1b)/*ESC*/ + "]2;" + pendingTitle.ToString() + ((char)0x07)/*BEL*/);
                             pendingTitle = new StringBuilder();
                             outputExpected = ExpectNextChar.NORMAL;
-                            SetResizeTimestamp(CommDirection.TO_CLIENT);
                         }
                         else
                             pendingTitle.Append(str[index]);
@@ -158,7 +122,6 @@ namespace kOS.UserIO
                         }
                         break;
                     case (char)(UnicodeCommand.RESIZESCREEN):
-                        SetResizeTimestamp(CommDirection.FROM_CLIENT);
                         System.Console.WriteLine("eraseme: TerminalXtermMapper: Detected INPUT's RESIZESCREEN, passing thru");
                         outChars.Add(inChars[index]); // dummy passthrough - just trapped this to notice the new resize direction.
                         break;

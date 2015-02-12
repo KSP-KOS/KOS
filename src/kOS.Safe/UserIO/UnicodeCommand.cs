@@ -45,11 +45,17 @@ namespace kOS.Safe.UserIO
         //
         
         /// <summary>
-        /// Indicates an emergency low-level break signal.  Often a telnet client will send this
+        /// Indicates an emergency low-level break or interrupt process signal.  Often a telnet client will send this
         /// character out-of-band immediately, queue-barging in front of whatever else is in the
         /// input queue:
         /// </summary>
         BREAK = 0xE000,
+        
+        /// <summary>
+        /// Indicates that when this character is seen on the output stream, the connection should
+        /// close down at that point, after the charactes prior to it have been sent out:
+        /// </summary>
+        DIE,
         
         /// <summary>
         /// Clear the screen and move the cursor to the upper left corner:

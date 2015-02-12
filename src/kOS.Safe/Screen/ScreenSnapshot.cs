@@ -100,19 +100,19 @@ namespace kOS.Safe.Screen
             {
                 System.Console.WriteLine("eraseme: DiffFrom(): iteration RowNum = " + newRowNum);
                 // Account for the diff due to the scrolling:
-                int oldRowNum = newRowNum - verticalScroll;
+                int oldRowNum = newRowNum + verticalScroll;
 
                 IScreenBufferLine newRow = Buffer[newRowNum];
                 IScreenBufferLine olderRow = (oldRowNum >= 0 && oldRowNum < older.Buffer.Count) ? older.Buffer[oldRowNum] : new ScreenBufferLine(0);
 
                 System.Console.WriteLine("eraseme: DiffFrom(): Now diffing:");
                 System.Console.WriteLine(newRow.ToString());
-                System.Console.WriteLine("time="+newRow.LastChangeTime.ToBinary().ToString());
+                System.Console.WriteLine("time="+newRow.LastChangeTick.ToString());
                 System.Console.WriteLine(olderRow.ToString());
-                System.Console.WriteLine("time="+olderRow.LastChangeTime.ToBinary().ToString());
+                System.Console.WriteLine("time="+olderRow.LastChangeTick.ToString());
                 
                 // If the old row is a dummy pad just made above, or if the new row is newer than the old row, then it needs checking for diffs:
-                if (olderRow.Length == 0 || newRow.LastChangeTime > olderRow.LastChangeTime)
+                if (olderRow.Length == 0 || newRow.LastChangeTick > olderRow.LastChangeTick)
                 {
                     System.Console.WriteLine("eraseme: DiffFrom(): diffing in detail.");
                     List<DiffChunk> diffs = new List<DiffChunk>();
@@ -148,6 +148,7 @@ namespace kOS.Safe.Screen
 
                     foreach (DiffChunk diff in diffs)
                     {
+                        /* comment-out -----------------
                         // If we're lucky enough that the current cursor happens to be right where we need it to
                         // be, some of these are more efficient.  Else it does TELEPORTCURSOR's:
                         
@@ -160,6 +161,7 @@ namespace kOS.Safe.Screen
                         }
                         else
                         {
+                        --------------------------- */
                             // If the change starts right where the cursor happens to be (i.e. when typing, one char
                             // at current cursor position will typically be the only diff from one update to the next),
                             // then don't bother moving the cursor first, else move it to the new pos:
@@ -178,7 +180,9 @@ namespace kOS.Safe.Screen
  
                             trackCursorColumn = diff.EndCol+1;
                             trackCursorRow = newRowNum;
+                        /* comment-out -----------------
                         }
+                        --------------------------- */
                     }
                 }
                     

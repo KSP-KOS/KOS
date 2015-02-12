@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Screen
 {
@@ -13,8 +14,19 @@ namespace kOS.Safe.Screen
     /// </summary>
     public class ScreenBufferLine : IScreenBufferLine
     {
-        public DateTime LastChangeTime {get; private set;}
+        /// <summary>
+        /// A number representing a count that can be used to check which changed
+        /// line is newer.  It doesn't store the real time, just an ever-increasing
+        /// counter taken from the TickGen class.  The purpose is to guarantee
+        /// that later numbers are marked with a later timestamp no matter what.
+        /// The .Net built-in DateTime.Now is insufficient for this purpose because it
+        /// returns the same fixed value for a few milliseconds before updating itself,
+        /// leading to a lot of 'ties' if its used as timestamp on code that runs fast.
+        /// </summary>
+        public ulong LastChangeTick {get; private set;}
+
         private char[] charArray;
+
         public int Length {get { return charArray.Length;}}
             
         /// <summary>
@@ -75,7 +87,7 @@ namespace kOS.Safe.Screen
 
         public void TouchTime()
         {
-            LastChangeTime = DateTime.Now;
+            LastChangeTick = TickGen.Next;
         }
         
         public override string ToString()

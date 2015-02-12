@@ -107,11 +107,13 @@ namespace kOS.Safe.Screen
 
         private int ScrollVerticalInternal(int deltaRows = 1)
         {
-            int maxTopRow = buffer.Count - 1;
+            int maxTopRow = buffer.Count - RowCount; // refuse to allow a scroll past the end of the visible buffer.
 
             // boundary checks
-            if (topRow + deltaRows < 0) deltaRows = -topRow;
-            if (topRow + deltaRows > maxTopRow) deltaRows = (maxTopRow - topRow);
+            if (topRow + deltaRows < 0)
+                deltaRows = -topRow;
+            else if (topRow + deltaRows > maxTopRow)
+                deltaRows = (maxTopRow - topRow);
 
             topRow += deltaRows;
 
@@ -247,7 +249,14 @@ namespace kOS.Safe.Screen
         public List<IScreenBufferLine> GetBuffer()
         {
             // base buffer
-            var mergedBuffer = new List<IScreenBufferLine>(buffer.GetRange(topRow, RowCount));
+            int extraPadRows = Math.Max(0, (topRow+RowCount) - buffer.Count); // When screen extends past the buffer bottom., this is needed to prevent GetRange() exception.
+            var mergedBuffer = new List<IScreenBufferLine>(buffer.GetRange(topRow, RowCount - extraPadRows));
+            int lastLineWidth = mergedBuffer[mergedBuffer.Count-1].Length;
+            while (extraPadRows > 0 )
+            {
+                mergedBuffer.Add(new ScreenBufferLine(lastLineWidth));
+                --extraPadRows;
+            }
 
             // merge sub buffers
             UpdateSubBuffers();

@@ -14,6 +14,7 @@ namespace kOS.Screen
     // Blockotronix 550 Computor Monitor
     public class TermWindow : KOSManagedWindow , ITermWindow
     {
+        private const string TERMINAL_MODEL = "kOS-GREEN-ONE";
         private const int CHARSIZE = 8;
         private const string CONTROL_LOCKOUT = "kOSTerminal";
         private const int FONTIMAGE_CHARS_PER_ROW = 16;
@@ -425,7 +426,9 @@ namespace kOS.Screen
                     
                     case (char)UnicodeCommand.REQUESTREPAINT:
                         if (whichTelnet != null)
-                            RepaintTelnet(whichTelnet, true);
+                        {
+                            ResizeAndRepaintTelnet(whichTelnet, shared.Screen.ColumnCount, shared.Screen.RowCount, true);
+                        }
                         break;
                         
                     // Typical case is to just let SpecialKey do the work:
@@ -654,24 +657,51 @@ namespace kOS.Screen
         internal void DetachTelnet(TelnetSingletonServer server)
         {
             System.Console.WriteLine("eraseme: Before DetachTelnet: There are now " + telnets.Count + " telnet servers attached.");
+            server.DisconnectFromProcessor();
             telnets.Remove(server);
             System.Console.WriteLine("eraseme: After DetachTelnet: There are now " + telnets.Count + " telnet servers attached.");
         }
         
+        public void DetachAllTelnets()
+        {
+            // Have to use a (shallow) copy of the list, because the act of detaching telnets
+            // will delete from the list while we're trying to iterate through it:
+            TelnetSingletonServer[] listSnapshot = telnets.ToArray();
+            
+            foreach (TelnetSingletonServer telnet in listSnapshot)
+            {
+                DetachTelnet(telnet);
+            }
+        }
+
         internal int NotifyOfScreenResize(IScreenBuffer sb)
         {
             windowRect = new Rect(windowRect.xMin, windowRect.yMin, sb.ColumnCount*CHARSIZE + 65, sb.RowCount*CHARSIZE + 100);
-            
-            // Make all the connected telnet clients resize themselves to match:
-            string resizeCmd = new string( new [] {(char)UnicodeCommand.RESIZESCREEN, (char)sb.ColumnCount, (char)sb.RowCount} );
+
             foreach (TelnetSingletonServer telnet in telnets)
             {
-                // TODO: Work on this timing bug:  The resize command which causes the repaint also causes the terminal to change
-                // size, which causes the repaint to fall out of bounds of the screen buffer arrays as they just changed size. 
-                telnet.Write(resizeCmd);
-                RepaintTelnet(telnet, true);
+                ResizeAndRepaintTelnet(telnet, sb.ColumnCount, sb.RowCount, false);
             }
             return 0;
+        }
+        
+        /// <summary>
+        /// Tell the telnet session to resize itself
+        /// </summary>
+        /// <param name="telnet">which telnet session to send to</param>
+        /// <param name="width">new width</param>
+        /// <param name="height">new height</param>
+        /// <param name="unconditional">if true, then send the resize message no matter what.  If false,
+        /// then only send it if we calculate that the size changed.</param>
+        private void ResizeAndRepaintTelnet(TelnetSingletonServer telnet, int width, int height, bool unconditional)
+        {
+            // Don't bother telling it to resize if its already the same size - this should stop resize spew looping:
+            if (unconditional || telnet.ClientWidth != width || telnet.ClientHeight != height)
+            {
+                string resizeCmd = new string( new [] {(char)UnicodeCommand.RESIZESCREEN, (char)width, (char)height} );
+                telnet.Write(resizeCmd);
+                RepaintTelnet(telnet, true);
+            }            
         }
         
         internal void ChangeTitle(string newTitle)
@@ -775,9 +805,9 @@ namespace kOS.Screen
                 telnet.Write((char)UnicodeCommand.CLEARSCREEN);
         }
 
-        public bool IsTelnetted()
+        public int NumTelnets()
         {
-            return telnets.Count > 0;
+            return telnets.Count;
         }
         
         private int HowManyRowsFit()

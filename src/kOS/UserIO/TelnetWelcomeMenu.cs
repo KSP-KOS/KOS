@@ -169,11 +169,17 @@ namespace kOS.UserIO
                                ", size = "
                                + telnetServer.ClientWidth + "x" + telnetServer.ClientHeight +
                                (char)UnicodeCommand.STARTNEXTLINE);
-            telnetServer.Write(CenterPadded(" Available CPUs for Connection: ",'=') + (char)UnicodeCommand.STARTNEXTLINE);
-            
+            telnetServer.Write(CenterPadded("",'_')/*line of '-' chars*/ + (char)UnicodeCommand.STARTNEXTLINE);
+
+            string formatter = "{0,4} {1,4} {2,4} {3} {4} {5}";
+
             int userPickNum = 1;
             int longestLength = 0;
             List<string> displayChoices = new List<string>();
+            displayChoices.Add( String.Format(formatter,"Menu", "GUI ", " Other ", "", "", ""));
+            displayChoices.Add( String.Format(formatter,"Pick", "Open", "Telnets", "", "Vessel Name", "(CPU tagname)"));
+            displayChoices.Add( String.Format(formatter,"----", "----", "-------", "", "--------------------------------", ""));
+            longestLength = displayChoices[2].Length;
             foreach (kOSProcessor kModule in availableCPUs)
             {
                 Part thisPart = kModule.part;
@@ -185,7 +191,9 @@ namespace kOS.UserIO
                 Vessel vessel = (thisPart == null) ? null/*can this even happen?*/ : thisPart.vessel;
                 string vesselLabel = (vessel == null) ? "<no vessel>"/*can this even happen?*/ : vessel.GetName();
                 
-                string choice = String.Format("[{0}] Vessel({1}), CPU({2})",userPickNum, vesselLabel, partLabel);
+                bool guiOpen = kModule.GetWindow().IsOpen();
+                int numTelnets = kModule.GetWindow().NumTelnets();
+                string choice = String.Format(formatter, "["+userPickNum+"]", (guiOpen ? "yes": "no"), numTelnets, "   ", vesselLabel, "("+partLabel+")");
                 displayChoices.Add(choice);
                 longestLength = Math.Max(choice.Length, longestLength);
                 ++userPickNum;
@@ -196,7 +204,7 @@ namespace kOS.UserIO
                 telnetServer.Write(CenterPadded(choicePaddedToLongest, ' ') + (char)UnicodeCommand.STARTNEXTLINE);
             }
             
-            if (displayChoices.Count > 0)
+            if (availableCPUs.Count > 0)
                 telnetServer.Write(CenterPadded("",'-')/*line of '-' chars*/ + (char)UnicodeCommand.STARTNEXTLINE +
                                    WordBreak("Choose a CPU to attach to by typing a " +
                                              "selection number and pressing return/enter. " +
@@ -211,7 +219,7 @@ namespace kOS.UserIO
                                    (char)UnicodeCommand.STARTNEXTLINE +
                                    "> ");
             else
-                telnetServer.Write(CenterPadded("<NONE>", ' ') + (char)UnicodeCommand.STARTNEXTLINE);
+                telnetServer.Write(CenterPadded(String.Format(formatter,"", "", "", "", "<NONE>", ""), ' ') + (char)UnicodeCommand.STARTNEXTLINE);
 
         }
         

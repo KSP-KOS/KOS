@@ -60,11 +60,16 @@ namespace kOS.UserIO
         {
             if (typeString.Substring(0,5).Equals("xterm", StringComparison.CurrentCultureIgnoreCase))
                 return TerminalType.XTERM;
-            else if (typeString.Substring(0,4).Equals("ansi", StringComparison.CurrentCultureIgnoreCase))
-                return TerminalType.XTERM;
             else if (typeString.Substring(0,4).Equals("vt100", StringComparison.CurrentCultureIgnoreCase))
                 return TerminalType.XTERM;
+            //
+            // The following condition isn't implemented yet:
+            //
+            // else if (typeString.Substring(0,4).Equals("ansi", StringComparison.CurrentCultureIgnoreCase))
+            //     return TerminalType.XTERM;
+            
             // Add more cases here if more subclasses of this class are created later.
+
             else
                 return TerminalType.UNKNOWN;
         }
@@ -212,6 +217,16 @@ namespace kOS.UserIO
             return new string(outChars.ToArray());
         }
         
+        /// <summary>
+        /// The base class, me, is the last class to "get its hands on"
+        /// the output chars and has the last chance to manipulate them.  By this point
+        /// any UnicodeCommand chars that haven't been translated by the derived classes
+        /// of me into something meaningful, that are still left in the stream, are just
+        /// going to be meaningless and confuse the terminal.  So strip them all out.
+        /// This way a derived unicodmapper class doesn't need to explicitly mention
+        /// all the codes it doesn't know how to implement.  It just lets me strip them.
+        /// </summary>
+        /// <param name="sb">buffer to strip from - strips in place because its a mutable StringBuffer</param>
         private void StripUnicodeCommands(StringBuilder sb)
         {
             for (int i = 0 ; i < sb.Length ; ++i)
@@ -221,7 +236,8 @@ namespace kOS.UserIO
                     int charsToStrip = 1;
                     switch (sb[i])
                     {
-                        // TODO: come up with a better way?  Maybe have the UnicodeCommands "know" their size?
+                        // TODO: come up with a better way?  Maybe have the UnicodeCommands "know" their size
+                        // instead of having to hardcode these cases here?
                         case (char)UnicodeCommand.TELEPORTCURSOR:
                         case (char)UnicodeCommand.RESIZESCREEN:
                             charsToStrip = 2;
@@ -232,7 +248,7 @@ namespace kOS.UserIO
                                     charsToStrip = 1 + j - i;
                             break;
                     }
-                    sb.Remove(i,charsToStrip);
+                    sb.Remove(i, charsToStrip);
                     --i; // Start the scan from the current position next iteration.  Don't advance the index.
                 }
             }

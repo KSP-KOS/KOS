@@ -28,6 +28,12 @@ namespace kOS.UserIO
         private Int32 port;
         private List<TelnetSingletonServer> telnets;
         private bool isListening;
+
+        // For status displays for the app control panel to see:
+        public static TelnetMainServer Instance {get; private set;}
+        public IPAddress BindAddr {get { return bindAddr;}}
+        public bool IsListening {get { return isListening;}}
+        public int ClientCount {get { return telnets.Count;}}
         
         public TelnetMainServer()
         {
@@ -37,6 +43,7 @@ namespace kOS.UserIO
             DontDestroyOnLoad(transform.gameObject); // Otherwise Unity will stop calling my Update() on the next scene change because my gameObject went away.
 
             Console.WriteLine("kOS TelnetMainServer class exists."); // Console.Writeline used because this occurs before kSP's logger is set up.
+            Instance = this;
         }
         
         public void SetConfigEnable(bool newVal)
@@ -59,8 +66,17 @@ namespace kOS.UserIO
             // Build the server settings here, not in the constructor, because the settings might have been altered by the user post-init:
 
             port = Config.Instance.TelnetPort;
-            bindAddr = IPAddress.Parse("127.0.0.1"); // Only allow loopback for now unless better security can be worked out.
-            
+            if (Config.Instance.TelnetLoopback)
+                bindAddr = IPAddress.Parse("127.0.0.1");
+            else
+            {
+                IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+                if (localIPs.Length > 0)
+                    bindAddr = localIPs[0]; // Hardcoded to only use the first IP it finds - good enough for most home network setups.
+                else
+                    bindAddr = IPAddress.Parse("127.0.0.1");
+            }
+
             server = new TcpListener(bindAddr, port);
             server.Start();
             kOS.Safe.Utilities.Debug.Logger.Log("kOS TelnetMainServer started listening on " + bindAddr + " " + port);
@@ -78,6 +94,11 @@ namespace kOS.UserIO
             server.Stop();
             foreach (TelnetSingletonServer telnet in telnets)
                 telnet.StopListening();
+        }
+        
+        internal void SingletonStopped(TelnetSingletonServer telnet)
+        {
+            telnets.Remove(telnet);
         }
 
         /// <summary>
@@ -123,7 +144,7 @@ namespace kOS.UserIO
             string remoteIdent = ((IPEndPoint)(incomingClient.Client.RemoteEndPoint)).Address.ToString();
             kOS.Safe.Utilities.Debug.Logger.Log("kOS telnet server got an incoming connection from " + remoteIdent);
             
-            TelnetSingletonServer newServer = new TelnetSingletonServer(incomingClient, ++howManySpawned);
+            TelnetSingletonServer newServer = new TelnetSingletonServer(this, incomingClient, ++howManySpawned);
             telnets.Add(newServer);
             newServer.StartListening();
         }
