@@ -79,7 +79,7 @@ namespace kOS.UserIO
                                              // so as to prevent accidentally typing this name instead of the property.  It's essential
                                              // that all the access even inside this class itself, be done via the property to
                                              // force it to keep the terminalMapper updated to match.
-
+                                             
         private readonly object keepAliveAccess = new object(); // because the timestamps can be seen by both in and out threads.
 
         private bool gotSomeRecentTraffic = true; // start off assumig it's alive.
@@ -581,15 +581,6 @@ namespace kOS.UserIO
                 StopListening();                    
             }
             
-            // Detect if the terminal type has been negotiated to be a type we can't deal with:
-            if (ClientTerminalType != "INITIAL_UNSET" && (terminalMapper != null && terminalMapper.TerminalTypeID == TerminalType.UNKNOWN))
-            {
-                Write("{YOUR TELNET CLIENT CLAIMS TO BE TERMINAL TYPE " +
-                      ClientTerminalType + 
-                      ", WHICH kOS HASN'T IMPLEMENTED A MAPPING FOR.}" +
-                      (char)UnicodeCommand.DIE);
-            }
-
             if (welcomeMenu == null)
             {
                 if (ConnectedProcessor == null)

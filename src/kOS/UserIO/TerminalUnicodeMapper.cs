@@ -87,8 +87,8 @@ namespace kOS.UserIO
             {
                 case TerminalType.XTERM:
                     return new TerminalXtermMapper(typeString);
-                case TerminalType.ANSI:
-                    return new TerminalAnsiMapper(typeString);
+                case TerminalType.VT100:
+                    return new TerminalVT100Mapper(typeString);
                 default:
                     return new TerminalUnicodeMapper(typeString);
             }
@@ -255,12 +255,12 @@ namespace kOS.UserIO
         }
     }
 
-    /// <summary>tokenization of the many different strings that might be returned as ID's from telnet clients</summary>    
+    /// <summary>tokenization of the many different strings that might be returned as ID's from telnet clients.  Adding
+    /// a string to this list means that type of terminal is understood.</summary>
     public enum TerminalType
     {
         UNKNOWN,
         VT100,
-        XTERM,
-        ANSI // Add more values here if more subclasses of this class are created later.
+        XTERM
     }
 }

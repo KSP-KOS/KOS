@@ -11,7 +11,8 @@ namespace kOS.UserIO
     {
         public TerminalAnsiMapper(string typeString) : base(typeString)
         {
-            TerminalTypeID = TerminalType.ANSI;
+            // enable this line later after ANSI mapping is filled in.
+            // TerminalTypeID = TerminalType.ANSI;
         }
 
         // TODO - this isn't implemented properly yet.  For now it's just a copy of the default unknown terminal base class.        

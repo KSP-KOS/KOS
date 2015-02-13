@@ -2,8 +2,10 @@
 using System.Net;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using KSP.IO;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
+using kOS.Screen;
 using UnityEngine;
 
 namespace kOS.UserIO
@@ -35,6 +37,19 @@ namespace kOS.UserIO
         public bool IsListening {get { return isListening;}}
         public int ClientCount {get { return telnets.Count;}}
         
+        /// <summary>The current user permission to turn the CONFIG:TELENT setting on.</summary>
+        private bool tempListenPermission;
+        /// <summary>The current user permission to turn the CONFIG:LOOPBACK setting off.</summary>
+        private bool tempRealIPPermission;
+        
+        private bool activeOptInDialog;
+        private bool activeRealIPDialog;
+        
+        private Rect optInRect = new Rect( 200, 200, 500, 400);
+        private Rect realIPRect = new Rect( 240, 140, 500, 400); // offset just in case both are up at the same time, to ensure visible bits to click on.  They aren't movable.
+        
+        private string helpURL = "http://TODO-change-this-when-the-actual-docs-exist/"; // TODO.
+
         public TelnetMainServer()
         {
             isListening = false;
@@ -44,15 +59,124 @@ namespace kOS.UserIO
 
             Console.WriteLine("kOS TelnetMainServer class exists."); // Console.Writeline used because this occurs before kSP's logger is set up.
             Instance = this;
+            
+            tempListenPermission = GetPermanentListenPermission();
+            tempRealIPPermission = GetPermanentRealIPPermission();
+        }
+        
+        /// <summary>
+        /// Return the user's permanent ("don't remind me again") status for the 
+        /// permission to have telnet listen turned on.  This is stored in the
+        /// kOS settings file and presumed to have a value of false if the setting is
+        /// missing entirely from the file (which it will be the first time the
+        /// user runs a version of the mod with this code in it.)
+        /// </summary>
+        /// <returns>The permission as read from the kOS settings file</returns>
+        private bool GetPermanentListenPermission()
+        {
+            try
+            {
+                PluginConfiguration savedPermissions = PluginConfiguration.CreateForType<TelnetMainServer>();
+                savedPermissions.load();
+                return (bool)(savedPermissions["PermanentListenPermission"]);
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Change the permanent ("don't remind me again") status of the permission
+        /// in the kOS settings file.
+        /// </summary>
+        private void SetPermanentListenPermission(bool newValue)
+        {
+            try
+            {
+                PluginConfiguration savedPermissions = PluginConfiguration.CreateForType<TelnetMainServer>();
+                savedPermissions.load();
+                savedPermissions.SetValue("PermanentListenPermission", newValue);
+                savedPermissions.save();
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+            }
+            return; // In principle it should never reach here.
+        }
+
+        /// <summary>
+        /// Return the user's permanent ("don't remind me again") status for the
+        /// permission to have the telnet server listen to an address other han
+        /// loopback.  (false = please restrict to only loopback.)  The permission
+        /// will be stored in the kOS settings file and will be presumed to be set
+        /// to false if the setting is missing from the file (as it will be the first
+        /// time the user runs a version of the mod with this code in it.
+        /// </summary>
+        /// <returns>The permission as read from the kOS settings file</returns>
+        private bool GetPermanentRealIPPermission()
+        {
+            try
+            {
+                PluginConfiguration savedPermissions = PluginConfiguration.CreateForType<TelnetMainServer>();
+                savedPermissions.load();
+                return (bool)(savedPermissions["PermanentRealIPPermission"]);
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+            }
+            return false; // In principle it should never reach here.
+        }
+
+        /// <summary>
+        /// Change the permanent ("don't remind me again") status of the permission
+        /// in the kOS settings file.
+        /// </summary>
+        private void SetPermanentRealIPPermission(bool newValue)
+        {
+            try
+            {
+                PluginConfiguration savedPermissions = PluginConfiguration.CreateForType<TelnetMainServer>();
+                savedPermissions.load();
+                savedPermissions.SetValue("PermanentRealIPPermission", newValue);
+                savedPermissions.save();
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+            }
+            return; // In principle it should never reach here.
         }
         
         public void SetConfigEnable(bool newVal)
         {
-            if (newVal == isListening)
-                return;
+            bool isLoopback = (bindAddr == IPAddress.Loopback);
+            bool loopBackStatusChanged = (isLoopback != Config.Instance.TelnetLoopback);
+            
+            if (loopBackStatusChanged)
+                StopListening(); // we'll be forcing a new restart of the telnet server on the new IP address.
+            else
+                if (newVal == isListening) // nothing changed about the settings on this pass through.
+                    return;
             
             if (newVal)
-                StartListening();
+            {
+                if (tempListenPermission && ((tempRealIPPermission || Config.Instance.TelnetLoopback)))
+                    StartListening();
+                else
+                {
+                    Config.Instance.EnableTelnet = false; // Turn it right back off, never having allowed the server to turn on.
+                    
+                    // Depending on which reason it was for the denial, activate the proper dialog window:
+                    if (!tempListenPermission)
+                        activeOptInDialog = true;
+                    else
+                        activeRealIPDialog = true;
+                }
+            }
             else
                 StopListening();
         }
@@ -67,14 +191,10 @@ namespace kOS.UserIO
 
             port = Config.Instance.TelnetPort;
             if (Config.Instance.TelnetLoopback)
-                bindAddr = IPAddress.Parse("127.0.0.1");
+                bindAddr = IPAddress.Loopback;
             else
             {
-                IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-                if (localIPs.Length > 0)
-                    bindAddr = localIPs[0]; // Hardcoded to only use the first IP it finds - good enough for most home network setups.
-                else
-                    bindAddr = IPAddress.Parse("127.0.0.1");
+                bindAddr = GetRealAddress();
             }
 
             server = new TcpListener(bindAddr, port);
@@ -94,8 +214,12 @@ namespace kOS.UserIO
             server.Stop();
             foreach (TelnetSingletonServer telnet in telnets)
                 telnet.StopListening();
+
+            // If it was only on for the one go, then it needs to get turned off again so
+            // the message reappears the next time it's turned on:
+            tempListenPermission = GetPermanentListenPermission();
         }
-        
+
         internal void SingletonStopped(TelnetSingletonServer telnet)
         {
             telnets.Remove(telnet);
@@ -147,6 +271,179 @@ namespace kOS.UserIO
             TelnetSingletonServer newServer = new TelnetSingletonServer(this, incomingClient, ++howManySpawned);
             telnets.Add(newServer);
             newServer.StartListening();
+        }
+        
+        private IPAddress GetRealAddress()
+        {
+            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+            if (localIPs.Length > 0)
+                return localIPs[0]; // Hardcoded to only use the first IP it finds - good enough for most home network setups.
+            else
+                return IPAddress.Parse("127.0.0.1");
+        }
+        
+        void OnGUI()
+        {
+            if (activeOptInDialog)
+                optInRect = GUILayout.Window(401123, // any made up number unlikely to clash is okay here
+                                             optInRect, OptInOnGui, "kOS Telnet Opt-In Permisssion");
+            if (activeRealIPDialog)
+                realIPRect = GUILayout.Window(401124, // any made up number unlikely to clash is okay here
+                                              realIPRect, RealIPOnGui, "kOS Telnet Non-Loopback Permisssion");
+        }
+        
+        void OptInOnGui(int id)
+        {
+            string optInText =
+                "You are attempting to turn on the telnet server embedded inside kOS.\n" +
+                " \n" +
+                "SQUAD has created a rule that all mods for KSP that wish to use network traffic " +
+                "are required to contain an accurate and informative opt-in question asking for user " +
+                "permission first. (We at kOS agree with the intent behind this rule.)\n" +
+                " \n" +
+                "If you turn on the kOS telnet server, this is what you are agreeing to:\n" +
+                " \n" +
+                "        kOS will keep a server running within the game that allows a commonly available " +
+                "external program called a \"telnet client\" to control the kOS terminal screens " +
+                "exactly as they can be used within the game's GUI.\n" +
+                "        This means the external telnet client program can type the same exact commands " +
+                "that you type at the terminal, with the same exact effect.\n" +
+                " \n" +
+                "        If this sounds dangerous, remember that you can force this feature to only " +
+                "work between programs running on your own computer, never allowing access from " +
+                "external computers.  This is the default way the mod ships, and the setting " +
+                "can be changed with the LOOPBACK config option.\n" +
+                " \n" +
+                "Further information can be found at: \n" +
+                "        " + helpURL + "\n";
+
+            // Note, the unnecessary curly braces below are there to help enforce an indentation that won't be
+            // clobbered by auto-indenter tools.  Conceptually it helps show which "begin" matches with "end"
+            // for layout purposes.  If approved, I might want to go through our other GUI stuff and do a
+            // similar thing because I think it makes everything clearer:
+            GUILayout.BeginVertical();
+            {
+                GUILayout.Label(optInText, HighLogic.Skin.textArea);
+                GUILayout.BeginHorizontal();
+                {
+                    // By putting an expandwidth field on either side, it centers the middle part:
+                    GUILayout.Label(" ", GUILayout.ExpandWidth(true));
+                    GUILayout.Label("____________________",HighLogic.Skin.label);
+                    GUILayout.Label(" ", GUILayout.ExpandWidth(true));
+                } GUILayout.EndHorizontal();
+                GUILayout.BeginVertical();
+                {
+                    GUILayout.BeginHorizontal();
+                    {
+                        // By putting an expandwidth field on either side, it centers the middle part:
+                        GUILayout.Label(" ", GUILayout.ExpandWidth(true));
+                        GUILayout.Label("Do you wish to enable the telnet server?",HighLogic.Skin.textArea);
+                        GUILayout.Label(" ", GUILayout.ExpandWidth(true));
+                    } GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                    {
+                        bool noClicked = GUILayout.Button("No", HighLogic.Skin.button);
+                        bool yesNeverAgainClicked = GUILayout.Button("Yes\n and never show this message again", HighLogic.Skin.button);
+                        bool yesClicked = GUILayout.Button("Yes\n just this once", HighLogic.Skin.button);
+                        
+                        // If any was clicked, this dialog window should go away next OnGui():
+                        if (noClicked || yesNeverAgainClicked || yesClicked)
+                            activeOptInDialog = false;
+                        
+                        if (yesClicked || yesNeverAgainClicked)
+                        {
+                            tempListenPermission = true;
+                            Config.Instance.EnableTelnet = true; // should get noticed next Update() and turn on the server.
+                        }
+                        
+                        if (yesNeverAgainClicked)
+                            SetPermanentListenPermission(true);
+                        
+                    } GUILayout.EndHorizontal();
+                } GUILayout.EndVertical();
+            } GUILayout.EndVertical();
+            GUI.DragWindow();
+        }
+        
+        void RealIPOnGui(int id)
+        {
+            string realIPText =
+                "You are trying to set the kOS telnet server's IP address to your machine's real IP address " +
+                "of " + GetRealAddress().ToString() + " rather than the loopback address of 127.0.0.1.\n" +
+                " \n" +
+                "The use of the loopback address by default is a safety measure to ensure that only telnet clients on " +
+                "your own computer can connect to your KSP game.\n" +
+                " \n" +
+                "If this is a local-only IP address (for example an address in the 192.168 range), or if your " +
+                "computer sits behind a router for which the necessary port forwarding has not been set up, " +
+                "then this is probably safe to turn the LOOPBACK option off, but on the other hand if this is a " +
+                "public IP address you should think of the implications first.\n" +
+                " \n" +
+                "If you want better security, and this is a public IP address, then it's recommended that you " +
+                "leave the LOOPBACK setting turned on and instead provide remote access by the use of an SSH tunnel " +
+                "you can control access to.  The subject of setting up an SSH tunnel is an advanced but well documented "+
+                "network administrator topic for which help can be found with internet searches.\n" +
+                " \n" +
+                "If you open your KSP game to other telnet clients outside your computer, you are choosing " +
+                "to accept the security implications and take on the responsibilty for them yourself.\n" +
+                " \n" +
+                "If you are thinking \"What's the harm? It's just letting people mess with my Kerbal Space Program Game?\", " +
+                "then think about the existence of the kOS LOG command, which writes files on your computer's hard drive.\n" +
+                " \n" +
+                "Further information can be found at: \n" +
+                "        " + helpURL + "\n";
+
+            // Note, the unnecessary curly braces below are there to help enforce a begin/end indentation that won't be
+            // clobbered by auto-indenter tools.
+            GUILayout.BeginVertical();
+            {
+                GUILayout.Label(realIPText, HighLogic.Skin.textArea);
+                GUILayout.BeginHorizontal();
+                {
+                    // By putting an expandwidth field on either side, it centers the middle part:
+                    GUILayout.Label(" ", GUILayout.ExpandWidth(true));
+                    GUILayout.Label("____________________", HighLogic.Skin.label);
+                    GUILayout.Label(" ", GUILayout.ExpandWidth(true));
+                } GUILayout.EndHorizontal();
+                GUILayout.BeginVertical();
+                {
+                    GUILayout.BeginHorizontal();
+                    {
+                        // By putting an expandwidth field on either side, it centers the middle part:
+                        GUILayout.Label(" ", GUILayout.ExpandWidth(true));
+                        GUILayout.Label("Do you wish to turn off safe loopback mode?", HighLogic.Skin.textArea);
+                        GUILayout.Label(" ", GUILayout.ExpandWidth(true));
+                    } GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                    {
+                        bool noClicked = GUILayout.Button("No (loopback stays on)", HighLogic.Skin.button);
+                        bool yesNeverAgainClicked = GUILayout.Button("Yes\n and never show this message again", HighLogic.Skin.button);
+                        bool yesClicked = GUILayout.Button("Yes\n just this once", HighLogic.Skin.button);
+                        
+                        // If any was clicked, this dialog window should go away next OnGui():
+                        if (noClicked || yesNeverAgainClicked || yesClicked)
+                            activeRealIPDialog = false;
+                        
+                        if (noClicked)
+                        {
+                            Config.Instance.TelnetLoopback = true;
+                            tempRealIPPermission = false;
+                        }
+
+                        if (yesClicked || yesNeverAgainClicked)
+                        {
+                            Config.Instance.TelnetLoopback = false;
+                            tempRealIPPermission = true;
+                            StartListening();
+                        }
+
+                        if (yesNeverAgainClicked)
+                            SetPermanentRealIPPermission(true);
+                        
+                    } GUILayout.EndHorizontal();
+                } GUILayout.EndVertical();
+            } GUILayout.EndVertical();            
+            GUI.DragWindow();
         }
     }
 }
