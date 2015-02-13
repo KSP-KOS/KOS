@@ -240,7 +240,6 @@ namespace kOS.UserIO
         /// </summary>true if input is currently Queued</returns>
         public bool InputWaiting()
         {
-            System.Console.WriteLine("eraseme:TelnetSingletonServer.InputWaiting(): My 'this' is " + (this==null ? "null" : "not null"));
             bool returnVal;
             lock (inQueueAccess)
             {
@@ -315,7 +314,7 @@ namespace kOS.UserIO
         /// <param name="str"></param>
         private void SendTextRaw(byte[] buff)
         {
-            bool verboseDebugSend = true;
+            bool verboseDebugSend = false; // enable to print a verbose dump of every char going to the client.
             try
             {
                 rawStream.Write(buff, 0, buff.Length);
@@ -445,7 +444,6 @@ namespace kOS.UserIO
             {
                 if (DateTime.Now > keepAliveSendTimeStamp)
                 {
-                    System.Console.WriteLine("eraseme: IsHung() is sending another keepalive message.");
                     // By the time it's time to send a second keepalive, we had better have gotten the reply from the previous one:
                     returnValue = ! gotSomeRecentTraffic;
 
@@ -538,7 +536,6 @@ namespace kOS.UserIO
 
             while (true)
             {
-                System.Console.WriteLine("eraseme: DoOutThread(): Loop iteration starting at time " + DateTime.Now );
                 ContinuousChecks();
 
                 sb.Remove(0,sb.Length); // clear the whole thing.
@@ -547,7 +544,6 @@ namespace kOS.UserIO
                     while (outQueue.Count > 0)
                     {
                         char ch = outQueue.Dequeue();
-                        System.Console.WriteLine("eraseme: Just dequeued (int)"+(int)ch+", '"+(char)ch+"'");
                         sb.Append(ch);
                     }
                 }
@@ -618,7 +614,6 @@ namespace kOS.UserIO
         private void TelnetAskForTerminalType()
         {
             SendTextRaw(new byte[] {RFC854_IAC, RFC854_SB, RFC1091_TERMTYPE, RFC1091_SEND, RFC854_IAC, RFC854_SE});
-            System.Console.WriteLine("eraseme: TelnetAskFoTerminalType sent.");
         }
 
         /// <summary>

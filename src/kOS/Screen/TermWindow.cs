@@ -345,10 +345,8 @@ namespace kOS.Screen
             for( int i = 0 ; i < telnets.Count ; ++i)
             {
                 TelnetSingletonServer telnet = telnets[i];
-                System.Console.WriteLine("eraseme:ProcessTelnetInput: working on a telnet number ["+i+"] which is "+(telnet==null?"null":"NOT null"));
                 while (telnet.InputWaiting())
                 {
-                    System.Console.WriteLine("eraseme:ProcessTelnetInput: now calling ProcessOneInputChar, with telnet = " + (telnet==null ? "null" : "NOT null"));
                     ProcessOneInputChar(telnet.ReadChar(), telnet);
                 }
             }
@@ -371,7 +369,6 @@ namespace kOS.Screen
         /// Set to null in order to say it wasn't from a telnet but was from the interactive GUI</param>
         public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet)
         {
-            System.Console.WriteLine("eraseme:ProcessOneInputChar( "+(char)ch+", "+ (whichTelnet==null ? "null" : "NOT null") + ")");
             // Weird exceptions for multi-char data combos that would have been begun on previous calls to this method:
             switch (inputExpected)
             {
@@ -424,15 +421,9 @@ namespace kOS.Screen
                         if (shared.Interpreter.IsAtStartOfCommand())
                         {
                             if (whichTelnet == null)
-                            {
-                                System.Console.WriteLine("eraseme:ProcessOneInputChar: in whichTelnet=null condition.");
                                 Close();
-                            }
                             else
-                            {
-                                System.Console.WriteLine("eraseme:ProcessOneInputChar: in whichTelnet=NOT null condition.");
                                 whichTelnet.DisconnectFromProcessor();
-                            }
                         }
                         break;
                         
@@ -670,10 +661,8 @@ namespace kOS.Screen
 
         internal void DetachTelnet(TelnetSingletonServer server)
         {
-            System.Console.WriteLine("eraseme: Before DetachTelnet: There are now " + telnets.Count + " telnet servers attached.");
             server.DisconnectFromProcessor();
             telnets.Remove(server);
-            System.Console.WriteLine("eraseme: After DetachTelnet: There are now " + telnets.Count + " telnet servers attached.");
         }
         
         public void DetachAllTelnets()
@@ -735,8 +724,6 @@ namespace kOS.Screen
                                                   (char)UnicodeCommand.TITLEBEGIN,
                                                   TitleText,
                                                   (char)UnicodeCommand.TITLEEND);
-            System.Console.WriteLine("eraseme: debug: sendTitleToTelnet is sending this:");
-            for (int i=0; i<changeTitleCmd.Length; ++i) { System.Console.WriteLine("eraseme: changeTitleCmd["+i+"] = (int)" + (int)changeTitleCmd[i] + ", (char)"+ (char)changeTitleCmd[i]); }
             telnet.Write(changeTitleCmd);
         }
 
@@ -753,7 +740,6 @@ namespace kOS.Screen
                 return;
             }
             
-            System.Console.WriteLine("eraseme: incremental repaint of telnet.");
             string updateText = mostRecentScreen.DiffFrom(prevTelnetScreens[telnet]);
             telnet.Write(updateText);
             
@@ -766,7 +752,6 @@ namespace kOS.Screen
         /// <param name="telnet">which telnet to paint to.</param>
         private void RepaintTelnetFull(TelnetSingletonServer telnet)
         {   
-            System.Console.WriteLine("eraseme: fullrepaint of telnet.");
             List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
 
             // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
@@ -801,7 +786,6 @@ namespace kOS.Screen
             }
 
             // ensure cursor locatiom (in case it's not at the bottom):
-            System.Console.WriteLine("eraseme: moving cursor to "+shared.Screen.CursorColumnShow +"x" + shared.Screen.CursorRowShow +".");
             telnet.Write(String.Format("{0}{1}{2}",
                                        (char)UnicodeCommand.TELEPORTCURSOR,
                                        // The next two are cast to char because, for example, a value of 76 should be

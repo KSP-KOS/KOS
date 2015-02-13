@@ -138,6 +138,15 @@ Special Keys
 
 The following keys have special meaning in the telnet session:
 
+Control-L
+  **Force refresh** Pressing Control-L forces the kOS telnet server to
+  redraw your whole screen for you from scratch.  This is useful if
+  you encounter strange line noise, interrupted messages, or for
+  just any occasion where you suspect the screen isn't being drawn
+  correctly.  Pressing control-L will ensure your display gets
+  fully re-synced with what's in the buffer in memory for the
+  terminal.
+
 Control-C
   **interrupt process** This is the same meaning as control-C in the normal
   GUI terminal - it breaks the program execution.  The reason it gets a special

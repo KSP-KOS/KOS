@@ -107,7 +107,6 @@ namespace kOS.UserIO
         /// <returns>raw byte stream to send to the terminal</returns>
         public virtual char[] OutputConvert(string str)
         {
-            System.Console.WriteLine("eraseme: TerminalUnicodeMapper: Passed string = "+str);
             StringBuilder sb = new StringBuilder();
 
             for (int index = 0 ; index < str.Length ; ++index)
@@ -117,13 +116,10 @@ namespace kOS.UserIO
                     case ExpectNextChar.RESIZEWIDTH:
                         pendingWidth = (int)(str[index]);
                         outputExpected = ExpectNextChar.RESIZEHEIGHT;
-                        System.Console.WriteLine("eraseme: TerminalUnicodeMapper: found RESIZEWIDTH char. Value = "+pendingWidth);
                         break;
                     case ExpectNextChar.RESIZEHEIGHT:
                         int height = (int)(str[index]);
-                        System.Console.WriteLine("eraseme: TerminalUnicodeMapper: found RESIZEHEIGHT char. Value = "+height);
                         sb.Append("{Please resize to " + pendingWidth + "x" + height + "}"); // By default, assume the terminal has no such control code, but this can be overridden.
-                        System.Console.WriteLine("eraseme: TerminalUnicodeMapper: sending string = " + sb.ToString());
                         outputExpected = ExpectNextChar.NORMAL;
                         break;
                     case ExpectNextChar.INTITLE:
@@ -136,7 +132,6 @@ namespace kOS.UserIO
                         {
                             case (char)UnicodeCommand.RESIZESCREEN:
                                 outputExpected = ExpectNextChar.RESIZEWIDTH;
-                                System.Console.WriteLine("eraseme: TerminalUnicodeMapper: found RESIZESCREEN.");
                                 break;
                             case (char)UnicodeCommand.TITLEBEGIN:
                                 outputExpected = ExpectNextChar.INTITLE;

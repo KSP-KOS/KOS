@@ -38,7 +38,6 @@ namespace kOS.UserIO
         /// <returns>raw byte stream to send to the terminal</returns>
         public override char[] OutputConvert(string str)
         {
-            System.Console.WriteLine("eraseme: TerminalXtermMapper: Passed string = "+str);
             StringBuilder sb = new StringBuilder();
 
             for (int index = 0 ; index < str.Length ; ++index)
@@ -48,18 +47,15 @@ namespace kOS.UserIO
                     case ExpectNextChar.RESIZEWIDTH:
                         pendingWidth = (int)(str[index]);
                         outputExpected = ExpectNextChar.RESIZEHEIGHT;
-                        System.Console.WriteLine("eraseme: TerminalXtermMapper: In RESIZEWIDTH mode, just read value = " + pendingWidth);
                         break;
                     case ExpectNextChar.RESIZEHEIGHT:
                         int height = (int)(str[index]);
-                        System.Console.WriteLine("eraseme: TerminalXtermMapper: In RESIZEHEIGHT mode, just read value = " + height);
                         sb.Append(((char)0x1b)/*ESC*/ + "[8;" + height + ";" + pendingWidth + "t");
                         outputExpected = ExpectNextChar.NORMAL;
                         break;
                     case ExpectNextChar.INTITLE:
                         if (str[index] == (char)UnicodeCommand.TITLEEND)
                         {
-                            System.Console.WriteLine("eraseme: TerminalXtermMapper: Saw TITLEEND, title = " + pendingTitle);
                             sb.Append(((char)0x1b)/*ESC*/ + "]2;" + pendingTitle.ToString() + ((char)0x07)/*BEL*/);
                             pendingTitle = new StringBuilder();
                             outputExpected = ExpectNextChar.NORMAL;
@@ -72,12 +68,10 @@ namespace kOS.UserIO
                         {
                             case (char)UnicodeCommand.RESIZESCREEN:
                                 outputExpected = ExpectNextChar.RESIZEWIDTH;
-                                System.Console.WriteLine("eraseme: TerminalXtermMapper: Detected RESIZESCREEN, going into RESIZEWIDTH mode.");
                                 break;
                             case (char)UnicodeCommand.TITLEBEGIN:
                                 outputExpected = ExpectNextChar.INTITLE;
                                 pendingTitle = new StringBuilder();
-                                System.Console.WriteLine("eraseme: TerminalXtermMapper: Detected TITLEBEGIN, going into INTITLE mode.");
                                 break;
                             case (char)UnicodeCommand.CLEARSCREEN:
                                 sb.Append((char)0x1b/*ESC*/ + "?47h" +                            // <-- Tells xterm to use fixed-buffer mode, not saving in scrollback.
@@ -122,7 +116,6 @@ namespace kOS.UserIO
                         }
                         break;
                     case (char)(UnicodeCommand.RESIZESCREEN):
-                        System.Console.WriteLine("eraseme: TerminalXtermMapper: Detected INPUT's RESIZESCREEN, passing thru");
                         outChars.Add(inChars[index]); // dummy passthrough - just trapped this to notice the new resize direction.
                         break;
                     default:

@@ -44,7 +44,6 @@ namespace kOS.UserIO
                     case ExpectNextChar.TELEPORTCURSORROW:
                         int row = (int)(str[index]);
                         // VT100 counts rows and cols starting at 1, not 0, thus the +1's below:
-                        System.Console.WriteLine("eraseme: TELEPORTCURSOR to " + pendingCol + " by " + row);
                         sb.Append(((char)0x1b)/*ESC*/ + "[" + (row+1) + ";" + (pendingCol+1) + "H");
                         outputExpected = ExpectNextChar.NORMAL;
                         break;
@@ -143,7 +142,6 @@ namespace kOS.UserIO
         /// <returns>The UnicdeCommand equivalent.  NOTE that if numConsumed is zero, this value shouldn't be used as nothing was actually done.</returns>
         protected char ConvertVT100InputCSI(char[] inChars, int offset, out int numConsumed)
         {
-            System.Console.WriteLine("eraseme: in ConvertVt100InputCSI.  inChars[offset] = (as integer) " + (int)inChars[offset]);
             char returnChar = '\0'; // dummy until changed.
             switch (inChars[offset])
             {

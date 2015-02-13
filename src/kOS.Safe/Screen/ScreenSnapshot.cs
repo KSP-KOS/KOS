@@ -94,27 +94,18 @@ namespace kOS.Safe.Screen
             else if (verticalScroll < 0) // scrolling text down (eyeballs panning up)
                 output.Append(new String((char)UnicodeCommand.SCROLLSCREENDOWNONE, -verticalScroll)); // A run of scrolldown chars
 
-            System.Console.WriteLine("eraseme: DiffFrom(): RowCount = " + RowCount);
             // Check each row:
             for (int newRowNum = 0 ; newRowNum < RowCount ; ++newRowNum)
             {
-                System.Console.WriteLine("eraseme: DiffFrom(): iteration RowNum = " + newRowNum);
                 // Account for the diff due to the scrolling:
                 int oldRowNum = newRowNum + verticalScroll;
 
                 IScreenBufferLine newRow = Buffer[newRowNum];
                 IScreenBufferLine olderRow = (oldRowNum >= 0 && oldRowNum < older.Buffer.Count) ? older.Buffer[oldRowNum] : new ScreenBufferLine(0);
-
-                System.Console.WriteLine("eraseme: DiffFrom(): Now diffing:");
-                System.Console.WriteLine(newRow.ToString());
-                System.Console.WriteLine("time="+newRow.LastChangeTick.ToString());
-                System.Console.WriteLine(olderRow.ToString());
-                System.Console.WriteLine("time="+olderRow.LastChangeTick.ToString());
                 
                 // If the old row is a dummy pad just made above, or if the new row is newer than the old row, then it needs checking for diffs:
                 if (olderRow.Length == 0 || newRow.LastChangeTick > olderRow.LastChangeTick)
                 {
-                    System.Console.WriteLine("eraseme: DiffFrom(): diffing in detail.");
                     List<DiffChunk> diffs = new List<DiffChunk>();
                     
                     for (int newCol = 0 ; newCol < newRow.Length ; ++newCol)
@@ -124,10 +115,8 @@ namespace kOS.Safe.Screen
                         bool oldRowTooShort = newCol >= olderRow.Length;
                         char newChar = (newRow[newCol] == '\0' ? ' ' : newRow[newCol]);
                         char oldChar = (oldRowTooShort ? ' ' : (olderRow[newCol] == '\0' ? ' ' : olderRow[newCol]));
-                        System.Console.WriteLine("eraseme: DiffFrom(): new = "+(int)newChar+", old = "+(int)oldChar);
                         if (newChar != oldChar)
                         {
-                            System.Console.WriteLine("eraseme: DiffFrom(): Is inside chunk check.");
                             // Start a new diff chunk if there isn't one yet, or the diff is a long enough distance from the existing one:
                             if (diffs.Count == 0 || diffs[diffs.Count-1].EndCol < newCol - joinDiffDist)
                             {
