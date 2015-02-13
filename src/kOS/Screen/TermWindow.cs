@@ -43,6 +43,7 @@ namespace kOS.Screen
 
         private SharedObjects shared;
         private KOSTextEditPopup popupEditor;
+        private Color currentTextColor = new Color(1,1,1,1); // a dummy color at first just so it won't crash before TerminalGUI() where it's *really* set.
 
 
         public TermWindow()
@@ -111,6 +112,7 @@ namespace kOS.Screen
             if (isLocked) return;
 
             isLocked = true;
+            ShowCursor = true;
             BringToFront();
 
             cameraManager = CameraManager.Instance;
@@ -154,6 +156,12 @@ namespace kOS.Screen
                 GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
             if (rememberThrottleFullKey != null)
                 GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
+
+            // Ensure that when the terminal is unfocused, it always reliably leaves the cursor frozen 
+            // in the display as visible, instead of leaving it frozen as invisible.  (Without this, then
+            // it will freeze at whatever blink state it was in at the moment the terminal was unfocussed.
+            // half the time it would be visible, half the time invisible.)
+            ShowCharacterByAscii((char)1, shared.Screen.CursorColumnShow, shared.Screen.CursorRowShow, currentTextColor);
         }
 
         void OnGUI()
@@ -350,7 +358,6 @@ namespace kOS.Screen
             }
 
 
-            Color currentTextColor;
             if (IsPowered)
             {
                 currentTextColor = isLocked ? textColor : textColorAlpha;
@@ -378,6 +385,7 @@ namespace kOS.Screen
                            screen.CursorRowShow < screen.RowCount &&
                            IsPowered &&
                            ShowCursor;
+            
             if (blinkOn)
             {
                 ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor);
