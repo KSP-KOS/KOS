@@ -37,6 +37,7 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :struct:`FileInfo`
     * :struct:`List`
     * :struct:`Iterator`
+    * :struct:`Terminal`
     * :ref:`Colors <colors>`
     * :ref:`Time <time>`
     * :ref:`Drawing Vectors <vecdraw>`

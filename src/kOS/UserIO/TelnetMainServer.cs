@@ -48,7 +48,7 @@ namespace kOS.UserIO
         private Rect optInRect = new Rect( 200, 200, 500, 400);
         private Rect realIPRect = new Rect( 240, 140, 500, 400); // offset just in case both are up at the same time, to ensure visible bits to click on.  They aren't movable.
         
-        private string helpURL = "http://TODO-change-this-when-the-actual-docs-exist/"; // TODO.
+        private string helpURL = "http://ksp-kos.github.io/KOS_DOC/general/telnet.html";
 
         public TelnetMainServer()
         {
