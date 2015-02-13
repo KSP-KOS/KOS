@@ -60,10 +60,12 @@ namespace kOS.Safe.Screen
                 case (char)UnicodeCommand.RIGHTCURSORONE:
                     TryMoveCursor(1);
                     break;
+                case (char)0x0001: // control-A, same as home key
                 case (char)UnicodeCommand.HOMECURSOR:
                     LineCursorIndex = 0;
                     UpdateSubBufferCursor();
                     break;
+                case (char)0x0005: // control-E, same as end key
                 case (char)UnicodeCommand.ENDCURSOR:
                     LineCursorIndex = LineBuilder.Length;
                     UpdateSubBufferCursor();

@@ -281,6 +281,20 @@ namespace kOS.Screen
                     return;
                 }
                 
+                if (e.keyCode == KeyCode.A && e.control)
+                {
+                    ProcessOneInputChar((char)0x0001, null);
+                    consumeEvent = true;
+                    return;
+                }
+                
+                if (e.keyCode == KeyCode.E && e.control)
+                {
+                    ProcessOneInputChar((char)0x0005, null);
+                    consumeEvent = true;
+                    return;
+                }
+                
                 if (0x20 <= c && c < 0x7f) // printable characters
                 {
                     ProcessOneInputChar(c, null);
