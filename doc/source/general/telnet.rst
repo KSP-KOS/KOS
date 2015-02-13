@@ -35,7 +35,7 @@ The telnet server for kOS requires the use of a
 recommend the following programs, although you can use others:
 
 For Windows
-  We recomemnd `Putty <TODO>`_, the free terminal emulator
+  We recommend `Putty <http://www.putty.org/>`_, the free terminal emulator
   for Windows, although any good terminal emulator should do the job, 
   provided it is capable of operating in an "XTERM - compatible" mode.
 
@@ -57,8 +57,9 @@ Using it
 
 1. Turn on the telnet server by going into the app control panel and clicking
    on the green circle next to the word "Telnet".  Alternatively, you can
-   issue the command: SET CONFIG:TELNET TO TRUE. from any terminal window in
-   kOS.
+   issue the command::
+     SET CONFIG:TELNET TO TRUE.
+   from any terminal window in kOS.
 
 2. The very first time you do this, you wil get a warning message, as per
    `SQUAD's rule number 5 about mods that run network services <http://forum.kerbalspaceprogram.com/threads/87843-Forum-Rules-Add-on-Posting-Rules-August-21st-2014>`_. 
@@ -197,18 +198,21 @@ HOWTO: Putty client
 the loopback address 127.0.0.1, and port number 5410.  If you've changed those
 settings then alter the numbers you see here accordingly.)
 
-0. Run KSP, and get it into a scene where there exists a vessel with at least one 
-kOS CPU loaded into it.
-1. Run Putty.
-2. On the first dialog you see, click the *Telnet* radio-button selection.
-3. Type in the number 127.0.0.1 in the large blank above the radio buttons that is labeled *"Host Name (or IP address)"*.
-4. Type in the number 5410 in the smaller blank to the right of it that is labeled *"Port"*.
-5. At the bottom of the screen, select the radio button labeled *"Never"* under *"Close window on exit"*.
-6. Click the *Open* button to connect to the server.
+1. Run KSP, and get it into a scene where there exists a vessel
+   with at least one kOS CPU loaded into it.
+2. Run Putty.
+3. On the first dialog you see, click the *Telnet* radio-button selection.
+4. Type in the number 127.0.0.1 in the large blank above the radio
+   buttons that is labeled *"Host Name (or IP address)"*.
+5. Type in the number 5410 in the smaller blank to the right of it
+   that is labeled *"Port"*.
+6. At the bottom of the screen, select the radio button labeled
+   *"Never"* under *"Close window on exit"*.
+7. Click the *Open* button to connect to the server.
 
 (You can also save these settings under a name for later re-use.)
 
-Step 5 is important.  Without it, Putty would just make the window disappear any
+Step 6 is important.  Without it, Putty would just make the window disappear any
 time there's a problem, making it very hard to diagnose because you can't see what
 message the server was sending back to you just before the window went away.
 
@@ -220,12 +224,15 @@ HOWTO: Command-line client
 the loopback address 127.0.0.1, and port number 5410.  If you've changed those
 settings then alter the numbers you see here accordingly.)
 
-0. Run KSP, and get it into a scene where there exists a vessel with at least one 
-kOS CPU loaded into it.
-1. Open a command shell window that either *IS* xterm, or emulates xterm.  For
-OSX, the default command shell should work fine.  For Linux, you should actually have
-the xterm program itself installed that you can use.
-2. At the shell prompt in that window, enter the command:  telnet 127.0.0.1 5410
+1.  Run KSP, and get it into a scene where there exists a vessel with
+    at least one 
+    kOS CPU loaded into it.
+2.  Open a command shell window that either *IS* xterm, or emulates xterm.  For
+    OSX, the default command shell should work fine.  For Linux, you should
+    actually have the xterm program itself installed that you can use.
+3.  At the shell prompt in that window, enter the command::
+
+      telnet 127.0.0.1 5410
 
 HOWTO: Other client
 -------------------
@@ -233,8 +240,8 @@ HOWTO: Other client
 1. Set the IP address to 127.0.0.1 using whatever means the program has for it.
 2. Set the port number to 5410 using whatever means the program has for it.
 3. Set the terminal to XTERM emulation mode if it has it, or VT100 mode as a
-4. less good, but still perhaps workable option.
-5. Run the terminal.
+   less good, but still perhaps workable option.
+4. Run the terminal.
 
 Security
 --------
@@ -307,7 +314,7 @@ looks like gibberish to you.  It can be skipped.
 
 If you wish to make your own homemade telnet client and connect it up to the 
 kOS telnet server, the following is the required subset of the telnet protocol
-that your telnet server must speak, and the terminal requirements it must
+that your telnet client must speak, and the terminal requirements it must
 fufill:
 
 1. It must suppress local character echoing, and enter character-at-a-time mode,
@@ -330,7 +337,7 @@ fufill:
    that are capable of emulating XTERM or VT100 commands won't work right if they 
    don't identify themselves as XTERM or VT100.  kOS does not know how to guess what
    emulation mode to enter if it doesn't recognize your terminal type string.
-5. It must implement the NAWS, Negotiate About Terminal Size option, as
+4. It must implement the NAWS, Negotiate About Terminal Size option, as
    `described by RFC1073 <http://www.networksorcery.com/enp/rfc/rfc1073.txt>`_.
    kOS uses this to decide how to size its mental image of your terminal to match
    your terminal's real size.  Note that this negotiation is one-way.  Your client
