@@ -6,6 +6,9 @@ The kOS Telnet Server
 kOS now supports the abilty to enable a `telnet server <http://www.telnet.org/htm/faq.htm>`_
 inside Kerbal Space Program.
 
+.. figure:: /_images/general/telnet.png
+    :width: 95 %
+
 Telnet is an old network protocol designed in the early days of the internet, long
 before World Wide Web.  Its purpose was (is) to allow you to get access to the
 remote command line interfaces of distant server computers, acting as if the 
@@ -43,14 +46,16 @@ For Mac
   You shouldn't have to install anything.  There should be a telnet client
   already installed, which you can access by opening up your command terminal,
   and then running it as a command-line tool.  To see how to use it, read
-  below in the section titled "`HOWTO: Command-line client`_"
+  below in the section titled "`HOWTO: Command-line client`_".  The built-in
+  Terminal.app for OSX understands the XTERM command sequences that kOS uses
+  and in fact identifies itself as a type of XTERM when used with a telnet
+  client.
 
 For Linux
   You shouldn't have to install anything.  There should be a telnet client
-  already installed, which you can access by opening up any shell terminal 
-  window which reports itself as being an XTERM terminal type.  (When in 
-  doubt, try running the program actually *called* "xterm".)  To see how
-  to use it, read below in the section titled "`HOWTO: Command-line client`_"
+  already installed, and an xterm program already installed in most any Linux
+  distribution.  Open an xterm window, and in that window type the telnet 
+  command, as described by the section titled "`HOWTO: Command-line client`_"
 
 Using it
 --------
@@ -129,6 +134,22 @@ Using it
    to keep them all the same size.  If you resize your telnet client window, it should
    cause the in-game window to change size to match.  (If your terminal type is XTERM,
    then the same thing works in reverse.  If it's VT100 then it doesn't.)
+
+.. warning::
+  Certain implementations of the xterm terminal emulation and the telnet cliet have
+  created a strange unending cascade of terminal resizes when you have two different
+  telnet clients connected to the same GUI terminal and one of them is dragged to a
+  new size.  Because some implementations don't wait until they're done resizing to
+  report their new size through telnet and instead report their intermediate sizes as
+  they are being stretched, the attempt to keep them the same size causes them to
+  effectively "argue" back and forth with each other, constantly changing each
+  other's size.   If you experience this problem (your terminal window will be
+  fliping back and forth between two different sizes, resizing itself over and over
+  again in a neverending loop), you can try to get out of it by issuing a hardcoded
+  command to set the terminal size, such as::
+    SET TERMINAL:WIDTH TO 50.
+  Doing this should force all the connected telnet XTERM windows to stop arguing with
+  each other about what the size is, and get them synced up again.
 
 10. At any time you may disconnect your telnet client from the terminal by hitting
     control-D as the first character of a new line.  This will bring you back to
