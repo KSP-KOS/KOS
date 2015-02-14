@@ -28,7 +28,7 @@ namespace kOS.Function
         }
     }
 
-[Function("hudtxt")]
+[Function("hudtext")]
     public class FunctionHudTxt : FunctionBase
     {
 
