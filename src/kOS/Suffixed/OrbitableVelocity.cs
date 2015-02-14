@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Utilities;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
@@ -18,6 +19,13 @@ namespace kOS.Suffixed
         {
             Orbital = new Vector(v.obt_velocity);
             Surface = new Vector(v.srf_velocity);
+            InitializeSuffixes();
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("ORBIT", new Suffix<Vector>(() => Orbital));
+            AddSuffix("SURFACE", new Suffix<Vector>(() => Surface));
         }
 
         public OrbitableVelocity(CelestialBody b, SharedObjects shared)
@@ -27,6 +35,7 @@ namespace kOS.Suffixed
             Surface = (parent != null) ?
                 new Vector(b.orbit.GetVel() - parent.getRFrmVel(b.position)) :
                 new Vector(Vector3d.zero);
+            InitializeSuffixes();
         }
 
         /// <summary>
@@ -40,20 +49,7 @@ namespace kOS.Suffixed
         {
             Orbital = orbVel;
             Surface = surfVel;
-        }
-
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "ORBIT":
-                    return Orbital;
-
-                case "SURFACE":
-                    return Surface;
-            }
-
-            return base.GetSuffix(suffixName);
+            InitializeSuffixes();
         }
 
         public override string ToString()

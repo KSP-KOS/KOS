@@ -383,21 +383,6 @@ namespace kOS.Suffixed
 
             return kScriptParts;
         }
-        
-
-        public override bool SetSuffix(string suffixName, object value)
-        {
-            switch (suffixName)
-            {
-                case "PACKDISTANCE":
-                    var distance = (float) value;
-                    Vessel.distanceLandedPackThreshold = distance;
-                    Vessel.distancePackThreshold = distance;
-                    return true;
-            }
-
-            return base.SetSuffix(suffixName, value);
-        }
 
         private void InitializeSuffixes()
         {
@@ -432,6 +417,9 @@ namespace kOS.Suffixed
             AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass, "The Ship's mass when full"));
             AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
+            AddSuffix("PACKDISTANCE", new SetSuffix<float>(
+                () => System.Math.Min(Vessel.distanceLandedPackThreshold, Vessel.distancePackThreshold), 
+                value => { Vessel.distanceLandedPackThreshold = Vessel.distancePackThreshold = value; }));
 
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
