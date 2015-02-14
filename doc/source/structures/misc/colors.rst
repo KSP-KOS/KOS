@@ -73,7 +73,7 @@ Method 1: Use one of these pre-arranged named colors:
         * - :A or :ALPHA
           - scalar
           - the alpha (how opaque: 1 = opaque, 0 = transparent) component of the color
-        * - :HTML
+        * - :HTML or :HEX
           - string
           - the color rendered into a HTML tag string i.e. "#ff0000".  This format ignores the alpha channel and treats all colors as opaue.
 

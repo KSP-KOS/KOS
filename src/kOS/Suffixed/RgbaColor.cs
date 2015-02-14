@@ -40,7 +40,7 @@ namespace kOS.Suffixed
         }
         
         /// <summary>
-        /// Returns a string represnting the HTML color code "#rrggbb" format
+        /// Returns a string representing the HTML color code "#rrggbb" format
         /// for the color.  (i.e. RED is "#ff0000").  Note that this cannot represent
         /// the transparency (alpha) information, and will treat the color as if it was
         /// fully opaque regardless of whether it really is or not.  Although there have
@@ -48,7 +48,7 @@ namespace kOS.Suffixed
         /// alpha information, i.e. "#80ff0000" would be a semitransparent red, those never
         /// got accepted as standard and remain special proprietary extensions.
         /// </summary>
-        /// <returns>The html spec string returned, using lowercase lettering for the alpha digits</returns>
+        /// <returns>The HTML spec string returned, using lowercase lettering for the alpha digits</returns>
         public string ToHTMLString()
         {
             byte redByte   = (byte)(Mathf.Min(255, (int)(color.r * 255f)));
