@@ -18,6 +18,14 @@ Terminal and game environment
         PRINT 4+1.
         PRINT “4 times 8 is: “ + (4*8).
 
+.. global:: SET TERMINAL:WIDTH. GET TERMINAL:WIDTH
+
+     Gets or sets the terminal's width in characters.
+
+.. global:: SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT
+
+     Gets or sets the terminal's height in characters.
+
 .. function:: AT(col,line)
 
     :parameter col: (integer) column starting with zero (left)

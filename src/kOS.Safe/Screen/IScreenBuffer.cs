@@ -9,6 +9,7 @@ namespace kOS.Safe.Screen
         int RowCount { get; }
         int ColumnCount { get; }
         int AbsoluteCursorRow { get; set; }
+        int TopRow {get;}
         void SetSize(int rowCount, int columnCount);
         int ScrollVertical(int deltaRows);
         void MoveCursor(int row, int column);
@@ -19,7 +20,7 @@ namespace kOS.Safe.Screen
         void ClearScreen();
         void AddSubBuffer(SubBuffer subBuffer);
         void RemoveSubBuffer(SubBuffer subBuffer);
-        List<char[]> GetBuffer();
+        List<IScreenBufferLine> GetBuffer();
         void AddResizeNotifier(ScreenBuffer.ResizeNotifier notifier);
         void RemoveResizeNotifier(ScreenBuffer.ResizeNotifier notifier);
         string DebugDump();

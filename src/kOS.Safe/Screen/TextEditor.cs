@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.Utilities;
+using kOS.Safe.UserIO;
 
 namespace kOS.Safe.Screen
 {
@@ -49,31 +50,33 @@ namespace kOS.Safe.Screen
             }
         }
 
-        public virtual void SpecialKey(kOSKeys key)
+        public virtual void SpecialKey(char key)
         {
             switch (key)
             {
-                case kOSKeys.LEFT:
+                case (char)UnicodeCommand.LEFTCURSORONE:
                     TryMoveCursor(-1);
                     break;
-                case kOSKeys.RIGHT:
+                case (char)UnicodeCommand.RIGHTCURSORONE:
                     TryMoveCursor(1);
                     break;
-                case kOSKeys.HOME:
+                case (char)0x0001: // control-A, same as home key
+                case (char)UnicodeCommand.HOMECURSOR:
                     LineCursorIndex = 0;
                     UpdateSubBufferCursor();
                     break;
-                case kOSKeys.END:
+                case (char)0x0005: // control-E, same as end key
+                case (char)UnicodeCommand.ENDCURSOR:
                     LineCursorIndex = LineBuilder.Length;
                     UpdateSubBufferCursor();
                     break;
-                case kOSKeys.DEL:
+                case (char)UnicodeCommand.DELETERIGHT:
                     RemoveChar();
                     break;
-                case kOSKeys.PGUP:
+                case (char)UnicodeCommand.PAGEUPCURSOR:
                     ScrollVertical(-10);
                     break;
-                case kOSKeys.PGDN:
+                case (char)UnicodeCommand.PAGEDOWNCURSOR:
                     ScrollVertical(10);
                     break;
             }
@@ -135,7 +138,7 @@ namespace kOS.Safe.Screen
             for (int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
             {
                 char[] lineCharArray = lines[lineIndex].PadRight(LineSubBuffer.ColumnCount, ' ').ToCharArray();
-                lineCharArray.CopyTo(LineSubBuffer.Buffer[lineIndex], 0);   
+                LineSubBuffer.Buffer[lineIndex].ArrayCopyFrom(lineCharArray, 0, 0);
             }
 
             UpdateSubBufferCursor(lines);

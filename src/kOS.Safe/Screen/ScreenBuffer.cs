@@ -10,7 +10,11 @@ namespace kOS.Safe.Screen
         private const int DEFAULT_COLUMNS = 50;
         
         private int topRow;
-        private readonly List<char[]> buffer;
+        
+        // Needed so the terminal knows when it's been scrolled, for its diffing purposes.
+        public int TopRow {get {return topRow;}}
+        
+        private readonly List<IScreenBufferLine> buffer;
         private readonly List<SubBuffer> subBuffers;
 
         protected int CursorRow { get; set; }
@@ -32,11 +36,9 @@ namespace kOS.Safe.Screen
             set { CursorRow = value - topRow; }
         }
 
-
-
         public ScreenBuffer()
         {
-            buffer = new List<char[]>();
+            buffer = new List<IScreenBufferLine>();
             Notifyees = new List<ResizeNotifier>();
             
             subBuffers = new List<SubBuffer>();
@@ -59,7 +61,7 @@ namespace kOS.Safe.Screen
         protected void AddNewBufferLines( int howMany = 1)
         {
             while (howMany-- > 0)
-                buffer.Add(new char[ColumnCount]);
+                buffer.Add(new ScreenBufferLine(ColumnCount));
         }
 
         public void AddResizeNotifier(ScreenBuffer.ResizeNotifier notifier)
@@ -93,23 +95,25 @@ namespace kOS.Safe.Screen
             // value.  Note that this does not (yet) account for preserving lines and wrapping them.
             for (int row = 0 ; row < buffer.Count ; ++row)
             {
-                char[] newRow = new char[ColumnCount];
-                Array.Copy(buffer[row], 0, newRow, 0, Math.Min(buffer[row].Length, ColumnCount));
+                ScreenBufferLine newRow = new ScreenBufferLine(ColumnCount);
+                newRow.ArrayCopyFrom(buffer[row], 0, 0, Math.Min(buffer[row].Length, ColumnCount));
                 buffer[row] = newRow;
             }
             
             // Add more buffer lines if needed to pad out the rest of the screen:
             while (buffer.Count - topRow < RowCount)
-                buffer.Add(new char[ColumnCount]);
+                buffer.Add(new ScreenBufferLine(ColumnCount));
         }
 
         private int ScrollVerticalInternal(int deltaRows = 1)
         {
-            int maxTopRow = buffer.Count - 1;
+            int maxTopRow = buffer.Count - RowCount; // refuse to allow a scroll past the end of the visible buffer.
 
             // boundary checks
-            if (topRow + deltaRows < 0) deltaRows = -topRow;
-            if (topRow + deltaRows > maxTopRow) deltaRows = (maxTopRow - topRow);
+            if (topRow + deltaRows < 0)
+                deltaRows = -topRow;
+            else if (topRow + deltaRows > maxTopRow)
+                deltaRows = (maxTopRow - topRow);
 
             topRow += deltaRows;
 
@@ -220,8 +224,8 @@ namespace kOS.Safe.Screen
 
         private void PrintLine(string textToPrint)
         {
-            char[] lineBuffer = buffer[AbsoluteCursorRow];
-            textToPrint.ToCharArray().CopyTo(lineBuffer, CursorColumn);
+            IScreenBufferLine lineBuffer = buffer[AbsoluteCursorRow];
+            lineBuffer.ArrayCopyFrom(textToPrint.ToCharArray(), 0, CursorColumn);
             MoveColumn(textToPrint.Length);
         }
 
@@ -242,10 +246,17 @@ namespace kOS.Safe.Screen
             subBuffers.Remove(subBuffer);
         }
 
-        public List<char[]> GetBuffer()
+        public List<IScreenBufferLine> GetBuffer()
         {
             // base buffer
-            var mergedBuffer = new List<char[]>(buffer.GetRange(topRow, RowCount));
+            int extraPadRows = Math.Max(0, (topRow+RowCount) - buffer.Count); // When screen extends past the buffer bottom., this is needed to prevent GetRange() exception.
+            var mergedBuffer = new List<IScreenBufferLine>(buffer.GetRange(topRow, RowCount - extraPadRows));
+            int lastLineWidth = mergedBuffer[mergedBuffer.Count-1].Length;
+            while (extraPadRows > 0 )
+            {
+                mergedBuffer.Add(new ScreenBufferLine(lastLineWidth));
+                --extraPadRows;
+            }
 
             // merge sub buffers
             UpdateSubBuffers();
@@ -260,7 +271,7 @@ namespace kOS.Safe.Screen
                         int startRow = (mergeRow < 0) ? -mergeRow : 0;
                         int rowsToMerge = subBuffer.RowCount - startRow;
                         if ((mergeRow + rowsToMerge) > RowCount) rowsToMerge = (RowCount - mergeRow);
-                        List<char[]> bufferRange = subBuffer.Buffer.GetRange(startRow, rowsToMerge);
+                        List<IScreenBufferLine> bufferRange = subBuffer.Buffer.GetRange(startRow, rowsToMerge);
 
                         // remove the replaced rows
                         mergedBuffer.RemoveRange(mergeRow, rowsToMerge);
@@ -299,4 +310,5 @@ namespace kOS.Safe.Screen
             // so subclasses can do something with their subbuffers before they are merged
         }
     }
+
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using kOS.Safe;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
+using kOS.Safe.UserIO;
 using kOS.Screen;
 
 namespace kOS.AddOns.RemoteTech2
@@ -35,7 +36,7 @@ namespace kOS.AddOns.RemoteTech2
             AddSubBuffer(progressBarSubBuffer);
 
             var separator = new string('-', progressBarSubBuffer.ColumnCount);
-            separator.ToCharArray().CopyTo(progressBarSubBuffer.Buffer[0], 0);
+            progressBarSubBuffer.Buffer[0].ArrayCopyFrom(separator.ToCharArray(), 0, 0);
         }
 
         protected override void ProcessCommand(string commandText)
@@ -178,18 +179,18 @@ namespace kOS.AddOns.RemoteTech2
         private void DrawStatus(string status)
         {
             status = status.PadRight(progressBarSubBuffer.ColumnCount);
-            status.ToCharArray().CopyTo(progressBarSubBuffer.Buffer[1], 0);
+            progressBarSubBuffer.Buffer[1].ArrayCopyFrom(status.ToCharArray(), 0, 0);
         }
 
         private void DrawBars(string bars)
         {
             bars = bars.PadRight(progressBarSubBuffer.ColumnCount);
-            bars.ToCharArray().CopyTo(progressBarSubBuffer.Buffer[2], 0);
+            progressBarSubBuffer.Buffer[2].ArrayCopyFrom(bars.ToCharArray(), 0, 0);
         }
 
-        public override void SpecialKey(kOSKeys key)
+        public override void SpecialKey(char key)
         {
-            if (key == kOSKeys.BREAK && deploymentInProgress)
+            if (key == (char)UnicodeCommand.BREAK && deploymentInProgress)
             {
                 if (deployingBatch) batchQueue.Clear();
                 else commandQueue.Clear();

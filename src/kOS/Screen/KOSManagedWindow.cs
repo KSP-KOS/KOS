@@ -96,7 +96,7 @@ namespace kOS.Screen
         {
             return isOpen;
         }
-
+        
         public void DumpDepthSort() // exists purely for debugging.
         {
             for (int i=0 ; i< depthSort.Count ; ++i)

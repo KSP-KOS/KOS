@@ -14,7 +14,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            shared.Screen.ClearScreen();
+            shared.Window.ClearScreen();
         }
     }
 

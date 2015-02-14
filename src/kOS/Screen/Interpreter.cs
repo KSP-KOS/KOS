@@ -5,6 +5,7 @@ using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Screen;
 using kOS.Safe.Utilities;
+using kOS.Safe.UserIO;
 
 namespace kOS.Screen
 {
@@ -41,6 +42,15 @@ namespace kOS.Screen
                 InsertChar('\n');
             }
         }
+        
+        /// <summary>
+        /// Detect if the interpreter happens to be right at the start of a new command line.
+        /// </summary>
+        /// <returns>true if it's at the start of a new line</returns>
+        public bool IsAtStartOfCommand()
+        {
+            return LineBuilder == null || LineBuilder.Length == 0;
+        }
 
         public override void Type(char ch)
         {
@@ -50,9 +60,9 @@ namespace kOS.Screen
             }
         }
 
-        public override void SpecialKey(kOSKeys key)
+        public override void SpecialKey(char key)
         {
-            if (key == kOSKeys.BREAK)
+            if (key == (char)UnicodeCommand.BREAK)
             {
                 Shared.Cpu.BreakExecution(true);
             }
@@ -61,10 +71,10 @@ namespace kOS.Screen
 
             switch (key)
             {
-                case kOSKeys.UP:
+                case (char)UnicodeCommand.UPCURSORONE:
                     ShowCommandHistoryEntry(-1);
                     break;
-                case kOSKeys.DOWN:
+                case (char)UnicodeCommand.DOWNCURSORONE:
                     ShowCommandHistoryEntry(1);
                     break;
                 default:

@@ -130,6 +130,13 @@
     <Compile Include="Suffixed\StageValues.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
+    <Compile Include="UserIO\TelnetMainServer.cs" />
+    <Compile Include="UserIO\TelnetSingletonServer.cs" />
+    <Compile Include="UserIO\TelnetWelcomeMenu.cs" />
+    <Compile Include="UserIO\TerminalAnsiMapper.cs" />
+    <Compile Include="UserIO\TerminalUnicodeMapper.cs" />
+    <Compile Include="UserIO\TerminalVT100Mapper.cs" />
+    <Compile Include="UserIO\TerminalXtermMapper.cs" />
     <Compile Include="Utilities\BetaShim.cs" />
     <Compile Include="Utilities\PartUtilities.cs" />
     <Compile Include="Utilities\SteeringHelper.cs" />
@@ -159,7 +166,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="UserIO" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
