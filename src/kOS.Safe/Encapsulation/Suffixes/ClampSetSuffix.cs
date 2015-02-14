@@ -25,14 +25,10 @@ namespace kOS.Safe.Encapsulation.Suffixes
         {
             //HACK, this is assumes the value parses as a double
             var dblValue = double.Parse(value.ToString());
-            
-            //Rounding to the nearest step
-            if (!(System.Math.Abs(stepIncrement) < 0.00001))
-            {
-                dblValue = System.Math.Round(dblValue/stepIncrement)*stepIncrement;
-            }
 
-            base.Set(Math.Clamp(dblValue, min, max));
+            base.Set(System.Math.Abs(stepIncrement) < 0.0001
+                ? Math.Clamp(dblValue, min, max)
+                : Math.ClampToIndent(dblValue, min, max, stepIncrement));
         }
     }
 }
