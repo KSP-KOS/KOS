@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using kOS.Safe.Screen;
 using kOS.Safe.UserIO;
 
 namespace kOS.Safe.Screen
@@ -30,7 +29,7 @@ namespace kOS.Safe.Screen
         // This setting is how far apart diff sections on the same row have to be before it will
         // perform a cursor jump to get from one to the other, rather than just overwriting the same
         // string as was already there.
-        private const int joinDiffDist = 6;
+        private const int JOIN_DIFF_DIST = 6;
 
         /// <summary>
         /// Make a screen snapshot of the current state of the screenbuffer.
@@ -52,19 +51,21 @@ namespace kOS.Safe.Screen
         /// <summary>
         /// Make a copy of me for later diffing against.
         /// Almost a deep copy.
-        /// <returns>The new copy</param>
         /// </summary>
+        /// <returns>The new copy</returns>
         public IScreenSnapShot DeepCopy()
         {
-            ScreenSnapShot newCopy = new ScreenSnapShot();
-            newCopy.TopRow = TopRow;
-            newCopy.CursorColumn = CursorColumn;
-            newCopy.CursorRow = CursorRow;
-            newCopy.RowCount = RowCount;
-            
+            ScreenSnapShot newCopy = new ScreenSnapShot
+            {
+                TopRow = TopRow,
+                CursorColumn = CursorColumn,
+                CursorRow = CursorRow,
+                RowCount = RowCount,
+                Buffer = new List<IScreenBufferLine>()
+            };
+
             // This will probably reset the timestamps on the rows, but for our purposes that's actually fine - we call this
             // when we want to get a fully sync'ed copy:
-            newCopy.Buffer = new List<IScreenBufferLine>();
             foreach (IScreenBufferLine line in Buffer)
             {
                 ScreenBufferLine newLine = new ScreenBufferLine(line.Length);
@@ -78,7 +79,7 @@ namespace kOS.Safe.Screen
         /// Get a list of the operations that would make a terminal window look like this snapshot
         /// if you assume that beforehand it looked like the older snapshot you pass in.
         /// </summary>
-        /// <param name="before">the older snapshot of a screen to diff from</param>
+        /// <param name="older">the older snapshot of a screen to diff from</param>
         /// <returns>the string that if output in order, will give you the desired changes</returns>
         public string DiffFrom(IScreenSnapShot older)
         {
@@ -118,11 +119,13 @@ namespace kOS.Safe.Screen
                         if (newChar != oldChar)
                         {
                             // Start a new diff chunk if there isn't one yet, or the diff is a long enough distance from the existing one:
-                            if (diffs.Count == 0 || diffs[diffs.Count-1].EndCol < newCol - joinDiffDist)
+                            if (diffs.Count == 0 || diffs[diffs.Count-1].EndCol < newCol - JOIN_DIFF_DIST)
                             {
-                                DiffChunk newChunk = new DiffChunk();
-                                newChunk.StartCol = newCol;
-                                newChunk.EndCol = newCol;
+                                DiffChunk newChunk = new DiffChunk
+                                {
+                                    StartCol = newCol, 
+                                    EndCol = newCol
+                                };
                                 diffs.Add(newChunk);
                             }
                             else // stretch the existing diff chunk to here.

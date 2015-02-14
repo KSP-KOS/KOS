@@ -4,7 +4,6 @@ using System.Text;
 using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Screen;
-using kOS.Safe.Utilities;
 using kOS.Safe.UserIO;
 
 namespace kOS.Screen

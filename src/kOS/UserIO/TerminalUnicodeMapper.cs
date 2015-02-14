@@ -8,11 +8,11 @@ namespace kOS.UserIO
     /// <summary>
     /// A base class for terminal-specific mappings like vt100, xterm, etc.
     /// <br/>
-    /// It encodes common terminal control codes in unicode, using some of the
-    /// unicode characters that we'll never use, as pretend terminal escape codes.
+    /// It encodes common terminal control codes in Unicode, using some of the
+    /// Unicode characters that we'll never use, as pretend terminal escape codes.
     /// <br/>
-    /// Subclasses of this need to implement a way to convert those unicode control
-    /// codes into a stream of ascii chars, and visa versa, that do things using the
+    /// Subclasses of this need to implement a way to convert those Unicode control
+    /// codes into a stream of ASCII chars, and visa versa, that do things using the
     /// terminal control codes for the specific model of terminal in question.
     /// </summary>
     public class TerminalUnicodeMapper
@@ -38,7 +38,7 @@ namespace kOS.UserIO
         /// </summary>
         protected bool AllowNativeUnicodeCommands {get; set;}
         
-        protected readonly object lockAccess = new object(); // to ensure that multiple threads use the mapper atomicly, to avoid messing up it's state variables.
+        protected readonly object LockAccess = new object(); // to ensure that multiple threads use the mapper atomicly, to avoid messing up it's state variables.
         
         // Note that it's essential that these remain private and not get changed to protected or public.
         // Some of the derived classes of this class also use the same identifier name for their own
@@ -60,20 +60,21 @@ namespace kOS.UserIO
         {
             if (typeString.Substring(0,5).Equals("xterm", StringComparison.CurrentCultureIgnoreCase))
                 return TerminalType.XTERM;
-            else if (typeString.Substring(0,4).Equals("vt100", StringComparison.CurrentCultureIgnoreCase))
+            if (typeString.Substring(0,4).Equals("vt100", StringComparison.CurrentCultureIgnoreCase))
                 return TerminalType.XTERM;
-            //
-            // The following condition isn't implemented yet:
-            //
-            // else if (typeString.Substring(0,4).Equals("ansi", StringComparison.CurrentCultureIgnoreCase))
-            //     return TerminalType.XTERM;
+
+                //
+                // The following condition isn't implemented yet:
+                //
+                // else if (typeString.Substring(0,4).Equals("ansi", StringComparison.CurrentCultureIgnoreCase))
+                //     return TerminalType.XTERM;
             
-            // Add more cases here if more subclasses of this class are created later.
+                // Add more cases here if more subclasses of this class are created later.
 
             else
                 return TerminalType.UNKNOWN;
         }
-        
+
         /// <summary>
         /// Construct an object of this type, or one of its derived subtypes, depending on
         /// the terminal type string passed in.
@@ -95,7 +96,7 @@ namespace kOS.UserIO
         }
         
         /// <summary>
-        /// Map the unicode chars (and the fake control codes we made) into what the terminal
+        /// Map the Unicode chars (and the fake control codes we made) into what the terminal
         /// wants to see.
         /// In this base class, all it does is just mostly passthru things as-is with no
         /// conversions.
@@ -103,32 +104,32 @@ namespace kOS.UserIO
         /// to this base class inmplementation at the bottom, to allow chains of
         /// subclasses to all operate on the data.
         /// </summary>
-        /// <param name="ch">unicode char</param>
+        /// <param name="str">Unicode char</param>
         /// <returns>raw byte stream to send to the terminal</returns>
         public virtual char[] OutputConvert(string str)
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int index = 0 ; index < str.Length ; ++index)
+            foreach (char t in str)
             {
                 switch (outputExpected)
                 {
                     case ExpectNextChar.RESIZEWIDTH:
-                        pendingWidth = (int)(str[index]);
+                        pendingWidth = t;
                         outputExpected = ExpectNextChar.RESIZEHEIGHT;
                         break;
                     case ExpectNextChar.RESIZEHEIGHT:
-                        int height = (int)(str[index]);
+                        int height = t;
                         sb.Append("{Please resize to " + pendingWidth + "x" + height + "}"); // By default, assume the terminal has no such control code, but this can be overridden.
                         outputExpected = ExpectNextChar.NORMAL;
                         break;
                     case ExpectNextChar.INTITLE:
                         // Default behavior: Ignore all content until the title ender.  Assume most terminals don't know how to do this.
-                        if (str[index] == (char)UnicodeCommand.TITLEEND)
+                        if (t == (char)UnicodeCommand.TITLEEND)
                             outputExpected = ExpectNextChar.NORMAL;
                         break;
                     default:
-                        switch (str[index])
+                        switch (t)
                         {
                             case (char)UnicodeCommand.RESIZESCREEN:
                                 outputExpected = ExpectNextChar.RESIZEWIDTH;
@@ -146,7 +147,7 @@ namespace kOS.UserIO
                                 sb.Append("\r");
                                 break;
                             default: 
-                                sb.Append(str[index]); // default passhtrough
+                                sb.Append(t); // default passhtrough
                                 break;
                         }
                         break;
@@ -162,14 +163,14 @@ namespace kOS.UserIO
 
         /// <summary>
         /// Map the bytes containing the terminal's own control codes into our
-        /// unicode system with its fake control codes.  In this base class, all it
+        /// Unicode system with its fake control codes.  In this base class, all it
         /// does it just mostly passthru things as-is with no conversion.
         /// Subclasses of this should perform their own manipulations, then fallthrough
         /// to this base class implementation at the bottom, to allow chains of
         /// subclasses to all operate on the data.
         /// </summary>
         /// <param name="inChars">chars in the terminal's way of thinking</param>
-        /// <returns>chars in our unicode way of thinking</returns>
+        /// <returns>chars in our Unicode way of thinking</returns>
         public virtual string InputConvert(char[] inChars)
         {
             List<char> outChars = new List<char>();
@@ -183,7 +184,7 @@ namespace kOS.UserIO
                     case (char)0x08: // control-H, the ASCII backspace
                         outChars.Add((char)UnicodeCommand.DELETELEFT);
                         break;
-                    case (char)0x7f: // ascii 127 = the delete character
+                    case (char)0x7f: // ASCII 127 = the delete character
                         outChars.Add((char)UnicodeCommand.DELETERIGHT);
                         break;
                     case '\r':

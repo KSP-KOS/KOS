@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using kOS.Safe.UserIO;
 
@@ -10,7 +9,7 @@ namespace kOS.UserIO
     /// the xterm terminal control codes.
     /// <br/>
     /// Note that because the XTERM program was designed explicitly to attempt
-    /// to emulate the already popular and existant VT100 hardware terminal, this
+    /// to emulate the already popular and existent VT100 hardware terminal, this
     /// class can mostly be just a subclass of the VT100 mapper that lets it
     /// do most of the heavy work.  It's only a separate class to support the
     /// few places where XTERM is more capable than VT100.
@@ -28,43 +27,44 @@ namespace kOS.UserIO
         private StringBuilder pendingTitle;
 
         /// <summary>
-        /// Map the unicode chars (and the fake control codes we made) into what the
+        /// Map the Unicode chars (and the fake control codes we made) into what the
         /// terminal wants to see.
         /// Subclasses of this should perform their own manipulations, then fallthrough
-        /// to this base class inmplementation at the bottom, to allow chains of
+        /// to this base class implementation at the bottom, to allow chains of
         /// subclasses to all operate on the data.
         /// </summary>
-        /// <param name="ch">unicode char</param>
+        /// <param name="str">Unicode char</param>
         /// <returns>raw byte stream to send to the terminal</returns>
         public override char[] OutputConvert(string str)
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int index = 0 ; index < str.Length ; ++index)
+            foreach (char t in str)
             {
                 switch (outputExpected)
                 {
                     case ExpectNextChar.RESIZEWIDTH:
-                        pendingWidth = (int)(str[index]);
+                        pendingWidth = t;
                         outputExpected = ExpectNextChar.RESIZEHEIGHT;
                         break;
                     case ExpectNextChar.RESIZEHEIGHT:
-                        int height = (int)(str[index]);
-                        sb.Append(((char)0x1b)/*ESC*/ + "[8;" + height + ";" + pendingWidth + "t");
+                        int height = t;
+                        sb.AppendFormat("{0}8;{1};{2}t", CSI, height, pendingWidth);
                         outputExpected = ExpectNextChar.NORMAL;
                         break;
                     case ExpectNextChar.INTITLE:
-                        if (str[index] == (char)UnicodeCommand.TITLEEND)
+                        if (t == (char)UnicodeCommand.TITLEEND)
                         {
-                            sb.Append(((char)0x1b)/*ESC*/ + "]2;" + pendingTitle.ToString() + ((char)0x07)/*BEL*/);
+
+                            sb.AppendFormat("{0}]2;{1}{2}", ESCAPE_CHARACTER , pendingTitle, BELL_CHAR);
                             pendingTitle = new StringBuilder();
                             outputExpected = ExpectNextChar.NORMAL;
                         }
                         else
-                            pendingTitle.Append(str[index]);
+                            pendingTitle.Append(t);
                         break;
                     default:
-                        switch (str[index])
+                        switch (t)
                         {
                             case (char)UnicodeCommand.RESIZESCREEN:
                                 outputExpected = ExpectNextChar.RESIZEWIDTH;
@@ -74,11 +74,11 @@ namespace kOS.UserIO
                                 pendingTitle = new StringBuilder();
                                 break;
                             case (char)UnicodeCommand.CLEARSCREEN:
-                                sb.Append((char)0x1b/*ESC*/ + "?47h" +                            // <-- Tells xterm to use fixed-buffer mode, not saving in scrollback.
-                                          (char)0x1b/*ESC*/ + "[2J" + (char)0x1b/*ESC*/ + "[H");  // <-- The normal clear screen char from vt100.
+                                sb.AppendFormat("{0}?47h", ESCAPE_CHARACTER);                   // <-- Tells xterm to use fixed-buffer mode, not saving in scrollback.
+                                sb.AppendFormat("{0}2J{0}H", CSI);  // <-- The normal clear screen char from vt100.
                                 break;
                             default: 
-                                sb.Append(str[index]); // default passhtrough
+                                sb.Append(t); // default passhtrough
                                 break;
                         }
                         break;
@@ -92,7 +92,7 @@ namespace kOS.UserIO
         /// base VT100 mappings for most of its work.
         /// </summary>
         /// <param name="inChars"></param>
-        /// <returns>input mapped into our internal pretend unicode terminal's codes</returns>
+        /// <returns>input mapped into our internal pretend Unicode terminal's codes</returns>
         public override string InputConvert(char[] inChars)
         {
             List<char> outChars = new List<char>();

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-
-namespace kOS.UserIO
+﻿namespace kOS.UserIO
 {
     /// <summary>
     /// Subclass of TerminalUnicodeMapper designed to handle the specifics of

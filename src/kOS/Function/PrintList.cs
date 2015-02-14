@@ -324,7 +324,7 @@ namespace kOS.Function
                         BuildFormatString();
                     }
 
-                    object[] stringFields = new string[fields.Length];
+                    var stringFields = new object[fields.Length];
                     for (int index = 0; index < columns.Count; index++)
                     {
                         string field;

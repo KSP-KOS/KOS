@@ -3,14 +3,11 @@ using System.Net;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using KSP.IO;
-using kOS.Safe.Utilities;
 using kOS.Suffixed;
-using kOS.Screen;
 using UnityEngine;
 
 namespace kOS.UserIO
 {
-    [KSPAddon(KSPAddon.Startup.Instantly, true)]
 
     /// <summary>
     /// A single instance of the telnet server embedded into kOS.
@@ -23,12 +20,13 @@ namespace kOS.UserIO
     /// and threading by having multiple instances of itself responding to their own
     /// Update() calls.
     /// </summary>
+    [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class TelnetMainServer : MonoBehaviour
     {
         private TcpListener server = null;
         private IPAddress bindAddr;
         private Int32 port;
-        private List<TelnetSingletonServer> telnets;
+        private readonly List<TelnetSingletonServer> telnets;
         private bool isListening;
 
         // For status displays for the app control panel to see:
@@ -47,8 +45,8 @@ namespace kOS.UserIO
         
         private Rect optInRect = new Rect( 200, 200, 500, 400);
         private Rect realIPRect = new Rect( 240, 140, 500, 400); // offset just in case both are up at the same time, to ensure visible bits to click on.  They aren't movable.
-        
-        private string helpURL = "http://ksp-kos.github.io/KOS_DOC/general/telnet.html";
+
+        private const string HELP_URL = "http://ksp-kos.github.io/KOS_DOC/general/telnet.html";
 
         public TelnetMainServer()
         {
@@ -82,7 +80,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+                Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
             }
             return false;
         }
@@ -102,14 +100,13 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+                Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
             }
-            return; // In principle it should never reach here.
         }
 
         /// <summary>
         /// Return the user's permanent ("don't remind me again") status for the
-        /// permission to have the telnet server listen to an address other han
+        /// permission to have the telnet server listen to an address other than
         /// loopback.  (false = please restrict to only loopback.)  The permission
         /// will be stored in the kOS settings file and will be presumed to be set
         /// to false if the setting is missing from the file (as it will be the first
@@ -126,7 +123,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+                Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
             }
             return false; // In principle it should never reach here.
         }
@@ -146,14 +143,13 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+                Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
             }
-            return; // In principle it should never reach here.
         }
         
         public void SetConfigEnable(bool newVal)
         {
-            bool isLoopback = (bindAddr == IPAddress.Loopback);
+            bool isLoopback = Equals(bindAddr, IPAddress.Loopback);
             bool loopBackStatusChanged = (isLoopback != Config.Instance.TelnetLoopback);
             
             if (loopBackStatusChanged)
@@ -190,16 +186,13 @@ namespace kOS.UserIO
             // Build the server settings here, not in the constructor, because the settings might have been altered by the user post-init:
 
             port = Config.Instance.TelnetPort;
-            if (Config.Instance.TelnetLoopback)
-                bindAddr = IPAddress.Loopback;
-            else
-            {
-                bindAddr = GetRealAddress();
-            }
+            bindAddr = Config.Instance.TelnetLoopback ? 
+                IPAddress.Loopback : 
+                GetRealAddress();
 
             server = new TcpListener(bindAddr, port);
             server.Start();
-            kOS.Safe.Utilities.Debug.Logger.Log("kOS TelnetMainServer started listening on " + bindAddr + " " + port);
+            Safe.Utilities.Debug.Logger.Log(string.Format("kOS TelnetMainServer started listening on {0} {1}", bindAddr, port));
             isListening = true;
         }
 
@@ -210,7 +203,7 @@ namespace kOS.UserIO
                 return;
             isListening = false;
 
-            kOS.Safe.Utilities.Debug.Logger.Log("kOS TelnetMainServer stopped listening on " + bindAddr + " " + port);
+            Safe.Utilities.Debug.Logger.Log(string.Format("kOS TelnetMainServer stopped listening on {0} {1}", bindAddr, port));
             server.Stop();
             foreach (TelnetSingletonServer telnet in telnets)
                 telnet.StopListening();
@@ -266,7 +259,7 @@ namespace kOS.UserIO
             TcpClient incomingClient = server.AcceptTcpClient();
             
             string remoteIdent = ((IPEndPoint)(incomingClient.Client.RemoteEndPoint)).Address.ToString();
-            kOS.Safe.Utilities.Debug.Logger.Log("kOS telnet server got an incoming connection from " + remoteIdent);
+            Safe.Utilities.Debug.Logger.Log("kOS telnet server got an incoming connection from " + remoteIdent);
             
             TelnetSingletonServer newServer = new TelnetSingletonServer(this, incomingClient, ++howManySpawned);
             telnets.Add(newServer);
@@ -294,28 +287,27 @@ namespace kOS.UserIO
         
         void OptInOnGui(int id)
         {
-            string optInText =
-                "You are attempting to turn on the telnet server embedded inside kOS.\n" +
-                " \n" +
-                "SQUAD has created a rule that all mods for KSP that wish to use network traffic " +
-                "are required to contain an accurate and informative opt-in question asking for user " +
-                "permission first. (We at kOS agree with the intent behind this rule.)\n" +
-                " \n" +
-                "If you turn on the kOS telnet server, this is what you are agreeing to:\n" +
-                " \n" +
-                "        kOS will keep a server running within the game that allows a commonly available " +
-                "external program called a \"telnet client\" to control the kOS terminal screens " +
-                "exactly as they can be used within the game's GUI.\n" +
-                "        This means the external telnet client program can type the same exact commands " +
-                "that you type at the terminal, with the same exact effect.\n" +
-                " \n" +
-                "        If this sounds dangerous, remember that you can force this feature to only " +
-                "work between programs running on your own computer, never allowing access from " +
-                "external computers.  This is the default way the mod ships, and the setting " +
-                "can be changed with the LOOPBACK config option.\n" +
-                " \n" +
-                "Further information can be found at: \n" +
-                "        " + helpURL + "\n";
+            const string OPT_IN_TEXT = "You are attempting to turn on the telnet server embedded inside kOS.\n" +
+                                     " \n" +
+                                     "SQUAD has created a rule that all mods for KSP that wish to use network traffic " +
+                                     "are required to contain an accurate and informative opt-in question asking for user " +
+                                     "permission first. (We at kOS agree with the intent behind this rule.)\n" +
+                                     " \n" +
+                                     "If you turn on the kOS telnet server, this is what you are agreeing to:\n" +
+                                     " \n" +
+                                     "        kOS will keep a server running within the game that allows a commonly available " +
+                                     "external program called a \"telnet client\" to control the kOS terminal screens " +
+                                     "exactly as they can be used within the game's GUI.\n" +
+                                     "        This means the external telnet client program can type the same exact commands " +
+                                     "that you type at the terminal, with the same exact effect.\n" +
+                                     " \n" +
+                                     "        If this sounds dangerous, remember that you can force this feature to only " +
+                                     "work between programs running on your own computer, never allowing access from " +
+                                     "external computers.  This is the default way the mod ships, and the setting " +
+                                     "can be changed with the LOOPBACK config option.\n" +
+                                     " \n" +
+                                     "Further information can be found at: \n" +
+                                     "        " + HELP_URL + "\n";
 
             // Note, the unnecessary curly braces below are there to help enforce an indentation that won't be
             // clobbered by auto-indenter tools.  Conceptually it helps show which "begin" matches with "end"
@@ -323,7 +315,7 @@ namespace kOS.UserIO
             // similar thing because I think it makes everything clearer:
             GUILayout.BeginVertical();
             {
-                GUILayout.Label(optInText, HighLogic.Skin.textArea);
+                GUILayout.Label(OPT_IN_TEXT, HighLogic.Skin.textArea);
                 GUILayout.BeginHorizontal();
                 {
                     // By putting an expandwidth field on either side, it centers the middle part:
@@ -369,7 +361,7 @@ namespace kOS.UserIO
         {
             string realIPText =
                 "You are trying to set the kOS telnet server's IP address to your machine's real IP address " +
-                "of " + GetRealAddress().ToString() + " rather than the loopback address of 127.0.0.1.\n" +
+                "of " + GetRealAddress() + " rather than the loopback address of 127.0.0.1.\n" +
                 " \n" +
                 "The use of the loopback address by default is a safety measure to ensure that only telnet clients on " +
                 "your own computer can connect to your KSP game.\n" +
@@ -382,16 +374,16 @@ namespace kOS.UserIO
                 "If you want better security, and this is a public IP address, then it's recommended that you " +
                 "leave the LOOPBACK setting turned on and instead provide remote access by the use of an SSH tunnel " +
                 "you can control access to.  The subject of setting up an SSH tunnel is an advanced but well documented "+
-                "network administrator topic for which help can be found with internet searches.\n" +
+                "network administrator topic for which help can be found with Internet searches.\n" +
                 " \n" +
                 "If you open your KSP game to other telnet clients outside your computer, you are choosing " +
-                "to accept the security implications and take on the responsibilty for them yourself.\n" +
+                "to accept the security implications and take on the responsibility for them yourself.\n" +
                 " \n" +
                 "If you are thinking \"What's the harm? It's just letting people mess with my Kerbal Space Program Game?\", " +
                 "then think about the existence of the kOS LOG command, which writes files on your computer's hard drive.\n" +
                 " \n" +
                 "Further information can be found at: \n" +
-                "        " + helpURL + "\n";
+                "        " + HELP_URL + "\n";
 
             // Note, the unnecessary curly braces below are there to help enforce a begin/end indentation that won't be
             // clobbered by auto-indenter tools.

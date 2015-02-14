@@ -1,17 +1,7 @@
-﻿/*
- * Created by SharpDevelop.
- * User: Dunbaratu
- * Date: 2/5/2015
- * Time: 12:47 AM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
-
-namespace kOS.Safe.UserIO
+﻿namespace kOS.Safe.UserIO
 {
     /// <summary>
-    /// A list of extra unicode command characters we use to genericize command codes, abstracting away
+    /// A list of extra Unicode command characters we use to generalize command codes, abstracting away
     /// the differences between different terminal models.
     /// <br/>
     /// These are all stored in the Unicode "private use" area in range [0xE000..0xF8FF].
@@ -25,13 +15,13 @@ namespace kOS.Safe.UserIO
     /// C# does not allow us to do the correct thing here, which is this:
     ///     public enum UnicodeCommand : char { stuff, stuff, stuff,....}
     /// For some reason I cannot fathom, C# lets you pick the type of any enum EXCEPT char, even
-    /// though a unicode char is still a well defined narrow known number of bits and should
+    /// though a Unicode char is still a well defined narrow known number of bits and should
     /// effectively work just as well for enums as, say, a ushort.
     /// <br/>
     /// If anyone does have the ambition to get rid of the need for all the casting, they can
     /// go through here and turn all these into const chars if they like.  But that means having
     /// to manually type in their number value for each one instead of just letting the enum
-    /// syntax auto-increment it for each sucessive one.
+    /// syntax auto-increment it for each successive one.
     /// </summary>
     public enum UnicodeCommand
     {
@@ -40,7 +30,7 @@ namespace kOS.Safe.UserIO
         // NOTE: Several of these are here for future expansion ideas but are not yet implemented
         // in the individual terminal-specific mappers (TerminalXtermMapper, TerminalVt100Mapper, etc).
         //
-        // To avoid the confusion of accidentally using the ones that are not implmented, the unused
+        // To avoid the confusion of accidentally using the ones that are not implemented, the unused
         // ones are commented out.  But they're still here for possible future plans.
         //
         
@@ -53,7 +43,7 @@ namespace kOS.Safe.UserIO
         
         /// <summary>
         /// Indicates that when this character is seen on the output stream, the connection should
-        /// close down at that point, after the charactes prior to it have been sent out:
+        /// close down at that point, after the characters prior to it have been sent out:
         /// </summary>
         DIE,
         
@@ -78,7 +68,7 @@ namespace kOS.Safe.UserIO
 
         /// <summary>
         /// Begins a cursor move to an exact position.  Expects exactly 2 more<br/>
-        /// unicode chars to follow, interpreted as binary number data (not as characters)<br/>
+        /// Unicode chars to follow, interpreted as binary number data (not as characters)<br/>
         /// for the column num and row num, respectively.<br/>
         /// <br/>
         /// Example:   To move the cursor to the 33rd column, 16th row:<br/>
@@ -161,7 +151,7 @@ namespace kOS.Safe.UserIO
         
         /// <summary>
         /// Abstracts away all that CR/LF vs LF only versus CR only nonsense.  In the pretend
-        /// unicode terminal we are referring to, we'll map them all to the same character,
+        /// Unicode terminal we are referring to, we'll map them all to the same character,
         /// this one.  This character means go to the start of the next line.
         /// Also used on input to represent hitting either the return or the enter key.
         /// </summary>
@@ -183,7 +173,7 @@ namespace kOS.Safe.UserIO
         
         /// <summary>
         /// Scroll the screen up one line (like what happens when you hit 'return' when
-        /// the cursor is at the bottomleft of the screen), but leave the cursor where it is.
+        /// the cursor is at the bottom left of the screen), but leave the cursor where it is.
         /// </summary>
         SCROLLSCREENUPONE,
         
@@ -194,28 +184,28 @@ namespace kOS.Safe.UserIO
         SCROLLSCREENDOWNONE,
         
         // /// <summary>
-        // /// Indicates moving a cursor [count] rows up.  Expects exactly 1 more unicode
+        // /// Indicates moving a cursor [count] rows up.  Expects exactly 1 more Unicode
         // /// char to follow, interpreted as binary number data (not as character) for
         // /// the number of spaces to move.
         // /// </summary>
         // UPCURSORNUM,
         
         // /// <summary>
-        // /// Indicates moving a cursor [count] rows down.  Expects exactly 1 more unicode
+        // /// Indicates moving a cursor [count] rows down.  Expects exactly 1 more Unicode
         // /// char to follow, interpreted as binary number data (not as character) for
         // /// the number of spaces to move.
         // /// </summary>
         // DOWNCURSORNUM,
         
         // /// <summary>
-        // /// Indicates moving a cursor [count] spaces left.  Expects exactly 1 more unicode
+        // /// Indicates moving a cursor [count] spaces left.  Expects exactly 1 more Unicode
         // /// char to follow, interpreted as binary number data (not as character) for
         // /// the number of spaces to move.
         // /// </summary>
         // LEFTCURSORNUM,
         
         // /// <summary>
-        // /// Indicates moving a cursor [count] spaces right.  Expects exactly 1 more unicode
+        // /// Indicates moving a cursor [count] spaces right.  Expects exactly 1 more Unicode
         // /// char to follow, interpreted as binary number data (not as character) for
         // /// the number of spaces to move.
         // /// </summary>
@@ -227,8 +217,8 @@ namespace kOS.Safe.UserIO
         /// for the server telling the client to it needs to resize itself.
         /// Expects a sequence of 3 characters as follows: <br/>
         ///     RESIZESCREEN Binary_Width_Num Binary_Height_Num <br/>
-        /// Where Width_num and Height_num are the numbers directly transcoded into unicode chars in a binary way.
-        /// (For example a height of 66, which is hex 0x32 would end up being sent as the capital letter 'B' which is unicode 0x0032.).
+        /// Where Width_num and Height_num are the numbers directly transcoded into Unicode chars in a binary way.
+        /// (For example a height of 66, which is hex 0x32 would end up being sent as the capital letter 'B' which is Unicode 0x0032.).
         /// </summary>
         RESIZESCREEN,        
     }

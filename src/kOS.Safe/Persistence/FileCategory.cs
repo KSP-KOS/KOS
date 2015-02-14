@@ -18,7 +18,7 @@ namespace kOS.Safe.Persistence
             
         /// <summary>
         /// The default the type identifier will always assume as long<br/>
-        /// as the first few characters are printable ascii.
+        /// as the first few characters are printable ASCII.
         /// </summary>
         ASCII, 
 

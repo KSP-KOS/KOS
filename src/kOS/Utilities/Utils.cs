@@ -247,7 +247,7 @@ namespace kOS.Utilities
 
             return codeFragment.Aggregate(string.Empty, (current, s) => current + (s + "\n"));
         }
-        
+
         /// <summary>
         /// Meant to be an override for stock KSP's CelestialBody.GetObtVelocity(), which (literally) always
         /// stack overflows because it's implemented as just infinite recursion without a base case.
@@ -257,6 +257,7 @@ namespace kOS.Utilities
         /// normally can't call that because it's orbit is null.
         /// </summary>
         /// <param name="body">The body to get the value for. (this will be hidden when this is an extension method of CelestialBody).</param>
+        /// <param name="shared">Ubiquitous shared objects</param>
         /// <returns>body position in current unity world coords</returns>
         public static Vector3d KOSExtensionGetObtVelocity(this CelestialBody body, SharedObjects shared)
         {
@@ -270,8 +271,7 @@ namespace kOS.Utilities
             CelestialBody soiBody = shared.Vessel.mainBody;
             if (soiBody.orbit != null)
                 return soiBody.orbit.GetFrameVel();
-            else
-                return (-1)*shared.Vessel.obt_velocity;
+            return (-1)*shared.Vessel.obt_velocity;
         }
 
         /// <summary>

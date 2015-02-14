@@ -89,7 +89,7 @@ namespace kOS.Safe.Persistence
                         string tempString = file.StringContent;
                         if (Utilities.Environment.IsWindows)
                         {
-                            // Only evil windows gets evil windows line breaks, and only if this is some sort of ascii:
+                            // Only evil windows gets evil windows line breaks, and only if this is some sort of ASCII:
                             tempString = tempString.Replace("\n", "\r\n");
                         }
                         fileBody = System.Text.Encoding.UTF8.GetBytes(tempString.ToCharArray());

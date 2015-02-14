@@ -109,7 +109,7 @@ namespace kOS.Module
         
         public bool WindowIsOpen()
         {
-            return shared.Window.IsOpen();
+            return shared.Window.IsOpen;
         }
         
         public bool TelnetIsAttached()
@@ -122,8 +122,8 @@ namespace kOS.Module
             return shared.Screen;
         }
         
-        public kOS.Screen.TermWindow GetWindow()
         // TODO - later refactor making this kOS.Safer so it can work on ITermWindow, which also means moving all of UserIO's classes too.
+        public Screen.TermWindow GetWindow()
         {
             return shared.Window;
         }

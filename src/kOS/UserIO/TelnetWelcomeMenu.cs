@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Linq;
 using UnityEngine;
@@ -21,7 +20,7 @@ namespace kOS.UserIO
         private TelnetSingletonServer telnetServer;
         private List<kOSProcessor> availableCPUs;
         private DateTime lastMenuQueryTime;
-        private StringBuilder localMenuBuffer;
+        private readonly StringBuilder localMenuBuffer;
         private bool firstTime;
         private volatile bool forceMenuReprint;
         
@@ -37,7 +36,7 @@ namespace kOS.UserIO
         public void Setup(TelnetSingletonServer tServer)
         {
             telnetServer = tServer;
-            lastMenuQueryTime = System.DateTime.MinValue; // Force a stale timestamp the first time.
+            lastMenuQueryTime = DateTime.MinValue; // Force a stale timestamp the first time.
             telnetServer.Write( (char)UnicodeCommand.TITLEBEGIN + "kOS Terminal Server Welcome Menu" + (char)UnicodeCommand.TITLEEND );
             forceMenuReprint = true; // force it to print the menu once the first time regardless of the state of the CPU list.
         }
@@ -74,7 +73,7 @@ namespace kOS.UserIO
             // Regularly check to see if the CPU list has changed while the user was sitting
             // on the menu.  If so, reprint it:
             // Querying the list of CPU's can be a little expensive, so don't do it too often:
-            if (System.DateTime.Now > lastMenuQueryTime + TimeSpan.FromMilliseconds(1000))
+            if (DateTime.Now > lastMenuQueryTime + TimeSpan.FromMilliseconds(1000))
             {
                 if (forceMenuReprint)
                     telnetServer.Write((char)UnicodeCommand.CLEARSCREEN); // if we HAVE to reprint - do so on a clear screen.
@@ -114,7 +113,7 @@ namespace kOS.UserIO
             if (localMenuBuffer.Length == 0)
                 return;
             string cmd = localMenuBuffer.ToString();
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose( "TelnetWelcomeMenu.LineEntered(): String from client was: [" + cmd.ToString() + "]");
+            Safe.Utilities.Debug.Logger.SuperVerbose( "TelnetWelcomeMenu.LineEntered(): String from client was: [" + cmd + "]");
             localMenuBuffer.Remove(0,localMenuBuffer.Length); // clear the buffer for next line.
             
             if (String.Equals(cmd.Substring(0,1),"Q",StringComparison.CurrentCultureIgnoreCase))
@@ -151,9 +150,9 @@ namespace kOS.UserIO
                     if (newList[i] != availableCPUs[i])
                         itChanged = true;
 
-            Console.WriteLine("in CPUListChanged(): itChanged = "+itChanged+", newList.Count="+newList.Count+", availableCPUs.Count="+availableCPUs.Count);
+            Console.WriteLine("in CPUListChanged(): itChanged = {0}, newList.Count={1}, availableCPUs.Count={2}", itChanged, newList.Count, availableCPUs.Count);
             availableCPUs = newList;
-            lastMenuQueryTime = System.DateTime.Now;
+            lastMenuQueryTime = DateTime.Now;
             return itChanged;
         }
 
@@ -171,14 +170,16 @@ namespace kOS.UserIO
                                (char)UnicodeCommand.STARTNEXTLINE);
             telnetServer.Write(CenterPadded("",'_')/*line of '-' chars*/ + (char)UnicodeCommand.STARTNEXTLINE);
 
-            string formatter = "{0,4} {1,4} {2,4} {3} {4} {5}";
+            const string FORMATTER = "{0,4} {1,4} {2,4} {3} {4} {5}";
 
             int userPickNum = 1;
             int longestLength = 0;
-            List<string> displayChoices = new List<string>();
-            displayChoices.Add( String.Format(formatter,"Menu", "GUI ", " Other ", "", "", ""));
-            displayChoices.Add( String.Format(formatter,"Pick", "Open", "Telnets", "", "Vessel Name", "(CPU tagname)"));
-            displayChoices.Add( String.Format(formatter,"----", "----", "-------", "", "--------------------------------", ""));
+            List<string> displayChoices = new List<string>
+            {
+                String.Format(FORMATTER, "Menu", "GUI ", " Other ", "", "", ""),
+                String.Format(FORMATTER, "Pick", "Open", "Telnets", "", "Vessel Name", "(CPU tagname)"),
+                String.Format(FORMATTER, "----", "----", "-------", "", "--------------------------------", "")
+            };
             longestLength = displayChoices[2].Length;
             foreach (kOSProcessor kModule in availableCPUs)
             {
@@ -191,9 +192,9 @@ namespace kOS.UserIO
                 Vessel vessel = (thisPart == null) ? null/*can this even happen?*/ : thisPart.vessel;
                 string vesselLabel = (vessel == null) ? "<no vessel>"/*can this even happen?*/ : vessel.GetName();
                 
-                bool guiOpen = kModule.GetWindow().IsOpen();
+                bool guiOpen = kModule.GetWindow().IsOpen;
                 int numTelnets = kModule.GetWindow().NumTelnets();
-                string choice = String.Format(formatter, "["+userPickNum+"]", (guiOpen ? "yes": "no"), numTelnets, "   ", vesselLabel, "("+partLabel+")");
+                string choice = String.Format(FORMATTER, "["+userPickNum+"]", (guiOpen ? "yes": "no"), numTelnets, "   ", vesselLabel, "("+partLabel+")");
                 displayChoices.Add(choice);
                 longestLength = Math.Max(choice.Length, longestLength);
                 ++userPickNum;
@@ -219,7 +220,7 @@ namespace kOS.UserIO
                                    (char)UnicodeCommand.STARTNEXTLINE +
                                    "> ");
             else
-                telnetServer.Write(CenterPadded(String.Format(formatter,"", "", "", "", "<NONE>", ""), ' ') + (char)UnicodeCommand.STARTNEXTLINE);
+                telnetServer.Write(CenterPadded(String.Format(FORMATTER,"", "", "", "", "<NONE>", ""), ' ') + (char)UnicodeCommand.STARTNEXTLINE);
 
         }
         

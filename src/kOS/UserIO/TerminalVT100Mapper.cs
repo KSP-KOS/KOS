@@ -1,7 +1,6 @@
-﻿using System;
+﻿using kOS.Safe.UserIO;
 using System.Collections.Generic;
 using System.Text;
-using kOS.Safe.UserIO;
 
 namespace kOS.UserIO
 {
@@ -11,80 +10,108 @@ namespace kOS.UserIO
     /// </summary>
     public class TerminalVT100Mapper : TerminalUnicodeMapper
     {
-        public TerminalVT100Mapper(string typeString) : base(typeString)
+        protected const char ESCAPE_CHARACTER = (char)0x1b;
+        protected const char BELL_CHAR = (char)0x07;
+        protected const char DELETE_CHARACTER = (char)0x7f;
+        private readonly string csi = string.Format("{0}{1}", ESCAPE_CHARACTER, '[');
+
+
+        public TerminalVT100Mapper(string typeString)
+            : base(typeString)
         {
             TerminalTypeID = TerminalType.XTERM;
             AllowNativeUnicodeCommands = false;
         }
-        
+
         private ExpectNextChar outputExpected = ExpectNextChar.NORMAL;
         private int pendingCol;
-        
+
+        ///<summary>
+        /// ESC followed by '[' is called the CSI (Control Sequence Initiator) and it's how most VT100 codes start.
+        ///</summary>
+        protected string CSI
+        {
+            get { return csi; }
+        }
+
         /// <summary>
-        /// Map the unicode chars (and the fake control codes we made) on output to what the terminal
+        /// Map the Unicode chars (and the fake control codes we made) on output to what the terminal
         /// wants to see.
-        /// Subclasses of this should perform their own manipulations, then fallthrough
-        /// to this base class inmplementation at the bottom, to allow chains of
+        /// Subclasses of this should perform their own manipulations, then fall-through
+        /// to this base class implementation at the bottom, to allow chains of
         /// subclasses to all operate on the data.
         /// </summary>
-        /// <param name="ch">unicode char</param>
+        /// <param name="str">Unicode char</param>
         /// <returns>raw byte stream to send to the terminal</returns>
         public override char[] OutputConvert(string str)
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int index = 0 ; index < str.Length ; ++index)
+            foreach (char t in str)
             {
                 switch (outputExpected)
                 {
                     case ExpectNextChar.TELEPORTCURSORCOL:
-                        pendingCol = (int)(str[index]);
+                        pendingCol = t;
                         outputExpected = ExpectNextChar.TELEPORTCURSORROW;
                         break;
+
                     case ExpectNextChar.TELEPORTCURSORROW:
-                        int row = (int)(str[index]);
+                        int row = t;
                         // VT100 counts rows and cols starting at 1, not 0, thus the +1's below:
-                        sb.Append(((char)0x1b)/*ESC*/ + "[" + (row+1) + ";" + (pendingCol+1) + "H");
+                        sb.AppendFormat("{0}{1};{2}H", csi, (row + 1), (pendingCol + 1));
                         outputExpected = ExpectNextChar.NORMAL;
                         break;
+
                     default:
-                        switch (str[index])
+                        switch (t)
                         {
                             case (char)UnicodeCommand.TELEPORTCURSOR:
                                 outputExpected = ExpectNextChar.TELEPORTCURSORCOL;
                                 break;
+
                             case (char)UnicodeCommand.CLEARSCREEN:
-                                sb.Append((char)0x1b/*ESC*/ + "[2J" + (char)0x1b/*ESC*/ + "[H");
+                                sb.AppendFormat("{0}2J{0}H", csi);
                                 break;
+
                             case (char)UnicodeCommand.SCROLLSCREENUPONE:
-                                sb.Append((char)0x1b/*ESC*/ + "[S");
+                                sb.AppendFormat("{0}S", csi);
                                 break;
+
                             case (char)UnicodeCommand.SCROLLSCREENDOWNONE:
-                                sb.Append((char)0x1b/*ESC*/ + "[T");
+                                sb.AppendFormat("{0}T", csi);
                                 break;
+
                             case (char)UnicodeCommand.HOMECURSOR:
-                                sb.Append((char)0x1b/*ESC*/ + "[H");
+                                sb.AppendFormat("{0}H", csi);
                                 break;
+
                             case (char)UnicodeCommand.UPCURSORONE:
-                                sb.Append((char)0x1b/*ESC*/ + "[A");
+                                sb.AppendFormat("{0}A", csi);
                                 break;
+
                             case (char)UnicodeCommand.DOWNCURSORONE:
-                                sb.Append((char)0x1b/*ESC*/ + "[B");
+                                sb.AppendFormat("{0}B", csi);
                                 break;
+
                             case (char)UnicodeCommand.RIGHTCURSORONE:
-                                sb.Append((char)0x1b/*ESC*/ + "[C");
+                                sb.AppendFormat("{0}C", csi);
                                 break;
+
                             case (char)UnicodeCommand.LEFTCURSORONE:
-                                sb.Append((char)0x1b/*ESC*/ + "[D");
+                                sb.AppendFormat("{0}D", csi);
                                 break;
+
                             case (char)UnicodeCommand.DELETELEFT:
-                                sb.Append((char)0x1b/*ESC*/ + "[K");
+                                sb.AppendFormat("{0}K", csi);
                                 break;
+
                             case (char)UnicodeCommand.DELETERIGHT:
-                                sb.Append((char)0x1b/*ESC*/ + "[1K");
+                                sb.AppendFormat("{0}1K", csi);
                                 break;
-                            default: 
-                                sb.Append(str[index]); // default passhtrough
+
+                            default:
+                                sb.Append(t); // default passhtrough
                                 break;
                         }
                         break;
@@ -97,21 +124,20 @@ namespace kOS.UserIO
         /// Provide the VT100 specific mappings of input chars, then fallback to the
         /// base class's mapping to see if there's other conversions to do.
         /// </summary>
-        /// <param name="inChars"></param>
-        /// <returns>input mapped into our internal pretend unicode terminal's codes</returns>
+        /// <returns>input mapped into our internal pretend Unicode terminal's codes</returns>
         public override string InputConvert(char[] inChars)
         {
             List<char> outChars = new List<char>();
-            
-            for (int index = 0 ; index < inChars.Length ; ++index )
+
+            for (int index = 0; index < inChars.Length; ++index)
             {
                 switch (inChars[index])
                 {
-                    case (char)0x1b: // ESCAPE char.
-                        if (inChars[index+1] == '[') // ESC followed by '[' is called the CSI (Control Sequence Initiator) and it's how most VT100 codes start.
+                    case ESCAPE_CHARACTER:
+                        if (inChars[index + 1] == '[') // ESC followed by '[' is called the CSI (Control Sequence Initiator) and it's how most VT100 codes start.
                         {
                             int numConsumed;
-                            char ch = ConvertVT100InputCSI(inChars,index+2,out numConsumed);
+                            char ch = ConvertVT100InputCSI(inChars, index + 2, out numConsumed);
                             if (numConsumed > 0)
                             {
                                 outChars.Add(ch);
@@ -119,11 +145,13 @@ namespace kOS.UserIO
                             }
                         }
                         else
-                            outChars.Add(inChars[index]); // dummy passthrough.  Send ESC as-is.                            
+                            outChars.Add(inChars[index]); // dummy passthrough.  Send ESC as-is.
                         break;
-                    case (char)0x7f: // DELETE char.
+
+                    case DELETE_CHARACTER: 
                         outChars.Add((char)UnicodeCommand.DELETELEFT); // Map to the same as backspace, because Vt100 sends it for the backspace key, annoyingly.
                         break;
+
                     default:
                         outChars.Add(inChars[index]); // dummy passthrough
                         break;
@@ -161,11 +189,11 @@ namespace kOS.UserIO
             {
                 switch (inChars[offset])
                 {
-                    case '1': returnChar = (char)UnicodeCommand.HOMECURSOR;      numConsumed = 2; break;
-                    case '3': returnChar = (char)UnicodeCommand.DELETERIGHT;     numConsumed = 2; break;
-                    case '4': returnChar = (char)UnicodeCommand.ENDCURSOR;       numConsumed = 2; break;
-                    case '5': returnChar = (char)UnicodeCommand.PAGEUPCURSOR;    numConsumed = 2; break;
-                    case '6': returnChar = (char)UnicodeCommand.PAGEDOWNCURSOR;  numConsumed = 2; break;
+                    case '1': returnChar = (char)UnicodeCommand.HOMECURSOR;     numConsumed = 2; break;
+                    case '3': returnChar = (char)UnicodeCommand.DELETERIGHT;    numConsumed = 2; break;
+                    case '4': returnChar = (char)UnicodeCommand.ENDCURSOR;      numConsumed = 2; break;
+                    case '5': returnChar = (char)UnicodeCommand.PAGEUPCURSOR;   numConsumed = 2; break;
+                    case '6': returnChar = (char)UnicodeCommand.PAGEDOWNCURSOR; numConsumed = 2; break;
                     default: numConsumed = 0; break; // Do nothing if it's not a recognized sequence.  Leave the chars to be read normally.
                 }
             }

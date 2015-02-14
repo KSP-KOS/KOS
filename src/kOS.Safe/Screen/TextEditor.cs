@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using kOS.Safe.Utilities;
 using kOS.Safe.UserIO;
 
 namespace kOS.Safe.Screen

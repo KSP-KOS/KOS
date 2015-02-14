@@ -3,13 +3,13 @@
 The kOS Telnet Server
 =====================
 
-kOS now supports the abilty to enable a `telnet server <http://www.telnet.org/htm/faq.htm>`_
+kOS now supports the ability to enable a `telnet server <http://www.telnet.org/htm/faq.htm>`_
 inside Kerbal Space Program.
 
 .. figure:: /_images/general/telnet.png
     :width: 95 %
 
-Telnet is an old network protocol designed in the early days of the internet, long
+Telnet is an old network protocol designed in the early days of the Internet, long
 before World Wide Web.  Its purpose was (is) to allow you to get access to the
 remote command line interfaces of distant server computers, acting as if the 
 keyboard and computer screen in front of you was a terminal hooked up to a distant
@@ -68,7 +68,7 @@ Using it
 
    from any terminal window in kOS.
 
-2. The very first time you do this, you wil get a warning message, as per
+2. The very first time you do this, you will get a warning message, as per
    `SQUAD's rule number 5 about mods that run network services <http://forum.kerbalspaceprogram.com/threads/87843-Forum-Rules-Add-on-Posting-Rules-August-21st-2014>`_. 
    After accepting and clicking "yes", the server will be running on loopback 
    127.0.0.1 (if you want to make it run on the non-loopback address, you will
@@ -121,7 +121,7 @@ Using it
 
      The welcome menu, shown here in a Mac OSX terminal.
 
-5. **Pick a CPU.**  Pick one of the cpu's listed by typing its number and hitting enter.
+5. **Pick a CPU.**  Pick one of the CPU's listed by typing its number and hitting enter.
 
 6. Your telnet is now connected to the server and should behave as the terminal for
    that CPU.  You can type commands and do what you like, the same as if you had been
@@ -144,7 +144,7 @@ Using it
    then the same thing works in reverse.  If it's VT100 then it doesn't.)
 
 .. warning::
-  Certain implementations of the xterm terminal emulation and the telnet cliet have
+  Certain implementations of the xterm terminal emulation and the telnet client have
   created a strange unending cascade of terminal resizes when you have two different
   telnet clients connected to the same GUI terminal and one of them is dragged to a
   new size.  Because some implementations don't wait until they're done resizing to
@@ -152,7 +152,7 @@ Using it
   they are being stretched, the attempt to keep them the same size causes them to
   effectively "argue" back and forth with each other, constantly changing each
   other's size.   If you experience this problem (your terminal window will be
-  fliping back and forth between two different sizes, resizing itself over and over
+  flipping back and forth between two different sizes, resizing itself over and over
   again in a neverending loop), you can try to get out of it by issuing a hardcoded
   command to set the terminal size, such as::
 
@@ -163,7 +163,7 @@ Using it
 
 10. At any time you may disconnect your telnet client from the terminal by hitting
     control-D as the first character of a new line.  This will bring you back to
-    the telnet welcom menu again.
+    the telnet welcome menu again.
 
 Special Keys
 ------------
@@ -219,8 +219,8 @@ Control-H
 
 Control-M
   **Return** This is an alternate way to press the "enter" or "return" key,
-  just in case your terminal emulation isn't sending the officialy understood
-  terminla code for it.
+  just in case your terminal emulation isn't sending the officially understood
+  terminal code for it.
 
 HOWTO: Putty client
 -------------------
@@ -316,7 +316,7 @@ scope of this document.  You can read more
 `For windows <http://realprogrammers.com/how_to/set_up_an_ssh_tunnel_with_putty.html>`_ or
 `For UNIX (both Mac and Linux) <http://www.cyberciti.biz/faq/set-up-ssh-tunneling-on-a-linux-unix-bsd-server-to-bypass-nat/>`_.
 
-Example: Let's say you have a remote unix machine you'd like to enable logins from,
+Example: Let's say you have a remote Unix machine you'd like to enable logins from,
 from there and nowhere else.  You can forward from your own machine's 
 127.0.0.1, port 5410, to the remote machine's, oh let's say 127.0.0.1, port 54100.
 Then anyone on the remote machine could telnet to ITS 127.0.0.1, port 54100 and 
@@ -358,7 +358,7 @@ looks like gibberish to you.  It can be skipped.
 If you wish to make your own homemade telnet client and connect it up to the 
 kOS telnet server, the following is the required subset of the telnet protocol
 that your telnet client must speak, and the terminal requirements it must
-fufill:
+fulfill:
 
 1. It must suppress local character echoing, and enter character-at-a-time mode,
    by implementing both the ECHO negotiation
@@ -366,11 +366,11 @@ fufill:
    the SUPPRESS GO AHEAD negotiation
    `described by RFC858 <http://www.networksorcery.com/enp/rfc/rfc858.txt>`_. These are
    used in the following way:  Your client must NOT ECHo (letting the server do it),
-   and your client must suppres go-ahead messages (allowing real-time back-and-forth).
+   and your client must suppress go-ahead messages (allowing real-time back-and-forth).
 2. It must implement the underlying DO/DONT and WILL/WONT, and SB/SE infrastructure of
    the main `telnet RFC854 <http://www.networksorcery.com/enp/rfc/rfc854.txt>`_.  It must
    send break (ctrl-C) as the IP interrupt process command (byte 255 followed by 244).
-   kOS does not use much of the negotaitions of the protocol mentioned on RFC854, other
+   kOS does not use much of the negotiations of the protocol mentioned on RFC854, other
    than those that are necessary to enable the other ones mentioned here.
 3. It must implement the Terminal-Type option
    `described by RFC1091 <http://www.networksorcery.com/enp/rfc/rfc1091.txt>`_.
@@ -391,12 +391,12 @@ fufill:
    (For example, if you identify as XTERM, you will be sent the XTERM escape code 
    pattern ESC [ 8 ; *height* ; *width* t, which is the XTERM escape code for setting
    the terminal size.)  This is because the telnet protocol was never written to
-   accomodate the concept of server-iniated resizes.
+   accommodate the concept of server-initiated resizes.
 
 Making a telnet client from scratch that actually follows protocol may be a complex
 enough task that the smarter solution is to just use an existing telnet program, if
 you are trying to create some sort of hardware rig.  These days a small cheap
-mini-hardware implementation of linux should be doable, and could include the
+mini-hardware implementation of Linux should be doable, and could include the
 telnet client installed in it for very little storage cost.
 
 **TERMINAL EMULATION**
@@ -406,7 +406,7 @@ or VT100 well, however the infrastructure is in place to support modifications
 to map to other terminal types.  If you want to try a hand at adding the
 terminal emulation for a currently unsupported terminal, you'd do it
 by subclassing the kOS.UserIO.TerminalUnicodeMapper class.  You can
-look at kOS.UserIO.TerminalXtermMapper as a sample to see wht you need
+look at kOS.UserIO.TerminalXtermMapper as a sample to see what you need
 to do.
 
 If you have a project where you want to just work with the terminal

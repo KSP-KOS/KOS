@@ -218,7 +218,7 @@ namespace kOS.Suffixed
             AddSuffix("SRFPROGRADE", new Suffix<Direction>(GetSurfacePrograde));
             AddSuffix("SRFRETROGRADE", new Suffix<Direction>(GetSurfaceRetrograde));
             AddSuffix("OBT", new Suffix<OrbitInfo>(GetOrbitInfo));
-            AddSuffix("POSITION", new Suffix<Vector>(delegate()
+            AddSuffix("POSITION", new Suffix<Vector>(() =>
             {
                 Safe.Utilities.Debug.Logger.Log("Position got Called");
                 return GetPosition();
