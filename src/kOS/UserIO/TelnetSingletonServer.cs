@@ -259,7 +259,7 @@ namespace kOS.UserIO
         /// mapper for whichever terminal type is actually attached to the telnet client.
         /// <br/>
         /// Remember that when sending strings to this method, end-of-lines need
-        /// to be expressed as "\r\n", because you are writing using the raw internet
+        /// to be expressed as "\r\n", because you are writing using the raw Internet
         /// ASCII standard.
         /// </summary>
         /// <param name="ch">character to write</param>
@@ -279,7 +279,7 @@ namespace kOS.UserIO
         /// mapper for whichever terminal type is actually attached to the telnet client.
         /// <br/>
         /// Remember that when sending strings to this method, end-of-lines need
-        /// to be expressed as "\r\n", because you are writing using the raw internet
+        /// to be expressed as "\r\n", because you are writing using the raw Internet
         /// ASCII standard.
         /// </summary>
         /// <param name="str">string to write</param>
@@ -433,7 +433,7 @@ namespace kOS.UserIO
         /// of network sockets, and hid the abilty to change that setting.   It's stuck at its default value of 2 hours.
         /// To change it from 2 hours would requre dropping into the Windows OS-specific libraries and we're trying to
         /// avoid that so KOS can run on Mac and Linux.  (Rant: The ability to choose the TCP/IP keepalive interval
-        /// is old bog-standard internet stuff and in no way is it Windows-specific so there's no reason to restrict
+        /// is old bog-standard Internet stuff and in no way is it Windows-specific so there's no reason to restrict
         /// it to the windows-specific part of the API, dammit!  It should be part of .NET because every OS can do it!!)
         /// </summary>
         private bool IsHung()
