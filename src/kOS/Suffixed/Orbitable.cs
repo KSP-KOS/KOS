@@ -210,7 +210,6 @@ namespace kOS.Suffixed
             AddSuffix("NAME", new Suffix<string>(GetName));
             AddSuffix("APOAPSIS", new Suffix<double>(() => Orbit.ApA));
             AddSuffix("PERIAPSIS", new Suffix<double>(() => Orbit.PeA));
-            AddSuffix("APOAPSIS", new Suffix<double>(() => Orbit.ApA));
             AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(Orbit.referenceBody, Shared)));
             AddSuffix("UP", new Suffix<Direction>(() => new Direction(GetUpVector(), false)));
             AddSuffix("NORTH", new Suffix<Direction>(() => new Direction(GetNorthVector(), false)));

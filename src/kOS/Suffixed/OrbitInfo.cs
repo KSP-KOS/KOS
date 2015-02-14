@@ -45,7 +45,6 @@ namespace kOS.Suffixed
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
             AddSuffix("NEXTPATCH", new Suffix<OrbitInfo>(GetNextPatch));
             AddSuffix("HASNEXTPATCH", new Suffix<bool>(GetHasNextPatch));
-            AddSuffix("TRANSITION", new Suffix<string>(() => orbit.patchEndTransition.ToString()));
 
             //TODO: Determine if these vectors are different than POSITION and VELOCITY
             AddSuffix("VSTATEVECTOR", new Suffix<Vector>(() => new Vector(orbit.vel)));
