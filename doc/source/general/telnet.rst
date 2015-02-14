@@ -333,6 +333,8 @@ and software developers trying to make interface mods that pretend to be
 kOS terminals.  If you are neither of those two, then don't worry if this section
 looks like gibberish to you.  It can be skipped.
 
+**TELNET PROTOCOL**
+
 If you wish to make your own homemade telnet client and connect it up to the 
 kOS telnet server, the following is the required subset of the telnet protocol
 that your telnet client must speak, and the terminal requirements it must
@@ -376,4 +378,105 @@ enough task that the smarter solution is to just use an existing telnet program,
 you are trying to create some sort of hardware rig.  These days a small cheap
 mini-hardware implementation of linux should be doable, and could include the
 telnet client installed in it for very little storage cost.
+
+**TERMINAL EMULATION**
+
+As of right now, the terminal emulation of kOS only really supports XTERM
+or VT100 well, however the infrastructure is in place to support modifications
+to map to other terminal types.  If you want to try a hand at adding the
+terminal emulation for a currently unsupported terminal, you'd do it
+by subclassing the kOS.UserIO.TerminalUnicodeMapper class.  You can
+look at kOS.UserIO.TerminalXtermMapper as a sample to see wht you need
+to do.
+
+If you have a project where you want to just work with the terminal
+codes already supported, then these are the subset you need to support:
+
+
+
+*ASCII*
+  The following terms should have their normal ASCII meaning:
+
+0x08 (control-H)
+  backspace key
+
+0x0d (control-M)
+  Return key.  On output it means go to left edge but don't go down a line.
+  A typical eoln needs to occur using its ASCII standard of \r\n.
+
+0x0a (control-J)
+  On output it means go to go down a line but don't go to the left edge
+  A typical eoln needs to occur using its ASCII standard of \r\n.
+
+
+
+*Terminal codes*
+   The following terms should have their VT100/XTERM meaning:
+
+Left-Arrow
+  ESC [ D  *-- both on input and on output*
+
+Right-Arrow
+  ESC [ C  *-- both on input and on output*
+
+Up-Arrow
+  ESC [ A  *-- both on input and on output*
+
+Down-Arrow
+  ESC [ B  *-- both on input and on output*
+
+Home-key
+  ESC [ 1 ~  *-- input only*
+
+End-key
+  ESC [ 4 ~  *-- input only*
+
+Delete-to-the-right-key
+  ESC [ 3 ~  *-- input only*
+
+PageUp-key
+  ESC [ 5 ~  *-- input only*
+
+PageDown-key
+  ESC [ 6 ~  *-- input only*
+
+Move-to-home-of-screen-upper-left
+  ESC [ H  *-- output only*
+
+Move-to-end-of-line
+  ESC [ F  *-- output only*
+
+Teleport-cursor-to-coordinate
+  ESC [ *row* ; *col* H   *-- output only: rows and cols start counting at 1, not 0*
+
+Clearscreen
+  ESC [ 2 J  *-- output only*
+
+Scroll-screen-up-one-line-keeping-cursor-where-it-is
+  ESC [ S  *-- output only*
+
+Scroll-screen-down-one-line-keeping-cursor-where-it-is
+  ESC [ T  *-- output only*
+
+Delete-to-the-left-of-cursor-ie-backspace
+  ESC [ K  *-- output only*
+
+Delete-at-the-cursor-toward-the-right
+  ESC [ 1 K  *-- output only*
+
+
+
+*The following codes are for the XTERM emulation only*
+
+Server-telling-client-to-resize-screen
+  ESC [ 8 ; *newheight* ; *newwidth* t  *-- The height/width are in chars*
+
+Server-telling-client-to-change-window-title
+  ESC ] 2 ; *title string* BEL  *-- where BEL is the character normally 
+  used to mean beep: control-G or 0x07.  But in this context it just marks
+  the end of the title and shouldn't cause a beep.
+
+
+Any value not mentioned in the list above might still get sent, but you 
+should be able to capture and ignore it.
 
