@@ -26,7 +26,7 @@ namespace kOS.Suffixed
             AddSuffix(new [] { "G", "GREEN" } , new ClampSetSuffix<float>(() => color.g, value => color.g = value, 0, 255));
             AddSuffix(new [] { "B", "BLUE" } , new ClampSetSuffix<float>(() => color.b, value => color.b = value, 0, 255));
             AddSuffix(new [] { "A", "ALPHA" } , new ClampSetSuffix<float>(() => color.a, value => color.a = value, 0, 1));
-            AddSuffix("HTML", new NoArgsSuffix<string>(ToHTMLString, "Returns a string representing the color in HTML, i.e. \"#ff0000\".  Ignores transparency (alpha) information."));
+            AddSuffix(new [] { "HTML", "HEX" } , new NoArgsSuffix<string>(ToHTMLString, "Returns a string representing the color in HTML, i.e. \"#ff0000\".  Ignores transparency (alpha) information."));
         }
         
         public Color Color()
