@@ -63,7 +63,9 @@ Using it
 1. Turn on the telnet server by going into the app control panel and clicking
    on the green circle next to the word "Telnet".  Alternatively, you can
    issue the command::
+
      SET CONFIG:TELNET TO TRUE.
+
    from any terminal window in kOS.
 
 2. The very first time you do this, you wil get a warning message, as per
@@ -98,6 +100,7 @@ Using it
       --------------------------------------------------------------------------------
       >_
 
+
    Or, if there are no CPU's within range, it will look like this::
 
       Terminal: type = XTERM, size = 80x24
@@ -112,6 +115,11 @@ Using it
 
    This menu should match 1:1 with the list of CPU's you see on the kOS applauncher
    control panel.
+
+.. figure:: /_images/general/telnet_welcomemenu.png
+     :width: 75 %
+
+     The welcome menu, shown here in a Mac OSX terminal.
 
 5. **Pick a CPU.**  Pick one of the cpu's listed by typing its number and hitting enter.
 
@@ -147,7 +155,9 @@ Using it
   fliping back and forth between two different sizes, resizing itself over and over
   again in a neverending loop), you can try to get out of it by issuing a hardcoded
   command to set the terminal size, such as::
+
     SET TERMINAL:WIDTH TO 50.
+
   Doing this should force all the connected telnet XTERM windows to stop arguing with
   each other about what the size is, and get them synced up again.
 
@@ -240,6 +250,16 @@ message the server was sending back to you just before the window went away.
 
 HOWTO: Command-line client
 --------------------------
+
+.. figure:: /_images/general/telnet_xterm.png
+    :width: 75 %
+
+    Showing the use of telnet in an x-term window.
+
+.. figure:: /_images/general/telnet_macterminal.png
+    :width: 75 %
+
+    Showing the use of telnet in a Mac OSX terminal.
 
 (These instructions assume you use the default kOS Telnet server settings, of
 the loopback address 127.0.0.1, and port number 5410.  If you've changed those
