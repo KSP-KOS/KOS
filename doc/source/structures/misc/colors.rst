@@ -51,6 +51,32 @@ Method 1: Use one of these pre-arranged named colors:
     ``a``
         A floating point number from 0.0 to 1.0 for the alpha component. (1.0 means opaque, 0.0 means invisibly transparent).
 
+.. structure:: RGBA
+
+    .. list-table:: Members
+        :header-rows: 1
+        :widths: 2 1 4
+
+        * - Suffix
+          - Type
+          - Description
+
+        * - :R or :RED
+          - scalar
+          - the red component of the color
+        * - :G or :GREEN
+          - scalar
+          - the green component of the color
+        * - :B or :BLUE
+          - scalar
+          - the blue component of the color
+        * - :A or :ALPHA
+          - scalar
+          - the alpha (how opaque: 1 = opaque, 0 = transparent) component of the color
+        * - :HTML or :HEX
+          - string
+          - the color rendered into a HTML tag string i.e. "#ff0000".  This format ignores the alpha channel and treats all colors as opaue.
+
 Examples::
 
     SET myarrow TO VECDRAW.
@@ -65,4 +91,6 @@ Examples::
 
     // half transparent yellow.
     SET myarrow:COLOR to RGBA(1.0,1.0,0.0,0.5).
+
+    PRINT GREEN:HTML. // prints #00ff00
 

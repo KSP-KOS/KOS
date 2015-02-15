@@ -52,7 +52,7 @@ Goals and Ideas - Compactness
 
 The first thing to mention about the format is that it is designed
 for maximum compactness, NOT human readability, and NOT for simple
-programming conveninece.  The goal is to make a format that stores
+programming convenience.  The goal is to make a format that stores
 the compiled program with the least 'wastage' due to indenting
 and comments and long variable names, and lets users run code
 on their meager small local volumes with them crunched down into
@@ -315,9 +315,9 @@ it as a kEXE type of file.  The magic number is this pattern:
 
 * ASCII lowercase 'k',
 * byte value 0x03,  // Not letter 'e', because something has to make it
-clear to applications that this file doesn't have printable ascii in it,
-as some will assume if they see a string of printable ascii at the start,
-that it must be an ascii file.
+clear to applications that this file doesn't have printable ASCII in it,
+as some will assume if they see a string of printable ASCII at the start,
+that it must be an ASCII file.
 * ASCII uppercase 'X',
 * ASCII uppercase 'E'
 
@@ -803,7 +803,7 @@ This is a small example of a tiny program that shows it all.  A
 very small example was picked because it's possible to see it all 
 at once in one hexdump:
 
-Original Program as ascii source:
+Original Program as ASCII source:
 ---------------------------------
 
     // This is testcode 
@@ -925,7 +925,7 @@ larger program will probably have 0x02 here.
 
 Type code is 0x07, string, followed by the BinaryWriter's encoding
 of a string, which starts with a one-byte string length, 0x13,
-and then the UTF-8 encoding of the unicode string (so it looks like
+and then the UTF-8 encoding of the Unicode string (so it looks like
 ASCII unless there's some extended chars).
 
 **Argument at location 0x18 in Argument Section:**

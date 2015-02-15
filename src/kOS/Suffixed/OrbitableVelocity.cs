@@ -1,4 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
+using kOS.Utilities;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
@@ -17,15 +19,23 @@ namespace kOS.Suffixed
         {
             Orbital = new Vector(v.obt_velocity);
             Surface = new Vector(v.srf_velocity);
+            InitializeSuffixes();
         }
 
-        public OrbitableVelocity(CelestialBody b)
+        private void InitializeSuffixes()
         {
-            Orbital = new Vector(b.orbit.GetVel()); // KSP's b.GetObtVelocity() is broken - it causes stack overflow
-            CelestialBody parent = b.referenceBody;
-            Surface = parent != null ?
+            AddSuffix("ORBIT", new Suffix<Vector>(() => Orbital));
+            AddSuffix("SURFACE", new Suffix<Vector>(() => Surface));
+        }
+
+        public OrbitableVelocity(CelestialBody b, SharedObjects shared)
+        {
+            Orbital = new Vector(b.KOSExtensionGetObtVelocity(shared)); // KSP's b.GetObtVelocity() is broken - it causes stack overflow
+            CelestialBody parent = b.KOSExtensionGetParentBody();
+            Surface = (parent != null) ?
                 new Vector(b.orbit.GetVel() - parent.getRFrmVel(b.position)) :
-                new Vector(default(float), default(float), default(float));
+                new Vector(Vector3d.zero);
+            InitializeSuffixes();
         }
 
         /// <summary>
@@ -39,20 +49,7 @@ namespace kOS.Suffixed
         {
             Orbital = orbVel;
             Surface = surfVel;
-        }
-
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "ORBIT":
-                    return Orbital;
-
-                case "SURFACE":
-                    return Surface;
-            }
-
-            return base.GetSuffix(suffixName);
+            InitializeSuffixes();
         }
 
         public override string ToString()

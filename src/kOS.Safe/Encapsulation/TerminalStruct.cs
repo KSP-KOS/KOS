@@ -46,7 +46,7 @@ namespace kOS.Safe.Encapsulation
                                                         MAXCOLUMNS,
                                                         "Get or Set the number of columns on the screen.  Value is limited to the range [" + MINCOLUMNS + "," + MAXCOLUMNS + "]"));
         }
-
+        
         public override string ToString()
         {
             return string.Format("{0} Terminal", base.ToString());

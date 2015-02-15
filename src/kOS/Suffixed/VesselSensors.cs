@@ -1,16 +1,32 @@
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
     public class VesselSensors : Structure
     {
-        private readonly Vector acceleration = new Vector(0, 0, 0);
-        private readonly Vector geeForce = new Vector(0, 0, 0);
-        private readonly double kerbolExposure;
-        private readonly double temperature;
-        private readonly double pressure;
+        private Vector acceleration = new Vector(0, 0, 0);
+        private Vector geeForce = new Vector(0, 0, 0);
+        private double kerbolExposure;
+        private double temperature;
+        private double pressure;
 
         public VesselSensors(Vessel target)
+        {
+            FindSensors(target);
+            InitializeSuffixes();
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("ACC", new Suffix<Vector>(() => acceleration));
+            AddSuffix("PRES", new Suffix<double>(() => pressure));
+            AddSuffix("TEMP", new Suffix<double>(() => temperature));
+            AddSuffix("GRAV", new Suffix<Vector>(() => geeForce));
+            AddSuffix("LIGHT", new Suffix<double>(() => kerbolExposure));
+        }
+
+        private void FindSensors(Vessel target)
         {
             foreach (var part in target.Parts)
             {
@@ -42,25 +58,6 @@ namespace kOS.Suffixed
                     }
                 }
             }
-        }
-
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "ACC":
-                    return acceleration;
-                case "PRES":
-                    return pressure;
-                case "TEMP":
-                    return temperature;
-                case "GRAV":
-                    return geeForce;
-                case "LIGHT":
-                    return kerbolExposure;
-            }
-
-            return base.GetSuffix(suffixName);
         }
 
         public override string ToString()

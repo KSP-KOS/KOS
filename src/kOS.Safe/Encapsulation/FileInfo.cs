@@ -1,4 +1,5 @@
 using System.Linq;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -25,27 +26,20 @@ namespace kOS.Safe.Encapsulation
         {
             Name = name;
             Size = size;
+            InitializeSuffixes();
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("NAME", new Suffix<string>(() => Name));
+            AddSuffix("SIZE", new Suffix<int>(() => Size));
+            AddSuffix("FILETYPE", new Suffix<string>(() => Extension));
         }
 
         public FileInfo(System.IO.FileInfo fileInfo)
         {
             Name = fileInfo.Name;
             Size = (int) fileInfo.Length;
-        }
-
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "NAME":
-                    return Name;
-                case "SIZE":
-                    return Size;
-                case "FILETYPE":
-                    return Extension;
-            }
-
-            return base.GetSuffix(suffixName);
         }
 
         public override string ToString()

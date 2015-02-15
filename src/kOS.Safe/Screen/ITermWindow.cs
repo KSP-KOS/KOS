@@ -8,7 +8,7 @@ namespace kOS.Safe.Screen
         void Open();
         void Close();
         void Toggle();
-        bool IsOpen();
+        bool IsOpen { get; }
         bool ShowCursor { get; set; }
         bool IsPowered { get; set; }
     }

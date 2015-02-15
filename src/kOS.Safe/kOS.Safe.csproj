@@ -134,18 +134,24 @@
     </Compile>
     <Compile Include="Screen\IInterpreter.cs" />
     <Compile Include="Screen\IScreenBuffer.cs" />
+    <Compile Include="Screen\IScreenBufferLine.cs" />
+    <Compile Include="Screen\IScreenSnapshot.cs" />
     <Compile Include="Screen\ITermWindow.cs" />
     <Compile Include="Screen\ScreenBuffer.cs" />
+    <Compile Include="Screen\ScreenBufferLine.cs" />
+    <Compile Include="Screen\ScreenSnapshot.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
     <Compile Include="SharedObjects.cs" />
     <Compile Include="UpdateHandler.cs" />
+    <Compile Include="UserIO\UnicodeCommand.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
     <Compile Include="Utilities\Environment.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
     <Compile Include="Utilities\Math.cs" />
+    <Compile Include="Utilities\TickGen.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
@@ -156,6 +162,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UserIO" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

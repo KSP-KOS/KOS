@@ -119,117 +119,25 @@ namespace kOS.Suffixed
 
         private void InitializePilotSuffixes()
         {
-            AddSuffix(new[] { "PILOTYAW" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.yaw;
-                }
-                return 0f;
-            }));
+            AddSuffix(new[] { "PILOTYAW" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.yaw)));
+            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.yawTrim)));
+            AddSuffix(new[] { "PILOTROLL" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.roll)));
+            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.rollTrim)));
+            AddSuffix(new[] { "PILOTPITCH" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.pitch)));
+            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.pitchTrim)));
+            AddSuffix(new[] { "PILOTFORE" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.Z)));
+            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.X)));
+            AddSuffix(new[] { "PILOTTOP" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.Y)));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottle)));
+            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottleTrim)));
+            AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.wheelSteer)));
+            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.wheelSteerTrim)));
+            AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<bool>(() => Vessel == FlightGlobals.ActiveVessel && FlightInputHandler.state.isNeutral));
 
-            AddSuffix(new[] { "PILOTYAWTRIM" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.yawTrim;
-                }
-                return 0f;
-            }));
-
-            AddSuffix(new[] { "PILOTROLL" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.roll;
-                }
-                return 0f;
-            }));
-
-            AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.rollTrim;
-                }
-                return 0f;
-            }));
-            
-            AddSuffix(new[] { "PILOTPITCH" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.pitch;
-                }
-                return 0f;
-            }));
-
-            AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.pitchTrim;
-                }
-                return 0f;
-            }));
-            
             AddSuffix(new[] { "PILOTROTATION" }, new Suffix<Vector>(GetPilotRotation));
-
-            AddSuffix(new[] { "PILOTFORE" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.Z;
-                }
-                return 0f;
-            }));
-
-            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.X;
-                }
-                return 0f;
-            }));
-
-            AddSuffix(new[] { "PILOTTOP" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.Y;
-                }
-                return 0f;
-            }));
-
             AddSuffix(new[] { "PILOTTRANSLATION" }, new Suffix<Vector>(GetPilotTranslation));
 
-            AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.wheelThrottle;
-                }
-                return 0f;
-            }));
-
-            AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.wheelThrottleTrim;
-                }
-                return 0f;
-            }));
-
-            AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.mainThrottle;
-                }
-                return 0f;
-            }, value =>
+            AddSuffix(new[] { "PILOTMAINTHROTTLE" }, new ClampSetSuffix<float>(() => ReadPilot(ref FlightInputHandler.state.mainThrottle), value =>
             {
                 Vessel.ctrlState.mainThrottle = value;
                 if (Vessel == FlightGlobals.ActiveVessel)
@@ -237,33 +145,11 @@ namespace kOS.Suffixed
                     FlightInputHandler.state.mainThrottle = value;
                 }
             }, 0, 1));
+        }
 
-            AddSuffix(new[] { "PILOTNEUTRAL" }, new Suffix<bool>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.isNeutral;
-                }
-                return false;
-            }));
-
-            AddSuffix(new[] { "PILOTWHEELSTEER" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.wheelSteer;
-                }
-                return 0f;
-            }));
-
-            AddSuffix(new[] { "PILOTWHEELSTEERTRIM" }, new Suffix<float>(() =>
-            {
-                if (Vessel == FlightGlobals.ActiveVessel)
-                {
-                    return FlightInputHandler.state.wheelSteerTrim;
-                }
-                return 0f;
-            }));
+        private float ReadPilot(ref float flightInputValue)
+        {
+            return Vessel == FlightGlobals.ActiveVessel ? flightInputValue : 0f;
         }
 
         private void InitializeSuffixes()

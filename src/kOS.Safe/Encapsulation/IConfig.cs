@@ -9,6 +9,8 @@ namespace kOS.Safe.Encapsulation
         bool StartOnArchive { get; set; }
         bool EnableSafeMode { get; set; }
         bool VerboseExceptions { get; set; }
+        bool EnableTelnet { get; set; }
+        int TelnetPort { get; set; }
         void SaveConfig();
     }
 }

@@ -15,6 +15,7 @@ using kOS.Safe;
 using kOS.Safe.Compilation;
 using kOS.Safe.Compilation.KS;
 using kOS.Safe.Module;
+using kOS.Safe.Screen;
 using kOS.Suffixed;
 using kOS.AddOns.RemoteTech2;
 
@@ -108,7 +109,23 @@ namespace kOS.Module
         
         public bool WindowIsOpen()
         {
-            return shared.Window.IsOpen();
+            return shared.Window.IsOpen;
+        }
+        
+        public bool TelnetIsAttached()
+        {
+            return shared.Window.NumTelnets() > 0;
+        }
+
+        public IScreenBuffer GetScreen()
+        {
+            return shared.Screen;
+        }
+        
+        // TODO - later refactor making this kOS.Safer so it can work on ITermWindow, which also means moving all of UserIO's classes too.
+        public Screen.TermWindow GetWindow()
+        {
+            return shared.Window;
         }
 
         public override void OnStart(StartState state)
@@ -213,6 +230,8 @@ namespace kOS.Module
             // This is technically called any time ANY part is destroyed, so ignore it if it's not MY part:
             if (p != part)
                 return;
+            
+            GetWindow().DetachAllTelnets();
             
             allMyInstances.RemoveAll(m => m==this);
         }

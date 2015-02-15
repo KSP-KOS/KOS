@@ -16,39 +16,118 @@ namespace kOS.Screen
         
         // Give each instance of TermWindow a unique ID block to ensure it can create
         // Unity windows that don't clash:
-        protected static int termWindowIDRange = 215300; // I literally just mashed the keyboard to get a unique number.
-        protected static int windowsMadeSoFar = 0;
+        private static int termWindowIDRange = 215300; // I literally just mashed the keyboard to get a unique number.
+        private static int windowsMadeSoFar;
         // Keep track of the stacking order of the Terminal windows relative to each other.
         // surprisingly, the Unity GUi doesn't do this automatically itself:
-        protected static List<KOSManagedWindow> depthSort = new List<KOSManagedWindow>();
+        private static List<KOSManagedWindow> depthSort = new List<KOSManagedWindow>();
 
-        protected static int dragTolerance = 2; // mouse pixel movement of this or less counts as a click and not a drag.
-        
+        private static int dragTolerance = 2; // mouse pixel movement of this or less counts as a click and not a drag.
 
-        protected Rect windowRect;
 
-        protected int uniqueId; // For the window attached to this widget.
+        private Rect windowRect;
+
+        private int uniqueId; // For the window attached to this widget.
 
         /// subclasses of KOSManagedWindow can use these to see the mouse position
         /// by full screen coords, or relative to their windowRect:
-        protected Vector2 mousePosAbsolute;
-        protected Vector2 mousePosRelative;
+        private Vector2 mousePosAbsolute;
+
+        private Vector2 mousePosRelative;
 
         /// When doing a mousedown, and mouseup to form a click, this is the
         /// position of the most recent mousedown:
-        protected Vector2 mouseButtonDownPosAbsolute;
-        protected Vector2 mouseButtonDownPosRelative;
+        private Vector2 mouseButtonDownPosAbsolute;
 
-        protected bool isOpen = false;
+        private Vector2 mouseButtonDownPosRelative;
+
+        private bool isOpen;
 
         protected KOSManagedWindow()
         {
-            // mult by 50 so there's a range for future expansion for other GUI objects inside the window:
+            // multiply by 50 so there's a range for future expansion for other GUI objects inside the window:
             uniqueId = termWindowIDRange + (windowsMadeSoFar * 50);
             ++windowsMadeSoFar;            
         }
 
         public bool IsPowered { get; set; }
+
+        protected static int TermWindowIDRange
+        {
+            get { return termWindowIDRange; }
+            set { termWindowIDRange = value; }
+        }
+
+        protected static int WindowsMadeSoFar
+        {
+            get { return windowsMadeSoFar; }
+            set { windowsMadeSoFar = value; }
+        }
+
+        protected static List<KOSManagedWindow> DepthSort
+        {
+            get { return depthSort; }
+            set { depthSort = value; }
+        }
+
+        protected static int DragTolerance
+        {
+            get { return dragTolerance; }
+            set { dragTolerance = value; }
+        }
+
+        protected Rect WindowRect
+        {
+            get { return windowRect; }
+            set { windowRect = value; }
+        }
+
+        protected int UniqueId
+        {
+            get { return uniqueId; }
+            set { uniqueId = value; }
+        }
+
+        /// <summary>
+        /// subclasses of KOSManagedWindow can use this to see the mouse position
+        /// by full screen coords
+        /// </summary>
+        protected Vector2 MousePosAbsolute
+        {
+            get { return mousePosAbsolute; }
+            set { mousePosAbsolute = value; }
+        }
+
+        /// <summary>
+        /// subclasses of KOSManagedWindow can use this to see the mouse position
+        /// relative to their windowRect
+        /// </summary>
+        protected Vector2 MousePosRelative
+        {
+            get { return mousePosRelative; }
+            set { mousePosRelative = value; }
+        }
+
+        /// <summary>
+        /// When doing a mousedown, and mouseup to form a click, this is the
+        /// absolute position of the most recent mousedown:
+        /// </summary>
+        protected Vector2 MouseButtonDownPosAbsolute
+        {
+            get { return mouseButtonDownPosAbsolute; }
+            set { mouseButtonDownPosAbsolute = value; }
+        }
+
+        /// <summary>
+        /// When doing a mousedown, and mouseup to form a click, this is the
+        /// relative position of the most recent mousedown:
+        /// </summary>
+        protected Vector2 MouseButtonDownPosRelative
+        {
+            get { return mouseButtonDownPosRelative; }
+            set { mouseButtonDownPosRelative = value; }
+        }
+
 
         /// <summary>
         /// Implement this for how to make your widget get the keyboard focus:
@@ -92,11 +171,12 @@ namespace kOS.Screen
             // DumpDepthSort();
         }
         
-        public virtual bool IsOpen()
+        public bool IsOpen
         {
-            return isOpen;
+            get { return isOpen; }
+            protected set { isOpen = value; }
         }
-
+        
         public void DumpDepthSort() // exists purely for debugging.
         {
             for (int i=0 ; i< depthSort.Count ; ++i)
@@ -130,7 +210,7 @@ namespace kOS.Screen
         }
 
         /// <summary>
-        /// Cause this window to become frontmost, AND it also gets the keyboard focus.
+        /// Cause this window to become front most, AND it also gets the keyboard focus.
         /// </summary>
         public virtual void BringToFront()
         {
@@ -181,33 +261,31 @@ namespace kOS.Screen
         /// <returns>True if there was a mouseclick within this window.</returns>
         public bool UpdateLogic()
         {
-            if (IsOpen())
+            if (!IsOpen) return false;
+
+            // Input.mousePosition, unlike Event.current.MousePosition, puts the origin at the
+            // lower-left instead of upper-left of the screen, thus the subtraction in the y coord below:
+            mousePosAbsolute = new Vector2( Input.mousePosition.x, UnityEngine.Screen.height - Input.mousePosition.y);
+    
+            // Mouse coord within the window, rather than within the screen.
+            mousePosRelative = new Vector2( mousePosAbsolute.x - windowRect.xMin, mousePosAbsolute.y - windowRect.yMin);
+    
+            bool clickUp = false;
+            if (Input.GetMouseButtonDown(0))
             {
-                // Input.mousePosition, unlike Event.current.MousePosition, puts the origin at the
-                // lower-left instead of upper-left of the screen, thus the subtraction in the y coord below:
-                mousePosAbsolute = new Vector2( Input.mousePosition.x, UnityEngine.Screen.height - Input.mousePosition.y);
-    
-                // Mouse coord within the window, rather than within the screen.
-                mousePosRelative = new Vector2( mousePosAbsolute.x - windowRect.xMin, mousePosAbsolute.y - windowRect.yMin);
-    
-                bool clickUp = false;
-                if (Input.GetMouseButtonDown(0))
-                {
-                    mouseButtonDownPosAbsolute = mousePosAbsolute;
-                    mouseButtonDownPosRelative = mousePosRelative;
-                }
-    
-                if (Input.GetMouseButtonUp(0))
-                {
-                    clickUp = true;
-                    if (Vector2.Distance(mousePosAbsolute,mouseButtonDownPosAbsolute) <= dragTolerance)
-                    {
-                        FocusClickLocationCheck(mousePosAbsolute);
-                    }
-                }
-                return IsInsideMyExposedPortion(mousePosAbsolute) && clickUp;
+                mouseButtonDownPosAbsolute = mousePosAbsolute;
+                mouseButtonDownPosRelative = mousePosRelative;
             }
-            return false;
+    
+            if (Input.GetMouseButtonUp(0))
+            {
+                clickUp = true;
+                if (Vector2.Distance(mousePosAbsolute,mouseButtonDownPosAbsolute) <= dragTolerance)
+                {
+                    FocusClickLocationCheck(mousePosAbsolute);
+                }
+            }
+            return IsInsideMyExposedPortion(mousePosAbsolute) && clickUp;
         }
     }
 }

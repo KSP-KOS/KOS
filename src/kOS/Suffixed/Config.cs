@@ -20,6 +20,9 @@ namespace kOS.Suffixed
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
         public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
+        public bool EnableTelnet { get { return GetPropValue<bool>(PropId.EnableTelnet); } set { SetPropValue(PropId.EnableTelnet, value); } }
+        public int TelnetPort { get { return GetPropValue<int>(PropId.TelnetPort); } set { SetPropValue(PropId.TelnetPort, value); } }
+        public bool TelnetLoopback { get { return GetPropValue<bool>(PropId.TelnetLoopback); } set { SetPropValue(PropId.TelnetLoopback, value); } }
         
         private Config()
         {
@@ -39,6 +42,9 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
+            AddConfigKey(PropId.EnableTelnet, new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number (must restart telnet to take effect)", 5410, 1024, 65535, typeof(int)));
+            AddConfigKey(PropId.TelnetLoopback, new ConfigKey("TelnetLoopback", "LOOPBACK", "Restricts telnet to 127.0.0.1 (must restart telnet to take effect)", true, false, true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -88,7 +94,7 @@ namespace kOS.Suffixed
         {
             properties[id].Value = value;
         }
-
+        
         public void SaveConfig()
         {
             var config = PluginConfiguration.CreateForType<Config>();
@@ -173,7 +179,10 @@ namespace kOS.Suffixed
             EnableRT2Integration = 4,
             StartOnArchive = 5,
             EnableSafeMode = 6,
-            VerboseExceptions = 7
+            VerboseExceptions = 7,
+            EnableTelnet = 8,
+            TelnetPort = 9,
+            TelnetLoopback = 10
         }
     }
 
@@ -184,7 +193,7 @@ namespace kOS.Suffixed
         public string Alias {get;set;}
         public string Name {get;set;}
         public Type ValType {get;set;}
-        public object Value {get{return val;} set{ val = SafeSetValue(value);} }
+        public object Value {get{return val;} set{ val = SafeSetValue(value); } }
         public object MinValue {get;set;}
         public object MaxValue {get;set;}
 

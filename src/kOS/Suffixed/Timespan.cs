@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Suffixed
 {
@@ -24,6 +25,19 @@ namespace kOS.Suffixed
         {
             span = unixStyleTime;
             kerbinTimeSetting = GameSettings.KERBIN_TIME;
+            InitializeSuffixes();
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("YEAR", new Suffix<int>(CalculateYear));
+            AddSuffix("DAY", new Suffix<int>(CalculateDay));
+            AddSuffix("HOUR", new Suffix<int>(CalculateHour));
+            AddSuffix("MINUTE", new Suffix<int>(CalculateMinute));
+            AddSuffix("SECOND", new Suffix<double>(CalculateSecond));
+            AddSuffix("SECONDS", new Suffix<double>(() => span));
+            AddSuffix("CLOCK", new Suffix<string>(() => string.Format("{0:00}:{1:00}:{2:00}", CalculateHour(), CalculateMinute(), CalculateSecond())));
+            AddSuffix("CALENDAR", new Suffix<string>(() => "Year " + CalculateYear() + ", day " + CalculateDay()));
         }
 
         private int CalculateYear()
@@ -62,22 +76,6 @@ namespace kOS.Suffixed
         public double ToUnixStyleTime()
         {
             return span;
-        }
-
-        public override object GetSuffix(string suffixName)
-        {
-            if (suffixName == "YEAR") return CalculateYear();
-            if (suffixName == "DAY") return CalculateDay();
-            if (suffixName == "HOUR") return CalculateHour();
-            if (suffixName == "MINUTE") return CalculateMinute();
-            if (suffixName == "SECOND") return CalculateSecond();
-
-            if (suffixName == "SECONDS") return span;
-
-            if (suffixName == "CLOCK") return string.Format("{0:00}:{1:00}:{2:00}", CalculateHour(), CalculateMinute(), CalculateSecond());
-            if (suffixName == "CALENDAR") return "Year " + CalculateYear() + ", day " + CalculateDay();
-
-            return base.GetSuffix(suffixName);
         }
 
         public static TimeSpan operator +(TimeSpan a, TimeSpan b) { return new TimeSpan(a.ToUnixStyleTime() + b.ToUnixStyleTime()); }
