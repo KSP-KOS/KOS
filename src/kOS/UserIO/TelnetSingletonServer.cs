@@ -328,7 +328,8 @@ namespace kOS.UserIO
                 else
                     throw; // Not one of the expected thread-closed IO exceptions, so don't hide it - let it get reported.
             }
-            if (VERBOSE_DEBUG_SEND)
+            
+            if (VERBOSE_DEBUG_SEND) // compiler warning - this code block is hardcoded to be unreachable.  But that's deliberate.
             {
                 StringBuilder logMessage = new StringBuilder();
                 logMessage.Append("kOS Telnet server:  Just wrote the following buffer chunk out to the client:");

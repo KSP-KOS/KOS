@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using kOS.Utilities;
@@ -93,6 +94,8 @@ namespace kOS.Screen
         private bool onGUICalledThisInstance = false;
         private bool onGUIWasOpenThisInstance = false;
         // ReSharper enable RedundantDefaultFieldInitializer
+        
+        private List<int> backingConfigInts;
 
         public KOSToolBarWindow()
         {
@@ -178,7 +181,26 @@ namespace kOS.Screen
                 
             launcher.AddOnShowCallback(CallbackOnShow);
             launcher.AddOnHideCallback(CallbackOnHide);
-            launcher.EnableMutuallyExclusive(launcherButton);            
+            launcher.EnableMutuallyExclusive(launcherButton);
+            SetupBackingConfigInts();
+        }
+        
+        /// <summary>
+        /// In order to support the changes to solve issue #565 (see github for kOS)
+        /// we have to store a temp value per integer field, that is NOT the actual
+        /// official integer value of the field, but just stores the value the user
+        /// is temporarily typing:
+        /// </summary>
+        public void SetupBackingConfigInts()
+        {
+            List<ConfigKey> keys = Config.Instance.GetConfigKeys();
+            backingConfigInts = new List<int>();
+            // Fills exactly the expected number of needed ints, in the same
+            // order they will be encountered in when iterating over GetConfigKeys later
+            // in the gui drawing method:
+            foreach (ConfigKey key in keys)
+                if (key.Value is int)
+                    backingConfigInts.Add((int)(key.Value));
         }
         
         public void GoAway()
@@ -345,6 +367,8 @@ namespace kOS.Screen
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
             GUILayout.Label("Changes to these settings are saved and globally affect all saved games.", tooltipLabelStyle);
 
+            int whichInt = 0; // increments only when an integer field is encountered in the config keys, else stays put.
+
             foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
                 CountBeginHorizontal();
@@ -358,12 +382,7 @@ namespace kOS.Screen
                 }
                 else if (key.Value is int)
                 {
-                    string fieldValue = key.Value.ToString();
-                    fieldValue  = GUILayout.TextField(fieldValue, 6, panelSkin.textField, GUILayout.MinWidth(60));
-                    int newInt;
-                    if (int.TryParse(fieldValue, out newInt))
-                        key.Value = newInt;
-                    // else it reverts to what it was and wipes the typing if you don't assign it to anything.
+                    key.Value = DrawConfigIntField((int)(key.Value), whichInt++);
                 }
                 else
                 {
@@ -387,8 +406,50 @@ namespace kOS.Screen
             CountEndVertical();
 
             EndHoverHousekeeping();
+            GUI.SetNextControlName(""); // because if you don't then there is no such thing as the "non" control to move the focus to.
+                                        // This is an invisible dummy control to "focus on" to, basically, unfocus, because Unity didn't
+                                        // provide an unfocus method.
         }
         
+        private int DrawConfigIntField(int keyVal, int whichInt)
+        {
+            int returnValue = keyVal; // no change, by default - return what was passed.
+            string fieldName = String.Format("CONFIG_intfield_{0}",whichInt);
+            
+            bool hasFocus = GUI.GetNameOfFocusedControl().Equals(fieldName);
+            bool userHitReturnThisPass = hasFocus && (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter);
+            int backInt = backingConfigInts[whichInt];
+            string fieldValue = (backInt == 0) ? "" : backInt.ToString(); // this lets the user temporarily delete the whole value instead of having it become a zero.
+            
+            GUI.SetNextControlName(fieldName);
+            fieldValue = GUILayout.TextField(fieldValue, 6, panelSkin.textField, GUILayout.MinWidth(60));
+
+            fieldValue = fieldValue.Trim(' ');
+            int newInt = -99; // Nonzero value to act as a flag to detect if the following line got triggered:
+            if (fieldValue.Length == 0 )
+                newInt = 0;// Empty or whitespace input should be a zero, instead of letting int.TryParse() call it an error.
+            if ( newInt == 0 || int.TryParse(fieldValue, out newInt))
+            {
+                backingConfigInts[whichInt] = newInt;
+                // Don't commit the temp value back to the CONFIGs unless RETURN is being pressed right now:
+                if (userHitReturnThisPass)
+                {
+                    returnValue = backingConfigInts[whichInt];
+                    GUI.FocusControl(""); // unfocus this textfield - it should give the user a visual clue that the edit has been committed.
+                }
+                // (Upon committing the value back to config, config will range-check it and clamp it if its out of range).
+            }
+            // else it reverts to what it was and wipes the typing if you don't assign it to anything.            
+            
+            // Lastly, check for losing the focus - when focus is lost (i.e. user clicks outside the textfield), then
+            // revert the backing value to the config value, throwing away edits.
+            if (!hasFocus)
+                backingConfigInts[whichInt] = keyVal;
+            
+            
+            return returnValue;
+        }
+
         private string TelnetStatusMessage()
         {
             if (TelnetMainServer.Instance == null) // We can't control the order in which monobeavhiors are loaded, so TelnetMainServer might not be there yet. 
