@@ -12,6 +12,7 @@ namespace kOS.Suffixed
         private readonly Dictionary<string, ConfigKey> keys;
         private readonly Dictionary<string, ConfigKey> alias;
         private readonly Dictionary<PropId, ConfigKey> properties;
+        private DateTime lastChangeTime;
 
         public int InstructionsPerUpdate { get { return GetPropValue<int>(PropId.InstructionsPerUpdate); } set { SetPropValue(PropId.InstructionsPerUpdate, value); } }
         public bool UseCompressedPersistence { get { return GetPropValue<bool>(PropId.UseCompressedPersistence); } set { SetPropValue(PropId.UseCompressedPersistence, value); } }
@@ -31,6 +32,7 @@ namespace kOS.Suffixed
             properties = new Dictionary<PropId, ConfigKey>();
             BuildValuesDictionary();
             LoadConfig();
+            lastChangeTime = DateTime.Now;
         }
 
         private void BuildValuesDictionary()
@@ -92,6 +94,8 @@ namespace kOS.Suffixed
 
         private void SetPropValue(PropId id, object value)
         {
+            if (! value.Equals(properties[id].Value))
+                lastChangeTime = DateTime.Now;
             properties[id].Value = value;
         }
         
@@ -159,6 +163,16 @@ namespace kOS.Suffixed
                 return true;
             }
             throw new Exception(string.Format("The value of the configuration key '{0}' has to be of type '{1}'", key.Name, key.ValType));
+        }
+        
+        /// <summary>
+        /// Return the moment in time when the most recent change to any of the
+        /// config values happened.  Used by KOSTollBarWindow to decide whether or not
+        /// it needs to assume its cached values are stale and need re-loading.         
+        /// </summary>
+        public DateTime TimeStamp()
+        {
+            return lastChangeTime;
         }
 
         public List<ConfigKey> GetConfigKeys()

@@ -95,6 +95,8 @@ namespace kOS.Screen
         private bool onGUIWasOpenThisInstance = false;
         // ReSharper enable RedundantDefaultFieldInitializer
         
+        private DateTime prevConfigTimeStamp = DateTime.MinValue;
+        
         private List<int> backingConfigInts;
 
         public KOSToolBarWindow()
@@ -193,6 +195,10 @@ namespace kOS.Screen
         /// </summary>
         public void SetupBackingConfigInts()
         {
+            if (Config.Instance.TimeStamp() <= prevConfigTimeStamp)
+                return;            
+            prevConfigTimeStamp = DateTime.Now;
+            
             List<ConfigKey> keys = Config.Instance.GetConfigKeys();
             backingConfigInts = new List<int>();
             // Fills exactly the expected number of needed ints, in the same
@@ -369,6 +375,8 @@ namespace kOS.Screen
 
             int whichInt = 0; // increments only when an integer field is encountered in the config keys, else stays put.
 
+            SetupBackingConfigInts();
+ 
             foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
                 CountBeginHorizontal();
