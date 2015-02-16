@@ -6,18 +6,11 @@ Stage
 *Contents*
 
     - :global:`EXAMPLE`
-    - :global:`READY`
-    - :global:`RESOURCES`
     - :struct:`Stage`
-
-A planned velocity change along an orbit. These are the nodes that you can set in the KSP user interface. Setting one through kOS will make it appear on the in-game map view, and creating one manually on the in-game map view will cause it to be visible to kOS.
-
-Access
---------
 
 You access the current stage for the vessel the kOS core is attached to with the STAGE: command.
 
-.. global::EXAMPLE	 
+.. global::EXAMPLE	
 	
 	
     A very simple auto-stager using :READY
