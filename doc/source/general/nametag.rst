@@ -3,6 +3,8 @@
 The Name Tag System
 ===================
 
+.. figure:: /_images/nametag.png
+
 One useful thing to do is to be able to give parts on a craft your own chosen names that you can use to get a reference to the parts, utterly bypassing the naming schemes used by KSP, and ignoring the complex part tree system. The Name Tag system was designed to make it possible for you to just give any part on a craft whatever arbitrary name you feel like.
 
 .. contents::
@@ -28,7 +30,7 @@ Giving a Part a Name
 3. From now on this part can be retrieved using either the :PARTSDUBBED
    or
    the :PARTSTAGGED methods of the vessel, as described
-   `on the Vessel Page <../../structure/vessel/index.html>`__
+   `on the Vessel Page <../structures/vessels/vessel.html>`__
 
 Cloning with Symmetry
 ---------------------
