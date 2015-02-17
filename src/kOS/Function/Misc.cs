@@ -29,7 +29,7 @@ namespace kOS.Function
     }
 
 [Function("hudtext")]
-    public class FunctionHudTxt : FunctionBase
+    public class FunctionHudText : FunctionBase
     {
 
         public override void Execute(SharedObjects shared)
