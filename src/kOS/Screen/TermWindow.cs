@@ -459,6 +459,14 @@ namespace kOS.Screen
             }
         }
         
+        /// <summary>
+        /// Get the newest copy of the screen buffer once, for use in all calculations for a while.
+        /// This was added when telnet clients were added.  The execution cost of obtaining a buffer snapshot
+        /// from the ScreenBuffer class is non-trivial, and therefore shouldn't be done over and over
+        /// for each telnet client that needs it within the span of a short time.  This gets it
+        /// once for all of them to borrow.  All calls will re-use this copy for a while,
+        /// until the next terminal refresh (1/20th of a second, at the moment).
+        /// </summary>
         void GetNewestBuffer()
         {
             DateTime newTime = DateTime.Now;
@@ -796,7 +804,10 @@ namespace kOS.Screen
         {
             shared.Screen.ClearScreen();
             foreach (TelnetSingletonServer telnet in telnets)
+            {
                 telnet.Write((char)UnicodeCommand.CLEARSCREEN);
+                prevTelnetScreens[telnet] = ScreenSnapShot.EmptyScreen(shared.Screen);
+            }
         }
 
         public int NumTelnets()
