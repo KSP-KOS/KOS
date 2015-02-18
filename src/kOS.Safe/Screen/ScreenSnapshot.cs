@@ -47,6 +47,24 @@ namespace kOS.Safe.Screen
         private ScreenSnapShot()
         {
         }
+
+        /// <summary>
+        /// A factory that constructs an empty screen buffer of a correct size for the fromScreen
+        /// </summary>
+        /// <param name="fromScreen">The screen - only used to determine the needed width/height</param>
+        /// <returns>An empty snapshot buffer</returns>
+        public static ScreenSnapShot EmptyScreen(IScreenBuffer fromScreen)
+        {
+            ScreenSnapShot newThing = new ScreenSnapShot();
+            newThing.TopRow = fromScreen.TopRow;
+            newThing.CursorColumn = fromScreen.CursorColumnShow;
+            newThing.CursorRow = fromScreen.CursorRowShow;
+            newThing.RowCount = fromScreen.RowCount;
+            newThing.Buffer = new List<IScreenBufferLine>();
+            for (int i = 0; i < newThing.RowCount ; ++i)
+                newThing.Buffer.Add(new ScreenBufferLine(fromScreen.ColumnCount));
+            return newThing;
+        }
         
         /// <summary>
         /// Make a copy of me for later diffing against.
