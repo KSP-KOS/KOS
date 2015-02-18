@@ -78,7 +78,7 @@ They all return a `List <../structures/misc/list.html>`__ of `Parts <../structur
 If the name does not exist, you can tell by seeing if the list returned
 has a length of zero::
 
-    IF somevessel:PARTSDUBBED("my favorite engine"):LENGTH == 0 {
+    IF somevessel:PARTSDUBBED("my favorite engine"):LENGTH = 0 {
       PRINT "There is no part named 'my favorite engine'.".
     }.
 
