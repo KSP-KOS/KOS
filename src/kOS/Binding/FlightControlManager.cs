@@ -71,18 +71,33 @@ namespace kOS.Binding
         {
             UnbindUnloaded();
 
-            if (currentVessel.id == Shared.Vessel.id) return;
+            // Why the "currentVessel != null checks?
+            //   Because of a timing issue where it can still be set to null during the span of one single
+            //   update if the new vessel isn't valid and set up yet when the old vessel connection got
+            //   broken off.
+            //
+            if (currentVessel != null && currentVessel.id == Shared.Vessel.id) return;
 
-            // Try to re-establish connection to vessel
-            if (VesselIsValid(currentVessel))
+            // If it gets this far, that means the part the kOSProcessor module is inside of
+            // got disconnected from its original vessel and became a member
+            // of a new child vessel, either do to undocking, decoupling, or breakage.
+
+            // currentVessel is now a stale reference to the vessel this manager used to be a member of,
+            // while Shared.Vessel is the new vessel it is now contained in.
+
+            // Before updating currentVessel, use it to break connection from the old vessel,
+            // so this this stops trying to pilot the vessel it's not attached to anymore:
+            if (currentVessel != null && VesselIsValid(currentVessel))
             {
                 currentVessel.OnPreAutopilotUpdate -= OnFlyByWire;
                 currentVessel = null;
             }
 
-            if (VesselIsValid(Shared.Vessel)) return;
-
-            currentVessel = Shared.Vessel;
+            // If the new vessel isn't ready for it, then don't attach to it yet (wait for a future update):
+            if (! VesselIsValid(Shared.Vessel)) return;
+            
+            // Now attach to the new vessel:
+            currentVessel = Shared.Vessel;            
             currentVessel.OnPreAutopilotUpdate += OnFlyByWire;
 
             foreach (var param in flightParameters.Values)
