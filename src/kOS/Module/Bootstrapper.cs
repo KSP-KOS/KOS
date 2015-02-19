@@ -38,7 +38,7 @@ namespace kOS.Module
         private void BuildLogger()
         {
             if (SafeHouse.Logger != null) return;
-            Debug.Log("kOS: Init Logger");
+            Debug.Log(string.Format("{0} Init Logger", KSPLogger.LOGGER_PREFIX));
             SafeHouse.Logger = new KSPLogger();
         }
 

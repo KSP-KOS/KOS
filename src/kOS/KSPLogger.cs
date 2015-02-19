@@ -10,6 +10,7 @@ namespace kOS
 {
     public class KSPLogger : Logger
     {
+        public const string LOGGER_PREFIX = "kOS:";
         public KSPLogger(SharedObjects shared) : base(shared)
         {
         }
@@ -22,12 +23,12 @@ namespace kOS
         public override void Log(string text)
         {
             base.Log(text);
-            UnityEngine.Debug.Log(string.Format("kOS: {0}", text));
+            UnityEngine.Debug.Log(string.Format("{0} {1}", LOGGER_PREFIX, text));
         }
 
         public override void LogWarning(string s)
         {
-            UnityEngine.Debug.LogWarning(string.Format("kOS: {0}", s));
+            UnityEngine.Debug.LogWarning(string.Format("{0} {1}", LOGGER_PREFIX, s));
         }
 
         public override void LogException(Exception exception)
@@ -37,7 +38,7 @@ namespace kOS
 
         public override void LogError(string s)
         {
-            UnityEngine.Debug.LogError(string.Format("kOS: {0}", s));
+            UnityEngine.Debug.LogError(string.Format("{0} {1}", LOGGER_PREFIX, s));
         }
 
         public override void Log(Exception e)
@@ -46,7 +47,7 @@ namespace kOS
 
             string traceText = TraceLog();
             LogToScreen(traceText);
-            var kosText = string.Format("kOS: {0}", traceText);
+            var kosText = string.Format("{0} {1}", LOGGER_PREFIX, traceText);
             UnityEngine.Debug.Log(kosText);
             
             // -------------
@@ -129,8 +130,8 @@ namespace kOS
             }
             catch (Exception ex) //INTENTIONAL POKEMON
             {
-                UnityEngine.Debug.Log("kOS: Logger: " + ex.Message);
-                UnityEngine.Debug.Log("kOS: Logger: " + ex.StackTrace);
+                UnityEngine.Debug.Log(string.Format("{0} Logger: {1}", LOGGER_PREFIX, ex.Message));
+                UnityEngine.Debug.Log(string.Format("{0} Logger: {1}", LOGGER_PREFIX, ex.StackTrace));
                 return BOGUS_MESSAGE;
             }
         }
