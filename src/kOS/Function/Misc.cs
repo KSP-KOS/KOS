@@ -27,7 +27,40 @@ namespace kOS.Function
             shared.Screen.Print(textToPrint);
         }
     }
+    
+    [Function("hudtext")]
+    public class FunctionHudText : FunctionBase
+    {
+        public override void Execute (SharedObjects shared)
 
+        {
+            bool      echo      = Convert.ToBoolean(shared.Cpu.PopValue());
+            RgbaColor rgba      = GetRgba(shared.Cpu.PopValue());
+            int       size      = Convert.ToInt32 (shared.Cpu.PopValue ());    
+            int       style     = Convert.ToInt32 (shared.Cpu.PopValue ());
+            int       delay     = Convert.ToInt32 (shared.Cpu.PopValue ());   
+            string    textToHud = shared.Cpu.PopValue ().ToString ();
+            string   htmlColour = rgba.ToHTMLString();
+            {                            
+            if (style == 1) {
+                ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_LEFT);
+            } else if (style == 2) {
+                ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_CENTER);
+            } else if (style == 3) {
+                ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_RIGHT);
+            } else if (style == 4) {
+                ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.LOWER_CENTER);
+            } else {
+                ScreenMessages.PostScreenMessage("*" + textToHud, 3f, ScreenMessageStyle.UPPER_CENTER);
+            }
+            if (echo) {
+                shared.Screen.Print ("HUD: " + textToHud);
+            }
+            }
+
+         }
+
+    
     [Function("printat")]
     public class FunctionPrintAt : FunctionBase
     {
