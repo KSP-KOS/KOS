@@ -94,11 +94,11 @@ namespace kOS.AddOns.RemoteTech2
             }
             catch (Exception e)
             {
-                SafeHouse.Logger.Log("kOS: Error creating RemoteTech2 interface: " + e); 
+                SafeHouse.Logger.Log("Error creating RemoteTech2 interface: " + e); 
                 return null;
             }
 
-            SafeHouse.Logger.Log("kOS: RemoteTech2 interface successfully created."); 
+            SafeHouse.Logger.Log("RemoteTech2 interface successfully created."); 
             return api;
         }
     }

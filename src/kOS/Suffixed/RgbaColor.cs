@@ -17,7 +17,7 @@ namespace kOS.Suffixed
         }
         public RgbaColor( RgbaColor copyFrom )
         {
-            SafeHouse.Logger.Log("kOS: --RgbaColor.Construct-- ");
+            SafeHouse.Logger.Log(" --RgbaColor.Construct-- ");
             color = copyFrom.color;
             InitializeSuffixColor();
         }

@@ -4,9 +4,11 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Encapsulation.Suffixes;
 using System.Linq;
+using kOS.Safe.Utilities;
 using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace kOS.Suffixed.Part
 {
@@ -57,10 +59,10 @@ namespace kOS.Suffixed.Part
         {
             foreach (PartModule mod in Part.Modules)
             {
-                Debug.Log("Does \"" + mod.moduleName.ToUpper() + "\" == \"" + modName.ToUpper() + "\"?");
+                SafeHouse.Logger.Log(string.Format("Does \"{0}\" == \"{1}\"?", mod.moduleName.ToUpper(), modName.ToUpper()));
                 if (String.Equals(mod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Debug.Log("yes it does");
+                    SafeHouse.Logger.Log("yes it does");
                     return PartModuleFieldsFactory.Construct(mod,shared);
                 }
             }

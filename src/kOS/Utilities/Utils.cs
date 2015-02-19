@@ -1,10 +1,12 @@
 ﻿using kOS.Safe.Compilation;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Reflection;
+using Debug = UnityEngine.Debug;
 
 namespace kOS.Utilities
 {
@@ -23,8 +25,7 @@ namespace kOS.Utilities
         public static string GetAssemblyFileVersion()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            // Fully qualified name used instead of "using" here because using System.Diagnostics causes ambiguities
-            // with all the Debug.Log's:
+
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
             return fvi.FileVersion;            
         }
@@ -157,14 +158,14 @@ namespace kOS.Utilities
         {
             const bool DEBUG_WALK = false;
             
-            if (DEBUG_WALK) Safe.Utilities.Debug.Logger.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
-            if (DEBUG_WALK) Safe.Utilities.Debug.Logger.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
+            if (DEBUG_WALK) SafeHouse.Logger.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
+            if (DEBUG_WALK) SafeHouse.Logger.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
             Boolean found = false;
             for (var curBody = a.referenceBody;
                  curBody != null && curBody != curBody.referenceBody; // reference body of Sun points to itself, weirdly.
                  curBody = curBody.referenceBody)
             {
-                if (DEBUG_WALK) Debug.Log("curBody=" + curBody.name);
+                if (DEBUG_WALK) SafeHouse.Logger.Log("curBody=" + curBody.name);
                 if (!curBody.name.Equals(b.name)) continue;
 
                 found = true;

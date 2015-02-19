@@ -22,7 +22,22 @@ namespace kOS
         public override void Log(string text)
         {
             base.Log(text);
-            UnityEngine.Debug.Log(text);
+            UnityEngine.Debug.Log(string.Format("kOS: {0}", text));
+        }
+
+        public override void LogWarning(string s)
+        {
+            UnityEngine.Debug.LogWarning(string.Format("kOS: {0}", s));
+        }
+
+        public override void LogException(Exception exception)
+        {
+            UnityEngine.Debug.LogException(exception);
+        }
+
+        public override void LogError(string s)
+        {
+            UnityEngine.Debug.LogError(string.Format("kOS: {0}", s));
         }
 
         public override void Log(Exception e)
@@ -31,7 +46,8 @@ namespace kOS
 
             string traceText = TraceLog();
             LogToScreen(traceText);
-            UnityEngine.Debug.Log(traceText);
+            var kosText = string.Format("kOS: {0}", traceText);
+            UnityEngine.Debug.Log(kosText);
             
             // -------------
             //    TODO

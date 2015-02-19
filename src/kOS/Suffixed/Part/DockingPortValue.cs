@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Utilities;
 using UnityEngine;
 
 namespace kOS.Suffixed.Part
@@ -44,7 +45,7 @@ namespace kOS.Suffixed.Part
             {
                 foreach (PartModule module in part.Modules)
                 {
-                    Debug.Log("Module Found: "+ module);
+                    SafeHouse.Logger.Log("Module Found: "+ module);
                     var dockingNode = module as ModuleDockingNode;
                     if (dockingNode != null)
                     {

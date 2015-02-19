@@ -739,7 +739,7 @@ namespace kOS.UserIO
             StringBuilder sb = new StringBuilder();
             sb.Append("{"+RFC854_DO+"}");
             sb.Append("{"+option+"}");
-            SafeHouse.Logger.SuperVerbose( "kOS: telnet protocol DO message from client: " + sb);
+            SafeHouse.Logger.SuperVerbose( "telnet protocol DO message from client: " + sb);
 
             return offset;
         }
@@ -787,7 +787,7 @@ namespace kOS.UserIO
             StringBuilder sb = new StringBuilder();
             sb.Append("{"+RFC854_DO+"}");
             sb.Append("{"+option+"}");
-            SafeHouse.Logger.SuperVerbose( "kOS: telnet protocol DO message from client: " + sb);
+            SafeHouse.Logger.SuperVerbose( "telnet protocol DO message from client: " + sb);
 
             return offset;
         }
@@ -825,7 +825,7 @@ namespace kOS.UserIO
             StringBuilder sb = new StringBuilder();
             sb.Append("{"+RFC854_DO+"}");
             sb.Append("{"+option+"}");
-            SafeHouse.Logger.SuperVerbose( "kOS: telnet protocol WILL message from client: " + sb);
+            SafeHouse.Logger.SuperVerbose( "telnet protocol WILL message from client: " + sb);
 
             return offset;
         }
@@ -855,7 +855,7 @@ namespace kOS.UserIO
             StringBuilder sb = new StringBuilder();
             sb.Append("{"+RFC854_DO+"}");
             sb.Append("{"+option+"}");
-            SafeHouse.Logger.SuperVerbose( "kOS: telnet protocol WILL message from client: " + sb);
+            SafeHouse.Logger.SuperVerbose( "telnet protocol WILL message from client: " + sb);
 
             return offset;
         }
@@ -900,7 +900,7 @@ namespace kOS.UserIO
                         sb.Append("{"+commandByte+"}");
                         for( int i = index; i < index+offset ; ++i )
                             sb.Append("{"+remainingBuff[i]+"}");
-                        SafeHouse.Logger.SuperVerbose( "kOS: telnet protocol submessage from client: " + sb);
+                        SafeHouse.Logger.SuperVerbose( "telnet protocol submessage from client: " + sb);
                     }
 
                     break;
@@ -910,7 +910,7 @@ namespace kOS.UserIO
                     // Everything below here is to help debug:
                     sb.Append("{"+commandByte+"}");
                     sb.Append("{"+remainingBuff[index+offset]+"}");
-                    SafeHouse.Logger.SuperVerbose( "kOS: telnet protocol command from client: " + sb);
+                    SafeHouse.Logger.SuperVerbose( "telnet protocol command from client: " + sb);
 
                     break;
             }
@@ -936,14 +936,14 @@ namespace kOS.UserIO
             byte code = remainingBuff[index + (offset++)];
             if (code != RFC1073_NAWS)
             {
-                SafeHouse.Logger.Log(string.Format("kOS: Bug in telnet server - expected NAWS byte {{{0}}} (RFC1073) but instead got {{{1}}}.", RFC1073_NAWS, (int)code));
+                SafeHouse.Logger.Log(string.Format("Bug in telnet server - expected NAWS byte {{{0}}} (RFC1073) but instead got {{{1}}}.", RFC1073_NAWS, (int)code));
                 handled = false;
                 return offset;
             }
 
             if (remainingBuff.Length < (index + offset + 3))
             {
-                SafeHouse.Logger.Log("kOS: Telnet client is trying to send me a window resize (RFC1073) command without actual width/height fields.  WTF?");
+                SafeHouse.Logger.Log("Telnet client is trying to send me a window resize (RFC1073) command without actual width/height fields.  WTF?");
                 handled = false;
                 return offset;
             }
@@ -960,7 +960,7 @@ namespace kOS.UserIO
             int width = (widthHighByte<<8) + widthLowByte;
             int height = (heightHighByte<<8) + heightLowByte;
 
-            SafeHouse.Logger.SuperVerbose( "kOS: Telnet client just told me its window size is " + width + "x" + height+".");
+            SafeHouse.Logger.SuperVerbose( "Telnet client just told me its window size is " + width + "x" + height+".");
             
             // Only *actually* set the width and height if the values are nonzero.  The telnet protocol allows the
             // client to send one or the other as zero, which does not really mean zero but rather "ignore this field".
@@ -1011,7 +1011,7 @@ namespace kOS.UserIO
             byte code = remainingBuff[index + (offset++)];
             if (code != RFC1091_TERMTYPE)
             {
-                SafeHouse.Logger.Log("kOS: Bug in telnet server - expected TERMTYPE byte {" + RFC1091_TERMTYPE + "} (RFC10791) but instead got {" + (int)code + "}.");
+                SafeHouse.Logger.Log("Bug in telnet server - expected TERMTYPE byte {" + RFC1091_TERMTYPE + "} (RFC10791) but instead got {" + (int)code + "}.");
                 handled = false;
                 return offset;
             }
@@ -1020,7 +1020,7 @@ namespace kOS.UserIO
             code = remainingBuff[index + (offset++)];
             if (code != RFC1091_IS)
             {
-                SafeHouse.Logger.Log("kOS: Bug in telnet server - expected [IS] byte {" + RFC1091_IS + "} (RFC10791) but instead got {" + (int)code + "}.");
+                SafeHouse.Logger.Log("Bug in telnet server - expected [IS] byte {" + RFC1091_IS + "} (RFC10791) but instead got {" + (int)code + "}.");
                 handled = false;
                 return offset;
             }
@@ -1048,12 +1048,12 @@ namespace kOS.UserIO
                     ClientTerminalType = newTermType;
                 }
 
-                SafeHouse.Logger.SuperVerbose(string.Format("kOS: Telnet client just told us its terminal type is: \"{0}\".", ClientTerminalType));
+                SafeHouse.Logger.SuperVerbose(string.Format("Telnet client just told us its terminal type is: \"{0}\".", ClientTerminalType));
                 handled = true;
             }
             else
             {
-                SafeHouse.Logger.Log("kOS: Telnet client sent us a garbled attempt at a terminal type ident string.");                
+                SafeHouse.Logger.Log("Telnet client sent us a garbled attempt at a terminal type ident string.");                
                 handled = false;
             }
             // remove the final two delimiter bytes:

@@ -131,7 +131,7 @@ namespace kOS.Execution
 
         private void PushContext(ProgramContext context)
         {
-            SafeHouse.Logger.Log("kOS: Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
+            SafeHouse.Logger.Log("Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
@@ -144,21 +144,21 @@ namespace kOS.Execution
 
         private void PopContext()
         {
-            SafeHouse.Logger.Log("kOS: Popping context " + contexts.Count);
+            SafeHouse.Logger.Log("Popping context " + contexts.Count);
             if (contexts.Any())
             {
                 // remove the last context
                 var contextRemove = contexts.Last();
                 contexts.Remove(contextRemove);
                 contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
-                SafeHouse.Logger.Log("kOS: Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
+                SafeHouse.Logger.Log("Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
 
                 if (contexts.Any())
                 {
                     currentContext = contexts.Last();
                     currentContext.EnableActiveFlyByWire(shared.BindingMgr);
                     RestorePointers();
-                    SafeHouse.Logger.Log("kOS: New current context " + currentContext.GetCodeFragment(0).FirstOrDefault());
+                    SafeHouse.Logger.Log("New current context " + currentContext.GetCodeFragment(0).FirstOrDefault());
                 }
                 else
                 {
@@ -219,7 +219,7 @@ namespace kOS.Execution
                 savedPointers.Add(pointerName, variables[pointerName]);
                 variables.Remove(pointerName);
             }
-            SafeHouse.Logger.Log(string.Format("kOS: Saving and removing {0} pointers", pointers.Count));
+            SafeHouse.Logger.Log(string.Format("Saving and removing {0} pointers", pointers.Count));
         }
 
         private void RestorePointers()
@@ -246,7 +246,7 @@ namespace kOS.Execution
                 }
             }
 
-            SafeHouse.Logger.Log(string.Format("kOS: Deleting {0} pointers and restoring {1} pointers", deletedPointers, restoredPointers));
+            SafeHouse.Logger.Log(string.Format("Deleting {0} pointers and restoring {1} pointers", deletedPointers, restoredPointers));
         }
 
         public void RunProgram(List<Opcode> program)
@@ -264,7 +264,7 @@ namespace kOS.Execution
 
         public void BreakExecution(bool manual)
         {
-            SafeHouse.Logger.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
+            SafeHouse.Logger.Log(string.Format("Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
             if (contexts.Count > 1)
             {
                 EndWait();
@@ -717,7 +717,7 @@ namespace kOS.Execution
             if (opcode is OpcodeEOP)
             {
                 BreakExecution(false);
-                SafeHouse.Logger.Log("kOS: Execution Broken");
+                SafeHouse.Logger.Log("Execution Broken");
             }
             return false;
         }
@@ -838,14 +838,14 @@ namespace kOS.Execution
                 // addressed yet).
                 try
                 {
-                    SafeHouse.Logger.Log("kOS: Parsing Context:\n\n" + scriptBuilder);
+                    SafeHouse.Logger.Log("Parsing Context:\n\n" + scriptBuilder);
                     programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);
                 }
                 catch (NullReferenceException ex)
                 {
-                    SafeHouse.Logger.Log("kOS: program builder failed on load. " + ex.Message);
+                    SafeHouse.Logger.Log("program builder failed on load. " + ex.Message);
                 }
             }
             catch (Exception e)

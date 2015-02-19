@@ -5,6 +5,7 @@ using kOS.Execution;
 using kOS.Factories;
 using kOS.Function;
 using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
 using kOS.Utilities;
 using UnityEngine;
 using KSP.IO;
@@ -18,6 +19,7 @@ using kOS.Safe.Module;
 using kOS.Safe.Screen;
 using kOS.Suffixed;
 using kOS.AddOns.RemoteTech2;
+using Debug = UnityEngine.Debug;
 
 namespace kOS.Module
 {
@@ -49,7 +51,7 @@ namespace kOS.Module
         [KSPEvent(guiActive = true, guiName = "Open Terminal", category = "skip_delay;")]
         public void Activate()
         {
-            Debug.Log("kOS: Activate");
+            SafeHouse.Logger.Log("Activate");
             OpenWindow();
         }
 
@@ -59,7 +61,7 @@ namespace kOS.Module
         [KSPEvent(guiActive = true, guiName = "Toggle Power")]
         public void TogglePower()
         {
-            Debug.Log("kOS: Toggle Power");
+            SafeHouse.Logger.Log("Toggle Power");
             ProcessorModes newProcessorMode = (ProcessorMode != ProcessorModes.OFF) ? ProcessorModes.OFF : ProcessorModes.STARVED;
             SetMode(newProcessorMode);
         }
@@ -67,28 +69,28 @@ namespace kOS.Module
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
         public void Activate(KSPActionParam param)
         {
-            Debug.Log("kOS: Open Terminal from Dialog");
+            SafeHouse.Logger.Log("Open Terminal from Dialog");
             Activate();
         }
 
         [KSPAction("Close Terminal", actionGroup = KSPActionGroup.None)]
         public void Deactivate(KSPActionParam param)
         {
-            Debug.Log("kOS: Close Terminal from ActionGroup");
+            SafeHouse.Logger.Log("Close Terminal from ActionGroup");
             CloseWindow();
         }
 
         [KSPAction("Toggle Terminal", actionGroup = KSPActionGroup.None)]
         public void Toggle(KSPActionParam param)
         {
-            Debug.Log("kOS: Toggle Terminal from ActionGroup");
+            SafeHouse.Logger.Log("Toggle Terminal from ActionGroup");
             ToggleWindow();
         }
 
         [KSPAction("Toggle Power", actionGroup = KSPActionGroup.None)]
         public void TogglePower(KSPActionParam param)
         {
-            Debug.Log("kOS: Toggle Power from ActionGroup");
+            SafeHouse.Logger.Log("Toggle Power from ActionGroup");
             TogglePower();
         }
         
@@ -136,13 +138,13 @@ namespace kOS.Module
                 return;
             }
 
-            Debug.Log(string.Format("kOS: OnStart: {0} {1}", state, ProcessorMode));
+            SafeHouse.Logger.Log(string.Format("OnStart: {0} {1}", state, ProcessorMode));
             InitObjects();
         }
 
         public void InitObjects()
         {
-            Debug.LogWarning("kOS: InitObjects: " + (shared == null));
+            SafeHouse.Logger.LogWarning("InitObjects: " + (shared == null));
 
             shared = new SharedObjects();
             CreateFactory();
@@ -255,7 +257,7 @@ namespace kOS.Module
 
         private void CreateFactory()
         {
-            Debug.LogWarning("kOS: Starting Factory Building");
+            SafeHouse.Logger.LogWarning("Starting Factory Building");
             bool isAvailable;
             try
             {
@@ -268,19 +270,19 @@ namespace kOS.Module
 
             if (isAvailable)
             {
-                Debug.LogWarning("kOS: RemoteTech Factory Building");
+                SafeHouse.Logger.LogWarning("RemoteTech Factory Building");
                 shared.Factory = new RemoteTechFactory();
             }
             else
             {
-                Debug.LogWarning("kOS: Standard Factory Building");
+                SafeHouse.Logger.LogWarning("Standard Factory Building");
                 shared.Factory = new StandardFactory();
             }
         }
 
         public void RegisterkOSExternalFunction(object[] parameters)
         {
-            //Debug.Log("*** External Function Registration Succeeded");
+            //SafeHouse.Logger.Log("*** External Function Registration Succeeded");
             //cpu.RegisterkOSExternalFunction(parameters);
         }
         
@@ -301,7 +303,7 @@ namespace kOS.Module
             if (!IsAlive()) return;
             if (firstUpdate)
             {
-                Debug.LogWarning("[kOS] First Update()");
+                SafeHouse.Logger.LogWarning("First Update()");
                 firstUpdate = false;
                 shared.Cpu.Boot();
             }
@@ -434,7 +436,7 @@ namespace kOS.Module
 
         public override void OnInactive()
         {
-            Debug.Log("kOS: Processor Stop");
+            SafeHouse.Logger.Log("Processor Stop");
         }
 
         public override void OnLoad(ConfigNode node)
@@ -460,8 +462,8 @@ namespace kOS.Module
             }
             catch (Exception ex) //Intentional Pokemon, if exceptions get out of here it can kill the craft
             {
-                Debug.Log("kOS: ONLOAD Exception: " + ex.TargetSite);
-                Debug.LogException(ex);
+                SafeHouse.Logger.Log("ONLOAD Exception: " + ex.TargetSite);
+                SafeHouse.Logger.LogException(ex);
             }
         }
 
@@ -485,8 +487,8 @@ namespace kOS.Module
             }
             catch (Exception ex) //Intentional Pokemon, if exceptions get out of here it can kill the craft
             {
-                Debug.Log("kOS: ONSAVE Exception: " + ex.TargetSite);
-                Debug.LogException(ex);
+                SafeHouse.Logger.Log("ONSAVE Exception: " + ex.TargetSite);
+                SafeHouse.Logger.LogException(ex);
             }
         }
         
