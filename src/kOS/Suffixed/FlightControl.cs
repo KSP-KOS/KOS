@@ -87,7 +87,7 @@ namespace kOS.Suffixed
 
         public void Unbind()
         {
-            UnityEngine.Debug.Log("kOS: FlightControl Unbinding");
+            Debug.Logger.Log("kOS: FlightControl Unbinding");
             if (!bound) return;
 
             if (RemoteTechHook.IsAvailable())
@@ -99,7 +99,7 @@ namespace kOS.Suffixed
                 Vessel.OnPreAutopilotUpdate -= OnFlyByWire;
             }
             bound = false;
-            UnityEngine.Debug.Log("kOS: FlightControl Unbound");
+            Debug.Logger.Log("kOS: FlightControl Unbound");
         }
 
         public void UpdateVessel(Vessel toUpdate)
@@ -281,7 +281,7 @@ namespace kOS.Suffixed
 
         private void Bind()
         {
-            UnityEngine.Debug.Log("kOS: FlightControl Binding");
+            Debug.Logger.Log("kOS: FlightControl Binding");
             if (bound) return;
 
             if (RemoteTechHook.IsAvailable(Vessel.id))
@@ -293,7 +293,7 @@ namespace kOS.Suffixed
                 Vessel.OnPreAutopilotUpdate += OnFlyByWire;
             }
             bound = true;
-            UnityEngine.Debug.Log("kOS: FlightControl Bound");
+            Debug.Logger.Log("kOS: FlightControl Bound");
         }
 
         private bool CheckKillRotation(string suffixName, object value)

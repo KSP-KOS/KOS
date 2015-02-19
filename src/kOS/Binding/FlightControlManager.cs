@@ -32,7 +32,7 @@ namespace kOS.Binding
                 return;
             }
 
-            Debug.Log("kOS: FlightControlManager.AddTo " + Shared.Vessel.id);
+            Safe.Utilities.Debug.Logger.Log("FlightControlManager.AddTo " + Shared.Vessel.id);
 
             currentVessel = shared.Vessel;
             currentVessel.OnPreAutopilotUpdate += OnFlyByWire;
@@ -57,7 +57,7 @@ namespace kOS.Binding
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            Debug.Log(string.Format("kOS: FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
+            Safe.Utilities.Debug.Logger.Log(string.Format("FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
             if (!flightParameters.ContainsKey(paramName)) return;
 
             flightParameters[paramName].Enabled = enabled;
@@ -126,7 +126,7 @@ namespace kOS.Binding
             {
                 var value = flightControls[key];
                 if (value.Vessel.loaded) continue;
-                Debug.Log("kOS: Unloading " + value.Vessel.vesselName);
+                Safe.Utilities.Debug.Logger.Log("Unloading " + value.Vessel.vesselName);
                 toRemove.Add(key);
                 value.Dispose();
             }
@@ -203,7 +203,7 @@ namespace kOS.Binding
                 get { return enabled; }
                 set
                 {
-                    Debug.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1}", name, enabled));
+                    Safe.Utilities.Debug.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1}", name, enabled));
 
                     enabled = value;
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
@@ -222,12 +222,12 @@ namespace kOS.Binding
                 }
                 if (Enabled)
                 {
-                    Debug.Log(string.Format("kOS: Adding RemoteTechPilot: " + name + " For : " + control.Vessel.id));
+                    Safe.Utilities.Debug.Logger.Log(string.Format("Adding RemoteTechPilot: " + name + " For : " + control.Vessel.id));
                     RemoteTechHook.Instance.AddSanctionedPilot(control.Vessel.id, action);
                 }
                 else
                 {
-                    Debug.Log(string.Format("kOS: Removing RemoteTechPilot: " + name + " For : " + control.Vessel.id));
+                    Safe.Utilities.Debug.Logger.Log(string.Format("Removing RemoteTechPilot: " + name + " For : " + control.Vessel.id));
                     RemoteTechHook.Instance.RemoveSanctionedPilot(control.Vessel.id, action);
                 }
             }

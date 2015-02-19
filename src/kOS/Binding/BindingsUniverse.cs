@@ -28,7 +28,7 @@ namespace kOS.Binding
                     }
                     catch (Exception ex)
                     {
-                        UnityEngine.Debug.Log(ex.Message);
+                        Safe.Utilities.Debug.Logger.Log(ex.Message);
                         return false;
                     }
                     return true;

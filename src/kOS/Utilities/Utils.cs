@@ -157,8 +157,8 @@ namespace kOS.Utilities
         {
             const bool DEBUG_WALK = false;
             
-            if (DEBUG_WALK) Debug.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
-            if (DEBUG_WALK) Debug.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
+            if (DEBUG_WALK) Safe.Utilities.Debug.Logger.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
+            if (DEBUG_WALK) Safe.Utilities.Debug.Logger.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
             Boolean found = false;
             for (var curBody = a.referenceBody;
                  curBody != null && curBody != curBody.referenceBody; // reference body of Sun points to itself, weirdly.

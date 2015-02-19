@@ -69,13 +69,13 @@ namespace kOS.Suffixed
                     if (value != null)
                     {
                         key.Value = value;
-                        UnityEngine.Debug.LogError(string.Format("kOS: Loading Config: {0} Value: {1}", key.StringKey, value));
+                        Safe.Utilities.Debug.Logger.Log(string.Format("kOS: Loading Config: {0} Value: {1}", key.StringKey, value));
                     }
                 }
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogError("kOS: Exception Loading Config: " + ex.Message);
+                Safe.Utilities.Debug.Logger.Log("kOS: Exception Loading Config: " + ex.Message);
             }
         }
 
