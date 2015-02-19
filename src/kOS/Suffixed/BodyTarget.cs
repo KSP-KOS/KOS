@@ -23,7 +23,7 @@ namespace kOS.Suffixed
         
         override public OrbitableVelocity GetVelocities()
         {
-            return new OrbitableVelocity(Body);
+            return new OrbitableVelocity(Body,Shared);
         }
         
         override public Vector GetPositionAtUT( TimeSpan timeStamp )
@@ -33,15 +33,26 @@ namespace kOS.Suffixed
 
         override public OrbitableVelocity GetVelocitiesAtUT( TimeSpan timeStamp )
         {
-            var orbVel = new Vector( Orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
-            orbVel = new Vector(orbVel.X,orbVel.Z,orbVel.Y); // swap Y and Z because KSP API is weird.
+            CelestialBody parent = Body.KOSExtensionGetParentBody();
+            if (parent==null) // only if Body is Sun and therefore has no parent, then do more complex work instead because KSP didn't provide a way itself
+            {
+                Vector3d futureOrbitalVel;
+                CelestialBody soiBody = Shared.Vessel.mainBody;
+                if (soiBody.orbit != null)
+                    futureOrbitalVel = soiBody.orbit.GetFrameVelAtUT(timeStamp.ToUnixStyleTime());
+                else
+                    futureOrbitalVel = (-1)*(new VesselTarget(Shared.Vessel,Shared).GetVelocitiesAtUT(timeStamp).Orbital.ToVector3D());
+                return new OrbitableVelocity( new Vector(futureOrbitalVel), new Vector(0.0,0.0,0.0) );
+            }
+            else
+            {
+                var orbVel = new Vector( Orbit.getOrbitalVelocityAtUT( timeStamp.ToUnixStyleTime() ) );
+                orbVel = new Vector(orbVel.X,orbVel.Z,orbVel.Y); // swap Y and Z because KSP API is weird.
             
-            CelestialBody parent = Body.referenceBody;
-            if (parent==null) // only if Body is Sun and therefore has no parent.
-                return new OrbitableVelocity( new Vector(0.0,0.0,0.0), new Vector(0.0,0.0,0.0) );
-            var surfVel = new Vector( Body.orbit.GetVel() - parent.getRFrmVel( Body.position ) );
+                var surfVel = new Vector( Body.orbit.GetVel() - parent.getRFrmVel( Body.position ) );
 
-            return new OrbitableVelocity( orbVel, surfVel );
+                return new OrbitableVelocity( orbVel, surfVel );
+            }
         }
 
         override public Orbit GetOrbitAtUT(double desiredUT)
@@ -51,7 +62,7 @@ namespace kOS.Suffixed
 
         override public Vector GetUpVector()
         {
-            CelestialBody parent = Body.referenceBody;
+            CelestialBody parent = Body.KOSExtensionGetParentBody();
             if (parent==null) // only if Body is Sun and therefore has no parent.
                 return new Vector(0.0,0.0,0.0);
             return new Vector( (Body.position - parent.position).normalized );
@@ -59,7 +70,7 @@ namespace kOS.Suffixed
 
         override public Vector GetNorthVector()
         {
-            CelestialBody parent = Body.referenceBody ?? Body;
+            CelestialBody parent = Body.KOSExtensionGetParentBody() ?? Body;
             return new Vector( Vector3d.Exclude(GetUpVector(), parent.transform.up) );
         }
 
@@ -86,6 +97,38 @@ namespace kOS.Suffixed
             AddSuffix("ROTATIONPERIOD", new Suffix<double>(()=> Body.rotationPeriod));
             AddSuffix("ATM", new Suffix<BodyAtmosphere>(()=> new BodyAtmosphere(Body)));
             AddSuffix("ANGULARVEL", new Suffix<Direction>(()=> new Direction(Body.angularVelocity, true)));
+            AddSuffix("GEOPOSITIONOF",
+                      new OneArgsSuffix<GeoCoordinates,Vector>(
+                              GeoCoordinatesFromPosition,
+                              "Interpret the vector given as a 3D position, and return the geocoordinates directly underneath it on this body."));
+            AddSuffix("ALTITUDEOF",
+                      new OneArgsSuffix<double,Vector>(
+                              AltitudeFromPosition,
+                              "Interpret the vector given as a 3D position, and return its altitude above 'sea level' of this body."));
+        }
+
+        /// <summary>
+        /// Interpret the vector given as a 3D position, and return the geocoordinates directly underneath it on this body.
+        /// </summary>
+        /// <param name="position">Vector to use as the 3D position in ship-raw coords</param>
+        /// <returns>The GeoCoordinates under the position.</returns>
+        public GeoCoordinates GeoCoordinatesFromPosition(Vector position)
+        {
+            Vector3d unityWorldPosition = Shared.Vessel.findWorldCenterOfMass() + position.ToVector3D();
+            double lat = Body.GetLatitude(unityWorldPosition);
+            double lng = Body.GetLongitude(unityWorldPosition);
+            return new GeoCoordinates(Body, Shared, lat, lng);
+        }
+        
+        /// <summary>
+        /// Interpret the vector given as a 3D position, and return the altitude above sea level of this body.
+        /// </summary>
+        /// <param name="position">Vector to use as the 3D position in ship-raw coords</param>
+        /// <returns>The altitude above 'sea level'.</returns>
+        public double AltitudeFromPosition(Vector position)
+        {
+            Vector3d unityWorldPosition = Shared.Vessel.findWorldCenterOfMass() + position.ToVector3D();
+            return Body.GetAltitude(unityWorldPosition);
         }
         
         public double GetDistance()

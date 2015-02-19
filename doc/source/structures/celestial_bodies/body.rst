@@ -56,6 +56,8 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     :attr:`MU`                       scalar (:math:`m^3 s^{−2}`)
     :attr:`ATM`                      :struct:`Atmosphere`
     :attr:`ANGULARVEL`               :struct:`Direction` in :ref:`SHIP-RAW <ship-raw>`
+    :attr:`GEOPOSITIONOF`            :struct:`GeoCoordinates` in :ref:`SHIP-RAW <ship-raw>`
+    :attr:`ALTITUDEOF`               scalar (m)
     ================================ ============
 
 .. attribute:: Body:NAME
@@ -95,4 +97,12 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 .. attribute:: Body:ANGULARVEL
 
     Despite the name, this is technically not a velocity. It only tells you the axis of rotation, not the speed of rotation around that axis.
+
+.. attribute:: Body:GEOPOSITIONOF
+
+    The geoposition underneath the given vector position.  SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:GEOPOSITION, while SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION + 1000*SHIP:NORTH) would give you the lat/lng of the position 1 kilometer north of you.  Be careful not to confuse this with :GEOPOSITION (no "OF" in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn't mean the same thing.
+
+.. attribute:: Body:ALTITUDEOF
+
+    The altitude of the given vector position, above this body's 'sea level'.  SHIP:BODY:ALTITUDEOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:ALTITUDE.  Example: Eve:ALTITUDEOF(GILLY:POSITION) gives the altitude of gilly's current position above Eve, even if you're not actually anywhere near the SOI of Eve at the time.  Be careful not to confuse this with :ALTITUDE (no "OF" in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn't mean the same thing.
 

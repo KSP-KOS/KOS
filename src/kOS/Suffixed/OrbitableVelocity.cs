@@ -1,4 +1,5 @@
 ﻿using kOS.Safe.Encapsulation;
+using kOS.Utilities;
 
 namespace kOS.Suffixed
 {
@@ -19,13 +20,13 @@ namespace kOS.Suffixed
             Surface = new Vector(v.srf_velocity);
         }
 
-        public OrbitableVelocity(CelestialBody b)
+        public OrbitableVelocity(CelestialBody b, SharedObjects shared)
         {
-            Orbital = new Vector(b.orbit.GetVel()); // KSP's b.GetObtVelocity() is broken - it causes stack overflow
-            CelestialBody parent = b.referenceBody;
-            Surface = parent != null ?
+            Orbital = new Vector(b.KOSExtensionGetObtVelocity(shared)); // KSP's b.GetObtVelocity() is broken - it causes stack overflow
+            CelestialBody parent = b.KOSExtensionGetParentBody();
+            Surface = (parent != null) ?
                 new Vector(b.orbit.GetVel() - parent.getRFrmVel(b.position)) :
-                new Vector(default(float), default(float), default(float));
+                new Vector(Vector3d.zero);
         }
 
         /// <summary>

@@ -20,6 +20,9 @@ All objects that can move in orbit around other objects share some similar struc
     ======================= ==============
      :attr:`NAME`            string
      :attr:`BODY`            :struct:`Body`
+     :attr:`HASBODY`         boolean
+     :attr:`HASORBIT`        boolean
+     :attr:`HASOBT`          boolean
      :attr:`OBT`             :struct:`Orbit`
      :attr:`UP`              :struct:`Direction`
      :attr:`NORTH`           :struct:`Direction`
@@ -37,7 +40,7 @@ All objects that can move in orbit around other objects share some similar struc
      :attr:`GEOPOSITION`     :struct:`GeoCoordinates`
      :attr:`PATCHES`         :struct:`List` of :struct:`Orbits <Orbit>`
     ----------------------- --------------
-     The Following are deprecated (use :attr:`OBT`)
+     The Following are deprecated (use apoapsis and periapsis on :attr:`OBT`)
     --------------------------------------
      :attr:`APOAPSIS`        scalar (m)
      :attr:`PERIAPSIS`       scalar (m)
@@ -50,6 +53,27 @@ All objects that can move in orbit around other objects share some similar struc
     :access: Get only
 
     Name of this vessel or body.
+
+.. attribute:: Orbitable:HASBODY
+
+    :type: boolean
+    :access: Get only
+
+    True if this object has a body it orbits (false only when this object is the Sun, pretty much).
+
+.. attribute:: Orbitable:HASORBIT
+
+    :type: boolean
+    :access: Get only
+
+    Alias for HASBODY.
+
+.. attribute:: Orbitable:HASOBT
+
+    :type: boolean
+    :access: Get only
+
+    Alias for HASBODY.
 
 .. attribute:: Orbitable:BODY
 
