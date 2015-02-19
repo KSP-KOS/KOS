@@ -381,7 +381,7 @@ namespace kOS.Module
 
         public void UpdateParts()
         {
-            // Trigger whenever the number of parts in the vessel changes (like when staging, docking or undocking)
+            // Trigger whenever the number of parts in the vessel changes (like when staging, docking or undocking).
             if (vessel.parts.Count == vesselPartCount) return;
 
             var missingHardDisks = false;
