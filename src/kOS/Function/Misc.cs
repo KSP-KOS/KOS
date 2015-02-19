@@ -41,25 +41,29 @@ namespace kOS.Function
             int       delay     = Convert.ToInt32 (shared.Cpu.PopValue ());   
             string    textToHud = shared.Cpu.PopValue ().ToString ();
             string   htmlColour = rgba.ToHTMLString();
-            {                            
-            if (style == 1) {
-                ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_LEFT);
-            } else if (style == 2) {
-                ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_CENTER);
-            } else if (style == 3) {
-                ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_RIGHT);
-            } else if (style == 4) {
-                ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.LOWER_CENTER);
-            } else {
-                ScreenMessages.PostScreenMessage("*" + textToHud, 3f, ScreenMessageStyle.UPPER_CENTER);
+            switch (style)
+            {
+                case 1:
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_LEFT);
+                    break;
+                case 2:
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_CENTER);
+                    break;
+                case 3:
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_RIGHT);
+                    break;
+                case 4:
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.LOWER_CENTER);
+                    break;
+                default:
+                    ScreenMessages.PostScreenMessage("*" + textToHud, 3f, ScreenMessageStyle.UPPER_CENTER);
+                    break;
             }
             if (echo) {
                 shared.Screen.Print ("HUD: " + textToHud);
             }
-            }
-
-         }
-
+        }
+    }
     
     [Function("printat")]
     public class FunctionPrintAt : FunctionBase
