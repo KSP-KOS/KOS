@@ -11,7 +11,7 @@ namespace kOS.Safe.Persistence
     {
         private static string ArchiveFolder
         {
-            get { return Utilities.Environment.ArchiveFolder; }
+            get { return SafeHouse.ArchiveFolder; }
         }
 
         public Archive()
@@ -36,7 +36,7 @@ namespace kOS.Safe.Persistence
         {
             try
             {
-                Debug.Logger.Log("Archive: Getting File By Name: " + name);
+                SafeHouse.Logger.Log("Archive: Getting File By Name: " + name);
                 var fileInfo = FileSearch(name, ksmDefault);
                 if (fileInfo == null)
                 {
@@ -64,7 +64,7 @@ namespace kOS.Safe.Persistence
             }
             catch (Exception e)
             {
-                Debug.Logger.Log(e);
+                SafeHouse.Logger.Log(e);
                 return null;
             }
         }
@@ -77,7 +77,7 @@ namespace kOS.Safe.Persistence
 
             try
             {
-                Debug.Logger.Log("Archive: Saving File Name: " + file.Filename);
+                SafeHouse.Logger.Log("Archive: Saving File Name: " + file.Filename);
                 byte[] fileBody;
                 string fileExtension;
                 switch (file.Category)
@@ -87,7 +87,7 @@ namespace kOS.Safe.Persistence
                     case FileCategory.ASCII:
                     case FileCategory.KERBOSCRIPT:
                         string tempString = file.StringContent;
-                        if (Utilities.Environment.IsWindows)
+                        if (SafeHouse.IsWindows)
                         {
                             // Only evil windows gets evil windows line breaks, and only if this is some sort of ASCII:
                             tempString = tempString.Replace("\n", "\r\n");
@@ -110,7 +110,7 @@ namespace kOS.Safe.Persistence
             }
             catch (Exception e)
             {
-                Debug.Logger.Log(e);
+                SafeHouse.Logger.Log(e);
                 return false;
             }
 
@@ -121,7 +121,7 @@ namespace kOS.Safe.Persistence
         {
             try
             {
-                Debug.Logger.Log("Archive: Deleting File Name: " + name);
+                SafeHouse.Logger.Log("Archive: Deleting File Name: " + name);
                 var fullPath = FileSearch(name);
                 if (fullPath == null)
                 {
@@ -142,7 +142,7 @@ namespace kOS.Safe.Persistence
         {
             try
             {
-                Debug.Logger.Log(string.Format("Archive: Renaming: {0} To: {1}", name, newName));
+                SafeHouse.Logger.Log(string.Format("Archive: Renaming: {0} To: {1}", name, newName));
                 var fullSourcePath = FileSearch(name);
                 if (fullSourcePath == null)
                 {
@@ -170,7 +170,7 @@ namespace kOS.Safe.Persistence
 
             try
             {
-                Debug.Logger.Log(string.Format("Archive: Listing Files"));
+                SafeHouse.Logger.Log(string.Format("Archive: Listing Files"));
                 var kosFiles = Directory.GetFiles(ArchiveFolder);
                 retList.AddRange(kosFiles.Select(file => new System.IO.FileInfo(file)).Select(sysFileInfo => new FileInfo(sysFileInfo)));
             }
@@ -235,7 +235,7 @@ namespace kOS.Safe.Persistence
         
         public override void AppendToFile(string name, string textToAppend)
         {
-            Debug.Logger.SuperVerbose("Archive: AppendToFile: " + name);
+            SafeHouse.Logger.SuperVerbose("Archive: AppendToFile: " + name);
             System.IO.FileInfo info = FileSearch(name);
 
             string fullPath = info == null ? string.Format("{0}{1}", ArchiveFolder, PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true)) : info.FullName;
@@ -251,7 +251,7 @@ namespace kOS.Safe.Persistence
 
         public override void AppendToFile(string name, byte[] bytesToAppend)
         {
-            Debug.Logger.SuperVerbose("Archive: AppendToFile: " + name);
+            SafeHouse.Logger.SuperVerbose("Archive: AppendToFile: " + name);
             System.IO.FileInfo info = FileSearch(name);
 
             string fullPath = info == null ? string.Format("{0}{1}", ArchiveFolder, PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true)) : info.FullName;

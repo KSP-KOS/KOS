@@ -2,9 +2,11 @@
 using System.Net;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using kOS.Safe.Utilities;
 using KSP.IO;
 using kOS.Suffixed;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace kOS.UserIO
 {
@@ -192,7 +194,7 @@ namespace kOS.UserIO
 
             server = new TcpListener(bindAddr, port);
             server.Start();
-            Safe.Utilities.Debug.Logger.Log(string.Format("kOS TelnetMainServer started listening on {0} {1}", bindAddr, port));
+            SafeHouse.Logger.Log(string.Format("kOS TelnetMainServer started listening on {0} {1}", bindAddr, port));
             isListening = true;
         }
 
@@ -203,7 +205,7 @@ namespace kOS.UserIO
                 return;
             isListening = false;
 
-            Safe.Utilities.Debug.Logger.Log(string.Format("kOS TelnetMainServer stopped listening on {0} {1}", bindAddr, port));
+            SafeHouse.Logger.Log(string.Format("kOS TelnetMainServer stopped listening on {0} {1}", bindAddr, port));
             server.Stop();
             foreach (TelnetSingletonServer telnet in telnets)
                 telnet.StopListening();
@@ -259,7 +261,7 @@ namespace kOS.UserIO
             TcpClient incomingClient = server.AcceptTcpClient();
             
             string remoteIdent = ((IPEndPoint)(incomingClient.Client.RemoteEndPoint)).Address.ToString();
-            Safe.Utilities.Debug.Logger.Log("kOS telnet server got an incoming connection from " + remoteIdent);
+            SafeHouse.Logger.Log("kOS telnet server got an incoming connection from " + remoteIdent);
             
             TelnetSingletonServer newServer = new TelnetSingletonServer(this, incomingClient, ++howManySpawned);
             telnets.Add(newServer);

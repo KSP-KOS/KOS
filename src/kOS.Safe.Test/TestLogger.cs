@@ -21,5 +21,10 @@ namespace kOS.Safe.Test
         {
             throw new NotImplementedException();
         }
+
+        public void LogWarning(string s)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

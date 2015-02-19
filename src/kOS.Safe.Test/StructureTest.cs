@@ -36,7 +36,7 @@ namespace kOS.Safe.Test
         [TestFixtureSetUp]
         public void Setup()
         {
-            Debug.Logger = new TestLogger();
+            SafeHouse.Logger = new TestLogger();
         }
 
         [Test]

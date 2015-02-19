@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Utilities;
 using kOS.Utilities;
 using UnityEngine;
 
@@ -220,7 +221,7 @@ namespace kOS.Suffixed
             AddSuffix("OBT", new Suffix<OrbitInfo>(GetOrbitInfo));
             AddSuffix("POSITION", new Suffix<Vector>(() =>
             {
-                Safe.Utilities.Debug.Logger.Log("Position got Called");
+                SafeHouse.Logger.Log("Position got Called");
                 return GetPosition();
             }));
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(GetVelocities));

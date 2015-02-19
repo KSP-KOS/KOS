@@ -7,5 +7,6 @@ namespace kOS.Safe
         void Log(string text);
         void Log(Exception e);
         void SuperVerbose(string s);
+        void LogWarning(string s);
     }
 }

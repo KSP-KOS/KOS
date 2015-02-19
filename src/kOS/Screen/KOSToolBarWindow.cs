@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Utilities;
 using UnityEngine;
 using kOS.Utilities;
 using kOS.Suffixed;
 using kOS.Safe.Module;
 using kOS.Module;
 using kOS.UserIO;
+
 namespace kOS.Screen
 {
     /// <summary>
@@ -102,7 +104,7 @@ namespace kOS.Screen
         public KOSToolBarWindow()
         {
             // This really needs fixing - the name ambiguity between UnityEngine's Debug and ours forces this long fully qualified name:
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolbarWindow: PROOF that constructor was called.");
+            SafeHouse.Logger.SuperVerbose("KOSToolbarWindow: PROOF that constructor was called.");
             launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalClosedIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalOpenIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
@@ -118,7 +120,7 @@ namespace kOS.Screen
         {
             ++countInstances;
             myInstanceNum = countInstances;
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: Now making instance number "+myInstanceNum+" of KOSToolBarWindow");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: Now making instance number "+myInstanceNum+" of KOSToolBarWindow");
 
             const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
             const string TERMINAL_OPEN_ICON_PNG = "GameData/kOS/GFX/terminal-icon-open.png";
@@ -149,7 +151,7 @@ namespace kOS.Screen
 
         public void Start()
         {
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolbarWindow: PROOF that Start() was called.");
+            SafeHouse.Logger.SuperVerbose("KOSToolbarWindow: PROOF that Start() was called.");
             // Prevent multiple calls of this:
             if (alreadyAwake) return;
             alreadyAwake = true;
@@ -159,7 +161,7 @@ namespace kOS.Screen
         
         public void RunWhenReady()
         {
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " is trying to ready the hooks");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " is trying to ready the hooks");
             // KSP claims the hook ApplicationLauncherReady.Add will not run until
             // the application is ready, even though this is emphatically false.  It actually
             // fires the event a few times before the one that "sticks" and works:
@@ -168,7 +170,7 @@ namespace kOS.Screen
             thisInstanceHasHooks = true;
             someInstanceHasHooks = true;
             
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " will now actually make its hooks");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " will now actually make its hooks");
             ApplicationLauncher launcher = ApplicationLauncher.Instance;
             
             launcherButton = launcher.AddModApplication(
@@ -211,10 +213,10 @@ namespace kOS.Screen
         
         public void GoAway()
         {
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Instance " + myInstanceNum + " is in GoAway().");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Instance " + myInstanceNum + " is in GoAway().");
             if (thisInstanceHasHooks)
             {
-                Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Instance " + myInstanceNum + " has hooks and is entering the guts of GoAway().");
+                SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Instance " + myInstanceNum + " has hooks and is entering the guts of GoAway().");
                 if (isOpen) Close();
                 clickedOn = false;
                 thisInstanceHasHooks = false;
@@ -239,7 +241,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is toggled on</summary>
         public void CallbackOnTrue()
         {
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnTrue()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnTrue()");
             clickedOn = true;
             Open();
         }
@@ -247,7 +249,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is toggled off</summary>
         public void CallbackOnFalse()
         {            
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnFalse()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnFalse()");
             clickedOn = false;
             Close();
         }
@@ -255,7 +257,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the mouse is hovering over the button</summary>
         public void CallbackOnHover()
         {            
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHover()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHover()");
             if (!clickedOn)
                 Open();
         }
@@ -263,7 +265,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the mouse is hover is off the button</summary>
         public void CallbackOnHoverOut()
         {            
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHoverOut()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHoverOut()");
             if (!clickedOn)
                 Close();
         }
@@ -271,7 +273,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the mouse is hovering over the button</summary>
         public void CallbackOnShow()
         {            
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnShow()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnShow()");
             if (!clickedOn && !isOpen)
                 Open();
         }
@@ -279,7 +281,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the mouse is hover is off the button</summary>
         public void CallbackOnHide()
         {            
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHide()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHide()");
             if (!clickedOn && isOpen)
             {
                 Close();
@@ -289,7 +291,7 @@ namespace kOS.Screen
         
         public void Open()
         {
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open()");
             
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
@@ -303,14 +305,14 @@ namespace kOS.Screen
             float topEdge = isTop ? (40f) : (UnityEngine.Screen.height - (height+40) );
             
             windowRect = new Rect(leftEdge, topEdge, 0, 0); // will resize upon first GUILayout-ing.
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open(), windowRect = " + windowRect);
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open(), windowRect = " + windowRect);
             
             isOpen = true;
         }
 
         public void Close()
         {
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Close()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Close()");
             if (! isOpen)
                 return;
 
@@ -320,14 +322,14 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is shown or enabled by the application launcher</summary>
         public void CallbackOnEnable()
         {
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnEnable()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnEnable()");
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
         
         /// <summary>Callback for when the button is hidden or disabled by the application launcher</summary>
         public void CallbackOnDisable()
         {            
-            Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnDisable()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnDisable()");
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
         
@@ -339,7 +341,7 @@ namespace kOS.Screen
 
             if (!onGUICalledThisInstance) // I want proof it was called, but without spamming the log:
             {
-                Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: OnGUI() was called at least once on instance number " + myInstanceNum);
+                SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: OnGUI() was called at least once on instance number " + myInstanceNum);
                 onGUICalledThisInstance = true;
             }
             
@@ -347,7 +349,7 @@ namespace kOS.Screen
 
             if (!onGUIWasOpenThisInstance) // I want proof it was called, but without spamming the log:
             {
-                Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: OnGUI() was called while the window was supposed to be open at least once on instance number " + myInstanceNum);
+                SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: OnGUI() was called while the window was supposed to be open at least once on instance number " + myInstanceNum);
                 onGUIWasOpenThisInstance = true;
             }
             
@@ -648,7 +650,7 @@ namespace kOS.Screen
         private void CountBeginVertical(string debugHelp="")
         {
             if (! String.IsNullOrEmpty(debugHelp))
-                Safe.Utilities.Debug.Logger.SuperVerbose("BeginVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
+                SafeHouse.Logger.SuperVerbose("BeginVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
             GUILayout.BeginVertical();
             ++verticalSectionCount;
         }
@@ -661,7 +663,7 @@ namespace kOS.Screen
             GUILayout.EndVertical();
             --verticalSectionCount;            
             if (! String.IsNullOrEmpty(debugHelp))
-                Safe.Utilities.Debug.Logger.SuperVerbose("EndVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
+                SafeHouse.Logger.SuperVerbose("EndVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
         }
         
         // Tracking the count to help detect when there's a mismatch:
@@ -670,7 +672,7 @@ namespace kOS.Screen
         private void CountBeginHorizontal(string debugHelp="")
         {
             if (! String.IsNullOrEmpty(debugHelp))
-                Safe.Utilities.Debug.Logger.SuperVerbose("BeginHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
+                SafeHouse.Logger.SuperVerbose("BeginHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
             GUILayout.BeginHorizontal();
             ++horizontalSectionCount;
         }
@@ -683,7 +685,7 @@ namespace kOS.Screen
             GUILayout.EndHorizontal();
             --horizontalSectionCount;            
             if (! String.IsNullOrEmpty(debugHelp))
-                Safe.Utilities.Debug.Logger.SuperVerbose("EndHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
+                SafeHouse.Logger.SuperVerbose("EndHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
         }
         
         

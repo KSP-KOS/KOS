@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Utilities;
 using UnityEngine;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -16,7 +17,7 @@ namespace kOS.Suffixed
         }
         public RgbaColor( RgbaColor copyFrom )
         {
-            Safe.Utilities.Debug.Logger.Log("kOS: --RgbaColor.Construct-- ");
+            SafeHouse.Logger.Log("kOS: --RgbaColor.Construct-- ");
             color = copyFrom.color;
             InitializeSuffixColor();
         }

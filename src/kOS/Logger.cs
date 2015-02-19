@@ -68,6 +68,11 @@ namespace kOS
             #endif
         }
 
+        public void LogWarning(string s)
+        {
+            Log(s);
+        }
+
         protected void LogToScreen(string text)
         {
             if (Shared != null && Shared.Screen != null)

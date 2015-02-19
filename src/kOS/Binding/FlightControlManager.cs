@@ -1,10 +1,13 @@
 ﻿using kOS.AddOns.RemoteTech2;
 using kOS.Safe.Binding;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using kOS.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Math = System.Math;
 
 namespace kOS.Binding
 {
@@ -22,7 +25,7 @@ namespace kOS.Binding
 
             if (Shared.Vessel == null)
             {
-                Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel== null");
+                SafeHouse.Logger.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel== null");
                 return;
             }
 
