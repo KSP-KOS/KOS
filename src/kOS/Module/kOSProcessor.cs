@@ -535,6 +535,7 @@ namespace kOS.Module
                     case ProcessorModes.STARVED:
                         if (shared.Interpreter != null) shared.Interpreter.SetInputLock(true);
                         if (shared.Window != null) shared.Window.IsPowered = false;
+                        if (shared.BindingMgr != null) shared.BindingMgr.UnBindAll(); 
                         break;
                 }
 
