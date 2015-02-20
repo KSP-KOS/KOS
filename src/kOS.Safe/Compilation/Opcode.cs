@@ -1109,8 +1109,9 @@ namespace kOS.Safe.Compilation
             else
             {
                 // This is one of those "the user had better NEVER see this error" sorts of messages that's here to keep us in check:
-                throw new Exception("kOS internal error: OpcodeCall calling a function described using " + functionPointer +
-                                    " which is of type " + functionPointer.GetType().Name + " and kOS doesn't know how to call that.");
+                throw new Exception(
+                    string.Format("kOS internal error: OpcodeCall calling a function described using {0} which is of type {1} and kOS doesn't know how to call that.", functionPointer, functionPointer.GetType().Name)
+                    );
             }
             
             if (! Direct)
@@ -1166,7 +1167,7 @@ namespace kOS.Safe.Compilation
                         castError = true;
                     }
                     if (castError) {
-                        throw new Exception("Argument " + (paramArray.Length - i) + "("+arg+") to method " + methInfo.Name + " should be " + paramType.Name + " instead of " + argType + ".");
+                        throw new Exception(string.Format("Argument {0}({1}) to method {2} should be {3} instead of {4}.", (paramArray.Length - i), arg, methInfo.Name, paramType.Name, argType));
                     }
                 }
                 
