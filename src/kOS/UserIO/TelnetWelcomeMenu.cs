@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using kOS.Safe.Utilities;
 using UnityEngine;
 using kOS.Module;
 using kOS.Safe.UserIO;
+using Math = System.Math;
 
 namespace kOS.UserIO
 {
@@ -113,7 +115,7 @@ namespace kOS.UserIO
             if (localMenuBuffer.Length == 0)
                 return;
             string cmd = localMenuBuffer.ToString();
-            Safe.Utilities.Debug.Logger.SuperVerbose( "TelnetWelcomeMenu.LineEntered(): String from client was: [" + cmd + "]");
+            SafeHouse.Logger.SuperVerbose( "TelnetWelcomeMenu.LineEntered(): String from client was: [" + cmd + "]");
             localMenuBuffer.Remove(0,localMenuBuffer.Length); // clear the buffer for next line.
             
             if (String.Equals(cmd.Substring(0,1),"Q",StringComparison.CurrentCultureIgnoreCase))

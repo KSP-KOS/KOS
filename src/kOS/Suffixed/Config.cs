@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Utilities;
 using KSP.IO;
 using kOS.Safe.Encapsulation;
 
@@ -69,13 +70,13 @@ namespace kOS.Suffixed
                     if (value != null)
                     {
                         key.Value = value;
-                        UnityEngine.Debug.LogError(string.Format("kOS: Loading Config: {0} Value: {1}", key.StringKey, value));
+                        SafeHouse.Logger.LogError(string.Format("Loading Config: {0} Value: {1}", key.StringKey, value));
                     }
                 }
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogError("kOS: Exception Loading Config: " + ex.Message);
+                SafeHouse.Logger.LogError("Exception Loading Config: " + ex.Message);
             }
         }
 

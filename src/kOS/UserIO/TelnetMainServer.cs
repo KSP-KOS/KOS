@@ -2,9 +2,11 @@
 using System.Net;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using kOS.Safe.Utilities;
 using KSP.IO;
 using kOS.Suffixed;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace kOS.UserIO
 {
@@ -80,7 +82,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+                Debug.LogError(string.Format("{0} Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
             }
             return false;
         }
@@ -100,7 +102,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+                Debug.LogError(string.Format("{0} Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
             }
         }
 
@@ -123,7 +125,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+                Debug.LogError(string.Format("{0} Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
             }
             return false; // In principle it should never reach here.
         }
@@ -143,7 +145,7 @@ namespace kOS.UserIO
             }
             catch (Exception ex)
             {
-                Debug.LogError("kOS: Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): " + ex.Message);
+                Debug.LogError(string.Format("{0} Exception Loading TelnetMainServer.xml (maybe the first time you ran and its not there yet): {1}", KSPLogger.LOGGER_PREFIX, ex.Message));
             }
         }
         
@@ -192,7 +194,7 @@ namespace kOS.UserIO
 
             server = new TcpListener(bindAddr, port);
             server.Start();
-            Safe.Utilities.Debug.Logger.Log(string.Format("kOS TelnetMainServer started listening on {0} {1}", bindAddr, port));
+            SafeHouse.Logger.Log(string.Format("{2} TelnetMainServer started listening on {0} {1}", bindAddr, port, KSPLogger.LOGGER_PREFIX));
             isListening = true;
         }
 
@@ -203,7 +205,7 @@ namespace kOS.UserIO
                 return;
             isListening = false;
 
-            Safe.Utilities.Debug.Logger.Log(string.Format("kOS TelnetMainServer stopped listening on {0} {1}", bindAddr, port));
+            SafeHouse.Logger.Log(string.Format("{2} TelnetMainServer stopped listening on {0} {1}", bindAddr, port, KSPLogger.LOGGER_PREFIX));
             server.Stop();
             foreach (TelnetSingletonServer telnet in telnets)
                 telnet.StopListening();
@@ -259,7 +261,7 @@ namespace kOS.UserIO
             TcpClient incomingClient = server.AcceptTcpClient();
             
             string remoteIdent = ((IPEndPoint)(incomingClient.Client.RemoteEndPoint)).Address.ToString();
-            Safe.Utilities.Debug.Logger.Log("kOS telnet server got an incoming connection from " + remoteIdent);
+            SafeHouse.Logger.Log(string.Format("{0} telnet server got an incoming connection from {1}", KSPLogger.LOGGER_PREFIX, remoteIdent));
             
             TelnetSingletonServer newServer = new TelnetSingletonServer(this, incomingClient, ++howManySpawned);
             telnets.Add(newServer);

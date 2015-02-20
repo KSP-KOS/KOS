@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 
 namespace kOS.AddOns.RemoteTech2
@@ -54,17 +55,17 @@ namespace kOS.AddOns.RemoteTech2
 
         private static IRemoteTechAPIv1 InitializeAPI()
         {  
-            Safe.Utilities.Debug.Logger.Log(string.Format("Looking for RemoteTech")); 
+            SafeHouse.Logger.Log(string.Format("Looking for RemoteTech")); 
             var loadedAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name.Equals(REMOTE_TECH_ASSEMBLY));
             if (loadedAssembly == null) return null;
-            Safe.Utilities.Debug.Logger.Log(string.Format("Found RemoteTech! Version: {0}.{1}", loadedAssembly.versionMajor, loadedAssembly.versionMinor)); 
+            SafeHouse.Logger.Log(string.Format("Found RemoteTech! Version: {0}.{1}", loadedAssembly.versionMajor, loadedAssembly.versionMinor)); 
 
             var type = loadedAssembly.assembly.GetTypes().FirstOrDefault(t => t.FullName.Equals(REMOTE_TECH_API)) ??
                        loadedAssembly.assembly.GetTypes().FirstOrDefault(t => t.FullName.Equals(ALT_REMOTE_TECH_API));
 
             if (type == null) return null;
 
-            Safe.Utilities.Debug.Logger.Log(string.Format("Found API! {0} ", type.Name)); 
+            SafeHouse.Logger.Log(string.Format("Found API! {0} ", type.Name)); 
             var methods = type.GetMethods();
             var api = new RemoteTechAPI();
 
@@ -76,7 +77,7 @@ namespace kOS.AddOns.RemoteTech2
                     {
                         if (m.Name.Equals(property.Name))
                         {
-                            Safe.Utilities.Debug.Logger.Log(string.Format("Found Endpoint: {0}", m.Name)); 
+                            SafeHouse.Logger.Log(string.Format("Found Endpoint: {0}", m.Name)); 
                             return true;
                         }
                         return false;
@@ -93,11 +94,11 @@ namespace kOS.AddOns.RemoteTech2
             }
             catch (Exception e)
             {
-                Safe.Utilities.Debug.Logger.Log("kOS: Error creating RemoteTech2 interface: " + e); 
+                SafeHouse.Logger.Log("Error creating RemoteTech2 interface: " + e); 
                 return null;
             }
 
-            Safe.Utilities.Debug.Logger.Log("kOS: RemoteTech2 interface successfully created."); 
+            SafeHouse.Logger.Log("RemoteTech2 interface successfully created."); 
             return api;
         }
     }

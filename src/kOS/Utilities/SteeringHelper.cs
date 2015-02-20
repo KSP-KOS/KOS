@@ -1,7 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using kOS.Safe.Utilities;
 using UnityEngine;
 using kOS.Suffixed;
+using Math = System.Math;
 
 namespace kOS.Utilities
 {
@@ -26,7 +27,7 @@ namespace kOS.Utilities
             // I take no credit for this, this is a stripped down, rearranged version of MechJeb's attitude control system
             if (vessel == null)
             {
-                Debug.LogError("kOS: SteerShipToward: Vessel is null!!");
+                SafeHouse.Logger.LogError("SteerShipToward: Vessel is null!!");
                 return;
             }
 

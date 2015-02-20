@@ -2,7 +2,7 @@
 
 namespace kOS.Safe.Utilities
 {
-    public static class Environment
+    public static class SafeHouse
     {
         public static IConfig Config { get; private set; }
         public static bool IsWindows { get; private set; }
@@ -14,5 +14,7 @@ namespace kOS.Safe.Utilities
             IsWindows = isWindows;
             ArchiveFolder = archiveFolder;
         }
+
+        public static ILogger Logger { get; set; }
     }
 }

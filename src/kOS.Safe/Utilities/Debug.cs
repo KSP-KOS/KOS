@@ -61,7 +61,7 @@ namespace kOS.Safe.Utilities
 
             return returnVal;
         }
-        public static ILogger Logger { get; set; }
+
         public static ObjectIDGenerator IDGenerator { get; set; }
     }
 }

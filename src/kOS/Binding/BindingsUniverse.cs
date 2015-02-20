@@ -1,4 +1,5 @@
 ﻿using kOS.Safe.Binding;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace kOS.Binding
                     }
                     catch (Exception ex)
                     {
-                        UnityEngine.Debug.Log(ex.Message);
+                        SafeHouse.Logger.Log(ex.Message);
                         return false;
                     }
                     return true;

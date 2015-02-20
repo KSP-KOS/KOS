@@ -227,7 +227,7 @@ namespace kOS.Suffixed
 
                     // This is how font loading would work if other fonts were available in KSP:
                     // Font lblFont = (Font)Resources.Load( "Arial", typeof(Font) );
-                    // Debug.Log( "lblFont is " + (lblFont == null ? "null" : "not null") );
+                    // SafeHouse.Logger.Log( "lblFont is " + (lblFont == null ? "null" : "not null") );
                     // _label.font = lblFont;
                     
                     label.fontSize = 12;

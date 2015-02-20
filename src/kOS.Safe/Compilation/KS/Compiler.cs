@@ -56,8 +56,8 @@ namespace kOS.Safe.Compilation.KS
                     // attach source/line information to the exception before throwing it upward.
                     // that's why this seemingly pointless "catch and then throw again" is here.
                 }
-                Debug.Logger.Log("Exception in Compiler: " + kosException.Message);
-                Debug.Logger.Log(kosException.StackTrace);
+                SafeHouse.Logger.Log("Exception in Compiler: " + kosException.Message);
+                SafeHouse.Logger.Log(kosException.StackTrace);
                 throw;  // throw it up in addition to logging the stack trace, so the kOS terminal will also give the user some message.
             }
 
@@ -88,7 +88,7 @@ namespace kOS.Safe.Compilation.KS
             if (node == null) { throw new ArgumentNullException("node"); }
 
             if (TRACE_PARSE)
-                Debug.Logger.Log("traceParse: visiting node: " + node.Token.Type.ToString() + ", " + node.Token.Text);
+                SafeHouse.Logger.Log("traceParse: visiting node: " + node.Token.Type.ToString() + ", " + node.Token.Text);
 
             if (node.Token == null || node.Token.Line <= 0)
             {

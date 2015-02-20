@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Compilation
 {
@@ -286,7 +287,7 @@ namespace kOS.Safe.Compilation
                     }
                     catch (MissingMethodException)
                     {
-                        Utilities.Debug.Logger.Log( String.Format(forceDefaultConstructorMsg, opType.Name) );
+                        SafeHouse.Logger.Log( String.Format(forceDefaultConstructorMsg, opType.Name) );
                         Utilities.Debug.AddNagMessage( Utilities.Debug.NagType.NAGFOREVER, "ERROR IN OPCODE DEFINITION " + opType.Name );
                         return;
                     }

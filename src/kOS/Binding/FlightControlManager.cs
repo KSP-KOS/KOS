@@ -1,10 +1,13 @@
 ﻿using kOS.AddOns.RemoteTech2;
 using kOS.Safe.Binding;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using kOS.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Math = System.Math;
 
 namespace kOS.Binding
 {
@@ -22,17 +25,17 @@ namespace kOS.Binding
 
             if (Shared.Vessel == null)
             {
-                Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel== null");
+                SafeHouse.Logger.LogWarning("FlightControlManager.AddTo Skipped: shared.Vessel== null");
                 return;
             }
 
             if (Shared.Vessel.rootPart == null)
             {
-                Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel.rootPart == null");
+                SafeHouse.Logger.LogWarning("FlightControlManager.AddTo Skipped: shared.Vessel.rootPart == null");
                 return;
             }
 
-            Debug.Log("kOS: FlightControlManager.AddTo " + Shared.Vessel.id);
+            SafeHouse.Logger.Log("FlightControlManager.AddTo " + Shared.Vessel.id);
 
             currentVessel = shared.Vessel;
             currentVessel.OnPreAutopilotUpdate += OnFlyByWire;
@@ -57,7 +60,7 @@ namespace kOS.Binding
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            Debug.Log(string.Format("kOS: FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
+            SafeHouse.Logger.Log(string.Format("FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
             if (!flightParameters.ContainsKey(paramName)) return;
 
             flightParameters[paramName].Enabled = enabled;
@@ -126,7 +129,7 @@ namespace kOS.Binding
             {
                 var value = flightControls[key];
                 if (value.Vessel.loaded) continue;
-                Debug.Log("kOS: Unloading " + value.Vessel.vesselName);
+                SafeHouse.Logger.Log("Unloading " + value.Vessel.vesselName);
                 toRemove.Add(key);
                 value.Dispose();
             }
@@ -203,7 +206,7 @@ namespace kOS.Binding
                 get { return enabled; }
                 set
                 {
-                    Debug.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1}", name, enabled));
+                    SafeHouse.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1}", name, enabled));
 
                     enabled = value;
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
@@ -222,12 +225,12 @@ namespace kOS.Binding
                 }
                 if (Enabled)
                 {
-                    Debug.Log(string.Format("kOS: Adding RemoteTechPilot: " + name + " For : " + control.Vessel.id));
+                    SafeHouse.Logger.Log(string.Format("Adding RemoteTechPilot: " + name + " For : " + control.Vessel.id));
                     RemoteTechHook.Instance.AddSanctionedPilot(control.Vessel.id, action);
                 }
                 else
                 {
-                    Debug.Log(string.Format("kOS: Removing RemoteTechPilot: " + name + " For : " + control.Vessel.id));
+                    SafeHouse.Logger.Log(string.Format("Removing RemoteTechPilot: " + name + " For : " + control.Vessel.id));
                     RemoteTechHook.Instance.RemoveSanctionedPilot(control.Vessel.id, action);
                 }
             }
