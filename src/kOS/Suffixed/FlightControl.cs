@@ -125,8 +125,10 @@ namespace kOS.Suffixed
             AddSuffix(new[] { "PILOTROLLTRIM" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.rollTrim)));
             AddSuffix(new[] { "PILOTPITCH" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.pitch)));
             AddSuffix(new[] { "PILOTPITCHTRIM" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.pitchTrim)));
-            AddSuffix(new[] { "PILOTFORE" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.Z)));
-            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.X)));
+
+            AddSuffix(new[] { "PILOTFORE" }, new Suffix<float>(() => Invert(ReadPilot(ref FlightInputHandler.state.Z))));
+            AddSuffix(new[] { "PILOTSTARBOARD" }, new Suffix<float>(() => Invert(ReadPilot(ref FlightInputHandler.state.X))));
+            
             AddSuffix(new[] { "PILOTTOP" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.Y)));
             AddSuffix(new[] { "PILOTWHEELTHROTTLE" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottle)));
             AddSuffix(new[] { "PILOTWHEELTHROTTLETRIM" }, new Suffix<float>(() => ReadPilot(ref FlightInputHandler.state.wheelThrottleTrim)));
@@ -189,9 +191,19 @@ namespace kOS.Suffixed
         {
             if (Vessel == FlightGlobals.ActiveVessel)
             {
-                return new Vector(FlightInputHandler.state.X, FlightInputHandler.state.Y, FlightInputHandler.state.Z);
+                return new Vector(
+                    Invert(FlightInputHandler.state.X),
+                    FlightInputHandler.state.Y, 
+                    Invert(FlightInputHandler.state.Z)
+                    );
             }
             return Vector.Zero;
+        }
+
+        private float Invert(float f)
+        {
+            // starboard and fore are reversed in KSP so we invert them here
+            return f * -1;
         }
 
         private Vector GetPilotRotation()
@@ -362,10 +374,9 @@ namespace kOS.Suffixed
             if(Math.Abs(pitchTrim) > SETTING_EPILSON) st.pitchTrim = pitchTrim;
             if(Math.Abs(rollTrim) > SETTING_EPILSON) st.rollTrim = rollTrim;
 
-            // starboard and fore are reversed in KSP so we invert them here
-            if(Math.Abs(starboard) > SETTING_EPILSON) st.X = starboard * -1;
+            if(Math.Abs(starboard) > SETTING_EPILSON) st.X = Invert(starboard);
             if(Math.Abs(top) > SETTING_EPILSON) st.Y = top;
-            if(Math.Abs(fore) > SETTING_EPILSON) st.Z = fore * -1;
+            if(Math.Abs(fore) > SETTING_EPILSON) st.Z = Invert(fore);
 
             if(Math.Abs(wheelSteer) > SETTING_EPILSON) st.wheelSteer = wheelSteer;
             if(Math.Abs(wheelThrottle) > SETTING_EPILSON) st.wheelThrottle = wheelThrottle;
