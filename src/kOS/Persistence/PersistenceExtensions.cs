@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using ICSharpCode.SharpZipLib.GZip;
-using kOS.AddOns.RemoteTech2;
+using kOS.AddOns.RemoteTech;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;

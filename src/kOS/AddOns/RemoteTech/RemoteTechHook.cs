@@ -3,7 +3,7 @@ using System.Linq;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
 
-namespace kOS.AddOns.RemoteTech2
+namespace kOS.AddOns.RemoteTech
 {
     public static class RemoteTechHook
     {
@@ -44,7 +44,7 @@ namespace kOS.AddOns.RemoteTech2
 
         public static bool IsAvailable()
         {
-            var integrationEnabled = Config.Instance.EnableRTIntegration;
+            var integrationEnabled = Config.Instance.EnableRT2Integration;
             if (!integrationEnabled)
             {
                 return false;
@@ -94,11 +94,11 @@ namespace kOS.AddOns.RemoteTech2
             }
             catch (Exception e)
             {
-                SafeHouse.Logger.Log("Error creating RemoteTech2 interface: " + e); 
+                SafeHouse.Logger.Log("Error creating RemoteTech interface: " + e); 
                 return null;
             }
 
-            SafeHouse.Logger.Log("RemoteTech2 interface successfully created."); 
+            SafeHouse.Logger.Log("RemoteTech interface successfully created."); 
             return api;
         }
     }

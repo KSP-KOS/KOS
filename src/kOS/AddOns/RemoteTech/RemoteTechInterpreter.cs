@@ -4,9 +4,8 @@ using kOS.Safe;
 using kOS.Safe.Screen;
 using kOS.Safe.UserIO;
 using kOS.Screen;
-using kOS.Utilities;
 
-namespace kOS.AddOns.RemoteTech2
+namespace kOS.AddOns.RemoteTech
 {
     public class RemoteTechInterpreter : Interpreter, IUpdateObserver
     {
@@ -111,8 +110,7 @@ namespace kOS.AddOns.RemoteTech2
 
         private void UpdateDeployment(double deltaTime)
         {
-            var hasSignal = !RemoteTechHook.Instance.HasAnyConnection(Shared.Vessel.id) || Shared.Vessel.HasCrewControl();
-            if (hasSignal)
+            if (!RemoteTechHook.Instance.HasAnyConnection(Shared.Vessel.id))
             {
                 if (!signalLossWarning)
                 {

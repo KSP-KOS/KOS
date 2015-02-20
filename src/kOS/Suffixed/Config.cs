@@ -18,7 +18,7 @@ namespace kOS.Suffixed
         public int InstructionsPerUpdate { get { return GetPropValue<int>(PropId.InstructionsPerUpdate); } set { SetPropValue(PropId.InstructionsPerUpdate, value); } }
         public bool UseCompressedPersistence { get { return GetPropValue<bool>(PropId.UseCompressedPersistence); } set { SetPropValue(PropId.UseCompressedPersistence, value); } }
         public bool ShowStatistics { get { return GetPropValue<bool>(PropId.ShowStatistics); } set { SetPropValue(PropId.ShowStatistics, value); } }
-        public bool EnableRT2Integration { get { return GetPropValue<bool>(PropId.EnableRT2Integration); } set { SetPropValue(PropId.EnableRT2Integration, value); } }
+        public bool EnableRTIntegration { get { return GetPropValue<bool>(PropId.EnableRTIntegration); } set { SetPropValue(PropId.EnableRTIntegration, value); } }
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
         public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
@@ -41,7 +41,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 150, 50, 2000, typeof(int)));
             AddConfigKey(PropId.UseCompressedPersistence, new ConfigKey("UseCompressedPersistence", "UCP", "Use compressed persistence", false, false, true, typeof(bool)));
             AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, false, true, typeof(bool)));
-            AddConfigKey(PropId.EnableRT2Integration, new ConfigKey("EnableRT2Integration", "RT2", "Enable RT2 integration", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.EnableRTIntegration, new ConfigKey("EnableRTIntegration", "RT", "Enable RT integration", false, false, true, typeof(bool)));
             AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
@@ -191,7 +191,7 @@ namespace kOS.Suffixed
             InstructionsPerUpdate = 1,
             UseCompressedPersistence = 2,
             ShowStatistics = 3,
-            EnableRT2Integration = 4,
+            EnableRTIntegration = 4,
             StartOnArchive = 5,
             EnableSafeMode = 6,
             VerboseExceptions = 7,

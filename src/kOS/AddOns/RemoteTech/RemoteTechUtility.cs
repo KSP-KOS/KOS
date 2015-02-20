@@ -1,4 +1,4 @@
-﻿namespace kOS.AddOns.RemoteTech2
+﻿namespace kOS.AddOns.RemoteTech
 {
     public static class RemoteTechUtility
     {

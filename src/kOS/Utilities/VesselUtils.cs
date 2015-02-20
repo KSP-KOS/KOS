@@ -10,6 +10,11 @@ namespace kOS.Utilities
 {
     public static class VesselUtils
     {
+        public static bool HasCrewControl(this Vessel vessel)
+        {
+            return vessel.parts.Any(p => p.isControlSource && (p.protoModuleCrew.Any()));
+        }
+
         public static List<Part> GetListOfActivatedEngines(Vessel vessel)
         {
             var retList = new List<Part>();

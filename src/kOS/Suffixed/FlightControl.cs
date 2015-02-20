@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using kOS.AddOns.RemoteTech2;
+using kOS.AddOns.RemoteTech;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;

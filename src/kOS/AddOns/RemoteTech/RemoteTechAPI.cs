@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace kOS.AddOns.RemoteTech2
+namespace kOS.AddOns.RemoteTech
 {
     internal class RemoteTechAPI : IRemoteTechAPIv1
     {
