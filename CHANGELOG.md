@@ -9,12 +9,12 @@ kOS Mod Changelog
 
 ### New Features
 * Added HUDTEXT that lets you add text to the screen. Thanks @pgodd !
-    * more information here: https://github.com/KSP-KOS/KOS/pull/560
+    * more information here: http://ksp-kos.github.io/KOS_DOC/commands/terminal.html#HUDTEXT 
 * TODO TERMINAL SERVER!!!
 * #72 - Added STAGE:NUMBER and STAGE:READY to allow for staging very close together
 * #522 - Added BODY:GEOPOSITIONOF and BODY:ALTITUDEOF 
 * #524 and #523 - mission waypoints now have 3d positions
-* In game Terminal is now resizable
+* In game Terminal is now resizable!
 
 ### Bug Fixes
 * Fixes #389 - LOCK STEERING broken for RCS-only (no torque) ships.
