@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using FinePrint.Utilities;
 using kOS.Execution;
 using kOS.Safe.Compilation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
+using kOS.Utilities;
 
 namespace kOS.Function
 {
@@ -94,7 +97,18 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            Staging.ActivateNextStage();
+            if (Staging.separate_ready && shared.Vessel.isActiveVessel)
+            {
+                Staging.ActivateNextStage();
+            }
+            else if (!Staging.separate_ready)
+            {
+                Safe.Utilities.Debug.Logger.Log("FAIL SILENT: Stage is called before it is ready, Use STAGE:READY to check first if staging rapidly");
+            }
+            else if (!shared.Vessel.isActiveVessel)
+            {
+                throw new KOSCommandInvalidHere("STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
+            }
         }
     }
 
