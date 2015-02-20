@@ -1,6 +1,38 @@
 kOS Mod Changelog
 =================
 
+# v0.16.0
+
+### BREAKING
+* Body:FACING and SHIP:FACING are now vectors instead of directions, they were pretty useless before so this shouldnt hurt many scripters :)
+* #536 the 1.5m kOS part has always had trouble with clipping into other parts. This fixes this but will change the length of craft using is slightly. 
+
+### New Features
+* Added HUDTEXT that lets you add text to the screen. Thanks @pgodd !
+    * more information here: https://github.com/KSP-KOS/KOS/pull/560
+* TODO TERMINAL SERVER!!!
+* #72 - Added STAGE:NUMBER and STAGE:READY to allow for staging very close together
+* #522 - Added BODY:GEOPOSITIONOF and BODY:ALTITUDEOF 
+* #524 and #523 - mission waypoints now have 3d positions
+* In game Terminal is now resizable
+
+### Bug Fixes
+* Fixes #389 - LOCK STEERING broken for RCS-only (no torque) ships.
+* Fixes #516 - kOSTags are now applied in the correct MM pass
+* Fixes #541 - All BODY: suffixes should now work for the center star.
+* Fixes #544 - Terminal subbuffer won't shrink when up-arrowing to a previous smaller command.
+* Fixes #545 - The terminal Cursor should never be invisible
+* Fixes #548 - If SHIP is not the same as ActiveVessel, then executing STAGE stages the wrong vessel.
+* Fixes #581 - SHIP:CONTROL:PILOTFORE and :PILOTSTARBOARD are no longer inverted
+* Fixes #578 - renamed our use of RemoteTech2 to RemoteTech to follow their new naming
+* Fixes #427 - Stack doesnt clear on exception termination
+* Fixes #409 - Delete leaves file in memory
+* Fixes #172 - Lock states persist through power cycling unit, become default for unlocked state
+   * Also #358, #362, #568
+* Fixes #580 - RT "signal lost. waiting to re-aquire signal" check disallows manned terminal use.
+* Fixes #344 - KOSArgumentMismatchException reports wrong arg number
+
+
 # v0.15.6
 
 ### BREAKING
