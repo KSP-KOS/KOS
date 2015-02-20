@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -49,7 +49,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,6 +66,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
@@ -75,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
@@ -105,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -161,7 +167,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="body">
 <span id="id1"></span><h1>Body<a class="headerlink" href="#body" title="Permalink to this headline">¶</a></h1>
@@ -235,8 +241,8 @@
 <em class="property">structure </em><tt class="descname">Body</tt><a class="headerlink" href="#structure:BODY" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
-<col width="40%" />
-<col width="60%" />
+<col width="37%" />
+<col width="63%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -272,6 +278,12 @@
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ANGULARVEL" title="BODY:ANGULARVEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP-RAW</em></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:GEOPOSITIONOF" title="BODY:GEOPOSITIONOF attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITIONOF</span></tt></a></td>
+<td><a class="reference internal" href="../../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></tt></a> in <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP-RAW</em></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ALTITUDEOF" title="BODY:ALTITUDEOF attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDEOF</span></tt></a></td>
+<td>scalar (m)</td>
 </tr>
 </tbody>
 </table>
@@ -331,6 +343,18 @@ Body:<tt class="descname">ANGULARVEL</tt><a class="headerlink" href="#attribute:
 <dd><p>Despite the name, this is technically not a velocity. It only tells you the axis of rotation, not the speed of rotation around that axis.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:BODY:GEOPOSITIONOF">
+Body:<tt class="descname">GEOPOSITIONOF</tt><a class="headerlink" href="#attribute:BODY:GEOPOSITIONOF" title="Permalink to this definition">¶</a></dt>
+<dd><p>The geoposition underneath the given vector position.  SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:GEOPOSITION, while SHIP:BODY:GEOPOSITIONOF(SHIP:POSITION + 1000*SHIP:NORTH) would give you the lat/lng of the position 1 kilometer north of you.  Be careful not to confuse this with :GEOPOSITION (no &#8220;OF&#8221; in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn&#8217;t mean the same thing.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:BODY:ALTITUDEOF">
+Body:<tt class="descname">ALTITUDEOF</tt><a class="headerlink" href="#attribute:BODY:ALTITUDEOF" title="Permalink to this definition">¶</a></dt>
+<dd><p>The altitude of the given vector position, above this body&#8217;s &#8216;sea level&#8217;.  SHIP:BODY:ALTITUDEOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:ALTITUDE.  Example: Eve:ALTITUDEOF(GILLY:POSITION) gives the altitude of gilly&#8217;s current position above Eve, even if you&#8217;re not actually anywhere near the SOI of Eve at the time.  Be careful not to confuse this with :ALTITUDE (no &#8220;OF&#8221; in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn&#8217;t mean the same thing.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -340,7 +364,7 @@ Body:<tt class="descname">ANGULARVEL</tt><a class="headerlink" href="#attribute:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../vessels.html" class="btn btn-neutral float-right" title="Vessels and Parts"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../vessels.html" class="btn btn-neutral float-right" title="Vessels and Parts">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="atmosphere.html" class="btn btn-neutral" title="Atmosphere"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -356,7 +380,8 @@ Body:<tt class="descname">ANGULARVEL</tt><a class="headerlink" href="#attribute:
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

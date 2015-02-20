@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -49,7 +49,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,6 +66,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
@@ -75,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Name Tags</a></li>
@@ -105,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -159,10 +165,13 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="the-name-tag-system">
 <span id="nametag"></span><h1>The Name Tag System<a class="headerlink" href="#the-name-tag-system" title="Permalink to this headline">¶</a></h1>
+<div class="figure">
+<img alt="../_images/nametag.png" src="../_images/nametag.png" />
+</div>
 <p>One useful thing to do is to be able to give parts on a craft your own chosen names that you can use to get a reference to the parts, utterly bypassing the naming schemes used by KSP, and ignoring the complex part tree system. The Name Tag system was designed to make it possible for you to just give any part on a craft whatever arbitrary name you feel like.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -189,7 +198,7 @@ in.</li>
 <li>From now on this part can be retrieved using either the :PARTSDUBBED
 or
 the :PARTSTAGGED methods of the vessel, as described
-<a class="reference external" href="../../structure/vessel/index.html">on the Vessel Page</a></li>
+<a class="reference external" href="../structures/vessels/vessel.html">on the Vessel Page</a></li>
 </ol>
 </div>
 <div class="section" id="cloning-with-symmetry">
@@ -256,7 +265,7 @@ not in the editor&#8217;s craft design file.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="parts_and_partmodules.html" class="btn btn-neutral float-right" title="Ship Parts and PartModules"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="parts_and_partmodules.html" class="btn btn-neutral float-right" title="Ship Parts and PartModules">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="compiling.html" class="btn btn-neutral" title="KerboScript Machine Code"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -272,7 +281,8 @@ not in the editor&#8217;s craft design file.</p>
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

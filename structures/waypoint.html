@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -49,7 +49,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,6 +66,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
@@ -75,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
@@ -105,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../structures.html">Structures</a><ul class="current">
@@ -159,7 +165,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="waypoints">
 <span id="waypoint"></span><h1>Waypoints<a class="headerlink" href="#waypoints" title="Permalink to this headline">¶</a></h1>
@@ -224,16 +230,25 @@
 <tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:GEOPOSITION" title="WAYPOINT:GEOPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITION</span></tt></a></td>
 <td><cite>GeoCoordinates</cite></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:ALTITUDE" title="WAYPOINT:ALTITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:POSITION" title="WAYPOINT:POSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></tt></a></td>
+<td><cite>Vector</cite></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:ALTITUDE" title="WAYPOINT:ALTITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></tt></a></td>
 <td>scalar</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:AGL" title="WAYPOINT:AGL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AGL</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:AGL" title="WAYPOINT:AGL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AGL</span></tt></a></td>
 <td>scalar</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:NEARSURFACE" title="WAYPOINT:NEARSURFACE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NEARSURFACE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:NEARSURFACE" title="WAYPOINT:NEARSURFACE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NEARSURFACE</span></tt></a></td>
 <td>boolean</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:GROUNDED" title="WAYPOINT:GROUNDED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GROUNDED</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:GROUNDED" title="WAYPOINT:GROUNDED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GROUNDED</span></tt></a></td>
+<td>boolean</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:WAYPOINT:INDEX" title="WAYPOINT:INDEX attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">INDEX</span></tt></a></td>
+<td>scalar</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:WAYPOINT:CLUSTERED" title="WAYPOINT:CLUSTERED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CLUSTERED</span></tt></a></td>
 <td>boolean</td>
 </tr>
 </tbody>
@@ -286,6 +301,22 @@ Waypoint:<tt class="descname">GEOPOSITION</tt><a class="headerlink" href="#attri
 </tbody>
 </table>
 <p>The LATLNG of this waypoint</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:WAYPOINT:POSITION">
+Waypoint:<tt class="descname">POSITION</tt><a class="headerlink" href="#attribute:WAYPOINT:POSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Vector</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The Vector position of this waypoint in 3D space, in ship-raw coords.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -352,6 +383,38 @@ Waypoint:<tt class="descname">GROUNDED</tt><a class="headerlink" href="#attribut
 <p>True if waypoint is actually glued to the ground.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:WAYPOINT:INDEX">
+Waypoint:<tt class="descname">INDEX</tt><a class="headerlink" href="#attribute:WAYPOINT:INDEX" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The integer index of this waypoint amongst its cluster of sibling waypoints.  In other words, when you have a cluster of waypoints called &#8220;Somewhere Alpha&#8221;, &#8220;Somewhere Beta&#8221;, and &#8220;Somewhere Gamma&#8221;, then the alpha site has index 0, the beta site has index 1 and the gamma site has index 2. When Waypoint:CLUSTERED is false, this value is zero but meaningless.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:WAYPOINT:CLUSTERED">
+Waypoint:<tt class="descname">CLUSTERED</tt><a class="headerlink" href="#attribute:WAYPOINT:CLUSTERED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>True if this waypoint is part of a set of clustered waypoints with greek letter names appended (Alpha, Beta, Gamma, etc).  If true, there should be a one-to-one correspondence with the greek letter name and the :INDEX suffix. (0 = Alpha, 1 = Beta, 2 = Gamma, etc).</p>
+</dd></dl>
+
 </div>
 
 
@@ -360,7 +423,7 @@ Waypoint:<tt class="descname">GROUNDED</tt><a class="headerlink" href="#attribut
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="misc.html" class="btn btn-neutral float-right" title="Configurations and Miscellany"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="misc.html" class="btn btn-neutral float-right" title="Configurations and Miscellany">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="vessels/vesselsensors.html" class="btn btn-neutral" title="VesselSensors"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -376,7 +439,8 @@ Waypoint:<tt class="descname">GROUNDED</tt><a class="headerlink" href="#attribut
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

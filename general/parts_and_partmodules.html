@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -49,7 +49,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,6 +66,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
@@ -75,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nametag.html">Name Tags</a></li>
@@ -105,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -159,7 +165,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="ship-parts-and-partmodules">
 <span id="parts-and-partmodules"></span><h1>Ship Parts and PartModules<a class="headerlink" href="#ship-parts-and-partmodules" title="Permalink to this headline">¶</a></h1>
@@ -185,7 +191,7 @@
 <div class="section" id="accessing-the-parts-by-various-naming-systems">
 <h3>Accessing the parts by various naming systems<a class="headerlink" href="#accessing-the-parts-by-various-naming-systems" title="Permalink to this headline">¶</a></h3>
 <p>Any time you have a vessel variable, you can use these suffixes to get lists of parts on it by their names using several different naming schemes:</p>
-<p><strong>Part Tag</strong>: A part&#8217;s <em>tag</em> is whatever custom name you have given it using the <a class="reference external" href="../nametag/index.html">nametag system described here</a>. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.</p>
+<p><strong>Part Tag</strong>: A part&#8217;s <em>tag</em> is whatever custom name you have given it using the <a class="reference external" href="nametag.html">nametag system described here</a>. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.</p>
 <p><strong>Part Title</strong>: A part&#8217;s <em>title</em> is the name it has inside the GUI interface on the screen that you see as the user.</p>
 <p><strong>Part Name</strong>: A part&#8217;s <em>name</em> is the name it is given behind the scenes in KSP. It never appears in the normal GUI for the user to see, but it is used in places like Part.cfg files, the saved game persistence file, the ModuleManager mod, and so on.</p>
 <p>Assuming you&#8217;ve done one of these:</p>
@@ -217,13 +223,13 @@
 </div>
 <p>In all cases the checks are performed case-insensitively.</p>
 <p>These are different styles of naming parts, all slightly different, and you can use any of them you like to get access to the part or parts you&#8217;re interested in.</p>
-<p>They all return a <a class="reference external" href="../../structure/list/index.html">List</a> of <a class="reference external" href="../../structure/index.html">Parts</a> rather than just one single part. This is because any name could have more than one hit. If you expect to get just one single hit, you can just look at the zero-th value of the list, like so:</p>
+<p>They all return a <a class="reference external" href="../structures/misc/list.html">List</a> of <a class="reference external" href="../structures/vessels/part.html">Parts</a> rather than just one single part. This is because any name could have more than one hit. If you expect to get just one single hit, you can just look at the zero-th value of the list, like so:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">onePart</span> <span class="n">TO</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSDUBBED</span><span class="p">(</span><span class="s">&quot;my favorite engine&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span>
 </pre></div>
 </div>
 <p>If the name does not exist, you can tell by seeing if the list returned
 has a length of zero:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">IF</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSDUBBED</span><span class="p">(</span><span class="s">&quot;my favorite engine&quot;</span><span class="p">)</span><span class="o">:</span><span class="n">LENGTH</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">IF</span> <span class="n">somevessel</span><span class="o">:</span><span class="n">PARTSDUBBED</span><span class="p">(</span><span class="s">&quot;my favorite engine&quot;</span><span class="p">)</span><span class="o">:</span><span class="n">LENGTH</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">{</span>
   <span class="n">PRINT</span> <span class="s">&quot;There is no part named &#39;my favorite engine&#39;.&quot;</span><span class="p">.</span>
 <span class="p">}.</span>
 </pre></div>
@@ -234,6 +240,9 @@ has a length of zero:</p>
   <span class="nl">somechute:</span><span class="n">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleParachute&quot;</span><span class="p">)</span><span class="o">:</span><span class="n">SETFIELD</span><span class="p">(</span><span class="s">&quot;DEPLOYALTITUDE&quot;</span><span class="p">,</span> <span class="mi">1500</span><span class="p">).</span>
 <span class="p">}.</span>
 </pre></div>
+</div>
+<div class="figure align-right">
+<img alt="../_images/ship_parts_tree.png" src="../_images/ship_parts_tree.png" />
 </div>
 </div>
 <div class="section" id="accessing-the-parts-list-as-a-tree">
@@ -262,7 +271,7 @@ has a length of zero:</p>
 </div>
 <div class="section" id="partmodules-and-the-right-click-menu">
 <h2>PartModules and the right-click menu:<a class="headerlink" href="#partmodules-and-the-right-click-menu" title="Permalink to this headline">¶</a></h2>
-<p>Each Part, in turn has a list of what are called <a class="reference external" href="../../structure/partmodule/index.html">PartModules</a> on it. A PartModule is a collection of variables and executable program hooks that gives the part some of its behaviors and properties. Without a PartModule, a part is really nothing more than a passive bit of structure that has nothing more than a shape, a look, and a strength to it. Some of the parts in the &#8220;structure&#8221; tab of the parts bin, like pure I-beams and girders, are like this - they have no PartModules on them. But all of the <em>interesting</em> parts you might want to do something with will have a PartModule on them. Through PartModules, **kOS will now allow you to manipulate or query anything that any KSP programmer, stock or mod, has added to the rightclick menu**, or action group actions, for a part.</p>
+<p>Each Part, in turn has a list of what are called <a class="reference external" href="../structures/vessels/partmodule.html">PartModules</a> on it. A PartModule is a collection of variables and executable program hooks that gives the part some of its behaviors and properties. Without a PartModule, a part is really nothing more than a passive bit of structure that has nothing more than a shape, a look, and a strength to it. Some of the parts in the &#8220;structure&#8221; tab of the parts bin, like pure I-beams and girders, are like this - they have no PartModules on them. But all of the <em>interesting</em> parts you might want to do something with will have a PartModule on them. Through PartModules, **kOS will now allow you to manipulate or query anything that any KSP programmer, stock or mod, has added to the rightclick menu**, or action group actions, for a part.</p>
 <div class="section" id="partmodules-stock-vs-mods">
 <h3>PartModules, Stock vs Mods:<a class="headerlink" href="#partmodules-stock-vs-mods" title="Permalink to this headline">¶</a></h3>
 <p>It should be noted that even if you play an entirely stock installation of KSP (well, stock other than for kOS, obviously, otherwise you wouldn&#8217;t be reading this), you will still have PartModules on your Parts. Some people have muddied the terminology difference between &#8220;Mod&#8221; meaning &#8220;modification&#8221; and &#8220;Mod&#8221; meaning &#8220;module&#8221;. It should be made absolutely clear that PartModules are a feature of stock KSP, and BOTH stock KSP parts and Modded KSP Parts use them. Even if all you want to do is affect the stock behavior of stock parts in a completely unmodded way, you&#8217;ll still want to know about PartModules in order to do so.</p>
@@ -366,7 +375,7 @@ has a length of zero:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="comm_range.html" class="btn btn-neutral float-right" title="Communication Range For Remote Updates"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="comm_range.html" class="btn btn-neutral float-right" title="Communication Range For Remote Updates">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="nametag.html" class="btn btn-neutral" title="The Name Tag System"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -382,7 +391,8 @@ has a length of zero:</p>
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

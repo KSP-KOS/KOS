@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -49,7 +49,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,6 +66,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/designpatterns.html">Design Patterns</a></li>
@@ -75,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
@@ -105,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
@@ -159,7 +165,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="catalog-of-bound-variable-names">
 <span id="bindings"></span><h1>Catalog of Bound Variable Names<a class="headerlink" href="#catalog-of-bound-variable-names" title="Permalink to this headline">¶</a></h1>
@@ -172,61 +178,136 @@ crucial to creating
 effective kOS scripts.</p>
 <div class="section" id="named-vessels-and-bodies">
 <h2>NAMED VESSELS AND BODIES<a class="headerlink" href="#named-vessels-and-bodies" title="Permalink to this headline">¶</a></h2>
-<p>Variable Name | Can Read | Can Set | Type | Description
-==============|==========|=========|======|============
-SHIP | yes | no | <a class="reference external" href="../structure/vessel/index.html">Vessel</a> |
-Whichever vessel happens to be the one containing the CPU part that is
-running this Kerboscript code at the moment. This is the <a class="reference external" href="../summary_topics/CPU_vessel/index.html">CPU
-Vessel</a>.
-TARGET | yes | yes | <a class="reference external" href="../structure/vessel/index.html">Vessel</a> or
-<a class="reference external" href="../structure/body/index.html">Body</a> | Whichever
-<a class="reference external" href="../structure/orbitable/index.html">Orbitable</a> object happens to be
-the one selected as the current KSP target. If set to a string, it will
-assume the string is the name of a vessel being targetted and set it to
-a vessel by that name. For best results set it to Body(&#8220;some name&#8221;) or
-Vessel(&#8220;some name&#8221;) explicitly.</p>
+<p>SHIP:</p>
+<div class="line-block">
+<div class="line"><strong>Variable name</strong>: SHIP</div>
+<div class="line"><strong>Gettable</strong>: yes</div>
+<div class="line"><strong>Settable</strong>: no</div>
+<div class="line"><strong>Type</strong>: <a class="reference external" href="structures/vessels/vessel.html">Vessel</a></div>
+<div class="line"><strong>Description</strong>: Whichever vessel happens to be the one containing the CPU part that is running this Kerboscript code at the moment. This is the <a class="reference external" href="general/cpu_vessel.html">CPU Vessel</a>.</div>
+</div>
+<p>TARGET:</p>
+<div class="line-block">
+<div class="line"><strong>Variable Name</strong>: TARGET</div>
+<div class="line"><strong>Gettable</strong>: yes</div>
+<div class="line"><strong>Settable</strong>: yes</div>
+<div class="line"><strong>Type</strong>: <a class="reference external" href="structures/vessels/vessel.html">Vessel</a> or <a class="reference external" href="structures/celestial_bodies/body.html">Body</a></div>
+<div class="line"><strong>Description</strong>: Whichever <a class="reference external" href="structures/orbits/orbitable.html">Orbitable</a> object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targetted and set it to a vessel by that name. For best results set it to Body(&#8220;some name&#8221;) or Vessel(&#8220;some name&#8221;) explicitly.</div>
+</div>
 </div>
 <div class="section" id="alias-shortcuts-for-ship-fields">
 <h2>Alias shortcuts for SHIP fields<a class="headerlink" href="#alias-shortcuts-for-ship-fields" title="Permalink to this headline">¶</a></h2>
 <p>The following are all alias shortcuts for accessing the fields of the
 SHIP vessel.
 To see their definition, please consult the
-<a class="reference external" href="../structure/vessel/index.html">Vessel</a>
+<a class="reference external" href="structures/vessels/vessel.html">Vessel</a>
 page, as they are all just instances of the standard vessel suffixes.</p>
-<p>Variable | Same as
-=========|===========
-HEADING | Same as SHIP:HEADING
-PROGRADE | Same as SHIP:PROGRADE
-RETROGRADE | Same as SHIP:RETROGRADE
-FACING | Same as SHIP:FACING
-MAXTHRUST | Same as SHIP:MAXTHRUST
-VELOCITY | Same as SHIP:VELOCITY
-GEOPOSITION | Same as SHIP:GEOPOSITION
-LATITUDE | Same as SHIP:LATITUDE
-LONGITUDE | Same as SHIP:LONGITUDE
-UP | Same as SHIP:UP
-NORTH | Same as SHIP:NORTH
-BODY | Same as SHIP:BODY
-ANGULARMOMENTUM | Same as SHIP:ANGULARMOMENTUM
-ANGULARVEL | Same as SHIP:ANGULARVEL
-ANGULARVELOCITY | Same as SHIP:ANGULARVEL
-COMMRANGE | Same as SHIP:COMMRANGE
-MASS | Same as SHIP:MASS
-VERTICALSPEED | Same as SHIP:VERTICALSPEED
-SURFACESPEED | Same as SHIP:SURFACESPEED
-AIRSPEED | Same as SHIP:AIRSPEED
-VESSELNAME | Same as SHIP:VESSELNAME
-ALTITUDE | Same as SHIP:ALTITUDE
-APOAPSIS | Same as SHIP:APOAPSIS
-PERIAPSIS | Same as SHIP:PERIAPSIS
-SENSOR | Same as SHIP:SENSOR
-SRFPROGRADE | Same as SHIP:SRFPROGRADE
-SRFREROGRADE | Same as SHIP:SRFREROGRADE
-OBT | Same as SHIP:OBT
-STATUS | Same as SHIP:STATUS
-VESSELNAME | Same as SHIP:NAME
-<em>Any resource</em> | Same as SHIP:<em>resource name</em>, eg. LIQUIDFUEL is the
-same as SHIP:LIQUIDFUEL</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Variable</th>
+<th class="head">Same as</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>HEADING</td>
+<td>Same as SHIP:HEADING</td>
+</tr>
+<tr class="row-odd"><td>PROGRADE</td>
+<td>Same as SHIP:PROGRADE</td>
+</tr>
+<tr class="row-even"><td>RETROGRADE</td>
+<td>Same as SHIP:RETROGRADE</td>
+</tr>
+<tr class="row-odd"><td>FACING</td>
+<td>Same as SHIP:FACING</td>
+</tr>
+<tr class="row-even"><td>MAXTHRUST</td>
+<td>Same as SHIP:MAXTHRUST</td>
+</tr>
+<tr class="row-odd"><td>VELOCITY</td>
+<td>Same as SHIP:VELOCITY</td>
+</tr>
+<tr class="row-even"><td>GEOPOSITION</td>
+<td>Same as SHIP:GEOPOSITION</td>
+</tr>
+<tr class="row-odd"><td>LATITUDE</td>
+<td>Same as SHIP:LATITUDE</td>
+</tr>
+<tr class="row-even"><td>LONGITUDE</td>
+<td>Same as SHIP:LONGITUDE</td>
+</tr>
+<tr class="row-odd"><td>UP</td>
+<td>Same as SHIP:UP</td>
+</tr>
+<tr class="row-even"><td>NORTH</td>
+<td>Same as SHIP:NORTH</td>
+</tr>
+<tr class="row-odd"><td>BODY</td>
+<td>Same as SHIP:BODY</td>
+</tr>
+<tr class="row-even"><td>ANGULARMOMENTUM</td>
+<td>Same as SHIP:ANGULARMOMENTUM</td>
+</tr>
+<tr class="row-odd"><td>ANGULARVEL</td>
+<td>Same as SHIP:ANGULARVEL</td>
+</tr>
+<tr class="row-even"><td>ANGULARVELOCITY</td>
+<td>Same as SHIP:ANGULARVEL</td>
+</tr>
+<tr class="row-odd"><td>COMMRANGE</td>
+<td>Same as SHIP:COMMRANGE</td>
+</tr>
+<tr class="row-even"><td>MASS</td>
+<td>Same as SHIP:MASS</td>
+</tr>
+<tr class="row-odd"><td>VERTICALSPEED</td>
+<td>Same as SHIP:VERTICALSPEED</td>
+</tr>
+<tr class="row-even"><td>SURFACESPEED</td>
+<td>Same as SHIP:SURFACESPEED</td>
+</tr>
+<tr class="row-odd"><td>AIRSPEED</td>
+<td>Same as SHIP:AIRSPEED</td>
+</tr>
+<tr class="row-even"><td>VESSELNAME</td>
+<td>Same as SHIP:VESSELNAME</td>
+</tr>
+<tr class="row-odd"><td>ALTITUDE</td>
+<td>Same as SHIP:ALTITUDE</td>
+</tr>
+<tr class="row-even"><td>APOAPSIS</td>
+<td>Same as SHIP:APOAPSIS</td>
+</tr>
+<tr class="row-odd"><td>PERIAPSIS</td>
+<td>Same as SHIP:PERIAPSIS</td>
+</tr>
+<tr class="row-even"><td>SENSOR</td>
+<td>Same as SHIP:SENSOR</td>
+</tr>
+<tr class="row-odd"><td>SRFPROGRADE</td>
+<td>Same as SHIP:SRFPROGRADE</td>
+</tr>
+<tr class="row-even"><td>SRFREROGRADE</td>
+<td>Same as SHIP:SRFREROGRADE</td>
+</tr>
+<tr class="row-odd"><td>OBT</td>
+<td>Same as SHIP:OBT</td>
+</tr>
+<tr class="row-even"><td>STATUS</td>
+<td>Same as SHIP:STATUS</td>
+</tr>
+<tr class="row-odd"><td>VESSELNAME</td>
+<td>Same as SHIP:NAME</td>
+</tr>
+<tr class="row-even"><td><em>Any resource</em></td>
+<td>Same as SHIP:<em>resourcename</em>, eg. LIQUIDFUEL is the same as SHIP:LIQUIDFUEL</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="resource-types">
 <h2>Resource Types<a class="headerlink" href="#resource-types" title="Permalink to this headline">¶</a></h2>
@@ -267,15 +348,33 @@ the term exactly as it appears in the resources window.</p>
 structure with suffixes but it&#8217;s acually a bit &#8220;fake&#8221; in that it&#8217;s not
 really a structure. The following terms are just exceptions that don&#8217;t
 fit anywhere else:</p>
-<p>Variable | Type | Meaning
-==============|========|==========
-ALT:APOAPSIS | number | The altitude of the apoapsis of the current
-ship. Identical to SHIP:APOAPSIS.
-ALT:PERIAPSIS | number | The altitude of the periapsis of the current
-ship. Identical to SHIP:PERIAPSIS.
-ALT:RADAR | number | The altitude of the current ship above the
-terrain, rather than above the sea level. Does not have an alias
-anywhere.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="7%" />
+<col width="79%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Variable</th>
+<th class="head">Type</th>
+<th class="head">Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>ALT:APOAPSIS</td>
+<td>number</td>
+<td>The altitude of the apoapsis of the current ship.  Identical to SHIP:APOAPSIS.</td>
+</tr>
+<tr class="row-odd"><td>ALT:PERIAPSIS</td>
+<td>number</td>
+<td>The altitude of the periapsis of the current ship.  Identical to SHIP:PERIAPSIS.</td>
+</tr>
+<tr class="row-even"><td>ALT:RADAR</td>
+<td>number</td>
+<td>The altitude of the current ship above the terrain.  Does not have an alias anywhere.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="eta-alias">
 <h2>ETA ALIAS<a class="headerlink" href="#eta-alias" title="Permalink to this headline">¶</a></h2>
@@ -283,21 +382,39 @@ anywhere.</p>
 structure with suffixes but it&#8217;s acually a bit &#8220;fake&#8221; in that it&#8217;s not
 really a structure. The following terms are just exceptions that don&#8217;t
 fit anywhere else:</p>
-<p>Variable | Type | Meaning
-===============|========|==========
-ETA:APOAPSIS | number | The number of seconds until the current ship
-will reach its apoapsis.
-ETA:PERIAPSIS | number | The number of seconds until the current ship
-will reach its periapsis.
-ETA:TRANSITION | number | The number of seconds until the current ship
-will leave the current sphere of influence and enter the sphere of
-influence of another celestial body.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="9%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Variable</th>
+<th class="head">Type</th>
+<th class="head">Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>ETA:APOAPSIS</td>
+<td>number</td>
+<td>seconds until SHIP will reach its apoapsis.</td>
+</tr>
+<tr class="row-odd"><td>ETA:PERIAPSIS</td>
+<td>number</td>
+<td>seconds until SHIP will reach its periapsis.</td>
+</tr>
+<tr class="row-even"><td>ETA:TRANSITION</td>
+<td>number</td>
+<td>seconds until SHIP will leave its SOI to enter the SOI of another body.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="encounter">
 <h2>ENCOUNTER<a class="headerlink" href="#encounter" title="Permalink to this headline">¶</a></h2>
 <p>The body being encountered next by the current vessel. Returns the
 special string &#8220;None&#8221; if there is no expected encounter, or an object of
-type <a class="reference external" href="../structures/body/index.html">Body</a> if an encounter is
+type <a class="reference external" href="structures/celestial_bodies/body.html">Body</a> if an encounter is
 expected.</p>
 </div>
 <div class="section" id="boolean-toggle-fields">
@@ -312,40 +429,140 @@ user presses the action group keypress, it <em>toggles</em> the action group,
 so you might need to check for both
 the change in state from false to true AND the change in state from true
 to false to see if the key was hit.</p>
-<p>Variable Name | Can Read | Can Set | Description
-==============|==========|=========|===============
-SAS | yes | yes | Is the SAS stabalizer control enabled right now?
-(Same as &#8220;SAS&#8221; indicator on the navball.)
-RCS | yes | yes | Is the RCS thrust flag enbabled right now? (Same as
-&#8220;RCS&#8221; indicator on the navball.)
-GEAR | yes | yes | Is the GEAR enabled right now? (Note, KSP does
-some strange things with this flag, like needing to hit it twice the
-first time).
-LEGS | yes | yes | Are the landing LEGS extended? (as opposed to GEAR
-which is for the wheels of a plane.)
-CHUTES | yes | yes | Are the parachutes extended? (Treats all
-parachutes as one single unit. Does not activate them individually.)
-LIGHTS | yes | yes | Are the lights on? (like the &#8220;U&#8221; key in manual
-flight.)
-PANELS | yes | yes | Are the solar panels extended? (Treats all solar
-panels as one single unit. Does not activate them individually.)
-BRAKES | yes | yes | Are the brakes on?
-ABORT | yes | yes | Abort Action Group.
-AG1 | yes | yes | Action Group 1.
-AG2 | yes | yes | Action Group 2.
-AG3 | yes | yes | Action Group 3.
-AG4 | yes | yes | Action Group 4.
-AG5 | yes | yes | Action Group 5.
-AG6 | yes | yes | Action Group 6.
-AG7 | yes | yes | Action Group 7.
-AG8 | yes | yes | Action Group 8.
-AG9 | yes | yes | Action Group 9.
-AG10 | yes | yes | Action Group 10.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="6%" />
+<col width="6%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Variable Name</th>
+<th class="head">Can Read</th>
+<th class="head">Can Set</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>SAS</td>
+<td>yes</td>
+<td>yes</td>
+<td>(Same as &#8220;SAS&#8221; indicator on the navball.)</td>
+</tr>
+<tr class="row-odd"><td>RCS</td>
+<td>yes</td>
+<td>yes</td>
+<td>(Same as &#8220;RCS&#8221; indicator on the navball.)</td>
+</tr>
+<tr class="row-even"><td>GEAR</td>
+<td>yes</td>
+<td>yes</td>
+<td>Is the GEAR enabled right now? (Note, KSP does some strange things with this flag, like needing to hit it twice the first time).</td>
+</tr>
+<tr class="row-odd"><td>LEGS</td>
+<td>yes</td>
+<td>yes</td>
+<td>Are the landing LEGS extended? (as opposed to GEAR which is for the wheels of a plane.)</td>
+</tr>
+<tr class="row-even"><td>CHUTES</td>
+<td>yes</td>
+<td>yes</td>
+<td>Are the parachutes extended? (Treats all parachutes as one single unit. Does not activate them individually.)</td>
+</tr>
+<tr class="row-odd"><td>LIGHTS</td>
+<td>yes</td>
+<td>yes</td>
+<td>Are the lights on? (like the &#8220;U&#8221; key in manual flight.)</td>
+</tr>
+<tr class="row-even"><td>PANELS</td>
+<td>yes</td>
+<td>yes</td>
+<td>Are the solar panels extended? (Treats all solar panels as one single unit. Does not activate them individually.)</td>
+</tr>
+<tr class="row-odd"><td>BRAKES</td>
+<td>yes</td>
+<td>yes</td>
+<td>Are the brakes on?</td>
+</tr>
+<tr class="row-even"><td>ABORT</td>
+<td>yes</td>
+<td>yes</td>
+<td>Abort Action Group.</td>
+</tr>
+<tr class="row-odd"><td>AG1</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 1.</td>
+</tr>
+<tr class="row-even"><td>AG2</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 2.</td>
+</tr>
+<tr class="row-odd"><td>AG3</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 3.</td>
+</tr>
+<tr class="row-even"><td>AG4</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 4.</td>
+</tr>
+<tr class="row-odd"><td>AG5</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 5.</td>
+</tr>
+<tr class="row-even"><td>AG6</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 6.</td>
+</tr>
+<tr class="row-odd"><td>AG7</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 7.</td>
+</tr>
+<tr class="row-even"><td>AG8</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 8.</td>
+</tr>
+<tr class="row-odd"><td>AG9</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 9.</td>
+</tr>
+<tr class="row-even"><td>AG10</td>
+<td>yes</td>
+<td>yes</td>
+<td>Action Group 10.</td>
+</tr>
+<tr class="row-odd"><td>AGn</td>
+<td>yes</td>
+<td>yes</td>
+<td>If you have the Action Groups Extended mod installed, you can access its groups the same way, i.e. AG11, AG12, AG13, etc.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="flight-control">
 <h2>Flight Control<a class="headerlink" href="#flight-control" title="Permalink to this headline">¶</a></h2>
-<p>A summary page describing the basics of controlling the flight of a ship
-<a class="reference external" href="../summary_topics/ship_control/index.html">can be found here</a></p>
+<p>There are bound variables used in controlling the flight of a ship, which
+can be found at the following links:</p>
+<p>If you want to let kOS do a lot of the work of alignging to a desired
+heading for you, use <a class="reference external" href="commands/flight/cooked.html">Cooked Control</a>.</p>
+<p>If you want your script to manipulate the controls directly (as in &#8220;set
+yaw axis halfway left for a few seconds (using the &#8216;A&#8217; key)&#8221;, then
+use <a class="reference external" href="commands/flight/raw.html">Raw Control</a>.</p>
+<p>If you want to be able to READ what the player is attempting to do
+while your script is running, and perhaps respond to it, then use
+<a class="reference external" href="commands/flight/pilot.html">Reading the Pilot&#8217;s Control settings (i.e reading what the manual input is attempting)</a>
+(By default your script will override manual piloting attempts, but
+you can read what the pilot&#8217;s controls are set at and make your
+autopilot take them under advisement - sort of like how a
+fly-by-wire plane works.)</p>
 <div class="section" id="controls-that-must-be-used-with-lock">
 <h3>Controls that must be used with LOCK<a class="headerlink" href="#controls-that-must-be-used-with-lock" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">THROTTLE</span>            <span class="c1">// Lock to a decimal value between 0 and 1.</span>
@@ -377,21 +594,35 @@ just started.</p>
 <p>CONFIG is a special variable name that refers to the configuration
 settings for
 the kOS mod, and can be used to set or get various options.</p>
-<p><a class="reference external" href="../structure/config/index.html">CONFIG has its own page</a> for further
+<p><a class="reference external" href="structures/misc/config.html">CONFIG has its own page</a> for further
 details.</p>
 </div>
 <div class="section" id="game-state">
 <h2>Game State<a class="headerlink" href="#game-state" title="Permalink to this headline">¶</a></h2>
 <p>Variables that have something to do with the state of the universe.</p>
-<p>Variable | Type | Meaning
-=========|======|=========
-TIME | <a class="reference external" href="../structure/time/index.html">Time</a> | Simulated amount of
-time that passed since the beginning of the game&#8217;s universe epoch. (A
-brand new campaign that just started begins at TIME zero.)
-MAPVIEW | boolean | Both settable and gettable. If you query MAPVIEW,
-it&#8217;s true if on the map screen, and false if on the flight view screen.
-If you SET MAPVIEW, you can cause the game to switch between mapview and
-flight view or visa versa.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="3%" />
+<col width="14%" />
+<col width="83%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Variable</th>
+<th class="head">Type</th>
+<th class="head">Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>TIME</td>
+<td><a class="reference external" href="structures/misc/time.html">Time</a></td>
+<td>Simulated amount of time that passed since the beginning of the game&#8217;s universe epoch. (A brand new campaign that just started begins at TIME zero.)</td>
+</tr>
+<tr class="row-odd"><td>MAPVIEW</td>
+<td>boolean</td>
+<td>Both settable and gettable. If you query MAPVIEW, it&#8217;s true if on the map screen, and false if on the flight view screen.  If you SET MAPVIEW, you can cause the game to switch between mapview and flight view or visa versa.</td>
+</tr>
+</tbody>
+</table>
 <p>TIME is a useful system variable for calculating the passage of time
 between taking
 physical measurements (i.e. to calulate how fast a phenomenon is
@@ -409,7 +640,7 @@ physical
 properties of the KSP universe, the time that matters is the simulated
 time, which
 is what TIME returns.</p>
-<p>It&#8217;s important to be aware of the <a class="reference external" href="../summary_topics/CPU_hardware/index.html#FROZEN">frozen update
+<p>It&#8217;s important to be aware of the <a class="reference external" href="general/CPU_hardware.html#FROZEN">frozen update
 nature</a> of the kOS
 computer when reading TIME.</p>
 </div>
@@ -421,7 +652,7 @@ computer when reading TIME.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="general/cpu_vessel.html" class="btn btn-neutral float-right" title="CPU Vessel (SHIP)"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="general/cpu_vessel.html" class="btn btn-neutral float-right" title="CPU Vessel (SHIP)">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="general.html" class="btn btn-neutral" title="General Topics"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -437,7 +668,8 @@ computer when reading TIME.</p>
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

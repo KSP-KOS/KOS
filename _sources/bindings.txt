@@ -14,19 +14,21 @@ effective kOS scripts.
 NAMED VESSELS AND BODIES
 ------------------------
 
-Variable Name \| Can Read \| Can Set \| Type \| Description
-==============\|==========\|=========\|======\|============
-SHIP \| yes \| no \| `Vessel <../structure/vessel/index.html>`__ \|
-Whichever vessel happens to be the one containing the CPU part that is
-running this Kerboscript code at the moment. This is the `CPU
-Vessel <../summary_topics/CPU_vessel/index.html>`__.
-TARGET \| yes \| yes \| `Vessel <../structure/vessel/index.html>`__ or
-`Body <../structure/body/index.html>`__ \| Whichever
-`Orbitable <../structure/orbitable/index.html>`__ object happens to be
-the one selected as the current KSP target. If set to a string, it will
-assume the string is the name of a vessel being targetted and set it to
-a vessel by that name. For best results set it to Body("some name") or
-Vessel("some name") explicitly.
+SHIP:
+
+| **Variable name**: SHIP
+| **Gettable**: yes
+| **Settable**: no
+| **Type**: `Vessel <structures/vessels/vessel.html>`__
+| **Description**: Whichever vessel happens to be the one containing the CPU part that is running this Kerboscript code at the moment. This is the `CPU Vessel <general/cpu_vessel.html>`__.
+ 
+TARGET:
+
+| **Variable Name**: TARGET
+| **Gettable**: yes
+| **Settable**: yes
+| **Type**: `Vessel <structures/vessels/vessel.html>`__ or `Body <structures/celestial_bodies/body.html>`__ 
+| **Description**: Whichever `Orbitable <structures/orbits/orbitable.html>`__ object happens to be the one selected as the current KSP target. If set to a string, it will assume the string is the name of a vessel being targetted and set it to a vessel by that name. For best results set it to Body("some name") or Vessel("some name") explicitly.
 
 Alias shortcuts for SHIP fields
 -------------------------------
@@ -34,43 +36,44 @@ Alias shortcuts for SHIP fields
 The following are all alias shortcuts for accessing the fields of the
 SHIP vessel.
 To see their definition, please consult the
-`Vessel <../structure/vessel/index.html>`__
+`Vessel <structures/vessels/vessel.html>`__
 page, as they are all just instances of the standard vessel suffixes.
 
-Variable \| Same as
-=========\|===========
-HEADING \| Same as SHIP:HEADING
-PROGRADE \| Same as SHIP:PROGRADE
-RETROGRADE \| Same as SHIP:RETROGRADE
-FACING \| Same as SHIP:FACING
-MAXTHRUST \| Same as SHIP:MAXTHRUST
-VELOCITY \| Same as SHIP:VELOCITY
-GEOPOSITION \| Same as SHIP:GEOPOSITION
-LATITUDE \| Same as SHIP:LATITUDE
-LONGITUDE \| Same as SHIP:LONGITUDE
-UP \| Same as SHIP:UP
-NORTH \| Same as SHIP:NORTH
-BODY \| Same as SHIP:BODY
-ANGULARMOMENTUM \| Same as SHIP:ANGULARMOMENTUM
-ANGULARVEL \| Same as SHIP:ANGULARVEL
-ANGULARVELOCITY \| Same as SHIP:ANGULARVEL
-COMMRANGE \| Same as SHIP:COMMRANGE
-MASS \| Same as SHIP:MASS
-VERTICALSPEED \| Same as SHIP:VERTICALSPEED
-SURFACESPEED \| Same as SHIP:SURFACESPEED
-AIRSPEED \| Same as SHIP:AIRSPEED
-VESSELNAME \| Same as SHIP:VESSELNAME
-ALTITUDE \| Same as SHIP:ALTITUDE
-APOAPSIS \| Same as SHIP:APOAPSIS
-PERIAPSIS \| Same as SHIP:PERIAPSIS
-SENSOR \| Same as SHIP:SENSOR
-SRFPROGRADE \| Same as SHIP:SRFPROGRADE
-SRFREROGRADE \| Same as SHIP:SRFREROGRADE
-OBT \| Same as SHIP:OBT
-STATUS \| Same as SHIP:STATUS
-VESSELNAME \| Same as SHIP:NAME
-*Any resource* \| Same as SHIP:\ *resource name*, eg. LIQUIDFUEL is the
-same as SHIP:LIQUIDFUEL
+================ ==============================================================================
+Variable         Same as
+================ ==============================================================================
+HEADING          Same as SHIP:HEADING
+PROGRADE         Same as SHIP:PROGRADE
+RETROGRADE       Same as SHIP:RETROGRADE
+FACING           Same as SHIP:FACING
+MAXTHRUST        Same as SHIP:MAXTHRUST
+VELOCITY         Same as SHIP:VELOCITY
+GEOPOSITION      Same as SHIP:GEOPOSITION
+LATITUDE         Same as SHIP:LATITUDE
+LONGITUDE        Same as SHIP:LONGITUDE
+UP               Same as SHIP:UP
+NORTH            Same as SHIP:NORTH
+BODY             Same as SHIP:BODY
+ANGULARMOMENTUM  Same as SHIP:ANGULARMOMENTUM
+ANGULARVEL       Same as SHIP:ANGULARVEL
+ANGULARVELOCITY  Same as SHIP:ANGULARVEL
+COMMRANGE        Same as SHIP:COMMRANGE
+MASS             Same as SHIP:MASS
+VERTICALSPEED    Same as SHIP:VERTICALSPEED
+SURFACESPEED     Same as SHIP:SURFACESPEED
+AIRSPEED         Same as SHIP:AIRSPEED
+VESSELNAME       Same as SHIP:VESSELNAME
+ALTITUDE         Same as SHIP:ALTITUDE
+APOAPSIS         Same as SHIP:APOAPSIS
+PERIAPSIS        Same as SHIP:PERIAPSIS
+SENSOR           Same as SHIP:SENSOR
+SRFPROGRADE      Same as SHIP:SRFPROGRADE
+SRFREROGRADE     Same as SHIP:SRFREROGRADE
+OBT              Same as SHIP:OBT
+STATUS           Same as SHIP:STATUS
+VESSELNAME       Same as SHIP:NAME
+*Any resource*   Same as SHIP:*resourcename*, eg. LIQUIDFUEL is the same as SHIP:LIQUIDFUEL
+================ ==============================================================================
 
 Resource Types
 --------------
@@ -124,15 +127,13 @@ structure with suffixes but it's acually a bit "fake" in that it's not
 really a structure. The following terms are just exceptions that don't
 fit anywhere else:
 
-Variable \| Type \| Meaning
-==============\|========\|==========
-ALT:APOAPSIS \| number \| The altitude of the apoapsis of the current
-ship. Identical to SHIP:APOAPSIS.
-ALT:PERIAPSIS \| number \| The altitude of the periapsis of the current
-ship. Identical to SHIP:PERIAPSIS.
-ALT:RADAR \| number \| The altitude of the current ship above the
-terrain, rather than above the sea level. Does not have an alias
-anywhere.
+============== ======== ==========
+Variable       Type      Meaning
+============== ======== ==========
+ALT:APOAPSIS   number   The altitude of the apoapsis of the current ship.  Identical to SHIP:APOAPSIS.
+ALT:PERIAPSIS  number   The altitude of the periapsis of the current ship.  Identical to SHIP:PERIAPSIS.
+ALT:RADAR      number   The altitude of the current ship above the terrain.  Does not have an alias anywhere.
+============== ======== ==========
 
 ETA ALIAS
 ---------
@@ -142,22 +143,20 @@ structure with suffixes but it's acually a bit "fake" in that it's not
 really a structure. The following terms are just exceptions that don't
 fit anywhere else:
 
-Variable \| Type \| Meaning
-===============\|========\|==========
-ETA:APOAPSIS \| number \| The number of seconds until the current ship
-will reach its apoapsis.
-ETA:PERIAPSIS \| number \| The number of seconds until the current ship
-will reach its periapsis.
-ETA:TRANSITION \| number \| The number of seconds until the current ship
-will leave the current sphere of influence and enter the sphere of
-influence of another celestial body.
+============== ======== ==========
+Variable       Type      Meaning
+============== ======== ==========
+ETA:APOAPSIS   number   seconds until SHIP will reach its apoapsis.
+ETA:PERIAPSIS  number   seconds until SHIP will reach its periapsis.
+ETA:TRANSITION number   seconds until SHIP will leave its SOI to enter the SOI of another body.
+============== ======== ==========
 
 ENCOUNTER
 ---------
 
 The body being encountered next by the current vessel. Returns the
 special string "None" if there is no expected encounter, or an object of
-type `Body <../structures/body/index.html>`__ if an encounter is
+type `Body <structures/celestial_bodies/body.html>`__ if an encounter is
 expected.
 
 BOOLEAN TOGGLE FIELDS:
@@ -174,41 +173,52 @@ so you might need to check for both
 the change in state from false to true AND the change in state from true
 to false to see if the key was hit.
 
-Variable Name \| Can Read \| Can Set \| Description
-==============\|==========\|=========\|===============
-SAS \| yes \| yes \| Is the SAS stabalizer control enabled right now?
-(Same as "SAS" indicator on the navball.)
-RCS \| yes \| yes \| Is the RCS thrust flag enbabled right now? (Same as
-"RCS" indicator on the navball.)
-GEAR \| yes \| yes \| Is the GEAR enabled right now? (Note, KSP does
-some strange things with this flag, like needing to hit it twice the
-first time).
-LEGS \| yes \| yes \| Are the landing LEGS extended? (as opposed to GEAR
-which is for the wheels of a plane.)
-CHUTES \| yes \| yes \| Are the parachutes extended? (Treats all
-parachutes as one single unit. Does not activate them individually.)
-LIGHTS \| yes \| yes \| Are the lights on? (like the "U" key in manual
-flight.)
-PANELS \| yes \| yes \| Are the solar panels extended? (Treats all solar
-panels as one single unit. Does not activate them individually.)
-BRAKES \| yes \| yes \| Are the brakes on?
-ABORT \| yes \| yes \| Abort Action Group.
-AG1 \| yes \| yes \| Action Group 1.
-AG2 \| yes \| yes \| Action Group 2.
-AG3 \| yes \| yes \| Action Group 3.
-AG4 \| yes \| yes \| Action Group 4.
-AG5 \| yes \| yes \| Action Group 5.
-AG6 \| yes \| yes \| Action Group 6.
-AG7 \| yes \| yes \| Action Group 7.
-AG8 \| yes \| yes \| Action Group 8.
-AG9 \| yes \| yes \| Action Group 9.
-AG10 \| yes \| yes \| Action Group 10.
+============== ==========   ========= ===============
+Variable Name  Can Read     Can Set   Description
+============== ==========   ========= ===============
+SAS            yes          yes       (Same as "SAS" indicator on the navball.)
+RCS            yes          yes       (Same as "RCS" indicator on the navball.)
+GEAR           yes          yes       Is the GEAR enabled right now? (Note, KSP does some strange things with this flag, like needing to hit it twice the first time).
+LEGS           yes          yes       Are the landing LEGS extended? (as opposed to GEAR which is for the wheels of a plane.)
+CHUTES         yes          yes       Are the parachutes extended? (Treats all parachutes as one single unit. Does not activate them individually.)
+LIGHTS         yes          yes       Are the lights on? (like the "U" key in manual flight.)
+PANELS         yes          yes       Are the solar panels extended? (Treats all solar panels as one single unit. Does not activate them individually.)
+BRAKES         yes          yes       Are the brakes on?
+ABORT          yes          yes       Abort Action Group.
+AG1            yes          yes       Action Group 1.
+AG2            yes          yes       Action Group 2.
+AG3            yes          yes       Action Group 3.
+AG4            yes          yes       Action Group 4.
+AG5            yes          yes       Action Group 5.
+AG6            yes          yes       Action Group 6.
+AG7            yes          yes       Action Group 7.
+AG8            yes          yes       Action Group 8.
+AG9            yes          yes       Action Group 9.
+AG10           yes          yes       Action Group 10.
+AGn            yes          yes       If you have the Action Groups Extended mod installed, you can access its groups the same way, i.e. AG11, AG12, AG13, etc.
+============== ==========   ========= ===============
 
 Flight Control
 --------------
 
-A summary page describing the basics of controlling the flight of a ship
-`can be found here <../summary_topics/ship_control/index.html>`__
+There are bound variables used in controlling the flight of a ship, which
+can be found at the following links:
+
+If you want to let kOS do a lot of the work of alignging to a desired
+heading for you, use `Cooked Control <commands/flight/cooked.html>`__.
+
+If you want your script to manipulate the controls directly (as in "set
+yaw axis halfway left for a few seconds (using the 'A' key)", then
+use `Raw Control <commands/flight/raw.html>`__.
+
+If you want to be able to READ what the player is attempting to do
+while your script is running, and perhaps respond to it, then use
+`Reading the Pilot's Control settings (i.e reading what the manual input is attempting) <commands/flight/pilot.html>`__ 
+(By default your script will override manual piloting attempts, but
+you can read what the pilot's controls are set at and make your
+autopilot take them under advisement - sort of like how a
+fly-by-wire plane works.)
+
 
 Controls that must be used with LOCK
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,7 +258,7 @@ CONFIG is a special variable name that refers to the configuration
 settings for
 the kOS mod, and can be used to set or get various options.
 
-`CONFIG has its own page <../structure/config/index.html>`__ for further
+`CONFIG has its own page <structures/misc/config.html>`__ for further
 details.
 
 Game State
@@ -256,15 +266,12 @@ Game State
 
 Variables that have something to do with the state of the universe.
 
-Variable \| Type \| Meaning
-=========\|======\|=========
-TIME \| `Time <../structure/time/index.html>`__ \| Simulated amount of
-time that passed since the beginning of the game's universe epoch. (A
-brand new campaign that just started begins at TIME zero.)
-MAPVIEW \| boolean \| Both settable and gettable. If you query MAPVIEW,
-it's true if on the map screen, and false if on the flight view screen.
-If you SET MAPVIEW, you can cause the game to switch between mapview and
-flight view or visa versa.
+========= ====================================== ==============
+Variable  Type                                   Meaning
+========= ====================================== ==============
+TIME      `Time <structures/misc/time.html>`__   Simulated amount of time that passed since the beginning of the game's universe epoch. (A brand new campaign that just started begins at TIME zero.)
+MAPVIEW    boolean                               Both settable and gettable. If you query MAPVIEW, it's true if on the map screen, and false if on the flight view screen.  If you SET MAPVIEW, you can cause the game to switch between mapview and flight view or visa versa.
+========= ====================================== ==============
 
 TIME is a useful system variable for calculating the passage of time
 between taking
@@ -285,7 +292,7 @@ time, which
 is what TIME returns.
 
 It's important to be aware of the `frozen update
-nature <../summary_topics/CPU_hardware/index.html#FROZEN>`__ of the kOS
+nature <general/CPU_hardware.html#FROZEN>`__ of the kOS
 computer when reading TIME.
 
 .. |Resources| image:: /_images/reference/bindings/resources.png

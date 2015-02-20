@@ -11,4 +11,4 @@ Command Reference
     Listing Data <commands/list>
     Parts Information <commands/parts>
     File I/O <commands/files>
-    Terminal <commands/terminal>
+    Terminal and GUI <commands/terminalgui>

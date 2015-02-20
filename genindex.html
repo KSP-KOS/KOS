@@ -17,7 +17,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -47,7 +47,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -62,6 +64,9 @@
         
             <ul>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/designpatterns.html">Design Patterns</a></li>
@@ -73,6 +78,7 @@
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
@@ -103,7 +109,7 @@
 <li class="toctree-l2"><a class="reference internal" href="commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
@@ -153,7 +159,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
 
 <h1 id="index">Index</h1>
@@ -241,7 +247,7 @@
   </dt>
 
       
-  <dt><a href="commands/terminal.html#function:AT">AT()</a>
+  <dt><a href="commands/terminalgui.html#function:AT">AT()</a>
   </dt>
 
       
@@ -295,6 +301,10 @@
   </dt>
 
       
+  <dt><a href="structures/celestial_bodies/body.html#attribute:BODY:ALTITUDEOF">Body:ALTITUDEOF</a>
+  </dt>
+
+      
   <dt><a href="structures/celestial_bodies/body.html#attribute:BODY:ANGULARVEL">Body:ANGULARVEL</a>
   </dt>
 
@@ -307,11 +317,15 @@
   </dt>
 
       
-  <dt><a href="structures/celestial_bodies/body.html#attribute:BODY:MASS">Body:MASS</a>
+  <dt><a href="structures/celestial_bodies/body.html#attribute:BODY:GEOPOSITIONOF">Body:GEOPOSITIONOF</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="structures/celestial_bodies/body.html#attribute:BODY:MASS">Body:MASS</a>
+  </dt>
+
       
   <dt><a href="structures/celestial_bodies/body.html#attribute:BODY:MU">Body:MU</a>
   </dt>
@@ -371,7 +385,7 @@
   </dt>
 
       
-  <dt><a href="commands/terminal.html#global:CLEARSCREEN">CLEARSCREEN</a>
+  <dt><a href="commands/terminalgui.html#global:CLEARSCREEN">CLEARSCREEN</a>
   </dt>
 
       
@@ -382,12 +396,16 @@
   <dt><a href="structures/misc/config.html#attribute:CONFIG:ARCH">Config:ARCH</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/config.html#attribute:CONFIG:IPU">Config:IPU</a>
   </dt>
 
+      
+  <dt><a href="structures/misc/config.html#attribute:CONFIG:LOOPBACK">Config:LOOPBACK</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/config.html#attribute:CONFIG:RT2">Config:RT2</a>
   </dt>
@@ -398,6 +416,14 @@
 
       
   <dt><a href="structures/misc/config.html#attribute:CONFIG:STAT">Config:STAT</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/config.html#attribute:CONFIG:TELNET">Config:TELNET</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/config.html#attribute:CONFIG:TPORT">Config:TPORT</a>
   </dt>
 
       
@@ -634,8 +660,6 @@
   <dt><a href="math/geocoordinates.html#attribute:GEOCOORDINATES:HEADING">GeoCoordinates:HEADING</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="math/geocoordinates.html#attribute:GEOCOORDINATES:LAT">GeoCoordinates:LAT</a>
   </dt>
@@ -648,8 +672,38 @@
   <dt><a href="math/geocoordinates.html#attribute:GEOCOORDINATES:POSITION">GeoCoordinates:POSITION</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="math/geocoordinates.html#attribute:GEOCOORDINATES:TERRAINHEIGHT">GeoCoordinates:TERRAINHEIGHT</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/gimbal.html#structure:GIMBAL">Gimbal [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/gimbal.html#attribute:GIMBAL:LOCK">Gimbal:LOCK</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/gimbal.html#attribute:GIMBAL:PITCHANGLE">Gimbal:PITCHANGLE</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/gimbal.html#attribute:GIMBAL:RANGE">Gimbal:RANGE</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/gimbal.html#attribute:GIMBAL:RESPONSESPEED">Gimbal:RESPONSESPEED</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/gimbal.html#attribute:GIMBAL:ROLLANGLE">Gimbal:ROLLANGLE</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/gimbal.html#attribute:GIMBAL:YAWANGLE">Gimbal:YAWANGLE</a>
   </dt>
 
       
@@ -664,6 +718,12 @@
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="math/direction.html#function:HEADING">HEADING()</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="commands/terminalgui.html#global:HUDTEXT">HUDTEXT</a>
   </dt>
 
   </dl></td>
@@ -831,7 +891,7 @@
   </dt>
 
       
-  <dt><a href="commands/terminal.html#global:MAPVIEW">MAPVIEW</a>
+  <dt><a href="commands/terminalgui.html#global:MAPVIEW">MAPVIEW</a>
   </dt>
 
       
@@ -968,12 +1028,12 @@
   <dt><a href="structures/orbits/orbitable.html#attribute:ORBITABLE:ALTITUDE">Orbitable:ALTITUDE</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/orbits/orbitable.html#attribute:ORBITABLE:APOAPSIS">Orbitable:APOAPSIS</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/orbits/orbitable.html#attribute:ORBITABLE:BODY">Orbitable:BODY</a>
   </dt>
@@ -988,6 +1048,18 @@
 
       
   <dt><a href="structures/orbits/orbitable.html#attribute:ORBITABLE:GEOPOSITION">Orbitable:GEOPOSITION</a>
+  </dt>
+
+      
+  <dt><a href="structures/orbits/orbitable.html#attribute:ORBITABLE:HASBODY">Orbitable:HASBODY</a>
+  </dt>
+
+      
+  <dt><a href="structures/orbits/orbitable.html#attribute:ORBITABLE:HASOBT">Orbitable:HASOBT</a>
+  </dt>
+
+      
+  <dt><a href="structures/orbits/orbitable.html#attribute:ORBITABLE:HASORBIT">Orbitable:HASORBIT</a>
   </dt>
 
       
@@ -1227,7 +1299,7 @@
   </dt>
 
       
-  <dt><a href="commands/terminal.html#global:PRINT">PRINT</a>
+  <dt><a href="commands/terminalgui.html#global:PRINT">PRINT</a>
   </dt>
 
       
@@ -1263,7 +1335,7 @@
   </dt>
 
       
-  <dt><a href="commands/terminal.html#global:REBOOT">REBOOT</a>
+  <dt><a href="commands/terminalgui.html#global:REBOOT">REBOOT</a>
   </dt>
 
       
@@ -1282,12 +1354,12 @@
   <dt><a href="structures/vessels/resource.html#attribute:RESOURCE:AMOUNT">Resource:AMOUNT</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/resource.html#attribute:RESOURCE:CAPACITY">Resource:CAPACITY</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/resource.html#attribute:RESOURCE:ENABLED">Resource:ENABLED</a>
   </dt>
@@ -1302,6 +1374,10 @@
 
       
   <dt><a href="structures/misc/colors.html#function:RGB">RGB()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/colors.html#structure:RGBA">RGBA [struct]</a>
   </dt>
 
       
@@ -1346,18 +1422,26 @@
   <dt><a href="structures/vessels/sensor.html#method:SENSOR:TOGGLE">Sensor:TOGGLE()</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/sensor.html#attribute:SENSOR:TYPE">Sensor:TYPE</a>
   </dt>
 
       
+  <dt><a href="commands/terminalgui.html#global:SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT">SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT</a>
+  </dt>
+
+      
+  <dt><a href="commands/terminalgui.html#global:SET TERMINAL:WIDTH. GET TERMINAL:WIDTH">SET TERMINAL:WIDTH. GET TERMINAL:WIDTH</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
   <dt><a href="math/ref_frame.html#index-0">SHIP-RAW (Reference Frame)</a>
   </dt>
 
       
-  <dt><a href="commands/terminal.html#global:SHUTDOWN">SHUTDOWN</a>
+  <dt><a href="commands/terminalgui.html#global:SHUTDOWN">SHUTDOWN</a>
   </dt>
 
       
@@ -1370,6 +1454,22 @@
 
       
   <dt><a href="math/basic.html#function:SQRT">SQRT()</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/stage.html#structure:STAGE">Stage [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/stage.html#attribute:STAGE:NUMBER">Stage:NUMBER</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/stage.html#attribute:STAGE:READY">Stage:READY</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/stage.html#attribute:STAGE:RESOURCES">Stage:Resources</a>
   </dt>
 
   </dl></td>
@@ -1387,6 +1487,18 @@
   </dt>
 
       
+  <dt><a href="structures/misc/terminal.html#structure:TERMINAL">Terminal [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/terminal.html#attribute:TERMINAL:HEIGHT">Terminal:HEIGHT</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/terminal.html#attribute:TERMINAL:WIDTH">Terminal:WIDTH</a>
+  </dt>
+
+      
   <dt><a href="structures/misc/time.html#global:TIME">TIME</a>
   </dt>
 
@@ -1398,6 +1510,8 @@
   <dt><a href="structures/misc/time.html#attribute:TIMESPAN:CALENDAR">TimeSpan:CALENDAR</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/time.html#attribute:TIMESPAN:CLOCK">TimeSpan:CLOCK</a>
   </dt>
@@ -1406,8 +1520,6 @@
   <dt><a href="structures/misc/time.html#attribute:TIMESPAN:DAY">TimeSpan:DAY</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/time.html#attribute:TIMESPAN:HOUR">TimeSpan:HOUR</a>
   </dt>
@@ -1471,6 +1583,10 @@
   </dt>
 
       
+  <dt><a href="commands/terminalgui.html#global:VECDRAW">VECDRAW</a>
+  </dt>
+
+      
   <dt><a href="structures/misc/vecdraw.html#structure:VECDRAW">VecDraw [struct]</a>
   </dt>
 
@@ -1504,6 +1620,10 @@
 
       
   <dt><a href="structures/misc/vecdraw.html#attribute:VECDRAW:VEC">VecDraw:VEC</a>
+  </dt>
+
+      
+  <dt><a href="commands/terminalgui.html#global:VECDRAWARGS">VECDRAWARGS</a>
   </dt>
 
       
@@ -1590,12 +1710,12 @@
   <dt><a href="structures/vessels/vessel.html#method:VESSEL:ALLPARTSTAGGED">Vessel:ALLPARTSTAGGED()</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:ANGULARMOMENTUM">Vessel:ANGULARMOMENTUM</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:ANGULARVEL">Vessel:ANGULARVEL</a>
   </dt>
@@ -1770,6 +1890,10 @@
   <dt><a href="structures/waypoint.html#attribute:WAYPOINT:BODY">Waypoint:BODY</a>
   </dt>
 
+      
+  <dt><a href="structures/waypoint.html#attribute:WAYPOINT:CLUSTERED">Waypoint:CLUSTERED</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -1781,11 +1905,19 @@
   </dt>
 
       
+  <dt><a href="structures/waypoint.html#attribute:WAYPOINT:INDEX">Waypoint:INDEX</a>
+  </dt>
+
+      
   <dt><a href="structures/waypoint.html#attribute:WAYPOINT:NAME">Waypoint:NAME</a>
   </dt>
 
       
   <dt><a href="structures/waypoint.html#attribute:WAYPOINT:NEARSURFACE">Waypoint:NEARSURFACE</a>
+  </dt>
+
+      
+  <dt><a href="structures/waypoint.html#attribute:WAYPOINT:POSITION">Waypoint:POSITION</a>
   </dt>
 
       
@@ -1823,7 +1955,8 @@
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

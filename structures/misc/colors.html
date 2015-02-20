@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -49,7 +49,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,6 +66,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
@@ -75,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
@@ -105,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -161,12 +167,12 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="color">
 <span id="colors"></span><span id="id1"></span><h1>Colors<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h1>
 <p>Any place you need to specify a color in the game (at the moment this is
-just with <a class="reference internal" href="vecdraw.html#vecdraw"><em>VECDRAW</em></a>.) You do so with a
+just with <a class="reference internal" href="vecdraw.html#vecdraw"><em>VECDRAW</em></a>. and HUDTEXT) You do so with a
 rgba color structure defined as follows:</p>
 <p>Method 1: Use one of these pre-arranged named colors:</p>
 <ul>
@@ -260,6 +266,47 @@ rgba color structure defined as follows:</p>
 </dl>
 </dd></dl>
 
+<dl class="structure">
+<dt id="structure:RGBA">
+<em class="property">structure </em><tt class="descname">RGBA</tt><a class="headerlink" href="#structure:RGBA" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<caption>Members</caption>
+<colgroup>
+<col width="29%" />
+<col width="14%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>:R or :RED</td>
+<td>scalar</td>
+<td>the red component of the color</td>
+</tr>
+<tr class="row-odd"><td>:G or :GREEN</td>
+<td>scalar</td>
+<td>the green component of the color</td>
+</tr>
+<tr class="row-even"><td>:B or :BLUE</td>
+<td>scalar</td>
+<td>the blue component of the color</td>
+</tr>
+<tr class="row-odd"><td>:A or :ALPHA</td>
+<td>scalar</td>
+<td>the alpha (how opaque: 1 = opaque, 0 = transparent) component of the color</td>
+</tr>
+<tr class="row-even"><td>:HTML or :HEX</td>
+<td>string</td>
+<td>the color rendered into a HTML tag string i.e. &#8220;#ff0000&#8221;.  This format ignores the alpha channel and treats all colors as opaque.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <p>Examples:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myarrow</span> <span class="n">TO</span> <span class="n">VECDRAW</span><span class="p">.</span>
 <span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">VEC</span> <span class="n">to</span> <span class="n">V</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">).</span>
@@ -273,6 +320,8 @@ rgba color structure defined as follows:</p>
 
 <span class="c1">// half transparent yellow.</span>
 <span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOR</span> <span class="n">to</span> <span class="n">RGBA</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">).</span>
+
+<span class="n">PRINT</span> <span class="n">GREEN</span><span class="o">:</span><span class="n">HTML</span><span class="p">.</span> <span class="c1">// prints #00ff00</span>
 </pre></div>
 </div>
 </div>
@@ -283,7 +332,7 @@ rgba color structure defined as follows:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="config.html" class="btn btn-neutral float-right" title="Configuration of kOS"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="config.html" class="btn btn-neutral float-right" title="Configuration of kOS">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../misc.html" class="btn btn-neutral" title="Configurations and Miscellany"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -299,7 +348,8 @@ rgba color structure defined as follows:</p>
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

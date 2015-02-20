@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -35,7 +35,7 @@
     <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Drawing Vectors on the Screen" href="vecdraw.html"/>
-        <link rel="prev" title="List" href="list.html"/> 
+        <link rel="prev" title="Terminal" href="terminal.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -49,7 +49,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,6 +66,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
@@ -75,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
@@ -105,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -161,14 +167,17 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="time-span">
 <span id="timestamp"></span><span id="time"></span><h1>Time Span<a class="headerlink" href="#time-span" title="Permalink to this headline">¶</a></h1>
 <p>In several places the game uses a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></tt></a> format. This is a strucure that gives the time in various formats. It also allows you to peform arithmetic on the time.</p>
 <div class="section" id="timespan-represents-simulated-time">
 <h2>TimeSpan represents <em>SIMULATED</em> time<a class="headerlink" href="#timespan-represents-simulated-time" title="Permalink to this headline">¶</a></h2>
-<p>When you are examining a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></tt></a> you are looking the &#8220;in character&#8221; <strong>simulated</strong> time, not the &#8220;out of character&#8221; real world time. This is very important distinction to remember, as the following points illustrate:</p>
+<p>When you are examining a <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></tt></a> you are looking at the
+&#8220;in character&#8221; <strong>simulated</strong> time, not the &#8220;out of character&#8221; real
+world time. This is a very important distinction to remember, as
+the following points illustrate:</p>
 <ul class="simple">
 <li>A <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></tt></a> does not count the time that was passing while the game was paused.</li>
 <li>If you turn off your computer and don&#8217;t play the game for several days, the <a class="reference internal" href="#structure:TIMESPAN" title="TIMESPAN structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">TimeSpan</span></tt></a> does not count this time.</li>
@@ -422,10 +431,10 @@ TimeSpan:<tt class="descname">SECONDS</tt><a class="headerlink" href="#attribute
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="vecdraw.html" class="btn btn-neutral float-right" title="Drawing Vectors on the Screen"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="vecdraw.html" class="btn btn-neutral float-right" title="Drawing Vectors on the Screen">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="list.html" class="btn btn-neutral" title="List"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="terminal.html" class="btn btn-neutral" title="Terminal"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -438,7 +447,8 @@ TimeSpan:<tt class="descname">SECONDS</tt><a class="headerlink" href="#attribute
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

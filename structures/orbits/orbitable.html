@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -49,7 +49,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,6 +66,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
@@ -75,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
@@ -105,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -161,7 +167,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="orbitable-vessels-and-bodies">
 <span id="orbitable"></span><h1>Orbitable (Vessels and Bodies)<a class="headerlink" href="#orbitable-vessels-and-bodies" title="Permalink to this headline">¶</a></h1>
@@ -177,8 +183,8 @@
 <dd><p><strong>These terms are all read-only.</strong></p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="35%" />
-<col width="65%" />
+<col width="32%" />
+<col width="68%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -192,60 +198,69 @@
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:BODY" title="ORBITABLE:BODY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">BODY</span></tt></a></td>
 <td><a class="reference internal" href="../celestial_bodies/body.html#structure:BODY" title="BODY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Body</span></tt></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:OBT" title="ORBITABLE:OBT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OBT</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:HASBODY" title="ORBITABLE:HASBODY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HASBODY</span></tt></a></td>
+<td>boolean</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:HASORBIT" title="ORBITABLE:HASORBIT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HASORBIT</span></tt></a></td>
+<td>boolean</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:HASOBT" title="ORBITABLE:HASOBT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HASOBT</span></tt></a></td>
+<td>boolean</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:OBT" title="ORBITABLE:OBT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OBT</span></tt></a></td>
 <td><a class="reference internal" href="orbit.html#structure:ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbit</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:UP" title="ORBITABLE:UP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UP</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:UP" title="ORBITABLE:UP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UP</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:NORTH" title="ORBITABLE:NORTH attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NORTH</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:NORTH" title="ORBITABLE:NORTH attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NORTH</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:PROGRADE" title="ORBITABLE:PROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PROGRADE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:PROGRADE" title="ORBITABLE:PROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PROGRADE</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:SRFPROGRADE" title="ORBITABLE:SRFPROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SRFPROGRADE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:SRFPROGRADE" title="ORBITABLE:SRFPROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SRFPROGRADE</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:RETROGRADE" title="ORBITABLE:RETROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RETROGRADE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:RETROGRADE" title="ORBITABLE:RETROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RETROGRADE</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:SRFRETROGRADE" title="ORBITABLE:SRFRETROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SRFRETROGRADE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:SRFRETROGRADE" title="ORBITABLE:SRFRETROGRADE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SRFRETROGRADE</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:POSITION" title="ORBITABLE:POSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:POSITION" title="ORBITABLE:POSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></tt></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:VELOCITY" title="ORBITABLE:VELOCITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VELOCITY</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:VELOCITY" title="ORBITABLE:VELOCITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VELOCITY</span></tt></a></td>
 <td><a class="reference internal" href="orbitablevelocity.html#structure:ORBITABLEVELOCITY" title="ORBITABLEVELOCITY structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">OrbitableVelocity</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:DISTANCE" title="ORBITABLE:DISTANCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DISTANCE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:DISTANCE" title="ORBITABLE:DISTANCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DISTANCE</span></tt></a></td>
 <td>scalar (m)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:DIRECTION" title="ORBITABLE:DIRECTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DIRECTION</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:DIRECTION" title="ORBITABLE:DIRECTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DIRECTION</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:LATITUDE" title="ORBITABLE:LATITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LATITUDE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:LATITUDE" title="ORBITABLE:LATITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LATITUDE</span></tt></a></td>
 <td>scalar (deg)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:LONGITUDE" title="ORBITABLE:LONGITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LONGITUDE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:LONGITUDE" title="ORBITABLE:LONGITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LONGITUDE</span></tt></a></td>
 <td>scalar (deg)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:ALTITUDE" title="ORBITABLE:ALTITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:ALTITUDE" title="ORBITABLE:ALTITUDE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALTITUDE</span></tt></a></td>
 <td>scalar (m)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:GEOPOSITION" title="ORBITABLE:GEOPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITION</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:GEOPOSITION" title="ORBITABLE:GEOPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GEOPOSITION</span></tt></a></td>
 <td><a class="reference internal" href="../../math/geocoordinates.html#structure:GEOCOORDINATES" title="GEOCOORDINATES structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">GeoCoordinates</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:PATCHES" title="ORBITABLE:PATCHES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PATCHES</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:PATCHES" title="ORBITABLE:PATCHES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PATCHES</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="orbit.html#structure:ORBIT" title="ORBIT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Orbits</span></tt></a></td>
 </tr>
-<tr class="row-even"><td colspan="2">The Following are deprecated (use <a class="reference internal" href="#attribute:ORBITABLE:OBT" title="ORBITABLE:OBT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OBT</span></tt></a>)</td>
+<tr class="row-odd"><td colspan="2">The Following are deprecated (use apoapsis and periapsis on <a class="reference internal" href="#attribute:ORBITABLE:OBT" title="ORBITABLE:OBT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OBT</span></tt></a>)</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:APOAPSIS" title="ORBITABLE:APOAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">APOAPSIS</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:APOAPSIS" title="ORBITABLE:APOAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">APOAPSIS</span></tt></a></td>
 <td>scalar (m)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ORBITABLE:PERIAPSIS" title="ORBITABLE:PERIAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PERIAPSIS</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ORBITABLE:PERIAPSIS" title="ORBITABLE:PERIAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PERIAPSIS</span></tt></a></td>
 <td>scalar (m)</td>
 </tr>
 </tbody>
@@ -266,6 +281,54 @@ Orbitable:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:O
 </tbody>
 </table>
 <p>Name of this vessel or body.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ORBITABLE:HASBODY">
+Orbitable:<tt class="descname">HASBODY</tt><a class="headerlink" href="#attribute:ORBITABLE:HASBODY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>True if this object has a body it orbits (false only when this object is the Sun, pretty much).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ORBITABLE:HASORBIT">
+Orbitable:<tt class="descname">HASORBIT</tt><a class="headerlink" href="#attribute:ORBITABLE:HASORBIT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Alias for HASBODY.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ORBITABLE:HASOBT">
+Orbitable:<tt class="descname">HASOBT</tt><a class="headerlink" href="#attribute:ORBITABLE:HASOBT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Alias for HASBODY.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -584,7 +647,7 @@ Orbitable:<tt class="descname">PERIAPSIS</tt><a class="headerlink" href="#attrib
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="orbitablevelocity.html" class="btn btn-neutral float-right" title="OrbitableVelocity"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="orbitablevelocity.html" class="btn btn-neutral float-right" title="OrbitableVelocity">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="orbit.html" class="btn btn-neutral" title="Orbit"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -600,7 +663,8 @@ Orbitable:<tt class="descname">PERIAPSIS</tt><a class="headerlink" href="#attrib
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

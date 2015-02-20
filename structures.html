@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -34,7 +34,7 @@
               href="about.html"/>
     <link rel="top" title="kOS 0.15.3 documentation" href="index.html"/>
         <link rel="next" title="Orbits" href="structures/orbits.html"/>
-        <link rel="prev" title="Terminal and game environment" href="commands/terminal.html"/> 
+        <link rel="prev" title="Terminal and game environment" href="commands/terminalgui.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -48,7 +48,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -63,6 +65,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/designpatterns.html">Design Patterns</a></li>
@@ -74,6 +79,7 @@
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
@@ -104,7 +110,7 @@
 <li class="toctree-l2"><a class="reference internal" href="commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Structures</a><ul>
@@ -156,7 +162,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="structure-reference">
 <span id="structures"></span><h1>Structure Reference<a class="headerlink" href="#structure-reference" title="Permalink to this headline">¶</a></h1>
@@ -205,6 +211,8 @@
 <li><a class="reference internal" href="structures/vessels/engine.html#structure:ENGINE" title="ENGINE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Engine</span></tt></a></li>
 <li><a class="reference internal" href="structures/vessels/aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">AggregateResource</span></tt></a></li>
 <li><a class="reference internal" href="structures/vessels/dockingport.html#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/gimbal.html#structure:GIMBAL" title="GIMBAL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Gimbal</span></tt></a></li>
+<li><a class="reference internal" href="structures/vessels/stage.html#structure:STAGE" title="STAGE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Stage</span></tt></a></li>
 <li><a class="reference internal" href="structures/vessels/part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></li>
 <li><a class="reference internal" href="structures/vessels/partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a></li>
 <li><a class="reference internal" href="structures/vessels/sensor.html#structure:SENSOR" title="SENSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Sensor</span></tt></a></li>
@@ -220,6 +228,7 @@
 <li><a class="reference internal" href="structures/misc/fileinfo.html#structure:FILEINFO" title="FILEINFO structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">FileInfo</span></tt></a></li>
 <li><a class="reference internal" href="structures/misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></li>
 <li><a class="reference internal" href="structures/misc/iterator.html#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a></li>
+<li><a class="reference internal" href="structures/misc/terminal.html#structure:TERMINAL" title="TERMINAL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Terminal</span></tt></a></li>
 <li><a class="reference internal" href="structures/misc/colors.html#colors"><em>Colors</em></a></li>
 <li><a class="reference internal" href="structures/misc/time.html#time"><em>Time</em></a></li>
 <li><a class="reference internal" href="structures/misc/vecdraw.html#vecdraw"><em>Drawing Vectors</em></a></li>
@@ -238,10 +247,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="structures/orbits.html" class="btn btn-neutral float-right" title="Orbits"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="structures/orbits.html" class="btn btn-neutral float-right" title="Orbits">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="commands/terminal.html" class="btn btn-neutral" title="Terminal and game environment"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="commands/terminalgui.html" class="btn btn-neutral" title="Terminal and game environment"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -254,7 +263,8 @@
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

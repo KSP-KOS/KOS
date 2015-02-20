@@ -16,7 +16,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   
   
@@ -49,7 +49,9 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,6 +66,9 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
@@ -75,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
@@ -105,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/terminal.html">Terminal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -161,7 +167,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="configuration-of-kos">
 <h1>Configuration of kOS<a class="headerlink" href="#configuration-of-kos" title="Permalink to this headline">¶</a></h1>
@@ -189,7 +195,7 @@
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:IPU" title="CONFIG:IPU attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">IPU</span></tt></a></td>
 <td>integer</td>
-<td>&nbsp;</td>
+<td>150</td>
 <td>Instructions per update</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:UCP" title="CONFIG:UCP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UCP</span></tt></a></td>
@@ -221,6 +227,21 @@
 <td>boolean</td>
 <td>False</td>
 <td>Enable verbose exceptions</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:TELNET" title="CONFIG:TELNET attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TELNET</span></tt></a></td>
+<td>boolean</td>
+<td>False</td>
+<td>activate the telnet server</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:TPORT" title="CONFIG:TPORT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></tt></a></td>
+<td>integer</td>
+<td>5410</td>
+<td>set the port the telnet server will run on</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:LOOPBACK" title="CONFIG:LOOPBACK attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOOPBACK</span></tt></a></td>
+<td>boolean</td>
+<td>True</td>
+<td>Force the telnet server to use loopback (127.0.0.1) address</td>
 </tr>
 </tbody>
 </table>
@@ -353,6 +374,83 @@ Config:<tt class="descname">VERBOSE</tt><a class="headerlink" href="#attribute:C
 <p>If true, then it enables a mode in which errors coming from kOS are very long and verbose, trying to explain every detail of the problem.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:CONFIG:TELNET">
+Config:<tt class="descname">TELNET</tt><a class="headerlink" href="#attribute:CONFIG:TELNET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Configures the <tt class="docutils literal"><span class="pre">EnableTelnet</span></tt> setting.</p>
+<p>When set to true, it activates a
+<a class="reference external" href="../../general/telnet.html">kOS telnet server in game</a> that allows you to
+connect external terminal programs like Putty and Xterm to it.
+Turning the option off or on immediately toggles the server.  (When
+you change it from false to true, it will start the server right then.
+When you change it from true to false, it will stop the server right
+then.)  Therefore <strong>to restart the server</strong> after changing a setting like
+<tt class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></tt>, DO this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Restart telnet server:</span>
+<span class="n">SET</span> <span class="n">CONFIG</span><span class="o">:</span><span class="n">TELNET</span> <span class="n">TO</span> <span class="n">FALSE</span><span class="p">.</span>
+<span class="n">WAIT</span> <span class="mf">0.5</span><span class="p">.</span> <span class="c1">// important to give kOS a moment to notice and kill the old server.</span>
+<span class="n">SET</span> <span class="n">CONFIG</span><span class="o">:</span><span class="n">TELNET</span> <span class="n">TO</span> <span class="n">TRUE</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Of course, you can do the equivalent of that by using the GUI config panel and just
+clicking the button off then clicking it on.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CONFIG:TPORT">
+Config:<tt class="descname">TPORT</tt><a class="headerlink" href="#attribute:CONFIG:TPORT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Configures the <tt class="docutils literal"><span class="pre">TelnetPort</span></tt> setting.</p>
+<p>Changes the TCP/IP port number that the
+<a class="reference external" href="../../general/telnet.html">kOS telnet server in game</a>
+will listen to.</p>
+<p>To make the change take effect you may have to
+stop, then restart the telnet server, as described above.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CONFIG:LOOPBACK">
+Config:<tt class="descname">LOOPBACK</tt><a class="headerlink" href="#attribute:CONFIG:LOOPBACK" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Configures the <tt class="docutils literal"><span class="pre">TelnetLoopback</span></tt> setting.</p>
+<p>If true, then it tells the
+<a class="reference external" href="../../general/telnet.html">kOS telnet server in game</a>
+to refuse to use the computer&#8217;s actual IP address, and
+instead use the loopback address (127.0.0.1).  This is
+the default mode the kOS mod ships in, in order to
+make it impossible get external access to your computer.</p>
+<p>To make the change take effect you may have to
+stop, then restart the telnet server, as described above.</p>
+</dd></dl>
+
 </div>
 
 
@@ -361,7 +459,7 @@ Config:<tt class="descname">VERBOSE</tt><a class="headerlink" href="#attribute:C
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="fileinfo.html" class="btn btn-neutral float-right" title="File Information"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="fileinfo.html" class="btn btn-neutral float-right" title="File Information">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="colors.html" class="btn btn-neutral" title="Colors"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -377,7 +475,8 @@ Config:<tt class="descname">VERBOSE</tt><a class="headerlink" href="#attribute:C
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>
