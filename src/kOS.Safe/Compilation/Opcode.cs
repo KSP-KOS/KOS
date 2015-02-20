@@ -1166,7 +1166,7 @@ namespace kOS.Safe.Compilation
                         castError = true;
                     }
                     if (castError) {
-                        throw new Exception("Argument " + i + "("+arg+") to method " + methInfo.Name + " should be " + paramType.Name + " instead of " + argType + ".");
+                        throw new Exception("Argument " + (paramArray.Length - i) + "("+arg+") to method " + methInfo.Name + " should be " + paramType.Name + " instead of " + argType + ".");
                     }
                 }
                 
