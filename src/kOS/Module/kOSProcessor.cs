@@ -528,8 +528,15 @@ namespace kOS.Module
                 switch (newProcessorMode)
                 {
                     case ProcessorModes.READY:
-                        if ((ProcessorMode == ProcessorModes.STARVED || ProcessorMode == ProcessorModes.OFF) && shared.Cpu != null)
-                            shared.Cpu.Boot();
+                        if (Config.Instance.StartOnArchive)
+                        {
+                            shared.VolumeMgr.SwitchTo(shared.VolumeMgr.GetVolume(0));
+                        }
+                        else
+                        {
+                            shared.VolumeMgr.SwitchTo(HardDisk);
+                        }
+                        if (shared.Cpu != null) shared.Cpu.Boot();
                         if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                         if (shared.Window != null) shared.Window.IsPowered = true;
                         break;
