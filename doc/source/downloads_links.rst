@@ -1,7 +1,9 @@
 Downloads and Video Links
 ==========================
 
-    Useful resources off-site for kOS:
+    Useful link resources for kOS:
+
+.. _obtain:
 
 Obtaining kOS itself
 ---------------------
@@ -22,6 +24,15 @@ Obtaining kOS itself
     - `Download from Curse <http://www.curse.com/ksp-mods/kerbal/220265-kos-scriptable-autopilot-system>`__
       Love it or Loathe it, Curse is the official place SQUAD points people to for KSP addons, so we
       make it available there too.
+
+.. _changelog:
+
+Change Log
+----------
+
+    - `Change Log <https://github.com/KSP-KOS/KOS/blob/develop/CHANGELOG.md>`__ on Github.
+
+.. _showandtell:
 
 Show and Tell, and Tutorials
 ----------------------------
