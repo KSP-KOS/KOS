@@ -157,9 +157,8 @@ namespace kOS.Screen
 
             Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum +
                                                      " will now actually make its hooks");
-            if (Config.Instance.UseBlizzyToolbar)
-                AddBlizzyButton();
-            else
+
+            if (!Config.Instance.UseBlizzyToolbarOnly)
             {
                 ApplicationLauncher launcher = ApplicationLauncher.Instance;
 
@@ -177,33 +176,20 @@ namespace kOS.Screen
                 launcher.AddOnHideCallback(CallbackOnHide);
                 launcher.EnableMutuallyExclusive(launcherButton);
 
-                //Will show buttons both on blizzy (if available) and stock toolbar
-                AddBlizzyButton();
             }
+            //Will show button on Blizzy's toolbar anyway
+            AddBlizzyButton();
 
         }
 
         public void AddBlizzyButton()
         {
-            //Add Blizzy Toolbar button
             if (!ToolbarManager.ToolbarAvailable) return;
 
             BlizzyButton = ToolbarManager.Instance.add("kOS", "kOSButton");
             BlizzyButton.TexturePath = "kOS/GFX/launcher-button-blizzy";
             BlizzyButton.ToolTip = "kOS";
             BlizzyButton.OnClick += (e) => CallbackOnClickBlizzy();
-
-            if (launcherButton == null) return;
-            if (Config.Instance.UseBlizzyToolbar)
-            {
-                ApplicationLauncher launcher = ApplicationLauncher.Instance;
-                launcher.DisableMutuallyExclusive(launcherButton);
-                launcher.RemoveOnRepositionCallback(CallbackOnShow);
-                launcher.RemoveOnHideCallback(CallbackOnHide);
-                launcher.RemoveOnShowCallback(CallbackOnShow);
-
-                launcher.RemoveModApplication(launcherButton);               
-            }
         }
         
         public void GoAway()

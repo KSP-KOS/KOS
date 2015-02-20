@@ -22,7 +22,7 @@ namespace kOS.Suffixed
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
         public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
-        public bool UseBlizzyToolbar { get { return GetPropValue<bool>(PropId.UseBlizzyToolbar); } set { SetPropValue(PropId.UseBlizzyToolbar, value); } }
+        public bool UseBlizzyToolbarOnly { get { return GetPropValue<bool>(PropId.UseBlizzyToolbarOnly); } set { SetPropValue(PropId.UseBlizzyToolbarOnly, value); } }
 
         private Config()
         {
@@ -43,7 +43,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
             if(ToolbarManager.ToolbarAvailable)
-                AddConfigKey(PropId.UseBlizzyToolbar, new ConfigKey("UseBlizzyToolbar", "BLIZZY", "Use Blizzy toolbar only. Needs Scene restart.", false, false, true, typeof(bool)));
+                AddConfigKey(PropId.UseBlizzyToolbarOnly, new ConfigKey("UseBlizzyToolbarOnly", "BLIZZY", "Use Blizzy toolbar only. Takes effect on new scene.", false, false, true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -179,7 +179,7 @@ namespace kOS.Suffixed
             StartOnArchive = 5,
             EnableSafeMode = 6,
             VerboseExceptions = 7,
-            UseBlizzyToolbar = 8
+            UseBlizzyToolbarOnly = 8
         }
     }
 
