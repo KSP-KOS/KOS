@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
 # SharpDevelop 4.4
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS", "kOS\kOS.csproj", "{465EC87D-723D-4A6C-B116-9777AC641DE3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kOS.Safe", "kOS.Safe\kOS.Safe.csproj", "{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}"
