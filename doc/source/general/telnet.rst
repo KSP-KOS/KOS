@@ -6,8 +6,11 @@ The kOS Telnet Server
 kOS now supports the ability to enable a `telnet server <http://www.telnet.org/htm/faq.htm>`_
 inside Kerbal Space Program.
 
-.. figure:: /_images/general/telnet.png
-    :width: 95 %
+.. raw:: html
+
+    <div style="margin-top:10px;">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/CgwRY-OrPhI?list=PLdXwd2JlyAvo_pH1tS3P7elVTYjvmIh-m" frameborder="0" allowfullscreen></iframe>
+    </div>
 
 Telnet is an old network protocol designed in the early days of the Internet, long
 before World Wide Web.  Its purpose was (is) to allow you to get access to the
@@ -29,6 +32,8 @@ on, see the section called "`Security`_" at the bottom of this page.
     :local:
     :depth: 1
 
+.. figure:: /_images/general/telnet.png
+    :width: 95 %
 
 Telnet clients
 --------------
@@ -422,16 +427,17 @@ codes already supported, then these are the subset you need to support:
 
 0x0d (control-M)
   Return key.  On output it means go to left edge but don't go down a line.
-  A typical eoln needs to occur using its ASCII standard of \r\n.
+  A typical eoln needs to occur using its ASCII standard of both a
+  return character 0x0d AND a linefeed character 0x0a
 
 0x0a (control-J)
   On output it means go to go down a line but don't go to the left edge
-  A typical eoln needs to occur using its ASCII standard of \r\n.
+  A typical eoln needs to occur using its ASCII standard of both a 
+  return character 0x0d AND a linefeed character 0x0a
 
 
 
-*Terminal codes*
-   The following terms should have their VT100/XTERM meaning:
+**Terminal codes:** *The following terms should have their VT100/XTERM meaning*
 
 Left-Arrow
   ESC [ D  *-- both on input and on output*
@@ -486,7 +492,7 @@ Delete-at-the-cursor-toward-the-right
 
 
 
-*The following codes are for the XTERM emulation only*
+**XTERM codes:** *The following codes are for the XTERM emulation only*
 
 Server-telling-client-to-resize-screen
   ESC [ 8 ; *newheight* ; *newwidth* t  *-- The height/width are in chars*
@@ -494,7 +500,10 @@ Server-telling-client-to-resize-screen
 Server-telling-client-to-change-window-title
   ESC ] 2 ; *title string* BEL  *-- where BEL is the character normally 
   used to mean beep: control-G or 0x07.  But in this context it just marks
-  the end of the title and shouldn't cause a beep.
+  the end of the title and shouldn't cause a beep.*
+  Note this is NOT a typo that it uses a right-square-bracket ("]") here where
+  all the other codes used a left-square-bracket ("[").  That's actually
+  how the xterm control sequence for this really looks.
 
 
 Any value not mentioned in the list above might still get sent, but you 

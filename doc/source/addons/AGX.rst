@@ -1,5 +1,5 @@
 Action Groups Extended
-=======
+======================
 
 - Download: https://github.com/SirDiazo/AGExt/releases  
 - Forum thread, including full instructions: http://forum.kerbalspaceprogram.com/threads/74195
@@ -17,8 +17,8 @@ Caution: Sometimes, AGX will return an unexpected value for a group's state (On/
  
 **Basic Quick Start:**
 
-.. figure:: /develop/doc/source/addons/AGExtQuickStart1.jpg
-.. figure:: /develop/doc/source/addons/AGExtQuickStart2.jpg
+.. figure:: /_images/addons/AGExtQuickStart1.jpg
+.. figure:: /_images/addons/AGExtQuickStart2.jpg
 
 
 **Overview Walkthrough:** (Video, imagur album, animated gif, something)

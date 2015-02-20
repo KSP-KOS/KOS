@@ -80,9 +80,14 @@ GUI display tools
 
     You can make text messages appear on the heads-up display, in the
     same way that the in-game stock messages appear, by calling the
-    HUDTEXT function, as follows:
+    HUDTEXT function, as follows::
 
-    HUDTEXT( string Message, integer delaySeconds, integer style, integer size, RGBA colour, boolean doEcho).
+        HUDTEXT( string Message, 
+                 integer delaySeconds,
+                 integer style,
+                 integer size,
+                 RGBA colour,
+                 boolean doEcho).
 
     Message
       The message to show to the user on screen
@@ -104,7 +109,7 @@ GUI display tools
       of the locations have a magnifying factor attached to their fonts.
     colour
       The colour to show the text in, using `one of the built-in colour names
-      or the RGB constructor to make one up <../structures/misc/rgba.html>`__
+      or the RGB constructor to make one up <../structures/misc/colors.html>`__
     doEcho
       If true, then the message is also echoed to the terminal as "HUD: message".
 

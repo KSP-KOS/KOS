@@ -5,7 +5,7 @@ Colors
 ======
 
 Any place you need to specify a color in the game (at the moment this is
-just with :ref:`VECDRAW <vecdraw>`.) You do so with a
+just with :ref:`VECDRAW <vecdraw>`. and HUDTEXT) You do so with a
 rgba color structure defined as follows:
 
 Method 1: Use one of these pre-arranged named colors:
@@ -75,7 +75,7 @@ Method 1: Use one of these pre-arranged named colors:
           - the alpha (how opaque: 1 = opaque, 0 = transparent) component of the color
         * - :HTML or :HEX
           - string
-          - the color rendered into a HTML tag string i.e. "#ff0000".  This format ignores the alpha channel and treats all colors as opaue.
+          - the color rendered into a HTML tag string i.e. "#ff0000".  This format ignores the alpha channel and treats all colors as opaque.
 
 Examples::
 

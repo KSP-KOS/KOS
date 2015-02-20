@@ -4,33 +4,41 @@ kOS Mod Changelog
 # v0.16.0
 
 ### BREAKING
-* Body:FACING and SHIP:FACING are now vectors instead of directions, they were pretty useless before so this shouldnt hurt many scripters :)
-* #536 the 1.5m kOS part has always had trouble with clipping into other parts. This fixes this but will change the length of craft using is slightly. 
+* Body:ANGULARVEL is now a Vector instead of a Direction.  (This is the same as the change that was done to Vessel:ANGULARVEL in v0.15.4, but we missed the fact that Body had the same problem).  It was pretty useless before so this shouldn't hurt many scripters :)
+* Both Body:ANGULARVEL and Vessel:ANGULARVEL now are expressed in the same SHIP_RAW coordinate system as everything else in kOS, rather than in their own private weirdly mirrored reference frame. (Thanks to forum user @thegreatgonz for finding the problem and the fix)
+* #536 the 1.5m kOS part has always had trouble with clipping into other parts due to the rim of the cylinder sticking up past the attachment points. The part definition has been changed to fix this, but in KSP new part definitions don't affect vessels that have already been built or have already had their design saved in a craft file in the VAB/SPH.  To see the fix you'll need to start a new vessel design from scratch, otherwise you'll still have the old clipping behavior.
 
 ### New Features
+* TELNET SERVER.  The biggest new feature this update is the introduction of a **telnet server** you can use to access the terminals in game.  For security, it's turned off by default, but you can enable it with the config radio button.  Full documentation on this new feature is at http://ksp-kos.github.io/KOS_DOC/general/telnet.html
+    * Synopsis:
+        * Telnet to 127.0.0.1, port 5410
+        * Select CPU from welcome menu by typing a number and hitting Return.
+        * Your telnet client is now a clone of that CPU's terminal window and can control it.
+        * If you want to open it up to others to use (i.e. controlling your KSP game from a second computer),
+          you can use an ssh tunnel to access the local loopback address, or if you just want to throw
+          caution to the wind, you can tell it to stop using loopback and use your real IP address.
+          Be aware of the security risk if you choose this.
 * Added HUDTEXT that lets you add text to the screen. Thanks @pgodd !
     * more information here: http://ksp-kos.github.io/KOS_DOC/commands/terminal.html#HUDTEXT 
-* TODO TERMINAL SERVER!!!
 * #72 - Added STAGE:NUMBER and STAGE:READY to allow for staging very close together
-* #522 - Added BODY:GEOPOSITIONOF and BODY:ALTITUDEOF 
+* #522 - Added BODY:GEOPOSITIONOF and BODY:ALTITUDEOF for getting body-relative info about a 3D point in space.
 * #524 and #523 - mission waypoints now have 3d positions
-* In game Terminal is now resizable!
+* In game Terminal is now resizable!  From a script with SET TERMINAL:WIDTH and SET TERMINAL:HEIGHT, or from dragging the lower-right corner of the GUI window.
 
 ### Bug Fixes
 * Fixes #389 - LOCK STEERING broken for RCS-only (no torque) ships.
 * Fixes #516 - kOSTags are now applied in the correct MM pass
-* Fixes #541 - All BODY: suffixes should now work for the center star.
+* Fixes #541 - All BODY: suffixes should now work properly when the body is the Sun without crashing.
 * Fixes #544 - Terminal subbuffer won't shrink when up-arrowing to a previous smaller command.
-* Fixes #545 - The terminal Cursor should never be invisible
 * Fixes #548 - If SHIP is not the same as ActiveVessel, then executing STAGE stages the wrong vessel.
-* Fixes #581 - SHIP:CONTROL:PILOTFORE and :PILOTSTARBOARD are no longer inverted
-* Fixes #578 - renamed our use of RemoteTech2 to RemoteTech to follow their new naming
-* Fixes #427 - Stack doesnt clear on exception termination
-* Fixes #409 - Delete leaves file in memory
-* Fixes #172 - Lock states persist through power cycling unit, become default for unlocked state
+* Fixes #581 - SHIP:CONTROL:PILOTFORE and SHIP:CONTROL:PILOTSTARBOARD are no longer inverted.
+* Fixes #578 - renamed our use of RemoteTech2 to RemoteTech to follow their new naming.
+* Fixes #427 - Stack now clears when interactive commands throw exceptions.  (no longer reports false stack traces).
+* Fixes #409 - Delete no longer leaves file in memory.
+* Fixes #172 - Lock states no longer persist through power cycling unit. Now they become default for unlocked state
    * Also #358, #362, #568
-* Fixes #580 - RT "signal lost. waiting to re-aquire signal" check disallows manned terminal use.
-* Fixes #344 - KOSArgumentMismatchException reports wrong arg number
+* Fixes #580 - RT "signal lost. waiting to re-aquire signal" check previously disallowed manned terminal use.  Now it only disables the terminal if the vessel is unmanned.
+* Fixes #344 - KOSArgumentMismatchException reported wrong arg number (i.e. it would claim your 3rd argument is wrong when it's really your 1st argument).  Fixed.
 
 
 # v0.15.6
