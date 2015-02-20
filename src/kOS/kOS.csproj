@@ -50,13 +50,13 @@
   <ItemGroup>
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
-    <Compile Include="AddOns\RemoteTech2\IRemoteTechAPIv1.cs" />
-    <Compile Include="AddOns\RemoteTech2\RemoteTechAPI.cs" />
-    <Compile Include="AddOns\RemoteTech2\RemoteTechArchive.cs" />
-    <Compile Include="AddOns\RemoteTech2\RemoteTechHook.cs" />
-    <Compile Include="AddOns\RemoteTech2\RemoteTechUtility.cs" />
-    <Compile Include="AddOns\RemoteTech2\RemoteTechInterpreter.cs" />
-    <Compile Include="AddOns\RemoteTech2\RemoteTechVolumeManager.cs" />
+    <Compile Include="AddOns\RemoteTech\IRemoteTechAPIv1.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechAPI.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechArchive.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechHook.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechUtility.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechInterpreter.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechVolumeManager.cs" />
     <Compile Include="Binding\ActionGroups.cs" />
     <Compile Include="Binding\Binding.cs" />
     <Compile Include="Binding\BindingConfig.cs" />
@@ -68,7 +68,7 @@
     <Compile Include="Binding\RoverStats.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
-    <Compile Include="AddOns\RemoteTech2\RemoteTechFactory.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechFactory.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\BuildList.cs" />
@@ -166,9 +166,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserIO" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -1,4 +1,4 @@
-﻿using kOS.AddOns.RemoteTech2;
+﻿using kOS.AddOns.RemoteTech;
 using kOS.Safe.Binding;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;

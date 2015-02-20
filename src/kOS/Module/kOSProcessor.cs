@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.AddOns.RemoteTech;
 using kOS.Execution;
 using kOS.Factories;
 using kOS.Function;
@@ -18,7 +19,6 @@ using kOS.Safe.Compilation.KS;
 using kOS.Safe.Module;
 using kOS.Safe.Screen;
 using kOS.Suffixed;
-using kOS.AddOns.RemoteTech2;
 using Debug = UnityEngine.Debug;
 
 namespace kOS.Module
