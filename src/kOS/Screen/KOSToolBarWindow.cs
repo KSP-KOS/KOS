@@ -375,10 +375,6 @@ namespace kOS.Screen
 
                 if (key.Value is bool)
                 {
-                    //Old toggle
-                    //key.Value = GUILayout.Toggle((bool)key.Value,"", panelSkin.toggle);
-
-                    //New toggle with tooltip
                     key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText));
                 }
                 else if (key.Value is int)
