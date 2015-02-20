@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using kOS.Binding;
+using UnityEngine;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -403,7 +404,7 @@ namespace kOS.Suffixed
             AddSuffix("MAXTHRUST", new Suffix<double>(() => VesselUtils.GetMaxThrust(Vessel)));
             AddSuffix("FACING", new Suffix<Direction>(() => VesselUtils.GetFacing(Vessel)));
             AddSuffix("ANGULARMOMENTUM", new Suffix<Vector>(() => new Vector(Vessel.angularMomentum)));
-            AddSuffix("ANGULARVEL", new Suffix<Vector>(() => new Vector(Vessel.angularVelocity)));
+            AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Vessel.angularVelocity)));
             AddSuffix("MASS", new Suffix<float>(() => Vessel.GetTotalMass()));
             AddSuffix("VERTICALSPEED", new Suffix<double>(() => Vessel.verticalSpeed));
             AddSuffix("SURFACESPEED", new Suffix<double>(() => Vessel.horizontalSrfSpeed));
@@ -441,6 +442,21 @@ namespace kOS.Suffixed
             {
                 Vessel.vesselName = value;
             }
+        }
+        
+        /// <summary>
+        /// Annoyingly, KSP returns vessel.angularVelociy in a frame of reference 
+        /// relative to the ship facing instead of the universe facing.  This would be
+        /// wonderful if that was their philosophy everywhere, but it's not - its just a
+        /// weird exception for this one case.  This transforms it back into raw universe
+        /// axes again:
+        /// </summary>
+        /// <param name="kSPAngularVel">the value KSP is returning for angular velocity</param>
+        /// <returns>altered velocity in the new reference frame</returns>
+        private Vector RawAngularVelFromRelative(Vector3 angularVelFromKSP)
+        {
+            return new Vector(VesselUtils.GetFacing(Vessel).Rotation *
+                              new Vector3d(angularVelFromKSP.x, -angularVelFromKSP.z, angularVelFromKSP.y));
         }
 
         public override object GetSuffix(string suffixName)
