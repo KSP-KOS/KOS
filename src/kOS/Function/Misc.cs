@@ -292,7 +292,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            if (shared.Cpu != null) shared.Cpu.Boot();
+            if (shared.Processor != null)
+            {
+                shared.Processor.SetMode(ProcessorModes.OFF);
+                shared.Processor.SetMode(ProcessorModes.READY);
+            }
         }
     }
 
