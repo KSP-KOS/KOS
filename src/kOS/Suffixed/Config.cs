@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using KSP.IO;
 using kOS.Safe.Encapsulation;
+using kOS.Screen;
 
 namespace kOS.Suffixed
 {
@@ -20,7 +22,8 @@ namespace kOS.Suffixed
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
         public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
-        
+        public bool UseBlizzyToolbar { get { return GetPropValue<bool>(PropId.UseBlizzyToolbar); } set { SetPropValue(PropId.UseBlizzyToolbar, value); } }
+
         private Config()
         {
             keys = new Dictionary<string, ConfigKey>();
@@ -39,6 +42,8 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
+            if(ToolbarManager.ToolbarAvailable)
+                AddConfigKey(PropId.UseBlizzyToolbar, new ConfigKey("UseBlizzyToolbar", "BLIZZY", "Use Blizzy toolbar only. Needs Scene restart.", false, false, true, typeof(bool)));
         }
 
         private void AddConfigKey(PropId id, ConfigKey key)
@@ -173,7 +178,8 @@ namespace kOS.Suffixed
             EnableRT2Integration = 4,
             StartOnArchive = 5,
             EnableSafeMode = 6,
-            VerboseExceptions = 7
+            VerboseExceptions = 7,
+            UseBlizzyToolbar = 8
         }
     }
 
