@@ -602,6 +602,7 @@ namespace kOS.Execution
                 {
                     // interpreter context
                     SkipCurrentInstructionId();
+                    stack.Clear(); // Get rid of this interpreter command's cruft.
                 }
                 else
                 {
