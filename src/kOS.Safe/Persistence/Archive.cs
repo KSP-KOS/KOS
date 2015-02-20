@@ -122,12 +122,13 @@ namespace kOS.Safe.Persistence
             try
             {
                 SafeHouse.Logger.Log("Archive: Deleting File Name: " + name);
+                base.DeleteByName(name);
+
                 var fullPath = FileSearch(name);
                 if (fullPath == null)
                 {
                     return false;
                 }
-                base.DeleteByName(name);
                 File.Delete(fullPath.FullName);
                 return true;
             }
