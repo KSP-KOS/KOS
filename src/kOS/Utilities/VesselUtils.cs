@@ -418,5 +418,12 @@ namespace kOS.Utilities
             Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
             return new Direction(vesselFacing);
         }
+        
+        public static Direction GetFacing(CelestialBody body)
+        {
+            var bodyRotation = body.transform.rotation;
+            Quaternion bodyFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(bodyRotation) * Quaternion.identity);
+            return new Direction(bodyFacing);
+        }
     }
 }

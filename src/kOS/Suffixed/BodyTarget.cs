@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
+using UnityEngine;
 using System;
 
 namespace kOS.Suffixed
@@ -94,7 +95,7 @@ namespace kOS.Suffixed
             AddSuffix("MU", new Suffix<double>(() => Body.gravParameter));
             AddSuffix("ROTATIONPERIOD", new Suffix<double>(() => Body.rotationPeriod));
             AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body)));
-            AddSuffix("ANGULARVEL", new Suffix<Direction>(() => new Direction(Body.angularVelocity, true)));
+            AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Body.angularVelocity)));
             AddSuffix("GEOPOSITIONOF",
                       new OneArgsSuffix<GeoCoordinates, Vector>(
                               GeoCoordinatesFromPosition,
@@ -127,6 +128,21 @@ namespace kOS.Suffixed
         {
             Vector3d unityWorldPosition = Shared.Vessel.findWorldCenterOfMass() + position.ToVector3D();
             return Body.GetAltitude(unityWorldPosition);
+        }
+
+        /// <summary>
+        /// Annoyingly, KSP returns CelestialBody.angularVelociy in a frame of reference 
+        /// relative to the ship facing instead of the universe facing.  This would be
+        /// wonderful if that was their philosophy everywhere, but it's not - its just a
+        /// weird exception for this one case.  This transforms it back into raw universe
+        /// axes again:
+        /// </summary>
+        /// <param name="kSPAngularVel">the value KSP is returning for angular velocity</param>
+        /// <returns>altered velocity in the new reference frame</returns>
+        private Vector RawAngularVelFromRelative(Vector3 angularVelFromKSP)
+        {
+            return new Vector(VesselUtils.GetFacing(Body).Rotation *
+                              new Vector3d(angularVelFromKSP.x, -angularVelFromKSP.z, angularVelFromKSP.y));
         }
 
         public double GetDistance()
