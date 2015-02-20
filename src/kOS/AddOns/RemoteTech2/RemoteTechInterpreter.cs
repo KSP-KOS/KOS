@@ -4,6 +4,7 @@ using kOS.Safe;
 using kOS.Safe.Screen;
 using kOS.Safe.UserIO;
 using kOS.Screen;
+using kOS.Utilities;
 
 namespace kOS.AddOns.RemoteTech2
 {
@@ -110,7 +111,8 @@ namespace kOS.AddOns.RemoteTech2
 
         private void UpdateDeployment(double deltaTime)
         {
-            if (!RemoteTechHook.Instance.HasAnyConnection(Shared.Vessel.id))
+            var hasSignal = !RemoteTechHook.Instance.HasAnyConnection(Shared.Vessel.id) || Shared.Vessel.HasCrewControl();
+            if (hasSignal)
             {
                 if (!signalLossWarning)
                 {
