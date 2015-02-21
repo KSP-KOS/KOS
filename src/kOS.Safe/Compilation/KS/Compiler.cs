@@ -1573,6 +1573,8 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePush(lockIdentifier));
                     AddOpcode(new OpcodePush(true));
                     AddOpcode(new OpcodeCall("toggleflybywire()"));
+                    // add a pop to clear out the dummy return value from toggleflybywire()
+                    AddOpcode(new OpcodePop());
                 }
             }
         }
@@ -1604,6 +1606,8 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePush(lockObject.Identifier));
                     AddOpcode(new OpcodePush(false));
                     AddOpcode(new OpcodeCall("toggleflybywire()"));
+                    // add a pop to clear out the dummy return value from toggleflybywire()
+                    AddOpcode(new OpcodePop());
 
                     // remove update trigger
                     string triggerIdentifier = "lock-" + lockObject.Identifier;

@@ -89,6 +89,22 @@ namespace kOS.Function
             bool enabled = Convert.ToBoolean(shared.Cpu.PopValue());
             string paramName = shared.Cpu.PopValue().ToString();
             ((CPU)shared.Cpu).ToggleFlyByWire(paramName, enabled);
+            // Work around to prevent the pop error following toggle fly by wire directly. 
+            // The VisitIdentifierLedExpression method in the Compiler class purposfully throws away the returned value of a function.
+            ((CPU)shared.Cpu).PushStack(0);
+
+        }
+    }
+
+    [Function("selectautopilotmode")]
+    public class FunctionSelectAutopilotMode : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string autopilotMode = shared.Cpu.PopValue().ToString();
+            ((CPU)shared.Cpu).SelectAutopilotMode(autopilotMode);
+            // The VisitIdentifierLedExpression method in the Compiler class purposfully throws away the returned value of a function.
+            ((CPU)shared.Cpu).PushStack(0);
 
         }
     }

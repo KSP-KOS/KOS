@@ -44,6 +44,9 @@ namespace kOS.Binding
             AddNewFlightParam("steering", Shared);
             AddNewFlightParam("wheelthrottle", Shared);
             AddNewFlightParam("wheelsteering", Shared);
+
+            shared.BindingMgr.AddSetter("SASMODE", value => this.SelectAutopilotMode((string)value));
+            shared.BindingMgr.AddGetter("SASMODE", () => currentVessel.Autopilot.Mode.ToString().ToUpper());
         }
 
 
@@ -61,12 +64,13 @@ namespace kOS.Binding
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
             SafeHouse.Logger.Log(string.Format("FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
-            if (!flightParameters.ContainsKey(paramName)) return;
+            if (!flightParameters.ContainsKey(paramName.ToLower())) { UnityEngine.Debug.LogError("kOS: no such flybywire parameter " + paramName); return; }
 
-            flightParameters[paramName].Enabled = enabled;
+            flightParameters[paramName.ToLower()].Enabled = enabled;
+
             if (!enabled)
             {
-                flightParameters[paramName].ClearValue();
+                flightParameters[paramName.ToLower()].ClearValue();
             }
         }
 
@@ -174,6 +178,88 @@ namespace kOS.Binding
             return vessel != null && vessel.rootPart != null;
         }
 
+        public void SelectAutopilotMode(object autopilotMode)
+        {
+            if (autopilotMode is Direction)
+            {
+                //TODO: implment use of direction subclasses.
+            }
+            else SelectAutopilotMode((string)autopilotMode);
+        }
+
+        public void SelectAutopilotMode(VesselAutopilot.AutopilotMode autopilotMode)
+        {
+            if (currentVessel.Autopilot.Mode != autopilotMode)
+            {
+                if (!currentVessel.Autopilot.CanSetMode(autopilotMode))
+                {
+                    // throw an exception if the mode is not available
+                    throw new kOS.Safe.Exceptions.KOSException(
+                        string.Format("Cannot set autopilot value, pilot/probe does not support {0}, or there is no node/target", autopilotMode));
+                }
+                currentVessel.Autopilot.SetMode(autopilotMode);
+                //currentVessel.Autopilot.Enable();
+                // change the autopilot indicator
+                ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)autopilotMode);
+                if (RemoteTechHook.IsAvailable(currentVessel.id))
+                {
+                    Debug.Log(string.Format("kOS: Adding RemoteTechPilot: autopilot For : " + currentVessel.id));
+                    // TODO: figure out how to make RemoteTech allow the built in autopilot control.  This may require modification to RemoteTech itself.
+                }
+            }
+        }
+
+        public void SelectAutopilotMode(string autopilotMode)
+        {
+            // handle a null/empty value in case of an unset command or setting to empty string to clear.
+            if (string.IsNullOrEmpty(autopilotMode))
+            {
+                SelectAutopilotMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+            }
+            else
+            {
+                // determine the AutopilotMode to use
+                switch (autopilotMode.ToLower())
+                {
+                    case "maneuver":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Maneuver);
+                        break;
+                    case "prograde":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Prograde);
+                        break;
+                    case "retrograde":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Retrograde);
+                        break;
+                    case "normal":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Normal);
+                        break;
+                    case "antinormal":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Antinormal);
+                        break;
+                    case "radialin":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialIn);
+                        break;
+                    case "radialout":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialOut);
+                        break;
+                    case "target":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Target);
+                        break;
+                    case "antitarget":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.AntiTarget);
+                        break;
+                    case "stability":
+                    case "stabilityassist":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        break;
+                    default:
+                        // If the mode is not recognised, thrown an exception rather than continuing or using a default setting
+                        throw new kOS.Safe.Exceptions.KOSException(
+                            string.Format("kOS does not recognize the SAS mode setting of {0}", autopilotMode));
+                }
+            }
+        }
+
         private class FlightCtrlParam : IDisposable
         {
             private readonly string name;
@@ -206,7 +292,7 @@ namespace kOS.Binding
                 get { return enabled; }
                 set
                 {
-                    SafeHouse.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1}", name, enabled));
+                    SafeHouse.Logger.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
                     enabled = value;
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
