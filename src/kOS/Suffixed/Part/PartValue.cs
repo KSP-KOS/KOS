@@ -38,7 +38,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("UID", new Suffix<string>(() => Part.uid().ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction( Part.transform.rotation) ));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector( Part.transform.position - shared.Vessel.findWorldCenterOfMass() )));
-            AddSuffix("TAG", new NoArgsSuffix<string>(GetTagName));
+            AddSuffix("TAG", new SetSuffix<string>(GetTagName, SetTagName));
             AddSuffix("FACING", new Suffix<Direction>(() => GetFacing(Part)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
@@ -54,6 +54,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("WETMASS", new Suffix<float>(Part.GetWetMass, "The Part's mass when full"));
             AddSuffix("HASPHYSICS", new Suffix<bool>(Part.HasPhysics, "Is this a strange 'massless' part"));
         }
+
 
 
         private PartModuleFields GetModule(string modName)
@@ -84,7 +85,13 @@ namespace kOS.Suffixed.Part
             KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
             return tagModule == null ? string.Empty : tagModule.nameTag;
         }
-        
+
+        private void SetTagName(string value)
+        {
+            KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+            if (tagModule != null) tagModule.nameTag = value;
+        }
+
         public override string ToString()
         {
             string tagName = GetTagName();
