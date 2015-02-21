@@ -32,6 +32,7 @@ namespace kOS.Suffixed.Part
         {
             AddSuffix("CONTROLFROM", new NoArgsSuffix(ControlFrom));
             AddSuffix("NAME", new Suffix<string>(() => Part.name));
+            AddSuffix("FUELCROSSFEED", new Suffix<bool>(() => Part.fuelCrossFeed));
             AddSuffix("TITLE", new Suffix<string>(() => Part.partInfo.title));
             AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
             AddSuffix("UID", new Suffix<string>(() => Part.uid().ToString()));
