@@ -25,6 +25,8 @@ namespace kOS.Suffixed.Part
             AddSuffix("THRUST", new Suffix<float>(() => engine.FinalThrust));
             AddSuffix("FUELFLOW", new Suffix<float>(() => engine.FuelFlow));
             AddSuffix("ISP", new Suffix<float>(() => engine.SpecificImpulse));
+            AddSuffix(new[] {"VISP", "VACUUMISP"}, new Suffix<float>(() => engine.SpecificImpulse));
+            AddSuffix(new[] {"SLISP", "SEALEVELISP"}, new Suffix<float>(() => engine.SpecificImpulse));
             AddSuffix("FLAMEOUT", new Suffix<bool>(() => engine.Flameout));
             AddSuffix("IGNITION", new Suffix<bool>(() => engine.Ignition));
             AddSuffix("ALLOWRESTART", new Suffix<bool>(() => engine.AllowRestart));

@@ -162,6 +162,40 @@ namespace kOS.Suffixed.Part
                 }
             }
         }
+        public float VacuumSpecificImpluse
+        {
+            get
+            {
+                switch (engineType)
+                {
+                    case EngineType.Engine:
+                        return engineModule.atmosphereCurve.Evaluate(0);
+
+                    case EngineType.EngineFx:
+                        return engineModuleFx.atmosphereCurve.Evaluate(0);
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+        public float SeaLeveSpecificImpulse
+        {
+            get
+            {
+                switch (engineType)
+                {
+                    case EngineType.Engine:
+                        return engineModule.atmosphereCurve.Evaluate(1);
+
+                    case EngineType.EngineFx:
+                        return engineModuleFx.atmosphereCurve.Evaluate(1);
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         public bool Flameout
         {
