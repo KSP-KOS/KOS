@@ -54,36 +54,50 @@ namespace kOS.Suffixed
             AddSuffix(new[] {"DELTAV", "BURNVECTOR"}, new Suffix<Vector>(GetBurnVector));
 
             AddSuffix("ETA", new SetSuffix<double>(
-                () => time - Planetarium.GetUniversalTime(),
+                () =>
+                {
+                    FromNodeRef();
+                    return time - Planetarium.GetUniversalTime();
+                },
                 value =>
                 {
                     time = value + Planetarium.GetUniversalTime();
+                    ToNodeRef();
                 }
             ));
 
             AddSuffix("PROGRADE", new SetSuffix<double>(
-                () => prograde, 
-                value =>
+                () =>
                 {
                     FromNodeRef();
+                    return prograde;
+                }, 
+                value =>
+                {
                     prograde = value;
                     ToNodeRef();
                 }
             ));
 
             AddSuffix("RADIALOUT", new SetSuffix<double>(
-                () => radialOut, 
-                value => {
+                () =>
+                {
                     FromNodeRef();
+                    return radialOut;
+                }, 
+                value => {
                     radialOut = value;
                     ToNodeRef();
                 }
             ));
 
             AddSuffix("NORMAL", new SetSuffix<double>(
-                () => normal, 
-                value => {
+                () =>
+                {
                     FromNodeRef();
+                    return normal;
+                }, 
+                value => {
                     normal = value;
                     ToNodeRef();
                 }
