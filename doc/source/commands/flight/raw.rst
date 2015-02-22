@@ -92,7 +92,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
       - ``I``, ``K``
     * - :ref:`TRANSLATION <SHIP CONTROL TRANSLATION>`
       - :struct:`Vector`
-      - ``(FORE,STARBOARD,TOP)``
+      - ``(STARBOARD,TOP,FORE)``
 
     * - :ref:`WHEELSTEER <SHIP CONTROL WHEELSTEER>`
       - scalar [-1,1]
@@ -181,7 +181,7 @@ These "Raw" controls allow you the direct control of flight parameters while the
 .. _SHIP CONTROL TRANSLATION:
 .. object:: SHIP:CONTROL:TRANSLATION
 
-    Controls the translation as a :struct:`Vector` ``(FORE, STARBOARD, TOP)``.
+    Controls the translation as a :struct:`Vector` ``(STARBOARD, TOP, FORE)``.
 
 .. _SHIP CONTROL WHEELSTEER:
 .. object:: SHIP:CONTROL:WHEELSTEER
