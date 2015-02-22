@@ -99,7 +99,6 @@ namespace kOS.Suffixed
                 ElementPair pair = queue.Dequeue();
                 if (AlreadyVisited(pair.Part, visitedFlightIds)) continue;
 
-
                 var dockingNodes = pair.Part.Modules.OfType<ModuleDockingNode>().ToList();
 
                 if (dockingNodes.Any())
@@ -113,7 +112,6 @@ namespace kOS.Suffixed
                         }
                         else
                         {
-
                             DockedVesselInfo info = dockingNode.vesselInfo;
 
                             if (!elements.TryGetValue(info.rootPartUId, out element))
@@ -132,15 +130,11 @@ namespace kOS.Suffixed
                     pair.Element.AddPart(pair.Part);
                     EnqueueChildren(queue, pair.Element, pair.Part);                    
                 }
-
             }
         }
 
         private static void EnqueueChildren(Queue<ElementPair> queue, ElementValue element, global::Part part)
         {
-            part.SetHighlightColor(element.Color);
-            part.SetHighlight(true, false);
-
             if (!part.children.Any()) return;
 
             foreach (var child in part.children)
