@@ -1,6 +1,12 @@
 kOS Mod Changelog
 =================
 
+# v0.16.1
+
+##HOTFIX
+
+this fixes #603 the mess that I made of the Node structure, thanks Tabris from the forums for bringing this to our attention.
+
 # v0.16.0
 
 ### BREAKING
