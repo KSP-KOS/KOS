@@ -2,6 +2,7 @@
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Suffixed.Part;
 using UnityEngine;
 
 namespace kOS.Suffixed
@@ -9,16 +10,18 @@ namespace kOS.Suffixed
     public class ElementValue : Structure
     {
         private readonly DockedVesselInfo dockedVesselInfo;
+        private readonly SharedObjects shared;
         private readonly IList<global::Part> parts;
         private Color color;
         private static int colorIndex;
         private string colorName;
 
-        public ListValue Parts { get { return PartsToList(parts); } }
+        public ListValue Parts { get { return PartValueFactory.Construct(parts, shared); } }
 
-        public ElementValue(DockedVesselInfo dockedVesselInfo)
+        public ElementValue(DockedVesselInfo dockedVesselInfo, SharedObjects shared)
         {
             this.dockedVesselInfo = dockedVesselInfo;
+            this.shared = shared;
             parts = new List<global::Part>();
             BuildColor();
 
@@ -73,24 +76,24 @@ namespace kOS.Suffixed
         {
             AddSuffix("NAME", new Suffix<string>(() => dockedVesselInfo.name));
             AddSuffix("UID", new Suffix<string>(() => dockedVesselInfo.rootPartUId.ToString()));
-            AddSuffix("PARTS", new Suffix<ListValue>(() => PartsToList(parts)));
+            AddSuffix("PARTS", new Suffix<ListValue>(() => PartValueFactory.Construct(parts, shared)));
         }
 
-        public static ListValue PartsToList(IEnumerable<global::Part> parts)
+        public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects shared)
         {
             //We need to walk the part tree for this, not just the list. So we start with the vessel.
             Vessel vessel = parts.First().vessel;
             var elements = new Dictionary<uint,ElementValue>();
 
-            Queue<ElementPair> queue = InitQueue(vessel, elements);
+            Queue<ElementPair> queue = InitQueue(vessel, elements, shared);
 
             //Runs the queue over the part tree
-            WorkQueue(queue, elements);
+            WorkQueue(queue, elements, shared);
 
             return ListValue.CreateList(elements.Values.ToList());
         }
 
-        private static void WorkQueue(Queue<ElementPair> queue, Dictionary<uint, ElementValue> elements)
+        private static void WorkQueue(Queue<ElementPair> queue, Dictionary<uint, ElementValue> elements, SharedObjects shared)
         {
             var visitedFlightIds = new HashSet<uint>();
 
@@ -116,7 +119,7 @@ namespace kOS.Suffixed
 
                             if (!elements.TryGetValue(info.rootPartUId, out element))
                             {
-                                element = new ElementValue(info);
+                                element = new ElementValue(info, shared);
                                 elements.Add(info.rootPartUId, element);
                             }
                         }
@@ -162,9 +165,10 @@ namespace kOS.Suffixed
         /// Builds the first element in the queue
         /// </summary>
         /// <param name="vessel">The vessel that you want to crawl for elements</param>
-        /// <param name="elements"></param>
+        /// <param name="elements">The final element list, is it included here to have the root element added</param>
+        /// <param name="shared">the ever present shared object</param>
         /// <returns>a queue with a starting entry</returns>
-        private static Queue<ElementPair> InitQueue(Vessel vessel, Dictionary<uint, ElementValue> elements)
+        private static Queue<ElementPair> InitQueue(Vessel vessel, Dictionary<uint, ElementValue> elements, SharedObjects shared)
         {
             var toReturn = new Queue<ElementPair>();
 
@@ -175,7 +179,7 @@ namespace kOS.Suffixed
                 rootPartUId = rootUid,
                 vesselType = vessel.vesselType
             };
-            var rootElement = new ElementValue(rootInfo);
+            var rootElement = new ElementValue(rootInfo, shared);
             elements.Add(rootUid, rootElement);
             toReturn.Enqueue(new ElementPair(rootElement, vessel.rootPart));
             return toReturn;

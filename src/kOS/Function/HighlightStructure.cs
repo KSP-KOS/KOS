@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using kOS.Safe;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
@@ -31,6 +32,8 @@ namespace kOS.Function
             this.color = color;
             DetermineType();
             InitializeSuffixes();
+            stale = true;
+            enabled = true;
             updateHandler.AddObserver(this);
         }
 
@@ -38,13 +41,13 @@ namespace kOS.Function
         {
             AddSuffix("COLOR", new SetSuffix<RgbaColor>(() => color, value =>
             {
-                stale = true;
                 color = value;
+                stale = true;
             }));
             AddSuffix("ENABLED", new SetSuffix<bool>(() => enabled, value =>
             {
-                stale = true;
                 enabled = value;
+                stale = true;
             }));
         }
 
@@ -66,10 +69,8 @@ namespace kOS.Function
 
         public void Update(double deltaTime)
         {
-            if (stale)
-            {
-                
-            }
+            if (!stale) return;
+
             switch (highlightType)
             {
                 case HighlightType.Part:
@@ -99,6 +100,7 @@ namespace kOS.Function
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            stale = false;
         }
 
         private void HighlightPart(PartValue partValue)
@@ -116,6 +118,11 @@ namespace kOS.Function
         public void Dispose()
         {
             updateHandler.RemoveObserver(this);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("HIGHLIGHT( Item: {0} Color: {1} Enabled: {2}", toHighlight, color, enabled);
         }
     }
 }
