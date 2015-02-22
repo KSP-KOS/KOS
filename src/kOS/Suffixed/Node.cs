@@ -161,7 +161,7 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             FromNodeRef();
-            return "NODE(" + time + "," + radialOut + "," + normal + "," + prograde + ")";
+            return string.Format("NODE({0},{1},{2},{3})", (time - Planetarium.GetUniversalTime()), radialOut, normal, prograde);
         }
 
         private void ToNodeRef()
