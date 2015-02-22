@@ -169,7 +169,7 @@ namespace kOS.Suffixed
             AddSuffix(new[] { "FORE" }, new ClampSetSuffix<float>(() => fore, value => fore = value, -1, 1));
             AddSuffix(new[] { "STARBOARD" }, new ClampSetSuffix<float>(() => starboard, value => starboard = value, -1, 1));
             AddSuffix(new[] { "TOP" }, new ClampSetSuffix<float>(() => top, value => top = value, -1, 1));
-            AddSuffix(new[] { "TRANSLATION" }, new SetSuffix<Vector>(() => new Vector(starboard, top, fore) , SetTranslation));
+            AddSuffix(new[] { "TRANSLATION" }, new SetSuffix<Vector>(() => new Vector(fore, starboard, top) , SetTranslation));
 
             //ROVER
             AddSuffix(new[] { "WHEELSTEER" }, new ClampSetSuffix<float>(() => wheelSteer, value => wheelSteer = value, -1, 1));
@@ -192,9 +192,9 @@ namespace kOS.Suffixed
             if (Vessel == FlightGlobals.ActiveVessel)
             {
                 return new Vector(
+                    Invert(FlightInputHandler.state.Z),
                     Invert(FlightInputHandler.state.X),
-                    FlightInputHandler.state.Y, 
-                    Invert(FlightInputHandler.state.Z)
+                    FlightInputHandler.state.Y
                     );
             }
             return Vector.Zero;
