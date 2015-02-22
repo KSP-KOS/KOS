@@ -8,7 +8,6 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace kOS.Suffixed.Part
 {
@@ -16,7 +15,7 @@ namespace kOS.Suffixed.Part
     {
         private readonly SharedObjects shared;
 
-        private global::Part Part { get; set; }
+        public global::Part Part { get; set; }
 
         public PartValue(global::Part part, SharedObjects sharedObj)
         {

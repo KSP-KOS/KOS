@@ -2,7 +2,6 @@
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
 using UnityEngine;
 
 namespace kOS.Suffixed
@@ -14,6 +13,8 @@ namespace kOS.Suffixed
         private Color color;
         private static int colorIndex;
         private string colorName;
+
+        public ListValue Parts { get { return PartsToList(parts); } }
 
         public ElementValue(DockedVesselInfo dockedVesselInfo)
         {
@@ -77,7 +78,6 @@ namespace kOS.Suffixed
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts)
         {
-            SafeHouse.Logger.Log("ELEMENTVALUE: START");
             //We need to walk the part tree for this, not just the list. So we start with the vessel.
             Vessel vessel = parts.First().vessel;
             var elements = new Dictionary<uint,ElementValue>();
@@ -87,10 +87,6 @@ namespace kOS.Suffixed
             //Runs the queue over the part tree
             WorkQueue(queue, elements);
 
-            vessel.rootPart.SetHighlightColor(Color.red);
-            vessel.rootPart.SetHighlight(true, false);
-
-            SafeHouse.Logger.Log("ELEMENTVALUE: STOP");
             return ListValue.CreateList(elements.Values.ToList());
         }
 
@@ -101,7 +97,6 @@ namespace kOS.Suffixed
             while (queue.Any())
             {
                 ElementPair pair = queue.Dequeue();
-                SafeHouse.Logger.Log(string.Format("ELEMENTVALUE: Queue Pop: {0}:{1} {2}", pair.Part.partName, pair.Part.flightID, pair.Element));
                 if (AlreadyVisited(pair.Part, visitedFlightIds)) continue;
 
 
@@ -114,11 +109,6 @@ namespace kOS.Suffixed
                         ElementValue element;
                         if (dockingNode.vesselInfo == null)
                         {
-                            if (pair.Part.children.Any())
-                            {
-                                SafeHouse.Logger.Log("ELEMENTVALUE: blarg docking node with no info and children?");
-                            }
-
                             element = pair.Element;
                         }
                         else
@@ -128,7 +118,6 @@ namespace kOS.Suffixed
 
                             if (!elements.TryGetValue(info.rootPartUId, out element))
                             {
-                                SafeHouse.Logger.Log("ELEMENTVALUE: New Element: " + info.rootPartUId);
                                 element = new ElementValue(info);
                                 elements.Add(info.rootPartUId, element);
                             }

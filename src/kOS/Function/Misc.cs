@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FinePrint.Utilities;
 using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Exceptions;
@@ -8,7 +7,6 @@ using kOS.Safe.Function;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
-using kOS.Utilities;
 using kOS.Safe.Utilities;
 
 namespace kOS.Function
@@ -334,5 +332,4 @@ namespace kOS.Function
             shared.Cpu.DumpVariables();
         }
     }
-
 }
