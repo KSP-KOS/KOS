@@ -63,7 +63,7 @@ The following rules apply as limitations to the bareword filenames:
    and the period extension separator ('.'), can only be referred to
    using a string expression (with quotes), and cannot be used as a
    bareword expression (without quotes).
--  If your filesystem is case-senstive (Linux and sometimes Mac OSX, or
+-  If your filesystem is case-sensitive (Linux and sometimes Mac OSX, or
    even Windows if using some kinds of remote network drives), then
    bareword filenames will only work properly on filenames that are all
    lowercase. If you try to use a file with capital letters in the name
@@ -91,7 +91,7 @@ Arguments:
 
 Pre-compiles a script into an :ref:`Kerboscript ML Exceutable
 image <compiling>` that can be used
-instead of executing the program discript directly.
+instead of executing the program script directly.
 
 The RUN command (elsewhere on this page) can work with either \*.ks
 script files or \*.ksm compiled files.
@@ -162,7 +162,7 @@ Arguments
 
 .. note::
 
-    The Edit feature was lost in version 0.11 but is back again after version 0.12.2 under a new guise. The new editor is unable to show a monospace font for a series of complex reasons involving how Unity works and how squad bundled the KSP game. The editor works, but will be in a proporional width font, which isn't ideal for editing code. The best way to edit code remains to use a text editor external to KSP, however for a fast peek at the code during play, this editor is useful.
+    The Edit feature was lost in version 0.11 but is back again after version 0.12.2 under a new guise. The new editor is unable to show a monospace font for a series of complex reasons involving how Unity works and how squad bundled the KSP game. The editor works, but will be in a proportional width font, which isn't ideal for editing code. The best way to edit code remains to use a text editor external to KSP, however for a fast peek at the code during play, this editor is useful.
 
 Example::
 
@@ -216,7 +216,7 @@ Arguments
 ^^^^^^^^^
 
 -  <program>: File to run.
--  comma-separagted-args: a list of values to pass into the program.
+-  comma-separated-args: a list of values to pass into the program.
 
 Example::
 
@@ -239,7 +239,7 @@ file commands allow. This is very important.
 
 RUN only works when the filename is a bareword filename. It cannot use expression filenames::
 
-    RUN "ProgName"   // THIS WILL FAIL.  Run needs a bare word filename.
+    RUN "ProgName"   // THIS WILL FAIL.  Run needs a bareword filename.
     SET ProgName to "MyProgram".
     RUN ProgName     // THIS WILL FAIL also.  It will attempt to run a file
                      // called "ProgName.ksm" or "ProgName.ks", when it sees this,
@@ -254,7 +254,7 @@ RUN only works when the filename is a bareword filename. It cannot use expressio
     generate some header info about them at compile time, and the
     filename
     has to be set in stone at that time. Changing this would require a
-    large re-write of some of the archetecture of the virtual machine.
+    large re-write of some of the architecture of the virtual machine.
 
 
 ``SWITCH TO <volumeNumber>.``
