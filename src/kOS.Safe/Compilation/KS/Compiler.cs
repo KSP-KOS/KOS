@@ -176,6 +176,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction:
                 case TokenType.if_stmt:
                 case TokenType.until_stmt:
+                case TokenType.for_stmt:
                     PreProcessChildNodes(node);
                     break;
                 case TokenType.on_stmt:
