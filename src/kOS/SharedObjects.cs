@@ -1,6 +1,7 @@
 ﻿using kOS.InterProcessor;
 using kOS.Binding;
 using kOS.Factories;
+using kOS.Safe.Encapsulation;
 using kOS.Screen;
 
 namespace kOS
@@ -13,6 +14,7 @@ namespace kOS
         public IFactory Factory { get; set; }
         public Part KSPPart { get; set; }
         public TermWindow Window { get; set; }
+        public TransferManager TransferManager { get; set; }
 
         public SharedObjects()
         {
@@ -26,5 +28,22 @@ namespace kOS
                 BindingMgr.Dispose();
             }
         }
+    }
+
+    public class TransferManager
+    {
+        public ResourceTransferValue CreateTransfer(Vessel.ActiveResource resourceInfo, object transferTo, object transferFrom, double parsedAmount)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ResourceTransferValue CreateTransfer(Vessel.ActiveResource resourceInfo, object transferTo, object transferFrom)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public class ResourceTransferValue : Structure
+    {
     }
 }

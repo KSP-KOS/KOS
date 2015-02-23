@@ -405,4 +405,33 @@ namespace kOS.Function
             shared.Cpu.PushStack(new WaypointValue(point, shared));
         }
     }    
+
+    [Function("transfer")]
+    public class FunctionTransfer : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var amount = shared.Cpu.PopValue();
+            var transferTo = shared.Cpu.PopValue();
+            var transferFrom = shared.Cpu.PopValue();
+            var resource = shared.Cpu.PopValue().ToString();
+            
+
+            var resources = shared.Vessel.GetActiveResources();
+            var resourceInfo = resources.FirstOrDefault(r => string.Equals(r.info.name, resource, StringComparison.InvariantCultureIgnoreCase));
+
+
+            object toPush;
+            double parsedAmount;
+            if (amount == null && Double.TryParse(amount.ToString(), out parsedAmount))
+            {
+                toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom, parsedAmount);
+            }
+            else
+            {
+                toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom);
+            }
+            shared.Cpu.PushStack(toPush);
+        }
+    }
 }
