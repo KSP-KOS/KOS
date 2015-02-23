@@ -278,6 +278,19 @@ namespace kOS.Function
         }
     }
 
+    [Function("highlight")]
+    public class FunctionHightlight : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var color = GetRgba(shared.Cpu.PopValue());
+            var obj = shared.Cpu.PopValue();
+
+            var toPush = new HighlightStructure(shared.UpdateHandler, obj, color);
+            shared.Cpu.PushStack(toPush);
+        }
+    }
+
     [Function("orbitat")]
     public class FunctionOrbitAt : FunctionBase
     {
