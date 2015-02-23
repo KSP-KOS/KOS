@@ -7,7 +7,7 @@ namespace kOS.Safe.Utilities
     /// for a number.  That's all.  Its meant to be used to timestamp the relative age of things.
     /// Bigger numbers were returned later in the life of the program than smaller ones.
     /// It could potentially overflow, but only if the program ran nonstop without crashing for
-    /// a ludicrous amount of time.  (Uint64 can store a number more than two orders of magnitude
+    /// a ludicrous amount of time.  (Int64 can store a number more than two orders of magnitude
     /// larger than the number of NANOseconds in a year.)
     /// </summary>
     public class TickGen
