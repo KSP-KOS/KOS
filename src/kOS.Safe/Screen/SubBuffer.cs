@@ -27,6 +27,8 @@ namespace kOS.Safe.Screen
         /// <param name="columnCount">Desired new number of columns (this will be adhered to faithfully).</param>
         public void SetSize(int rowCount, int columnCount)
         {
+            foreach( IScreenBufferLine lineBuff in Buffer)
+                lineBuff.TouchTime();
             RowCount = rowCount;
             ColumnCount = columnCount;
             ResizeBuffer();

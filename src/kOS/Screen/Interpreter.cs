@@ -71,6 +71,7 @@ namespace kOS.Screen
             switch (key)
             {
                 case (char)UnicodeCommand.UPCURSORONE:
+                    System.Console.WriteLine("Just pressed UPCURSOR");
                     ShowCommandHistoryEntry(-1);
                     break;
                 case (char)UnicodeCommand.DOWNCURSORONE:
@@ -103,6 +104,7 @@ namespace kOS.Screen
                     LineBuilder = new StringBuilder();
                     LineBuilder.Append(commandHistory[commandHistoryIndex]);
                     LineCursorIndex = LineBuilder.Length;
+                    MarkRowsDirty(LineSubBuffer.PositionRow, LineSubBuffer.RowCount);
                     LineSubBuffer.Wipe();
                     UpdateLineSubBuffer();
                 }

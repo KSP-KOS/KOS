@@ -80,6 +80,18 @@ namespace kOS.Safe.Screen
             return ScrollVerticalInternal(deltaRows);
         }
 
+        /// <summary>
+        /// Marks the given section of rows in the buffer as dirty and
+        /// in need of a diff check.
+        /// </summary>
+        /// <param name="startRow">Starting with this row number</param>
+        /// <param name="numRows">for this many rows</param>
+        public void MarkRowsDirty(int startRow, int numRows)
+        {
+            for( int i = 0; i < numRows ; ++i)
+                buffer[startRow + i].TouchTime();
+        }
+
         public void MoveCursor(int row, int column)
         {
             if (row >= RowCount)
@@ -232,7 +244,7 @@ namespace kOS.Safe.Screen
 
                         // remove the replaced rows
                         mergedBuffer.RemoveRange(mergeRow, rowsToMerge);
-                        // insert the new ones
+                        // Replace them:
                         mergedBuffer.InsertRange(mergeRow, bufferRange);
                     }
                 }

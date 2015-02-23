@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using System;
 using kOS.Safe.UserIO;
 
 namespace kOS.Safe.Screen
@@ -107,6 +108,7 @@ namespace kOS.Safe.Screen
                 if (LineCursorIndex >= 0 && LineCursorIndex < LineBuilder.Length)
                 {
                     LineBuilder.Remove(LineCursorIndex, 1);
+                    MarkRowsDirty(LineSubBuffer.PositionRow, LineSubBuffer.RowCount); // just in case removing it reduces the number of subbuffer lines.
                     UpdateLineSubBuffer();
                 }
             }
@@ -132,7 +134,9 @@ namespace kOS.Safe.Screen
             List<string> lines = SplitIntoLinesPreserveNewLine(commandText);
                         
             if (lines.Count != LineSubBuffer.RowCount)
+            {
                 LineSubBuffer.SetSize(lines.Count, LineSubBuffer.ColumnCount);
+            }
 
             for (int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
             {

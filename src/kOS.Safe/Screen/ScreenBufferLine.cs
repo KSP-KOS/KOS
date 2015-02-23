@@ -54,6 +54,7 @@ namespace kOS.Safe.Screen
         public ScreenBufferLine(int size)
         {
             charArray = new char[size];
+            TouchTime();
         }
 
         /// <summary>
@@ -84,6 +85,9 @@ namespace kOS.Safe.Screen
             TouchTime();
         }
 
+        /// <summary>
+        /// Marks the line as recent by updating its "last change time" marker to now.
+        /// </summary>
         public void TouchTime()
         {
             LastChangeTick = TickGen.Next;
