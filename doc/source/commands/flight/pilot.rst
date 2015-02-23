@@ -57,7 +57,7 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
       - ``I``, ``K``
     * - :ref:`PILOTTRANSLATION <SHIP CONTROL PILOTTRANSLATION>`
       - :struct:`Vector`
-      - ``(FORE,STARBOARD,TOP)``
+      - ``(STARBOARD,TOP,FORE)``
 
     * - :ref:`PILOTWHEELSTEER <SHIP CONTROL PILOTWHEELSTEER>`
       - scalar [-1,1]
@@ -141,7 +141,7 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
 .. _SHIP CONTROL PILOTTRANSLATION:
 .. object:: SHIP:CONTROL:TRANSLATION
 
-    Returns the the pilot's input for translation as a :struct:`Vector` ``(FORE, STARBOARD, TOP)``.
+    Returns the the pilot's input for translation as a :struct:`Vector` ``(STARBOARD, TOP, FORE)``.
 
 .. _SHIP CONTROL PILOTWHEELSTEER:
 .. object:: SHIP:CONTROL:WHEELSTEER
