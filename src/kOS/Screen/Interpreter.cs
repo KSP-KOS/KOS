@@ -71,7 +71,6 @@ namespace kOS.Screen
             switch (key)
             {
                 case (char)UnicodeCommand.UPCURSORONE:
-                    System.Console.WriteLine("Just pressed UPCURSOR");
                     ShowCommandHistoryEntry(-1);
                     break;
                 case (char)UnicodeCommand.DOWNCURSORONE:
