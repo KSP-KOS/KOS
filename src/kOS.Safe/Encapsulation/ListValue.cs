@@ -297,7 +297,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("COPY", new NoArgsSuffix<ListValue>(() => new ListValue(this)));
         }
 
-        public static ListValue CreateList<T>(List<T> toCopy)
+        public static ListValue CreateList<T>(IList<T> toCopy)
         {
             return new ListValue(toCopy.Cast<object>());
         }
