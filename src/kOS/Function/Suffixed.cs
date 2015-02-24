@@ -415,15 +415,12 @@ namespace kOS.Function
             var transferTo = shared.Cpu.PopValue();
             var transferFrom = shared.Cpu.PopValue();
             var resource = shared.Cpu.PopValue().ToString();
-            
 
-            var resources = shared.Vessel.GetActiveResources();
-            var resourceInfo = resources.FirstOrDefault(r => string.Equals(r.info.name, resource, StringComparison.InvariantCultureIgnoreCase));
-
+            var resourceInfo = PartResourceLibrary.Instance.GetDefinition(resource);
 
             object toPush;
             double parsedAmount;
-            if (amount == null && Double.TryParse(amount.ToString(), out parsedAmount))
+            if (amount != null && Double.TryParse(amount.ToString(), out parsedAmount))
             {
                 toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom, parsedAmount);
             }

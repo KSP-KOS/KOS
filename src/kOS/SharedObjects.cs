@@ -1,8 +1,13 @@
-﻿using kOS.InterProcessor;
+﻿using System;
+using System.Collections.Generic;
+using kOS.InterProcessor;
 using kOS.Binding;
 using kOS.Factories;
+using kOS.Safe;
 using kOS.Safe.Encapsulation;
 using kOS.Screen;
+using kOS.Suffixed;
+using kOS.Suffixed.Part;
 
 namespace kOS
 {
@@ -30,20 +35,103 @@ namespace kOS
         }
     }
 
-    public class TransferManager
+    public class TransferManager : IUpdateObserver
     {
-        public ResourceTransferValue CreateTransfer(Vessel.ActiveResource resourceInfo, object transferTo, object transferFrom, double parsedAmount)
+        private readonly SharedObjects shared;
+        private readonly List<ResourceTransferValue> transfers;
+
+        public TransferManager(SharedObjects shared)
         {
-            throw new System.NotImplementedException();
+            this.shared = shared;
+            transfers = new List<ResourceTransferValue>();
+            shared.UpdateHandler.AddObserver(this);
         }
 
-        public ResourceTransferValue CreateTransfer(Vessel.ActiveResource resourceInfo, object transferTo, object transferFrom)
+        public List<ResourceTransferValue> Transfers
         {
-            throw new System.NotImplementedException();
+            get { return transfers; }
+        }
+
+        public ResourceTransferValue CreateTransfer(PartResourceDefinition resourceInfo, object transferTo, object transferFrom, double amount)
+        {
+            var toReturn = new ResourceTransferValue(resourceInfo, transferTo, transferFrom, amount);
+            transfers.Add(toReturn);
+            return toReturn;
+        }
+
+        public ResourceTransferValue CreateTransfer(PartResourceDefinition resourceInfo, object transferTo, object transferFrom)
+        {
+            var toReturn = new ResourceTransferValue(resourceInfo, transferTo, transferFrom);
+            transfers.Add(toReturn);
+            return toReturn;
+        }
+
+        public void Dispose()
+        {
+            shared.UpdateHandler.RemoveObserver(this);
+        }
+
+        public void Update(double deltaTime)
+        {
+            
         }
     }
 
     public class ResourceTransferValue : Structure
     {
+        private enum TransferPartType
+        {
+            Part,
+            Parts,
+            Element
+        }
+
+        private readonly double amount;
+        private readonly PartResourceDefinition resourceInfo;
+        private readonly object transferTo;
+        private TransferPartType transferToType;
+        private readonly object transferFrom;
+        private TransferPartType transferFromType;
+
+        public ResourceTransferValue(PartResourceDefinition resourceInfo, object transferTo, object transferFrom, double amount) :this (resourceInfo, transferTo, transferFrom)
+        {
+            this.amount = amount;
+        }
+
+        public ResourceTransferValue(PartResourceDefinition  resourceInfo, object transferTo, object transferFrom)
+        {
+            this.resourceInfo = resourceInfo;
+            this.transferTo = transferTo;
+            this.transferFrom = transferFrom;
+            DetermineTypes();
+            InitializeSuffixes();
+        }
+
+        private void InitializeSuffixes()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DetermineTypes()
+        {
+            transferToType = DetermineType(transferTo);
+            transferFromType = DetermineType(transferFrom);
+        }
+
+        private TransferPartType DetermineType(object toTest)
+        {
+            if (toTest is PartValue)
+            {
+                return TransferPartType.Part;
+            }
+            if (toTest is ListValue)
+            {
+                return TransferPartType.Parts;
+            }
+            if (toTest is ElementValue)
+            {
+                return TransferPartType.Element;
+            }
+        }
     }
 }
