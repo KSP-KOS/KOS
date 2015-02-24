@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using kOS.Safe.Compilation;
 
 namespace kOS.Safe.Execution
 {
-    public interface ICpu
+    public interface ICpu : IDisposable
     {
         void PushStack(object item);
         object PopStack();

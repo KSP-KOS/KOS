@@ -859,5 +859,10 @@ namespace kOS.Execution
                 if (shared.Logger != null) shared.Logger.Log(e);
             }
         }
+
+        public void Dispose()
+        {
+            shared.UpdateHandler.RemoveObserver(this);
+        }
     }
 }

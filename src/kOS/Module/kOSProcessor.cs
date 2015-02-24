@@ -19,7 +19,6 @@ using kOS.Safe.Compilation.KS;
 using kOS.Safe.Module;
 using kOS.Safe.Screen;
 using kOS.Suffixed;
-using Debug = UnityEngine.Debug;
 
 namespace kOS.Module
 {
@@ -312,6 +311,11 @@ namespace kOS.Module
             ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
 
+        public void FixedUpdate()
+        {
+            UpdateFixedObservers();
+        }
+
         private void UpdateVessel()
         {
             if (shared != null && shared.Vessel != vessel)
@@ -326,6 +330,14 @@ namespace kOS.Module
             {
                 if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(Time.deltaTime);
                 UpdateParts();
+            }
+        }
+
+        private void UpdateFixedObservers()
+        {
+            if (ProcessorMode == ProcessorModes.READY)
+            {
+                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateFixedObservers(Time.deltaTime);
             }
         }
 

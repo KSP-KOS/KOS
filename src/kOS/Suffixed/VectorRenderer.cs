@@ -390,5 +390,10 @@ namespace kOS.Suffixed
         {
             return string.Format("{0} VectorRenderer", base.ToString());
         }
+
+        public void Dispose()
+        {
+           updateHandler.RemoveObserver(this);
+        }
     }
 }
