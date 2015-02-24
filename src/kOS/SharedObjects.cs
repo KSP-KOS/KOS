@@ -132,6 +132,7 @@ namespace kOS
             {
                 return TransferPartType.Element;
             }
+            throw new ArgumentOutOfRangeException();
         }
     }
 }
