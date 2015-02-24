@@ -120,9 +120,13 @@ namespace kOS.Safe.Screen
                 int oldRowNum = newRowNum + verticalScroll;
 
                 IScreenBufferLine newRow = Buffer[newRowNum];
-                IScreenBufferLine olderRow = (oldRowNum >= 0 && oldRowNum < older.Buffer.Count) ? older.Buffer[oldRowNum] : new ScreenBufferLine(0);
+                bool oldRowExists = (oldRowNum >= 0 && oldRowNum < older.Buffer.Count);
+                IScreenBufferLine olderRow = oldRowExists ? older.Buffer[oldRowNum] : new ScreenBufferLine(0);
                 
-                // If the old row is a dummy pad just made above, or if the new row is newer than the old row, then it needs checking for diffs:
+                // if new row is an empty dummy, then pad it out so it gets properly diffed against the old row:
+                if (newRow.Length == 0)
+                    newRow = new ScreenBufferLine(olderRow.Length);
+                // If the old row is a dummy pad or if the new row is newer than the old row, then it needs checking for diffs:
                 if (olderRow.Length == 0 || newRow.LastChangeTick > olderRow.LastChangeTick)
                 {
                     List<DiffChunk> diffs = new List<DiffChunk>();
@@ -152,7 +156,6 @@ namespace kOS.Safe.Screen
                             }
                         }
                     }
-                    // Now we have a list of diff chunks - next we find the most efficient way to actually output them.
                     
                     string newRowText = newRow.ToString();
 
@@ -184,9 +187,11 @@ namespace kOS.Safe.Screen
                                                            (char)diff.StartCol,
                                                            (char)newRowNum);
                             
-                            output.Append(String.Format("{0}{1}",
-                                                        moveString,
-                                                        newRowText.Substring(diff.StartCol, diff.EndCol - diff.StartCol + 1)));
+                            // content = the bit of string to print at this location, with nulls made into spaces so the 
+                            // telnet terminal will print correctly.
+                            string content = newRowText.Substring(diff.StartCol, diff.EndCol - diff.StartCol + 1).Replace('\0',' ');
+
+                            output.Append(String.Format("{0}{1}", moveString, content));
  
                             trackCursorColumn = diff.EndCol+1;
                             trackCursorRow = newRowNum;
@@ -194,6 +199,7 @@ namespace kOS.Safe.Screen
                         }
                         --------------------------- */
                     }
+                    
                 }
                     
             }

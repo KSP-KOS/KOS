@@ -103,6 +103,7 @@ namespace kOS.Screen
                     LineBuilder = new StringBuilder();
                     LineBuilder.Append(commandHistory[commandHistoryIndex]);
                     LineCursorIndex = LineBuilder.Length;
+                    MarkRowsDirty(LineSubBuffer.PositionRow, LineSubBuffer.RowCount);
                     LineSubBuffer.Wipe();
                     UpdateLineSubBuffer();
                 }
