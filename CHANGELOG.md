@@ -1,6 +1,20 @@
 kOS Mod Changelog
 =================
 
+# v0.16.2
+
+##HOTFIX
+
+* Fixes #609 KOS ignores run command in FOR loop
+* Fixes #610 Print AT draws in the wrong place on telnet after clearscreen.
+* Fixes #612 doesn't update telnet screen when cur command is longer than prev and you up-arrow
+
+# v0.16.1
+
+##HOTFIX
+
+this fixes #603 the mess that I made of the Node structure, thanks Tabris from the forums for bringing this to our attention.
+
 # v0.16.0
 
 ### BREAKING

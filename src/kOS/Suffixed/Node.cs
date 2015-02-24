@@ -14,9 +14,9 @@ namespace kOS.Suffixed
         private Vessel vesselRef;
         private readonly SharedObjects shared;
         private double time;
-        private double pro;
-        private double radOut;
-        private double norm;
+        private double prograde;
+        private double radialOut;
+        private double normal;
 
         static Node()
         {
@@ -27,9 +27,9 @@ namespace kOS.Suffixed
             : this(shareObj)
         {
             this.time = time;
-            pro = prograde;
-            radOut = radialOut;
-            norm = normal;
+            this.prograde = prograde;
+            this.radialOut = radialOut;
+            this.normal = normal;
         }
 
         private Node(Vessel v, ManeuverNode existingNode, SharedObjects shareObj)
@@ -52,28 +52,57 @@ namespace kOS.Suffixed
         private void InitializeSuffixes()
         {
             AddSuffix(new[] {"DELTAV", "BURNVECTOR"}, new Suffix<Vector>(GetBurnVector));
-            AddSuffix("ETA", new SetSuffix<double>(() => time - Planetarium.GetUniversalTime(), value => time = value + Planetarium.GetUniversalTime()));
 
-            AddSuffix("PROGRADE", new SetSuffix<double>(() => time - Planetarium.GetUniversalTime(), value =>
-            {
-                FromNodeRef();
-                pro = value;
-                ToNodeRef();
-            }));
+            AddSuffix("ETA", new SetSuffix<double>(
+                () =>
+                {
+                    FromNodeRef();
+                    return time - Planetarium.GetUniversalTime();
+                },
+                value =>
+                {
+                    time = value + Planetarium.GetUniversalTime();
+                    ToNodeRef();
+                }
+            ));
 
-            AddSuffix("RADIALOUT", new SetSuffix<double>(() => radOut, value =>
-            {
-                FromNodeRef();
-                radOut = value;
-                ToNodeRef();
-            }));
+            AddSuffix("PROGRADE", new SetSuffix<double>(
+                () =>
+                {
+                    FromNodeRef();
+                    return prograde;
+                }, 
+                value =>
+                {
+                    prograde = value;
+                    ToNodeRef();
+                }
+            ));
 
-            AddSuffix("NORMAL", new SetSuffix<double>(() => time - Planetarium.GetUniversalTime(), value =>
-            {
-                FromNodeRef();
-                norm = value;
-                ToNodeRef();
-            }));
+            AddSuffix("RADIALOUT", new SetSuffix<double>(
+                () =>
+                {
+                    FromNodeRef();
+                    return radialOut;
+                }, 
+                value => {
+                    radialOut = value;
+                    ToNodeRef();
+                }
+            ));
+
+            AddSuffix("NORMAL", new SetSuffix<double>(
+                () =>
+                {
+                    FromNodeRef();
+                    return normal;
+                }, 
+                value => {
+                    normal = value;
+                    ToNodeRef();
+                }
+            ));
+
             AddSuffix("ORBIT", new Suffix<OrbitInfo>(() =>
             {
                 if (nodeRef == null) throw new Exception("Node must be added to flight plan first");
@@ -132,18 +161,18 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             FromNodeRef();
-            return "NODE(" + time + "," + radOut + "," + norm + "," + pro + ")";
+            return string.Format("NODE({0},{1},{2},{3})", (time - Planetarium.GetUniversalTime()), radialOut, normal, prograde);
         }
 
         private void ToNodeRef()
         {
-            nodeRef.OnGizmoUpdated(new Vector3d(radOut, norm, pro), time);
+            nodeRef.OnGizmoUpdated(new Vector3d(radialOut, normal, prograde), time);
         }
 
         private void UpdateNodeDeltaV()
         {
             if (nodeRef == null) return;
-            var dv = new Vector3d(radOut, norm, pro);
+            var dv = new Vector3d(radialOut, normal, prograde);
             nodeRef.DeltaV = dv;
         }
 
@@ -161,9 +190,9 @@ namespace kOS.Suffixed
             if (nodeRef == null) return;
 
             time = nodeRef.UT;
-            radOut = nodeRef.DeltaV.x;
-            norm = nodeRef.DeltaV.y;
-            pro = nodeRef.DeltaV.z;
+            radialOut = nodeRef.DeltaV.x;
+            normal = nodeRef.DeltaV.y;
+            prograde = nodeRef.DeltaV.z;
         }
     }
 }
