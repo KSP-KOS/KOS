@@ -93,6 +93,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Suffixed\HsvColor.cs" />
+    <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
     <Compile Include="Screen\KOSNameTagWindow.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Suffixed\StageValues.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
+    <Compile Include="Execution\TransferManager.cs" />
     <Compile Include="UserIO\TelnetMainServer.cs" />
     <Compile Include="UserIO\TelnetSingletonServer.cs" />
     <Compile Include="UserIO\TelnetWelcomeMenu.cs" />

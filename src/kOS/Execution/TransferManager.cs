@@ -1,10 +1,19 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using kOS.Safe;
+using kOS.Suffixed;
 
 namespace kOS
 {
     public class TransferManager : IUpdateObserver
     {
+        public enum TransferStatus        
+        {
+            Failed,
+            Finished,
+            Paused,
+            Transfering
+        }
+
         private readonly SharedObjects shared;
         private readonly List<ResourceTransferValue> transfers;
 
@@ -41,9 +50,9 @@ namespace kOS
 
         public void Update(double deltaTime)
         {
-            foreach (var transfer in transfers)
+            foreach (var transfer in Transfers)
             {
-                
+                transfer.Update(deltaTime);
             }
         }
     }
