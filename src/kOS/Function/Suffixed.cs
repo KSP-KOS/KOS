@@ -209,7 +209,7 @@ namespace kOS.Function
     // or with
     //   vecdrawargs(,vector,vector,rgba,double,bool)
     // If varying args were more easily supported, this could
-    // be done with just one fuction that counts how many args it
+    // be done with just one function that counts how many args it
     // was given.
     //
     [Function("vecdraw")]
@@ -319,7 +319,7 @@ namespace kOS.Function
         {
             // ReSharper disable SuggestUseVarKeywordEvident
             ListValue<WaypointValue> returnList = new ListValue<WaypointValue>();
-            // ReSharper ensable SuggestUseVarKeywordEvident
+            // ReSharper enable SuggestUseVarKeywordEvident
 
             WaypointManager wpm = WaypointManager.Instance();
             if (wpm == null)
