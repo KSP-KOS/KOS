@@ -2,7 +2,7 @@
 using kOS.Safe;
 using kOS.Suffixed;
 
-namespace kOS
+namespace kOS.Execution
 {
     public class TransferManager : IUpdateObserver
     {

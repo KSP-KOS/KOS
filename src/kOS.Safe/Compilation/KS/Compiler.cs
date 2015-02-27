@@ -1356,7 +1356,7 @@ namespace kOS.Safe.Compilation.KS
 
         /// <summary>
         /// Perform a depth-first leftmost search of the parse tree from the starting
-        /// point given to find the first occurrance of a node of the given token type.<br/>
+        /// point given to find the first occurrence of a node of the given token type.<br/>
         /// This is intended as a way to make code that might be a bit more robustly able
         /// to handle shifts and adjustments to the parse grammar in the TinyPG file.<br/>
         /// Instead of assuming "I know that array nodes are always one level underneath

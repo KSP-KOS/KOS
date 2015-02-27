@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using kOS.Execution;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
@@ -11,6 +13,7 @@ namespace kOS.Suffixed
 {
     public class ResourceTransferValue : Structure
     {
+        private const float RESOURCE_SHARE_PER_UPDATE = 0.001f;
         private enum TransferPartType
         {
             Part,
@@ -95,9 +98,58 @@ namespace kOS.Suffixed
 
         private void WorkTransfer(IList<global::Part> fromParts, IList<global::Part> toParts)
         {
-            SafeHouse.Logger.Log("TRANSFER WORK: Have already transfered: " +transferedAmount);
-            throw new NotImplementedException();
+            SafeHouse.Logger.Log("TRANSFER WORK: Have already transfered: " + transferedAmount);
+
+            var transferGoal = CalculateTransferGoal(toParts);
+
+            double pulledAmount = PullResources(fromParts, transferGoal);
+
+            PutResources(toParts, pulledAmount);
         }
+
+        private void PutResources(IList<global::Part> parts, double pulledAmount)
+        {
+            var remaining = pulledAmount;
+            foreach (var part in parts)
+            {
+                part.Resources.Get(resourceInfo.id);
+            }
+        }
+
+        private double PullResources(IList<global::Part> parts, double transferGoal)
+        {
+            double toReturn = 0.0;
+            var availableResources = CalculateAvailableResource(parts);
+            foreach (var part in parts)
+            {
+                var resource = part.Resources.Get(resourceInfo.id);
+                var thisPartsPercentage = resource.amount/availableResources;
+                var thisPartsShare = transferGoal*thisPartsPercentage;
+                toReturn += part.TransferResource(resourceInfo.id, thisPartsShare);
+            }
+            SafeHouse.Logger.Log("TRANSFER WORK: Pulled: " + toReturn);
+            return toReturn;
+        }
+
+        private double CalculateTransferGoal(IEnumerable<global::Part> toParts)
+        {
+            double toReturn;
+
+            var destinationAvailableCapacity = CalculateAvailableSpace(toParts);
+
+            if (!amount.HasValue)
+            {
+                toReturn = destinationAvailableCapacity;
+            }
+            else
+            {
+                var rawGoal = amount.Value - transferedAmount; 
+                toReturn = Math.Min(destinationAvailableCapacity, rawGoal);
+            }
+
+            return toReturn;
+        }
+
 
         /// <summary>
         /// Tests to see if the transfer has reached its goal
@@ -123,7 +175,7 @@ namespace kOS.Suffixed
 
         private bool SourceReady(IEnumerable<global::Part> fromParts)
         {
-            var sourceAvailable = AvailableResource(fromParts);
+            var sourceAvailable = CalculateAvailableResource(fromParts);
             if (Math.Abs(sourceAvailable) < 0.0001)
             {
                 // Nothing to transfer
@@ -142,7 +194,7 @@ namespace kOS.Suffixed
 
         private bool DestinationReady(IEnumerable<global::Part> toParts)
         {
-            var destinationAvailableCapacity = AvailableSpace(toParts);
+            var destinationAvailableCapacity = CalculateAvailableSpace(toParts);
             if (Math.Abs(destinationAvailableCapacity) < 0.0001)
             {
                 // No room at the inn
@@ -173,13 +225,19 @@ namespace kOS.Suffixed
             Status = TransferManager.TransferStatus.Finished;
         }
 
-        private double AvailableSpace(IEnumerable<global::Part> parts)
+        private double CalculateMaxSpace(IEnumerable<global::Part> parts)
         {
             var resources = parts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
-            return resources.Sum(r => r.maxAmount = r.amount);
+            return resources.Sum(r => r.maxAmount);
         }
 
-        private double AvailableResource(IEnumerable<global::Part> fromParts)
+        private double CalculateAvailableSpace(IEnumerable<global::Part> parts)
+        {
+            var resources = parts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
+            return resources.Sum(r => r.maxAmount - r.amount);
+        }
+
+        private double CalculateAvailableResource(IEnumerable<global::Part> fromParts)
         {
             var resources = fromParts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
             return resources.Sum(r => r.amount);
