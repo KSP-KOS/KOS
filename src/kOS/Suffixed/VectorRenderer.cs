@@ -350,8 +350,8 @@ namespace kOS.Suffixed
         public void RenderColor()
         {
 
-            Color c1 = Color.Color();
-            Color c2 = Color.Color();
+            Color c1 = Color.Color;
+            Color c2 = Color.Color;
             c1.a = c1.a * (float)0.25;
             Color lCol = UnityEngine.Color.Lerp( c2, UnityEngine.Color.white, 0.7f ); // "whiten" the label color a lot.
 
