@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using kOS.Factories;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
@@ -30,9 +32,23 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => dockedVesselInfo.name));
+            AddSuffix("NAME", new SetSuffix<string>(() => dockedVesselInfo.name, SetName ));
             AddSuffix("UID", new Suffix<string>(() => dockedVesselInfo.rootPartUId.ToString()));
             AddSuffix("PARTS", new Suffix<ListValue>(() => PartValueFactory.Construct(parts, shared)));
+            AddSuffix("RESOURCES", new Suffix<ListValue>(GetResourceManifest));
+        }
+
+        private void SetName(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                dockedVesselInfo.name = value;
+            }
+        }
+
+        private ListValue GetResourceManifest()
+        {
+            return AggregateResourceValue.PartsToList(parts, shared);
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects shared)
