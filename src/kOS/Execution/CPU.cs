@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using kOS.Safe;
 using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
@@ -15,7 +14,7 @@ using kOS.Persistence;
 
 namespace kOS.Execution
 {
-    public class CPU: IUpdateObserver , ICpu
+    public class CPU: ICpu
     {
         private enum Status
         {
@@ -858,6 +857,11 @@ namespace kOS.Execution
             {
                 if (shared.Logger != null) shared.Logger.Log(e);
             }
+        }
+
+        public void Dispose()
+        {
+            shared.UpdateHandler.RemoveObserver(this);
         }
     }
 }

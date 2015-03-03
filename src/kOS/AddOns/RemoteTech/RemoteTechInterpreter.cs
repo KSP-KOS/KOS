@@ -201,5 +201,10 @@ namespace kOS.AddOns.RemoteTech
                 base.SpecialKey(key);
             }
         }
+
+        public void Dispose()
+        {
+            Shared.UpdateHandler.RemoveObserver(this);
+        }
     }
 }

@@ -3,7 +3,7 @@ using kOS.Safe.Compilation;
 
 namespace kOS.Safe.Execution
 {
-    public interface ICpu
+    public interface ICpu : IUpdateObserver
     {
         void PushStack(object item);
         object PopStack();
