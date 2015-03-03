@@ -56,9 +56,6 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
         * - :attr:`SLISP`
           - scalar
           - `Synonym for SEALEVELISP`_
-        * - :attr:`ISP`
-          - scalar
-          - `Specific impulse <isp>`_
         * - :attr:`FLAMEOUT`
           - boolean
           - Check if no more fuel
