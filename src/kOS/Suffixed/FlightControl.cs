@@ -281,8 +281,8 @@ namespace kOS.Suffixed
 
         private void Bind()
         {
-            SafeHouse.Logger.Log("FlightControl Binding");
             if (bound) return;
+            SafeHouse.Logger.Log("FlightControl Binding");
 
             if (RemoteTechHook.IsAvailable(Vessel.id))
             {
