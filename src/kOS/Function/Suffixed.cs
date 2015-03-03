@@ -179,6 +179,31 @@ namespace kOS.Function
         }
     }
 
+    [Function("hsv")]
+    public class FunctionHsv : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var v = (float) GetDouble(shared.Cpu.PopValue());
+            var s = (float) GetDouble(shared.Cpu.PopValue());
+            var h = (float) GetDouble(shared.Cpu.PopValue());
+            shared.Cpu.PushStack( new HsvColor(h,s,v) );
+        }
+    }
+
+    [Function("hsva")]
+    public class FunctionHsva : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var a = (float) GetDouble(shared.Cpu.PopValue());
+            var v = (float) GetDouble(shared.Cpu.PopValue());
+            var s = (float) GetDouble(shared.Cpu.PopValue());
+            var h = (float) GetDouble(shared.Cpu.PopValue());
+            shared.Cpu.PushStack( new HsvColor(h,s,v,a) );
+        }
+    }
+
     [Function("rgb")]
     public class FunctionRgb : FunctionBase
     {

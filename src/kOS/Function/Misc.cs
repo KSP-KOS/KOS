@@ -44,7 +44,7 @@ namespace kOS.Function
             int       style     = Convert.ToInt32 (shared.Cpu.PopValue ());
             int       delay     = Convert.ToInt32 (shared.Cpu.PopValue ());   
             string    textToHud = shared.Cpu.PopValue ().ToString ();
-            string   htmlColour = rgba.ToHTMLString();
+            string   htmlColour = rgba.ToHexNotation();
             switch (style)
             {
                 case 1:
