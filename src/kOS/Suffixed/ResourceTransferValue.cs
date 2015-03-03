@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using kOS.Execution;
 using kOS.Safe.Encapsulation;
@@ -107,15 +107,42 @@ namespace kOS.Suffixed
             PutResources(toParts, pulledAmount);
         }
 
+        /// <summary>
+        /// Transfers resources into the specified parts 
+        /// </summary>
+        /// <param name="parts">All of the recipient parts</param>
+        /// <param name="pulledAmount">the aggregate amount we are seeking to add to the parts</param>
         private void PutResources(IList<global::Part> parts, double pulledAmount)
         {
+            var retries = 0;
+            var evenShare = pulledAmount/parts.Count;
+
             var remaining = pulledAmount;
-            foreach (var part in parts)
+            while (remaining > 0)
             {
-                part.Resources.Get(resourceInfo.id);
+                if (retries > 10)
+                {
+                    MarkFailed("Error in putting resource with " + remaining + " remaining.");
+                }
+                foreach (var part in parts)
+                {
+                    var resource = part.Resources.Get(resourceInfo.id);
+                    if (resource == null) continue;
+
+                    var transferAmount = Math.Min(remaining, evenShare);
+
+                    remaining -= part.TransferResource(resource.info.id, transferAmount);
+                }
+                retries++;
             }
         }
 
+        /// <summary>
+        /// Requests the resource from all parts in the collection
+        /// </summary>
+        /// <param name="parts">All of the donor parts</param>
+        /// <param name="transferGoal">the aggregate amount we are seeking to remove from parts</param>
+        /// <returns>the amount we were successful at pulling</returns>
         private double PullResources(IList<global::Part> parts, double transferGoal)
         {
             double toReturn = 0.0;
@@ -123,8 +150,12 @@ namespace kOS.Suffixed
             foreach (var part in parts)
             {
                 var resource = part.Resources.Get(resourceInfo.id);
+                if (resource == null) continue;
+
                 var thisPartsPercentage = resource.amount/availableResources;
-                var thisPartsShare = transferGoal*thisPartsPercentage;
+
+                // The amount you pull must be negative 
+                var thisPartsShare = -transferGoal*thisPartsPercentage;
                 toReturn += part.TransferResource(resourceInfo.id, thisPartsShare);
             }
             SafeHouse.Logger.Log("TRANSFER WORK: Pulled: " + toReturn);
