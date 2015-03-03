@@ -42,6 +42,8 @@ namespace kOS.Suffixed
             this.resourceInfo = resourceInfo;
             this.transferTo = transferTo;
             this.transferFrom = transferFrom;
+            Status = TransferManager.TransferStatus.Transfering;
+
             DetermineTypes();
             InitializeSuffixes();
         }
