@@ -14,7 +14,15 @@ namespace kOS.Safe.Encapsulation.Suffixes
 
         public virtual void Set(object value)
         {
-            var toSet = (TValue)Convert.ChangeType(value, typeof(TValue));
+            TValue toSet;
+            if (value is TValue)
+            {
+                toSet = (TValue) value;
+            }
+            else
+            {
+                toSet = (TValue)Convert.ChangeType(value, typeof(TValue));
+            }
             setter.Invoke(toSet);
         }
     }
