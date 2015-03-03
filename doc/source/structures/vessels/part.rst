@@ -105,7 +105,7 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. attribute:: Part:TAG
 
-    :access: Get only
+    :access: Get / Set
     :type: string
 
     The name tag value that may exist on this part if you have given the part a name via the :ref:`name-tag system <nametag>`.
