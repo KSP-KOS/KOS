@@ -340,5 +340,10 @@ namespace kOS.Suffixed
             // Some parts are from a different vessel? bail
             return null;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Transfer( {0}, {1} )", Status, StatusMessage);
+        }
     }
 }
