@@ -21,6 +21,8 @@ using kOS.Safe.Screen;
 using kOS.Suffixed;
 using Debug = UnityEngine.Debug;
 
+using KSPAPIExtensions;
+
 namespace kOS.Module
 {
     public class kOSProcessor : PartModule, IProcessor
@@ -36,12 +38,8 @@ namespace kOS.Module
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
 
-        [KSPField(isPersistant = true, guiName = "Boot File", guiActive = false, guiActiveEditor = false)]
-        public string bootFile = "boot.ks";
-
-        [KSPField(isPersistant = false, guiName = "Boot File Choice", guiActive = false, guiActiveEditor = true), UI_FloatRange(minValue=0f,maxValue=1f,stepIncrement=1f)]
-        public float bootFileChoice = 0f;
-        private float bootFileChoiceLast = -1f;
+		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File"), UI_ChooseOption(scene=UI_Scene.Editor)]
+		public string bootFile = "boot.ks";
 
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
         public int diskSpace = 500;
@@ -132,6 +130,11 @@ namespace kOS.Module
 
         public override void OnStart(StartState state)
         {
+			//if in Editor, populate boot script selector
+            if (state == StartState.Editor)
+            {
+                BootUISelector();
+            }
             //Do not start from editor and at KSP first loading
             if (state == StartState.Editor || state == StartState.None)
             {
@@ -140,6 +143,29 @@ namespace kOS.Module
 
             SafeHouse.Logger.Log(string.Format("OnStart: {0} {1}", state, ProcessorMode));
             InitObjects();
+        }
+
+        private void BootUISelector()
+        {
+            //Populate selector for boot scripts
+            BaseField field = Fields["bootFile"];
+            UI_ChooseOption options = (UI_ChooseOption)field.uiControlEditor;
+
+            List<string> bootFiles = new List<string>();
+
+            var temp = new Archive();
+            var files = temp.GetFileList();
+            var maxchoice = 0;
+            for (var i = 0; i < files.Count; ++i)
+            {
+                if (!files[i].Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
+                bootFiles.Add(files[i].Name);
+                maxchoice++;
+            }
+            //no need to show the control if there are no files starting with boot
+            options.controlEnabled = maxchoice > 0;
+            field.guiActiveEditor = maxchoice > 0;
+            options.options = bootFiles.ToArray();
         }
 
         public void InitObjects()
@@ -299,7 +325,6 @@ namespace kOS.Module
         
         public void Update()
         {
-            ProcessBoot();
             if (!IsAlive()) return;
             if (firstUpdate)
             {
@@ -339,46 +364,6 @@ namespace kOS.Module
                 return false;
             }
             return true;
-        }
-
-        private void ProcessBoot()
-        {
-            if (bootFileChoice == bootFileChoiceLast) return;
-
-            var temp = new Archive();
-            var files = temp.GetFileList();
-            var maxchoice = 0;
-            for (var i = 0; i < files.Count; ++i)
-            {
-                if (!files[i].Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
-                maxchoice++;
-                if (bootFileChoiceLast < 0)
-                {
-                    // find previous
-                    if (files[i].Name == bootFile)
-                    {
-                        bootFileChoice = i;
-                        bootFileChoiceLast = i;
-                    }
-                }
-                if (i == bootFileChoice)
-                {
-                    bootFile = files[i].Name;
-                }
-            }
-            var field = Fields["bootFileChoice"];
-            if (field != null)
-            {
-                field.guiName = bootFile;
-                var ui = field.uiControlEditor as UI_FloatRange;
-                if (ui != null)
-                {
-                    ui.maxValue = maxchoice;
-                    ui.controlEnabled = maxchoice > 0;
-                    field.guiActiveEditor = maxchoice > 0;
-                    bootFileChoiceLast = bootFileChoice;
-                }
-            }
         }
 
         public void UpdateParts()
