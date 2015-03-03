@@ -94,7 +94,7 @@ namespace kOS.Utilities
                     break;
 
                 case "ELEMENTS":
-                    list = ElementValue.PartsToList(partList);
+                    list = ElementValue.PartsToList(partList, sharedObj);
                     break;
 
                 case "DOCKINGPORTS":
