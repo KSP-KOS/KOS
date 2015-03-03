@@ -179,7 +179,7 @@ namespace kOS.Suffixed.Part
                 }
             }
         }
-        public float SeaLeveSpecificImpulse
+        public float SeaLevelSpecificImpulse
         {
             get
             {

@@ -10,7 +10,7 @@
         float FuelFlow { get; }
         float SpecificImpulse { get; }
         float VacuumSpecificImpluse { get; }
-        float SeaLeveSpecificImpulse { get; }
+        float SeaLevelSpecificImpulse { get; }
         bool Flameout { get; }
         bool Ignition { get; }
         bool AllowRestart { get; }
