@@ -130,26 +130,11 @@ namespace kOS.Module
 
         public override void OnStart(StartState state)
         {
-			//Populate selector for boot scripts
-			BaseField field = Fields["bootFile"];
-			UI_ChooseOption options = (UI_ChooseOption)field.uiControlEditor;
-
-			List<string> bootFiles = new List<string>();
-
-			var temp = new Archive();
-			var files = temp.GetFileList();
-			var maxchoice = 0;
-			for (var i = 0; i < files.Count; ++i)
-			{
-				if (!files[i].Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
-				bootFiles.Add(files[i].Name);
-				maxchoice++;
-			}
-			//no need to show the control if there are no files starting with boot
-			options.controlEnabled = maxchoice > 0;
-			field.guiActiveEditor = maxchoice > 0;
-			options.options = bootFiles.ToArray();
-
+			//if in Editor, populate boot script selector
+            if (state == StartState.Editor)
+            {
+                BootUISelector();
+            }
             //Do not start from editor and at KSP first loading
             if (state == StartState.Editor || state == StartState.None)
             {
@@ -158,6 +143,29 @@ namespace kOS.Module
 
             SafeHouse.Logger.Log(string.Format("OnStart: {0} {1}", state, ProcessorMode));
             InitObjects();
+        }
+
+        private void BootUISelector()
+        {
+            //Populate selector for boot scripts
+            BaseField field = Fields["bootFile"];
+            UI_ChooseOption options = (UI_ChooseOption)field.uiControlEditor;
+
+            List<string> bootFiles = new List<string>();
+
+            var temp = new Archive();
+            var files = temp.GetFileList();
+            var maxchoice = 0;
+            for (var i = 0; i < files.Count; ++i)
+            {
+                if (!files[i].Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
+                bootFiles.Add(files[i].Name);
+                maxchoice++;
+            }
+            //no need to show the control if there are no files starting with boot
+            options.controlEnabled = maxchoice > 0;
+            field.guiActiveEditor = maxchoice > 0;
+            options.options = bootFiles.ToArray();
         }
 
         public void InitObjects()
