@@ -5,7 +5,7 @@ Colors
 ======
 
 Any place you need to specify a color in the game (at the moment this is
-just with :ref:`VECDRAW <vecdraw>`. and HUDTEXT) You do so with a
+just with :ref:`VECDRAW <vecdraw>`, :ref:`HIGHLIGHT <highlight>`. and HUDTEXT) You do so with a
 rgba color structure defined as follows:
 
 Method 1: Use one of these pre-arranged named colors:
