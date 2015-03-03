@@ -105,7 +105,7 @@ namespace kOS.Function
         private void HighlightPart(PartValue partValue)
         {
             var part = partValue.Part;
-            part.highlightColor = color.Color();
+            part.highlightColor = color.Color;
             part.highlightType = Part.HighlightType.AlwaysOn;
             part.SetHighlight(enabled, false);
         }

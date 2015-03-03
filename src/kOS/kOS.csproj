@@ -37,6 +37,10 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\..\KSP_LIB\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="KSPAPIExtensions, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\KSP_LIB\KSPAPIExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

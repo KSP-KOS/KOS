@@ -272,3 +272,30 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
+
+Special handling of files starting with "boot" (example ``boot.ks``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**(experimental)**
+
+For users requiring even more automation, the feature of custom boot scripts was introduced. If you have at least 1 file in your Archive volume starting with "boot" (for example "boot.ks", "boot2.ks" or even "boot_custom_script.ks"), you will be presented with the option to choose one of those files as a boot script for your kOS CPU.
+ 
+.. image:: http://i.imgur.com/05kp7Sy.jpg
+
+As soon as you vessel leaves VAB/SPH and is being initialised on the launchpad (e.g. its status is PRELAUNCH) the assigned script will be copied to CPU's local hard disk and named "boot.ks". This script will be run as soon as CPU boots, e.g. as soon as you bring your CPU in physics range or power on your CPU if it was turned off.
+
+Important things to consider:
+	* kOS CPU hard disk space is limited, avoid using complex boot scripts or increase disk space using MM config.
+	* If your kOS set to start from Archive, this feature may not work as intended. Possible workaround: disable starting from Archive and create simple default "boot.ks" file like this::
+		
+		//default boot script, just switches to Archive
+		switch to 0.
+		
+	* Boot script runs immediately on initialisation, it should avoid interaction with parts/modules until physics fully load. It is best to wait for couple seconds or until certain trigger.
+	
+	
+Possible uses for boot scripts:
+
+	* Automatically activate sleeper/background scripts which will run on CPU until triggered by certain condition.
+	* Create basic station-keeping scripts - you will only have to focus your probes once in a while and let the boot script do the orbit adjustment automatically.
+	* Create multi-CPU vessels with certain cores dedicated to specific tasks, triggered by user input or external events (Robotic-heavy Vessels)
+	* Anything else you can come up with
