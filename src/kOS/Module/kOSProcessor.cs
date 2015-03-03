@@ -37,8 +37,8 @@ namespace kOS.Module
         //640K ought to be enough for anybody -sic
         private const int PROCESSOR_HARD_CAP = 655360;
 
-		[KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File"), UI_ChooseOption(scene=UI_Scene.Editor)]
-		public string bootFile = "boot.ks";
+        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File"), UI_ChooseOption(scene=UI_Scene.Editor)]
+        public string bootFile = "boot.ks";
 
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
         public int diskSpace = 500;
@@ -129,7 +129,7 @@ namespace kOS.Module
 
         public override void OnStart(StartState state)
         {
-			//if in Editor, populate boot script selector
+            //if in Editor, populate boot script selector
             if (state == StartState.Editor)
             {
                 BootUISelector();
