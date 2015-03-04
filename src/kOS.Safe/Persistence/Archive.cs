@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using kOS.Safe.Utilities;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
@@ -172,7 +173,14 @@ namespace kOS.Safe.Persistence
             try
             {
                 SafeHouse.Logger.Log(string.Format("Archive: Listing Files"));
-                var kosFiles = Directory.GetFiles(ArchiveFolder);
+                var listFiles = Directory.GetFiles(ArchiveFolder);
+                var filterHid =  Directory.GetFiles(ArchiveFolder).Select(f => f)
+                    .Where(f => (File.GetAttributes (f) & FileAttributes.Hidden) != 0);
+                var filterSys =  Directory.GetFiles(ArchiveFolder).Select(f => f)
+                    .Where(f => (File.GetAttributes (f) & FileAttributes.System ) != 0);
+                var noHid    =   listFiles.Except(filterHid);
+                var visFiles =   noHid.Except(filterSys);
+                var kosFiles =   visFiles.Except(Directory.GetFiles(ArchiveFolder, ".*"));
                 retList.AddRange(kosFiles.Select(file => new System.IO.FileInfo(file)).Select(sysFileInfo => new FileInfo(sysFileInfo)));
             }
             catch (DirectoryNotFoundException)
