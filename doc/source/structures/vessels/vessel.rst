@@ -217,7 +217,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :struct:`Part`
     :access: Get only
 
-    The first :struct:`Part` that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree.
+    The ROOTPART is usually the first :struct:`Part` that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree. It is possible to change the root part in VAB/SPH by using Root tool, so ROOTPART does not always point to command core or command pod. Vessel:ROOTPART may change in flight as a result of docking/undocking or decoupling of some part of a Vessel.
 
 .. attribute:: Vessel:PARTS
 
