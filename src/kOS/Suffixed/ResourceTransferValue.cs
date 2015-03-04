@@ -267,13 +267,13 @@ namespace kOS.Suffixed
         private double CalculateAvailableSpace(IEnumerable<global::Part> parts)
         {
             var resources = parts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
-            return resources.Sum(r => r.maxAmount - r.amount);
+            return resources.Where(r=> r != null).Sum(r => r.maxAmount - r.amount);
         }
 
         private double CalculateAvailableResource(IEnumerable<global::Part> fromParts)
         {
             var resources = fromParts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
-            return resources.Sum(r => r.amount);
+            return resources.Where(r=> r != null).Sum(r => r.amount);
         }
 
         private IList<global::Part> GetParts(TransferPartType type, object obj)
