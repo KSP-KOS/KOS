@@ -338,6 +338,8 @@ namespace kOS.Module
 
         public void FixedUpdate()
         {
+            if (!IsAlive()) return;
+
             UpdateFixedObservers();
         }
 
