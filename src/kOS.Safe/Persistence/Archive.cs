@@ -1,9 +1,8 @@
+using kOS.Safe.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using kOS.Safe.Utilities;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Safe.Persistence
@@ -96,10 +95,12 @@ namespace kOS.Safe.Persistence
                         fileBody = System.Text.Encoding.UTF8.GetBytes(tempString.ToCharArray());
                         fileExtension = KERBOSCRIPT_EXTENSION;
                         break;
+
                     case FileCategory.KSM:
                         fileBody = file.BinaryContent;
                         fileExtension = KOS_MACHINELANGUAGE_EXTENSION;
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -139,7 +140,6 @@ namespace kOS.Safe.Persistence
             }
         }
 
-
         public override bool RenameFile(string name, string newName)
         {
             try
@@ -174,13 +174,12 @@ namespace kOS.Safe.Persistence
             {
                 SafeHouse.Logger.Log(string.Format("Archive: Listing Files"));
                 var listFiles = Directory.GetFiles(ArchiveFolder);
-                var filterHid =  Directory.GetFiles(ArchiveFolder).Select(f => f)
-                    .Where(f => (File.GetAttributes (f) & FileAttributes.Hidden) != 0);
-                var filterSys =  Directory.GetFiles(ArchiveFolder).Select(f => f)
-                    .Where(f => (File.GetAttributes (f) & FileAttributes.System ) != 0);
-                var noHid    =   listFiles.Except(filterHid);
-                var visFiles =   noHid.Except(filterSys);
-                var kosFiles =   visFiles.Except(Directory.GetFiles(ArchiveFolder, ".*"));
+                var filterHid = listFiles.Where(f => (File.GetAttributes(f) & FileAttributes.Hidden) != 0);
+                var filterSys = listFiles.Where(f => (File.GetAttributes(f) & FileAttributes.System) != 0);
+
+                var visFiles = listFiles.Except(filterSys).Except(filterHid);
+                var kosFiles = visFiles.Except(Directory.GetFiles(ArchiveFolder, ".*"));
+                
                 retList.AddRange(kosFiles.Select(file => new System.IO.FileInfo(file)).Select(sysFileInfo => new FileInfo(sysFileInfo)));
             }
             catch (DirectoryNotFoundException)
@@ -193,7 +192,7 @@ namespace kOS.Safe.Persistence
         public override float RequiredPower()
         {
             const int MULTIPLIER = 5;
-            const float POWER_REQUIRED = BASE_POWER*MULTIPLIER;
+            const float POWER_REQUIRED = BASE_POWER * MULTIPLIER;
 
             return POWER_REQUIRED;
         }
@@ -241,7 +240,7 @@ namespace kOS.Safe.Persistence
                 return ms.ToArray();
             }
         }
-        
+
         public override void AppendToFile(string name, string textToAppend)
         {
             SafeHouse.Logger.SuperVerbose("Archive: AppendToFile: " + name);
@@ -251,9 +250,9 @@ namespace kOS.Safe.Persistence
 
             // Using binary writer so we can bypass the OS behavior about ASCII end-of-lines and always use \n's no matter the OS:
             // Deliberately not catching potential I/O exceptions from this, so they will percolate upward and be seen by the user:
-            using (var outfile = new BinaryWriter(File.Open(fullPath, FileMode.Append, FileAccess.Write,FileShare.ReadWrite)))
+            using (var outfile = new BinaryWriter(File.Open(fullPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))
             {
-                byte[] binaryLine = System.Text.Encoding.UTF8.GetBytes((textToAppend+"\n").ToCharArray());
+                byte[] binaryLine = System.Text.Encoding.UTF8.GetBytes((textToAppend + "\n").ToCharArray());
                 outfile.Write(binaryLine);
             }
         }
