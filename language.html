@@ -93,6 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="math.html">Mathematics</a><ul>
@@ -171,13 +172,15 @@
 <li class="toctree-l1"><a class="reference internal" href="language/features.html">General Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/features.html#case-insensitivity">Case Insensitivity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/features.html#expressions">Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/features.html#user-functions">User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/features.html#language-structures">Structures</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language/syntax.html">Language Syntax</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#general-rules">General Rules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/syntax.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/syntax.html#functions-built-in">Functions (built-in)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#suffixes-as-functions-methods">Suffixes as Functions (Methods)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/syntax.html#user-functions">User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#built-in-special-variable-names">Built-In Special Variable Names</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#what-does-not-exist-yet">What does not exist (yet?)</a></li>
 </ul>
@@ -193,17 +196,32 @@
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html#when-then"><tt class="docutils literal"><span class="pre">WHEN</span></tt> / <tt class="docutils literal"><span class="pre">THEN</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html#on"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html#preserve"><tt class="docutils literal"><span class="pre">PRESERVE</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/flow.html#declare-function"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html#boolean-operators">Boolean Operators</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language/variables.html">Variables</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#declare"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/variables.html#declare-to"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">...</span> <span class="pre">TO</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#declare-parameter"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#set"><tt class="docutils literal"><span class="pre">SET</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#lock"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#toggle"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#on"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#off"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/variables.html#scoping-rules">Scoping rules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="language/user_functions.html">User Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#help-for-the-new-user-what-is-a-function">Help for the new user - What is a Function?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare-function"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare-parameter"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare-to"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">TO</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#return"><tt class="docutils literal"><span class="pre">RETURN</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#passing-by-value">Passing by value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#recursion">Recursion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#user-function-gotchas">User Function Gotchas</a></li>
 </ul>
 </li>
 </ul>

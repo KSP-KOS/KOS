@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -181,7 +182,8 @@
 <li><a class="reference internal" href="#when-then" id="id15"><tt class="docutils literal"><span class="pre">WHEN</span></tt> / <tt class="docutils literal"><span class="pre">THEN</span></tt></a></li>
 <li><a class="reference internal" href="#on" id="id16"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
 <li><a class="reference internal" href="#preserve" id="id17"><tt class="docutils literal"><span class="pre">PRESERVE</span></tt></a></li>
-<li><a class="reference internal" href="#boolean-operators" id="id18">Boolean Operators</a></li>
+<li><a class="reference internal" href="#declare-function" id="id18"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt></a></li>
+<li><a class="reference internal" href="#boolean-operators" id="id19">Boolean Operators</a></li>
 </ul>
 </div>
 <div class="section" id="break">
@@ -392,8 +394,14 @@ does not halt execution. It starts a check in the background that will keep acti
 </pre></div>
 </div>
 </div>
+<div class="section" id="declare-function">
+<span id="booleans"></span><span id="index-10"></span><h2><a class="toc-backref" href="#id18"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt></a><a class="headerlink" href="#declare-function" title="Permalink to this headline">¶</a></h2>
+<p>Covered in more depth <a class="reference internal" href="user_functions.html#user-functions"><em>elsewhere in the documentation</em></a>,
+the <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt> statement creates a user-defined function that
+you can then call elsewhere in the code.</p>
+</div>
 <div class="section" id="boolean-operators">
-<span id="booleans"></span><span id="index-10"></span><h2><a class="toc-backref" href="#id18">Boolean Operators</a><a class="headerlink" href="#boolean-operators" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id19">Boolean Operators</a><a class="headerlink" href="#boolean-operators" title="Permalink to this headline">¶</a></h2>
 <p>All conditional statements, like <tt class="docutils literal"><span class="pre">IF</span></tt>, can make use of boolean operators. The order of operations is as follows:</p>
 <ul class="simple">
 <li><tt class="docutils literal"><span class="pre">=</span></tt> <tt class="docutils literal"><span class="pre">&lt;</span></tt> <tt class="docutils literal"><span class="pre">&gt;</span></tt> <tt class="docutils literal"><span class="pre">&lt;=</span></tt> <tt class="docutils literal"><span class="pre">&gt;=</span></tt> <tt class="docutils literal"><span class="pre">&lt;&gt;</span></tt></li>

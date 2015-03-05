@@ -93,7 +93,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables &amp; Statements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html#scoping-rules">Scoping rules</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
@@ -172,7 +173,7 @@
   <div class="section" id="color">
 <span id="colors"></span><span id="id1"></span><h1>Colors<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h1>
 <p>Any place you need to specify a color in the game (at the moment this is
-just with <a class="reference internal" href="vecdraw.html#vecdraw"><em>VECDRAW</em></a>. and HUDTEXT) You do so with a
+just with <a class="reference internal" href="vecdraw.html#vecdraw"><em>VECDRAW</em></a>, <a class="reference internal" href="highlight.html#highlight"><em>HIGHLIGHT</em></a>. and HUDTEXT) You do so with a
 rgba color structure defined as follows:</p>
 <p>Method 1: Use one of these pre-arranged named colors:</p>
 <ul>
@@ -322,6 +323,83 @@ rgba color structure defined as follows:</p>
 <span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOR</span> <span class="n">to</span> <span class="n">RGBA</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">).</span>
 
 <span class="n">PRINT</span> <span class="n">GREEN</span><span class="o">:</span><span class="n">HTML</span><span class="p">.</span> <span class="c1">// prints #00ff00</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="function:HSV">
+<tt class="descname">HSV</tt><big>(</big>h,s,v<big>)</big><a class="headerlink" href="#function:HSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>This global function creates a color from hue, saturation and value:</p>
+<div class="highlight-c"><div class="highlight"><pre>SET myColor TO HSV(h,s,v).
+
+`More Information about HSV &lt;http://en.wikipedia.org/wiki/HSL_and_HSV&gt;`_,
+</pre></div>
+</div>
+<p>where:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">h</span></tt></dt>
+<dd>A floating point number from 0.0 to 360.0 for the hue component.</dd>
+<dt><tt class="docutils literal"><span class="pre">s</span></tt></dt>
+<dd>A floating point number from 0.0 to 1.0 for the saturation component.</dd>
+<dt><tt class="docutils literal"><span class="pre">v</span></tt></dt>
+<dd>A floating point number from 0.0 to 1.0 for the value component.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="function:HSVA">
+<tt class="descname">HSVA</tt><big>(</big>h,s,v,a<big>)</big><a class="headerlink" href="#function:HSVA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <a class="reference internal" href="#function:HSV" title="HSV function"><tt class="xref ks ks-func docutils literal"><span class="pre">HSV()</span></tt></a> but with an alpha (transparency) channel:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myColor</span> <span class="n">TO</span> <span class="n">HSVA</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">a</span><span class="p">).</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">h,</span> <span class="pre">s,</span> <span class="pre">v</span></tt> are the same as above.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">a</span></tt></dt>
+<dd>A floating point number from 0.0 to 1.0 for the alpha component. (1.0 means opaque, 0.0 means invisibly transparent).</dd>
+</dl>
+</dd></dl>
+
+<dl class="structure">
+<dt id="structure:HSVA">
+<em class="property">structure </em><tt class="descname">HSVA</tt><a class="headerlink" href="#structure:HSVA" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>The HSVA structure contains all of the suffixes from the RGBA structure in addition to these</div></blockquote>
+<table border="1" class="docutils">
+<caption>Members</caption>
+<colgroup>
+<col width="29%" />
+<col width="14%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>:H or :HUE</td>
+<td>scalar</td>
+<td>the hue component of the color. It is a value from 0.0 to 360.0</td>
+</tr>
+<tr class="row-odd"><td>:S or :SATURATION</td>
+<td>scalar</td>
+<td>the saturation component of the color. It has a value from 0.0 to 1.0</td>
+</tr>
+<tr class="row-even"><td>:V or :VALUE</td>
+<td>scalar</td>
+<td>the value component of the color. It has a value from 0.0 to 1.0</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myarrow</span> <span class="n">TO</span> <span class="n">VECDRAW</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">VEC</span> <span class="n">to</span> <span class="n">V</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">).</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOR</span> <span class="n">to</span> <span class="n">HSV</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">).</span> <span class="c1">// Yellow</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOR</span><span class="o">:</span><span class="n">S</span> <span class="n">to</span> <span class="mf">0.5</span><span class="p">.</span> <span class="c1">// Light yellow</span>
+<span class="n">SET</span> <span class="n">myarrow</span><span class="o">:</span><span class="n">COLOR</span><span class="o">:</span><span class="n">H</span> <span class="n">to</span> <span class="mf">0.</span> <span class="c1">// pink</span>
 </pre></div>
 </div>
 </div>

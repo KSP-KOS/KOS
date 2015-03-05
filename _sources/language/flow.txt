@@ -254,6 +254,13 @@ The following example sets up a continuous background check to keep looking for 
 .. index:: Boolean Operators
 .. _booleans:
 
+``DECLARE FUNCTION``
+--------------------
+
+Covered in more depth :ref:`elsewhere in the documentation <user_functions>`, 
+the ``DECLARE FUNCTION`` statement creates a user-defined function that
+you can then call elsewhere in the code.
+
 Boolean Operators
 -----------------
 
