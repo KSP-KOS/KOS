@@ -24,7 +24,7 @@ using KSPAPIExtensions;
 
 namespace kOS.Module
 {
-    public class kOSProcessor : PartModule, IProcessor
+    public class kOSProcessor : PartModule, IProcessor, IPartCostModifier
     {
         public ProcessorModes ProcessorMode = ProcessorModes.READY;
 
@@ -42,6 +42,9 @@ namespace kOS.Module
 
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
         public int diskSpace = 500;
+
+        [KSPField(isPersistant = true, guiName = "CPU Upgrade Cost", guiActive = false, guiActiveEditor=false)]
+        public int additionalCost = 0;
 
         [KSPField(isPersistant = true, guiActive = false)] public int MaxPartId = 100;
 
@@ -127,12 +130,39 @@ namespace kOS.Module
             return shared.Window;
         }
 
+        //returns basic information on kOSProcessor module in Editor
+        public override string GetInfo()
+        {
+            const float maximumPowerConsumption = 0.2F;
+            string moduleInfo = "KOS Processor\n";
+
+            moduleInfo += "\nLocal disk capacity: " + diskSpace;
+
+            moduleInfo += "\nMax Power consuption, EC/s : " + System.Math.Round(maximumPowerConsumption,2);
+
+            if (additionalCost > 0)
+            {
+                moduleInfo += "\nCost of probe CPU upgrade: " + additionalCost.ToString();
+            }
+
+            return moduleInfo;
+        }
+
+        //implement IPartCostModifier component
+        public float GetModuleCost(float defaultCost)
+        {
+            return additionalCost;
+        }
+
         public override void OnStart(StartState state)
         {
-            //if in Editor, populate boot script selector
+            //if in Editor, populate boot script selector and show additionalCost if its non-zero
             if (state == StartState.Editor)
             {
                 BootUISelector();
+                BaseField field = Fields["additionalCost"];
+                field.guiActiveEditor = additionalCost > 0;
+
             }
             //Do not start from editor and at KSP first loading
             if (state == StartState.Editor || state == StartState.None)
