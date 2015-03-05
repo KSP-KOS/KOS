@@ -138,10 +138,10 @@ namespace kOS.Module
             sb.AppendFormat("Local disk capacity: {0}", diskSpace);
             sb.AppendFormat("Max Power consumption, EC/s : {0}", System.Math.Round(MAXIMUM_POWER_CONSUMPTION,2));
 
-            if (additionalCost > 0)
-            {
-                sb.AppendFormat("Cost of probe CPU upgrade: {0}", additionalCost);
-            }
+            //if (additionalCost > 0)
+            //{
+            //    sb.AppendFormat("Cost of probe CPU upgrade: {0}", additionalCost);
+            //}
 
             return sb.ToString();
         }
