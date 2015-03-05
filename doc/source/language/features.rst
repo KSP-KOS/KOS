@@ -79,6 +79,36 @@ Structures also often contain methods. A method is a suffix of a structure that 
 
 For more information, see the :ref:`Structures Section <language structures>`. A full list of structure types can be found on the :ref:`Structures <structures>` page. For a more detailed breakdown of the language, see the :ref:`Language Syntax Constructs <syntax>` page.
 
+.. _feature functions:
+
+User Functions
+--------------
+
+.. note::
+    .. versionadded:: 0.17
+        This feature did not exist in prior versions of kerboscript.
+
+Kerboscript supports user functions which you can write yourself
+and call from your own scripts.  *These are not* :ref:`structure
+methods <methods>` *(which as of this writing are a feature which
+only works for the built-in kOS types, and are not yet supported
+by the kerboscript language for user functions you write yourself).*
+
+Example::
+
+    DECLARE FUNCTION DEGREES_TO_RADIANS {
+      DECLARE PARAMETER DEG.
+
+      RETURN CONSTANT():PI * DEG/180.
+    }.
+
+    SET ALPHA TO 45.
+    PRINT ALPHA + " degrees is " + DEGREES_TO_RADIANS(ALPHA) + " radians.".
+
+For a more detailed description of how to declare your own user functions,
+see the :ref:`Language Syntax Constructs, User Functions <syntax functions>`
+section.
+
 .. _language structures:
 
 Structures
@@ -96,3 +126,4 @@ These terms are referred to as "suffixes". For example ``Velocity`` is a suffix 
     SET n:ETA to 500.
 
 The full list of available suffixes for each type :ref:`can be found here <structures>`.
+

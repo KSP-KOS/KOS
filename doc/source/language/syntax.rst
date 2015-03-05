@@ -71,8 +71,8 @@ Suffixes can be chained together, as in this example::
 
 In the above example you'd say "``velocity`` is a suffix of ``ship``", and "``orbit`` is a suffix of ``ship:velocity``", and "``x`` is a suffix of ``ship:velocity:orbit``".
 
-Functions
----------
+Functions (built-in)
+--------------------
 
 There exist a number of built-in functions you can call using their names. When you do so, you can do it like so::
 
@@ -102,6 +102,41 @@ Some suffixes are actually functions you can call. When that is the case, these 
     x:remove(0).
     x:clear().
 
+.. _syntax functions:
+
+User Functions
+--------------
+
+.. note::
+    .. versionadded:: 0.17
+        This feature did not exist in prior versions of kerboscript.
+
+Help for the new user - What is a Function?
+    In programming terminology, there is a commonly used feature of
+    many programming languages that works as follows:
+
+    - 1. Create a chunk of program instructions that you don't intend to execute YET.
+    - 2. Later, when executing other parts of the program, do the following:
+
+       - 2.A. Remember the current location in the program.
+       - 2.B. Jump to the previously created chunk of code from (1) above.
+       - 2.C. Run the instructions there.
+       - 2.D. Return to where you remembered from (2.A) and continue from there.
+
+    This feature goes by many different names, with slightly different
+    precise meanings: *Subroutines*, *Procedures*, *Functions*, etc.
+    For the purposes of kerboscript, we will refer to all uses of this
+    feature with the term *Function*, whether it *technically* fits the
+    mathematical definition of a "function" or not.
+
+In kerboscript, you can make your own user functions using the
+DECLARE FUNCTION command, which is structured as follows:
+
+  ``declare function`` *identifier* ``{`` *statements* ``}`` *optional dot (.)*
+
+Functions are a long enough topic as to require a
+:ref:`separate documentation page, here. <user_functions>`
+
 Built-In Special Variable Names
 -------------------------------
 
@@ -111,12 +146,6 @@ What does not exist (yet?)
 --------------------------
 
 Concepts that many other languages have, that are missing from **KerboScript**, are listed below. Many of these are things that could be supported some day, but at the moment with the limited amount of developer time available they haven't become essential enough to spend the time on supporting them.
-
-**user-made functions**
-    There are built-in functions you can call, but you can't make your own in the script. The closest you can come to this is to make a separate script file and you can ``RUN`` the script file from another script file.
-
-**local variables**
-    All variables are in the same global namespace. You can't make local variables. If homemade functions are ever supported, that is when local variables would become useful.
 
 **user-made structures or classes**
     Several of the built-in variables of **kOS** are essentially "classes" with methods and fields, however there's currently no way for user code to create its own classes or structures. Supporting this would open up a *large* can of worms, as it would then make the **kOS** system more complex.
