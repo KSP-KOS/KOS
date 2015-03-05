@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using kOS.Execution;
 using kOS.Safe.Encapsulation;
@@ -87,7 +86,10 @@ namespace kOS.Suffixed
             if (Status != TransferManager.TransferStatus.Transfering) { return; }
 
             IList<global::Part> fromParts = GetParts(transferFromType, transferFrom);
-            IList<global::Part> toParts = GetParts(transferFromType, transferFrom);
+            SafeHouse.Logger.Log("TRANSFER: FromParts Count: " + fromParts.Count);
+            IList<global::Part> toParts = GetParts(transferFromType, transferTo);
+            SafeHouse.Logger.Log("TRANSFER: ToParts Count: " + toParts.Count);
+
             if (!AllPartsAreConnected(fromParts, toParts)) { return; }
             SafeHouse.Logger.Log("TRANSFER: All Parts Connected");
 
@@ -125,6 +127,7 @@ namespace kOS.Suffixed
                 if (retries > 10)
                 {
                     MarkFailed("Error in putting resource with " + remaining + " remaining.");
+                    break;
                 }
                 foreach (var part in parts)
                 {
@@ -267,43 +270,42 @@ namespace kOS.Suffixed
         private double CalculateAvailableSpace(IEnumerable<global::Part> parts)
         {
             var resources = parts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
-            return resources.Where(r=> r != null).Sum(r => r.maxAmount - r.amount);
+            var toReturn =  resources.Sum(r => r.maxAmount - r.amount);
+            SafeHouse.Logger.Log("TRANSFER: Available Space: " + toReturn);
+            return toReturn;
         }
 
         private double CalculateAvailableResource(IEnumerable<global::Part> fromParts)
         {
             var resources = fromParts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
-            return resources.Where(r=> r != null).Sum(r => r.amount);
+            var toReturn = resources.Sum(r => r.amount);
+            SafeHouse.Logger.Log("TRANSFER: Available Resource: " + toReturn);
+            return toReturn;
         }
 
         private IList<global::Part> GetParts(TransferPartType type, object obj)
         {
-            IList<global::Part> toReturn = new List<global::Part>();
+            var parts = new List<global::Part>();
             switch (type)
             {
                 case TransferPartType.Part:
                     var partValue = obj as PartValue;
-                    toReturn.Add(partValue.Part);
+                    parts.Add(partValue.Part);
                     break;
                 case TransferPartType.Parts:
                     var partList = (obj as ListValue).Cast<PartValue>();
-                    foreach (var part in partList)
-                    {
-                        toReturn.Add(part.Part);
-                    }
+                    parts.AddRange(partList.Select(part => part.Part));
                     break;
                 case TransferPartType.Element:
                     var element = obj as ElementValue;
                     var elementParts = element.Parts.Cast<PartValue>();
-                    foreach (var part in elementParts)
-                    {
-                        toReturn.Add(part.Part);
-                    }
+                    parts.AddRange(elementParts.Select(part => part.Part));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("type");
             }
-            return toReturn;
+
+            return parts.Where(part => part.Resources != null && part.Resources.Contains(resourceInfo.id)).ToList();
         }
 
         private bool AllPartsAreConnected(IList<global::Part> fromParts, IList<global::Part> toParts)
