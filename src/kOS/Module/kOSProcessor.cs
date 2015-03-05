@@ -21,6 +21,7 @@ using kOS.Safe.Screen;
 using kOS.Suffixed;
 
 using KSPAPIExtensions;
+using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Module
 {
@@ -148,17 +149,17 @@ namespace kOS.Module
         {
             //Populate selector for boot scripts
             BaseField field = Fields["bootFile"];
-            UI_ChooseOption options = (UI_ChooseOption)field.uiControlEditor;
+            var options = (UI_ChooseOption)field.uiControlEditor;
 
-            List<string> bootFiles = new List<string>();
+            var bootFiles = new List<string>();
 
             var temp = new Archive();
             var files = temp.GetFileList();
             var maxchoice = 0;
-            for (var i = 0; i < files.Count; ++i)
+            foreach (FileInfo file in files)
             {
-                if (!files[i].Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
-                bootFiles.Add(files[i].Name);
+                if (!file.Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
+                bootFiles.Add(file.Name);
                 maxchoice++;
             }
             //no need to show the control if there are no files starting with boot
@@ -562,8 +563,8 @@ namespace kOS.Module
 
         public void SetSASUI(int mode)
         {
-            RUIToggleButton[] SASbtns = FindObjectOfType<VesselAutopilotUI>().modeButtons;
-            SASbtns.ElementAt<RUIToggleButton>(mode).SetTrue(true, true);
+            RUIToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
+            modeButtons.ElementAt(mode).SetTrue();
         }
     }
 }
