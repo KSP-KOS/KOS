@@ -1,0 +1,588 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>KerboScript User Functions &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="up" title="The KerboScript Language" href="../language.html"/>
+        <link rel="next" title="Mathematics and Basic Geometry" href="../math.html"/>
+        <link rel="prev" title="Variables &amp; Statements" href="variables.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../language.html">Language</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../language.html">The <strong>KerboScript</strong> Language</a> &raquo;</li>
+      
+    <li><strong>KerboScript</strong> User Functions</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/language/user_functions.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="kerboscript-user-functions">
+<span id="user-functions"></span><h1><strong>KerboScript</strong> User Functions<a class="headerlink" href="#kerboscript-user-functions" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#help-for-the-new-user-what-is-a-function" id="id3">Help for the new user - What is a Function?</a></li>
+<li><a class="reference internal" href="#declare-function" id="id4"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt></a></li>
+<li><a class="reference internal" href="#declare-parameter" id="id5"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
+<li><a class="reference internal" href="#declare" id="id6"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
+<li><a class="reference internal" href="#declare-to" id="id7"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">TO</span></tt></a><ul>
+<li><a class="reference internal" href="#difference-between-declare-and-set" id="id8">Difference between declare and set</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#return" id="id9"><tt class="docutils literal"><span class="pre">RETURN</span></tt></a></li>
+<li><a class="reference internal" href="#passing-by-value" id="id10">Passing by value</a><ul>
+<li><a class="reference internal" href="#important-exception-to-passing-by-value-structures" id="id11">Important exception to passing by value - structures</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#recursion" id="id12">Recursion</a></li>
+<li><a class="reference internal" href="#user-function-gotchas" id="id13">User Function Gotchas</a><ul>
+<li><a class="reference internal" href="#inconsistent-returns" id="id14">Inconsistent returns</a></li>
+<li><a class="reference internal" href="#accidentally-using-globals" id="id15">Accidentally using globals</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>This page covers functions created by you, the user of kerboscript,
+rather than the built-in functions provided by kOS.</p>
+<div class="section" id="help-for-the-new-user-what-is-a-function">
+<h2><a class="toc-backref" href="#id3">Help for the new user - What is a Function?</a><a class="headerlink" href="#help-for-the-new-user-what-is-a-function" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>In programming terminology, there is a commonly used feature of
+many programming languages that works as follows:</p>
+<ul>
+<li><ol class="first arabic simple">
+<li>Create a chunk of program instructions that you don&#8217;t intend to execute YET.</li>
+</ol>
+</li>
+<li><ol class="first arabic simple" start="2">
+<li>Later, when executing other parts of the program, do the following:</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><ol class="first upperalpha">
+<li>Remember the current location in the program.</li>
+</ol>
+</li>
+<li><ol class="first upperalpha" start="2">
+<li>Jump to the previously created chunk of code from (1) above.</li>
+</ol>
+</li>
+<li><ol class="first upperalpha" start="3">
+<li>Run the instructions there.</li>
+</ol>
+</li>
+<li><ol class="first upperalpha" start="4">
+<li>Return to where you remembered from (A) and continue from there.</li>
+</ol>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>This feature goes by many different names, with slightly different
+precise meanings: <em>Subroutines</em>, <em>Procedures</em>, <em>Functions</em>, etc.
+For the purposes of kerboscript, we will refer to all uses of this
+feature with the term <em>Function</em>, whether it <em>technically</em> fits the
+mathematical definition of a &#8220;function&#8221; or not.</p>
+</div></blockquote>
+</div>
+<div class="section" id="declare-function">
+<span id="id1"></span><h2><a class="toc-backref" href="#id4"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt></a><a class="headerlink" href="#declare-function" title="Permalink to this headline">¶</a></h2>
+<p>In kerboscript, you can make your own user functions using the
+DECLARE FUNCTION command, which has syntax as follows:</p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">declare</span> <span class="pre">function</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">{</span></tt> <em>statements</em> <tt class="docutils literal"><span class="pre">}</span></tt> <em>optional dot (.)</em></div></blockquote>
+<p>example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Print the string you pass in, in one of the 4 corners</span>
+<span class="c1">// of the terminal:</span>
+<span class="c1">//   mode = 1 for upper-left, 2 for upper-right, 3</span>
+<span class="c1">//          for lower-left, and 4 for lower-right:</span>
+<span class="c1">//</span>
+<span class="n">declare</span> <span class="n">function</span> <span class="n">print_corner</span> <span class="p">{</span>
+  <span class="n">declare</span> <span class="n">parameter</span> <span class="n">mode</span><span class="p">.</span>
+  <span class="n">declare</span> <span class="n">parameter</span> <span class="n">text</span><span class="p">.</span>
+
+  <span class="n">declare</span> <span class="n">row</span><span class="p">.</span>
+  <span class="n">declare</span> <span class="n">col</span><span class="p">.</span>
+
+  <span class="k">if</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">or</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">3</span> <span class="p">{</span>
+    <span class="n">set</span> <span class="n">col</span> <span class="n">to</span> <span class="mf">0.</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">set</span> <span class="n">col</span> <span class="n">to</span> <span class="n">terminal</span><span class="o">:</span><span class="n">width</span> <span class="o">-</span> <span class="n">text</span><span class="o">:</span><span class="n">length</span><span class="p">.</span>
+  <span class="p">}.</span>
+  <span class="k">if</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">or</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">{</span>
+    <span class="n">set</span> <span class="n">row</span> <span class="n">to</span> <span class="mf">0.</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">set</span> <span class="n">row</span> <span class="n">to</span> <span class="n">terminal</span><span class="o">:</span><span class="n">height</span> <span class="o">-</span> <span class="mf">1.</span>
+  <span class="p">}.</span>
+
+  <span class="n">print</span> <span class="n">text</span> <span class="n">at</span> <span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">row</span><span class="p">).</span>
+<span class="p">}.</span>
+
+<span class="c1">// An example of calling it:</span>
+
+<span class="n">print_corner</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="s">&quot;That&#39;s me in the corner&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">Declare</span> <span class="pre">function</span></tt> can appear anywhere in a kerboscript program,
+and once its been &#8220;parsed&#8221; by the compiler, the function can be called
+from anywhere in the program.</p>
+<p>The best design pattern is probably to create your library of function
+calls as one or more separate .ks files that contain ONLY function
+definitions and nothing else in them.  Then when you &#8220;run&#8221; the file
+containing the functions, what you&#8217;re really doing is just loading
+the function definitions into memory so they can be called by other
+programs.  At the top of your main script you can then &#8220;run&#8221; the
+other scripts containing the library of functions to get them
+compiled into memory.</p>
+</div>
+<div class="section" id="declare-parameter">
+<h2><a class="toc-backref" href="#id5"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
+<p>If your function expects to have parameters passed into it, you can
+use the <a class="reference internal" href="variables.html#declare-parameter"><em>DECLARE PARAMETER</em></a> command to do
+so.  This is the same command as is used to declare parameters for
+running a whole script.  By putting a DECLARE PARAMETER statement
+inside a function, you tell the kerboscript compiler that you want
+the parameter to be for that function, not for the whole script.</p>
+<p>An example of using <tt class="docutils literal"><span class="pre">declare</span> <span class="pre">parameter</span></tt> can be seen in the example
+above, where it is used for the <tt class="docutils literal"><span class="pre">mode</span></tt> and <tt class="docutils literal"><span class="pre">text</span></tt> parameters.</p>
+</div>
+<div class="section" id="declare">
+<h2><a class="toc-backref" href="#id6"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a><a class="headerlink" href="#declare" title="Permalink to this headline">¶</a></h2>
+<p>(aka: <strong>local variables</strong>)</p>
+<p>If your function needs to make a local variable, it can do so using
+the <a class="reference internal" href="variables.html#declare"><em>DECLARE</em></a> command.  Whenever the DECLARE command is
+seen inside a function, the compiler assumes the variable is meant to
+be local to that function&#8217;s block.  This also works with recursion.
+If you recursively call a function again and again, there will be
+new copies stacked up of all the local variables made with DECLARE,
+but not of the variables implicitly made global without DECLARE.</p>
+<p>An example of using <tt class="docutils literal"><span class="pre">declare</span></tt> for a local variable can be seen in
+the example above, where it is used for the <tt class="docutils literal"><span class="pre">row</span></tt> and <tt class="docutils literal"><span class="pre">col</span></tt> variables.</p>
+<p>A more in-depth explanation of kerboscript&#8217;s scoping rules and how they
+work is found <a class="reference internal" href="variables.html#scope"><em>on another page</em></a></p>
+</div>
+<div class="section" id="declare-to">
+<h2><a class="toc-backref" href="#id7"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">TO</span></tt></a><a class="headerlink" href="#declare-to" title="Permalink to this headline">¶</a></h2>
+<p>It is often useful to declare a variable and then immediately afterward
+set it to an initial value like so:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">x</span><span class="p">.</span>
+<span class="n">set</span> <span class="n">x</span> <span class="n">to</span> <span class="mf">5.</span>
+</pre></div>
+</div>
+<p>Like many languages, kerboscript provides a way to combine these
+into the same statement, with the <tt class="docutils literal"><span class="pre">declare</span> <span class="pre">..</span> <span class="pre">to</span></tt> syntax, like so:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">x</span> <span class="n">to</span> <span class="mf">5.</span>
+</pre></div>
+</div>
+<div class="section" id="difference-between-declare-and-set">
+<h3><a class="toc-backref" href="#id8">Difference between declare and set</a><a class="headerlink" href="#difference-between-declare-and-set" title="Permalink to this headline">¶</a></h3>
+<p>You may think that:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">x</span> <span class="n">to</span> <span class="mf">5.</span>
+</pre></div>
+</div>
+<p>is identical to just not using a <tt class="docutils literal"><span class="pre">declare</span></tt> statement
+at all, and just performing <tt class="docutils literal"><span class="pre">set</span> <span class="pre">x</span> <span class="pre">to</span> <span class="pre">5.</span></tt> alone, but
+it is not.  With <tt class="docutils literal"><span class="pre">declare</span></tt>, a NEW variable called <tt class="docutils literal"><span class="pre">x</span></tt> will be made
+at the current local scope, temporarily hiding any existing <tt class="docutils literal"><span class="pre">x</span></tt>
+variables that may otherwise have been reachable in a more global scope.
+With <tt class="docutils literal"><span class="pre">set</span></tt>, if there already is an <tt class="docutils literal"><span class="pre">x</span></tt> variable you can use in a
+different scope higher than this scope, it will be used, and only
+if it doesn&#8217;t exist will a new <tt class="docutils literal"><span class="pre">x</span></tt> be made (and that new <tt class="docutils literal"><span class="pre">x</span></tt> will
+be global, not local).</p>
+</div>
+</div>
+<div class="section" id="return">
+<span id="id2"></span><h2><a class="toc-backref" href="#id9"><tt class="docutils literal"><span class="pre">RETURN</span></tt></a><a class="headerlink" href="#return" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">return</span></tt> <em>expression(optional)</em> <em>dot(mandatory)</em></p>
+<p>examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">return</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">.</span>
+
+<span class="k">return</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>If your function needs to exit early, and/or if it needs to pass a
+return value back to the user, you can use the RETURN staement to
+do so.  RETURN accepts an optional argument - the value to pass back
+to the caller.  Note that functions in kerboscript are very weakly
+typed with late binding.  You cannot declare the expected return
+type for the function, and it&#8217;s up to you to ensure that all possible
+returned values are useful and meaningful.</p>
+<p>example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Cacluate what component of a vessel&#39;s surface</span>
+<span class="c1">// velocity is Northward:</span>
+<span class="n">declare</span> <span class="n">function</span> <span class="n">north_velocity</span> <span class="p">{</span>
+  <span class="n">declare</span> <span class="n">parameter</span> <span class="n">which_vessel</span><span class="p">.</span>
+
+  <span class="k">return</span> <span class="n">VDOT</span><span class="p">(</span><span class="n">which_vessel</span><span class="o">:</span><span class="n">velocity</span><span class="o">:</span><span class="n">surface</span><span class="p">,</span> <span class="n">which_vessel</span><span class="o">:</span><span class="n">north</span><span class="o">:</span><span class="n">vector</span><span class="p">).</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="passing-by-value">
+<h2><a class="toc-backref" href="#id10">Passing by value</a><a class="headerlink" href="#passing-by-value" title="Permalink to this headline">¶</a></h2>
+<p>Parameters to user functions in kerboscript are all pass-by-value, with
+an important caveat.  &#8220;Pass by value&#8221; means that the function is
+working on a copy of the variable you passed in, rather than the
+original variable.  This matters when the function tries to change the
+value of the parameter, as in this example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">function</span> <span class="n">embiggen</span> <span class="p">{</span>
+  <span class="n">declare</span> <span class="n">parameter</span> <span class="n">x</span><span class="p">.</span>
+
+  <span class="n">set</span> <span class="n">x</span> <span class="n">to</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">10.</span>
+
+  <span class="n">print</span> <span class="s">&quot;x has been embiggened to &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="p">.</span>
+<span class="p">}.</span>
+
+<span class="n">set</span> <span class="n">global_val</span> <span class="n">to</span> <span class="mf">30.</span>
+<span class="n">print</span> <span class="n">global_val</span><span class="p">.</span>
+<span class="n">embiggen</span><span class="p">(</span><span class="n">global_val</span><span class="p">).</span>
+<span class="n">print</span> <span class="n">global_val</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>The above example will print:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="mi">30</span>
+<span class="n">x</span> <span class="n">has</span> <span class="n">been</span> <span class="n">embiggened</span> <span class="n">to</span> <span class="mi">40</span>
+<span class="mi">30</span>
+</pre></div>
+</div>
+<p>Although the function added 10 to its OWN copy of the parameter, the
+caller&#8217;s copy of the parameter remained unchanged.</p>
+<div class="section" id="important-exception-to-passing-by-value-structures">
+<h3><a class="toc-backref" href="#id11">Important exception to passing by value - structures</a><a class="headerlink" href="#important-exception-to-passing-by-value-structures" title="Permalink to this headline">¶</a></h3>
+<p>If the value being sent to the function as its parameter is a
+complex structure consisting of sub-parts (i.e. if it has
+suffxes) rather than being a simple single scalar value like a
+number, then the copy in the function is <em>really</em> a copy of
+the reference pointing to the object, so changes you make
+in the object really WILL change it, as shown here:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">define</span> <span class="n">function</span> <span class="n">half_vector</span> <span class="p">{</span>
+  <span class="n">define</span> <span class="n">parameter</span> <span class="n">vec</span><span class="p">.</span> <span class="c1">//vector passed in.</span>
+
+  <span class="n">print</span> <span class="s">&quot;full vector is &quot;</span> <span class="o">+</span> <span class="n">vec</span><span class="p">.</span>
+
+  <span class="n">set</span> <span class="n">vec</span><span class="o">:</span><span class="n">x</span> <span class="n">to</span> <span class="n">vec</span><span class="o">:</span><span class="n">x</span><span class="o">/</span><span class="mf">2.</span>
+  <span class="n">set</span> <span class="n">vec</span><span class="o">:</span><span class="n">y</span> <span class="n">to</span> <span class="n">vec</span><span class="o">:</span><span class="n">y</span><span class="o">/</span><span class="mf">2.</span>
+  <span class="n">set</span> <span class="n">vec</span><span class="o">:</span><span class="n">z</span> <span class="n">to</span> <span class="n">vec</span><span class="o">:</span><span class="n">z</span><span class="o">/</span><span class="mf">2.</span>
+
+  <span class="n">print</span> <span class="s">&quot;half vector is &quot;</span> <span class="o">+</span> <span class="n">vec</span><span class="p">.</span>
+<span class="p">}.</span>
+
+<span class="n">set</span> <span class="n">global_vec</span> <span class="n">to</span> <span class="n">V</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">).</span>
+<span class="n">half_vector</span><span class="p">(</span><span class="n">global_vec</span><span class="p">).</span>
+<span class="n">print</span> <span class="s">&quot;afterward, global_vec is now &quot;</span> <span class="o">+</span> <span class="n">global_vec</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>This will give the following result:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">full</span> <span class="n">vector</span> <span class="n">is</span> <span class="n">v</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">half</span> <span class="n">vector</span> <span class="n">is</span> <span class="n">v</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">afterward</span><span class="p">,</span> <span class="n">global_vec</span> <span class="n">is</span> <span class="n">now</span> <span class="n">v</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Because a vector is a suffixed structure, it effectively acts as if
+it was passed in by reference instead of by value, and so when it
+was changed in the function, the caller&#8217;s original copy is what was
+being changed.</p>
+<p>This may be hard to get used to for new programmers, however
+experienced programmers who use some modern object-oriented languages
+will find this behavior very familiar.  Only primitives are passed by
+value.  Structures are passed by their reference rather than trying to
+make a deep copy of the object for the function to use.</p>
+<p><em>This behavior is inherited from the fact that kerboscript is
+implemented on top of C#, which is one of several OOP languages that
+work like this.</em></p>
+</div>
+</div>
+<div class="section" id="recursion">
+<h2><a class="toc-backref" href="#id12">Recursion</a><a class="headerlink" href="#recursion" title="Permalink to this headline">¶</a></h2>
+<p>Recursive algorithms (TODO: wikipedia link) are possible with kerboscript
+functions, provided you remember to always exclusively use local variables
+made with the <tt class="docutils literal"><span class="pre">declare</span></tt> statement in the body of the function, and
+never use global variables for something that you intended to be
+different per recursive call.</p>
+</div>
+<div class="section" id="user-function-gotchas">
+<h2><a class="toc-backref" href="#id13">User Function Gotchas</a><a class="headerlink" href="#user-function-gotchas" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="inconsistent-returns">
+<h3><a class="toc-backref" href="#id14">Inconsistent returns</a><a class="headerlink" href="#inconsistent-returns" title="Permalink to this headline">¶</a></h3>
+<p>Note that if you sometimes do and sometimes don&#8217;t return a value, from
+the same function, as in the example here:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// A badly designed function, with inconsistency</span>
+<span class="c1">// in whether or not it returns a value:</span>
+<span class="c1">//</span>
+<span class="n">DECLARE</span> <span class="n">FUNCTION</span> <span class="n">foo</span> <span class="p">{</span>
+   <span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">x</span><span class="p">.</span>
+   <span class="n">IF</span> <span class="n">X</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+     <span class="n">RETURN</span><span class="p">.</span> <span class="c1">// no return value.</span>
+   <span class="p">}</span> <span class="n">ELSE</span> <span class="p">{</span>
+     <span class="n">RETURN</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span> <span class="c1">// a string return value</span>
+   <span class="p">}.</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+<p>Then the kerboscript compiler is not clever enough to detect this
+and warn you about it.  The internal stack will not get corrupted
+by this error, as some experienced programmers might expect upon
+hearing this (because secretly all kerboscript user functions
+return a value even if it&#8217;s never used, so there&#8217;s universally
+always something to pop off the stack even for the empty return
+statements.) However, you will still have to deal with the fact
+that the calling program might be getting nulls back some of the
+time if you make this programming error.</p>
+<p>In general, make sure that if you <em>sometimes</em> return a value from
+a user function, that you <em>always</em> do so in every path through your
+function.</p>
+</div>
+<div class="section" id="accidentally-using-globals">
+<h3><a class="toc-backref" href="#id15">Accidentally using globals</a><a class="headerlink" href="#accidentally-using-globals" title="Permalink to this headline">¶</a></h3>
+<p>It is possible to accidentally create global variables
+when you didn&#8217;t meant to, just because you made a typo.</p>
+<p>For example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">define</span> <span class="n">function</span> <span class="n">mean</span> <span class="p">{</span>
+  <span class="n">declare</span> <span class="n">parameter</span> <span class="n">the_list</span><span class="p">.</span>
+  <span class="n">declare</span> <span class="n">sum</span> <span class="n">to</span> <span class="mf">0.</span>
+
+  <span class="k">for</span> <span class="n">item</span> <span class="n">in</span> <span class="n">the_list</span> <span class="p">{</span>
+    <span class="n">set</span> <span class="n">dum</span> <span class="n">to</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">item</span><span class="p">.</span> <span class="c1">// typo - said &#39;dum&#39; instead of &#39;sum&#39;.</span>
+  <span class="p">}.</span>
+
+  <span class="k">return</span> <span class="n">sum</span> <span class="o">/</span> <span class="n">the_list</span><span class="o">:</span><span class="n">length</span><span class="p">.</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+<p>The above example contains a typo that causes a global variable to be
+made where you didn&#8217;t mean to.  You wanted to say &#8220;sum&#8221; but said &#8220;dum&#8221;
+and insted of that being an error, kerboscript happily said &#8220;okay,
+well since you&#8217;re setting a variable name that doesn&#8217;t exist yet,
+I&#8217;ll make it for you implicitly&#8221; (and it ends up being a global).</p>
+<p>When you are writing libraries of code for yourself to call, this can
+really be annoying.  And it&#8217;s a very common problem with &#8220;sloppy&#8221;
+declaration languages that allow you to use variable names without
+declaring them first.  Most such languages have provided a way to
+catch the problem, and allow you to instruct the compiler &#8220;please
+don&#8217;t let me do that.  Please force me to declare everything&#8221;.</p>
+<p>The way that is done in kerboscript is by using a <tt class="docutils literal"><span class="pre">NOLAZYGLOBAL</span></tt>
+section, <a class="reference internal" href="variables.html#nolazyglobal"><em>as described here</em></a>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../math.html" class="btn btn-neutral float-right" title="Mathematics and Basic Geometry">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="variables.html" class="btn btn-neutral" title="Variables &amp; Statements"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
