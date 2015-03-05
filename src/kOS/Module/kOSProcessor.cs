@@ -561,7 +561,7 @@ namespace kOS.Module
             }
         }
 
-        public void SetSASUI(int mode)
+        public void SetAutopilotMode(int mode)
         {
             RUIToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
             modeButtons.ElementAt(mode).SetTrue();
