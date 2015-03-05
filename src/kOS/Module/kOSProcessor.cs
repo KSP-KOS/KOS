@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using kOS.AddOns.RemoteTech;
 using kOS.Execution;
 using kOS.Factories;
@@ -125,6 +126,24 @@ namespace kOS.Module
         public Screen.TermWindow GetWindow()
         {
             return shared.Window;
+        }
+
+        //returns basic information on kOSProcessor module in Editor
+        public override string GetInfo()
+        {
+            const float MAXIMUM_POWER_CONSUMPTION = 0.2F;
+            var sb  = new StringBuilder();
+
+            sb.AppendLine("KOS Processor");
+            sb.AppendFormat("Local disk capacity: {0}", diskSpace);
+            sb.AppendFormat("Max Power consumption, EC/s : {0}", System.Math.Round(MAXIMUM_POWER_CONSUMPTION,2));
+
+            if (additionalCost > 0)
+            {
+                sb.AppendFormat("Cost of probe CPU upgrade: {0}", additionalCost);
+            }
+
+            return sb.ToString();
         }
 
         public override void OnStart(StartState state)
