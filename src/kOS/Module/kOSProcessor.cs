@@ -24,7 +24,7 @@ using KSPAPIExtensions;
 
 namespace kOS.Module
 {
-    public class kOSProcessor : PartModule, IProcessor, IPartCostModifier, IPartMassModifier
+    public class kOSProcessor : PartModule, IProcessor, IPartCostModifier
     {
         public ProcessorModes ProcessorMode = ProcessorModes.READY;
 
@@ -39,21 +39,12 @@ namespace kOS.Module
 
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File"), UI_ChooseOption(scene=UI_Scene.Editor)]
         public string bootFile = "boot.ks";
-        
+
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
-        public int diskSpace = 1024;
-
-        [KSPField(isPersistant = true, guiName = "kOS Base Disk Space", guiActive = false)]
-        public int baseDiskSpace = 0;
-
-        [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true), UI_ChooseOption(scene = UI_Scene.Editor)]
-        public string diskSpaceUI = "1024";
+        public int diskSpace = 500;
 
         [KSPField(isPersistant = true, guiName = "CPU Upgrade Cost", guiActive = false, guiActiveEditor = false)]
         public int additionalCost = 0;
-
-        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true)]
-        public float additionalMass = 0F;
 
         [KSPField(isPersistant = true, guiActive = false)] public int MaxPartId = 100;
 
@@ -145,7 +136,7 @@ namespace kOS.Module
             const float maximumPowerConsumption = 0.2F;
             string moduleInfo = "KOS Processor\n";
 
-            moduleInfo += "\nDefault disk capacity: " + diskSpace;
+            moduleInfo += "\nLocal disk capacity: " + diskSpace;
 
             moduleInfo += "\nMax Power consuption, EC/s : " + System.Math.Round(maximumPowerConsumption, 2);
 
@@ -163,36 +154,15 @@ namespace kOS.Module
             return additionalCost;
         }
 
-        private void UpdateMass()
-        {
-            float diskSpaceMassMultiplier = 0.0000049F; //implies approx 20kg for 4096bytes of diskSpace
-            additionalMass = diskSpace * diskSpaceMassMultiplier;
-        }
-
-        //implement IPartMassModifier component
-        public float GetModuleMass(float defaultMass)
-        {
-            return additionalMass;
-        }
-
         public override void OnStart(StartState state)
         {
             //if in Editor, populate boot script selector and show additionalCost if its non-zero
             if (state == StartState.Editor)
             {
-                if (baseDiskSpace == 0) baseDiskSpace = diskSpace;
                 BootUISelector();
                 BaseField field = Fields["additionalCost"];
                 field.guiActiveEditor = additionalCost > 0;
 
-                diskSpaceUI = diskSpace.ToString();
-                field = Fields["diskSpaceUI"];
-                UI_ChooseOption options = (UI_ChooseOption)field.uiControlEditor;
-                string [] sizeOptions = new string[3];
-                sizeOptions[0] = baseDiskSpace.ToString();
-                sizeOptions[1] = (baseDiskSpace*2).ToString();
-                sizeOptions[2] = (baseDiskSpace*4).ToString();
-                options.options = sizeOptions;
             }
             //Do not start from editor and at KSP first loading
             if (state == StartState.Editor || state == StartState.None)
@@ -384,16 +354,6 @@ namespace kOS.Module
         
         public void Update()
         {
-            if (HighLogic.LoadedScene == GameScenes.EDITOR)
-            {
-                if (diskSpace != Convert.ToInt32(diskSpaceUI))
-                {
-                    diskSpace = Convert.ToInt32(diskSpaceUI);
-                    UpdateMass();
-                    GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
-                }
-                
-            }
             if (!IsAlive()) return;
             if (firstUpdate)
             {
