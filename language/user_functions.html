@@ -175,8 +175,8 @@
 <li><a class="reference internal" href="#help-for-the-new-user-what-is-a-function" id="id3">Help for the new user - What is a Function?</a></li>
 <li><a class="reference internal" href="#declare-function" id="id4"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt></a></li>
 <li><a class="reference internal" href="#declare-parameter" id="id5"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
-<li><a class="reference internal" href="#declare" id="id6"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
-<li><a class="reference internal" href="#declare-to" id="id7"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">TO</span></tt></a><ul>
+<li><a class="reference internal" href="#declare-to" id="id6"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO</span></tt></a><ul>
+<li><a class="reference internal" href="#initializers-are-now-mandatory-for-the-declare-statement" id="id7">Initializers are now mandatory for the DECLARE statement</a></li>
 <li><a class="reference internal" href="#difference-between-declare-and-set" id="id8">Difference between declare and set</a></li>
 </ul>
 </li>
@@ -253,17 +253,13 @@ DECLARE FUNCTION command, which has syntax as follows:</p>
   <span class="n">declare</span> <span class="n">parameter</span> <span class="n">mode</span><span class="p">.</span>
   <span class="n">declare</span> <span class="n">parameter</span> <span class="n">text</span><span class="p">.</span>
 
-  <span class="n">declare</span> <span class="n">row</span><span class="p">.</span>
-  <span class="n">declare</span> <span class="n">col</span><span class="p">.</span>
+  <span class="n">declare</span> <span class="n">row</span> <span class="n">to</span> <span class="mf">0.</span>
+  <span class="n">declare</span> <span class="n">col</span> <span class="n">to</span> <span class="mf">0.</span>
 
-  <span class="k">if</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">or</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">3</span> <span class="p">{</span>
-    <span class="n">set</span> <span class="n">col</span> <span class="n">to</span> <span class="mf">0.</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">2</span> <span class="n">or</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">{</span>
     <span class="n">set</span> <span class="n">col</span> <span class="n">to</span> <span class="n">terminal</span><span class="o">:</span><span class="n">width</span> <span class="o">-</span> <span class="n">text</span><span class="o">:</span><span class="n">length</span><span class="p">.</span>
   <span class="p">}.</span>
-  <span class="k">if</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">or</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">{</span>
-    <span class="n">set</span> <span class="n">row</span> <span class="n">to</span> <span class="mf">0.</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">3</span> <span class="n">or</span> <span class="n">mode</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">{</span>
     <span class="n">set</span> <span class="n">row</span> <span class="n">to</span> <span class="n">terminal</span><span class="o">:</span><span class="n">height</span> <span class="o">-</span> <span class="mf">1.</span>
   <span class="p">}.</span>
 
@@ -298,9 +294,16 @@ the parameter to be for that function, not for the whole script.</p>
 <p>An example of using <tt class="docutils literal"><span class="pre">declare</span> <span class="pre">parameter</span></tt> can be seen in the example
 above, where it is used for the <tt class="docutils literal"><span class="pre">mode</span></tt> and <tt class="docutils literal"><span class="pre">text</span></tt> parameters.</p>
 </div>
-<div class="section" id="declare">
-<h2><a class="toc-backref" href="#id6"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a><a class="headerlink" href="#declare" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="declare-to">
+<h2><a class="toc-backref" href="#id6"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO</span></tt></a><a class="headerlink" href="#declare-to" title="Permalink to this headline">¶</a></h2>
 <p>(aka: <strong>local variables</strong>)</p>
+<p>Syntax: <tt class="docutils literal"><span class="pre">DECLARE</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">TO</span></tt> <em>expression</em> <em>dot</em></p>
+<p>Examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">x</span> <span class="n">to</span> <span class="mf">5.</span>
+<span class="n">declare</span> <span class="n">y</span> <span class="n">to</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="mf">1.</span>
+<span class="n">declare</span> <span class="n">halfSpeed</span> <span class="n">to</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">VELOCITY</span><span class="o">:</span><span class="n">ORBIT</span><span class="o">:</span><span class="n">MAG</span> <span class="o">/</span> <span class="mf">2.</span>
+</pre></div>
+</div>
 <p>If your function needs to make a local variable, it can do so using
 the <a class="reference internal" href="variables.html#declare"><em>DECLARE</em></a> command.  Whenever the DECLARE command is
 seen inside a function, the compiler assumes the variable is meant to
@@ -312,19 +315,32 @@ but not of the variables implicitly made global without DECLARE.</p>
 the example above, where it is used for the <tt class="docutils literal"><span class="pre">row</span></tt> and <tt class="docutils literal"><span class="pre">col</span></tt> variables.</p>
 <p>A more in-depth explanation of kerboscript&#8217;s scoping rules and how they
 work is found <a class="reference internal" href="variables.html#scope"><em>on another page</em></a></p>
-</div>
-<div class="section" id="declare-to">
-<h2><a class="toc-backref" href="#id7"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">TO</span></tt></a><a class="headerlink" href="#declare-to" title="Permalink to this headline">¶</a></h2>
-<p>It is often useful to declare a variable and then immediately afterward
-set it to an initial value like so:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">x</span><span class="p">.</span>
-<span class="n">set</span> <span class="n">x</span> <span class="n">to</span> <span class="mf">5.</span>
+<div class="section" id="initializers-are-now-mandatory-for-the-declare-statement">
+<h3><a class="toc-backref" href="#id7">Initializers are now mandatory for the DECLARE statement</a><a class="headerlink" href="#initializers-are-now-mandatory-for-the-declare-statement" title="Permalink to this headline">¶</a></h3>
+<p>This is now <strong>illegal</strong> syntax:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">x</span><span class="p">.</span>  <span class="c1">// no initial value for x given.</span>
 </pre></div>
 </div>
-<p>Like many languages, kerboscript provides a way to combine these
-into the same statement, with the <tt class="docutils literal"><span class="pre">declare</span> <span class="pre">..</span> <span class="pre">to</span></tt> syntax, like so:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">x</span> <span class="n">to</span> <span class="mf">5.</span>
-</pre></div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.17: </span><strong>Breaking Change:</strong> The kerboscript from prior versions
+of kOS did allow you do make <tt class="docutils literal"><span class="pre">declare</span></tt> statements
+without any initializers in them (and in fact you couldn&#8217;t
+provide an initializer for them in prior versions even if
+you wanted to.)</p>
+</div>
+</div>
+<p>In order to avoid the issue of having uninitialized variables in
+kerboscript, the declare command <em>requires</em> the use of the
+initializer clause.</p>
+<blockquote>
+<div><em>This is especially important as kerboscript is a late typing
+language in which it is impossible for the compiler to choose
+some implied default initial value for the variable from some
+language spec.  This is because until a value has been assigned
+into it, the compiler wouldn&#8217;t even know what type of default to
+use - a string, an integer, a floating point number, etc.</em></div></blockquote>
 </div>
 <div class="section" id="difference-between-declare-and-set">
 <h3><a class="toc-backref" href="#id8">Difference between declare and set</a><a class="headerlink" href="#difference-between-declare-and-set" title="Permalink to this headline">¶</a></h3>
@@ -448,7 +464,7 @@ work like this.</em></p>
 <h2><a class="toc-backref" href="#id12">Recursion</a><a class="headerlink" href="#recursion" title="Permalink to this headline">¶</a></h2>
 <p>Recursive algorithms (TODO: wikipedia link) are possible with kerboscript
 functions, provided you remember to always exclusively use local variables
-made with the <tt class="docutils literal"><span class="pre">declare</span></tt> statement in the body of the function, and
+made with the <tt class="docutils literal"><span class="pre">declare</span> <span class="pre">..</span> <span class="pre">to</span></tt> statement in the body of the function, and
 never use global variables for something that you intended to be
 different per recursive call.</p>
 </div>
@@ -514,6 +530,24 @@ catch the problem, and allow you to instruct the compiler &#8220;please
 don&#8217;t let me do that.  Please force me to declare everything&#8221;.</p>
 <p>The way that is done in kerboscript is by using a <tt class="docutils literal"><span class="pre">NOLAZYGLOBAL</span></tt>
 section, <a class="reference internal" href="variables.html#nolazyglobal"><em>as described here</em></a>.</p>
+<p>Had the function above been wrapped inside a NOLAZYGLOBAL section,
+the typo would be noticed:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">nolazyglobal</span> <span class="p">{</span>
+
+  <span class="n">define</span> <span class="n">function</span> <span class="n">mean</span> <span class="p">{</span>
+    <span class="n">declare</span> <span class="n">parameter</span> <span class="n">the_list</span><span class="p">.</span>
+    <span class="n">declare</span> <span class="n">sum</span> <span class="n">to</span> <span class="mf">0.</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="n">in</span> <span class="n">the_list</span> <span class="p">{</span>
+      <span class="n">set</span> <span class="n">dum</span> <span class="n">to</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">item</span><span class="p">.</span> <span class="c1">// error - &#39;dum&#39; is an unknown identifier.</span>
+    <span class="p">}.</span>
+
+    <span class="k">return</span> <span class="n">sum</span> <span class="o">/</span> <span class="n">the_list</span><span class="o">:</span><span class="n">length</span><span class="p">.</span>
+  <span class="p">}.</span>
+
+<span class="p">}.</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>

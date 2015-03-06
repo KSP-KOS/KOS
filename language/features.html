@@ -93,8 +93,8 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="">General Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables &amp; Statements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="variables.html#scoping-rules">Scoping rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -180,8 +180,10 @@
 <li><a class="reference internal" href="#structure-methods" id="id7">4. Structure Methods</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#user-functions" id="id8">User Functions</a></li>
-<li><a class="reference internal" href="#language-structures" id="id9">Structures</a></li>
+<li><a class="reference internal" href="#late-typing" id="id8">Late Typing</a></li>
+<li><a class="reference internal" href="#lazy-globals-variable-declarations-optional" id="id9">Lazy Globals (variable declarations optional)</a></li>
+<li><a class="reference internal" href="#user-functions" id="id10">User Functions</a></li>
+<li><a class="reference internal" href="#language-structures" id="id11">Structures</a></li>
 </ul>
 </div>
 <div class="section" id="case-insensitivity">
@@ -249,8 +251,33 @@
 <p>For more information, see the <a class="reference internal" href="#language-structures"><em>Structures Section</em></a>. A full list of structure types can be found on the <a class="reference internal" href="../structures.html#structures"><em>Structures</em></a> page. For a more detailed breakdown of the language, see the <a class="reference internal" href="syntax.html#syntax"><em>Language Syntax Constructs</em></a> page.</p>
 </div>
 </div>
+<div class="section" id="late-typing">
+<h2><a class="toc-backref" href="#id8">Late Typing</a><a class="headerlink" href="#late-typing" title="Permalink to this headline">¶</a></h2>
+<p>Kerboscript is a language in which there is only one type of variable
+and it just generically holds any sort of object of any kind.  If
+you attempt to assign, for example, a string into a variable that is
+currently holding an integer, this does not generate an error.  It
+simply causes the variable to change its type and no longer be an
+integer, becoming a string now.</p>
+<p>In other words, the type of a variable changes dynamically at
+runtime depending on what you assign into it.</p>
+</div>
+<div class="section" id="lazy-globals-variable-declarations-optional">
+<h2><a class="toc-backref" href="#id9">Lazy Globals (variable declarations optional)</a><a class="headerlink" href="#lazy-globals-variable-declarations-optional" title="Permalink to this headline">¶</a></h2>
+<p>Kerboscript is a language in which variables need not be declared ahead
+of time.  If you simply set a variable to a value, that just &#8220;magically&#8221;
+makes the variable exist if it didn&#8217;t already.  When you do this,
+the variable will necessarily be <em>global</em> in scope.  kerboscript refers
+to these variables created implicitly this way as &#8220;lazy globals&#8221;.
+It&#8217;s a system designed to make kerboscript easy to use for people new to
+programming.</p>
+<p>But if you are an experienced programmer you might not like this
+behavior, and there are good arguments for why you might want to
+disable it.  If you wish to do so, a syntax exists to do so called
+:ref:<tt class="docutils literal"><span class="pre">NOLAZYGLOBAL</span></tt>.</p>
+</div>
 <div class="section" id="user-functions">
-<span id="feature-functions"></span><h2><a class="toc-backref" href="#id8">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
+<span id="feature-functions"></span><h2><a class="toc-backref" href="#id10">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
@@ -278,7 +305,7 @@ see the <a class="reference internal" href="syntax.html#syntax-functions"><em>La
 section.</p>
 </div>
 <div class="section" id="language-structures">
-<span id="id1"></span><h2><a class="toc-backref" href="#id9">Structures</a><a class="headerlink" href="#language-structures" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2><a class="toc-backref" href="#id11">Structures</a><a class="headerlink" href="#language-structures" title="Permalink to this headline">¶</a></h2>
 <p>Structures, <a class="reference internal" href="#features-structures"><em>introduced above</em></a>, are variable <em>types</em> that contain more than one piece of information. All structures contain sub-values or <a class="reference internal" href="#features-methods"><em>methods</em></a> that can be accessed with a colon (<tt class="docutils literal"><span class="pre">:</span></tt>) operator. Multiple structures can be chained together with more than one colon (<tt class="docutils literal"><span class="pre">:</span></tt>) operator:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myCraft</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="p">.</span>
 <span class="n">SET</span> <span class="n">myMass</span> <span class="n">TO</span> <span class="n">myCraft</span><span class="o">:</span><span class="n">MASS</span><span class="p">.</span>

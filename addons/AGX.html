@@ -93,8 +93,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables &amp; Statements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html#scoping-rules">Scoping rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -206,35 +206,31 @@ Adds action groups AG11 through AG250 to kOS that are interacted with the same w
 <li>It is okay to activate an already activated group and deactivate a non-activated group. Actions in the group will still try to execute as normal. Exact behavior of a specific action will depend on how the action&#8217;s creator set things up.</li>
 </ul>
 <p><strong>Example code:</strong></p>
+<p>Print to the terminal anytime you activate action group 15. Use this to change variables within a running kOS script and the &#8220;Script Trigger&#8221; action found on the kOS computer part:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">AG15</span> <span class="n">on</span><span class="p">.</span> <span class="c1">// Activate action group 15.</span>
+<span class="n">print</span> <span class="n">AG15</span><span class="p">.</span> <span class="c1">// Print action group 15&#39;s state to the terminal. (True/False)</span>
+<span class="n">on</span> <span class="n">AG15</span> <span class="p">{</span>
+  <span class="n">print</span> <span class="s">&quot;Action group 15 clicked!&quot;</span><span class="p">.</span>
+  <span class="n">preserve</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">on.</span></tt> Activate action group 15.</li>
-<li><tt class="docutils literal"><span class="pre">print</span> <span class="pre">AG15.</span></tt> Print action group 15&#8217;s state to the terminal. (True/False)</li>
-<li><tt class="docutils literal"><span class="pre">on</span> <span class="pre">AG15</span> <span class="pre">{</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">print</span> <span class="pre">&quot;Action</span> <span class="pre">group</span> <span class="pre">15</span> <span class="pre">clicked!&quot;.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">preserve.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">}</span></tt> Print to the terminal anytime you activate action group 15. Use this to change variables within a running kOS script and the &#8220;Script Trigger&#8221; action found on the kOS computer part.</li>
-</ul>
-<p>If you want to use the <tt class="docutils literal"><span class="pre">on</span> <span class="pre">AG15</span></tt> command to monitor a part that has an animation, a cool down is required.</p>
-<ul class="simple">
-<li><tt class="docutils literal"><span class="pre">on</span> <span class="pre">AG15</span> <span class="pre">{</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">print</span> <span class="pre">&quot;Solar</span> <span class="pre">Panel</span> <span class="pre">Toggled!&quot;.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">preserve.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">}</span></tt> will print to the terminal 3 times when the solar panel is extened.</li>
 <li>Player activates AG15, AG15&#8217;s state goes from false to true and the actions are triggered. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">False</span> <span class="pre">-&gt;</span> <span class="pre">True</span></tt> and prints to the terminal.</li>
 <li>On it&#8217;s next update pass (100ms to 250ms later), AGX checks AG15&#8217;s state and sees the solar panel is still deploying which means that AG15&#8217;s state is false and so sets it that way. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">True</span> <span class="pre">-&gt;</span> <span class="pre">False</span></tt> and prints to the terminal.</li>
 <li>A few seconds later, the solar panel finishes it&#8217;s deployment animation. On it&#8217;s next update pass AGX checks AG15&#8217;s state and sees the solar panel is now deployed which means that AG15&#8217;s state is now true and so sets it that way. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">False</span> <span class="pre">-&gt;</span> <span class="pre">True</span></tt> and prints to the terminal a third time.</li>
 </ul>
 <p>As a workaround, you need to add a cooldown:</p>
-<ul class="simple">
-<li><tt class="docutils literal"><span class="pre">declare</span> <span class="pre">cooldownTimeAG15</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">on</span> <span class="pre">AG15</span> <span class="pre">{</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">if</span> <span class="pre">cooldownTimeAG15</span> <span class="pre">+</span> <span class="pre">10</span> <span class="pre">&lt;</span> <span class="pre">time</span> <span class="pre">{</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">print</span> <span class="pre">&quot;Solar</span> <span class="pre">Panel</span> <span class="pre">Toggled!&quot;.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set</span> <span class="pre">cooldownTimeAG15</span> <span class="pre">to</span> <span class="pre">time.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">}</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">preserve.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">}</span></tt></li>
-</ul>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">cooldownTimeAG15</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">on</span> <span class="n">AG15</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="n">cooldownTimeAG15</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">&lt;</span> <span class="n">time</span><span class="o">:</span><span class="n">seconds</span> <span class="p">{</span>
+    <span class="n">print</span> <span class="s">&quot;Solar Panel Toggled!&quot;</span><span class="p">.</span>
+    <span class="n">set</span> <span class="n">cooldownTimeAG15</span> <span class="n">to</span> <span class="n">time</span><span class="p">.</span>
+  <span class="p">}</span>
+  <span class="n">preserve</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>Note the 10 in the second line, that is your cooldown time in seconds. Set this to a number of seconds that is longer then your animation time and the above code will limit AG15 so it can only activate after 10 seconds have passed since the previous activation and not activate multiple times on the same activation.</p>
 </div>
 

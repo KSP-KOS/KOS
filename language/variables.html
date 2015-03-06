@@ -172,10 +172,15 @@
 <h1>Variables &amp; Statements<a class="headerlink" href="#variables-statements" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#declare" id="id8"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
-<li><a class="reference internal" href="#declare-to" id="id9"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">...</span> <span class="pre">TO</span></tt></a></li>
-<li><a class="reference internal" href="#declare-parameter" id="id10"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
-<li><a class="reference internal" href="#set" id="id11"><tt class="docutils literal"><span class="pre">SET</span></tt></a></li>
+<li><a class="reference internal" href="#declare-to" id="id7"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO</span></tt></a><ul>
+<li><a class="reference internal" href="#initializer-required-in-declare" id="id8">Initializer required in DECLARE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#declare-parameter" id="id9"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
+<li><a class="reference internal" href="#set" id="id10"><tt class="docutils literal"><span class="pre">SET</span></tt></a><ul>
+<li><a class="reference internal" href="#difference-between-set-and-declare" id="id11">Difference between SET and DECLARE</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#lock" id="id12"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a></li>
 <li><a class="reference internal" href="#toggle" id="id13"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
 <li><a class="reference internal" href="#on" id="id14"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
@@ -186,18 +191,22 @@
 </li>
 </ul>
 </div>
-<div class="section" id="declare">
-<span id="id1"></span><h2><a class="toc-backref" href="#id8"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a><a class="headerlink" href="#declare" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
+<div class="section" id="declare-to">
+<span id="declare"></span><h2><a class="toc-backref" href="#id7"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO</span></tt></a><a class="headerlink" href="#declare-to" title="Permalink to this headline">¶</a></h2>
+<p>Syntax: <tt class="docutils literal"><span class="pre">DECLARE</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">TO</span></tt> <em>expression</em> <em>dot</em></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
 <div class="last versionadded">
-<p><span class="versionmodified">New in version 0.17: </span>The meaning of this statement changed considerably in this update.
-Prior to this version, DECLARE always created global variables
-no matter where it appeared in the script.</p>
+<p><span class="versionmodified">New in version 0.17: </span><strong>*BREAKING CHANGE</strong>
+The meaning, and syntax, of this statement changed considerably
+in this update.  Prior to this version, DECLARE always created
+global variables no matter where it appeared in the script.
+See &#8216;initialier required&#8217; below.</p>
 </div>
 </div>
-<p>Declares a variable that is limited in scope to the code block it appears in:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">X</span><span class="p">.</span>
+<p>Declares a variable that is limited in scope to the code block it appears
+in, and gives it an initial value:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
 </pre></div>
 </div>
 <p>(A &#8220;code block&#8221; is any section of statements that begins with a
@@ -209,22 +218,23 @@ will no longer exist.</p>
 <tt class="docutils literal"><span class="pre">LOCK</span></tt> statement, however doing so causes the variable to always have
 global scope.  <strong>The only way to make a variable be local instead of
 global is to declare it explicitly with DECLARE</strong>.</p>
+<div class="section" id="initializer-required-in-declare">
+<h3><a class="toc-backref" href="#id8">Initializer required in DECLARE</a><a class="headerlink" href="#initializer-required-in-declare" title="Permalink to this headline">¶</a></h3>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.17.</span></p>
 </div>
-<div class="section" id="declare-to">
-<h2><a class="toc-backref" href="#id9"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">...</span> <span class="pre">TO</span></tt></a><a class="headerlink" href="#declare-to" title="Permalink to this headline">¶</a></h2>
-<p>An optional syntax for the DECLARE statement is to combine a DECLARE
-with a SET into the same statement as follows:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="mf">10.</span>
+<p>The syntax without the initializer, looking like so:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">x</span><span class="p">.</span> <span class="c1">// no initializer like &quot;TO 1.&quot;</span>
 </pre></div>
 </div>
-<p>Which would have exactly the same effect as:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">countdown</span><span class="p">.</span>
-<span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="mf">10.</span>
-</pre></div>
+<p>is <strong>no longer legal syntax</strong>.</p>
+<p>Kerboscript now requires the use of the initializer clause (the &#8220;TO&#8221;
+keyword) after the identifer name so as to make it impossible for
+there to exist any uninitialized variables in a script.</p>
 </div>
 </div>
 <div class="section" id="declare-parameter">
-<span id="id2"></span><h2><a class="toc-backref" href="#id10"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2><a class="toc-backref" href="#id9"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
 <p>If you put this statement in the main part of your script, it
 declares variables to be used as a parameter that can be passed
 in using the <tt class="docutils literal"><span class="pre">RUN</span></tt> command.</p>
@@ -272,14 +282,32 @@ be passed in to that function when calling the function.</p>
 </div>
 </div>
 <div class="section" id="set">
-<span id="id3"></span><h2><a class="toc-backref" href="#id11"><tt class="docutils literal"><span class="pre">SET</span></tt></a><a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id10"><tt class="docutils literal"><span class="pre">SET</span></tt></a><a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
 <p>Sets the value of a variable. Implicitly creates a global variable if it doesn’t already exist:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+<span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="n">y</span><span class="o">*</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">1.</span>
 </pre></div>
 </div>
 <p>This follows the <a class="reference internal" href="#scope"><em>scoping rules explained below</em></a>.  If the
 variable can be found in the current local scope, or any scope higher
 up, then it won&#8217;t be created and instead the existing one will be used.</p>
+<div class="section" id="difference-between-set-and-declare">
+<h3><a class="toc-backref" href="#id11">Difference between SET and DECLARE</a><a class="headerlink" href="#difference-between-set-and-declare" title="Permalink to this headline">¶</a></h3>
+<p>The following two look very similar and you might ask why you&#8217;d pick
+one instead of the other:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+<span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+</pre></div>
+</div>
+<p>The difference is that <tt class="docutils literal"><span class="pre">SET</span></tt> attempts to store the value in the
+variable that already exists, if it can find one, and it only
+creates a new variable if it <em>has</em> to because there isn&#8217;t one that
+already exists.  <em>(That&#8217;s the first difference)</em>.  Because <tt class="docutils literal"><span class="pre">SET</span></tt>
+doesn&#8217;t make a new variable until it has exhausted the attempts to
+find an existing one by looking up the &#8220;scope stack&#8221;, <tt class="docutils literal"><span class="pre">SET</span></tt> only
+is capable of creating <strong>global</strong> variables.  <em>(That&#8217;s the second
+difference.)</em></p>
+</div>
 </div>
 <div class="section" id="lock">
 <h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
@@ -295,7 +323,7 @@ up, then it won&#8217;t be created and instead the existing one will be used.</p
 functions, they cannot have local scope.  A LOCK <em>always</em> has global scope.</p>
 </div>
 <div class="section" id="toggle">
-<span id="id4"></span><h2><a class="toc-backref" href="#id13"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a><a class="headerlink" href="#toggle" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2><a class="toc-backref" href="#id13"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a><a class="headerlink" href="#toggle" title="Permalink to this headline">¶</a></h2>
 <p>Toggles a variable between <tt class="docutils literal"><span class="pre">TRUE</span></tt> or <tt class="docutils literal"><span class="pre">FALSE</span></tt>. If the variable in question starts out as a number, it will be converted to a boolean and then toggled. This is useful for setting action groups, which are activated whenever their values are inverted:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">TOGGLE</span> <span class="n">AG1</span><span class="p">.</span> <span class="c1">// Fires action group 1.</span>
 <span class="n">TOGGLE</span> <span class="n">SAS</span><span class="p">.</span> <span class="c1">// Toggles SAS on or off.</span>
@@ -306,7 +334,7 @@ question doesn&#8217;t already exist, it will end up creating it as a global
 variable.</p>
 </div>
 <div class="section" id="on">
-<span id="id5"></span><h2><a class="toc-backref" href="#id14"><tt class="docutils literal"><span class="pre">ON</span></tt></a><a class="headerlink" href="#on" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id14"><tt class="docutils literal"><span class="pre">ON</span></tt></a><a class="headerlink" href="#on" title="Permalink to this headline">¶</a></h2>
 <p>Sets a variable to <tt class="docutils literal"><span class="pre">TRUE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">ON</span><span class="p">.</span>  <span class="c1">// Turns on the RCS</span>
 </pre></div>
@@ -316,7 +344,7 @@ question doesn&#8217;t already exist, it will end up creating it as a global
 variable.</p>
 </div>
 <div class="section" id="off">
-<span id="id6"></span><h2><a class="toc-backref" href="#id15"><tt class="docutils literal"><span class="pre">OFF</span></tt></a><a class="headerlink" href="#off" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2><a class="toc-backref" href="#id15"><tt class="docutils literal"><span class="pre">OFF</span></tt></a><a class="headerlink" href="#off" title="Permalink to this headline">¶</a></h2>
 <p>Sets a variable to <tt class="docutils literal"><span class="pre">FALSE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">OFF</span><span class="p">.</span>  <span class="c1">// Turns off the RCS</span>
 </pre></div>
@@ -379,7 +407,7 @@ the technique to even work at all.</dd>
 <p>Examples:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">x</span> <span class="n">TO</span> <span class="mf">10.</span> <span class="c1">// X is now a global variable with value 10.</span>
 <span class="n">SET</span> <span class="n">y</span> <span class="n">TO</span> <span class="mf">20.</span> <span class="c1">// Y is now a global variable (implicitly) with value 20.</span>
-<span class="n">DECLARE</span> <span class="n">z</span><span class="p">.</span> <span class="c1">// Z is now a global variable, with no particular value yet.</span>
+<span class="n">DECLARE</span> <span class="n">z</span> <span class="n">TO</span> <span class="mf">0.</span> <span class="c1">// Z is now a global variable.</span>
 
 <span class="n">SET</span> <span class="n">sum</span> <span class="n">to</span> <span class="o">-</span><span class="mf">1.</span> <span class="c1">// sum is now an implicitly made global variable, containing -1.</span>
 
@@ -423,7 +451,7 @@ if the variable isn&#8217;t found at the global scope either will it be
 implicitly created.</dd>
 </dl>
 <div class="section" id="nolazyglobal">
-<span id="id7"></span><h3><a class="toc-backref" href="#id17"><tt class="docutils literal"><span class="pre">NOLAZYGLOBAL</span></tt></a><a class="headerlink" href="#nolazyglobal" title="Permalink to this headline">¶</a></h3>
+<span id="id6"></span><h3><a class="toc-backref" href="#id17"><tt class="docutils literal"><span class="pre">NOLAZYGLOBAL</span></tt></a><a class="headerlink" href="#nolazyglobal" title="Permalink to this headline">¶</a></h3>
 <p>Often the fact that you can get an implicit global variable declared
 without intending to can lead to a lot of code maintenence headaches
 down the road.  If you make a typo in a variable name, you end up

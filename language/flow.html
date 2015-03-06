@@ -246,7 +246,9 @@
 <span class="n">PRINT</span> <span class="n">Y</span><span class="p">.</span>         <span class="c1">// Outputs 6</span>
 </pre></div>
 </div>
-<p>Unlike variables created with the <tt class="docutils literal"><span class="pre">SET</span></tt> or <tt class="docutils literal"><span class="pre">DECLARE</span></tt> commands, <tt class="docutils literal"><span class="pre">LOCK</span></tt> variables are local to the current program. If program <strong>A</strong> calls program <strong>B</strong>, and program <strong>B</strong> issues a <tt class="docutils literal"><span class="pre">LOCK</span></tt> command, program <strong>A</strong> will not be able to read that <tt class="docutils literal"><span class="pre">LOCK</span></tt> variable&#8217;s result.</p>
+<p>Note that a LOCK expression is extremely similar to a user function.
+Every time you read the value of the &#8220;variable&#8221;, it executes the expression
+again.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">If a <tt class="docutils literal"><span class="pre">LOCK</span></tt> expression is used with a flight control such as <tt class="docutils literal"><span class="pre">THROTTLE</span></tt> or <tt class="docutils literal"><span class="pre">STEERING</span></tt>, then it will get continually evaluated in the background <a class="reference internal" href="../general/cpu_hardware.html#cpu-hardware"><em>each update tick</em></a>.</p>
