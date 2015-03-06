@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
 
 namespace kOS.Execution
 {
-    public class TransferManager : IUpdateObserver
+    public class TransferManager : Structure, IUpdateObserver
     {
         public enum TransferStatus        
         {
@@ -22,6 +26,13 @@ namespace kOS.Execution
             this.shared = shared;
             transfers = new List<ResourceTransferValue>();
             shared.UpdateHandler.AddObserver(this);
+            InitializeSuffixes();
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix("CLEAR", new NoArgsSuffix(() => transfers.Clear()));
+            AddSuffix("LIST", new Suffix<ListValue>(() => ListValue.CreateList(transfers)));
         }
 
         public List<ResourceTransferValue> Transfers
@@ -46,6 +57,13 @@ namespace kOS.Execution
         public void Dispose()
         {
             shared.UpdateHandler.RemoveObserver(this);
+        }
+
+        public static PartResourceDefinition ParseResource(string resourceName)
+        {
+            var resourceDefs = PartResourceLibrary.Instance.resourceDefinitions;
+            var resourceInfo = resourceDefs.FirstOrDefault(rd => string.Equals(rd.name, resourceName, StringComparison.CurrentCultureIgnoreCase));
+            return resourceInfo;
         }
 
         public void Update(double deltaTime)

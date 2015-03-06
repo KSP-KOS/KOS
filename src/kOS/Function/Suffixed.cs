@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Execution;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Suffixed;
 using kOS.Utilities;
@@ -406,6 +408,28 @@ namespace kOS.Function
         }
     }    
 
+    [Function("transferall")]
+    public class FunctionTransferAll : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var transferTo = shared.Cpu.PopValue();
+            var transferFrom = shared.Cpu.PopValue();
+            var resourceName = shared.Cpu.PopValue().ToString();
+
+            var resourceInfo = TransferManager.ParseResource(resourceName);
+            if (resourceInfo == null)
+            {
+                throw new KOSInvalidArgumentException("TransferAll", "Resource",
+                    resourceName + " was not found in the resource list");
+            }
+
+            object toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom);
+            shared.Cpu.PushStack(toPush);
+        }
+
+    }
+
     [Function("transfer")]
     public class FunctionTransfer : FunctionBase
     {
@@ -414,21 +438,21 @@ namespace kOS.Function
             var amount = shared.Cpu.PopValue();
             var transferTo = shared.Cpu.PopValue();
             var transferFrom = shared.Cpu.PopValue();
-            var resource = shared.Cpu.PopValue().ToString();
+            var resourceName = shared.Cpu.PopValue().ToString();
 
-            var resourceInfo = PartResourceLibrary.Instance.GetDefinition(resource);
+            var resourceInfo = TransferManager.ParseResource(resourceName);
+            if (resourceInfo == null)
+            {
+                throw new KOSInvalidArgumentException("TransferAll", "Resource",
+                    resourceName + " was not found in the resource list");
+            }
 
-            object toPush;
             double parsedAmount;
-            if (amount != null && Double.TryParse(amount.ToString(), out parsedAmount))
+            if (Double.TryParse(amount.ToString(), out parsedAmount))
             {
-                toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom, parsedAmount);
+                object toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom, parsedAmount);
+                shared.Cpu.PushStack(toPush);
             }
-            else
-            {
-                toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom);
-            }
-            shared.Cpu.PushStack(toPush);
         }
     }
 }

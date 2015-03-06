@@ -83,8 +83,8 @@ namespace kOS.Suffixed
         private void DetermineTypes()
         {
             transferToType = DetermineType(transferTo);
-            transferFromType = DetermineType(transferFrom);
             SafeHouse.Logger.Log("TRANSFER: To Type: " + transferToType);
+            transferFromType = DetermineType(transferFrom);
             SafeHouse.Logger.Log("TRANSFER: From Type: " + transferFromType);
         }
 
@@ -102,7 +102,7 @@ namespace kOS.Suffixed
             {
                 return TransferPartType.Element;
             }
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException("toTest", "Type: " + toTest.GetType());
         }
 
         private void WorkTransfer(IList<global::Part> fromParts, IList<global::Part> toParts)
@@ -131,7 +131,7 @@ namespace kOS.Suffixed
             var evenShare = pulledAmount/parts.Count;
 
             var remaining = pulledAmount;
-            while (remaining > 0)
+            while (remaining > 0.0001)
             {
                 if (retries > 10)
                 {
@@ -172,9 +172,12 @@ namespace kOS.Suffixed
 
                 var thisPartsPercentage = resource.amount/availableResources;
 
+                // Throttle the transfer
+                var thisPartsShare = transferGoal*thisPartsPercentage;
+                var thisPartsRate = resource.maxAmount*0.005;
+                
                 // The amount you pull must be negative 
-                var thisPartsShare = -transferGoal*thisPartsPercentage;
-
+                thisPartsShare = -Math.Min(thisPartsShare, thisPartsRate);
                 SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PULL AMOUNT: {1}", part.flightID, thisPartsShare));
 
                 toReturn += part.TransferResource(resourceInfo.id, thisPartsShare);
