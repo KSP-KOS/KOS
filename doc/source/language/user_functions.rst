@@ -50,17 +50,13 @@ example::
       declare parameter mode.
       declare parameter text.
 
-      declare row.
-      declare col.
+      declare row to 0.
+      declare col to 0.
 
-      if mode = 1 or mode = 3 {
-        set col to 0.
-      } else {
+      if mode = 2 or mode = 4 {
         set col to terminal:width - text:length.
       }.
-      if mode = 1 or mode = 2 {
-        set row to 0.
-      } else {
+      if mode = 3 or mode = 4 {
         set row to terminal:height - 1.
       }.
 
@@ -97,10 +93,18 @@ the parameter to be for that function, not for the whole script.
 An example of using ``declare parameter`` can be seen in the example
 above, where it is used for the ``mode`` and ``text`` parameters.
 
-``DECLARE``
------------
+``DECLARE .. TO``
+-----------------
 
 (aka: **local variables**)
+
+Syntax: ``DECLARE`` *identifier* ``TO`` *expression* *dot*
+
+Examples::
+
+    declare x to 5.
+    declare y to 2*x - 1.
+    declare halfSpeed to SHIP:VELOCITY:ORBIT:MAG / 2.
 
 If your function needs to make a local variable, it can do so using
 the :ref:`DECLARE <declare>` command.  Whenever the DECLARE command is
@@ -116,20 +120,31 @@ the example above, where it is used for the ``row`` and ``col`` variables.
 A more in-depth explanation of kerboscript's scoping rules and how they
 work is found :ref:`on another page <scope>`
 
-``DECLARE TO``
---------------
+Initializers are now mandatory for the DECLARE statement
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-It is often useful to declare a variable and then immediately afterward
-set it to an initial value like so::
+This is now **illegal** syntax::
 
-    declare x.
-    set x to 5.
+    declare x.  // no initial value for x given.
 
-Like many languages, kerboscript provides a way to combine these
-into the same statement, with the ``declare .. to`` syntax, like so::
+.. warning::
+  .. versionadded:: 0.17
+    **Breaking Change:** The kerboscript from prior versions
+    of kOS did allow you do make ``declare`` statements 
+    without any initializers in them (and in fact you couldn't
+    provide an initializer for them in prior versions even if
+    you wanted to.)
 
-    declare x to 5.
+In order to avoid the issue of having uninitialized variables in
+kerboscript, the declare command *requires* the use of the
+initializer clause.
 
+  *This is especially important as kerboscript is a late typing
+  language in which it is impossible for the compiler to choose
+  some implied default initial value for the variable from some
+  language spec.  This is because until a value has been assigned
+  into it, the compiler wouldn't even know what type of default to
+  use - a string, an integer, a floating point number, etc.*
 
 Difference between declare and set
 ::::::::::::::::::::::::::::::::::
@@ -262,7 +277,7 @@ Recursion
 
 Recursive algorithms (TODO: wikipedia link) are possible with kerboscript
 functions, provided you remember to always exclusively use local variables
-made with the ``declare`` statement in the body of the function, and 
+made with the ``declare .. to`` statement in the body of the function, and 
 never use global variables for something that you intended to be
 different per recursive call.
 
@@ -336,4 +351,22 @@ don't let me do that.  Please force me to declare everything".
 
 The way that is done in kerboscript is by using a ``NOLAZYGLOBAL`` 
 section, :ref:`as described here <nolazyglobal>`.
+
+Had the function above been wrapped inside a NOLAZYGLOBAL section,
+the typo would be noticed::
+
+    nolazyglobal {
+
+      define function mean {
+        declare parameter the_list.
+        declare sum to 0.
+
+        for item in the_list {
+          set dum to sum + item. // error - 'dum' is an unknown identifier.
+        }.
+
+        return sum / the_list:length.
+      }.
+
+    }.
 

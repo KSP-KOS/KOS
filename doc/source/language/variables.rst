@@ -7,18 +7,23 @@ Variables & Statements
 
 .. _declare:
 
-``DECLARE``
------------
+``DECLARE .. TO``
+-----------------
 
-.. note::
+Syntax: ``DECLARE`` *identifier* ``TO`` *expression* *dot*
+
+.. warning::
     .. versionadded:: 0.17
-        The meaning of this statement changed considerably in this update.
-	Prior to this version, DECLARE always created global variables
-	no matter where it appeared in the script.
+        ***BREAKING CHANGE**
+        The meaning, and syntax, of this statement changed considerably
+        in this update.  Prior to this version, DECLARE always created
+        global variables no matter where it appeared in the script.
+        See 'initialier required' below.
 
-Declares a variable that is limited in scope to the code block it appears in::
+Declares a variable that is limited in scope to the code block it appears
+in, and gives it an initial value::
 
-    DECLARE X.
+    DECLARE X TO 1.
 
 (A "code block" is any section of statements that begins with a
 left-curly-brace "{" and ends with its closing right-curly-brace "}".)
@@ -32,18 +37,20 @@ Alternatively, a variable can be implicitly declared by any ``SET`` or
 global scope.  **The only way to make a variable be local instead of
 global is to declare it explicitly with DECLARE**.
 
-``DECLARE ... TO``
-------------------
+Initializer required in DECLARE
+:::::::::::::::::::::::::::::::
 
-An optional syntax for the DECLARE statement is to combine a DECLARE
-with a SET into the same statement as follows::
+.. versionadded:: 0.17
 
-    DECLARE countdown TO 10.
+The syntax without the initializer, looking like so::
 
-Which would have exactly the same effect as::
+    DECLARE x. // no initializer like "TO 1."
 
-    DECLARE countdown.
-    SET countdown TO 10.
+is **no longer legal syntax**.
+
+Kerboscript now requires the use of the initializer clause (the "TO"
+keyword) after the identifer name so as to make it impossible for
+there to exist any uninitialized variables in a script.
 
 .. _declare parameter:
 
@@ -108,10 +115,29 @@ The ``DECLARE PARAMETER`` statements can appear anywhere in a program as long as
 Sets the value of a variable. Implicitly creates a global variable if it doesn’t already exist::
 
     SET X TO 1.
+    SET X TO y*2 - 1.
 
 This follows the :ref:`scoping rules explained below <scope>`.  If the 
 variable can be found in the current local scope, or any scope higher
 up, then it won't be created and instead the existing one will be used.
+
+Difference between SET and DECLARE
+::::::::::::::::::::::::::::::::::
+
+The following two look very similar and you might ask why you'd pick
+one instead of the other::
+
+    DECLARE X TO 1.
+    SET X TO 1.
+
+The difference is that ``SET`` attempts to store the value in the
+variable that already exists, if it can find one, and it only 
+creates a new variable if it *has* to because there isn't one that
+already exists.  *(That's the first difference)*.  Because ``SET``
+doesn't make a new variable until it has exhausted the attempts to
+find an existing one by looking up the "scope stack", ``SET`` only
+is capable of creating **global** variables.  *(That's the second
+difference.)*
 
 
 ``LOCK``
@@ -226,7 +252,7 @@ Examples::
 
     DECLARE x TO 10. // X is now a global variable with value 10.
     SET y TO 20. // Y is now a global variable (implicitly) with value 20.
-    DECLARE z. // Z is now a global variable, with no particular value yet.
+    DECLARE z TO 0. // Z is now a global variable.
 
     SET sum to -1. // sum is now an implicitly made global variable, containing -1.
 

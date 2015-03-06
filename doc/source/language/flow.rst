@@ -75,7 +75,9 @@ Locks an identifier to an expression. Each time the identifier is used in an exp
     SET X TO 4.
     PRINT Y.         // Outputs 6
 
-Unlike variables created with the ``SET`` or ``DECLARE`` commands, ``LOCK`` variables are local to the current program. If program **A** calls program **B**, and program **B** issues a ``LOCK`` command, program **A** will not be able to read that ``LOCK`` variable's result.
+Note that a LOCK expression is extremely similar to a user function.
+Every time you read the value of the "variable", it executes the expression
+again.
 
 .. note::
     If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each update tick <cpu hardware>`.
