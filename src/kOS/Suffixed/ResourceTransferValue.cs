@@ -21,7 +21,7 @@ namespace kOS.Suffixed
         }
 
         private readonly double? amount;
-        private readonly double transferedAmount;
+        private double transferedAmount;
         private readonly PartResourceDefinition resourceInfo;
         private readonly object transferTo;
         private TransferPartType transferToType;
@@ -45,6 +45,30 @@ namespace kOS.Suffixed
 
             DetermineTypes();
             InitializeSuffixes();
+        }
+
+        public void Update(double deltaTime)
+        {
+            if (Status != TransferManager.TransferStatus.Transfering) { return; }
+
+            IList<global::Part> fromParts = GetParts(transferFromType, transferFrom);
+            SafeHouse.Logger.Log("TRANSFER: FromParts Count: " + fromParts.Count);
+            IList<global::Part> toParts = GetParts(transferFromType, transferTo);
+            SafeHouse.Logger.Log("TRANSFER: ToParts Count: " + toParts.Count);
+
+            if (!AllPartsAreConnected(fromParts, toParts)) { return; }
+            SafeHouse.Logger.Log("TRANSFER: All Parts Connected");
+
+            if (!CanTransfer(fromParts, toParts))
+            {
+                return;
+            }
+            WorkTransfer(fromParts, toParts);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Transfer( {0}, {1} )", Status, StatusMessage);
         }
 
         private void InitializeSuffixes()
@@ -81,25 +105,6 @@ namespace kOS.Suffixed
             throw new ArgumentOutOfRangeException();
         }
 
-        public void Update(double deltaTime)
-        {
-            if (Status != TransferManager.TransferStatus.Transfering) { return; }
-
-            IList<global::Part> fromParts = GetParts(transferFromType, transferFrom);
-            SafeHouse.Logger.Log("TRANSFER: FromParts Count: " + fromParts.Count);
-            IList<global::Part> toParts = GetParts(transferFromType, transferTo);
-            SafeHouse.Logger.Log("TRANSFER: ToParts Count: " + toParts.Count);
-
-            if (!AllPartsAreConnected(fromParts, toParts)) { return; }
-            SafeHouse.Logger.Log("TRANSFER: All Parts Connected");
-
-            if (!CanTransfer(fromParts, toParts))
-            {
-                return;
-            }
-            WorkTransfer(fromParts, toParts);
-        }
-
         private void WorkTransfer(IList<global::Part> fromParts, IList<global::Part> toParts)
         {
             SafeHouse.Logger.Log("TRANSFER WORK: Have already transfered: " + transferedAmount);
@@ -108,7 +113,11 @@ namespace kOS.Suffixed
 
             double pulledAmount = PullResources(fromParts, transferGoal);
 
+            transferedAmount += pulledAmount;
+
             PutResources(toParts, pulledAmount);
+
+            SafeHouse.Logger.Log("TRANSFER WORK: Have now transfered: " + transferedAmount);
         }
 
         /// <summary>
@@ -136,7 +145,11 @@ namespace kOS.Suffixed
 
                     var transferAmount = Math.Min(remaining, evenShare);
 
-                    remaining -= part.TransferResource(resource.info.id, transferAmount);
+                    SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PUT AMOUNT: {1}", part.flightID, transferAmount));
+
+                    remaining += part.TransferResource(resource.info.id, transferAmount);
+
+                    SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PUT REMAINING: {1}", part.flightID, remaining));
                 }
                 retries++;
             }
@@ -161,7 +174,12 @@ namespace kOS.Suffixed
 
                 // The amount you pull must be negative 
                 var thisPartsShare = -transferGoal*thisPartsPercentage;
+
+                SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PULL AMOUNT: {1}", part.flightID, thisPartsShare));
+
                 toReturn += part.TransferResource(resourceInfo.id, thisPartsShare);
+
+                SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PULLED RESOURCE: {1}", part.flightID, toReturn));
             }
             SafeHouse.Logger.Log("TRANSFER WORK: Pulled: " + toReturn);
             return toReturn;
@@ -343,11 +361,6 @@ namespace kOS.Suffixed
 
             // Some parts are from a different vessel? bail
             return null;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Transfer( {0}, {1} )", Status, StatusMessage);
         }
     }
 }
