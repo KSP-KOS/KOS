@@ -340,7 +340,7 @@ namespace kOS.Execution
 
         public void DumpVariables()
         {
-            StringBuilder msg = new StringBuilder();
+            var msg = new StringBuilder();
             foreach (string ident in variables.Keys)
             {
                 string line;
