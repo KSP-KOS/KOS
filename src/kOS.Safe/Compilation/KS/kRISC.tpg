@@ -141,7 +141,7 @@ remove_stmt    -> REMOVE expr EOI;
 log_stmt       -> LOG expr TO expr EOI;
 break_stmt     -> BREAK EOI;
 preserve_stmt  -> PRESERVE EOI;
-declare_stmt   -> DECLARE PARAMETER? IDENTIFIER (COMMA IDENTIFIER)* EOI;
+declare_stmt   -> DECLARE ( (PARAMETER IDENTIFIER (COMMA IDENTIFIER)*)|(IDENTIFIER TO expr) ) EOI;
 switch_stmt    -> SWITCH TO expr EOI;
 copy_stmt      -> COPY expr (FROM | TO) expr EOI;
 rename_stmt    -> RENAME (VOLUME | FILE)? expr TO expr EOI;

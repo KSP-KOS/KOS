@@ -1689,11 +1689,12 @@ namespace kOS.Safe.Compilation.KS
         private void VisitDeclareStatement(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            if (node.Nodes.Count == 3)
+            // If the declare statement is of the form:
+            //    DECLARE identifier TO expr.
+            if (node.Nodes.Count > 1 && node.Nodes[1].Token.Type == TokenType.IDENTIFIER)
             {
-                // standard declare
                 VisitNode(node.Nodes[1]);
-                AddOpcode(new OpcodePush(0));
+                VisitNode(node.Nodes[3]);
                 AddOpcode(new OpcodeStore());
             }
         }
