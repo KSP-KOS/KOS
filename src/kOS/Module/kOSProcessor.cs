@@ -172,11 +172,11 @@ namespace kOS.Module
 
         private void UpdateCostAndMass()
         {
-            const float diskSpaceMassMultiplier = 0.0000048829F; //implies approx 20kg for 4096bytes of diskSpace
-            const float diskSpaceCostMultiplier = 0.0244140625F; //implies approx 100funds for 4096bytes of diskSpace
+            const float DISK_SPACE_MASS_MULTIPLIER = 0.0000048829F; //implies approx 20kg for 4096bytes of diskSpace
+            const float DISK_SPACE_COST_MULTIPLIER = 0.0244140625F; //implies approx 100funds for 4096bytes of diskSpace
 
-            additionalCost = baseModuleCost + (float)System.Math.Round((diskSpace - baseDiskSpace) * diskSpaceCostMultiplier,0);
-            additionalMass = (diskSpace - baseDiskSpace) * diskSpaceMassMultiplier;
+            additionalCost = baseModuleCost + (float)System.Math.Round((diskSpace - baseDiskSpace) * DISK_SPACE_COST_MULTIPLIER,0);
+            additionalMass = (diskSpace - baseDiskSpace) * DISK_SPACE_MASS_MULTIPLIER;
 
             part.mass = basePartMass + additionalMass;
         }
@@ -246,7 +246,7 @@ namespace kOS.Module
             diskSpaceUI = diskSpace.ToString();
             field = Fields["diskSpaceUI"];
             options = (UI_ChooseOption)field.uiControlEditor;
-            string [] sizeOptions = new string[3];
+            var sizeOptions = new string[3];
             sizeOptions[0] = baseDiskSpace.ToString();
             sizeOptions[1] = (baseDiskSpace*2).ToString();
             sizeOptions[2] = (baseDiskSpace*4).ToString();
