@@ -45,7 +45,7 @@ namespace kOS.Binding
             AddNewFlightParam("wheelthrottle", Shared);
             AddNewFlightParam("wheelsteering", Shared);
 
-            shared.BindingMgr.AddSetter("SASMODE", value => this.SelectAutopilotMode((string)value));
+            shared.BindingMgr.AddSetter("SASMODE", value => SelectAutopilotMode((string)value));
             shared.BindingMgr.AddGetter("SASMODE", () => currentVessel.Autopilot.Mode.ToString().ToUpper());
         }
 
@@ -64,7 +64,7 @@ namespace kOS.Binding
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
             SafeHouse.Logger.Log(string.Format("FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
-            if (!flightParameters.ContainsKey(paramName.ToLower())) { UnityEngine.Debug.LogError("kOS: no such flybywire parameter " + paramName); return; }
+            if (!flightParameters.ContainsKey(paramName.ToLower())) { Debug.LogError("kOS: no such flybywire parameter " + paramName); return; }
 
             flightParameters[paramName.ToLower()].Enabled = enabled;
 
@@ -194,13 +194,13 @@ namespace kOS.Binding
                 if (!currentVessel.Autopilot.CanSetMode(autopilotMode))
                 {
                     // throw an exception if the mode is not available
-                    throw new kOS.Safe.Exceptions.KOSException(
+                    throw new Safe.Exceptions.KOSException(
                         string.Format("Cannot set autopilot value, pilot/probe does not support {0}, or there is no node/target", autopilotMode));
                 }
                 currentVessel.Autopilot.SetMode(autopilotMode);
                 //currentVessel.Autopilot.Enable();
                 // change the autopilot indicator
-                ((kOS.Module.kOSProcessor)Shared.Processor).SetSASUI((int)autopilotMode);
+                ((Module.kOSProcessor)Shared.Processor).SetAutopilotMode((int)autopilotMode);
                 if (RemoteTechHook.IsAvailable(currentVessel.id))
                 {
                     Debug.Log(string.Format("kOS: Adding RemoteTechPilot: autopilot For : " + currentVessel.id));
@@ -254,7 +254,7 @@ namespace kOS.Binding
                         break;
                     default:
                         // If the mode is not recognised, thrown an exception rather than continuing or using a default setting
-                        throw new kOS.Safe.Exceptions.KOSException(
+                        throw new Safe.Exceptions.KOSException(
                             string.Format("kOS does not recognize the SAS mode setting of {0}", autopilotMode));
                 }
             }
