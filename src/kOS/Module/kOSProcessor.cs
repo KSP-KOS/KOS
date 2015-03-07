@@ -134,12 +134,12 @@ namespace kOS.Module
         //returns basic information on kOSProcessor module in Editor
         public override string GetInfo()
         {
-            const float maximumPowerConsumption = 0.2F;
+            const float MAXIMUM_POWER_CONSUMPTION = 0.2F;
             string moduleInfo = "KOS Processor\n";
 
             moduleInfo += "\nLocal disk capacity: " + diskSpace;
 
-            moduleInfo += "\nMax Power consuption, EC/s : " + System.Math.Round(maximumPowerConsumption, 2);
+            moduleInfo += "\nMax Power consuption, EC/s : " + System.Math.Round(MAXIMUM_POWER_CONSUMPTION, 2);
 
             if (additionalCost > 0)
             {
