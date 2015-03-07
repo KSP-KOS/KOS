@@ -25,7 +25,7 @@ using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Module
 {
-    public class kOSProcessor : PartModule, IProcessor, IPartCostModifier
+    public class kOSProcessor : PartModule, IProcessor, IPartCostModifier, IPartMassModifier
     {
         public ProcessorModes ProcessorMode = ProcessorModes.READY;
 
@@ -40,12 +40,27 @@ namespace kOS.Module
 
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Boot File"), UI_ChooseOption(scene=UI_Scene.Editor)]
         public string bootFile = "boot.ks";
-
+        
         [KSPField(isPersistant = true, guiName = "kOS Disk Space", guiActive = true)]
-        public int diskSpace = 500;
+        public int diskSpace = 1024;
 
-        [KSPField(isPersistant = true, guiName = "CPU Upgrade Cost", guiActive = false, guiActiveEditor = false)]
-        public int additionalCost = 0;
+        [KSPField(isPersistant = true, guiName = "kOS Base Disk Space", guiActive = false)]
+        public int baseDiskSpace = 0;
+
+        [KSPField(isPersistant = true, guiName = "kOS Base Module Cost", guiActive = false)]
+        public float baseModuleCost = 0F;
+
+        [KSPField(isPersistant = true, guiName = "kOS Base Part Mass", guiActive = false)]
+        public float basePartMass = 0F;
+
+        [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true), UI_ChooseOption(scene = UI_Scene.Editor)]
+        public string diskSpaceUI = "1024";
+
+        [KSPField(isPersistant = true, guiName = "CPU/Disk Upgrade Cost", guiActive = false, guiActiveEditor = true)]
+        public float additionalCost = 0F;
+
+        [KSPField(isPersistant = false, guiName = "CPU/Disk Upgrade Mass", guiActive = false, guiActiveEditor = true)]
+        public float additionalMass = 0F;
 
         [KSPField(isPersistant = true, guiActive = false)] public int MaxPartId = 100;
 
@@ -137,13 +152,13 @@ namespace kOS.Module
             const float MAXIMUM_POWER_CONSUMPTION = 0.2F;
             string moduleInfo = "KOS Processor\n";
 
-            moduleInfo += "\nLocal disk capacity: " + diskSpace;
+            moduleInfo += "\nDefault disk capacity: " + diskSpace;
 
             moduleInfo += "\nMax Power consuption, EC/s : " + System.Math.Round(MAXIMUM_POWER_CONSUMPTION, 2);
 
             if (additionalCost > 0)
             {
-                moduleInfo += "\nCost of probe CPU upgrade: " + additionalCost.ToString();
+                moduleInfo += "\nCost of probe CPU upgrade: " + System.Math.Round(additionalCost,0);
             }
 
             return moduleInfo;
@@ -155,16 +170,47 @@ namespace kOS.Module
             return additionalCost;
         }
 
+        private void UpdateCostAndMass()
+        {
+            const float diskSpaceMassMultiplier = 0.0000048829F; //implies approx 20kg for 4096bytes of diskSpace
+            const float diskSpaceCostMultiplier = 0.0244140625F; //implies approx 100funds for 4096bytes of diskSpace
+
+            additionalCost = baseModuleCost + (float)System.Math.Round((diskSpace - baseDiskSpace) * diskSpaceCostMultiplier,0);
+            additionalMass = (diskSpace - baseDiskSpace) * diskSpaceMassMultiplier;
+
+            part.mass = basePartMass + additionalMass;
+        }
+
+        //implement IPartMassModifier component
+        public float GetModuleMass(float defaultMass)
+        {
+            return part.mass - defaultMass; //copied this fix from ProceduralParts mod as we already changed part.mass
+            //return additionalMass;
+        }
+
         public override void OnStart(StartState state)
         {
-            //if in Editor, populate boot script selector and show additionalCost if its non-zero
+            //if in Editor, populate boot script selector, diskSpace selector and etc.
             if (state == StartState.Editor)
             {
-                BootUISelector();
-                BaseField field = Fields["additionalCost"];
-                field.guiActiveEditor = additionalCost > 0;
+                if (baseDiskSpace == 0) 
+                    baseDiskSpace = diskSpace;
 
+                if (System.Math.Abs (baseModuleCost) < 0.000001F)
+                    baseModuleCost = additionalCost;  //remember module cost before tweaks
+                else
+                    additionalCost = baseModuleCost; //reset module cost and update later in UpdateCostAndMass()
+
+                if (System.Math.Abs (basePartMass) < 0.000001F)
+                    basePartMass = part.mass;  //remember part mass before tweaks
+                else
+                    part.mass = basePartMass; //reset part mass to original value and update later in UpdateCostAndMass()
+
+                InitUI();
             }
+
+            UpdateCostAndMass(); 
+
             //Do not start from editor and at KSP first loading
             if (state == StartState.Editor || state == StartState.None)
             {
@@ -174,8 +220,7 @@ namespace kOS.Module
             SafeHouse.Logger.Log(string.Format("OnStart: {0} {1}", state, ProcessorMode));
             InitObjects();
         }
-
-        private void BootUISelector()
+        private void InitUI()
         {
             //Populate selector for boot scripts
             BaseField field = Fields["bootFile"];
@@ -196,6 +241,17 @@ namespace kOS.Module
             options.controlEnabled = maxchoice > 0;
             field.guiActiveEditor = maxchoice > 0;
             options.options = bootFiles.ToArray();
+
+            //populate diskSpaceUI selector
+            diskSpaceUI = diskSpace.ToString();
+            field = Fields["diskSpaceUI"];
+            options = (UI_ChooseOption)field.uiControlEditor;
+            string [] sizeOptions = new string[3];
+            sizeOptions[0] = baseDiskSpace.ToString();
+            sizeOptions[1] = (baseDiskSpace*2).ToString();
+            sizeOptions[2] = (baseDiskSpace*4).ToString();
+            options.options = sizeOptions;
+        
         }
 
         public void InitObjects()
@@ -355,6 +411,16 @@ namespace kOS.Module
         
         public void Update()
         {
+            if (HighLogic.LoadedScene == GameScenes.EDITOR)
+            {
+                if (diskSpace != Convert.ToInt32(diskSpaceUI))
+                {
+                    diskSpace = Convert.ToInt32(diskSpaceUI);
+                    UpdateCostAndMass();
+                    GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
+                }
+                
+            }
             if (!IsAlive()) return;
             if (firstUpdate)
             {
