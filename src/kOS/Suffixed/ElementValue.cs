@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using kOS.Factories;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
@@ -154,7 +152,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "ELEMENT( " + dockedVesselInfo.name + ", " + parts.Count + " )" ;
+            return string.Format("ELEMENT: {0} {1} Parts", dockedVesselInfo.name, parts.Count);
         }
     }
 

@@ -14,7 +14,7 @@ namespace kOS.Execution
         {
             Failed,
             Finished,
-            Paused,
+            Inactive,
             Transferring
         }
 

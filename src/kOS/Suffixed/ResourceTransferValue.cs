@@ -41,7 +41,7 @@ namespace kOS.Suffixed
             this.resourceInfo = resourceInfo;
             this.transferTo = transferTo;
             this.transferFrom = transferFrom;
-            Status = TransferManager.TransferStatus.Transferring;
+            Status = TransferManager.TransferStatus.Inactive;
 
             DetermineTypes();
             InitializeSuffixes();
@@ -73,11 +73,15 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("AMOUNT", new Suffix<double>(() => amount.HasValue ? amount.Value : -1));
+            AddSuffix("TARGETAMOUNT", new Suffix<double>(() => amount.HasValue ? amount.Value : -1));
             AddSuffix("TRANSFEREDAMOUNT", new Suffix<double>(() => transferedAmount));
             AddSuffix("STATUS", new Suffix<string>(() => Status.ToString()));
             AddSuffix("MESSAGE", new Suffix<string>(() => StatusMessage));
             AddSuffix("RESOURCE", new Suffix<string>(() => resourceInfo.name));
+            AddSuffix("ACTIVE", new SetSuffix<bool>(() => Status == TransferManager.TransferStatus.Transferring, 
+            value => {
+                Status = value ? TransferManager.TransferStatus.Transferring : TransferManager.TransferStatus.Inactive;
+            }));
         }
 
         private void DetermineTypes()
@@ -113,9 +117,9 @@ namespace kOS.Suffixed
 
             double pulledAmount = PullResources(fromParts, transferGoal);
 
-            transferedAmount += pulledAmount;
-
             PutResources(toParts, pulledAmount);
+
+            transferedAmount += pulledAmount;
 
             if (Status == TransferManager.TransferStatus.Transferring)
             {
@@ -281,6 +285,7 @@ namespace kOS.Suffixed
 
         private void MarkFinished()
         {
+            transferedAmount = Math.Round(transferedAmount, 5);
             SafeHouse.Logger.Log(string.Format("TRANSFER FINISHED: Transfered {0} {1}", transferedAmount, resourceInfo.name));
             StatusMessage = string.Format("Transfered: {0}", transferedAmount);
             Status = TransferManager.TransferStatus.Finished;
