@@ -41,7 +41,7 @@ namespace kOS.Suffixed
             this.resourceInfo = resourceInfo;
             this.transferTo = transferTo;
             this.transferFrom = transferFrom;
-            Status = TransferManager.TransferStatus.Transfering;
+            Status = TransferManager.TransferStatus.Transferring;
 
             DetermineTypes();
             InitializeSuffixes();
@@ -49,7 +49,7 @@ namespace kOS.Suffixed
 
         public void Update(double deltaTime)
         {
-            if (Status != TransferManager.TransferStatus.Transfering) { return; }
+            if (Status != TransferManager.TransferStatus.Transferring) { return; }
 
             IList<global::Part> fromParts = GetParts(transferFromType, transferFrom);
             SafeHouse.Logger.Log("TRANSFER: FromParts Count: " + fromParts.Count);
@@ -117,6 +117,10 @@ namespace kOS.Suffixed
 
             PutResources(toParts, pulledAmount);
 
+            if (Status == TransferManager.TransferStatus.Transferring)
+            {
+                StatusMessage = string.Format("Transfered: {0}", transferedAmount);
+            }
             SafeHouse.Logger.Log("TRANSFER WORK: Have now transfered: " + transferedAmount);
         }
 

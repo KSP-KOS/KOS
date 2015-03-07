@@ -15,7 +15,7 @@ namespace kOS.Execution
             Failed,
             Finished,
             Paused,
-            Transfering
+            Transferring
         }
 
         private readonly SharedObjects shared;
