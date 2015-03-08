@@ -4,11 +4,9 @@ using kOS.Safe.Exceptions;
 
 namespace kOS.Function
 {
-    public class FunctionBase
+    public abstract class FunctionBase
     {
-        public virtual void Execute(SharedObjects shared)
-        {
-        }
+        public abstract void Execute(SharedObjects shared);
 
         protected double GetDouble(object argument)
         {
