@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe;
-using kOS.Safe.Encapsulation;
-using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
 
 namespace kOS.Execution
 {
-    public class TransferManager : Structure, IUpdateObserver
+    public class TransferManager : IUpdateObserver
     {
         public enum TransferStatus        
         {
@@ -19,37 +17,25 @@ namespace kOS.Execution
         }
 
         private readonly SharedObjects shared;
-        private readonly List<ResourceTransferValue> transfers;
+        private readonly HashSet<ResourceTransferValue> transfers;
 
         public TransferManager(SharedObjects shared)
         {
             this.shared = shared;
-            transfers = new List<ResourceTransferValue>();
+            transfers = new HashSet<ResourceTransferValue>();
             shared.UpdateHandler.AddObserver(this);
-            InitializeSuffixes();
-        }
-
-        private void InitializeSuffixes()
-        {
-            AddSuffix("CLEAR", new NoArgsSuffix(() => transfers.Clear()));
-            AddSuffix("LIST", new Suffix<ListValue>(() => ListValue.CreateList(transfers)));
-        }
-
-        public List<ResourceTransferValue> Transfers
-        {
-            get { return transfers; }
         }
 
         public ResourceTransferValue CreateTransfer(PartResourceDefinition resourceInfo, object transferTo, object transferFrom, double amount)
         {
-            var toReturn = new ResourceTransferValue(resourceInfo, transferTo, transferFrom, amount);
+            var toReturn = new ResourceTransferValue(this, resourceInfo, transferTo, transferFrom, amount);
             transfers.Add(toReturn);
             return toReturn;
         }
 
         public ResourceTransferValue CreateTransfer(PartResourceDefinition resourceInfo, object transferTo, object transferFrom)
         {
-            var toReturn = new ResourceTransferValue(resourceInfo, transferTo, transferFrom);
+            var toReturn = new ResourceTransferValue(this, resourceInfo, transferTo, transferFrom);
             transfers.Add(toReturn);
             return toReturn;
         }
@@ -68,9 +54,22 @@ namespace kOS.Execution
 
         public void Update(double deltaTime)
         {
-            foreach (var transfer in Transfers)
+            foreach (var transfer in transfers)
             {
                 transfer.Update(deltaTime);
+
+            }
+            transfers.RemoveWhere(t => t.Status == TransferStatus.Finished || t.Status == TransferStatus.Failed);
+        }
+
+        public void ReregisterTransfer(ResourceTransferValue resourceTransferValue)
+        {
+            if (resourceTransferValue.Status == TransferStatus.Transferring)
+            {
+                if (!transfers.Contains(resourceTransferValue))
+                {
+                    transfers.Add(resourceTransferValue);
+                }
             }
         }
     }

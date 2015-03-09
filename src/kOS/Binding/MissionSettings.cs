@@ -59,9 +59,6 @@ namespace kOS.Binding
 
                 return null;
             });
-
-            shared.BindingMgr.AddGetter("TRANSFERS", () => ListValue.CreateList(shared.TransferManager.Transfers));
-
         }
     }
 }
