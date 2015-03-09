@@ -198,6 +198,9 @@ namespace kOS.Suffixed
                 
                 // The amount you pull must be negative 
                 thisPartsShare = -Math.Min(thisPartsShare, thisPartsRate);
+                // the amount is subject to floating point lameness, if we round it here it is not material to the request but should make the numbers work out nicer.
+                thisPartsShare = Math.Round(thisPartsShare, 5);
+
                 SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PULL AMOUNT: {1}", part.flightID, thisPartsShare));
 
                 toReturn += part.TransferResource(resourceInfo.id, thisPartsShare);
