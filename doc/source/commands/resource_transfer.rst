@@ -21,7 +21,7 @@ Resource
 --------
 
 in all transfers, you must specify a resource by name 
-(eg "oxidixer", "LIQUIDFUEL", ect). this term is not case sensitive.
+(eg "oxidizer", "LIQUIDFUEL", ect). this term is not case sensitive.
 	
 Source and Destination 
 ----------------------
