@@ -12,7 +12,7 @@ namespace kOS.Suffixed
 {
     public class ResourceTransferValue : Structure
     {
-        private const float RESOURCE_SHARE_PER_UPDATE = 0.001f;
+        private const float RESOURCE_SHARE_PER_UPDATE = 0.005f;
         private enum TransferPartType
         {
             Part,
@@ -22,22 +22,34 @@ namespace kOS.Suffixed
 
         private readonly double? amount;
         private double transferedAmount;
+        private readonly TransferManager transferManager;
         private readonly PartResourceDefinition resourceInfo;
         private readonly object transferTo;
         private TransferPartType transferToType;
         private readonly object transferFrom;
         private TransferPartType transferFromType;
+        private TransferManager.TransferStatus status;
 
         public string StatusMessage { get; private set; }
-        public TransferManager.TransferStatus Status { get; private set; }
 
-        public ResourceTransferValue(PartResourceDefinition resourceInfo, object transferTo, object transferFrom, double amount) :this (resourceInfo, transferTo, transferFrom)
+        public TransferManager.TransferStatus Status
+        {
+            get { return status; }
+            private set
+            {
+                status = value;
+                transferManager.ReregisterTransfer(this);
+            }
+        }
+
+        public ResourceTransferValue(TransferManager transferManager, PartResourceDefinition resourceInfo, object transferTo, object transferFrom, double amount) :this (transferManager, resourceInfo, transferTo, transferFrom)
         {
             this.amount = amount;
         }
 
-        public ResourceTransferValue(PartResourceDefinition  resourceInfo, object transferTo, object transferFrom)
+        public ResourceTransferValue(TransferManager transferManager, PartResourceDefinition resourceInfo, object transferTo, object transferFrom)
         {
+            this.transferManager = transferManager;
             this.resourceInfo = resourceInfo;
             this.transferTo = transferTo;
             this.transferFrom = transferFrom;
@@ -73,8 +85,8 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("TARGETAMOUNT", new Suffix<double>(() => amount.HasValue ? amount.Value : -1));
-            AddSuffix("TRANSFEREDAMOUNT", new Suffix<double>(() => transferedAmount));
+            AddSuffix("GOAL", new Suffix<double>(() => amount.HasValue ? amount.Value : -1));
+            AddSuffix("TRANSFERED", new Suffix<double>(() => transferedAmount));
             AddSuffix("STATUS", new Suffix<string>(() => Status.ToString()));
             AddSuffix("MESSAGE", new Suffix<string>(() => StatusMessage));
             AddSuffix("RESOURCE", new Suffix<string>(() => resourceInfo.name));
@@ -106,7 +118,7 @@ namespace kOS.Suffixed
             {
                 return TransferPartType.Element;
             }
-            throw new ArgumentOutOfRangeException("toTest", "Type: " + toTest.GetType());
+            throw new ArgumentOutOfRangeException("toTest", @"Type: " + toTest.GetType());
         }
 
         private void WorkTransfer(IList<global::Part> fromParts, IList<global::Part> toParts)
@@ -182,7 +194,7 @@ namespace kOS.Suffixed
 
                 // Throttle the transfer
                 var thisPartsShare = transferGoal*thisPartsPercentage;
-                var thisPartsRate = resource.maxAmount*0.005;
+                var thisPartsRate = resource.maxAmount*RESOURCE_SHARE_PER_UPDATE;
                 
                 // The amount you pull must be negative 
                 thisPartsShare = -Math.Min(thisPartsShare, thisPartsRate);
@@ -289,12 +301,6 @@ namespace kOS.Suffixed
             SafeHouse.Logger.Log(string.Format("TRANSFER FINISHED: Transfered {0} {1}", transferedAmount, resourceInfo.name));
             StatusMessage = string.Format("Transfered: {0}", transferedAmount);
             Status = TransferManager.TransferStatus.Finished;
-        }
-
-        private double CalculateMaxSpace(IEnumerable<global::Part> parts)
-        {
-            var resources = parts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
-            return resources.Sum(r => r.maxAmount);
         }
 
         private double CalculateAvailableSpace(IEnumerable<global::Part> parts)
