@@ -73,7 +73,10 @@ namespace kOS.Safe.Compilation
         WAIT           = 0x54,
         ENDWAIT        = 0x55,
         GETMETHOD      = 0x56,
-        
+        STORELOCAL     = 0x57,
+        PUSHSCOPE      = 0x58,
+        POPSCOPE       = 0x59,
+
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
         // or in the ML file but never actually can be executed.
@@ -425,7 +428,23 @@ namespace kOS.Safe.Compilation
 
     #region General
 
-    
+
+    /// <summary>
+    /// Consumes the topmost 2 values of the stack, storing the topmost stack
+    /// value into a variable described by the next value down the stack. <br/>
+    /// <br/>
+    /// If the variable does not exist in the local scope, then it will attempt to look for
+    /// it in the next scoping level up, and the next one up, and so on
+    /// until it hits global scope and if it still hasn't found it,
+    /// it will CREATE the variable anew there, at global scope, and
+    /// then store the value there.<br/>
+    /// <br/>
+    /// This is the usual way to make a new GLOBAL variable, or to overwrite
+    /// an existing LOCAL variable.  Note that since this
+    /// is the way to make a variable, it's impossible to make a variable
+    /// that hasn't been given an initial value.  Its the act of storing a value into
+    /// the variable that causues it to exist.  This is deliberate design.
+    /// </summary>
     public class OpcodeStore : Opcode
     {
         protected override string Name { get { return "store"; } }
@@ -439,6 +458,38 @@ namespace kOS.Safe.Compilation
         }
     }
 
+    /// <summary>
+    /// Consumes the topmost 2 values of the stack, storing the topmost stack
+    /// value into a variable described by the next value down the stack. <br/>
+    /// <br/>
+    /// The variable must not exist already in the local nesting level, and it will
+    /// NOT attempt to look for it in the next scoping level up.<br/>
+    /// <br/>
+    /// Instead it will attempt to create the variable anew at the current local
+    /// nesting scope.<br/>
+    /// <br/>
+    /// This is the usual way to make a new LOCAL variable.  Do not attempt to
+    /// use this opcode to store the value into an existing variable - just use it
+    /// when making new variables.  If you use it to store into an existing
+    /// local variable, it will generate an error at runtime.<br/>
+    /// <br/>
+    /// Note that since this
+    /// is the way to make a variable, it's impossible to make a variable
+    /// that hasn't been given an initial value.  Its the act of storing a value into
+    /// the variable that causues it to exist.  This is deliberate design.
+    /// </summary>
+    public class OpcodeStoreLocal : Opcode
+    {
+        protected override string Name { get { return "storelocal"; } }
+        public override ByteCode Code { get { return ByteCode.STORELOCAL; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            object value = cpu.PopValue();
+            var identifier = (string)cpu.PopStack();
+            cpu.SetNewLocal(identifier, value);
+        }
+    }
     
     public class OpcodeUnset : Opcode
     {
@@ -454,7 +505,7 @@ namespace kOS.Safe.Compilation
             }
             else
             {
-                cpu.RemoveAllVariables();
+                throw new KOSDeprecationException("0.17","UNSET ALL", "<not supported anymore now that we have nested scoping>", "");
             }
         }
     }
@@ -1092,8 +1143,7 @@ namespace kOS.Safe.Compilation
                 int currentPointer = cpu.InstructionPointer;
                 DeltaInstructionPointer = (int)functionPointer - currentPointer;
                 var contextRecord = new SubroutineContext(currentPointer+1);
-                cpu.PushStack(contextRecord);
-                cpu.MoveStackPointer(-1);
+                cpu.PushAboveStack(contextRecord);
             }
             else if (functionPointer is string)
             {
@@ -1233,8 +1283,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            cpu.MoveStackPointer(1);
-            object shouldBeContextRecord = cpu.PopValue();
+            object shouldBeContextRecord = cpu.PopAboveStack(1);
             if ( !(shouldBeContextRecord is SubroutineContext) )
             {
                 // This should never happen with any user code:
@@ -1403,6 +1452,70 @@ namespace kOS.Safe.Compilation
             cpu.PushStack(value1);
             cpu.PushStack(value2);
         }
+    }
+    
+    /// <summary>
+    /// Pushes a new variable namespace scope (for example, when a "{" is encountered
+    /// in a block-scoping language like C++ or Java or C#.)
+    /// From now on any local variables created will be made in this new
+    /// namespace.
+    /// </summary>
+    public class OpcodePushScope : Opcode
+    {
+        protected override string Name { get { return "pushscope"; } }
+        public override ByteCode Code { get { return ByteCode.PUSHSCOPE; } }
+        
+        public override void Execute(ICpu cpu)
+        {
+            cpu.PushAboveStack(new Dictionary<string, Variable>());
+        }
+    }
+
+    /// <summary>
+    /// Pops a variable namespace scope (for example, when a "}" is encountered
+    /// in a block-scoping language like C++ or Java or C#.)
+    /// From now on any local variables created within the previous scope are
+    /// orphaned and gone forever ready to be garbage collected.
+    /// It is possible to give it an argument to pop more than one nesting level of scope, to
+    /// handle the case where you are breaking out of more than one nested level at once.
+    /// (i.e. such as might happen with a break, return, or exit keyword).
+    /// </summary>
+    public class OpcodePopScope : Opcode
+    {
+        [MLField(1,true)]
+        public Int16 NumLevels {get;set;} // Are we really going to have recursion more than 32767 levels?  Int16 is fine.
+
+        protected override string Name { get { return "popscope"; } }
+        public override ByteCode Code { get { return ByteCode.POPSCOPE; } }
+        
+        public OpcodePopScope(int numLevels)
+        {
+            NumLevels = (Int16)numLevels;
+        }
+        
+        public OpcodePopScope()
+        {
+            NumLevels = 1;
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodePopScope seems to be missing.  Version mismatch?");
+            NumLevels = (Int16)(fields[0]); // should throw error if it's not an int.
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            cpu.PopAboveStack(NumLevels);
+        }
+        
+        public override string ToString()
+        {
+            return Name + " " + NumLevels;
+        }
+  
     }
 
     #endregion

@@ -72,12 +72,11 @@ current part in the tree:
 You could keep walking down the tree this way, or go upward with PARENT
 and HASPARENT:
 
+TODO - **NEED TO MAKE A GOOD EXAMPLE OF WALKING THE PARTS TREE HERE WITH RECURSION ONCE THE SYNTAX IS NAILED DOWN FOR THAT.**
+
 ::
 
     IF thisPart:HASPARENT {
       print "This part's parent part is "+ thisPart:PARENT:NAME.
     }.
 
-This tree method of walking the parts is slightly less useful because
-user
-functions don't exist, making recursive algorithms messy to implement.

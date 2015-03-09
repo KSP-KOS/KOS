@@ -62,8 +62,13 @@ namespace kOS
 
             // print the call stack
             UnityEngine.Debug.Log(e);
+            
             // print a fragment of the code where the exception ocurred
-            List<string> codeFragment = Shared.Cpu.GetCodeFragment(16);
+            int logContextLines = 16;
+            #if DEBUG
+            logContextLines = 999999; // in debug mode let's just dump everything because it's easier that way.
+            #endif
+            List<string> codeFragment = Shared.Cpu.GetCodeFragment(logContextLines);
             var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine("Code Fragment");
             foreach (string instruction in codeFragment)

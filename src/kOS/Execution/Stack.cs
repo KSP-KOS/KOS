@@ -77,12 +77,14 @@ namespace kOS.Execution
         /// </summary>
         /// <param name="digDepth">How far underneath the top to look.  Zero means peek at the top,
         /// 1 means peek at the item just under the top, 2 means peek at the item just under that, and
-        /// so on.</param>
+        /// so on.  Note you CAN peek a negative number, which looks at the secret stack above the
+        /// stack - where the subroutine contexts and local variable contexts are.</param>
         /// <returns>The object at that depth.  Returns null when digDepth is too large and the stack isn't
         /// big enough to dig that deep.</returns>
         public object Peek(int digDepth)
         {
-            return digDepth > stackPointer ? null : stack[stackPointer - digDepth];
+            int index = stackPointer - digDepth;
+            return (index < 0 || index >= stack.Count) ? null : stack[index];
         }
 
         /// <summary>
@@ -108,14 +110,26 @@ namespace kOS.Execution
         public string Dump()
         {
             var builder = new StringBuilder();
-            builder.AppendLine("Stack dump:");
+            builder.AppendLine("Stack dump: stackPointer = " + stackPointer);
 
             // Print in reverse order so the top of the stack is on top of the printout:
             // (actually given the double nature of the stack, one of the two sub-stacks
             // inside it will always be backwardly printed):
             for (int index = stack.Count-1 ; index >= 0 ; --index)
             {
-                builder.AppendLine(string.Format("{0:000} {1,4} {2}", index, (index==stackPointer ? "SP->" : "" ), stack[index]));
+                object item = stack[index];
+                builder.AppendLine(string.Format("{0:000} {1,4} {2}", index, (index==stackPointer ? "SP->" : "" ), item));
+                Dictionary<string,Variable> dict = item as Dictionary<string,Variable>;
+                if (dict != null)
+                {
+                    // Dump the local variable context stored here on the stack:
+                    foreach (string varName in dict.Keys)
+                    {
+                        builder.AppendFormat("      local var \"{0}\" = {1}", varName, dict[varName].Value);
+                        builder.AppendLine();
+                    }
+                }
+                
             }
 
             return builder.ToString();

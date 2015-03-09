@@ -32,6 +32,14 @@ Any variable declared with DECLARE will only exist inside the code block
 section it was created in.  After that code block is finished, the variable
 will no longer exist.
 
+.. note::
+    There is an implicit outer scope block around a whole kerboscript
+    program, such that if you use a DECLARE .. TO statement inside
+    a script, it will be one nesting level "higher" than the implicit
+    globals you make with SET.  In other words, using DECLARE always
+    makes a variable that is at least limited to the program script
+    it is inside of.
+
 Alternatively, a variable can be implicitly declared by any ``SET`` or
 ``LOCK`` statement, however doing so causes the variable to always have 
 global scope.  **The only way to make a variable be local instead of
@@ -51,6 +59,16 @@ is **no longer legal syntax**.
 Kerboscript now requires the use of the initializer clause (the "TO"
 keyword) after the identifer name so as to make it impossible for
 there to exist any uninitialized variables in a script.
+
+.. _declare glboal:
+
+``DECLARE GLOBAL``
+------------------
+
+TODO: need to document this after it's made - basiclly makes
+globals just like SET implicitly does, but does so explicitly so
+it can still be done when in NOLAZYGLOBAL section.
+
 
 .. _declare parameter:
 
@@ -138,6 +156,12 @@ doesn't make a new variable until it has exhausted the attempts to
 find an existing one by looking up the "scope stack", ``SET`` only
 is capable of creating **global** variables.  *(That's the second
 difference.)*
+
+Also, be aware that DECLARE, in effect, is actually *incapable* of
+creating global variables.  There is an implicit scope block
+of "limited to the current script file" or "limited to the
+interpreter" when the DECLARE statement is used even at the outermost
+nesting level of a script.
 
 
 ``LOCK``
@@ -234,6 +258,23 @@ DECLARE statements are in block scope
     the current curly-brace block of statements, even if that block
     of statements is, say, the body of an IF check, or the body of
     an UNTIL loop.
+
+    Be aware that whenever you use the DECLARE..TO statement, you are
+    making a variable that is local to the scope in which it appears.
+    If you use DECLARE in the live interpreter, it makes a variable
+    that doesn't exist from inside a program.  If you use DECLARE in
+    a program script at the outermost nesting level of that script, it
+    still makes a variable that can only be seen from inside THAT 
+    program script.  If you have gotten used to the easy 'sloppy'
+    feature of being able to just SET a variable anywhere and then
+    see its value even after the program ends, be aware that this will
+    NOT happen with variables you created with DECLARE..TO.  After the
+    script ends, the variables made with DECLARE..TO will no longer exist.
+
+    Or to put it another way, variables created implicitly with SET
+    are **even more global** than ones created by the explict use
+    of DECLARE.  The implicit variables made by SET end up existing
+    even after the program ends.
 
 Why limit scope?
     You might be wondering why it's useful to limit the scope of a

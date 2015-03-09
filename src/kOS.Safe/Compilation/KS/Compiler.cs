@@ -13,16 +13,17 @@ namespace kOS.Safe.Compilation.KS
         private List<Opcode> currentCodeSection;
         private bool addBranchDestination;
         private ParseNode lastNode;
-        private int startLineNum = 1;
+        private int startLineNum;
         private short lastLine;
         private short lastColumn;
-        private readonly List<List<Opcode>> breakList = new List<List<Opcode>>();
+        private readonly List<BreakInfo> breakList = new List<BreakInfo>();
         private readonly List<string> triggerRemoveNames = new List<string>();
         private bool nowCompilingTrigger;
         private bool compilingSetDestination;
         private bool identifierIsVariable;
         private bool identifierIsSuffix;
         private bool nowInALoop;
+        private int braceNestLevel;
         private readonly List<ParseNode> programParameters = new List<ParseNode>();
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
@@ -32,9 +33,35 @@ namespace kOS.Safe.Compilation.KS
             { "round|1", "roundnearest" },
             { "round|2", "round"} 
         };
+        
+        // Because the Compiler object can be re-used, with its Compile()
+        // method called a second time, we can't rely on the constructor or C#'s rules about default
+        // variable values to guarantee these are all set properly.  They might be leftover values
+        // from a previous aborted use of Compiler.Compile().  I've noticed sometimes after an
+        // error I end up with the very next command always failing even when it's right, and
+        // only the next command after that works right, and I suspect this was why - these
+        // weren't being reset after a failed compile.
+        private void InitCompileFlags()
+        {
+            addBranchDestination = false;
+            lastNode = null;
+            startLineNum = 1;
+            lastLine = 0;
+            lastColumn = 0;
+            breakList.Clear();
+            triggerRemoveNames.Clear();
+            nowCompilingTrigger = false;
+            compilingSetDestination = false;
+            identifierIsSuffix = false;
+            nowInALoop = false;
+            braceNestLevel = 0;
+            programParameters.Clear();
+        }
 
         public CodePart Compile(int startLineNum, ParseTree tree, Context context, CompilerOptions options)
         {
+            InitCompileFlags();
+
             part = new CodePart();
             this.context = context;
             this.options = options;
@@ -45,7 +72,7 @@ namespace kOS.Safe.Compilation.KS
                 if (tree.Nodes.Count > 0)
                 {
                     PreProcess(tree);
-                    CompileProgram(tree);
+                    CompileProgram(tree, options.WrapImplicitBlockScope);
                 }
             }
             catch (KOSException kosException)
@@ -64,12 +91,25 @@ namespace kOS.Safe.Compilation.KS
             return part;
         }
 
-        private void CompileProgram(ParseTree tree)
+        private void CompileProgram(ParseTree tree, bool wrapInAScope)
         {
             currentCodeSection = part.MainCode;
+
+            if (wrapInAScope)
+            {
+                ++braceNestLevel;
+                AddOpcode(new OpcodePushScope());
+            }
+            
             PushProgramParameters();
             VisitNode(tree.Nodes[0]);
 
+            if (wrapInAScope)
+            {
+                --braceNestLevel;
+                AddOpcode(new OpcodePopScope());
+            }
+            
             if (addBranchDestination)
             {
                 AddOpcode(new OpcodeNOP());
@@ -461,18 +501,17 @@ namespace kOS.Safe.Compilation.KS
             return returnVal;
         }
 
-        private void PushBreakList()
+        private void PushBreakList(int nestLevel)
         {
-            List<Opcode> list = new List<Opcode>();
-            breakList.Add(list);
+            breakList.Add(new BreakInfo(nestLevel));
         }
 
         private void AddToBreakList(Opcode opcode)
         {
             if (breakList.Count > 0)
             {
-                List<Opcode> list = breakList[breakList.Count - 1];
-                list.Add(opcode);
+                BreakInfo list = breakList[breakList.Count - 1];
+                list.Opcodes.Add(opcode);
             }
         }
 
@@ -480,13 +519,21 @@ namespace kOS.Safe.Compilation.KS
         {
             if (breakList.Count > 0)
             {
-                List<Opcode> list = breakList[breakList.Count - 1];
+                BreakInfo list = breakList[breakList.Count - 1];
                 if (list != null)
                 {
                     breakList.Remove(list);
-                    foreach (Opcode opcode in list)
+                    foreach (Opcode opcode in list.Opcodes)
                     {
-                        opcode.DestinationLabel = label;
+                        OpcodePopScope popScopeOp = opcode as OpcodePopScope;
+                        if (popScopeOp != null)
+                            // calculate how many nesting levels it needs to really pop
+                            // by comparing the nest level where the break statement was to
+                            // the nest level where the break context started:
+                            popScopeOp.NumLevels = (Int16)(popScopeOp.NumLevels - list.NestLevel);
+
+                        else // assume all others are branch opcodes of some sort:
+                            opcode.DestinationLabel = label;
                     }
                 }
             }
@@ -501,9 +548,15 @@ namespace kOS.Safe.Compilation.KS
             switch (node.Token.Type)
             {
                 case TokenType.Start:
-                case TokenType.instruction_block:
                 case TokenType.instruction:
                     VisitChildNodes(node);
+                    break;
+                case TokenType.instruction_block:
+                    ++braceNestLevel;
+                    AddOpcode(new OpcodePushScope());
+                    VisitChildNodes(node);
+                    AddOpcode(new OpcodePopScope());
+                    --braceNestLevel;
                     break;
                 case TokenType.set_stmt:
                     VisitSetStatement(node);
@@ -1461,7 +1514,7 @@ namespace kOS.Safe.Compilation.KS
             nowInALoop = true;
 
             string conditionLabel = GetNextLabel(false);
-            PushBreakList();
+            PushBreakList(braceNestLevel);
             VisitNode(node.Nodes[1]);
             AddOpcode(new OpcodeLogicNot());
             Opcode branch = AddOpcode(new OpcodeBranchIfFalse());
@@ -1695,7 +1748,7 @@ namespace kOS.Safe.Compilation.KS
             {
                 VisitNode(node.Nodes[1]);
                 VisitNode(node.Nodes[3]);
-                AddOpcode(new OpcodeStore());
+                AddOpcode(new OpcodeStoreLocal());
             }
         }
 
@@ -1909,6 +1962,17 @@ namespace kOS.Safe.Compilation.KS
             if (!nowInALoop)
                 throw new KOSBreakInvalidHereException();
 
+            // Will need to pop out the number of variables scopes equal to the
+            // number of braces we're skipping out of.  For now just record the
+            // current nest level in the opcode.  Later, during PopBreakList(),
+            // the nest argument gets replaced with the real value it will have
+            // in the final program:
+            Opcode popScope = AddOpcode(new OpcodePopScope(braceNestLevel));
+            AddToBreakList(popScope);
+ 
+            // Jump to the bottom of the loop. Since we don't know where that
+            // is yet, put a placeholder jump opcode here, to be filled in later
+            // during PopBreakList() when the real value becomes known:
             Opcode jump = AddOpcode(new OpcodeBranchJump());
             AddToBreakList(jump);
         }
@@ -1947,7 +2011,7 @@ namespace kOS.Safe.Compilation.KS
 
             string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + "-iterator";
 
-            PushBreakList();
+            PushBreakList(braceNestLevel);
             AddOpcode(new OpcodePush(iteratorIdentifier));
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodePush("iterator"));

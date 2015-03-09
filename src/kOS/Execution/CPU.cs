@@ -23,7 +23,7 @@ namespace kOS.Execution
         }
 
         private readonly Stack stack;
-        private readonly Dictionary<string, Variable> variables;
+        private readonly Dictionary<string, Variable> globalVariables;
         private Status currentStatus;
         private double currentTime;
         private double timeWaitUntil;
@@ -56,7 +56,7 @@ namespace kOS.Execution
             this.shared = shared;
             this.shared.Cpu = this;
             stack = new Stack();
-            variables = new Dictionary<string, Variable>();
+            globalVariables = new Dictionary<string, Variable>();
             contexts = new List<ProgramContext>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddObserver(this);
         }
@@ -73,7 +73,7 @@ namespace kOS.Execution
             // clear stack
             stack.Clear();
             // clear variables
-            variables.Clear();
+            globalVariables.Clear();
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
@@ -170,6 +170,32 @@ namespace kOS.Execution
                 }
             }
         }
+        
+        /// <summary>
+        /// Push a single thing onto the secret "over" stack.
+        /// </summary>
+        public void PushAboveStack(object thing)
+        {
+            PushStack(thing);
+            MoveStackPointer(-1);            
+        }
+        
+        /// <summary>
+        /// Pop one or more things from the secret "over" stack, only returning the
+        /// finalmost thing popped.  (i.e if you pop 3 things then you get:
+        /// pop once and throw away, pop again and throw away, pop again and return the popped thing.)
+        /// </summary>
+        public object PopAboveStack(int howMany)
+        {
+            object returnVal = new Int32(); // bogus return val if given a bogus "pop zero things" request.
+            while (howMany > 0)
+            {
+                MoveStackPointer(1);
+                returnVal = PopStack();
+                --howMany;
+            }
+            return returnVal;
+        }
 
         private void PopFirstContext()
         {
@@ -184,7 +210,7 @@ namespace kOS.Execution
         {
             return contexts[0];
         }
-
+        
         public ProgramContext GetProgramContext()
         {
             if (contexts.Count == 1)
@@ -211,12 +237,12 @@ namespace kOS.Execution
         private void SaveAndClearPointers()
         {
             savedPointers = new Dictionary<string, Variable>();
-            var pointers = new List<string>(variables.Keys.Where(v => v.Contains('*')));
+            var pointers = new List<string>(globalVariables.Keys.Where(v => v.Contains('*')));
 
             foreach (var pointerName in pointers)
             {
-                savedPointers.Add(pointerName, variables[pointerName]);
-                variables.Remove(pointerName);
+                savedPointers.Add(pointerName, globalVariables[pointerName]);
+                globalVariables.Remove(pointerName);
             }
             SafeHouse.Logger.Log(string.Format("Saving and removing {0} pointers", pointers.Count));
         }
@@ -228,11 +254,11 @@ namespace kOS.Execution
 
             foreach (var item in savedPointers)
             {
-                if (variables.ContainsKey(item.Key))
+                if (globalVariables.ContainsKey(item.Key))
                 {
                     // if the pointer exists it means it was redefined from inside a program
                     // and it's going to be invalid outside of it, so we remove it
-                    variables.Remove(item.Key);
+                    globalVariables.Remove(item.Key);
                     deletedPointers++;
                     // also remove the corresponding trigger if exists
                     if (item.Value.Value is int)
@@ -240,7 +266,7 @@ namespace kOS.Execution
                 }
                 else
                 {
-                    variables.Add(item.Key, item.Value);
+                    globalVariables.Add(item.Key, item.Value);
                     restoredPointers++;
                 }
             }
@@ -308,6 +334,59 @@ namespace kOS.Execution
         {
             stack.MoveStackPointer(delta);
         }
+        
+        /// <summary>
+        /// Gets the dictionary N levels of nesting down the dictionary stack,
+        /// where zero is the current localmost level.
+        /// Never errors out or fails.  If N is too large you just end up with
+        /// the global scope dictionary.
+        /// Does not allow the walk to go past the start of the current function
+        /// scope.
+        /// </summary>
+        /// <param name="peekDepth">how far down the peek under the top.  0 = localmost.</param>
+        /// <returns>The dictionary found, or the global dictionary if peekDepth is too big.</returns>
+        private Dictionary<string,Variable> GetNestedDictionary(int peekDepth)
+        {
+            object stackItem = true; // any non-null value will do here, just to get the loop started.
+            for (int rawStackDepth = 0 ; stackItem != null && peekDepth >= 0; ++rawStackDepth)
+            {
+                stackItem = stack.Peek(-1 - rawStackDepth);
+                if (stackItem is Dictionary<string,Variable>)
+                    --peekDepth;
+                if (stackItem is SubroutineContext)
+                    stackItem = null; // once we hit the bottom of the current subroutine on the runtime stack - jump all the way out to global.
+            }
+            return stackItem == null ? globalVariables : (Dictionary<string,Variable>) stackItem;
+        }
+
+        /// <summary>
+        /// Gets the dictionary that contains the given identifer, starting the
+        /// search at the local level and scanning the scopes upward all the
+        /// way to the global dictionary.<br/>
+        /// Does not allow the walk to go past the start of the current function scope.<br/>
+        /// Returns null when no hit was found.<br/>
+        /// </summary>
+        /// <param name="identifier">identifer name to search for</param>
+        /// <returns>The dictionary found, or null if no dictionary contins the identifier.</returns>
+        private Dictionary<string,Variable> GetNestedDictionary(string identifier)
+        {
+            for (int rawStackDepth = 0 ; true /*all loop exits are explicit break or return stmts*/ ; ++rawStackDepth)
+            {
+                object stackItem = stack.Peek(-1 - rawStackDepth);
+                if (stackItem == null)
+                    break;
+                Dictionary<string,Variable> localDict = stackItem as Dictionary<string,Variable>;
+                if (localDict != null)
+                    if (localDict.ContainsKey(identifier))
+                        return localDict;
+                if (stackItem is SubroutineContext)
+                    break; // once we hit the bottom of the current subroutine on the runtime stack - jump all the way out to global.
+            }
+            if (globalVariables.ContainsKey(identifier))
+                return globalVariables;
+            else
+                return null;
+        }
 
         /// <summary>
         /// Return the subroutine call trace of how the code got to where it is right now.
@@ -322,30 +401,33 @@ namespace kOS.Execution
             return trace;
         }
 
+        /// <summary>
+        /// Get the value of a variable or create it at global scope if not found.
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
         private Variable GetOrCreateVariable(string identifier)
         {
-            Variable variable;
-
-            if (variables.ContainsKey(identifier))
-            {
-                variable = GetVariable(identifier);
-            }
-            else
+            Variable variable = GetVariable(identifier,false,true);
+            if (variable == null)
             {
                 variable = new Variable {Name = identifier};
-                AddVariable(variable, identifier);
+                AddVariable(variable, identifier, false);
             }
             return variable;
         }
-
-        public void DumpVariables()
+        
+        public string DumpVariables()
         {
             var msg = new StringBuilder();
-            foreach (string ident in variables.Keys)
+            msg.AppendLine("============== STACK VARIABLES ===============");
+            msg.AppendLine(stack.Dump());
+            msg.AppendLine("============== GLOBAL VARIABLES ==============");
+            foreach (string ident in globalVariables.Keys)
             {
                 string line;
                 try {
-                    Variable v = variables[ident];
+                    Variable v = globalVariables[ident];
                     line = ident;
                     line += v.Value == null ? "= <null>" : "= " + v.Value;
                 }
@@ -355,36 +437,48 @@ namespace kOS.Execution
                     // get raised by FlightStats when you try to print all of them out:
                     line = ident + "= <value caused exception>\n    " + e.Message;
                 }
-                shared.Screen.Print(line);
                 msg.AppendLine(line);
             }
             SafeHouse.Logger.Log(msg.ToString());
-            shared.Screen.Print("YOU CAN SEE THIS LOG IN THE DEBUG OUTPUT.");
+            return "Variable dump is in the output log";
         }
 
         /// <summary>
-        /// Get the variable's contents, performing a lookup.
+        /// Get the variable's contents, performing a lookup through all nesting levels
+        /// up to global.
         /// </summary>
         /// <param name="identifier">variable to look for</param>
         /// <param name="barewordOkay">Is it acceptable for the variable to
         ///   not exist, in which case its bare name will be returned as the value.</param>
+        /// <param name="failOkay">Is it acceptable for the variable to
+        ///   not exist, in which case a null will be returned as the value.</param>
         /// <returns>the value that was found</returns>
-        private Variable GetVariable(string identifier, bool barewordOkay = false)
+        private Variable GetVariable(string identifier, bool barewordOkay = false, bool failOkay = false)
         {
             identifier = identifier.ToLower();
-            if (variables.ContainsKey(identifier))
-            {
-                return variables[identifier];
-            }
+            Dictionary<string,Variable> foundDict = GetNestedDictionary(identifier);
+            if (foundDict != null)
+                return foundDict[identifier];
             if (barewordOkay)
             {
                 string strippedIdent = identifier.TrimStart('$');
                 return new Variable {Name = strippedIdent, Value = strippedIdent};
             }
-            throw new KOSUndefinedIdentifierException(identifier.TrimStart('$'),"");
+            if (failOkay)
+                return null;
+            else
+                throw new KOSUndefinedIdentifierException(identifier.TrimStart('$'),"");
         }
 
-        public void AddVariable(Variable variable, string identifier)
+        /// <summary>
+        /// Make a new variable at either the local depth or the
+        /// global depth depending.
+        /// throws exception if it already exists
+        /// </summary>
+        /// <param name="variable">variable to add</param>
+        /// <param name="identifier">name of variable to adde</param>
+        /// <param name="local">true if you want to make it at local depth</param>
+        public void AddVariable(Variable variable, string identifier, bool local)
         {
             identifier = identifier.ToLower();
             
@@ -392,13 +486,20 @@ namespace kOS.Execution
             {
                 identifier = "$" + identifier;
             }
-
-            if (variables.ContainsKey(identifier))
+            
+            Dictionary<string,Variable> whichDict;
+            if (local)
+                whichDict = GetNestedDictionary(0);
+            else
+                whichDict = globalVariables;
+            if (whichDict.ContainsKey(identifier))
             {
-                variables.Remove(identifier);
+                // was this: TODO - delete it after testing:
+                // whichDict.Remove(identifier);
+                
+                throw new KOSIdentiferClashException(identifier);
             }
-
-            variables.Add(identifier, variable);
+            whichDict.Add(identifier, variable);
         }
 
         public bool VariableIsRemovable(Variable variable)
@@ -406,34 +507,24 @@ namespace kOS.Execution
             return !(variable is BoundVariable);
         }
 
+        /// <summary>
+        /// Removes a variable, following current scoping rules, removing
+        /// the innermost scope of the variable that is found.<br/>
+        /// <br/>
+        /// If the variable cannot be found, it fails silently without complaint.
+        /// </summary>
+        /// <param name="identifier">varible to remove.</param>
         public void RemoveVariable(string identifier)
         {
             identifier = identifier.ToLower();
-            
-            if (variables.ContainsKey(identifier) &&
-                VariableIsRemovable(variables[identifier]))
+            Dictionary<string,Variable> foundDict = GetNestedDictionary(identifier);
+            if (foundDict != null && VariableIsRemovable(foundDict[identifier]))
             {
                 // Tell Variable to orphan its old value now.  Faster than relying 
                 // on waiting several seconds for GC to eventually call ~Variable()
-                variables[identifier].Value = null;
+                foundDict[identifier].Value = null;
                 
-                variables.Remove(identifier);
-            }
-        }
-
-        public void RemoveAllVariables()
-        {
-            var removals = variables.
-                Where(v => VariableIsRemovable(v.Value)).
-                Select(kvp => kvp.Key).ToList();
-
-            foreach (string identifier in removals)
-            {
-                // Tell Variable to orphan its old value now.  Faster than relying 
-                // on waiting several seconds for GC to eventually call ~Variable()
-                variables[identifier].Value = null;
-
-                variables.Remove(identifier);
+                foundDict.Remove(identifier);
             }
         }
 
@@ -470,6 +561,40 @@ namespace kOS.Execution
             return testValue;
         }
 
+        /// <summary>
+        /// Try to make a new local variable at the localmost scoping level and
+        /// give it a starting value.  It errors out of there is already one there
+        /// by the same name.<br/>
+        /// <br/>
+        /// This does NOT scan up the scoping stack like SetValue() does.
+        /// It operates at the local level only.<br/>
+        /// <br/>
+        /// This is the normal way to make a new local variable.  You cannot make a 
+        /// local variable without attempting to give it a value.
+        /// </summary>
+        /// <param name="identifier">variable name to attempt to store into</param>
+        /// <param name="value">value to put into it</param>
+        public void SetNewLocal(string identifier, object value)
+        {
+            Variable variable = new Variable {Name = identifier};
+            AddVariable(variable, identifier, true);
+            variable.Value = value;
+        }
+
+        /// <summary>
+        /// Try to set the value of the identifier at the localmost
+        /// level possible, by scanning up the scope stack to find
+        /// the local-most level at which the identifier is a variable,
+        /// and assigning it the value there.<br/>
+        /// <br/>
+        /// If no such value is found, all the way up to the global level,
+        /// then it resorts to making a global variable with the name and using that.<br/>
+        /// <br/>
+        /// This is the normal way to make a new global variable.  You cannot make a 
+        /// global variable without attempting to give it a value.
+        /// </summary>
+        /// <param name="identifier">variable name to attempt to store into</param>
+        /// <param name="value">value to put into it</param>
         public void SetValue(string identifier, object value)
         {
             Variable variable = GetOrCreateVariable(identifier);
@@ -785,11 +910,11 @@ namespace kOS.Execution
                 var contextNode = new ConfigNode("context");
 
                 // Save variables
-                if (variables.Count > 0)
+                if (globalVariables.Count > 0)
                 {
                     var varNode = new ConfigNode("variables");
 
-                    foreach (var kvp in variables)
+                    foreach (var kvp in globalVariables)
                     {
                         if (!(kvp.Value is BoundVariable) &&
                             (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted

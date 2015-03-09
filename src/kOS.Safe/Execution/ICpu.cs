@@ -8,14 +8,16 @@ namespace kOS.Safe.Execution
         void PushStack(object item);
         object PopStack();
         void MoveStackPointer(int delta);
+        void PushAboveStack(object thing);
+        object PopAboveStack(int howMany);
         object GetValue(object testValue, bool barewordOkay = false);
         object PopValue(bool barewordOkay = false);
         object PeekValue(int digDepth, bool barewordOkay = false);        
         int GetStackSize();
         void SetValue(string identifier, object value);
-        void DumpVariables();
+        void SetNewLocal(string identifier, object value);
+        string DumpVariables();
         void RemoveVariable(string identifier);
-        void RemoveAllVariables();
         int InstructionPointer { get; set; }
         double SessionTime { get; }
         void AddTrigger(int triggerFunctionPointer);
@@ -24,7 +26,7 @@ namespace kOS.Safe.Execution
         void EndWait();
         void CallBuiltinFunction(string functionName);
         void BreakExecution(bool manual);
-        void AddVariable(Variable variable, string identifier);
+        void AddVariable(Variable variable, string identifier, bool local);
         Opcode GetOpcodeAt(int instructionPtr);
         void Boot();
 

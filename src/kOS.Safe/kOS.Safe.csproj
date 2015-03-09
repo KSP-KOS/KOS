@@ -46,6 +46,7 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
     <Compile Include="Compilation\KS\Context.cs" />
     <Compile Include="Compilation\KS\Subprogram.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSIdentifierClashException.cs" />
     <Compile Include="Exceptions\KOSLowTechException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
     <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
