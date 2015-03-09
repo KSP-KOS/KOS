@@ -23,7 +23,7 @@ namespace kOS.Execution
         {
             this.shared = shared;
             transfers = new HashSet<ResourceTransferValue>();
-            shared.UpdateHandler.AddObserver(this);
+            shared.UpdateHandler.AddFixedObserver(this);
         }
 
         public ResourceTransferValue CreateTransfer(PartResourceDefinition resourceInfo, object transferTo, object transferFrom, double amount)
@@ -42,7 +42,7 @@ namespace kOS.Execution
 
         public void Dispose()
         {
-            shared.UpdateHandler.RemoveObserver(this);
+            shared.UpdateHandler.RemoveFixedObserver(this);
         }
 
         public static PartResourceDefinition ParseResource(string resourceName)
