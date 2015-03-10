@@ -494,10 +494,10 @@ namespace kOS.Execution
                 whichDict = globalVariables;
             if (whichDict.ContainsKey(identifier))
             {
-                // was this: TODO - delete it after testing:
-                // whichDict.Remove(identifier);
-                
-                throw new KOSIdentiferClashException(identifier);
+                if (whichDict[identifier].Value is BoundVariable)
+                    throw new KOSIdentiferClashException(identifier);
+                else
+                    whichDict.Remove(identifier);
             }
             whichDict.Add(identifier, variable);
         }

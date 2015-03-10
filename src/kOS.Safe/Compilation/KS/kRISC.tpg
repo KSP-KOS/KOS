@@ -84,7 +84,7 @@ COMMENTLINE  -> @"//[^\n]*\n?";
 // Rules
 // ===================================================
 Start -> (instruction)* EOF;
-instruction_block -> instruction | CURLYOPEN instruction* CURLYCLOSE EOI?;
+instruction_block -> CURLYOPEN instruction* CURLYCLOSE EOI?;
 instruction -> set_stmt | 
                if_stmt |
                until_stmt |
@@ -117,21 +117,22 @@ instruction -> set_stmt |
                unset_stmt |
                batch_stmt |
                deploy_stmt |
+               instruction_block |
                identifier_led_stmt; // any statement that starts with an identifier.
 
 
 // ------------ statements --------------------
 
 set_stmt       -> SET varidentifier TO expr EOI;
-if_stmt        -> IF expr instruction_block (ELSE instruction_block)? EOI?;
-until_stmt     -> UNTIL expr instruction_block EOI?;
+if_stmt        -> IF expr instruction (ELSE instruction)? EOI?;
+until_stmt     -> UNTIL expr instruction EOI?;
 lock_stmt      -> LOCK IDENTIFIER TO expr EOI;
 unlock_stmt    -> UNLOCK (IDENTIFIER | ALL) EOI;
 print_stmt     -> PRINT expr (AT BRACKETOPEN expr COMMA expr BRACKETCLOSE)? EOI;
-on_stmt        -> ON varidentifier instruction_block EOI?;
+on_stmt        -> ON varidentifier instruction EOI?;
 toggle_stmt    -> TOGGLE varidentifier EOI;
 wait_stmt      -> WAIT UNTIL? expr EOI;
-when_stmt      -> WHEN expr THEN instruction_block EOI?;
+when_stmt      -> WHEN expr THEN instruction EOI?;
 onoff_stmt     -> varidentifier onoff_trailer EOI;
 onoff_trailer  -> (ON | OFF);
 stage_stmt     -> STAGE EOI;
@@ -152,7 +153,7 @@ compile_stmt   -> COMPILE expr (TO expr)? EOI;
 list_stmt      -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
 reboot_stmt    -> REBOOT EOI;
 shutdown_stmt  -> SHUTDOWN EOI;
-for_stmt       -> FOR IDENTIFIER IN varidentifier instruction_block EOI?;
+for_stmt       -> FOR IDENTIFIER IN varidentifier instruction EOI?;
 unset_stmt     -> UNSET (IDENTIFIER | ALL) EOI;
 batch_stmt     -> BATCH EOI;
 deploy_stmt    -> DEPLOY EOI;

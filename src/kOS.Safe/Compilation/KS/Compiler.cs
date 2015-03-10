@@ -72,7 +72,7 @@ namespace kOS.Safe.Compilation.KS
                 if (tree.Nodes.Count > 0)
                 {
                     PreProcess(tree);
-                    CompileProgram(tree, options.WrapImplicitBlockScope);
+                    CompileProgram(tree);
                 }
             }
             catch (KOSException kosException)
@@ -91,24 +91,12 @@ namespace kOS.Safe.Compilation.KS
             return part;
         }
 
-        private void CompileProgram(ParseTree tree, bool wrapInAScope)
+        private void CompileProgram(ParseTree tree)
         {
             currentCodeSection = part.MainCode;
-
-            if (wrapInAScope)
-            {
-                ++braceNestLevel;
-                AddOpcode(new OpcodePushScope());
-            }
             
             PushProgramParameters();
             VisitNode(tree.Nodes[0]);
-
-            if (wrapInAScope)
-            {
-                --braceNestLevel;
-                AddOpcode(new OpcodePopScope());
-            }
             
             if (addBranchDestination)
             {
