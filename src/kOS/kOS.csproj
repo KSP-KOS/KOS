@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{465EC87D-723D-4A6C-B116-9777AC641DE3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -37,10 +35,6 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\..\KSP_LIB\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="KSPAPIExtensions, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\KSP_LIB\KSPAPIExtensions.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,6 +43,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\KSP_LIB\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="KSPAPIExtensions">
+      <HintPath>..\..\..\KSP_LIB\KSPAPIExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -159,10 +156,13 @@
     <Compile Include="Suffixed\VesselTarget.cs" />
     <Compile Include="Utilities\VesselUtils.cs" />
     <Compile Include="Suffixed\OrbitableVelocity.cs" />
+    <Compile Include="AddOns\KAC\KACWrapper.cs" />
+    <Compile Include="Function\KAC.cs" />
+    <Compile Include="Suffixed\KACAlarmWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
-      <Project>{590ffda8-7b44-4bc3-a12a-5ffe2bb7d8fd}</Project>
+      <Project>{590FFDA8-7B44-4BC3-A12A-5FFE2BB7D8FD}</Project>
       <Name>kOS.Safe</Name>
     </ProjectReference>
   </ItemGroup>
@@ -185,4 +185,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="AddOns\KAC\" />
+  </ItemGroup>
 </Project>

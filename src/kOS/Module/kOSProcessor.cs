@@ -21,6 +21,7 @@ using kOS.Safe.Screen;
 using kOS.Suffixed;
 
 using KSPAPIExtensions;
+using kOS_KACWrapper;
 using FileInfo = kOS.Safe.Encapsulation.FileInfo;
 
 namespace kOS.Module
@@ -310,8 +311,38 @@ namespace kOS.Module
             }
             
             InitProcessorTracking();
+
+            if (!KACWrapper.APIReady)
+            {
+                InitKAC ();
+            }
+
             // move Cpu.Boot() to within the first Update() to prevent boot script errors from killing OnStart
             // shared.Cpu.Boot();
+        }
+
+        private void InitKAC()
+        {
+            KACWrapper.InitKACWrapper();
+            if (KACWrapper.APIReady)
+            {
+                //register event handler
+
+                KACWrapper.KAC.onAlarmStateChanged += KAC_onAlarmStateChanged;
+
+                SafeHouse.Logger.Log(string.Format ("Kerbal Alarm Clock found, Alarms Count {0}", KACWrapper.KAC.Alarms.Count));
+            }
+        }
+
+        void KAC_onAlarmStateChanged(KACWrapper.KACAPI.AlarmStateChangedEventArgs e)
+        {
+            //output whats happened
+            if (IsAlive())
+            {
+                //when you have multiple instances of kOSProcessor only first instance has this handler
+                shared.Screen.Print(string.Format("Caught event{0}->{1}", e.alarm.Name, e.eventType));
+            }
+            SafeHouse.Logger.Log(string.Format("{0}->{1}", e.alarm.Name, e.eventType));
         }
 
         private void InitProcessorTracking()
@@ -344,7 +375,10 @@ namespace kOS.Module
             // This is technically called any time ANY part is destroyed, so ignore it if it's not MY part:
             if (p != part)
                 return;
-            
+
+            //destroy the event hook
+            KACWrapper.KAC.onAlarmStateChanged -= KAC_onAlarmStateChanged;
+
             GetWindow().DetachAllTelnets();
             
             allMyInstances.RemoveAll(m => m==this);
