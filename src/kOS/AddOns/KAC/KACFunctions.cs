@@ -4,6 +4,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Function;
 using kOS.Safe.Utilities;
 using kOS.Safe.Persistence;
+using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
 using kOS.AddOns.KAC;
@@ -54,8 +55,8 @@ namespace kOS.Function
                 }
                 else
                 {
-                    //failed creating alarm
                     shared.Cpu.PushStack("");
+                    SafeHouse.Logger.Log(string.Format("Failed creating KAC Alarm, UT={0}, Name={1}, type = {2}", alarmUT.ToString(), alarmName, alarmType));
                 }
 
             }
@@ -63,6 +64,7 @@ namespace kOS.Function
             {
                 //KAC integration not present.
                 shared.Cpu.PushStack("");
+                throw new KOSUnavailableAddonException("addAlarm()", "Kerbal Alarm Clock"); 
             }
         }
     }
@@ -86,8 +88,14 @@ namespace kOS.Function
                     if (alarmTypes == "All" || a.AlarmTime.ToString() == alarmTypes)
                         list.Add (new KACAlarmWrapper(a));
                 }
+                shared.Cpu.PushStack(list);
             }
-            shared.Cpu.PushStack(list);
+            else
+            {
+                shared.Cpu.PushStack(list);
+                throw new KOSUnavailableAddonException("listAlarms()", "Kerbal Alarm Clock");
+            }
+            
         }
     }
     
@@ -103,10 +111,13 @@ namespace kOS.Function
             {
                 //Delete the Alarm using its ID and get the result
                 result = KACWrapper.KAC.DeleteAlarm(alarmID);
-
+                shared.Cpu.PushStack(result);
             }
-
-            shared.Cpu.PushStack(result);
+            else
+            {
+                shared.Cpu.PushStack(result);
+                throw new KOSUnavailableAddonException("deleteAlarm()", "Kerbal Alarm Clock");
+            }
         }
     }
 }

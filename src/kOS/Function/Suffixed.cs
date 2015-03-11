@@ -9,17 +9,6 @@ using FinePrint;
 
 namespace kOS.Function
 {
-
-    [Function("addons")]
-    public class FunctionAddons : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            var addons = new AddonList();
-            shared.Cpu.PushStack(addons);
-        }
-    }
-
     [Function("node")]
     public class FunctionNode : FunctionBase
     {
