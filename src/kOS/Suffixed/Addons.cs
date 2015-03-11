@@ -15,6 +15,8 @@ namespace kOS.Suffixed
             KACAddon = new Addon ("KAC");
             RTAddon = new Addon ("RT");
             AGXAddon = new Addon ("AGX");
+
+            InitializeSuffixes();
         }
 
         private void InitializeSuffixes()
@@ -37,6 +39,8 @@ namespace kOS.Suffixed
         public Addon(string name)
         {
             addonName = name;
+
+            InitializeSuffixes();
         }
         private void InitializeSuffixes()
         {
@@ -44,59 +48,59 @@ namespace kOS.Suffixed
 
             if (addonName == "RT")
             {
-                AddSuffix("GETDELAY", new OneArgsSuffix<double, Vessel>(RTGetDelay, "Get current Shortest Signal Delay for Vessel"));
+                AddSuffix("GETDELAY", new OneArgsSuffix<double, VesselTarget>(RTGetDelay, "Get current Shortest Signal Delay for Vessel"));
 
-                AddSuffix("GETKSCDELAY", new OneArgsSuffix<double, Vessel>(RTGetKSCDelay, "Get current KSC Signal Delay"));
+                AddSuffix("GETKSCDELAY", new OneArgsSuffix<double, VesselTarget>(RTGetKSCDelay, "Get current KSC Signal Delay"));
 
-                AddSuffix("HASCONNECTION", new OneArgsSuffix<bool, Vessel>(RTHasConnection, "True if ship has any connection"));
+                AddSuffix("HASCONNECTION", new OneArgsSuffix<bool, VesselTarget>(RTHasConnection, "True if ship has any connection"));
 
-                AddSuffix("HASCONNECTION", new OneArgsSuffix<bool, Vessel>(RTHasConnection, "True if ship has connection to KSC"));
+                AddSuffix("HASCONNECTION", new OneArgsSuffix<bool, VesselTarget>(RTHasConnection, "True if ship has connection to KSC"));
             }
         }
 
-        private static double RTGetDelay(Vessel tgtVessel)
+        private static double RTGetDelay(VesselTarget tgtVessel)
         {
             double waitTotal = 0;
 
-            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.id) && tgtVessel.GetVesselCrew().Count == 0)
+            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id) && tgtVessel.Vessel.GetVesselCrew().Count == 0)
             {
-                waitTotal = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.GetShortestSignalDelay(tgtVessel.id);
+                waitTotal = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.GetShortestSignalDelay(tgtVessel.Vessel.id);
             }
 
             return waitTotal;
         }
 
-        private static double RTGetKSCDelay(Vessel tgtVessel)
+        private static double RTGetKSCDelay(VesselTarget tgtVessel)
         {
             double waitTotal = 0;
 
-            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.id) && tgtVessel.GetVesselCrew().Count == 0)
+            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id) && tgtVessel.Vessel.GetVesselCrew().Count == 0)
             {
-                waitTotal = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.GetSignalDelayToKSC(tgtVessel.id);
+                waitTotal = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.GetSignalDelayToKSC(tgtVessel.Vessel.id);
             }
 
             return waitTotal;
         }
 
-        private static bool RTHasConnection(Vessel tgtVessel)
+        private static bool RTHasConnection(VesselTarget tgtVessel)
         {
             bool result = false;
 
-            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.id) && tgtVessel.GetVesselCrew().Count == 0)
+            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
             {
-                result = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.HasAnyConnection(tgtVessel.id);
+                result = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.HasAnyConnection(tgtVessel.Vessel.id);
             }
 
             return result;
         }
 
-        private static bool RTHasKSCConnection(Vessel tgtVessel)
+        private static bool RTHasKSCConnection(VesselTarget tgtVessel)
         {
             bool result = false;
 
-            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.id) && tgtVessel.GetVesselCrew().Count == 0)
+            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
             {
-                result = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.HasConnectionToKSC(tgtVessel.id);
+                result = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.HasConnectionToKSC(tgtVessel.Vessel.id);
             }
 
             return result;
