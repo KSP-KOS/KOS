@@ -6,7 +6,7 @@ using kOS.Suffixed;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-using kOS_KACWrapper;
+using kOS.KAC;
 
 namespace kOS.Module
 {
@@ -26,8 +26,6 @@ namespace kOS.Module
 
             CheckForLegacyArchive();
 
-            //try to init here, but most likely will fail due to load order
-            InitKAC();
         }
 
         private void BuildEnvironment()
@@ -70,16 +68,6 @@ namespace kOS.Module
                 true,
                 HighLogic.Skin
                 );
-        }
-
-        private void InitKAC()
-        {
-            KACWrapper.InitKACWrapper();
-            if (KACWrapper.APIReady)
-            {
-                //All good to go
-                Debug.Log (string.Format ("{0} Kerbal Alarm CLock found, Alarms Count {1}", KSPLogger.LOGGER_PREFIX, KACWrapper.KAC.Alarms.Count));
-            }
         }
 
         private void MigrateScripts()

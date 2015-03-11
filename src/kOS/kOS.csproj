@@ -157,8 +157,9 @@
     <Compile Include="Utilities\VesselUtils.cs" />
     <Compile Include="Suffixed\OrbitableVelocity.cs" />
     <Compile Include="AddOns\KAC\KACWrapper.cs" />
-    <Compile Include="Function\KAC.cs" />
-    <Compile Include="Suffixed\KACAlarmWrapper.cs" />
+    <Compile Include="AddOns\KAC\KACAlarmWrapper.cs" />
+    <Compile Include="AddOns\KAC\KACFunctions.cs" />
+    <Compile Include="AddOns\KAC\KACEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

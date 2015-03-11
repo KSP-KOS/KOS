@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace kOS_KACWrapper
+namespace kOS.KAC
 {
 
     ///////////////////////////////////////////////////////////////////////////////////////////

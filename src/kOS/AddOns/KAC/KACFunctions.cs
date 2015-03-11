@@ -6,7 +6,7 @@ using kOS.Safe.Utilities;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Utilities;
-using kOS_KACWrapper;
+using kOS.KAC;
 
 namespace kOS.Function
 {
@@ -18,12 +18,25 @@ namespace kOS.Function
             string alarmNotes = shared.Cpu.PopValue().ToString();
             string alarmName = shared.Cpu.PopValue().ToString();
             double alarmUT = GetDouble(shared.Cpu.PopValue());
+            string alarmType = shared.Cpu.PopValue().ToString(); //alarm type is read-only, you cannot change it afterwards
 
             if (KACWrapper.APIReady)
             {
-                String aID = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Raw, alarmName, alarmUT);
+                KACWrapper.KACAPI.AlarmTypeEnum newAlarmType;
+                try
+                {
+                    newAlarmType = (KACWrapper.KACAPI.AlarmTypeEnum) Enum.Parse(typeof(KACWrapper.KACAPI.AlarmTypeEnum), alarmType);
+                }
+                catch (ArgumentException)
+                {
+                    SafeHouse.Logger.LogWarning (string.Format ("Failed parsing {0} into KACAPI.AlarmTypeEnum", alarmType));
+                    //failed parsing alarmType, defaulting to Raw
+                    newAlarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
+                }
 
-                SafeHouse.Logger.Log (string.Format ("Trying to create KAC Alarm, UT={0}, Name={1}", alarmUT.ToString (), alarmName));
+                String aID = KACWrapper.KAC.CreateAlarm(newAlarmType, alarmName, alarmUT);
+
+                SafeHouse.Logger.Log (string.Format ("Trying to create KAC Alarm, UT={0}, Name={1}, type = {2}", alarmUT.ToString (), alarmName, alarmType));
 
                 if (aID !="") 
                 {
@@ -35,13 +48,13 @@ namespace kOS.Function
                     a.AlarmAction = KACWrapper.KACAPI.AlarmActionEnum.PauseGame;
                     a.VesselID = shared.Vessel.id.ToString();
 
-                    KACAlarmWrapper result = new KACAlarmWrapper (a);
+                    var result = new KACAlarmWrapper (a);
 
                     shared.Cpu.PushStack(result);
                 }
                 else
                 {
-                    //failed creating node
+                    //failed creating alarm
                     shared.Cpu.PushStack("");
                 }
 
@@ -70,7 +83,8 @@ namespace kOS.Function
 
                 foreach (KACWrapper.KACAPI.KACAlarm a in alarms) 
                 {
-                    list.Add (new KACAlarmWrapper(a));
+                    if (alarmTypes == "All" || a.AlarmTime.ToString() == alarmTypes)
+                        list.Add (new KACAlarmWrapper(a));
                 }
             }
             shared.Cpu.PushStack(list);
