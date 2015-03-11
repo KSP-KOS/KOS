@@ -29,8 +29,11 @@ namespace kOS
 
         public void OnDestroy()
         {
-            //destroy the event hook
-            KACWrapper.KAC.onAlarmStateChanged -= KAC_onAlarmStateChanged;
+            if (KACWrapper.APIReady)
+            {
+                //destroy the event hook
+                KACWrapper.KAC.onAlarmStateChanged -= KAC_onAlarmStateChanged;
+            }
         }
 
         void KAC_onAlarmStateChanged(KACWrapper.KACAPI.AlarmStateChangedEventArgs e)
