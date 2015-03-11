@@ -6,7 +6,7 @@ using kOS.Safe.Utilities;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Utilities;
-using kOS.KAC;
+using kOS.AddOns.KAC;
 
 namespace kOS.Function
 {

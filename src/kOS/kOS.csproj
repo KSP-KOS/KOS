@@ -160,6 +160,7 @@
     <Compile Include="AddOns\KAC\KACAlarmWrapper.cs" />
     <Compile Include="AddOns\KAC\KACFunctions.cs" />
     <Compile Include="AddOns\KAC\KACEventHandler.cs" />
+    <Compile Include="Suffixed\Addons.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

@@ -6,8 +6,6 @@ using kOS.Suffixed;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-using kOS.KAC;
-
 namespace kOS.Module
 {
     [KSPAddon(KSPAddon.Startup.Instantly, true)]

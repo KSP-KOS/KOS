@@ -6,7 +6,7 @@ using kOS.Suffixed;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-using kOS.KAC;
+using kOS.AddOns.KAC;
 
 namespace kOS
 {
