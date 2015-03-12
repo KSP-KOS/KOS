@@ -1,12 +1,12 @@
-﻿using System;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Encapsulation;
+using System;
 
 namespace kOS.Suffixed
 {
     public class Addon : Structure
     {
-        private string addonName = "";
+        private readonly string addonName;
 
         public Addon(string name)
         {
@@ -14,6 +14,7 @@ namespace kOS.Suffixed
 
             InitializeSuffixes();
         }
+
         private void InitializeSuffixes()
         {
             AddSuffix("AVAILABLE", new Suffix<Boolean>(Available));
@@ -34,9 +35,9 @@ namespace kOS.Suffixed
         {
             double waitTotal = 0;
 
-            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id) && tgtVessel.Vessel.GetVesselCrew().Count == 0)
+            if (AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id) && tgtVessel.Vessel.GetVesselCrew().Count == 0)
             {
-                waitTotal = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.GetShortestSignalDelay(tgtVessel.Vessel.id);
+                waitTotal = AddOns.RemoteTech.RemoteTechHook.Instance.GetShortestSignalDelay(tgtVessel.Vessel.id);
             }
 
             return waitTotal;
@@ -46,9 +47,9 @@ namespace kOS.Suffixed
         {
             double waitTotal = 0;
 
-            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id) && tgtVessel.Vessel.GetVesselCrew().Count == 0)
+            if (AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id) && tgtVessel.Vessel.GetVesselCrew().Count == 0)
             {
-                waitTotal = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.GetSignalDelayToKSC(tgtVessel.Vessel.id);
+                waitTotal = AddOns.RemoteTech.RemoteTechHook.Instance.GetSignalDelayToKSC(tgtVessel.Vessel.id);
             }
 
             return waitTotal;
@@ -58,9 +59,9 @@ namespace kOS.Suffixed
         {
             bool result = false;
 
-            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
+            if (AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
             {
-                result = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.HasAnyConnection(tgtVessel.Vessel.id);
+                result = AddOns.RemoteTech.RemoteTechHook.Instance.HasAnyConnection(tgtVessel.Vessel.id);
             }
 
             return result;
@@ -70,9 +71,9 @@ namespace kOS.Suffixed
         {
             bool result = false;
 
-            if (kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
+            if (AddOns.RemoteTech.RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
             {
-                result = kOS.AddOns.RemoteTech.RemoteTechHook.Instance.HasConnectionToKSC(tgtVessel.Vessel.id);
+                result = AddOns.RemoteTech.RemoteTechHook.Instance.HasConnectionToKSC(tgtVessel.Vessel.id);
             }
 
             return result;
@@ -82,17 +83,17 @@ namespace kOS.Suffixed
         {
             if (addonName == "AGX")
             {
-                return kOS.AddOns.ActionGroupsExtended.ActionGroupsExtendedAPI.Instance.Installed ();
+                return AddOns.ActionGroupsExtended.ActionGroupsExtendedAPI.Instance.Installed();
             }
 
             if (addonName == "KAC")
             {
-                return kOS.AddOns.KerbalAlarmClock.KACWrapper.APIReady;
+                return AddOns.KerbalAlarmClock.KACWrapper.APIReady;
             }
 
             if (addonName == "RT")
             {
-                return kOS.AddOns.RemoteTech.RemoteTechHook.IsAvailable ();
+                return AddOns.RemoteTech.RemoteTechHook.IsAvailable();
             }
             return false;
         }

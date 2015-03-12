@@ -1,14 +1,7 @@
-﻿using System;
-using System.IO;
-using kOS.Safe.Persistence;
-using kOS.Safe.Utilities;
-using kOS.Suffixed;
-using UnityEngine;
+﻿using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-using kOS.AddOns.KerbalAlarmClock;
-
-namespace kOS
+namespace kOS.AddOns.KerbalAlarmClock
 {
     [KSPAddon(KSPAddon.Startup.EveryScene, false)]
     public class KACEventHandler : MonoBehaviour
@@ -22,9 +15,8 @@ namespace kOS
                 //register Event Handler
                 KACWrapper.KAC.onAlarmStateChanged += KAC_onAlarmStateChanged;
 
-                Debug.Log (string.Format ("{0} Kerbal Alarm Clock found, Alarms Count {1}", KSPLogger.LOGGER_PREFIX, KACWrapper.KAC.Alarms.Count));
+                Debug.Log(string.Format("{0} Kerbal Alarm Clock found, Alarms Count {1}", KSPLogger.LOGGER_PREFIX, KACWrapper.KAC.Alarms.Count));
             }
-
         }
 
         public void OnDestroy()
@@ -36,11 +28,10 @@ namespace kOS
             }
         }
 
-        void KAC_onAlarmStateChanged(KACWrapper.KACAPI.AlarmStateChangedEventArgs e)
+        private void KAC_onAlarmStateChanged(KACWrapper.KACAPI.AlarmStateChangedEventArgs e)
         {
             //output whats happened
-            Debug.Log (string.Format("{0}, caugth Event from alarm {1}, event type {2}", KSPLogger.LOGGER_PREFIX, e.alarm.Name, e.eventType));
+            Debug.Log(string.Format("{0}, caught Event from alarm {1}, event type {2}", KSPLogger.LOGGER_PREFIX, e.alarm.Name, e.eventType));
         }
-
     }
 }

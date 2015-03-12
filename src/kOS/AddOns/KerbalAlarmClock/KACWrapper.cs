@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace kOS.AddOns.KerbalAlarmClock
 {
 
     ///////////////////////////////////////////////////////////////////////////////////////////
-    // BELOW HERE SHOULD NOT BE EDITED - this links to the loaded KAC module without requiring a Hard Dependancy
+    // BELOW HERE SHOULD NOT BE EDITED - this links to the loaded KAC module without requiring a Hard Dependency
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     /// <summary>
