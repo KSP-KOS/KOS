@@ -13,8 +13,8 @@ Access structure RTAddon via `ADDONS:RT`.
      Suffix                                Type                      Description
     ===================================== ========================= =============
      :attr:`AVAILABLE`                     bool(readonly)            True if RT is installed and RT integration enabled.
-     :meth:`GETDELAY(vessel)`              double                    Get shortest possible delay to given :struct:`Vessel`
-     :meth:`GETKSCDELAY(vessel)`           double                    Get delay from KSC to given :struct:`Vessel`
+     :meth:`DELAY(vessel)`                 double                    Get shortest possible delay to given :struct:`Vessel`
+     :meth:`KSCDELAY(vessel)`              double                    Get delay from KSC to given :struct:`Vessel`
      :meth:`HASCONNECTION(vessel)`         bool                      True if given :struct:`Vessel` has any connection
      :meth:`HASKSCCONNECTION(vessel)`      bool                      True if given :struct:`Vessel` has connection to KSC
     ===================================== ========================= =============
@@ -28,14 +28,14 @@ Access structure RTAddon via `ADDONS:RT`.
 
     True if RT is installed and RT integration enabled.
 
-.. method:: RTAddon:GETDELAY(vessel)
+.. method:: RTAddon:DELAY(vessel)
 
     :parameter vessel: :struct:`Vessel`
     :return: (double) seconds 
     
     Returns shortest possible delay for `vessel` (Will be less than KSC delay if you have a local command post).
 
-.. method:: RTAddon:GETKSCDELAY(vessel)
+.. method:: RTAddon:KSCDELAY(vessel)
 
     :parameter vessel: :struct:`Vessel`
     :return: (double) seconds 
