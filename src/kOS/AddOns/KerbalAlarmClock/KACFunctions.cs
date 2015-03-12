@@ -1,15 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using kOS.Function;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Safe.Utilities;
-using kOS.Safe.Persistence;
-using kOS.Safe.Exceptions;
-using kOS.Suffixed;
-using kOS.Utilities;
-using kOS.AddOns.KerbalAlarmClock;
+using System;
+using System.Linq;
 
-namespace kOS.Function
+namespace kOS.AddOns.KerbalAlarmClock
 {
     [Function("addAlarm")]
     public class FunctionAddAlarm : FunctionBase
@@ -26,45 +23,44 @@ namespace kOS.Function
                 KACWrapper.KACAPI.AlarmTypeEnum newAlarmType;
                 try
                 {
-                    newAlarmType = (KACWrapper.KACAPI.AlarmTypeEnum) Enum.Parse(typeof(KACWrapper.KACAPI.AlarmTypeEnum), alarmType);
+                    newAlarmType = (KACWrapper.KACAPI.AlarmTypeEnum)Enum.Parse(typeof(KACWrapper.KACAPI.AlarmTypeEnum), alarmType);
                 }
                 catch (ArgumentException)
                 {
-                    SafeHouse.Logger.LogWarning (string.Format ("Failed parsing {0} into KACAPI.AlarmTypeEnum", alarmType));
+                    SafeHouse.Logger.LogWarning(string.Format("Failed parsing {0} into KACAPI.AlarmTypeEnum", alarmType));
                     //failed parsing alarmType, defaulting to Raw
                     newAlarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
                 }
 
                 String aID = KACWrapper.KAC.CreateAlarm(newAlarmType, alarmName, alarmUT);
 
-                SafeHouse.Logger.Log (string.Format ("Trying to create KAC Alarm, UT={0}, Name={1}, type = {2}", alarmUT.ToString (), alarmName, alarmType));
+                SafeHouse.Logger.Log(string.Format("Trying to create KAC Alarm, UT={0}, Name={1}, Type= {2}", alarmUT, alarmName, alarmType));
 
-                if (aID !="") 
+                if (!string.IsNullOrEmpty(aID))
                 {
                     //if the alarm was made get the object so we can update it
-                    KACWrapper.KACAPI.KACAlarm a = KACWrapper.KAC.Alarms.First(z=>z.ID==aID);
+                    KACWrapper.KACAPI.KACAlarm a = KACWrapper.KAC.Alarms.First(z => z.ID == aID);
 
                     //Now update some of the other properties
                     a.Notes = alarmNotes;
                     a.AlarmAction = KACWrapper.KACAPI.AlarmActionEnum.PauseGame;
                     a.VesselID = shared.Vessel.id.ToString();
 
-                    var result = new KACAlarmWrapper (a, shared);
+                    var result = new KACAlarmWrapper(a, shared);
 
                     shared.Cpu.PushStack(result);
                 }
                 else
                 {
-                    shared.Cpu.PushStack("");
-                    SafeHouse.Logger.Log(string.Format("Failed creating KAC Alarm, UT={0}, Name={1}, type = {2}", alarmUT.ToString(), alarmName, alarmType));
+                    shared.Cpu.PushStack(string.Empty);
+                    SafeHouse.Logger.Log(string.Format("Failed creating KAC Alarm, UT={0}, Name={1}, Type= {2}", alarmUT, alarmName, alarmType));
                 }
-
             }
             else
             {
                 //KAC integration not present.
-                shared.Cpu.PushStack("");
-                throw new KOSUnavailableAddonException("addAlarm()", "Kerbal Alarm Clock"); 
+                shared.Cpu.PushStack(string.Empty);
+                throw new KOSUnavailableAddonException("addAlarm()", "Kerbal Alarm Clock");
             }
         }
     }
@@ -78,27 +74,30 @@ namespace kOS.Function
 
             string alarmTypes = shared.Cpu.PopValue().ToString();
 
-            if (KACWrapper.APIReady) 
-            {
-                //Get the list of alarms from the KAC Object
-                KACWrapper.KACAPI.KACAlarmList alarms = KACWrapper.KAC.Alarms;
-
-                foreach (KACWrapper.KACAPI.KACAlarm a in alarms) 
-                {
-                    if (alarmTypes.ToUpperInvariant() == "ALL" || a.AlarmTime.ToString() == alarmTypes)
-                        list.Add (new KACAlarmWrapper(a, shared));
-                }
-                shared.Cpu.PushStack(list);
-            }
-            else
+            if (!KACWrapper.APIReady)
             {
                 shared.Cpu.PushStack(list);
                 throw new KOSUnavailableAddonException("listAlarms()", "Kerbal Alarm Clock");
             }
-            
+
+            //Get the list of alarms from the KAC Object
+            KACWrapper.KACAPI.KACAlarmList alarms = KACWrapper.KAC.Alarms;
+
+            foreach (KACWrapper.KACAPI.KACAlarm alarm in alarms)
+            {
+                // if its not my alarm or a general alarm, ignore it
+                if (!string.IsNullOrEmpty(alarm.VesselID) && alarm.VesselID != shared.Vessel.id.ToString())
+                {
+                    continue;
+                }
+                
+                if (alarmTypes.ToUpperInvariant() == "ALL" || alarm.AlarmTime.ToString() == alarmTypes)
+                    list.Add(new KACAlarmWrapper(alarm, shared));
+            }
+            shared.Cpu.PushStack(list);
         }
     }
-    
+
     [Function("deleteAlarm")]
     public class FunctionDeleteAlarm : FunctionBase
     {
@@ -108,9 +107,7 @@ namespace kOS.Function
 
             if (KACWrapper.APIReady)
             {
-                Boolean result = false;
-                //Delete the Alarm using its ID and get the result
-                result = KACWrapper.KAC.DeleteAlarm(alarmID);
+                bool result = KACWrapper.KAC.DeleteAlarm(alarmID);
                 shared.Cpu.PushStack(result);
             }
             else

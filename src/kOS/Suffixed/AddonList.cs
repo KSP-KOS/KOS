@@ -1,20 +1,19 @@
-﻿using System;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
     public class AddonList : Structure
     {
-        private Addon kacAddon;
-        private Addon rtAddon;
-        private Addon agxAddon;
+        private readonly Addon kacAddon;
+        private readonly Addon rtAddon;
+        private readonly Addon agxAddon;
 
         public AddonList()
         {
-            kacAddon = new Addon ("KAC");
-            rtAddon = new Addon ("RT");
-            agxAddon = new Addon ("AGX");
+            kacAddon = new Addon("KAC");
+            rtAddon = new Addon("RT");
+            agxAddon = new Addon("AGX");
 
             InitializeSuffixes();
         }
