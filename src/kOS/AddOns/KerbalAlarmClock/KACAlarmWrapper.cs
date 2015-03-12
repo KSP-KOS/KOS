@@ -24,34 +24,36 @@ namespace kOS.Suffixed
             this.shared = shared;
             InitializeSuffixes();
         }
+
         private void InitializeSuffixes()
         {
             AddSuffix("ID", new Suffix<string>(() => alarm.ID));
             AddSuffix("NAME", new SetSuffix<string>(() => alarm.Name, value => alarm.Name = value));
 
-            AddSuffix("VESSELID", new SetSuffix<string>(() => alarm.VesselID, value => alarm.VesselID = value));
-            AddSuffix("VESSEL", new SetSuffix<VesselTarget>(() => getVesselByID(alarm.VesselID), value => alarm.VesselID = value.Vessel.id.ToString()));
+            //AddSuffix("VESSELID", new SetSuffix<string>(() => alarm.VesselID, value => alarm.VesselID = value));
+            AddSuffix("VESSEL", new SetSuffix<VesselTarget> (() => getVesselByID (alarm.VesselID), setVesselID));
 
             AddSuffix("NOTES", new SetSuffix<string>(() => alarm.Name, value => alarm.Name = value));
 
-            AddSuffix("ALARMACTION", new SetSuffix<string> (alarm.AlarmAction.ToString, SetAlarmAction));
+            AddSuffix("ACTION", new SetSuffix<string> (alarm.AlarmAction.ToString, SetAlarmAction));
 
-            AddSuffix("ALARMTYPE", new Suffix<string> (alarm.AlarmType.ToString));
+            AddSuffix("TYPE", new Suffix<string> (alarm.AlarmType.ToString));
 
             AddSuffix("REMAINING", new Suffix<double>(GetRemaining));
 
-            AddSuffix("ALARMTIME", new SetSuffix<double>(() => alarm.AlarmTime, value => alarm.AlarmTime = value));
-            AddSuffix("ALARMMARGIN", new SetSuffix<double>(() => alarm.AlarmMargin, value => alarm.AlarmMargin = value));
+            AddSuffix("TIME", new SetSuffix<double>(() => alarm.AlarmTime, value => alarm.AlarmTime = value));
+            AddSuffix("MARGIN", new SetSuffix<double>(() => alarm.AlarmMargin, value => alarm.AlarmMargin = value));
 
-            AddSuffix("REPEATALARM", new SetSuffix<Boolean>(() => alarm.RepeatAlarm, value => alarm.RepeatAlarm = value));
+            AddSuffix("REPEAT", new SetSuffix<Boolean>(() => alarm.RepeatAlarm, value => alarm.RepeatAlarm = value));
 
-            AddSuffix("REPEATALARMPERIOD", new SetSuffix<double>(() => alarm.RepeatAlarmPeriod, value => alarm.RepeatAlarmPeriod = value));
+            AddSuffix("REPEATPERIOD", new SetSuffix<double>(() => alarm.RepeatAlarmPeriod, value => alarm.RepeatAlarmPeriod = value));
 
-            AddSuffix("XferOriginBodyName", new SetSuffix<string>(() => alarm.XferOriginBodyName, value => alarm.XferOriginBodyName = value));
-            AddSuffix("XferTargetBodyName", new SetSuffix<string>(() => alarm.XferTargetBodyName, value => alarm.XferTargetBodyName = value));
+            AddSuffix("ORIGINBODY", new SetSuffix<string>(() => alarm.XferOriginBodyName, value => alarm.XferOriginBodyName = value));
+            AddSuffix("TARGETBODY", new SetSuffix<string>(() => alarm.XferTargetBodyName, value => alarm.XferTargetBodyName = value));
 
 
         }
+
         private VesselTarget getVesselByID (string vesselID)
         {
             if (string.IsNullOrEmpty (vesselID))
@@ -60,6 +62,11 @@ namespace kOS.Suffixed
             var g = new Guid(vesselID);
             Vessel v = FlightGlobals.Vessels.First (z => z.id == g);
             return v != null ? new VesselTarget (v, shared) : null;
+        }
+
+        private void setVesselID (VesselTarget v)
+        {
+            alarm.VesselID = v.Vessel == null ? "" : v.Vessel.id.ToString ();
         }
 
         private double GetRemaining()

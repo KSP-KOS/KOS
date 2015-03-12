@@ -4,37 +4,9 @@ using kOS.Safe.Encapsulation;
 
 namespace kOS.Suffixed
 {
-    public class AddonList : Structure
-    {
-        private Addon KACAddon;
-        private Addon RTAddon;
-        private Addon AGXAddon;
-
-        public AddonList()
-        {
-            KACAddon = new Addon ("KAC");
-            RTAddon = new Addon ("RT");
-            AGXAddon = new Addon ("AGX");
-
-            InitializeSuffixes();
-        }
-
-        private void InitializeSuffixes()
-        {
-            AddSuffix("KAC", new Suffix<Addon>(() => KACAddon));
-            AddSuffix("RT", new Suffix<Addon>(() => RTAddon));
-            AddSuffix("AGX", new Suffix<Addon>(() => AGXAddon));
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0} AddonList", base.ToString());
-        }
-    }
-
     public class Addon : Structure
     {
-        public string addonName = "";
+        private string addonName = "";
 
         public Addon(string name)
         {

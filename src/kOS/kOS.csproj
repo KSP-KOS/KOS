@@ -156,11 +156,12 @@
     <Compile Include="Suffixed\VesselTarget.cs" />
     <Compile Include="Utilities\VesselUtils.cs" />
     <Compile Include="Suffixed\OrbitableVelocity.cs" />
-    <Compile Include="Suffixed\Addons.cs" />
     <Compile Include="AddOns\KerbalAlarmClock\KACWrapper.cs" />
     <Compile Include="AddOns\KerbalAlarmClock\KACAlarmWrapper.cs" />
     <Compile Include="AddOns\KerbalAlarmClock\KACFunctions.cs" />
     <Compile Include="AddOns\KerbalAlarmClock\KACEventHandler.cs" />
+    <Compile Include="Suffixed\AddonList.cs" />
+    <Compile Include="Suffixed\Addon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

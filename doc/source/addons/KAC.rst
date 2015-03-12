@@ -20,16 +20,15 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
     ===================================== ========================= =============
      :attr:`ID`                            string (readonly)         Unique identifier
      :attr:`NAME`                          string                    Name of the alarm
-     :attr:`ALARMACTION`                   string                    What should the Alarm Clock do when the alarm fires
-     :attr:`ALARMTYPE`                     string (readonly)         What type of Alarm is this - affects icon displayed and some calc options
+     :attr:`ACTION`                        string                    What should the Alarm Clock do when the alarm fires
+     :attr:`TYPE`                          string (readonly)         What type of Alarm is this - affects icon displayed and some calc options
      :attr:`NOTES`                         string                    Long description of the alarm (optional)
      :attr:`REMAINING`                     scalar (s)                Time remaining until alarm is triggered
-     :attr:`REPEATALARM`                   bool                      Should the alarm be repeated once it fires
-     :attr:`REPEATALARMPERIOD`             scalar (s)                How long after the alarm fires should the next alarm be set up
-     :attr:`VESSELID`                      string                    Unique Identifier of the Vessel that the alarm is attached to
+     :attr:`REPEAT`                        bool                      Should the alarm be repeated once it fires
+     :attr:`REPEATPERIOD`                  scalar (s)                How long after the alarm fires should the next alarm be set up
      :attr:`VESSEL`                        :struct: `Vessel`         Vessel structure of that the alarm is attached to, use this to set VESSELID
-     :attr:`XFERORIGINBODYNAME`            string                    Name of the body the vessel is departing from
-     :attr:`XFERTARGETBODYNAME`            string                    Name of the body the vessel is arriving at
+     :attr:`ORIGINBODY`                    string                    Name of the body the vessel is departing from
+     :attr:`TARGETBODY`                    string                    Name of the body the vessel is arriving at
     ===================================== ========================= =============
 
 .. attribute:: KACAlarm:ID
@@ -46,7 +45,7 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
 
     Name of the alarm. Displayed in main KAC window.
 
-.. attribute:: KACAlarm:ALARMACTION
+.. attribute:: KACAlarm:ACTION
 
     :type: string
     :access: Get/Set
@@ -60,7 +59,7 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
 
     If set incorrectly will log a warning in Debug log and revert to previous or default value.
 
-.. attribute:: KACAlarm:ALARMTYPE
+.. attribute:: KACAlarm:TYPE
 
     :type: string
     :access: Get only
@@ -103,26 +102,19 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
 
     Time remaining until alarm is triggered.
 
-.. attribute:: KACAlarm:REPEATALARM
+.. attribute:: KACAlarm:REPEAT
 
 	:type: bool
 	:access: Get/Set
 
 	Should the alarm be repeated once it fires.
 
-.. attribute:: KACAlarm:REPEATALARMPERIOD
+.. attribute:: KACAlarm:REPEATPERIOD
 
 	:type: double
 	:access: Get/Set
 
 	How long after the alarm fires should the next alarm be set up.
-
-.. attribute:: KACAlarm:VESSELID
-
-    :type: string
-    :access: Get/Set
-
-    Unique Identifier of the Vessel that the alarm is attached to. Should only be used to unattach Alarm from any Vessel by setting to ampty string.
 
 .. attribute:: KACAlarm:VESSEL
 
@@ -132,14 +124,14 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
     :ref:`Vessel <vessel>` structure of that the alarm is attached to, use this to set VESSELID, instead of setting it directly, unless you want to unattach the Alarm from any Vessel.
 
 
-.. attribute:: KACAlarm:XFERORIGINBODYNAME
+.. attribute:: KACAlarm:ORIGINBODY
 
     :type: string
     :access: Get/Set
 
     Name of the body the vessel is departing from.
 
-.. attribute:: KACAlarm:XFERTARGETBODYNAME
+.. attribute:: KACAlarm:TARGETBODY
 
     :type: string
     :access: Get/Set
@@ -149,7 +141,7 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
 
 
 Available Functions
-===================
+-------------------
 
 ============================================= ===================================================
  Function                                      Description
@@ -184,7 +176,7 @@ Available Functions
     Deletes alarm with ID equal to alarmID. Returns True if successful, false otherwise::
 
     	set na to addAlarm("Raw",time:seconds+300, "Test", "Notes").
-        if (DELETEALARM(na:ID))
-        {
-        	print "Alarm Deleted".
-        }
+      if (DELETEALARM(na:ID))
+      {
+          print "Alarm Deleted".
+      }
