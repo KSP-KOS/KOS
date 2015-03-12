@@ -31,9 +31,6 @@ namespace kOS.AddOns.KerbalAlarmClock
             AddSuffix("ID", new Suffix<string>(() => alarm.ID));
             AddSuffix("NAME", new SetSuffix<string>(() => alarm.Name, value => alarm.Name = value));
 
-            //AddSuffix("VESSELID", new SetSuffix<string>(() => alarm.VesselID, value => alarm.VesselID = value));
-            AddSuffix("VESSEL", new SetSuffix<VesselTarget>(() => GetVesselByID(alarm.VesselID), SetVesselID));
-
             AddSuffix("NOTES", new SetSuffix<string>(() => alarm.Name, value => alarm.Name = value));
 
             AddSuffix("ACTION", new SetSuffix<string>(alarm.AlarmAction.ToString, SetAlarmAction));
