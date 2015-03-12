@@ -26,7 +26,6 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
      :attr:`REMAINING`                     scalar (s)                Time remaining until alarm is triggered
      :attr:`REPEAT`                        bool                      Should the alarm be repeated once it fires
      :attr:`REPEATPERIOD`                  scalar (s)                How long after the alarm fires should the next alarm be set up
-     :attr:`VESSEL`                        :struct: `Vessel`         Vessel structure of that the alarm is attached to, use this to set VESSELID
      :attr:`ORIGINBODY`                    string                    Name of the body the vessel is departing from
      :attr:`TARGETBODY`                    string                    Name of the body the vessel is arriving at
     ===================================== ========================= =============
@@ -116,14 +115,6 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
 
 	How long after the alarm fires should the next alarm be set up.
 
-.. attribute:: KACAlarm:VESSEL
-
-    :type: :struct: `Vessel`
-    :access: Get/Set
-
-    :ref:`Vessel <vessel>` structure of that the alarm is attached to, use this to set VESSELID, instead of setting it directly, unless you want to unattach the Alarm from any Vessel.
-
-
 .. attribute:: KACAlarm:ORIGINBODY
 
     :type: string
@@ -162,14 +153,14 @@ Available Functions
 
 .. function:: LISTALARMS(alarmType)
 
-    If `alarmType` equals "All", returns :struct:`List` of *all* :struct:`KACAlarm` objects, otherwise returns :struct:`List` of all :struct:`KACAlarm` objects with `KACAlarm:ALARMTYPE` equeal to `alarmType'::
+    If `alarmType` equals "All", returns :struct:`List` of *all* :struct:`KACAlarm` objects attached to current vessel or have no vessel attached.
+    Otherwise returns :struct:`List` of all :struct:`KACAlarm` objects with `KACAlarm:ALARMTYPE` equeal to `alarmType' and attached to current vessel or have no vessel attached.::
 
         set al to listAlarms("All").
-
-		for i in al
-		{
-			print i:ID + " - " + i:name.
-		}
+	for i in al
+	{
+		print i:ID + " - " + i:name.
+	}
 
 .. function:: DELETEALARM(alarmID)
 
