@@ -10,22 +10,28 @@ namespace kOS.Suffixed
     public class KACAlarmWrapper : Structure
     {
         private KACWrapper.KACAPI.KACAlarm alarm;
+        private SharedObjects shared;
 
-        public KACAlarmWrapper(KACWrapper.KACAPI.KACAlarm init) 
+        public KACAlarmWrapper(KACWrapper.KACAPI.KACAlarm init, SharedObjects shared) 
         { 
             alarm = init;
+            this.shared = shared;
             InitializeSuffixes();
         }
-        public KACAlarmWrapper(String alarmID) 
+        public KACAlarmWrapper(String alarmID, SharedObjects shared) 
         {
             alarm = KACWrapper.KAC.Alarms.First(z=>z.ID==alarmID);
+            this.shared = shared;
             InitializeSuffixes();
         }
         private void InitializeSuffixes()
         {
             AddSuffix("ID", new Suffix<string>(() => alarm.ID));
             AddSuffix("NAME", new SetSuffix<string>(() => alarm.Name, value => alarm.Name = value));
+
             AddSuffix("VESSELID", new SetSuffix<string>(() => alarm.VesselID, value => alarm.VesselID = value));
+            AddSuffix("VESSEL", new SetSuffix<VesselTarget>(() => getVesselByID(alarm.VesselID), value => alarm.VesselID = value.Vessel.id.ToString()));
+
             AddSuffix("NOTES", new SetSuffix<string>(() => alarm.Name, value => alarm.Name = value));
 
             AddSuffix("ALARMACTION", new SetSuffix<string> (alarm.AlarmAction.ToString, SetAlarmAction));
@@ -45,6 +51,15 @@ namespace kOS.Suffixed
             AddSuffix("XferTargetBodyName", new SetSuffix<string>(() => alarm.XferTargetBodyName, value => alarm.XferTargetBodyName = value));
 
 
+        }
+        private VesselTarget getVesselByID (string vesselID)
+        {
+            if (string.IsNullOrEmpty (vesselID))
+                return null;
+            
+            var g = new Guid(vesselID);
+            Vessel v = FlightGlobals.Vessels.First (z => z.id == g);
+            return v != null ? new VesselTarget (v, shared) : null;
         }
 
         private double GetRemaining()

@@ -49,7 +49,7 @@ namespace kOS.Function
                     a.AlarmAction = KACWrapper.KACAPI.AlarmActionEnum.PauseGame;
                     a.VesselID = shared.Vessel.id.ToString();
 
-                    var result = new KACAlarmWrapper (a);
+                    var result = new KACAlarmWrapper (a, shared);
 
                     shared.Cpu.PushStack(result);
                 }
@@ -85,8 +85,8 @@ namespace kOS.Function
 
                 foreach (KACWrapper.KACAPI.KACAlarm a in alarms) 
                 {
-                    if (alarmTypes == "All" || a.AlarmTime.ToString() == alarmTypes)
-                        list.Add (new KACAlarmWrapper(a));
+                    if (alarmTypes.ToUpperInvariant() == "ALL" || a.AlarmTime.ToString() == alarmTypes)
+                        list.Add (new KACAlarmWrapper(a, shared));
                 }
                 shared.Cpu.PushStack(list);
             }
