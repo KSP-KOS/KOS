@@ -28,8 +28,8 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
      :attr:`REPEATALARMPERIOD`             scalar (s)                How long after the alarm fires should the next alarm be set up
      :attr:`VESSELID`                      string                    Unique Identifier of the Vessel that the alarm is attached to
      :attr:`VESSEL`                        :struct: `Vessel`         Vessel structure of that the alarm is attached to, use this to set VESSELID
-     :attr:`XferOriginBodyname`            string                    Name of the body the vessel is departing from
-     :attr:`XferTargetBodyname`            string                    Name of the body the vessel is arriving at
+     :attr:`XFERORIGINBODYNAME`            string                    Name of the body the vessel is departing from
+     :attr:`XFERTARGETBODYNAME`            string                    Name of the body the vessel is arriving at
     ===================================== ========================= =============
 
 .. attribute:: KACAlarm:ID
@@ -132,14 +132,14 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
     :ref:`Vessel <vessel>` structure of that the alarm is attached to, use this to set VESSELID, instead of setting it directly, unless you want to unattach the Alarm from any Vessel.
 
 
-.. attribute:: KACAlarm:XferOriginBodyname
+.. attribute:: KACAlarm:XFERORIGINBODYNAME
 
     :type: string
     :access: Get/Set
 
     Name of the body the vessel is departing from.
 
-.. attribute:: KACAlarm:XferTargetBodyname
+.. attribute:: KACAlarm:XFERTARGETBODYNAME
 
     :type: string
     :access: Get/Set

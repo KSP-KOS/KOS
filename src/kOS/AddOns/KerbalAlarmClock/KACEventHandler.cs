@@ -6,7 +6,7 @@ using kOS.Suffixed;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-using kOS.AddOns.KAC;
+using kOS.AddOns.KerbalAlarmClock;
 
 namespace kOS
 {

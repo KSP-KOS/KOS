@@ -7,7 +7,7 @@ using kOS.Safe.Persistence;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
-using kOS.AddOns.KAC;
+using kOS.AddOns.KerbalAlarmClock;
 
 namespace kOS.Function
 {
@@ -105,17 +105,17 @@ namespace kOS.Function
         public override void Execute(SharedObjects shared)
         {
             string alarmID = shared.Cpu.PopValue().ToString();
-            Boolean result = false;
 
             if (KACWrapper.APIReady)
             {
+                Boolean result = false;
                 //Delete the Alarm using its ID and get the result
                 result = KACWrapper.KAC.DeleteAlarm(alarmID);
                 shared.Cpu.PushStack(result);
             }
             else
             {
-                shared.Cpu.PushStack(result);
+                shared.Cpu.PushStack(false);
                 throw new KOSUnavailableAddonException("deleteAlarm()", "Kerbal Alarm Clock");
             }
         }

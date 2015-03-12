@@ -115,7 +115,7 @@ namespace kOS.Suffixed
 
             if (addonName == "KAC")
             {
-                return kOS.AddOns.KAC.KACWrapper.APIReady;
+                return kOS.AddOns.KerbalAlarmClock.KACWrapper.APIReady;
             }
 
             if (addonName == "RT")

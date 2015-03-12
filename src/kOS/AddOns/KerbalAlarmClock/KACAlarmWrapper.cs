@@ -3,7 +3,7 @@ using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
-using kOS.AddOns.KAC;
+using kOS.AddOns.KerbalAlarmClock;
 
 namespace kOS.Suffixed
 {
