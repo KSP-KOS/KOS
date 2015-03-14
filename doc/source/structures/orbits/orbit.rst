@@ -36,9 +36,15 @@ Structure
         * - :attr:`APOAPSIS`
           - scalar (m)
           - Maximum altitude
+        * - :attr:`ETA:APOAPSIS`
+          - scalar (seconds)
+          - seconds until you will reach this orbit's apoapsis.
         * - :attr:`PERIAPSIS`
           - scalar (m)
           - Minimum altitude
+        * - :attr:`ETA:PERIAPSIS`
+          - scalar (seconds)
+          - seconds until you will reach this orbit's periapsis.
         * - :attr:`BODY`
           - :struct:`Body`
           - Focal body of orbit
