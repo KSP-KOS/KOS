@@ -21,7 +21,7 @@ namespace kOS.Suffixed
         }
 
         private readonly double? amount;
-        private double transferedAmount;
+        private double transferredAmount;
         private readonly TransferManager transferManager;
         private readonly PartResourceDefinition resourceInfo;
         private readonly object transferTo;
@@ -39,6 +39,7 @@ namespace kOS.Suffixed
             {
                 status = value;
                 transferManager.ReregisterTransfer(this);
+                SafeHouse.Logger.Log(StatusChangeMessage());
             }
         }
 
@@ -53,10 +54,11 @@ namespace kOS.Suffixed
             this.resourceInfo = resourceInfo;
             this.transferTo = transferTo;
             this.transferFrom = transferFrom;
-            Status = TransferManager.TransferStatus.Inactive;
 
             DetermineTypes();
             InitializeSuffixes();
+
+            Status = TransferManager.TransferStatus.Inactive; // Last because the setter for Status prints some of the values calculated above to the log
         }
 
         public void Update(double deltaTime)
@@ -64,12 +66,9 @@ namespace kOS.Suffixed
             if (Status != TransferManager.TransferStatus.Transferring) { return; }
 
             IList<global::Part> fromParts = GetParts(transferFromType, transferFrom);
-            SafeHouse.Logger.Log("TRANSFER: FromParts Count: " + fromParts.Count);
             IList<global::Part> toParts = GetParts(transferFromType, transferTo);
-            SafeHouse.Logger.Log("TRANSFER: ToParts Count: " + toParts.Count);
 
             if (!AllPartsAreConnected(fromParts, toParts)) { return; }
-            SafeHouse.Logger.Log("TRANSFER: All Parts Connected");
 
             if (!CanTransfer(fromParts, toParts))
             {
@@ -80,13 +79,16 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return string.Format("Transfer( {0}, {1} )", Status, StatusMessage);
+            return string.Format("{0}(\"{1}\", {2}, {3}{4})",
+                                 amount.HasValue ? "TRANSFER" : "TRANSFERALL",
+                                 resourceInfo.name, transferFromType, transferToType,
+                                 amount.HasValue ? (", " + amount) : "" );
         }
 
         private void InitializeSuffixes()
         {
             AddSuffix("GOAL", new Suffix<double>(() => amount.HasValue ? amount.Value : -1));
-            AddSuffix("TRANSFERED", new Suffix<double>(() => transferedAmount));
+            AddSuffix("TRANSFERRED", new Suffix<double>(() => transferredAmount));
             AddSuffix("STATUS", new Suffix<string>(() => Status.ToString()));
             AddSuffix("MESSAGE", new Suffix<string>(() => StatusMessage));
             AddSuffix("RESOURCE", new Suffix<string>(() => resourceInfo.name));
@@ -95,13 +97,16 @@ namespace kOS.Suffixed
                 Status = value ? TransferManager.TransferStatus.Transferring : TransferManager.TransferStatus.Inactive;
             }));
         }
+        
+        private string StatusChangeMessage()
+        {
+            return string.Format("{0} is now {1}.", ToString(), Status);
+        }
 
         private void DetermineTypes()
         {
             transferToType = DetermineType(transferTo);
-            SafeHouse.Logger.Log("TRANSFER: To Type: " + transferToType);
             transferFromType = DetermineType(transferFrom);
-            SafeHouse.Logger.Log("TRANSFER: From Type: " + transferFromType);
         }
 
         private TransferPartType DetermineType(object toTest)
@@ -123,21 +128,18 @@ namespace kOS.Suffixed
 
         private void WorkTransfer(IList<global::Part> fromParts, IList<global::Part> toParts)
         {
-            SafeHouse.Logger.Log("TRANSFER WORK: Have already transfered: " + transferedAmount);
-
             var transferGoal = CalculateTransferGoal(toParts);
 
             double pulledAmount = PullResources(fromParts, transferGoal);
 
             PutResources(toParts, pulledAmount);
 
-            transferedAmount += pulledAmount;
+            transferredAmount += pulledAmount;
 
             if (Status == TransferManager.TransferStatus.Transferring)
             {
-                StatusMessage = string.Format("Transfered: {0}", transferedAmount);
+                StatusMessage = string.Format("Transferred: {0}", transferredAmount);
             }
-            SafeHouse.Logger.Log("TRANSFER WORK: Have now transfered: " + transferedAmount);
         }
 
         /// <summary>
@@ -165,11 +167,7 @@ namespace kOS.Suffixed
 
                     var transferAmount = Math.Min(remaining, evenShare);
 
-                    SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PUT AMOUNT: {1}", part.flightID, transferAmount));
-
                     remaining += part.TransferResource(resource.info.id, transferAmount);
-
-                    SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PUT REMAINING: {1}", part.flightID, remaining));
                 }
                 retries++;
             }
@@ -201,13 +199,8 @@ namespace kOS.Suffixed
                 // the amount is subject to floating point lameness, if we round it here it is not material to the request but should make the numbers work out nicer.
                 thisPartsShare = Math.Round(thisPartsShare, 5);
 
-                SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PULL AMOUNT: {1}", part.flightID, thisPartsShare));
-
                 toReturn += part.TransferResource(resourceInfo.id, thisPartsShare);
-
-                SafeHouse.Logger.Log(string.Format("TRANSFER WORK: {0} PULLED RESOURCE: {1}", part.flightID, toReturn));
             }
-            SafeHouse.Logger.Log("TRANSFER WORK: Pulled: " + toReturn);
             return toReturn;
         }
 
@@ -217,14 +210,14 @@ namespace kOS.Suffixed
 
             var destinationAvailableCapacity = CalculateAvailableSpace(toParts);
 
-            if (!amount.HasValue)
+            if (amount.HasValue)
             {
-                toReturn = destinationAvailableCapacity;
+                var rawGoal = amount.Value - transferredAmount; 
+                toReturn = Math.Min(destinationAvailableCapacity, rawGoal);
             }
             else
             {
-                var rawGoal = amount.Value - transferedAmount; 
-                toReturn = Math.Min(destinationAvailableCapacity, rawGoal);
+                toReturn = destinationAvailableCapacity;
             }
 
             return toReturn;
@@ -242,7 +235,7 @@ namespace kOS.Suffixed
 
             if (amount.HasValue)
             {
-                if (Math.Abs(amount.Value - transferedAmount) < 0.00001)
+                if (Math.Abs(amount.Value - transferredAmount) < 0.00001)
                 {
                     MarkFinished();               
                     return false;
@@ -293,16 +286,14 @@ namespace kOS.Suffixed
 
         private void MarkFailed(string message)
         {
-            SafeHouse.Logger.Log("TRANSFER FAILED: " + message);
             StatusMessage = message;
             Status = TransferManager.TransferStatus.Failed;
         }
 
         private void MarkFinished()
         {
-            transferedAmount = Math.Round(transferedAmount, 5);
-            SafeHouse.Logger.Log(string.Format("TRANSFER FINISHED: Transfered {0} {1}", transferedAmount, resourceInfo.name));
-            StatusMessage = string.Format("Transfered: {0}", transferedAmount);
+            transferredAmount = Math.Round(transferredAmount, 5);
+            StatusMessage = string.Format("Transferred: {0}", transferredAmount);
             Status = TransferManager.TransferStatus.Finished;
         }
 
@@ -310,7 +301,6 @@ namespace kOS.Suffixed
         {
             var resources = parts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
             var toReturn =  resources.Sum(r => r.maxAmount - r.amount);
-            SafeHouse.Logger.Log("TRANSFER: Available Space: " + toReturn);
             return toReturn;
         }
 
@@ -318,7 +308,6 @@ namespace kOS.Suffixed
         {
             var resources = fromParts.SelectMany(p => p.Resources.GetAll(resourceInfo.id));
             var toReturn = resources.Sum(r => r.amount);
-            SafeHouse.Logger.Log("TRANSFER: Available Resource: " + toReturn);
             return toReturn;
         }
 
