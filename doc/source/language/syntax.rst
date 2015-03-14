@@ -71,6 +71,59 @@ Suffixes can be chained together, as in this example::
 
 In the above example you'd say "``velocity`` is a suffix of ``ship``", and "``orbit`` is a suffix of ``ship:velocity``", and "``x`` is a suffix of ``ship:velocity:orbit``".
 
+Braces (statement blocks)
+-------------------------
+
+Anywhere you feel like, you may insert braces around a list of statements
+to get the language to treat them all as a single statement block.
+
+For example: the IF statement expects one statement as its body, like so::
+
+    if x = 1
+      print "it's 1".
+
+But you can put multiple statements there as its body by surrounding them
+with braces, like so::
+
+    if x = 1 { print "it's 1".  print "yippieee.".  }
+
+(Although this is usually preferred to be indented as follows)::
+
+    if x = 1 {
+      print "it's 1".
+      print "yippieee.".
+    }
+
+or::
+
+    if x = 1
+    {
+      print "it's 1".
+      print "yippieee.".
+    }
+
+Kerboscript does not require proper indentation of the brace sections,
+but it is a good idea to make things clear.
+
+You are allowed to just insert braces anywhere you feel like even when the
+language does not require it, as shown below::
+
+    declare x to 3.
+    print "x here is " + x.
+    {
+      declare x to 5.
+      print "x here is " + x.
+      {
+        declare x to 7.
+        print "x here is " + x.
+      }
+    }
+
+The usual reason for doing this is to create a
+:ref:`local scope section <scope>` for yourself.
+In the above example, there are actually 3 *different*
+variables called 'x' - each with a different scope.
+
 Functions (built-in)
 --------------------
 

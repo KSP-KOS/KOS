@@ -60,16 +60,6 @@ Kerboscript now requires the use of the initializer clause (the "TO"
 keyword) after the identifer name so as to make it impossible for
 there to exist any uninitialized variables in a script.
 
-.. _declare glboal:
-
-``DECLARE GLOBAL``
-------------------
-
-TODO: need to document this after it's made - basiclly makes
-globals just like SET implicitly does, but does so explicitly so
-it can still be done when in NOLAZYGLOBAL section.
-
-
 .. _declare parameter:
 
 ``DECLARE PARAMETER``
