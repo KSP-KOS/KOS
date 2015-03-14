@@ -111,12 +111,26 @@ Structure
 
     The max altitude expected to be reached.
 
+.. attribute:: Orbit:ETA:APOAPSIS
+
+    :type: scalar (seconds)
+    :access: Get only
+
+    Seconds until you will reach this orbit's apoapsis.
+
 .. attribute:: Orbit:PERIAPSIS
 
     :type: scalar (m)
     :access: Get only
 
     The min altitude expected to be reached.
+
+.. attribute:: Orbit:ETA:PERIAPSIS
+
+    :type: scalar (seconds)
+    :access: Get only
+
+    Seconds until you will reach this orbit's periapsis.
 
 .. attribute:: Orbit:BODY
 
