@@ -1,7 +1,7 @@
 ﻿using System;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Utilities;
 using UnityEngine;
-using kOS.Execution;
 using kOS.Safe;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
@@ -56,6 +56,7 @@ namespace kOS.Suffixed
             
             updateHandler = updateHand;
             this.shared = shared;
+            InitializeSuffixes();
         }
 
         // Implementation of KOSSCopeObserver interface:
@@ -101,6 +102,38 @@ namespace kOS.Suffixed
             {
                 LabelPlacement();
             }
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix(new[]{"VEC", "VECTOR"}, new SetSuffix<Vector>(() => new Vector(Vector), value =>
+            {
+                Vector = value;
+                RenderPointCoords();
+            }));
+            AddSuffix(new[]{"COLOR", "COLOUR"}, new SetSuffix<RgbaColor>(() => Color, value =>
+            {
+                Color = value;
+                RenderColor();
+            }));
+            AddSuffix("SHOW", new SetSuffix<bool>(() => enable, SetShow));
+            AddSuffix("START", new SetSuffix<Vector>(() => new Vector(Start), value =>
+            {
+                Start = value;
+                RenderPointCoords();
+            }));
+            AddSuffix("SCALE", new SetSuffix<double>(() => Scale, value =>
+            {
+                Scale = value;
+                RenderPointCoords();
+            }));
+
+            AddSuffix("LABEL", new SetSuffix<string>(() => labelStr,SetLabel));
+            AddSuffix("WIDTH", new SetSuffix<double>(() => Width, value =>
+            {
+                Width = value;
+                RenderPointCoords();
+            }));
         }
 
         /// <summary>
@@ -194,7 +227,7 @@ namespace kOS.Suffixed
 
                     // This is how font loading would work if other fonts were available in KSP:
                     // Font lblFont = (Font)Resources.Load( "Arial", typeof(Font) );
-                    // Debug.Log( "lblFont is " + (lblFont == null ? "null" : "not null") );
+                    // SafeHouse.Logger.Log( "lblFont is " + (lblFont == null ? "null" : "not null") );
                     // _label.font = lblFont;
                     
                     label.fontSize = 12;
@@ -234,108 +267,7 @@ namespace kOS.Suffixed
 
             enable = newShowVal;
         }
-        
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "VEC":
-                case "VECTOR":
-                    return  new Vector(Vector);
-                case "SHOW":
-                    return enable;
-                case "COLOR":
-                case "COLOUR":
-                    return Color ;
-                case "START":
-                    return  new Vector(Start);
-                case "SCALE":
-                    return Scale ;
-                case "LABEL":
-                    return labelStr;
-                case "WIDTH":
-                    return Width;
-            }
 
-            return base.GetSuffix(suffixName);
-        }
-
-        public override bool SetSuffix(string suffixName, object value)
-        {
-            double dblValue = 0.0;
-            bool boolValue = false;
-            string strValue = "";
-            var rgbaValue = new RgbaColor(1,1,1);
-            var vectorValue = new Vector(0,0,0);
-            
-            // When the wrong type of value is given, attempt
-            // to make at least SOME value out of it that won't crash
-            // the system.  This was added because now the value can
-            // be a wide variety of different types and this check
-            // used to deny any of them being usable other than doubles.
-            // This is getting a bit silly looking and something else
-            // needs to be done, I think.
-            if (value is double || value is int || value is float || value is long)
-            {
-                dblValue = Convert.ToDouble(value);
-                boolValue = (Convert.ToBoolean(value));
-            }
-            else if (value is bool)
-            {
-                boolValue = (bool)value;
-                dblValue = ((bool)value) ? 1.0 : 0.0;
-            }
-            else if (value is RgbaColor)
-            {
-                rgbaValue = (RgbaColor) value;
-            }
-            else if (value is Vector)
-            {
-                vectorValue = (Vector) value;
-            }
-            else if (value is String)
-            {
-                strValue = value.ToString() ;
-            }
-            else if (!double.TryParse(value.ToString(), out dblValue))
-            {
-                return false;
-            }
-
-            switch (suffixName)
-            {
-                case "VEC":
-                case "VECTOR":
-                    Vector = vectorValue;
-                    RenderPointCoords();
-                    return true;
-                case "SHOW":
-                    SetShow( boolValue );
-                    return true;
-                case "COLOR":
-                case "COLOUR":
-                    Color = rgbaValue;
-                    RenderColor();
-                    return true;
-                case "START":
-                    Start = vectorValue;
-                    RenderPointCoords();
-                    return true;
-                case "SCALE":
-                    Scale = dblValue;
-                    RenderPointCoords();
-                    return true;
-                case "LABEL":
-                    SetLabel( strValue );
-                    return true;
-                case "WIDTH":
-                    Width = dblValue;
-                    RenderPointCoords();
-                    return true;
-            }
-
-            return base.SetSuffix(suffixName, value);
-        }
         public void SetLayer( int newVal )
         {
             if (lineObj  != null) lineObj.layer  = newVal;
@@ -418,8 +350,8 @@ namespace kOS.Suffixed
         public void RenderColor()
         {
 
-            Color c1 = Color.Color();
-            Color c2 = Color.Color();
+            Color c1 = Color.Color;
+            Color c2 = Color.Color;
             c1.a = c1.a * (float)0.25;
             Color lCol = UnityEngine.Color.Lerp( c2, UnityEngine.Color.white, 0.7f ); // "whiten" the label color a lot.
 
@@ -457,6 +389,11 @@ namespace kOS.Suffixed
         public override string ToString()
         {
             return string.Format("{0} VectorRenderer", base.ToString());
+        }
+
+        public void Dispose()
+        {
+           updateHandler.RemoveObserver(this);
         }
     }
 }

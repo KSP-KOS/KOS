@@ -1,7 +1,6 @@
-﻿using kOS.Persistence;
-using kOS.Safe.Persistence;
+﻿using kOS.Safe.Persistence;
 
-namespace kOS.AddOns.RemoteTech2
+namespace kOS.AddOns.RemoteTech
 {
     public class RemoteTechArchive : Archive
     {

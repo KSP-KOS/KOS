@@ -1,10 +1,13 @@
-﻿using kOS.AddOns.RemoteTech2;
+﻿using kOS.AddOns.RemoteTech;
 using kOS.Safe.Binding;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using kOS.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+using Math = System.Math;
 
 namespace kOS.Binding
 {
@@ -22,17 +25,17 @@ namespace kOS.Binding
 
             if (Shared.Vessel == null)
             {
-                Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel== null");
+                SafeHouse.Logger.LogWarning("FlightControlManager.AddTo Skipped: shared.Vessel== null");
                 return;
             }
 
             if (Shared.Vessel.rootPart == null)
             {
-                Debug.LogWarning("kOS: FlightControlManager.AddTo Skipped: shared.Vessel.rootPart == null");
+                SafeHouse.Logger.LogWarning("FlightControlManager.AddTo Skipped: shared.Vessel.rootPart == null");
                 return;
             }
 
-            Debug.Log("kOS: FlightControlManager.AddTo " + Shared.Vessel.id);
+            SafeHouse.Logger.Log("FlightControlManager.AddTo " + Shared.Vessel.id);
 
             currentVessel = shared.Vessel;
             currentVessel.OnPreAutopilotUpdate += OnFlyByWire;
@@ -41,6 +44,9 @@ namespace kOS.Binding
             AddNewFlightParam("steering", Shared);
             AddNewFlightParam("wheelthrottle", Shared);
             AddNewFlightParam("wheelsteering", Shared);
+
+            shared.BindingMgr.AddSetter("SASMODE", value => SelectAutopilotMode((string)value));
+            shared.BindingMgr.AddGetter("SASMODE", () => currentVessel.Autopilot.Mode.ToString().ToUpper());
         }
 
 
@@ -57,13 +63,14 @@ namespace kOS.Binding
 
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
-            Debug.Log(string.Format("kOS: FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
-            if (!flightParameters.ContainsKey(paramName)) return;
+            SafeHouse.Logger.Log(string.Format("FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
+            if (!flightParameters.ContainsKey(paramName.ToLower())) { Debug.LogError("kOS: no such flybywire parameter " + paramName); return; }
 
-            flightParameters[paramName].Enabled = enabled;
+            flightParameters[paramName.ToLower()].Enabled = enabled;
+
             if (!enabled)
             {
-                flightParameters[paramName].ClearValue();
+                flightParameters[paramName.ToLower()].ClearValue();
             }
         }
 
@@ -71,18 +78,33 @@ namespace kOS.Binding
         {
             UnbindUnloaded();
 
-            if (currentVessel.id == Shared.Vessel.id) return;
+            // Why the "currentVessel != null checks?
+            //   Because of a timing issue where it can still be set to null during the span of one single
+            //   update if the new vessel isn't valid and set up yet when the old vessel connection got
+            //   broken off.
+            //
+            if (currentVessel != null && currentVessel.id == Shared.Vessel.id) return;
 
-            // Try to re-establish connection to vessel
-            if (VesselIsValid(currentVessel))
+            // If it gets this far, that means the part the kOSProcessor module is inside of
+            // got disconnected from its original vessel and became a member
+            // of a new child vessel, either do to undocking, decoupling, or breakage.
+
+            // currentVessel is now a stale reference to the vessel this manager used to be a member of,
+            // while Shared.Vessel is the new vessel it is now contained in.
+
+            // Before updating currentVessel, use it to break connection from the old vessel,
+            // so this this stops trying to pilot the vessel it's not attached to anymore:
+            if (currentVessel != null && VesselIsValid(currentVessel))
             {
                 currentVessel.OnPreAutopilotUpdate -= OnFlyByWire;
                 currentVessel = null;
             }
 
-            if (VesselIsValid(Shared.Vessel)) return;
-
-            currentVessel = Shared.Vessel;
+            // If the new vessel isn't ready for it, then don't attach to it yet (wait for a future update):
+            if (! VesselIsValid(Shared.Vessel)) return;
+            
+            // Now attach to the new vessel:
+            currentVessel = Shared.Vessel;            
             currentVessel.OnPreAutopilotUpdate += OnFlyByWire;
 
             foreach (var param in flightParameters.Values)
@@ -111,7 +133,7 @@ namespace kOS.Binding
             {
                 var value = flightControls[key];
                 if (value.Vessel.loaded) continue;
-                Debug.Log("kOS: Unloading " + value.Vessel.vesselName);
+                SafeHouse.Logger.Log("Unloading " + value.Vessel.vesselName);
                 toRemove.Add(key);
                 value.Dispose();
             }
@@ -156,6 +178,88 @@ namespace kOS.Binding
             return vessel != null && vessel.rootPart != null;
         }
 
+        public void SelectAutopilotMode(object autopilotMode)
+        {
+            if (autopilotMode is Direction)
+            {
+                //TODO: implment use of direction subclasses.
+            }
+            else SelectAutopilotMode((string)autopilotMode);
+        }
+
+        public void SelectAutopilotMode(VesselAutopilot.AutopilotMode autopilotMode)
+        {
+            if (currentVessel.Autopilot.Mode != autopilotMode)
+            {
+                if (!currentVessel.Autopilot.CanSetMode(autopilotMode))
+                {
+                    // throw an exception if the mode is not available
+                    throw new Safe.Exceptions.KOSException(
+                        string.Format("Cannot set autopilot value, pilot/probe does not support {0}, or there is no node/target", autopilotMode));
+                }
+                currentVessel.Autopilot.SetMode(autopilotMode);
+                //currentVessel.Autopilot.Enable();
+                // change the autopilot indicator
+                ((Module.kOSProcessor)Shared.Processor).SetAutopilotMode((int)autopilotMode);
+                if (RemoteTechHook.IsAvailable(currentVessel.id))
+                {
+                    Debug.Log(string.Format("kOS: Adding RemoteTechPilot: autopilot For : " + currentVessel.id));
+                    // TODO: figure out how to make RemoteTech allow the built in autopilot control.  This may require modification to RemoteTech itself.
+                }
+            }
+        }
+
+        public void SelectAutopilotMode(string autopilotMode)
+        {
+            // handle a null/empty value in case of an unset command or setting to empty string to clear.
+            if (string.IsNullOrEmpty(autopilotMode))
+            {
+                SelectAutopilotMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+            }
+            else
+            {
+                // determine the AutopilotMode to use
+                switch (autopilotMode.ToLower())
+                {
+                    case "maneuver":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Maneuver);
+                        break;
+                    case "prograde":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Prograde);
+                        break;
+                    case "retrograde":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Retrograde);
+                        break;
+                    case "normal":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Normal);
+                        break;
+                    case "antinormal":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Antinormal);
+                        break;
+                    case "radialin":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialIn);
+                        break;
+                    case "radialout":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialOut);
+                        break;
+                    case "target":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.Target);
+                        break;
+                    case "antitarget":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.AntiTarget);
+                        break;
+                    case "stability":
+                    case "stabilityassist":
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.StabilityAssist);
+                        break;
+                    default:
+                        // If the mode is not recognised, thrown an exception rather than continuing or using a default setting
+                        throw new Safe.Exceptions.KOSException(
+                            string.Format("kOS does not recognize the SAS mode setting of {0}", autopilotMode));
+                }
+            }
+        }
+
         private class FlightCtrlParam : IDisposable
         {
             private readonly string name;
@@ -188,7 +292,7 @@ namespace kOS.Binding
                 get { return enabled; }
                 set
                 {
-                    Debug.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1}", name, enabled));
+                    SafeHouse.Logger.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
                     enabled = value;
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
@@ -207,12 +311,12 @@ namespace kOS.Binding
                 }
                 if (Enabled)
                 {
-                    Debug.Log(string.Format("kOS: Adding RemoteTechPilot: " + name + " For : " + control.Vessel.id));
+                    SafeHouse.Logger.Log(string.Format("Adding RemoteTechPilot: " + name + " For : " + control.Vessel.id));
                     RemoteTechHook.Instance.AddSanctionedPilot(control.Vessel.id, action);
                 }
                 else
                 {
-                    Debug.Log(string.Format("kOS: Removing RemoteTechPilot: " + name + " For : " + control.Vessel.id));
+                    SafeHouse.Logger.Log(string.Format("Removing RemoteTechPilot: " + name + " For : " + control.Vessel.id));
                     RemoteTechHook.Instance.RemoveSanctionedPilot(control.Vessel.id, action);
                 }
             }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS.Safe.Test
 {
@@ -18,6 +15,21 @@ namespace kOS.Safe.Test
         }
 
         public void SuperVerbose(string s)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogWarning(string s)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogException(Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LogError(string s)
         {
             throw new NotImplementedException();
         }

@@ -179,6 +179,31 @@ namespace kOS.Function
         }
     }
 
+    [Function("hsv")]
+    public class FunctionHsv : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var v = (float) GetDouble(shared.Cpu.PopValue());
+            var s = (float) GetDouble(shared.Cpu.PopValue());
+            var h = (float) GetDouble(shared.Cpu.PopValue());
+            shared.Cpu.PushStack( new HsvColor(h,s,v) );
+        }
+    }
+
+    [Function("hsva")]
+    public class FunctionHsva : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var a = (float) GetDouble(shared.Cpu.PopValue());
+            var v = (float) GetDouble(shared.Cpu.PopValue());
+            var s = (float) GetDouble(shared.Cpu.PopValue());
+            var h = (float) GetDouble(shared.Cpu.PopValue());
+            shared.Cpu.PushStack( new HsvColor(h,s,v,a) );
+        }
+    }
+
     [Function("rgb")]
     public class FunctionRgb : FunctionBase
     {
@@ -209,7 +234,7 @@ namespace kOS.Function
     // or with
     //   vecdrawargs(,vector,vector,rgba,double,bool)
     // If varying args were more easily supported, this could
-    // be done with just one fuction that counts how many args it
+    // be done with just one function that counts how many args it
     // was given.
     //
     [Function("vecdraw")]
@@ -278,6 +303,19 @@ namespace kOS.Function
         }
     }
 
+    [Function("highlight")]
+    public class FunctionHightlight : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            var color = GetRgba(shared.Cpu.PopValue());
+            var obj = shared.Cpu.PopValue();
+
+            var toPush = new HighlightStructure(shared.UpdateHandler, obj, color);
+            shared.Cpu.PushStack(toPush);
+        }
+    }
+
     [Function("orbitat")]
     public class FunctionOrbitAt : FunctionBase
     {
@@ -319,7 +357,7 @@ namespace kOS.Function
         {
             // ReSharper disable SuggestUseVarKeywordEvident
             ListValue<WaypointValue> returnList = new ListValue<WaypointValue>();
-            // ReSharper ensable SuggestUseVarKeywordEvident
+            // ReSharper enable SuggestUseVarKeywordEvident
 
             WaypointManager wpm = WaypointManager.Instance();
             if (wpm == null)
@@ -349,16 +387,20 @@ namespace kOS.Function
             string pointName = shared.Cpu.PopValue().ToString();
 
             WaypointManager wpm = WaypointManager.Instance();
-            if (wpm == null)
+            if (wpm == null) // When zero waypoints exist, there might not even be a waypoint manager.
             {
-                shared.Cpu.PushStack(null); // When no waypoints exist, there isn't even a waypoint manager.
+                shared.Cpu.PushStack(null);
                 // I don't like returning null here without the user being able to test for that, but
                 // we don't have another way to communicate "no such waypoint".  We really need to address
                 // that problem once and for all.
                 return;
             }
-
-            Waypoint point = wpm.AllWaypoints().FirstOrDefault(p => String.Equals(p.name, pointName,StringComparison.CurrentCultureIgnoreCase));
+            
+            string baseName;
+            int index;
+            bool hasGreek = WaypointValue.GreekToInteger(pointName, out index, out baseName);
+            Waypoint point = wpm.AllWaypoints().FirstOrDefault(
+                p => String.Equals(p.name, baseName,StringComparison.CurrentCultureIgnoreCase) && (!hasGreek || p.index == index));
 
             shared.Cpu.PushStack(new WaypointValue(point, shared));
         }

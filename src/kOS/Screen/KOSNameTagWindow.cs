@@ -38,7 +38,7 @@ namespace kOS.Screen
             // float xPixelWindow = (drawOnLeft ? screenPos.x - 0.3f : screenPos.x + 0.2f) * UnityEngine.Screen.width;
             // float tagLineWidth = (drawOnLeft) ? (xPixelPoint - xPixelWindow) : (xPixelWindow - xPixelPoint - windowWidth);
             // tagLineRect = new Rect(xPixelPoint, yPixelPoint, tagLineWidth, 3);
-            // Debug.Log("tagLineRect = " + tagLineRect );
+            // SafeHouse.Logger.Log("tagLineRect = " + tagLineRect );
 
             SetEnabled(true);
 

@@ -6,7 +6,7 @@ using kOS.Safe.Exceptions;
 
 namespace kOS
 {
-    public class Logger : ILogger
+    public abstract class Logger : ILogger
     {
         protected SharedObjects Shared;
 
@@ -14,12 +14,12 @@ namespace kOS
         // to see help data about old exceptions other than just the current one, perhaps
         // in a help log window or something.  At the moment nothing uses it yet.
         protected List<Exception> ExceptionHistory = new List<Exception>();
-        
-        public Logger()
+
+        protected Logger()
         {
         }
 
-        public Logger(SharedObjects shared)
+        protected Logger(SharedObjects shared)
         {
             Shared = shared;
         }
@@ -67,6 +67,12 @@ namespace kOS
             Log(s);
             #endif
         }
+
+        public abstract void LogWarning(string s);
+
+        public abstract void LogException(Exception exception);
+
+        public abstract void LogError(string s);
 
         protected void LogToScreen(string text)
         {

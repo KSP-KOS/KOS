@@ -1,10 +1,12 @@
 ﻿using kOS.Safe.Compilation;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Reflection;
+using Debug = UnityEngine.Debug;
 
 namespace kOS.Utilities
 {
@@ -23,8 +25,7 @@ namespace kOS.Utilities
         public static string GetAssemblyFileVersion()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            // Fully qualified name used instead of "using" here because using System.Diagnostics causes ambiguities
-            // with all the Debug.Log's:
+
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
             return fvi.FileVersion;            
         }
@@ -157,14 +158,14 @@ namespace kOS.Utilities
         {
             const bool DEBUG_WALK = false;
             
-            if (DEBUG_WALK) Debug.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
-            if (DEBUG_WALK) Debug.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
+            if (DEBUG_WALK) SafeHouse.Logger.Log("BodyOrbitsBody(" + a.name + "," + b.name + ")");
+            if (DEBUG_WALK) SafeHouse.Logger.Log("a's ref body = " + (a.referenceBody == null ? "null" : a.referenceBody.name));
             Boolean found = false;
             for (var curBody = a.referenceBody;
                  curBody != null && curBody != curBody.referenceBody; // reference body of Sun points to itself, weirdly.
                  curBody = curBody.referenceBody)
             {
-                if (DEBUG_WALK) Debug.Log("curBody=" + curBody.name);
+                if (DEBUG_WALK) SafeHouse.Logger.Log("curBody=" + curBody.name);
                 if (!curBody.name.Equals(b.name)) continue;
 
                 found = true;
@@ -246,6 +247,49 @@ namespace kOS.Utilities
             }
 
             return codeFragment.Aggregate(string.Empty, (current, s) => current + (s + "\n"));
+        }
+
+        /// <summary>
+        /// Meant to be an override for stock KSP's CelestialBody.GetObtVelocity(), which (literally) always
+        /// stack overflows because it's implemented as just infinite recursion without a base case.
+        /// <br/>
+        /// Returns the celestial body's velocity relative to the current universe's SOI body.  It's
+        /// identical to body.orbit.GetVel() except that it also works for The Sun, which
+        /// normally can't call that because it's orbit is null.
+        /// </summary>
+        /// <param name="body">The body to get the value for. (this will be hidden when this is an extension method of CelestialBody).</param>
+        /// <param name="shared">Ubiquitous shared objects</param>
+        /// <returns>body position in current unity world coords</returns>
+        public static Vector3d KOSExtensionGetObtVelocity(this CelestialBody body, SharedObjects shared)
+        {
+            if (body.orbit != null)
+                return body.orbit.GetVel();
+            
+            // When we can't use body.orbit, then manually perform the work that (probably) body.orbit.GetVel()
+            // is doing itself.  This isn't DRY, but SQUAD made it impossible to be DRY when they didn't implement
+            // the algorithm for the Sun so we have to repeat it again ourselves:
+            
+            CelestialBody soiBody = shared.Vessel.mainBody;
+            if (soiBody.orbit != null)
+                return soiBody.orbit.GetFrameVel();
+            return (-1)*shared.Vessel.obt_velocity;
+        }
+
+        /// <summary>
+        /// Return the parent body of this body, just like KSP's built-in referenceBody, except that
+        /// it exhibits more sane behavior in the case of the Sun where there is no parent.  Default
+        /// KSP's referenceBody will sometimes return null and sometimes return the Sun itself as
+        /// the parent of the Sun.  This makes it always return null as the parent of the Sun no matter
+        /// what.
+        /// </summary>
+        /// <param name="body">Body to get parent of (this will be hidden when called as an extension method)</param>
+        /// <returns>parent body or null</returns>
+        public static CelestialBody KOSExtensionGetParentBody(this CelestialBody body)
+        {
+            CelestialBody parent = body.referenceBody;            
+            if (parent == body)
+                parent = null;
+            return parent;
         }
     }
 }

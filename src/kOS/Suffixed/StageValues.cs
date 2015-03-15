@@ -18,7 +18,10 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
+            AddSuffix("NUMBER", new Suffix<int>(() => Staging.CurrentStage));
+            AddSuffix("READY", new Suffix<bool>(() => shared.Vessel.isActiveVessel && Staging.separate_ready));
             AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
+
         }
 
         private ListValue<ActiveResourceValue> GetResourceManifest()

@@ -1,15 +1,15 @@
-﻿using System.Linq;
-using kOS.Safe.Encapsulation;
-using kOS.Safe.Exceptions;
-using kOS.Safe.Encapsulation.Suffixes;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
+using kOS.Suffixed.Part;
 using UnityEngine;
+using Math = kOS.Safe.Utilities.Math;
 
-using System;
-
-
-namespace kOS.Suffixed.Part
+namespace kOS.Suffixed.PartModuleField
 {
     /// <summary>
     /// An abstraction of a part module attached to a PartValue, that allows
@@ -26,6 +26,7 @@ namespace kOS.Suffixed.Part
         /// Create a kOS-user variable wrapper around a KSP PartModule attached to a part.
         /// </summary>
         /// <param name="partModule">the KSP PartModule to make a wrapper for</param>
+        /// <param name="shared">The omnipresent shared data</param>
         public PartModuleFields(PartModule partModule, SharedObjects shared)
         {
             this.partModule = partModule;
@@ -159,7 +160,7 @@ namespace kOS.Suffixed.Part
                 if (range != null)
                 {
                     float val = Convert.ToSingle(convertedVal);
-                    val = SliderClampRound(val, range.minValue, range.maxValue, range.stepIncrement);
+                    val = Math.ClampToIndent(val, range.minValue, range.maxValue, range.stepIncrement);
                     convertedVal = Convert.ToDouble(val);
                 }
                 if (! isLegal)
@@ -169,37 +170,6 @@ namespace kOS.Suffixed.Part
             return isLegal;
         }
         
-        /// <summary>
-        /// Round the value to the nearest value the slider will allow if the slider starts
-        /// at min, ends at max, and has detents every inc.
-        /// </summary>
-        /// <param name="val">value to round</param>
-        /// <param name="min">minimun the slider allows</param>
-        /// <param name="max">maximum the slider allows</param>
-        /// <param name="inc">increment of the detents</param>
-        /// <returns></returns>
-        private float SliderClampRound(float val, float min, float max, float inc)
-        {
-            // First clamp the value to within min/max:
-            float outVal = Math.Max(min, Math.Min(val, max));
-            
-            // How many discrete increments up the slider gets us to the nearest detent less than or equal to the value:
-            int numIncs = Mathf.FloorToInt((outVal-min)/inc);
-
-            // get detent values just below and above the value:
-            float nearUnder = min + (numIncs*inc);
-            float nearOver = min + ((numIncs+1)*inc);
-            
-            // pick which one to round to:
-            float remainder = outVal - nearUnder;
-            if (remainder >= (inc/2f) && nearOver <= max)
-                outVal = nearOver;
-            else
-                outVal = nearUnder;
-
-            return outVal;
-        }
-
         /// <summary>
         /// Return a list of all the strings of all KSPfields registered to this PartModule
         /// which are currently showing on the part's RMB menu.

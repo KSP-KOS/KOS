@@ -10,6 +10,11 @@ namespace kOS.Utilities
 {
     public static class VesselUtils
     {
+        public static bool HasCrewControl(this Vessel vessel)
+        {
+            return vessel.parts.Any(p => p.isControlSource && (p.protoModuleCrew.Any()));
+        }
+
         public static List<Part> GetListOfActivatedEngines(Vessel vessel)
         {
             var retList = new List<Part>();
@@ -89,7 +94,7 @@ namespace kOS.Utilities
                     break;
 
                 case "ELEMENTS":
-                    list = ElementValue.PartsToList(partList);
+                    list = ElementValue.PartsToList(partList, sharedObj);
                     break;
 
                 case "DOCKINGPORTS":
@@ -417,6 +422,13 @@ namespace kOS.Utilities
             var vesselRotation = vessel.ReferenceTransform.rotation;
             Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
             return new Direction(vesselFacing);
+        }
+        
+        public static Direction GetFacing(CelestialBody body)
+        {
+            var bodyRotation = body.transform.rotation;
+            Quaternion bodyFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(bodyRotation) * Quaternion.identity);
+            return new Direction(bodyFacing);
         }
     }
 }

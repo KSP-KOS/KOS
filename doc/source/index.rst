@@ -11,6 +11,7 @@ Welcome to the **kOS** Documentation Website!
     :maxdepth: 5
 
     Home <self>
+    Downloads and Links <downloads_links>
     Tutorials <tutorials>
     General <general>
     Language <language>

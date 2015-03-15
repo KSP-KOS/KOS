@@ -20,11 +20,13 @@ namespace kOS.Suffixed.Part
         {
             AddSuffix("ACTIVATE", new NoArgsSuffix(() => engine.Activate()));
             AddSuffix("SHUTDOWN", new NoArgsSuffix(() => engine.Shutdown()));
-            AddSuffix("THRUSTLIMIT", new ClampSetSuffix<float>(() => engine.ThrustPercentage, value => engine.ThrustPercentage = value, 0, 1));
+            AddSuffix("THRUSTLIMIT", new ClampSetSuffix<float>(() => engine.ThrustPercentage, value => engine.ThrustPercentage = value, 0, 100, 0.5f));
             AddSuffix("MAXTHRUST", new Suffix<float>(() => engine.MaxThrust));
             AddSuffix("THRUST", new Suffix<float>(() => engine.FinalThrust));
             AddSuffix("FUELFLOW", new Suffix<float>(() => engine.FuelFlow));
             AddSuffix("ISP", new Suffix<float>(() => engine.SpecificImpulse));
+            AddSuffix(new[] {"VISP", "VACUUMISP"}, new Suffix<float>(() => engine.VacuumSpecificImpluse));
+            AddSuffix(new[] {"SLISP", "SEALEVELISP"}, new Suffix<float>(() => engine.SeaLevelSpecificImpulse));
             AddSuffix("FLAMEOUT", new Suffix<bool>(() => engine.Flameout));
             AddSuffix("IGNITION", new Suffix<bool>(() => engine.Ignition));
             AddSuffix("ALLOWRESTART", new Suffix<bool>(() => engine.AllowRestart));

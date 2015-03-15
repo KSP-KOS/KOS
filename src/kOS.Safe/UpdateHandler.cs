@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace kOS.Safe
@@ -9,27 +8,22 @@ namespace kOS.Safe
         // insert itself more than once into the observer list, it still only gets in the list
         // once and therefore only gets its Update() called once per update.
         // The value of the KeyValuePair, the int, is unused.
-        private readonly Dictionary<IUpdateObserver, int> observers = new Dictionary<IUpdateObserver, int>();
-        
+        private readonly HashSet<IUpdateObserver> observers = new HashSet<IUpdateObserver>();
+        private readonly HashSet<IUpdateObserver> fixedObservers = new HashSet<IUpdateObserver>();
+
+        public double CurrentFixedTime { get; private set; }
+        public double LastDeltaFixedTime { get; private set; }
         public double CurrentTime { get; private set; }
         public double LastDeltaTime { get; private set; }
 
-        public UpdateHandler()
-        {
-            CurrentTime = 0;
-            LastDeltaTime = 0;
-        }
-
         public void AddObserver(IUpdateObserver observer)
         {
-            try 
-            {
-                observers.Add(observer, 0);
-            }
-            catch (ArgumentException)
-            {
-                // observer is alredy in the list.  Nothing needs to be done.
-            }
+            observers.Add(observer);
+        }
+
+        public void AddFixedObserver(IUpdateObserver observer)
+        {
+            fixedObservers.Add(observer);
         }
 
         public void RemoveObserver(IUpdateObserver observer)
@@ -37,17 +31,32 @@ namespace kOS.Safe
             observers.Remove(observer);
         }
 
+        public void RemoveFixedObserver(IUpdateObserver observer)
+        {
+            fixedObservers.Remove(observer);
+        }
+
         public void UpdateObservers(double deltaTime)
         {
             LastDeltaTime = deltaTime;
             CurrentTime += deltaTime;
             
-            // Iterate over a frozen snapshot of _observers rather than  _observers itself,
-            // because _observers can be altered during the course of the loop:
-            var fixedObserverList = new Dictionary<IUpdateObserver,int>(observers);
-            foreach (KeyValuePair<IUpdateObserver,int> observer in fixedObserverList)
+            var snapshot = new HashSet<IUpdateObserver>(observers);
+            foreach (var observer in snapshot)
             {
-                observer.Key.Update(deltaTime);
+                observer.Update(deltaTime);
+            }
+        }
+
+        public void UpdateFixedObservers(double deltaTime)
+        {
+            LastDeltaFixedTime = deltaTime;
+            CurrentFixedTime += deltaTime;
+            
+            var snapshot = new HashSet<IUpdateObserver>(fixedObservers);
+            foreach (var observer in snapshot)
+            {
+                observer.Update(deltaTime);
             }
         }
     }

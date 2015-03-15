@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using kOS.Execution;
 using kOS.Safe.Compilation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
+using kOS.Safe.Utilities;
 
 namespace kOS.Function
 {
@@ -14,7 +16,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            shared.Screen.ClearScreen();
+            shared.Window.ClearScreen();
         }
     }
 
@@ -27,7 +29,44 @@ namespace kOS.Function
             shared.Screen.Print(textToPrint);
         }
     }
+    
+    [Function("hudtext")]
+    public class FunctionHudText : FunctionBase
+    {
+        public override void Execute (SharedObjects shared)
 
+        {
+            bool      echo      = Convert.ToBoolean(shared.Cpu.PopValue());
+            RgbaColor rgba      = GetRgba(shared.Cpu.PopValue());
+            int       size      = Convert.ToInt32 (shared.Cpu.PopValue ());    
+            int       style     = Convert.ToInt32 (shared.Cpu.PopValue ());
+            int       delay     = Convert.ToInt32 (shared.Cpu.PopValue ());   
+            string    textToHud = shared.Cpu.PopValue ().ToString ();
+            string   htmlColour = rgba.ToHexNotation();
+            switch (style)
+            {
+                case 1:
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_LEFT);
+                    break;
+                case 2:
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_CENTER);
+                    break;
+                case 3:
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_RIGHT);
+                    break;
+                case 4:
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.LOWER_CENTER);
+                    break;
+                default:
+                    ScreenMessages.PostScreenMessage("*" + textToHud, 3f, ScreenMessageStyle.UPPER_CENTER);
+                    break;
+            }
+            if (echo) {
+                shared.Screen.Print ("HUD: " + textToHud);
+            }
+        }
+    }
+    
     [Function("printat")]
     public class FunctionPrintAt : FunctionBase
     {
@@ -48,6 +87,22 @@ namespace kOS.Function
             bool enabled = Convert.ToBoolean(shared.Cpu.PopValue());
             string paramName = shared.Cpu.PopValue().ToString();
             ((CPU)shared.Cpu).ToggleFlyByWire(paramName, enabled);
+            // Work around to prevent the pop error following toggle fly by wire directly. 
+            // The VisitIdentifierLedExpression method in the Compiler class purposfully throws away the returned value of a function.
+            ((CPU)shared.Cpu).PushStack(0);
+
+        }
+    }
+
+    [Function("selectautopilotmode")]
+    public class FunctionSelectAutopilotMode : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            string autopilotMode = shared.Cpu.PopValue().ToString();
+            ((CPU)shared.Cpu).SelectAutopilotMode(autopilotMode);
+            // The VisitIdentifierLedExpression method in the Compiler class purposfully throws away the returned value of a function.
+            ((CPU)shared.Cpu).PushStack(0);
 
         }
     }
@@ -57,7 +112,18 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            Staging.ActivateNextStage();
+            if (Staging.separate_ready && shared.Vessel.isActiveVessel)
+            {
+                Staging.ActivateNextStage();
+            }
+            else if (!Staging.separate_ready)
+            {
+                SafeHouse.Logger.Log("FAIL SILENT: Stage is called before it is ready, Use STAGE:READY to check first if staging rapidly");
+            }
+            else if (!shared.Vessel.isActiveVessel)
+            {
+                throw new KOSCommandInvalidHere("STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
+            }
         }
     }
 
@@ -241,7 +307,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            if (shared.Cpu != null) shared.Cpu.Boot();
+            if (shared.Processor != null)
+            {
+                shared.Processor.SetMode(ProcessorModes.OFF);
+                shared.Processor.SetMode(ProcessorModes.READY);
+            }
         }
     }
 
@@ -262,5 +332,4 @@ namespace kOS.Function
             shared.Cpu.DumpVariables();
         }
     }
-
 }

@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using kOS.Safe;
 using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Persistence;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using kOS.Persistence;
 
 namespace kOS.Execution
 {
-    public class CPU: IUpdateObserver , ICpu
+    public class CPU: ICpu
     {
         private enum Status
         {
@@ -103,11 +103,11 @@ namespace kOS.Execution
                 shared.Screen.Print(bootMessage);
             }
 
-            if (shared.VolumeMgr == null) { Safe.Utilities.Debug.Logger.Log("No volume mgr"); }
-            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { Safe.Utilities.Debug.Logger.Log("Boot volume not in range"); }
-            else if (shared.VolumeMgr.CurrentVolume == null) { Safe.Utilities.Debug.Logger.Log("No current volume"); }
-            else if (shared.ScriptHandler == null) { Safe.Utilities.Debug.Logger.Log("No script handler"); }
-            else if (shared.VolumeMgr.CurrentVolume.GetByName("boot") == null) { Safe.Utilities.Debug.Logger.Log("Boot File is Missing"); }
+            if (shared.VolumeMgr == null) { SafeHouse.Logger.Log("No volume mgr"); }
+            else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { SafeHouse.Logger.Log("Boot volume not in range"); }
+            else if (shared.VolumeMgr.CurrentVolume == null) { SafeHouse.Logger.Log("No current volume"); }
+            else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
+            else if (shared.VolumeMgr.CurrentVolume.GetByName("boot") == null) { SafeHouse.Logger.Log("Boot File is Missing"); }
             else {
                 shared.ScriptHandler.ClearContext("program");
 
@@ -130,7 +130,7 @@ namespace kOS.Execution
 
         private void PushContext(ProgramContext context)
         {
-            Safe.Utilities.Debug.Logger.Log("kOS: Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
+            SafeHouse.Logger.Log("Pushing context staring with: " + context.GetCodeFragment(0).FirstOrDefault());
             SaveAndClearPointers();
             contexts.Add(context);
             currentContext = contexts.Last();
@@ -143,21 +143,21 @@ namespace kOS.Execution
 
         private void PopContext()
         {
-            Safe.Utilities.Debug.Logger.Log("kOS: Popping context " + contexts.Count);
+            SafeHouse.Logger.Log("Popping context " + contexts.Count);
             if (contexts.Any())
             {
                 // remove the last context
                 var contextRemove = contexts.Last();
                 contexts.Remove(contextRemove);
                 contextRemove.DisableActiveFlyByWire(shared.BindingMgr);
-                Safe.Utilities.Debug.Logger.Log("kOS: Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
+                SafeHouse.Logger.Log("Removed Context " + contextRemove.GetCodeFragment(0).FirstOrDefault());
 
                 if (contexts.Any())
                 {
                     currentContext = contexts.Last();
                     currentContext.EnableActiveFlyByWire(shared.BindingMgr);
                     RestorePointers();
-                    Safe.Utilities.Debug.Logger.Log("kOS: New current context " + currentContext.GetCodeFragment(0).FirstOrDefault());
+                    SafeHouse.Logger.Log("New current context " + currentContext.GetCodeFragment(0).FirstOrDefault());
                 }
                 else
                 {
@@ -218,7 +218,7 @@ namespace kOS.Execution
                 savedPointers.Add(pointerName, variables[pointerName]);
                 variables.Remove(pointerName);
             }
-            Safe.Utilities.Debug.Logger.Log(string.Format("kOS: Saving and removing {0} pointers", pointers.Count));
+            SafeHouse.Logger.Log(string.Format("Saving and removing {0} pointers", pointers.Count));
         }
 
         private void RestorePointers()
@@ -245,7 +245,7 @@ namespace kOS.Execution
                 }
             }
 
-            Safe.Utilities.Debug.Logger.Log(string.Format("kOS: Deleting {0} pointers and restoring {1} pointers", deletedPointers, restoredPointers));
+            SafeHouse.Logger.Log(string.Format("Deleting {0} pointers and restoring {1} pointers", deletedPointers, restoredPointers));
         }
 
         public void RunProgram(List<Opcode> program)
@@ -263,7 +263,7 @@ namespace kOS.Execution
 
         public void BreakExecution(bool manual)
         {
-            Safe.Utilities.Debug.Logger.Log(string.Format("kOS: Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
+            SafeHouse.Logger.Log(string.Format("Breaking Execution {0} Contexts: {1}", manual ? "Manually" : "Automatically", contexts.Count));
             if (contexts.Count > 1)
             {
                 EndWait();
@@ -340,7 +340,7 @@ namespace kOS.Execution
 
         public void DumpVariables()
         {
-            StringBuilder msg = new StringBuilder();
+            var msg = new StringBuilder();
             foreach (string ident in variables.Keys)
             {
                 string line;
@@ -358,7 +358,7 @@ namespace kOS.Execution
                 shared.Screen.Print(line);
                 msg.AppendLine(line);
             }
-            Safe.Utilities.Debug.Logger.Log(msg.ToString());
+            SafeHouse.Logger.Log(msg.ToString());
             shared.Screen.Print("YOU CAN SEE THIS LOG IN THE DEBUG OUTPUT.");
         }
 
@@ -594,13 +594,14 @@ namespace kOS.Execution
                 if (shared.Logger != null)
                 {
                     shared.Logger.Log(e);
-                    Safe.Utilities.Debug.Logger.Log(stack.Dump());
+                    SafeHouse.Logger.Log(stack.Dump());
                 }
 
                 if (contexts.Count == 1)
                 {
                     // interpreter context
                     SkipCurrentInstructionId();
+                    stack.Clear(); // Get rid of this interpreter command's cruft.
                 }
                 else
                 {
@@ -703,7 +704,7 @@ namespace kOS.Execution
             Opcode opcode = context.Program[context.InstructionPointer];
             if (DEBUG_EACH_OPCODE)
             {
-                Safe.Utilities.Debug.Logger.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count +
+                SafeHouse.Logger.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count +
                                       "\n                   Opcode is: " + opcode.ToString() );
             }
             
@@ -716,7 +717,7 @@ namespace kOS.Execution
             if (opcode is OpcodeEOP)
             {
                 BreakExecution(false);
-                Safe.Utilities.Debug.Logger.Log("kOS: Execution Broken");
+                SafeHouse.Logger.Log("Execution Broken");
             }
             return false;
         }
@@ -745,6 +746,11 @@ namespace kOS.Execution
 
             shared.BindingMgr.ToggleFlyByWire(paramName, enabled);
             currentContext.ToggleFlyByWire(paramName, enabled);
+        }
+
+        public void SelectAutopilotMode(string autopilotMode)
+        {
+            shared.BindingMgr.SelectAutopilotMode(autopilotMode);
         }
 
         public List<string> GetCodeFragment(int contextLines)
@@ -837,20 +843,25 @@ namespace kOS.Execution
                 // addressed yet).
                 try
                 {
-                    Safe.Utilities.Debug.Logger.Log("kOS: Parsing Context:\n\n" + scriptBuilder);
+                    SafeHouse.Logger.Log("Parsing Context:\n\n" + scriptBuilder);
                     programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);
                 }
                 catch (NullReferenceException ex)
                 {
-                    Safe.Utilities.Debug.Logger.Log("kOS: program builder failed on load. " + ex.Message);
+                    SafeHouse.Logger.Log("program builder failed on load. " + ex.Message);
                 }
             }
             catch (Exception e)
             {
                 if (shared.Logger != null) shared.Logger.Log(e);
             }
+        }
+
+        public void Dispose()
+        {
+            shared.UpdateHandler.RemoveObserver(this);
         }
     }
 }

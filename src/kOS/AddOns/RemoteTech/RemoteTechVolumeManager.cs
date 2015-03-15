@@ -1,8 +1,8 @@
-﻿using kOS.Persistence;
+﻿using System;
+using kOS.Persistence;
 using kOS.Safe.Persistence;
-using System;
 
-namespace kOS.AddOns.RemoteTech2
+namespace kOS.AddOns.RemoteTech
 {
     public class RemoteTechVolumeManager : VolumeManager
     {

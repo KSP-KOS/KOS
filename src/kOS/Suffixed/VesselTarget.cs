@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using kOS.Binding;
+using UnityEngine;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
+using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
 using kOS.Module;
 using System.Collections.Generic;
@@ -382,21 +384,6 @@ namespace kOS.Suffixed
 
             return kScriptParts;
         }
-        
-
-        public override bool SetSuffix(string suffixName, object value)
-        {
-            switch (suffixName)
-            {
-                case "PACKDISTANCE":
-                    var distance = (float) value;
-                    Vessel.distanceLandedPackThreshold = distance;
-                    Vessel.distancePackThreshold = distance;
-                    return true;
-            }
-
-            return base.SetSuffix(suffixName, value);
-        }
 
         private void InitializeSuffixes()
         {
@@ -417,7 +404,7 @@ namespace kOS.Suffixed
             AddSuffix("MAXTHRUST", new Suffix<double>(() => VesselUtils.GetMaxThrust(Vessel)));
             AddSuffix("FACING", new Suffix<Direction>(() => VesselUtils.GetFacing(Vessel)));
             AddSuffix("ANGULARMOMENTUM", new Suffix<Vector>(() => new Vector(Vessel.angularMomentum)));
-            AddSuffix("ANGULARVEL", new Suffix<Vector>(() => new Vector(Vessel.angularVelocity)));
+            AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Vessel.angularVelocity)));
             AddSuffix("MASS", new Suffix<float>(() => Vessel.GetTotalMass()));
             AddSuffix("VERTICALSPEED", new Suffix<double>(() => Vessel.verticalSpeed));
             AddSuffix("SURFACESPEED", new Suffix<double>(() => Vessel.horizontalSrfSpeed));
@@ -431,6 +418,9 @@ namespace kOS.Suffixed
             AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass, "The Ship's mass when full"));
             AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
+            AddSuffix("PACKDISTANCE", new SetSuffix<float>(
+                () => System.Math.Min(Vessel.distanceLandedPackThreshold, Vessel.distancePackThreshold), 
+                value => { Vessel.distanceLandedPackThreshold = Vessel.distancePackThreshold = value; }));
 
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
@@ -452,6 +442,21 @@ namespace kOS.Suffixed
             {
                 Vessel.vesselName = value;
             }
+        }
+        
+        /// <summary>
+        /// Annoyingly, KSP returns vessel.angularVelociy in a frame of reference 
+        /// relative to the ship facing instead of the universe facing.  This would be
+        /// wonderful if that was their philosophy everywhere, but it's not - its just a
+        /// weird exception for this one case.  This transforms it back into raw universe
+        /// axes again:
+        /// </summary>
+        /// <param name="kSPAngularVel">the value KSP is returning for angular velocity</param>
+        /// <returns>altered velocity in the new reference frame</returns>
+        private Vector RawAngularVelFromRelative(Vector3 angularVelFromKSP)
+        {
+            return new Vector(VesselUtils.GetFacing(Vessel).Rotation *
+                              new Vector3d(angularVelFromKSP.x, -angularVelFromKSP.z, angularVelFromKSP.y));
         }
 
         public override object GetSuffix(string suffixName)

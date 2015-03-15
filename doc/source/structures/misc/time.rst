@@ -9,7 +9,10 @@ In several places the game uses a :struct:`TimeSpan` format. This is a strucure 
 TimeSpan represents *SIMULATED* time
 ------------------------------------
 
-When you are examining a :struct:`TimeSpan` you are looking the "in character" **simulated** time, not the "out of character" real world time. This is very important distinction to remember, as the following points illustrate:
+When you are examining a :struct:`TimeSpan` you are looking at the
+"in character" **simulated** time, not the "out of character" real
+world time. This is a very important distinction to remember, as
+the following points illustrate:
 
 -  A :struct:`TimeSpan` does not count the time that was passing while the game was paused.
 -  If you turn off your computer and don't play the game for several days, the :struct:`TimeSpan` does not count this time.

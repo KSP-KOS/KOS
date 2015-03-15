@@ -1,7 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using kOS.Safe.Utilities;
 using UnityEngine;
 using kOS.Suffixed;
+using Math = System.Math;
 
 namespace kOS.Utilities
 {
@@ -26,7 +27,7 @@ namespace kOS.Utilities
             // I take no credit for this, this is a stripped down, rearranged version of MechJeb's attitude control system
             if (vessel == null)
             {
-                Debug.LogError("kOS: SteerShipToward: Vessel is null!!");
+                SafeHouse.Logger.LogError("SteerShipToward: Vessel is null!!");
                 return;
             }
 
@@ -37,6 +38,13 @@ namespace kOS.Utilities
 
             var target = targetDir.Rotation;
             var vesselRotation = vessel.ReferenceTransform.rotation;
+
+            if (vessel.ActionGroups[KSPActionGroup.SAS])
+            {
+                target = target * Quaternion.Euler(90, 0, 0);
+                if (vessel.Autopilot.SAS.lockedHeading != target) vessel.Autopilot.SAS.LockHeading(target, true);
+                return;
+            }
 
             // some validations
             if (!Utils.IsValidNumber(c.mainThrottle) ||
@@ -151,73 +159,56 @@ namespace kOS.Utilities
         public static Vector3d GetTorque(Vessel vessel, float thrust)
         {
             var centerOfMass = vessel.findWorldCenterOfMass();
+            var rollaxis = vessel.transform.up;
+            rollaxis.Normalize ();
+            var pitchaxis = vessel.GetFwdVector ();
+            pitchaxis.Normalize ();
             
-            float pitchYaw = 0;
-            float roll = 0;
+            float pitch = 0.0f;
+            float yaw = 0.0f;
+            float roll = 0.0f;
 
             foreach (Part part in vessel.parts)
             {
                 var relCoM = part.Rigidbody.worldCenterOfMass - centerOfMass;
-
-                var pod = part as CommandPod;
-                if (pod != null)
-                {
-                    pitchYaw += Math.Abs(pod.rotPower);
-                    roll += Math.Abs(pod.rotPower);
-                }
-
-                var rcsModule = part as RCSModule;
-                if (rcsModule != null)
-                {
-                    float max = rcsModule.thrusterPowers.Aggregate<float, float>(0, Mathf.Max);
-
-                    pitchYaw += max * relCoM.magnitude;
-                }
 
                 foreach (PartModule module in part.Modules)
                 {
                     var wheel = module as ModuleReactionWheel;
                     if (wheel == null) continue;
 
-                    pitchYaw += wheel.PitchTorque;
+                    pitch += wheel.PitchTorque;
+                    yaw += wheel.YawTorque;
                     roll += wheel.RollTorque;
                 }
+                if (vessel.ActionGroups [KSPActionGroup.RCS])
+                {
+                    foreach (PartModule module in part.Modules) {
+                        var rcs = module as ModuleRCS;
+                        if (rcs == null || !rcs.rcsEnabled) continue;
 
-                pitchYaw += (float)GetThrustTorque(part, vessel) * thrust;
+                        bool enoughfuel = rcs.propellants.All(p => (int) (p.totalResourceAvailable) != 0);
+                        if (!enoughfuel) continue;
+                        foreach (Transform thrustdir in rcs.thrusterTransforms)
+                        {
+                            float rcsthrust = rcs.thrusterPower;
+                            //just counting positive contributions in one direction. This is incorrect for asymmetric thruster placements.
+                            roll += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(relCoM, thrustdir.up), rollaxis), 0.0f);
+                            pitch += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(Vector3.Cross(relCoM, thrustdir.up), rollaxis), pitchaxis), 0.0f);
+                            yaw += Mathf.Max(rcsthrust * Vector3.Dot(Vector3.Cross(Vector3.Cross(relCoM, thrustdir.up), rollaxis), Vector3.Cross(rollaxis,pitchaxis)),0.0f);
+                        }
+                    }
+                }
+                pitch += (float)GetThrustTorque(part, vessel) * thrust;
+                yaw += (float)GetThrustTorque (part, vessel) * thrust;
             }
             
-            return new Vector3d(pitchYaw, roll, pitchYaw);
+            return new Vector3d(pitch, roll, yaw);
         }
 
         public static double GetThrustTorque(Part p, Vessel vessel)
         {
-            var centerOfMass = vessel.CoM;
-
-            if (p.State == PartStates.ACTIVE)
-            {
-                if (p is LiquidEngine)
-                {
-                    if (((LiquidEngine)p).thrustVectoringCapable)
-                    {
-                        return Math.Sin(Math.Abs(((LiquidEngine)p).gimbalRange) * Math.PI / 180) * ((LiquidEngine)p).maxThrust * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
-                    }
-                }
-                else if (p is LiquidFuelEngine)
-                {
-                    if (((LiquidFuelEngine)p).thrustVectoringCapable)
-                    {
-                        return Math.Sin(Math.Abs(((LiquidFuelEngine)p).gimbalRange) * Math.PI / 180) * ((LiquidFuelEngine)p).maxThrust * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
-                    }
-                }
-                else if (p is AtmosphericEngine)
-                {
-                    if (((AtmosphericEngine)p).thrustVectoringCapable)
-                    {
-                        return Math.Sin(Math.Abs(((AtmosphericEngine)p).gimbalRange) * Math.PI / 180) * ((AtmosphericEngine)p).maximumEnginePower * ((AtmosphericEngine)p).totalEfficiency * (p.Rigidbody.worldCenterOfMass - centerOfMass).magnitude;
-                    }
-                }
-            }
-
+            //TODO: implement gimbalthrust Torque calculation
             return 0;
         }
 

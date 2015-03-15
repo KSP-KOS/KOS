@@ -126,5 +126,13 @@ namespace kOS.Binding
                 flightControl.Dispose();
             }
         }
+
+        internal void SelectAutopilotMode(string autopilotMode)
+        {
+            if (flightControl != null)
+            {
+                flightControl.SelectAutopilotMode(autopilotMode);
+            }
+        }
     }
 }

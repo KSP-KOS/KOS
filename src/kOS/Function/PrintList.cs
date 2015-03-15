@@ -242,9 +242,9 @@ namespace kOS.Function
         private kList GetConfigList()
         {
             var list = new kList();
-            list.AddColumn("", 8, ColumnAlignment.Left);
-            list.AddColumn("Name", 30, ColumnAlignment.Left);
-            list.AddColumn("Value", 7, ColumnAlignment.Left);
+            list.AddColumn("", 9, ColumnAlignment.Left);
+            list.AddColumn("Name", 34, ColumnAlignment.Left);
+            list.AddColumn("Value", 6, ColumnAlignment.Left);
 
             foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
@@ -324,7 +324,7 @@ namespace kOS.Function
                         BuildFormatString();
                     }
 
-                    object[] stringFields = new string[fields.Length];
+                    var stringFields = new object[fields.Length];
                     for (int index = 0; index < columns.Count; index++)
                     {
                         string field;

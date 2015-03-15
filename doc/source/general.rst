@@ -14,6 +14,8 @@ These topics discuss the interfacing between **kOS** and **Kerbal Space Program*
     CPU Hardware        <general/cpu_hardware>
     
     Launcher Panel      <general/applauncher_panel>
+
+    Telnet Server       <general/telnet>
     
     Files & Volumes     <general/volumes>
     Machine Code        <general/compiling>

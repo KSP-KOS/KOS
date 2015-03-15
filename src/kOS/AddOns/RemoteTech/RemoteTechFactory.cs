@@ -2,7 +2,7 @@
 using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
 
-namespace kOS.AddOns.RemoteTech2
+namespace kOS.AddOns.RemoteTech
 {
     public class RemoteTechFactory : IFactory
     {

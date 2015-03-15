@@ -4,7 +4,7 @@ Querying a vessel's parts
 This is a quick list to get the idea across fast. The actual
 details of the meaning of these things is complex enough to
 warrant `its own
-topic <../../summary_topics/ship_parts_and_modules/index.html>`__.
+topic <../general/parts_and_partmodules.html>`__.
 
 To get the parts of a vessel (such as your current vessel,
 called SHIP), you can do the following things:

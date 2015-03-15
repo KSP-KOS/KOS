@@ -34,7 +34,7 @@ Accessing the parts by various naming systems
 
 Any time you have a vessel variable, you can use these suffixes to get lists of parts on it by their names using several different naming schemes:
 
-**Part Tag**: A part's *tag* is whatever custom name you have given it using the `nametag system described here <../nametag/index.html>`__. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.
+**Part Tag**: A part's *tag* is whatever custom name you have given it using the `nametag system described here <nametag.html>`__. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.
 
 **Part Title**: A part's *title* is the name it has inside the GUI interface on the screen that you see as the user.
 
@@ -71,14 +71,14 @@ In all cases the checks are performed case-insensitively.
 
 These are different styles of naming parts, all slightly different, and you can use any of them you like to get access to the part or parts you're interested in.
 
-They all return a `List <../../structure/list/index.html>`__ of `Parts <../../structure/index.html>`__ rather than just one single part. This is because any name could have more than one hit. If you expect to get just one single hit, you can just look at the zero-th value of the list, like so::
+They all return a `List <../structures/misc/list.html>`__ of `Parts <../structures/vessels/part.html>`__ rather than just one single part. This is because any name could have more than one hit. If you expect to get just one single hit, you can just look at the zero-th value of the list, like so::
 
     SET onePart TO somevessel:PARTSDUBBED("my favorite engine")[0].
 
 If the name does not exist, you can tell by seeing if the list returned
 has a length of zero::
 
-    IF somevessel:PARTSDUBBED("my favorite engine"):LENGTH == 0 {
+    IF somevessel:PARTSDUBBED("my favorite engine"):LENGTH = 0 {
       PRINT "There is no part named 'my favorite engine'.".
     }.
 
@@ -88,6 +88,9 @@ Examples::
     FOR somechute IN somevessel:PARTSNAMED("parachuteDrogue") {
       somechute:GETMODULE("ModuleParachute"):SETFIELD("DEPLOYALTITUDE", 1500).
     }.
+
+.. figure:: /_images/ship_parts_tree.png
+  :align: right
 
 Accessing the parts list as a tree
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -119,7 +122,7 @@ Return a List of just the parts that have had some sort of activity attached to 
 PartModules and the right-click menu:
 -------------------------------------
 
-Each Part, in turn has a list of what are called `PartModules <../../structure/partmodule/index.html>`__ on it. A PartModule is a collection of variables and executable program hooks that gives the part some of its behaviors and properties. Without a PartModule, a part is really nothing more than a passive bit of structure that has nothing more than a shape, a look, and a strength to it. Some of the parts in the "structure" tab of the parts bin, like pure I-beams and girders, are like this - they have no PartModules on them. But all of the *interesting* parts you might want to do something with will have a PartModule on them. Through PartModules, \*\*kOS will now allow you to manipulate or query anything that any KSP programmer, stock or mod, has added to the rightclick menu\*\*, or action group actions, for a part.
+Each Part, in turn has a list of what are called `PartModules <../structures/vessels/partmodule.html>`__ on it. A PartModule is a collection of variables and executable program hooks that gives the part some of its behaviors and properties. Without a PartModule, a part is really nothing more than a passive bit of structure that has nothing more than a shape, a look, and a strength to it. Some of the parts in the "structure" tab of the parts bin, like pure I-beams and girders, are like this - they have no PartModules on them. But all of the *interesting* parts you might want to do something with will have a PartModule on them. Through PartModules, \*\*kOS will now allow you to manipulate or query anything that any KSP programmer, stock or mod, has added to the rightclick menu\*\*, or action group actions, for a part.
 
 PartModules, Stock vs Mods:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

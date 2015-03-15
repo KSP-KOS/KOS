@@ -4,17 +4,19 @@ using System.Collections.Generic;
 using kOS.Safe.Persistence;
 using UnityEngine;
 using kOS.Safe.Screen;
-using kOS.Safe.Utilities;
 using kOS.Module;
+using kOS.UserIO;
+using kOS.Safe.UserIO;
 
 namespace kOS.Screen
 {
     // Blockotronix 550 Computor Monitor
-    public class TermWindow : KOSManagedWindow
+    public class TermWindow : KOSManagedWindow , ITermWindow
     {
         private const int CHARSIZE = 8;
         private const string CONTROL_LOCKOUT = "kOSTerminal";
-        private const int CHARS_PER_ROW = 16;
+        private const int FONTIMAGE_CHARS_PER_ROW = 16;
+        
         private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private static readonly Color color = new Color(1, 1, 1, 1);
         private static readonly Color colorAlpha = new Color(0.9f, 0.9f, 0.9f, 0.6f);
@@ -22,8 +24,10 @@ namespace kOS.Screen
         private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
-        private static readonly Rect closeButtonRect = new Rect(398, 370, 59, 30);
-        
+        private Rect closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.        
+        private Rect resizeButtonCoords = new Rect(0,0,0,0); // will be resized later.
+        private Vector2 resizeOldSize;
+        private bool resizeMouseDown;
         
         private bool consumeEvent;
 
@@ -36,28 +40,48 @@ namespace kOS.Screen
         private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool isLocked;
         private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private Texture2D networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
 
         private SharedObjects shared;
-        private bool showCursor = true;
         private KOSTextEditPopup popupEditor;
+        private Color currentTextColor = new Color(1,1,1,1); // a dummy color at first just so it won't crash before TerminalGUI() where it's *really* set.
 
-        public bool IsPowered { get; protected set; }
+        // data stored per telnet client attached:
+        private readonly List<TelnetSingletonServer> telnets; // support exists for more than one telnet client to be attached to the same terminal, thus this is a list.
+        private readonly Dictionary<TelnetSingletonServer, IScreenSnapShot> prevTelnetScreens;
+        
+        private ExpectNextChar inputExpected = ExpectNextChar.NORMAL;
+        private int pendingWidth; // width to come from a resize combo.
+        
+        public string TitleText {get; private set;}
 
+        private IScreenSnapShot mostRecentScreen;
+        
+        private DateTime lastBufferGet = DateTime.Now;
+        private DateTime lastTelnetIncrementalRepaint = DateTime.Now;
 
         public TermWindow()
         {
             IsPowered = true;
-            windowRect = new Rect(60, 50, 470, 405);
+            WindowRect = new Rect(50, 60, 0, 0); // will get resized later in AttachTo().
+            telnets = new List<TelnetSingletonServer>();
+            prevTelnetScreens = new Dictionary<TelnetSingletonServer, IScreenSnapShot>();
         }
+
+        public bool ShowCursor { get; set; }
 
         public void Awake()
         {
             LoadTexture("GameData/kOS/GFX/font_sml.png", ref fontImage);
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
+            LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
+            LoadTexture("GameData/kOS/GFX/network-zigzag.png", ref networkZigZagImage);
+            
             var gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
             DontDestroyOnLoad(gObj);
             popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
-            popupEditor.SetUniqueId(uniqueId + 5);
+            popupEditor.SetUniqueId(UniqueId + 5);
         }
 
         public void LoadTexture(String relativePath, ref Texture2D targetTexture)
@@ -98,7 +122,7 @@ namespace kOS.Screen
 
         public void Toggle()
         {
-            if (IsOpen()) Close();
+            if (IsOpen) Close();
             else Open();
         }
 
@@ -107,6 +131,7 @@ namespace kOS.Screen
             if (isLocked) return;
 
             isLocked = true;
+            ShowCursor = true;
             BringToFront();
 
             cameraManager = CameraManager.Instance;
@@ -150,13 +175,14 @@ namespace kOS.Screen
                 GameSettings.THROTTLE_CUTOFF = rememberThrottleCutoffKey;
             if (rememberThrottleFullKey != null)
                 GameSettings.THROTTLE_FULL = rememberThrottleFullKey;
+
         }
 
         void OnGUI()
         {
-            if (!IsOpen()) return;
+            if (!IsOpen) return;
 
-            if (isLocked) ProcessKeyStrokes();
+            if (isLocked) ProcessKeyEvents();
             
             try
             {
@@ -171,20 +197,16 @@ namespace kOS.Screen
             GUI.color = isLocked ? color : colorAlpha;
 
             // Should probably make "gui screen name for my CPU part" into some sort of utility method:
-            KOSNameTag partTag = shared.KSPPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
-            string labelText = String.Format("{0} CPU: {1} ({2})",
-                                             shared.Vessel.vesselName,
-                                             shared.KSPPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
-                                             ((partTag==null) ? "" : partTag.nameTag)
-                                            );
+            ChangeTitle(CalcualteTitle());
 
-            windowRect = GUI.Window(uniqueId, windowRect, TerminalGui, labelText);
-
+            WindowRect = GUI.Window(UniqueId, WindowRect, TerminalGui, TitleText);
+            
             if (consumeEvent)
             {
                 consumeEvent = false;
                 Event.current.Use();
             }
+
         }
         
         void Update()
@@ -194,8 +216,11 @@ namespace kOS.Screen
                 // Holding onto a vessel instance that no longer exists?
                 Close();
             }
+            GetNewestBuffer();
+            TelnetOutputUpdate();
+            ProcessTelnetInput(); // want to do this even when the terminal isn't actually displaying.
 
-            if (!IsOpen() ) return;
+            if (!IsOpen ) return;
          
             UpdateLogic();
 
@@ -204,8 +229,29 @@ namespace kOS.Screen
             cursorBlinkTime += Time.deltaTime;
             if (cursorBlinkTime > 1) cursorBlinkTime -= 1;
         }
+        
+        void TelnetOutputUpdate()
+        {
+            DateTime newTime = DateTime.Now;
+            
+            // Throttle it back so the faster Update() rates don't cause pointlessly repeated work:
+            // Needs to be no faster than the fastest theoretical typist or script might change the view.
+            if (newTime > lastTelnetIncrementalRepaint + TimeSpan.FromMilliseconds(50)) // = 1/20th second.
+            {
+                lastTelnetIncrementalRepaint = newTime;
+                foreach (TelnetSingletonServer telnet in telnets)
+                {
+                    RepaintTelnet(telnet, false); // try the incremental differ update.
+                }
+            }
+        }
 
-        void ProcessKeyStrokes()
+        /// <summary>
+        /// Process the GUI event handler key events that are being seen the by GUI terminal,
+        /// by translating them into values from the UnicodeCommand enum first if need be,
+        /// and then passing them through to ProcessOneInputChar().
+        /// </summary>
+        void ProcessKeyEvents()
         {
             Event e = Event.current;
             if (e.type == EventType.KeyDown)
@@ -217,72 +263,184 @@ namespace kOS.Screen
                 // command sequences
                 if (e.keyCode == KeyCode.C && e.control) // Ctrl+C
                 {
-                    SpecialKey(kOSKeys.BREAK);
+                    ProcessOneInputChar((char)UnicodeCommand.BREAK, null);
                     consumeEvent = true;
                     return;
                 }
-                if (e.keyCode == KeyCode.X && e.control && e.shift) // Ctrl+Shift+X
+                // Command used to be Control-shift-X, now we don't care if shift is down aymore, to match the telnet expereince
+                // where there is no such thing as "uppercasing" a control char.
+                if ((e.keyCode == KeyCode.X && e.control) ||
+                    (e.keyCode == KeyCode.D && e.control) // control-D to match the telnet experience
+                   )
                 {
-                    Close();
+                    ProcessOneInputChar((char)0x000d, null);
                     consumeEvent = true;
                     return;
                 }
-
+                
+                if (e.keyCode == KeyCode.A && e.control)
+                {
+                    ProcessOneInputChar((char)0x0001, null);
+                    consumeEvent = true;
+                    return;
+                }
+                
+                if (e.keyCode == KeyCode.E && e.control)
+                {
+                    ProcessOneInputChar((char)0x0005, null);
+                    consumeEvent = true;
+                    return;
+                }
+                
                 if (0x20 <= c && c < 0x7f) // printable characters
                 {
-                    Type(c);
+                    ProcessOneInputChar(c, null);
                     consumeEvent = true;
+                    cursorBlinkTime = 0.0f; // Don't blink while the user is still actively typing.
                 }
-                else if (e.keyCode != KeyCode.None) 
+                else if (e.keyCode != KeyCode.None)
                 {
-                    Keydown(e.keyCode);
                     consumeEvent = true;
+                    switch (e.keyCode)
+                    {
+                        case KeyCode.Tab:          ProcessOneInputChar('\t', null);                                  break;
+                        case KeyCode.LeftArrow:    ProcessOneInputChar((char)UnicodeCommand.LEFTCURSORONE, null);    break;
+                        case KeyCode.RightArrow:   ProcessOneInputChar((char)UnicodeCommand.RIGHTCURSORONE, null);   break;
+                        case KeyCode.UpArrow:      ProcessOneInputChar((char)UnicodeCommand.UPCURSORONE, null);      break;
+                        case KeyCode.DownArrow:    ProcessOneInputChar((char)UnicodeCommand.DOWNCURSORONE, null);    break;
+                        case KeyCode.Home:         ProcessOneInputChar((char)UnicodeCommand.HOMECURSOR, null);       break;
+                        case KeyCode.End:          ProcessOneInputChar((char)UnicodeCommand.ENDCURSOR, null);        break;
+                        case KeyCode.PageUp:       ProcessOneInputChar((char)UnicodeCommand.PAGEUPCURSOR, null);     break;
+                        case KeyCode.PageDown:     ProcessOneInputChar((char)UnicodeCommand.PAGEDOWNCURSOR, null);   break;
+                        case KeyCode.Delete:       ProcessOneInputChar((char)UnicodeCommand.DELETERIGHT, null);      break;
+                        case KeyCode.Backspace:    ProcessOneInputChar((char)UnicodeCommand.DELETELEFT, null);       break;
+                        case KeyCode.KeypadEnter:  // (deliberate fall through to next case)
+                        case KeyCode.Return:       ProcessOneInputChar((char)UnicodeCommand.STARTNEXTLINE, null);    break;
+                        
+                        // More can be added to the list here to support things like F1, F2, etc.  But at the moment we don't use them yet.
+                        
+                        // default: ignore and allow the event to pass through to whatever else wants to read it:
+                        default:                   consumeEvent = false;                                             break;
+                    }
+                    cursorBlinkTime = 0.0f;// Don't blink while the user is still actively typing.
                 }
-
-                cursorBlinkTime = 0.0f;
+            }
+        }
+        
+        /// <summary>
+        /// Read all pending input from all telnet clients attached and process it all.
+        /// Hopefully this won't bog down anything, as we don't expect to get lots
+        /// of chars at once from keyboard input in a single update.  The amount of
+        /// characters pending in the queues should be very small since this is flushing it out
+        /// every update.  It could potentially be large if someone does a big cut-n-paste
+        /// into their terminal window and their telnet client therefore sends a wall of
+        /// text within the span of one Update().  Premature optimization is bad, so we'll
+        /// wait to see if that is a problem later.
+        /// </summary>
+        private void ProcessTelnetInput()
+        {
+            foreach (var telnet in telnets)
+            {
+                while (telnet.InputWaiting())
+                {
+                    ProcessOneInputChar(telnet.ReadChar(), telnet);
+                }
             }
         }
 
-        private void Keydown(KeyCode code)
+        /// <summary>
+        /// Respond to one single input character in Unicode, using the pretend
+        /// virtual Unicode terminal keycodes described in the UnicodeCommand enum.
+        /// To keep things simple, all key input is coerced into single Unicode chars
+        /// even if the actual keypress takes multiple characters to express in its
+        /// native form (i.e. ESC [ A means left-arrow on a VT100 terminal.  If
+        /// a telnet is talking via VT100 codes, that ESC [ A will get converted into
+        /// a single UnicdeCommand.LEFTCURSORONE character before being sent here.)
+        /// <br/>
+        /// This method is public because it is also how other mods should send input
+        /// to the terminal if they want some other source to send simulated keystrokes.
+        /// </summary>
+        /// <param name="ch">The character, which might be a UnicodeCommand char</param>
+        /// <param name="whichTelnet">If this came from a telnet session, which one did it come from?
+        /// Set to null in order to say it wasn't from a telnet but was from the interactive GUI</param>
+        public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet)
         {
-            switch (code)
+            // Weird exceptions for multi-char data combos that would have been begun on previous calls to this method:
+            switch (inputExpected)
             {
-                case KeyCode.Break:      SpecialKey(kOSKeys.BREAK); break;
-                case KeyCode.F1:         SpecialKey(kOSKeys.F1);    break;
-                case KeyCode.F2:         SpecialKey(kOSKeys.F2);    break;
-                case KeyCode.F3:         SpecialKey(kOSKeys.F3);    break;
-                case KeyCode.F4:         SpecialKey(kOSKeys.F4);    break;
-                case KeyCode.F5:         SpecialKey(kOSKeys.F5);    break;
-                case KeyCode.F6:         SpecialKey(kOSKeys.F6);    break;
-                case KeyCode.F7:         SpecialKey(kOSKeys.F7);    break;
-                case KeyCode.F8:         SpecialKey(kOSKeys.F8);    break;
-                case KeyCode.F9:         SpecialKey(kOSKeys.F9);    break;
-                case KeyCode.F10:        SpecialKey(kOSKeys.F10);   break;
-                case KeyCode.F11:        SpecialKey(kOSKeys.F11);   break;
-                case KeyCode.F12:        SpecialKey(kOSKeys.F12);   break;
-                case KeyCode.UpArrow:    SpecialKey(kOSKeys.UP);    break;
-                case KeyCode.DownArrow:  SpecialKey(kOSKeys.DOWN);  break;
-                case KeyCode.LeftArrow:  SpecialKey(kOSKeys.LEFT);  break;
-                case KeyCode.RightArrow: SpecialKey(kOSKeys.RIGHT); break;
-                case KeyCode.Home:       SpecialKey(kOSKeys.HOME);  break;
-                case KeyCode.End:        SpecialKey(kOSKeys.END);   break;
-                case KeyCode.Delete:     SpecialKey(kOSKeys.DEL);   break;
-                case KeyCode.PageUp:     SpecialKey(kOSKeys.PGUP);  break;
-                case KeyCode.PageDown:   SpecialKey(kOSKeys.PGDN);  break;
-
-                case (KeyCode.Backspace):
-                    Type((char)8);
-                    break;
-
-                case (KeyCode.KeypadEnter):
-                case (KeyCode.Return):
-                    Type('\r');
-                    break;
-
-                case (KeyCode.Tab):
-                    Type('\t');
+                case ExpectNextChar.RESIZEWIDTH:
+                    pendingWidth = ch;
+                    inputExpected = ExpectNextChar.RESIZEHEIGHT;
+                    return;
+                case ExpectNextChar.RESIZEHEIGHT:
+                    int height = ch;
+                    shared.Screen.SetSize(height, pendingWidth);
+                    inputExpected = ExpectNextChar.NORMAL;
+                    return;
+                default:
                     break;
             }
+
+            // Printable ASCII section of Unicode - the common vanilla situation
+            // (Idea: Since this is all Unicode anyway, should we allow a wider range to
+            // include multi-language accent characters and so on?  Answer: to do so we'd
+            // first need to expand the font pictures in the font image file, so it's a
+            // bigger task than it may first seem.)
+            if (0x0020 <= ch && ch <= 0x007f)
+            {
+                 Type(ch);
+            }
+            else
+            {
+                switch(ch)
+                {
+                    // A few conversions from UnicodeCommand into those parts of ASCII that it 
+                    // maps directly into nicely, otherwise just pass it through to SpecialKey():
+
+                    case (char)UnicodeCommand.DELETELEFT:
+                        Type((char)8);
+                        break;
+                    case (char)UnicodeCommand.STARTNEXTLINE:
+                        Type('\r');
+                        break;
+                    case '\t':
+                        Type('\t');
+                        break;
+                    case (char)UnicodeCommand.RESIZESCREEN:
+                        inputExpected = ExpectNextChar.RESIZEWIDTH;
+                        break; // next expected char is the width.
+                        
+                    // Finish session:  If GUI, then close window.  If Telnet, then detatch from the session:
+                    
+                    case (char)0x0004/*control-D*/: // How users of unix shells are used to doing this.
+                    case (char)0x0018/*control-X*/: // How kOS did it in the past in the GUI window.
+                        if (shared.Interpreter.IsAtStartOfCommand())
+                        {
+                            if (whichTelnet == null)
+                                Close();
+                            else
+                                whichTelnet.DisconnectFromProcessor();
+                        }
+                        break;
+                        
+                    // User asking for redraw (Unity already requires that we continually redraw the GUI Terminal, so this is only meaningful for telnet):
+                    
+                    case (char)UnicodeCommand.REQUESTREPAINT:
+                        if (whichTelnet != null)
+                        {
+                            ResizeAndRepaintTelnet(whichTelnet, shared.Screen.ColumnCount, shared.Screen.RowCount, true);
+                        }
+                        break;
+                        
+                    // Typical case is to just let SpecialKey do the work:
+                    
+                    default:
+                        SpecialKey(ch);
+                        break;
+                }
+            }
+
+            // else ignore it - unimplemented char.
         }
 
         void Type(char ch)
@@ -293,11 +451,32 @@ namespace kOS.Screen
             }
         }
 
-        void SpecialKey(kOSKeys key)
+        void SpecialKey(char key)
         {
             if (shared != null && shared.Interpreter != null)
             {
                 shared.Interpreter.SpecialKey(key);
+            }
+        }
+        
+        /// <summary>
+        /// Get the newest copy of the screen buffer once, for use in all calculations for a while.
+        /// This was added when telnet clients were added.  The execution cost of obtaining a buffer snapshot
+        /// from the ScreenBuffer class is non-trivial, and therefore shouldn't be done over and over
+        /// for each telnet client that needs it within the span of a short time.  This gets it
+        /// once for all of them to borrow.  All calls will re-use this copy for a while,
+        /// until the next terminal refresh (1/20th of a second, at the moment).
+        /// </summary>
+        void GetNewestBuffer()
+        {
+            DateTime newTime = DateTime.Now;
+            
+            // Throttle it back so the faster Update() rates don't cause pointlessly repeated work:
+            // Needs to be no faster than the fastest theoretical typist or script might change the view.
+            if (newTime > lastBufferGet + TimeSpan.FromMilliseconds(50)) // = 1/20th second.
+            {
+                mostRecentScreen = new ScreenSnapShot(shared.Screen);
+                lastBufferGet = newTime;
             }
         }
 
@@ -318,9 +497,29 @@ namespace kOS.Screen
             {
                 return;
             }
+            IScreenBuffer screen = shared.Screen;
 
             GUI.color = isLocked ? color : colorAlpha;
-            GUI.DrawTexture(new Rect(10, 20, terminalImage.width, terminalImage.height), terminalImage);
+            GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalImage);
+
+            if (telnets.Count > 0)
+                DrawTelnetStatus();
+
+            closeButtonRect = new Rect(WindowRect.width-75, WindowRect.height-30, 50, 25);
+
+            resizeButtonCoords = new Rect(WindowRect.width-resizeButtonImage.width,
+                                          WindowRect.height-resizeButtonImage.height,
+                                          resizeButtonImage.width,
+                                          resizeButtonImage.height);
+            if (GUI.RepeatButton(resizeButtonCoords, resizeButtonImage ))
+            {
+                if (! resizeMouseDown)
+                {
+                    // Remember the fact that this mouseDown started on the resize button:
+                    resizeMouseDown = true;
+                    resizeOldSize = new Vector2(WindowRect.width, WindowRect.height);
+                }
+            }
 
             if (GUI.Button(closeButtonRect, "Close"))
             {
@@ -328,9 +527,7 @@ namespace kOS.Screen
                 Event.current.Use();
             }
 
-            GUI.DragWindow(new Rect(0, 0, 10000, 500));
 
-            Color currentTextColor;
             if (IsPowered)
             {
                 currentTextColor = isLocked ? textColor : textColorAlpha;
@@ -340,15 +537,17 @@ namespace kOS.Screen
                 currentTextColor = isLocked ? textColorOff : textColorOffAlpha;
             }
 
-            GUI.BeginGroup(new Rect(31, 38, 420, 340));
+            GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount*CHARSIZE, screen.RowCount*CHARSIZE));
 
-            IScreenBuffer screen = shared.Screen;
-            List<char[]> buffer = screen.GetBuffer();
+            List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
 
-            for (int row = 0; row < screen.RowCount; row++)
+            // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
+            int rowsToPaint = Math.Min(screen.RowCount, buffer.Count);
+
+            for (int row = 0; row < rowsToPaint; row++)
             {
-                char[] lineBuffer = buffer[row];
-                for (int column = 0; column < screen.ColumnCount; column++)
+                IScreenBufferLine lineBuffer = buffer[row];
+                for (int column = 0; column < lineBuffer.Length; column++)
                 {
                     char c = lineBuffer[column];
                     if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(c, column, row, currentTextColor);
@@ -358,34 +557,80 @@ namespace kOS.Screen
             bool blinkOn = cursorBlinkTime < 0.5f &&
                            screen.CursorRowShow < screen.RowCount &&
                            IsPowered &&
-                           showCursor;
+                           ShowCursor;
+            
             if (blinkOn)
             {
                 ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor);
             }
             GUI.EndGroup();
+            
+            GUI.Label(new Rect(WindowRect.width/2-40,WindowRect.height-20,100,10),screen.ColumnCount+"x"+screen.RowCount);
 
+            CheckResizeDrag(); // Has to occur before DragWindow or else DragWindow will consume the event and prevent drags from being seen by the resize icon.
+            GUI.DragWindow();
         }
 
-        void ShowCharacterByAscii(char ch, int x, int y, Color textColor)
+        /// <summary>
+        ///  Draw a little status line at the bottom as a reminder that you are sharing the terminal with a telnet session:
+        /// </summary>
+        protected void DrawTelnetStatus()
         {
-            int tx = ch % CHARS_PER_ROW;
-            int ty = ch / CHARS_PER_ROW;
+            int num = telnets.Count;
+            string message = String.Format( "{0} telnet client{1} attached", num, (num == 1 ? "" : "s"));
+            GUI.DrawTexture(new Rect(10, WindowRect.height - 25, 25, 25), networkZigZagImage);
+            GUI.Label(new Rect(40, WindowRect.height - 25, 160, 20), message);
+        }
+        
+        protected void CheckResizeDrag()
+        {
+            if (Input.GetMouseButton(0)) // mouse button is down
+            {
+                if (resizeMouseDown) // and it's in the midst of a drag.
+                {
+                    Vector2 dragDelta = MousePosAbsolute - MouseButtonDownPosAbsolute;
+                    WindowRect = new Rect(WindowRect.xMin,
+                                          WindowRect.yMin,
+                                          Math.Max(resizeOldSize.x + dragDelta.x, 200),
+                                          Math.Max(resizeOldSize.y + dragDelta.y, 200));
+                }
+            }
+            else // mouse button is up
+            {
+                if (resizeMouseDown) // and it had been dragging a resize before.
+                {
+                    resizeMouseDown = false;
+                    // Resize by integer character cells, not by actual x/y pixels:
+                    // Note I wanted to call this dynamically as it's resizing, but there's some weird issue
+                    // with the timing of it, where the windowRect is temporarily set to a bogus value during the
+                    // time it was trying to run this, and thus it created exception-throwing code unless it waits
+                    // until the drag is done before trying to calculate this.
+                    // The effect the user sees is that the text can float in space past the edge of the window (when
+                    // shrinking the size) until the resize drag is done, and then it redraws itself.
+                    shared.Screen.SetSize(HowManyRowsFit(), HowManyColumnsFit());
+                }
+            }
+        }
+        
+        void ShowCharacterByAscii(char ch, int x, int y, Color charTextColor)
+        {
+            int tx = ch % FONTIMAGE_CHARS_PER_ROW;
+            int ty = ch / FONTIMAGE_CHARS_PER_ROW;
 
-            ShowCharacterByXY(x, y, tx, ty, textColor);
+            ShowCharacterByXY(x, y, tx, ty, charTextColor);
         }
 
-        void ShowCharacterByXY(int x, int y, int tx, int ty, Color textColor)
+        void ShowCharacterByXY(int x, int y, int tx, int ty, Color charTextColor)
         {
             GUI.BeginGroup(new Rect((x * CHARSIZE), (y * CHARSIZE), CHARSIZE, CHARSIZE));
-            GUI.color = textColor;
+            GUI.color = charTextColor;
             GUI.DrawTexture(new Rect(tx * -CHARSIZE, ty * -CHARSIZE, fontImage.width, fontImage.height), fontImage);
             GUI.EndGroup();
         }
 
         public Rect GetRect()
         {
-            return windowRect;
+            return WindowRect;
         }
         
         public void Print( string str )
@@ -393,20 +638,192 @@ namespace kOS.Screen
             shared.Screen.Print( str );
         }
 
-        internal void AttachTo(SharedObjects shared)
+        internal void AttachTo(SharedObjects sharedObj)
         {
-            this.shared = shared;
-            this.shared.Window = this;
+            shared = sharedObj;
+            shared.Window = this;
+            NotifyOfScreenResize(shared.Screen);
+            shared.Screen.AddResizeNotifier(NotifyOfScreenResize);
+            ChangeTitle(CalcualteTitle());
+        }
+        
+        internal string CalcualteTitle()
+        {
+           KOSNameTag partTag = shared.KSPPart.Modules.OfType<KOSNameTag>().FirstOrDefault();
+           return String.Format("{0} CPU: {1} ({2})",
+                                shared.Vessel.vesselName,
+                                shared.KSPPart.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
+                                ((partTag==null) ? "" : partTag.nameTag)
+                                );
+        }
+        
+        internal void AttachTelnet(TelnetSingletonServer server)
+        {
+            telnets.AddUnique(server);
+            prevTelnetScreens[server] = null;
         }
 
-        public void SetPowered(bool isPowered)
+        internal void DetachTelnet(TelnetSingletonServer server)
         {
-            IsPowered = isPowered;
+            server.DisconnectFromProcessor();
+            telnets.Remove(server);
+        }
+        
+        public void DetachAllTelnets()
+        {
+            // Have to use a (shallow) copy of the list, because the act of detaching telnets
+            // will delete from the list while we're trying to iterate through it:
+            TelnetSingletonServer[] listSnapshot = telnets.ToArray();
+            
+            foreach (TelnetSingletonServer telnet in listSnapshot)
+            {
+                DetachTelnet(telnet);
+            }
         }
 
-        public void SetShowCursor(bool showCursor)
+        internal int NotifyOfScreenResize(IScreenBuffer sb)
         {
-            this.showCursor = showCursor;
+            WindowRect = new Rect(WindowRect.xMin, WindowRect.yMin, sb.ColumnCount*CHARSIZE + 65, sb.RowCount*CHARSIZE + 100);
+
+            foreach (TelnetSingletonServer telnet in telnets)
+            {
+                ResizeAndRepaintTelnet(telnet, sb.ColumnCount, sb.RowCount, false);
+            }
+            return 0;
         }
+        
+        /// <summary>
+        /// Tell the telnet session to resize itself
+        /// </summary>
+        /// <param name="telnet">which telnet session to send to</param>
+        /// <param name="width">new width</param>
+        /// <param name="height">new height</param>
+        /// <param name="unconditional">if true, then send the resize message no matter what.  If false,
+        /// then only send it if we calculate that the size changed.</param>
+        private void ResizeAndRepaintTelnet(TelnetSingletonServer telnet, int width, int height, bool unconditional)
+        {
+            // Don't bother telling it to resize if its already the same size - this should stop resize spew looping:
+            if (unconditional || telnet.ClientWidth != width || telnet.ClientHeight != height)
+            {
+                string resizeCmd = new string( new [] {(char)UnicodeCommand.RESIZESCREEN, (char)width, (char)height} );
+                telnet.Write(resizeCmd);
+                RepaintTelnet(telnet, true);
+            }            
+        }
+        
+        internal void ChangeTitle(string newTitle)
+        {
+            if (TitleText != newTitle) // For once, a direct simple reference-equals is really what we want.  Immutable strings should make this work quickly.
+            {
+                TitleText = newTitle;
+                foreach (TelnetSingletonServer telnet in telnets)
+                    SendTitleToTelnet(telnet);
+            }
+        }
+
+        internal void SendTitleToTelnet(TelnetSingletonServer telnet)
+        {
+            // Make the telnet client learn about the new title:
+            string changeTitleCmd = String.Format("{0}{1}{2}",
+                                                  (char)UnicodeCommand.TITLEBEGIN,
+                                                  TitleText,
+                                                  (char)UnicodeCommand.TITLEEND);
+            telnet.Write(changeTitleCmd);
+        }
+
+        /// <summary>
+        /// Do the repaint of the telnet session.
+        /// </summary>
+        /// <param name="telnet">which telnet session to repaint</param>
+        /// <param name="fullSync">if true, then ignore the diffing algorithm and just redraw everything.</param>
+        internal void RepaintTelnet(TelnetSingletonServer telnet, bool fullSync)
+        {
+            if (fullSync || prevTelnetScreens[telnet] == null)
+            {
+                RepaintTelnetFull(telnet);
+                return;
+            }
+            
+            string updateText = mostRecentScreen.DiffFrom(prevTelnetScreens[telnet]);
+            telnet.Write(updateText);
+            
+            prevTelnetScreens[telnet] = mostRecentScreen.DeepCopy();
+        }
+        
+        /// <summary>
+        /// Cover the case where the whole screen needs to be repainted from scratch.
+        /// </summary>
+        /// <param name="telnet">which telnet to paint to.</param>
+        private void RepaintTelnetFull(TelnetSingletonServer telnet)
+        {   
+            List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
+
+            // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
+            int rowsToPaint = Math.Min(shared.Screen.RowCount, buffer.Count);
+            
+            telnet.Write((char)UnicodeCommand.CLEARSCREEN);
+            for (int row = 0 ; row < rowsToPaint ; ++row)
+            {
+                IScreenBufferLine lineBuffer = buffer[row];
+                int columnOfLastContent = -1;
+                for (int col = 0 ; col < lineBuffer.Length ; ++col)
+                {
+                    char ch = lineBuffer[col];
+                    switch (ch)
+                    {
+                        case (char)0x0000: // The buffer pads null chars into the 'dead' space of the screen past the last printed char.
+                            break;
+                        case (char)0x0009: // tab chars - really shouldn't be in the buffer.
+                            break;
+                        default:
+                            columnOfLastContent = col;
+                            break;
+                    }
+                }
+                if (columnOfLastContent >= 0) // skip for empty lines
+                {
+                    string line = lineBuffer.ToString().Substring(0, columnOfLastContent+1);
+                    telnet.Write(line);
+                }
+                if (row < rowsToPaint-1) //don't write the eoln for the lastmost line.
+                    telnet.Write((char)UnicodeCommand.STARTNEXTLINE);
+            }
+
+            // ensure cursor locatiom (in case it's not at the bottom):
+            telnet.Write(String.Format("{0}{1}{2}",
+                                       (char)UnicodeCommand.TELEPORTCURSOR,
+                                       // The next two are cast to char because, for example, a value of 76 should be
+                                       // encoded as (char)76 (which is 'L'), rather than as '7' followed by '6':
+                                       (char)mostRecentScreen.CursorColumn,
+                                       (char)mostRecentScreen.CursorRow));
+
+            prevTelnetScreens[telnet] = mostRecentScreen.DeepCopy();
+        }
+        
+        public void ClearScreen()
+        {
+            shared.Screen.ClearScreen();
+            foreach (TelnetSingletonServer telnet in telnets)
+            {
+                telnet.Write((char)UnicodeCommand.CLEARSCREEN);
+                prevTelnetScreens[telnet] = ScreenSnapShot.EmptyScreen(shared.Screen);
+            }
+        }
+
+        public int NumTelnets()
+        {
+            return telnets.Count;
+        }
+        
+        private int HowManyRowsFit()
+        {
+            return (int)(WindowRect.height - 100) / CHARSIZE;
+        }
+
+        private int HowManyColumnsFit()
+        {
+            return (int)(WindowRect.width - 65) / CHARSIZE;
+        }
+
     }
 }

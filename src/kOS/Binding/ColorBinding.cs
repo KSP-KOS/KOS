@@ -21,6 +21,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("YELLOW", () => new RgbaColor(1.0f, 1.0f, 0.0f));
             shared.BindingMgr.AddGetter("MAGENTA", () => new RgbaColor(1.0f, 0.0f, 1.0f));
             shared.BindingMgr.AddGetter("CYAN", () => new RgbaColor(0.0f, 1.0f, 1.0f));
+            shared.BindingMgr.AddGetter("GREY", () => new RgbaColor(0.5f, 0.5f, 0.5f));
 
             // Other synonym spellings repeating the above colors:
             shared.BindingMgr.AddGetter("PURPLE", () => new RgbaColor(1.0f, 0.0f, 1.0f));

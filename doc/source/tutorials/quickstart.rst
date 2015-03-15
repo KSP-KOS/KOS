@@ -183,7 +183,7 @@ By saving the file in ``Ships/Script``, you have actually put it in your archive
 after saving the file from your external text editor program, you will see a listing of your file "hellolaunch" right away. Okay, now copy it to your local drive and give it a try running it from there::
 
     SWITCH TO 1.
-    COPY HELLOLANCH FROM 0.
+    COPY HELLOLAUNCH FROM 0.
     RUN HELLOLAUNCH.
 
 .. figure:: /_images/tutorials/quickstart/example_2_1.png
@@ -245,7 +245,7 @@ So to fix that problem, let's add steering control to the script.
 
 The easy way to control steering is to use the ``LOCK STEERING`` command.
 
-Once you have mastered the basics of **kOS**, you should go and read `the documentation on ship steering techniques <../ship_control/index.html>`__, but that's a more advanced topic for later.
+Once you have mastered the basics of **kOS**, you should go and read `the documentation on ship steering techniques <../commands/flight.html>`__, but that's a more advanced topic for later.
 
 The way to use the ``LOCK STEERING`` command is to set it to a thing called a :struct:`Vector` or a :struct:`Direction`. There are several Directions built-in to **kOS**, one of which is called "UP". "UP" is a Direction that always aims directly toward the sky (the center of the blue part of the navball).
 
@@ -304,11 +304,11 @@ Step 5: Add staging logic
 
 The logic for how and when to stage can be an interesting and fun thing to write yourself. This example will keep it very simple, and this is the part where it's important that you are using a vessel that only contains liquidfuel engines. If your vessel has some booster engines, then it would require a more sophisticated script to launch it correctly than this tutorial gives you.
 
-To add the logic to check when to stage, we introduce a new concept called the WHEN trigger. To see full documentation on it when you finish the tutorial, look for it on the `Flow Control page <../../command/flowControl/index.html>`__
+To add the logic to check when to stage, we introduce a new concept called the WHEN trigger. To see full documentation on it when you finish the tutorial, look for it on the `Flow Control page <../language/flow.html>`__
 
 The quick and dirty explanation is that a WHEN section is a short section of code that you set up to run LATER rather than right now. It creates a check in the background that will constantly look for some condition to occur, and when it happens, it interrupts whatever else the code is doing, and it will run the body of the WHEN code before continuing from where it left off in the main script.
 
-There are some complex dangers with writing WHEN triggers that can cause **KSP** itself to hang or stutter if you are not careful, but explaining them is beyond the scope of this tutorial. But when you want to start using WHEN triggers yourself, you really should read the section on WHEN in the `Flow Control page <../../command/flowControl/index.html>`__ before you do so.
+There are some complex dangers with writing WHEN triggers that can cause **KSP** itself to hang or stutter if you are not careful, but explaining them is beyond the scope of this tutorial. But when you want to start using WHEN triggers yourself, you really should read the section on WHEN in the `Flow Control page <../language/flow.html>`__ before you do so.
 
 The WHEN trigger we are going to add to the launch script looks like this::
 

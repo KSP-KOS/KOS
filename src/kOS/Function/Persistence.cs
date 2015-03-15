@@ -55,7 +55,7 @@ namespace kOS.Function
             string direction = shared.Cpu.PopValue().ToString();
             string fileName = shared.Cpu.PopValue(true).ToString();
 
-            Debug.Logger.Log(string.Format("FunctionCopy: Volume: {0} Direction: {1} Filename: {2}", volumeId, direction, fileName));
+            SafeHouse.Logger.Log(string.Format("FunctionCopy: Volume: {0} Direction: {1} Filename: {2}", volumeId, direction, fileName));
 
             if (shared.VolumeMgr != null)
             {
