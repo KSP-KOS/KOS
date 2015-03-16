@@ -53,6 +53,13 @@ namespace kOS.Module
         [KSPField(isPersistant = true, guiName = "kOS Base Part Mass", guiActive = false)]
         public float basePartMass = 0F;
 
+        [KSPField(isPersistant = true)]
+        public float maximumControllableMass = float.MaxValue;
+        [KSPField(isPersistant = true)]
+        public int maximumControllableParts = int.MaxValue;
+
+        private bool avionicsEnforcedPowerDown = false;
+
         [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string diskSpaceUI = "1024";
 
@@ -80,6 +87,8 @@ namespace kOS.Module
             SafeHouse.Logger.Log("Toggle Power");
             ProcessorModes newProcessorMode = (ProcessorMode != ProcessorModes.OFF) ? ProcessorModes.OFF : ProcessorModes.STARVED;
             SetMode(newProcessorMode);
+            if (newProcessorMode == ProcessorModes.OFF)
+                avionicsEnforcedPowerDown = false;
         }
         
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
@@ -473,6 +482,41 @@ namespace kOS.Module
             {
                 ProcessorMode = ProcessorModes.OFF;
                 return false;
+            }
+            // Do a check for avionics limits (mass and part count)
+            if (vessel != null)
+            {
+                int numParts = vessel.parts.Count;
+                float vesselMass = 0f;
+
+                if (numParts != vesselPartCount)
+                {
+                    // recalculate mass because our part count has changed
+                    vesselPartCount = numParts;
+                    for (int i = 0; i < numParts; i++)
+                    {
+                        // add up mass
+                        if ((object)(vessel.Parts[i].rb) != null)
+                            vesselMass += vessel.Parts[i].rb.mass;
+                        else
+                            vesselMass += vessel.Parts[i].mass + vessel.Parts[i].GetResourceMass();
+                    }
+                }
+
+                // If current mass or part count is above limits, shutdown the CPU
+                if (vesselMass > maximumControllableMass || numParts > maximumControllableParts)
+                {
+                    if (ProcessorMode == ProcessorModes.READY || ProcessorMode == ProcessorModes.STARVED)
+                        avionicsEnforcedPowerDown = true;
+                    SetMode(ProcessorModes.OFF);
+                    return false;
+                }
+                // If mass and part count are within limits, we turn the CPU back on
+                else
+                {
+                    if (avionicsEnforcedPowerDown && ProcessorMode == ProcessorModes.OFF)
+                        SetMode(ProcessorModes.STARVED);
+                }
             }
             return true;
         }
