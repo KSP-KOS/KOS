@@ -55,8 +55,10 @@ namespace kOS.Module
 
         [KSPField(isPersistant = true)]
         public float maximumControllableMass = float.MaxValue;
+        [KSPField(isPersistant = true)]
+        public int maximumControllableParts = int.MaxValue;
 
-        private bool massEnforcedPowerDown = false;
+        private bool avionicsEnforcedPowerDown = false;
 
         [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string diskSpaceUI = "1024";
@@ -86,7 +88,7 @@ namespace kOS.Module
             ProcessorModes newProcessorMode = (ProcessorMode != ProcessorModes.OFF) ? ProcessorModes.OFF : ProcessorModes.STARVED;
             SetMode(newProcessorMode);
             if (newProcessorMode == ProcessorModes.OFF)
-                massEnforcedPowerDown = false;
+                avionicsEnforcedPowerDown = false;
         }
         
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
@@ -481,32 +483,38 @@ namespace kOS.Module
                 ProcessorMode = ProcessorModes.OFF;
                 return false;
             }
-            // Do a check for vessel's current total mass and make sure we can control it
-            if (vessel != null && maximumControllableMass < float.MaxValue)
+            // Do a check for avionics limits (mass and part count)
+            if (vessel != null)
             {
                 int numParts = vessel.parts.Count;
                 float vesselMass = 0f;
-                for (int i = 0; i < vessel.Parts.Count; i++)
+
+                if (numParts != vesselPartCount)
                 {
-                    // add up mass
-                    if ((object)(vessel.Parts[i].rb) != null)
-                        vesselMass += vessel.Parts[i].rb.mass;
-                    else
-                        vesselMass += vessel.Parts[i].mass + vessel.Parts[i].GetResourceMass();
+                    // recalculate mass because our part count has changed
+                    vesselPartCount = numParts;
+                    for (int i = 0; i < numParts; i++)
+                    {
+                        // add up mass
+                        if ((object)(vessel.Parts[i].rb) != null)
+                            vesselMass += vessel.Parts[i].rb.mass;
+                        else
+                            vesselMass += vessel.Parts[i].mass + vessel.Parts[i].GetResourceMass();
+                    }
                 }
-                // if current mass is higher than our controllable mass, we turn off the CPU
-                if (vesselMass > maximumControllableMass)
+
+                // If current mass or part count is above limits, shutdown the CPU
+                if (vesselMass > maximumControllableMass || numParts > maximumControllableParts)
                 {
                     if (ProcessorMode == ProcessorModes.READY || ProcessorMode == ProcessorModes.STARVED)
-                        massEnforcedPowerDown = true;
+                        avionicsEnforcedPowerDown = true;
                     SetMode(ProcessorModes.OFF);
                     return false;
                 }
-                // If current mass is lower than our controllable mass, we turn the CPU back on
-                // This ensure that the CPU can be re-enabled when the craft gets lighter!
+                // If mass and part count are within limits, we turn the CPU back on
                 else
                 {
-                    if (massEnforcedPowerDown && ProcessorMode == ProcessorModes.OFF)
+                    if (avionicsEnforcedPowerDown && ProcessorMode == ProcessorModes.OFF)
                         SetMode(ProcessorModes.STARVED);
                 }
             }
