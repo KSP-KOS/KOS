@@ -53,6 +53,11 @@ namespace kOS.Module
         [KSPField(isPersistant = true, guiName = "kOS Base Part Mass", guiActive = false)]
         public float basePartMass = 0F;
 
+        [KSPField(isPersistant = true)]
+        public float maximumControllableMass = float.MaxValue;
+
+        private bool massEnforcedPowerDown = false;
+
         [KSPField(isPersistant = false, guiName = "kOS Disk Space", guiActive = false, guiActiveEditor = true), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string diskSpaceUI = "1024";
 
@@ -80,6 +85,8 @@ namespace kOS.Module
             SafeHouse.Logger.Log("Toggle Power");
             ProcessorModes newProcessorMode = (ProcessorMode != ProcessorModes.OFF) ? ProcessorModes.OFF : ProcessorModes.STARVED;
             SetMode(newProcessorMode);
+            if (newProcessorMode == ProcessorModes.OFF)
+                massEnforcedPowerDown = false;
         }
         
         [KSPAction("Open Terminal", actionGroup = KSPActionGroup.None)]
@@ -473,6 +480,35 @@ namespace kOS.Module
             {
                 ProcessorMode = ProcessorModes.OFF;
                 return false;
+            }
+            // Do a check for vessel's current total mass and make sure we can control it
+            if (vessel != null && maximumControllableMass < float.MaxValue)
+            {
+                int numParts = vessel.parts.Count;
+                float vesselMass = 0f;
+                for (int i = 0; i < vessel.Parts.Count; i++)
+                {
+                    // add up mass
+                    if ((object)(vessel.Parts[i].rb) != null)
+                        vesselMass += vessel.Parts[i].rb.mass;
+                    else
+                        vesselMass += vessel.Parts[i].mass + vessel.Parts[i].GetResourceMass();
+                }
+                // if current mass is higher than our controllable mass, we turn off the CPU
+                if (vesselMass > maximumControllableMass)
+                {
+                    if (ProcessorMode == ProcessorModes.READY || ProcessorMode == ProcessorModes.STARVED)
+                        massEnforcedPowerDown = true;
+                    SetMode(ProcessorModes.OFF);
+                    return false;
+                }
+                // If current mass is lower than our controllable mass, we turn the CPU back on
+                // This ensure that the CPU can be re-enabled when the craft gets lighter!
+                else
+                {
+                    if (massEnforcedPowerDown && ProcessorMode == ProcessorModes.OFF)
+                        SetMode(ProcessorModes.STARVED);
+                }
             }
             return true;
         }
