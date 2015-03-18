@@ -317,13 +317,22 @@ namespace kOS.Suffixed
             switch (type)
             {
                 case TransferPartType.Part:
+                {
+                    
                     var partValue = obj as PartValue;
                     parts.Add(partValue.Part);
                     break;
+                }
                 case TransferPartType.Parts:
-                    var partList = (obj as ListValue).Cast<PartValue>();
-                    parts.AddRange(partList.Select(part => part.Part));
+                {
+                    var listValue = (obj as ListValue);
+                    if (listValue != null)
+                    {
+                        var partValues = listValue.OfType<PartValue>();
+                        parts.AddRange(partValues.Select(partValue => partValue.Part));
+                    }
                     break;
+                }
                 case TransferPartType.Element:
                     var element = obj as ElementValue;
                     var elementParts = element.Parts.Cast<PartValue>();
