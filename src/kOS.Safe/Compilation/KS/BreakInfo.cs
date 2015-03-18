@@ -19,7 +19,7 @@ namespace kOS.Safe.Compilation.KS
         /// What is the nesting level that should be broken back to.
         /// </summary>
         public Int16 NestLevel {get; private set;} // 32767 max recursion supported?  Seems fine.
-        
+                
         /// <summary>
         /// Which opcodes are in need of adjusting.
         /// There are two kinds of adjustment:
@@ -33,11 +33,13 @@ namespace kOS.Safe.Compilation.KS
         /// <summary>
         /// Make a new break info block, with empty opcode list, given the current brace nest level.
         /// </summary>
+        /// <param name="type">Whether this is in the context of being a loop or being a function body.</param>
         /// <param name="nest">current brace nest level when the break info was set up</param>
         public BreakInfo(int nest)
         {
             NestLevel = (Int16)nest;
             Opcodes = new List<Opcode>();
         }
+        
     }
 }

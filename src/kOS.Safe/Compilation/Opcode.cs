@@ -68,14 +68,15 @@ namespace kOS.Safe.Compilation
         POP            = 0x4f,
         DUP            = 0x50,
         SWAP           = 0x51,
-        ADDTRIGGER     = 0x52,
-        REMOVETRIGGER  = 0x53,
-        WAIT           = 0x54,
-        ENDWAIT        = 0x55,
-        GETMETHOD      = 0x56,
-        STORELOCAL     = 0x57,
-        PUSHSCOPE      = 0x58,
-        POPSCOPE       = 0x59,
+        EVAL           = 0x52,
+        ADDTRIGGER     = 0x53,
+        REMOVETRIGGER  = 0x54,
+        WAIT           = 0x55,
+        ENDWAIT        = 0x56,
+        GETMETHOD      = 0x57,
+        STORELOCAL     = 0x58,
+        PUSHSCOPE      = 0x59,
+        POPSCOPE       = 0x5a,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -1144,6 +1145,7 @@ namespace kOS.Safe.Compilation
                 DeltaInstructionPointer = (int)functionPointer - currentPointer;
                 var contextRecord = new SubroutineContext(currentPointer+1);
                 cpu.PushAboveStack(contextRecord);
+                ReverseStackArgs(cpu);
             }
             else if (functionPointer is string)
             {
@@ -1163,7 +1165,7 @@ namespace kOS.Safe.Compilation
                     string.Format("kOS internal error: OpcodeCall calling a function described using {0} which is of type {1} and kOS doesn't know how to call that.", functionPointer, functionPointer.GetType().Name)
                     );
             }
-            
+
             if (! Direct)
             {
                 cpu.PopValue(); // consume function name, branch index, or delegate
@@ -1269,6 +1271,26 @@ namespace kOS.Safe.Compilation
                 throw;
             }
         }
+        
+        /// <summary>
+        /// Take the topmost arguments down to the ARG_MARKER_STRING, pop them off, and then
+        /// put them back again in reversed order so a function can read them in normal order.
+        /// </summary>
+        public void ReverseStackArgs(ICpu cpu)
+        {
+            List<object> args = new List<object>();
+            object arg = cpu.PopStack();
+            while (arg != null && (!(arg.ToString().Equals(ARG_MARKER_STRING))))
+            {
+                args.Add(arg);
+                arg = cpu.PopStack();
+            }
+            // Push the arg marker back on again.
+            cpu.PushStack(ARG_MARKER_STRING);
+            // Push the arguments back on again, which will invert their order:
+            foreach (object item in args)
+                cpu.PushStack(item);
+        }
 
         public override string ToString()
         {
@@ -1289,6 +1311,24 @@ namespace kOS.Safe.Compilation
                 // This should never happen with any user code:
                 throw new Exception( "kOS internal error: Stack misalignment detected when returning from routine.");
             }
+            // Return value should be atop the stack - we have to pop it so that
+            // we can reach the arg start marker under it:
+            object returnVal = cpu.PopValue();
+
+            // The next thing on the stack under the return value should be the marker that indicated where
+            // the parameters started.  It should be thrown away now.  If the next thing is NOT the marker
+            // of where the parameters started, that is proof the stack is misaligned, probably because the
+            // number of args passed didn't match the number of DECLARE PARAMETER statements in the function:
+            string shouldBeArgMarker = cpu.PopStack() as string;
+
+            if ( (shouldBeArgMarker == null) || (!(shouldBeArgMarker.Equals(OpcodeCall.ARG_MARKER_STRING))) )
+            {
+                throw new KOSArgumentMismatchException("(detected when returning from function)");
+            }
+            // If the proper argument marker was found, then it's all okay, so put the return value
+            // back, where it belongs, now that the arg start marker was popped off:
+            cpu.PushStack(returnVal);
+            
             var contextRecord = shouldBeContextRecord as SubroutineContext;
             
             int destinationPointer = contextRecord.CameFromInstPtr;
@@ -1454,6 +1494,24 @@ namespace kOS.Safe.Compilation
         }
     }
     
+    /// <summary>
+    /// Replaces the topmost thing on the stack with its evaluated,
+    /// fully dereferenced version.  For example, if the variable
+    /// foo contains value 4, and the top of the stack is the
+    /// identifier name "$foo", then this will replace the "$foo"
+    /// with a 4.
+    /// </summary>
+    public class OpcodeEval : Opcode
+    {
+        protected override string Name { get { return "eval"; } }
+        public override ByteCode Code { get { return ByteCode.EVAL; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            cpu.PushStack(cpu.PopValue());
+        }
+    }
+
     /// <summary>
     /// Pushes a new variable namespace scope (for example, when a "{" is encountered
     /// in a block-scoping language like C++ or Java or C#.)

@@ -969,6 +969,12 @@ namespace kOS.Execution
                 try
                 {
                     SafeHouse.Logger.Log("Parsing Context:\n\n" + scriptBuilder);
+                    
+                    // TODO - make this set up compiler options and pass them in properly, so we can detect built-ins properly.
+                    // (for the compiler to detect the difference between a user function call and a built-in, it needs to be
+                    // passed the FunctionManager object from Shared.)
+                    // this isn't fixed mainly because this OnLoad() code is a major bug fire already anyway and needs to be 
+                    // fixed, but that's way out of scope for the moment:
                     programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
                     RunProgram(program, true);

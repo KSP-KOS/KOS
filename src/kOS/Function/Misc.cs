@@ -150,7 +150,7 @@ namespace kOS.Function
                     if (shared.ProcessorMgr != null)
                     {
                         string filePath = string.Format("{0}/{1}", shared.VolumeMgr.GetVolumeRawIdentifier(targetVolume), fileName) ;
-                        var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
+                        var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager};
                         List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
                         var builder = new ProgramBuilder();
                         builder.AddRange(parts);
@@ -168,7 +168,7 @@ namespace kOS.Function
                 // clear the "program" compilation context
                 shared.ScriptHandler.ClearContext("program");
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
-                var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true};
+                var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager};
                 var programContext = ((CPU)shared.Cpu).GetProgramContext();
 
                 List<CodePart> codeParts;
@@ -230,7 +230,7 @@ namespace kOS.Function
 
             if (shared.ScriptHandler != null)
             {
-                var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
+                var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
                 // add this program to the address space of the parent program,
                 // or to a file to save:
