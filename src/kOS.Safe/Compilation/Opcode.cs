@@ -1141,14 +1141,17 @@ namespace kOS.Safe.Compilation
 
             if (functionPointer is int) 
             {
+                ReverseStackArgs(cpu);
                 int currentPointer = cpu.InstructionPointer;
                 DeltaInstructionPointer = (int)functionPointer - currentPointer;
                 var contextRecord = new SubroutineContext(currentPointer+1);
                 cpu.PushAboveStack(contextRecord);
-                ReverseStackArgs(cpu);
             }
             else if (functionPointer is string)
             {
+                // Built-ins don't need to dereference the stack values because they
+                // don't leave the scope - they're not implemented that way.  But later we
+                // might want to change that.
                 var name = functionPointer as string;
                 string functionName = name;
                 functionName = functionName.Substring(0, functionName.Length - 2);
@@ -1279,11 +1282,21 @@ namespace kOS.Safe.Compilation
         public void ReverseStackArgs(ICpu cpu)
         {
             List<object> args = new List<object>();
-            object arg = cpu.PopStack();
+            object arg = cpu.PopValue();
             while (arg != null && (!(arg.ToString().Equals(ARG_MARKER_STRING))))
             {
                 args.Add(arg);
-                arg = cpu.PopStack();
+
+                // It's important to dereference with PopValue, not using PopStack, because the function
+                // being called might not even be able to see the variable in scope anyway.
+                // In other words, if calling a function like so:
+                //     declare foo to 3.
+                //     myfunc(foo).
+                // The code inside myfunc needs to see that as being identical to just saying:
+                //     myfunc(3).
+                // It has to be unaware of the fact that the name of the argument was 'foo'.  It just needs to
+                // see the contents that were inside foo.
+                arg = cpu.PopValue();
             }
             // Push the arg marker back on again.
             cpu.PushStack(ARG_MARKER_STRING);

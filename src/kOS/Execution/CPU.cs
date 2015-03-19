@@ -426,10 +426,13 @@ namespace kOS.Execution
             foreach (string ident in globalVariables.Keys)
             {
                 string line;
-                try {
+                try
+                {
                     Variable v = globalVariables[ident];
                     line = ident;
-                    line += v.Value == null ? "= <null>" : "= " + v.Value;
+                    line += " is a " + v.Value.GetType().FullName;
+                    line += " with value = ";
+                    line += v.Value == null ? "<null>" : "" + v.Value;
                 }
                 catch (Exception e)
                 {

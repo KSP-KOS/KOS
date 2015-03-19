@@ -2266,11 +2266,17 @@ namespace kOS.Safe.Compilation.KS
             string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + "-iterator";
 
             PushBreakList(braceNestLevel);
+
+            // Add a scope level to hold the iterator variable.  This will live just "outside" the
+            // brace scope of the function body.
+            ++braceNestLevel;
+            AddOpcode(new OpcodePushScope());
+
             AddOpcode(new OpcodePush(iteratorIdentifier));
             VisitNode(node.Nodes[3]);
             AddOpcode(new OpcodePush("iterator"));
             AddOpcode(new OpcodeGetMember());
-            AddOpcode(new OpcodeStore());
+            AddOpcode(new OpcodeStoreLocal());
             // loop condition
             Opcode condition = AddOpcode(new OpcodePush(iteratorIdentifier));
             string conditionLabel = condition.Label;
@@ -2284,7 +2290,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePush(iteratorIdentifier));
             AddOpcode(new OpcodePush("value"));
             AddOpcode(new OpcodeGetMember());
-            AddOpcode(new OpcodeStore());
+            AddOpcode(new OpcodeStoreLocal());
             // instructions in FOR body
             VisitNode(node.Nodes[4]);
             // jump to condition
@@ -2300,6 +2306,11 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodeUnset());
             VisitVariableNode(node.Nodes[1]);
             AddOpcode(new OpcodeUnset());
+
+            // End the scope level holding the iterator variable:
+            --braceNestLevel;
+            AddOpcode(new OpcodePopScope());
+
             PopBreakList(endLoop.Label);
 
             nowInALoop = remember;
