@@ -1027,7 +1027,6 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            Console.WriteLine("eraseme: kOS: VisitActualFunction, isDirect="+isDirect+", directName="+directName);
             int parameterCount = 0;
             ParseNode trailerNode = node; // the function_trailer rule is here.
 
@@ -1128,54 +1127,43 @@ namespace kOS.Safe.Compilation.KS
 
                 string firstIdentifier = "";
                 bool isUserFunc = false;
-                Console.WriteLine("eraseme: kOS: VisitSuffix, A");
                 if (nodeIndex == 0)
                 {
-                    Console.WriteLine("eraseme: kOS: VisitSuffix, B");
                     firstIdentifier = GetIdentifierText(suffixTerm);
                     if (context.Locks.Contains(firstIdentifier))
                     {
-                        Console.WriteLine("eraseme: kOS: VisitSuffix, C");
                         Lock lockObject = context.Locks.GetLock(firstIdentifier);
                         firstIdentifier = lockObject.PointerIdentifier;
                         isUserFunc = true;
                     }
                 }
-                Console.WriteLine("eraseme: kOS: VisitSuffix, D");
                 // The term starts with either an identifier or an expression.  If it's the start, then parse
                 // it as a variable, else parse it as a raw identifier:
                 bool rememberIsV = identifierIsVariable;
                 identifierIsVariable = (!startsWithFunc) && nodeIndex == 0;
                 // Push this term on the stack unless it's the name of the user function or built-in function:
                 bool isDirect = true;
-                Console.WriteLine("eraseme: kOS: VisitSuffix, E");
                 if ( (!isUserFunc) && (nodeIndex > 0 || !startsWithFunc) )
                 {
-                    Console.WriteLine("eraseme: kOS: VisitSuffix, F");
                     VisitNode(suffixTerm.Nodes[0]);
                     isDirect = false;
                 }
-                Console.WriteLine("eraseme: kOS: VisitSuffix, G");
                 identifierIsVariable = rememberIsV;
                 if (nodeIndex != 0)
                 {
-                    Console.WriteLine("eraseme: kOS: VisitSuffix, H");
                     // when we are setting a member value we need to leave
                     // the last object and the last suffix in the stack
                     bool usingSetMember = (suffixTerm.Nodes.Count > 0) && (compilingSetDestination && nodeIndex == (node.Nodes.Count - 1));
 
                     if (!usingSetMember)
                     {
-                        Console.WriteLine("eraseme: kOS: VisitSuffix, I");
                         AddOpcode(startsWithFunc ? new OpcodeGetMethod() : new OpcodeGetMember());
                     }
                 }
-                Console.WriteLine("eraseme: kOS: VisitSuffix, isDirect="+isDirect+", firstIdentifier="+firstIdentifier);
 
                 // The remaining terms are a chain of function_trailers "(...)" and array_trailers "[...]" or "#.." in any arbitrary order:
                 for (int trailerIndex = 1; trailerIndex < suffixTerm.Nodes.Count; ++trailerIndex)
                 {
-                    Console.WriteLine("eraseme: kOS: VisitSuffix, J");
                     // suffixterm_trailer is always a wrapper around either function_trailer or array_trailer,
                     // so delve down one level to get which of them it is:
                     ParseNode trailerTerm = suffixTerm.Nodes[trailerIndex].Nodes[0];
@@ -1184,14 +1172,12 @@ namespace kOS.Safe.Compilation.KS
 
                     if (isFunc || isUserFunc)
                     {
-                        Console.WriteLine("eraseme: kOS: VisitSuffix, K");
                         // direct if it's just one term like foo(aaa) but indirect
                         // if it's a list of suffixes like foo:bar(aaa):
                         VisitActualFunction(trailerTerm, isDirect, isUserFunc, firstIdentifier);
                     }
                     if (isArray)
                     {
-                        Console.WriteLine("eraseme: kOS: VisitSuffix, L");
                         VisitActualArray(trailerTerm);
                     }
                 }
@@ -1390,10 +1376,8 @@ namespace kOS.Safe.Compilation.KS
             bool isVariable = (identifierIsVariable && !identifierIsSuffix);
             string prefix = isVariable ? "$" : String.Empty;
             string identifier = GetIdentifierText(node);
-            Console.WriteLine("eraseme: kOS: VisitIdentifier called, on identifier " + identifier );
             if (isVariable && context.Locks.Contains(identifier))
             {
-                Console.WriteLine("eraseme: kOS: It thinks it is an identifier.");
                 Lock lockObject = context.Locks.GetLock(identifier);
                 if (compilingSetDestination)
                 {
@@ -1770,10 +1754,6 @@ namespace kOS.Safe.Compilation.KS
         /// <param name="node"></param>
         private void AddFunctionJumpVars(ParseNode node)
         {
-            Console.WriteLine("eraseme: AddFunctionJumpVars("+((node==null)?"null":node.Token.Type.ToString())+"), when locks is size = " + (context.Locks == null ? -1 : context.Locks.GetLockList().Count()));
-            /*eraseme*/ foreach ( Lock l in context.Locks.GetLockList()) {
-                /*eraseme*/     Console.WriteLine("  " + (l.Identifier ?? "null") + ", IsFunction=" + l.IsFunction + ", ScopeNode=" + (l.ScopeNode == null ? "null" : l.ScopeNode.Token.Type.ToString()));
-            /*eraseme*/ }
             // All the functions for which this scope is where they live:
             IEnumerable<Lock> theseFuncs = context.Locks.GetLockList().Where((item) => item.IsFunction && item.ScopeNode == node);
             
