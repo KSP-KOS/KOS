@@ -23,14 +23,14 @@ namespace kOS.Execution
         }
 
         private readonly Stack stack;
-        private readonly Dictionary<string, Variable> globalVariables;
+        private readonly VariableScope globalVariables;
         private Status currentStatus;
         private double currentTime;
         private double timeWaitUntil;
         private readonly SharedObjects shared;
         private readonly List<ProgramContext> contexts;
         private ProgramContext currentContext;
-        private Dictionary<string, Variable> savedPointers;
+        private VariableScope savedPointers;
         private int instructionsSoFarInUpdate;
         private int instructionsPerUpdate;
         
@@ -56,7 +56,7 @@ namespace kOS.Execution
             this.shared = shared;
             this.shared.Cpu = this;
             stack = new Stack();
-            globalVariables = new Dictionary<string, Variable>();
+            globalVariables = new VariableScope(0, -1);
             contexts = new List<ProgramContext>();
             if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddObserver(this);
         }
@@ -70,10 +70,10 @@ namespace kOS.Execution
             currentStatus = Status.Running;
             currentTime = 0;
             timeWaitUntil = 0;
-            // clear stack
+            // clear stack (which also orphans all local variables so they can get garbage collected)
             stack.Clear();
-            // clear variables
-            globalVariables.Clear();
+            // clear global variables
+            globalVariables.Variables.Clear();
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
@@ -236,29 +236,43 @@ namespace kOS.Execution
 
         private void SaveAndClearPointers()
         {
-            savedPointers = new Dictionary<string, Variable>();
-            var pointers = new List<string>(globalVariables.Keys.Where(v => v.Contains('*')));
+            // To be honest, I'm a little afraid of this.  It appears to be doing
+            // something with locks (and now user functions) whenever you
+            // switch contexts from interpreter to program and it seems to be
+            // presuming the only such pointers that need to exist are going to be
+            // global.  This was written by marianoapp before I added locals,
+            // and I don't understand what it's for -- Dunbaratu
+            
+            savedPointers = new VariableScope(0,-1);
+            var pointers = new List<string>(globalVariables.Variables.Keys.Where(v => v.Contains('*')));
 
             foreach (var pointerName in pointers)
             {
-                savedPointers.Add(pointerName, globalVariables[pointerName]);
-                globalVariables.Remove(pointerName);
+                savedPointers.Variables.Add(pointerName, globalVariables.Variables[pointerName]);
+                globalVariables.Variables.Remove(pointerName);
             }
             SafeHouse.Logger.Log(string.Format("Saving and removing {0} pointers", pointers.Count));
         }
 
         private void RestorePointers()
         {
+            // To be honest, I'm a little afraid of this.  It appears to be doing
+            // something with locks (and now user functions) whenever you
+            // switch contexts from program to interpreter and it seems to be
+            // presuming the only such pointers that need to exist are going to be
+            // global.  This was written by marianoapp before I added locals,
+            // and I don't understand what it's for -- Dunbaratu
+            
             int restoredPointers = 0;
             int deletedPointers = 0;
 
-            foreach (var item in savedPointers)
+            foreach (var item in savedPointers.Variables)
             {
-                if (globalVariables.ContainsKey(item.Key))
+                if (globalVariables.Variables.ContainsKey(item.Key))
                 {
                     // if the pointer exists it means it was redefined from inside a program
                     // and it's going to be invalid outside of it, so we remove it
-                    globalVariables.Remove(item.Key);
+                    globalVariables.Variables.Remove(item.Key);
                     deletedPointers++;
                     // also remove the corresponding trigger if exists
                     if (item.Value.Value is int)
@@ -266,7 +280,7 @@ namespace kOS.Execution
                 }
                 else
                 {
-                    globalVariables.Add(item.Key, item.Value);
+                    globalVariables.Variables.Add(item.Key, item.Value);
                     restoredPointers++;
                 }
             }
@@ -345,44 +359,96 @@ namespace kOS.Execution
         /// </summary>
         /// <param name="peekDepth">how far down the peek under the top.  0 = localmost.</param>
         /// <returns>The dictionary found, or the global dictionary if peekDepth is too big.</returns>
-        private Dictionary<string,Variable> GetNestedDictionary(int peekDepth)
+        private VariableScope GetNestedDictionary(int peekDepth)
         {
             object stackItem = true; // any non-null value will do here, just to get the loop started.
             for (int rawStackDepth = 0 ; stackItem != null && peekDepth >= 0; ++rawStackDepth)
             {
                 stackItem = stack.Peek(-1 - rawStackDepth);
-                if (stackItem is Dictionary<string,Variable>)
+                if (stackItem is VariableScope)
                     --peekDepth;
                 if (stackItem is SubroutineContext)
                     stackItem = null; // once we hit the bottom of the current subroutine on the runtime stack - jump all the way out to global.
             }
-            return stackItem == null ? globalVariables : (Dictionary<string,Variable>) stackItem;
+            return stackItem == null ? globalVariables : (VariableScope) stackItem;
         }
 
         /// <summary>
         /// Gets the dictionary that contains the given identifer, starting the
         /// search at the local level and scanning the scopes upward all the
         /// way to the global dictionary.<br/>
-        /// Does not allow the walk to go past the start of the current function scope.<br/>
+        /// Does not allow the walk to use scope frames that were not directly in this
+        /// scope's lexical chain.  It skips over scope frames from other braches
+        /// of the parse tree.  (i.e. if a function calls a function elsewhere).<br/>
         /// Returns null when no hit was found.<br/>
         /// </summary>
         /// <param name="identifier">identifer name to search for</param>
         /// <returns>The dictionary found, or null if no dictionary contins the identifier.</returns>
-        private Dictionary<string,Variable> GetNestedDictionary(string identifier)
+        private VariableScope GetNestedDictionary(string identifier)
         {
-            for (int rawStackDepth = 0 ; true /*all loop exits are explicit break or return stmts*/ ; ++rawStackDepth)
+            Int16 rawStackDepth = 0 ;
+            while (true) /*all of this loop's exits are explicit break or return stmts*/
             {
-                object stackItem = stack.Peek(-1 - rawStackDepth);
-                if (stackItem == null)
+                object stackItem;
+                bool stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
+                if (stackExhausted) 
                     break;
-                Dictionary<string,Variable> localDict = stackItem as Dictionary<string,Variable>;
-                if (localDict != null)
-                    if (localDict.ContainsKey(identifier))
-                        return localDict;
-                if (stackItem is SubroutineContext)
-                    break; // once we hit the bottom of the current subroutine on the runtime stack - jump all the way out to global.
+                VariableScope localDict = stackItem as VariableScope;
+                if (localDict == null) // some items on the stack might not be variable scopes.  skip them.
+                {
+                    ++rawStackDepth;
+                    continue;
+                }
+
+                if (localDict.Variables.ContainsKey(identifier))
+                    return localDict;
+
+                
+                // Get the next VariableScope that is the lexical (not runtime) parent of this one:
+                // -------------------------------------------------------------------------------
+
+                // Scan the stack until the variable scope with the right parent ID is seen:
+                Int16 skippedLevels = 0;
+                while ( !(stackExhausted))
+                {
+                    bool needsIncrement = true;
+                    VariableScope scopeFrame = stackItem as VariableScope;
+                    if (scopeFrame != null) // skip cases where the thing on the stack isn't a variable scope.
+                    {
+                        // If the scope id of this frame is my parent ID, then we found it and are done.
+                        if (scopeFrame.ScopeId == localDict.ParentScopeId)
+                        {
+                            needsIncrement = false;
+                            break;
+                        }
+
+                        // In the case where the variable scope is the SAME lexical ID as myself, that
+                        // means I recursively called myself and the thing on the runtime stack just before
+                        // me is ... another instance of me.  In that case just follow it's parent skip level
+                        if (scopeFrame.ScopeId == localDict.ScopeId && scopeFrame.ParentSkipLevels > 0)
+                        {
+                            skippedLevels += scopeFrame.ParentSkipLevels;
+                            rawStackDepth += scopeFrame.ParentSkipLevels;
+                            needsIncrement = false;
+                        }
+                    }
+
+                    if (needsIncrement)
+                    {
+                        ++skippedLevels;
+                        ++rawStackDepth;
+                    }
+                    stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
+                }
+                
+                // Record how many levels had to be skipped for that to work.  In future calls of this
+                // method, it will know how far to jump in the stack without doing that scan.  This can
+                // be quite a speedup when dealing with nested recursion, where the runtime stack might
+                // be a hundred levels deep of the same function calling itself before hitting its lexical parent.
+                if (stackItem != null && localDict.ParentSkipLevels == 0)
+                    localDict.ParentSkipLevels = skippedLevels;
             }
-            if (globalVariables.ContainsKey(identifier))
+            if (globalVariables.Variables.ContainsKey(identifier))
                 return globalVariables;
             else
                 return null;
@@ -423,12 +489,12 @@ namespace kOS.Execution
             msg.AppendLine("============== STACK VARIABLES ===============");
             msg.AppendLine(stack.Dump());
             msg.AppendLine("============== GLOBAL VARIABLES ==============");
-            foreach (string ident in globalVariables.Keys)
+            foreach (string ident in globalVariables.Variables.Keys)
             {
                 string line;
                 try
                 {
-                    Variable v = globalVariables[ident];
+                    Variable v = globalVariables.Variables[ident];
                     line = ident;
                     line += " is a " + v.Value.GetType().FullName;
                     line += " with value = ";
@@ -459,9 +525,9 @@ namespace kOS.Execution
         private Variable GetVariable(string identifier, bool barewordOkay = false, bool failOkay = false)
         {
             identifier = identifier.ToLower();
-            Dictionary<string,Variable> foundDict = GetNestedDictionary(identifier);
+            VariableScope foundDict = GetNestedDictionary(identifier);
             if (foundDict != null)
-                return foundDict[identifier];
+                return foundDict.Variables[identifier];
             if (barewordOkay)
             {
                 string strippedIdent = identifier.TrimStart('$');
@@ -490,19 +556,19 @@ namespace kOS.Execution
                 identifier = "$" + identifier;
             }
             
-            Dictionary<string,Variable> whichDict;
+            VariableScope whichDict;
             if (local)
                 whichDict = GetNestedDictionary(0);
             else
                 whichDict = globalVariables;
-            if (whichDict.ContainsKey(identifier))
+            if (whichDict.Variables.ContainsKey(identifier))
             {
-                if (whichDict[identifier].Value is BoundVariable)
+                if (whichDict.Variables[identifier].Value is BoundVariable)
                     throw new KOSIdentiferClashException(identifier);
                 else
-                    whichDict.Remove(identifier);
+                    whichDict.Variables.Remove(identifier);
             }
-            whichDict.Add(identifier, variable);
+            whichDict.Variables.Add(identifier, variable);
         }
 
         public bool VariableIsRemovable(Variable variable)
@@ -520,14 +586,14 @@ namespace kOS.Execution
         public void RemoveVariable(string identifier)
         {
             identifier = identifier.ToLower();
-            Dictionary<string,Variable> foundDict = GetNestedDictionary(identifier);
-            if (foundDict != null && VariableIsRemovable(foundDict[identifier]))
+            VariableScope foundDict = GetNestedDictionary(identifier);
+            if (foundDict != null && VariableIsRemovable(foundDict.Variables[identifier]))
             {
                 // Tell Variable to orphan its old value now.  Faster than relying 
                 // on waiting several seconds for GC to eventually call ~Variable()
-                foundDict[identifier].Value = null;
+                foundDict.Variables[identifier].Value = null;
                 
-                foundDict.Remove(identifier);
+                foundDict.Variables.Remove(identifier);
             }
         }
 
@@ -913,11 +979,11 @@ namespace kOS.Execution
                 var contextNode = new ConfigNode("context");
 
                 // Save variables
-                if (globalVariables.Count > 0)
+                if (globalVariables.Variables.Count > 0)
                 {
                     var varNode = new ConfigNode("variables");
 
-                    foreach (var kvp in globalVariables)
+                    foreach (var kvp in globalVariables.Variables)
                     {
                         if (!(kvp.Value is BoundVariable) &&
                             (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted

@@ -49,6 +49,7 @@
     <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
     <Compile Include="Compilation\KS\Context.cs" />
+    <Compile Include="Compilation\KS\Scope.cs" />
     <Compile Include="Compilation\KS\Subprogram.cs" />
     <Compile Include="Compilation\KS\KSScript.cs" />
     <Compile Include="Compilation\KS\Lock.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Execution\ICpu.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\Variable.cs" />
+    <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
     <Compile Include="Function\IFunctionManager.cs" />
     <Compile Include="ILogger.cs" />

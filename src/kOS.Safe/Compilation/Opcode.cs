@@ -1533,13 +1533,53 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodePushScope : Opcode
     {
+        [MLField(1,true)]
+        public Int16 ScopeId {get;set;}
+        [MLField(2,true)]
+        public Int16 ParentScopeId {get;set;}
+
+        /// <summary>
+        /// Push a scope frame that knows the id of its lexical parent scope.
+        /// </summary>
+        /// <param name="id">the unique id of this scope frame.</param>
+        /// <param name="parentId">the unique id of the scope frame this scope is inside of.</param>
+        public OpcodePushScope(Int16 id, Int16 parentId)
+        {
+            ScopeId = id;
+            ParentScopeId = parentId;
+        }
+
+        /// <summary>
+        /// This variant of the constructor is just for ML file save/load to use.
+        /// </summary>
+        protected OpcodePushScope()
+        {
+            ScopeId = -1;
+            ParentScopeId = -1;
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<2)
+                throw new Exception("Saved field in ML file for OpcodePushScope seems to be missing.  Version mismatch?");
+            ScopeId = (Int16)( fields[0] );
+            ParentScopeId = (Int16)( fields[1] );
+        }
+
         protected override string Name { get { return "pushscope"; } }
         public override ByteCode Code { get { return ByteCode.PUSHSCOPE; } }
         
         public override void Execute(ICpu cpu)
         {
-            cpu.PushAboveStack(new Dictionary<string, Variable>());
+            cpu.PushAboveStack(new VariableScope(ScopeId,ParentScopeId));
         }
+
+        public override string ToString()
+        {
+            return String.Format("{0} {1} {2}", Name, ScopeId, ParentScopeId);
+        }
+ 
     }
 
     /// <summary>

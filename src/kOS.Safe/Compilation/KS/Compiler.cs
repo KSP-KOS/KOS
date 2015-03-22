@@ -26,7 +26,10 @@ namespace kOS.Safe.Compilation.KS
         private bool identifierIsSuffix;
         private bool nowInALoop;
         private bool needImplicitReturn;
-        private int braceNestLevel;
+        private bool nextBraceIsFunction;
+        private Int16 braceNestLevel;
+        private readonly List<Int16> scopeStack = new List<Int16>();
+        private readonly Dictionary<ParseNode, Scope> scopeMap = new Dictionary<ParseNode, Scope>();
         private readonly List<ParseNode> programParameters = new List<ParseNode>();
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
@@ -60,6 +63,9 @@ namespace kOS.Safe.Compilation.KS
             nowInALoop = false;
             needImplicitReturn = true;
             braceNestLevel = 0;
+            nextBraceIsFunction = false;
+            scopeStack.Clear();
+            scopeMap.Clear();
             programParameters.Clear();
         }
 
@@ -76,6 +82,7 @@ namespace kOS.Safe.Compilation.KS
             {
                 if (tree.Nodes.Count > 0)
                 {
+                    TraverseScopeBranch(tree.Nodes[0]);
                     PreProcess(tree);
                     CompileProgram(tree);
                 }
@@ -196,6 +203,14 @@ namespace kOS.Safe.Compilation.KS
                 //
                 case TokenType.lock_stmt:
                 case TokenType.declare_stmt: // for DECLARE FUNCTION's
+                    // for catching functions nested inside functions, or locks nested inside functions:
+                    // Depth-first: Walk my children first, then iterate through me.  Thus the functions nested inside
+                    // me have already been compiled before I start compiling my own code.  This allows my code to make
+                    // forward-calls into my nested functions, because they've been compiled and we know where they live
+                    // in memory now.
+                    foreach (ParseNode childNode in node.Nodes)
+                        IterateLocks(childNode, action);                    
+
                     action.Invoke(node);
                     break;
             }
@@ -469,10 +484,10 @@ namespace kOS.Safe.Compilation.KS
             // lock expression's or function body's code
             currentCodeSection = lockObject.GetLockFunction(expressionHash);
             if (isDefFunc)
-                PushReturnList();
+                nextBraceIsFunction = true;
             VisitNode(bodyNode);
             if (isDefFunc)
-                PopReturnList();
+                nextBraceIsFunction = false;
             if (needImplicitReturn)
             {
                 if (isDefFunc)
@@ -649,6 +664,93 @@ namespace kOS.Safe.Compilation.KS
         private int GetReturnNestLevel()
         {
             return (returnList.Count > 0) ? returnList.Last() : -1;
+        }
+        
+        /// <summary>
+        /// Insert the Opcode to start a new lexical scope, handling the parent id mapping.
+        /// Call upon every open brace "{"
+        /// </summary>
+        private void BeginScope(ParseNode node)
+        {
+            // walk up parse tree until a node with a scope is found:
+            while (node != null && !scopeMap.ContainsKey(node))
+                node = node.Parent;
+
+            // defaults if the node isn't found:
+            Int16 scopeId = 0;
+            Int16 parentScopeId = 0;
+            braceNestLevel = 0;
+            
+            if (node != null)
+            {
+                Scope thisScope = scopeMap[node];
+                scopeId = thisScope.ScopeId;
+                parentScopeId = thisScope.ParentScopeId;
+                braceNestLevel = thisScope.NestDepth;
+            }
+            AddOpcode(new OpcodePushScope(scopeId, parentScopeId));
+        }
+        
+        /// <summary>
+        /// Insert the Opcode to finish a lexical scope
+        /// Call upon every close brace "}"
+        /// </summary>
+        private void EndScope(ParseNode node)
+        {
+            node = node.Parent;
+
+            // Walk up parse tree starting with my parent, until a node with a scope is found.
+            // The goal here is to get the scope one level outside the current scope.
+            while (node != null && ! scopeMap.ContainsKey(node))
+                node = node.Parent;
+            if (node != null)
+            {
+                Scope thisScope = scopeMap[node];
+                braceNestLevel = thisScope.NestDepth;
+            }
+            else
+            {
+                braceNestLevel = 0;
+            }
+
+            AddOpcode(new OpcodePopScope());
+        }
+        
+        /// <summary>
+        /// Because the compile occurs a bit out of order (doing the most deeply nested function
+        /// first, then working out from there) it walks the scope nesting in the wrong order. 
+        /// Therefore before doing the complie, run through in one pass just recording the nesting
+        /// levels and lexical parent tree of the scoping before we begin, so we can
+        /// use that information later in the parse:
+        /// </summary>
+        /// <param name="node"></param>
+        private void TraverseScopeBranch(ParseNode node)
+        {
+            switch (node.Token.Type)
+            {
+                // List all the types of parse node that open a new variable scope here:
+                // ---------------------------------------------------------------------
+                case TokenType.for_stmt: // Here because it wraps the body inside an outer scope that holds the for-iterator variable.                
+                case TokenType.instruction_block:
+
+                    ++braceNestLevel;
+                    Int16 parentId = ( (scopeStack.Count == 0) ? (Int16)0 : scopeStack.Last() );
+                    scopeStack.Add(++context.MaxScopeIdSoFar);
+                    scopeMap[node] = new Scope(context.MaxScopeIdSoFar, parentId, braceNestLevel);
+                    
+                    foreach (ParseNode childNode in node.Nodes)
+                        TraverseScopeBranch(childNode);
+                    
+                    --braceNestLevel;
+                    if (scopeStack.Count > 0)
+                        scopeStack.RemoveAt(scopeStack.Count-1);
+                    break;
+                    
+                default:
+                    foreach (ParseNode childNode in node.Nodes)
+                          TraverseScopeBranch(childNode);
+                    break;                    
+            }
         }
 
         private void VisitNode(ParseNode node)
@@ -1739,12 +1841,15 @@ namespace kOS.Safe.Compilation.KS
 
         private void VisitInstructionBlock(ParseNode node)
         {
-            ++braceNestLevel;
-            AddOpcode(new OpcodePushScope());
+            NodeStartHousekeeping(node);
+            BeginScope(node);
+            if (nextBraceIsFunction)
+                PushReturnList();
             AddFunctionJumpVars(node);
             VisitChildNodes(node);
-            AddOpcode(new OpcodePopScope());
-            --braceNestLevel;
+            if (nextBraceIsFunction)
+                PopReturnList();
+            EndScope(node);
         }
         
         /// <summary>
@@ -2185,9 +2290,9 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            int nestLevelJustOutsideFuncBraces = GetReturnNestLevel();
+            int nestLevelOfFuncBraces = GetReturnNestLevel();
 
-            if (nestLevelJustOutsideFuncBraces < 0)
+            if (nestLevelOfFuncBraces < 0)
                 throw new KOSReturnInvalidHereException();
 
             // Push the return expression onto the stack, or if it was a naked RETURN
@@ -2207,7 +2312,7 @@ namespace kOS.Safe.Compilation.KS
             // simpler than the BREAK case because RETURN already knows to use the function
             // call stack to figure out where to return to, so we don't have to wait until
             // later to decide where to jump to like we do in BREAK:
-            AddOpcode(new OpcodePopScope(braceNestLevel - nestLevelJustOutsideFuncBraces));
+            AddOpcode(new OpcodePopScope(1 + braceNestLevel - nestLevelOfFuncBraces));
             AddOpcode(new OpcodeReturn());
         }
 
@@ -2249,8 +2354,7 @@ namespace kOS.Safe.Compilation.KS
 
             // Add a scope level to hold the iterator variable.  This will live just "outside" the
             // brace scope of the function body.
-            ++braceNestLevel;
-            AddOpcode(new OpcodePushScope());
+            BeginScope(node);
 
             AddOpcode(new OpcodePush(iteratorIdentifier));
             VisitNode(node.Nodes[3]);
@@ -2288,8 +2392,7 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodeUnset());
 
             // End the scope level holding the iterator variable:
-            --braceNestLevel;
-            AddOpcode(new OpcodePopScope());
+            EndScope(node);
 
             PopBreakList(endLoop.Label);
 
