@@ -466,8 +466,8 @@ namespace kOS.Safe.Compilation.KS
                     short rememberLastLine = lastLine;
                     lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
                     currentCodeSection = triggerObject.Code;
-                    AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // need these for all locks now.
                     AddOpcode(new OpcodePush("$" + lockObject.Identifier));
+                    AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // need these for all locks now.
                     AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
                     if (allowLazyGlobal)
                         AddOpcode(new OpcodeStore());
@@ -1268,7 +1268,7 @@ namespace kOS.Safe.Compilation.KS
                 if (nodeIndex == 0)
                 {
                     firstIdentifier = GetIdentifierText(suffixTerm);
-                    if (context.Locks.Contains(firstIdentifier))
+                    if (context.Locks.Contains(firstIdentifier) && !compilingSetDestination)
                     {
                         Lock lockObject = context.Locks.GetLock(firstIdentifier);
                         firstIdentifier = lockObject.PointerIdentifier;
@@ -2195,6 +2195,7 @@ namespace kOS.Safe.Compilation.KS
                 {
                     Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
                     AddOpcode(new OpcodeCall(null)).DestinationLabel = subprogramObject.FunctionLabel;
+                    AddOpcode(new OpcodePop()); // ditch the dummy return value for now - maybe we can use it in a later version.
                 }
             }
             else
@@ -2209,6 +2210,7 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePush(null));
 
                 AddOpcode(new OpcodeCall("run()"));
+                AddOpcode(new OpcodePop()); // ditch the dummy return value for now - maybe we can use it in a later version.
             }
         }
 
