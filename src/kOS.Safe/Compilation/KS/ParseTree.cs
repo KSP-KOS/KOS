@@ -187,6 +187,12 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction:
                     Value = Evalinstruction(tree, paramlist);
                     break;
+                case TokenType.lazyglobal_directive:
+                    Value = Evallazyglobal_directive(tree, paramlist);
+                    break;
+                case TokenType.directive:
+                    Value = Evaldirective(tree, paramlist);
+                    break;
                 case TokenType.set_stmt:
                     Value = Evalset_stmt(tree, paramlist);
                     break;
@@ -370,6 +376,20 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evalinstruction(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evallazyglobal_directive(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evaldirective(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);

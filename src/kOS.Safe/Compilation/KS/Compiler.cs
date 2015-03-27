@@ -27,6 +27,7 @@ namespace kOS.Safe.Compilation.KS
         private bool nowInALoop;
         private bool needImplicitReturn;
         private bool nextBraceIsFunction;
+        private bool allowLazyGlobal;
         private Int16 braceNestLevel;
         private readonly List<Int16> scopeStack = new List<Int16>();
         private readonly Dictionary<ParseNode, Scope> scopeMap = new Dictionary<ParseNode, Scope>();
@@ -64,6 +65,7 @@ namespace kOS.Safe.Compilation.KS
             needImplicitReturn = true;
             braceNestLevel = 0;
             nextBraceIsFunction = false;
+            allowLazyGlobal = true;
             scopeStack.Clear();
             scopeMap.Clear();
             programParameters.Clear();
@@ -82,7 +84,6 @@ namespace kOS.Safe.Compilation.KS
             {
                 if (tree.Nodes.Count > 0)
                 {
-                    TraverseScopeBranch(tree.Nodes[0]);
                     PreProcess(tree);
                     CompileProgram(tree);
                 }
@@ -170,6 +171,7 @@ namespace kOS.Safe.Compilation.KS
         private void PreProcess(ParseTree tree)
         {
             ParseNode rootNode = tree.Nodes[0];
+            TraverseScopeBranch(rootNode);
             PreProcessLocks(rootNode);
             PreProcessStatements(rootNode);
         }
@@ -215,7 +217,7 @@ namespace kOS.Safe.Compilation.KS
                     break;
             }
         }
-
+        
         private void PreProcessStatements(ParseNode node)
         {
 
@@ -448,19 +450,15 @@ namespace kOS.Safe.Compilation.KS
             // exist exactly once, and can be "forward" called from higher up in
             // the same scope so they get assigned when the scope is first opened.
             //
-            // TODO ? ? : Do we want to have local locks?  It could be done by having them
-            // define the lock... but....  could mess things up for system locks.  For
-            // now, we're defining that all locks are global?
             if (isLock && !lockObject.IsInitialized())
             {
-                // initialization code
                 currentCodeSection = lockObject.InitializationCode;
-                AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
-                AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
-                AddOpcode(new OpcodeStore());
 
                 if (lockObject.IsSystemLock())
                 {
+                    AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
+                    AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
+                    AddOpcode(new OpcodeStore());
                     // add trigger
                     string triggerIdentifier = "lock-" + lockObject.Identifier;
                     Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
@@ -468,11 +466,26 @@ namespace kOS.Safe.Compilation.KS
                     short rememberLastLine = lastLine;
                     lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
                     currentCodeSection = triggerObject.Code;
+                    AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // need these for all locks now.
                     AddOpcode(new OpcodePush("$" + lockObject.Identifier));
                     AddOpcode(new OpcodeCall(lockObject.PointerIdentifier));
-                    AddOpcode(new OpcodeStore());
+                    if (allowLazyGlobal)
+                        AddOpcode(new OpcodeStore());
+                    else
+                        AddOpcode(new OpcodeStoreExist());
                     AddOpcode(new OpcodeEOF());
                     lastLine = rememberLastLine;
+                }
+                else
+                {
+                    // initialization code - unfortunately the lock implementation presumed global namespace
+                    // and insisted on inserting an initialization block in front of the entire program to set up
+                    // the GLOBAL lock value.  This assumption was thorny to remove, so for now, we'll make the init
+                    // code consist of a dummy NOP until a better solution can be found.  Note this does put a NOP
+                    // into the code PER LOCK.  Which is silly.  It's because lockObject.IsInitialized() doesn't
+                    // know how to tell the difference between initialization code that's deliberately empty versus
+                    // initialization code being empty because the lock has never been set up properly yet.
+                    AddOpcode(new OpcodeNOP());
                 }
 
                 // build default dummy function to be used when this is a LOCK:
@@ -560,8 +573,18 @@ namespace kOS.Safe.Compilation.KS
                         Opcode callOpcode = AddOpcode(new OpcodeCall(subprogramObject.PointerIdentifier));
                         // set the call opcode as the destination of the previous branch
                         branchOpcode.DestinationLabel = callOpcode.Label;
-                        // return to the caller address
-                        AddOpcode(new OpcodeReturn());
+                        // return to the caller address, after adding a dummy return val:
+                        
+                        // maybe TODO?  Right now the RETURN command is being prevented from being used outside 
+                        // a function declaration.  But in principle we could have programs return exit codes
+                        // using the same archetecture, and in fact that is why this dummy return value is needed,
+                        // because OpcodeReturn now expects such a return value to exist and throws an exception when it
+                        // does not.
+                        // If an EXIT command was implemented, it would maybe allow an exit code that can be read here:
+                        AddOpcode(new OpcodePop()); // for now: throw away return code from subprogram.
+                        AddOpcode(new OpcodePush(0)); // Replace it with new dummy return code.
+                        AddOpcode(new OpcodeReturn()); // return that.
+
                         // set the function start label
                         subprogramObject.FunctionLabel = functionStart.Label;
 
@@ -746,6 +769,11 @@ namespace kOS.Safe.Compilation.KS
                         scopeStack.RemoveAt(scopeStack.Count-1);
                     break;
                     
+                // Some Compiler directives affect variable scope rules:
+                case TokenType.lazyglobal_directive:
+                    VisitLazyGlobalDirective(node);
+                    break;
+                    
                 default:
                     foreach (ParseNode childNode in node.Nodes)
                           TraverseScopeBranch(childNode);
@@ -762,8 +790,7 @@ namespace kOS.Safe.Compilation.KS
             switch (node.Token.Type)
             {
                 case TokenType.Start:
-                    AddFunctionJumpVars(null);
-                    VisitChildNodes(node);
+                    VisitStartStatement(node);
                     break;
                 case TokenType.instruction:
                     VisitChildNodes(node);
@@ -947,7 +974,16 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.identifier_led_expr:
                     VisitIdentifierLedExpression(node);
                     break;
+                case TokenType.directive:
+                    VisitDirective(node);
+                    break;
             }
+        }
+        
+        private void VisitStartStatement(ParseNode node)
+        {
+            AddFunctionJumpVars(null);
+            VisitChildNodes(node);
         }
 
         private void VisitChildNodes(ParseNode node)
@@ -1378,6 +1414,10 @@ namespace kOS.Safe.Compilation.KS
 
         private string GetIdentifierText(ParseNode node)
         {
+            //Prevent recursing through parenthesized sub-expressions:
+            if (node.Token.Type == TokenType.expr)
+                return string.Empty;
+
             if (node.Token.Type == TokenType.IDENTIFIER || node.Token.Type == TokenType.FILEIDENT)
             {
                 return node.Token.Text;
@@ -1456,10 +1496,6 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             
-            // I'm not entirely convinced this method is even being called by the parser anymore.
-            // I think it's arranged such that it's VisitSuffix that does all the work.
-            // If I can find a way to prove that I might want to see this method deleted.
-
             if (node.Nodes.Count > 1 &&
                 node.Nodes[1].Token.Type == TokenType.function_trailer)
             {
@@ -1713,7 +1749,10 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                AddOpcode(new OpcodeStore());
+                if (allowLazyGlobal)
+                    AddOpcode(new OpcodeStore());
+                else
+                    AddOpcode(new OpcodeStoreExist());
             }
         }
 
@@ -1897,7 +1936,10 @@ namespace kOS.Safe.Compilation.KS
                 // lock variable
                 AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
                 AddOpcode(new OpcodePushRelocateLater(null), functionLabel);
-                AddOpcode(new OpcodeStore());
+                if (allowLazyGlobal)
+                    AddOpcode(new OpcodeStore());
+                else
+                    AddOpcode(new OpcodeStoreExist());
 
                 if (lockObject.IsSystemLock())
                 {
@@ -1961,9 +2003,13 @@ namespace kOS.Safe.Compilation.KS
                 }
 
                 // unlock variable
+                // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
                 AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
                 AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
-                AddOpcode(new OpcodeStore());
+                if (allowLazyGlobal)
+                    AddOpcode(new OpcodeStore());
+                else
+                    AddOpcode(new OpcodeStoreExist());
             }
         }
 
@@ -2065,7 +2111,10 @@ namespace kOS.Safe.Compilation.KS
             VisitVarIdentifier(node.Nodes[1]);
             AddOpcode(new OpcodeLogicToBool());
             AddOpcode(new OpcodeLogicNot());
-            AddOpcode(new OpcodeStore());
+            if (allowLazyGlobal)
+                AddOpcode(new OpcodeStore());
+            else
+                AddOpcode(new OpcodeStoreExist());
         }
 
         private void VisitPrintStatement(ParseNode node)
@@ -2124,6 +2173,14 @@ namespace kOS.Safe.Compilation.KS
             int volumeIndex = 3;
 
             // process program arguments
+            if (options.LoadProgramsInSameAddressSpace)
+            {
+                // If running inside the same prog, it needs the arg marker to exist twice because it will
+                // call a subroutine that in turn checks to see if it's loaded and then calls the real
+                // program, which will itself have a return as well, which outermost programs don't have:
+                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+            }
             if (node.Nodes.Count > 3 && node.Nodes[3].Token.Type == TokenType.arglist)
             {
                 VisitNode(node.Nodes[3]);
@@ -2241,7 +2298,10 @@ namespace kOS.Safe.Compilation.KS
                 VisitNode(node.Nodes[1]);
                 // build list
                 AddOpcode(new OpcodeCall("buildlist()"));
-                AddOpcode(new OpcodeStore());
+                if (allowLazyGlobal)
+                    AddOpcode(new OpcodeStore());
+                else
+                    AddOpcode(new OpcodeStoreExist());
             }
             else
             {
@@ -2468,6 +2528,93 @@ namespace kOS.Safe.Compilation.KS
                 VisitNode(node.Nodes[0]);
                 AddOpcode(new OpcodePop());
             }
+        }
+        
+        public void VisitDirective(ParseNode node)
+        {
+            // For now, let the compiler decide if the compiler directive is in the wrong place, 
+            // not the parser.  Therefore the parser treats it like a normal statement and here in
+            // the compiler we'll decide per-directive which directives can go where:
+
+            ParseNode directiveNode = node.Nodes[0]; // a directive contains the exact directive node nested one step inside it.
+            
+            if (directiveNode.Nodes.Count < 2)
+                throw new KOSCompileException("Kerboscript compiler directive ('@') without a keyword after it.");
+            
+            
+            switch (directiveNode.Nodes[1].Token.Type)
+            {
+                case TokenType.LAZYGLOBAL:
+                    VisitLazyGlobalDirective(directiveNode);
+                    break;
+                    
+                // There is room for expansion here if we want to add more compiler directives.
+                
+                default:
+                    throw new KOSCompileException("Kerboscript compiler directive @"+directiveNode.Nodes[1].Text+" is unknown.");
+            }
+        }
+        
+        public void VisitLazyGlobalDirective(ParseNode node)
+        {
+            if (node.Nodes.Count < 3 || node.Nodes[2].Token.Type != TokenType.onoff_trailer)
+                throw new KOSCompileException("Kerboscript compiler directive @LAZYGLOBAL requires an ON or an OFF keyword.");
+            
+            // This particular directive is only allowed up at the top of a file, prior to any other non-directive statements.
+            // ---------------------------------------------------------------------------------------------------------------
+            
+            bool validLocation = true; // will change to false if this isn't where a LazyGlobalDirective is allowed.
+
+            // Check 1 - see if I'm nested in anything other than the outermost list of statements:
+            ParseNode ancestor = node.Parent;
+            ParseNode myInstructionContainer = node.Parent;
+            while( ancestor != null && ancestor.Token.Type != TokenType.Start)
+            {
+                switch (ancestor.Token.Type)
+                {
+                    case TokenType.instruction_block:
+                    case TokenType.if_stmt:
+                    case TokenType.until_stmt:
+                    case TokenType.when_stmt:
+                    case TokenType.for_stmt:
+                    case TokenType.on_stmt:
+                        validLocation = false;
+                        break;
+                    case TokenType.instruction:
+                        myInstructionContainer = ancestor;
+                        break;
+                    default:
+                        break;
+                }
+                ancestor = ancestor.Parent;
+            }
+            // Check 2 - see if I am at the top.  The only statements allowed to preceed me are other directives:
+            if (validLocation && ancestor != null && ancestor.Token.Type == TokenType.Start)
+            {
+                // ancestor is now the Start node for the compile:
+                int myInstructionIndex = ancestor.Nodes.IndexOf(myInstructionContainer); // would be an expensive walk - except this should only exist once, near the top.
+                for (int i = 0; validLocation && i < myInstructionIndex; ++i)
+                {
+                    // if a statement preceeding me is anything other than another directive, it's wrong:
+                    if (ancestor.Nodes[i].Token.Type != TokenType.directive ||
+                            (ancestor.Nodes[i].Token.Type == TokenType.instruction &&
+                             ancestor.Nodes[i].Nodes[0].Token.Type != TokenType.directive)
+                       )
+                        validLocation = false;
+                }
+            }
+            if (!validLocation)
+                throw new KOSCommandInvalidHere("@LAZYGLOBAL",
+                                                "after the first command in the file",
+                                                "at the start of a script file, prior to any other statements");
+
+            // Okay the location is fine - do the work:
+            ParseNode onOffValue = node.Nodes[2].Nodes[0];
+            if (onOffValue.Token.Type == TokenType.ON)
+                allowLazyGlobal = true; // this is the default anyway, so this is just here for completeness in case we change the default.
+            else if (onOffValue.Token.Type == TokenType.OFF)
+                allowLazyGlobal = false;
+            // else do nothing, which really should be an impossible case.
         }
     }
 }

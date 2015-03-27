@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text; //eraseme
 
 namespace kOS.Safe.Compilation
 {
@@ -98,12 +99,14 @@ namespace kOS.Safe.Compilation
             }
             else
             {
+                linkedObject.MainCode.Add(new OpcodePush(0)); // all Returns now need a dummy return value on them.
                 linkedObject.MainCode.Add(new OpcodeReturn());
             }
         }
 
         private void ReplaceLabels(List<Opcode> program)
         {
+            Console.WriteLine("eraseme: ReplaceLabels program dump:\n------------------\n" + ErasemeGetCodeFragment(program));
             var labels = new Dictionary<string, int>();
 
             // get the index of every label
@@ -111,7 +114,9 @@ namespace kOS.Safe.Compilation
             {
                 if (program[index].Label != string.Empty)
                 {
+                    Console.WriteLine("eraseme: ReplaceLabels about to add label="+program[index].Label);
                     labels.Add(program[index].Label, index);
+                    Console.WriteLine("eraseme: ReplaceLabels just did add label="+program[index].Label);
                 }
             }
 
@@ -148,6 +153,28 @@ namespace kOS.Safe.Compilation
                 if (objectFile.EntryPointLabel != string.Empty)
                     objectFile.EntryPointAddress = labels[objectFile.EntryPointLabel];
             }
+        }
+        
+        public string ErasemeGetCodeFragment(List<Opcode> program) // eraseme - delete this entire function after debugging.
+        {
+            var codeFragment = new StringBuilder();
+            
+            const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5}";
+            codeFragment.AppendLine(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "opcode", "operand" ));
+            codeFragment.AppendLine(string.Format(FORMAT_STR, "----", "----", "---", "----", "---------------------", "" ));
+
+            for (int index = 0; index < program.Count; index++)
+            {
+                codeFragment.AppendLine(string.Format(FORMAT_STR,
+                                               program[index].SourceName,
+                                               program[index].SourceLine,
+                                               program[index].SourceColumn,
+                                               index,
+                                               program[index],
+                                               ("(label: "+program[index].Label+")")));
+            }
+
+            return codeFragment.ToString();
         }
 
         public int GetObjectFileEntryPointAddress(Guid objectFileId)

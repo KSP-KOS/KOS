@@ -76,6 +76,9 @@ INTEGER      -> @"[0-9]+";
 DOUBLE       -> @"[0-9]*\.[0-9]+";
 STRING       -> @"@?\""(\""\""|[^\""])*\""";
 EOI          -> @"\.";
+//Compiler Directives
+ATSIGN       -> @"@";
+LAZYGLOBAL   -> @"lazyglobal";
 //Special
 EOF          -> @"^$";
 [Skip]
@@ -121,8 +124,12 @@ instruction -> set_stmt |
                batch_stmt |
                deploy_stmt |
                instruction_block |
-               identifier_led_stmt; // any statement that starts with an identifier.
+               identifier_led_stmt | // any statement that starts with an identifier.
+               directive; // allow directives anywhere for now, let the compiler decide if it's in the wrong place, not the parser.
 
+// ------------ directives --------------------
+lazyglobal_directive -> ATSIGN LAZYGLOBAL onoff_trailer EOI;
+directive            -> lazyglobal_directive; // Add to this list later if we make other directives.
 
 // ------------ statements --------------------
 

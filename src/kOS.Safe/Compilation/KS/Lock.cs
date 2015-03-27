@@ -52,7 +52,7 @@ namespace kOS.Safe.Compilation.KS
         {
             return (IsFunction || codePart.InitializationCode.Count > 0);
         }
-
+        
         /// <summary>
         /// Get the label of the function body entry point,
         /// in other words the label of the very first Opcode

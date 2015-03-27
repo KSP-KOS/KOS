@@ -328,6 +328,7 @@ namespace kOS.Binding
 
             public void OnFlyByWire(ref FlightCtrlState c)
             {
+                Console.WriteLine("eraseme: OnFlyByWire called with value="+(value==null?"null":value.ToString())+", Enabled="+Enabled);
                 if (value == null || !Enabled) return;
 
                 var action = ChooseAction();
@@ -368,6 +369,7 @@ namespace kOS.Binding
 
             private void UpdateThrottle(FlightCtrlState c)
             {
+                Console.WriteLine("eraseme: FlightCtrlParam: name="+name+" enabled="+Enabled+" UpdateThrottle called");
                 if (!Enabled) return;
                 double doubleValue = Convert.ToDouble(value);
                 if (!double.IsNaN(doubleValue))
@@ -444,6 +446,12 @@ namespace kOS.Binding
             {
                 control = GetControllerByVessel(vessel);
             }
+            
+            public override string ToString() // added to aid in debugging.
+            {
+                return "FlightCtrlParam: name="+name+" enabled="+Enabled;
+            }
+ 
         }
     }
 }

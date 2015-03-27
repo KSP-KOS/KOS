@@ -15,6 +15,7 @@ namespace kOS.Safe.Execution
         object PeekValue(int digDepth, bool barewordOkay = false);        
         int GetStackSize();
         void SetValue(string identifier, object value);
+        void SetValueExists(string identifier, object value);
         void SetNewLocal(string identifier, object value);
         string DumpVariables();
         void RemoveVariable(string identifier);

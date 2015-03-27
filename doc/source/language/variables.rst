@@ -325,6 +325,25 @@ Nesting:
   if the variable isn't found at the global scope either will it be 
   implicitly created.
 
+.. _trigger_scope:
+
+Scoping and Triggers:
+:::::::::::::::::::::
+
+Triggers such as:
+
+  - WHEN <expression> { <statements> }.
+
+and
+
+  - ON <boolean variable> { <statements> }.
+
+Do not work predictably when you use local variables in the <expression>
+part of them.  They need to be designed to use global variables only,
+because they outlive the duration of any particular scoping braces.
+You can declare local variables within their <statements> in their bodies,
+just don't use local variables in the trigger conditions.
+
 .. _nolazyglobal:
 
 ``NOLAZYGLOBAL``

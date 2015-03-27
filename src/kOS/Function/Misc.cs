@@ -181,7 +181,7 @@ namespace kOS.Function
                 {
                     codeParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
                 }
-                programContext.AddParts(codeParts);                
+                programContext.AddParts(codeParts);
             }
         }
     }

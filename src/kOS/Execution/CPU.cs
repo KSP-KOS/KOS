@@ -669,6 +669,24 @@ namespace kOS.Execution
             Variable variable = GetOrCreateVariable(identifier);
             variable.Value = value;
         }
+        
+        /// <summary>
+        /// Try to set the value of the identifier at the localmost
+        /// level possible, by scanning up the scope stack to find
+        /// the local-most level at which the identifier is a variable,
+        /// and assigning it the value there.<br/>
+        /// <br/>
+        /// If no such value is found, an error is thrown.  It only stores into
+        /// variables that already exist, refusing to create new variables.<br/>
+        /// <br/>
+        /// </summary>
+        /// <param name="identifier">variable name to attempt to store into</param>
+        /// <param name="value">value to put into it</param>
+        public void SetValueExists(string identifier, object value)
+        {
+            Variable variable = GetVariable(identifier);
+            variable.Value = value;
+        }
 
         /// <summary>
         /// Pop a value off the stack, and if it's a variable name then get its value,
@@ -899,7 +917,7 @@ namespace kOS.Execution
             if (DEBUG_EACH_OPCODE)
             {
                 SafeHouse.Logger.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count +
-                                      "\n                   Opcode is: " + opcode.ToString() );
+                                      "\n                   Opcode is: " + opcode.Label + " " + opcode.ToString() );
             }
             
             if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))

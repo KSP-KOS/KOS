@@ -8,6 +8,12 @@ FUNCTIONS! FUNCTIONS! FUNCTIONS!
 Big feature: You can make your own user-defined functions.
 
 ###BREAKING:
+- **RECOMPILE YOUR KSM FILES!!!** - changes to the kOS machine code
+  that were needed to support variable scoping ended up invalidating
+  any existing precompiled KSM files.  You should be able to just
+  perform one compile and then use the new KSM file.  If you don't do
+  this, you will get the error message:
+    ```The given key was not present in the dictionary.```
 - *DECLARE has a new syntax*
   DECLARE _VARNAME_ now requires an initializier syntax as follows:
   - DECLARE _VARNAME_ TO _VALUE_.

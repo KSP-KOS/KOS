@@ -77,6 +77,7 @@ namespace kOS.Safe.Compilation
         STORELOCAL     = 0x58,
         PUSHSCOPE      = 0x59,
         POPSCOPE       = 0x5a,
+        STOREEXIST     = 0x5b,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -456,6 +457,28 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             var identifier = (string)cpu.PopStack();
             cpu.SetValue(identifier, value);
+        }
+    }
+
+    /// <summary>
+    /// Consumes the topmost 2 values of the stack, storing the topmost stack
+    /// value into a variable described by the next value down the stack. <br/>
+    /// <br/>
+    /// Unlike OpcodeStore, OpcodeStoreExist will NOT create the variable if it
+    /// does not already exist.  Instead it will cause an
+    /// error.  (It corresponds to kerboscript's @LAZYGLOBAL OFF directive).<br/>
+    /// <br/>
+    /// </summary>
+    public class OpcodeStoreExist : Opcode
+    {
+        protected override string Name { get { return "storeexist"; } }
+        public override ByteCode Code { get { return ByteCode.STOREEXIST; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            object value = cpu.PopValue();
+            var identifier = (string)cpu.PopStack();
+            cpu.SetValueExists(identifier, value);
         }
     }
 
