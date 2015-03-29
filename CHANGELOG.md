@@ -5,7 +5,10 @@ kOS Mod Changelog
 
 FUNCTIONS! FUNCTIONS! FUNCTIONS!
 --------------------------------
-Big feature: You can make your own user-defined functions.
+Big feature: You can make your own user-defined functions, that 
+can handle recursion, and can use local variable scoping.  You can
+build a library of your own function calls and load them into your
+script.
 
 ###BREAKING:
 - **RECOMPILE YOUR KSM FILES!!!** - changes to the kOS machine code
@@ -14,6 +17,12 @@ Big feature: You can make your own user-defined functions.
   perform one compile and then use the new KSM file.  If you don't do
   this, you will get the error message:
     ```The given key was not present in the dictionary.```
+- **KSM FILES ARE BIGGER** - compiled KSM files are now larger than
+  they used to be, due to extra code generated for dealing with
+  variable scoping and more universal function calling techniques.
+  Compiling to a KSM file will probably no longer be a reliable way
+  to make your code smaller, but we also intend to increase the volume
+  capacity to compensate.
 - *DECLARE has a new syntax*
   DECLARE _VARNAME_ now requires an initializier syntax as follows:
   - DECLARE _VARNAME_ TO _VALUE_.
@@ -30,6 +39,9 @@ Big feature: You can make your own user-defined functions.
   The _VARIABLE_ in loops of the form FOR _VARIABLE_ IN _SOMELIST_ now
   has local scope to just that loop, meaning it stops existing after
   the loop is done and you can't use it outside the loop's body.
+  In the past you could try using it after the loop body, but this
+  was poor practice and was only allowed because we didn't have
+  variable scoping set up right.
 
 ###New Features:
 - *FUNCTIONS*
@@ -53,6 +65,11 @@ Big feature: You can make your own user-defined functions.
     }
     set twentySpaces to padString(" ", 20).
     set threeX to padString("X", 3).
+
+  If you'd like to create a library of utility functions for
+  yourself, you can make a kerboscript file that contains only
+  DECLARE FUNCTION statements, and then RUN it from the top of
+  your other scripts to load in all the functions it contains.
 
   For the full documentation, see:
   http://ksp-kos.github.io/KOS/language/user_functions.html
