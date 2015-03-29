@@ -2,6 +2,7 @@
 using kOS.Safe.Compilation;
 using kOS.Safe.Function;
 using kOS.Suffixed;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Function
 {
@@ -10,9 +11,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = Math.Abs(argument);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -21,10 +23,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double divisor = GetDouble(shared.Cpu.PopValue());
-            double dividend = GetDouble(shared.Cpu.PopValue());
+            double divisor = GetDouble(PopValueAssert(shared));
+            double dividend = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = dividend % divisor;
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -33,9 +36,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = Math.Floor(argument);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -44,9 +48,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = Math.Ceiling(argument);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -55,9 +60,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = Math.Round(argument);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -66,10 +72,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            int decimals = GetInt(shared.Cpu.PopValue());
-            double argument = GetDouble(shared.Cpu.PopValue());
+            int decimals = GetInt(PopValueAssert(shared));
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = Math.Round(argument, decimals);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -78,9 +85,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = Math.Sqrt(argument);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -89,9 +97,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = Math.Log(argument);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -100,9 +109,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = Math.Log10(argument);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -111,12 +121,13 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object argument1 = shared.Cpu.PopValue();
-            object argument2 = shared.Cpu.PopValue();
+            object argument1 = PopValueAssert(shared);
+            object argument2 = PopValueAssert(shared);
+            AssertArgBottomAndConsume(shared);
             
             Calculator calculator = Calculator.GetCalculator(argument1, argument2);
             object result = calculator.Min(argument1, argument2);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -125,12 +136,13 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object argument1 = shared.Cpu.PopValue();
-            object argument2 = shared.Cpu.PopValue();
+            object argument1 = PopValueAssert(shared);
+            object argument2 = PopValueAssert(shared);
+            AssertArgBottomAndConsume(shared);
 
             Calculator calculator = Calculator.GetCalculator(argument1, argument2);
             object result = calculator.Max(argument1, argument2);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -141,7 +153,8 @@ namespace kOS.Function
 
         public override void Execute(SharedObjects shared)
         {
-            shared.Cpu.PushStack(random.NextDouble());
+            AssertArgBottomAndConsume(shared);
+            ReturnValue = random.NextDouble();
         }
     }
 
@@ -150,14 +163,17 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var vector2 = GetVector(shared.Cpu.PopValue());
-            var vector1 = GetVector(shared.Cpu.PopValue());
+            var vector2 = GetVector(PopValueAssert(shared));
+            var vector1 = GetVector(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
 
             if (vector1 != null && vector2 != null)
             {
                 object result = new Vector(Vector3d.Cross(vector1, vector2));
-                shared.Cpu.PushStack(result);
+                ReturnValue = result;
             }
+            else
+                throw new KOSException("vector cross product attempted with a non-vector value");
         }
     }
 
@@ -166,14 +182,17 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var vector2 = GetVector(shared.Cpu.PopValue());
-            var vector1 = GetVector(shared.Cpu.PopValue());
+            var vector2 = GetVector(PopValueAssert(shared));
+            var vector1 = GetVector(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
 
             if (vector1 != null && vector2 != null)
             {
                 object result = Vector3d.Dot(vector1, vector2);
-                shared.Cpu.PushStack(result);
+                ReturnValue = result;
             }
+            else
+                throw new KOSException("vector dot product attempted with a non-vector value");
         }
     }
 
@@ -182,14 +201,17 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var vector2 = GetVector(shared.Cpu.PopValue());
-            var vector1 = GetVector(shared.Cpu.PopValue());
+            var vector2 = GetVector(PopValueAssert(shared));
+            var vector1 = GetVector(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
 
             if (vector1 != null && vector2 != null)
             {
                 object result = new Vector(Vector3d.Exclude(vector1, vector2));
-                shared.Cpu.PushStack(result);
+                ReturnValue = result;
             }
+            else
+                throw new KOSException("vector exclude attempted with a non-vector value");
         }
     }
 
@@ -198,14 +220,17 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var vector2 = GetVector(shared.Cpu.PopValue());
-            var vector1 = GetVector(shared.Cpu.PopValue());
+            var vector2 = GetVector(PopValueAssert(shared));
+            var vector1 = GetVector(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
 
             if (vector1 != null && vector2 != null)
             {
                 object result = Vector3d.Angle(vector1, vector2);
-                shared.Cpu.PushStack(result);
+                ReturnValue = result;
             }
+            else
+                throw new KOSException("vector angle calculation attempted with a non-vector value");
         }
     }
 }

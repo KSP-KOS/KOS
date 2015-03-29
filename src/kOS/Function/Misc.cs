@@ -16,6 +16,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            AssertArgBottomAndConsume(shared);
             shared.Window.ClearScreen();
         }
     }
@@ -25,7 +26,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string textToPrint = shared.Cpu.PopValue().ToString();
+            string textToPrint = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
             shared.Screen.Print(textToPrint);
         }
     }
@@ -36,12 +38,13 @@ namespace kOS.Function
         public override void Execute (SharedObjects shared)
 
         {
-            bool      echo      = Convert.ToBoolean(shared.Cpu.PopValue());
-            RgbaColor rgba      = GetRgba(shared.Cpu.PopValue());
-            int       size      = Convert.ToInt32 (shared.Cpu.PopValue ());    
-            int       style     = Convert.ToInt32 (shared.Cpu.PopValue ());
-            int       delay     = Convert.ToInt32 (shared.Cpu.PopValue ());   
-            string    textToHud = shared.Cpu.PopValue ().ToString ();
+            bool      echo      = Convert.ToBoolean(PopValueAssert(shared));
+            RgbaColor rgba      = GetRgba(PopValueAssert(shared));
+            int       size      = Convert.ToInt32 (PopValueAssert(shared));
+            int       style     = Convert.ToInt32 (PopValueAssert(shared));
+            int       delay     = Convert.ToInt32 (PopValueAssert(shared));
+            string    textToHud = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
             string   htmlColour = rgba.ToHexNotation();
             switch (style)
             {
@@ -72,9 +75,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            int row = Convert.ToInt32(shared.Cpu.PopValue());
-            int column = Convert.ToInt32(shared.Cpu.PopValue());
-            string textToPrint = shared.Cpu.PopValue().ToString();
+            int row = Convert.ToInt32(PopValueAssert(shared));
+            int column = Convert.ToInt32(PopValueAssert(shared));
+            string textToPrint = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
             shared.Screen.PrintAt(textToPrint, row, column);
         }
     }
@@ -84,13 +88,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            bool enabled = Convert.ToBoolean(shared.Cpu.PopValue());
-            string paramName = shared.Cpu.PopValue().ToString();
+            bool enabled = Convert.ToBoolean(PopValueAssert(shared));
+            string paramName = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
             ((CPU)shared.Cpu).ToggleFlyByWire(paramName, enabled);
-            // Work around to prevent the pop error following toggle fly by wire directly. 
-            // The VisitIdentifierLedExpression method in the Compiler class purposfully throws away the returned value of a function.
-            ((CPU)shared.Cpu).PushStack(0);
-
         }
     }
 
@@ -99,11 +100,9 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string autopilotMode = shared.Cpu.PopValue().ToString();
+            string autopilotMode = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
             ((CPU)shared.Cpu).SelectAutopilotMode(autopilotMode);
-            // The VisitIdentifierLedExpression method in the Compiler class purposfully throws away the returned value of a function.
-            ((CPU)shared.Cpu).PushStack(0);
-
         }
     }
 
@@ -112,6 +111,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            AssertArgBottomAndConsume(shared);
             if (Staging.separate_ready && shared.Vessel.isActiveVessel)
             {
                 Staging.ActivateNextStage();
@@ -132,9 +132,19 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = shared.Cpu.PopValue(true);
-            string fileName = shared.Cpu.PopValue(true).ToString();
+            // run() is strange.  It needs two levels of args - the args to itself, and the args it is meant to
+            // pass on to the program it's invoking.  First, these are the args to run itself:
+            object volumeId = PopValueAssert(shared, true);
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
             
+            // Now the args it is going to be passing on to the program:
+            List<Object> prog_args = new List<Object>();
+            int argc = CountRemainingArgs(shared);
+            for (int i = 0 ; i < argc ; ++i)
+                prog_args.Add(PopValueAssert(shared, true));
+            AssertArgBottomAndConsume(shared);
+
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new Exception("Volume not found");
 
@@ -183,6 +193,17 @@ namespace kOS.Function
                 }
                 programContext.AddParts(codeParts);
             }
+            
+            // Because run() returns FIRST, and THEN the CPU jumps to the new program's first instruction that it set up,
+            // it needs to put the return stack in a weird order.  Its return value needs to be buried UNDER the args to the 
+            // program it's calling:
+            UsesAutoReturn = false;
+            
+            shared.Cpu.PushStack(0); // dummy return that all functions have.
+
+            // Put the args for the program being called back on in the same order they were in before (so read the list backward):
+            for (int i = argc-1 ; i >= 0 ; --i)
+                shared.Cpu.PushStack(prog_args[i]);
         }
     }
 
@@ -194,7 +215,7 @@ namespace kOS.Function
             bool defaultOutput = false;
             bool justCompiling = false; // is this load() happening to compile, or to run?
             string fileNameOut = null;
-            object topStack = shared.Cpu.PopValue(true); // null if there's no output file (output file means compile, not run).
+            object topStack = PopValueAssert(shared, true); // null if there's no output file (output file means compile, not run).
             if (topStack != null)
             {
                 justCompiling = true;
@@ -206,9 +227,11 @@ namespace kOS.Function
             }
 
             string fileName = null;
-            topStack = shared.Cpu.PopValue(true);
+            topStack = PopValueAssert(shared, true);
             if (topStack != null)
                 fileName = topStack.ToString();
+            
+            AssertArgBottomAndConsume(shared);
 
             if (fileName == null)
                 throw new KOSFileException("No filename to load was given.");
@@ -265,7 +288,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var node = (Node)shared.Cpu.PopValue();
+            var node = (Node)PopValueAssert(shared);
+            AssertArgBottomAndConsume(shared);
             node.AddToVessel(shared.Vessel);
         }
     }
@@ -275,7 +299,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var node = (Node)shared.Cpu.PopValue();
+            var node = (Node)PopValueAssert(shared);
+            AssertArgBottomAndConsume(shared);
             node.Remove();
         }
     }
@@ -285,8 +310,9 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = shared.Cpu.PopValue(true).ToString();
-            string expressionResult = shared.Cpu.PopValue().ToString();
+            string fileName = PopValueAssert(shared, true).ToString();
+            string expressionResult = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
 
             if (shared.VolumeMgr != null)
             {
@@ -310,6 +336,7 @@ namespace kOS.Function
         {
             if (shared.Processor != null)
             {
+                AssertArgBottomAndConsume(shared); // not sure if this matters when rebooting anwyway.
                 shared.Processor.SetMode(ProcessorModes.OFF);
                 shared.Processor.SetMode(ProcessorModes.READY);
             }
@@ -321,6 +348,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            AssertArgBottomAndConsume(shared); // not sure if this matters when shutting down anwyway.
             if (shared.Processor != null) shared.Processor.SetMode(ProcessorModes.OFF);
         }
     }
@@ -330,7 +358,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            shared.Cpu.PushStack(shared.Cpu.DumpVariables());
+            AssertArgBottomAndConsume(shared);
+            ReturnValue = shared.Cpu.DumpVariables();
         }
     }
 }

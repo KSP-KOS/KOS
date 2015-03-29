@@ -4,7 +4,7 @@ namespace kOS.Safe.Compilation.KS
 {
     public class Context
     {
-        public LockCollection Locks { get; private set; }
+        public UserFunctionCollection UserFunctions { get; private set; }
         public TriggerCollection Triggers { get; private set; }
         public SubprogramCollection Subprograms { get; private set; }
         public int LabelIndex { get; set; }
@@ -19,7 +19,7 @@ namespace kOS.Safe.Compilation.KS
 
         public Context()
         {
-            Locks = new LockCollection();
+            UserFunctions = new UserFunctionCollection();
             Triggers = new TriggerCollection();
             Subprograms = new SubprogramCollection();
             LabelIndex = 0;

@@ -13,6 +13,7 @@ namespace kOS.Safe.Execution
         object GetValue(object testValue, bool barewordOkay = false);
         object PopValue(bool barewordOkay = false);
         object PeekValue(int digDepth, bool barewordOkay = false);        
+        object PeekRaw(int digDepth, out bool checkOkay);
         int GetStackSize();
         void SetValue(string identifier, object value);
         void SetValueExists(string identifier, object value);
@@ -26,6 +27,7 @@ namespace kOS.Safe.Execution
         void StartWait(double waitTime);
         void EndWait();
         void CallBuiltinFunction(string functionName);
+        bool BuiltInExists(string functionName);
         void BreakExecution(bool manual);
         void AddVariable(Variable variable, string identifier, bool local);
         Opcode GetOpcodeAt(int instructionPtr);

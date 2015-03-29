@@ -1160,8 +1160,25 @@ namespace kOS.Safe.Compilation
                     return;
                 }
             }
-
-
+            
+            // If it's a string it might not really be a built-in, it might still be a user func.
+            // Detect whether it's built-in, and if it's not, then convert it into the equivalent
+            // user func call by making it be an integer instruction pointer instead:
+            if (functionPointer is string)
+            {
+                string functionName = functionPointer as string;
+                if (functionName.EndsWith("()"))
+                    functionName = functionName.Substring(0, functionName.Length - 2);
+                if (!(cpu.BuiltInExists(functionName)))
+                {
+                    // It is not a built-in, so instead get its value as a user function pointer variable, despite 
+                    // the fact that it's being called AS IF it was direct.
+                    if (!functionName.EndsWith("*")) functionName = functionName + "*";
+                    if (!functionName.StartsWith("$")) functionName = "$" + functionName;
+                    functionPointer = cpu.GetValue(functionName);
+                }
+            }
+ 
             if (functionPointer is int) 
             {
                 ReverseStackArgs(cpu);
@@ -1177,7 +1194,8 @@ namespace kOS.Safe.Compilation
                 // might want to change that.
                 var name = functionPointer as string;
                 string functionName = name;
-                functionName = functionName.Substring(0, functionName.Length - 2);
+                if (functionName.EndsWith("()"))
+                    functionName = functionName.Substring(0, functionName.Length - 2);
                 cpu.CallBuiltinFunction(functionName);
             }
             else if (functionPointer is Delegate)

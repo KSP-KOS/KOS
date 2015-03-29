@@ -52,9 +52,9 @@
     <Compile Include="Compilation\KS\Scope.cs" />
     <Compile Include="Compilation\KS\Subprogram.cs" />
     <Compile Include="Compilation\KS\KSScript.cs" />
-    <Compile Include="Compilation\KS\Lock.cs" />
-    <Compile Include="Compilation\KS\LockCollection.cs" />
-    <Compile Include="Compilation\KS\LockFunction.cs" />
+    <Compile Include="Compilation\KS\UserFunction.cs" />
+    <Compile Include="Compilation\KS\UserFunctionCollection.cs" />
+    <Compile Include="Compilation\KS\UserFunctionCodeFragment.cs" />
     <Compile Include="Compilation\KS\Parser.cs" />
     <Compile Include="Compilation\KS\ParseTree.cs" />
     <Compile Include="Compilation\KS\Scanner.cs" />

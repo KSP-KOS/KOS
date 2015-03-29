@@ -44,6 +44,8 @@ namespace kOS.Function
 
             FunctionBase function = functions[functionName];
             function.Execute(shared);
+            if (function.UsesAutoReturn)
+                shared.Cpu.PushStack(function.ReturnValue);
         }
         
         /// <summary>

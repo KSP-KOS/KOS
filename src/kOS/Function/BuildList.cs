@@ -13,7 +13,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string listType = shared.Cpu.PopValue().ToString();
+            string listType = PopValueAssert(shared).ToString();
             var list = new ListValue();
 
             switch (listType)
@@ -45,8 +45,9 @@ namespace kOS.Function
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            AssertArgBottomAndConsume(shared);
 
-            shared.Cpu.PushStack(list);
+            ReturnValue = list;
         }
     }
 }

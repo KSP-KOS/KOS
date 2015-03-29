@@ -41,7 +41,7 @@ namespace kOS.Safe.Compilation.KS
                     CodePart mainPart = compiler.Compile(startLineNum, parseTree, currentContext, options);
 
                     // add locks and triggers
-                    parts.AddRange(currentContext.Locks.GetNewParts());
+                    parts.AddRange(currentContext.UserFunctions.GetNewParts());
                     parts.AddRange(currentContext.Triggers.GetNewParts());
                     parts.AddRange(currentContext.Subprograms.GetNewParts());
 

@@ -506,7 +506,6 @@ namespace kOS.Execution
                     // This is necessary because of the deprecation exceptions that
                     // get raised by FlightStats when you try to print all of them out:
                     line = ident + "= <value caused exception>\n    " + e.Message;
-                    line += "\n" + e.StackTrace; // eraseme.
                 }
                 msg.AppendLine(line);
             }
@@ -705,7 +704,11 @@ namespace kOS.Execution
         
         /// <summary>
         /// Peek at a value atop the stack without popping it, and if it's a variable name then get its value,
-        /// else just return it as it is.
+        /// else just return it as it is.<br/>
+        /// <br/>
+        /// NOTE: Evaluating variables when you don't really need to is pointlessly expensive, as it
+        /// needs to walk the scoping stack to exhaust a search.  If you don't need to evaluate variables,
+        /// then consider using PeekRaw() instead.<br/>
         /// </summary>
         /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
         /// <param name="barewordOkay">Is this a context in which it's acceptable for
@@ -715,6 +718,21 @@ namespace kOS.Execution
         public object PeekValue(int digDepth, bool barewordOkay = false)
         {
             return GetValue(stack.Peek(digDepth), barewordOkay);
+        }
+
+        /// <summary>
+        /// Peek at a value atop the stack without popping it, and without evaluating it to get the variable's
+        /// value.  (i.e. if the thing in the stack is $foo, and the variable foo has value 5, you'll get the string
+        /// "$foo" returned, not the integer 5).
+        /// </summary>
+        /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
+        /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the peek went too deep.</param>
+        /// <returns>value off the stack</returns>        
+        public object PeekRaw(int digDepth, out bool checkOkay)
+        {
+            object returnValue;
+            checkOkay = stack.PeekCheck(digDepth,out returnValue);
+            return returnValue;
         }
         
         public int GetStackSize()
@@ -952,6 +970,11 @@ namespace kOS.Execution
         public void CallBuiltinFunction(string functionName)
         {
             shared.FunctionManager.CallFunction(functionName);
+        }
+        
+        public bool BuiltInExists(string functionName)
+        {
+            return shared.FunctionManager.Exists(functionName);
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)
