@@ -2,7 +2,6 @@
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Function;
-using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Utilities;
 

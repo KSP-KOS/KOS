@@ -273,6 +273,7 @@ namespace kOS.Module
             shared.VolumeMgr = shared.Factory.CreateVolumeManager(shared);
             shared.ProcessorMgr = new ProcessorManager();
             shared.FunctionManager = new FunctionManager(shared);
+            shared.TransferManager = new TransferManager(shared);
             shared.Cpu = new CPU(shared);
 
             // Make the window that is going to correspond to this kOS part:

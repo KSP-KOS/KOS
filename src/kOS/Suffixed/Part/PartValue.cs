@@ -15,7 +15,7 @@ namespace kOS.Suffixed.Part
     {
         private readonly SharedObjects shared;
 
-        public global::Part Part { get; set; }
+        public global::Part Part { get; private set; }
 
         public PartValue(global::Part part, SharedObjects sharedObj)
         {

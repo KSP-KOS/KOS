@@ -91,6 +91,7 @@
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSInvalidArgumentException.cs" />
     <Compile Include="Exceptions\KOSLowTechException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
     <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
