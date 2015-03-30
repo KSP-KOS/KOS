@@ -22,7 +22,7 @@ Structure
         * - :attr:`STATUS`
           - string
           - Get only
-          - The string status of the transfer (eg "Inactive", "Transferring", "Failed")
+          - The string status of the transfer (eg "Inactive", "Transferring", "Failed", "Finished")
         * - :attr:`MESSAGE`
           - string
           - Get only
