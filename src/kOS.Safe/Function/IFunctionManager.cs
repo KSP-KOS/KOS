@@ -4,5 +4,6 @@ namespace kOS.Safe.Function
     {
         void Load();
         void CallFunction(string functionName);
+        bool Exists(string functionName);
     }
 }

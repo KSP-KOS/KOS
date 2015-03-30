@@ -62,7 +62,7 @@ namespace kOS.Binding
                         Name = name, 
                     };
                 variables.Add(name, variable);
-                shared.Cpu.AddVariable(variable, name);
+                shared.Cpu.AddVariable(variable, name, false);
             }
 
             if (getDelegate != null)

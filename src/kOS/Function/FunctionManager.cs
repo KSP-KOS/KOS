@@ -44,6 +44,19 @@ namespace kOS.Function
 
             FunctionBase function = functions[functionName];
             function.Execute(shared);
+            if (function.UsesAutoReturn)
+                shared.Cpu.PushStack(function.ReturnValue);
+        }
+        
+        /// <summary>
+        /// Find out if the function with the name given exists already in the built-in hardcoded functions set
+        /// (as opposed to the user functions).
+        /// </summary>
+        /// <param name="functionName">check if this function exists</param>
+        /// <returns>true if it does exist (as a built-in, not as a user function)</returns>
+        public bool Exists(string functionName)
+        {
+            return functions.ContainsKey(functionName);
         }
 
     }

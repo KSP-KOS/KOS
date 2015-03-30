@@ -14,7 +14,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string listType = shared.Cpu.PopValue().ToString();
+            string listType = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
 
             if (shared.Screen == null) return;
 

@@ -77,12 +77,40 @@ namespace kOS.Execution
         /// </summary>
         /// <param name="digDepth">How far underneath the top to look.  Zero means peek at the top,
         /// 1 means peek at the item just under the top, 2 means peek at the item just under that, and
-        /// so on.</param>
+        /// so on.  Note you CAN peek a negative number, which looks at the secret stack above the
+        /// stack - where the subroutine contexts and local variable contexts are.</param>
         /// <returns>The object at that depth.  Returns null when digDepth is too large and the stack isn't
-        /// big enough to dig that deep.</returns>
+        /// big enough to dig that deep.  Note that this conflates with the case where there really is a 
+        /// null stored on the stack and makes it impossible to tell the difference between peeking too far
+        /// versus actually finding a null.  If you need to know the difference, use PeekCheck.</returns>
         public object Peek(int digDepth)
         {
-            return digDepth > stackPointer ? null : stack[stackPointer - digDepth];
+            object returnVal;
+            PeekCheck(digDepth, out returnVal);
+            return returnVal;
+        }
+
+        /// <summary>
+        /// Slightly "cheats" and breaks out of the 'stack' model by allowing you to view the contents of
+        /// somewhere on the stack that is underneath the topmost thing.  You can only peek, but not pop
+        /// values this way.  It returns both the object found there (as an out parameter) and a boolean for
+        /// whether or not your peek attempt went out of bounds of the stack.
+        /// </summary>
+        /// <param name="digDepth">How far underneath the top to look.  Zero means peek at the top,
+        /// 1 means peek at the item just under the top, 2 means peek at the item just under that, and
+        /// so on.  Note you CAN peek a negative number, which looks at the secret stack above the
+        /// stack - where the subroutine contexts and local variable contexts are.</param>
+        /// <param name="item">The object at that depth.  Will be null when digDepth is too large and the stack isn't
+        /// big enough to dig that deep, but it also could return null if the actual value stored there on
+        /// the stack really is a null.  If you need to be certain of the difference, use the return value.</param>
+        /// <returns>Returns true if your peek was within the bounds of the stack, or false if you tried
+        /// to peek too far and went past the top or bottom of the stack.</returns>
+        public bool PeekCheck(int digDepth, out object item)
+        {
+            int index = stackPointer - digDepth;
+            bool returnVal = (index >= 0 && index < stack.Count);
+            item = returnVal ? stack[index] : null;
+            return returnVal;
         }
 
         /// <summary>
@@ -108,14 +136,28 @@ namespace kOS.Execution
         public string Dump()
         {
             var builder = new StringBuilder();
-            builder.AppendLine("Stack dump:");
+            builder.AppendLine("Stack dump: stackPointer = " + stackPointer);
 
             // Print in reverse order so the top of the stack is on top of the printout:
             // (actually given the double nature of the stack, one of the two sub-stacks
             // inside it will always be backwardly printed):
             for (int index = stack.Count-1 ; index >= 0 ; --index)
             {
-                builder.AppendLine(string.Format("{0:000} {1,4} {2}", index, (index==stackPointer ? "SP->" : "" ), stack[index]));
+                object item = stack[index];
+                builder.AppendLine(string.Format("{0:000} {1,4} {2}", index, (index==stackPointer ? "SP->" : "" ), item));
+                VariableScope dict = item as VariableScope;
+                if (dict != null)
+                {
+                    builder.AppendFormat("            ScopeId={0}, ParentScopeId={1}, ParentSkipLevels={2}", dict.ScopeId, dict.ParentScopeId, dict.ParentSkipLevels);
+                    builder.AppendLine();
+                    // Dump the local variable context stored here on the stack:
+                    foreach (string varName in dict.Variables.Keys)
+                    {
+                        builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, varName.GetType().FullName, dict.Variables[varName].Value);
+                        builder.AppendLine();
+                    }
+                }
+                
             }
 
             return builder.ToString();

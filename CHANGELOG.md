@@ -1,6 +1,102 @@
 kOS Mod Changelog
 =================
 
+# v0.17.0
+
+FUNCTIONS! FUNCTIONS! FUNCTIONS!
+--------------------------------
+Big feature: You can make your own user-defined functions, that 
+can handle recursion, and can use local variable scoping.  You can
+build a library of your own function calls and load them into your
+script.
+
+###BREAKING:
+- **RECOMPILE YOUR KSM FILES!!!** - changes to the kOS machine code
+  that were needed to support variable scoping ended up invalidating
+  any existing precompiled KSM files.  You should be able to just
+  perform one compile and then use the new KSM file.  If you don't do
+  this, you will get the error message:
+    ```The given key was not present in the dictionary.```
+- **KSM FILES ARE BIGGER** - compiled KSM files are now larger than
+  they used to be, due to extra code generated for dealing with
+  variable scoping and more universal function calling techniques.
+  Compiling to a KSM file will probably no longer be a reliable way
+  to make your code smaller, but we also intend to increase the volume
+  capacity to compensate.
+- *DECLARE has a new syntax*
+  DECLARE _VARNAME_ now requires an initializier syntax as follows:
+  - DECLARE _VARNAME_ TO _VALUE_.
+  If you leave the TO _VALUE_ off, it will now be a syntax error.
+  The Kerobscript language used to leave it unspecified what the value
+  of a variable that has been declared but not set was.  This gets rid
+  of that ambiguity.
+- *DECLAREd variables are now local*
+  Using the DECLARE _VARNAME_ TO _VALUE_ statement now causes the
+  variable to have local scope that only exists within the local block
+  of curly braces ('{'...'}') that it was declared inside of.  Once you
+  leave that block of braces, the variable doesn't exist anymore.
+- *FOR iterator now is local*
+  The _VARIABLE_ in loops of the form FOR _VARIABLE_ IN _SOMELIST_ now
+  has local scope to just that loop, meaning it stops existing after
+  the loop is done and you can't use it outside the loop's body.
+  In the past you could try using it after the loop body, but this
+  was poor practice and was only allowed because we didn't have
+  variable scoping set up right.
+
+###New Features:
+- *FUNCTIONS*
+  It's been a long time coming, but finally the addition
+  of the new DECLARE FUNCTION statement now allows you to make your
+  own user functions you can call, which you can use to help build
+  your own library of common routines.
+  Synopsis::
+
+    // Silly example function to build a string of padded chars.
+    DECLARE FUNCTION padString {
+      DECLARE PARAMETER ch, howmany
+
+      DECLARE str to "". // makes str a local variable.
+
+      UNTIL howmany <= 0 {
+        set str to str + ch.
+        set howmany to howmany - 1.
+      }
+      RETURN str.
+    }
+    set twentySpaces to padString(" ", 20).
+    set threeX to padString("X", 3).
+
+  If you'd like to create a library of utility functions for
+  yourself, you can make a kerboscript file that contains only
+  DECLARE FUNCTION statements, and then RUN it from the top of
+  your other scripts to load in all the functions it contains.
+
+  For the full documentation, see:
+  http://ksp-kos.github.io/KOS/language/user_functions.html
+
+- *VARIABLE SCOPING (LOCALS)*
+  It used to be the case that all variables were global and there was
+  no such thing as a local variable.  As part of getting functions to
+  work, we also implemented some local scoping rules.
+  Synopsis::
+  
+      Kerboscript now uses block scoping, local to the brace scope the variable was declared inside of.
+      Local vars are declared with the DECLARE..TO statement.
+      Variables made implicitly by "lazy" use of SET will still be global like they always have been.
+
+  The exact means of making a variable local is described here:
+  http://ksp-kos.github.io/KOS/language/variables.html#declare-to
+  and here:
+  http://ksp-kos.github.io/KOS/language/variables.html#scoping-rules
+
+###Bug Fixes:
+- For iterator no longer name clashes because it's not global anymore.
+  It used to be that if you had two FOR _VAR_ IN _THING_'s in the same
+  program, and both used the same name for their _VAR_, they could
+  interfere and clash in strange ways because they were using the same
+  global variable.  Now the iterator _VAR_ is local to the loop and
+  no longer exists outside the loop. 
+
 # v0.16.2
 
 ##HOTFIX
