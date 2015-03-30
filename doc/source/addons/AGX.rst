@@ -44,34 +44,30 @@ Note that the state of action groups is tracked on a per-action basis, rather th
 
 **Example code:**
 
-- ``AG15 on.`` Activate action group 15.
-- ``print AG15.`` Print action group 15's state to the terminal. (True/False)
-- ``on AG15 {``
-- ``print "Action group 15 clicked!".``
-- ``preserve.``
-- ``}`` Print to the terminal anytime you activate action group 15. Use this to change variables within a running kOS script and the "Script Trigger" action found on the kOS computer part.
+Print to the terminal anytime you activate action group 15. Use this to change variables within a running kOS script and the "Script Trigger" action found on the kOS computer part::
 
-If you want to use the ``on AG15`` command to monitor a part that has an animation, a cool down is required.
+    AG15 on. // Activate action group 15.
+    print AG15. // Print action group 15's state to the terminal. (True/False)
+    on AG15 {
+      print "Action group 15 clicked!".
+      preserve.
+    }
 
-- ``on AG15 {``
-- ``print "Solar Panel Toggled!".``
-- ``preserve.``
-- ``}`` will print to the terminal 3 times when the solar panel is extened.
 
 - Player activates AG15, AG15's state goes from false to true and the actions are triggered. ``AG15 False -> True`` and prints to the terminal.
 - On it's next update pass (100ms to 250ms later), AGX checks AG15's state and sees the solar panel is still deploying which means that AG15's state is false and so sets it that way. ``AG15 True -> False`` and prints to the terminal.
 - A few seconds later, the solar panel finishes it's deployment animation. On it's next update pass AGX checks AG15's state and sees the solar panel is now deployed which means that AG15's state is now true and so sets it that way. ``AG15 False -> True`` and prints to the terminal a third time.
 
-As a workaround, you need to add a cooldown:
+As a workaround, you need to add a cooldown::
 
-- ``declare cooldownTimeAG15``
-- ``on AG15 {``
-- ``if cooldownTimeAG15 + 10 < time {``
-- ``print "Solar Panel Toggled!".``
-- ``set cooldownTimeAG15 to time.``
-- ``}``
-- ``preserve.``
-- ``}``
+    declare cooldownTimeAG15 to 0.
+    on AG15 {
+      if cooldownTimeAG15 + 10 < time:seconds {
+        print "Solar Panel Toggled!".
+        set cooldownTimeAG15 to time.
+      }
+      preserve.
+    }
 
 Note the 10 in the second line, that is your cooldown time in seconds. Set this to a number of seconds that is longer then your animation time and the above code will limit AG15 so it can only activate after 10 seconds have passed since the previous activation and not activate multiple times on the same activation.
 

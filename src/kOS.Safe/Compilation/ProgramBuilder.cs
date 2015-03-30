@@ -98,6 +98,7 @@ namespace kOS.Safe.Compilation
             }
             else
             {
+                linkedObject.MainCode.Add(new OpcodePush(0)); // all Returns now need a dummy return value on them.
                 linkedObject.MainCode.Add(new OpcodeReturn());
             }
         }
@@ -149,7 +150,7 @@ namespace kOS.Safe.Compilation
                     objectFile.EntryPointAddress = labels[objectFile.EntryPointLabel];
             }
         }
-
+        
         public int GetObjectFileEntryPointAddress(Guid objectFileId)
         {
             return objectFiles.ContainsKey(objectFileId) ? objectFiles[objectFileId].EntryPointAddress : 0;

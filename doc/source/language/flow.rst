@@ -75,7 +75,16 @@ Locks an identifier to an expression. Each time the identifier is used in an exp
     SET X TO 4.
     PRINT Y.         // Outputs 6
 
-Unlike variables created with the ``SET`` or ``DECLARE`` commands, ``LOCK`` variables are local to the current program. If program **A** calls program **B**, and program **B** issues a ``LOCK`` command, program **A** will not be able to read that ``LOCK`` variable's result.
+LOCK follows the same scoping rules as the SET command.  If the variable
+name used already exists in local scope, then the lock command creates 
+a lock function that only lasts as long as the current scope and then 
+becomes unreachable after that.  If the variable name used does not exist
+in local scope, then LOCK will create it as a global variable, unless
+@NOLAZYGLOBAL is set to off, in which case it will be an error.
+
+Note that a LOCK expression is extremely similar to a user function.
+Every time you read the value of the "variable", it executes the expression
+again.
 
 .. note::
     If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each update tick <cpu hardware>`.
@@ -175,6 +184,14 @@ does not halt execution. It starts a check in the background that will keep acti
 The body of a ``THEN`` or an ``ON`` statement interrupts the normal flow of a **kOS** program. When the event that triggers the body happens, the main **kOS** program is paused until the body of the ``THEN`` completes.
 
 .. warning::
+    With the advent of :ref:`local variable scoping <trigger_scope>` in kOS
+    version 0.17 and above, it's important to note that the variables
+    used within the expression of a WHEN or an ON statement should
+    be GLOBAL variables or the results are unpredictable.  If local
+    variables were used, the results could change depending on where
+    you are within the execution at the time.  
+
+.. warning::
     Do not make the body of a ``WHEN``/``THEN`` take a long time to execute. If you attempt to run code that lasts too long in the body of your ``WHEN``/``THEN`` statement, :ref:`it will cause an error <cpu hardware>`. Avoid looping during ``WHEN``/``THEN`` if you can. For details on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
 
 .. note::
@@ -204,6 +221,14 @@ A ``WHEN``/``THEN`` trigger is removed when the program that created it exits, e
 The ``ON`` command is almost identical to the ``WHEN``/``THEN`` command. ``ON`` sets up a trigger in the background that will run the selected command exactly once when the boolean variable changes state from true to false or from false to true. This command is best used to listen for action group activations.
 
 Just like with the ``WHEN``/``THEN`` command, the ``PRESERVE`` command can be used inside the code block to cause the trigger to remain active and not go away.
+
+.. warning::
+    With the advent of :ref:`local variable scoping <scope>` in kOS
+    version 0.17 and above, it's important to note that the variables
+    used within the expression of a WHEN or an ON statement should
+    be GLOBAL variables or the results are unpredictable.  If local
+    variables were used, the results could change depending on where
+    you are within the execution at the time.  
 
 How does it differ from ``WHEN``/``THEN``? The ``WHEN``/``THEN`` triggers are executed whenever the conditional expression *becomes true*. ``ON`` triggers are executed whenever the boolean variable *changes state* either from false to true or from true to false.
 
@@ -253,6 +278,13 @@ The following example sets up a continuous background check to keep looking for 
 
 .. index:: Boolean Operators
 .. _booleans:
+
+``DECLARE FUNCTION``
+--------------------
+
+Covered in more depth :ref:`elsewhere in the documentation <user_functions>`, 
+the ``DECLARE FUNCTION`` statement creates a user-defined function that
+you can then call elsewhere in the code.
 
 Boolean Operators
 -----------------

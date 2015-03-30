@@ -126,7 +126,8 @@ namespace kOS.Screen
 
             try
             {
-                List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter");
+                CompilerOptions options = new CompilerOptions { LoadProgramsInSameAddressSpace = false, FuncManager = Shared.FunctionManager };
+                List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter", options);
                 if (commandParts == null) return;
 
                 var interpreterContext = ((CPU)Shared.Cpu).GetInterpreterContext();

@@ -8,10 +8,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double degrees = GetDouble(shared.Cpu.PopValue());
+            double degrees = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double radians = DegreesToRadians(degrees);
             double result = Math.Sin(radians);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -20,10 +21,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double degrees = GetDouble(shared.Cpu.PopValue());
+            double degrees = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double radians = DegreesToRadians(degrees);
             double result = Math.Cos(radians);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -32,10 +34,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double degrees = GetDouble(shared.Cpu.PopValue());
+            double degrees = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double radians = DegreesToRadians(degrees);
             double result = Math.Tan(radians);
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -44,9 +47,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = RadiansToDegrees(Math.Asin(argument));
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -55,9 +59,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = RadiansToDegrees(Math.Acos(argument));
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -66,9 +71,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double argument = GetDouble(shared.Cpu.PopValue());
+            double argument = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = RadiansToDegrees(Math.Atan(argument));
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -77,10 +83,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double x = GetDouble(shared.Cpu.PopValue());
-            double y = GetDouble(shared.Cpu.PopValue());
+            double x = GetDouble(PopValueAssert(shared));
+            double y = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = RadiansToDegrees(Math.Atan2(y, x));
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 
@@ -89,10 +96,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            double ang2 = GetDouble(shared.Cpu.PopValue());
-            double ang1 = GetDouble(shared.Cpu.PopValue());
+            double ang2 = GetDouble(PopValueAssert(shared));
+            double ang1 = GetDouble(PopValueAssert(shared));
+            AssertArgBottomAndConsume(shared);
             double result = kOS.Utilities.Utils.DegreeFix( ang2 - ang1, -180 );
-            shared.Cpu.PushStack(result);
+            ReturnValue = result;
         }
     }
 }

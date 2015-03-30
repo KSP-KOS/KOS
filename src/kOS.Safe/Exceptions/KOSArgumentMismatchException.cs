@@ -33,12 +33,28 @@ namespace kOS.Safe.Exceptions
             expectedNum = expected;
             actualNum = actual;
         }
+
+        /// <summary>
+        /// Describe an error in the number of arguments, without knowing the number of args
+        /// </summary>
+        /// <param name="message">optional message</param>
+        public KOSArgumentMismatchException(string message = "") :
+            base( BuildTerseMessage() + " " + message )
+        {
+            expectedNum = 0;
+            actualNum = 0;
+        }
         
         private static string BuildTerseMessage(int expected, int actual)
         {
             return String.Format("Incorrect number of arguments.  Expected {0} argument{1}, but found {2}",
                                  (expected==0?"no":expected.ToString()), (expected==1?"":"s"), (actual==0?"none":actual.ToString())
                                 );
+        }
+
+        private static string BuildTerseMessage()
+        {
+            return String.Format("Number of arguments passed to the function didn't match the number of DECLARE PARAMETERs encountered.");
         }
         
         private string BuildVerboseMessage()

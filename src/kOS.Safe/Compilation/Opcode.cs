@@ -68,12 +68,17 @@ namespace kOS.Safe.Compilation
         POP            = 0x4f,
         DUP            = 0x50,
         SWAP           = 0x51,
-        ADDTRIGGER     = 0x52,
-        REMOVETRIGGER  = 0x53,
-        WAIT           = 0x54,
-        ENDWAIT        = 0x55,
-        GETMETHOD      = 0x56,
-        
+        EVAL           = 0x52,
+        ADDTRIGGER     = 0x53,
+        REMOVETRIGGER  = 0x54,
+        WAIT           = 0x55,
+        ENDWAIT        = 0x56,
+        GETMETHOD      = 0x57,
+        STORELOCAL     = 0x58,
+        PUSHSCOPE      = 0x59,
+        POPSCOPE       = 0x5a,
+        STOREEXIST     = 0x5b,
+
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
         // or in the ML file but never actually can be executed.
@@ -425,7 +430,23 @@ namespace kOS.Safe.Compilation
 
     #region General
 
-    
+
+    /// <summary>
+    /// Consumes the topmost 2 values of the stack, storing the topmost stack
+    /// value into a variable described by the next value down the stack. <br/>
+    /// <br/>
+    /// If the variable does not exist in the local scope, then it will attempt to look for
+    /// it in the next scoping level up, and the next one up, and so on
+    /// until it hits global scope and if it still hasn't found it,
+    /// it will CREATE the variable anew there, at global scope, and
+    /// then store the value there.<br/>
+    /// <br/>
+    /// This is the usual way to make a new GLOBAL variable, or to overwrite
+    /// an existing LOCAL variable.  Note that since this
+    /// is the way to make a variable, it's impossible to make a variable
+    /// that hasn't been given an initial value.  Its the act of storing a value into
+    /// the variable that causues it to exist.  This is deliberate design.
+    /// </summary>
     public class OpcodeStore : Opcode
     {
         protected override string Name { get { return "store"; } }
@@ -439,6 +460,60 @@ namespace kOS.Safe.Compilation
         }
     }
 
+    /// <summary>
+    /// Consumes the topmost 2 values of the stack, storing the topmost stack
+    /// value into a variable described by the next value down the stack. <br/>
+    /// <br/>
+    /// Unlike OpcodeStore, OpcodeStoreExist will NOT create the variable if it
+    /// does not already exist.  Instead it will cause an
+    /// error.  (It corresponds to kerboscript's @LAZYGLOBAL OFF directive).<br/>
+    /// <br/>
+    /// </summary>
+    public class OpcodeStoreExist : Opcode
+    {
+        protected override string Name { get { return "storeexist"; } }
+        public override ByteCode Code { get { return ByteCode.STOREEXIST; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            object value = cpu.PopValue();
+            var identifier = (string)cpu.PopStack();
+            cpu.SetValueExists(identifier, value);
+        }
+    }
+
+    /// <summary>
+    /// Consumes the topmost 2 values of the stack, storing the topmost stack
+    /// value into a variable described by the next value down the stack. <br/>
+    /// <br/>
+    /// The variable must not exist already in the local nesting level, and it will
+    /// NOT attempt to look for it in the next scoping level up.<br/>
+    /// <br/>
+    /// Instead it will attempt to create the variable anew at the current local
+    /// nesting scope.<br/>
+    /// <br/>
+    /// This is the usual way to make a new LOCAL variable.  Do not attempt to
+    /// use this opcode to store the value into an existing variable - just use it
+    /// when making new variables.  If you use it to store into an existing
+    /// local variable, it will generate an error at runtime.<br/>
+    /// <br/>
+    /// Note that since this
+    /// is the way to make a variable, it's impossible to make a variable
+    /// that hasn't been given an initial value.  Its the act of storing a value into
+    /// the variable that causues it to exist.  This is deliberate design.
+    /// </summary>
+    public class OpcodeStoreLocal : Opcode
+    {
+        protected override string Name { get { return "storelocal"; } }
+        public override ByteCode Code { get { return ByteCode.STORELOCAL; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            object value = cpu.PopValue();
+            var identifier = (string)cpu.PopStack();
+            cpu.SetNewLocal(identifier, value);
+        }
+    }
     
     public class OpcodeUnset : Opcode
     {
@@ -454,7 +529,7 @@ namespace kOS.Safe.Compilation
             }
             else
             {
-                cpu.RemoveAllVariables();
+                throw new KOSDeprecationException("0.17","UNSET ALL", "<not supported anymore now that we have nested scoping>", "");
             }
         }
     }
@@ -1085,21 +1160,42 @@ namespace kOS.Safe.Compilation
                     return;
                 }
             }
-
-
+            
+            // If it's a string it might not really be a built-in, it might still be a user func.
+            // Detect whether it's built-in, and if it's not, then convert it into the equivalent
+            // user func call by making it be an integer instruction pointer instead:
+            if (functionPointer is string)
+            {
+                string functionName = functionPointer as string;
+                if (functionName.EndsWith("()"))
+                    functionName = functionName.Substring(0, functionName.Length - 2);
+                if (!(cpu.BuiltInExists(functionName)))
+                {
+                    // It is not a built-in, so instead get its value as a user function pointer variable, despite 
+                    // the fact that it's being called AS IF it was direct.
+                    if (!functionName.EndsWith("*")) functionName = functionName + "*";
+                    if (!functionName.StartsWith("$")) functionName = "$" + functionName;
+                    functionPointer = cpu.GetValue(functionName);
+                }
+            }
+ 
             if (functionPointer is int) 
             {
+                ReverseStackArgs(cpu);
                 int currentPointer = cpu.InstructionPointer;
                 DeltaInstructionPointer = (int)functionPointer - currentPointer;
                 var contextRecord = new SubroutineContext(currentPointer+1);
-                cpu.PushStack(contextRecord);
-                cpu.MoveStackPointer(-1);
+                cpu.PushAboveStack(contextRecord);
             }
             else if (functionPointer is string)
             {
+                // Built-ins don't need to dereference the stack values because they
+                // don't leave the scope - they're not implemented that way.  But later we
+                // might want to change that.
                 var name = functionPointer as string;
                 string functionName = name;
-                functionName = functionName.Substring(0, functionName.Length - 2);
+                if (functionName.EndsWith("()"))
+                    functionName = functionName.Substring(0, functionName.Length - 2);
                 cpu.CallBuiltinFunction(functionName);
             }
             else if (functionPointer is Delegate)
@@ -1113,7 +1209,7 @@ namespace kOS.Safe.Compilation
                     string.Format("kOS internal error: OpcodeCall calling a function described using {0} which is of type {1} and kOS doesn't know how to call that.", functionPointer, functionPointer.GetType().Name)
                     );
             }
-            
+
             if (! Direct)
             {
                 cpu.PopValue(); // consume function name, branch index, or delegate
@@ -1219,6 +1315,36 @@ namespace kOS.Safe.Compilation
                 throw;
             }
         }
+        
+        /// <summary>
+        /// Take the topmost arguments down to the ARG_MARKER_STRING, pop them off, and then
+        /// put them back again in reversed order so a function can read them in normal order.
+        /// </summary>
+        public void ReverseStackArgs(ICpu cpu)
+        {
+            List<object> args = new List<object>();
+            object arg = cpu.PopValue();
+            while (arg != null && (!(arg.ToString().Equals(ARG_MARKER_STRING))))
+            {
+                args.Add(arg);
+
+                // It's important to dereference with PopValue, not using PopStack, because the function
+                // being called might not even be able to see the variable in scope anyway.
+                // In other words, if calling a function like so:
+                //     declare foo to 3.
+                //     myfunc(foo).
+                // The code inside myfunc needs to see that as being identical to just saying:
+                //     myfunc(3).
+                // It has to be unaware of the fact that the name of the argument was 'foo'.  It just needs to
+                // see the contents that were inside foo.
+                arg = cpu.PopValue();
+            }
+            // Push the arg marker back on again.
+            cpu.PushStack(ARG_MARKER_STRING);
+            // Push the arguments back on again, which will invert their order:
+            foreach (object item in args)
+                cpu.PushStack(item);
+        }
 
         public override string ToString()
         {
@@ -1233,13 +1359,30 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            cpu.MoveStackPointer(1);
-            object shouldBeContextRecord = cpu.PopValue();
+            object shouldBeContextRecord = cpu.PopAboveStack(1);
             if ( !(shouldBeContextRecord is SubroutineContext) )
             {
                 // This should never happen with any user code:
                 throw new Exception( "kOS internal error: Stack misalignment detected when returning from routine.");
             }
+            // Return value should be atop the stack - we have to pop it so that
+            // we can reach the arg start marker under it:
+            object returnVal = cpu.PopValue();
+
+            // The next thing on the stack under the return value should be the marker that indicated where
+            // the parameters started.  It should be thrown away now.  If the next thing is NOT the marker
+            // of where the parameters started, that is proof the stack is misaligned, probably because the
+            // number of args passed didn't match the number of DECLARE PARAMETER statements in the function:
+            string shouldBeArgMarker = cpu.PopStack() as string;
+
+            if ( (shouldBeArgMarker == null) || (!(shouldBeArgMarker.Equals(OpcodeCall.ARG_MARKER_STRING))) )
+            {
+                throw new KOSArgumentMismatchException("(detected when returning from function)");
+            }
+            // If the proper argument marker was found, then it's all okay, so put the return value
+            // back, where it belongs, now that the arg start marker was popped off:
+            cpu.PushStack(returnVal);
+            
             var contextRecord = shouldBeContextRecord as SubroutineContext;
             
             int destinationPointer = contextRecord.CameFromInstPtr;
@@ -1403,6 +1546,128 @@ namespace kOS.Safe.Compilation
             cpu.PushStack(value1);
             cpu.PushStack(value2);
         }
+    }
+    
+    /// <summary>
+    /// Replaces the topmost thing on the stack with its evaluated,
+    /// fully dereferenced version.  For example, if the variable
+    /// foo contains value 4, and the top of the stack is the
+    /// identifier name "$foo", then this will replace the "$foo"
+    /// with a 4.
+    /// </summary>
+    public class OpcodeEval : Opcode
+    {
+        protected override string Name { get { return "eval"; } }
+        public override ByteCode Code { get { return ByteCode.EVAL; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            cpu.PushStack(cpu.PopValue());
+        }
+    }
+
+    /// <summary>
+    /// Pushes a new variable namespace scope (for example, when a "{" is encountered
+    /// in a block-scoping language like C++ or Java or C#.)
+    /// From now on any local variables created will be made in this new
+    /// namespace.
+    /// </summary>
+    public class OpcodePushScope : Opcode
+    {
+        [MLField(1,true)]
+        public Int16 ScopeId {get;set;}
+        [MLField(2,true)]
+        public Int16 ParentScopeId {get;set;}
+
+        /// <summary>
+        /// Push a scope frame that knows the id of its lexical parent scope.
+        /// </summary>
+        /// <param name="id">the unique id of this scope frame.</param>
+        /// <param name="parentId">the unique id of the scope frame this scope is inside of.</param>
+        public OpcodePushScope(Int16 id, Int16 parentId)
+        {
+            ScopeId = id;
+            ParentScopeId = parentId;
+        }
+
+        /// <summary>
+        /// This variant of the constructor is just for ML file save/load to use.
+        /// </summary>
+        protected OpcodePushScope()
+        {
+            ScopeId = -1;
+            ParentScopeId = -1;
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<2)
+                throw new Exception("Saved field in ML file for OpcodePushScope seems to be missing.  Version mismatch?");
+            ScopeId = (Int16)( fields[0] );
+            ParentScopeId = (Int16)( fields[1] );
+        }
+
+        protected override string Name { get { return "pushscope"; } }
+        public override ByteCode Code { get { return ByteCode.PUSHSCOPE; } }
+        
+        public override void Execute(ICpu cpu)
+        {
+            cpu.PushAboveStack(new VariableScope(ScopeId,ParentScopeId));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} {1} {2}", Name, ScopeId, ParentScopeId);
+        }
+ 
+    }
+
+    /// <summary>
+    /// Pops a variable namespace scope (for example, when a "}" is encountered
+    /// in a block-scoping language like C++ or Java or C#.)
+    /// From now on any local variables created within the previous scope are
+    /// orphaned and gone forever ready to be garbage collected.
+    /// It is possible to give it an argument to pop more than one nesting level of scope, to
+    /// handle the case where you are breaking out of more than one nested level at once.
+    /// (i.e. such as might happen with a break, return, or exit keyword).
+    /// </summary>
+    public class OpcodePopScope : Opcode
+    {
+        [MLField(1,true)]
+        public Int16 NumLevels {get;set;} // Are we really going to have recursion more than 32767 levels?  Int16 is fine.
+
+        protected override string Name { get { return "popscope"; } }
+        public override ByteCode Code { get { return ByteCode.POPSCOPE; } }
+        
+        public OpcodePopScope(int numLevels)
+        {
+            NumLevels = (Int16)numLevels;
+        }
+        
+        public OpcodePopScope()
+        {
+            NumLevels = 1;
+        }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodePopScope seems to be missing.  Version mismatch?");
+            NumLevels = (Int16)(fields[0]); // should throw error if it's not an int.
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            cpu.PopAboveStack(NumLevels);
+        }
+        
+        public override string ToString()
+        {
+            return Name + " " + NumLevels;
+        }
+  
     }
 
     #endregion

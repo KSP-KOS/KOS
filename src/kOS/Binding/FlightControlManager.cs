@@ -444,6 +444,12 @@ namespace kOS.Binding
             {
                 control = GetControllerByVessel(vessel);
             }
+            
+            public override string ToString() // added to aid in debugging.
+            {
+                return "FlightCtrlParam: name="+name+" enabled="+Enabled;
+            }
+ 
         }
     }
 }
