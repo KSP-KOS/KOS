@@ -2192,15 +2192,22 @@ namespace kOS.Safe.Compilation.KS
 
             // process program arguments
             AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // regardless of whether it's called directly or indirectly, we still need at least one.
+            bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
+            if (!hasON && options.LoadProgramsInSameAddressSpace)
+            {
+                // When running in the same address space, we need an extra arg marker under the args, because
+                // of the double-indirect call where we call the subroutine that was built in PreProcessRunStatement,
+                // and IT in turn calls the actual subprogram (after deciding whether or not it needs to compile it
+                // into existence).
+                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));                
+            }
             
             if (node.Nodes.Count > 3 && node.Nodes[3].Token.Type == TokenType.arglist)
             {
                 VisitNode(node.Nodes[3]);
                 volumeIndex += 3;
             }
-            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // separates the RUN() args (progname, volume) from the args to the program the RUn is running.
 
-            bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
             if (!hasON && options.LoadProgramsInSameAddressSpace)
             {
                 string subprogramName = node.Nodes[1].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
@@ -2213,6 +2220,11 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
+                // When running in a new address space, we also need a second arg marker, but in this
+                // case it has to go over the top of the other args, not under them, to tell the RUN
+                // builtin function where its arguments end and the progs arguments start:
+                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));                
+
                 // program name
                 VisitNode(node.Nodes[1]);
 
