@@ -2460,11 +2460,11 @@ namespace kOS.Safe.Compilation.KS
 
             string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + "-iterator";
 
-            PushBreakList(braceNestLevel);
-
             // Add a scope level to hold the iterator variable.  This will live just "outside" the
             // brace scope of the function body.
             BeginScope(node);
+
+            PushBreakList(braceNestLevel);
 
             AddOpcode(new OpcodePush(iteratorIdentifier));
             VisitNode(node.Nodes[3]);
@@ -2490,21 +2490,14 @@ namespace kOS.Safe.Compilation.KS
             // jump to condition
             Opcode jump = AddOpcode(new OpcodeBranchJump());
             jump.DestinationLabel = conditionLabel;
-            // end of loop, cleanup
-            Opcode endLoop = AddOpcode(new OpcodePush(iteratorIdentifier));
-            AddOpcode(new OpcodePush("reset"));
-            AddOpcode(new OpcodeGetMember());
-            AddOpcode(new OpcodePop()); // removes the "true" returned by the previous getmember
-            // unset of iterator and iteration variable
-            AddOpcode(new OpcodePush(iteratorIdentifier));
-            AddOpcode(new OpcodeUnset());
-            VisitVariableNode(node.Nodes[1]);
-            AddOpcode(new OpcodeUnset());
+
+            // end of loop, give NOP destination to land at for breaks and end-loop condition:
+            Opcode endLoop = AddOpcode(new OpcodeNOP());
+            PopBreakList(endLoop.Label);
 
             // End the scope level holding the iterator variable:
             EndScope(node);
 
-            PopBreakList(endLoop.Label);
 
             nowInALoop = remember;
         }
