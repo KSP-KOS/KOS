@@ -41,6 +41,7 @@ namespace kOS.Execution
         private double totalExecutionTime;
         private int maxMainlineInstructionsSoFar;
         private int maxTriggerInstructionsSoFar;
+        private StringBuilder executeLog = new StringBuilder();
 
         public int InstructionPointer
         {
@@ -895,11 +896,14 @@ namespace kOS.Execution
                     currentContext.InstructionPointer = triggerPointer;
 
                     bool executeNext = true;
+                    executeLog.Remove(0,executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
                     while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
                     {
                         executeNext = ExecuteInstruction(currentContext);
                         instructionsSoFarInUpdate++;
                     }
+                    if (executeLog.Length > 0)
+                        SafeHouse.Logger.Log(executeLog.ToString());
                 }
                 catch (Exception e)
                 {
@@ -918,7 +922,7 @@ namespace kOS.Execution
         private void ContinueExecution()
         {
             bool executeNext = true;
-            
+            executeLog.Remove(0,executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
             while (currentStatus == Status.Running && 
                    instructionsSoFarInUpdate < instructionsPerUpdate &&
                    executeNext &&
@@ -927,6 +931,8 @@ namespace kOS.Execution
                 executeNext = ExecuteInstruction(currentContext);
                 instructionsSoFarInUpdate++;
             }
+            if (executeLog.Length > 0)
+                SafeHouse.Logger.Log(executeLog.ToString());
         }
 
         private bool ExecuteInstruction(ProgramContext context)
@@ -936,20 +942,30 @@ namespace kOS.Execution
             Opcode opcode = context.Program[context.InstructionPointer];
             if (DEBUG_EACH_OPCODE)
             {
-                SafeHouse.Logger.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count +
-                                      "\n                   Opcode is: " + opcode.Label + " " + opcode.ToString() );
+                executeLog.Append(String.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n",
+                                                context.InstructionPointer, context.Program.Count, opcode.Label, opcode.ToString()));
             }
-            
-            if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
+            try
             {
-                opcode.Execute(this);
-                context.InstructionPointer += opcode.DeltaInstructionPointer;
-                return true;
+                if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
+                {
+                    opcode.Execute(this);
+                    context.InstructionPointer += opcode.DeltaInstructionPointer;
+                    return true;
+                }
+                if (opcode is OpcodeEOP)
+                {
+                    BreakExecution(false);
+                    SafeHouse.Logger.Log("Execution Broken");
+                }
             }
-            if (opcode is OpcodeEOP)
+            catch (Exception e)
             {
-                BreakExecution(false);
-                SafeHouse.Logger.Log("Execution Broken");
+                // exception will skip the normal printing of the log buffer,
+                // so print what we have so far before throwing up the exception:
+                if (executeLog.Length > 0)
+                    SafeHouse.Logger.Log(executeLog.ToString());
+                throw e;
             }
             return false;
         }
