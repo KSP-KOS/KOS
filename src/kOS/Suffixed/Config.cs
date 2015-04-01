@@ -41,7 +41,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 150, 50, 2000, typeof(int)));
             AddConfigKey(PropId.UseCompressedPersistence, new ConfigKey("UseCompressedPersistence", "UCP", "Use compressed persistence", false, false, true, typeof(bool)));
             AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, false, true, typeof(bool)));
-            AddConfigKey(PropId.EnableRTIntegration, new ConfigKey("EnableRTIntegration", "RT", "Enable RT integration", false, false, true, typeof(bool)));
+            AddConfigKey(PropId.EnableRTIntegration, new ConfigKey("EnableRTIntegration", "RT", "Enable RT integration", true, false, true, typeof(bool)));
             AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
