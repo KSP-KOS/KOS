@@ -1377,7 +1377,10 @@ namespace kOS.Safe.Compilation
 
             if ( (shouldBeArgMarker == null) || (!(shouldBeArgMarker.Equals(OpcodeCall.ARG_MARKER_STRING))) )
             {
-                throw new KOSArgumentMismatchException("(detected when returning from function)");
+                cpu.DumpVariables(); // eraseme.
+                throw new KOSArgumentMismatchException(
+                    "(detected when returning from function and the stack still had " +
+                    (shouldBeArgMarker ?? "a non-string value") + " on it)");
             }
             // If the proper argument marker was found, then it's all okay, so put the return value
             // back, where it belongs, now that the arg start marker was popped off:
