@@ -79,6 +79,8 @@ namespace kOS.Safe.Compilation.KS
             this.context = context;
             this.options = options;
             this.startLineNum = startLineNum;
+            
+            ++context.NumCompilesSoFar;
 
             try
             {
@@ -359,14 +361,26 @@ namespace kOS.Safe.Compilation.KS
                 branchOpcode.DestinationLabel = eofOpcode.Label;
             }
         }
+        
 
+        /// <summary>
+        /// Create a unique string out of a sub-branch of the parse tree that
+        /// can be used to uniquely identify it.  The purpose is so that two
+        /// sub-branches of the parse tree can be compared to see if they are 
+        /// the exact same code as each other.</br>
+        /// </summary>
         private string ConcatenateNodes(ParseNode node)
         {
-            string concatenated = node.Token.Text;
+            return context.NumCompilesSoFar.ToString() + ConcatenateNodesRecurse(node);
+        }
+        
+        private string ConcatenateNodesRecurse(ParseNode node)
+        {
+            string concatenated = context.NumCompilesSoFar.ToString() + node.Token.Text;
 
             if (node.Nodes.Any())
             {
-                return node.Nodes.Aggregate(concatenated, (current, childNode) => current + ConcatenateNodes(childNode));
+                return node.Nodes.Aggregate(concatenated, (current, childNode) => current + ConcatenateNodesRecurse(childNode));
             }
 
             return concatenated;
