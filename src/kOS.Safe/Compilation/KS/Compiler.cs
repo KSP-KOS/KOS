@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
-using kOS.Safe.Function;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -367,16 +366,16 @@ namespace kOS.Safe.Compilation.KS
         /// Create a unique string out of a sub-branch of the parse tree that
         /// can be used to uniquely identify it.  The purpose is so that two
         /// sub-branches of the parse tree can be compared to see if they are 
-        /// the exact same code as each other.</br>
+        /// the exact same code as each other.
         /// </summary>
         private string ConcatenateNodes(ParseNode node)
         {
-            return context.NumCompilesSoFar.ToString() + ConcatenateNodesRecurse(node);
+            return string.Format("{0}{1}", context.NumCompilesSoFar, ConcatenateNodesRecurse(node));
         }
         
         private string ConcatenateNodesRecurse(ParseNode node)
         {
-            string concatenated = context.NumCompilesSoFar.ToString() + node.Token.Text;
+            string concatenated = string.Format("{0}{1}", context.NumCompilesSoFar, node.Token.Text);
 
             if (node.Nodes.Any())
             {
@@ -1163,7 +1162,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitOnOffTrailer(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush((node.Nodes[0].Token.Type == TokenType.ON) ? true : false));
+            AddOpcode(new OpcodePush((node.Nodes[0].Token.Type == TokenType.ON)));
         }
 
         /// <summary>
@@ -1914,7 +1913,7 @@ namespace kOS.Safe.Compilation.KS
         private void AddFunctionJumpVars(ParseNode node)
         {
             // All the functions for which this scope is where they live:
-            IEnumerable<UserFunction> theseFuncs = context.UserFunctions.GetUserFunctionList().Where((item) => item.IsFunction && item.ScopeNode == node);
+            IEnumerable<UserFunction> theseFuncs = context.UserFunctions.GetUserFunctionList().Where(item => item.IsFunction && item.ScopeNode == node);
             
             foreach (UserFunction func in theseFuncs)
             {
