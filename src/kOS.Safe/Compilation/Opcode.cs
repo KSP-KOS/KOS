@@ -147,7 +147,7 @@ namespace kOS.Safe.Compilation
         private static int lastId;
         private readonly int id = ++lastId;
 
-        // SHOUD-BE-STATIC MEMBERS:
+        // SHOULD-BE-STATIC MEMBERS:
         // ========================
         //
         // There are places in this class where a static abstract member was the intent,
@@ -158,7 +158,7 @@ namespace kOS.Safe.Compilation
         // Name="jump", and so on.)
         // 
         // But C# cannot support this, apparently, due to a limitation in how it implements class
-        // inheritences.  It doesn't know how to store overrides at the static level where there's just
+        // inheritances.  It doesn't know how to store overrides at the static level where there's just
         // one instance per subclass definition.   It only knows how to override dynamic members.  Because of
         // this the compiler will call it an error to try to make a member be both abstract and static.
         //
@@ -1377,10 +1377,10 @@ namespace kOS.Safe.Compilation
 
             if ( (shouldBeArgMarker == null) || (!(shouldBeArgMarker.Equals(OpcodeCall.ARG_MARKER_STRING))) )
             {
-                cpu.DumpVariables(); // eraseme.
                 throw new KOSArgumentMismatchException(
-                    "(detected when returning from function and the stack still had " +
-                    (shouldBeArgMarker ?? "a non-string value") + " on it)");
+                    string.Format("(detected when returning from function and the stack still had {0} on it)", 
+                    (shouldBeArgMarker ?? "a non-string value"))
+                );
             }
             // If the proper argument marker was found, then it's all okay, so put the return value
             // back, where it belongs, now that the arg start marker was popped off:

@@ -41,7 +41,7 @@ namespace kOS.Execution
         private double totalExecutionTime;
         private int maxMainlineInstructionsSoFar;
         private int maxTriggerInstructionsSoFar;
-        private StringBuilder executeLog = new StringBuilder();
+        private readonly StringBuilder executeLog = new StringBuilder();
 
         public int InstructionPointer
         {
@@ -375,20 +375,20 @@ namespace kOS.Execution
         }
 
         /// <summary>
-        /// Gets the dictionary that contains the given identifer, starting the
+        /// Gets the dictionary that contains the given identifier, starting the
         /// search at the local level and scanning the scopes upward all the
         /// way to the global dictionary.<br/>
         /// Does not allow the walk to use scope frames that were not directly in this
-        /// scope's lexical chain.  It skips over scope frames from other braches
+        /// scope's lexical chain.  It skips over scope frames from other branches
         /// of the parse tree.  (i.e. if a function calls a function elsewhere).<br/>
         /// Returns null when no hit was found.<br/>
         /// </summary>
-        /// <param name="identifier">identifer name to search for</param>
-        /// <returns>The dictionary found, or null if no dictionary contins the identifier.</returns>
+        /// <param name="identifier">identifier name to search for</param>
+        /// <returns>The dictionary found, or null if no dictionary contains the identifier.</returns>
         private VariableScope GetNestedDictionary(string identifier)
         {
             Int16 rawStackDepth = 0 ;
-            while (true) /*all of this loop's exits are explicit break or return stmts*/
+            while (true) /*all of this loop's exits are explicit break or return statements*/
             {
                 object stackItem;
                 bool stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
@@ -959,13 +959,13 @@ namespace kOS.Execution
                     SafeHouse.Logger.Log("Execution Broken");
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // exception will skip the normal printing of the log buffer,
                 // so print what we have so far before throwing up the exception:
                 if (executeLog.Length > 0)
                     SafeHouse.Logger.Log(executeLog.ToString());
-                throw e;
+                throw;
             }
             return false;
         }
