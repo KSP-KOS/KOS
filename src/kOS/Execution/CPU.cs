@@ -59,7 +59,7 @@ namespace kOS.Execution
             stack = new Stack();
             globalVariables = new VariableScope(0, -1);
             contexts = new List<ProgramContext>();
-            if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddObserver(this);
+            if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
         }
 
         public void Boot()
@@ -772,7 +772,7 @@ namespace kOS.Execution
             currentStatus = Status.Running;
         }
 
-        public void KOSUpdate(double deltaTime)
+        public void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = Config.Instance.ShowStatistics;
             Stopwatch updateWatch = null;
@@ -1120,7 +1120,7 @@ namespace kOS.Execution
 
         public void Dispose()
         {
-            shared.UpdateHandler.RemoveObserver(this);
+            shared.UpdateHandler.RemoveFixedObserver(this);
         }
     }
 }
