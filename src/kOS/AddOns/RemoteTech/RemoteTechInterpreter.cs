@@ -93,7 +93,7 @@ namespace kOS.AddOns.RemoteTech
             waitElapsed = 0;
         }
 
-        public void Update(double deltaTime)
+        public void KOSUpdate(double deltaTime)
         {
             if (!deploymentInProgress && commandQueue.Count > 0 && !BatchMode)
             {

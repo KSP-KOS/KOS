@@ -772,7 +772,7 @@ namespace kOS.Execution
             currentStatus = Status.Running;
         }
 
-        public void Update(double deltaTime)
+        public void KOSUpdate(double deltaTime)
         {
             bool showStatistics = Config.Instance.ShowStatistics;
             Stopwatch updateWatch = null;

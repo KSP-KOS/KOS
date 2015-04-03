@@ -9,7 +9,7 @@ namespace kOS.Safe
         // once and therefore only gets its Update() called once per update.
         // The value of the KeyValuePair, the int, is unused.
         private readonly HashSet<IUpdateObserver> observers = new HashSet<IUpdateObserver>();
-        private readonly HashSet<IUpdateObserver> fixedObservers = new HashSet<IUpdateObserver>();
+        private readonly HashSet<IFixedUpdateObserver> fixedObservers = new HashSet<IFixedUpdateObserver>();
 
         public double CurrentFixedTime { get; private set; }
         public double LastDeltaFixedTime { get; private set; }
@@ -21,7 +21,7 @@ namespace kOS.Safe
             observers.Add(observer);
         }
 
-        public void AddFixedObserver(IUpdateObserver observer)
+        public void AddFixedObserver(IFixedUpdateObserver observer)
         {
             fixedObservers.Add(observer);
         }
@@ -31,7 +31,7 @@ namespace kOS.Safe
             observers.Remove(observer);
         }
 
-        public void RemoveFixedObserver(IUpdateObserver observer)
+        public void RemoveFixedObserver(IFixedUpdateObserver observer)
         {
             fixedObservers.Remove(observer);
         }
@@ -44,7 +44,7 @@ namespace kOS.Safe
             var snapshot = new HashSet<IUpdateObserver>(observers);
             foreach (var observer in snapshot)
             {
-                observer.Update(deltaTime);
+                observer.KOSUpdate(deltaTime);
             }
         }
 
@@ -53,10 +53,10 @@ namespace kOS.Safe
             LastDeltaFixedTime = deltaTime;
             CurrentFixedTime += deltaTime;
             
-            var snapshot = new HashSet<IUpdateObserver>(fixedObservers);
+            var snapshot = new HashSet<IFixedUpdateObserver>(fixedObservers);
             foreach (var observer in snapshot)
             {
-                observer.Update(deltaTime);
+                observer.KOSFixedUpdate(deltaTime);
             }
         }
     }
