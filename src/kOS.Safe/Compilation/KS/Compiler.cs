@@ -245,9 +245,6 @@ namespace kOS.Safe.Compilation.KS
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
                     break;
-                case TokenType.wait_stmt:
-                    PreProcessWaitStatement(node);
-                    break;
                 case TokenType.declare_stmt:
                     PreProcessProgramParameters(node);
                     break;
@@ -339,28 +336,6 @@ namespace kOS.Safe.Compilation.KS
             branchOpcode.DestinationLabel = eofOpcode.Label;
             skipRemoval.DestinationLabel = eofOpcode.Label;
         }
-
-        private void PreProcessWaitStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            if (node.Nodes.Count == 4)
-            {
-                // wait condition
-                int expressionHash = ConcatenateNodes(node).GetHashCode();
-                string triggerIdentifier = "wait-" + expressionHash.ToString();
-                Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-
-                currentCodeSection = triggerObject.Code;
-                VisitNode(node.Nodes[2]);
-                Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
-                AddOpcode(new OpcodeEndWait());
-                AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                AddOpcode(new OpcodeRemoveTrigger());
-                Opcode eofOpcode = AddOpcode(new OpcodeEOF());
-                branchOpcode.DestinationLabel = eofOpcode.Label;
-            }
-        }
-        
 
         /// <summary>
         /// Create a unique string out of a sub-branch of the parse tree that
@@ -1963,7 +1938,7 @@ namespace kOS.Safe.Compilation.KS
                     {
                         Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
                         AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                        AddOpcode(new OpcodeAddTrigger(false));
+                        AddOpcode(new OpcodeAddTrigger());
                     }
 
                     // enable this FlyByWire parameter
@@ -2043,7 +2018,7 @@ namespace kOS.Safe.Compilation.KS
                 AddOpcode(new OpcodePush(triggerObject.VariableName));
                 AddOpcode(new OpcodeStore());
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                AddOpcode(new OpcodeAddTrigger(false));
+                AddOpcode(new OpcodeAddTrigger());
             }
         }
 
@@ -2057,7 +2032,7 @@ namespace kOS.Safe.Compilation.KS
             if (triggerObject.IsInitialized())
             {
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                AddOpcode(new OpcodeAddTrigger(false));
+                AddOpcode(new OpcodeAddTrigger());
             }
         }
 
@@ -2070,22 +2045,18 @@ namespace kOS.Safe.Compilation.KS
 
             if (node.Nodes.Count == 3)
             {
-                // wait time
+                // For commands of the form:  WAIT N. where N is a number:
                 VisitNode(node.Nodes[1]);
                 AddOpcode(new OpcodeWait());
             }
             else
             {
-                // wait condition
-                int expressionHash = ConcatenateNodes(node).GetHashCode();
-                string triggerIdentifier = "wait-" + expressionHash.ToString();
-                Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-
-                if (triggerObject.IsInitialized())
-                {
-                    AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                    AddOpcode(new OpcodeAddTrigger(true));
-                }
+                // For commands of the form:  WAIT UNTIL expr. where expr is any boolean expression:
+                Opcode waitLoopStart = AddOpcode(new OpcodePush(0));       // Loop start: Gives OpcodeWait an argument of zero.
+                AddOpcode(new OpcodeWait());                               // Avoid busy polling.  Even a WAIT 0 still forces 1 fixedupdate 'tick'.
+                VisitNode(node.Nodes[2]);                                  // Inserts instructions here to evaluate the expression
+                AddOpcode(new OpcodeBranchIfFalse(), waitLoopStart.Label); // Repeat the loop as long as expression is false.
+                // Falls through to whatever comes next when expression is true.
             }
         }
 

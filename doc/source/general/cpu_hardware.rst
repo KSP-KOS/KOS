@@ -43,6 +43,14 @@ Triggers are all of the following:
 -  ON condition { some commands }.
 -  WHEN condition THEN { some commands }.
 
+.. note::
+
+    The :ref:`WAIT <wait>` command only causes mainline code
+    to be suspended.  Trigger code such as WHEN, ON, LOCK STEERING,
+    and LOCK THROTTLE, will continue executing while your program
+    is sitting still on the WAIT command.
+
+
 The way these work is that once per **update tick**, all the LOCK expressions which directly affect flight control are re-executed, and then each conditional trigger's condition is checked, and if true, then the entire body of the trigger is executed all the way to the bottom \*before any more instructions of the main body are executed\*. This means that execution of a trigger never gets interleaved with the main code. Once a trigger happens, the entire trigger occurs all in one go before the rest of the main body continues.
 
 Do Not Loop a Long Time in a Trigger Body!
@@ -81,6 +89,14 @@ But the duration of the next update tick is actually 0.09 seconds, then you will
     WAIT UNTIL TRUE.
 
 Then even though the condition is immediately true, it will still wait one update tick to discover this fact and continue.
+
+.. note::
+
+    The :ref:`WAIT <wait>` command only causes mainline code
+    to be suspended.  Trigger code such as WHEN, ON, LOCK STEERING,
+    and LOCK THROTTLE, will continue executing while your program
+    is sitting still on the WAIT command.
+
 
 The Frozen Universe
 -------------------
@@ -161,7 +177,3 @@ forums. You may put this code up near the top of your script::
       PRESERVE.
     }
 
-An Even Better Solution
-~~~~~~~~~~~~~~~~~~~~~~~
-
-There has been talk of instituting a special command: WAIT UNTIL PHYSICS that will sleep until there has been a physics update, and it's a good idea but it hasn't been implemented yet.

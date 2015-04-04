@@ -759,10 +759,7 @@ namespace kOS.Execution
 
         public void StartWait(double waitTime)
         {
-            if (waitTime > 0)
-            {
-                timeWaitUntil = currentTime + waitTime;
-            }
+            timeWaitUntil = currentTime + waitTime;
             currentStatus = Status.Waiting;
         }
 
@@ -873,7 +870,7 @@ namespace kOS.Execution
 
         private void ProcessWait()
         {
-            if (currentStatus == Status.Waiting && timeWaitUntil > 0)
+            if (currentStatus == Status.Waiting)
             {
                 if (currentTime >= timeWaitUntil)
                 {
