@@ -1689,41 +1689,18 @@ namespace kOS.Safe.Compilation
     
     public class OpcodeAddTrigger : Opcode
     {
-        [MLField(1,false)]
-        private bool ShouldWait { get; set; }
-
         protected override string Name { get { return "addtrigger"; } }
         public override ByteCode Code { get { return ByteCode.ADDTRIGGER; } }
-
-        public OpcodeAddTrigger(bool shouldWait)
-        {
-            ShouldWait = shouldWait;
-        }
-
-        /// <summary>
-        /// This variant of the constructor is just for ML save/load to use.
-        /// </summary>
-        protected OpcodeAddTrigger() { }
-
-        public override void PopulateFromMLFields(List<object> fields)
-        {
-            // Expect fields in the same order as the [MLField] properties of this class:
-            if (fields == null || fields.Count<1)
-                throw new Exception("Saved field in ML file for OpcodeAddTrigger seems to be missing.  Version mismatch?");
-            ShouldWait = (bool)(fields[0]); // should throw error if it's not a bool.
-        }
 
         public override void Execute(ICpu cpu)
         {
             var functionPointer = (int)cpu.PopValue();
             cpu.AddTrigger(functionPointer);
-            if (ShouldWait)
-                cpu.StartWait(0);
         }
 
         public override string ToString()
         {
-            return Name + " " + ShouldWait.ToString().ToLower();
+            return Name;
         }
     }
 
@@ -1748,11 +1725,8 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object waitTime = cpu.PopValue();
-            if (waitTime is double)
-                cpu.StartWait((double)waitTime);
-            else if (waitTime is int)
-                cpu.StartWait((int)waitTime);
+            object arg = cpu.PopValue();
+            cpu.StartWait(Convert.ToDouble(arg));
         }
     }
 

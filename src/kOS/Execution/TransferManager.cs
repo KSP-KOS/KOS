@@ -6,7 +6,7 @@ using kOS.Suffixed;
 
 namespace kOS.Execution
 {
-    public class TransferManager : IUpdateObserver
+    public class TransferManager : IFixedUpdateObserver
     {
         public enum TransferStatus        
         {
@@ -52,8 +52,10 @@ namespace kOS.Execution
             return resourceInfo;
         }
 
-        public void Update(double deltaTime)
+        public void KOSFixedUpdate(double deltaTime)
         {
+            if (!transfers.Any()) return;
+
             foreach (var transfer in transfers)
             {
                 transfer.Update(deltaTime);

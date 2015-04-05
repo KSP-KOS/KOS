@@ -66,7 +66,7 @@ namespace kOS.Function
             }
         }
 
-        public void Update(double deltaTime)
+        public void KOSUpdate(double deltaTime)
         {
             if (!stale) return;
 
