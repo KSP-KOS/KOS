@@ -906,6 +906,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.suffix:
                     VisitSuffix(node);
                     break;
+                case TokenType.unary_expr:
+                    VisitUnaryExpression(node);
+                    break;
                 case TokenType.atom:
                     VisitAtom(node);
                     break;
@@ -1023,7 +1026,7 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
-        private void VisitAtom(ParseNode node)
+        private void VisitUnaryExpression(ParseNode node)
         {
             NodeStartHousekeeping(node);
             if (node.Nodes.Count <= 0) return;
@@ -1045,15 +1048,8 @@ namespace kOS.Safe.Compilation.KS
                 nodeIndex++;
                 addNot = true;
             }
-
-            if (node.Nodes[nodeIndex].Token.Type == TokenType.BRACKETOPEN)
-            {
-                VisitNode(node.Nodes[nodeIndex + 1]);
-            }
-            else
-            {
-                VisitNode(node.Nodes[nodeIndex]);
-            }
+            
+            VisitNode(node.Nodes[nodeIndex]);
 
             if (addNegation)
             {
@@ -1062,6 +1058,20 @@ namespace kOS.Safe.Compilation.KS
             if (addNot)
             {
                 AddOpcode(new OpcodeLogicNot());
+            }
+        }
+
+        private void VisitAtom(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+
+            if (node.Nodes[0].Token.Type == TokenType.BRACKETOPEN)
+            {
+                VisitNode(node.Nodes[1]);
+            }
+            else
+            {
+                VisitNode(node.Nodes[0]);
             }
         }
 

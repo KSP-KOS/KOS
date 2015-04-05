@@ -47,7 +47,7 @@ namespace kOS.Safe.Compilation.KS
 
 
             
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.PLUSMINUS, TokenType.NOT, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
+            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
             while (tok.Type == TokenType.SET
                 || tok.Type == TokenType.IF
                 || tok.Type == TokenType.UNTIL
@@ -82,8 +82,6 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.BATCH
                 || tok.Type == TokenType.DEPLOY
                 || tok.Type == TokenType.CURLYOPEN
-                || tok.Type == TokenType.PLUSMINUS
-                || tok.Type == TokenType.NOT
                 || tok.Type == TokenType.INTEGER
                 || tok.Type == TokenType.DOUBLE
                 || tok.Type == TokenType.TRUEFALSE
@@ -94,7 +92,7 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.ATSIGN)
             {
                 Parseinstruction(node);
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.PLUSMINUS, TokenType.NOT, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
+            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
             }
 
             
@@ -129,7 +127,7 @@ namespace kOS.Safe.Compilation.KS
             }
 
             
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.PLUSMINUS, TokenType.NOT, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
+            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
             while (tok.Type == TokenType.SET
                 || tok.Type == TokenType.IF
                 || tok.Type == TokenType.UNTIL
@@ -164,8 +162,6 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.BATCH
                 || tok.Type == TokenType.DEPLOY
                 || tok.Type == TokenType.CURLYOPEN
-                || tok.Type == TokenType.PLUSMINUS
-                || tok.Type == TokenType.NOT
                 || tok.Type == TokenType.INTEGER
                 || tok.Type == TokenType.DOUBLE
                 || tok.Type == TokenType.TRUEFALSE
@@ -176,7 +172,7 @@ namespace kOS.Safe.Compilation.KS
                 || tok.Type == TokenType.ATSIGN)
             {
                 Parseinstruction(node);
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.PLUSMINUS, TokenType.NOT, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
+            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
             }
 
             
@@ -213,7 +209,7 @@ namespace kOS.Safe.Compilation.KS
             ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.instruction), "instruction");
             parent.Nodes.Add(node);
 
-            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.PLUSMINUS, TokenType.NOT, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
+            tok = scanner.LookAhead(TokenType.SET, TokenType.IF, TokenType.UNTIL, TokenType.LOCK, TokenType.UNLOCK, TokenType.PRINT, TokenType.ON, TokenType.TOGGLE, TokenType.WAIT, TokenType.WHEN, TokenType.STAGE, TokenType.CLEARSCREEN, TokenType.ADD, TokenType.REMOVE, TokenType.LOG, TokenType.BREAK, TokenType.PRESERVE, TokenType.DECLARE, TokenType.RETURN, TokenType.SWITCH, TokenType.COPY, TokenType.RENAME, TokenType.DELETE, TokenType.EDIT, TokenType.RUN, TokenType.COMPILE, TokenType.LIST, TokenType.REBOOT, TokenType.SHUTDOWN, TokenType.FOR, TokenType.UNSET, TokenType.BATCH, TokenType.DEPLOY, TokenType.CURLYOPEN, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING, TokenType.ATSIGN);
             switch (tok.Type)
             {
                 case TokenType.SET:
@@ -318,8 +314,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.CURLYOPEN:
                     Parseinstruction_block(node);
                     break;
-                case TokenType.PLUSMINUS:
-                case TokenType.NOT:
                 case TokenType.INTEGER:
                 case TokenType.DOUBLE:
                 case TokenType.TRUEFALSE:
@@ -2338,7 +2332,7 @@ namespace kOS.Safe.Compilation.KS
 
 
             
-            Parsefactor(node);
+            Parseunary_expr(node);
 
             
             tok = scanner.LookAhead(TokenType.MULT, TokenType.DIV);
@@ -2376,9 +2370,57 @@ namespace kOS.Safe.Compilation.KS
                 }
 
                 
-                Parsefactor(node);
+                Parseunary_expr(node);
             tok = scanner.LookAhead(TokenType.MULT, TokenType.DIV);
             }
+
+            parent.Token.UpdateRange(node.Token);
+        }
+
+        private void Parseunary_expr(ParseNode parent)
+        {
+            Token tok;
+            ParseNode n;
+            ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.unary_expr), "unary_expr");
+            parent.Nodes.Add(node);
+
+
+            
+            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT);
+            if (tok.Type == TokenType.PLUSMINUS
+                || tok.Type == TokenType.NOT)
+            {
+                tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT);
+                switch (tok.Type)
+                {
+                    case TokenType.PLUSMINUS:
+                        tok = scanner.Scan(TokenType.PLUSMINUS);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.PLUSMINUS) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PLUSMINUS.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    case TokenType.NOT:
+                        tok = scanner.Scan(TokenType.NOT);
+                        n = node.CreateNode(tok, tok.ToString() );
+                        node.Token.UpdateRange(tok);
+                        node.Nodes.Add(n);
+                        if (tok.Type != TokenType.NOT) {
+                            tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.NOT.ToString(), 0x1001, tok));
+                            return;
+                        }
+                        break;
+                    default:
+                        tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
+                        break;
+                }
+            }
+
+            
+            Parsefactor(node);
 
             parent.Token.UpdateRange(node.Token);
         }
@@ -2649,53 +2691,15 @@ namespace kOS.Safe.Compilation.KS
             ParseNode node = parent.CreateNode(scanner.GetToken(TokenType.atom), "atom");
             parent.Nodes.Add(node);
 
-            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING);
+            tok = scanner.LookAhead(TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING);
             switch (tok.Type)
             {
-                case TokenType.PLUSMINUS:
-                case TokenType.NOT:
                 case TokenType.INTEGER:
                 case TokenType.DOUBLE:
                 case TokenType.TRUEFALSE:
                 case TokenType.IDENTIFIER:
                 case TokenType.FILEIDENT:
                 case TokenType.BRACKETOPEN:
-
-                    
-                    tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT);
-                    if (tok.Type == TokenType.PLUSMINUS
-                        || tok.Type == TokenType.NOT)
-                    {
-                        tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT);
-                        switch (tok.Type)
-                        {
-                            case TokenType.PLUSMINUS:
-                                tok = scanner.Scan(TokenType.PLUSMINUS);
-                                n = node.CreateNode(tok, tok.ToString() );
-                                node.Token.UpdateRange(tok);
-                                node.Nodes.Add(n);
-                                if (tok.Type != TokenType.PLUSMINUS) {
-                                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.PLUSMINUS.ToString(), 0x1001, tok));
-                                    return;
-                                }
-                                break;
-                            case TokenType.NOT:
-                                tok = scanner.Scan(TokenType.NOT);
-                                n = node.CreateNode(tok, tok.ToString() );
-                                node.Token.UpdateRange(tok);
-                                node.Nodes.Add(n);
-                                if (tok.Type != TokenType.NOT) {
-                                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.NOT.ToString(), 0x1001, tok));
-                                    return;
-                                }
-                                break;
-                            default:
-                                tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found.", 0x0002, tok));
-                                break;
-                        }
-                    }
-
-                    
                     tok = scanner.LookAhead(TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN);
                     switch (tok.Type)
                     {

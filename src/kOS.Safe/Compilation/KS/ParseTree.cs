@@ -316,6 +316,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.multdiv_expr:
                     Value = Evalmultdiv_expr(tree, paramlist);
                     break;
+                case TokenType.unary_expr:
+                    Value = Evalunary_expr(tree, paramlist);
+                    break;
                 case TokenType.factor:
                     Value = Evalfactor(tree, paramlist);
                     break;
@@ -677,6 +680,13 @@ namespace kOS.Safe.Compilation.KS
         }
 
         protected virtual object Evalmultdiv_expr(ParseTree tree, params object[] paramlist)
+        {
+            foreach (var node in Nodes)
+                node.Eval(tree, paramlist);
+            return null;
+        }
+
+        protected virtual object Evalunary_expr(ParseTree tree, params object[] paramlist)
         {
             foreach (var node in Nodes)
                 node.Eval(tree, paramlist);
