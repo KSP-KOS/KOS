@@ -80,7 +80,7 @@ namespace kOS.Suffixed
         /// and move to wherever that ship is within its local XYZ world (which
         /// isn't always at (0,0,0), as it turns out.):
         /// </summary>
-        public void Update( double deltaTime )
+        public void KOSUpdate( double deltaTime )
         {
             if (line == null || hat == null) return;
             if (!enable) return;

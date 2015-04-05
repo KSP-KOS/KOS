@@ -41,6 +41,7 @@ namespace kOS.Execution
         private double totalExecutionTime;
         private int maxMainlineInstructionsSoFar;
         private int maxTriggerInstructionsSoFar;
+        private readonly StringBuilder executeLog = new StringBuilder();
 
         public int InstructionPointer
         {
@@ -58,7 +59,7 @@ namespace kOS.Execution
             stack = new Stack();
             globalVariables = new VariableScope(0, -1);
             contexts = new List<ProgramContext>();
-            if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddObserver(this);
+            if (this.shared.UpdateHandler != null) this.shared.UpdateHandler.AddFixedObserver(this);
         }
 
         public void Boot()
@@ -374,20 +375,20 @@ namespace kOS.Execution
         }
 
         /// <summary>
-        /// Gets the dictionary that contains the given identifer, starting the
+        /// Gets the dictionary that contains the given identifier, starting the
         /// search at the local level and scanning the scopes upward all the
         /// way to the global dictionary.<br/>
         /// Does not allow the walk to use scope frames that were not directly in this
-        /// scope's lexical chain.  It skips over scope frames from other braches
+        /// scope's lexical chain.  It skips over scope frames from other branches
         /// of the parse tree.  (i.e. if a function calls a function elsewhere).<br/>
         /// Returns null when no hit was found.<br/>
         /// </summary>
-        /// <param name="identifier">identifer name to search for</param>
-        /// <returns>The dictionary found, or null if no dictionary contins the identifier.</returns>
+        /// <param name="identifier">identifier name to search for</param>
+        /// <returns>The dictionary found, or null if no dictionary contains the identifier.</returns>
         private VariableScope GetNestedDictionary(string identifier)
         {
             Int16 rawStackDepth = 0 ;
-            while (true) /*all of this loop's exits are explicit break or return stmts*/
+            while (true) /*all of this loop's exits are explicit break or return statements*/
             {
                 object stackItem;
                 bool stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
@@ -758,10 +759,7 @@ namespace kOS.Execution
 
         public void StartWait(double waitTime)
         {
-            if (waitTime > 0)
-            {
-                timeWaitUntil = currentTime + waitTime;
-            }
+            timeWaitUntil = currentTime + waitTime;
             currentStatus = Status.Waiting;
         }
 
@@ -771,7 +769,7 @@ namespace kOS.Execution
             currentStatus = Status.Running;
         }
 
-        public void Update(double deltaTime)
+        public void KOSFixedUpdate(double deltaTime)
         {
             bool showStatistics = Config.Instance.ShowStatistics;
             Stopwatch updateWatch = null;
@@ -872,7 +870,7 @@ namespace kOS.Execution
 
         private void ProcessWait()
         {
-            if (currentStatus == Status.Waiting && timeWaitUntil > 0)
+            if (currentStatus == Status.Waiting)
             {
                 if (currentTime >= timeWaitUntil)
                 {
@@ -895,11 +893,14 @@ namespace kOS.Execution
                     currentContext.InstructionPointer = triggerPointer;
 
                     bool executeNext = true;
+                    executeLog.Remove(0,executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
                     while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
                     {
                         executeNext = ExecuteInstruction(currentContext);
                         instructionsSoFarInUpdate++;
                     }
+                    if (executeLog.Length > 0)
+                        SafeHouse.Logger.Log(executeLog.ToString());
                 }
                 catch (Exception e)
                 {
@@ -918,7 +919,7 @@ namespace kOS.Execution
         private void ContinueExecution()
         {
             bool executeNext = true;
-            
+            executeLog.Remove(0,executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
             while (currentStatus == Status.Running && 
                    instructionsSoFarInUpdate < instructionsPerUpdate &&
                    executeNext &&
@@ -927,6 +928,8 @@ namespace kOS.Execution
                 executeNext = ExecuteInstruction(currentContext);
                 instructionsSoFarInUpdate++;
             }
+            if (executeLog.Length > 0)
+                SafeHouse.Logger.Log(executeLog.ToString());
         }
 
         private bool ExecuteInstruction(ProgramContext context)
@@ -936,20 +939,30 @@ namespace kOS.Execution
             Opcode opcode = context.Program[context.InstructionPointer];
             if (DEBUG_EACH_OPCODE)
             {
-                SafeHouse.Logger.Log("ExecuteInstruction.  Opcode number " + context.InstructionPointer + " out of " + context.Program.Count +
-                                      "\n                   Opcode is: " + opcode.Label + " " + opcode.ToString() );
+                executeLog.Append(String.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n",
+                                                context.InstructionPointer, context.Program.Count, opcode.Label, opcode.ToString()));
             }
-            
-            if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
+            try
             {
-                opcode.Execute(this);
-                context.InstructionPointer += opcode.DeltaInstructionPointer;
-                return true;
+                if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
+                {
+                    opcode.Execute(this);
+                    context.InstructionPointer += opcode.DeltaInstructionPointer;
+                    return true;
+                }
+                if (opcode is OpcodeEOP)
+                {
+                    BreakExecution(false);
+                    SafeHouse.Logger.Log("Execution Broken");
+                }
             }
-            if (opcode is OpcodeEOP)
+            catch (Exception)
             {
-                BreakExecution(false);
-                SafeHouse.Logger.Log("Execution Broken");
+                // exception will skip the normal printing of the log buffer,
+                // so print what we have so far before throwing up the exception:
+                if (executeLog.Length > 0)
+                    SafeHouse.Logger.Log(executeLog.ToString());
+                throw;
             }
             return false;
         }
@@ -1104,7 +1117,7 @@ namespace kOS.Execution
 
         public void Dispose()
         {
-            shared.UpdateHandler.RemoveObserver(this);
+            shared.UpdateHandler.RemoveFixedObserver(this);
         }
     }
 }

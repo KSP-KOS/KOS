@@ -1,4 +1,5 @@
-﻿using kOS.InterProcessor;
+﻿using kOS.Execution;
+using kOS.InterProcessor;
 using kOS.Binding;
 using kOS.Factories;
 using kOS.Screen;
@@ -13,6 +14,7 @@ namespace kOS
         public IFactory Factory { get; set; }
         public Part KSPPart { get; set; }
         public TermWindow Window { get; set; }
+        public TransferManager TransferManager { get; set; }
 
         public SharedObjects()
         {

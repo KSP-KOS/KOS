@@ -7,6 +7,7 @@ namespace kOS.Safe.Compilation.KS
         public UserFunctionCollection UserFunctions { get; private set; }
         public TriggerCollection Triggers { get; private set; }
         public SubprogramCollection Subprograms { get; private set; }
+        public int NumCompilesSoFar {get; set;}
         public int LabelIndex { get; set; }
         public string LastSourceName { get; set; }
         
@@ -25,6 +26,7 @@ namespace kOS.Safe.Compilation.KS
             LabelIndex = 0;
             LastSourceName = "";
             MaxScopeIdSoFar = 0;
+            NumCompilesSoFar = 0;
         }
         
     }

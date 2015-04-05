@@ -177,9 +177,9 @@ expr               -> and_expr (OR and_expr)*;
 and_expr           -> compare_expr (AND compare_expr)*;
 compare_expr       -> arith_expr (COMPARATOR arith_expr)*;
 arith_expr         -> multdiv_expr (PLUSMINUS multdiv_expr)*;
-multdiv_expr       -> factor ((MULT|DIV) factor)*;
+multdiv_expr       -> unary_expr ((MULT|DIV) unary_expr)*;
+unary_expr         -> (PLUSMINUS|NOT)? factor;
 factor             -> suffix (POWER suffix)*;
-
 suffix             -> suffixterm (suffix_trailer)*;
 suffix_trailer     -> (COLON suffixterm);
 
@@ -189,12 +189,12 @@ suffixterm_trailer -> (function_trailer | array_trailer);
 function_trailer   -> (BRACKETOPEN arglist? BRACKETCLOSE);
 array_trailer      -> ( (ARRAYINDEX (IDENTIFIER | INTEGER)) | (SQUAREOPEN expr SQUARECLOSE) );
 
-atom               -> (PLUSMINUS|NOT)? ( sci_number |
-                                         TRUEFALSE |
-                                         IDENTIFIER |
-                                         FILEIDENT |
-                                         BRACKETOPEN expr BRACKETCLOSE
-                                       ) | STRING;
+atom               -> ( sci_number |
+                        TRUEFALSE |
+                        IDENTIFIER |
+                        FILEIDENT |
+                        BRACKETOPEN expr BRACKETCLOSE
+                      ) | STRING;
 sci_number         -> number (E PLUSMINUS? INTEGER)?;
 number             -> (INTEGER | DOUBLE);
 

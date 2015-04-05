@@ -64,7 +64,7 @@ namespace kOS.Binding
         public void ToggleFlyByWire(string paramName, bool enabled)
         {
             SafeHouse.Logger.Log(string.Format("FlightControlManager: ToggleFlyByWire: {0} {1}", paramName, enabled));
-            if (!flightParameters.ContainsKey(paramName.ToLower())) { Debug.LogError("kOS: no such flybywire parameter " + paramName); return; }
+            if (!flightParameters.ContainsKey(paramName.ToLower())) { Debug.LogError("no such flybywire parameter " + paramName); return; }
 
             flightParameters[paramName.ToLower()].Enabled = enabled;
 
@@ -292,7 +292,7 @@ namespace kOS.Binding
                 get { return enabled; }
                 set
                 {
-                    SafeHouse.Logger.Log(string.Format("kOS: FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
+                    SafeHouse.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
                     enabled = value;
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))

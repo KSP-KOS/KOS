@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
-using kOS.Safe.Function;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -79,6 +78,8 @@ namespace kOS.Safe.Compilation.KS
             this.context = context;
             this.options = options;
             this.startLineNum = startLineNum;
+            
+            ++context.NumCompilesSoFar;
 
             try
             {
@@ -244,9 +245,6 @@ namespace kOS.Safe.Compilation.KS
                     PreProcessChildNodes(node);
                     PreProcessWhenStatement(node);
                     break;
-                case TokenType.wait_stmt:
-                    PreProcessWaitStatement(node);
-                    break;
                 case TokenType.declare_stmt:
                     PreProcessProgramParameters(node);
                     break;
@@ -339,34 +337,24 @@ namespace kOS.Safe.Compilation.KS
             skipRemoval.DestinationLabel = eofOpcode.Label;
         }
 
-        private void PreProcessWaitStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            if (node.Nodes.Count == 4)
-            {
-                // wait condition
-                int expressionHash = ConcatenateNodes(node).GetHashCode();
-                string triggerIdentifier = "wait-" + expressionHash.ToString();
-                Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-
-                currentCodeSection = triggerObject.Code;
-                VisitNode(node.Nodes[2]);
-                Opcode branchOpcode = AddOpcode(new OpcodeBranchIfFalse());
-                AddOpcode(new OpcodeEndWait());
-                AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                AddOpcode(new OpcodeRemoveTrigger());
-                Opcode eofOpcode = AddOpcode(new OpcodeEOF());
-                branchOpcode.DestinationLabel = eofOpcode.Label;
-            }
-        }
-
+        /// <summary>
+        /// Create a unique string out of a sub-branch of the parse tree that
+        /// can be used to uniquely identify it.  The purpose is so that two
+        /// sub-branches of the parse tree can be compared to see if they are 
+        /// the exact same code as each other.
+        /// </summary>
         private string ConcatenateNodes(ParseNode node)
         {
-            string concatenated = node.Token.Text;
+            return string.Format("{0}{1}", context.NumCompilesSoFar, ConcatenateNodesRecurse(node));
+        }
+        
+        private string ConcatenateNodesRecurse(ParseNode node)
+        {
+            string concatenated = string.Format("{0}{1}", context.NumCompilesSoFar, node.Token.Text);
 
             if (node.Nodes.Any())
             {
-                return node.Nodes.Aggregate(concatenated, (current, childNode) => current + ConcatenateNodes(childNode));
+                return node.Nodes.Aggregate(concatenated, (current, childNode) => current + ConcatenateNodesRecurse(childNode));
             }
 
             return concatenated;
@@ -918,6 +906,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.suffix:
                     VisitSuffix(node);
                     break;
+                case TokenType.unary_expr:
+                    VisitUnaryExpression(node);
+                    break;
                 case TokenType.atom:
                     VisitAtom(node);
                     break;
@@ -1035,7 +1026,7 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
-        private void VisitAtom(ParseNode node)
+        private void VisitUnaryExpression(ParseNode node)
         {
             NodeStartHousekeeping(node);
             if (node.Nodes.Count <= 0) return;
@@ -1057,15 +1048,8 @@ namespace kOS.Safe.Compilation.KS
                 nodeIndex++;
                 addNot = true;
             }
-
-            if (node.Nodes[nodeIndex].Token.Type == TokenType.BRACKETOPEN)
-            {
-                VisitNode(node.Nodes[nodeIndex + 1]);
-            }
-            else
-            {
-                VisitNode(node.Nodes[nodeIndex]);
-            }
+            
+            VisitNode(node.Nodes[nodeIndex]);
 
             if (addNegation)
             {
@@ -1074,6 +1058,20 @@ namespace kOS.Safe.Compilation.KS
             if (addNot)
             {
                 AddOpcode(new OpcodeLogicNot());
+            }
+        }
+
+        private void VisitAtom(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+
+            if (node.Nodes[0].Token.Type == TokenType.BRACKETOPEN)
+            {
+                VisitNode(node.Nodes[1]);
+            }
+            else
+            {
+                VisitNode(node.Nodes[0]);
             }
         }
 
@@ -1149,7 +1147,7 @@ namespace kOS.Safe.Compilation.KS
         private void VisitOnOffTrailer(ParseNode node)
         {
             NodeStartHousekeeping(node);
-            AddOpcode(new OpcodePush((node.Nodes[0].Token.Type == TokenType.ON) ? true : false));
+            AddOpcode(new OpcodePush((node.Nodes[0].Token.Type == TokenType.ON)));
         }
 
         /// <summary>
@@ -1688,7 +1686,7 @@ namespace kOS.Safe.Compilation.KS
 
         /// <summary>
         /// Perform a depth-first leftmost search of the parse tree from the starting
-        /// point given to find the first occurrance of a node of the given token type.<br/>
+        /// point given to find the first occurrence of a node of the given token type.<br/>
         /// This is intended as a way to make code that might be a bit more robustly able
         /// to handle shifts and adjustments to the parse grammar in the TinyPG file.<br/>
         /// Instead of assuming "I know that array nodes are always one level underneath
@@ -1900,7 +1898,7 @@ namespace kOS.Safe.Compilation.KS
         private void AddFunctionJumpVars(ParseNode node)
         {
             // All the functions for which this scope is where they live:
-            IEnumerable<UserFunction> theseFuncs = context.UserFunctions.GetUserFunctionList().Where((item) => item.IsFunction && item.ScopeNode == node);
+            IEnumerable<UserFunction> theseFuncs = context.UserFunctions.GetUserFunctionList().Where(item => item.IsFunction && item.ScopeNode == node);
             
             foreach (UserFunction func in theseFuncs)
             {
@@ -1950,7 +1948,7 @@ namespace kOS.Safe.Compilation.KS
                     {
                         Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
                         AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                        AddOpcode(new OpcodeAddTrigger(false));
+                        AddOpcode(new OpcodeAddTrigger());
                     }
 
                     // enable this FlyByWire parameter
@@ -2030,7 +2028,7 @@ namespace kOS.Safe.Compilation.KS
                 AddOpcode(new OpcodePush(triggerObject.VariableName));
                 AddOpcode(new OpcodeStore());
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                AddOpcode(new OpcodeAddTrigger(false));
+                AddOpcode(new OpcodeAddTrigger());
             }
         }
 
@@ -2044,7 +2042,7 @@ namespace kOS.Safe.Compilation.KS
             if (triggerObject.IsInitialized())
             {
                 AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                AddOpcode(new OpcodeAddTrigger(false));
+                AddOpcode(new OpcodeAddTrigger());
             }
         }
 
@@ -2057,22 +2055,18 @@ namespace kOS.Safe.Compilation.KS
 
             if (node.Nodes.Count == 3)
             {
-                // wait time
+                // For commands of the form:  WAIT N. where N is a number:
                 VisitNode(node.Nodes[1]);
                 AddOpcode(new OpcodeWait());
             }
             else
             {
-                // wait condition
-                int expressionHash = ConcatenateNodes(node).GetHashCode();
-                string triggerIdentifier = "wait-" + expressionHash.ToString();
-                Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-
-                if (triggerObject.IsInitialized())
-                {
-                    AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                    AddOpcode(new OpcodeAddTrigger(true));
-                }
+                // For commands of the form:  WAIT UNTIL expr. where expr is any boolean expression:
+                Opcode waitLoopStart = AddOpcode(new OpcodePush(0));       // Loop start: Gives OpcodeWait an argument of zero.
+                AddOpcode(new OpcodeWait());                               // Avoid busy polling.  Even a WAIT 0 still forces 1 fixedupdate 'tick'.
+                VisitNode(node.Nodes[2]);                                  // Inserts instructions here to evaluate the expression
+                AddOpcode(new OpcodeBranchIfFalse(), waitLoopStart.Label); // Repeat the loop as long as expression is false.
+                // Falls through to whatever comes next when expression is true.
             }
         }
 
@@ -2460,11 +2454,11 @@ namespace kOS.Safe.Compilation.KS
 
             string iteratorIdentifier = "$" + GetIdentifierText(node.Nodes[3]) + "-iterator";
 
-            PushBreakList(braceNestLevel);
-
             // Add a scope level to hold the iterator variable.  This will live just "outside" the
             // brace scope of the function body.
             BeginScope(node);
+
+            PushBreakList(braceNestLevel);
 
             AddOpcode(new OpcodePush(iteratorIdentifier));
             VisitNode(node.Nodes[3]);
@@ -2490,21 +2484,14 @@ namespace kOS.Safe.Compilation.KS
             // jump to condition
             Opcode jump = AddOpcode(new OpcodeBranchJump());
             jump.DestinationLabel = conditionLabel;
-            // end of loop, cleanup
-            Opcode endLoop = AddOpcode(new OpcodePush(iteratorIdentifier));
-            AddOpcode(new OpcodePush("reset"));
-            AddOpcode(new OpcodeGetMember());
-            AddOpcode(new OpcodePop()); // removes the "true" returned by the previous getmember
-            // unset of iterator and iteration variable
-            AddOpcode(new OpcodePush(iteratorIdentifier));
-            AddOpcode(new OpcodeUnset());
-            VisitVariableNode(node.Nodes[1]);
-            AddOpcode(new OpcodeUnset());
+
+            // end of loop, give NOP destination to land at for breaks and end-loop condition:
+            Opcode endLoop = AddOpcode(new OpcodeNOP());
+            PopBreakList(endLoop.Label);
 
             // End the scope level holding the iterator variable:
             EndScope(node);
 
-            PopBreakList(endLoop.Label);
 
             nowInALoop = remember;
         }

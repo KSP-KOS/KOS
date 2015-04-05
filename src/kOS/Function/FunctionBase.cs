@@ -7,7 +7,7 @@ using kOS.Safe.Function;
 
 namespace kOS.Function
 {
-    public class FunctionBase
+    public abstract class FunctionBase
     {
         /// <summary>
         /// ALL FUNCTIONS in kOS will always have exactly one return value.  We have no
@@ -36,16 +36,14 @@ namespace kOS.Function
         /// wierd return behavior.
         /// </summary>
         public bool UsesAutoReturn {get; set;}
-        
-        public FunctionBase()
+
+        protected FunctionBase()
         {
-            ReturnValue = (int)0; // default return value ALL built-ins will have if they don't set it.
+            ReturnValue = 0; // default return value ALL built-ins will have if they don't set it.
             UsesAutoReturn = true;
         }
-        
-        public virtual void Execute(SharedObjects shared)
-        {
-        }
+
+        public abstract void Execute(SharedObjects shared);
 
         protected double GetDouble(object argument)
         {
