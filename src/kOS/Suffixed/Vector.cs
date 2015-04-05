@@ -163,5 +163,9 @@ namespace kOS.Suffixed
         {
             return new Vector(a.ToVector3D() - b.ToVector3D());
         }
+        public static Vector operator -(Vector a)
+        {
+            return a*(-1);
+        }
     }
 }
