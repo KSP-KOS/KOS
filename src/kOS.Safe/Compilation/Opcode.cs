@@ -898,7 +898,7 @@ namespace kOS.Safe.Compilation
                 // (For example, kOS.Suffixed.Vector and kOS.Suffixed.Direction)
                 Type t = value.GetType();
                 MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
-                if (negateMe != null && t.IsSpecialName)
+                if (negateMe != null)
                     result = negateMe.Invoke(null, new[]{value}); // value is an arg, not the 'this'.  (Method is static.)
                 else
                     throw new KOSUnaryOperandTypeException("negate", value);
