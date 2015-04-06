@@ -89,21 +89,11 @@ namespace kOS.Binding
             {
                 b.Update();
             }
-
-            // clear bound variables values
-            foreach (var variable in variables.Values)
-            {
-                variable.ClearValue();
-            }
         }
 
         public void PostUpdate()
         {
-            // save bound variables values
-            foreach (BoundVariable variable in variables.Values)
-            {
-                variable.SaveValue();
-            }
+
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)
