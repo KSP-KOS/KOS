@@ -30,7 +30,8 @@ namespace kOS.Screen
     public class KOSToolBarWindow : MonoBehaviour
     {
         private ApplicationLauncherButton launcherButton;
-        
+        private IButton BlizzyButton;
+
         private const ApplicationLauncher.AppScenes APP_SCENES = 
             ApplicationLauncher.AppScenes.FLIGHT | 
             ApplicationLauncher.AppScenes.SPH | 
@@ -158,35 +159,53 @@ namespace kOS.Screen
 
             FirstTimeSetup();
         }
-        
+
         public void RunWhenReady()
         {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " is trying to ready the hooks");
             // KSP claims the hook ApplicationLauncherReady.Add will not run until
             // the application is ready, even though this is emphatically false.  It actually
             // fires the event a few times before the one that "sticks" and works:
-            if (!ApplicationLauncher.Ready) return; 
+            if (!ApplicationLauncher.Ready) return;
             if (someInstanceHasHooks) return;
             thisInstanceHasHooks = true;
             someInstanceHasHooks = true;
-            
+
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " will now actually make its hooks");
-            ApplicationLauncher launcher = ApplicationLauncher.Instance;
-            
-            launcherButton = launcher.AddModApplication(
-                CallbackOnTrue,
-                CallbackOnFalse,
-                CallbackOnHover,
-                CallbackOnHoverOut,
-                CallbackOnEnable,
-                CallbackOnDisable,
-                APP_SCENES,
-                launcherButtonTexture);
-                
-            launcher.AddOnShowCallback(CallbackOnShow);
-            launcher.AddOnHideCallback(CallbackOnHide);
-            launcher.EnableMutuallyExclusive(launcherButton);
+
+            if (!Config.Instance.UseBlizzyToolbarOnly)
+            {
+                ApplicationLauncher launcher = ApplicationLauncher.Instance;
+
+                launcherButton = launcher.AddModApplication(
+                    CallbackOnTrue,
+                    CallbackOnFalse,
+                    CallbackOnHover,
+                    CallbackOnHoverOut,
+                    CallbackOnEnable,
+                    CallbackOnDisable,
+                    APP_SCENES,
+                    launcherButtonTexture);
+
+                launcher.AddOnShowCallback(CallbackOnShow);
+                launcher.AddOnHideCallback(CallbackOnHide);
+                launcher.EnableMutuallyExclusive(launcherButton);
+
+            }
+            //Will show button on Blizzy's toolbar anyway
+            AddBlizzyButton();
+
             SetupBackingConfigInts();
+        }
+
+        public void AddBlizzyButton()
+        {
+            if (!ToolbarManager.ToolbarAvailable) return;
+
+            BlizzyButton = ToolbarManager.Instance.add("kOS", "kOSButton");
+            BlizzyButton.TexturePath = "kOS/GFX/launcher-button-blizzy";
+            BlizzyButton.ToolTip = "kOS";
+            BlizzyButton.OnClick += (e) => CallbackOnClickBlizzy();
         }
         
         /// <summary>
@@ -231,11 +250,21 @@ namespace kOS.Screen
             
                 launcher.RemoveModApplication(launcherButton);
             }
+            if(BlizzyButton != null)
+                BlizzyButton.Destroy();
         }
         
         public void OnDestroy()
         {
             GoAway();
+        }
+
+        public void CallbackOnClickBlizzy()
+        {
+            if(!isOpen)
+                Open();
+            else
+                Close();           
         }
                         
         /// <summary>Callback for when the button is toggled on</summary>
@@ -388,7 +417,7 @@ namespace kOS.Screen
 
                 if (key.Value is bool)
                 {
-                    key.Value = GUILayout.Toggle((bool)key.Value,"", panelSkin.toggle);
+                    key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText));
                 }
                 else if (key.Value is int)
                 {
