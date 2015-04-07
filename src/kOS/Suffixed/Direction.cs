@@ -158,6 +158,11 @@ namespace kOS.Suffixed
             return new Direction(a.Euler - b.Euler, true);
         }
 
+        public static Direction operator -(Direction a)
+        {
+            return new Direction(a.rotation.Inverse());
+        }
+        
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
             var otherVector = other as Vector;

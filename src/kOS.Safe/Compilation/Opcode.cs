@@ -6,7 +6,6 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
-
 namespace kOS.Safe.Compilation
 {
     /// A very short numerical ID for the opcode. <br/>
@@ -893,7 +892,17 @@ namespace kOS.Safe.Compilation
             else if (value is double)
                 result = -((double)value);
             else
-                throw new KOSUnaryOperandTypeException("negate", value);
+            {
+                // Generic last-ditch to catch any sort of object that has
+                // overloaded the unary negate operator '-'.
+                // (For example, kOS.Suffixed.Vector and kOS.Suffixed.Direction)
+                Type t = value.GetType();
+                MethodInfo negateMe = t.GetMethod("op_UnaryNegation", BindingFlags.Static | BindingFlags.Public); // C#'s alternate name for '-' operator
+                if (negateMe != null)
+                    result = negateMe.Invoke(null, new[]{value}); // value is an arg, not the 'this'.  (Method is static.)
+                else
+                    throw new KOSUnaryOperandTypeException("negate", value);
+            }
 
             cpu.PushStack(result);
         }
