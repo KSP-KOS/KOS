@@ -100,6 +100,7 @@
     <Compile Include="Screen\KOSNameTagWindow.cs" />
     <Compile Include="Screen\KOSTextEditPopup.cs" />
     <Compile Include="Screen\KOSToolBarWindow.cs" />
+    <Compile Include="Screen\ToolbarWrapper.cs" />
     <Compile Include="Suffixed\ActiveResourceValue.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
