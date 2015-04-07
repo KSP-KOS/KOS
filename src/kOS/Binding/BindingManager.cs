@@ -84,6 +84,10 @@ namespace kOS.Binding
 
         public void PreUpdate()
         {
+            foreach (var variable in variables)
+            {
+                variable.Value.ClearCache();
+            }
             // update the bindings
             foreach (var b in bindings)
             {

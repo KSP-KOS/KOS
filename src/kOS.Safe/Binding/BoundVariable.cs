@@ -33,5 +33,10 @@ namespace kOS.Safe.Binding
                 Set(value);
             }
         }
+
+        public void ClearCache()
+        {
+            currentValue = null;
+        }
     }
 }
