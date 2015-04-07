@@ -22,7 +22,7 @@ namespace kOS.Execution
             Waiting = 2
         }
 
-        private readonly Stack stack;
+        private readonly IStack stack;
         private readonly VariableScope globalVariables;
         private Status currentStatus;
         private double currentTime;
@@ -205,6 +205,32 @@ namespace kOS.Execution
                 PopContext();
             }
         }
+        
+        /// <summary>
+        /// Build a clone of the current state of the scope stack, for the sake of capturing a closure.
+        /// </summary>
+        /// <returns>A stripped down copy of the stack with just the relevant closure frames in it.</returns>
+        public List<VariableScope> GetCurrentClosure()
+        {
+            List<VariableScope> closureList = new List<VariableScope>();
+            GetNestedDictionary("", closureList);
+            // The closure's variable scopes need to be marked as such, so the
+            // 'popscope' opcode knows to pop them off in one go when it hits
+            // them on the stack:
+            foreach (VariableScope scope in closureList)
+                scope.IsClosure = true;
+            return closureList;
+        }
+        
+        /// <summary>
+        /// Build a delegate call for the given function entry point, in which it will capture a closure of the current
+        /// runtime scoping state to be used when that function gets called later by OpcodeCall:
+        /// </summary>
+        /// <returns>The delegate object you can store in a variable.</returns>
+        public IUserDelegate MakeUserDelegate(int entryPoint)
+        {
+            return (IUserDelegate) new UserDelegate(this, entryPoint, true);
+        }
 
         // only two contexts exist now, one for the interpreter and one for the programs
         public ProgramContext GetInterpreterContext()
@@ -373,7 +399,7 @@ namespace kOS.Execution
             }
             return stackItem == null ? globalVariables : (VariableScope) stackItem;
         }
-
+        
         /// <summary>
         /// Gets the dictionary that contains the given identifier, starting the
         /// search at the local level and scanning the scopes upward all the
@@ -383,10 +409,16 @@ namespace kOS.Execution
         /// of the parse tree.  (i.e. if a function calls a function elsewhere).<br/>
         /// Returns null when no hit was found.<br/>
         /// </summary>
-        /// <param name="identifier">identifier name to search for</param>
+        /// <param name="identifier">identifier name to search for.  Pass an empty string to guarentee no hits will
+        ///   be found (which is useful to do when using the searchReport argument).</param>
+        /// <param name="searchReport">If you want to see the list of all the scopes that constituted the search
+        ///   path, not just the final hit, pass an empty list here and this method will fill it for you with
+        ///   that report.  Pass in a null to not get a report.</param>
         /// <returns>The dictionary found, or null if no dictionary contains the identifier.</returns>
-        private VariableScope GetNestedDictionary(string identifier)
+        private VariableScope GetNestedDictionary(string identifier, List<VariableScope> searchReport = null)
         {
+            if (searchReport != null) 
+                searchReport.Clear();
             Int16 rawStackDepth = 0 ;
             while (true) /*all of this loop's exits are explicit break or return statements*/
             {
@@ -401,11 +433,14 @@ namespace kOS.Execution
                     continue;
                 }
 
+                if (searchReport != null)
+                    searchReport.Add(localDict);
+                
                 if (localDict.Variables.ContainsKey(identifier))
                     return localDict;
-
                 
-                // Get the next VariableScope that is the lexical (not runtime) parent of this one:
+                // Get the next VariableScope that is valid, where valid means:
+                //    It is the lexical (not runtime) parent of this scope.
                 // -------------------------------------------------------------------------------
 
                 // Scan the stack until the variable scope with the right parent ID is seen:
@@ -422,7 +457,6 @@ namespace kOS.Execution
                             needsIncrement = false;
                             break;
                         }
-
                         // In the case where the variable scope is the SAME lexical ID as myself, that
                         // means I recursively called myself and the thing on the runtime stack just before
                         // me is ... another instance of me.  In that case just follow it's parent skip level
@@ -433,7 +467,6 @@ namespace kOS.Execution
                             needsIncrement = false;
                         }
                     }
-
                     if (needsIncrement)
                     {
                         ++skippedLevels;

@@ -78,12 +78,14 @@ namespace kOS.Safe.Compilation
         PUSHSCOPE      = 0x59,
         POPSCOPE       = 0x5a,
         STOREEXIST     = 0x5b,
+        PUSHDELEGATE   = 0x5c,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
         // or in the ML file but never actually can be executed.
         
         PUSHRELOCATELATER = 0xce,
+        PUSHDELEGATERELOCATELATER = 0xcd,
         LABELRESET = 0xf0     // for storing the fact that the Opcode.Label's positional index jumps weirdly.
     }
 
@@ -1178,14 +1180,23 @@ namespace kOS.Safe.Compilation
                     functionPointer = cpu.GetValue(functionName);
                 }
             }
- 
-            if (functionPointer is int) 
+            IUserDelegate userDelegate = functionPointer as IUserDelegate;
+            if (userDelegate != null)
+                functionPointer = userDelegate.EntryPoint;
+
+            if (functionPointer is int)
             {
                 ReverseStackArgs(cpu);
                 int currentPointer = cpu.InstructionPointer;
                 DeltaInstructionPointer = (int)functionPointer - currentPointer;
                 var contextRecord = new SubroutineContext(currentPointer+1);
                 cpu.PushAboveStack(contextRecord);
+                if (userDelegate != null)
+                {
+                    // Reverse-push the closure's scope record, just after the function return context got put on the stack.
+                    for (int i = userDelegate.Closure.Count - 1 ; i >= 0 ; --i)
+                        cpu.PushAboveStack(userDelegate.Closure[i]);
+                }
             }
             else if (functionPointer is string)
             {
@@ -1359,12 +1370,26 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
+            // The only thing on the "above stack" now that is allowed to get in the way of
+            // finding the context record that tells us where to jump back to, are the potential
+            // closure scope frames that might have been pushed if this subroutine was
+            // called via a delegate reference.  Consume any of those that are in
+            // the way, then expect the context record.  Any other pattern encountered
+            // is proof the stack alignment got screwed up:
+            bool okay;
+            VariableScope peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
+            while (okay && peeked != null && peeked.IsClosure)
+            {
+                cpu.PopAboveStack(1);
+                peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
+            }
             object shouldBeContextRecord = cpu.PopAboveStack(1);
             if ( !(shouldBeContextRecord is SubroutineContext) )
             {
                 // This should never happen with any user code:
                 throw new Exception( "kOS internal error: Stack misalignment detected when returning from routine.");
             }
+
             // Return value should be atop the stack - we have to pop it so that
             // we can reach the arg start marker under it:
             object returnVal = cpu.PopValue();
@@ -1665,14 +1690,70 @@ namespace kOS.Safe.Compilation
         {
             cpu.PopAboveStack(NumLevels);
         }
-        
+
         public override string ToString()
         {
             return Name + " " + NumLevels;
         }
   
     }
+    
+    public class OpcodePushDelegate : Opcode
+    {
+        [MLField(1,false)]
+        private int EntryPoint { get; set; }
 
+        protected override string Name { get { return "pushdelegate"; } }
+        public override ByteCode Code { get { return ByteCode.PUSHDELEGATE; } }
+
+        public OpcodePushDelegate(int entryPoint)
+        {
+            EntryPoint = entryPoint;
+        }
+
+        /// <summary>
+        /// This variant of the constructor is just for ML file save/load to use.
+        /// </summary>
+        protected OpcodePushDelegate() { }
+
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodePush seems to be missing.  Version mismatch?");
+            EntryPoint = (int)fields[0];
+        }
+
+        public override void Execute(ICpu cpu)
+        {
+            cpu.PushStack(cpu.MakeUserDelegate(EntryPoint));
+        }
+
+        public override string ToString()
+        {
+            return Name + " " + EntryPoint.ToString();
+        }
+    }
+    
+    /// <summary>
+    /// This serves the same purpose as OpcodePushRelocateLater, except it's for
+    /// use with UserDelegates instead of raw integer IP calls.
+    /// </summary>
+    public class OpcodePushDelegateRelocateLater : OpcodePushRelocateLater
+    {
+        protected override string Name { get { return "PushDelegateRelocateLater"; } }
+        public override ByteCode Code { get { return ByteCode.PUSHDELEGATERELOCATELATER; } }
+
+        public OpcodePushDelegateRelocateLater(string destLabel) : base(destLabel)
+        {
+        }
+
+        /// <summary>
+        /// This variant of the constructor is just for ML file save/load to use.
+        /// </summary>
+        protected OpcodePushDelegateRelocateLater() : base() { }
+    }
+    
     #endregion
 
     #region Wait / Trigger

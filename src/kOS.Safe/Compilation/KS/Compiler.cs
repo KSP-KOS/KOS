@@ -486,11 +486,18 @@ namespace kOS.Safe.Compilation.KS
 
             // lock expression's or function body's code
             currentCodeSection = userFuncObject.GetUserFunctionOpcodes(expressionHash);
+            if (isLock) // locks need to behave as if they had braces even though they don't - so they get lexical scope ids for closure reasons:
+                BeginScope(node);
             if (isDefFunc)
                 nextBraceIsFunction = true;
+
             VisitNode(bodyNode);
+
             if (isDefFunc)
                 nextBraceIsFunction = false;
+            if (isLock) // locks need to behave as if they had braces even though they don't - so they get lexical scope ids for closure reasons:
+                EndScope(node);
+
             if (needImplicitReturn)
             {
                 if (isDefFunc)
@@ -745,7 +752,8 @@ namespace kOS.Safe.Compilation.KS
             {
                 // List all the types of parse node that open a new variable scope here:
                 // ---------------------------------------------------------------------
-                case TokenType.for_stmt: // Here because it wraps the body inside an outer scope that holds the for-iterator variable.                
+                case TokenType.for_stmt: // Here because it wraps the body inside an outer scope that holds the for-iterator variable.
+                case TokenType.lock_stmt: // here because the lock body needs a scope in order to work with closures.  The scope remembers the lexical id.
                 case TokenType.instruction_block:
 
                     ++braceNestLevel;
@@ -1934,7 +1942,7 @@ namespace kOS.Safe.Compilation.KS
                 string functionLabel = lockObject.GetUserFunctionOpcodes(expressionHash)[0].Label;
                 // lock variable
                 AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
-                AddOpcode(new OpcodePushRelocateLater(null), functionLabel);
+                AddOpcode(new OpcodePushDelegateRelocateLater(null), functionLabel);
                 if (allowLazyGlobal)
                     AddOpcode(new OpcodeStore());
                 else

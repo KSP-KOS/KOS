@@ -116,6 +116,8 @@
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Execution\ICpu.cs" />
+    <Compile Include="Execution\IStack.cs" />
+    <Compile Include="Execution\IUserDelegate.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
