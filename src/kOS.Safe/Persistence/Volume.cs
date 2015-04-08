@@ -40,16 +40,6 @@ namespace kOS.Safe.Persistence
             InitializeVolumeSuffixes();
         }
 
-        private void InitializeVolumeSuffixes()
-        {
-            AddSuffix("FREESPACE" , new Suffix<float>(() => GetFreeSpace()));
-            AddSuffix("CAPACITY" , new Suffix<float>(() => Capacity));
-            AddSuffix("NAME" , new Suffix<string>(() => Name));
-            AddSuffix("RENAMEABLE" , new Suffix<string>(() => Name));
-            AddSuffix("FILES" , new Suffix<ListValue<FileInfo>>(() => new ListValue<FileInfo>(GetFileList())));
-            AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
-        }
-
         /// <summary>
         /// Get a file given its name
         /// </summary>
@@ -173,11 +163,6 @@ namespace kOS.Safe.Persistence
             returnList.Sort(FileInfoComparer); // make sure files will print in sorted form.
             return returnList;
         }
-        
-        private int FileInfoComparer(FileInfo a, FileInfo b)
-        {
-            return String.CompareOrdinal(a.Name, b.Name);
-        }
 
         public virtual float RequiredPower()
         {
@@ -185,6 +170,21 @@ namespace kOS.Safe.Persistence
             var powerRequired = BASE_POWER * multiplier;
 
             return powerRequired;
+        }
+
+        public override string ToString()
+        {
+            return "Volume( " + Name + ", " + Capacity + ")";
+        }
+
+        private void InitializeVolumeSuffixes()
+        {
+            AddSuffix("FREESPACE" , new Suffix<float>(() => GetFreeSpace()));
+            AddSuffix("CAPACITY" , new Suffix<float>(() => Capacity));
+            AddSuffix("NAME" , new Suffix<string>(() => Name));
+            AddSuffix("RENAMEABLE" , new Suffix<bool>(() => Renameable));
+            AddSuffix("FILES" , new Suffix<ListValue<FileInfo>>(() => new ListValue<FileInfo>(GetFileList())));
+            AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
         }
 
         private ProgramFile FileSearch(string name, bool ksmDefault = false)
@@ -210,6 +210,11 @@ namespace kOS.Safe.Persistence
                 return kosMlFile;
             }
             return null;
+        }
+        
+        private int FileInfoComparer(FileInfo a, FileInfo b)
+        {
+            return String.CompareOrdinal(a.Name, b.Name);
         }
     }    
 }
