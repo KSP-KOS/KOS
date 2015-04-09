@@ -13,7 +13,10 @@ Adds action groups AG11 through AG250 to kOS that are interacted with the same w
 
 Anywhere you use ``AG1``, you can use ``AG15`` in exactly the same way.
 
-Caution: Sometimes, AGX will return an unexpected value for a group's state (On/Off), see below for the explination. (Action State Monitoring)
+**Behavior changes to be aware of:**
+All action groups (from 1 through 250) now have their on/off state monitored and is based on the state of the actions in the group. See Action State Montioring below for how animations affect the on/off state of an action group.
+
+For Action Groups 11 through 250 there must be an action assigned in order to toggle their state on/off. The Script Trigger object on the kOS computer is provided for this purpse. Action Groups 1 through 10 can still be triggered even in empty as per stock behavior.
  
 **Basic Quick Start:**
 
