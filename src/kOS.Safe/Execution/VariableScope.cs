@@ -30,6 +30,13 @@ namespace kOS.Safe.Execution
         /// can jump there quicker next time without scanning the scope stack.
         /// </summary>
         public Int16 ParentSkipLevels {get;set;}
+        
+        /// <summary>
+        /// Set this to true to indicate that this scope is part of a closure
+        /// call.  That lets OpcodePushStack and OpcodePopStack to know it
+        /// needs to be treated specially.
+        /// </summary>
+        public bool IsClosure {get;set;}
 
         public Dictionary<string, Variable>  Variables;
         
@@ -39,6 +46,7 @@ namespace kOS.Safe.Execution
             ParentScopeId = parentScopeId;
             ParentSkipLevels = 1; // the default case is to just move one stack level.
             Variables = new Dictionary<string, Variable>();
+            IsClosure = false;
         }
     }
 }

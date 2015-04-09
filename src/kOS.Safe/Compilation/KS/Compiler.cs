@@ -486,11 +486,18 @@ namespace kOS.Safe.Compilation.KS
 
             // lock expression's or function body's code
             currentCodeSection = userFuncObject.GetUserFunctionOpcodes(expressionHash);
+            if (isLock) // locks need to behave as if they had braces even though they don't - so they get lexical scope ids for closure reasons:
+                BeginScope(node);
             if (isDefFunc)
                 nextBraceIsFunction = true;
+
             VisitNode(bodyNode);
+
             if (isDefFunc)
                 nextBraceIsFunction = false;
+            if (isLock) // locks need to behave as if they had braces even though they don't - so they get lexical scope ids for closure reasons:
+                EndScope(node);
+
             if (needImplicitReturn)
             {
                 if (isDefFunc)
@@ -745,7 +752,8 @@ namespace kOS.Safe.Compilation.KS
             {
                 // List all the types of parse node that open a new variable scope here:
                 // ---------------------------------------------------------------------
-                case TokenType.for_stmt: // Here because it wraps the body inside an outer scope that holds the for-iterator variable.                
+                case TokenType.for_stmt: // Here because it wraps the body inside an outer scope that holds the for-iterator variable.
+                case TokenType.lock_stmt: // here because the lock body needs a scope in order to work with closures.  The scope remembers the lexical id.
                 case TokenType.instruction_block:
 
                     ++braceNestLevel;
@@ -1159,11 +1167,9 @@ namespace kOS.Safe.Compilation.KS
         /// the name to the left of the parentheses will be the name of the function call.  If isDirect is false, then it will
         /// ignore the name to the left of the parentheses and presume the function name, delegate, or branch index was
         /// already placed atop the stack by other parts of this compiler.</param>
-        /// <param name="isUserFunc">true if this is a function call that will jump to user instructions in the code (LOCK and DECLARE FUNCTION), rather
-        /// than execute using C# code.</param>
         /// <param name="directName">In the case where it's a direct function, what's the name of it?  In the case
         /// where it's not direct, this argument doesn't matter.</param>
-        private void VisitActualFunction(ParseNode node, bool isDirect, bool isUserFunc, string directName = "")
+        private void VisitActualFunction(ParseNode node, bool isDirect, string directName = "")
         {
             NodeStartHousekeeping(node);
 
@@ -1311,7 +1317,7 @@ namespace kOS.Safe.Compilation.KS
                     {
                         // direct if it's just one term like foo(aaa) but indirect
                         // if it's a list of suffixes like foo:bar(aaa):
-                        VisitActualFunction(trailerTerm, isDirect, isUserFunc, firstIdentifier);
+                        VisitActualFunction(trailerTerm, isDirect, firstIdentifier);
                     }
                     if (isArray)
                     {
@@ -1431,66 +1437,6 @@ namespace kOS.Safe.Compilation.KS
             return string.Empty;
         }
 
-        /// <summary>
-        /// The suffixterm parse node contains both actual function calls
-        /// (with parentheses) and just plain vanilla terms.  This
-        /// determines if it's REALLY a function call or not.
-        /// </summary>
-        /// <param name="node">the node to test</param>
-        /// <returns>true if it's really a function call.  False otherwise.</returns>
-        private bool IsActualFunctionCall(ParseNode node)
-        {
-            // This can be called at the level of the parent of the function node, so get down to it first:
-            ParseNode child = node;
-            while (child != null &&
-                   (child.Token.Type != TokenType.function_trailer &&
-                    child.Token.Type != TokenType.identifier_led_expr))
-            {
-                if (child.Nodes.Count > 1)
-                    child = child.Nodes[1];
-                else if (child.Nodes.Count == 1)
-                    child = child.Nodes[0];
-                else
-                    child = null;
-            }
-            if (child == null)
-                return false;
-
-            // If it has the optional function_trailer node tacked on to it, then it's really a function call with
-            // parentheses, not just using the function node as a dummy wrapper around a plain array node.
-            return child.Nodes.Count > 1;
-        }
-
-        /// <summary>
-        /// The Array parse node contains both actual Array calls
-        /// (with index given) and just plain vanilla terms.  This
-        /// determines if it's REALLY an array index call or not.
-        /// </summary>
-        /// <param name="node">The node to test</param>
-        /// <returns>true if it's really an array index reference call.  False otherwise.</returns>
-        private bool IsActualArrayIndexing(ParseNode node)
-        {
-            // This can be called at the level of the parent of the array node, so get down to it first:
-            ParseNode child = node;
-            while (child != null &&
-                   (child.Token.Type != TokenType.array_trailer &&
-                    child.Token.Type != TokenType.identifier_led_expr))
-            {
-                if (child.Nodes.Count > 1)
-                    child = child.Nodes[1];
-                else if (child.Nodes.Count == 1)
-                    child = child.Nodes[0];
-                else
-                    child = null;
-            }
-            if (child == null)
-                return false;
-
-            // If it has the optional array_trailer node tacked on to it, then it's really an array index, not just using array as
-            // a dummy wrapper around a plain atom node
-            return child.Nodes.Count > 1;
-        }
-
         private void VisitSuffixTerm(ParseNode node)
         {
             NodeStartHousekeeping(node);
@@ -1499,7 +1445,7 @@ namespace kOS.Safe.Compilation.KS
                 node.Nodes[1].Token.Type == TokenType.function_trailer)
             {
                 // if a bracket follows an identifier then its a function call
-                VisitActualFunction(node.Nodes[1], true, false, GetIdentifierText(node));
+                VisitActualFunction(node.Nodes[1], true, GetIdentifierText(node));
             }
             else
             {
@@ -1545,37 +1491,6 @@ namespace kOS.Safe.Compilation.KS
             AddOpcode(new OpcodePush(node.Token.Text.Trim('"')));
         }
 
-        /// <summary>
-        /// Check for if the var_identifer node has a suffix term as its very next neighbor
-        /// to the right.  i.e. in the following syntax:<br/>
-        ///     AAA:BBB:CCC[0]:DDD:EEE[0]<br/>
-        /// This method should return true if called on the AAA, BBB, or DDD nodes,
-        /// but not when called on the CCC or EEE nodes.
-        /// </summary>
-        /// <param name="node">The node to test</param>
-        /// <returns></returns>
-        private bool VarIdentifierPreceedsSuffix(ParseNode node)
-        {
-            // If it's a var_identifier being worked on, drop down one level first
-            // to get into the actual meat of the syntax tree it represents:
-            if (node.Token.Type == TokenType.varidentifier)
-                return VarIdentifierPreceedsSuffix(node.Nodes.First());
-
-            if (node.Token.Type == TokenType.suffix_trailer ||
-                node.Nodes.Count > 1 && node.Nodes[1].Token.Type == TokenType.suffix_trailer)
-            {
-                return true;
-            }
-            // Descend into child nodes to try them but don't parse too far over to the right, just the immediate neighbor only.
-            if (node.Nodes.Count > 1)
-            {
-                ParseNode child = node.Nodes[0];
-                if (VarIdentifierPreceedsSuffix(child))
-                    return true;
-            }
-            return false;
-        }
-
         ///<summary>
         /// Check for if the rightmost thing in the var_identifier node
         /// is a suffix term.  i.e. return true if the var_identifier is:<br/>
@@ -1616,37 +1531,6 @@ namespace kOS.Safe.Compilation.KS
             return descendedThroughAColon && 
                 (prevChild.Token.Type == TokenType.suffix_trailer ||
                  prevChild.Token.Type == TokenType.suffixterm);
-        }
-
-        /// <summary>
-        /// Check for if the var_identifer node has an array index as its very next neighbor
-        /// to the right.  i.e. in the following syntax:<br/>
-        ///     AAA:BBB:CCC[0]:DDD:EEE[0]<br/>
-        /// This method should return true if called on the CCC node or the EEE node,
-        /// but not when called on the AAA, BBB, or DDD nodes.
-        /// </summary>
-        /// <param name="node">The node to test</param>
-        /// <returns></returns>
-        private bool VarIdentifierPreceedsIndex(ParseNode node)
-        {
-            // If it's a var_identifier being worked on, drop down one level first
-            // to get into the actual meat of the syntax tree it represents:
-            if (node.Token.Type == TokenType.varidentifier)
-                return VarIdentifierPreceedsIndex(node.Nodes.First());
-
-            if (node.Token.Type == TokenType.array_trailer ||
-                node.Nodes.Count > 1 && node.Nodes[1].Token.Type == TokenType.array_trailer)
-            {
-                return true;
-            }
-            // Descend into child nodes to try them but don't parse too far over to the right, just the immediate neighbor only.
-            if (node.Nodes.Count > 1)
-            {
-                ParseNode child = node.Nodes[0];
-                if (VarIdentifierPreceedsIndex(child))
-                    return true;
-            }
-            return false;
         }
 
         ///<summary>
@@ -1881,15 +1765,23 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             BeginScope(node);
-            if (nextBraceIsFunction)
+
+            // Ensure the flag doesn't stay on for inner braces unless they too are really functions and turn it back on:
+            bool nextBraceWasFunction = nextBraceIsFunction;
+            nextBraceIsFunction = false;
+
+            if (nextBraceWasFunction)
                 PushReturnList();
+            
             AddFunctionJumpVars(node);
-            VisitChildNodes(node);
-            if (nextBraceIsFunction)
+            VisitChildNodes(node); // nextBraceIsFunction state would get incorrectly inherited by my children here if it wasn't turned off up above. 
+
+            if (nextBraceWasFunction)
                 PopReturnList();
+
             EndScope(node);
         }
-        
+
         /// <summary>
         /// Add all the variables at this local scope for holding the jump addresses to go to
         /// for the given function names defined in this scope.  Pass a NULL to mean global scope.
@@ -1934,7 +1826,7 @@ namespace kOS.Safe.Compilation.KS
                 string functionLabel = lockObject.GetUserFunctionOpcodes(expressionHash)[0].Label;
                 // lock variable
                 AddOpcode(new OpcodePush(lockObject.PointerIdentifier));
-                AddOpcode(new OpcodePushRelocateLater(null), functionLabel);
+                AddOpcode(new OpcodePushDelegateRelocateLater(null), functionLabel);
                 if (allowLazyGlobal)
                     AddOpcode(new OpcodeStore());
                 else
