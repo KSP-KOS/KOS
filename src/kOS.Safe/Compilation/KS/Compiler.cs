@@ -173,14 +173,9 @@ namespace kOS.Safe.Compilation.KS
         {
             ParseNode rootNode = tree.Nodes[0];
             TraverseScopeBranch(rootNode);
+            IterateUserFunctions(rootNode, IdentifyUserFunctions);
             PreProcessStatements(rootNode);
-            PreProcessUserFunctions(rootNode);
-        }
-
-        private void PreProcessUserFunctions(ParseNode node)
-        {
-            IterateUserFunctions(node, IdentifyUserFunctions);
-            IterateUserFunctions(node, PreProcessUserFunctionStatement);
+            IterateUserFunctions(rootNode, PreProcessUserFunctionStatement);
         }
 
         private void IterateUserFunctions(ParseNode node, Action<ParseNode> action)
