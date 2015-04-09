@@ -1889,15 +1889,23 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             BeginScope(node);
-            if (nextBraceIsFunction)
+
+            // Ensure the flag doesn't stay on for inner braces unless they too are really functions and turn it back on:
+            bool nextBraceWasFunction = nextBraceIsFunction;
+            nextBraceIsFunction = false;
+
+            if (nextBraceWasFunction)
                 PushReturnList();
+            
             AddFunctionJumpVars(node);
-            VisitChildNodes(node);
-            if (nextBraceIsFunction)
+            VisitChildNodes(node); // nextBraceIsFunction state would get incorrectly inherited by my children here if it wasn't turned off up above. 
+
+            if (nextBraceWasFunction)
                 PopReturnList();
+
             EndScope(node);
         }
-        
+
         /// <summary>
         /// Add all the variables at this local scope for holding the jump addresses to go to
         /// for the given function names defined in this scope.  Pass a NULL to mean global scope.
