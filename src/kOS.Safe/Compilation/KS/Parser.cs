@@ -1400,7 +1400,19 @@ namespace kOS.Safe.Compilation.KS
             }
 
             
-            Parseexpr(node);
+            tok = scanner.LookAhead(TokenType.PLUSMINUS, TokenType.NOT, TokenType.INTEGER, TokenType.DOUBLE, TokenType.TRUEFALSE, TokenType.IDENTIFIER, TokenType.FILEIDENT, TokenType.BRACKETOPEN, TokenType.STRING);
+            if (tok.Type == TokenType.PLUSMINUS
+                || tok.Type == TokenType.NOT
+                || tok.Type == TokenType.INTEGER
+                || tok.Type == TokenType.DOUBLE
+                || tok.Type == TokenType.TRUEFALSE
+                || tok.Type == TokenType.IDENTIFIER
+                || tok.Type == TokenType.FILEIDENT
+                || tok.Type == TokenType.BRACKETOPEN
+                || tok.Type == TokenType.STRING)
+            {
+                Parseexpr(node);
+            }
 
             
             tok = scanner.Scan(TokenType.EOI);
