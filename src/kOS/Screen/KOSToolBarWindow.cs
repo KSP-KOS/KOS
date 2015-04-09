@@ -38,11 +38,11 @@ namespace kOS.Screen
             ApplicationLauncher.AppScenes.VAB | 
             ApplicationLauncher.AppScenes.MAPVIEW;
 
-        private readonly Texture2D launcherButtonTexture;
-        private readonly Texture2D terminalClosedIconTexture;
-        private readonly Texture2D terminalOpenIconTexture;
-        private readonly Texture2D terminalClosedTelnetIconTexture;
-        private readonly Texture2D terminalOpenTelnetIconTexture;
+        private static Texture2D launcherButtonTexture;
+        private static Texture2D terminalClosedIconTexture;
+        private static Texture2D terminalOpenIconTexture;
+        private static Texture2D terminalClosedTelnetIconTexture;
+        private static Texture2D terminalOpenTelnetIconTexture;
         
         // ReSharper disable once RedundantDefaultFieldInitializer
         private bool clickedOn = false;
@@ -55,17 +55,17 @@ namespace kOS.Screen
         // ReSharper restore RedundantDefaultFieldInitializer
         private Vector2 scrollPos = new Vector2(200,350);
 
-        private Rect windowRect;
+        private static Rect windowRect;
         private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
-        private GUISkin panelSkin;
-        private GUIStyle headingLabelStyle;
-        private GUIStyle vesselNameStyle;
-        private GUIStyle partNameStyle;
-        private GUIStyle tooltipLabelStyle;
-        private GUIStyle boxDisabledStyle;
-        private GUIStyle boxOffStyle;
-        private GUIStyle boxOnStyle;
-        private string versionString;
+        private static GUISkin panelSkin;
+        private static GUIStyle headingLabelStyle;
+        private static GUIStyle vesselNameStyle;
+        private static GUIStyle partNameStyle;
+        private static GUIStyle tooltipLabelStyle;
+        private static GUIStyle boxDisabledStyle;
+        private static GUIStyle boxOffStyle;
+        private static GUIStyle boxOnStyle;
+        private static string versionString;
         
         ///<summary>Which CPU part description in the gui panel was the mouse hovering over during the current OnGUI call?</summary>
         private Part newHoverPart;
@@ -80,100 +80,65 @@ namespace kOS.Screen
         /// <summary>Our highlight color for kOS panel's part highlighting.</summary>
         private readonly Color ourPartHighlightColor = new Color(1.0f, 0.5f, 1.0f); // Bright purple.
         
-        // Some of these are for just debug messages, and others are
-        // necessary for tracking things to make it not spawn too many
-        // buttons or spawn them at the wrong times.  For now I want to
-        // keep the debug logging in the code so users have something they
-        // can show in bug reports until I'm more confident this is working
-        // perfectly:
-        
-        // ReSharper disable RedundantDefaultFieldInitializer
         private bool alreadyAwake = false;
-        private static int  countInstances = 0;
-        private int myInstanceNum = 0;
-        private bool thisInstanceHasHooks = false;
-        private static bool someInstanceHasHooks = false;
         private bool isOpen = false;
-        private bool onGUICalledThisInstance = false;
-        private bool onGUIWasOpenThisInstance = false;
-        // ReSharper enable RedundantDefaultFieldInitializer
-        
+
         private DateTime prevConfigTimeStamp = DateTime.MinValue;
         
         private List<int> backingConfigInts;
 
         public KOSToolBarWindow()
         {
-            // This really needs fixing - the name ambiguity between UnityEngine's Debug and ours forces this long fully qualified name:
-            SafeHouse.Logger.SuperVerbose("KOSToolbarWindow: PROOF that constructor was called.");
-            launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalClosedIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalOpenIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalClosedTelnetIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalOpenTelnetIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            
         }
 
         /// <summary>
         /// Unity hates it when a MonoBehaviour has a constructor,
         /// so all the construction work is here instead:
         /// </summary>
-        public void FirstTimeSetup()
+        public static void FirstTimeSetup()
         {
-            ++countInstances;
-            myInstanceNum = countInstances;
-            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: Now making instance number "+myInstanceNum+" of KOSToolBarWindow");
-
-            const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
-            const string TERMINAL_OPEN_ICON_PNG = "GameData/kOS/GFX/terminal-icon-open.png";
-            const string TERMINAL_CLOSED_ICON_PNG = "GameData/kOS/GFX/terminal-icon-closed.png";
-            const string TERMINAL_OPEN_TELNET_ICON_PNG = "GameData/kOS/GFX/terminal-icon-open-telnet.png";
-            const string TERMINAL_CLOSED_TELNET_ICON_PNG = "GameData/kOS/GFX/terminal-icon-closed-telnet.png";
-
-            // ReSharper disable SuggestUseVarKeywordEvident
-            WWW launcherButtonImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
-            WWW terminalOpenIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_OPEN_ICON_PNG);
-            WWW terminalClosedIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_CLOSED_ICON_PNG);
-            WWW terminalOpenTelnetIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_OPEN_TELNET_ICON_PNG);
-            WWW terminalClosedTelnetIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_CLOSED_TELNET_ICON_PNG);
-            // ReSharper enable SuggestUseVarKeywordEvident
-            launcherButtonImage.LoadImageIntoTexture(launcherButtonTexture);
-            terminalOpenIconImage.LoadImageIntoTexture(terminalOpenIconTexture);
-            terminalClosedIconImage.LoadImageIntoTexture(terminalClosedIconTexture);
-            terminalOpenTelnetIconImage.LoadImageIntoTexture(terminalOpenTelnetIconTexture);
-            terminalClosedTelnetIconImage.LoadImageIntoTexture(terminalClosedTelnetIconTexture);
-
-            windowRect = new Rect(0,0,width,height); // this origin point will move when opened/closed.
+            launcherButtonTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/launcher-button",false);
+            terminalOpenIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-open", false);
+            terminalClosedIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-closed", false);
+            terminalOpenTelnetIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-open-telnet", false);
+            terminalClosedTelnetIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-closed-telnet", false);
+                
+            windowRect = new Rect(0,0,1f,1f); // this origin point will move when opened/closed.
             panelSkin = BuildPanelSkin();
             versionString = Utils.GetAssemblyFileVersion();
+            //UnityEngine.Debug.Log("[kOSToolBarWindow] FirstTimeSetup Finished, v=" + versionString);
+        }
+
+        public void Awake ()
+        {
             
-            GameEvents.onGUIApplicationLauncherReady.Add(RunWhenReady);
-            GameEvents.onGUIApplicationLauncherDestroyed.Add(GoAway);
         }
 
         public void Start()
         {
-            SafeHouse.Logger.SuperVerbose("KOSToolbarWindow: PROOF that Start() was called.");
             // Prevent multiple calls of this:
             if (alreadyAwake) return;
             alreadyAwake = true;
 
             FirstTimeSetup();
+
+            GameEvents.onGUIApplicationLauncherReady.Add(RunWhenReady);
+            GameEvents.onGUIApplicationLauncherDestroyed.Add(GoAway);
+
+            SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Start succesful");
         }
 
         public void RunWhenReady()
         {
-            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " is trying to ready the hooks");
-            // KSP claims the hook ApplicationLauncherReady.Add will not run until
-            // the application is ready, even though this is emphatically false.  It actually
-            // fires the event a few times before the one that "sticks" and works:
             if (!ApplicationLauncher.Ready) return;
-            if (someInstanceHasHooks) return;
-            thisInstanceHasHooks = true;
-            someInstanceHasHooks = true;
 
-            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " will now actually make its hooks");
+            var useBlizzyOnly = false;
 
-            if (!Config.Instance.UseBlizzyToolbarOnly)
+            if (ToolbarManager.ToolbarAvailable)
+                useBlizzyOnly = Config.Instance.UseBlizzyToolbarOnly;
+
+            if (!useBlizzyOnly && launcherButton == null)
             {
                 ApplicationLauncher launcher = ApplicationLauncher.Instance;
 
@@ -192,10 +157,10 @@ namespace kOS.Screen
                 launcher.EnableMutuallyExclusive(launcherButton);
 
             }
-            //Will show button on Blizzy's toolbar anyway
             AddBlizzyButton();
 
             SetupBackingConfigInts();
+            SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Launcher Icon init successful");
         }
 
         public void AddBlizzyButton()
@@ -232,31 +197,39 @@ namespace kOS.Screen
         
         public void GoAway()
         {
-            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Instance " + myInstanceNum + " is in GoAway().");
-            if (thisInstanceHasHooks)
+            if (isOpen) Close();
+            clickedOn = false;
+
+            try
             {
-                SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Instance " + myInstanceNum + " has hooks and is entering the guts of GoAway().");
-                if (isOpen) Close();
-                clickedOn = false;
-                thisInstanceHasHooks = false;
-                someInstanceHasHooks = false; // if this is the instance that had hooks and it's going away, let another instance have a go.
-            
-                ApplicationLauncher launcher = ApplicationLauncher.Instance;
-                
-                launcher.DisableMutuallyExclusive(launcherButton);
-                launcher.RemoveOnRepositionCallback(CallbackOnShow);
-                launcher.RemoveOnHideCallback(CallbackOnHide);
-                launcher.RemoveOnShowCallback(CallbackOnShow);
-            
-                launcher.RemoveModApplication(launcherButton);
+                GameEvents.onGUIApplicationLauncherReady.Remove(RunWhenReady);
+                GameEvents.onGUIApplicationLauncherDestroyed.Remove(GoAway);
+
+                if (launcherButton != null && ApplicationLauncher.Instance != null)
+                {
+                    ApplicationLauncher launcher = ApplicationLauncher.Instance;
+
+                    launcher.DisableMutuallyExclusive(launcherButton);
+                    launcher.RemoveOnRepositionCallback(CallbackOnShow);
+                    launcher.RemoveOnHideCallback(CallbackOnHide);
+                    launcher.RemoveOnShowCallback(CallbackOnShow);
+                    launcher.RemoveModApplication(launcherButton);
+                    launcherButton = null;
+                }
             }
+            catch (Exception e)
+            {
+                SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Failed unregistering AppLauncher handlers," + e.Message);
+            }
+
             if(BlizzyButton != null)
                 BlizzyButton.Destroy();
         }
-        
+
         public void OnDestroy()
         {
             GoAway();
+            SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] OnDestroy successful");
         }
 
         public void CallbackOnClickBlizzy()
@@ -270,7 +243,6 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is toggled on</summary>
         public void CallbackOnTrue()
         {
-            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnTrue()");
             clickedOn = true;
             Open();
         }
@@ -278,7 +250,6 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is toggled off</summary>
         public void CallbackOnFalse()
         {            
-            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnFalse()");
             clickedOn = false;
             Close();
         }
@@ -368,20 +339,8 @@ namespace kOS.Screen
             horizontalSectionCount = 0;
             verticalSectionCount = 0;
 
-            if (!onGUICalledThisInstance) // I want proof it was called, but without spamming the log:
-            {
-                SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: OnGUI() was called at least once on instance number " + myInstanceNum);
-                onGUICalledThisInstance = true;
-            }
-            
             if (!isOpen ) return;
 
-            if (!onGUIWasOpenThisInstance) // I want proof it was called, but without spamming the log:
-            {
-                SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: OnGUI() was called while the window was supposed to be open at least once on instance number " + myInstanceNum);
-                onGUIWasOpenThisInstance = true;
-            }
-            
             GUI.skin = HighLogic.Skin;
 
             windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
@@ -718,7 +677,7 @@ namespace kOS.Screen
         }
         
         
-        private GUISkin BuildPanelSkin()
+        private static GUISkin BuildPanelSkin()
         {
             GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
             // theSkin won't actually be used directly anymore because GetSkinCopy is missing a few key

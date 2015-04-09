@@ -231,6 +231,7 @@ namespace kOS.Module
             var temp = new Archive();
             var files = temp.GetFileList();
             var maxchoice = 0;
+            bootFiles.Add("None");
             foreach (FileInfo file in files)
             {
                 if (!file.Name.StartsWith("boot", StringComparison.InvariantCultureIgnoreCase)) continue;
@@ -291,7 +292,7 @@ namespace kOS.Module
             {
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
-                if (vessel.situation == Vessel.Situations.PRELAUNCH)
+                if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None")
                 {
                     var bootProgramFile = archive.GetByName(bootFile);
                     if (bootProgramFile != null)
