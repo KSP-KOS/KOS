@@ -104,8 +104,6 @@ namespace kOS.Screen
 
         public KOSToolBarWindow()
         {
-            // This really needs fixing - the name ambiguity between UnityEngine's Debug and ours forces this long fully qualified name:
-            SafeHouse.Logger.SuperVerbose("KOSToolbarWindow: PROOF that constructor was called.");
             launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalClosedIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
             terminalOpenIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
@@ -173,7 +171,12 @@ namespace kOS.Screen
 
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " will now actually make its hooks");
 
-            if (!Config.Instance.UseBlizzyToolbarOnly)
+            var useBlizzyOnly = false;
+
+            if (ToolbarManager.ToolbarAvailable)
+                useBlizzyOnly = Config.Instance.UseBlizzyToolbarOnly;
+
+            if (!useBlizzyOnly)
             {
                 ApplicationLauncher launcher = ApplicationLauncher.Instance;
 
