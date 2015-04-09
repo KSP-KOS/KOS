@@ -49,6 +49,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
      :attr:`LOADED`                        Boolean                   loaded into KSP physics engine or "on rails"
+     :attr:`ISDEAD`                        Boolean                   True if the vessel refers to a ship that has gone away.
      :attr:`PATCHES`                       :struct:`List`            :struct:`Orbit` patches
      :attr:`ROOTPART`                      :struct:`Part`            Root :struct:`Part` of this vessel
      :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
@@ -204,6 +205,19 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     true if the vessel is fully loaded into the complete KSP physics engine (false if it's "on rails").
+
+.. attribute:: Vessel:ISDEAD
+
+    :type: Boolean
+    :access: Get only
+
+    It is possible to have a variable that refers to a vessel that
+    doesn't exist in the Kerbal Space Program universe anymore, but
+    did back when you first got it.  For example: you could do:
+    SET VES TO VESSEL("OTHER"). WAIT 10. And in that intervening
+    waiting time, the vessel might have crashed into the ground.
+    Checking :ISDEAD lets you see if the vessel that was previously
+    valid isn't valid anymore.
 
 .. attribute:: Vessel:PATCHES
 
