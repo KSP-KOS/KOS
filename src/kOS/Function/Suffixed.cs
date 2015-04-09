@@ -5,7 +5,6 @@ using kOS.Execution;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
-using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
 using FinePrint;
