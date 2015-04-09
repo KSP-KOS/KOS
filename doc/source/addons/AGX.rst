@@ -14,7 +14,7 @@ Adds action groups AG11 through AG250 to kOS that are interacted with the same w
 Anywhere you use ``AG1``, you can use ``AG15`` in the same way.
 
 **Behavior changes to be aware of:**
-All action groups (from 1 through 250) now have their on/off state monitored and it is based on the state of the actions in the group. See Action State Montioring below for how animations affect this. Note this means that an action assigned to one action group can change the on/off state of a second action group when the same action is present in both action groups.
+All action groups (from 1 through 250) now have their on/off state monitored and it is based on the state of the actions in the group. See Action State Montioring and Animation Delay below for how animations affect this. Note this means that an action assigned to one action group can change the on/off state of a second action group when the same action is present in both action groups.
 
 For Action Groups 11 through 250 there must be an action assigned to the group in order to toggle their state on/off. The Script Trigger action on the kOS computer is provided for this purpse. Action Groups 1 through 10 can still be triggered even if empty as per stock behavior.
  
@@ -49,13 +49,15 @@ Print to the terminal anytime you activate action group 15. Use this to change v
 
     AG15 on. // Activate action group 15.
     print AG15. // Print action group 15's state to the terminal. (True/False)
-    on AG15 {
+    
+    on AG15 { //Prints "Action group 15 clicked!" to the console when AG15 is toggled, either via "AG15 on." or in-game with an assigned key.
       print "Action group 15 clicked!".
       preserve.
     }
 
 
 **Animation Delay:**
+
 - Using the above code on a stock solar panel's Toggle Panels action, the player activates AG15, AG15's state goes from false to true and the actions are triggered. ``AG15 False -> True`` and prints to the terminal.
 - On it's next update pass (100ms to 250ms later), AGX checks AG15's state and sees the solar panel is still deploying which means that AG15's state is false and so sets it that way. ``AG15 True -> False`` and prints to the terminal.
 - A few seconds later, the solar panel finishes it's deployment animation. On it's next update pass AGX checks AG15's state and sees the solar panel is now deployed which means that AG15's state is now true and so sets it that way. ``AG15 False -> True`` and prints to the terminal a third time.
