@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using kOS.Safe.Execution;
+﻿using System.Collections.Generic;
 
-namespace kOS.Execution
+namespace kOS.Safe.Execution
 {
     /// <summary>
     /// A callback reference to a user-land function, implemented in kRISC code<br/>
@@ -12,7 +10,7 @@ namespace kOS.Execution
     public class UserDelegate : IUserDelegate
     {
         public int EntryPoint {get; private set;}
-        private ICpu cpu;
+        private readonly ICpu cpu;
         public List<VariableScope> Closure {get; private set;}
         
         /// <summary>

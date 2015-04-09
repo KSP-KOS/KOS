@@ -104,7 +104,7 @@ namespace kOS.Safe.Compilation
     /// WARNING! BE SURE TO EDIT CompiledObject.InitTypeData() if you add any new [MLField]'s that
     /// refer to argument types that haven't already been mentioned in CompiledObject.InitTypeData().
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Property)]
     public class MLField : Attribute
     {
         public int Ordering { get; private set; }
@@ -294,7 +294,7 @@ namespace kOS.Safe.Compilation
                     catch (MissingMethodException)
                     {
                         SafeHouse.Logger.Log( String.Format(forceDefaultConstructorMsg, opType.Name) );
-                        Utilities.Debug.AddNagMessage( Utilities.Debug.NagType.NAGFOREVER, "ERROR IN OPCODE DEFINITION " + opType.Name );
+                        Debug.AddNagMessage( Debug.NagType.NAGFOREVER, "ERROR IN OPCODE DEFINITION " + opType.Name );
                         return;
                     }
                     

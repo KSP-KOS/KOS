@@ -229,7 +229,7 @@ namespace kOS.Execution
         /// <returns>The delegate object you can store in a variable.</returns>
         public IUserDelegate MakeUserDelegate(int entryPoint)
         {
-            return (IUserDelegate) new UserDelegate(this, entryPoint, true);
+            return new UserDelegate(this, entryPoint, true);
         }
 
         // only two contexts exist now, one for the interpreter and one for the programs
@@ -454,7 +454,6 @@ namespace kOS.Execution
                         // If the scope id of this frame is my parent ID, then we found it and are done.
                         if (scopeFrame.ScopeId == localDict.ParentScopeId)
                         {
-                            needsIncrement = false;
                             break;
                         }
                         // In the case where the variable scope is the SAME lexical ID as myself, that

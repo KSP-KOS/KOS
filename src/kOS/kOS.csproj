@@ -73,7 +73,6 @@
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechFactory.cs" />
-    <Compile Include="Execution\UserDelegate.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\StandardFactory.cs" />
     <Compile Include="Function\BuildList.cs" />
