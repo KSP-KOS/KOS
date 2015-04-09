@@ -14,7 +14,7 @@ Adds action groups AG11 through AG250 to kOS that are interacted with the same w
 Anywhere you use ``AG1``, you can use ``AG15`` in the same way.
 
 **Behavior changes to be aware of:**
-All action groups (from 1 through 250) now have their on/off state monitored and is based on the state of the actions in the group. See Action State Montioring below for how animations affect the on/off state of an action group. Note this means that an action assigned to one action group can change the on/off state of a second action group when the same action is present in both action groups.
+All action groups (from 1 through 250) now have their on/off state monitored and it is based on the state of the actions in the group. See Action State Montioring below for how animations affect the on/off state of an action group. Note this means that an action assigned to one action group can change the on/off state of a second action group when the same action is present in both action groups.
 
 For Action Groups 11 through 250 there must be an action assigned to the group in order to toggle their state on/off. The Script Trigger action on the kOS computer is provided for this purpse. Action Groups 1 through 10 can still be triggered even if empty as per stock behavior.
  
