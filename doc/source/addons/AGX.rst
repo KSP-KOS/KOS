@@ -18,9 +18,9 @@ Installing AGX adds the "Script Trigger" action to all kOS computer parts. This 
 
 When an action group has the Script Trigger action assigned, on that action gorup you can now:
 
--Name the action group so you remember what that action group does in your code when you trigger it.
--Activate the action group with a mouse click on-screen, no more tying up your entire keyboard with various script trigger keys.
--Enable group state feedback so you can have your script change the groups state as feedback as to what the script is doing. Green being On and Red being Off. (Toggle option in AGX.)
+- Name the action group so you remember what that action group does in your code when you trigger it.
+- Activate the action group with a mouse click on-screen, no more tying up your entire keyboard with various script trigger keys.
+- Enable group state feedback so you can have your script change the groups state as feedback as to what the script is doing. Green being On and Red being Off. (Toggle option in AGX.)
 
  
 **Basic Quick Start:**
