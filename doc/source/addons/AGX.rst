@@ -11,12 +11,17 @@ Includes a Script Trigger action that can be used to control a running program a
 **Usage:** 
 Adds action groups AG11 through AG250 to kOS that are interacted with the same way as the AG1 through AG10 bindings in base kOS are.
 
-Anywhere you use ``AG1``, you can use ``AG15`` in the same way.
+Anywhere you use ``AG1``, you can use ``AG15`` in the same way. (AG11 through AG250 explicitly behave the same as the 10 stock groups. Please file a bug report if they do not.)
 
-**Behavior changes to be aware of:**
-All action groups (from 1 through 250) now have their on/off state monitored and it is based on the state of the actions in the group. See Action State Montioring and Animation Delay below for how animations affect this. Note this means that an action assigned to one action group can change the on/off state of a second action group when the same action is present in both action groups.
+**Script Trigger action:**
+Installing AGX adds the "Script Trigger" action to all kOS computer parts. This action is a null action that does not activate anything but serves as a placeholder to enhance action groups in kOS.
 
-For Action Groups 11 through 250 there must be an action assigned to the group in order to toggle their state on/off. The Script Trigger action on the kOS computer is provided for this purpse. Assigning the Script Trigger action this way will also allow you to name the action group on AGX's GUI so you can remember what it does and allow you trigger that action group via mouse-click. Action Groups 1 through 10 can still be triggered even if empty as per stock behavior. 
+When an action group has the Script Trigger action assigned, on that action gorup you can now:
+
+-Name the action group so you remember what that action group does in your code when you trigger it.
+-Activate the action group with a mouse click on-screen, no more tying up your entire keyboard with various script trigger keys.
+-Enable group state feedback so you can have your script change the groups state as feedback as to what the script is doing. Green being On and Red being Off. (Toggle option in AGX.)
+
  
 **Basic Quick Start:**
 
@@ -24,12 +29,11 @@ For Action Groups 11 through 250 there must be an action assigned to the group i
 .. figure:: /_images/addons/AGExtQuickStart2.jpg
 
 
-Note that this mod only adds action grousp 11 through 250, it does not change how action groups 1 through 10 behave in any way.
+Note that this mod only adds action grousp 11 through 250, it does not change how action groups 1 through 10 behave in any way and groups 11 through 250 should behave the same way.
 
 **Known limitations (Action groups 11 through 250 only):** 
 
-- For an action group to be useable, it must have an action assigned to it. When installed, AGX adds a "Script Trigger" action to the kOS computer part that serves this purpose if you want an "empty" action group to trigger kOS scripts with. 
-- Be aware that if you query an empty action group, it will always return a state of False and trying to turn an emtpy action group On will do nothing and silently fail without any sort of error message. 
+- On a nearby vessel that is not your current focus, an action group with no actions assigned will always return a state of False and can not be set to a state of true via the "AG15 on." command. Assign the Script Trigger action as a work-around for this.
 - At this point, AG11 through AG250 do not officially support RemoteTech through kOS. (Support will happen once all three mods involved have updated to KSP version 1.0 and made any internal changes necessary.) All three mods can be installed at the same time without issue, just be aware there may be unexpected behavior when using action groups 11 through 250 from a kOS script in terms of RemoteTech signal delay and connection state.
 
 **Action state monitoring**
