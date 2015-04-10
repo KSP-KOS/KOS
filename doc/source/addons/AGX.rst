@@ -16,7 +16,7 @@ Anywhere you use ``AG1``, you can use ``AG15`` in the same way. (AG11 through AG
 **Script Trigger action:**
 Installing AGX adds the "Script Trigger" action to all kOS computer parts. This action is a null action that does not activate anything but serves as a placeholder to enhance action groups in kOS.
 
-When an action group has the Script Trigger action assigned, on that action gorup you can now:
+When an action group has the Script Trigger action assigned, on that action group you can now:
 
 - Name the action group so you remember what that action group does in your code when you trigger it.
 - Activate the action group with a mouse click on-screen, no more tying up your entire keyboard with various script trigger keys.
