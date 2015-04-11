@@ -27,7 +27,7 @@ So now we have our node's deltav vector, ETA to the node and we calculated our b
 
 This wait can be tedious and you'll most likely end up warping some time, but we'll leave kOS automation of warping for a given period of time to our readers.
 
-The wait has finished, and now we need to start turning our ship in the direction of the burn.
+The wait has finished, and now we need to start turning our ship in the direction of the burn::
 
     set np to lookdirup(nd:deltav, ship:facing:topvector). //points to node, keeping roll the same.
     lock steering to np.
