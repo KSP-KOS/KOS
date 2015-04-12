@@ -173,14 +173,9 @@ namespace kOS.Safe.Compilation.KS
         {
             ParseNode rootNode = tree.Nodes[0];
             TraverseScopeBranch(rootNode);
-            PreProcessUserFunctions(rootNode);
+            IterateUserFunctions(rootNode, IdentifyUserFunctions);
             PreProcessStatements(rootNode);
-        }
-
-        private void PreProcessUserFunctions(ParseNode node)
-        {
-            IterateUserFunctions(node, IdentifyUserFunctions);
-            IterateUserFunctions(node, PreProcessUserFunctionStatement);
+            IterateUserFunctions(rootNode, PreProcessUserFunctionStatement);
         }
 
         private void IterateUserFunctions(ParseNode node, Action<ParseNode> action)
@@ -246,6 +241,7 @@ namespace kOS.Safe.Compilation.KS
                     PreProcessWhenStatement(node);
                     break;
                 case TokenType.declare_stmt:
+                    PreProcessChildNodes(node);
                     PreProcessProgramParameters(node);
                     break;
                 case TokenType.run_stmt:
@@ -536,6 +532,8 @@ namespace kOS.Safe.Compilation.KS
                     programParameters.Add(node.Nodes[index]);
                 }
             }
+            // If it's any other sort of Declare statement, do nothing and instead
+            // allow the PreProcessChildNodes handle all the work.
         }
 
         private void PreProcessRunStatement(ParseNode node)
