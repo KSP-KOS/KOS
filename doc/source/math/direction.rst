@@ -185,6 +185,13 @@ Structure
 
     :struct:`Vector` of length 1 that is in the same direction as the "starboard side" of this Direction.  Note that it is the same meaning as "what the X axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe". When you LOCK STEERING to a direction, that direction's STARVECTOR is the vector the right wing of the ship will orient to.  SHIP:FACING:STARVECTOR is the way the ship's right wing is aimed right now.
 
+.. attribute:: Direction:INVERSE
+
+    :type: :struct:`Direction`
+    :access: Get only
+    
+    :struct: The reverse of a `Direction`. So `PROGRADE:INVERSE` is the same as `RETROGRADE`.
+    
 
 .. note:: **The difference between a :struct:`Direction` and a ``Vector``**
 
