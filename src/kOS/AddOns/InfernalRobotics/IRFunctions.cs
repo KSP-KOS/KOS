@@ -9,23 +9,23 @@ using System.Linq;
 namespace kOS.AddOns.InfernalRobotics
 {
     [Function("IR_listServos")]
-    public class FunctionListServos : FunctionBase
+    public class FunctionIRListServos : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
-            var list = new ListValue();
+            var list = new ListValue<IRServoWrapper>();
             if (!IRWrapper.APIReady)
             {
-                shared.Cpu.PushStack(list);
+                ReturnValue = list;
                 //throw new KOSUnavailableAddonException("IR_listServos()", "Infernal Robotics");
                 return;
             }
 
-            IRWrapper.IRAPI.IRControlGroup controlGroup = (IRWrapper.IRAPI.IRControlGroup) shared.Cpu.PopValue();
-
+            var controlGroup = (IRWrapper.IRAPI.IRControlGroup) PopValueAssert(shared);
+            AssertArgBottomAndConsume(shared);
             if (controlGroup == null)
             {
-                shared.Cpu.PushStack(list);
+                ReturnValue = list;
                 return;
             }
 
@@ -36,31 +36,42 @@ namespace kOS.AddOns.InfernalRobotics
                 list.Add(new IRServoWrapper(s, shared));
             }
 
-            shared.Cpu.PushStack(list);
+            ReturnValue = list;
         }
     }
 
     [Function("IR_listControlGroups")]
-    public class FunctionListControlGroups : FunctionBase
+    public class FunctionIRListControlGroups : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
-            var list = new ListValue();
+            var list = new ListValue<IRControlGroupWrapper>();
+
+            AssertArgBottomAndConsume(shared);
+
             if (!IRWrapper.APIReady)
             {
-                shared.Cpu.PushStack(list);
+                SafeHouse.Logger.SuperVerbose ("IRAPI not ready.");
+                ReturnValue = list;
                 //throw new KOSUnavailableAddonException("listControlGroups()", "Kerbal Alarm Clock");
                 return;
             }
 
             IRWrapper.IRAPI.IRServoGroupsList controlGroups = IRWrapper.IRController.ServoGroups;
 
+            if (controlGroups == null)
+            {
+                ReturnValue = list;
+                //throw new KOSUnavailableAddonException("listControlGroups()", "Kerbal Alarm Clock");
+                return;
+            }
+
             foreach (IRWrapper.IRAPI.IRControlGroup cg in controlGroups)
             {
                 list.Add(new IRControlGroupWrapper(cg, shared));
             }
 
-            shared.Cpu.PushStack(list);
+            ReturnValue = list;
         }
     }
 }

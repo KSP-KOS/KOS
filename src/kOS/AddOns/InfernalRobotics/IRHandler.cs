@@ -4,7 +4,7 @@ using Debug = UnityEngine.Debug;
 namespace kOS.AddOns.InfernalRobotics
 {
     [KSPAddon(KSPAddon.Startup.EveryScene, false)]
-    public class KACEventHandler : MonoBehaviour
+    public class IRHandler : MonoBehaviour
     {
         public void Start()
         {
