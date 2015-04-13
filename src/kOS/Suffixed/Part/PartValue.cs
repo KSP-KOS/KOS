@@ -34,7 +34,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("FUELCROSSFEED", new Suffix<bool>(() => Part.fuelCrossFeed));
             AddSuffix("TITLE", new Suffix<string>(() => Part.partInfo.title));
             AddSuffix("STAGE", new Suffix<int>(() => Part.inverseStage));
-            AddSuffix("UID", new Suffix<string>(() => Part.flightID.ToString));
+            AddSuffix("UID", new Suffix<string>(() => Part.flightID.ToString()));
             AddSuffix("ROTATION", new Suffix<Direction>(() => new Direction( Part.transform.rotation) ));
             AddSuffix("POSITION", new Suffix<Vector>(() => new Vector( Part.transform.position - shared.Vessel.findWorldCenterOfMass() )));
             AddSuffix("TAG", new SetSuffix<string>(GetTagName, SetTagName));
