@@ -13,10 +13,11 @@ namespace kOS.AddOns.KerbalAlarmClock
     {
         public override void Execute(SharedObjects shared)
         {
-            string alarmNotes = shared.Cpu.PopValue().ToString();
-            string alarmName = shared.Cpu.PopValue().ToString();
-            double alarmUT = GetDouble(shared.Cpu.PopValue());
-            string alarmType = shared.Cpu.PopValue().ToString(); //alarm type is read-only, you cannot change it afterwards
+            string alarmNotes = PopValueAssert(shared).ToString();
+            string alarmName = PopValueAssert(shared).ToString();
+            double alarmUT = GetDouble(PopValueAssert(shared));
+            string alarmType = PopValueAssert(shared).ToString(); //alarm type is read-only, you cannot change it afterwards
+            AssertArgBottomAndConsume(shared);
 
             if (KACWrapper.APIReady)
             {
@@ -48,18 +49,18 @@ namespace kOS.AddOns.KerbalAlarmClock
 
                     var result = new KACAlarmWrapper(a, shared);
 
-                    shared.Cpu.PushStack(result);
+                    ReturnValue = result;
                 }
                 else
                 {
-                    shared.Cpu.PushStack(string.Empty);
+                    ReturnValue = string.Empty;
                     SafeHouse.Logger.Log(string.Format("Failed creating KAC Alarm, UT={0}, Name={1}, Type= {2}", alarmUT, alarmName, alarmType));
                 }
             }
             else
             {
                 //KAC integration not present.
-                shared.Cpu.PushStack(string.Empty);
+                ReturnValue = string.Empty;
                 throw new KOSUnavailableAddonException("addAlarm()", "Kerbal Alarm Clock");
             }
         }
@@ -72,11 +73,12 @@ namespace kOS.AddOns.KerbalAlarmClock
         {
             var list = new ListValue();
 
-            string alarmTypes = shared.Cpu.PopValue().ToString();
+            string alarmTypes = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
 
             if (!KACWrapper.APIReady)
             {
-                shared.Cpu.PushStack(list);
+                ReturnValue = list;
                 throw new KOSUnavailableAddonException("listAlarms()", "Kerbal Alarm Clock");
             }
 
@@ -94,7 +96,7 @@ namespace kOS.AddOns.KerbalAlarmClock
                 if (alarmTypes.ToUpperInvariant() == "ALL" || alarm.AlarmTime.ToString() == alarmTypes)
                     list.Add(new KACAlarmWrapper(alarm, shared));
             }
-            shared.Cpu.PushStack(list);
+            ReturnValue = list;
         }
     }
 
@@ -103,16 +105,17 @@ namespace kOS.AddOns.KerbalAlarmClock
     {
         public override void Execute(SharedObjects shared)
         {
-            string alarmID = shared.Cpu.PopValue().ToString();
+            string alarmID = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
 
             if (KACWrapper.APIReady)
             {
                 bool result = KACWrapper.KAC.DeleteAlarm(alarmID);
-                shared.Cpu.PushStack(result);
+                ReturnValue = result;
             }
             else
             {
-                shared.Cpu.PushStack(false);
+                ReturnValue = false;
                 throw new KOSUnavailableAddonException("deleteAlarm()", "Kerbal Alarm Clock");
             }
         }
