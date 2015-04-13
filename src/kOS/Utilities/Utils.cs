@@ -222,34 +222,6 @@ namespace kOS.Utilities
         }
 
         /// <summary>
-        /// This is copied almost verbatim from ProgramContext,
-        /// It's here to help debug.
-        /// </summary>
-        public static string GetCodeFragment(List<Opcode> codes)
-        {
-            var codeFragment = new List<string>();
-            
-            const string FORMAT_STR = "{0,-20} {1,4}:{2,-3} {3:0000} {4} {5} {6} {7}";
-            codeFragment.Add(string.Format(FORMAT_STR, "File", "Line", "Col", "IP  ", "Label  ", "opcode", "operand", "Destination" ));
-            codeFragment.Add(string.Format(FORMAT_STR, "----", "----", "---", "----", "-------", "---------------------", "", "" ));
-
-            for (int index = 0; index < codes.Count; index++)
-            {
-                codeFragment.Add(string.Format(FORMAT_STR,
-                                               codes[index].SourceName ?? "null",
-                                               codes[index].SourceLine,
-                                               codes[index].SourceColumn ,
-                                               index,
-                                               codes[index].Label ?? "null",
-                                               codes[index] ?? new OpcodeBogus(),
-                                               "DEST: " + (codes[index].DestinationLabel ?? "null" ),
-                                               "" ) );
-            }
-
-            return codeFragment.Aggregate(string.Empty, (current, s) => current + (s + "\n"));
-        }
-
-        /// <summary>
         /// Meant to be an override for stock KSP's CelestialBody.GetObtVelocity(), which (literally) always
         /// stack overflows because it's implemented as just infinite recursion without a base case.
         /// <br/>

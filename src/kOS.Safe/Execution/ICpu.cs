@@ -20,6 +20,7 @@ namespace kOS.Safe.Execution
         void SetValue(string identifier, object value);
         void SetValueExists(string identifier, object value);
         void SetNewLocal(string identifier, object value);
+        void SetGlobal(string identifier, object value);
         string DumpVariables();
         void RemoveVariable(string identifier);
         int InstructionPointer { get; set; }
@@ -31,7 +32,7 @@ namespace kOS.Safe.Execution
         void CallBuiltinFunction(string functionName);
         bool BuiltInExists(string functionName);
         void BreakExecution(bool manual);
-        void AddVariable(Variable variable, string identifier, bool local);
+        void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false);
         Opcode GetOpcodeAt(int instructionPtr);
         void Boot();
 
