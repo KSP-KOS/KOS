@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace kOS.Safe.Compilation.KS
 {
-    public class LockFunction
+    public class UserFunctionCodeFragment
     {
         public List<Opcode> Code { get; private set; }
 
-        public LockFunction()
+        public UserFunctionCodeFragment()
         {
             Code = new List<Opcode>();
         }

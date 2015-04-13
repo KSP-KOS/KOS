@@ -3,19 +3,25 @@ using kOS.Safe.Compilation;
 
 namespace kOS.Safe.Execution
 {
-    public interface ICpu : IUpdateObserver
+    public interface ICpu : IFixedUpdateObserver
     {
         void PushStack(object item);
         object PopStack();
         void MoveStackPointer(int delta);
+        void PushAboveStack(object thing);
+        object PopAboveStack(int howMany);
+        List<VariableScope> GetCurrentClosure();
+        IUserDelegate MakeUserDelegate(int entryPoint);
         object GetValue(object testValue, bool barewordOkay = false);
         object PopValue(bool barewordOkay = false);
         object PeekValue(int digDepth, bool barewordOkay = false);        
+        object PeekRaw(int digDepth, out bool checkOkay);
         int GetStackSize();
         void SetValue(string identifier, object value);
-        void DumpVariables();
+        void SetValueExists(string identifier, object value);
+        void SetNewLocal(string identifier, object value);
+        string DumpVariables();
         void RemoveVariable(string identifier);
-        void RemoveAllVariables();
         int InstructionPointer { get; set; }
         double SessionTime { get; }
         void AddTrigger(int triggerFunctionPointer);
@@ -23,8 +29,9 @@ namespace kOS.Safe.Execution
         void StartWait(double waitTime);
         void EndWait();
         void CallBuiltinFunction(string functionName);
+        bool BuiltInExists(string functionName);
         void BreakExecution(bool manual);
-        void AddVariable(Variable variable, string identifier);
+        void AddVariable(Variable variable, string identifier, bool local);
         Opcode GetOpcodeAt(int instructionPtr);
         void Boot();
 

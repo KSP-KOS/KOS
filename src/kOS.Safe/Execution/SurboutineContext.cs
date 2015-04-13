@@ -1,10 +1,9 @@
 namespace kOS.Safe.Execution
 {
     /// <summary>
-    /// <p>The context record that gets pushed onto the stack to store everything
-    /// that you need to know about the current nesting level when entering/leaving
-    /// a subroutine.  i.e. run program, or call lock function (or other function
-    /// when user functions are implemented.)</p>
+    /// <p>The context record that gets pushed onto the stack to store what you need to
+    /// know to return from a subroutine.
+    /// </p>
     /// 
     /// <p>At the moment it only contains the instruction pointer to return to.</p>
     /// 
@@ -37,8 +36,10 @@ namespace kOS.Safe.Execution
     /// the same reason).</p>
     /// </summary>
     public class SubroutineContext
-    {
-        /// <summary>The instruction pointer that this subroutine call came from, and therefore
+    {        
+        /// <summary>In the case where this block context is for a subroutine that needs
+        /// to jump back to the calling location, this stores what the calling location was.
+        /// It is the instruction pointer that this subroutine call came from, and therefore
         /// should be returned to when it's done.</summary>
         public int CameFromInstPtr {get; private set;}
 

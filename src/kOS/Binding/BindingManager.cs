@@ -62,7 +62,7 @@ namespace kOS.Binding
                         Name = name, 
                     };
                 variables.Add(name, variable);
-                shared.Cpu.AddVariable(variable, name);
+                shared.Cpu.AddVariable(variable, name, false);
             }
 
             if (getDelegate != null)
@@ -84,26 +84,20 @@ namespace kOS.Binding
 
         public void PreUpdate()
         {
+            foreach (var variable in variables)
+            {
+                variable.Value.ClearCache();
+            }
             // update the bindings
             foreach (var b in bindings)
             {
                 b.Update();
             }
-
-            // clear bound variables values
-            foreach (var variable in variables.Values)
-            {
-                variable.ClearValue();
-            }
         }
 
         public void PostUpdate()
         {
-            // save bound variables values
-            foreach (BoundVariable variable in variables.Values)
-            {
-                variable.SaveValue();
-            }
+
         }
 
         public void ToggleFlyByWire(string paramName, bool enabled)

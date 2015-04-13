@@ -135,13 +135,14 @@ Operations and Methods
 ============================================================= =============
 Method / Operator                                              Return Type    
 ============================================================= =============
- :ref:`* (asterisk) <Vector *>`                                scalar or :struct:`Vector` 
- :ref:`+ (plus)     <Vector +->`                               :struct:`Vector`           
- :ref:`- (minus)    <Vector +->`                               :struct:`Vector`           
- :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* <Vector *>`    scalar               
- :func:`VCRS`, :func:`VECTORCROSSPRODUCT`                      :struct:`Vector`           
- :func:`VANG`, :func:`VECTORANGLE`                             scalar (deg)
- :func:`VXCL`, :func:`VECTOREXCLUDE`                           :struct:`Vector`           
+ :ref:`* (asterisk) <Vector *>`                               scalar or :struct:`Vector` 
+ :ref:`+ (plus)     <Vector +->`                              :struct:`Vector`
+ :ref:`- (minus)    <Vector +->`                              :struct:`Vector`
+ :ref:`- (unary)    <Vector +->`                              :struct:`Vector`
+ :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* <Vector *>`  scalar
+ :func:`VCRS`, :func:`VECTORCROSSPRODUCT`                     :struct:`Vector`
+ :func:`VANG`, :func:`VECTORANGLE`                            scalar (deg)
+ :func:`VXCL`, :func:`VECTOREXCLUDE`                          :struct:`Vector`
 ============================================================= =============
 
 .. index:: vector multiplication
@@ -156,6 +157,12 @@ Method / Operator                                              Return Type
         PRINT a * vec1.     // prints: V(2,4,6)
         PRINT vec1 * vec2.  // prints: 20
 
+    Note that the *unary* minus operator is really a multiplication of 
+    the vector by a scalar of (-1)::
+
+	PRINT -vec1.     // these two both print the
+	PRINT (-1)*vec1. // exact same thing.
+
 .. index:: vector addition
 .. index:: vector subtraction
 .. _Vector +-:
@@ -168,6 +175,13 @@ Method / Operator                                              Return Type
         SET vec2 TO V(2,3,4).
         PRINT vec1 + vec2.  // prints: V(3,5,7)
         PRINT vec2 - vec1.  // prints: V(1,1,1)
+
+    Note that the *unary* minus operator is the same thing as multiplying
+    the vector by a scalar of (-1), and is not technically an addition or
+    subtraction operator::
+
+	PRINT -vec1.     // these two both print the
+	PRINT (-1)*vec1. // exact same thing.
 
 .. function:: VDOT(v1,v2)
 

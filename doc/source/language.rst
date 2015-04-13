@@ -10,3 +10,4 @@ The **KerboScript** Language
     Language Syntax  <language/syntax>
     Flow Control     <language/flow>
     Variables        <language/variables>
+    User Functions   <language/user_functions>

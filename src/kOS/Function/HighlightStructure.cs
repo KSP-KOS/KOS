@@ -66,7 +66,7 @@ namespace kOS.Function
             }
         }
 
-        public void Update(double deltaTime)
+        public void KOSUpdate(double deltaTime)
         {
             if (!stale) return;
 
@@ -117,7 +117,7 @@ namespace kOS.Function
 
         public override string ToString()
         {
-            return string.Format("HIGHLIGHT( Item: {0} Color: {1} Enabled: {2}", toHighlight, color, enabled);
+            return string.Format("HIGHLIGHT( Item: {0} Color: {1} Enabled: {2})", toHighlight, color, enabled);
         }
     }
 }

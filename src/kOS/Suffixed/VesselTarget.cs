@@ -421,6 +421,7 @@ namespace kOS.Suffixed
             AddSuffix("PACKDISTANCE", new SetSuffix<float>(
                 () => System.Math.Min(Vessel.distanceLandedPackThreshold, Vessel.distancePackThreshold), 
                 value => { Vessel.distanceLandedPackThreshold = Vessel.distancePackThreshold = value; }));
+            AddSuffix("ISDEAD", new NoArgsSuffix<bool>(() => (Vessel.state == Vessel.State.DEAD) ));
 
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
