@@ -190,7 +190,7 @@ Structure
     :type: :struct:`Direction`
     :access: Get only
     
-    :struct: Gives a `Direction` with the opposite rotation around its axes. So `r(30,15,5)` becomes `r(-30,-15,-5)`.
+    :struct: Gives a `Direction` with the opposite rotation around its axes.
     
 
 .. note:: **The difference between a :struct:`Direction` and a ``Vector``**
