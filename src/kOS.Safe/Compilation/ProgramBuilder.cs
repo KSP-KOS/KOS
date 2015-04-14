@@ -63,7 +63,7 @@ namespace kOS.Safe.Compilation
                 // add the linked object to the final program
                 program.AddRange(linkedObject.MergeSections());
             }
-
+                       
             // replace all the labels references with the corresponding address
             ReplaceLabels(program);
 

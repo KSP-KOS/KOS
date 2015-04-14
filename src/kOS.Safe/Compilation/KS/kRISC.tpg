@@ -17,6 +17,7 @@ COMPARATOR   -> @"<>|>=|<=|=|>|<";
 //Instructions tokens
 SET          -> @"set";
 TO           -> @"to";
+IS           -> @"is";
 IF           -> @"if";
 ELSE         -> @"else";
 UNTIL        -> @"until";
@@ -38,6 +39,8 @@ LOG          -> @"log";
 BREAK        -> @"break";
 PRESERVE     -> @"preserve";
 DECLARE      -> @"declare";
+LOCAL        -> @"local";
+GLOBAL       -> @"global";
 PARAMETER    -> @"parameter";
 FUNCTION     -> @"function";
 RETURN       -> @"return";
@@ -93,7 +96,6 @@ instruction_block -> CURLYOPEN instruction* CURLYCLOSE EOI?;
 instruction -> set_stmt | 
                if_stmt |
                until_stmt |
-               lock_stmt |
                unlock_stmt |
                print_stmt |
                on_stmt |
@@ -136,7 +138,6 @@ directive            -> lazyglobal_directive; // Add to this list later if we ma
 set_stmt       -> SET varidentifier TO expr EOI;
 if_stmt        -> IF expr instruction (ELSE instruction)? EOI?;
 until_stmt     -> UNTIL expr instruction EOI?;
-lock_stmt      -> LOCK IDENTIFIER TO expr EOI;
 unlock_stmt    -> UNLOCK (IDENTIFIER | ALL) EOI;
 print_stmt     -> PRINT expr (AT BRACKETOPEN expr COMMA expr BRACKETCLOSE)? EOI;
 on_stmt        -> ON varidentifier instruction EOI?;
@@ -152,7 +153,31 @@ remove_stmt    -> REMOVE expr EOI;
 log_stmt       -> LOG expr TO expr EOI;
 break_stmt     -> BREAK EOI;
 preserve_stmt  -> PRESERVE EOI;
-declare_stmt   -> DECLARE ( (PARAMETER IDENTIFIER (COMMA IDENTIFIER)* EOI) | (FUNCTION IDENTIFIER instruction_block EOI?) | (IDENTIFIER TO expr) EOI);
+declare_identifier_clause -> IDENTIFIER (TO|IS) expr EOI;
+declare_parameter_clause  -> PARAMETER IDENTIFIER (COMMA IDENTIFIER)* EOI;
+declare_function_clause   -> FUNCTION IDENTIFIER instruction_block EOI?;
+declare_lock_clause       -> LOCK IDENTIFIER TO expr EOI;
+declare_stmt   -> // declare|global|local are all optional for function and parameter,
+                  // but mandatory for declaring an identifier.  This was the only
+                  // way to get the LL(1) parser to understand that without barfing on
+                  // ambiguity.
+                  (   
+                      declare_parameter_clause |
+                      declare_function_clause |
+                      declare_lock_clause |
+                      (
+                          (
+                              (DECLARE (LOCAL|GLOBAL)?) |
+                              (LOCAL|GLOBAL)
+                          )
+                          (
+                              declare_parameter_clause |
+                              declare_function_clause |
+                              declare_identifier_clause |
+                              declare_lock_clause
+                          )
+                      )
+                  );
 return_stmt    -> RETURN expr? EOI;
 switch_stmt    -> SWITCH TO expr EOI;
 copy_stmt      -> COPY expr (FROM | TO) expr EOI;

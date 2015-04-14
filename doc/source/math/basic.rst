@@ -58,6 +58,7 @@ Mathematical Functions
  :func:`MOD(a,b)`     modulus
  :func:`MIN(a,b)`     minimum
  :func:`MAX(a,b)`     maximum
+ :func:`RANDOM()`     random number
  :func:`ROUND(a)`     round to whole number
  :func:`ROUND(a,b)`   round to nearest place
  :func:`SQRT(a)`      square root
@@ -111,6 +112,12 @@ Mathematical Functions
 
         PRINT MAX(0,100). // prints 100
 
+.. function:: RANDOM()
+    
+    Returns a random floating point number in the range [0,1]::
+    
+        PRINT RANDOM(). //prints a random number
+        
 .. function:: ROUND(a)
 
     Rounds to the nearest whole number::
