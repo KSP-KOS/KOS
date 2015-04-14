@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Reflection;
-using Debug = UnityEngine.Debug;
 
 namespace kOS.Utilities
 {
