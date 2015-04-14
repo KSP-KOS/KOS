@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Text;
 using System.Linq;
+using System;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -14,7 +16,53 @@ namespace kOS.Safe.Compilation.KS
         public string Identifier { get; private set; }
         public string PointerIdentifier{ get; private set; }
         public string DefaultLabel{ get; private set; }
+
+        /// <summary>The node from the parse tree in which this function or lock was defined. </summary>
+        public ParseNode OriginalNode{ get; private set; }
         
+        /// <summary>
+        /// To help store the difference between the same function name at different scope
+        /// levels, the scope number is appened to the end of the identifier name when storing
+        /// things.  This sanitizes that by removing the number again to get the actual variable
+        /// name as used by the script code:
+        /// </summary>
+        public string ScopelessDefaultLabel
+        {
+            get
+            {
+                int backTickIndex = DefaultLabel.IndexOf('`');
+                return backTickIndex < 0 ? DefaultLabel : (DefaultLabel.Remove(backTickIndex) + "-default"); // reattach the "-default" on the end.
+            }
+        }
+        /// <summary>
+        /// To help store the difference between the same function name at different scope
+        /// levels, the scope number is appened to the end of the identifier name when storing
+        /// things.  This sanitizes that by removing the number again to get the actual variable
+        /// name as used by the script code:
+        /// </summary>
+        public string ScopelessPointerIdentifier
+        {
+            get
+            {
+                int backTickIndex = PointerIdentifier.IndexOf('`');
+                return backTickIndex < 0 ? PointerIdentifier : (PointerIdentifier.Remove(backTickIndex) + "*"); // reattach the '*' on the end.
+            }
+        }
+        /// <summary>
+        /// To help store the difference between the same function name at different scope
+        /// levels, the scope number is appened to the end of the identifier name when storing
+        /// things.  This sanitizes that by removing the number again to get the actual variable
+        /// name as used by the script code:
+        /// </summary>
+        public string ScopelessIdentifier
+        {
+            get
+            {
+                int backTickIndex = Identifier.IndexOf('`');
+                return backTickIndex < 0 ? Identifier : Identifier.Remove(backTickIndex);
+            }
+        }
+
         /// <summary>
         /// A the thing this was defined in.  (it will be part of the parse tree of the compiler).
         /// null = global
@@ -33,15 +81,16 @@ namespace kOS.Safe.Compilation.KS
             get { return codePart.MainCode; }
         }
 
-        public UserFunction()
+        public UserFunction(ParseNode originalNode)
         {
             codePart = new CodePart();
             functions = new Dictionary<int, UserFunctionCodeFragment>();
             newFunctions = new List<UserFunctionCodeFragment>();
+            OriginalNode = originalNode;
         }
 
-        public UserFunction(string userFuncIdentifier)
-            : this()
+        public UserFunction(string userFuncIdentifier, ParseNode originalNode)
+            : this(originalNode)
         {
             Identifier = userFuncIdentifier;
             PointerIdentifier = "$" + Identifier + "*";
@@ -79,6 +128,11 @@ namespace kOS.Safe.Compilation.KS
             functions.Add(expressionHash, newUserFuncFragment);
             newFunctions.Add(newUserFuncFragment);
             return newUserFuncFragment.Code;
+        }
+        
+        public string GetUserFunctionLabel(int expressionHash)
+        {
+            return String.Format("{0}-{1}", Identifier, expressionHash.ToString("x"));
         }
         
         public CodePart GetCodePart()
@@ -122,7 +176,7 @@ namespace kOS.Safe.Compilation.KS
 
         public bool IsSystemLock()
         {
-            return systemLocks.Contains(Identifier.ToLower());
+            return systemLocks.Contains(ScopelessIdentifier.ToLower());
         }
     }
 }

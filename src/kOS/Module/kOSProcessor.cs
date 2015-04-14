@@ -312,6 +312,7 @@ namespace kOS.Module
             }
             
             InitProcessorTracking();
+
             // move Cpu.Boot() to within the first Update() to prevent boot script errors from killing OnStart
             // shared.Cpu.Boot();
         }
@@ -346,7 +347,7 @@ namespace kOS.Module
             // This is technically called any time ANY part is destroyed, so ignore it if it's not MY part:
             if (p != part)
                 return;
-            
+
             GetWindow().DetachAllTelnets();
             
             allMyInstances.RemoveAll(m => m==this);

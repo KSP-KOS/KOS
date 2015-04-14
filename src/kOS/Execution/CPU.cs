@@ -576,12 +576,14 @@ namespace kOS.Execution
         /// <summary>
         /// Make a new variable at either the local depth or the
         /// global depth depending.
-        /// throws exception if it already exists
+        /// throws exception if it already exists as a boundvariable at the desired
+        /// scope level, unless overwrite = true.
         /// </summary>
         /// <param name="variable">variable to add</param>
         /// <param name="identifier">name of variable to adde</param>
         /// <param name="local">true if you want to make it at local depth</param>
-        public void AddVariable(Variable variable, string identifier, bool local)
+        /// <param name="overwrite">true if it's okay to overwrite an existing variable</param>
+        public void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false)
         {
             identifier = identifier.ToLower();
             
@@ -598,7 +600,12 @@ namespace kOS.Execution
             if (whichDict.Variables.ContainsKey(identifier))
             {
                 if (whichDict.Variables[identifier].Value is BoundVariable)
-                    throw new KOSIdentiferClashException(identifier);
+                {
+                    if (!overwrite)
+                        throw new KOSIdentiferClashException(identifier);
+                    else
+                        return; // no work to do - the bound variable is fine to leave in place.
+                }
                 else
                     whichDict.Variables.Remove(identifier);
             }
@@ -681,6 +688,23 @@ namespace kOS.Execution
         {
             Variable variable = new Variable {Name = identifier};
             AddVariable(variable, identifier, true);
+            variable.Value = value;
+        }
+
+        /// <summary>
+        /// Make a new global variable at the localmost scoping level and
+        /// give it a starting value, or overwrite an existing variable
+        /// at the localmost level with a starting value.<br/>
+        /// <br/>
+        /// This does NOT scan up the scoping stack like SetValue() does.
+        /// It operates at the global level only.<br/>
+        /// </summary>
+        /// <param name="identifier">variable name to attempt to store into</param>
+        /// <param name="value">value to put into it</param>
+        public void SetGlobal(string identifier, object value)
+        {
+            Variable variable = new Variable {Name = identifier};
+            AddVariable(variable, identifier, false, true);
             variable.Value = value;
         }
 

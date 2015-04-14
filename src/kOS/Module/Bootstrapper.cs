@@ -23,6 +23,7 @@ namespace kOS.Module
             BuildLogger();
 
             CheckForLegacyArchive();
+
         }
 
         private void BuildEnvironment()
@@ -66,7 +67,6 @@ namespace kOS.Module
                 HighLogic.Skin
                 );
         }
-
 
         private void MigrateScripts()
         {
