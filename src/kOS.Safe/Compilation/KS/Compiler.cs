@@ -397,12 +397,14 @@ namespace kOS.Safe.Compilation.KS
                 bodyNode = lastSubNode.Nodes[2];
             }
             else
-                return; // not one of the types of statement we're really meant to run IdentifyLocks on.
+                return; // not one of the types of statement we're really meant to run IdentifyUserFunctions on.
             
             UserFunction userFuncObject =
                 context.UserFunctions.GetUserFunction(funcIdentifier, storageType == StorageModifier.GLOBAL ? (Int16)0 : GetContainingScopeId(node), node);
             int expressionHash = ConcatenateNodes(bodyNode).GetHashCode();
             userFuncObject.GetUserFunctionOpcodes(expressionHash);
+            if (userFuncObject.IsSystemLock())
+                BuildSystemTrigger(userFuncObject);
         }
         
         /// <summary>
@@ -514,22 +516,6 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodePush(userFuncObject.ScopelessPointerIdentifier));
                     AddOpcode(new OpcodePushRelocateLater(null), userFuncObject.DefaultLabel);
                     AddOpcode(new OpcodeStore());
-                    // add trigger
-                    string triggerIdentifier = "lock-" + userFuncObject.ScopelessIdentifier;
-                    Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-
-                    short rememberLastLine = lastLine;
-                    lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
-                    currentCodeSection = triggerObject.Code;
-                    AddOpcode(new OpcodePush("$" + userFuncObject.ScopelessIdentifier));
-                    AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // need these for all locks now.
-                    AddOpcode(new OpcodeCall(userFuncObject.ScopelessPointerIdentifier));
-                    if (allowLazyGlobal)
-                        AddOpcode(new OpcodeStore());
-                    else
-                        AddOpcode(new OpcodeStoreExist());
-                    AddOpcode(new OpcodeEOF());
-                    lastLine = rememberLastLine;
                 }
                 else
                 {
@@ -575,8 +561,35 @@ namespace kOS.Safe.Compilation.KS
                     AddOpcode(new OpcodeReturn());
                 }
                 userFuncObject.ScopeNode = GetContainingBlockNode(node); // This limits the scope of the function to the instruction_block the DEFINE was in.
-                userFuncObject.IsFunction = true;
+                userFuncObject.IsFunction = !(isLock);;
             }
+        }
+        
+        
+        /// <summary>
+        /// Build the system trigger to go with a user function (lock)
+        /// such as LOCK STEERING or LOCK THROTTLE
+        /// </summary>
+        /// <param name="func">Represents the lock object, which might not be fully populated yet.</param>
+        private void BuildSystemTrigger(UserFunction func)
+        {
+            string triggerIdentifier = "lock-" + func.ScopelessIdentifier;
+            Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
+            
+            if (triggerObject.IsInitialized())
+                return;
+
+            short rememberLastLine = lastLine;
+            lastLine = -1; // special flag telling the error handler that these opcodes came from the system itself, when reporting the error
+            List<Opcode> rememberCurrentCodeSection = currentCodeSection;
+            currentCodeSection = triggerObject.Code;
+            AddOpcode(new OpcodePush("$" + func.ScopelessIdentifier));
+            AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // need these for all locks now.
+            AddOpcode(new OpcodeCall(func.ScopelessPointerIdentifier));
+            AddOpcode(new OpcodeStoreGlobal());
+            AddOpcode(new OpcodeEOF());
+            lastLine = rememberLastLine;
+            currentCodeSection = rememberCurrentCodeSection;
         }
         
         /// <summary>
@@ -1964,7 +1977,7 @@ namespace kOS.Safe.Compilation.KS
             if (lockObject.IsSystemLock())
             {
                 // add update trigger
-                string triggerIdentifier = "lock-" + lockIdentifier;
+                string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
                 if (context.Triggers.Contains(triggerIdentifier))
                 {
                     Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
@@ -1976,7 +1989,6 @@ namespace kOS.Safe.Compilation.KS
                 AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
                 AddOpcode(new OpcodePush(lockIdentifier));
                 AddOpcode(new OpcodePush(true));
-                AddOpcode(new OpcodeCall("toggleflybywire()"));
                 // add a pop to clear out the dummy return value from toggleflybywire()
                 AddOpcode(new OpcodePop());
             }

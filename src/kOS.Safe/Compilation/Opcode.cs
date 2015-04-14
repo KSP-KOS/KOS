@@ -1165,6 +1165,8 @@ namespace kOS.Safe.Compilation
             if (Direct)
             {
                 functionPointer = cpu.GetValue(Destination);
+                if (functionPointer == null)
+                    throw new KOSException("Attempt to call function failed - Value of function pointer for " + Destination + " is null.");
             }
             else // for indirect calls, dig down to find what's underneath the argument list in the stack and use that:
             {
@@ -1265,7 +1267,6 @@ namespace kOS.Safe.Compilation
             {
                 cpu.PushStack(delegateReturn); // And now leave the return value on the stack to be read.
             }
-
         }
         
         /// <summary>
@@ -1762,7 +1763,8 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            cpu.PushStack(cpu.MakeUserDelegate(EntryPoint));
+            IUserDelegate pushMe = cpu.MakeUserDelegate(EntryPoint);
+            cpu.PushStack(pushMe);
         }
 
         public override string ToString()

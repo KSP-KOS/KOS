@@ -580,7 +580,7 @@ namespace kOS.Execution
         /// scope level, unless overwrite = true.
         /// </summary>
         /// <param name="variable">variable to add</param>
-        /// <param name="identifier">name of variable to adde</param>
+        /// <param name="identifier">name of variable to add</param>
         /// <param name="local">true if you want to make it at local depth</param>
         /// <param name="overwrite">true if it's okay to overwrite an existing variable</param>
         public void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false)
@@ -600,14 +600,9 @@ namespace kOS.Execution
             if (whichDict.Variables.ContainsKey(identifier))
             {
                 if (whichDict.Variables[identifier].Value is BoundVariable)
-                {
                     if (!overwrite)
                         throw new KOSIdentiferClashException(identifier);
-                    else
-                        return; // no work to do - the bound variable is fine to leave in place.
-                }
-                else
-                    whichDict.Variables.Remove(identifier);
+                whichDict.Variables.Remove(identifier);
             }
             whichDict.Variables.Add(identifier, variable);
         }
@@ -703,8 +698,15 @@ namespace kOS.Execution
         /// <param name="value">value to put into it</param>
         public void SetGlobal(string identifier, object value)
         {
-            Variable variable = new Variable {Name = identifier};
-            AddVariable(variable, identifier, false, true);
+            Variable variable;
+            // Attempt to get it as a global.  Make a new one if it's not found.
+            // This preserves the "bound-ness" of the variable if it's a
+            // BoundVariable, whereas unconditionally making a new Variable wouldn't:
+            if (! globalVariables.Variables.TryGetValue(identifier, out variable))
+            {
+                variable = new Variable {Name = identifier};
+                AddVariable(variable, identifier, false, true);                
+            }
             variable.Value = value;
         }
 
