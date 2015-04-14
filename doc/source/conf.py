@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'kOS'
-copyright = u'2014, Dunbaratu, erendrake, Originally By Nivekk'
+copyright = u'2014-2015, Developed and maintained by KOS Team, Originally By Nivekk'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
