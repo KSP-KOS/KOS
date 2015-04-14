@@ -3,10 +3,7 @@
 Addon Reference
 ===============
 
-    This section is for ways in which kOS has special case
-    exceptions to its normal generic behaviours, in order to
-    accommodate other KSP mods.  If you don't use any of KSP mods mentioned,
-    you don't need to read this section.
+    This section is for ways in which kOS has special case exceptions to its normal generic behaviours, in order to accommodate other KSP mods.  If you don't use any of KSP mods mentioned, you don't need to read this section.
 
 
 .. toctree::
