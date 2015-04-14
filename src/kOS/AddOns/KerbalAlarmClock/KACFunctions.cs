@@ -33,21 +33,21 @@ namespace kOS.AddOns.KerbalAlarmClock
                     newAlarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
                 }
 
-                String aID = KACWrapper.KAC.CreateAlarm(newAlarmType, alarmName, alarmUT);
+                string alarmId = KACWrapper.KAC.CreateAlarm(newAlarmType, alarmName, alarmUT);
 
                 SafeHouse.Logger.Log(string.Format("Trying to create KAC Alarm, UT={0}, Name={1}, Type= {2}", alarmUT, alarmName, alarmType));
 
-                if (!string.IsNullOrEmpty(aID))
+                if (!string.IsNullOrEmpty(alarmId))
                 {
                     //if the alarm was made get the object so we can update it
-                    KACWrapper.KACAPI.KACAlarm a = KACWrapper.KAC.Alarms.First(z => z.ID == aID);
+                    KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.First(z => z.ID == alarmId);
 
                     //Now update some of the other properties
-                    a.Notes = alarmNotes;
-                    a.AlarmAction = KACWrapper.KACAPI.AlarmActionEnum.PauseGame;
-                    a.VesselID = shared.Vessel.id.ToString();
+                    alarm.Notes = alarmNotes;
+                    alarm.AlarmAction = KACWrapper.KACAPI.AlarmActionEnum.PauseGame;
+                    alarm.VesselID = shared.Vessel.id.ToString();
 
-                    var result = new KACAlarmWrapper(a, shared);
+                    var result = new KACAlarmWrapper(alarm);
 
                     ReturnValue = result;
                 }
@@ -94,7 +94,7 @@ namespace kOS.AddOns.KerbalAlarmClock
                 }
                 
                 if (alarmTypes.ToUpperInvariant() == "ALL" || alarm.AlarmTime.ToString() == alarmTypes)
-                    list.Add(new KACAlarmWrapper(alarm, shared));
+                    list.Add(new KACAlarmWrapper(alarm));
             }
             ReturnValue = list;
         }

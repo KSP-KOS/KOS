@@ -1,11 +1,9 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Suffixed;
-using System;
 
 namespace kOS.AddOns.KerbalAlarmClock
 {
-    public class Addon : kOS.Suffixed.Addon
+    public class Addon : Suffixed.Addon
     {
         public Addon(SharedObjects shared) : base ("KAC", shared)
         {
@@ -31,7 +29,7 @@ namespace kOS.AddOns.KerbalAlarmClock
 
             foreach (KACWrapper.KACAPI.KACAlarm alarm in alarms)
             {
-                list.Add(new KACAlarmWrapper(alarm, shared));
+                list.Add(new KACAlarmWrapper(alarm));
             }
             return list;
         }

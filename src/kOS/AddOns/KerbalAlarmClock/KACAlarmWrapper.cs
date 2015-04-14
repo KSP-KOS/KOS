@@ -1,7 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
-using kOS.Suffixed;
 using System;
 using System.Linq;
 
@@ -10,19 +9,16 @@ namespace kOS.AddOns.KerbalAlarmClock
     public class KACAlarmWrapper : Structure
     {
         private readonly KACWrapper.KACAPI.KACAlarm alarm;
-        private readonly SharedObjects shared;
 
-        public KACAlarmWrapper(KACWrapper.KACAPI.KACAlarm init, SharedObjects shared)
+        public KACAlarmWrapper(KACWrapper.KACAPI.KACAlarm init)
         {
             alarm = init;
-            this.shared = shared;
             InitializeSuffixes();
         }
 
-        public KACAlarmWrapper(String alarmID, SharedObjects shared)
+        public KACAlarmWrapper(String alarmID)
         {
             alarm = KACWrapper.KAC.Alarms.First(z => z.ID == alarmID);
-            this.shared = shared;
             InitializeSuffixes();
         }
 
@@ -48,21 +44,6 @@ namespace kOS.AddOns.KerbalAlarmClock
 
             AddSuffix("ORIGINBODY", new SetSuffix<string>(() => alarm.XferOriginBodyName, value => alarm.XferOriginBodyName = value));
             AddSuffix("TARGETBODY", new SetSuffix<string>(() => alarm.XferTargetBodyName, value => alarm.XferTargetBodyName = value));
-        }
-
-        private VesselTarget GetVesselByID(string vesselID)
-        {
-            if (string.IsNullOrEmpty(vesselID))
-                return null;
-
-            var g = new Guid(vesselID);
-            Vessel v = FlightGlobals.Vessels.First(z => z.id == g);
-            return v != null ? new VesselTarget(v, shared) : null;
-        }
-
-        private void SetVesselID(VesselTarget v)
-        {
-            alarm.VesselID = v.Vessel == null ? "" : v.Vessel.id.ToString();
         }
 
         private double GetRemaining()

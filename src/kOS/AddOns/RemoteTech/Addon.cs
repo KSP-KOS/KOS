@@ -1,11 +1,9 @@
-﻿using kOS.Safe.Encapsulation;
-using kOS.Safe.Encapsulation.Suffixes;
+﻿using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
-using System;
 
 namespace kOS.AddOns.RemoteTech
 {
-    public class Addon : kOS.Suffixed.Addon
+    public class Addon : Suffixed.Addon
     {
         public Addon(SharedObjects shared) : base ("RT", shared)
         {
