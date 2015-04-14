@@ -183,7 +183,7 @@ namespace kOS.Suffixed
 
             //OTHER
             AddSuffix(new[] { "BOUND" }, new SetSuffix<bool>(() => bound, value => bound = value));
-            AddSuffix(new[] { "NEUTRAL" }, new Suffix<bool>(() => neutral.Value));
+            AddSuffix(new[] { "NEUTRAL" }, new Suffix<Flushable<bool>>(() => neutral));
 
         }
 
