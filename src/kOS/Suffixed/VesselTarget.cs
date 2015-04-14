@@ -419,8 +419,16 @@ namespace kOS.Suffixed
             AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass, "The Ship's mass when full"));
             AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
             AddSuffix("PACKDISTANCE", new SetSuffix<float>(
-                () => System.Math.Min(Vessel.distanceLandedPackThreshold, Vessel.distancePackThreshold), 
-                value => { Vessel.distanceLandedPackThreshold = Vessel.distancePackThreshold = value; }));
+                () =>
+                {
+                    return System.Math.Min(Vessel.vesselRanges.landed.pack, Vessel.vesselRanges.prelaunch.pack);
+                },
+                value =>
+                {
+                      Vessel.vesselRanges.landed.pack = value;
+                      Vessel.vesselRanges.splashed.pack = value;
+                      Vessel.vesselRanges.prelaunch.pack = value;
+                }));
             AddSuffix("ISDEAD", new NoArgsSuffix<bool>(() => (Vessel.state == Vessel.State.DEAD) ));
             AddSuffix("STATUS", new Suffix<String>(() => Vessel.situation.ToString()));
 
@@ -430,6 +438,7 @@ namespace kOS.Suffixed
             AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLatitude(Vessel)));
             AddSuffix("LONGITUDE", new Suffix<double>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<double>(() => Vessel.altitude));
+
        }
 
 

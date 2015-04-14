@@ -14,9 +14,9 @@ namespace kOS.Suffixed
             AddSuffix("BODY", new Suffix<string>(()=> celestialBody.bodyName));
             AddSuffix("EXISTS", new Suffix<bool>(()=> celestialBody.atmosphere));
             AddSuffix("OXYGEN", new Suffix<bool>(()=> celestialBody.atmosphere && celestialBody.atmosphereContainsOxygen));
-            AddSuffix("SCALE", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmosphereScaleHeight : 0));
-            AddSuffix("SEALEVELPRESSURE", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.staticPressureASL : 0));
-            AddSuffix("HEIGHT", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.maxAtmosphereAltitude : 0));
+            AddSuffix("SCALE", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmospherePressureCurve.maxTime : 0));
+            AddSuffix("SEALEVELPRESSURE", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmospherePressureSeaLevel : 0));
+            AddSuffix("HEIGHT", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmosphereDepth : 0));
         }
 
         public override string ToString()
