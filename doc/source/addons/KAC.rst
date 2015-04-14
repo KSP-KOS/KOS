@@ -13,6 +13,45 @@ The Kerbal Alarm Clock is a plugin that allows you to create reminder alarms at 
 
 Creator of the KAC provides API for integration with other mods. In KOS we provide limited access to KAC alarms via following structure and functions.
 
+Access structure KACAddon via `ADDONS:KAC`.
+
+.. structure:: KACAddon
+
+    ===================================== ========================= =============
+     Suffix                                Type                      Description
+    ===================================== ========================= =============
+     :attr:`AVAILABLE`                     bool(readonly)            True if KAC is installed and KAC integration enabled.
+     :meth:`ALARMS()`                      List                      List all alarms
+    ===================================== ========================= =============
+
+
+
+.. attribute:: KACAddon:AVAILABLE
+
+    :type: bool
+    :access: Get only
+
+    True if KAC is installed and KAC integration enabled.
+    Example of use::
+
+        if ADDONS:KAC:AVAILABLE
+        {
+            //some KAC dependent code
+        }
+
+.. method:: KACAddon:ALARMS()
+
+    :return: List of :struct:`KACAlarm` objects
+
+    List **all** the alarms set up in Kerbal Alarm Clock. Example of use::
+
+        for i in ADDONS:KAC:ALARMS
+        {
+        	print i:NAME + " - " + i:REMAINING + " - " + i:TYPE+ " - " + i:ACTION.
+        }
+
+
+
 .. structure:: KACAlarm
 
     ===================================== ========================= =============
@@ -64,7 +103,7 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
     :access: Get only
 
     Can only be set at Alarm creation.
-    Could be one of the following as per API 
+    Could be one of the following as per API
 
     	* Raw (default)
         * Maneuver
@@ -82,17 +121,17 @@ Creator of the KAC provides API for integration with other mods. In KOS we provi
         * Distance
         * Crew
         * EarthTime
-    
-    **Warning** Unless you are 100% certain you know what you're doing, create only "Raw" AlarmTypes to avoid unnecessary complications. 
+
+    **Warning**: Unless you are 100% certain you know what you're doing, create only "Raw" AlarmTypes to avoid unnecessary complications.
 
 .. attribute:: KACAlarm:NOTES
 
     :type: string
     :access: Get/Set
 
-    Long description of the alarm. Can be seen when alarm pops or by doubleclicking alarm in UI.
+    Long description of the alarm. Can be seen when alarm pops or by double-clicking alarm in UI.
 
-    **Warning** This field may be reserved in the fututre version of KAC-KOS integration for automated script execution upon triggering of the alarm.
+    **Warning**: This field may be reserved in the future version of KAC-KOS integration for automated script execution upon triggering of the alarm.
 
 .. attribute:: KACAlarm:REMAINING
 
@@ -137,7 +176,7 @@ Available Functions
 ============================================= ===================================================
  Function                                      Description
 ============================================= ===================================================
- :func:`ADDALARM(AlarmType, UT, Name, Notes)`  Create new alarm of AlarmType at UT 
+ :func:`ADDALARM(AlarmType, UT, Name, Notes)`  Create new alarm of AlarmType at UT
  :func:`LISTALARMS(alarmType)`                 List alarms with type `alarmType`.
  :func:`DELETEALARM(alarmID)`                  Delete alarm with ID = alarmID
 ============================================= ===================================================
@@ -146,7 +185,7 @@ Available Functions
 
     Creates alarm of type `KACAlarm:ALARMTYPE` at `UT` with `Name` and `Notes` attributes set. Attaches alarm to current :ref:`CPU Vessel <cpu vessel>`.  Returns :struct:`KACAlarm` object if creation was successful and empty string otherwise::
 
-        set na to addAlarm("Raw",time:seconds+300, "Test", "Notes"). 
+        set na to addAlarm("Raw",time:seconds+300, "Test", "Notes").
         print na:NAME. //prints 'Test'
         set na:NOTES to "New Description".
         print na:NOTES. //prints 'New Description'
@@ -157,17 +196,17 @@ Available Functions
     Otherwise returns :struct:`List` of all :struct:`KACAlarm` objects with `KACAlarm:TYPE` equeal to `alarmType' and attached to current vessel or have no vessel attached.::
 
         set al to listAlarms("All").
-	for i in al
-	{
-		print i:ID + " - " + i:name.
-	}
+        for i in al
+        {
+            print i:ID + " - " + i:name.
+        }
 
 .. function:: DELETEALARM(alarmID)
 
     Deletes alarm with ID equal to alarmID. Returns True if successful, false otherwise::
 
-    	set na to addAlarm("Raw",time:seconds+300, "Test", "Notes").
-      if (DELETEALARM(na:ID))
-      {
-          print "Alarm Deleted".
-      }
+        set na to addAlarm("Raw",time:seconds+300, "Test", "Notes").
+        if (DELETEALARM(na:ID))
+        {
+            print "Alarm Deleted".
+        }

@@ -165,6 +165,9 @@
     <Compile Include="AddOns\KerbalAlarmClock\KACEventHandler.cs" />
     <Compile Include="Suffixed\AddonList.cs" />
     <Compile Include="Suffixed\Addon.cs" />
+    <Compile Include="AddOns\RemoteTech\Addon.cs" />
+    <Compile Include="AddOns\KerbalAlarmClock\Addon.cs" />
+    <Compile Include="AddOns\ActionGroupsExtended\Addon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

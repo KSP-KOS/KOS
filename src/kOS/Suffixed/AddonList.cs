@@ -1,19 +1,22 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 
+
 namespace kOS.Suffixed
 {
     public class AddonList : Structure
     {
-        private readonly Addon kacAddon;
-        private readonly Addon rtAddon;
-        private readonly Addon agxAddon;
+        private readonly SharedObjects shared;
+        private readonly kOS.AddOns.KerbalAlarmClock.Addon kacAddon;
+        private readonly kOS.AddOns.RemoteTech.Addon rtAddon;
+        private readonly kOS.AddOns.ActionGroupsExtended.Addon agxAddon;
 
-        public AddonList()
+        public AddonList(SharedObjects shared)
         {
-            kacAddon = new Addon("KAC");
-            rtAddon = new Addon("RT");
-            agxAddon = new Addon("AGX");
+            this.shared = shared;
+            kacAddon = new kOS.AddOns.KerbalAlarmClock.Addon(shared);
+            rtAddon = new kOS.AddOns.RemoteTech.Addon(shared);
+            agxAddon = new kOS.AddOns.ActionGroupsExtended.Addon(shared);
 
             InitializeSuffixes();
         }
