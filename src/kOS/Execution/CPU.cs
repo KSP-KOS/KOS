@@ -681,8 +681,13 @@ namespace kOS.Execution
         /// <param name="value">value to put into it</param>
         public void SetNewLocal(string identifier, object value)
         {
-            Variable variable = new Variable {Name = identifier};
-            AddVariable(variable, identifier, true);
+            Variable variable;
+            VariableScope localDict = GetNestedDictionary(0);
+            if (! localDict.Variables.TryGetValue(identifier, out variable))
+            {
+                variable = new Variable {Name = identifier};
+                AddVariable(variable, identifier, true);                
+            }
             variable.Value = value;
         }
 

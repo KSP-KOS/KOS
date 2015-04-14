@@ -1989,6 +1989,7 @@ namespace kOS.Safe.Compilation.KS
                 AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
                 AddOpcode(new OpcodePush(lockIdentifier));
                 AddOpcode(new OpcodePush(true));
+                AddOpcode(new OpcodeCall("toggleflybywire()"));
                 // add a pop to clear out the dummy return value from toggleflybywire()
                 AddOpcode(new OpcodePop());
             }
