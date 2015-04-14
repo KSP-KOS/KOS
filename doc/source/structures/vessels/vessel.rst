@@ -45,6 +45,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
      :attr:`SHIPNAME`                      string                    The name of the vessel
      :attr:`NAME`                          string                    Synomym for SHIPNAME
+     :attr:`STATUS`                        string                    Current ship status
+     :attr:`TYPE`                          string                    Ship type
      :attr:`ANGULARMOMENTUM`               :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
@@ -159,6 +161,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     Same as :attr:`Vessel:SHIPNAME`.
 
+.. attribute:: Vessel:STATUS
+
+    :type: string
+    :access: get only
+    
+    The current status of the vessel possible results are: `LANDED`, `SPLASHED`, `PRELAUNCH`, `FLYING`, `SUB_ORBITAL`, `ORBITING`, `ESCAPING` and `DOCKED`.
+    
 .. attribute:: Vessel:TYPE
 
     :type: string

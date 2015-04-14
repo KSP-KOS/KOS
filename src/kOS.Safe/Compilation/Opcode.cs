@@ -74,10 +74,11 @@ namespace kOS.Safe.Compilation
         ENDWAIT        = 0x56,
         GETMETHOD      = 0x57,
         STORELOCAL     = 0x58,
-        PUSHSCOPE      = 0x59,
-        POPSCOPE       = 0x5a,
-        STOREEXIST     = 0x5b,
-        PUSHDELEGATE   = 0x5c,
+        STOREGLOBAL    = 0x59,
+        PUSHSCOPE      = 0x5a,
+        POPSCOPE       = 0x5b,
+        STOREEXIST     = 0x5c,
+        PUSHDELEGATE   = 0x5d,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -515,7 +516,34 @@ namespace kOS.Safe.Compilation
             cpu.SetNewLocal(identifier, value);
         }
     }
-    
+
+    /// <summary>
+    /// Consumes the topmost 2 values of the stack, storing the topmost stack
+    /// value into a variable described by the next value down the stack. <br/>
+    /// <br/>
+    /// The variable will always be stored at a global scope, overwriting
+    /// whatever else was there if the variable already existed.<br/>
+    /// <br/>
+    /// It will ignore local scoping and never store the value in a local
+    /// variable<br/>
+    /// <br/>
+    /// It's impossible to make a variable that hasn't been given an initial value.
+    /// Its the act of storing a value into the variable that causues it to exist.
+    /// This is deliberate design.
+    /// </summary>
+    public class OpcodeStoreGlobal : Opcode
+    {
+        protected override string Name { get { return "storeglobal"; } }
+        public override ByteCode Code { get { return ByteCode.STOREGLOBAL; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            object value = cpu.PopValue();
+            var identifier = (string)cpu.PopStack();
+            cpu.SetGlobal(identifier, value);
+        }
+    }
+
     public class OpcodeUnset : Opcode
     {
         protected override string Name { get { return "unset"; } }
@@ -534,7 +562,6 @@ namespace kOS.Safe.Compilation
             }
         }
     }
-
     
     public class OpcodeGetMember : Opcode
     {
