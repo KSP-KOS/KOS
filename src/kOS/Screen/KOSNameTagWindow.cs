@@ -20,7 +20,6 @@ namespace kOS.Screen
 
         public void Invoke(KOSNameTag module, string oldValue)
         {
-            Console.WriteLine("eraseme: KOsNameTagWindow (instance="+GetInstanceID()+") .Invoke() called with module = " + module.GetInstanceID() );
             attachedModule = module;
             tagValue = oldValue;
             myWindowId = GetInstanceID(); // Use the Id of this MonoBehaviour to guarantee unique window ID.
