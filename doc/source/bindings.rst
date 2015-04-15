@@ -251,6 +251,12 @@ TIME is the time since the entire saved game campaign started, in the
 kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
 just started.
 
+WARPING
+~~~~~~~
+
+Time warp can be controlled with WARP, and WARPMODE.  See
+:ref:`WARP <warp>`
+
 Config
 ------
 
