@@ -21,7 +21,7 @@ Time Warping
     one of the two strings mentioned above.
 
     The difference is the same as that experienced in the game between
-    physics warp and 'rails' warp (sometimes called 'time warp') allthough
+    physics warp and 'rails' warp (sometimes called 'time warp') although
     that term is confusingly ambiguous.
 
 .. table:: RAILS WARP MODES
