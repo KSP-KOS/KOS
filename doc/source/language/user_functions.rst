@@ -470,8 +470,8 @@ don't let me do that.  Please force me to declare everything".
 The way that is done in kerboscript is by using a ``@LAZYGLOBAL`` 
 compiler directive, :ref:`as described here <lazyglobal>`.
 
-Had the function above been wrapped inside a ``@LAZYGLOBAL off.`` section,
-the typo would be noticed::
+Had the function above been compiled under a ``@LAZYGLOBAL off.``
+compiler directive, the typo would be noticed::
 
     @lazyglobal off.
 
