@@ -7,10 +7,36 @@ Variables & Statements
 
 .. _declare:
 
-``DECLARE .. TO``
------------------
+``DECLARE .. TO/IS``
+--------------------
 
-Syntax: ``DECLARE`` *identifier* ``TO`` *expression* *dot*
+What it does:
+:::::::::::::
+
+Declares a variable, explicitly or implicitly defining what scope it
+has, and gives it an initial value.
+
+Allowed Syntax:
+:::::::::::::::
+
+All the following are legal "declare" statements:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following alternate versions have identical meaning to each other:
+
+  * ``DECLARE`` *identifier* ``TO`` *expression* *dot*
+  * ``DECLARE`` *identifier* ``IS`` *expression* *dot*
+  * ``DECLARE`` ``LOCAL`` *identifier* ``TO`` *expression* *dot*
+  * ``DECLARE`` ``LOCAL`` *identifier* ``IS`` *expression* *dot*
+  * ``LOCAL`` *identifier* ``TO`` *expression* *dot*
+  * ``LOCAL`` *identifier* ``IS`` *expression* *dot*
+
+The following alternate versions have identical meaning to each other:
+
+  * ``DECLARE`` ``GLOBAL`` *identifier* ``TO`` *expression* *dot*
+  * ``DECLARE`` ``GLOBAL`` *identifier* ``IS`` *expression* *dot*
+  * ``GLOBAL`` *identifier* ``TO`` *expression* *dot*
+  * ``GLOBAL`` *identifier* ``IS`` *expression* *dot*
 
 .. warning::
     .. versionadded:: 0.17
@@ -20,30 +46,68 @@ Syntax: ``DECLARE`` *identifier* ``TO`` *expression* *dot*
         global variables no matter where it appeared in the script.
         See 'initialier required' below.
 
-Declares a variable that is limited in scope to the code block it appears
-in, and gives it an initial value::
+Detailed Description of the syntax:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    DECLARE X TO 1.
+   * The statement must begin with either the word ``DECLARE``, ``LOCAL``,
+     or ``GLOBAL``.  If it begins with the word ``DECLARE`` it may optionally
+     also contain the word ``LOCAL`` or ``GLOBAL`` afterward.  *Note that if
+     neither* ``GLOBAL`` *nor* ``LOCAL`` *is used, the behavior of* 
+     ``LOCAL`` *will be assumed implicitly.  Therefore* ``DECLARE LOCAL``
+     *and just* ``DECLARE`` *and just* ``LOCAL`` *mean the same thing.* 
+   * After that it must contain an identifier.
+   * After that it must contain either the word ``TO`` or the word ``IS``,
+     which mean the same thing here.
+   * After that it must contain some expression for the initial starting
+     value of the variable.
+   * After that it must contain a dot ("period"), like all commands in
+     kerboscript.
+   
+   ::
 
-(A "code block" is any section of statements that begins with a
-left-curly-brace "{" and ends with its closing right-curly-brace "}".)
+    // These all do the exact same thing - make a local variable:
+    DECLARE X TO 1. // assumes local when unspecified.
+    LOCAL X IS 1.
+    DECLARE LOCAL X IS 1.
 
-Any variable declared with DECLARE will only exist inside the code block
-section it was created in.  After that code block is finished, the variable
-will no longer exist.
+    // These do the exact same thing - make a global variable:
+    GLOBAL X IS 1.
+    DECLARE GLOBAL X IS 1.
+
+If neither the scope word ``GLOBAL`` nor the scope word ``LOCAL``
+appear, a declare statement assumes ``LOCAL`` by default.
+
+Any variable declared with ``DECLARE``, ``DECLARE LOCAL``, or ``LOCAL``
+will only exist inside the code block section it was created in.
+After that code block is finished, the variable will no longer exist.
+
+See Scoping:
+::::::::::::
+
+    If you don't know what the terms "global" or "local" mean, it's
+    important to read the :ref:`section below about scoping. <scope>`
 
 .. note::
-    There is an implicit outer scope block around a whole kerboscript
-    program, such that if you use a DECLARE .. TO statement inside
-    a script, it will be one nesting level "higher" than the implicit
-    globals you make with SET.  In other words, using DECLARE always
-    makes a variable that is at least limited to the program script
-    it is inside of.
+    It is implied that the outermost scope of a program file is 
+    the global scope.  Therefore if you make a LOCAL variable at
+    the outermost nesting level of your program it really ends up
+    being GLOBAL.  Note that GLOBAL variables are not only shared
+    between functions of your script, but also can be seen by
+    other programs you run from the current program, and visa
+    versa.
 
 Alternatively, a variable can be implicitly declared by any ``SET`` or
 ``LOCK`` statement, however doing so causes the variable to always have 
 global scope.  **The only way to make a variable be local instead of
-global is to declare it explicitly with DECLARE**.
+global is to declare it explicitly with one of these DECLARE statements**.
+
+.. note::
+    **Terminology: "declare statement"**: Note that the documentation
+    will often refer to the phrase "declare statement" even when
+    referring to a statement in which the optional keyword "declare"
+    was left off.  A statement such as ``LOCAL X IS 1.`` Will still
+    be referred to as a "declare statement", even though the word
+    "declare" never explicitly appeared in it.
 
 Initializer required in DECLARE
 :::::::::::::::::::::::::::::::
@@ -73,11 +137,16 @@ If you put this statement inside of a :ref:`Function body <user_functions>`,
 then it declares variables to be used as a parameter that can
 be passed in to that function when calling the function.
 
+Just as with a :ref:`declare itentifier statement <declare>`,
+in a ``declare parameter`` statement, the actual keyword
+``declare`` need not be used.  The word ``parameter`` may
+be used alone and that is legal syntax.
+
 Program 1::
 
     // This is the contents of program1:
     DECLARE PARAMETER X.
-    DECLARE PARAMETER Y.
+    PARAMETER Y. // omitting the word "DECLARE" - it still means the same thing.
     PRINT "X times Y is " + X*Y.
 
 Program 2::
@@ -94,16 +163,24 @@ It is also possible to put more than one parameter into a single ``DECLARE PARAM
 
     DECLARE PARAMETER X, Y, CheckFlag.
 
-This is exactly equivalent to::
+    // Or you could leave "DECLARE" off like so:
+    PARAMETER X, Y, CheckFlag.
 
-    DECLARE PARAMETER X.
-    DECLARE PARAMETER Y.
-    DECLARE PARAMETER CheckFlag.
+Either of the above is exactly equivalent to::
 
-Note: Unlike normal variables, Parameter variables are local to the program. When program A calls program B and passes parameters to it, program B can alter their values without affecting the values of the variables in program A.
+    PARAMETER X.
+    PARAMETER Y.
+    PARAMETER CheckFlag.
+
+Note: Unlike normal variables, Parameter variables are always local to the program. When program A calls program B and passes parameters to it, program B can alter their values without affecting the values of the variables in program A.
 
 Caveat
     This is only true if the values are primitive singleton values like numbers or booleans. If the values are Structures like Vectors or Lists, then they do end up behaving as if they were passed by reference, in the usual way that should be familiar to people who have used languages like Java or C# before.
+
+
+**Illegal to say** ``DECLARE GLOBAL PARAMETER`` : Becasue parameters
+are always local to the location they were declared at, the keyword
+``GLOBAL`` is illegal to use in a ``DECLARE PARAMETER`` statement.
 
 The ``DECLARE PARAMETER`` statements can appear anywhere in a program as long as they are in the file at a point earlier than the point at which the parameter is being used. The order the arguments need to be passed in by the caller is the order the ``DECLARE PARAMETER`` statements appear in the program being called.
 
@@ -129,35 +206,51 @@ This follows the :ref:`scoping rules explained below <scope>`.  If the
 variable can be found in the current local scope, or any scope higher
 up, then it won't be created and instead the existing one will be used.
 
-Difference between SET and DECLARE
-::::::::::::::::::::::::::::::::::
+Difference between SET and DECLARE LOCAL and DECLARE GLOBAL
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-The following two look very similar and you might ask why you'd pick
-one instead of the other::
+The following three examples look very similar and you might ask
+why you'd pick one instead of the other::
 
-    DECLARE X TO 1.
     SET X TO 1.
+    DECLARE LOCAL X TO 1.
+    DECLARE GLOBAL X TO 1.
 
-The difference is that ``SET`` attempts to store the value in the
-variable that already exists, if it can find one, and it only 
-creates a new variable if it *has* to because there isn't one that
-already exists.  *(That's the first difference)*.  Because ``SET``
-doesn't make a new variable until it has exhausted the attempts to
-find an existing one by looking up the "scope stack", ``SET`` only
-is capable of creating **global** variables.  *(That's the second
-difference.)*
+They are slightly different, as follows:
 
-Also, be aware that DECLARE, in effect, is actually *incapable* of
-creating global variables.  There is an implicit scope block
-of "limited to the current script file" or "limited to the
-interpreter" when the DECLARE statement is used even at the outermost
-nesting level of a script.
+``SET X TO 1.`` Performs the following activity:
+
+  1. Attempt to find an already existing local X.  If found, set it to 1.
+  2. Try again for each scoping level outside the current one.
+  3. If and only if it gets all the way out to global scope and it still
+     hasn't found an X, then create a new X with value 1, and do so at
+     global scope.  This behavior is called making a "lazy global".
+
+``DECLARE LOCAL X TO 1.`` Performs the following activity:
+
+  1. Immediately make a new X right here at the local-most scope.
+     Set it to 1.
+
+``DECLARE GLOBAL X TO 1.`` Performs the following activity:
+
+  1. Ignore whether or not there are any existing X's in a local scope.
+  2. Immediately go all the way to global scope and make a new X there.
+     Set it to 1.
+
+When to use GLOBAL
+::::::::::::::::::
+
+You should use a ``DECLARE GLOBAL`` statement only sparingly.  It 
+mostly exists so that a function can store values "in the caller"
+for the caller to get its hands on.  It's generally a "sloppy" design
+pattern to use, and it's much better to keep everything local
+and only pass back things to the caller as return values.
 
 
 ``LOCK``
 --------
 
-Declares that the idenifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also :ref:`Flow Control documentation <lock>`)::
+Declares that the identifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also :ref:`Flow Control documentation <lock>`)::
 
     SET Y TO 1.
     LOCK X TO Y + 1.
@@ -167,6 +260,82 @@ Declares that the idenifier will refer to an expression that is always re-evalua
 
 Note that because of how LOCK expressions are in fact implemented as mini
 functions, they cannot have local scope.  A LOCK *always* has global scope.
+
+By default a ``LOCK`` expression is ``GLOBAL`` when made.  This is 
+neccesary for backward compatibility with older scripts that use
+LOCK STEERING from inside triggers, loops, etc, and expect it to 
+affect the global steering value.
+
+Calling a LOCK that was created in another file
+:::::::::::::::::::::::::::::::::::::::::::::::
+
+If you try to call a lock that is declared in another program
+file you run, it does not work, and has never worked prior to kOS
+0.17.0:
+
+File1.ks::
+
+    run File2.
+    print "x's locked value is " + x.
+
+File2.ks::
+
+    lock x to "this is x".
+
+But now with the kerboscript of kOS 0.17.0, you can make it work
+by inserting empty parentheses after the lock name to help give
+the compiler the hint that you expected x to be a function call
+(which is what a lock really is):
+
+Change this line::
+
+    print "x's locked value is " + x.
+
+To this instead::
+
+    print "x's locked value is " + x().
+
+and it should work.
+
+Local lock
+::::::::::
+
+You can explicitly make a ``LOCK`` statement be LOCAL with the ``LOCAL``
+keyword, like so:
+
+``LOCK LOCAL`` identifier ``TO`` expression.
+
+But be aware that doing so with a cooked steering control such
+as THROTTLE or STEERING will not actually affect your ship.  The
+automated cooked steering control is only reading the GLOBAL locks
+for these settings.
+
+The purpose of making a LOCAL lock is if you only need to use the
+value temporarily for the duration of a function call, loop, or
+if-statement body, and then you don't care about it anymore after
+that.
+
+Why do I care about a local lock?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You care because in order to make a LOCK work even after the variables
+it's using in its expression go out of scope (which is necessary
+for LOCK STEERING or LOCK THROTTLE to work if done from inside
+a user function call or trigger body), locks need to preserve
+a thing called a "closure".
+( http://en.wikipedia.org/wiki/Closure_(computer_programming)
+
+When they do this, it means none of the local variables used
+in the function body they were declared in truly "go away" from
+memory.  They live on, taking up space until the lock disappears.
+Making the lock be local tells the computer that it can make the lock
+disappear when it goes out of scope, and thus it doesn't need to
+hold that "closure" around forever.
+
+The tl;dr version:  It's more efficient for memory.  If you know 
+for sure that your lock isn't getting used after your current
+section of code is over, make it a local lock.
+
 
 .. _toggle:
 
@@ -211,7 +380,7 @@ variable.
 
 .. _scope:
 
-Scoping rules
+Scoping terms
 -------------
 
 .. note::
@@ -236,35 +405,13 @@ Global scope
     beginners, this is often enough and you don't have to read the rest
     of this topic until you start advancing to more intermediate scripts.
 
-If you need to have variables that only have local scope, either just
-to keep your code more manageable, or because you literally need
-local scope to allow for recursive function calls, then you use the
-DECLARE statement to create the variables.
-
-DECLARE statements are in block scope
+Local Scope
     Kerboscript uses block scoping to keep track of local variable
     scope.  This means you can have variables that are not only
     local to a function, but are in fact actually local to JUST
     the current curly-brace block of statements, even if that block
     of statements is, say, the body of an IF check, or the body of
     an UNTIL loop.
-
-    Be aware that whenever you use the DECLARE..TO statement, you are
-    making a variable that is local to the scope in which it appears.
-    If you use DECLARE in the live interpreter, it makes a variable
-    that doesn't exist from inside a program.  If you use DECLARE in
-    a program script at the outermost nesting level of that script, it
-    still makes a variable that can only be seen from inside THAT 
-    program script.  If you have gotten used to the easy 'sloppy'
-    feature of being able to just SET a variable anywhere and then
-    see its value even after the program ends, be aware that this will
-    NOT happen with variables you created with DECLARE..TO.  After the
-    script ends, the variables made with DECLARE..TO will no longer exist.
-
-    Or to put it another way, variables created implicitly with SET
-    are **even more global** than ones created by the explict use
-    of DECLARE.  The implicit variables made by SET end up existing
-    even after the program ends.
 
 Why limit scope?
     You might be wondering why it's useful to limit the scope of a
@@ -275,25 +422,97 @@ Why limit scope?
     variables, can be a large unmanagable chore, especially with
     programs written by more than one person collaborating together.
     (2) Even if you can keep track of all that in your head, there's
-    a certain programming technique known as recursion (TODO - wiki
-    link) in which you actually NEED to have local variable scope for
+    a certain programming technique known as recursion
+    ( http://en.wikipedia.org/wiki/Recursion#In_computer_science )
+    in which you actually NEED to have local variable scope for
     the technique to even work at all.
+
+If you need to have variables that only have local scope, either just
+to keep your code more manageable, or because you literally need
+local scope to allow for recursive function calls, then you use the
+``DECLARE LOCAL`` statement (or just ``LOCAL`` for short) to create
+the variables.
+
+Scoping syntax
+--------------
+
+Presumed defaults
+:::::::::::::::::
+
+The DECLARE keyword and the LOCK keyword have some default
+presumed scoping behaviors:
+
+``DECLARE`` Is assumed to always be LOCAL when not otherwise specified.
+
+``FUNCTION`` Is assumed to always be LOCAL when not otherwise specified.
+
+``PARAMETER`` Cannot be anything but LOCAL to the location it's mentioned.
+It is an error to attempt to declare a parameter with the GLOBAL keyword.
+
+``LOCK`` Is assumed to always be GLOBAL when not otherwise specified.
+this is necessary to preserve backward compatibility with how cooked
+controls such as LOCK STEERING and LOCK THROTTLE work.
+
+Note that when operating under the :ref:`@LAZYGLOBAL OFF <lazyglobal>`
+directive the keywords LOCAL and GLOBAL are no longer optional, and are
+in fact required.  You are not allowed to rely on these presumed defaults
+when you've turned off LAZYGLOBAL.
+
+Explicit scoping keywords
+:::::::::::::::::::::::::
+
+The ``DECLARE``, ``FUNCTION``, and ``LOCK`` commands can be given
+explicit ``GLOBAL`` or ``LOCAL`` keywords to define their intended
+scoping level::
+
+    //
+    // These are all synonymous with each other:
+    //
+    DECLARE X TO 1.
+    DECLARE LOCAL X TO 1.
+    LOCAL X TO 1. // 'declare' is implied and optional when scoping words are used
+    LOCAL X IS 1. // 'declare' is implied and optional when scoping words are used
+    //
+    // These are all synonymous with each other:
+    //
+    DECLARE GLOBAL X TO 1.
+    GLOBAL X TO 1. // 'declare' is implied and optional when scoping words are used
+    GLOBAL X IS 1. // 'declare' is implied and optional when scoping words are used
+
+Even when the word 'DECLARE' is left off, the statement can still be
+referred to as a "declare statement".  The word "declare" is implied
+by the use of LOCAL or GLOBAL and you are allowed to leave it off 
+merely to reduce verbosity.
+
+
+Locals stated at the global level are global
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Note that if you put a statement at the outermost scope
+of the program, then there is effectively no difference
+between a ``DECLARE LOCAL`` (or just ``LOCAL`` for short)
+and a ``DECLARE GLOBAL`` (or just ``GLOBAL`` for short) statement.  
+They are both goihg to make a variable at global scope because that's
+the scope the program was in when the statement was encoutnered.
+
 
 Examples::
 
-    DECLARE x TO 10. // X is now a global variable with value 10.
+    GLOBAL x IS 10. // X is now a global variable with value 10,
     SET y TO 20. // Y is now a global variable (implicitly) with value 20.
-    DECLARE z TO 0. // Z is now a global variable.
+    LOCAL z IS 0.  // Z is now a global variable
+                   // because even though this says LOCAL, it was
+                   // stated at the outermost, global scope.
 
     SET sum to -1. // sum is now an implicitly made global variable, containing -1.
 
     // A function to return the mean average of all the items in the list
     // passed into it, under the assumption all the items in the list are
     // numbers of some sort:
-    DECLARE FUNCTION calcAverage {
-      DECLARE PARAMETER inputList.
+    FUNCTION calcAverage {
+      PARAMETER inputList.
       
-      DECLARE sum TO 0. // sum is now local to this function's body.
+      LOCAL sum IS 0. // sum is now local to this function's body.
       FOR val IN inputList {
         SET sum TO sum + val.
       }.
@@ -317,13 +536,15 @@ This example will print::
 Thus proving that the variable called SUM inside the function is NOT the
 same variable as the one called SUM out in the global main code.
 
-Nesting:
-  The scoping rules are nested as well.  If you attempt to use a
-  variable that doesn't exist in the local scope, the next scope "outside"
-  it wil be used, and if it doesn't exist there, the next scope "outside"
-  that will be used and so on, all the way up to the global scope.  Only
-  if the variable isn't found at the global scope either will it be 
-  implicitly created.
+Nesting
+~~~~~~~
+
+The scoping rules are nested as well.  If you attempt to use a
+variable that doesn't exist in the local scope, the next scope "outside"
+it wil be used, and if it doesn't exist there, the next scope "outside"
+that will be used and so on, all the way up to the global scope.  Only
+if the variable isn't found at the global scope either will it be 
+implicitly created.
 
 .. _trigger_scope:
 
@@ -344,10 +565,10 @@ because they outlive the duration of any particular scoping braces.
 You can declare local variables within their <statements> in their bodies,
 just don't use local variables in the trigger conditions.
 
-.. _nolazyglobal:
+.. _lazyglobal:
 
-``NOLAZYGLOBAL``
-::::::::::::::::
+``@LAZYGLOBAL`` directive
+:::::::::::::::::::::::::
 
 Often the fact that you can get an implicit global variable declared
 without intending to can lead to a lot of code maintenence headaches
@@ -357,35 +578,84 @@ forget to mark the variable as local when you intended to.
 
 If you wish to instruct kerboscript to alter its behavior and
 disable its normal implicit globals, and instead demand that all
-variables MUST be mentioned in a DECLARE statement, you can do so
-using the ``NOLAZYGLOBAL`` syntax.  Everything that occurs inside
-a NOLAZYGLOBAL code block will use the rule that varibles MUST already
-exist before being encountered.  SET will no longer automatically create
-variables for you when inside this section.
+variables MUST be explicitly declared and may not use implied
+lazy scoping, the ``@LAZYGLOBAL`` compiler directive allows you to
+do that.
+
+If you place the words::
+
+    @LAZYGLOBAL OFF.
+
+At the start of your program, you will turn off the compiler's
+lazy global feature and it will require you to explicitly mention
+all variables you use in a declaration somewhere (with the 
+exception of the built-in variables such as THROTTLE, STEERING,
+SHIP, and so on.)
+
+@LAZYGLOBAL Can only exist at the top of your code.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The @LAZYGLOBAL compile directive is only allowed as the first
+non-comment thing in the program file.  This is because it
+instructs the compiler to change its default behavior for the
+duration of the entire file's compile.
+
+@LAZYGLOBAL Makes ``LOCAL`` and ``GLOBAL`` mandatory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Normally the keywords ``local`` and ``global`` can be left off
+as optional in declare statements.  But when you turn LAZYGLOBAL
+off, the compiler starts requiring them to be explicitly stated.
+
+For example, this program, which is valid::
+
+    function foo {print "foo ". }
+    local x is 1.
+
+    print foo() + x.
+
+Starts giving errors when you add @LAZYGLOBAL OFF to the top::
+
+    @LAZYGLOBAL OFF.
+    function foo {print "foo ". }
+    declare x is 1.
+
+    print foo() + x.
+
+Wich you fix by explicitly stating the local keyword, as follows::
+
+    @LAZYGLOBAL OFF.
+    local function foo {print "foo ". }
+    declare local x is 1.
+
+    print foo() + x.
+
+
+
+Longer Example of use
+~~~~~~~~~~~~~~~~~~~~~
 
 Example::
 
-    NOLAZYGLOBAL {
-      SET num TO 1.
-      IF TRUE {
-        DECLARE Y TO 2.
-        SET num TO num + Y. // This is fine.  num exists already as a global and
-                            // you're adding the local Y to it.
-        SET nim TO 20. // This typo generates an error.  There is
-                       // no such variable "nim" and NOLAZYGLOBAL
-                       // says not to implicitly make it.
-      }.
+    @LAZYGLOBAL off.
+    global num TO 1.
+    IF TRUE {
+      LOCAL Y IS 2.
+      SET num TO num + Y. // This is fine.  num exists already as a global and
+                          // you're adding the local Y to it.
+      SET nim TO 20. // This typo generates an error.  There is
+                     // no such variable "nim" and @LAZYGLOBAL OFF
+                     // says not to implicitly make it.
     }.
 
-    SET nim TO 20.  // HERE, on the other hand, this doesn't generate an
-                    // error.  When outside the NOLAZYGLOBAL section,
-                    // it just makes a new varible called nim
-
-Why NOLAZYGLOBAL?
-    The rationale behind NOLAZYGLOBAL is to primarily be used in cases
-    where you're writing a libary of function calls you intend to
+Why ``LAZYGLOBAL OFF``?
+    The rationale behind ``LAZYGLOBAL OFF.`` is to primarily be used in 
+    cases where you're writing a libary of function calls you intend to
     use elsewhere, and want to be careful not to accidentally make
     them dependant on globals outside the function itself.
+
+The ``@LAZYGLOBAL OFF.`` directive is meant to mimic Perl's ``use strict;``
+directive.
 
 ~~~~~~
 
@@ -407,5 +677,3 @@ History:
     global so that people who wish to keep programming that way
     don't need to understand or deal with scope.
 
-    The NOLAZYGLOBAL keyword is meant to mimic Perl's ``use strict;``
-    directive.
