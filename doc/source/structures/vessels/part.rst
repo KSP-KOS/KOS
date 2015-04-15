@@ -148,7 +148,7 @@ These are the generic properties every PART has. You can obtain a list of values
     :access: Get only
     :type: string
 
-    All parts have a unique ID number. Part's uid never changes because it is the same value as stored in persistent.sfs. Although you can compare parts by comparing their uid it is recomended to compare parts directly if possible.
+    All parts have a unique ID number. Part's uid never changes because it is the same value as stored in persistent.sfs. Although you can compare parts by comparing their uid it is recommended to compare parts directly if possible.
 
 .. attribute:: Part:ROTATION
 

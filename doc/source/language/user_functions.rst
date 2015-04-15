@@ -51,10 +51,10 @@ The following are all identical in meaning::
     function hi { print "hello". }
 
 Functions are presumed to have scope local to the location where
-they are declareed when the explicit local scope keyword is missing.
+they are declared when the explicit local scope keyword is missing.
 
 At the moment, it is redundant to mention the ``local`` keyword,
-althogh it is allowed.
+although it is allowed.
 
 It is best to just leave all the optional keywords of and merely say
 ``function`` by itself.

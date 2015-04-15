@@ -484,11 +484,11 @@ Explicit Scoping required for @lazyglobal off
 
 Note that when operating under the :ref:`@LAZYGLOBAL OFF <lazyglobal>`
 directive the keywords LOCAL and GLOBAL are no longer optional for
-**declare identifier** satements, and are in fact required.  You
+**declare identifier** statements, and are in fact required.  You
 are not allowed to rely on these presumed defaults when you've
 turned off LAZYGLOBAL.  (This only applies to trying to make
 a variable with **declare identifier to value**, and not to
-``declare parameter`` or ``declare funcion``.)
+``declare parameter`` or ``declare function``.)
 
 
 Locals stated at the global level are global
@@ -630,11 +630,11 @@ Starts giving errors when you add @LAZYGLOBAL OFF to the top::
 
     print foo() + x.
 
-Wich you fix by explicitly stating the local keyword, as follows::
+Which you fix by explicitly stating the local keyword, as follows::
 
     @LAZYGLOBAL OFF.
     function foo {print "foo ". }  // This does not need the 'local' keyword added
-    declare local x is 1.          // But this does because it is a declare *identifier* statememt.
+    declare local x is 1.          // But this does because it is a declare *identifier* statement.
 
     print foo() + x.
 
