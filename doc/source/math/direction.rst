@@ -9,7 +9,7 @@ Directions
 
 :struct:`Direction` objects represent a rotation starting from an initial point in **KSP**'s coordinate system where the initial state was looking down the :math:`+z` axis, with the camera "up" being the :math:`+y` axis. This exists primarily to enable automated steering.
 
-In your thinking, you can largely think of Directions as being Rotations and Rotations as being Directions.  The two concepts can be used interchangably.  Used on its own to steer by, a rotation from the default XYZ axes of the universe into a new rotation does in fact provide an absolute direction, thus the name Direction for these objects even though in reality they are just Rotations.  It's important to know that Directions are just rotations because you can use them to modify other directions or vectors.
+In your thinking, you can largely think of Directions as being Rotations and Rotations as being Directions.  The two concepts can be used interchangeably.  Used on its own to steer by, a rotation from the default XYZ axes of the universe into a new rotation does in fact provide an absolute direction, thus the name Direction for these objects even though in reality they are just Rotations.  It's important to know that Directions are just rotations because you can use them to modify other directions or vectors.
 
 .. note::
     When dealing with Directions (which are Rotations) in kOS, it is
@@ -84,7 +84,7 @@ Creation
 
 .. function:: ROTATEFROMTO(fromVec,toVec)
 
-    A :struct:`Direction` can be created with the ROTATEFROMTO function.  It is *one of the infinite number of* rotatations that could rotate vector *fromVec* to become vector *toVec* (or at least pointing in the same direction as toVec, since fromVec and toVec need not be the same magnitude).  Note the use of the phrase "**infinite number of**".  Because there's no guarantee about the roll information, there are an infinite number of rotations that could qualify as getting you from one vector to another, because there's an infinite number of roll angles that could result and all still fit the requirement::
+    A :struct:`Direction` can be created with the ROTATEFROMTO function.  It is *one of the infinite number of* rotations that could rotate vector *fromVec* to become vector *toVec* (or at least pointing in the same direction as toVec, since fromVec and toVec need not be the same magnitude).  Note the use of the phrase "**infinite number of**".  Because there's no guarantee about the roll information, there are an infinite number of rotations that could qualify as getting you from one vector to another, because there's an infinite number of roll angles that could result and all still fit the requirement::
 
         SET myDir to ROTATEFROMTO( v1, v2 ).
 
