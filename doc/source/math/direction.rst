@@ -11,6 +11,12 @@ Directions
 
 In your thinking, you can largely think of Directions as being Rotations and Rotations as being Directions.  The two concepts can be used interchangably.  Used on its own to steer by, a rotation from the default XYZ axes of the universe into a new rotation does in fact provide an absolute direction, thus the name Direction for these objects even though in reality they are just Rotations.  It's important to know that Directions are just rotations because you can use them to modify other directions or vectors.
 
+.. note::
+    When dealing with Directions (which are Rotations) in kOS, it is
+    important to remember that KSP uses a :ref:`left-handed <left-handed>`
+    coordinate system.  This affects the convention of which rotation
+    direction is positive when calculating angles.
+
 Creation
 --------
 
@@ -69,6 +75,12 @@ Creation
         SET pitchUp30 to ANGLEAXIS(-30,SHIP:STARFACING).
         SET newDir to pitchUp30*SHIP:FACING.
         LOCK STEERING TO newDir.
+
+.. note::
+    The fact that KSP is using a :ref:`left-handed <left-handed>`
+    coordinate system is important to keep in mind when visualizing
+    the meaning of an ANGLEAXIS function call.  It affects which
+    direction is positive when calculating angles.
 
 .. function:: ROTATEFROMTO(fromVec,toVec)
 
