@@ -254,7 +254,7 @@ examples::
     return.
 
 If your function needs to exit early, and/or if it needs to pass a
-return value back to the user, you can use the RETURN staement to
+return value back to the user, you can use the RETURN statement to
 do so.  RETURN accepts an optional argument - the value to pass back
 to the caller.  Note that functions in kerboscript are very weakly
 typed with late binding.  You cannot declare the expected return
@@ -265,10 +265,10 @@ example::
 
     // Note, in this example, the keyword 'declare' is
     // spelled out explicitly.  You can choose to do so
-    // if you wish.  It's up to you what you aestetically
+    // if you wish.  It's up to you what you aesthetically
     // prefer.
 
-    // Cacluate what component of a vessel's surface
+    // Calculate what component of a vessel's surface
     // velocity is Northward:
     declare function north_velocity {
       declare parameter which_vessel.
@@ -312,7 +312,7 @@ Important exception to passing by value - structures
 
 If the value being sent to the function as its parameter is a
 complex structure consisting of sub-parts (i.e. if it has
-suffxes) rather than being a simple single scalar value like a
+suffixes) rather than being a simple single scalar value like a
 number, then the copy in the function is *really* a copy of
 the reference pointing to the object, so changes you make
 in the object really WILL change it, as shown here::
@@ -385,7 +385,7 @@ Example::
     L:ADD(9).
     print "mean average is " + getMean(L).
 
-    // The following line will give an error becasue
+    // The following line will give an error because
     // getSum is local inside of getMean, and isn't allowed
     // to be called from here:
     //
@@ -457,7 +457,7 @@ For example::
 
 The above example contains a typo that causes a global variable to be 
 made where you didn't mean to.  You wanted to say "sum" but said "dum" 
-and insted of that being an error, kerboscript happily said "okay,
+and instead of that being an error, kerboscript happily said "okay,
 well since you're setting a variable name that doesn't exist yet,
 I'll make it for you implicitly" (and it ends up being a global).
 

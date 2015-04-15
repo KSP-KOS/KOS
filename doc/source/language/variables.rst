@@ -44,7 +44,7 @@ The following alternate versions have identical meaning to each other:
         The meaning, and syntax, of this statement changed considerably
         in this update.  Prior to this version, DECLARE always created
         global variables no matter where it appeared in the script.
-        See 'initialier required' below.
+        See 'initializer required' below.
 
 Detailed Description of the syntax:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -121,7 +121,7 @@ The syntax without the initializer, looking like so::
 is **no longer legal syntax**.
 
 Kerboscript now requires the use of the initializer clause (the "TO"
-keyword) after the identifer name so as to make it impossible for
+keyword) after the identifier name so as to make it impossible for
 there to exist any uninitialized variables in a script.
 
 .. _declare parameter:
@@ -137,7 +137,7 @@ If you put this statement inside of a :ref:`Function body <user_functions>`,
 then it declares variables to be used as a parameter that can
 be passed in to that function when calling the function.
 
-Just as with a :ref:`declare itentifier statement <declare>`,
+Just as with a :ref:`declare identifier statement <declare>`,
 in a ``declare parameter`` statement, the actual keyword
 ``declare`` need not be used.  The word ``parameter`` may
 be used alone and that is legal syntax.
@@ -178,7 +178,7 @@ Caveat
     This is only true if the values are primitive singleton values like numbers or booleans. If the values are Structures like Vectors or Lists, then they do end up behaving as if they were passed by reference, in the usual way that should be familiar to people who have used languages like Java or C# before.
 
 
-**Illegal to say** ``DECLARE GLOBAL PARAMETER`` : Becasue parameters
+**Illegal to say** ``DECLARE GLOBAL PARAMETER`` : Because parameters
 are always local to the location they were declared at, the keyword
 ``GLOBAL`` is illegal to use in a ``DECLARE PARAMETER`` statement.
 
@@ -262,7 +262,7 @@ Note that because of how LOCK expressions are in fact implemented as mini
 functions, they cannot have local scope.  A LOCK *always* has global scope.
 
 By default a ``LOCK`` expression is ``GLOBAL`` when made.  This is 
-neccesary for backward compatibility with older scripts that use
+necessary for backward compatibility with older scripts that use
 LOCK STEERING from inside triggers, loops, etc, and expect it to 
 affect the global steering value.
 
@@ -419,7 +419,7 @@ Why limit scope?
     global?  The answer is twofold: (1) Once a program becomes large
     enough, trying to remember the name of every variable in the
     program, and having to keep coming up with new names for new
-    variables, can be a large unmanagable chore, especially with
+    variables, can be a large unmanageable chore, especially with
     programs written by more than one person collaborating together.
     (2) Even if you can keep track of all that in your head, there's
     a certain programming technique known as recursion
@@ -492,8 +492,8 @@ Note that if you put a statement at the outermost scope
 of the program, then there is effectively no difference
 between a ``DECLARE LOCAL`` (or just ``LOCAL`` for short)
 and a ``DECLARE GLOBAL`` (or just ``GLOBAL`` for short) statement.  
-They are both goihg to make a variable at global scope because that's
-the scope the program was in when the statement was encoutnered.
+They are both going to make a variable at global scope because that's
+the scope the program was in when the statement was encountered.
 
 
 Examples::
@@ -541,7 +541,7 @@ Nesting
 
 The scoping rules are nested as well.  If you attempt to use a
 variable that doesn't exist in the local scope, the next scope "outside"
-it wil be used, and if it doesn't exist there, the next scope "outside"
+it will be used, and if it doesn't exist there, the next scope "outside"
 that will be used and so on, all the way up to the global scope.  Only
 if the variable isn't found at the global scope either will it be 
 implicitly created.
@@ -571,7 +571,7 @@ just don't use local variables in the trigger conditions.
 :::::::::::::::::::::::::
 
 Often the fact that you can get an implicit global variable declared
-without intending to can lead to a lot of code maintenence headaches
+without intending to can lead to a lot of code maintenance headaches
 down the road.  If you make a typo in a variable name, you end up
 creating a new variable instead of generating an error.  Or you may just
 forget to mark the variable as local when you intended to.  
@@ -650,9 +650,9 @@ Example::
 
 Why ``LAZYGLOBAL OFF``?
     The rationale behind ``LAZYGLOBAL OFF.`` is to primarily be used in 
-    cases where you're writing a libary of function calls you intend to
+    cases where you're writing a library of function calls you intend to
     use elsewhere, and want to be careful not to accidentally make
-    them dependant on globals outside the function itself.
+    them dependent on globals outside the function itself.
 
 The ``@LAZYGLOBAL OFF.`` directive is meant to mimic Perl's ``use strict;``
 directive.
@@ -664,9 +664,9 @@ History:
     declare a variable if you don't want to.  You can just create any
     variable implicitly by just using it in a SET statement.
 
-    There are a variety of programming langauges that work like this,
+    There are a variety of programming languages that work like this,
     such as Perl, Javascript, and Lua.  However, they all share one
-    thing in common - once you want to allow the possiblity of having
+    thing in common - once you want to allow the possibility of having
     local variables, you have to figure out how this should work with
     the implicit variable declaration feature.
 
