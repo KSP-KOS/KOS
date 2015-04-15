@@ -3,7 +3,38 @@
 Reference Frames
 ================
 
-This page describes the :math:`(x,y,z)` reference frame used for most of **kOS**'s vectors. The coordinate system of Kerbal Space Program does some strange things that don't make a lot of sense at first. For nomenclature, the following terms are used in this documentation:
+This page describes the :math:`(x,y,z)` reference frame used for most
+of **kOS**'s vectors. kOS inherits its reference frame mostly from the
+base Kerbal Space Program game itself.  The coordinate system of Kerbal
+Space Program does some strange things that don't make a lot of sense
+at first. For nomenclature, the following terms are used in this
+documentation:
+
+
+.. _left-handed:
+
+.. note::
+    Be aware that Kerbal Space program (and in fact many of the games
+    based on the Unity game engine) uses a **LEFT-handed** coordinate
+    system.  kOS inherits this behavior from KSP.
+
+In all the the reference frames mentioned below, the orientation of 
+the axes is **left-handed**.  This means that if you imagine opening your
+palm and pointing your fingers down the x-axis, then curling your fingers
+in the direction of the y-axis, then sticking your thumb up, that the
+direction your thumb would have to be pointing to accomplish this task
+is the direction of the z-axis **if and only if** you used your left
+hand to perform those steps.  (If you do those steps with your right
+hand, you get a z-axis in the opposite direction and that is known as
+a **right handed** coordinate system).
+
+This is an important thing to keep in mind, as most mathematics
+and physics textbooks tend to draw examples using a right handed
+coordinate system, and most students become familiar with that
+convention first.  But for a variety of reasons, many computer
+graphics systems have a tradition of using left-handed systems
+instead, and Kerbal Space Program is one of them.
+
 
 .. _ship-raw:
 .. index:: SHIP-RAW (Reference Frame)
