@@ -72,7 +72,6 @@ SRFREROGRADE     Same as SHIP:SRFREROGRADE
 OBT              Same as SHIP:OBT
 STATUS           Same as SHIP:STATUS
 VESSELNAME       Same as SHIP:NAME
-*Any resource*   Same as SHIP:*resourcename*, eg. LIQUIDFUEL is the same as SHIP:LIQUIDFUEL
 ================ ==============================================================================
 
 Resource Types
