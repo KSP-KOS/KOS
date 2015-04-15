@@ -35,6 +35,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`BEARING`                       scalar (deg)              relative heading to this vessel
      :attr:`HEADING`                       scalar (deg)              Absolute heading to this vessel
      :attr:`MAXTHRUST`                     scalar                    Sum of active maximum thrusts
+     :attr:`AVAILABLETHRUST`               scalar                    Sum of active limited maximum thrusts 
      :attr:`FACING`                        :struct:`Direction`       The way the vessel is pointed
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
      :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
@@ -93,6 +94,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     Sum of all the Max thrust of all the currently active engines In Kilonewtons.
+    
+.. attribute:: vessel:AVAILABLETHRUST
+
+    :type: scalar
+    :access: Get only
+    
+    Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
 
 .. attribute:: Vessel:FACING
 

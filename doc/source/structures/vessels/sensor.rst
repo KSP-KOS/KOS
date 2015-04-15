@@ -11,7 +11,7 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
     // TURN EVERY SINGLE SENSOR ON
     FOR S IN SENSELIST {
       PRINT "SENSOR: " + S:TYPE.
-      PRINT "VALUE:  " + S:READOUT.
+      PRINT "VALUE:  " + S:DISPLAY.
       IF S:ACTIVE {
         PRINT "     SENSOR IS ALREADY ON.".
       } ELSE {
@@ -39,8 +39,8 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
         * - :attr:`TYPE`
           -
           -
-        * - :attr:`READOUT`
-          - varies
+        * - :attr:`DISPLAY`
+          - string
           - Value of the readout
         * - :attr:`POWERCONSUMPTION`
           - scalar
@@ -64,12 +64,12 @@ The type of structures returned by :ref:`LIST SENSORS IN SOMEVARIABLE <list comm
 
     :access: Get only
 
-.. attribute:: Sensor:READOUT
+.. attribute:: Sensor:DISPLAY
 
     :access: Get only
-    :type: varies (usually scalar)
+    :type: string
 
-    The value of the sensor's readout, usually a double.
+    The value of the sensor's readout, usualy including the units.
 
 .. attribute:: Sensor:POWERCONSUMPTION
 

@@ -18,6 +18,7 @@ Help for the new user - What is a Function?
 
     - 1. Create a chunk of program instructions that you don't intend to execute YET.
     - 2. Later, when executing other parts of the program, do the following:
+
        - A. Remember the current location in the program.
        - B. Jump to the previously created chunk of code from (1) above.
        - C. Run the instructions there.
@@ -37,7 +38,27 @@ Help for the new user - What is a Function?
 In kerboscript, you can make your own user functions using the
 DECLARE FUNCTION command, which has syntax as follows:
 
-  ``declare function`` *identifier* ``{`` *statements* ``}`` *optional dot (.)*
+  [``declare``] [``local``|``global``] ``function`` *identifier* ``{`` *statements* ``}`` *optional dot (.)*
+
+The statement is called a "declare function" statement even when the optional
+word "declare" was left off.
+
+The following are all identical in meaning::
+
+    declare function hi { print "hello". }
+    declare local function hi { print "hello". }
+    local function hi { print "hello". }
+    function hi { print "hello". }
+
+Functions are presumed to have local scope when the explicit scope
+keyword is missing.
+
+While it is valid syntax to use a global keyword with a declare
+function statement, it is not well defined yet in kOS 0.17.0 what
+exactly that is supposed to mean, if anything.
+
+It is best to just leave all the optional keywords of and merely say
+``function`` by itself.
 
 example::
 
@@ -46,12 +67,12 @@ example::
     //   mode = 1 for upper-left, 2 for upper-right, 3
     //          for lower-left, and 4 for lower-right:
     //
-    declare function print_corner {
-      declare parameter mode.
-      declare parameter text.
+    function print_corner {
+      parameter mode.
+      parameter text.
 
-      declare row to 0.
-      declare col to 0.
+      local row is 0.
+      local col is 0.
 
       if mode = 2 or mode = 4 {
         set col to terminal:width - text:length.
@@ -67,7 +88,7 @@ example::
     
     print_corner(4,"That's me in the corner").
 
-``Declare function`` can appear anywhere in a kerboscript program,
+A declare function command can appear anywhere in a kerboscript program,
 and once its been "parsed" by the compiler, the function can be called
 from anywhere in the program.  
 
@@ -93,18 +114,74 @@ the parameter to be for that function, not for the whole script.
 An example of using ``declare parameter`` can be seen in the example
 above, where it is used for the ``mode`` and ``text`` parameters.
 
-``DECLARE .. TO``
+(Again, even when the word 'declare' is missing, we still call them
+'declare parameter' commands.)
+
+Calling a function
+------------------
+
+To call a function you created, you call it the same way you
+call a built-in function, by putting a pair of parentheses
+to the right of it, as shown here::
+
+    function example_function {
+      print "hello, this is my example.".
+    }
+
+    example_function().
+
+If the function takes parameters, then you put them in the parentheses
+just like when running a program.  You can see an example of this above
+in the previous example where it said::
+
+    print_corner(4,"That's me in the corner").
+    
+Calling a function without parentheses (please don't)
+:::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+In some cases it is possible to call a function with the
+parentheses off, as shown below, but this is not recommended::
+
+    function example_function {
+      print "hello, this is my example.".
+    }
+
+    example_function. // please don't do this, even if it works.
+
+This is a holdover from the fact that functions and locks are 
+really the same thing, and you need to be able to call a lock
+without the parentheses for old scripts written prior to kOS
+version 0.17.0 to continue working.
+
+Omitting parentheses only works in the same file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One reason to avoid the above technique (of leaving the parentheses
+off) is that it really only works when you try to call a function
+that was declared in the same file.  If you want to call a *library*
+function (a function you made for yourself in another file) then it
+does not work, for complex reason involving the compiler and late-time
+binding.
+
+``LOCAL .. TO``
 -----------------
 
 (aka: **local variables**)
 
-Syntax: ``DECLARE`` *identifier* ``TO`` *expression* *dot*
+Syntax:
+
+    ``DECLARE`` *identifier* ``TO`` *expression* *dot*
+    ``LOCAL`` *identifier* ``IS`` *expression* *dot*
+    ``DECLARE LOCAL`` *identifier* ``IS`` *expression* *dot*
+
+The above are all the same, although the version that
+just says ``LOCAL identifier IS expr.`` is preferred.
 
 Examples::
 
     declare x to 5.
-    declare y to 2*x - 1.
-    declare halfSpeed to SHIP:VELOCITY:ORBIT:MAG / 2.
+    local y is 2*x - 1.
+    declare local halfSpeed to SHIP:VELOCITY:ORBIT:MAG / 2.
 
 If your function needs to make a local variable, it can do so using
 the :ref:`DECLARE <declare>` command.  Whenever the DECLARE command is
@@ -114,7 +191,7 @@ If you recursively call a function again and again, there will be
 new copies stacked up of all the local variables made with DECLARE,
 but not of the variables implicitly made global without DECLARE.
 
-An example of using ``declare`` for a local variable can be seen in
+An example of using ``local`` for a local variable can be seen in
 the example above, where it is used for the ``row`` and ``col`` variables.
 
 A more in-depth explanation of kerboscript's scoping rules and how they
@@ -136,7 +213,7 @@ This is now **illegal** syntax::
     you wanted to.)
 
 In order to avoid the issue of having uninitialized variables in
-kerboscript, the declare command *requires* the use of the
+kerboscript, any declare statement *requires* the use of the
 initializer clause.
 
   *This is especially important as kerboscript is a late typing
@@ -151,17 +228,17 @@ Difference between declare and set
 
 You may think that::
 
-    declare x to 5.
+    local x is 5.
 
-is identical to just not using a ``declare`` statement
+is identical to just not using a declare local statement
 at all, and just performing ``set x to 5.`` alone, but
-it is not.  With ``declare``, a NEW variable called ``x`` will be made
-at the current local scope, temporarily hiding any existing ``x``
-variables that may otherwise have been reachable in a more global scope.
-With ``set``, if there already is an ``x`` variable you can use in a
-different scope higher than this scope, it will be used, and only
-if it doesn't exist will a new ``x`` be made (and that new ``x`` will
-be global, not local).
+it is not.  With ``declare local`` (or just ``declare`` or just ``local``),
+a NEW variable called ``x`` will be made at the current local scope,
+temporarily hiding any existing ``x`` variables that may otherwise have
+been reachable in a more global scope.  With ``set``, if there already
+is an ``x`` variable you can use in a different scope higher than this
+scope, it will be used, and only if it doesn't exist will a new ``x``
+be made (and that new ``x`` will be global, not local).
 
 .. _return:
 
@@ -177,7 +254,7 @@ examples::
     return.
 
 If your function needs to exit early, and/or if it needs to pass a
-return value back to the user, you can use the RETURN staement to
+return value back to the user, you can use the RETURN statement to
 do so.  RETURN accepts an optional argument - the value to pass back
 to the caller.  Note that functions in kerboscript are very weakly
 typed with late binding.  You cannot declare the expected return
@@ -186,7 +263,12 @@ returned values are useful and meaningful.
 
 example::
 
-    // Cacluate what component of a vessel's surface
+    // Note, in this example, the keyword 'declare' is
+    // spelled out explicitly.  You can choose to do so
+    // if you wish.  It's up to you what you aesthetically
+    // prefer.
+
+    // Calculate what component of a vessel's surface
     // velocity is Northward:
     declare function north_velocity {
       declare parameter which_vessel.
@@ -203,8 +285,8 @@ working on a copy of the variable you passed in, rather than the
 original variable.  This matters when the function tries to change the
 value of the parameter, as in this example::
 
-    declare function embiggen {
-      declare parameter x.
+    function embiggen {
+      parameter x.
 
       set x to x + 10.
 
@@ -230,13 +312,13 @@ Important exception to passing by value - structures
 
 If the value being sent to the function as its parameter is a
 complex structure consisting of sub-parts (i.e. if it has
-suffxes) rather than being a simple single scalar value like a
+suffixes) rather than being a simple single scalar value like a
 number, then the copy in the function is *really* a copy of
 the reference pointing to the object, so changes you make
 in the object really WILL change it, as shown here::
 
-    define function half_vector {
-      define parameter vec. //vector passed in.
+    function half_vector {
+      parameter vec. //vector passed in.
 
       print "full vector is " + vec.
 
@@ -272,15 +354,52 @@ make a deep copy of the object for the function to use.
 implemented on top of C#, which is one of several OOP languages that
 work like this.*
 
+Nesting functions inside functions
+----------------------------------
+
+You are allowed to make a local function existing inside another function.
+
+This means that the containing function is the only place the
+nested function can be called from.
+
+Example::
+
+    function getMean {
+      parameter aList.
+
+      function getSum {
+        parameter aList. // note, this is a local aList MASKING the other one.
+
+        local sum is 0.
+        for num in aList {
+          set sum to sum + num.
+        }.
+        return sum.
+      }.
+
+      return getSum(aList) / aList:LENGTH.
+    }.
+
+    set L to LIST();
+    L:ADD(10).
+    L:ADD(9).
+    print "mean average is " + getMean(L).
+
+    // The following line will give an error because
+    // getSum is local inside of getMean, and isn't allowed
+    // to be called from here:
+    //
+    print "getSum is " + getSum(L).
+
+
 Recursion
 ---------
 
-Recursive algorithms (TODO: wikipedia link) are possible with kerboscript
-functions, provided you remember to always exclusively use local variables
-made with the ``declare .. to`` statement in the body of the function, and 
-never use global variables for something that you intended to be
-different per recursive call.
-
+Recursive algorithms ( http://en.wikipedia.org/wiki/Recursion#In_computer_science )
+are possible with kerboscript functions, provided you remember to
+always exclusively use local variables made with a declare statement
+in the body of the function, and never use global variables for
+something that you intended to be different per recursive call.
 
 User Function Gotchas
 ---------------------
@@ -325,9 +444,9 @@ when you didn't meant to, just because you made a typo.
 
 For example::
 
-    define function mean {
-      declare parameter the_list.
-      declare sum to 0.
+    function mean {
+      parameter the_list.
+      local sum is 0.
 
       for item in the_list {
         set dum to sum + item. // typo - said 'dum' instead of 'sum'.
@@ -338,7 +457,7 @@ For example::
 
 The above example contains a typo that causes a global variable to be 
 made where you didn't mean to.  You wanted to say "sum" but said "dum" 
-and insted of that being an error, kerboscript happily said "okay,
+and instead of that being an error, kerboscript happily said "okay,
 well since you're setting a variable name that doesn't exist yet,
 I'll make it for you implicitly" (and it ends up being a global).
 
@@ -349,24 +468,22 @@ declaring them first.  Most such languages have provided a way to
 catch the problem, and allow you to instruct the compiler "please
 don't let me do that.  Please force me to declare everything".
 
-The way that is done in kerboscript is by using a ``NOLAZYGLOBAL`` 
-section, :ref:`as described here <nolazyglobal>`.
+The way that is done in kerboscript is by using a ``@LAZYGLOBAL`` 
+compiler directive, :ref:`as described here <lazyglobal>`.
 
-Had the function above been wrapped inside a NOLAZYGLOBAL section,
+Had the function above been wrapped inside a ``@LAZYGLOBAL off.`` section,
 the typo would be noticed::
 
-    nolazyglobal {
+    @lazyglobal off.
 
-      define function mean {
-        declare parameter the_list.
-        declare sum to 0.
+    local function mean {
+      local parameter the_list.
+      local sum is 0.
 
-        for item in the_list {
-          set dum to sum + item. // error - 'dum' is an unknown identifier.
-        }.
-
-        return sum / the_list:length.
+      for item in the_list {
+        set dum to sum + item. // error - 'dum' is an unknown identifier.
       }.
 
+      return sum / the_list:length.
     }.
 

@@ -66,7 +66,7 @@ VESSELNAME       Same as SHIP:VESSELNAME
 ALTITUDE         Same as SHIP:ALTITUDE
 APOAPSIS         Same as SHIP:APOAPSIS
 PERIAPSIS        Same as SHIP:PERIAPSIS
-SENSOR           Same as SHIP:SENSOR
+SENSORS          Same as SHIP:SENSORS
 SRFPROGRADE      Same as SHIP:SRFPROGRADE
 SRFREROGRADE     Same as SHIP:SRFREROGRADE
 OBT              Same as SHIP:OBT
@@ -123,7 +123,7 @@ ALT ALIAS
 ---------
 
 The special variable ALT is a unique exception. It behaves like a
-structure with suffixes but it's acually a bit "fake" in that it's not
+structure with suffixes but it's actually a bit "fake" in that it's not
 really a structure. The following terms are just exceptions that don't
 fit anywhere else:
 
@@ -139,7 +139,7 @@ ETA ALIAS
 ---------
 
 The special variable ETA is a unique exception. It behaves like a
-structure with suffixes but it's acually a bit "fake" in that it's not
+structure with suffixes but it's actually a bit "fake" in that it's not
 really a structure. The following terms are just exceptions that don't
 fit anywhere else:
 
@@ -204,7 +204,7 @@ Flight Control
 There are bound variables used in controlling the flight of a ship, which
 can be found at the following links:
 
-If you want to let kOS do a lot of the work of alignging to a desired
+If you want to let kOS do a lot of the work of aligning to a desired
 heading for you, use `Cooked Control <commands/flight/cooked.html>`__.
 
 If you want your script to manipulate the controls directly (as in "set
@@ -227,8 +227,8 @@ Controls that must be used with LOCK
 
     THROTTLE            // Lock to a decimal value between 0 and 1.
     STEERING            // Lock to a direction, either a Vector or a Direction.
-    WHEELTHROTTLE       // Seperate throttle for wheels
-    WHEELSTEERING       // Seperate steering system for wheels
+    WHEELTHROTTLE       // Separate throttle for wheels
+    WHEELSTEERING       // Separate steering system for wheels
 
 System Variables
 ----------------
@@ -250,6 +250,12 @@ on-rails into full physics.
 TIME is the time since the entire saved game campaign started, in the
 kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
 just started.
+
+WARPING
+~~~~~~~
+
+Time warp can be controlled with WARP, and WARPMODE.  See
+:ref:`WARP <warp>`
 
 Config
 ------
@@ -275,7 +281,7 @@ MAPVIEW    boolean                               Both settable and gettable. If 
 
 TIME is a useful system variable for calculating the passage of time
 between taking
-physical measurements (i.e. to calulate how fast a phenomenon is
+physical measurements (i.e. to calculate how fast a phenomenon is
 changing in a loop).
 It returns the KSP *simulated* time, rather than the actual realtime
 sitting in the
