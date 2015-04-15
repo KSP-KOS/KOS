@@ -10,6 +10,17 @@ can handle recursion, and can use local variable scoping.  You can
 build a library of your own function calls and load them into your
 script.
 
+**New Documenatation change page**:
+
+    For those users who just want to see what new features
+    exist without reading the entire documentation again
+    from scratch, we have created a changes page in the main documentation:
+
+    * New Changes Page: http://ksp-kos.github.io/KOS_DOC/changes.html
+
+    For the features mentioned below, you can go to the page above
+    and get a more verbose description of the new features.
+
 ###BREAKING:
 - **RECOMPILE YOUR KSM FILES!!!** - changes to the kOS machine code
   that were needed to support variable scoping ended up invalidating
@@ -23,6 +34,12 @@ script.
   Compiling to a KSM file will probably no longer be a reliable way
   to make your code smaller, but we also intend to increase the volume
   capacity to compensate.
+- *CONFIG:IPU should probably be slightly increased*
+  There's a few more instructions for some of the same amount of source
+  code, so you might need to increase your CONFIG:IPU to get the same
+  programs to continue working.  Although the default setting for 0.17.0
+  is higher, it will not overwrite your settings if you have a config file
+  already present from earlier installations.
 - *DECLARE has a new syntax*
   DECLARE _VARNAME_ now requires an initializier syntax as follows:
   - DECLARE _VARNAME_ TO _VALUE_.
@@ -52,10 +69,10 @@ script.
   Synopsis::
 
     // Silly example function to build a string of padded chars.
-    DECLARE FUNCTION padString {
-      DECLARE PARAMETER ch, howmany
+    FUNCTION padString {
+      PARAMETER ch, howmany
 
-      DECLARE str to "". // makes str a local variable.
+      LOCAL str to "". // makes str a local variable.
 
       UNTIL howmany <= 0 {
         set str to str + ch.
@@ -88,6 +105,13 @@ script.
   http://ksp-kos.github.io/KOS/language/variables.html#declare-to
   and here:
   http://ksp-kos.github.io/KOS/language/variables.html#scoping-rules
+
+- *Physics update*
+  In the past kOS performed its work during the animation frame
+  updates.  Now it does so during the physics updates, as it
+  should.  One effect of this is that if you have a frame rate
+  of more than 25, then you'll need to increase your CONFIG:IPU
+  to get the same general amount of code running in the same time.
 
 ###Bug Fixes:
 - For iterator no longer name clashes because it's not global anymore.

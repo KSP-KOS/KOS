@@ -87,7 +87,7 @@ Every time you read the value of the "variable", it executes the expression
 again.
 
 .. note::
-    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each update tick <cpu hardware>`.
+    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each physics tick <cpu hardware>`.
 
 .. index:: UNLOCK
 .. _unlock:
