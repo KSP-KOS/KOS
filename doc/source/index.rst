@@ -20,6 +20,7 @@ Welcome to the **kOS** Documentation Website!
     Structures <structures>
     Addons <addons>
     Contribute <contribute>
+    Changes <changes>
     About <about>
 
 Introduction to **kOS** and **KerboScript**

@@ -28,11 +28,19 @@ namespace kOS.Safe.Execution
             EntryPoint = entryPoint;
             if (useClosure)
                 CaptureClosure();
+            else
+                Closure = new List<VariableScope>(); // make sure it exists as an empty list so we don't have to have 'if null' checks everwywhere.
         }
 
         private void CaptureClosure()
         {
             Closure = cpu.GetCurrentClosure();
         }
+        
+        public override string ToString()
+        {
+            return "UserDelegate( cpu=" + cpu.ToString() + ", entryPoint=" + EntryPoint.ToString() + ", Closure=" + Closure.ToString();
+        }
+
     }
 }

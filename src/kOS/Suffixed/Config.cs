@@ -40,7 +40,7 @@ namespace kOS.Suffixed
 
         private void BuildValuesDictionary()
         {
-            AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 150, 50, 2000, typeof(int)));
+            AddConfigKey(PropId.InstructionsPerUpdate, new ConfigKey("InstructionsPerUpdate", "IPU", "Instructions per update", 200, 50, 2000, typeof(int)));
             AddConfigKey(PropId.UseCompressedPersistence, new ConfigKey("UseCompressedPersistence", "UCP", "Use compressed persistence", false, false, true, typeof(bool)));
             AddConfigKey(PropId.ShowStatistics, new ConfigKey("ShowStatistics", "STAT", "Show execution statistics", false, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableRTIntegration, new ConfigKey("EnableRTIntegration", "RT", "Enable RT integration", true, false, true, typeof(bool)));

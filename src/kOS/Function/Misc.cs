@@ -179,7 +179,7 @@ namespace kOS.Function
                 shared.ScriptHandler.ClearContext("program");
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
                 var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager};
-                var programContext = ((CPU)shared.Cpu).GetProgramContext();
+                var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
 
                 List<CodePart> codeParts;
                 if (file.Category == FileCategory.KSM)
@@ -189,7 +189,19 @@ namespace kOS.Function
                 }
                 else
                 {
-                    codeParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
+                    try 
+                    {
+                        codeParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
+                    }
+                    catch (Exception e)
+                    {
+                        // If it died due to a compile error, then we won't really be able to switch to program context
+                        // as was implied by calling Cpu.SwitchToProgramContext() up above.  The CPU needs to be
+                        // told that it's still in interpreter context, or else it fails to advance the interpreter's
+                        // instruction pointer and it will just try the "call run()" instruction again:
+                        shared.Cpu.BreakExecution(false);
+                        throw;
+                    }
                 }
                 programContext.AddParts(codeParts);
             }
@@ -264,7 +276,7 @@ namespace kOS.Function
                 }
                 else
                 {
-                    var programContext = ((CPU)shared.Cpu).GetProgramContext();
+                    var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
                     List<CodePart> parts;
                     if (file.Category == FileCategory.KSM)
                     {
