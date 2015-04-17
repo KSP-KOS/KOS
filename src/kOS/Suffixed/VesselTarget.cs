@@ -427,7 +427,7 @@ namespace kOS.Suffixed
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
             //// available:
-            AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLattitude(Vessel)));
+            AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLatitude(Vessel)));
             AddSuffix("LONGITUDE", new Suffix<double>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<double>(() => Vessel.altitude));
        }

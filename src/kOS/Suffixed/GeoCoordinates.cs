@@ -7,8 +7,30 @@ namespace kOS.Suffixed
 {
     public class GeoCoordinates : Structure
     {
-        public double Lat { get; private set; }
-        public double Lng { get; private set; }
+        private double lat;
+        private double lng;
+        public double Lat
+        {
+            get
+            {
+                return Utils.DegreeFix(lat,-180);
+            }
+            private set
+            {
+                lat = value;
+            }
+        }
+        public double Lng
+        {
+            get
+            {
+                return Utils.DegreeFix(lng,-180);
+            }
+            private set
+            {
+                lng = value;
+            }
+        }
         public CelestialBody Body { get; private set; }
         public SharedObjects Shared { get; set; } // for finding the current CPU's vessel, as per issue #107
 
@@ -36,12 +58,12 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="body">A different celestial body to select a lat/long for that might not be the curent one</param>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
-        /// <param name="lat">latitude</param>
-        /// <param name="lng">longitude</param>
-        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double lat, double lng)
+        /// <param name="latitude">latitude</param>
+        /// <param name="longitude">longitude</param>
+        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double latitude, double longitude)
         {
-            Lat = lat;
-            Lng = lng;
+            Lat = latitude;
+            Lng = longitude;
             Shared = sharedObj;
             Body = body;
             GeoCoordsInitializeSuffixes();
@@ -51,10 +73,10 @@ namespace kOS.Suffixed
         ///   Build a GeoCoordinates from any arbitrary lat/long pair of floats.
         /// </summary>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
-        /// <param name="lat">latitude</param>
-        /// <param name="lng">longitude</param>
-        public GeoCoordinates(SharedObjects sharedObj, float lat, float lng) :
-            this(sharedObj.Vessel.GetOrbit().referenceBody, sharedObj, lat, lng)
+        /// <param name="latitude">latitude</param>
+        /// <param name="lnongitude">longitude</param>
+        public GeoCoordinates(SharedObjects sharedObj, float latitude, float longitude) :
+            this(sharedObj.Vessel.GetOrbit().referenceBody, sharedObj, latitude, longitude)
         {
         }
 
@@ -62,12 +84,12 @@ namespace kOS.Suffixed
         ///   Build a GeoCoordinates from any arbitrary lat/long pair of doubles.
         /// </summary>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
-        /// <param name="lat">latitude</param>
-        /// <param name="lng">longitude</param>
-        public GeoCoordinates(SharedObjects sharedObj, double lat, double lng)
+        /// <param name="latitude">latitude</param>
+        /// <param name="longitude">longitude</param>
+        public GeoCoordinates(SharedObjects sharedObj, double latitude, double longitude)
         {
-            Lat = lat;
-            Lng = lng;
+            Lat = latitude;
+            Lng = longitude;
             Shared = sharedObj;
             Body = Shared.Vessel.GetOrbit().referenceBody;
             GeoCoordsInitializeSuffixes();

@@ -365,7 +365,7 @@ namespace kOS.Utilities
                           vessel.GetTotalMass() / (GetMassDrag(vessel) * FlightGlobals.DragMultiplier * densityOfAir));
         }
 
-        public static float GetVesselLattitude(Vessel vessel)
+        public static float GetVesselLatitude(Vessel vessel)
         {
             var retVal = (float)vessel.latitude;
 
