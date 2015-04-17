@@ -444,9 +444,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var transferTo = shared.Cpu.PopValue();
-            var transferFrom = shared.Cpu.PopValue();
-            var resourceName = shared.Cpu.PopValue().ToString();
+            var transferTo = PopValueAssert(shared);
+            var transferFrom = PopValueAssert(shared);
+            var resourceName = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
 
             var resourceInfo = TransferManager.ParseResource(resourceName);
             if (resourceInfo == null)
@@ -456,7 +457,7 @@ namespace kOS.Function
             }
 
             object toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom);
-            shared.Cpu.PushStack(toPush);
+            ReturnValue = toPush;
         }
 
     }
@@ -466,10 +467,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            var amount = shared.Cpu.PopValue();
-            var transferTo = shared.Cpu.PopValue();
-            var transferFrom = shared.Cpu.PopValue();
-            var resourceName = shared.Cpu.PopValue().ToString();
+            var amount = PopValueAssert(shared);
+            var transferTo = PopValueAssert(shared);
+            var transferFrom = PopValueAssert(shared);
+            var resourceName = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
 
             var resourceInfo = TransferManager.ParseResource(resourceName);
             if (resourceInfo == null)
@@ -482,7 +484,7 @@ namespace kOS.Function
             if (Double.TryParse(amount.ToString(), out parsedAmount))
             {
                 object toPush = shared.TransferManager.CreateTransfer(resourceInfo, transferTo, transferFrom, parsedAmount);
-                shared.Cpu.PushStack(toPush);
+                ReturnValue = toPush;
             }
         }
     }
