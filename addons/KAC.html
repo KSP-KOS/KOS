@@ -1,0 +1,642 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kerbal Alarm Clock &mdash; kOS 0.16.2 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
+        <link rel="up" title="Addon Reference" href="../addons.html"/>
+        <link rel="next" title="Contribute" href="../contribute.html"/>
+        <link rel="prev" title="RemoteTech" href="RemoteTech.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Kerbal Alarm Clock</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../addons.html">Addon Reference</a> &raquo;</li>
+      
+    <li>Kerbal Alarm Clock</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/addons/KAC.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="kerbal-alarm-clock">
+<span id="kac"></span><h1>Kerbal Alarm Clock<a class="headerlink" href="#kerbal-alarm-clock" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>Download: <a class="reference external" href="https://github.com/TriggerAu/KerbalAlarmClock/releases">https://github.com/TriggerAu/KerbalAlarmClock/releases</a></li>
+<li>Alternative download <a class="reference external" href="https://kerbalstuff.com/mod/231/Kerbal%20Alarm%20Clock">https://kerbalstuff.com/mod/231/Kerbal%20Alarm%20Clock</a></li>
+<li>Forum thread, including full instructions: <a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/24786">http://forum.kerbalspaceprogram.com/threads/24786</a></li>
+</ul>
+<p>The Kerbal Alarm Clock is a plugin that allows you to create reminder alarms at future periods to help you manage your flights and not warp past important times.</p>
+<div class="figure">
+<img alt="http://triggerau.github.io/KerbalAlarmClock/images/KACForumPic.png" src="http://triggerau.github.io/KerbalAlarmClock/images/KACForumPic.png" />
+</div>
+<p>Creator of the KAC provides API for integration with other mods. In KOS we provide limited access to KAC alarms via following structure and functions.</p>
+<p>Access structure KACAddon via <cite>ADDONS:KAC</cite>.</p>
+<dl class="structure">
+<dt id="structure:KACADDON">
+<em class="property">structure </em><tt class="descname">KACAddon</tt><a class="headerlink" href="#structure:KACADDON" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="22%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KACADDON:AVAILABLE" title="KACADDON:AVAILABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></tt></a></td>
+<td>bool(readonly)</td>
+<td>True if KAC is installed and KAC integration enabled.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:KACADDON:ALARMS" title="KACADDON:ALARMS method"><tt class="xref ks ks-meth docutils literal"><span class="pre">ALARMS()</span></tt></a></td>
+<td>List</td>
+<td>List all alarms</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACADDON:AVAILABLE">
+KACAddon:<tt class="descname">AVAILABLE</tt><a class="headerlink" href="#attribute:KACADDON:AVAILABLE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>True if KAC is installed and KAC integration enabled.
+Example of use:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="n">ADDONS</span><span class="o">:</span><span class="n">KAC</span><span class="o">:</span><span class="n">AVAILABLE</span>
+<span class="p">{</span>
+    <span class="c1">//some KAC dependent code</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KACADDON:ALARMS">
+KACAddon:<tt class="descname">ALARMS</tt><big>(</big><big>)</big><a class="headerlink" href="#method:KACADDON:ALARMS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of <a class="reference internal" href="#structure:KACALARM" title="KACALARM structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">KACAlarm</span></tt></a> objects</td>
+</tr>
+</tbody>
+</table>
+<p>List <strong>all</strong> the alarms set up in Kerbal Alarm Clock. Example of use:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="n">ADDONS</span><span class="o">:</span><span class="n">KAC</span><span class="o">:</span><span class="n">ALARMS</span>
+<span class="p">{</span>
+        <span class="n">print</span> <span class="n">i</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot; - &quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">:</span><span class="n">REMAINING</span> <span class="o">+</span> <span class="s">&quot; - &quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">:</span><span class="n">TYPE</span><span class="o">+</span> <span class="s">&quot; - &quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">:</span><span class="n">ACTION</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="structure">
+<dt id="structure:KACALARM">
+<em class="property">structure </em><tt class="descname">KACAlarm</tt><a class="headerlink" href="#structure:KACALARM" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="18%" />
+<col width="54%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KACALARM:ID" title="KACALARM:ID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ID</span></tt></a></td>
+<td>string (readonly)</td>
+<td>Unique identifier</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KACALARM:NAME" title="KACALARM:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+<td>Name of the alarm</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KACALARM:ACTION" title="KACALARM:ACTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ACTION</span></tt></a></td>
+<td>string</td>
+<td>What should the Alarm Clock do when the alarm fires</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KACALARM:TYPE" title="KACALARM:TYPE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TYPE</span></tt></a></td>
+<td>string (readonly)</td>
+<td>What type of Alarm is this - affects icon displayed and some calc options</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KACALARM:NOTES" title="KACALARM:NOTES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NOTES</span></tt></a></td>
+<td>string</td>
+<td>Long description of the alarm (optional)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KACALARM:REMAINING" title="KACALARM:REMAINING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">REMAINING</span></tt></a></td>
+<td>scalar (s)</td>
+<td>Time remaining until alarm is triggered</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KACALARM:REPEAT" title="KACALARM:REPEAT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">REPEAT</span></tt></a></td>
+<td>bool</td>
+<td>Should the alarm be repeated once it fires</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KACALARM:REPEATPERIOD" title="KACALARM:REPEATPERIOD attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">REPEATPERIOD</span></tt></a></td>
+<td>scalar (s)</td>
+<td>How long after the alarm fires should the next alarm be set up</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KACALARM:ORIGINBODY" title="KACALARM:ORIGINBODY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ORIGINBODY</span></tt></a></td>
+<td>string</td>
+<td>Name of the body the vessel is departing from</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KACALARM:TARGETBODY" title="KACALARM:TARGETBODY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TARGETBODY</span></tt></a></td>
+<td>string</td>
+<td>Name of the body the vessel is arriving at</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:ID">
+KACAlarm:<tt class="descname">ID</tt><a class="headerlink" href="#attribute:KACALARM:ID" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Unique identifier of the alarm.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:NAME">
+KACAlarm:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:KACALARM:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Name of the alarm. Displayed in main KAC window.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:ACTION">
+KACAlarm:<tt class="descname">ACTION</tt><a class="headerlink" href="#attribute:KACALARM:ACTION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Should be one of the following</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>MessageOnly</cite> - Message Only-No Affect on warp</li>
+<li><cite>KillWarpOnly</cite> - Kill Warp Only-No Message</li>
+<li><cite>KillWarp</cite> - Kill Warp and Message</li>
+<li><cite>PauseGame</cite> - Pause Game and Message</li>
+</ul>
+</div></blockquote>
+<p>If set incorrectly will log a warning in Debug log and revert to previous or default value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:TYPE">
+KACAlarm:<tt class="descname">TYPE</tt><a class="headerlink" href="#attribute:KACALARM:TYPE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Can only be set at Alarm creation.
+Could be one of the following as per API</p>
+<blockquote>
+<div><ul class="simple">
+<li>Raw (default)</li>
+<li>Maneuver</li>
+<li>ManeuverAuto</li>
+<li>Apoapsis</li>
+<li>Periapsis</li>
+<li>AscendingNode</li>
+<li>DescendingNode</li>
+<li>LaunchRendevous</li>
+<li>Closest</li>
+<li>SOIChange</li>
+<li>SOIChangeAuto</li>
+<li>Transfer</li>
+<li>TransferModelled</li>
+<li>Distance</li>
+<li>Crew</li>
+<li>EarthTime</li>
+</ul>
+</div></blockquote>
+<p><strong>Warning</strong>: Unless you are 100% certain you know what you&#8217;re doing, create only &#8220;Raw&#8221; AlarmTypes to avoid unnecessary complications.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:NOTES">
+KACAlarm:<tt class="descname">NOTES</tt><a class="headerlink" href="#attribute:KACALARM:NOTES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Long description of the alarm. Can be seen when alarm pops or by double-clicking alarm in UI.</p>
+<p><strong>Warning</strong>: This field may be reserved in the future version of KAC-KOS integration for automated script execution upon triggering of the alarm.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:REMAINING">
+KACAlarm:<tt class="descname">REMAINING</tt><a class="headerlink" href="#attribute:KACALARM:REMAINING" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">double</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Time remaining until alarm is triggered.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:REPEAT">
+KACAlarm:<tt class="descname">REPEAT</tt><a class="headerlink" href="#attribute:KACALARM:REPEAT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Should the alarm be repeated once it fires.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:REPEATPERIOD">
+KACAlarm:<tt class="descname">REPEATPERIOD</tt><a class="headerlink" href="#attribute:KACALARM:REPEATPERIOD" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">double</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>How long after the alarm fires should the next alarm be set up.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:ORIGINBODY">
+KACAlarm:<tt class="descname">ORIGINBODY</tt><a class="headerlink" href="#attribute:KACALARM:ORIGINBODY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Name of the body the vessel is departing from.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KACALARM:TARGETBODY">
+KACAlarm:<tt class="descname">TARGETBODY</tt><a class="headerlink" href="#attribute:KACALARM:TARGETBODY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Name of the body the vessel is arriving to.</p>
+</dd></dl>
+
+<div class="section" id="available-functions">
+<h2>Available Functions<a class="headerlink" href="#available-functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="47%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Function</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#function:ADDALARM" title="ADDALARM function"><tt class="xref ks ks-func docutils literal"><span class="pre">ADDALARM(AlarmType,</span> <span class="pre">UT,</span> <span class="pre">Name,</span> <span class="pre">Notes)</span></tt></a></td>
+<td>Create new alarm of AlarmType at UT</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#function:LISTALARMS" title="LISTALARMS function"><tt class="xref ks ks-func docutils literal"><span class="pre">LISTALARMS(alarmType)</span></tt></a></td>
+<td>List alarms with type <cite>alarmType</cite>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#function:DELETEALARM" title="DELETEALARM function"><tt class="xref ks ks-func docutils literal"><span class="pre">DELETEALARM(alarmID)</span></tt></a></td>
+<td>Delete alarm with ID = alarmID</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="function:ADDALARM">
+<tt class="descname">ADDALARM</tt><big>(</big>AlarmType, UT, Name, Notes<big>)</big><a class="headerlink" href="#function:ADDALARM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates alarm of type <cite>KACAlarm:ALARMTYPE</cite> at <cite>UT</cite> with <cite>Name</cite> and <cite>Notes</cite> attributes set. Attaches alarm to current <a class="reference internal" href="../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a>.  Returns <a class="reference internal" href="#structure:KACALARM" title="KACALARM structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">KACAlarm</span></tt></a> object if creation was successful and empty string otherwise:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">na</span> <span class="n">to</span> <span class="n">addAlarm</span><span class="p">(</span><span class="s">&quot;Raw&quot;</span><span class="p">,</span><span class="n">time</span><span class="o">:</span><span class="n">seconds</span><span class="o">+</span><span class="mi">300</span><span class="p">,</span> <span class="s">&quot;Test&quot;</span><span class="p">,</span> <span class="s">&quot;Notes&quot;</span><span class="p">).</span>
+<span class="n">print</span> <span class="n">na</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span> <span class="c1">//prints &#39;Test&#39;</span>
+<span class="n">set</span> <span class="n">na</span><span class="o">:</span><span class="n">NOTES</span> <span class="n">to</span> <span class="s">&quot;New Description&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="n">na</span><span class="o">:</span><span class="n">NOTES</span><span class="p">.</span> <span class="c1">//prints &#39;New Description&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="function:LISTALARMS">
+<tt class="descname">LISTALARMS</tt><big>(</big>alarmType<big>)</big><a class="headerlink" href="#function:LISTALARMS" title="Permalink to this definition">¶</a></dt>
+<dd><p>If <cite>alarmType</cite> equals &#8220;All&#8221;, returns <a class="reference internal" href="../structures/misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <em>all</em> <a class="reference internal" href="#structure:KACALARM" title="KACALARM structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">KACAlarm</span></tt></a> objects attached to current vessel or have no vessel attached.
+Otherwise returns <a class="reference internal" href="../structures/misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of all <a class="reference internal" href="#structure:KACALARM" title="KACALARM structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">KACAlarm</span></tt></a> objects with <cite>KACAlarm:TYPE</cite> equeal to <a href="#id1"><span class="problematic" id="id2">`</span></a>alarmType&#8217; and attached to current vessel or have no vessel attached.:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">al</span> <span class="n">to</span> <span class="n">listAlarms</span><span class="p">(</span><span class="s">&quot;All&quot;</span><span class="p">).</span>
+<span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="n">al</span>
+<span class="p">{</span>
+    <span class="n">print</span> <span class="n">i</span><span class="o">:</span><span class="n">ID</span> <span class="o">+</span> <span class="s">&quot; - &quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">:</span><span class="n">name</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="function:DELETEALARM">
+<tt class="descname">DELETEALARM</tt><big>(</big>alarmID<big>)</big><a class="headerlink" href="#function:DELETEALARM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes alarm with ID equal to alarmID. Returns True if successful, false otherwise:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">na</span> <span class="n">to</span> <span class="nf">addAlarm</span><span class="p">(</span><span class="s">&quot;Raw&quot;</span><span class="p">,</span><span class="n">time</span><span class="o">:</span><span class="n">seconds</span><span class="o">+</span><span class="mi">300</span><span class="p">,</span> <span class="s">&quot;Test&quot;</span><span class="p">,</span> <span class="s">&quot;Notes&quot;</span><span class="p">).</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">DELETEALARM</span><span class="p">(</span><span class="n">na</span><span class="o">:</span><span class="n">ID</span><span class="p">))</span>
+<span class="p">{</span>
+    <span class="n">print</span> <span class="s">&quot;Alarm Deleted&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../contribute.html" class="btn btn-neutral float-right" title="Contribute">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="RemoteTech.html" class="btn btn-neutral" title="RemoteTech"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.16.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

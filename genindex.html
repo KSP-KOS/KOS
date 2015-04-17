@@ -8,7 +8,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; kOS 0.15.3 documentation</title>
+  <title>Index &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -33,7 +33,8 @@
   
         <link rel="author" title="About these documents"
               href="about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="index.html"/> 
+        <link rel="copyright" title="Copyright" href="copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="index.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -73,6 +74,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -83,7 +85,6 @@
 <li class="toctree-l2"><a class="reference internal" href="general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -111,6 +112,7 @@
 <li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
@@ -124,9 +126,13 @@
 <li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
@@ -175,6 +181,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -199,6 +206,10 @@
 
       
   <dt><a href="structures/vessels/node.html#global:ADD">ADD</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#function:ADDALARM">ADDALARM()</a>
   </dt>
 
       
@@ -233,12 +244,12 @@
   <dt><a href="math/basic.html#function:ARCCOS">ARCCOS()</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="math/basic.html#function:ARCSIN">ARCSIN()</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="math/basic.html#function:ARCTAN">ARCTAN()</a>
   </dt>
@@ -454,11 +465,19 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="addons/KAC.html#function:DELETEALARM">DELETEALARM()</a>
+  </dt>
+
+      
   <dt><a href="math/direction.html#structure:DIRECTION">Direction [struct]</a>
   </dt>
 
       
   <dt><a href="math/direction.html#attribute:DIRECTION:FOREVECTOR">Direction:FOREVECTOR</a>
+  </dt>
+
+      
+  <dt><a href="math/direction.html#attribute:DIRECTION:INVERSE">Direction:INVERSE</a>
   </dt>
 
       
@@ -485,12 +504,12 @@
   <dt><a href="structures/vessels/dockingport.html#structure:DOCKINGPORT">DockingPort [struct]</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/dockingport.html#attribute:DOCKINGPORT:AQUIREFORCE">DockingPort:AQUIREFORCE</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/dockingport.html#attribute:DOCKINGPORT:AQUIRERANGE">DockingPort:AQUIRERANGE</a>
   </dt>
@@ -822,6 +841,70 @@
   </dl></td>
 </tr></table>
 
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="addons/KAC.html#structure:KACADDON">KACAddon [struct]</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#method:KACADDON:ALARMS">KACAddon:ALARMS()</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACADDON:AVAILABLE">KACAddon:AVAILABLE</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#structure:KACALARM">KACAlarm [struct]</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:ACTION">KACAlarm:ACTION</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:ID">KACAlarm:ID</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:NAME">KACAlarm:NAME</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:NOTES">KACAlarm:NOTES</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:ORIGINBODY">KACAlarm:ORIGINBODY</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:REMAINING">KACAlarm:REMAINING</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:REPEAT">KACAlarm:REPEAT</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:REPEATPERIOD">KACAlarm:REPEATPERIOD</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:TARGETBODY">KACAlarm:TARGETBODY</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:TYPE">KACAlarm:TYPE</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
@@ -885,6 +968,10 @@
 
       
   <dt><a href="structures/misc/list.html#method:LIST:SUBLIST">List:SUBLIST()</a>
+  </dt>
+
+      
+  <dt><a href="addons/KAC.html#function:LISTALARMS">LISTALARMS()</a>
   </dt>
 
       
@@ -1384,6 +1471,10 @@
   </dt>
 
       
+  <dt><a href="math/basic.html#function:RANDOM">RANDOM()</a>
+  </dt>
+
+      
   <dt><a href="math/ref_frame.html#index-2">RAW-RAW (Reference Frame)</a>
   </dt>
 
@@ -1415,8 +1506,6 @@
   <dt><a href="structures/vessels/resource.html#attribute:RESOURCE:CAPACITY">Resource:CAPACITY</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/resource.html#attribute:RESOURCE:ENABLED">Resource:ENABLED</a>
   </dt>
@@ -1427,6 +1516,36 @@
 
       
   <dt><a href="structures/vessels/resource.html#attribute:RESOURCE:TOGGLEABLE">Resource:TOGGLEABLE</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/resource_transfer.html#structure:RESOURCETRANSFER">ResourceTransfer [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/resource_transfer.html#attribute:RESOURCETRANSFER:ACTIVE">RESOURCETRANSFER:ACTIVE</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/resource_transfer.html#attribute:RESOURCETRANSFER:GOAL">RESOURCETRANSFER:GOAL</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="structures/misc/resource_transfer.html#attribute:RESOURCETRANSFER:MESSAGE">RESOURCETRANSFER:MESSAGE</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/resource_transfer.html#attribute:RESOURCETRANSFER:RESOURCE">RESOURCETRANSFER:RESOURCE</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/resource_transfer.html#attribute:RESOURCETRANSFER:STATUS">RESOURCETRANSFER:STATUS</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/resource_transfer.html#attribute:RESOURCETRANSFER:TRANSFERRED">RESOURCETRANSFER:TRANSFERRED</a>
   </dt>
 
       
@@ -1449,6 +1568,30 @@
   <dt><a href="math/basic.html#function:ROUND">ROUND()</a>, <a href="math/basic.html#function:ROUND">[1]</a>
   </dt>
 
+      
+  <dt><a href="addons/RemoteTech.html#structure:RTADDON">RTAddon [struct]</a>
+  </dt>
+
+      
+  <dt><a href="addons/RemoteTech.html#attribute:RTADDON:AVAILABLE">RTADDON:AVAILABLE</a>
+  </dt>
+
+      
+  <dt><a href="addons/RemoteTech.html#method:RTADDON:DELAY">RTAddon:DELAY()</a>
+  </dt>
+
+      
+  <dt><a href="addons/RemoteTech.html#method:RTADDON:HASCONNECTION">RTAddon:HASCONNECTION()</a>
+  </dt>
+
+      
+  <dt><a href="addons/RemoteTech.html#method:RTADDON:HASKSCCONNECTION">RTAddon:HASKSCCONNECTION()</a>
+  </dt>
+
+      
+  <dt><a href="addons/RemoteTech.html#method:RTADDON:KSCDELAY">RTAddon:KSCDELAY()</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
@@ -1468,11 +1611,11 @@
   </dt>
 
       
-  <dt><a href="structures/vessels/sensor.html#attribute:SENSOR:POWERCONSUMPTION">Sensor:POWERCONSUMPTION</a>
+  <dt><a href="structures/vessels/sensor.html#attribute:SENSOR:DISPLAY">Sensor:DISPLAY</a>
   </dt>
 
       
-  <dt><a href="structures/vessels/sensor.html#attribute:SENSOR:READOUT">Sensor:READOUT</a>
+  <dt><a href="structures/vessels/sensor.html#attribute:SENSOR:POWERCONSUMPTION">Sensor:POWERCONSUMPTION</a>
   </dt>
 
       
@@ -1767,14 +1910,18 @@
   <dt><a href="structures/vessels/vessel.html#method:VESSEL:ALLPARTSTAGGED">Vessel:ALLPARTSTAGGED()</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:ANGULARMOMENTUM">Vessel:ANGULARMOMENTUM</a>
   </dt>
 
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:ANGULARVEL">Vessel:ANGULARVEL</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:AVAILABLETHRUST">vessel:AVAILABLETHRUST</a>
   </dt>
 
       
@@ -1795,6 +1942,10 @@
 
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:HEADING">Vessel:HEADING</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:ISDEAD">Vessel:ISDEAD</a>
   </dt>
 
       
@@ -1863,6 +2014,10 @@
 
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:SHIPNAME">Vessel:SHIPNAME</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:STATUS">Vessel:STATUS</a>
   </dt>
 
       
@@ -2008,7 +2163,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -2029,7 +2184,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

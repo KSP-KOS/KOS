@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Terminal and game environment &mdash; kOS 0.15.3 documentation</title>
+  <title>Terminal and game environment &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,9 +32,10 @@
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
-        <link rel="next" title="Structure Reference" href="../structures.html"/>
+        <link rel="next" title="Transferring resources" href="resource_transfer.html"/>
         <link rel="prev" title="File I/O" href="files.html"/> 
 
   
@@ -85,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -93,8 +93,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables &amp; Statements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../language/variables.html#scoping-rules">Scoping rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -113,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="files.html">File I/O</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -126,6 +127,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -336,7 +338,7 @@ or the RGB constructor to make one up</a></dd>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../structures.html" class="btn btn-neutral float-right" title="Structure Reference">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="resource_transfer.html" class="btn btn-neutral float-right" title="Transferring resources">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="files.html" class="btn btn-neutral" title="File I/O"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -348,7 +350,7 @@ or the RGB constructor to make one up</a></dd>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -369,7 +371,7 @@ or the RGB constructor to make one up</a></dd>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -79,6 +79,35 @@ Structures also often contain methods. A method is a suffix of a structure that 
 
 For more information, see the :ref:`Structures Section <language structures>`. A full list of structure types can be found on the :ref:`Structures <structures>` page. For a more detailed breakdown of the language, see the :ref:`Language Syntax Constructs <syntax>` page.
 
+Late Typing
+-----------
+
+Kerboscript is a language in which there is only one type of variable
+and it just generically holds any sort of object of any kind.  If
+you attempt to assign, for example, a string into a variable that is
+currently holding an integer, this does not generate an error.  It
+simply causes the variable to change its type and no longer be an
+integer, becoming a string now.
+
+In other words, the type of a variable changes dynamically at
+runtime depending on what you assign into it.
+
+Lazy Globals (variable declarations optional)
+---------------------------------------------
+
+Kerboscript is a language in which variables need not be declared ahead
+of time.  If you simply set a variable to a value, that just "magically"
+makes the variable exist if it didn't already.  When you do this,
+the variable will necessarily be *global* in scope.  kerboscript refers
+to these variables created implicitly this way as "lazy globals".
+It's a system designed to make kerboscript easy to use for people new to
+programming.
+
+But if you are an experienced programmer you might not like this
+behavior, and there are good arguments for why you might want to
+disable it.  If you wish to do so, a syntax exists to do so called
+:ref:``NOLAZYGLOBAL``.
+
 .. _feature functions:
 
 User Functions

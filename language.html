@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The KerboScript Language &mdash; kOS 0.15.3 documentation</title>
+  <title>The KerboScript Language &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="index.html"/>
+        <link rel="copyright" title="Copyright" href="copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="index.html"/>
         <link rel="next" title="General Features of the KerboScript Language" href="language/features.html"/>
         <link rel="prev" title="Career Limits" href="general/career_limits.html"/> 
 
@@ -74,6 +75,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -84,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -112,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
@@ -125,9 +127,13 @@
 <li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
@@ -172,12 +178,15 @@
 <li class="toctree-l1"><a class="reference internal" href="language/features.html">General Features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/features.html#case-insensitivity">Case Insensitivity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/features.html#expressions">Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/features.html#late-typing">Late Typing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/features.html#lazy-globals-variable-declarations-optional">Lazy Globals (variable declarations optional)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/features.html#user-functions">User Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/features.html#language-structures">Structures</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language/syntax.html">Language Syntax</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#general-rules">General Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/syntax.html#braces-statement-blocks">Braces (statement blocks)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#functions-built-in">Functions (built-in)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#suffixes-as-functions-methods">Suffixes as Functions (Methods)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html#user-functions">User Functions</a></li>
@@ -201,25 +210,26 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language/variables.html">Variables</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="language/variables.html#declare"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/variables.html#declare-to"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">...</span> <span class="pre">TO</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/variables.html#declare-to-is"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#declare-parameter"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#set"><tt class="docutils literal"><span class="pre">SET</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#lock"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#toggle"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#on"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/variables.html#off"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/variables.html#scoping-rules">Scoping rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/variables.html#scoping-terms">Scoping terms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/variables.html#scoping-syntax">Scoping syntax</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language/user_functions.html">User Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#help-for-the-new-user-what-is-a-function">Help for the new user - What is a Function?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare-function"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare-parameter"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#declare-to"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">TO</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#calling-a-function">Calling a function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#local-to"><tt class="docutils literal"><span class="pre">LOCAL</span> <span class="pre">..</span> <span class="pre">TO</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#return"><tt class="docutils literal"><span class="pre">RETURN</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#passing-by-value">Passing by value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#nesting-functions-inside-functions">Nesting functions inside functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#recursion">Recursion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/user_functions.html#user-function-gotchas">User Function Gotchas</a></li>
 </ul>
@@ -246,7 +256,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -267,7 +277,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

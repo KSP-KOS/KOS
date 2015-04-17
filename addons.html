@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Addon Reference &mdash; kOS 0.15.3 documentation</title>
+  <title>Addon Reference &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="index.html"/>
+        <link rel="copyright" title="Copyright" href="copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="index.html"/>
         <link rel="next" title="Action Groups Extended" href="addons/AGX.html"/>
         <link rel="prev" title="Drawing Vectors on the Screen" href="structures/misc/vecdraw.html"/> 
 
@@ -74,6 +75,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -84,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -92,8 +93,8 @@
 <li class="toctree-l2"><a class="reference internal" href="language/features.html">General Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/variables.html">Variables &amp; Statements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language/variables.html#scoping-rules">Scoping rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="math.html">Mathematics</a><ul>
@@ -112,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
@@ -125,9 +127,13 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
@@ -168,15 +174,32 @@
   <div class="section" id="addon-reference">
 <span id="addons"></span><h1>Addon Reference<a class="headerlink" href="#addon-reference" title="Permalink to this headline">¶</a></h1>
 <blockquote>
-<div>This section is for ways in which kOS has special case
-exceptions to its normal generic behaviors, in order to
-accomdate other KSP mods.  If you don&#8217;t use the KSP mod mentioned,
-you don&#8217;t need to read this section.</div></blockquote>
+<div>This section is for ways in which kOS has special case exceptions to its normal generic behaviours, in order to accommodate other KSP mods.  If you don&#8217;t use any of KSP mods mentioned, you don&#8217;t need to read this section.</div></blockquote>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
-<li class="toctree-l1"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html#interaction-with-kos">Interaction with kOS</a></li>
 </ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="addons/KAC.html#available-functions">Available Functions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>To help KOS scripts identify whether or not certain mod is installed and available following suffixed functions were introduced in version 0.17</p>
+<div class="section" id="addons-agx-available">
+<h2><tt class="docutils literal"><span class="pre">ADDONS:AGX:AVAILABLE</span></tt><a class="headerlink" href="#addons-agx-available" title="Permalink to this headline">¶</a></h2>
+<p>Returns True if mod Action Group Extended is installed and available to KOS.</p>
+</div>
+<div class="section" id="addons-rt-available">
+<h2><tt class="docutils literal"><span class="pre">ADDONS:RT:AVAILABLE</span></tt><a class="headerlink" href="#addons-rt-available" title="Permalink to this headline">¶</a></h2>
+<p>Returns True if mod RemoteTech is installed and available to KOS. See more RemoteTech functions here &lt;addons/RemoteTech&gt;.</p>
+</div>
+<div class="section" id="addons-kac-available">
+<h2><tt class="docutils literal"><span class="pre">ADDONS:KAC:AVAILABLE</span></tt><a class="headerlink" href="#addons-kac-available" title="Permalink to this headline">¶</a></h2>
+<p>Returns True if mod Kerbal Alarm Clock is installed and available to KOS.</p>
 </div>
 </div>
 
@@ -198,7 +221,7 @@ you don&#8217;t need to read this section.</div></blockquote>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -219,7 +242,7 @@ you don&#8217;t need to read this section.</div></blockquote>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

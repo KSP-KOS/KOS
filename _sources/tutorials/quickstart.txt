@@ -183,7 +183,7 @@ By saving the file in ``Ships/Script``, you have actually put it in your archive
 after saving the file from your external text editor program, you will see a listing of your file "hellolaunch" right away. Okay, now copy it to your local drive and give it a try running it from there::
 
     SWITCH TO 1.
-    COPY HELLOLANCH FROM 0.
+    COPY HELLOLAUNCH FROM 0.
     RUN HELLOLAUNCH.
 
 .. figure:: /_images/tutorials/quickstart/example_2_1.png

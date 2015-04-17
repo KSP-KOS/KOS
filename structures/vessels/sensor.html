@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Sensor &mdash; kOS 0.15.3 documentation</title>
+  <title>Sensor &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Stage" href="stage.html"/>
         <link rel="prev" title="Resource" href="resource.html"/> 
@@ -85,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -93,8 +93,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables &amp; Statements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html#scoping-rules">Scoping rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
@@ -113,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -126,9 +127,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
@@ -179,7 +184,7 @@
 <span class="c1">// TURN EVERY SINGLE SENSOR ON</span>
 <span class="n">FOR</span> <span class="n">S</span> <span class="n">IN</span> <span class="n">SENSELIST</span> <span class="p">{</span>
   <span class="n">PRINT</span> <span class="s">&quot;SENSOR: &quot;</span> <span class="o">+</span> <span class="n">S</span><span class="o">:</span><span class="n">TYPE</span><span class="p">.</span>
-  <span class="n">PRINT</span> <span class="s">&quot;VALUE:  &quot;</span> <span class="o">+</span> <span class="n">S</span><span class="o">:</span><span class="n">READOUT</span><span class="p">.</span>
+  <span class="n">PRINT</span> <span class="s">&quot;VALUE:  &quot;</span> <span class="o">+</span> <span class="n">S</span><span class="o">:</span><span class="n">DISPLAY</span><span class="p">.</span>
   <span class="n">IF</span> <span class="n">S</span><span class="o">:</span><span class="n">ACTIVE</span> <span class="p">{</span>
     <span class="n">PRINT</span> <span class="s">&quot;     SENSOR IS ALREADY ON.&quot;</span><span class="p">.</span>
   <span class="p">}</span> <span class="n">ELSE</span> <span class="p">{</span>
@@ -217,8 +222,8 @@
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:SENSOR:READOUT" title="SENSOR:READOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">READOUT</span></tt></a></td>
-<td>varies</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SENSOR:DISPLAY" title="SENSOR:DISPLAY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DISPLAY</span></tt></a></td>
+<td>string</td>
 <td>Value of the readout</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:SENSOR:POWERCONSUMPTION" title="SENSOR:POWERCONSUMPTION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POWERCONSUMPTION</span></tt></a></td>
@@ -267,19 +272,19 @@ Sensor:<tt class="descname">TYPE</tt><a class="headerlink" href="#attribute:SENS
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:SENSOR:READOUT">
-Sensor:<tt class="descname">READOUT</tt><a class="headerlink" href="#attribute:SENSOR:READOUT" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:SENSOR:DISPLAY">
+Sensor:<tt class="descname">DISPLAY</tt><a class="headerlink" href="#attribute:SENSOR:DISPLAY" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">varies (usually scalar)</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>
-<p>The value of the sensor&#8217;s readout, usually a double.</p>
+<p>The value of the sensor&#8217;s readout, usualy including the units.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -324,7 +329,7 @@ Sensor:<tt class="descname">TOGGLE</tt><big>(</big><big>)</big><a class="headerl
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -345,7 +350,7 @@ Sensor:<tt class="descname">TOGGLE</tt><big>(</big><big>)</big><a class="headerl
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -272,6 +272,7 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
+.. _boot:
 
 Special handling of files starting with "boot" (example ``boot.ks``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
