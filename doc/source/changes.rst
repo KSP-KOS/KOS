@@ -16,6 +16,32 @@ of documentation again from scratch.
 Changes in 0.17.0
 -----------------
 
+Variables can now be local
+::::::::::::::::::::::::::
+
+Previously, the kOS runtime had a serious limitation in which
+it could only support one flat namespace of global-only variables.
+Considerable archetecture re-work has been done to now support
+:ref:`block-scoping <scope>` in the underlying runtime, which can
+be controlled through the use of :ref:`local declarations <declare syntax>`
+in your kerboscript files.
+
+User Functions
+::::::::::::::
+
+The primary reason for the local scope variables rework was in
+support of the new :ref:`user functions feature <user_functions>`
+which has been a long-wished-for feature for kOS to support.
+
+Community Examples Library
+::::::::::::::::::::::::::
+
+There is now a :ref:`new fledgling repository of examples and library
+scripts<library>` that we hope to be something the user community
+contributes to.  Some of the examples shown in the kOS 0.17.0 release
+video are located there.  The addition of the ability to make user
+functions now makes the creation of such a library a viable option.
+
 Physics Ticks not Update Ticks
 ::::::::::::::::::::::::::::::
 
@@ -27,5 +53,62 @@ penalizing the users of faster computers anymore.  (Previously,
 if your computer was faster, you'd be charged more electricity as
 the updates came more often).
 
+Blizzy ToolBar Support
+::::::::::::::::::::::
 
+If you have the Blizzy Toolbar mod installed, you should be able
+to put the kOS control panel window under its control.
 
+Ability to define colors using HSV
+::::::::::::::::::::::::::::::::::
+
+When a color is called for, such as with VECDRAW or HIGHLIGHT, you
+can now use the :ref:`HSV color system (hue, saturation, value)<hsv>`
+instead of RGB, if you prefer.
+
+Ability to highlight a part in color
+::::::::::::::::::::::::::::::::::::
+
+Any time your script needs to communicate something to the user about
+which part or parts it's dealing with, it can use KSP's :ref:`part
+highlighting feature <highlight>` to show a part.
+
+Better user interface for selecting boot scripts
+::::::::::::::::::::::::::::::::::::::::::::::::
+
+The selection of :ref:`boot scripts for your vessel <boot>` has been
+improved.
+
+Disks can be made bigger with tweakable slider
+::::::::::::::::::::::::::::::::::::::::::::::
+
+All parts that have disk space now have a slider you can use in the VAB
+or SPH editors to tweak the disk space to choose whether you want it to
+have 1x, 2x, or 4x as much as its default size.  Increasing the size
+increases its price and its weight cost.
+
+You Can Transfer Resources
+::::::::::::::::::::::::::
+
+You can now use kOS scripts to :ref:`transfer resources between
+parts <resource transfer>` for things like fuel, in the same way
+that a manual user can do by using the right-click menus.
+
+Kerbal Alarm Clock support
+::::::::::::::::::::::::::
+
+If you have the Kerbal Alarm Clock Mod isntalled, you can now
+:ref:`query and manipulate its alarms <KAC>` from within your
+kOS scripts.
+
+Query the docked elements of a vessel
+:::::::::::::::::::::::::::::::::::::
+
+You can get the :ref:`docked components of a joined-together
+vessel <element>` as separate collections of parts now.
+
+Support for Action Groups Extended
+::::::::::::::::::::::::::::::::::
+
+While there was some support for the Action Groups Extended
+mod before, it has :ref:`been greatly improved <AGX>`.

@@ -22,6 +22,8 @@ Allowed Syntax:
 All the following are legal "declare" statements:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. _declare syntax:
+
 The following alternate versions have identical meaning to each other:
 
   * ``DECLARE`` *identifier* ``TO`` *expression* *dot*

@@ -24,6 +24,8 @@ Ship Systems
 
         SAS ON.
 
+.. _sasmode:
+
 .. object:: SET SASMODE TO value.
 
     :access: Get/Set
