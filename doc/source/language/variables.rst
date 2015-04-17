@@ -453,11 +453,6 @@ It is an error to attempt to declare a parameter with the GLOBAL keyword.
 this is necessary to preserve backward compatibility with how cooked
 controls such as LOCK STEERING and LOCK THROTTLE work.
 
-Note that when operating under the :ref:`@LAZYGLOBAL OFF <lazyglobal>`
-directive the keywords LOCAL and GLOBAL are no longer optional, and are
-in fact required.  You are not allowed to rely on these presumed defaults
-when you've turned off LAZYGLOBAL.
-
 Explicit scoping keywords
 :::::::::::::::::::::::::
 
@@ -483,6 +478,17 @@ Even when the word 'DECLARE' is left off, the statement can still be
 referred to as a "declare statement".  The word "declare" is implied
 by the use of LOCAL or GLOBAL and you are allowed to leave it off 
 merely to reduce verbosity.
+
+Explicit Scoping required for @lazyglobal off
+:::::::::::::::::::::::::::::::::::::::::::::
+
+Note that when operating under the :ref:`@LAZYGLOBAL OFF <lazyglobal>`
+directive the keywords LOCAL and GLOBAL are no longer optional for
+**declare identifier** statements, and are in fact required.  You
+are not allowed to rely on these presumed defaults when you've
+turned off LAZYGLOBAL.  (This only applies to trying to make
+a variable with **declare identifier to value**, and not to
+``declare parameter`` or ``declare function``.)
 
 
 Locals stated at the global level are global
@@ -604,8 +610,10 @@ duration of the entire file's compile.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Normally the keywords ``local`` and ``global`` can be left off
-as optional in declare statements.  But when you turn LAZYGLOBAL
-off, the compiler starts requiring them to be explicitly stated.
+as optional in declare **identifier** statements.  But when you
+turn LAZYGLOBAL off, the compiler starts requiring them to be
+explicitly stated for **declare identifier** statements, to
+force yourself to be clear and explicit about the difference.
 
 For example, this program, which is valid::
 
@@ -622,15 +630,17 @@ Starts giving errors when you add @LAZYGLOBAL OFF to the top::
 
     print foo() + x.
 
-Wich you fix by explicitly stating the local keyword, as follows::
+Which you fix by explicitly stating the local keyword, as follows::
 
     @LAZYGLOBAL OFF.
-    local function foo {print "foo ". }
-    declare local x is 1.
+    function foo {print "foo ". }  // This does not need the 'local' keyword added
+    declare local x is 1.          // But this does because it is a declare *identifier* statement.
 
     print foo() + x.
 
-
+If you get in the habit of just writing your **declare identifier**
+statements like ``local x is 1.`` or ``global x is 1.``, which is
+probably nicer to read anyway, the issue won't come up.
 
 Longer Example of use
 ~~~~~~~~~~~~~~~~~~~~~

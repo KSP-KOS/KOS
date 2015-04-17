@@ -10,9 +10,9 @@ namespace kOS.Safe.Encapsulation
         // They may have to change after experimentation.
         protected const int MINROWS = 3;
 
-        protected const int MAXROWS = 80;
+        protected const int MAXROWS = 160;
         protected const int MINCOLUMNS = 15;
-        protected const int MAXCOLUMNS = 160;
+        protected const int MAXCOLUMNS = 255;
 
         // TODO: To implement IsOpen, we'd have to make a kOS.Safe interface wrapper around TermWindow first.
         // That's more than I want to do in this update, I'm leaving it as a TODO for me or someone else:

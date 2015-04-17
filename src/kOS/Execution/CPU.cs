@@ -112,7 +112,7 @@ namespace kOS.Execution
             else {
                 shared.ScriptHandler.ClearContext("program");
 
-                var programContext = ((CPU)shared.Cpu).GetProgramContext();
+                var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
                 programContext.Silent = true;
                 var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
                 string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + "boot";
@@ -238,7 +238,7 @@ namespace kOS.Execution
             return contexts[0];
         }
         
-        public ProgramContext GetProgramContext()
+        public ProgramContext SwitchToProgramContext()
         {
             if (contexts.Count == 1)
             {

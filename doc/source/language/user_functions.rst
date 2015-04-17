@@ -38,7 +38,7 @@ Help for the new user - What is a Function?
 In kerboscript, you can make your own user functions using the
 DECLARE FUNCTION command, which has syntax as follows:
 
-  [``declare``] [``local``|``global``] ``function`` *identifier* ``{`` *statements* ``}`` *optional dot (.)*
+  [``declare``] [``local``] ``function`` *identifier* ``{`` *statements* ``}`` *optional dot (.)*
 
 The statement is called a "declare function" statement even when the optional
 word "declare" was left off.
@@ -50,12 +50,11 @@ The following are all identical in meaning::
     local function hi { print "hello". }
     function hi { print "hello". }
 
-Functions are presumed to have local scope when the explicit scope
-keyword is missing.
+Functions are presumed to have scope local to the location where
+they are declared when the explicit local scope keyword is missing.
 
-While it is valid syntax to use a global keyword with a declare
-function statement, it is not well defined yet in kOS 0.17.0 what
-exactly that is supposed to mean, if anything.
+At the moment, it is redundant to mention the ``local`` keyword,
+although it is allowed.
 
 It is best to just leave all the optional keywords of and merely say
 ``function`` by itself.
@@ -471,8 +470,8 @@ don't let me do that.  Please force me to declare everything".
 The way that is done in kerboscript is by using a ``@LAZYGLOBAL`` 
 compiler directive, :ref:`as described here <lazyglobal>`.
 
-Had the function above been wrapped inside a ``@LAZYGLOBAL off.`` section,
-the typo would be noticed::
+Had the function above been compiled under a ``@LAZYGLOBAL off.``
+compiler directive, the typo would be noticed::
 
     @lazyglobal off.
 
