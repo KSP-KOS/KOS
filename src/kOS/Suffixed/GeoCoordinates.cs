@@ -9,7 +9,7 @@ namespace kOS.Suffixed
     {
         private double lat;
         private double lng;
-        public double Lat
+        public double Latitude
         {
             get
             {
@@ -20,7 +20,7 @@ namespace kOS.Suffixed
                 lat = value;
             }
         }
-        public double Lng
+        public double Longitude
         {
             get
             {
@@ -47,8 +47,8 @@ namespace kOS.Suffixed
         {
             Shared = sharedObj;
             Vector p = orb.GetPosition();
-            Lat = orb.PositionToLatitude(p);
-            Lng = orb.PositionToLongitude(p);
+            Latitude = orb.PositionToLatitude(p);
+            Longitude = orb.PositionToLongitude(p);
             Body = orb.GetParentBody();
             GeoCoordsInitializeSuffixes();
         }
@@ -56,14 +56,14 @@ namespace kOS.Suffixed
         /// <summary>
         ///   Build a GeoCoordinates from any arbitrary lat/long pair of floats.
         /// </summary>
-        /// <param name="body">A different celestial body to select a lat/long for that might not be the curent one</param>
+        /// <param name="body">A different celestial body to select a lat/long for that might not be the current one</param>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         /// <param name="latitude">latitude</param>
         /// <param name="longitude">longitude</param>
         public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double latitude, double longitude)
         {
-            Lat = latitude;
-            Lng = longitude;
+            Latitude = latitude;
+            Longitude = longitude;
             Shared = sharedObj;
             Body = body;
             GeoCoordsInitializeSuffixes();
@@ -74,7 +74,7 @@ namespace kOS.Suffixed
         /// </summary>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
         /// <param name="latitude">latitude</param>
-        /// <param name="lnongitude">longitude</param>
+        /// <param name="longitude">longitude</param>
         public GeoCoordinates(SharedObjects sharedObj, float latitude, float longitude) :
             this(sharedObj.Vessel.GetOrbit().referenceBody, sharedObj, latitude, longitude)
         {
@@ -88,8 +88,8 @@ namespace kOS.Suffixed
         /// <param name="longitude">longitude</param>
         public GeoCoordinates(SharedObjects sharedObj, double latitude, double longitude)
         {
-            Lat = latitude;
-            Lng = longitude;
+            Latitude = latitude;
+            Longitude = longitude;
             Shared = sharedObj;
             Body = Shared.Vessel.GetOrbit().referenceBody;
             GeoCoordsInitializeSuffixes();
@@ -138,8 +138,8 @@ namespace kOS.Suffixed
                 // Using that reference frame, you tell GetSurfaceHeight what the "up" vector is pointing through
                 // the spot on the surface you're querying for.
                 var bodyUpVector = new Vector3d(1,0,0);
-                bodyUpVector = QuaternionD.AngleAxis(Lat, Vector3d.forward/*around Z axis*/) * bodyUpVector;
-                bodyUpVector = QuaternionD.AngleAxis(Lng, Vector3d.down/*around -Y axis*/) * bodyUpVector;
+                bodyUpVector = QuaternionD.AngleAxis(Latitude, Vector3d.forward/*around Z axis*/) * bodyUpVector;
+                bodyUpVector = QuaternionD.AngleAxis(Longitude, Vector3d.down/*around -Y axis*/) * bodyUpVector;
 
                 alt = bodyPQS.GetSurfaceHeight( bodyUpVector ) - bodyPQS.radius ;
 
@@ -148,9 +148,9 @@ namespace kOS.Suffixed
                 const double HIGH_AGL = 1000.0;
                 const double POINT_AGL = 800.0;
                 // a point hopefully above the terrain:
-                Vector3d worldRayCastStart = Body.GetWorldSurfacePosition( Lat, Lng, alt+HIGH_AGL );
+                Vector3d worldRayCastStart = Body.GetWorldSurfacePosition( Latitude, Longitude, alt+HIGH_AGL );
                 // a point a bit below it, to aim down to the terrain:
-                Vector3d worldRayCastStop = Body.GetWorldSurfacePosition( Lat, Lng, alt+POINT_AGL );
+                Vector3d worldRayCastStop = Body.GetWorldSurfacePosition( Latitude, Longitude, alt+POINT_AGL );
                 RaycastHit hit;
                 if (Physics.Raycast(worldRayCastStart, (worldRayCastStop - worldRayCastStart), out hit, float.MaxValue, 1<<TERRAIN_MASK_BIT ))
                 {
@@ -175,7 +175,7 @@ namespace kOS.Suffixed
             var up = Shared.Vessel.upAxis;
             var north = VesselUtils.GetNorthVector(Shared.Vessel);
 
-            var targetWorldCoords = Body.GetWorldSurfacePosition(Lat, Lng, GetTerrainAltitude() );
+            var targetWorldCoords = Body.GetWorldSurfacePosition(Latitude, Longitude, GetTerrainAltitude() );
 
             var vector = Vector3d.Exclude(up, targetWorldCoords - Shared.Vessel.findWorldCenterOfMass()).normalized;
             var headingQ =
@@ -213,15 +213,15 @@ namespace kOS.Suffixed
         /// <returns>position vector</returns>
         public Vector GetAltitudePosition(double altitude)
         {
-            Vector3d latLongCoords = Body.GetWorldSurfacePosition(Lat, Lng, altitude);
+            Vector3d latLongCoords = Body.GetWorldSurfacePosition(Latitude, Longitude, altitude);
             Vector3d hereCoords = Shared.Vessel.findWorldCenterOfMass();
             return new Vector(latLongCoords - hereCoords);
         }
 
         private void GeoCoordsInitializeSuffixes()
         {
-            AddSuffix("LAT", new Suffix<double>(()=> Lat));
-            AddSuffix("LNG", new Suffix<double>(()=> Lng));
+            AddSuffix("LAT", new Suffix<double>(()=> Latitude));
+            AddSuffix("LNG", new Suffix<double>(()=> Longitude));
             AddSuffix("BODY", new Suffix<BodyTarget>(()=> new BodyTarget(Body, Shared)));
             AddSuffix("TERRAINHEIGHT", new Suffix<double>(GetTerrainAltitude));
             AddSuffix("DISTANCE", new Suffix<double>(GetDistanceFrom));
@@ -237,7 +237,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return "LATLNG(" + Lat + ", " + Lng + ")";
+            return "LATLNG(" + Latitude + ", " + Longitude + ")";
         }
     }
 }

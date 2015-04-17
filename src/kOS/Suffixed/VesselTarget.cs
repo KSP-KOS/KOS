@@ -453,7 +453,7 @@ namespace kOS.Suffixed
         /// weird exception for this one case.  This transforms it back into raw universe
         /// axes again:
         /// </summary>
-        /// <param name="kSPAngularVel">the value KSP is returning for angular velocity</param>
+        /// <param name="angularVelFromKSP">the value KSP is returning for angular velocity</param>
         /// <returns>altered velocity in the new reference frame</returns>
         private Vector RawAngularVelFromRelative(Vector3 angularVelFromKSP)
         {
