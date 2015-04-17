@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Action Groups Extended &mdash; kOS 0.15.3 documentation</title>
+  <title>Action Groups Extended &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="RemoteTech" href="RemoteTech.html"/>
         <link rel="prev" title="Addon Reference" href="../addons.html"/> 
@@ -75,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -85,7 +87,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -112,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -125,9 +128,13 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
@@ -168,7 +175,7 @@
           <div role="main" class="document">
             
   <div class="section" id="action-groups-extended">
-<h1>Action Groups Extended<a class="headerlink" href="#action-groups-extended" title="Permalink to this headline">¶</a></h1>
+<span id="agx"></span><h1>Action Groups Extended<a class="headerlink" href="#action-groups-extended" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li>Download: <a class="reference external" href="https://github.com/SirDiazo/AGExt/releases">https://github.com/SirDiazo/AGExt/releases</a></li>
 <li>Forum thread, including full instructions: <a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/74195">http://forum.kerbalspaceprogram.com/threads/74195</a></li>
@@ -177,8 +184,15 @@
 <p>Includes a Script Trigger action that can be used to control a running program and visual feedback if an action group is currently activated.</p>
 <p><strong>Usage:</strong>
 Adds action groups AG11 through AG250 to kOS that are interacted with the same way as the AG1 through AG10 bindings in base kOS are.</p>
-<p>Anywhere you use <tt class="docutils literal"><span class="pre">AG1</span></tt>, you can use <tt class="docutils literal"><span class="pre">AG15</span></tt> in exactly the same way.</p>
-<p>Caution: Sometimes, AGX will return an unexpected value for a group&#8217;s state (On/Off), see below for the explination. (Action State Monitoring)</p>
+<p>Anywhere you use <tt class="docutils literal"><span class="pre">AG1</span></tt>, you can use <tt class="docutils literal"><span class="pre">AG15</span></tt> in the same way. (AG11 through AG250 explicitly behave the same as the 10 stock groups. Please file a bug report if they do not.)</p>
+<p><strong>Script Trigger action:</strong>
+Installing AGX adds the &#8220;Script Trigger&#8221; action to all kOS computer parts. This action is a null action that does not activate anything but serves as a placeholder to enhance action groups in kOS.</p>
+<p>When an action group has the Script Trigger action assigned, on that action group you can now:</p>
+<ul class="simple">
+<li>Name the action group so you remember what that action group does in your code when you trigger it.</li>
+<li>Activate the action group with a mouse click on-screen, no more tying up your entire keyboard with various script trigger keys.</li>
+<li>Enable group state feedback so you can have your script change the groups state as feedback as to what the script is doing. Green being On and Red being Off. (Toggle option in AGX.)</li>
+</ul>
 <p><strong>Basic Quick Start:</strong></p>
 <div class="figure">
 <img alt="../_images/AGExtQuickStart1.jpg" src="../_images/AGExtQuickStart1.jpg" />
@@ -186,55 +200,51 @@ Adds action groups AG11 through AG250 to kOS that are interacted with the same w
 <div class="figure">
 <img alt="../_images/AGExtQuickStart2.jpg" src="../_images/AGExtQuickStart2.jpg" />
 </div>
-<p><strong>Overview Walkthrough:</strong> (Video, imagur album, animated gif, something)</p>
-<p>Note that this mod only adds action grousp 11 through 250, it does not change how action groups 1 through 10 behave in any way.</p>
-<p><strong>Known limitations:</strong></p>
+<p>Note that this mod only adds action groups 11 through 250, it does not change how action groups 1 through 10 behave in any way and groups 11 through 250 should behave the same way.</p>
+<p><strong>Known limitations (Action groups 11 through 250 only):</strong></p>
 <ul class="simple">
-<li>For an action group to be useable, it must have an action assigned to it. When installed, AGX adds a &#8220;Script Trigger&#8221; action to the kOS computer part that serves this purpose if you want an &#8220;empty&#8221; action group to trigger kOS scripts with.</li>
-<li>Be aware that if you query an empty action group, it will always return a state of False and trying to turn an emtpy action group On will do nothing and silently fail without any sort of error message. (Groups AG11 through AG250 only. Groups AG1 through AG10 can be empty and will turn On and Off when commanded to.)</li>
-<li>At this point, AG11 through AG250 do not support RemoteTech. Triggering those action groups will bypass the signal delay and execute those actions immediately. (On the immediate fix list.)</li>
+<li>On a nearby vessel that is not your current focus, an action group with no actions assigned will always return a state of False and can not be set to a state of true via the &#8220;AG15 on.&#8221; command. Assign the Script Trigger action as a work-around for this.</li>
+<li>At this point, AG11 through AG250 do not officially support RemoteTech through kOS. (Support will happen once all three mods involved have updated to KSP version 1.0 and made any internal changes necessary.) All three mods can be installed at the same time without issue, just be aware there may be unexpected behaviour when using action groups 11 through 250 from a kOS script in terms of RemoteTech signal delay and connection state.</li>
 </ul>
 <p><strong>Action state monitoring</strong></p>
-<p>Note that the state of action groups is tracked on a per-action basis, rather then on a per-group basis. This results in the group state being handled differently. (AG 11 through AG250 only.)</p>
+<p>Note that the state of action groups is tracked on a per-action basis, rather then on a per-group basis. This results in the group state being handled differently.</p>
 <ul class="simple">
 <li>The Script Trigger action found on the kOS computer module is not subject to the below considerations and is the recommended action to use when interacting with a running kOS script.</li>
 <li>The state of actions are monitored on the part and updated automatically. A closed solar panel will return a state of false for all it&#8217;s actions. (Extend Panels, Retract Panels, Toggle Panels) When you extend the solar panel with either the Extend Panels or Toggle Panels action, all three actions will change to a state of True. Retract the panels and the state of all three actions will become False. Note that this state will update in any action group that contains that action, not just the action group that was activated.</li>
 <li>This can result in an action group have actions in a mixed state where some actions are on and some are off. In this case querying the group state will result in a state of False. For the purposes of the group state being True or False, if <em>all</em> actions in the action group are true, the group state will return true. If <em>any</em> actions in the group are false,the group state with return False.</li>
 <li>When an action triggers an animation, the state of the action will be uncertain until the animation finishes playing. Some parts will report True during the animation and some will report False. It depends on how the part creator set things up and not something AGX can control.</li>
 <li>For clarity, visual feedback can be provided of the current state of an action group. When editing action groups, find the &#8220;Toggle Grp.&#8221; button just below the text entry field for the group name in the main AGX window and enable it. (It is enabled/disabled for the current action group when you click the button.) Once you do this, the text displaying that group will change from gray to colored. Green: Group is activated (state True). Red: Group is deactivated (state False). Yellow: Group is in a mixed state, will return a state False when queried.</li>
-<li>It is okay to activate an already activated group and deactivate a non-activated group. Actions in the group will still try to execute as normal. Exact behavior of a specific action will depend on how the action&#8217;s creator set things up.</li>
+<li>It is okay to activate an already activated group and deactivate a non-activated group. Actions in the group will still try to execute as normal. Exact behaviour of a specific action will depend on how the action&#8217;s creator set things up.</li>
 </ul>
 <p><strong>Example code:</strong></p>
+<p>Print to the terminal any time you activate action group 15. Use this to change variables within a running kOS script and the &#8220;Script Trigger&#8221; action found on the kOS computer part:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">AG15</span> <span class="n">on</span><span class="p">.</span> <span class="c1">// Activate action group 15.</span>
+<span class="n">print</span> <span class="n">AG15</span><span class="p">.</span> <span class="c1">// Print action group 15&#39;s state to the terminal. (True/False)</span>
+
+<span class="n">on</span> <span class="n">AG15</span> <span class="p">{</span> <span class="c1">//Prints &quot;Action group 15 clicked!&quot; to the console when AG15 is toggled, either via &quot;AG15 on.&quot; or in-game with an assigned key.</span>
+  <span class="n">print</span> <span class="s">&quot;Action group 15 clicked!&quot;</span><span class="p">.</span>
+  <span class="n">preserve</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Animation Delay:</strong></p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">on.</span></tt> Activate action group 15.</li>
-<li><tt class="docutils literal"><span class="pre">print</span> <span class="pre">AG15.</span></tt> Print action group 15&#8217;s state to the terminal. (True/False)</li>
-<li><tt class="docutils literal"><span class="pre">on</span> <span class="pre">AG15</span> <span class="pre">{</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">print</span> <span class="pre">&quot;Action</span> <span class="pre">group</span> <span class="pre">15</span> <span class="pre">clicked!&quot;.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">preserve.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">}</span></tt> Print to the terminal anytime you activate action group 15. Use this to change variables within a running kOS script and the &#8220;Script Trigger&#8221; action found on the kOS computer part.</li>
-</ul>
-<p>If you want to use the <tt class="docutils literal"><span class="pre">on</span> <span class="pre">AG15</span></tt> command to monitor a part that has an animation, a cool down is required.</p>
-<ul class="simple">
-<li><tt class="docutils literal"><span class="pre">on</span> <span class="pre">AG15</span> <span class="pre">{</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">print</span> <span class="pre">&quot;Solar</span> <span class="pre">Panel</span> <span class="pre">Toggled!&quot;.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">preserve.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">}</span></tt> will print to the terminal 3 times when the solar panel is extened.</li>
-<li>Player activates AG15, AG15&#8217;s state goes from false to true and the actions are triggered. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">False</span> <span class="pre">-&gt;</span> <span class="pre">True</span></tt> and prints to the terminal.</li>
+<li>Using the above code on a stock solar panel&#8217;s Toggle Panels action, the player activates AG15, AG15&#8217;s state goes from false to true and the actions are triggered. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">False</span> <span class="pre">-&gt;</span> <span class="pre">True</span></tt> and prints to the terminal.</li>
 <li>On it&#8217;s next update pass (100ms to 250ms later), AGX checks AG15&#8217;s state and sees the solar panel is still deploying which means that AG15&#8217;s state is false and so sets it that way. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">True</span> <span class="pre">-&gt;</span> <span class="pre">False</span></tt> and prints to the terminal.</li>
 <li>A few seconds later, the solar panel finishes it&#8217;s deployment animation. On it&#8217;s next update pass AGX checks AG15&#8217;s state and sees the solar panel is now deployed which means that AG15&#8217;s state is now true and so sets it that way. <tt class="docutils literal"><span class="pre">AG15</span> <span class="pre">False</span> <span class="pre">-&gt;</span> <span class="pre">True</span></tt> and prints to the terminal a third time.</li>
 </ul>
 <p>As a workaround, you need to add a cooldown:</p>
-<ul class="simple">
-<li><tt class="docutils literal"><span class="pre">declare</span> <span class="pre">cooldownTimeAG15</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">on</span> <span class="pre">AG15</span> <span class="pre">{</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">if</span> <span class="pre">cooldownTimeAG15</span> <span class="pre">+</span> <span class="pre">10</span> <span class="pre">&lt;</span> <span class="pre">time</span> <span class="pre">{</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">print</span> <span class="pre">&quot;Solar</span> <span class="pre">Panel</span> <span class="pre">Toggled!&quot;.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">set</span> <span class="pre">cooldownTimeAG15</span> <span class="pre">to</span> <span class="pre">time.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">}</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">preserve.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">}</span></tt></li>
-</ul>
-<p>Note the 10 in the second line, that is your cooldown time in seconds. Set this to a number of seconds that is longer then your animation time and the above code will limit AG15 so it can only activate after 10 seconds have passed since the previous activation and not activate multiple times on the same activation.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">cooldownTimeAG15</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">on</span> <span class="n">AG15</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="n">cooldownTimeAG15</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">&lt;</span> <span class="n">time</span><span class="o">:</span><span class="n">seconds</span> <span class="p">{</span>
+    <span class="n">print</span> <span class="s">&quot;Solar Panel Toggled!&quot;</span><span class="p">.</span>
+    <span class="n">set</span> <span class="n">cooldownTimeAG15</span> <span class="n">to</span> <span class="n">time</span><span class="p">.</span>
+  <span class="p">}</span>
+  <span class="n">preserve</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note the 10 in the second line, that is your cooldown time in seconds. Set this to a number of seconds that is longer then your animation time and the above code will limit whatever is inside the IF statement so it can only activate after 10 seconds have passed since the previous activation and will not try to activate a second time while the solar panel animation is still playing.</p>
 </div>
 
 
@@ -255,7 +265,7 @@ Adds action groups AG11 through AG250 to kOS that are interacted with the same w
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -276,7 +286,7 @@ Adds action groups AG11 through AG250 to kOS that are interacted with the same w
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

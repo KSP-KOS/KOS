@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>File I/O &mdash; kOS 0.15.3 documentation</title>
+  <title>File I/O &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Terminal and game environment" href="terminalgui.html"/>
         <link rel="prev" title="Querying a vessel’s parts" href="parts.html"/> 
@@ -75,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -85,7 +87,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -112,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parts.html">Parts Information</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -125,9 +128,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
@@ -225,7 +232,7 @@ filename.</li>
 and the period extension separator (&#8216;.&#8217;), can only be referred to
 using a string expression (with quotes), and cannot be used as a
 bareword expression (without quotes).</li>
-<li>If your filesystem is case-senstive (Linux and sometimes Mac OSX, or
+<li>If your filesystem is case-sensitive (Linux and sometimes Mac OSX, or
 even Windows if using some kinds of remote network drives), then
 bareword filenames will only work properly on filenames that are all
 lowercase. If you try to use a file with capital letters in the name
@@ -252,7 +259,7 @@ example:</p>
 </div></blockquote>
 <p>Pre-compiles a script into an <a class="reference internal" href="../general/compiling.html#compiling"><em>Kerboscript ML Exceutable
 image</em></a> that can be used
-instead of executing the program discript directly.</p>
+instead of executing the program script directly.</p>
 <p>The RUN command (elsewhere on this page) can work with either *.ks
 script files or *.ksm compiled files.</p>
 <p>The full details of this process are long and complex enough to be
@@ -315,7 +322,7 @@ understanding this command.</p>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The Edit feature was lost in version 0.11 but is back again after version 0.12.2 under a new guise. The new editor is unable to show a monospace font for a series of complex reasons involving how Unity works and how squad bundled the KSP game. The editor works, but will be in a proporional width font, which isn&#8217;t ideal for editing code. The best way to edit code remains to use a text editor external to KSP, however for a fast peek at the code during play, this editor is useful.</p>
+<p class="last">The Edit feature was lost in version 0.11 but is back again after version 0.12.2 under a new guise. The new editor is unable to show a monospace font for a series of complex reasons involving how Unity works and how squad bundled the KSP game. The editor works, but will be in a proportional width font, which isn&#8217;t ideal for editing code. The best way to edit code remains to use a text editor external to KSP, however for a fast peek at the code during play, this editor is useful.</p>
 </div>
 <p>Example:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">EDIT</span> <span class="n">filename</span><span class="p">.</span>       <span class="c1">// edits filename.ks</span>
@@ -367,7 +374,7 @@ LOG “4 times 8 is: “ + (4*8) to mylog.   // logs to mylog.ks because .ks is 
 <h3>Arguments<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>&lt;program&gt;: File to run.</li>
-<li>comma-separagted-args: a list of values to pass into the program.</li>
+<li>comma-separated-args: a list of values to pass into the program.</li>
 </ul>
 <p>Example:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">RUN</span> <span class="n">AutoLaunch</span><span class="p">.</span><span class="n">ks</span><span class="p">.</span>
@@ -387,7 +394,7 @@ mentions in <a class="reference internal" href="../language/variables.html#decla
 filenames that the other
 file commands allow. This is very important.</p>
 <p>RUN only works when the filename is a bareword filename. It cannot use expression filenames:</p>
-<div class="highlight-c"><div class="highlight"><pre>RUN &quot;ProgName&quot;   // THIS WILL FAIL.  Run needs a bare word filename.
+<div class="highlight-c"><div class="highlight"><pre>RUN &quot;ProgName&quot;   // THIS WILL FAIL.  Run needs a bareword filename.
 SET ProgName to &quot;MyProgram&quot;.
 RUN ProgName     // THIS WILL FAIL also.  It will attempt to run a file
                  // called &quot;ProgName.ksm&quot; or &quot;ProgName.ks&quot;, when it sees this,
@@ -402,7 +409,7 @@ has to
 generate some header info about them at compile time, and the
 filename
 has to be set in stone at that time. Changing this would require a
-large re-write of some of the archetecture of the virtual machine.
+large re-write of some of the architecture of the virtual machine.
 </pre></div>
 </div>
 </div>
@@ -419,6 +426,38 @@ to understanding this command.</p>
 <span class="n">SWITCH</span> <span class="n">TO</span> <span class="n">AwesomeDisk</span><span class="p">.</span>              <span class="c1">// Switch to volume 1.</span>
 <span class="n">PRINT</span> <span class="n">VOLUME</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>                  <span class="c1">// Prints &quot;AwesomeDisk&quot;.</span>
 </pre></div>
+</div>
+<div class="section" id="special-handling-of-files-starting-with-boot-example-boot-ks">
+<span id="boot"></span><h3>Special handling of files starting with &#8220;boot&#8221; (example <tt class="docutils literal"><span class="pre">boot.ks</span></tt>)<a class="headerlink" href="#special-handling-of-files-starting-with-boot-example-boot-ks" title="Permalink to this headline">¶</a></h3>
+<p><strong>(experimental)</strong></p>
+<p>For users requiring even more automation, the feature of custom boot scripts was introduced. If you have at least 1 file in your Archive volume starting with &#8220;boot&#8221; (for example &#8220;boot.ks&#8221;, &#8220;boot2.ks&#8221; or even &#8220;boot_custom_script.ks&#8221;), you will be presented with the option to choose one of those files as a boot script for your kOS CPU.</p>
+<img alt="http://i.imgur.com/05kp7Sy.jpg" src="http://i.imgur.com/05kp7Sy.jpg" />
+<p>As soon as you vessel leaves VAB/SPH and is being initialised on the launchpad (e.g. its status is PRELAUNCH) the assigned script will be copied to CPU&#8217;s local hard disk and named &#8220;boot.ks&#8221;. This script will be run as soon as CPU boots, e.g. as soon as you bring your CPU in physics range or power on your CPU if it was turned off.</p>
+<dl class="docutils">
+<dt>Important things to consider:</dt>
+<dd><ul class="first last">
+<li><p class="first">kOS CPU hard disk space is limited, avoid using complex boot scripts or increase disk space using MM config.</p>
+</li>
+<li><p class="first">If your kOS set to start from Archive, this feature may not work as intended. Possible workaround: disable starting from Archive and create simple default &#8220;boot.ks&#8221; file like this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">//default boot script, just switches to Archive</span>
+<span class="k">switch</span> <span class="n">to</span> <span class="mf">0.</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Boot script runs immediately on initialisation, it should avoid interaction with parts/modules until physics fully load. It is best to wait for couple seconds or until certain trigger.</p>
+</li>
+</ul>
+</dd>
+</dl>
+<p>Possible uses for boot scripts:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Automatically activate sleeper/background scripts which will run on CPU until triggered by certain condition.</li>
+<li>Create basic station-keeping scripts - you will only have to focus your probes once in a while and let the boot script do the orbit adjustment automatically.</li>
+<li>Create multi-CPU vessels with certain cores dedicated to specific tasks, triggered by user input or external events (Robotic-heavy Vessels)</li>
+<li>Anything else you can come up with</li>
+</ul>
+</div></blockquote>
 </div>
 </div>
 </div>
@@ -441,7 +480,7 @@ to understanding this command.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -462,7 +501,7 @@ to understanding this command.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

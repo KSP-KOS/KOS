@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>General Features of the KerboScript Language &mdash; kOS 0.15.3 documentation</title>
+  <title>General Features of the KerboScript Language &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="KerboScript Syntax Specification" href="syntax.html"/>
         <link rel="prev" title="The KerboScript Language" href="../language.html"/> 
@@ -85,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -112,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -125,6 +127,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -179,7 +182,10 @@
 <li><a class="reference internal" href="#structure-methods" id="id7">4. Structure Methods</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#language-structures" id="id8">Structures</a></li>
+<li><a class="reference internal" href="#late-typing" id="id8">Late Typing</a></li>
+<li><a class="reference internal" href="#lazy-globals-variable-declarations-optional" id="id9">Lazy Globals (variable declarations optional)</a></li>
+<li><a class="reference internal" href="#user-functions" id="id10">User Functions</a></li>
+<li><a class="reference internal" href="#language-structures" id="id11">Structures</a></li>
 </ul>
 </div>
 <div class="section" id="case-insensitivity">
@@ -247,8 +253,61 @@
 <p>For more information, see the <a class="reference internal" href="#language-structures"><em>Structures Section</em></a>. A full list of structure types can be found on the <a class="reference internal" href="../structures.html#structures"><em>Structures</em></a> page. For a more detailed breakdown of the language, see the <a class="reference internal" href="syntax.html#syntax"><em>Language Syntax Constructs</em></a> page.</p>
 </div>
 </div>
+<div class="section" id="late-typing">
+<h2><a class="toc-backref" href="#id8">Late Typing</a><a class="headerlink" href="#late-typing" title="Permalink to this headline">¶</a></h2>
+<p>Kerboscript is a language in which there is only one type of variable
+and it just generically holds any sort of object of any kind.  If
+you attempt to assign, for example, a string into a variable that is
+currently holding an integer, this does not generate an error.  It
+simply causes the variable to change its type and no longer be an
+integer, becoming a string now.</p>
+<p>In other words, the type of a variable changes dynamically at
+runtime depending on what you assign into it.</p>
+</div>
+<div class="section" id="lazy-globals-variable-declarations-optional">
+<h2><a class="toc-backref" href="#id9">Lazy Globals (variable declarations optional)</a><a class="headerlink" href="#lazy-globals-variable-declarations-optional" title="Permalink to this headline">¶</a></h2>
+<p>Kerboscript is a language in which variables need not be declared ahead
+of time.  If you simply set a variable to a value, that just &#8220;magically&#8221;
+makes the variable exist if it didn&#8217;t already.  When you do this,
+the variable will necessarily be <em>global</em> in scope.  kerboscript refers
+to these variables created implicitly this way as &#8220;lazy globals&#8221;.
+It&#8217;s a system designed to make kerboscript easy to use for people new to
+programming.</p>
+<p>But if you are an experienced programmer you might not like this
+behavior, and there are good arguments for why you might want to
+disable it.  If you wish to do so, a syntax exists to do so called
+:ref:<tt class="docutils literal"><span class="pre">NOLAZYGLOBAL</span></tt>.</p>
+</div>
+<div class="section" id="user-functions">
+<span id="feature-functions"></span><h2><a class="toc-backref" href="#id10">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.17: </span>This feature did not exist in prior versions of kerboscript.</p>
+</div>
+</div>
+<p>Kerboscript supports user functions which you can write yourself
+and call from your own scripts.  <em>These are not</em> <em class="xref std std-ref">structure
+methods</em> <em>(which as of this writing are a feature which
+only works for the built-in kOS types, and are not yet supported
+by the kerboscript language for user functions you write yourself).</em></p>
+<p>Example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">FUNCTION</span> <span class="n">DEGREES_TO_RADIANS</span> <span class="p">{</span>
+  <span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">DEG</span><span class="p">.</span>
+
+  <span class="n">RETURN</span> <span class="n">CONSTANT</span><span class="p">()</span><span class="o">:</span><span class="n">PI</span> <span class="o">*</span> <span class="n">DEG</span><span class="o">/</span><span class="mf">180.</span>
+<span class="p">}.</span>
+
+<span class="n">SET</span> <span class="n">ALPHA</span> <span class="n">TO</span> <span class="mf">45.</span>
+<span class="n">PRINT</span> <span class="n">ALPHA</span> <span class="o">+</span> <span class="s">&quot; degrees is &quot;</span> <span class="o">+</span> <span class="n">DEGREES_TO_RADIANS</span><span class="p">(</span><span class="n">ALPHA</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; radians.&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>For a more detailed description of how to declare your own user functions,
+see the <a class="reference internal" href="syntax.html#syntax-functions"><em>Language Syntax Constructs, User Functions</em></a>
+section.</p>
+</div>
 <div class="section" id="language-structures">
-<span id="id1"></span><h2><a class="toc-backref" href="#id8">Structures</a><a class="headerlink" href="#language-structures" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2><a class="toc-backref" href="#id11">Structures</a><a class="headerlink" href="#language-structures" title="Permalink to this headline">¶</a></h2>
 <p>Structures, <a class="reference internal" href="#features-structures"><em>introduced above</em></a>, are variable <em>types</em> that contain more than one piece of information. All structures contain sub-values or <a class="reference internal" href="#features-methods"><em>methods</em></a> that can be accessed with a colon (<tt class="docutils literal"><span class="pre">:</span></tt>) operator. Multiple structures can be chained together with more than one colon (<tt class="docutils literal"><span class="pre">:</span></tt>) operator:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myCraft</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="p">.</span>
 <span class="n">SET</span> <span class="n">myMass</span> <span class="n">TO</span> <span class="n">myCraft</span><span class="o">:</span><span class="n">MASS</span><span class="p">.</span>
@@ -282,7 +341,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -303,7 +362,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vessels and Parts &mdash; kOS 0.15.3 documentation</title>
+  <title>Vessels and Parts &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
         <link rel="up" title="Structure Reference" href="../structures.html"/>
         <link rel="next" title="AggregateResource" href="vessels/aggregateresource.html"/>
         <link rel="prev" title="Body" href="celestial_bodies/body.html"/> 
@@ -75,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -85,7 +87,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -112,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../structures.html">Structures</a><ul class="current">
@@ -125,9 +128,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
@@ -173,6 +180,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="vessels/aggregateresource.html">AggregateResource</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vessels/dockingport.html">DockingPort</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vessels/element.html">Element</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vessels/engine.html">Engine</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vessels/gimbal.html">Gimbal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vessels/node.html">Maneuver Node</a></li>
@@ -205,7 +213,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -226,7 +234,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

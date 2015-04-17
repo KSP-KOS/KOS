@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Reference Frames &mdash; kOS 0.15.3 documentation</title>
+  <title>Reference Frames &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Command Reference" href="../commands.html"/>
         <link rel="prev" title="Geographic Coordinates" href="geocoordinates.html"/> 
@@ -85,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../math.html">Mathematics</a><ul class="current">
@@ -112,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -125,9 +127,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
@@ -169,7 +175,33 @@
             
   <div class="section" id="reference-frames">
 <span id="ref-frame"></span><h1>Reference Frames<a class="headerlink" href="#reference-frames" title="Permalink to this headline">¶</a></h1>
-<p>This page describes the <span class="math">\((x,y,z)\)</span> reference frame used for most of <strong>kOS</strong>&#8216;s vectors. The coordinate system of Kerbal Space Program does some strange things that don&#8217;t make a lot of sense at first. For nomenclature, the following terms are used in this documentation:</p>
+<p>This page describes the <span class="math">\((x,y,z)\)</span> reference frame used for most
+of <strong>kOS</strong>&#8216;s vectors. kOS inherits its reference frame mostly from the
+base Kerbal Space Program game itself.  The coordinate system of Kerbal
+Space Program does some strange things that don&#8217;t make a lot of sense
+at first. For nomenclature, the following terms are used in this
+documentation:</p>
+<div class="admonition note" id="left-handed">
+<p class="first admonition-title">Note</p>
+<p class="last">Be aware that Kerbal Space program (and in fact many of the games
+based on the Unity game engine) uses a <strong>LEFT-handed</strong> coordinate
+system.  kOS inherits this behavior from KSP.</p>
+</div>
+<p>In all the reference frames mentioned below, the orientation of
+the axes is <strong>left-handed</strong>.  This means that if you imagine opening your
+palm and pointing your fingers down the x-axis, then curling your fingers
+in the direction of the y-axis, then sticking your thumb up, that the
+direction your thumb would have to be pointing to accomplish this task
+is the direction of the z-axis <strong>if and only if</strong> you used your left
+hand to perform those steps.  (If you do those steps with your right
+hand, you get a z-axis in the opposite direction and that is known as
+a <strong>right handed</strong> coordinate system).</p>
+<p>This is an important thing to keep in mind, as most mathematics
+and physics textbooks tend to draw examples using a right handed
+coordinate system, and most students become familiar with that
+convention first.  But for a variety of reasons, many computer
+graphics systems have a tradition of using left-handed systems
+instead, and Kerbal Space Program is one of them.</p>
 <span class="target" id="ship-raw"></span><span class="target" id="index-0"></span><dl class="object">
 <dt>
 <tt class="descname">SHIP-RAW</tt></dt>
@@ -185,19 +217,19 @@
 <span class="target" id="raw-raw"></span><span class="target" id="index-2"></span><dl class="object">
 <dt>
 <tt class="descname">RAW-RAW</tt></dt>
-<dd><p>The name of the reference fraem in which both the origin point and the rotation of the axes is identical to <strong>KSP</strong>&#8216;s native raw coordinate grid. This is never exposed to the <strong>KerbalScript</strong> program, because the origin point is meaningless to work with.</p>
+<dd><p>The name of the reference frame in which both the origin point and the rotation of the axes is identical to <strong>KSP</strong>&#8216;s native raw coordinate grid. This is never exposed to the <strong>KerbalScript</strong> program, because the origin point is meaningless to work with.</p>
 </dd></dl>
 
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">It is hoped that this may be expanded in the future, and conversion routines provided to let people pick a reference frame that makes sense depending on what the script is trying to do. At the moment the only reference frames used are SHIP-RAW and SOI-RAW, as they match closely to what <strong>KSP</strong> is using internally.</p>
 </div>
-<div class="section" id="raw-orienatation">
-<h2>Raw Orienatation<a class="headerlink" href="#raw-orienatation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="raw-orientation">
+<h2>Raw Orientation<a class="headerlink" href="#raw-orientation" title="Permalink to this headline">¶</a></h2>
 <div class="figure">
 <img alt="../_images/KSP_body_coords.png" src="../_images/KSP_body_coords.png" />
 </div>
-<p>The Y axis of <strong>KSP</strong> is the only consistent thing. Imagine a ray starting in the center of the SOI body and pointing upward out through the north pole. That is the direction of the Y axis. (If you move to the SOI of a body with an inclinded spin, presumably it will also change the angle of the Y axis to point in the new direction of the body&#8217;s spin axis).</p>
+<p>The Y axis of <strong>KSP</strong> is the only consistent thing. Imagine a ray starting in the center of the SOI body and pointing upward out through the north pole. That is the direction of the Y axis. (If you move to the SOI of a body with an inclined spin, presumably it will also change the angle of the Y axis to point in the new direction of the body&#8217;s spin axis).</p>
 <p>The X and Z axes of the coordinate grid are then consequently aligned with the equator plane of the SOI body, 90 degrees to each other. <strong>KSP</strong> uses a left-handed coordinate system, so the Z axis will always be rotated 90 degrees to the east of the X axis.</p>
 <div class="figure">
 <img alt="../_images/KSP_body_latlong.png" src="../_images/KSP_body_latlong.png" />
@@ -244,7 +276,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -265,7 +297,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

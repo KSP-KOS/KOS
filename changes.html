@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Changes from version to version &mdash; kOS 0.16.2 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="about.html"/>
+        <link rel="copyright" title="Copyright" href="copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="index.html"/>
+        <link rel="next" title="About kOS and KerboScript" href="about.html"/>
+        <link rel="prev" title="Contribute" href="contribute.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language/user_functions.html">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">    Resource Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/waypoint.html">Waypoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Changes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Changes from version to version</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/changes.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="changes-from-version-to-version">
+<span id="changes"></span><h1>Changes from version to version<a class="headerlink" href="#changes-from-version-to-version" title="Permalink to this headline">¶</a></h1>
+<p>This is a slightly more verbose version of the new features
+mentioned in the CHANGELOG, specifically for new features and for
+users familiar with older versions of the documentation who want
+only a quick update to the docs without reading the entire set
+of documentation again from scratch.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#changes-in-0-17-0" id="id1">Changes in 0.17.0</a><ul>
+<li><a class="reference internal" href="#variables-can-now-be-local" id="id2">Variables can now be local</a></li>
+<li><a class="reference internal" href="#kerboscript-has-user-functions" id="id3">Kerboscript has User Functions</a></li>
+<li><a class="reference internal" href="#community-examples-library" id="id4">Community Examples Library</a></li>
+<li><a class="reference internal" href="#physics-ticks-not-update-ticks" id="id5">Physics Ticks not Update Ticks</a></li>
+<li><a class="reference internal" href="#ability-to-use-sas-modes-from-ksp-0-90" id="id6">Ability to use SAS modes from KSP 0.90</a></li>
+<li><a class="reference internal" href="#blizzy-toolbar-support" id="id7">Blizzy ToolBar Support</a></li>
+<li><a class="reference internal" href="#ability-to-define-colors-using-hsv" id="id8">Ability to define colors using HSV</a></li>
+<li><a class="reference internal" href="#ability-to-highlight-a-part-in-color" id="id9">Ability to highlight a part in color</a></li>
+<li><a class="reference internal" href="#better-user-interface-for-selecting-boot-scripts" id="id10">Better user interface for selecting boot scripts</a></li>
+<li><a class="reference internal" href="#disks-can-be-made-bigger-with-tweakable-slider" id="id11">Disks can be made bigger with tweakable slider</a></li>
+<li><a class="reference internal" href="#you-can-transfer-resources" id="id12">You Can Transfer Resources</a></li>
+<li><a class="reference internal" href="#kerbal-alarm-clock-support" id="id13">Kerbal Alarm Clock support</a></li>
+<li><a class="reference internal" href="#query-the-docked-elements-of-a-vessel" id="id14">Query the docked elements of a vessel</a></li>
+<li><a class="reference internal" href="#support-for-action-groups-extended" id="id15">Support for Action Groups Extended</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="changes-in-0-17-0">
+<h2><a class="toc-backref" href="#id1">Changes in 0.17.0</a><a class="headerlink" href="#changes-in-0-17-0" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="variables-can-now-be-local">
+<h3><a class="toc-backref" href="#id2">Variables can now be local</a><a class="headerlink" href="#variables-can-now-be-local" title="Permalink to this headline">¶</a></h3>
+<p>Previously, the kOS runtime had a serious limitation in which
+it could only support one flat namespace of global-only variables.
+Considerable archetecture re-work has been done to now support
+<a class="reference internal" href="language/variables.html#scope"><em>block-scoping</em></a> in the underlying runtime, which can
+be controlled through the use of <a class="reference internal" href="language/variables.html#declare-syntax"><em>local declarations</em></a>
+in your kerboscript files.</p>
+</div>
+<div class="section" id="kerboscript-has-user-functions">
+<h3><a class="toc-backref" href="#id3">Kerboscript has User Functions</a><a class="headerlink" href="#kerboscript-has-user-functions" title="Permalink to this headline">¶</a></h3>
+<p>The primary reason for the local scope variables rework was in
+support of the new <a class="reference internal" href="language/user_functions.html#user-functions"><em>user functions feature</em></a>
+which has been a long-wished-for feature for kOS to support.</p>
+</div>
+<div class="section" id="community-examples-library">
+<h3><a class="toc-backref" href="#id4">Community Examples Library</a><a class="headerlink" href="#community-examples-library" title="Permalink to this headline">¶</a></h3>
+<p>There is now a <a class="reference internal" href="library.html#library"><em>new fledgling repository of examples and library
+scripts</em></a> that we hope to be something the user community
+contributes to.  Some of the examples shown in the kOS 0.17.0 release
+video are located there.  The addition of the ability to make user
+functions now makes the creation of such a library a viable option.</p>
+</div>
+<div class="section" id="physics-ticks-not-update-ticks">
+<h3><a class="toc-backref" href="#id5">Physics Ticks not Update Ticks</a><a class="headerlink" href="#physics-ticks-not-update-ticks" title="Permalink to this headline">¶</a></h3>
+<p>The updates have been <a class="reference internal" href="general/cpu_hardware.html#physics-tick"><em>moved to the physics update</em></a>
+portion of Unity, instead of the animation frame rate updates.
+This may affect your preferred CONFIG:IPU setting.  The new move
+creates a much more uniform performance across all users, without
+penalizing the users of faster computers anymore.  (Previously,
+if your computer was faster, you&#8217;d be charged more electricity as
+the updates came more often).</p>
+</div>
+<div class="section" id="ability-to-use-sas-modes-from-ksp-0-90">
+<h3><a class="toc-backref" href="#id6">Ability to use SAS modes from KSP 0.90</a><a class="headerlink" href="#ability-to-use-sas-modes-from-ksp-0-90" title="Permalink to this headline">¶</a></h3>
+<p>Added a new <a class="reference internal" href="commands/flight/systems.html#sasmode"><em>third way to control the ship</em></a>,
+by leaving SAS on, and just telling KSP which mode
+(prograde, retrograde, normal, etc) to put the SAS
+into.</p>
+</div>
+<div class="section" id="blizzy-toolbar-support">
+<h3><a class="toc-backref" href="#id7">Blizzy ToolBar Support</a><a class="headerlink" href="#blizzy-toolbar-support" title="Permalink to this headline">¶</a></h3>
+<p>If you have the Blizzy Toolbar mod installed, you should be able
+to put the kOS control panel window under its control.</p>
+</div>
+<div class="section" id="ability-to-define-colors-using-hsv">
+<h3><a class="toc-backref" href="#id8">Ability to define colors using HSV</a><a class="headerlink" href="#ability-to-define-colors-using-hsv" title="Permalink to this headline">¶</a></h3>
+<p>When a color is called for, such as with VECDRAW or HIGHLIGHT, you
+can now use the <a class="reference internal" href="structures/misc/colors.html#hsv"><em>HSV color system (hue, saturation, value)</em></a>
+instead of RGB, if you prefer.</p>
+</div>
+<div class="section" id="ability-to-highlight-a-part-in-color">
+<h3><a class="toc-backref" href="#id9">Ability to highlight a part in color</a><a class="headerlink" href="#ability-to-highlight-a-part-in-color" title="Permalink to this headline">¶</a></h3>
+<p>Any time your script needs to communicate something to the user about
+which part or parts it&#8217;s dealing with, it can use KSP&#8217;s <a class="reference internal" href="structures/misc/highlight.html#highlight"><em>part
+highlighting feature</em></a> to show a part.</p>
+</div>
+<div class="section" id="better-user-interface-for-selecting-boot-scripts">
+<h3><a class="toc-backref" href="#id10">Better user interface for selecting boot scripts</a><a class="headerlink" href="#better-user-interface-for-selecting-boot-scripts" title="Permalink to this headline">¶</a></h3>
+<p>The selection of <a class="reference internal" href="commands/files.html#boot"><em>boot scripts for your vessel</em></a> has been
+improved.</p>
+</div>
+<div class="section" id="disks-can-be-made-bigger-with-tweakable-slider">
+<h3><a class="toc-backref" href="#id11">Disks can be made bigger with tweakable slider</a><a class="headerlink" href="#disks-can-be-made-bigger-with-tweakable-slider" title="Permalink to this headline">¶</a></h3>
+<p>All parts that have disk space now have a slider you can use in the VAB
+or SPH editors to tweak the disk space to choose whether you want it to
+have 1x, 2x, or 4x as much as its default size.  Increasing the size
+increases its price and its weight cost.</p>
+</div>
+<div class="section" id="you-can-transfer-resources">
+<h3><a class="toc-backref" href="#id12">You Can Transfer Resources</a><a class="headerlink" href="#you-can-transfer-resources" title="Permalink to this headline">¶</a></h3>
+<p>You can now use kOS scripts to <a class="reference internal" href="commands/resource_transfer.html#resource-transfer"><em>transfer resources between
+parts</em></a> for things like fuel, in the same way
+that a manual user can do by using the right-click menus.</p>
+</div>
+<div class="section" id="kerbal-alarm-clock-support">
+<h3><a class="toc-backref" href="#id13">Kerbal Alarm Clock support</a><a class="headerlink" href="#kerbal-alarm-clock-support" title="Permalink to this headline">¶</a></h3>
+<p>If you have the Kerbal Alarm Clock Mod isntalled, you can now
+<a class="reference internal" href="addons/KAC.html#kac"><em>query and manipulate its alarms</em></a> from within your
+kOS scripts.</p>
+</div>
+<div class="section" id="query-the-docked-elements-of-a-vessel">
+<h3><a class="toc-backref" href="#id14">Query the docked elements of a vessel</a><a class="headerlink" href="#query-the-docked-elements-of-a-vessel" title="Permalink to this headline">¶</a></h3>
+<p>You can get the <a class="reference internal" href="structures/vessels/element.html#element"><em>docked components of a joined-together
+vessel</em></a> as separate collections of parts now.</p>
+</div>
+<div class="section" id="support-for-action-groups-extended">
+<h3><a class="toc-backref" href="#id15">Support for Action Groups Extended</a><a class="headerlink" href="#support-for-action-groups-extended" title="Permalink to this headline">¶</a></h3>
+<p>While there was some support for the Action Groups Extended
+mod before, it has <a class="reference internal" href="addons/AGX.html#agx"><em>been greatly improved</em></a>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="about.html" class="btn btn-neutral float-right" title="About kOS and KerboScript">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="contribute.html" class="btn btn-neutral" title="Contribute"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.16.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

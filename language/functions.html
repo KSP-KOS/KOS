@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>KerboScript User Functions &mdash; kOS 0.15.3 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">Variables &amp; Statements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html#scoping-rules">Scoping rules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li><strong>KerboScript</strong> User Functions</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/language/functions.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="kerboscript-user-functions">
+<span id="user-functions"></span><h1><strong>KerboScript</strong> User Functions<a class="headerlink" href="#kerboscript-user-functions" title="Permalink to this headline">¶</a></h1>
+<p>This page covers functions created by you, the user of kerboscript,
+rather than the built-in functions provided by kOS.</p>
+<dl class="docutils">
+<dt>Help for the new user - What is a Function?</dt>
+<dd><p class="first">In programming terminology, there is a commonly used feature of
+many programming languages that works as follows:</p>
+<ul>
+<li><ol class="first arabic simple">
+<li>Create a chunk of program instructions that you don&#8217;t intend to execute YET.</li>
+</ol>
+</li>
+<li><ol class="first arabic simple" start="2">
+<li>Later, when executing other parts of the program, do the following:</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><ol class="first upperalpha">
+<li>Remember the current location in the program.</li>
+</ol>
+</li>
+<li><ol class="first upperalpha" start="2">
+<li>Jump to the previously created chunk of code from (1) above.</li>
+</ol>
+</li>
+<li><ol class="first upperalpha" start="3">
+<li>Run the instructions there.</li>
+</ol>
+</li>
+<li><ol class="first upperalpha" start="4">
+<li>Return to where you remembered from (A) and continue from there.</li>
+</ol>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p class="last">This feature goes by many different names, with slightly different
+precise meanings: <em>Subroutines</em>, <em>Procedures</em>, <em>Functions</em>, etc.
+For the purposes of kerboscript, we will refer to all uses of this
+feature with the term <em>Function</em>, whether it <em>technically</em> fits the
+mathematical definition of a &#8220;function&#8221; or not.</p>
+</dd>
+</dl>
+<p>In kerboscript, you can make your own user functions using the
+DECLARE FUNCTION command, which has syntax as follows:</p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">declare</span> <span class="pre">function</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">{</span></tt> <em>statements</em> <tt class="docutils literal"><span class="pre">}</span></tt> <em>optional dot (.)</em></div></blockquote>
+<dl class="docutils">
+<dt>DECLARE PARAMETER</dt>
+<dd>If your function expects to have parameters passed into it, you can
+use the <a class="reference internal" href="variables.html#declare-parameter"><em>DECLARE PARAMETER</em></a> command to do
+so.  This is the same command as is used to declare parameters for
+running a whole script.  By putting a DECLARE PARAMETER statement
+inside a function, you tell the kerboscript compiler that you want
+the parameter to be for that function, not for the whole script.</dd>
+<dt>DECLARE</dt>
+<dd>If your function needs to make a local variable, it can do so using
+the <a class="reference internal" href="variables.html#declare"><em>DECLARE</em></a> command.  Whenever the DECLARE command is
+seen inside a function, the compiler assumes the variable is meant to
+be local to that function&#8217;s block.  This also works with recursion.
+If you recursively call a function again and again, there will be
+new copies stacked up of all the local varaibles made with DECLARE,
+but not of the variables implicitly made global without DECLARE.</dd>
+</dl>
+<p>A more in-depth explanation of kerboscript&#8217;s scoping rules and how they
+work is found <a class="reference internal" href="variables.html#scope"><em>on another page</em></a></p>
+<dl class="docutils">
+<dt>RETURN</dt>
+<dd><p class="first">If your function needs to exit early, and/or if it needs to pass a
+return value back to the user, you can use the RETURN staement to
+do so.  RETURN accepts an optional argument - the value to pass back
+to the caller.  Note that functions in kerboscript are very weakly
+typed with late binding.  You cannot declare the expected return
+type for the function, and it&#8217;s up to you to ensure that all possible
+returned values are useful and meaningful.</p>
+<p>Note that if you sometimes do and sometimes don&#8217;t return a value, from
+the same function, as in the example here:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// A badly designed function, with inconsistency in whether</span>
+<span class="c1">// or not it returns a value:</span>
+<span class="c1">//</span>
+<span class="n">DECLARE</span> <span class="n">FUNCTION</span> <span class="n">foo</span> <span class="p">{</span>
+   <span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">x</span><span class="p">.</span>
+   <span class="n">IF</span> <span class="n">X</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+     <span class="n">RETURN</span><span class="p">.</span> <span class="c1">// no return value.</span>
+   <span class="p">}</span> <span class="n">ELSE</span> <span class="p">{</span>
+     <span class="n">RETURN</span> <span class="s">&quot;hello&quot;</span><span class="p">.</span> <span class="c1">// a string return value</span>
+   <span class="p">}.</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+<p>Then the kerboscript compiler is not clever enough to detect this
+and warn you about it.  The internal stack will not get corrupted
+by this error, as some experienced programmers might expect upon
+hearing this (because secretly all kerboscript user functions
+return a value even if it&#8217;s never used, so there&#8217;s universally
+always something to pop off the stack even for the empty return
+statements.) However, you will still have to deal with the fact
+that the calling program might be getting nulls back some of the
+time if you make this programming error.</p>
+<p class="last">In general, make sure that if you <em>sometimes</em> return a value from
+a user function, that you <em>always</em> do so in every path through your
+function.</p>
+</dd>
+<dt>PASSING BY VALUE</dt>
+<dd>TODO - repeat the same thing was was said about this for built-in
+funtions elsewhere in the docs.</dd>
+</dl>
+<p>Examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">TODO</span> <span class="o">-</span> <span class="n">this</span> <span class="n">should</span> <span class="n">be</span> <span class="n">in</span><span class="o">-</span><span class="n">depth</span><span class="p">.</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.15.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Variables &amp; Statements &mdash; kOS 0.15.3 documentation</title>
+  <title>Variables &amp; Statements &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,9 +32,10 @@
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
-        <link rel="next" title="Mathematics and Basic Geometry" href="../math.html"/>
+        <link rel="next" title="KerboScript User Functions" href="user_functions.html"/>
         <link rel="prev" title="Flow Control" href="flow.html"/> 
 
   
@@ -75,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -85,7 +87,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flow.html">Flow Control</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -112,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -125,9 +128,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
@@ -168,32 +175,179 @@
           <div role="main" class="document">
             
   <div class="section" id="variables-statements">
-<span id="variables"></span><h1>Variables &amp; Statements<a class="headerlink" href="#variables-statements" title="Permalink to this headline">¶</a></h1>
+<h1>Variables &amp; Statements<a class="headerlink" href="#variables-statements" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#declare" id="id7"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a></li>
-<li><a class="reference internal" href="#declare-parameter" id="id8"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
-<li><a class="reference internal" href="#set" id="id9"><tt class="docutils literal"><span class="pre">SET</span></tt></a></li>
-<li><a class="reference internal" href="#lock" id="id10"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a></li>
-<li><a class="reference internal" href="#toggle" id="id11"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
-<li><a class="reference internal" href="#on" id="id12"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
-<li><a class="reference internal" href="#off" id="id13"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
+<li><a class="reference internal" href="#declare-to-is" id="id6"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></tt></a><ul>
+<li><a class="reference internal" href="#what-it-does" id="id7">What it does:</a></li>
+<li><a class="reference internal" href="#allowed-syntax" id="id8">Allowed Syntax:</a></li>
+<li><a class="reference internal" href="#see-scoping" id="id9">See Scoping:</a></li>
+<li><a class="reference internal" href="#initializer-required-in-declare" id="id10">Initializer required in DECLARE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#declare-parameter" id="id11"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
+<li><a class="reference internal" href="#set" id="id12"><tt class="docutils literal"><span class="pre">SET</span></tt></a><ul>
+<li><a class="reference internal" href="#difference-between-set-and-declare-local-and-declare-global" id="id13">Difference between SET and DECLARE LOCAL and DECLARE GLOBAL</a></li>
+<li><a class="reference internal" href="#when-to-use-global" id="id14">When to use GLOBAL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#lock" id="id15"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><ul>
+<li><a class="reference internal" href="#calling-a-lock-that-was-created-in-another-file" id="id16">Calling a LOCK that was created in another file</a></li>
+<li><a class="reference internal" href="#local-lock" id="id17">Local lock</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#toggle" id="id18"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
+<li><a class="reference internal" href="#on" id="id19"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
+<li><a class="reference internal" href="#off" id="id20"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
+<li><a class="reference internal" href="#scoping-terms" id="id21">Scoping terms</a></li>
+<li><a class="reference internal" href="#scoping-syntax" id="id22">Scoping syntax</a><ul>
+<li><a class="reference internal" href="#presumed-defaults" id="id23">Presumed defaults</a></li>
+<li><a class="reference internal" href="#explicit-scoping-keywords" id="id24">Explicit scoping keywords</a></li>
+<li><a class="reference internal" href="#explicit-scoping-required-for-lazyglobal-off" id="id25">Explicit Scoping required for &#64;lazyglobal off</a></li>
+<li><a class="reference internal" href="#scoping-and-triggers" id="id26">Scoping and Triggers:</a></li>
+<li><a class="reference internal" href="#lazyglobal-directive" id="id27"><tt class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></tt> directive</a></li>
+</ul>
+</li>
 </ul>
 </div>
-<div class="section" id="declare">
-<span id="id1"></span><h2><a class="toc-backref" href="#id7"><tt class="docutils literal"><span class="pre">DECLARE</span></tt></a><a class="headerlink" href="#declare" title="Permalink to this headline">¶</a></h2>
-<p>Declares a global variable. Alternatively, a variable can be implicitly declared by any <tt class="docutils literal"><span class="pre">SET</span></tt> or <tt class="docutils literal"><span class="pre">LOCK</span></tt> statement:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">X</span><span class="p">.</span>
+<div class="section" id="declare-to-is">
+<span id="declare"></span><h2><a class="toc-backref" href="#id6"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></tt></a><a class="headerlink" href="#declare-to-is" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="what-it-does">
+<h3><a class="toc-backref" href="#id7">What it does:</a><a class="headerlink" href="#what-it-does" title="Permalink to this headline">¶</a></h3>
+<p>Declares a variable, explicitly or implicitly defining what scope it
+has, and gives it an initial value.</p>
+</div>
+<div class="section" id="allowed-syntax">
+<h3><a class="toc-backref" href="#id8">Allowed Syntax:</a><a class="headerlink" href="#allowed-syntax" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="all-the-following-are-legal-declare-statements">
+<h4>All the following are legal &#8220;declare&#8221; statements:<a class="headerlink" href="#all-the-following-are-legal-declare-statements" title="Permalink to this headline">¶</a></h4>
+<p id="declare-syntax">The following alternate versions have identical meaning to each other:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">DECLARE</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">TO</span></tt> <em>expression</em> <em>dot</em></li>
+<li><tt class="docutils literal"><span class="pre">DECLARE</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">IS</span></tt> <em>expression</em> <em>dot</em></li>
+<li><tt class="docutils literal"><span class="pre">DECLARE</span></tt> <tt class="docutils literal"><span class="pre">LOCAL</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">TO</span></tt> <em>expression</em> <em>dot</em></li>
+<li><tt class="docutils literal"><span class="pre">DECLARE</span></tt> <tt class="docutils literal"><span class="pre">LOCAL</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">IS</span></tt> <em>expression</em> <em>dot</em></li>
+<li><tt class="docutils literal"><span class="pre">LOCAL</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">TO</span></tt> <em>expression</em> <em>dot</em></li>
+<li><tt class="docutils literal"><span class="pre">LOCAL</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">IS</span></tt> <em>expression</em> <em>dot</em></li>
+</ul>
+</div></blockquote>
+<p>The following alternate versions have identical meaning to each other:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">DECLARE</span></tt> <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">TO</span></tt> <em>expression</em> <em>dot</em></li>
+<li><tt class="docutils literal"><span class="pre">DECLARE</span></tt> <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">IS</span></tt> <em>expression</em> <em>dot</em></li>
+<li><tt class="docutils literal"><span class="pre">GLOBAL</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">TO</span></tt> <em>expression</em> <em>dot</em></li>
+<li><tt class="docutils literal"><span class="pre">GLOBAL</span></tt> <em>identifier</em> <tt class="docutils literal"><span class="pre">IS</span></tt> <em>expression</em> <em>dot</em></li>
+</ul>
+</div></blockquote>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.17: </span><strong>*BREAKING CHANGE</strong>
+The meaning, and syntax, of this statement changed considerably
+in this update.  Prior to this version, DECLARE always created
+global variables no matter where it appeared in the script.
+See &#8216;initializer required&#8217; below.</p>
+</div>
+</div>
+</div>
+<div class="section" id="detailed-description-of-the-syntax">
+<h4>Detailed Description of the syntax:<a class="headerlink" href="#detailed-description-of-the-syntax" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>The statement must begin with either the word <tt class="docutils literal"><span class="pre">DECLARE</span></tt>, <tt class="docutils literal"><span class="pre">LOCAL</span></tt>,
+or <tt class="docutils literal"><span class="pre">GLOBAL</span></tt>.  If it begins with the word <tt class="docutils literal"><span class="pre">DECLARE</span></tt> it may optionally
+also contain the word <tt class="docutils literal"><span class="pre">LOCAL</span></tt> or <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> afterward.  <em>Note that if
+neither</em> <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> <em>nor</em> <tt class="docutils literal"><span class="pre">LOCAL</span></tt> <em>is used, the behavior of</em>
+<tt class="docutils literal"><span class="pre">LOCAL</span></tt> <em>will be assumed implicitly.  Therefore</em> <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">LOCAL</span></tt>
+<em>and just</em> <tt class="docutils literal"><span class="pre">DECLARE</span></tt> <em>and just</em> <tt class="docutils literal"><span class="pre">LOCAL</span></tt> <em>mean the same thing.</em></li>
+<li>After that it must contain an identifier.</li>
+<li>After that it must contain either the word <tt class="docutils literal"><span class="pre">TO</span></tt> or the word <tt class="docutils literal"><span class="pre">IS</span></tt>,
+which mean the same thing here.</li>
+<li>After that it must contain some expression for the initial starting
+value of the variable.</li>
+<li>After that it must contain a dot (&#8220;period&#8221;), like all commands in
+kerboscript.</li>
+</ul>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// These all do the exact same thing - make a local variable:</span>
+<span class="n">DECLARE</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span> <span class="c1">// assumes local when unspecified.</span>
+<span class="n">LOCAL</span> <span class="n">X</span> <span class="n">IS</span> <span class="mf">1.</span>
+<span class="n">DECLARE</span> <span class="n">LOCAL</span> <span class="n">X</span> <span class="n">IS</span> <span class="mf">1.</span>
+
+<span class="c1">// These do the exact same thing - make a global variable:</span>
+<span class="n">GLOBAL</span> <span class="n">X</span> <span class="n">IS</span> <span class="mf">1.</span>
+<span class="n">DECLARE</span> <span class="n">GLOBAL</span> <span class="n">X</span> <span class="n">IS</span> <span class="mf">1.</span>
 </pre></div>
+</div>
+</div></blockquote>
+<p>If neither the scope word <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> nor the scope word <tt class="docutils literal"><span class="pre">LOCAL</span></tt>
+appear, a declare statement assumes <tt class="docutils literal"><span class="pre">LOCAL</span></tt> by default.</p>
+<p>Any variable declared with <tt class="docutils literal"><span class="pre">DECLARE</span></tt>, <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">LOCAL</span></tt>, or <tt class="docutils literal"><span class="pre">LOCAL</span></tt>
+will only exist inside the code block section it was created in.
+After that code block is finished, the variable will no longer exist.</p>
+</div>
+</div>
+<div class="section" id="see-scoping">
+<h3><a class="toc-backref" href="#id9">See Scoping:</a><a class="headerlink" href="#see-scoping" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div>If you don&#8217;t know what the terms &#8220;global&#8221; or &#8220;local&#8221; mean, it&#8217;s
+important to read the <a class="reference internal" href="#scope"><em>section below about scoping.</em></a></div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is implied that the outermost scope of a program file is
+the global scope.  Therefore if you make a LOCAL variable at
+the outermost nesting level of your program it really ends up
+being GLOBAL.  Note that GLOBAL variables are not only shared
+between functions of your script, but also can be seen by
+other programs you run from the current program, and visa
+versa.</p>
+</div>
+<p>Alternatively, a variable can be implicitly declared by any <tt class="docutils literal"><span class="pre">SET</span></tt> or
+<tt class="docutils literal"><span class="pre">LOCK</span></tt> statement, however doing so causes the variable to always have
+global scope.  <strong>The only way to make a variable be local instead of
+global is to declare it explicitly with one of these DECLARE statements</strong>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Terminology: &#8220;declare statement&#8221;</strong>: Note that the documentation
+will often refer to the phrase &#8220;declare statement&#8221; even when
+referring to a statement in which the optional keyword &#8220;declare&#8221;
+was left off.  A statement such as <tt class="docutils literal"><span class="pre">LOCAL</span> <span class="pre">X</span> <span class="pre">IS</span> <span class="pre">1.</span></tt> Will still
+be referred to as a &#8220;declare statement&#8221;, even though the word
+&#8220;declare&#8221; never explicitly appeared in it.</p>
+</div>
+</div>
+<div class="section" id="initializer-required-in-declare">
+<h3><a class="toc-backref" href="#id10">Initializer required in DECLARE</a><a class="headerlink" href="#initializer-required-in-declare" title="Permalink to this headline">¶</a></h3>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.17.</span></p>
+</div>
+<p>The syntax without the initializer, looking like so:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">x</span><span class="p">.</span> <span class="c1">// no initializer like &quot;TO 1.&quot;</span>
+</pre></div>
+</div>
+<p>is <strong>no longer legal syntax</strong>.</p>
+<p>Kerboscript now requires the use of the initializer clause (the &#8220;TO&#8221;
+keyword) after the identifier name so as to make it impossible for
+there to exist any uninitialized variables in a script.</p>
 </div>
 </div>
 <div class="section" id="declare-parameter">
-<span id="id2"></span><h2><a class="toc-backref" href="#id8"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
-<p>Declares variables to be used as a parameter that can be passed in using the <tt class="docutils literal"><span class="pre">RUN</span></tt> command.</p>
+<span id="id1"></span><h2><a class="toc-backref" href="#id11"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
+<p>If you put this statement in the main part of your script, it
+declares variables to be used as a parameter that can be passed
+in using the <tt class="docutils literal"><span class="pre">RUN</span></tt> command.</p>
+<p>If you put this statement inside of a <a class="reference internal" href="user_functions.html#user-functions"><em>Function body</em></a>,
+then it declares variables to be used as a parameter that can
+be passed in to that function when calling the function.</p>
+<p>Just as with a <a class="reference internal" href="#declare"><em>declare identifier statement</em></a>,
+in a <tt class="docutils literal"><span class="pre">declare</span> <span class="pre">parameter</span></tt> statement, the actual keyword
+<tt class="docutils literal"><span class="pre">declare</span></tt> need not be used.  The word <tt class="docutils literal"><span class="pre">parameter</span></tt> may
+be used alone and that is legal syntax.</p>
 <p>Program 1:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// This is the contents of program1:</span>
 <span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">X</span><span class="p">.</span>
-<span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">Y</span><span class="p">.</span>
+<span class="n">PARAMETER</span> <span class="n">Y</span><span class="p">.</span> <span class="c1">// omitting the word &quot;DECLARE&quot; - it still means the same thing.</span>
 <span class="n">PRINT</span> <span class="s">&quot;X times Y is &quot;</span> <span class="o">+</span> <span class="n">X</span><span class="o">*</span><span class="n">Y</span><span class="p">.</span>
 </pre></div>
 </div>
@@ -209,19 +363,25 @@
 </div>
 <p>It is also possible to put more than one parameter into a single <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt> statement, separated by commas, as shown below:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">CheckFlag</span><span class="p">.</span>
+
+<span class="c1">// Or you could leave &quot;DECLARE&quot; off like so:</span>
+<span class="n">PARAMETER</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">CheckFlag</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>This is exactly equivalent to:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">X</span><span class="p">.</span>
-<span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">Y</span><span class="p">.</span>
-<span class="n">DECLARE</span> <span class="n">PARAMETER</span> <span class="n">CheckFlag</span><span class="p">.</span>
+<p>Either of the above is exactly equivalent to:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PARAMETER</span> <span class="n">X</span><span class="p">.</span>
+<span class="n">PARAMETER</span> <span class="n">Y</span><span class="p">.</span>
+<span class="n">PARAMETER</span> <span class="n">CheckFlag</span><span class="p">.</span>
 </pre></div>
 </div>
-<p>Note: Unlike normal variables, Parameter variables are local to the program. When program A calls program B and passes parameters to it, program B can alter their values without affecting the values of the variables in program A.</p>
+<p>Note: Unlike normal variables, Parameter variables are always local to the program. When program A calls program B and passes parameters to it, program B can alter their values without affecting the values of the variables in program A.</p>
 <dl class="docutils">
 <dt>Caveat</dt>
 <dd>This is only true if the values are primitive singleton values like numbers or booleans. If the values are Structures like Vectors or Lists, then they do end up behaving as if they were passed by reference, in the usual way that should be familiar to people who have used languages like Java or C# before.</dd>
 </dl>
+<p><strong>Illegal to say</strong> <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">GLOBAL</span> <span class="pre">PARAMETER</span></tt> : Because parameters
+are always local to the location they were declared at, the keyword
+<tt class="docutils literal"><span class="pre">GLOBAL</span></tt> is illegal to use in a <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt> statement.</p>
 <p>The <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt> statements can appear anywhere in a program as long as they are in the file at a point earlier than the point at which the parameter is being used. The order the arguments need to be passed in by the caller is the order the <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt> statements appear in the program being called.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -231,15 +391,63 @@
 </div>
 </div>
 <div class="section" id="set">
-<span id="id3"></span><h2><a class="toc-backref" href="#id9"><tt class="docutils literal"><span class="pre">SET</span></tt></a><a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
-<p>Sets the value of a variable. Declares a global variable if it doesn’t already exist:</p>
+<span id="id2"></span><h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">SET</span></tt></a><a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
+<p>Sets the value of a variable. Implicitly creates a global variable if it doesn’t already exist:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+<span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="n">y</span><span class="o">*</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">1.</span>
 </pre></div>
+</div>
+<p>This follows the <a class="reference internal" href="#scope"><em>scoping rules explained below</em></a>.  If the
+variable can be found in the current local scope, or any scope higher
+up, then it won&#8217;t be created and instead the existing one will be used.</p>
+<div class="section" id="difference-between-set-and-declare-local-and-declare-global">
+<h3><a class="toc-backref" href="#id13">Difference between SET and DECLARE LOCAL and DECLARE GLOBAL</a><a class="headerlink" href="#difference-between-set-and-declare-local-and-declare-global" title="Permalink to this headline">¶</a></h3>
+<p>The following three examples look very similar and you might ask
+why you&#8217;d pick one instead of the other:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+<span class="n">DECLARE</span> <span class="n">LOCAL</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+<span class="n">DECLARE</span> <span class="n">GLOBAL</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+</pre></div>
+</div>
+<p>They are slightly different, as follows:</p>
+<p><tt class="docutils literal"><span class="pre">SET</span> <span class="pre">X</span> <span class="pre">TO</span> <span class="pre">1.</span></tt> Performs the following activity:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Attempt to find an already existing local X.  If found, set it to 1.</li>
+<li>Try again for each scoping level outside the current one.</li>
+<li>If and only if it gets all the way out to global scope and it still
+hasn&#8217;t found an X, then create a new X with value 1, and do so at
+global scope.  This behavior is called making a &#8220;lazy global&#8221;.</li>
+</ol>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">LOCAL</span> <span class="pre">X</span> <span class="pre">TO</span> <span class="pre">1.</span></tt> Performs the following activity:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Immediately make a new X right here at the local-most scope.
+Set it to 1.</li>
+</ol>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">GLOBAL</span> <span class="pre">X</span> <span class="pre">TO</span> <span class="pre">1.</span></tt> Performs the following activity:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Ignore whether or not there are any existing X&#8217;s in a local scope.</li>
+<li>Immediately go all the way to global scope and make a new X there.
+Set it to 1.</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="when-to-use-global">
+<h3><a class="toc-backref" href="#id14">When to use GLOBAL</a><a class="headerlink" href="#when-to-use-global" title="Permalink to this headline">¶</a></h3>
+<p>You should use a <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">GLOBAL</span></tt> statement only sparingly.  It
+mostly exists so that a function can store values &#8220;in the caller&#8221;
+for the caller to get its hands on.  It&#8217;s generally a &#8220;sloppy&#8221; design
+pattern to use, and it&#8217;s much better to keep everything local
+and only pass back things to the caller as return values.</p>
 </div>
 </div>
 <div class="section" id="lock">
-<h2><a class="toc-backref" href="#id10"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
-<p>Declares that the idenifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also <a class="reference internal" href="flow.html#lock"><em>Flow Control documentation</em></a>):</p>
+<h2><a class="toc-backref" href="#id15"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
+<p>Declares that the identifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also <a class="reference internal" href="flow.html#lock"><em>Flow Control documentation</em></a>):</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">Y</span> <span class="n">TO</span> <span class="mf">1.</span>
 <span class="n">LOCK</span> <span class="n">X</span> <span class="n">TO</span> <span class="n">Y</span> <span class="o">+</span> <span class="mf">1.</span>
 <span class="n">PRINT</span> <span class="n">X</span><span class="p">.</span>    <span class="c1">// prints &quot;2&quot;</span>
@@ -247,27 +455,388 @@
 <span class="n">PRINT</span> <span class="n">X</span><span class="p">.</span>    <span class="c1">// prints &quot;3&quot;</span>
 </pre></div>
 </div>
+<p>Note that because of how LOCK expressions are in fact implemented as mini
+functions, they cannot have local scope.  A LOCK <em>always</em> has global scope.</p>
+<p>By default a <tt class="docutils literal"><span class="pre">LOCK</span></tt> expression is <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> when made.  This is
+necessary for backward compatibility with older scripts that use
+LOCK STEERING from inside triggers, loops, etc, and expect it to
+affect the global steering value.</p>
+<div class="section" id="calling-a-lock-that-was-created-in-another-file">
+<h3><a class="toc-backref" href="#id16">Calling a LOCK that was created in another file</a><a class="headerlink" href="#calling-a-lock-that-was-created-in-another-file" title="Permalink to this headline">¶</a></h3>
+<p>If you try to call a lock that is declared in another program
+file you run, it does not work, and has never worked prior to kOS
+0.17.0:</p>
+<p>File1.ks:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">run</span> <span class="n">File2</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;x&#39;s locked value is &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>File2.ks:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">lock</span> <span class="n">x</span> <span class="n">to</span> <span class="s">&quot;this is x&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>But now with the kerboscript of kOS 0.17.0, you can make it work
+by inserting empty parentheses after the lock name to help give
+the compiler the hint that you expected x to be a function call
+(which is what a lock really is):</p>
+<p>Change this line:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="s">&quot;x&#39;s locked value is &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>To this instead:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="s">&quot;x&#39;s locked value is &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="p">().</span>
+</pre></div>
+</div>
+<p>and it should work.</p>
+</div>
+<div class="section" id="local-lock">
+<h3><a class="toc-backref" href="#id17">Local lock</a><a class="headerlink" href="#local-lock" title="Permalink to this headline">¶</a></h3>
+<p>You can explicitly make a <tt class="docutils literal"><span class="pre">LOCK</span></tt> statement be LOCAL with the <tt class="docutils literal"><span class="pre">LOCAL</span></tt>
+keyword, like so:</p>
+<p><tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">LOCAL</span></tt> identifier <tt class="docutils literal"><span class="pre">TO</span></tt> expression.</p>
+<p>But be aware that doing so with a cooked steering control such
+as THROTTLE or STEERING will not actually affect your ship.  The
+automated cooked steering control is only reading the GLOBAL locks
+for these settings.</p>
+<p>The purpose of making a LOCAL lock is if you only need to use the
+value temporarily for the duration of a function call, loop, or
+if-statement body, and then you don&#8217;t care about it anymore after
+that.</p>
+<div class="section" id="why-do-i-care-about-a-local-lock">
+<h4>Why do I care about a local lock?<a class="headerlink" href="#why-do-i-care-about-a-local-lock" title="Permalink to this headline">¶</a></h4>
+<p>You care because in order to make a LOCK work even after the variables
+it&#8217;s using in its expression go out of scope (which is necessary
+for LOCK STEERING or LOCK THROTTLE to work if done from inside
+a user function call or trigger body), locks need to preserve
+a thing called a &#8220;closure&#8221;.
+( <a class="reference external" href="http://en.wikipedia.org/wiki/Closure_(computer_programming">http://en.wikipedia.org/wiki/Closure_(computer_programming</a>)</p>
+<p>When they do this, it means none of the local variables used
+in the function body they were declared in truly &#8220;go away&#8221; from
+memory.  They live on, taking up space until the lock disappears.
+Making the lock be local tells the computer that it can make the lock
+disappear when it goes out of scope, and thus it doesn&#8217;t need to
+hold that &#8220;closure&#8221; around forever.</p>
+<p>The tl;dr version:  It&#8217;s more efficient for memory.  If you know
+for sure that your lock isn&#8217;t getting used after your current
+section of code is over, make it a local lock.</p>
+</div>
+</div>
 </div>
 <div class="section" id="toggle">
-<span id="id4"></span><h2><a class="toc-backref" href="#id11"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a><a class="headerlink" href="#toggle" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2><a class="toc-backref" href="#id18"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a><a class="headerlink" href="#toggle" title="Permalink to this headline">¶</a></h2>
 <p>Toggles a variable between <tt class="docutils literal"><span class="pre">TRUE</span></tt> or <tt class="docutils literal"><span class="pre">FALSE</span></tt>. If the variable in question starts out as a number, it will be converted to a boolean and then toggled. This is useful for setting action groups, which are activated whenever their values are inverted:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">TOGGLE</span> <span class="n">AG1</span><span class="p">.</span> <span class="c1">// Fires action group 1.</span>
 <span class="n">TOGGLE</span> <span class="n">SAS</span><span class="p">.</span> <span class="c1">// Toggles SAS on or off.</span>
 </pre></div>
 </div>
+<p>This follows the same rules as <a class="reference internal" href="#set"><em>SET</em></a>, in that if the variable in
+question doesn&#8217;t already exist, it will end up creating it as a global
+variable.</p>
 </div>
 <div class="section" id="on">
-<span id="id5"></span><h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">ON</span></tt></a><a class="headerlink" href="#on" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id19"><tt class="docutils literal"><span class="pre">ON</span></tt></a><a class="headerlink" href="#on" title="Permalink to this headline">¶</a></h2>
 <p>Sets a variable to <tt class="docutils literal"><span class="pre">TRUE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">ON</span><span class="p">.</span>  <span class="c1">// Turns on the RCS</span>
 </pre></div>
 </div>
+<p>This follows the same rules as <a class="reference internal" href="#set"><em>SET</em></a>, in that if the variable in
+question doesn&#8217;t already exist, it will end up creating it as a global
+variable.</p>
 </div>
 <div class="section" id="off">
-<span id="id6"></span><h2><a class="toc-backref" href="#id13"><tt class="docutils literal"><span class="pre">OFF</span></tt></a><a class="headerlink" href="#off" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2><a class="toc-backref" href="#id20"><tt class="docutils literal"><span class="pre">OFF</span></tt></a><a class="headerlink" href="#off" title="Permalink to this headline">¶</a></h2>
 <p>Sets a variable to <tt class="docutils literal"><span class="pre">FALSE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">OFF</span><span class="p">.</span>  <span class="c1">// Turns off the RCS</span>
 </pre></div>
+</div>
+<p>This follows the same rules as <a class="reference internal" href="#set"><em>SET</em></a>, in that if the variable in
+question doesn&#8217;t already exist, it will end up creating it as a global
+variable.</p>
+</div>
+<div class="section" id="scoping-terms">
+<span id="scope"></span><h2><a class="toc-backref" href="#id21">Scoping terms</a><a class="headerlink" href="#scoping-terms" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.17: </span>In prior versions of kerboscript, all identifiers other than
+DECLARE PARAMETER identifiers were always global variables no
+matter what, even if you used the DECLARE statement to make them.</p>
+</div>
+</div>
+<dl class="docutils">
+<dt>What is Scope?</dt>
+<dd>The term <em>Scope</em> simply refers to asking the question &#8220;where in the
+code can this variable be used, and how long does it last before it
+goes away?&#8221;  The <em>scope</em> of a variable is the section of the program&#8217;s
+code that it &#8220;works&#8221; within.  Any section of the program&#8217;s code
+from which the variable cannot be seen is said to be &#8220;out of that
+variable&#8217;s scope&#8221;.</dd>
+<dt>Global scope</dt>
+<dd>The simplest scope is called &#8220;global&#8221;.  Global scope simply means
+&#8220;this variable can be used from anywhere in the program&#8221;.  If you
+never use the DECLARE statement, then your variables in kerboscript
+will all be in <em>global scope</em>.  For simple easy scripts used by
+beginners, this is often enough and you don&#8217;t have to read the rest
+of this topic until you start advancing to more intermediate scripts.</dd>
+<dt>Local Scope</dt>
+<dd>Kerboscript uses block scoping to keep track of local variable
+scope.  This means you can have variables that are not only
+local to a function, but are in fact actually local to JUST
+the current curly-brace block of statements, even if that block
+of statements is, say, the body of an IF check, or the body of
+an UNTIL loop.</dd>
+<dt>Why limit scope?</dt>
+<dd>You might be wondering why it&#8217;s useful to limit the scope of a
+variable.  Wouldn&#8217;t it be easier just to make all variables
+global?  The answer is twofold: (1) Once a program becomes large
+enough, trying to remember the name of every variable in the
+program, and having to keep coming up with new names for new
+variables, can be a large unmanageable chore, especially with
+programs written by more than one person collaborating together.
+(2) Even if you can keep track of all that in your head, there&#8217;s
+a certain programming technique known as recursion
+( <a class="reference external" href="http://en.wikipedia.org/wiki/Recursion#In_computer_science">http://en.wikipedia.org/wiki/Recursion#In_computer_science</a> )
+in which you actually NEED to have local variable scope for
+the technique to even work at all.</dd>
+</dl>
+<p>If you need to have variables that only have local scope, either just
+to keep your code more manageable, or because you literally need
+local scope to allow for recursive function calls, then you use the
+<tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">LOCAL</span></tt> statement (or just <tt class="docutils literal"><span class="pre">LOCAL</span></tt> for short) to create
+the variables.</p>
+</div>
+<div class="section" id="scoping-syntax">
+<h2><a class="toc-backref" href="#id22">Scoping syntax</a><a class="headerlink" href="#scoping-syntax" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="presumed-defaults">
+<h3><a class="toc-backref" href="#id23">Presumed defaults</a><a class="headerlink" href="#presumed-defaults" title="Permalink to this headline">¶</a></h3>
+<p>The DECLARE keyword and the LOCK keyword have some default
+presumed scoping behaviors:</p>
+<p><tt class="docutils literal"><span class="pre">DECLARE</span></tt> Is assumed to always be LOCAL when not otherwise specified.</p>
+<p><tt class="docutils literal"><span class="pre">FUNCTION</span></tt> Is assumed to always be LOCAL when not otherwise specified.</p>
+<p><tt class="docutils literal"><span class="pre">PARAMETER</span></tt> Cannot be anything but LOCAL to the location it&#8217;s mentioned.
+It is an error to attempt to declare a parameter with the GLOBAL keyword.</p>
+<p><tt class="docutils literal"><span class="pre">LOCK</span></tt> Is assumed to always be GLOBAL when not otherwise specified.
+this is necessary to preserve backward compatibility with how cooked
+controls such as LOCK STEERING and LOCK THROTTLE work.</p>
+</div>
+<div class="section" id="explicit-scoping-keywords">
+<h3><a class="toc-backref" href="#id24">Explicit scoping keywords</a><a class="headerlink" href="#explicit-scoping-keywords" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">DECLARE</span></tt>, <tt class="docutils literal"><span class="pre">FUNCTION</span></tt>, and <tt class="docutils literal"><span class="pre">LOCK</span></tt> commands can be given
+explicit <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> or <tt class="docutils literal"><span class="pre">LOCAL</span></tt> keywords to define their intended
+scoping level:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">//</span>
+<span class="c1">// These are all synonymous with each other:</span>
+<span class="c1">//</span>
+<span class="n">DECLARE</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+<span class="n">DECLARE</span> <span class="n">LOCAL</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+<span class="n">LOCAL</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span> <span class="c1">// &#39;declare&#39; is implied and optional when scoping words are used</span>
+<span class="n">LOCAL</span> <span class="n">X</span> <span class="n">IS</span> <span class="mf">1.</span> <span class="c1">// &#39;declare&#39; is implied and optional when scoping words are used</span>
+<span class="c1">//</span>
+<span class="c1">// These are all synonymous with each other:</span>
+<span class="c1">//</span>
+<span class="n">DECLARE</span> <span class="n">GLOBAL</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
+<span class="n">GLOBAL</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span> <span class="c1">// &#39;declare&#39; is implied and optional when scoping words are used</span>
+<span class="n">GLOBAL</span> <span class="n">X</span> <span class="n">IS</span> <span class="mf">1.</span> <span class="c1">// &#39;declare&#39; is implied and optional when scoping words are used</span>
+</pre></div>
+</div>
+<p>Even when the word &#8216;DECLARE&#8217; is left off, the statement can still be
+referred to as a &#8220;declare statement&#8221;.  The word &#8220;declare&#8221; is implied
+by the use of LOCAL or GLOBAL and you are allowed to leave it off
+merely to reduce verbosity.</p>
+</div>
+<div class="section" id="explicit-scoping-required-for-lazyglobal-off">
+<h3><a class="toc-backref" href="#id25">Explicit Scoping required for &#64;lazyglobal off</a><a class="headerlink" href="#explicit-scoping-required-for-lazyglobal-off" title="Permalink to this headline">¶</a></h3>
+<p>Note that when operating under the <a class="reference internal" href="#lazyglobal"><em>&#64;LAZYGLOBAL OFF</em></a>
+directive the keywords LOCAL and GLOBAL are no longer optional for
+<strong>declare identifier</strong> statements, and are in fact required.  You
+are not allowed to rely on these presumed defaults when you&#8217;ve
+turned off LAZYGLOBAL.  (This only applies to trying to make
+a variable with <strong>declare identifier to value</strong>, and not to
+<tt class="docutils literal"><span class="pre">declare</span> <span class="pre">parameter</span></tt> or <tt class="docutils literal"><span class="pre">declare</span> <span class="pre">function</span></tt>.)</p>
+<div class="section" id="locals-stated-at-the-global-level-are-global">
+<h4>Locals stated at the global level are global<a class="headerlink" href="#locals-stated-at-the-global-level-are-global" title="Permalink to this headline">¶</a></h4>
+<p>Note that if you put a statement at the outermost scope
+of the program, then there is effectively no difference
+between a <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">LOCAL</span></tt> (or just <tt class="docutils literal"><span class="pre">LOCAL</span></tt> for short)
+and a <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">GLOBAL</span></tt> (or just <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> for short) statement.
+They are both going to make a variable at global scope because that&#8217;s
+the scope the program was in when the statement was encountered.</p>
+<p>Examples:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">GLOBAL</span> <span class="n">x</span> <span class="n">IS</span> <span class="mf">10.</span> <span class="c1">// X is now a global variable with value 10,</span>
+<span class="n">SET</span> <span class="n">y</span> <span class="n">TO</span> <span class="mf">20.</span> <span class="c1">// Y is now a global variable (implicitly) with value 20.</span>
+<span class="n">LOCAL</span> <span class="n">z</span> <span class="n">IS</span> <span class="mf">0.</span>  <span class="c1">// Z is now a global variable</span>
+               <span class="c1">// because even though this says LOCAL, it was</span>
+               <span class="c1">// stated at the outermost, global scope.</span>
+
+<span class="n">SET</span> <span class="n">sum</span> <span class="n">to</span> <span class="o">-</span><span class="mf">1.</span> <span class="c1">// sum is now an implicitly made global variable, containing -1.</span>
+
+<span class="c1">// A function to return the mean average of all the items in the list</span>
+<span class="c1">// passed into it, under the assumption all the items in the list are</span>
+<span class="c1">// numbers of some sort:</span>
+<span class="n">FUNCTION</span> <span class="n">calcAverage</span> <span class="p">{</span>
+  <span class="n">PARAMETER</span> <span class="n">inputList</span><span class="p">.</span>
+
+  <span class="n">LOCAL</span> <span class="n">sum</span> <span class="n">IS</span> <span class="mf">0.</span> <span class="c1">// sum is now local to this function&#39;s body.</span>
+  <span class="n">FOR</span> <span class="n">val</span> <span class="n">IN</span> <span class="n">inputList</span> <span class="p">{</span>
+    <span class="n">SET</span> <span class="n">sum</span> <span class="n">TO</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">val</span><span class="p">.</span>
+  <span class="p">}.</span>
+  <span class="n">print</span> <span class="s">&quot;Inside calcAverage, sum is &quot;</span> <span class="o">+</span> <span class="n">sum</span><span class="p">.</span>
+  <span class="n">RETURN</span> <span class="n">sum</span> <span class="o">/</span> <span class="n">inputList</span><span class="o">:</span><span class="n">LENGTH</span><span class="p">.</span>
+<span class="p">}.</span>
+
+<span class="n">SET</span> <span class="n">testList</span> <span class="n">TO</span> <span class="n">LIST</span><span class="p">();</span>
+<span class="nl">testList:</span><span class="n">ADD</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span>
+<span class="nl">testList:</span><span class="n">ADD</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span>
+<span class="nl">testList:</span><span class="n">ADD</span><span class="p">(</span><span class="mi">15</span><span class="p">).</span>
+<span class="n">print</span> <span class="s">&quot;average is &quot;</span> <span class="o">+</span> <span class="n">calcAverage</span><span class="p">(</span><span class="n">testList</span><span class="p">).</span>
+<span class="n">print</span> <span class="s">&quot;but out here where it&#39;s global, sum is still &quot;</span> <span class="o">+</span> <span class="n">sum</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>This example will print:</p>
+<div class="highlight-c"><div class="highlight"><pre>Inside calcAverage, sum is 30
+average is 10
+but out here where it&#39;s global, sum is still -1
+</pre></div>
+</div>
+<p>Thus proving that the variable called SUM inside the function is NOT the
+same variable as the one called SUM out in the global main code.</p>
+</div>
+<div class="section" id="nesting">
+<h4>Nesting<a class="headerlink" href="#nesting" title="Permalink to this headline">¶</a></h4>
+<p>The scoping rules are nested as well.  If you attempt to use a
+variable that doesn&#8217;t exist in the local scope, the next scope &#8220;outside&#8221;
+it will be used, and if it doesn&#8217;t exist there, the next scope &#8220;outside&#8221;
+that will be used and so on, all the way up to the global scope.  Only
+if the variable isn&#8217;t found at the global scope either will it be
+implicitly created.</p>
+</div>
+</div>
+<div class="section" id="scoping-and-triggers">
+<span id="trigger-scope"></span><h3><a class="toc-backref" href="#id26">Scoping and Triggers:</a><a class="headerlink" href="#scoping-and-triggers" title="Permalink to this headline">¶</a></h3>
+<p>Triggers such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li>WHEN &lt;expression&gt; { &lt;statements&gt; }.</li>
+</ul>
+</div></blockquote>
+<p>and</p>
+<blockquote>
+<div><ul class="simple">
+<li>ON &lt;boolean variable&gt; { &lt;statements&gt; }.</li>
+</ul>
+</div></blockquote>
+<p>Do not work predictably when you use local variables in the &lt;expression&gt;
+part of them.  They need to be designed to use global variables only,
+because they outlive the duration of any particular scoping braces.
+You can declare local variables within their &lt;statements&gt; in their bodies,
+just don&#8217;t use local variables in the trigger conditions.</p>
+</div>
+<div class="section" id="lazyglobal-directive">
+<span id="lazyglobal"></span><h3><a class="toc-backref" href="#id27"><tt class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></tt> directive</a><a class="headerlink" href="#lazyglobal-directive" title="Permalink to this headline">¶</a></h3>
+<p>Often the fact that you can get an implicit global variable declared
+without intending to can lead to a lot of code maintenance headaches
+down the road.  If you make a typo in a variable name, you end up
+creating a new variable instead of generating an error.  Or you may just
+forget to mark the variable as local when you intended to.</p>
+<p>If you wish to instruct kerboscript to alter its behavior and
+disable its normal implicit globals, and instead demand that all
+variables MUST be explicitly declared and may not use implied
+lazy scoping, the <tt class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></tt> compiler directive allows you to
+do that.</p>
+<p>If you place the words:</p>
+<div class="highlight-c"><div class="highlight"><pre>@LAZYGLOBAL OFF.
+</pre></div>
+</div>
+<p>At the start of your program, you will turn off the compiler&#8217;s
+lazy global feature and it will require you to explicitly mention
+all variables you use in a declaration somewhere (with the
+exception of the built-in variables such as THROTTLE, STEERING,
+SHIP, and so on.)</p>
+<div class="section" id="lazyglobal-can-only-exist-at-the-top-of-your-code">
+<h4>&#64;LAZYGLOBAL Can only exist at the top of your code.<a class="headerlink" href="#lazyglobal-can-only-exist-at-the-top-of-your-code" title="Permalink to this headline">¶</a></h4>
+<p>The &#64;LAZYGLOBAL compile directive is only allowed as the first
+non-comment thing in the program file.  This is because it
+instructs the compiler to change its default behavior for the
+duration of the entire file&#8217;s compile.</p>
+</div>
+<div class="section" id="lazyglobal-makes-local-and-global-mandatory">
+<h4>&#64;LAZYGLOBAL Makes <tt class="docutils literal"><span class="pre">LOCAL</span></tt> and <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> mandatory<a class="headerlink" href="#lazyglobal-makes-local-and-global-mandatory" title="Permalink to this headline">¶</a></h4>
+<p>Normally the keywords <tt class="docutils literal"><span class="pre">local</span></tt> and <tt class="docutils literal"><span class="pre">global</span></tt> can be left off
+as optional in declare <strong>identifier</strong> statements.  But when you
+turn LAZYGLOBAL off, the compiler starts requiring them to be
+explicitly stated for <strong>declare identifier</strong> statements, to
+force yourself to be clear and explicit about the difference.</p>
+<p>For example, this program, which is valid:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">function</span> <span class="n">foo</span> <span class="p">{</span><span class="n">print</span> <span class="s">&quot;foo &quot;</span><span class="p">.</span> <span class="p">}</span>
+<span class="n">local</span> <span class="n">x</span> <span class="n">is</span> <span class="mf">1.</span>
+
+<span class="n">print</span> <span class="n">foo</span><span class="p">()</span> <span class="o">+</span> <span class="n">x</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Starts giving errors when you add &#64;LAZYGLOBAL OFF to the top:</p>
+<div class="highlight-c"><div class="highlight"><pre>@LAZYGLOBAL OFF.
+function foo {print &quot;foo &quot;. }
+declare x is 1.
+
+print foo() + x.
+</pre></div>
+</div>
+<p>Which you fix by explicitly stating the local keyword, as follows:</p>
+<div class="highlight-c"><div class="highlight"><pre>@LAZYGLOBAL OFF.
+function foo {print &quot;foo &quot;. }  // This does not need the &#39;local&#39; keyword added
+declare local x is 1.          // But this does because it is a declare *identifier* statement.
+
+print foo() + x.
+</pre></div>
+</div>
+<p>If you get in the habit of just writing your <strong>declare identifier</strong>
+statements like <tt class="docutils literal"><span class="pre">local</span> <span class="pre">x</span> <span class="pre">is</span> <span class="pre">1.</span></tt> or <tt class="docutils literal"><span class="pre">global</span> <span class="pre">x</span> <span class="pre">is</span> <span class="pre">1.</span></tt>, which is
+probably nicer to read anyway, the issue won&#8217;t come up.</p>
+</div>
+<div class="section" id="longer-example-of-use">
+<h4>Longer Example of use<a class="headerlink" href="#longer-example-of-use" title="Permalink to this headline">¶</a></h4>
+<p>Example:</p>
+<div class="highlight-c"><div class="highlight"><pre>@LAZYGLOBAL off.
+global num TO 1.
+IF TRUE {
+  LOCAL Y IS 2.
+  SET num TO num + Y. // This is fine.  num exists already as a global and
+                      // you&#39;re adding the local Y to it.
+  SET nim TO 20. // This typo generates an error.  There is
+                 // no such variable &quot;nim&quot; and @LAZYGLOBAL OFF
+                 // says not to implicitly make it.
+}.
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Why <tt class="docutils literal"><span class="pre">LAZYGLOBAL</span> <span class="pre">OFF</span></tt>?</dt>
+<dd>The rationale behind <tt class="docutils literal"><span class="pre">LAZYGLOBAL</span> <span class="pre">OFF.</span></tt> is to primarily be used in
+cases where you&#8217;re writing a library of function calls you intend to
+use elsewhere, and want to be careful not to accidentally make
+them dependent on globals outside the function itself.</dd>
+</dl>
+<p>The <tt class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span> <span class="pre">OFF.</span></tt> directive is meant to mimic Perl&#8217;s <tt class="docutils literal"><span class="pre">use</span> <span class="pre">strict;</span></tt>
+directive.</p>
+<hr class="docutils" />
+<dl class="docutils">
+<dt>History:</dt>
+<dd><p class="first">Kerboscript began its life as a language in which you never have to
+declare a variable if you don&#8217;t want to.  You can just create any
+variable implicitly by just using it in a SET statement.</p>
+<p>There are a variety of programming languages that work like this,
+such as Perl, Javascript, and Lua.  However, they all share one
+thing in common - once you want to allow the possibility of having
+local variables, you have to figure out how this should work with
+the implicit variable declaration feature.</p>
+<p class="last">And all those languages went with the same solution, which
+kerboscript now follows as well.  Because implicit undeclared
+variables are intended to be a nice easy way for new users to
+ease into programming, they should always default to being
+global so that people who wish to keep programming that way
+don&#8217;t need to understand or deal with scope.</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 </div>
@@ -278,7 +847,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../math.html" class="btn btn-neutral float-right" title="Mathematics and Basic Geometry">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="user_functions.html" class="btn btn-neutral float-right" title="KerboScript User Functions">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="flow.html" class="btn btn-neutral" title="Flow Control"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -290,7 +859,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -311,7 +880,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
