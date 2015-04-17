@@ -53,6 +53,14 @@ penalizing the users of faster computers anymore.  (Previously,
 if your computer was faster, you'd be charged more electricity as
 the updates came more often).
 
+Ability to use SAS modes from KSP 0.90
+::::::::::::::::::::::::::::::::::::::
+
+Added a new :ref:`third way to control the ship <sasmode>`,
+by leaving SAS on, and just telling KSP which mode
+(prograde, retrograde, normal, etc) to put the SAS
+into.
+
 Blizzy ToolBar Support
 ::::::::::::::::::::::
 
