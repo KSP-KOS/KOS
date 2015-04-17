@@ -26,8 +26,8 @@ Considerable archetecture re-work has been done to now support
 be controlled through the use of :ref:`local declarations <declare syntax>`
 in your kerboscript files.
 
-User Functions
-::::::::::::::
+Kerboscript has User Functions
+::::::::::::::::::::::::::::::
 
 The primary reason for the local scope variables rework was in
 support of the new :ref:`user functions feature <user_functions>`
