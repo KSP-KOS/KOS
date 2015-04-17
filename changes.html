@@ -185,15 +185,16 @@ of documentation again from scratch.</p>
 <li><a class="reference internal" href="#kerboscript-has-user-functions" id="id3">Kerboscript has User Functions</a></li>
 <li><a class="reference internal" href="#community-examples-library" id="id4">Community Examples Library</a></li>
 <li><a class="reference internal" href="#physics-ticks-not-update-ticks" id="id5">Physics Ticks not Update Ticks</a></li>
-<li><a class="reference internal" href="#blizzy-toolbar-support" id="id6">Blizzy ToolBar Support</a></li>
-<li><a class="reference internal" href="#ability-to-define-colors-using-hsv" id="id7">Ability to define colors using HSV</a></li>
-<li><a class="reference internal" href="#ability-to-highlight-a-part-in-color" id="id8">Ability to highlight a part in color</a></li>
-<li><a class="reference internal" href="#better-user-interface-for-selecting-boot-scripts" id="id9">Better user interface for selecting boot scripts</a></li>
-<li><a class="reference internal" href="#disks-can-be-made-bigger-with-tweakable-slider" id="id10">Disks can be made bigger with tweakable slider</a></li>
-<li><a class="reference internal" href="#you-can-transfer-resources" id="id11">You Can Transfer Resources</a></li>
-<li><a class="reference internal" href="#kerbal-alarm-clock-support" id="id12">Kerbal Alarm Clock support</a></li>
-<li><a class="reference internal" href="#query-the-docked-elements-of-a-vessel" id="id13">Query the docked elements of a vessel</a></li>
-<li><a class="reference internal" href="#support-for-action-groups-extended" id="id14">Support for Action Groups Extended</a></li>
+<li><a class="reference internal" href="#ability-to-use-sas-modes-from-ksp-0-90" id="id6">Ability to use SAS modes from KSP 0.90</a></li>
+<li><a class="reference internal" href="#blizzy-toolbar-support" id="id7">Blizzy ToolBar Support</a></li>
+<li><a class="reference internal" href="#ability-to-define-colors-using-hsv" id="id8">Ability to define colors using HSV</a></li>
+<li><a class="reference internal" href="#ability-to-highlight-a-part-in-color" id="id9">Ability to highlight a part in color</a></li>
+<li><a class="reference internal" href="#better-user-interface-for-selecting-boot-scripts" id="id10">Better user interface for selecting boot scripts</a></li>
+<li><a class="reference internal" href="#disks-can-be-made-bigger-with-tweakable-slider" id="id11">Disks can be made bigger with tweakable slider</a></li>
+<li><a class="reference internal" href="#you-can-transfer-resources" id="id12">You Can Transfer Resources</a></li>
+<li><a class="reference internal" href="#kerbal-alarm-clock-support" id="id13">Kerbal Alarm Clock support</a></li>
+<li><a class="reference internal" href="#query-the-docked-elements-of-a-vessel" id="id14">Query the docked elements of a vessel</a></li>
+<li><a class="reference internal" href="#support-for-action-groups-extended" id="id15">Support for Action Groups Extended</a></li>
 </ul>
 </li>
 </ul>
@@ -233,54 +234,61 @@ penalizing the users of faster computers anymore.  (Previously,
 if your computer was faster, you&#8217;d be charged more electricity as
 the updates came more often).</p>
 </div>
+<div class="section" id="ability-to-use-sas-modes-from-ksp-0-90">
+<h3><a class="toc-backref" href="#id6">Ability to use SAS modes from KSP 0.90</a><a class="headerlink" href="#ability-to-use-sas-modes-from-ksp-0-90" title="Permalink to this headline">¶</a></h3>
+<p>Added a new <a class="reference internal" href="commands/flight/systems.html#sasmode"><em>third way to control the ship</em></a>,
+by leaving SAS on, and just telling KSP which mode
+(prograde, retrograde, normal, etc) to put the SAS
+into.</p>
+</div>
 <div class="section" id="blizzy-toolbar-support">
-<h3><a class="toc-backref" href="#id6">Blizzy ToolBar Support</a><a class="headerlink" href="#blizzy-toolbar-support" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id7">Blizzy ToolBar Support</a><a class="headerlink" href="#blizzy-toolbar-support" title="Permalink to this headline">¶</a></h3>
 <p>If you have the Blizzy Toolbar mod installed, you should be able
 to put the kOS control panel window under its control.</p>
 </div>
 <div class="section" id="ability-to-define-colors-using-hsv">
-<h3><a class="toc-backref" href="#id7">Ability to define colors using HSV</a><a class="headerlink" href="#ability-to-define-colors-using-hsv" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id8">Ability to define colors using HSV</a><a class="headerlink" href="#ability-to-define-colors-using-hsv" title="Permalink to this headline">¶</a></h3>
 <p>When a color is called for, such as with VECDRAW or HIGHLIGHT, you
 can now use the <a class="reference internal" href="structures/misc/colors.html#hsv"><em>HSV color system (hue, saturation, value)</em></a>
 instead of RGB, if you prefer.</p>
 </div>
 <div class="section" id="ability-to-highlight-a-part-in-color">
-<h3><a class="toc-backref" href="#id8">Ability to highlight a part in color</a><a class="headerlink" href="#ability-to-highlight-a-part-in-color" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Ability to highlight a part in color</a><a class="headerlink" href="#ability-to-highlight-a-part-in-color" title="Permalink to this headline">¶</a></h3>
 <p>Any time your script needs to communicate something to the user about
 which part or parts it&#8217;s dealing with, it can use KSP&#8217;s <a class="reference internal" href="structures/misc/highlight.html#highlight"><em>part
 highlighting feature</em></a> to show a part.</p>
 </div>
 <div class="section" id="better-user-interface-for-selecting-boot-scripts">
-<h3><a class="toc-backref" href="#id9">Better user interface for selecting boot scripts</a><a class="headerlink" href="#better-user-interface-for-selecting-boot-scripts" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">Better user interface for selecting boot scripts</a><a class="headerlink" href="#better-user-interface-for-selecting-boot-scripts" title="Permalink to this headline">¶</a></h3>
 <p>The selection of <a class="reference internal" href="commands/files.html#boot"><em>boot scripts for your vessel</em></a> has been
 improved.</p>
 </div>
 <div class="section" id="disks-can-be-made-bigger-with-tweakable-slider">
-<h3><a class="toc-backref" href="#id10">Disks can be made bigger with tweakable slider</a><a class="headerlink" href="#disks-can-be-made-bigger-with-tweakable-slider" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Disks can be made bigger with tweakable slider</a><a class="headerlink" href="#disks-can-be-made-bigger-with-tweakable-slider" title="Permalink to this headline">¶</a></h3>
 <p>All parts that have disk space now have a slider you can use in the VAB
 or SPH editors to tweak the disk space to choose whether you want it to
 have 1x, 2x, or 4x as much as its default size.  Increasing the size
 increases its price and its weight cost.</p>
 </div>
 <div class="section" id="you-can-transfer-resources">
-<h3><a class="toc-backref" href="#id11">You Can Transfer Resources</a><a class="headerlink" href="#you-can-transfer-resources" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id12">You Can Transfer Resources</a><a class="headerlink" href="#you-can-transfer-resources" title="Permalink to this headline">¶</a></h3>
 <p>You can now use kOS scripts to <a class="reference internal" href="commands/resource_transfer.html#resource-transfer"><em>transfer resources between
 parts</em></a> for things like fuel, in the same way
 that a manual user can do by using the right-click menus.</p>
 </div>
 <div class="section" id="kerbal-alarm-clock-support">
-<h3><a class="toc-backref" href="#id12">Kerbal Alarm Clock support</a><a class="headerlink" href="#kerbal-alarm-clock-support" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id13">Kerbal Alarm Clock support</a><a class="headerlink" href="#kerbal-alarm-clock-support" title="Permalink to this headline">¶</a></h3>
 <p>If you have the Kerbal Alarm Clock Mod isntalled, you can now
 <a class="reference internal" href="addons/KAC.html#kac"><em>query and manipulate its alarms</em></a> from within your
 kOS scripts.</p>
 </div>
 <div class="section" id="query-the-docked-elements-of-a-vessel">
-<h3><a class="toc-backref" href="#id13">Query the docked elements of a vessel</a><a class="headerlink" href="#query-the-docked-elements-of-a-vessel" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id14">Query the docked elements of a vessel</a><a class="headerlink" href="#query-the-docked-elements-of-a-vessel" title="Permalink to this headline">¶</a></h3>
 <p>You can get the <a class="reference internal" href="structures/vessels/element.html#element"><em>docked components of a joined-together
 vessel</em></a> as separate collections of parts now.</p>
 </div>
 <div class="section" id="support-for-action-groups-extended">
-<h3><a class="toc-backref" href="#id14">Support for Action Groups Extended</a><a class="headerlink" href="#support-for-action-groups-extended" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id15">Support for Action Groups Extended</a><a class="headerlink" href="#support-for-action-groups-extended" title="Permalink to this headline">¶</a></h3>
 <p>While there was some support for the Action Groups Extended
 mod before, it has <a class="reference internal" href="addons/AGX.html#agx"><em>been greatly improved</em></a>.</p>
 </div>
