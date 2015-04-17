@@ -27,5 +27,13 @@ penalizing the users of faster computers anymore.  (Previously,
 if your computer was faster, you'd be charged more electricity as
 the updates came more often).
 
+LIST constructor can now initialize lists
+:::::::::::::::::::::::::::::::::::::::::
 
+You can now do this::
 
+    set mylist to list(2,6,1,6,21).
+
+to initialize a :ref:`list of values <list>` from the start, so
+you no longer have to have a long list of list:ADD commands to
+populate it.

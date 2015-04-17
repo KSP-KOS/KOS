@@ -526,10 +526,7 @@ Examples::
       RETURN sum / inputList:LENGTH.
     }.
 
-    SET testList TO LIST();
-    testList:ADD(5).
-    testList:ADD(10).
-    testList:ADD(15).
+    SET testList TO LIST(5,10,15);
     print "average is " + calcAverage(testList).
     print "but out here where it's global, sum is still " + sum.
 
