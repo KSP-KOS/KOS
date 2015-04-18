@@ -12,17 +12,15 @@ These topics discuss the interfacing between **kOS** and **Kerbal Space Program*
 
     CPU Vessel (SHIP)   <general/cpu_vessel>
     CPU Hardware        <general/cpu_hardware>
-    
+
     Launcher Panel      <general/applauncher_panel>
 
     Telnet Server       <general/telnet>
-    
+
     Files & Volumes     <general/volumes>
     Machine Code        <general/compiling>
-    
+
     Name Tags           <general/nametag>
     Parts & PartModules <general/parts_and_partmodules>
-    
-    Communication Range <general/comm_range>
 
     Respecting Career Limits <general/career_limits>

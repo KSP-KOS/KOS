@@ -37,6 +37,7 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :struct:`Config`
     * :struct:`FileInfo`
     * :struct:`List`
+    * :struct:`Highlight`
     * :struct:`Iterator`
     * :struct:`Terminal`
     * :ref:`Colors <colors>`

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pilot Input &mdash; kOS 0.15.3 documentation</title>
+  <title>Pilot Input &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Ship Systems" href="systems.html"/>
         <link rel="prev" title="Raw Control" href="raw.html"/> 
@@ -85,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
@@ -112,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a><ul>
@@ -125,9 +127,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
@@ -240,7 +246,7 @@
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#ship-control-pilottranslation"><em>PILOTTRANSLATION</em></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
-<td><tt class="docutils literal"><span class="pre">(FORE,STARBOARD,TOP)</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">(STARBOARD,TOP,FORE)</span></tt></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#ship-control-pilotwheelsteer"><em>PILOTWHEELSTEER</em></a></td>
 <td>scalar [-1,1]</td>
@@ -272,97 +278,97 @@
 
 <span class="target" id="ship-control-pilotyaw"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:YAW</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTYAW</tt></dt>
 <dd><p>Returns the pilot&#8217;s rotation input about the &#8220;up&#8221; vector as the pilot faces forward. Essentially left <span class="math">\((-1)\)</span> or right <span class="math">\((+1)\)</span>.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotpitch"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:PITCH</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTPITCH</tt></dt>
 <dd><p>Returns the pilot&#8217;s rotation input  about the starboard vector up <span class="math">\((+1)\)</span> or down <span class="math">\((-1)\)</span>.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotroll"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:ROLL</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTROLL</tt></dt>
 <dd><p>Returns the pilot&#8217;s rotation input  about the logintudinal axis of the ship left-wing-down <span class="math">\((-1)\)</span> or left-wing-up <span class="math">\((+1)\)</span>.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotrotation"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:ROTATION</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTROTATION</tt></dt>
 <dd><p>Returns the pilot&#8217;s rotation input as a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> object containing <tt class="docutils literal"><span class="pre">(YAW,</span> <span class="pre">PITCH,</span> <span class="pre">ROLL)</span></tt> in that order.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotyawtrim"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:YAWTRIM</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTYAWTRIM</tt></dt>
 <dd><p>Returns the pilot&#8217;s input for the <tt class="docutils literal"><span class="pre">YAW</span></tt> of the rotational trim.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotpitchtrim"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:PITCHTRIM</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTPITCHTRIM</tt></dt>
 <dd><p>Returns the pilot&#8217;s input for the <tt class="docutils literal"><span class="pre">PITCH</span></tt> of the rotational trim.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotrolltrim"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:ROLLTRIM</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTROLLTRIM</tt></dt>
 <dd><p>Returns the pilot&#8217;s input for the <tt class="docutils literal"><span class="pre">ROLL</span></tt> of the rotational trim.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotfore"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:FORE</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTFORE</tt></dt>
 <dd><p>Returns the the pilot&#8217;s input for the translation of the ship forward <span class="math">\((+1)\)</span> or backward <span class="math">\((-1)\)</span>.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotstarboard"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:STARBOARD</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTSTARBOARD</tt></dt>
 <dd><p>Returns the the pilot&#8217;s input for the translation of the ship to the right <span class="math">\((+1)\)</span> or left <span class="math">\((-1)\)</span> from the pilot&#8217;s perspective.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilottop"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:TOP</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTTOP</tt></dt>
 <dd><p>Returns the the pilot&#8217;s input for the translation of the ship up <span class="math">\((+1)\)</span> or down <span class="math">\((-1)\)</span> from the pilot&#8217;s perspective.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilottranslation"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:TRANSLATION</tt></dt>
-<dd><p>Returns the the pilot&#8217;s input for translation as a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> <tt class="docutils literal"><span class="pre">(FORE,</span> <span class="pre">STARBOARD,</span> <span class="pre">TOP)</span></tt>.</p>
+<tt class="descname">SHIP:CONTROL:PILOTTRANSLATION</tt></dt>
+<dd><p>Returns the the pilot&#8217;s input for translation as a <a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> <tt class="docutils literal"><span class="pre">(STARBOARD,</span> <span class="pre">TOP,</span> <span class="pre">FORE)</span></tt>.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotwheelsteer"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:WHEELSTEER</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTWHEELSTEER</tt></dt>
 <dd><p>Returns the the pilot&#8217;s input for wheel steering left <span class="math">\((-1)\)</span> or right <span class="math">\((+1)\)</span>.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotwheelthrottle"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:WHEELTHROTTLE</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTWHEELTHROTTLE</tt></dt>
 <dd><p>Returns the the pilot&#8217;s input for the wheels to move the ship forward <span class="math">\((+1)\)</span> or backward <span class="math">\((-1)\)</span> while on the ground.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotwheelsteertrim"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:WHEELSTEERTRIM</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTWHEELSTEERTRIM</tt></dt>
 <dd><p>Returns the the pilot&#8217;s input for the trim of the wheel steering.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotwheelthrottletrim"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:WHEELTHROTTLETRIM</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTWHEELTHROTTLETRIM</tt></dt>
 <dd><p>Returns the the pilot&#8217;s input for the trim of the wheel throttle.</p>
 </dd></dl>
 
 <span class="target" id="ship-control-pilotneutral"></span><dl class="object">
 <dt>
-<tt class="descname">SHIP:CONTROL:NEUTRAL</tt></dt>
+<tt class="descname">SHIP:CONTROL:PILOTNEUTRAL</tt></dt>
 <dd><p>Returns true or false if the pilot is active or not.</p>
 </dd></dl>
 
@@ -391,7 +397,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -412,7 +418,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

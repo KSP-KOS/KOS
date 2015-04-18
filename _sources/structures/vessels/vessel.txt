@@ -35,6 +35,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`BEARING`                       scalar (deg)              relative heading to this vessel
      :attr:`HEADING`                       scalar (deg)              Absolute heading to this vessel
      :attr:`MAXTHRUST`                     scalar                    Sum of active maximum thrusts
+     :attr:`AVAILABLETHRUST`               scalar                    Sum of active limited maximum thrusts 
      :attr:`FACING`                        :struct:`Direction`       The way the vessel is pointed
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
      :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
@@ -45,10 +46,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
      :attr:`SHIPNAME`                      string                    The name of the vessel
      :attr:`NAME`                          string                    Synomym for SHIPNAME
+     :attr:`STATUS`                        string                    Current ship status
+     :attr:`TYPE`                          string                    Ship type
      :attr:`ANGULARMOMENTUM`               :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
      :attr:`LOADED`                        Boolean                   loaded into KSP physics engine or "on rails"
+     :attr:`ISDEAD`                        Boolean                   True if the vessel refers to a ship that has gone away.
      :attr:`PATCHES`                       :struct:`List`            :struct:`Orbit` patches
      :attr:`ROOTPART`                      :struct:`Part`            Root :struct:`Part` of this vessel
      :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
@@ -90,6 +94,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     Sum of all the Max thrust of all the currently active engines In Kilonewtons.
+    
+.. attribute:: vessel:AVAILABLETHRUST
+
+    :type: scalar
+    :access: Get only
+    
+    Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
 
 .. attribute:: Vessel:FACING
 
@@ -158,6 +169,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     Same as :attr:`Vessel:SHIPNAME`.
 
+.. attribute:: Vessel:STATUS
+
+    :type: string
+    :access: get only
+    
+    The current status of the vessel possible results are: `LANDED`, `SPLASHED`, `PRELAUNCH`, `FLYING`, `SUB_ORBITAL`, `ORBITING`, `ESCAPING` and `DOCKED`.
+    
 .. attribute:: Vessel:TYPE
 
     :type: string
@@ -205,6 +223,19 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     true if the vessel is fully loaded into the complete KSP physics engine (false if it's "on rails").
 
+.. attribute:: Vessel:ISDEAD
+
+    :type: Boolean
+    :access: Get only
+
+    It is possible to have a variable that refers to a vessel that
+    doesn't exist in the Kerbal Space Program universe anymore, but
+    did back when you first got it.  For example: you could do:
+    SET VES TO VESSEL("OTHER"). WAIT 10. And in that intervening
+    waiting time, the vessel might have crashed into the ground.
+    Checking :ISDEAD lets you see if the vessel that was previously
+    valid isn't valid anymore.
+
 .. attribute:: Vessel:PATCHES
 
     :type: :struct:`List`
@@ -217,7 +248,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :struct:`Part`
     :access: Get only
 
-    The first :struct:`Part` that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree.
+    The ROOTPART is usually the first :struct:`Part` that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree. It is possible to change the root part in VAB/SPH by using Root tool, so ROOTPART does not always point to command core or command pod. Vessel:ROOTPART may change in flight as a result of docking/undocking or decoupling of some part of a Vessel.
 
 .. attribute:: Vessel:PARTS
 

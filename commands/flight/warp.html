@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Time Warping &mdash; kOS 0.15.3 documentation</title>
+  <title>Time Warping &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Predictions of Flight Path" href="../prediction.html"/>
         <link rel="prev" title="Ship Systems" href="systems.html"/> 
@@ -85,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
@@ -112,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a><ul>
@@ -125,9 +127,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
@@ -174,13 +180,88 @@
 <dl class="global">
 <dt id="global:WARP">
 <tt class="descname">WARP</tt><a class="headerlink" href="#global:WARP" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <a class="reference internal" href="#global:WARP" title="WARP global"><tt class="xref ks ks-global docutils literal"><span class="pre">WARP</span></tt></a> global variable can be set to change the game warp to a value between 0 and 7:</p>
+<dd><p>The <a class="reference internal" href="#global:WARP" title="WARP global"><tt class="xref ks ks-global docutils literal"><span class="pre">WARP</span></tt></a> global variable can be set to change the game warp to a value between 0 and 7 (for rails warp) or 0 to 3 (for physics warp):</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">WARP</span> <span class="n">TO</span> <span class="mf">5.</span> <span class="c1">// Sets warp to 1000x</span>
-<span class="n">SET</span> <span class="n">WARP</span> <span class="n">TO</span> <span class="mf">0.</span> <span class="c1">// Sets warp to 0x (real time)</span>
+<span class="n">SET</span> <span class="n">WARP</span> <span class="n">TO</span> <span class="mf">0.</span> <span class="c1">// Sets warp to 1x (real time)</span>
 </pre></div>
 </div>
+<p>You may also choose which warp mode you wish the WARP command
+to invoke- physics warp (capped at 4x) or rails warp:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">WARPMODE</span> <span class="n">TO</span> <span class="s">&quot;PHYSICS&quot;</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">WARPMODE</span> <span class="n">TO</span> <span class="s">&quot;RAILS&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>WARPMODE can be set to a string to choose the warp.  It must be
+one of the two strings mentioned above.</p>
+<p>The difference is the same as that experienced in the game between
+physics warp and &#8216;rails&#8217; warp (sometimes called &#8216;time warp&#8217;) although
+that term is confusingly ambiguous.</p>
 </dd></dl>
 
+<table border="1" class="docutils">
+<caption>RAILS WARP MODES</caption>
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">MODE</th>
+<th class="head">MEANING</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>1x</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>5x</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>10x</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>50x</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>100x</td>
+</tr>
+<tr class="row-odd"><td>5</td>
+<td>1000x</td>
+</tr>
+<tr class="row-even"><td>6</td>
+<td>10000x</td>
+</tr>
+<tr class="row-odd"><td>7</td>
+<td>100000x</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<caption>PHYSICS WARP MODES</caption>
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">MODE</th>
+<th class="head">MEANING</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>1x</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>2x</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>3x</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>4x</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -201,7 +282,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -222,7 +303,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ship Systems &mdash; kOS 0.15.3 documentation</title>
+  <title>Ship Systems &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Time Warping" href="warp.html"/>
         <link rel="prev" title="Pilot Input" href="pilot.html"/> 
@@ -75,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -85,7 +87,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
@@ -112,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a><ul>
@@ -125,9 +128,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
@@ -211,6 +218,31 @@
 </div>
 </dd></dl>
 
+<span class="target" id="sasmode"></span><dl class="object">
+<dt>
+<tt class="descname">SET SASMODE TO value.</tt></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first">Get/Set</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+<p>Getting this variable will return the currently selected mode.  Where <tt class="docutils literal"><span class="pre">value</span></tt> is one of the valid strings listed below, this will set the stock SAS mode for the cpu vessel:</p>
+<p>SET SASMODE TO value.</p>
+<p class="last">It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity).  Valid strings for <tt class="docutils literal"><span class="pre">value</span></tt> are <tt class="docutils literal"><span class="pre">&quot;PROGRADE&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RETROGRADE&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;NORMAL&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;ANTINORMAL&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RADIALOUT&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RADIALIN&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></tt>, <tt class="docutils literal"><span class="pre">MANEUVER</span></tt>, <tt class="docutils literal"><span class="pre">&quot;STABILITYASSIST&quot;</span></tt>, and <tt class="docutils literal"><span class="pre">&quot;STABILITY&quot;</span></tt>.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if <tt class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></tt> or <tt class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></tt> are used, but no target is selected.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>SASMODE does not work with RemoteTech</p>
+<p class="last">Due to the way that RemoteTech disables flight control input, the built in SAS modes do not function properly when there is no connection to the KSC or a Command Center.  If you are writing scripts for use with RemoteTech, make sure to take this into account.</p>
+</div>
 <dl class="global">
 <dt id="global:LIGHTS">
 <tt class="descname">LIGHTS</tt><a class="headerlink" href="#global:LIGHTS" title="Permalink to this definition">¶</a></dt>
@@ -285,7 +317,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -306,7 +338,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

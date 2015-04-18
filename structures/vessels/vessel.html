@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vessel &mdash; kOS 0.15.3 documentation</title>
+  <title>Vessel &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="VesselSensors" href="vesselsensors.html"/>
         <link rel="prev" title="Stage" href="stage.html"/> 
@@ -85,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
@@ -112,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -125,9 +127,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
@@ -225,61 +231,77 @@
 <td>scalar</td>
 <td>Sum of active maximum thrusts</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:FACING" title="VESSEL:FACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FACING</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:AVAILABLETHRUST" title="VESSEL:AVAILABLETHRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLETHRUST</span></tt></a></td>
+<td>scalar</td>
+<td>Sum of active limited maximum thrusts</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:FACING" title="VESSEL:FACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FACING</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
 <td>The way the vessel is pointed</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:MASS" title="VESSEL:MASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:MASS" title="VESSEL:MASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MASS</span></tt></a></td>
 <td>scalar (metric tons)</td>
 <td>Mass of the ship</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:WETMASS" title="VESSEL:WETMASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">WETMASS</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:WETMASS" title="VESSEL:WETMASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">WETMASS</span></tt></a></td>
 <td>scalar (metric tons)</td>
 <td>Mass of the ship fully fuelled</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:DRYMASS" title="VESSEL:DRYMASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DRYMASS</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:DRYMASS" title="VESSEL:DRYMASS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DRYMASS</span></tt></a></td>
 <td>scalar (metric tons)</td>
 <td>Mass of the ship with no resources</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:VERTICALSPEED" title="VESSEL:VERTICALSPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VERTICALSPEED</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:VERTICALSPEED" title="VESSEL:VERTICALSPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VERTICALSPEED</span></tt></a></td>
 <td>scalar (m/s)</td>
 <td>How fast the ship is moving &#8220;up&#8221;</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:SURFACESPEED" title="VESSEL:SURFACESPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SURFACESPEED</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:SURFACESPEED" title="VESSEL:SURFACESPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SURFACESPEED</span></tt></a></td>
 <td>scalar (m/s)</td>
 <td>How fast the ship is moving &#8220;horizontally&#8221;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:AIRSPEED" title="VESSEL:AIRSPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AIRSPEED</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:AIRSPEED" title="VESSEL:AIRSPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AIRSPEED</span></tt></a></td>
 <td>scalar (m/s)</td>
 <td>How fast the ship is moving relative to the air</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:TERMVELOCITY" title="VESSEL:TERMVELOCITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TERMVELOCITY</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:TERMVELOCITY" title="VESSEL:TERMVELOCITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TERMVELOCITY</span></tt></a></td>
 <td>scalar (m/s)</td>
 <td>terminal velocity of the vessel</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:SHIPNAME" title="VESSEL:SHIPNAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHIPNAME</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:SHIPNAME" title="VESSEL:SHIPNAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHIPNAME</span></tt></a></td>
 <td>string</td>
 <td>The name of the vessel</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:NAME" title="VESSEL:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:NAME" title="VESSEL:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
 <td>string</td>
 <td>Synomym for SHIPNAME</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARMOMENTUM" title="VESSEL:ANGULARMOMENTUM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARMOMENTUM</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:STATUS" title="VESSEL:STATUS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">STATUS</span></tt></a></td>
+<td>string</td>
+<td>Current ship status</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:TYPE" title="VESSEL:TYPE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TYPE</span></tt></a></td>
+<td>string</td>
+<td>Ship type</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARMOMENTUM" title="VESSEL:ANGULARMOMENTUM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARMOMENTUM</span></tt></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 <td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP_RAW</em></a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARVEL" title="VESSEL:ANGULARVEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:ANGULARVEL" title="VESSEL:ANGULARVEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGULARVEL</span></tt></a></td>
 <td><a class="reference internal" href="../../math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 <td>In <a class="reference internal" href="../../math/ref_frame.html#ship-raw"><em>SHIP_RAW</em></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:SENSORS" title="VESSEL:SENSORS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SENSORS</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:SENSORS" title="VESSEL:SENSORS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SENSORS</span></tt></a></td>
 <td><a class="reference internal" href="vesselsensors.html#structure:VESSELSENSORS" title="VESSELSENSORS structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">VesselSensors</span></tt></a></td>
 <td>Sensor data</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:LOADED" title="VESSEL:LOADED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOADED</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:LOADED" title="VESSEL:LOADED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOADED</span></tt></a></td>
 <td>Boolean</td>
 <td>loaded into KSP physics engine or &#8220;on rails&#8221;</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:ISDEAD" title="VESSEL:ISDEAD attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ISDEAD</span></tt></a></td>
+<td>Boolean</td>
+<td>True if the vessel refers to a ship that has gone away.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:PATCHES" title="VESSEL:PATCHES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PATCHES</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
@@ -395,6 +417,22 @@ Vessel:<tt class="descname">MAXTHRUST</tt><a class="headerlink" href="#attribute
 </tbody>
 </table>
 <p>Sum of all the Max thrust of all the currently active engines In Kilonewtons.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:VESSEL:AVAILABLETHRUST">
+vessel:<tt class="descname">AVAILABLETHRUST</tt><a class="headerlink" href="#attribute:VESSEL:AVAILABLETHRUST" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -548,6 +586,22 @@ Vessel:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:VESS
 </dd></dl>
 
 <dl class="attribute">
+<dt id="attribute:VESSEL:STATUS">
+Vessel:<tt class="descname">STATUS</tt><a class="headerlink" href="#attribute:VESSEL:STATUS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">get only</td>
+</tr>
+</tbody>
+</table>
+<p>The current status of the vessel possible results are: <cite>LANDED</cite>, <cite>SPLASHED</cite>, <cite>PRELAUNCH</cite>, <cite>FLYING</cite>, <cite>SUB_ORBITAL</cite>, <cite>ORBITING</cite>, <cite>ESCAPING</cite> and <cite>DOCKED</cite>.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="attribute:VESSEL:TYPE">
 Vessel:<tt class="descname">TYPE</tt><a class="headerlink" href="#attribute:VESSEL:TYPE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -640,6 +694,28 @@ Vessel:<tt class="descname">LOADED</tt><a class="headerlink" href="#attribute:VE
 </dd></dl>
 
 <dl class="attribute">
+<dt id="attribute:VESSEL:ISDEAD">
+Vessel:<tt class="descname">ISDEAD</tt><a class="headerlink" href="#attribute:VESSEL:ISDEAD" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Boolean</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>It is possible to have a variable that refers to a vessel that
+doesn&#8217;t exist in the Kerbal Space Program universe anymore, but
+did back when you first got it.  For example: you could do:
+SET VES TO VESSEL(&#8220;OTHER&#8221;). WAIT 10. And in that intervening
+waiting time, the vessel might have crashed into the ground.
+Checking :ISDEAD lets you see if the vessel that was previously
+valid isn&#8217;t valid anymore.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="attribute:VESSEL:PATCHES">
 Vessel:<tt class="descname">PATCHES</tt><a class="headerlink" href="#attribute:VESSEL:PATCHES" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -668,7 +744,7 @@ Vessel:<tt class="descname">ROOTPART</tt><a class="headerlink" href="#attribute:
 </tr>
 </tbody>
 </table>
-<p>The first <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree.</p>
+<p>The ROOTPART is usually the first <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree. It is possible to change the root part in VAB/SPH by using Root tool, so ROOTPART does not always point to command core or command pod. Vessel:ROOTPART may change in flight as a result of docking/undocking or decoupling of some part of a Vessel.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -877,7 +953,7 @@ Vessel:<tt class="descname">ALLPARTSTAGGED</tt><big>(</big><big>)</big><a class=
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -898,7 +974,7 @@ Vessel:<tt class="descname">ALLPARTSTAGGED</tt><big>(</big><big>)</big><a class=
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

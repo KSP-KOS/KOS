@@ -5,6 +5,31 @@ List
 
 A :struct:`List` is a collection of any type in kOS. Many places throughout the system return variables of the :struct:`List` type, and you can create your own :struct:`List` variables as well. One of the places you are likely to find that kOS gives you a :struct:`List` is when you use the :ref:`LIST command <list command>` to list some query into one of your variables.
 
+Constructing a list
+-------------------
+
+Numerous built-in functions in kOS return a list.  If you wish
+to make your own list from scratch you can do so with the
+LIST() built-in function.  You pass a varying number of arguments
+into it to pre-populate the list with an initial list of items:
+
+    // Make an empty list with zero items in it:
+    set mylist to list().
+
+    // Make a list with 3 numbers in it:
+    set mylist to list(10,20,30).
+
+    // Make a list with 3 strings in it:
+    set mylist to list("10","20","30").
+
+    // Make a two dimensional 2x3 list with heterogenious contents
+    // mixing strings and numbers:
+    set mylist to list( list("a","b","c"), list(1,2,3) ).
+
+The contents of a list can be any objects you feel like, and do not
+need to be of a homogeneous type.
+
+
 Structure
 ---------
 
@@ -145,6 +170,7 @@ All list indexes start counting at zero. (The list elements are numbered from 0 
 
 Examples::
 
+    SET BAR TO LIST(5,3,6).  // Creates a new list with 3 integers in it.
     SET FOO TO LIST().       // Creates a new empty list in FOO variable
     FOO:ADD(5).              // Adds a new element to the end of the list
     FOO:ADD( ALTITUDE ).     // Adds current altitude number to the end of the list

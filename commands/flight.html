@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Flight Control &mdash; kOS 0.15.3 documentation</title>
+  <title>Flight Control &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Cooked Control" href="flight/cooked.html"/>
         <link rel="prev" title="Command Reference" href="../commands.html"/> 
@@ -75,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -85,7 +87,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
@@ -112,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -125,9 +128,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
@@ -190,7 +197,7 @@
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p><strong>SAS OVERRIDES kOS</strong></p>
-<p class="last">With the current implementation of flight control, if you leave <tt class="docutils literal"><span class="pre">SAS</span></tt> turned on, it will override <strong>kOS</strong>&#8216;s attempts to steer the ship. In order for <strong>kOS</strong> to be able to turn the ship, you need to set <tt class="docutils literal"><span class="pre">SAS</span> <span class="pre">OFF</span></tt>. In manual control, you can pilot with <tt class="docutils literal"><span class="pre">SAS</span> <span class="pre">ON</span></tt>, because the pilot&#8217;s manual controls override the <tt class="docutils literal"><span class="pre">SAS</span></tt> and &#8220;fight&#8221; against it. In <strong>KOS</strong> no such ability exists. If <tt class="docutils literal"><span class="pre">SAS</span></tt> is on, <strong>kOS</strong> won&#8217;t be able to turn the ship. It is common for people writing <strong>kOS</strong> scripts to explicitly start them with a use of the <tt class="docutils literal"><span class="pre">SAS</span> <span class="pre">OFF</span></tt> command just in case you forgot to turn it off before running the script.</p>
+<p class="last">With the current implementation of flight control, you may now leave <tt class="docutils literal"><span class="pre">SAS</span></tt> turned on in <tt class="docutils literal"><span class="pre">&quot;STABILITYASSIST&quot;</span></tt> mode, and it will not override <strong>kOS</strong>&#8216;s attempts to steer the ship. However, it will fight and/or override <strong>kOS</strong>&#8216;s attempts to steer when using any other mode.  In order for <strong>kOS</strong> to be able to turn the ship in other modes, you need to set <tt class="docutils literal"><span class="pre">SAS</span> <span class="pre">OFF</span></tt> or <tt class="docutils literal"><span class="pre">SET</span> <span class="pre">SASMODE</span> <span class="pre">TO</span> <span class="pre">&quot;STABILITYASSIST&quot;</span></tt>. You should take care in your scripts to manage the use of <tt class="docutils literal"><span class="pre">SAS</span></tt> and <tt class="docutils literal"><span class="pre">SASMODE</span></tt> appropriately. It is common for people writing <strong>kOS</strong> scripts to explicitly start them with a use of the <tt class="docutils literal"><span class="pre">SAS</span> <span class="pre">OFF</span></tt> and/or <tt class="docutils literal"><span class="pre">SET</span> <span class="pre">SASMODE</span> <span class="pre">TO</span> <span class="pre">&quot;STABILITYASSIST&quot;</span></tt> commands just in case you forgot to turn it off before running the script.  You could also store the current state in a temporary variable, and re-set it at the conclusion of your script.</p>
 </div>
 </div>
 
@@ -212,7 +219,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -233,7 +240,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -9,7 +9,13 @@ Directions
 
 :struct:`Direction` objects represent a rotation starting from an initial point in **KSP**'s coordinate system where the initial state was looking down the :math:`+z` axis, with the camera "up" being the :math:`+y` axis. This exists primarily to enable automated steering.
 
-In your thinking, you can largely think of Directions as being Rotations and Rotations as being Directions.  The two concepts can be used interchangably.  Used on its own to steer by, a rotation from the default XYZ axes of the universe into a new rotation does in fact provide an absolute direction, thus the name Direction for these objects even though in reality they are just Rotations.  It's important to know that Directions are just rotations because you can use them to modify other directions or vectors.
+In your thinking, you can largely think of Directions as being Rotations and Rotations as being Directions.  The two concepts can be used interchangeably.  Used on its own to steer by, a rotation from the default XYZ axes of the universe into a new rotation does in fact provide an absolute direction, thus the name Direction for these objects even though in reality they are just Rotations.  It's important to know that Directions are just rotations because you can use them to modify other directions or vectors.
+
+.. note::
+    When dealing with Directions (which are Rotations) in kOS, it is
+    important to remember that KSP uses a :ref:`left-handed <left-handed>`
+    coordinate system.  This affects the convention of which rotation
+    direction is positive when calculating angles.
 
 Creation
 --------
@@ -70,9 +76,15 @@ Creation
         SET newDir to pitchUp30*SHIP:FACING.
         LOCK STEERING TO newDir.
 
+.. note::
+    The fact that KSP is using a :ref:`left-handed <left-handed>`
+    coordinate system is important to keep in mind when visualizing
+    the meaning of an ANGLEAXIS function call.  It affects which
+    direction is positive when calculating angles.
+
 .. function:: ROTATEFROMTO(fromVec,toVec)
 
-    A :struct:`Direction` can be created with the ROTATEFROMTO function.  It is *one of the infinite number of* rotatations that could rotate vector *fromVec* to become vector *toVec* (or at least pointing in the same direction as toVec, since fromVec and toVec need not be the same magnitude).  Note the use of the phrase "**infinite number of**".  Because there's no guarantee about the roll information, there are an infinite number of rotations that could qualify as getting you from one vector to another, because there's an infinite number of roll angles that could result and all still fit the requirement::
+    A :struct:`Direction` can be created with the ROTATEFROMTO function.  It is *one of the infinite number of* rotations that could rotate vector *fromVec* to become vector *toVec* (or at least pointing in the same direction as toVec, since fromVec and toVec need not be the same magnitude).  Note the use of the phrase "**infinite number of**".  Because there's no guarantee about the roll information, there are an infinite number of rotations that could qualify as getting you from one vector to another, because there's an infinite number of roll angles that could result and all still fit the requirement::
 
         SET myDir to ROTATEFROMTO( v1, v2 ).
 
@@ -126,6 +138,7 @@ Structure
      :attr:`STARVECTOR`       :struct:`Vector`    This Direction's starboard vector (z axis after rotation).
      RIGHTVECTOR              :struct:`Vector`    Alias synonym for :attr:`STARVECTOR`
      :attr:`INVERSE`          :struct:`Direction` The inverse of this direction.
+     :attr:`unary minus`      :struct:`Direction` Using the negation operator "-" on a Direction does the same thing as using the :INVERSE suffix on it.
     ========================= =================== ================================
 
     The :struct:`Direction` object exists primarily to enable automated steering. You can initialize a :struct:`Direction` using a :struct:`Vector` or a ``Rotation``. :struct:`Direction` objects represent a rotation starting from an initial point in **KSP**'s coordinate system where the initial state was looking down the :math:`+z` axis, with the camera "up" being the :math:`+y` axis. So for example, a :struct:`Direction` pointing along the :math:`x` axis might be represented as ``R(0,90,0)``, meaning the initial :math:`z`-axis direction was rotated *90 degrees* around the :math:`y` axis.
@@ -184,6 +197,13 @@ Structure
 
     :struct:`Vector` of length 1 that is in the same direction as the "starboard side" of this Direction.  Note that it is the same meaning as "what the X axis of the universe would be rotated to if this rotation was applied to the basis axes of the universe". When you LOCK STEERING to a direction, that direction's STARVECTOR is the vector the right wing of the ship will orient to.  SHIP:FACING:STARVECTOR is the way the ship's right wing is aimed right now.
 
+.. attribute:: Direction:INVERSE
+
+    :type: :struct:`Direction`
+    :access: Get only
+    
+    :struct: Gives a `Direction` with the opposite rotation around its axes.
+    
 
 .. note:: **The difference between a :struct:`Direction` and a ``Vector``**
 

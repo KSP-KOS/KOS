@@ -63,7 +63,7 @@ The following rules apply as limitations to the bareword filenames:
    and the period extension separator ('.'), can only be referred to
    using a string expression (with quotes), and cannot be used as a
    bareword expression (without quotes).
--  If your filesystem is case-senstive (Linux and sometimes Mac OSX, or
+-  If your filesystem is case-sensitive (Linux and sometimes Mac OSX, or
    even Windows if using some kinds of remote network drives), then
    bareword filenames will only work properly on filenames that are all
    lowercase. If you try to use a file with capital letters in the name
@@ -91,7 +91,7 @@ Arguments:
 
 Pre-compiles a script into an :ref:`Kerboscript ML Exceutable
 image <compiling>` that can be used
-instead of executing the program discript directly.
+instead of executing the program script directly.
 
 The RUN command (elsewhere on this page) can work with either \*.ks
 script files or \*.ksm compiled files.
@@ -162,7 +162,7 @@ Arguments
 
 .. note::
 
-    The Edit feature was lost in version 0.11 but is back again after version 0.12.2 under a new guise. The new editor is unable to show a monospace font for a series of complex reasons involving how Unity works and how squad bundled the KSP game. The editor works, but will be in a proporional width font, which isn't ideal for editing code. The best way to edit code remains to use a text editor external to KSP, however for a fast peek at the code during play, this editor is useful.
+    The Edit feature was lost in version 0.11 but is back again after version 0.12.2 under a new guise. The new editor is unable to show a monospace font for a series of complex reasons involving how Unity works and how squad bundled the KSP game. The editor works, but will be in a proportional width font, which isn't ideal for editing code. The best way to edit code remains to use a text editor external to KSP, however for a fast peek at the code during play, this editor is useful.
 
 Example::
 
@@ -216,7 +216,7 @@ Arguments
 ^^^^^^^^^
 
 -  <program>: File to run.
--  comma-separagted-args: a list of values to pass into the program.
+-  comma-separated-args: a list of values to pass into the program.
 
 Example::
 
@@ -239,7 +239,7 @@ file commands allow. This is very important.
 
 RUN only works when the filename is a bareword filename. It cannot use expression filenames::
 
-    RUN "ProgName"   // THIS WILL FAIL.  Run needs a bare word filename.
+    RUN "ProgName"   // THIS WILL FAIL.  Run needs a bareword filename.
     SET ProgName to "MyProgram".
     RUN ProgName     // THIS WILL FAIL also.  It will attempt to run a file
                      // called "ProgName.ksm" or "ProgName.ks", when it sees this,
@@ -254,7 +254,7 @@ RUN only works when the filename is a bareword filename. It cannot use expressio
     generate some header info about them at compile time, and the
     filename
     has to be set in stone at that time. Changing this would require a
-    large re-write of some of the archetecture of the virtual machine.
+    large re-write of some of the architecture of the virtual machine.
 
 
 ``SWITCH TO <volumeNumber>.``
@@ -272,3 +272,31 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
+.. _boot:
+
+Special handling of files starting with "boot" (example ``boot.ks``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**(experimental)**
+
+For users requiring even more automation, the feature of custom boot scripts was introduced. If you have at least 1 file in your Archive volume starting with "boot" (for example "boot.ks", "boot2.ks" or even "boot_custom_script.ks"), you will be presented with the option to choose one of those files as a boot script for your kOS CPU.
+ 
+.. image:: http://i.imgur.com/05kp7Sy.jpg
+
+As soon as you vessel leaves VAB/SPH and is being initialised on the launchpad (e.g. its status is PRELAUNCH) the assigned script will be copied to CPU's local hard disk and named "boot.ks". This script will be run as soon as CPU boots, e.g. as soon as you bring your CPU in physics range or power on your CPU if it was turned off.
+
+Important things to consider:
+	* kOS CPU hard disk space is limited, avoid using complex boot scripts or increase disk space using MM config.
+	* If your kOS set to start from Archive, this feature may not work as intended. Possible workaround: disable starting from Archive and create simple default "boot.ks" file like this::
+		
+		//default boot script, just switches to Archive
+		switch to 0.
+		
+	* Boot script runs immediately on initialisation, it should avoid interaction with parts/modules until physics fully load. It is best to wait for couple seconds or until certain trigger.
+	
+	
+Possible uses for boot scripts:
+
+	* Automatically activate sleeper/background scripts which will run on CPU until triggered by certain condition.
+	* Create basic station-keeping scripts - you will only have to focus your probes once in a while and let the boot script do the orbit adjustment automatically.
+	* Create multi-CPU vessels with certain cores dedicated to specific tasks, triggered by user input or external events (Robotic-heavy Vessels)
+	* Anything else you can come up with

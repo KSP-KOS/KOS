@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Iterator &mdash; kOS 0.15.3 documentation</title>
+  <title>Iterator &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,10 +32,11 @@
   
         <link rel="author" title="About these documents"
               href="../../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../../index.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="List" href="list.html"/>
-        <link rel="prev" title="File Information" href="fileinfo.html"/> 
+        <link rel="prev" title="Part Highlighting" href="highlight.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -75,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -85,7 +87,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
@@ -112,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -125,9 +128,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
@@ -174,10 +181,7 @@
 <p>An iterator can be obtained from <a class="reference internal" href="list.html#attribute:LIST:ITERATOR" title="LIST:ITERATOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">List:ITERATOR</span></tt></a>. Once a <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> has given you an <a class="reference internal" href="#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a> object, you can use it to access elements inside the <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a>. An ITERATOR is a <a class="reference external" href="http://en.wikipedia.org/wiki/Iterator">generic computer programming concept</a>. In the general case it&#8217;s a variable type that allows you to get the value at a position in some collection, as well as increment to the next item in the collection in order to operate on all objects in the collection one at a time. In kOS it operates on <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></tt></a>.</p>
 <p>A loop using an <a class="reference internal" href="#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a> on a <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> might look like this:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// Starting with a list that was built like this</span>
-<span class="n">SET</span> <span class="n">MyList</span> <span class="n">To</span> <span class="n">LIST</span><span class="p">().</span>
-<span class="nl">MyList:</span><span class="n">ADD</span><span class="p">(</span> <span class="s">&quot;Hello&quot;</span> <span class="p">).</span>
-<span class="nl">MyList:</span><span class="n">ADD</span><span class="p">(</span> <span class="s">&quot;Aloha&quot;</span> <span class="p">).</span>
-<span class="nl">MyList:</span><span class="n">ADD</span><span class="p">(</span> <span class="s">&quot;Bonjour&quot;</span> <span class="p">).</span>
+<span class="n">SET</span> <span class="n">MyList</span> <span class="n">To</span> <span class="n">LIST</span><span class="p">(</span> <span class="s">&quot;Hello&quot;</span><span class="p">,</span> <span class="s">&quot;Aloha&quot;</span><span class="p">,</span> <span class="s">&quot;Bonjour&quot;</span><span class="p">).</span>
 
 <span class="c1">// It could be looped over like this</span>
 <span class="n">SET</span> <span class="n">MyCurrent</span> <span class="n">TO</span> <span class="n">MyList</span><span class="o">:</span><span class="n">ITERATOR</span><span class="p">.</span>
@@ -319,7 +323,7 @@ Iterator:<tt class="descname">VALUE</tt><a class="headerlink" href="#attribute:I
         <a href="list.html" class="btn btn-neutral float-right" title="List">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="fileinfo.html" class="btn btn-neutral" title="File Information"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="highlight.html" class="btn btn-neutral" title="Part Highlighting"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -328,7 +332,7 @@ Iterator:<tt class="descname">VALUE</tt><a class="headerlink" href="#attribute:I
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -349,7 +353,7 @@ Iterator:<tt class="descname">VALUE</tt><a class="headerlink" href="#attribute:I
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

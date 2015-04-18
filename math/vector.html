@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vectors &mdash; kOS 0.15.3 documentation</title>
+  <title>Vectors &mdash; kOS 0.16.2 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
         <link rel="author" title="About these documents"
               href="../about.html"/>
-    <link rel="top" title="kOS 0.15.3 documentation" href="../index.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.16.2 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Directions" href="direction.html"/>
         <link rel="prev" title="Fundamental Constants" href="basic.html"/> 
@@ -85,7 +86,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../general/comm_range.html">Communication Range</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
 </ul>
 </li>
@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../math.html">Mathematics</a><ul class="current">
@@ -112,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -125,9 +127,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
@@ -205,6 +211,11 @@
 <p>Here, a new <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> called <tt class="docutils literal"><span class="pre">vec</span></tt> is created . The object <a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> represents a <a class="reference external" href="http://en.wikipedia.org/wiki/Euclidean_vector">three-dimensional euclidean vector</a> To deeply understand most vectors in kOS, you have to understand a bit about the <a class="reference internal" href="ref_frame.html#ref-frame"><em>underlying coordinate system of KSP</em></a>. If you are having trouble making sense of the direction the axes point in, go read that page.</p>
 </dd></dl>
 
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Remember that the XYZ grid in Kerbal Space Program uses a
+<a class="reference internal" href="ref_frame.html#left-handed"><em>left-handed</em></a> coordinate system.</p>
+</div>
 </div>
 <div class="section" id="structure">
 <h2><a class="toc-backref" href="#id4">Structure</a><a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
@@ -409,8 +420,8 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#attribute:VECTO
 <h2><a class="toc-backref" href="#id5">Operations and Methods</a><a class="headerlink" href="#operations-and-methods" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="docutils">
 <colgroup>
-<col width="69%" />
-<col width="31%" />
+<col width="70%" />
+<col width="30%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Method / Operator</th>
@@ -427,16 +438,19 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#attribute:VECTO
 <tr class="row-even"><td><a class="reference internal" href="#id1"><em>- (minus)</em></a></td>
 <td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:VDOT" title="VDOT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VDOT</span></tt></a>, <a class="reference internal" href="#function:VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT</span></tt></a>, <a class="reference internal" href="#vector"><em>*</em></a></td>
-<td>scalar</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:VCRS" title="VCRS function"><tt class="xref ks ks-func docutils literal"><span class="pre">VCRS</span></tt></a>, <a class="reference internal" href="#function:VECTORCROSSPRODUCT" title="VECTORCROSSPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORCROSSPRODUCT</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#id1"><em>- (unary)</em></a></td>
 <td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#function:VANG" title="VANG function"><tt class="xref ks ks-func docutils literal"><span class="pre">VANG</span></tt></a>, <a class="reference internal" href="#function:VECTORANGLE" title="VECTORANGLE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORANGLE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#function:VDOT" title="VDOT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VDOT</span></tt></a>, <a class="reference internal" href="#function:VECTORDOTPRODUCT" title="VECTORDOTPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORDOTPRODUCT</span></tt></a>, <a class="reference internal" href="#vector"><em>*</em></a></td>
+<td>scalar</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#function:VCRS" title="VCRS function"><tt class="xref ks ks-func docutils literal"><span class="pre">VCRS</span></tt></a>, <a class="reference internal" href="#function:VECTORCROSSPRODUCT" title="VECTORCROSSPRODUCT function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORCROSSPRODUCT</span></tt></a></td>
+<td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#function:VANG" title="VANG function"><tt class="xref ks ks-func docutils literal"><span class="pre">VANG</span></tt></a>, <a class="reference internal" href="#function:VECTORANGLE" title="VECTORANGLE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTORANGLE</span></tt></a></td>
 <td>scalar (deg)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#function:VXCL" title="VXCL function"><tt class="xref ks ks-func docutils literal"><span class="pre">VXCL</span></tt></a>, <a class="reference internal" href="#function:VECTOREXCLUDE" title="VECTOREXCLUDE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTOREXCLUDE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#function:VXCL" title="VXCL function"><tt class="xref ks ks-func docutils literal"><span class="pre">VXCL</span></tt></a>, <a class="reference internal" href="#function:VECTOREXCLUDE" title="VECTOREXCLUDE function"><tt class="xref ks ks-func docutils literal"><span class="pre">VECTOREXCLUDE</span></tt></a></td>
 <td><a class="reference internal" href="#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a></td>
 </tr>
 </tbody>
@@ -452,6 +466,12 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#attribute:VECTO
 <span class="n">PRINT</span> <span class="n">vec1</span> <span class="o">*</span> <span class="n">vec2</span><span class="p">.</span>  <span class="c1">// prints: 20</span>
 </pre></div>
 </div>
+<p>Note that the <em>unary</em> minus operator is really a multiplication of
+the vector by a scalar of (-1):</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="o">-</span><span class="n">vec1</span><span class="p">.</span>     <span class="c1">// these two both print the</span>
+<span class="n">PRINT</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">vec1</span><span class="p">.</span> <span class="c1">// exact same thing.</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <span class="target" id="index-1"></span><span class="target" id="id1"><span id="index-2"></span></span><dl class="object">
@@ -463,6 +483,13 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#attribute:VECTO
 <span class="n">SET</span> <span class="n">vec2</span> <span class="n">TO</span> <span class="n">V</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">).</span>
 <span class="n">PRINT</span> <span class="n">vec1</span> <span class="o">+</span> <span class="n">vec2</span><span class="p">.</span>  <span class="c1">// prints: V(3,5,7)</span>
 <span class="n">PRINT</span> <span class="n">vec2</span> <span class="o">-</span> <span class="n">vec1</span><span class="p">.</span>  <span class="c1">// prints: V(1,1,1)</span>
+</pre></div>
+</div>
+<p>Note that the <em>unary</em> minus operator is the same thing as multiplying
+the vector by a scalar of (-1), and is not technically an addition or
+subtraction operator:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="o">-</span><span class="n">vec1</span><span class="p">.</span>     <span class="c1">// these two both print the</span>
+<span class="n">PRINT</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">vec1</span><span class="p">.</span> <span class="c1">// exact same thing.</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -542,6 +569,11 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#attribute:VECTO
 <span class="n">PRINT</span> <span class="n">VECTORCROSSPRODUCT</span><span class="p">(</span><span class="n">vec1</span><span class="p">,</span> <span class="n">vec2</span><span class="p">).</span>
 </pre></div>
 </div>
+<p>When visualizing the direction that a vector cross product will
+point, remember that KSP is using a <a class="reference internal" href="ref_frame.html#left-handed"><em>left-handed</em></a>
+coordinate system, and this means a cross-product of two vectors
+will point in the opposite direction of what it would had KSP been
+using a right-handed coordinate system.</p>
 </dd></dl>
 
 <dl class="function">
@@ -643,7 +675,7 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#attribute:VECTO
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014, Dunbaratu, erendrake, Originally By Nivekk.
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
     </p>
   </div>
 
@@ -664,7 +696,7 @@ Vector:<tt class="descname">VEC</tt><a class="headerlink" href="#attribute:VECTO
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.15.3',
+            VERSION:'0.16.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
