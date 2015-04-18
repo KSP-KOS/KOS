@@ -105,7 +105,7 @@ that a manual user can do by using the right-click menus.
 Kerbal Alarm Clock support
 ::::::::::::::::::::::::::
 
-If you have the Kerbal Alarm Clock Mod isntalled, you can now
+If you have the Kerbal Alarm Clock Mod installed, you can now
 :ref:`query and manipulate its alarms <KAC>` from within your
 kOS scripts.
 
