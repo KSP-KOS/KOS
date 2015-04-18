@@ -13,6 +13,7 @@ Welcome to the **kOS** Documentation Website!
     Home <self>
     Downloads and Links <downloads_links>
     Tutorials <tutorials>
+    Community Example Library <library>
     General <general>
     Language <language>
     Mathematics <math>
