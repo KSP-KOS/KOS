@@ -37,3 +37,11 @@ You can now do this::
 to initialize a :ref:`list of values <list>` from the start, so
 you no longer have to have a long list of list:ADD commands to
 populate it.
+
+ISDEAD suffix for Vessel
+::::::::::::::::::::::::
+
+Vessels now have an :ISDEAD suffix you can use to detect if the
+vessel has gone away since the last time you got the handle to it.
+(for example, you LIST TARGETS IN FOO, then the ship foo[3] blows
+up, then foo[3]:ISDEAD should become true to clue you in to this fact.)
