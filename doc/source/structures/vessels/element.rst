@@ -3,7 +3,18 @@
 Element
 ======
 
-An element is a docked component of a :struct:`Vessel` 
+An element is a *docked component* of a :struct:`Vessel`.  When you dock several
+vessels together to create one larger vessel, you can obtain the "chunks" of the
+larger vessel organized by which original vessel they came from.  These "chunks"
+are called elements, and they are what the Element structure refers to.
+
+A list of elements from the vessel can be created by using the command::
+
+    list elements in eList.
+    // now eList is a list of elements from the vessel.
+
+Each item of that list is one of the elements.  The rest of this page describes the
+elements and what they do.
 
 .. note::
         Element boundries are not formed between two docking ports that were launched coupled. a craft with such an arrangement will appear as one element until you uncoupled the nodes and redocked

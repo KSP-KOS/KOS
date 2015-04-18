@@ -94,6 +94,8 @@ Examples::
 
     PRINT GREEN:HTML. // prints #00ff00
 
+.. _hsv:
+
 .. function:: HSV(h,s,v)
 
     This global function creates a color from hue, saturation and value::

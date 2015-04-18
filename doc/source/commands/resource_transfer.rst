@@ -1,3 +1,5 @@
+.. _resource transfer:
+
 Transferring resources
 ======================
 
