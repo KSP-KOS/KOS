@@ -27,5 +27,21 @@ penalizing the users of faster computers anymore.  (Previously,
 if your computer was faster, you'd be charged more electricity as
 the updates came more often).
 
+LIST constructor can now initialize lists
+:::::::::::::::::::::::::::::::::::::::::
 
+You can now do this::
 
+    set mylist to list(2,6,1,6,21).
+
+to initialize a :ref:`list of values <list>` from the start, so
+you no longer have to have a long list of list:ADD commands to
+populate it.
+
+ISDEAD suffix for Vessel
+::::::::::::::::::::::::
+
+Vessels now have an :ISDEAD suffix you can use to detect if the
+vessel has gone away since the last time you got the handle to it.
+(for example, you LIST TARGETS IN FOO, then the ship foo[3] blows
+up, then foo[3]:ISDEAD should become true to clue you in to this fact.)
