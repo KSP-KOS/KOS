@@ -187,7 +187,7 @@ namespace kOS.Suffixed
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
             Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
-            return parent.GetLatitude(unityWorldPos);
+            return Utils.DegreeFix(parent.GetLatitude(unityWorldPos),-180);
         }
         public double PositionToLongitude( Vector pos )
         {
