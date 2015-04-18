@@ -76,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -133,6 +134,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
@@ -177,10 +181,7 @@
 <p>An iterator can be obtained from <a class="reference internal" href="list.html#attribute:LIST:ITERATOR" title="LIST:ITERATOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">List:ITERATOR</span></tt></a>. Once a <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> has given you an <a class="reference internal" href="#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a> object, you can use it to access elements inside the <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a>. An ITERATOR is a <a class="reference external" href="http://en.wikipedia.org/wiki/Iterator">generic computer programming concept</a>. In the general case it&#8217;s a variable type that allows you to get the value at a position in some collection, as well as increment to the next item in the collection in order to operate on all objects in the collection one at a time. In kOS it operates on <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Lists</span></tt></a>.</p>
 <p>A loop using an <a class="reference internal" href="#structure:ITERATOR" title="ITERATOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Iterator</span></tt></a> on a <a class="reference internal" href="list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> might look like this:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// Starting with a list that was built like this</span>
-<span class="n">SET</span> <span class="n">MyList</span> <span class="n">To</span> <span class="n">LIST</span><span class="p">().</span>
-<span class="nl">MyList:</span><span class="n">ADD</span><span class="p">(</span> <span class="s">&quot;Hello&quot;</span> <span class="p">).</span>
-<span class="nl">MyList:</span><span class="n">ADD</span><span class="p">(</span> <span class="s">&quot;Aloha&quot;</span> <span class="p">).</span>
-<span class="nl">MyList:</span><span class="n">ADD</span><span class="p">(</span> <span class="s">&quot;Bonjour&quot;</span> <span class="p">).</span>
+<span class="n">SET</span> <span class="n">MyList</span> <span class="n">To</span> <span class="n">LIST</span><span class="p">(</span> <span class="s">&quot;Hello&quot;</span><span class="p">,</span> <span class="s">&quot;Aloha&quot;</span><span class="p">,</span> <span class="s">&quot;Bonjour&quot;</span><span class="p">).</span>
 
 <span class="c1">// It could be looped over like this</span>
 <span class="n">SET</span> <span class="n">MyCurrent</span> <span class="n">TO</span> <span class="n">MyList</span><span class="o">:</span><span class="n">ITERATOR</span><span class="p">.</span>

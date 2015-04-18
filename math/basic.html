@@ -76,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -131,6 +132,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
@@ -321,8 +325,10 @@
 <dl class="function">
 <dt id="function:MOD">
 <tt class="descname">MOD</tt><big>(</big>a,b<big>)</big><a class="headerlink" href="#function:MOD" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns remainder from integer division:</p>
+<dd><p>Returns remainder from integer division.
+Keep in mind that it&#8217;s not a traditional mathematical Euclidean division where the result is always positive. The result has the same absolute value as mathematical modulo operation but the sign is the same as the sign of dividend:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">MOD</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span><span class="mi">6</span><span class="p">).</span> <span class="c1">// prints 3</span>
+<span class="n">PRINT</span> <span class="n">MOD</span><span class="p">(</span><span class="o">-</span><span class="mi">21</span><span class="p">,</span><span class="mi">6</span><span class="p">).</span> <span class="c1">// prints -3</span>
 </pre></div>
 </div>
 </dd></dl>

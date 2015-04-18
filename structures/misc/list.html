@@ -76,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
@@ -133,6 +134,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
 </ul>
 
@@ -175,6 +179,26 @@
   <div class="section" id="list">
 <span id="id1"></span><h1>List<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h1>
 <p>A <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> is a collection of any type in kOS. Many places throughout the system return variables of the <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> type, and you can create your own <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> variables as well. One of the places you are likely to find that kOS gives you a <a class="reference internal" href="#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> is when you use the <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST command</em></a> to list some query into one of your variables.</p>
+<div class="section" id="constructing-a-list">
+<h2>Constructing a list<a class="headerlink" href="#constructing-a-list" title="Permalink to this headline">¶</a></h2>
+<p>Numerous built-in functions in kOS return a list.  If you wish
+to make your own list from scratch you can do so with the
+LIST() built-in function.  You pass a varying number of arguments
+into it to pre-populate the list with an initial list of items:</p>
+<blockquote>
+<div><p>// Make an empty list with zero items in it:
+set mylist to list().</p>
+<p>// Make a list with 3 numbers in it:
+set mylist to list(10,20,30).</p>
+<p>// Make a list with 3 strings in it:
+set mylist to list(&#8220;10&#8221;,&#8221;20&#8221;,&#8221;30&#8221;).</p>
+<p>// Make a two dimensional 2x3 list with heterogenious contents
+// mixing strings and numbers:
+set mylist to list( list(&#8220;a&#8221;,&#8221;b&#8221;,&#8221;c&#8221;), list(1,2,3) ).</p>
+</div></blockquote>
+<p>The contents of a list can be any objects you feel like, and do not
+need to be of a homogeneous type.</p>
+</div>
 <div class="section" id="structure">
 <h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
 <dl class="structure">
@@ -439,7 +463,8 @@ List:<tt class="descname">DUMP</tt><a class="headerlink" href="#attribute:LIST:D
 <dd>operator: access the element at postion x. Works for get or set. X must be a hardcoded number or a variable name. This is here for backward compatibility. The syntax in the next bullet point is preferred over this.</dd>
 </dl>
 <p>Examples:</p>
-<div class="highlight-c"><div class="highlight"><pre>SET FOO TO LIST().       // Creates a new empty list in FOO variable
+<div class="highlight-c"><div class="highlight"><pre>SET BAR TO LIST(5,3,6).  // Creates a new list with 3 integers in it.
+SET FOO TO LIST().       // Creates a new empty list in FOO variable
 FOO:ADD(5).              // Adds a new element to the end of the list
 FOO:ADD( ALTITUDE ).     // Adds current altitude number to the end of the list
 FOO:ADD(ETA:APOAPSIS).   // Adds current seconds to apoapsis to the end of the list
