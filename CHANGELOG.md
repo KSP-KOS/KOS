@@ -21,105 +21,90 @@ script.
 	For the features mentioned below, you can go to the page above
 	and get a more verbose description of the new features.
 
+###New Features:
+
+A brief list of what's new:
+
+* Variables can now be local
+* Kerboscript has User Functions
+* Community Examples Library
+* LIST() now takes args to initialize the list.
+* Physics Ticks not Update Ticks
+* Ability to use SAS modes from KSP 0.90
+* Blizzy ToolBar Support
+* Ability to define colors using HSV
+* Ability to highlight a part in color
+* Better user interface for selecting boot scripts
+* Disks can be made bigger with tweakable slider
+* You Can Transfer Resources
+* Kerbal Alarm Clock support
+* Query the docked elements of a vessel
+* Support for Action Groups Extended
+* ISDEAD suffix for Vessel
+
+This update is so full of new features that instead of describing all of their
+details here, you can go see them on the main docs page at the following link:
+
+http://ksp-kos.github.io/KOS_DOC/changes.html
+
+###Bug Fixes:
+
+- Using the same FOR iterator in two loops no longer name clashes because it's not global anymore.
+- Repaired a number of boot file selection bugs.
+- Removed a few unnecessary debug log spamming message.
+- Fixed a minor issue with the special hidden file .DS_Store that Macs insert into the Scripts folder.
+- Fixed bug spamming nullrefs when panel was open in the VAB/SPH editor.
+- Fixed bugs where setting warp could crash KSP. Now it clamps warp to valid values.
+- Fixed bug where kOS CPU's were drawing power from the batteries even when the game was paused.
+- Fixed bug where rate of power consumption varied depending on animation frame rate.
+- Fixed bug where WAIT 0 crashed scripts.  Now WAIT 0 waits the min. possible time (1 physics tick).
+- Fixed small order of operations problem with expressions containing unary operators like '-', '+', and 'not'.
+- Fixed problem where SET TARGET didn't really set it until the next physics tick.  Now it sets immediately.
+- Fixed some issues with the use of Action Groups above 10, when Action Groups Extended is installed.
+- Fixed bug where VOLUME:RENAMABLE returned the name string, rather than a boolean.
+- Fixed bun when printing a VOLUME to the screen and failing to "stringify" it properly.
+- Using the unary negation '-' on vectors and directions now works.
+- Fixed some major bugs in how the kOS toolbar panel was dealing with scene changes and getting "stuck" on screen.
+- Fixed some bugs with the kos Name Tag typing window getting stuck on screen and locking the user out of the UI.
+- Fixed bug with reboot not clearing out the state properly.
+- Fixed bug where any syntax error caught by the compiler resulted in bogus additional second error message.
+
 ###BREAKING:
-- **RECOMPILE YOUR KSM FILES!!!** - changes to the kOS machine code
-  that were needed to support variable scoping ended up invalidating
-  any existing compiled KSM files.  You should be able to just
-  perform one compile and then use the new KSM file.  If you don't do
-  this, you will get the error message:
-	```The given key was not present in the dictionary.```
+
+- **RECOMPILE YOUR KSM FILES!!!** - If you used the COMPILE command in
+  the past, changes to the kOS machine code that were needed to support
+  variable scoping ended up invalidating any existing compiled KSM files.
+
 - **KSM FILES ARE BIGGER** - compiled KSM files are now larger than
-  they used to be, due to extra code generated for dealing with
-  variable scoping and more universal function calling techniques.
-  Compiling to a KSM file will probably no longer be a reliable way
-  to make your code smaller, but we also intend to increase the volume
-  capacity to compensate.
-- *CONFIG:IPU should probably be slightly increased*
-  There's a few more instructions for some of the same amount of source
-  code, so you might need to increase your CONFIG:IPU to get the same
-  programs to continue working.  Although the default setting for 0.17.0
-  is higher, it will not overwrite your settings if you have a config file
-  already present from earlier installations.
+  they used to be for the same source code.  They might not be an
+  efficient way to pack your code down to a small disk footprint
+  anymore.
+
+- *CONFIG:IPU should be slightly increased*  The new default
+  we ship with is 200, to reflect both the change in ML code, and the
+  movement to Unity's FixedUpdate for physics ticks.  However if you
+  have played kOS in the past, your settings don't get automatically
+  overwritten.  You will need to change the setting manually.
+
 - *DECLARE has a new syntax*
   DECLARE _VARNAME_ now requires an initializer syntax as follows:
   - DECLARE _VARNAME_ TO _VALUE_.
   If you leave the TO _VALUE_ off, it will now be a syntax error.
-  The Kerboscript language used to leave it unspecified what the value
-  of a variable that has been declared but not set was.  This gets rid
-  of that ambiguity.
+  Also, you can say LOCAL or GLOBAL instead of, or in addition to,
+  the word DECLARE.
+
 - *DECLAREd variables are now local*
   Using the DECLARE _VARNAME_ TO _VALUE_ statement now causes the
   variable to have local scope that only exists within the local block
-  of curly braces ('{'...'}') that it was declared inside of.  Once you
-  leave that block of braces, the variable doesn't exist anymore.
+  of curly braces ('{'...'}') that it was declared inside of. To get
+  the old behavior you can explicitly say:
+  DECLARE GLOBAL _VARNAME_ to _VALUE.
+
 - *FOR iterator now is local*
   The _VARIABLE_ in loops of the form FOR _VARIABLE_ IN _SOMELIST_ now
   has local scope to just that loop, meaning it stops existing after
   the loop is done and you can't use it outside the loop's body.
-  In the past you could try using it after the loop body, but this
-  was poor practice and was only allowed because we didn't have
-  variable scoping set up right.
 
-###New Features:
-- *FUNCTIONS*
-  It's been a long time coming, but finally the addition
-  of the new DECLARE FUNCTION statement now allows you to make your
-  own user functions you can call, which you can use to help build
-  your own library of common routines.
-  Synopsis::
-
-	// Silly example function to build a string of padded chars.
-	FUNCTION padString {
-	  PARAMETER ch, howmany
-
-	  LOCAL str to "". // makes str a local variable.
-
-	  UNTIL howmany <= 0 {
-		set str to str + ch.
-		set howmany to howmany - 1.
-	  }
-	  RETURN str.
-	}
-	set twentySpaces to padString(" ", 20).
-	set threeX to padString("X", 3).
-
-  If you'd like to create a library of utility functions for
-  yourself, you can make a kerboscript file that contains only
-  DECLARE FUNCTION statements, and then RUN it from the top of
-  your other scripts to load in all the functions it contains.
-
-  For the full documentation, see:
-  http://ksp-kos.github.io/KOS/language/user_functions.html
-
-- *VARIABLE SCOPING (LOCALS)*
-  It used to be the case that all variables were global and there was
-  no such thing as a local variable.  As part of getting functions to
-  work, we also implemented some local scoping rules.
-  Synopsis::
-  
-	  Kerboscript now uses block scoping, local to the brace scope the variable was declared inside of.
-	  Local vars are declared with the DECLARE..TO statement.
-	  Variables made implicitly by "lazy" use of SET will still be global like they always have been.
-
-  The exact means of making a variable local is described here:
-  http://ksp-kos.github.io/KOS/language/variables.html#declare-to
-  and here:
-  http://ksp-kos.github.io/KOS/language/variables.html#scoping-rules
-
-- *Physics update*
-  In the past kOS performed its work during the animation frame
-  updates.  Now it does so during the physics updates, as it
-  should.  One effect of this is that if you have a frame rate
-  of more than 25, then you'll need to increase your CONFIG:IPU
-  to get the same general amount of code running in the same time.
-
-###Bug Fixes:
-- For iterator no longer name clashes because it's not global anymore.
-  It used to be that if you had two FOR _VAR_ IN _THING_'s in the same
-  program, and both used the same name for their _VAR_, they could
-  interfere and clash in strange ways because they were using the same
-  global variable.  Now the iterator _VAR_ is local to the loop and
-  no longer exists outside the loop. 
 
 # v0.16.2
 
