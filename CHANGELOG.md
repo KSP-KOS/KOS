@@ -12,14 +12,14 @@ script.
 
 **New Documentation change page**:
 
-	For those users who just want to see what new features
-	exist without reading the entire documentation again
-	from scratch, we have created a changes page in the main documentation:
+For those users who just want to see what new features
+exist without reading the entire documentation again
+from scratch, we have created a changes page in the main documentation:
 
-	* New Changes Page: http://ksp-kos.github.io/KOS_DOC/changes.html
+* New Changes Page: http://ksp-kos.github.io/KOS_DOC/changes.html
 
-	For the features mentioned below, you can go to the page above
-	and get a more verbose description of the new features.
+For the features mentioned below, you can go to the page above
+and get a more verbose description of the new features.
 
 ###New Features:
 
