@@ -11,6 +11,7 @@ If you prefer the tutorial style of explanation, please see the following exampl
     Quick Start <tutorials/quickstart>
     Design Patterns <tutorials/designpatterns>
     PID Loops <tutorials/pidloops>
+    Execute Node script <tutorials/exenode>
 
 Introductory
 ------------
@@ -28,4 +29,4 @@ Intermediate
     Starts with a basic proportional feedback loop and develops, in stages, a complete PID-loop to control the throttle of a simple rocket design.
 
 :doc:`Execute Node script <tutorials/exenode>`
-    Describes a generic "execute manuever node" script to be a one-size-fits-all solution to many situations in KSP.  If you can make a manuever node for something, exenode will execute it.
+    ZiwKerman describes a generic "execute manuever node" script to be a one-size-fits-all solution to many situations in KSP.  If you can make a manuever node for something, exenode will execute it.
