@@ -112,6 +112,11 @@ script.
   should.  One effect of this is that if you have a frame rate
   of more than 25, then you'll need to increase your CONFIG:IPU
   to get the same general amount of code running in the same time.
+  
+- *STOCK SAS MODES INTEGRATION*
+  It is now possible to toggle the stock sas modes just like clicking
+  on the UI button next to the navball.  For the full documentation see:
+  http://ksp-kos.github.io/KOS/commands/flight/systems.html
 
 ###Bug Fixes:
 - For iterator no longer name clashes because it's not global anymore.
