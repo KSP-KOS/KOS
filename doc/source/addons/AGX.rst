@@ -1,3 +1,5 @@
+.. _AGX:
+
 Action Groups Extended
 ======================
 
