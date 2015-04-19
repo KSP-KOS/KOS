@@ -494,7 +494,7 @@ the compiler the hint that you expected x to be a function call
 <h3><a class="toc-backref" href="#id17">Local lock</a><a class="headerlink" href="#local-lock" title="Permalink to this headline">¶</a></h3>
 <p>You can explicitly make a <tt class="docutils literal"><span class="pre">LOCK</span></tt> statement be LOCAL with the <tt class="docutils literal"><span class="pre">LOCAL</span></tt>
 keyword, like so:</p>
-<p><tt class="docutils literal"><span class="pre">LOCK</span> <span class="pre">LOCAL</span></tt> identifier <tt class="docutils literal"><span class="pre">TO</span></tt> expression.</p>
+<p><tt class="docutils literal"><span class="pre">LOCAL</span> <span class="pre">LOCK</span></tt> identifier <tt class="docutils literal"><span class="pre">TO</span></tt> expression.</p>
 <p>But be aware that doing so with a cooked steering control such
 as THROTTLE or STEERING will not actually affect your ship.  The
 automated cooked steering control is only reading the GLOBAL locks
@@ -766,7 +766,7 @@ explicitly stated for <strong>declare identifier</strong> statements, to
 force yourself to be clear and explicit about the difference.</p>
 <p>For example, this program, which is valid:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">function</span> <span class="n">foo</span> <span class="p">{</span><span class="n">print</span> <span class="s">&quot;foo &quot;</span><span class="p">.</span> <span class="p">}</span>
-<span class="n">local</span> <span class="n">x</span> <span class="n">is</span> <span class="mf">1.</span>
+<span class="n">declare</span> <span class="n">x</span> <span class="n">is</span> <span class="mf">1.</span>
 
 <span class="n">print</span> <span class="n">foo</span><span class="p">()</span> <span class="o">+</span> <span class="n">x</span><span class="p">.</span>
 </pre></div>
@@ -783,6 +783,9 @@ print foo() + x.
 <div class="highlight-c"><div class="highlight"><pre>@LAZYGLOBAL OFF.
 function foo {print &quot;foo &quot;. }  // This does not need the &#39;local&#39; keyword added
 declare local x is 1.          // But this does because it is a declare *identifier* statement.
+                               // you could have also just said:
+                               //     local x is 1.
+                               // without the &#39;declare&#39; keyword.
 
 print foo() + x.
 </pre></div>
