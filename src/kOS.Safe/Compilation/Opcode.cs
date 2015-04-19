@@ -656,10 +656,23 @@ namespace kOS.Safe.Compilation
             }
             object list = cpu.PopValue();
 
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            object value;
+
+            if (list is IIndexable)
+            {
+                value = ((IIndexable)list).GetIndex((int)index);
+            }
+            else if (list is ILexicon)
+            {
+                value = ((ILexicon)list).GetKey(index);
+            }
+            else
+            {
+                throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            }
+
             if (!(index is int)) throw new Exception("The index must be an integer number");
 
-            object value = ((IIndexable)list).GetIndex((int)index);
             cpu.PushStack(value);
         }
     }
@@ -679,13 +692,27 @@ namespace kOS.Safe.Compilation
             {
                 index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
             }
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
 
-            if (value != null)
+            if (list is IIndexable)
             {
-                ((IIndexable)list).SetIndex((int)index, value);
+                if (value != null)
+                {
+                    ((IIndexable)list).SetIndex((int)index, value);
+                }
             }
+            else if (list is ILexicon)
+            {
+                if (value != null)
+                {
+                    ((ILexicon)list).SetKey((int)index, value);
+                }
+            }
+            else
+            {
+                throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            }
+
+            if (!(index is int)) throw new Exception("The index must be an integer number");
         }
     }
 

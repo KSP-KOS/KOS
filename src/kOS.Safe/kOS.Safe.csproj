@@ -75,6 +75,7 @@
     <Compile Include="Encapsulation\ISetSuffix.cs" />
     <Compile Include="Encapsulation\ISuffix.cs" />
     <Compile Include="Encapsulation\ISuffixed.cs" />
+    <Compile Include="Encapsulation\Lexicon.cs" />
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
