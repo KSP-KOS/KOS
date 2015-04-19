@@ -169,9 +169,9 @@ binding.
 
 Syntax:
 
-    ``DECLARE`` *identifier* ``TO`` *expression* *dot*
-    ``LOCAL`` *identifier* ``IS`` *expression* *dot*
-    ``DECLARE LOCAL`` *identifier* ``IS`` *expression* *dot*
+* ``DECLARE`` *identifier* ``TO`` *expression* *dot*
+* ``LOCAL`` *identifier* ``IS`` *expression* *dot*
+* ``DECLARE LOCAL`` *identifier* ``IS`` *expression* *dot*
 
 The above are all the same, although the version that
 just says ``LOCAL identifier IS expr.`` is preferred.
