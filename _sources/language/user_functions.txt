@@ -30,6 +30,18 @@ Help for the new user - What is a Function?
     feature with the term *Function*, whether it *technically* fits the
     mathematical definition of a "function" or not.
 
+.. warning::
+    **Functions created in programs can only be called from programs,
+    not from the interpreter terminal prompt**.
+
+    If you attempt to create a function in a program, and then call it
+    from the interactive prompt in the interpreter instead of calling
+    it from inside a program, it will definitely not work properly,
+    but the exact error you get will depend on several "random"
+    factors.  This may be fixed later by a later release, but for
+    now, don't do it.  For further explanation, see the section entitled
+    :ref:`Functions and the interpreter terminal <interpreter functions>`
+
 .. _declare function:
 
 ``DECLARE FUNCTION``
@@ -134,6 +146,33 @@ just like when running a program.  You can see an example of this above
 in the previous example where it said::
 
     print_corner(4,"That's me in the corner").
+
+.. _interpreter functions:
+
+Functions and the terminal interpreter
+::::::::::::::::::::::::::::::::::::::
+
+You **cannot** call functions from the interpreter interactive
+command line if they were declared inside of script programs.
+If you do, you will get seemingly "random" errors.  The reasons
+for this are complex, but the short version is because the
+memory the script files' pseudo-machine language instructions
+live in and the memory the interpreter's pseudo-machine
+langauge instructions live in are two different things.
+
+The effect you may see if you attempt this is merely
+an "Unknown Identifer" error, or worse yet, it may end
+up jumping into random parts of your code that have nothing
+to do with the actual function call you're trying to
+make.
+
+As a rule of thumb, in kOS 0.17.0, make sure you only use
+functions from inside script programs.  Don't try to call
+them interactively from the interpreter prompt.  You will
+get very strange and (seemingly) inexplicable errors.
+
+In the future we may find a way to fix this problem,
+but for right now, just don't do it.
     
 Calling a function without parentheses (please don't)
 :::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -402,6 +441,14 @@ something that you intended to be different per recursive call.
 
 User Function Gotchas
 ---------------------
+
+Calling program's functions from the interpreter
+::::::::::::::::::::::::::::::::::::::::::::::::
+
+As :ref:`explained above <interpreter functions>`, kOS 0.17.0 does
+not support the calling of a function from the interpreter console
+and if you attempt it you will get very strange and random errors
+that you might waste a lot of time trying to track down.
 
 Inconsistent returns
 ::::::::::::::::::::
