@@ -29,7 +29,7 @@ namespace kOS.AddOns.KerbalAlarmClock
 
             AddSuffix("NOTES", new SetSuffix<string>(() => alarm.Name, value => alarm.Name = value));
 
-            AddSuffix("ACTION", new SetSuffix<string>(alarm.AlarmAction.ToString, SetAlarmAction));
+            AddSuffix("ACTION", new SetSuffix<string>(GetAlarmAction, SetAlarmAction));
 
             AddSuffix("TYPE", new Suffix<string>(alarm.AlarmType.ToString));
 
@@ -51,6 +51,13 @@ namespace kOS.AddOns.KerbalAlarmClock
             /*SafeHouse.Logger.LogWarning (string.Format ("Trying to get remaining time, {0}", alarm.Remaining));*/
             //workaround for alarm.Remaining type mismatch
             return alarm.AlarmTime - Planetarium.GetUniversalTime();
+        }
+
+        private string GetAlarmAction()
+        {
+            //For some reason had to do it this way, otherwise ACTION suffix returned incorrect values
+            //SafeHouse.Logger.Log(string.Format("Actual AlarmAction eq = {0} ", alarm.AlarmAction));
+            return alarm.AlarmAction.ToString();
         }
 
         private void SetAlarmAction(string newAlarmAction)
