@@ -41,7 +41,7 @@ These are the generic properties every PART has. You can obtain a list of values
           - The stage this is associated with
         * - :attr:`UID`
           - string
-          - Unique identifying number
+          - Unique identifying number of this part
         * - :attr:`ROTATION`
           - :struct:`Direction`
           - The rotation of this part's :math:`x`-axis
@@ -148,7 +148,7 @@ These are the generic properties every PART has. You can obtain a list of values
     :access: Get only
     :type: string
 
-    All parts have a unique ID number. Test if two parts are the same part by seeing if this is the same between them.
+    All parts have a unique ID number. Part's uid never changes because it is the same value as stored in persistent.sfs. Although you can compare parts by comparing their uid it is recommended to compare parts directly if possible.
 
 .. attribute:: Part:ROTATION
 

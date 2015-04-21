@@ -3,6 +3,7 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace kOS.Binding
 {
@@ -19,7 +20,7 @@ namespace kOS.Binding
                 QuickSaveLoad.QuickSave();
                 return true;
             });
-            
+
             shared.BindingMgr.AddGetter("QUICKLOAD", () =>
                 {
                     if (!HighLogic.CurrentGame.Parameters.Flight.CanQuickLoad) return false;
@@ -37,7 +38,7 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddSetter("SAVETO", val =>
                 {
-                    if (reservedSaveNames.Contains(val.ToString().ToLower())) return; 
+                    if (reservedSaveNames.Contains(val.ToString().ToLower())) return;
 
                     Game game = HighLogic.CurrentGame.Updated();
                     game.startScene = GameScenes.FLIGHT;
@@ -102,7 +103,17 @@ namespace kOS.Binding
                 int newRate;
                 if (int.TryParse(val.ToString(), out newRate))
                 {
-                    TimeWarp.SetRate(newRate, false);
+                    switch (TimeWarp.WarpMode)
+                    {
+                        case TimeWarp.Modes.HIGH:
+                            SetWarpRate(newRate, TimeWarp.fetch.warpRates.Length - 1);
+                            break;
+                        case TimeWarp.Modes.LOW:
+                            SetWarpRate(newRate, TimeWarp.fetch.maxPhysicsRate_index);
+                            break;
+                        default:
+                            throw new Exception(string.Format("WARPMODE '{0}' is unknown to kOS, please contact the devs", val));
+                    }
                 }
             });
             shared.BindingMgr.AddGetter("MAPVIEW", () => MapView.MapIsEnabled);
@@ -124,6 +135,16 @@ namespace kOS.Binding
             }
 
             shared.BindingMgr.AddGetter("VERSION", () => Core.VersionInfo);
+        }
+
+        private static void SetWarpRate(int newRate, int maxRate)
+        {
+            var clampedValue = Mathf.Clamp(maxRate, 0, newRate);
+            if (clampedValue != maxRate)
+            {
+                SafeHouse.Logger.Log(string.Format("Clamped Timewarp rate. Was: {0} Is: {1}", clampedValue, maxRate));
+            }
+            TimeWarp.SetRate(clampedValue, false);
         }
     }
 }

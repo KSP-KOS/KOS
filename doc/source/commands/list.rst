@@ -57,7 +57,7 @@ These generate :struct:`lists <List>` of items on the :struct:`Vessel`:
 ``Sensors``
     :struct:`List` of :struct:`Sensors <Sensor>`
 ``Elements``
-    ??
+    :struct:`List` of :ref:`Elements <element>` that comprise the current vessel.
 ``DockingPorts``
     list of `DockingPorts <DockingPort>`
 

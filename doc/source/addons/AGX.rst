@@ -1,3 +1,5 @@
+.. _AGX:
+
 Action Groups Extended
 ======================
 
@@ -29,12 +31,12 @@ When an action group has the Script Trigger action assigned, on that action grou
 .. figure:: /_images/addons/AGExtQuickStart2.jpg
 
 
-Note that this mod only adds action grousp 11 through 250, it does not change how action groups 1 through 10 behave in any way and groups 11 through 250 should behave the same way.
+Note that this mod only adds action groups 11 through 250, it does not change how action groups 1 through 10 behave in any way and groups 11 through 250 should behave the same way.
 
 **Known limitations (Action groups 11 through 250 only):** 
 
 - On a nearby vessel that is not your current focus, an action group with no actions assigned will always return a state of False and can not be set to a state of true via the "AG15 on." command. Assign the Script Trigger action as a work-around for this.
-- At this point, AG11 through AG250 do not officially support RemoteTech through kOS. (Support will happen once all three mods involved have updated to KSP version 1.0 and made any internal changes necessary.) All three mods can be installed at the same time without issue, just be aware there may be unexpected behavior when using action groups 11 through 250 from a kOS script in terms of RemoteTech signal delay and connection state.
+- At this point, AG11 through AG250 do not officially support RemoteTech through kOS. (Support will happen once all three mods involved have updated to KSP version 1.0 and made any internal changes necessary.) All three mods can be installed at the same time without issue, just be aware there may be unexpected behaviour when using action groups 11 through 250 from a kOS script in terms of RemoteTech signal delay and connection state.
 
 **Action state monitoring**
 
@@ -45,11 +47,11 @@ Note that the state of action groups is tracked on a per-action basis, rather th
 - This can result in an action group have actions in a mixed state where some actions are on and some are off. In this case querying the group state will result in a state of False. For the purposes of the group state being True or False, if *all* actions in the action group are true, the group state will return true. If *any* actions in the group are false,the group state with return False.
 - When an action triggers an animation, the state of the action will be uncertain until the animation finishes playing. Some parts will report True during the animation and some will report False. It depends on how the part creator set things up and not something AGX can control.
 - For clarity, visual feedback can be provided of the current state of an action group. When editing action groups, find the "Toggle Grp." button just below the text entry field for the group name in the main AGX window and enable it. (It is enabled/disabled for the current action group when you click the button.) Once you do this, the text displaying that group will change from gray to colored. Green: Group is activated (state True). Red: Group is deactivated (state False). Yellow: Group is in a mixed state, will return a state False when queried.
-- It is okay to activate an already activated group and deactivate a non-activated group. Actions in the group will still try to execute as normal. Exact behavior of a specific action will depend on how the action's creator set things up.
+- It is okay to activate an already activated group and deactivate a non-activated group. Actions in the group will still try to execute as normal. Exact behaviour of a specific action will depend on how the action's creator set things up.
 
 **Example code:**
 
-Print to the terminal anytime you activate action group 15. Use this to change variables within a running kOS script and the "Script Trigger" action found on the kOS computer part::
+Print to the terminal any time you activate action group 15. Use this to change variables within a running kOS script and the "Script Trigger" action found on the kOS computer part::
 
     AG15 on. // Activate action group 15.
     print AG15. // Print action group 15's state to the terminal. (True/False)

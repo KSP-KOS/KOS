@@ -422,11 +422,12 @@ namespace kOS.Suffixed
                 () => System.Math.Min(Vessel.distanceLandedPackThreshold, Vessel.distancePackThreshold), 
                 value => { Vessel.distanceLandedPackThreshold = Vessel.distancePackThreshold = value; }));
             AddSuffix("ISDEAD", new NoArgsSuffix<bool>(() => (Vessel.state == Vessel.State.DEAD) ));
+            AddSuffix("STATUS", new Suffix<String>(() => Vessel.situation.ToString()));
 
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
             //// available:
-            AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLattitude(Vessel)));
+            AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLatitude(Vessel)));
             AddSuffix("LONGITUDE", new Suffix<double>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<double>(() => Vessel.altitude));
        }
@@ -452,7 +453,7 @@ namespace kOS.Suffixed
         /// weird exception for this one case.  This transforms it back into raw universe
         /// axes again:
         /// </summary>
-        /// <param name="kSPAngularVel">the value KSP is returning for angular velocity</param>
+        /// <param name="angularVelFromKSP">the value KSP is returning for angular velocity</param>
         /// <returns>altered velocity in the new reference frame</returns>
         private Vector RawAngularVelFromRelative(Vector3 angularVelFromKSP)
         {

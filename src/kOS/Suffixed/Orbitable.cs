@@ -187,7 +187,7 @@ namespace kOS.Suffixed
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
             Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
-            return parent.GetLatitude(unityWorldPos);
+            return Utils.DegreeFix(parent.GetLatitude(unityWorldPos),-180);
         }
         public double PositionToLongitude( Vector pos )
         {
@@ -219,11 +219,7 @@ namespace kOS.Suffixed
             AddSuffix("SRFPROGRADE", new Suffix<Direction>(GetSurfacePrograde));
             AddSuffix("SRFRETROGRADE", new Suffix<Direction>(GetSurfaceRetrograde));
             AddSuffix("OBT", new Suffix<OrbitInfo>(GetOrbitInfo));
-            AddSuffix("POSITION", new Suffix<Vector>(() =>
-            {
-                SafeHouse.Logger.Log("Position got Called");
-                return GetPosition();
-            }));
+            AddSuffix("POSITION", new Suffix<Vector>(GetPosition));
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(GetVelocities));
             AddSuffix("DISTANCE", new Suffix<double>(GetDistance));
             AddSuffix("DIRECTION", new Suffix<Direction>(() => new Direction(GetPosition(), false)));

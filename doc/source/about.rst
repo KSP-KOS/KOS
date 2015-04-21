@@ -3,8 +3,7 @@
 About **kOS** and **KerboScript**
 =================================
 
-kOS was originally created by Nivekk. It is under `active development`_ by `Chris Woerz`_ and `Steven Mading`_.
+kOS was originally created by Nivekk.
+It is under `active development`_ by the
+`kOS Team <https://github.com/orgs/KSP-KOS/people>`_ and is licensed under terms of GNU General Public License Version 3, 29 June 2007, Copyright © 2007 `Free Software Foundation, Inc. <http://fsf.org/>`_
 
-.. _active development: https://github.com/KSP-KOS
-.. _Chris Woerz: https://github.com/erendrake
-.. _Steven Mading: https://github.com/Dunbaratu

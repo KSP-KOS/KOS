@@ -35,6 +35,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`BEARING`                       scalar (deg)              relative heading to this vessel
      :attr:`HEADING`                       scalar (deg)              Absolute heading to this vessel
      :attr:`MAXTHRUST`                     scalar                    Sum of active maximum thrusts
+     :attr:`AVAILABLETHRUST`               scalar                    Sum of active limited maximum thrusts 
      :attr:`FACING`                        :struct:`Direction`       The way the vessel is pointed
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
      :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
@@ -45,6 +46,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
      :attr:`SHIPNAME`                      string                    The name of the vessel
      :attr:`NAME`                          string                    Synomym for SHIPNAME
+     :attr:`STATUS`                        string                    Current ship status
+     :attr:`TYPE`                          string                    Ship type
      :attr:`ANGULARMOMENTUM`               :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
@@ -91,6 +94,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     Sum of all the Max thrust of all the currently active engines In Kilonewtons.
+    
+.. attribute:: vessel:AVAILABLETHRUST
+
+    :type: scalar
+    :access: Get only
+    
+    Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
 
 .. attribute:: Vessel:FACING
 
@@ -159,6 +169,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     Same as :attr:`Vessel:SHIPNAME`.
 
+.. attribute:: Vessel:STATUS
+
+    :type: string
+    :access: get only
+    
+    The current status of the vessel possible results are: `LANDED`, `SPLASHED`, `PRELAUNCH`, `FLYING`, `SUB_ORBITAL`, `ORBITING`, `ESCAPING` and `DOCKED`.
+    
 .. attribute:: Vessel:TYPE
 
     :type: string

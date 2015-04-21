@@ -21,6 +21,10 @@ Creation
 
     Here, a new :struct:`Vector` called ``vec`` is created . The object :struct:`Vector` represents a `three-dimensional euclidean vector <http://en.wikipedia.org/wiki/Euclidean_vector>`__ To deeply understand most vectors in kOS, you have to understand a bit about the :ref:`underlying coordinate system of KSP <ref frame>`. If you are having trouble making sense of the direction the axes point in, go read that page.
 
+.. note::
+    Remember that the XYZ grid in Kerbal Space Program uses a
+    :ref:`left-handed <left-handed>` coordinate system.
+
 Structure
 ---------
 
@@ -223,6 +227,12 @@ Method / Operator                                              Return Type
         // These will both print: V(-1,2,-1)
         PRINT VCRS(vec1, vec2).
         PRINT VECTORCROSSPRODUCT(vec1, vec2).
+
+    When visualizing the direction that a vector cross product will
+    point, remember that KSP is using a :ref:`left-handed <left-handed>`
+    coordinate system, and this means a cross-product of two vectors
+    will point in the opposite direction of what it would had KSP been
+    using a right-handed coordinate system.
 
 .. function:: VANG(v1,v2)::
 
