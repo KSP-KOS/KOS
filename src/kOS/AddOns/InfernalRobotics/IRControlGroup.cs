@@ -11,10 +11,10 @@ namespace kOS.AddOns.InfernalRobotics
 {
     public class IRControlGroupWrapper : Structure
     {
-        private readonly IRWrapper.IRAPI.IRControlGroup cg;
+        private readonly IRWrapper.IControlGroup cg;
         private readonly SharedObjects shared;
 
-        public IRControlGroupWrapper(IRWrapper.IRAPI.IRControlGroup init, SharedObjects shared)
+        public IRControlGroupWrapper(IRWrapper.IControlGroup init, SharedObjects shared)
         {
             cg = init;
             this.shared = shared;
@@ -45,7 +45,7 @@ namespace kOS.AddOns.InfernalRobotics
 
             if(IRWrapper.APIReady)
             {
-                foreach(IRWrapper.IRAPI.IRServo s in cg.Servos)
+                foreach(IRWrapper.IServo s in cg.Servos)
                 {
                     list.Add(new IRServoWrapper(s, shared));
                 }

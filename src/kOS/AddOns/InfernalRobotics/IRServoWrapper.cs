@@ -9,10 +9,10 @@ namespace kOS.AddOns.InfernalRobotics
 {
     public class IRServoWrapper : Structure
     {
-        private readonly IRWrapper.IRAPI.IRServo servo;
+        private readonly IRWrapper.IServo servo;
         private readonly SharedObjects shared;
 
-        public IRServoWrapper(IRWrapper.IRAPI.IRServo init, SharedObjects shared)
+        public IRServoWrapper(IRWrapper.IServo init, SharedObjects shared)
         {
             servo = init;
             this.shared = shared;
@@ -22,6 +22,7 @@ namespace kOS.AddOns.InfernalRobotics
         private void InitializeSuffixes()
         {
             AddSuffix("NAME", new SetSuffix<string>(() => servo.Name, value => servo.Name = value));
+            AddSuffix("UID", new Suffix<uint>(() => servo.UID));
             AddSuffix("HIGHLIGHT", new SetSuffix<bool>(() => true, value => servo.Highlight = value));
 
             AddSuffix("POSITION", new Suffix<float>(() => servo.Position));
