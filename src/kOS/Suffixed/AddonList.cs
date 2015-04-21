@@ -20,6 +20,7 @@ namespace kOS.Suffixed
             AddSuffix("KAC", new Suffix<Addon>(() => new AddOns.KerbalAlarmClock.Addon(shared)));
             AddSuffix("RT", new Suffix<Addon>(() => new AddOns.RemoteTech.Addon(shared)));
             AddSuffix("AGX", new Suffix<Addon>(() => new AddOns.ActionGroupsExtended.Addon(shared)));
+            AddSuffix("IR", new Suffix<Addon>(() => new AddOns.InfernalRobotics.Addon(shared)));
         }
 
         public override string ToString()

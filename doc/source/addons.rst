@@ -11,6 +11,7 @@ Addon Reference
     Action Groups Extended <addons/AGX>
     RemoteTech <addons/RemoteTech>
     Kerbal Alarm Clock <addons/KAC>
+    Infernal Robotics <addons/IR>
 
 To help KOS scripts identify whether or not certain mod is installed and available following suffixed functions were introduced in version 0.17
 
@@ -23,10 +24,16 @@ Returns True if mod Action Group Extended is installed and available to KOS.
 ``ADDONS:RT:AVAILABLE``
 ------------------------
 
-Returns True if mod RemoteTech is installed and available to KOS. See more RemoteTech functions here <addons/RemoteTech>.
+Returns True if mod RemoteTech is installed and available to KOS. See more RemoteTech functions :doc:`here <addons/RemoteTech>`.
 
 
 ``ADDONS:KAC:AVAILABLE``
 ------------------------
 
 Returns True if mod Kerbal Alarm Clock is installed and available to KOS.
+
+
+``ADDONS:IR:AVAILABLE``
+------------------------
+
+Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft. See more :doc:`here <addons/IR>`.
