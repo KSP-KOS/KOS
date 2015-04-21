@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Part;
 
 namespace kOS.Suffixed.Part
 {
     public class ModuleEngineAdapter : IModuleEngine
     {
+        private readonly SharedObjects shared;
+
         private enum EngineType
         {
             Engine,
@@ -15,16 +18,21 @@ namespace kOS.Suffixed.Part
         private readonly ModuleEngines engineModule;
         private readonly EngineType engineType;
 
-        public ModuleEngineAdapter(ModuleEngines engineModule)
+        public ModuleEngineAdapter(ModuleEngines engineModule, SharedObjects shared) : this (shared)
         {
             this.engineModule = engineModule;
             engineType = EngineType.Engine;
         }
 
-        public ModuleEngineAdapter(ModuleEnginesFX engineModuleFx)
+        public ModuleEngineAdapter(ModuleEnginesFX engineModuleFx, SharedObjects shared) : this (shared)
         {
             this.engineModuleFx = engineModuleFx;
             engineType = EngineType.EngineFx;
+        }
+
+        private ModuleEngineAdapter(SharedObjects shared)
+        {
+            this.shared = shared;
         }
 
         public void Activate()
@@ -54,6 +62,24 @@ namespace kOS.Suffixed.Part
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public IList<IPropellant> Propellants
+        {
+            get
+            {
+                switch (engineType)
+                {
+                    case EngineType.Engine:
+                        return PropellantFactory.GetPropellants( engineModule.propellants, shared );
+
+                    case EngineType.EngineFx:
+                        return PropellantFactory.GetPropellants( engineModuleFx.propellants, shared );
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -286,5 +312,6 @@ namespace kOS.Suffixed.Part
                 }
             }
         }
+
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
@@ -20,21 +22,29 @@ namespace kOS.Suffixed
         {
             AddSuffix("NUMBER", new Suffix<int>(() => Staging.CurrentStage));
             AddSuffix("READY", new Suffix<bool>(() => shared.Vessel.isActiveVessel && Staging.separate_ready));
-            AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
+            AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(GetResourceManifest));
 
         }
 
-        private ListValue<ActiveResourceValue> GetResourceManifest()
+        private ListValue<AggregateResourceValue> GetResourceManifest()
         {
-            var resources = shared.Vessel.GetActiveResources();
-            var toReturn = new ListValue<ActiveResourceValue>();
+            var engines = EngineValue.PartsToEngineAdapters(shared.Vessel.parts, shared);
+            var activeEngines = engines.Values.Where(e => e.Ignition);
 
-            foreach (var resource in resources)
+            var resources = new Dictionary<string, AggregateResourceValue>();
+
+            foreach (var propellant in activeEngines.SelectMany(engine => engine.Propellants))
             {
-                toReturn.Add(new ActiveResourceValue(resource, shared));
+                AggregateResourceValue aggreate;
+                if (!resources.TryGetValue(propellant.Name, out aggreate))
+                {
+                    resources.Add(propellant.Name, new AggregateResourceValue(propellant));
+                    continue;
+                }
+                aggreate.AddPropellant(propellant);
             }
 
-            return toReturn;
+            return ListValue<AggregateResourceValue>.CreateList(resources.Values);
         }
 
         public override object GetSuffix(string suffixName)

@@ -1,85 +1,83 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Part;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
-    public class AggregateResourceValue : Structure
+    public class AggregateResourceValue : Structure, IPropellant
     {
-        private readonly string name;
-        private readonly SharedObjects shared;
-        private double amount;
-        private double capacity;
-        private readonly ListValue<PartValue> parts;
-        private readonly float density;
+        private readonly IList<IPropellant> propellants;
 
-        public AggregateResourceValue(PartResourceDefinition definition, SharedObjects shared)
+        public AggregateResourceValue(IPropellant propellant) :this( new List<IPropellant>{propellant})
         {
-            name = definition.name;
-            density = definition.density;
-            this.shared = shared;
-            amount = 0;
-            capacity = 0;
-            parts = new ListValue<PartValue>();
+            if (propellant == null) throw new ArgumentNullException("propellant");
+        }
+
+        public AggregateResourceValue(IList<IPropellant> propellants )
+        {
+            if (propellants == null) throw new ArgumentNullException("propellants");
+            if (!propellants.Any()) throw new ArgumentOutOfRangeException("propellants");
+
+            this.propellants = propellants;
             InitializeAggregateResourceSuffixes();
         }
 
         private void InitializeAggregateResourceSuffixes()
         {
-            AddSuffix("NAME", new Suffix<string>(() => name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
-            AddSuffix("DENSITY", new Suffix<float>(() => density, "The density of the resource"));
-            AddSuffix("AMOUNT", new Suffix<double>(() => amount, "The resources currently available"));
-            AddSuffix("CAPACITY", new Suffix<double>(() => capacity, "The total storage capacity currently available"));
-            AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => parts, "The containers for this resource"));
+            AddSuffix("NAME", new Suffix<string>(() => Name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
+            AddSuffix("DENSITY", new Suffix<float>(() => Density, "The density of the resource"));
+            AddSuffix("AMOUNT", new Suffix<double>(() => Amount, "The resources currently available"));
+            AddSuffix("CAPACITY", new Suffix<double>(() => Capacity, "The total storage capacity currently available"));
+            AddSuffix("PARTS", new Suffix<ListValue>(() => Parts, "The containers for this resource"));
         }
 
-        public void AddResource(PartResource resource)
+        private ListValue GetParts()
         {
-            amount += resource.amount;
-            capacity += resource.maxAmount;
-            parts.Add(new PartValue(resource.part, shared));
+            var allParts = propellants.SelectMany(p => p.Parts).Cast<PartValue>();
+            return ListValue.CreateList(allParts);
         }
 
         public override string ToString()
         {
-            return string.Format("SHIPRESOURCE({0},{1},{2})", name, amount, capacity);
+            return string.Format("SHIPRESOURCE({0},{1},{2})", Name, Amount, Capacity);
         }
 
-        private static Dictionary<string, AggregateResourceValue> ProspectResources(IEnumerable<global::Part> parts, SharedObjects shared)
+        public void AddPropellant(IPropellant propellantAddendum)
         {
-            var resources = new Dictionary<string, AggregateResourceValue>();
-            foreach (var part in parts)
+            if (propellantAddendum.Name != Name)
             {
-                foreach (PartResource resource in part.Resources)
-                {
-                    AggregateResourceValue aggregateResourceAmount;
-                    if (!resources.TryGetValue(resource.resourceName, out aggregateResourceAmount))
-                    {
-                        aggregateResourceAmount = new AggregateResourceValue(resource.info, shared);
-                    }
-                    aggregateResourceAmount.AddResource(resource);
-                    resources[resource.resourceName] = aggregateResourceAmount;
-                }
+                throw new ArgumentOutOfRangeException("propellantAddendum");
             }
-            return resources;
+            propellants.Add(propellantAddendum);
         }
 
-        public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects shared)
+        public string Name
         {
-            var list = new ListValue();
-            var resources = ProspectResources(parts, shared);
-            foreach (var resource in resources)
-            {
-                list.Add(resource.Value);
-            }
-            return list;
+            get { return propellants.First().Name; }
         }
 
-        public static ListValue<AggregateResourceValue> FromVessel(Vessel vessel, SharedObjects shared)
+        public float Density
         {
-            var resources = ProspectResources(vessel.parts, shared);
-            return ListValue<AggregateResourceValue>.CreateList(resources.Values);
+            get { return propellants.First().Density; }
+        }
+
+        public double Amount
+        {
+            get { return propellants.Sum(p => p.Amount); }
+        }
+
+        public double Capacity
+        {
+            get { return propellants.Sum(p => p.Capacity); }
+        }
+
+        public ListValue Parts
+        {
+            get { return GetParts(); }
         }
     }
 }

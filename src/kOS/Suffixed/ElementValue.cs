@@ -46,7 +46,7 @@ namespace kOS.Suffixed
 
         private ListValue GetResourceManifest()
         {
-            return AggregateResourceValue.PartsToList(parts, shared);
+            return PropellantFactory.PartsToList(parts, shared);
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects shared)
