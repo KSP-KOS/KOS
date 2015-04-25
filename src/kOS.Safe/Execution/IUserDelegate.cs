@@ -9,6 +9,7 @@ namespace kOS.Safe.Execution
     /// </summary>
     public interface IUserDelegate
     {
+        IProgramContext ProgContext {get;}
         int EntryPoint {get;}
         List<VariableScope> Closure {get;}
     }
