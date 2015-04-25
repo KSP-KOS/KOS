@@ -4,7 +4,6 @@ using kOS.Suffixed.Part;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Compilation;
 using UnityEngine;
 
 namespace kOS.Utilities

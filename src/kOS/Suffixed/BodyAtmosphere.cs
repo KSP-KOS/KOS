@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
@@ -14,9 +15,10 @@ namespace kOS.Suffixed
             AddSuffix("BODY", new Suffix<string>(()=> celestialBody.bodyName));
             AddSuffix("EXISTS", new Suffix<bool>(()=> celestialBody.atmosphere));
             AddSuffix("OXYGEN", new Suffix<bool>(()=> celestialBody.atmosphere && celestialBody.atmosphereContainsOxygen));
-            AddSuffix("SCALE", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmospherePressureCurve.maxTime : 0));
             AddSuffix("SEALEVELPRESSURE", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmospherePressureSeaLevel : 0));
             AddSuffix("HEIGHT", new Suffix<double>(()=> celestialBody.atmosphere ? celestialBody.atmosphereDepth : 0));
+
+            AddSuffix("SCALE", new Suffix<double>(() => { throw new KOSDeprecationException("0.17.2","SCALE","TODO: build alternatives","TODO: Fill in before 1.0 goes out"); }));
         }
 
         public override string ToString()
