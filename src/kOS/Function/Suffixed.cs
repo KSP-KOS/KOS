@@ -188,8 +188,11 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            object[] argArray = new object[CountRemainingArgs(shared)];
+            for (int i = argArray.Length - 1 ; i >= 0 ; --i)
+                argArray[i] = PopValueAssert(shared); // fill array in reverse order because .. stack args.
             AssertArgBottomAndConsume(shared);
-            var listValue = new ListValue();
+            var listValue = new ListValue(argArray.ToList());
             ReturnValue = listValue;
         }
     }

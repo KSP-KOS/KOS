@@ -22,6 +22,8 @@ Allowed Syntax:
 All the following are legal "declare" statements:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. _declare syntax:
+
 The following alternate versions have identical meaning to each other:
 
   * ``DECLARE`` *identifier* ``TO`` *expression* *dot*
@@ -303,7 +305,7 @@ Local lock
 You can explicitly make a ``LOCK`` statement be LOCAL with the ``LOCAL``
 keyword, like so:
 
-``LOCK LOCAL`` identifier ``TO`` expression.
+``LOCAL LOCK`` identifier ``TO`` expression.
 
 But be aware that doing so with a cooked steering control such
 as THROTTLE or STEERING will not actually affect your ship.  The
@@ -386,8 +388,8 @@ Scoping terms
 .. note::
     .. versionadded:: 0.17
         In prior versions of kerboscript, all identifiers other than
-	DECLARE PARAMETER identifiers were always global variables no
-	matter what, even if you used the DECLARE statement to make them.
+        DECLARE PARAMETER identifiers were always global variables no
+        matter what, even if you used the DECLARE statement to make them.
 
 What is Scope?
     The term *Scope* simply refers to asking the question "where in the
@@ -526,10 +528,7 @@ Examples::
       RETURN sum / inputList:LENGTH.
     }.
 
-    SET testList TO LIST();
-    testList:ADD(5).
-    testList:ADD(10).
-    testList:ADD(15).
+    SET testList TO LIST(5,10,15);
     print "average is " + calcAverage(testList).
     print "but out here where it's global, sum is still " + sum.
 
@@ -618,7 +617,7 @@ force yourself to be clear and explicit about the difference.
 For example, this program, which is valid::
 
     function foo {print "foo ". }
-    local x is 1.
+    declare x is 1.
 
     print foo() + x.
 
@@ -635,6 +634,9 @@ Which you fix by explicitly stating the local keyword, as follows::
     @LAZYGLOBAL OFF.
     function foo {print "foo ". }  // This does not need the 'local' keyword added
     declare local x is 1.          // But this does because it is a declare *identifier* statement.
+                                   // you could have also just said:
+                                   //     local x is 1.
+                                   // without the 'declare' keyword.
 
     print foo() + x.
 

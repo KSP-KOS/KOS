@@ -170,7 +170,7 @@ namespace kOS.AddOns.KerbalAlarmClock
                 //DrawTimeEntryMethod = KACType.GetMethod("DrawTimeEntryAPI", BindingFlags.Public | BindingFlags.Instance);
                 //LogFormatted_DebugOnly("Success: " + (DrawTimeEntryMethod != null).ToString());
 
-				//Commenting out rubbish lines
+                //Commenting out rubbish lines
                 //MethodInfo[] mis = KACType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
                 //foreach (MethodInfo mi in mis)
                 //{
@@ -560,11 +560,12 @@ namespace kOS.AddOns.KerbalAlarmClock
 
             public enum AlarmActionEnum
             {
-
+                [Description("Do Nothing-Delete When Past")]        DoNothingDeleteWhenPassed,
+                [Description("Do Nothing")]                         DoNothing,
                 [Description("Message Only-No Affect on warp")]     MessageOnly,
                 [Description("Kill Warp Only-No Message")]          KillWarpOnly,
                 [Description("Kill Warp and Message")]              KillWarp,
-                [Description("Pause Game and Message")]             PauseGame
+                [Description("Pause Game and Message")]             PauseGame,
             }
 
             public enum TimeEntryPrecisionEnum

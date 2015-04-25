@@ -24,6 +24,8 @@ Ship Systems
 
         SAS ON.
 
+.. _sasmode:
+
 .. object:: SET SASMODE TO value.
 
     :access: Get/Set
@@ -33,7 +35,11 @@ Ship Systems
 
         SET SASMODE TO value.
 
-        It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity).  Valid strings for ``value`` are ``"PROGRADE"``, ``"RETROGRADE"``, ``"NORMAL"``, ``"ANTINORMAL"``, ``"RADIALOUT"``, ``"RADIALIN"``, ``"TARGET"``, ``"ANTITARGET"``, ``"STABILITYASSIST"``, and ``"STABILITY"``.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if ``"TARGET"`` or ``"ANTITARGET"`` are used, but no target is selected.
+        It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity).  Valid strings for ``value`` are ``"PROGRADE"``, ``"RETROGRADE"``, ``"NORMAL"``, ``"ANTINORMAL"``, ``"RADIALOUT"``, ``"RADIALIN"``, ``"TARGET"``, ``"ANTITARGET"``, ``MANEUVER``, ``"STABILITYASSIST"``, and ``"STABILITY"``.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if ``"TARGET"`` or ``"ANTITARGET"`` are used, but no target is selected.
+		
+.. warning:: SASMODE does not work with RemoteTech
+
+		Due to the way that RemoteTech disables flight control input, the built in SAS modes do not function properly when there is no connection to the KSC or a Command Center.  If you are writing scripts for use with RemoteTech, make sure to take this into account.
 
 .. global:: LIGHTS
 
