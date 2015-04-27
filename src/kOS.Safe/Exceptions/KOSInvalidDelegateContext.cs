@@ -16,12 +16,12 @@ namespace kOS.Safe.Exceptions
         {
         }
 
-        public virtual string VerboseMessage
+        public override string VerboseMessage
         {
             get { return base.Message; }
         }
 
-        public virtual string HelpURL
+        public override string HelpURL
         {
             get { return HELP_URL; }
         }
