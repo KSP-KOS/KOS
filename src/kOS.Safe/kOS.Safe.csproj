@@ -92,6 +92,7 @@
     <Compile Include="Encapsulation\TerminalStruct.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
+    <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSInvalidArgumentException.cs" />
     <Compile Include="Exceptions\KOSIdentifierClashException.cs" />
