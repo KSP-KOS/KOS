@@ -123,8 +123,14 @@ namespace kOS.Screen
 
             FirstTimeSetup();
 
+            //in 1.0 these Events are never fired (it seems), so we need to maka a workaround
             GameEvents.onGUIApplicationLauncherReady.Add(RunWhenReady);
             GameEvents.onGUIApplicationLauncherDestroyed.Add(GoAway);
+
+            if (ApplicationLauncher.Ready && launcherButton == null)
+            {
+                RunWhenReady();
+            }
 
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Start succesful");
         }
@@ -157,7 +163,8 @@ namespace kOS.Screen
                 launcher.EnableMutuallyExclusive(launcherButton);
 
             }
-            AddBlizzyButton();
+            if (BlizzyButton == null)
+                AddBlizzyButton();
 
             SetupBackingConfigInts();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Launcher Icon init successful");
