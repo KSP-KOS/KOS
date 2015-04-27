@@ -9,6 +9,7 @@ namespace kOS.Safe.Execution
     /// </summary>
     public class UserDelegate : IUserDelegate
     {
+        public IProgramContext ProgContext {get; private set;}
         public int EntryPoint {get; private set;}
         private readonly ICpu cpu;
         public List<VariableScope> Closure {get; private set;}
@@ -18,13 +19,15 @@ namespace kOS.Safe.Execution
         /// the entry point location of the function to call.
         /// </summary>
         /// <param name="cpu">the CPU on which this program is running.</param>
+        /// <param name="context">The IProgramContext in which the entryPoint is stored.  Entry point 27 in the interpreter is not the same as entrypoint 27 in program context.</param>
         /// <param name="entryPoint">instruction address where OpcodeCall should jump to to call the function.</param>
         /// <param name="useClosure">If true, then a snapshot of the current scoping stack, and thus a persistent ref to its variables,
         ///   will be kept in the delegate so it can be called later as a callback with closure.  Set to false if the
         ///   function is only getting called instantly using whatever the scope is at the time of the call.</param>
-        public UserDelegate(ICpu cpu, int entryPoint, bool useClosure)
+        public UserDelegate(ICpu cpu, IProgramContext context, int entryPoint, bool useClosure)
         {
             this.cpu = cpu;
+            ProgContext = context;
             EntryPoint = entryPoint;
             if (useClosure)
                 CaptureClosure();

@@ -132,7 +132,9 @@ namespace kOS.Safe.Compilation
                     // Replace the OpcodePushRelocateLater with the proper OpcodePush:
                     Opcode newOp;
                     if (opcode is OpcodePushDelegateRelocateLater)
-                        newOp = new OpcodePushDelegate(destinationIndex);
+                    {
+                        newOp = new OpcodePushDelegate(destinationIndex, ((OpcodePushDelegateRelocateLater)opcode).WithClosure);
+                    }
                     else
                         newOp = new OpcodePush(destinationIndex);
                     newOp.SourceName = opcode.SourceName;
