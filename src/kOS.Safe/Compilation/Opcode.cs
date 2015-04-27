@@ -1289,7 +1289,7 @@ namespace kOS.Safe.Compilation
             {
                 object arg = cpu.PopValue();
                 if (arg is string && ((string)arg) == ARG_MARKER_STRING)
-                    throw new KOSArgumentMismatchException(paramArray.Length, i-1);
+                    throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i+1));
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
                 Type paramType = paramInfo.ParameterType;
