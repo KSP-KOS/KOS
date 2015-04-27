@@ -1,18 +1,17 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Persistence;
 using kOS.Suffixed.Part;
 
 namespace kOS
 {
     public class Core : Structure
     {
-        public static VersionInfo VersionInfo = new VersionInfo(0, 17, 1);
+        public static VersionInfo VersionInfo;
         private readonly SharedObjects shared;
 
         static Core()
         {
-            VersionInfo = new VersionInfo(0, 17, 0);
+            VersionInfo = new VersionInfo(0, 17, 1);
         }
 
         public Core(SharedObjects shared)
