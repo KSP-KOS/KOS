@@ -1,6 +1,23 @@
 kOS Mod Changelog
 =================
 
+
+# v0.17.1
+
+Corrections and omissions   
+-----------------------
+
+### "New" features
+
+* Due to erendrake's inability to correctly use git. The new list constructor was omitted from the 0.17.0 release binaries.
+    
+### Bug Fixes:
+
+* Many Doc fixes
+* Fixed bug with setting KAC Alarm action to correct value
+* Fixed some unneeded log spamming 
+
+
 # v0.17.0
 
 FUNCTIONS! FUNCTIONS! FUNCTIONS!
@@ -21,7 +38,7 @@ from scratch, we have created a changes page in the main documentation:
 For the features mentioned below, you can go to the page above
 and get a more verbose description of the new features.
 
-###New Features:
+### New Features:
 
 A brief list of what's new:
 
@@ -47,7 +64,7 @@ details here, you can go see them on the main docs page at the following link:
 
 http://ksp-kos.github.io/KOS_DOC/changes.html
 
-###Bug Fixes:
+### Bug Fixes:
 
 - Using the same FOR iterator in two loops no longer name clashes because it's not global anymore.
 - Repaired a number of boot file selection bugs.

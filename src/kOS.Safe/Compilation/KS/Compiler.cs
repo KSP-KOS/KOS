@@ -983,12 +983,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.unset_stmt:
                     VisitUnsetStatement(node);
                     break;
-                case TokenType.batch_stmt:
-                    VisitBatchStatement(node);
-                    break;
-                case TokenType.deploy_stmt:
-                    VisitDeployStatement(node);
-                    break;
                 case TokenType.arglist:
                     VisitArgList(node);
                     break;
@@ -1944,7 +1938,7 @@ namespace kOS.Safe.Compilation.KS
                 // methods and functions, and always has exactly one copy in memory whether there are
                 // one, many, or zero "instances" of it present in scope at the moment.
                 AddOpcode(new OpcodePush(func.ScopelessPointerIdentifier));
-                AddOpcode(new OpcodePushRelocateLater(null), func.GetFuncLabel());
+                AddOpcode(new OpcodePushDelegateRelocateLater(null,false), func.GetFuncLabel());
                 if (node == null) // global scope, so unconditionally use a normal Store:
                     AddOpcode(new OpcodeStore()); //
                 else
@@ -1971,7 +1965,7 @@ namespace kOS.Safe.Compilation.KS
             string functionLabel = lockObject.GetUserFunctionLabel(expressionHash);
             // lock variable
             AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
-            AddOpcode(new OpcodePushDelegateRelocateLater(null), functionLabel);
+            AddOpcode(new OpcodePushDelegateRelocateLater(null,true), functionLabel);
             AddOpcode(CreateAppropriateStoreCode(whereToStore, allowLazyGlobal));
 
             if (lockObject.IsSystemLock())
@@ -2652,18 +2646,6 @@ namespace kOS.Safe.Compilation.KS
             }
 
             AddOpcode(new OpcodeUnset());
-        }
-
-        private void VisitBatchStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            throw new Exception("Batch mode can only be used when in immediate mode.");
-        }
-
-        private void VisitDeployStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            throw new Exception("Batch mode can only be used when in immediate mode.");
         }
 
         private void VisitIdentifierLedStatement(ParseNode node)

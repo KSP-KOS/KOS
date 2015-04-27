@@ -226,19 +226,21 @@ namespace kOS.Execution
         /// Build a delegate call for the given function entry point, in which it will capture a closure of the current
         /// runtime scoping state to be used when that function gets called later by OpcodeCall:
         /// </summary>
+        /// <param name="entryPoint">Integer location in memory to jump to to start the call</param>
+        /// <param name="withClosure">Should the closure be captured for this delegate or ignored</param></param>
         /// <returns>The delegate object you can store in a variable.</returns>
-        public IUserDelegate MakeUserDelegate(int entryPoint)
+        public IUserDelegate MakeUserDelegate(int entryPoint, bool withClosure)
         {
-            return new UserDelegate(this, entryPoint, true);
+            return new UserDelegate(this, currentContext, entryPoint, withClosure);
         }
 
         // only two contexts exist now, one for the interpreter and one for the programs
-        public ProgramContext GetInterpreterContext()
+        public IProgramContext GetInterpreterContext()
         {
             return contexts[0];
         }
         
-        public ProgramContext SwitchToProgramContext()
+        public IProgramContext SwitchToProgramContext()
         {
             if (contexts.Count == 1)
             {
@@ -374,6 +376,19 @@ namespace kOS.Execution
         public void MoveStackPointer(int delta)
         {
             stack.MoveStackPointer(delta);
+        }
+        
+        /// <summary>Throw exception if the user delegate is not one the CPU can call right now.</summary>
+        /// <param name="userDelegate">The userdelegate being checked</param>
+        /// <exception cref="KOSInvalidDelegate">thrown if the cpu is in a state where it can't call this delegate.</exception>
+        public void AssertValidDelegateCall(IUserDelegate userDelegate)
+        {
+            if (userDelegate.ProgContext != currentContext) {
+                throw new KOSInvalidDelegateContext(
+                    (currentContext == contexts[0] ? "the interpreter" : "a program" ),
+                    (currentContext == contexts[0] ? "a program" : "the interpreter" )
+                    );
+            }
         }
         
         /// <summary>
@@ -995,7 +1010,7 @@ namespace kOS.Execution
                 SafeHouse.Logger.Log(executeLog.ToString());
         }
 
-        private bool ExecuteInstruction(ProgramContext context)
+        private bool ExecuteInstruction(IProgramContext context)
         {
             bool DEBUG_EACH_OPCODE = false;
             

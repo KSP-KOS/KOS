@@ -347,22 +347,22 @@ namespace kOS.Utilities
 
         private static double RealMaxAtmosphereAltitude(CelestialBody body)
         {
-            // This comes from MechJeb CelestialBodyExtensions.cs
-            if (!body.atmosphere) return 0;
-            //Atmosphere actually cuts out when exp(-altitude / scale height) = 1e-6
-            return -body.atmosphereScaleHeight * 1000 * Math.Log(1e-6);
+            return body.atmosphere ? body.atmosphereDepth : 0;
         }
 
         public static double GetTerminalVelocity(Vessel vessel)
         {
-            if (vessel.mainBody.GetAltitude(vessel.findWorldCenterOfMass()) > RealMaxAtmosphereAltitude(vessel.mainBody))
-                return double.PositiveInfinity;
-            double densityOfAir =
-                FlightGlobals.getAtmDensity(FlightGlobals.getStaticPressure(vessel.findWorldCenterOfMass(),
-                                                                            vessel.mainBody));
-            return
-                Math.Sqrt(2 * FlightGlobals.getGeeForceAtPosition(vessel.findWorldCenterOfMass()).magnitude *
-                          vessel.GetTotalMass() / (GetMassDrag(vessel) * FlightGlobals.DragMultiplier * densityOfAir));
+            //if (vessel.mainBody.GetAltitude(vessel.findWorldCenterOfMass()) > RealMaxAtmosphereAltitude(vessel.mainBody))
+            //    return double.PositiveInfinity;
+            //var staticPressure = FlightGlobals.getStaticPressure(vessel.findWorldCenterOfMass(), vessel.mainBody);
+            //var exteriorTemperature = FlightGlobals.getExternalTemperature(vessel.findWorldCenterOfMass(), vessel.mainBody);
+            //double densityOfAir = FlightGlobals.getAtmDensity(staticPressure, exteriorTemperature);
+            //return
+            //    Math.Sqrt(2 * FlightGlobals.getGeeForceAtPosition(vessel.findWorldCenterOfMass()).magnitude *
+            //              vessel.GetTotalMass() / (GetMassDrag(vessel) * FlightGlobals.DragMultiplier * densityOfAir));
+
+            #warning Version 1.0 TODO
+            return default(Double);
         }
 
         public static float GetVesselLatitude(Vessel vessel)

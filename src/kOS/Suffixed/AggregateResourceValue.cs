@@ -12,10 +12,12 @@ namespace kOS.Suffixed
         private double amount;
         private double capacity;
         private readonly ListValue<PartValue> parts;
+        private readonly float density;
 
-        public AggregateResourceValue(string name, SharedObjects shared)
+        public AggregateResourceValue(PartResourceDefinition definition, SharedObjects shared)
         {
-            this.name = name;
+            name = definition.name;
+            density = definition.density;
             this.shared = shared;
             amount = 0;
             capacity = 0;
@@ -26,6 +28,7 @@ namespace kOS.Suffixed
         private void InitializeAggregateResourceSuffixes()
         {
             AddSuffix("NAME", new Suffix<string>(() => name, "The name of the resource (eg LiguidFuel, ElectricCharge)"));
+            AddSuffix("DENSITY", new Suffix<float>(() => density, "The density of the resource"));
             AddSuffix("AMOUNT", new Suffix<double>(() => amount, "The resources currently available"));
             AddSuffix("CAPACITY", new Suffix<double>(() => capacity, "The total storage capacity currently available"));
             AddSuffix("PARTS", new Suffix<ListValue<PartValue>>(() => parts, "The containers for this resource"));
@@ -48,15 +51,15 @@ namespace kOS.Suffixed
             var resources = new Dictionary<string, AggregateResourceValue>();
             foreach (var part in parts)
             {
-                foreach (PartResource module in part.Resources)
+                foreach (PartResource resource in part.Resources)
                 {
                     AggregateResourceValue aggregateResourceAmount;
-                    if (!resources.TryGetValue(module.resourceName, out aggregateResourceAmount))
+                    if (!resources.TryGetValue(resource.resourceName, out aggregateResourceAmount))
                     {
-                        aggregateResourceAmount = new AggregateResourceValue(module.resourceName, shared);
+                        aggregateResourceAmount = new AggregateResourceValue(resource.info, shared);
                     }
-                    aggregateResourceAmount.AddResource(module);
-                    resources[module.resourceName] = aggregateResourceAmount;
+                    aggregateResourceAmount.AddResource(resource);
+                    resources[resource.resourceName] = aggregateResourceAmount;
                 }
             }
             return resources;

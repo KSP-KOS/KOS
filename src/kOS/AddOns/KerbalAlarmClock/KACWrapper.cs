@@ -170,7 +170,7 @@ namespace kOS.AddOns.KerbalAlarmClock
                 //DrawTimeEntryMethod = KACType.GetMethod("DrawTimeEntryAPI", BindingFlags.Public | BindingFlags.Instance);
                 //LogFormatted_DebugOnly("Success: " + (DrawTimeEntryMethod != null).ToString());
 
-				//Commenting out rubbish lines
+                //Commenting out rubbish lines
                 //MethodInfo[] mis = KACType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
                 //foreach (MethodInfo mi in mis)
                 //{

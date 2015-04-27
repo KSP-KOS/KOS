@@ -51,6 +51,10 @@
   <ItemGroup>
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedAPI.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\ActionGroupsExtendedBinding.cs" />
+    <Compile Include="AddOns\InfernalRobotics\IRControlGroup.cs" />
+    <Compile Include="AddOns\InfernalRobotics\IRHandler.cs" />
+    <Compile Include="AddOns\InfernalRobotics\IRServoWrapper.cs" />
+    <Compile Include="AddOns\InfernalRobotics\IRWrapper.cs" />
     <Compile Include="AddOns\RemoteTech\IRemoteTechAPIv1.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAPI.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechArchive.cs" />
@@ -168,6 +172,7 @@
     <Compile Include="AddOns\RemoteTech\Addon.cs" />
     <Compile Include="AddOns\KerbalAlarmClock\Addon.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\Addon.cs" />
+    <Compile Include="AddOns\InfernalRobotics\Addon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

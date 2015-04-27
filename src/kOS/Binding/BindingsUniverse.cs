@@ -56,13 +56,28 @@ namespace kOS.Binding
                     FlightDriver.StartAndFocusVessel(game, game.flightState.activeVesselIdx);
                 });
 
-            shared.BindingMgr.AddGetter("LOADDISTANCE", () => Vessel.loadDistance);
+            shared.BindingMgr.AddGetter("LOADDISTANCE", () => PhysicsGlobals.Instance.VesselRangesDefault.orbit.load);
             shared.BindingMgr.AddSetter("LOADDISTANCE", val =>
             {
                 var distance = Convert.ToSingle(val);
-                Vessel.loadDistance = distance;
-                Vessel.unloadDistance = distance - 250;
+                PhysicsGlobals.Instance.VesselRangesDefault.landed.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.splashed.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.prelaunch.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.flying.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.orbit.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.subOrbital.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.escaping.load = distance;
+
+                var unloadDistance = distance - 250;
+                PhysicsGlobals.Instance.VesselRangesDefault.landed.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.splashed.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.prelaunch.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.flying.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.orbit.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.subOrbital.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.escaping.unload = unloadDistance;
             });
+
             shared.BindingMgr.AddGetter("WARPMODE", () =>
                 {
                     switch (TimeWarp.WarpMode)
@@ -81,7 +96,7 @@ namespace kOS.Binding
                 {
                     TimeWarp.Modes toSet;
 
-                    switch (val.ToString())
+                    switch (val.ToString().ToUpper())
                     {
                         case "PHYSICS":
                             toSet = TimeWarp.Modes.LOW;

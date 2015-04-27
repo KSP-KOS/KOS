@@ -1231,6 +1231,7 @@ namespace kOS.Safe.Compilation
                 cpu.PushAboveStack(contextRecord);
                 if (userDelegate != null)
                 {
+                    cpu.AssertValidDelegateCall(userDelegate);
                     // Reverse-push the closure's scope record, just after the function return context got put on the stack.
                     for (int i = userDelegate.Closure.Count - 1 ; i >= 0 ; --i)
                         cpu.PushAboveStack(userDelegate.Closure[i]);
@@ -1288,7 +1289,7 @@ namespace kOS.Safe.Compilation
             {
                 object arg = cpu.PopValue();
                 if (arg is string && ((string)arg) == ARG_MARKER_STRING)
-                    throw new KOSArgumentMismatchException(paramArray.Length, i-1);
+                    throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i+1));
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
                 Type paramType = paramInfo.ParameterType;
@@ -1739,13 +1740,16 @@ namespace kOS.Safe.Compilation
     {
         [MLField(1,false)]
         private int EntryPoint { get; set; }
+        [MLField(2,false)]
+        private bool WithClosure { get; set; }
 
         protected override string Name { get { return "pushdelegate"; } }
         public override ByteCode Code { get { return ByteCode.PUSHDELEGATE; } }
 
-        public OpcodePushDelegate(int entryPoint)
+        public OpcodePushDelegate(int entryPoint, bool withClosure)
         {
             EntryPoint = entryPoint;
+            WithClosure = withClosure;
         }
 
         /// <summary>
@@ -1756,14 +1760,15 @@ namespace kOS.Safe.Compilation
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
-            if (fields == null || fields.Count<1)
-                throw new Exception("Saved field in ML file for OpcodePush seems to be missing.  Version mismatch?");
+            if (fields == null || fields.Count<2)
+                throw new Exception("Saved field in ML file for OpcodePushDelegate seems to be missing.  Version mismatch?");
             EntryPoint = (int)fields[0];
+            WithClosure = (bool)fields[1];
         }
 
         public override void Execute(ICpu cpu)
         {
-            IUserDelegate pushMe = cpu.MakeUserDelegate(EntryPoint);
+            IUserDelegate pushMe = cpu.MakeUserDelegate(EntryPoint, WithClosure);
             cpu.PushStack(pushMe);
         }
 
@@ -1779,17 +1784,29 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodePushDelegateRelocateLater : OpcodePushRelocateLater
     {
+        [MLField(1,false)]
+        public bool WithClosure { get; set; }
+
         protected override string Name { get { return "PushDelegateRelocateLater"; } }
         public override ByteCode Code { get { return ByteCode.PUSHDELEGATERELOCATELATER; } }
 
-        public OpcodePushDelegateRelocateLater(string destLabel) : base(destLabel)
+        public OpcodePushDelegateRelocateLater(string destLabel, bool withClosure) : base(destLabel)
         {
+            WithClosure = withClosure;
         }
 
         /// <summary>
         /// This variant of the constructor is just for ML file save/load to use.
         /// </summary>
-        protected OpcodePushDelegateRelocateLater() : base() { }
+        protected OpcodePushDelegateRelocateLater() : base() {}
+        
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodePushDelegateRelocatelater seems to be missing.  Version mismatch?");
+            WithClosure = (bool)fields[0];
+        }
     }
     
     #endregion

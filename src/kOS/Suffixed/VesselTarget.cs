@@ -412,15 +412,23 @@ namespace kOS.Suffixed
             AddSuffix(new[] {"SHIPNAME", "NAME"}, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
-            AddSuffix("TERMVELOCITY", new Suffix<double>(() => VesselUtils.GetTerminalVelocity(Vessel)));
+            AddSuffix("TERMVELOCITY", new Suffix<double>(() => { throw new KOSAtmosphereDeprecationException("17.2", "TERMVELOCITY", "<None>", string.Empty);}));
             AddSuffix("LOADED", new Suffix<bool>(() => Vessel.loaded));
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
             AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass, "The Ship's mass when full"));
             AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
             AddSuffix("PACKDISTANCE", new SetSuffix<float>(
-                () => System.Math.Min(Vessel.distanceLandedPackThreshold, Vessel.distancePackThreshold), 
-                value => { Vessel.distanceLandedPackThreshold = Vessel.distancePackThreshold = value; }));
+                () =>
+                {
+                    return System.Math.Min(Vessel.vesselRanges.landed.pack, Vessel.vesselRanges.prelaunch.pack);
+                },
+                value =>
+                {
+                      Vessel.vesselRanges.landed.pack = value;
+                      Vessel.vesselRanges.splashed.pack = value;
+                      Vessel.vesselRanges.prelaunch.pack = value;
+                }));
             AddSuffix("ISDEAD", new NoArgsSuffix<bool>(() => (Vessel.state == Vessel.State.DEAD) ));
             AddSuffix("STATUS", new Suffix<String>(() => Vessel.situation.ToString()));
 
@@ -430,6 +438,7 @@ namespace kOS.Suffixed
             AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLatitude(Vessel)));
             AddSuffix("LONGITUDE", new Suffix<double>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<double>(() => Vessel.altitude));
+
        }
 
 
