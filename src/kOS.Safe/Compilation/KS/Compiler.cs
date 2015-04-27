@@ -983,12 +983,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.unset_stmt:
                     VisitUnsetStatement(node);
                     break;
-                case TokenType.batch_stmt:
-                    VisitBatchStatement(node);
-                    break;
-                case TokenType.deploy_stmt:
-                    VisitDeployStatement(node);
-                    break;
                 case TokenType.arglist:
                     VisitArgList(node);
                     break;
@@ -2652,18 +2646,6 @@ namespace kOS.Safe.Compilation.KS
             }
 
             AddOpcode(new OpcodeUnset());
-        }
-
-        private void VisitBatchStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            throw new Exception("Batch mode can only be used when in immediate mode.");
-        }
-
-        private void VisitDeployStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            throw new Exception("Batch mode can only be used when in immediate mode.");
         }
 
         private void VisitIdentifierLedStatement(ParseNode node)

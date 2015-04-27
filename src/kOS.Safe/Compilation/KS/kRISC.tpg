@@ -59,8 +59,6 @@ REBOOT       -> @"\breboot\b";
 SHUTDOWN     -> @"\bshutdown\b";
 FOR          -> @"\bfor\b";
 UNSET        -> @"\bunset\b";
-BATCH        -> @"\bbatch\b";
-DEPLOY       -> @"\bdeploy\b";
 //Generic
 BRACKETOPEN  -> @"\(";
 BRACKETCLOSE -> @"\)";
@@ -123,8 +121,6 @@ instruction -> set_stmt |
                shutdown_stmt |
                for_stmt |
                unset_stmt |
-               batch_stmt |
-               deploy_stmt |
                instruction_block |
                identifier_led_stmt | // any statement that starts with an identifier.
                directive; // allow directives anywhere for now, let the compiler decide if it's in the wrong place, not the parser.
@@ -191,8 +187,6 @@ reboot_stmt    -> REBOOT EOI;
 shutdown_stmt  -> SHUTDOWN EOI;
 for_stmt       -> FOR IDENTIFIER IN varidentifier instruction EOI?;
 unset_stmt     -> UNSET (IDENTIFIER | ALL) EOI;
-batch_stmt     -> BATCH EOI;
-deploy_stmt    -> DEPLOY EOI;
 
 
 // ---------- expressions ---------------------------
