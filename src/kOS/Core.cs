@@ -1,5 +1,7 @@
-﻿using kOS.Safe.Encapsulation;
+﻿using System;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Persistence;
 using kOS.Suffixed.Part;
 
 namespace kOS
@@ -24,6 +26,7 @@ namespace kOS
         {
             AddSuffix("VERSION", new Suffix<VersionInfo>(() => VersionInfo));
             AddSuffix("PART", new Suffix<PartValue>(() => new PartValue(shared.KSPPart, shared)));
+            AddSuffix("VOLUME", new Suffix<Volume>(() => { throw new NotImplementedException(); }));
         }
     }
 }
