@@ -345,26 +345,6 @@ namespace kOS.Utilities
             return vessel.parts.Sum(part => part.GetWetMass());
         }
 
-        private static double RealMaxAtmosphereAltitude(CelestialBody body)
-        {
-            return body.atmosphere ? body.atmosphereDepth : 0;
-        }
-
-        public static double GetTerminalVelocity(Vessel vessel)
-        {
-            //if (vessel.mainBody.GetAltitude(vessel.findWorldCenterOfMass()) > RealMaxAtmosphereAltitude(vessel.mainBody))
-            //    return double.PositiveInfinity;
-            //var staticPressure = FlightGlobals.getStaticPressure(vessel.findWorldCenterOfMass(), vessel.mainBody);
-            //var exteriorTemperature = FlightGlobals.getExternalTemperature(vessel.findWorldCenterOfMass(), vessel.mainBody);
-            //double densityOfAir = FlightGlobals.getAtmDensity(staticPressure, exteriorTemperature);
-            //return
-            //    Math.Sqrt(2 * FlightGlobals.getGeeForceAtPosition(vessel.findWorldCenterOfMass()).magnitude *
-            //              vessel.GetTotalMass() / (GetMassDrag(vessel) * FlightGlobals.DragMultiplier * densityOfAir));
-
-            #warning Version 1.0 TODO
-            return default(Double);
-        }
-
         public static float GetVesselLatitude(Vessel vessel)
         {
             var retVal = (float)vessel.latitude;
