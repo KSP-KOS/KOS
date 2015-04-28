@@ -112,7 +112,14 @@ namespace kOS.Screen
 
         public void Awake ()
         {
-            
+            GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
+
+            RunWhenReady();
+        }
+
+        void OnGameSceneLoadRequestedForAppLauncher(GameScenes SceneToLoad)
+        {
+            GoAway();
         }
 
         public void Start()
@@ -122,15 +129,6 @@ namespace kOS.Screen
             alreadyAwake = true;
 
             FirstTimeSetup();
-
-            //in 1.0 these Events are never fired (it seems), so we need to maka a workaround
-            GameEvents.onGUIApplicationLauncherReady.Add(RunWhenReady);
-            GameEvents.onGUIApplicationLauncherDestroyed.Add(GoAway);
-
-            if (ApplicationLauncher.Ready && launcherButton == null)
-            {
-                RunWhenReady();
-            }
 
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Start succesful");
         }
@@ -209,9 +207,6 @@ namespace kOS.Screen
 
             try
             {
-                GameEvents.onGUIApplicationLauncherReady.Remove(RunWhenReady);
-                GameEvents.onGUIApplicationLauncherDestroyed.Remove(GoAway);
-
                 if (launcherButton != null && ApplicationLauncher.Instance != null)
                 {
                     ApplicationLauncher launcher = ApplicationLauncher.Instance;
@@ -235,6 +230,7 @@ namespace kOS.Screen
 
         public void OnDestroy()
         {
+            GameEvents.onGameSceneLoadRequested.Remove(OnGameSceneLoadRequestedForAppLauncher);
             GoAway();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] OnDestroy successful");
         }
