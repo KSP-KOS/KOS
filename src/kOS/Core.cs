@@ -1,43 +1,32 @@
-﻿using UnityEngine;
+﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Persistence;
+using kOS.Suffixed.Part;
 
 namespace kOS
 {
-    public class Core : MonoBehaviour
+    public class Core : Structure
     {
-        public static VersionInfo VersionInfo = new VersionInfo(0, 17, 2);
+        public static VersionInfo VersionInfo;
+        private readonly SharedObjects shared;
 
-        public static Core Fetch; 
-        
-        public void Awake()
+        static Core()
         {
-            // This thing gets instantiated 4 times by KSP for some reason
-            if (Fetch != null) return;
-            Fetch = this;
-
+            VersionInfo = new VersionInfo(0, 17, 1);
         }
 
-        public void SaveSettings()
+        public Core(SharedObjects shared)
         {
-            //var writer = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/");
+            this.shared = shared;
+            InitializeSuffixes();
         }
 
-        public static void Debug(string line)
+        private void InitializeSuffixes()
         {
-        }
-
-        void OnGUI()
-        {
-        }
-
-    }
-
-    public class CoreInitializer : KSP.Testing.UnitTest
-    {
-        public CoreInitializer()
-        {
-            var gameobject = new GameObject("kOSCore", typeof (Core));
-            Object.DontDestroyOnLoad(gameobject);
+            AddSuffix("VERSION", new Suffix<VersionInfo>(() => VersionInfo));
+            AddSuffix("PART", new Suffix<PartValue>(() => new PartValue(shared.KSPPart, shared)));
+            AddSuffix("VOLUME", new Suffix<Volume>(() => { throw new NotImplementedException(); }));
         }
     }
 }

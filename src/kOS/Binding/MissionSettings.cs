@@ -1,5 +1,4 @@
 using kOS.Safe.Binding;
-using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
@@ -11,6 +10,8 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
+            shared.BindingMgr.AddGetter("CORE", () => new Core(shared));
+
             shared.BindingMgr.AddSetter("TARGET", val =>
             {
                 var targetable = val as IKOSTargetable;
