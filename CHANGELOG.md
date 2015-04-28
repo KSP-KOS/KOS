@@ -1,11 +1,25 @@
 kOS Mod Changelog
 =================
 
+# v0.17.1
+
+1.0 Release
+-----------
+
+### New Hotness
+
+* New infernal robotics integration
+* Better error reporting
+
+
+### Old and busted
+
+* fixes keyword lexxing 
 
 # v0.17.1
 
 Corrections and omissions   
------------------------
+-------------------------
 
 ### "New" features
 
