@@ -8,7 +8,7 @@ namespace kOS
 {
     public class Core : Structure
     {
-        public static VersionInfo VersionInfo;
+        public static VersionInfo VersionInfo = new VersionInfo(0, 17, 2);
         private readonly SharedObjects shared;
 
         static Core()
