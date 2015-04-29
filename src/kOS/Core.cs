@@ -16,7 +16,8 @@ namespace kOS
 
         static Core()
         {
-            VersionInfo = new VersionInfo(0, 17, 2);
+            var ver = typeof(Core).Assembly.GetName().Version;
+            VersionInfo = new VersionInfo(ver.Major, ver.Minor, ver.Build);
         }
 
         public Core(SharedObjects shared)
