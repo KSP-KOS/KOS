@@ -532,7 +532,7 @@ namespace kOS.Safe.Compilation.KS
                 // build default dummy function to be used when this is a LOCK:
                 currentCodeSection = userFuncObject.GetUserFunctionOpcodes(0);
                 AddOpcode(new OpcodePush("$" + userFuncObject.ScopelessIdentifier)).Label = userFuncObject.DefaultLabel;
-                AddOpcode(new OpcodeReturn());
+                AddOpcode(new OpcodeReturn(0));
             }
 
             // lock expression's or function body's code
@@ -549,16 +549,21 @@ namespace kOS.Safe.Compilation.KS
 
                 VisitNode(bodyNode);
 
+                Int16 implicitReturnScopeDepth = 0;
+                
                 if (isDefFunc)
                     nextBraceIsFunction = false;
                 if (isLock) // locks need to behave as if they had braces even though they don't - so they get lexical scope ids for closure reasons:
-                    EndScope(bodyNode);
+                {
+                    EndScope(bodyNode, false);
+                    implicitReturnScopeDepth = 1;
+                }
 
                 if (needImplicitReturn)
                 {
                     if (isDefFunc)
                         AddOpcode(new OpcodePush(0)); // Functions must push a dummy return val when making implicit returns. Locks already leave an expr atop the stack.
-                    AddOpcode(new OpcodeReturn());
+                    AddOpcode(new OpcodeReturn(implicitReturnScopeDepth));
                 }
                 userFuncObject.ScopeNode = GetContainingBlockNode(node); // This limits the scope of the function to the instruction_block the DEFINE was in.
                 userFuncObject.IsFunction = !(isLock);;
@@ -666,7 +671,7 @@ namespace kOS.Safe.Compilation.KS
                         // If an EXIT command was implemented, it would maybe allow an exit code that can be read here:
                         AddOpcode(new OpcodePop()); // for now: throw away return code from subprogram.
                         AddOpcode(new OpcodePush(0)); // Replace it with new dummy return code.
-                        AddOpcode(new OpcodeReturn()); // return that.
+                        AddOpcode(new OpcodeReturn(0)); // return that.
 
                         // set the function start label
                         subprogramObject.FunctionLabel = functionStart.Label;
@@ -800,8 +805,11 @@ namespace kOS.Safe.Compilation.KS
         /// <summary>
         /// Insert the Opcode to finish a lexical scope
         /// Call upon every close brace "}"
+        /// <param name="withPopScope">Should this code insert its own popscope.  Only say false when
+        /// you intend to immediately do a return statement and have the return statement be
+        /// responsible for the popscope itself.</param>
         /// </summary>
-        private void EndScope(ParseNode node)
+        private void EndScope(ParseNode node, bool withPopScope = true)
         {
             node = node.Parent;
 
@@ -819,7 +827,8 @@ namespace kOS.Safe.Compilation.KS
                 braceNestLevel = 0;
             }
 
-            AddOpcode(new OpcodePopScope());
+            if (withPopScope)
+                AddOpcode(new OpcodePopScope());
         }
         
         /// <summary>
@@ -2526,7 +2535,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            int nestLevelOfFuncBraces = GetReturnNestLevel();
+            Int16 nestLevelOfFuncBraces = (Int16)GetReturnNestLevel();
 
             if (nestLevelOfFuncBraces < 0)
                 throw new KOSReturnInvalidHereException();
@@ -2548,8 +2557,8 @@ namespace kOS.Safe.Compilation.KS
             // simpler than the BREAK case because RETURN already knows to use the function
             // call stack to figure out where to return to, so we don't have to wait until
             // later to decide where to jump to like we do in BREAK:
-            AddOpcode(new OpcodePopScope(1 + braceNestLevel - nestLevelOfFuncBraces));
-            AddOpcode(new OpcodeReturn());
+            int depth = 1 + braceNestLevel - nestLevelOfFuncBraces;
+            AddOpcode(new OpcodeReturn((Int16)depth));
         }
 
         private void VisitPreserveStatement(ParseNode node)

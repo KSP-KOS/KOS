@@ -99,7 +99,7 @@ namespace kOS.Safe.Compilation
             else
             {
                 linkedObject.MainCode.Add(new OpcodePush(0)); // all Returns now need a dummy return value on them.
-                linkedObject.MainCode.Add(new OpcodeReturn());
+                linkedObject.MainCode.Add(new OpcodeReturn(0));
             }
         }
 
