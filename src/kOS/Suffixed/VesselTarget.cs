@@ -417,7 +417,7 @@ namespace kOS.Suffixed
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
             AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass, "The Ship's mass when full"));
-            AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
+            AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => PropellantFactory.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
             AddSuffix("PACKDISTANCE", new SetSuffix<float>(
                 () =>
                 {

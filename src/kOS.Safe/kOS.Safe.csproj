@@ -77,6 +77,7 @@
     <Compile Include="Encapsulation\ISuffixed.cs" />
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
+    <Compile Include="Encapsulation\Part\IPropellant.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />

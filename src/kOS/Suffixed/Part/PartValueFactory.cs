@@ -24,10 +24,10 @@ namespace kOS.Suffixed.Part
             {
                 ModuleEngines mEng = module as ModuleEngines;
                 if (mEng != null)
-                    return new EngineValue(part, new ModuleEngineAdapter(mEng), shared);
+                    return new EngineValue(part, new ModuleEngineAdapter(mEng, shared), shared);
                 ModuleEnginesFX mEngFX = module as ModuleEnginesFX;
                 if (mEngFX != null)
-                    return new EngineValue(part, new ModuleEngineAdapter(mEngFX), shared);
+                    return new EngineValue(part, new ModuleEngineAdapter(mEngFX, shared), shared);
                 ModuleDockingNode mDock = module as ModuleDockingNode;
                 if (mDock != null)
                     return new DockingPortValue(mDock, shared);

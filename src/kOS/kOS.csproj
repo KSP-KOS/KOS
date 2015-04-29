@@ -94,6 +94,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Suffixed\HsvColor.cs" />
+    <Compile Include="Suffixed\Part\PropellantFactory.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
@@ -101,7 +102,6 @@
     <Compile Include="Screen\KOSTextEditPopup.cs" />
     <Compile Include="Screen\KOSToolBarWindow.cs" />
     <Compile Include="Screen\ToolbarWrapper.cs" />
-    <Compile Include="Suffixed\ActiveResourceValue.cs" />
     <Compile Include="Suffixed\BodyAtmosphere.cs" />
     <Compile Include="Suffixed\BodyTarget.cs" />
     <Compile Include="Suffixed\Career.cs" />
@@ -199,7 +199,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="AddOns\KerbalAlarmClock\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

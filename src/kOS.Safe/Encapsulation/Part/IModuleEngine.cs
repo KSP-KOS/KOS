@@ -1,4 +1,6 @@
-﻿namespace kOS.Safe.Encapsulation.Part
+﻿using System.Collections.Generic;
+
+namespace kOS.Safe.Encapsulation.Part
 {
     public interface IModuleEngine
     {
@@ -16,5 +18,6 @@
         bool AllowRestart { get; }
         bool AllowShutdown { get; }
         bool ThrottleLock { get; }
+        IList<IPropellant> Propellants { get; }
     }
 }
