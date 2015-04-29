@@ -31,19 +31,15 @@ namespace kOS
             AddSuffix("VERSION", new Suffix<VersionInfo>(() => VersionInfo));
             AddSuffix("PART", new Suffix<PartValue>(() => new PartValue(shared.KSPPart, shared)));
             AddSuffix("VESSEL", new Suffix<VesselTarget>(() => new VesselTarget(shared.KSPPart.vessel, shared)));
-            AddSuffix("ELEMENT", new Suffix<ElementValue>(getEelement));
+            AddSuffix("ELEMENT", new Suffix<ElementValue>(GetEelement));
             AddSuffix("VOLUME", new Suffix<Volume>(() => { throw new NotImplementedException(); }));
         }
 
-        private ElementValue getEelement()
+        private ElementValue GetEelement()
         {
             var elList = shared.KSPPart.vessel.PartList("elements", shared);
             var part = new PartValue(shared.KSPPart, shared);
-            foreach (ElementValue el in elList)
-            {
-                if (el.Parts.Contains(part)) return el;
-            }
-            return null;
+            return elList.Cast<ElementValue>().FirstOrDefault(el => el.Parts.Contains(part));
         }
     }
 }
