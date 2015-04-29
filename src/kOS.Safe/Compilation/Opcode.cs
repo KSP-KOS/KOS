@@ -33,7 +33,7 @@ namespace kOS.Safe.Compilation
         // The explicit picking of the hex numbers is not strictly necessary,
         // but it's being done to aid in debugging the ML load/unload process,
         // as it makes it possible to look at hexdumps of the machine code
-        // and comapre that to this list: 
+        // and compare that to this list: 
         EOF            = 0x31,
         EOP            = 0x32,
         NOP            = 0x33,
@@ -1436,7 +1436,7 @@ namespace kOS.Safe.Compilation
         
         /// <summary>
         /// Make a return, telling it how many levels of the scope stack it should
-        /// be popping as it does so.  It compbines the behavior of a PopScope inside
+        /// be popping as it does so.  It combines the behavior of a PopScope inside
         /// itself, AFTER it reads and evaluates the thing atop the stack for return
         /// purposes (that way it evals the top thing BEFORE it pops the scope and forgets
         /// what variables exist).<br/

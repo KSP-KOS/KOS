@@ -79,8 +79,11 @@ namespace kOS.Safe.Compilation
         {
             if (linkedObject.MainCode.Count <= 0) return;
 
-            var jumpOpcode = new OpcodeBranchJump();
-            jumpOpcode.DestinationLabel = GetEntryPointLabel(linkedObject);
+            var jumpOpcode = new OpcodeBranchJump
+            {
+                DestinationLabel = GetEntryPointLabel(linkedObject)
+            };
+
             linkedObject.FunctionsCode.Insert(0, jumpOpcode);
         }
 
