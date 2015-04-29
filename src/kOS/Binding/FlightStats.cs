@@ -21,7 +21,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("ETA_APOAPSIS", () => shared.Vessel.orbit.timeToAp);
             shared.BindingMgr.AddGetter("ETA_PERIAPSIS", () => shared.Vessel.orbit.timeToPe);
             shared.BindingMgr.AddGetter("ETA_TRANSITION", () => shared.Vessel.orbit.EndUT - Planetarium.GetUniversalTime());
-            shared.BindingMgr.AddGetter("INCOMMRANGE", () => true);
+            shared.BindingMgr.AddGetter("INCOMMRANGE", () => { throw new kOS.Safe.Exceptions.KOSDeprecationException("0.17.0", "INCOMMRANGE", "RTADDON:HASCONNECTION(VESSEL)", @"http://ksp-kos.github.io/KOS_DOC/addons/RemoteTech.html"); });
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);
             shared.BindingMgr.AddGetter("OBT", () => new OrbitInfo(shared.Vessel.orbit,shared));
             shared.BindingMgr.AddGetter("TIME", () => new TimeSpan(Planetarium.GetUniversalTime()));

@@ -32,7 +32,9 @@ namespace kOS.Suffixed
         {
             AddSuffix("NAME", new SetSuffix<string>(() => dockedVesselInfo.name, SetName ));
             AddSuffix("UID", new Suffix<string>(() => dockedVesselInfo.rootPartUId.ToString()));
+            AddSuffix("VESSEL", new Suffix<VesselTarget>(() => new VesselTarget(parts[0].vessel, shared)));
             AddSuffix("PARTS", new Suffix<ListValue>(() => PartValueFactory.Construct(parts, shared)));
+            AddSuffix("DOCKINGPORTS", new Suffix<ListValue>(() => DockingPortValue.PartsToList(parts, shared)));
             AddSuffix("RESOURCES", new Suffix<ListValue>(GetResourceManifest));
         }
 
