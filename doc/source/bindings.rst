@@ -239,6 +239,7 @@ Returns values about kOS and hardware
     PRINT VERSION.            // Returns operating system version number. i.e. 0.8.6
     PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
     PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
+    PRINT VERSION:BUILD.      // Returns build version number. e.g. 2
     PRINT SESSIONTIME.        // Returns amount of time, in seconds, from vessel load.
 
 NOTE the following important difference:
