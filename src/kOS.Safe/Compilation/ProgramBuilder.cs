@@ -79,8 +79,11 @@ namespace kOS.Safe.Compilation
         {
             if (linkedObject.MainCode.Count <= 0) return;
 
-            var jumpOpcode = new OpcodeBranchJump();
-            jumpOpcode.DestinationLabel = GetEntryPointLabel(linkedObject);
+            var jumpOpcode = new OpcodeBranchJump
+            {
+                DestinationLabel = GetEntryPointLabel(linkedObject)
+            };
+
             linkedObject.FunctionsCode.Insert(0, jumpOpcode);
         }
 
@@ -99,7 +102,7 @@ namespace kOS.Safe.Compilation
             else
             {
                 linkedObject.MainCode.Add(new OpcodePush(0)); // all Returns now need a dummy return value on them.
-                linkedObject.MainCode.Add(new OpcodeReturn());
+                linkedObject.MainCode.Add(new OpcodeReturn(0));
             }
         }
 
