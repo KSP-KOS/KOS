@@ -11,12 +11,25 @@ namespace kOS.Safe.Encapsulation
         {
             public bool Equals(TI x, TI y)
             {
+                if (x.GetType() != y.GetType())
+                {
+                    return false;
+                }
+
+                if (x is string && y is string)
+                {
+                    return x.ToString() == y.ToString();
+                }
                 throw new NotImplementedException();
             }
 
             public int GetHashCode(TI obj)
             {
-                throw new NotImplementedException();
+                if (obj is string)
+                {
+                    return obj.ToString().ToLower().GetHashCode();
+                }
+                return obj.GetHashCode();
             }
         }
 

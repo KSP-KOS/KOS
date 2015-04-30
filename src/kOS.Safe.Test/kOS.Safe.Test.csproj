@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClampSetSuffixTest.cs" />
+    <Compile Include="LexiconTest.cs" />
     <Compile Include="ListValueTest.cs" />
     <Compile Include="NoArgsSuffixTest.cs" />
     <Compile Include="SetSuffixTest.cs" />
