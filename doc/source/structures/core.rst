@@ -1,6 +1,6 @@
-.. _waypoint:
+.. _core:
 
-Waypoints
+Core
 =========
 
 .. contents::
