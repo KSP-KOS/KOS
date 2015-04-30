@@ -12,16 +12,10 @@ namespace kOS.Binding
         public override void AddTo(SharedObjects shared)
         {
             shared.BindingMgr.AddGetter("ALT", () => new VesselAlt(shared));
-            shared.BindingMgr.AddGetter("ALT_APOAPSIS", () => (new VesselAlt(shared)).GetApoapsis());
-            shared.BindingMgr.AddGetter("ALT_PERIAPSIS", () => (new VesselAlt(shared)).GetPeriapsis());
-            shared.BindingMgr.AddGetter("ALT_RADAR", () => (new VesselAlt(shared)).GetRadar());
             shared.BindingMgr.AddGetter("ANGULARVELOCITY", () => shared.Vessel.transform.InverseTransformDirection(shared.Vessel.rigidbody.angularVelocity));
             shared.BindingMgr.AddGetter("COMMRANGE", () => int.MaxValue);
             shared.BindingMgr.AddGetter("ENCOUNTER", () => VesselUtils.TryGetEncounter(shared.Vessel,shared));
             shared.BindingMgr.AddGetter("ETA", () => new VesselEta(shared));
-            shared.BindingMgr.AddGetter("ETA_APOAPSIS", () => (new VesselEta(shared)).GetApoapsis());
-            shared.BindingMgr.AddGetter("ETA_PERIAPSIS", () => (new VesselEta(shared)).GetPeriapsis());
-            shared.BindingMgr.AddGetter("ETA_TRANSITION", () => (new VesselEta(shared)).GetTransition());
             shared.BindingMgr.AddGetter("INCOMMRANGE", () => { throw new Safe.Exceptions.KOSDeprecationException("0.17.0", "INCOMMRANGE", "RTADDON:HASCONNECTION(VESSEL)", @"http://ksp-kos.github.io/KOS_DOC/addons/RemoteTech.html"); });
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);
             shared.BindingMgr.AddGetter("OBT", () => new OrbitInfo(shared.Vessel.orbit,shared));
