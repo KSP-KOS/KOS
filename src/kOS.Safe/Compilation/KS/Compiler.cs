@@ -2561,11 +2561,9 @@ namespace kOS.Safe.Compilation.KS
 
             // Push the return expression onto the stack, or if it was a naked RETURN
             // keyword with no expression, then push a secret dummy return value of zero:
-            if (node.Nodes.Count > 1)
+            if (node.Nodes.Count > 2)
             {
                 VisitNode(node.Nodes[1]);
-                AddOpcode(new OpcodeEval()); // vital because we can't return a local var to the caller,
-                                             // we must return the value it contained instead.
             }
             else
             {
