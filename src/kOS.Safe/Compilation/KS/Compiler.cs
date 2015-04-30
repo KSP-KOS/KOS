@@ -1470,12 +1470,18 @@ namespace kOS.Safe.Compilation.KS
                     ++nodeIndex;
                 }
 
-                bool remember = identifierIsSuffix;
+                // Temporarily turn off these flags while evaluating the expression inside
+                // the array index square brackets.  These flags apply to this outer containing
+                // thing, the array access, not to the expression in the index brackets:
+                bool rememberIdentIsSuffix = identifierIsSuffix;
                 identifierIsSuffix = false;
+                bool rememberCompSetDest = compilingSetDestination;
+                compilingSetDestination = false;
+                
+                VisitNode(trailerNode.Nodes[nodeIndex]); // pushes the result of expression inside square brackets.
 
-                VisitNode(trailerNode.Nodes[nodeIndex]);
-
-                identifierIsSuffix = remember;
+                compilingSetDestination = rememberCompSetDest;
+                identifierIsSuffix = rememberIdentIsSuffix;
 
                 // Two ways to check if this is the last index (i.e. the 'k' in arr[i][j][k]'),
                 // depending on whether using the "#" syntax or the "[..]" syntax:
