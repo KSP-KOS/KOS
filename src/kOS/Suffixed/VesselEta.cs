@@ -1,16 +1,12 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
-using System;
-using UnityEngine;
-using Math = kOS.Safe.Utilities.Math;
 
 namespace kOS.Suffixed
 {
-    public class Eta : Structure
+    public class VesselEta : Structure
     {
-        private SharedObjects shared;
-        public Eta(SharedObjects shared )
+        private readonly SharedObjects shared;
+        public VesselEta(SharedObjects shared )
         {
             this.shared = shared;
             InitializeSuffixEta();
@@ -39,7 +35,7 @@ namespace kOS.Suffixed
         
         public override string ToString()
         {
-            return string.Format("ETA: Apoapsis={0} Periapsis={0} Transition={0}", GetApoapsis(), GetPeriapsis(), GetTransition());
+            return string.Format("ETA: Apoapsis={0} Periapsis={1} Transition={2}", GetApoapsis(), GetPeriapsis(), GetTransition());
         }
     }
 }

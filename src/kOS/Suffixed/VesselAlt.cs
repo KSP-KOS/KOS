@@ -1,16 +1,14 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
 using System;
 using UnityEngine;
-using Math = kOS.Safe.Utilities.Math;
 
 namespace kOS.Suffixed
 {
-    public class Alt : Structure
+    public class VesselAlt : Structure
     {
-        private SharedObjects shared;
-        public Alt(SharedObjects shared )
+        private readonly SharedObjects shared;
+        public VesselAlt(SharedObjects shared )
         {
             this.shared = shared;
             InitializeSuffixAlt();
@@ -18,12 +16,12 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixAlt()
         {
-            AddSuffix("APOAPSIS", new NoArgsSuffix<double>(GetApoapais));
+            AddSuffix("APOAPSIS", new NoArgsSuffix<double>(GetApoapsis));
             AddSuffix("PERIAPSIS", new NoArgsSuffix<double>(GetPeriapsis));
             AddSuffix("RADAR", new NoArgsSuffix<double>(GetRadar));
         }
         
-        public double GetApoapais()
+        public double GetApoapsis()
         {
             return shared.Vessel.orbit.ApA;            
         }
@@ -43,7 +41,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return string.Format("ALT: Apoapsis={0} Periapsis={0} Radar={0}", GetApoapais(), GetPeriapsis(), GetRadar());
+            return string.Format("ALT: Apoapsis={0} Periapsis={1} Radar={2}", GetApoapsis(), GetPeriapsis(), GetRadar());
         }
     }
 }

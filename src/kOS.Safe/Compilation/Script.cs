@@ -1,20 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace kOS.Safe.Compilation
 {
     public abstract class Script
     {
-        private readonly Dictionary<string, string> identifierReplacements = new Dictionary<string, string> {    { "alt:radar", "alt_radar" },
-                                                                                                                 { "alt:apoapsis", "alt_apoapsis" },
-                                                                                                                 { "alt:periapsis", "alt_periapsis" },
-                                                                                                                 { "eta:apoapsis", "eta_apoapsis" },
-                                                                                                                 { "eta:periapsis", "eta_periapsis" },
-                                                                                                                 { "eta:transition", "eta_transition" }};
-
         protected CompileCache Cache { get; set; }
 
         protected Script()
@@ -79,26 +68,5 @@ namespace kOS.Safe.Compilation
         {
             return true;
         }
-
-        private Dictionary<string, string> ExtractStrings(string scriptText)
-        {
-            var stringsLiterals = new Dictionary<string, string>();
-            int stringIndex = 0;
-
-            var regex = new Regex("\".+?\"");
-            MatchCollection matches = regex.Matches(scriptText);
-
-            foreach (Match match in matches)
-            {
-                if (match.Success)
-                {
-                    string token = string.Format("[s{0}]", ++stringIndex);
-                    stringsLiterals.Add(token, match.Value);
-                }
-            }
-
-            return stringsLiterals;
-        }
-
     }
 }
