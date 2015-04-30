@@ -21,10 +21,6 @@ namespace kOS.Safe.Compilation.KS
         {
             List<CodePart> parts = null;
             
-            // make the code lowercase
-            scriptText = MakeLowerCase(scriptText);
-            scriptText = ReplaceIdentifiers(scriptText);
-            
             //if (contextId != "interpreter") parts = _cache.GetFromCache(scriptText);
 
             // if parts is null means the code doesn't exists in the cache

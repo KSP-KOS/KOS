@@ -191,12 +191,32 @@ namespace kOS.Safe.Compilation.KS
         private void PreProcess(ParseTree tree)
         {
             ParseNode rootNode = tree.Nodes[0];
+            LowercaseConversions(rootNode);
             TraverseScopeBranch(rootNode);
             IterateUserFunctions(rootNode, IdentifyUserFunctions);
             PreProcessStatements(rootNode);
             IterateUserFunctions(rootNode, PreProcessUserFunctionStatement);
         }
-
+        
+        /// <summary>
+        /// Lowercase every IDENTIFIER and FILEIDENT token in the parse.
+        /// </summary>
+        /// <param name="node">branch head to start from in the compiler</param>
+        private void LowercaseConversions(ParseNode node)
+        {
+            switch (node.Token.Type)
+            {
+                case TokenType.IDENTIFIER:
+                case TokenType.FILEIDENT:
+                    node.Token.Text = node.Token.Text.ToLower();
+                    break;
+                default:
+                    foreach (ParseNode child in node.Nodes)
+                        LowercaseConversions(child);
+                    break;
+            }
+        }
+        
         private void IterateUserFunctions(ParseNode node, Action<ParseNode> action)
         {
             switch (node.Token.Type)
