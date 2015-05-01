@@ -121,13 +121,35 @@ namespace kOS.Utilities
                     if (enginefx != null)
                     {
                         if (!enginefx.isOperational) continue;
-                        thrust += enginefx.maxThrust;
+                        float flowMod = (float)(engine.part.atmDensity / 1.225f);
+                        float velMod = 1.0f;
+                        if (enginefx.atmChangeFlow && enginefx.atmCurve != null)
+                        {
+                            flowMod = enginefx.atmCurve.Evaluate((float)(enginefx.part.atmDensity / 1.225));
+                        }
+                        if (enginefx.velCurve != null)
+                        {
+                            velMod = velMod * enginefx.velCurve.Evaluate((float)vessel.mach);
+                        }
+                        // thrust is fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
+                        thrust += enginefx.maxFuelFlow * flowMod * enginefx.atmosphereCurve.Evaluate((float)enginefx.part.staticPressureAtm) * enginefx.g * velMod;
                     }
-
-                    if (engine != null)
+                    else if (engine != null)
                     {
                         if (!engine.isOperational) continue;
-                        thrust += engine.maxThrust;
+                        float flowMod = (float)(engine.part.atmDensity / 1.225f);
+                        float velMod = 1.0f;
+                        if (engine.atmChangeFlow && engine.atmCurve != null)
+                        {
+                            flowMod = engine.atmCurve.Evaluate((float)(engine.part.atmDensity / 1.225));
+                        }
+                        if (engine.velCurve != null)
+                        {
+                            velMod = velMod * engine.velCurve.Evaluate((float)vessel.mach);
+                        }
+                        // thrust is modified fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
+                        thrust += engine.maxFuelFlow * flowMod * engine.atmosphereCurve.Evaluate((float)engine.part.staticPressureAtm) * engine.g * velMod;
+                        //thrust += engine.GetCurrentThrust();
                     }
                 }
             }
