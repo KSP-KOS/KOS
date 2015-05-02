@@ -36,7 +36,8 @@ namespace kOS.Screen
             ApplicationLauncher.AppScenes.FLIGHT | 
             ApplicationLauncher.AppScenes.SPH | 
             ApplicationLauncher.AppScenes.VAB | 
-            ApplicationLauncher.AppScenes.MAPVIEW;
+            ApplicationLauncher.AppScenes.MAPVIEW |
+            ApplicationLauncher.AppScenes.SPACECENTER;
 
         private static Texture2D launcherButtonTexture;
         private static Texture2D terminalClosedIconTexture;
@@ -569,7 +570,7 @@ namespace kOS.Screen
             // So for the meantime let's use our own text label and leave it at that.
             
             KOSNameTag partTag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
-
+            
             string labelText = String.Format("{0}\n({1})",
                                              part.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
                                              ((partTag==null) ? "" : partTag.nameTag)
