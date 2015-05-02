@@ -92,7 +92,7 @@ corner of the screen in the KSP window. |Resources|
 
 All of the above resources can be queried using either the prefix SHIP
 or STAGE, depending on whether you are trying to query how much is left
-in the curent stage or the entire ship:
+in the current stage or the entire ship:
 
 How much liquid fuel is left in the entire ship:
 
@@ -236,9 +236,10 @@ Returns values about kOS and hardware
 
 ::
 
-    PRINT VERSION.            // Returns operating system version number. i.e. 0.8.6
+    PRINT VERSION.            // Returns operating system version number. e.g. 0.8.6
     PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
     PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
+    PRINT VERSION:BUILD.      // Returns build version number. e.g. 6
     PRINT SESSIONTIME.        // Returns amount of time, in seconds, from vessel load.
 
 NOTE the following important difference:

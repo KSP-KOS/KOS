@@ -1,6 +1,5 @@
 ﻿using System;
 using kOS.Safe.Binding;
-using UnityEngine;
 using kOS.Suffixed;
 using kOS.Utilities;
 using TimeSpan = kOS.Suffixed.TimeSpan;
@@ -12,16 +11,12 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
-            shared.BindingMgr.AddGetter("ALT_APOAPSIS", () => shared.Vessel.orbit.ApA);
-            shared.BindingMgr.AddGetter("ALT_PERIAPSIS", () => shared.Vessel.orbit.PeA);
-            shared.BindingMgr.AddGetter("ALT_RADAR", () => Convert.ToDouble(shared.Vessel.heightFromTerrain > 0 ? Mathf.Min(shared.Vessel.heightFromTerrain, (float)shared.Vessel.altitude) : (float)shared.Vessel.altitude));
+            shared.BindingMgr.AddGetter("ALT", () => new VesselAlt(shared));
             shared.BindingMgr.AddGetter("ANGULARVELOCITY", () => shared.Vessel.transform.InverseTransformDirection(shared.Vessel.rigidbody.angularVelocity));
             shared.BindingMgr.AddGetter("COMMRANGE", () => int.MaxValue);
             shared.BindingMgr.AddGetter("ENCOUNTER", () => VesselUtils.TryGetEncounter(shared.Vessel,shared));
-            shared.BindingMgr.AddGetter("ETA_APOAPSIS", () => shared.Vessel.orbit.timeToAp);
-            shared.BindingMgr.AddGetter("ETA_PERIAPSIS", () => shared.Vessel.orbit.timeToPe);
-            shared.BindingMgr.AddGetter("ETA_TRANSITION", () => shared.Vessel.orbit.EndUT - Planetarium.GetUniversalTime());
-            shared.BindingMgr.AddGetter("INCOMMRANGE", () => true);
+            shared.BindingMgr.AddGetter("ETA", () => new VesselEta(shared));
+            shared.BindingMgr.AddGetter("INCOMMRANGE", () => { throw new Safe.Exceptions.KOSDeprecationException("0.17.0", "INCOMMRANGE", "RTADDON:HASCONNECTION(VESSEL)", @"http://ksp-kos.github.io/KOS_DOC/addons/RemoteTech.html"); });
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);
             shared.BindingMgr.AddGetter("OBT", () => new OrbitInfo(shared.Vessel.orbit,shared));
             shared.BindingMgr.AddGetter("TIME", () => new TimeSpan(Planetarium.GetUniversalTime()));

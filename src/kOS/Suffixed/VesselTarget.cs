@@ -396,6 +396,8 @@ namespace kOS.Suffixed
             AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue,string>(GetPartsTagged));
             AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
             AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
+            AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("dockingports", Shared)));
+            AddSuffix("ELEMENTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("elements", Shared)));
 
             AddSuffix("CONTROL", new Suffix<FlightControl>(() => FlightControlManager.GetControllerByVessel(Vessel)));
             AddSuffix("BEARING", new Suffix<float>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));

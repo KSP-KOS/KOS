@@ -135,7 +135,7 @@ namespace kOS.Safe.Persistence
         {
             // Remove volumes that are no longer attached
             var removals = new List<int>();
-            foreach (KeyValuePair<int, Volume> kvp in volumes)
+            foreach (var kvp in volumes)
             {
                 if (!(kvp.Value is Archive) && !attachedVolumes.Contains(kvp.Value))
                 {
