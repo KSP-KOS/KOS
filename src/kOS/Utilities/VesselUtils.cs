@@ -113,43 +113,9 @@ namespace kOS.Utilities
                 foreach (PartModule pm in p.Modules)
                 {
                     if (!pm.isEnabled) continue;
-                    if (!(pm is ModuleEngines || pm is ModuleEnginesFX)) continue;
-
-                    var engine = pm as ModuleEngines;
-                    var enginefx = pm as ModuleEnginesFX;
-
-                    if (enginefx != null)
+                    if (pm is ModuleEngines)
                     {
-                        if (!enginefx.isOperational) continue;
-                        float flowMod = (float)(engine.part.atmDensity / 1.225f);
-                        float velMod = 1.0f;
-                        if (enginefx.atmChangeFlow && enginefx.atmCurve != null)
-                        {
-                            flowMod = enginefx.atmCurve.Evaluate((float)(enginefx.part.atmDensity / 1.225));
-                        }
-                        if (enginefx.velCurve != null)
-                        {
-                            velMod = velMod * enginefx.velCurve.Evaluate((float)vessel.mach);
-                        }
-                        // thrust is fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
-                        thrust += enginefx.maxFuelFlow * flowMod * enginefx.atmosphereCurve.Evaluate((float)enginefx.part.staticPressureAtm) * enginefx.g * velMod;
-                    }
-                    else if (engine != null)
-                    {
-                        if (!engine.isOperational) continue;
-                        float flowMod = (float)(engine.part.atmDensity / 1.225f);
-                        float velMod = 1.0f;
-                        if (engine.atmChangeFlow && engine.atmCurve != null)
-                        {
-                            flowMod = engine.atmCurve.Evaluate((float)(engine.part.atmDensity / 1.225));
-                        }
-                        if (engine.velCurve != null)
-                        {
-                            velMod = velMod * engine.velCurve.Evaluate((float)vessel.mach);
-                        }
-                        // thrust is modified fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
-                        thrust += engine.maxFuelFlow * flowMod * engine.atmosphereCurve.Evaluate((float)engine.part.staticPressureAtm) * engine.g * velMod;
-                        //thrust += engine.GetCurrentThrust();
+                        thrust += ModuleEngineAdapter.GetEngineMaxThrust((ModuleEngines)pm);
                     }
                 }
             }
@@ -397,22 +363,9 @@ namespace kOS.Utilities
             {
                 foreach (PartModule pm in p.Modules)
                 {
-                    if (!pm.isEnabled) continue;
-                    if (!(pm is ModuleEngines || pm is ModuleEnginesFX)) continue;
-
-                    var engine = pm as ModuleEngines;
-                    var enginefx = pm as ModuleEnginesFX;
-
-                    if (enginefx != null)
+                    if (pm.isEnabled && pm is ModuleEngines)
                     {
-                        if (!enginefx.isOperational) continue;
-                        thrust += enginefx.maxThrust * enginefx.thrustPercentage / 100;
-                    }
-
-                    if (engine != null)
-                    {
-                        if (!engine.isOperational) continue;
-                        thrust += engine.maxThrust * engine.thrustPercentage / 100;
+                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm);
                     }
                 }
             }

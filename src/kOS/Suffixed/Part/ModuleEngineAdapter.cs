@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Encapsulation.Part;
+using UnityEngine;
 
 namespace kOS.Suffixed.Part
 {
@@ -98,10 +99,32 @@ namespace kOS.Suffixed.Part
                 switch (engineType)
                 {
                     case EngineType.Engine:
-                        return engineModule.maxThrust;
+                        return (float)GetEngineMaxThrust(engineModule);
+                        //return engineModule.maxThrust;
 
                     case EngineType.EngineFx:
-                        return engineModuleFx.maxThrust;
+                        return (float)GetEngineMaxThrust(engineModuleFx);
+                        //return engineModuleFx.maxThrust;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public float AvailableThrust
+        {
+            get
+            {
+                switch (engineType)
+                {
+                    case EngineType.Engine:
+                        return (float)GetEngineThrust(engineModule);
+                    //return engineModule.maxThrust;
+
+                    case EngineType.EngineFx:
+                        return (float)GetEngineThrust(engineModuleFx);
+                    //return engineModuleFx.maxThrust;
 
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -125,6 +148,49 @@ namespace kOS.Suffixed.Part
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+        public static double GetEngineMaxThrust(ModuleEngines engine, float throttle = 1.0f)
+        {
+            if (engine != null)
+            {
+                if (!engine.isOperational) return 0.0;
+                float flowMod = (float)(engine.part.atmDensity / 1.225f);
+                float velMod = 1.0f;
+                if (engine.atmChangeFlow && engine.atmCurve != null)
+                {
+                    flowMod = engine.atmCurve.Evaluate((float)(engine.part.atmDensity / 1.225));
+                }
+                if (engine.velCurve != null)
+                {
+                    velMod = velMod * engine.velCurve.Evaluate((float)engine.vessel.mach);
+                }
+                // thrust is modified fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
+                return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle) * flowMod * engine.atmosphereCurve.Evaluate((float)engine.part.staticPressureAtm) * engine.g * velMod;
+                //thrust += engine.GetCurrentThrust();
+            }
+            else return 0.0;
+        }
+        public static double GetEngineThrust(ModuleEngines engine, float throttle = 1.0f)
+        {
+            if (engine != null)
+            {
+                if (!engine.isOperational) return 0.0;
+                float flowMod = (float)(engine.part.atmDensity / 1.225f);
+                float velMod = 1.0f;
+                if (engine.atmChangeFlow && engine.atmCurve != null)
+                {
+                    flowMod *= engine.atmCurve.Evaluate((float)(engine.part.atmDensity / 1.225));
+                }
+                if (engine.velCurve != null)
+                {
+                    velMod = velMod * engine.velCurve.Evaluate((float)engine.vessel.mach);
+                }
+                
+                // thrust is modified fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
+                return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle * engine.thrustPercentage / 100.0f) * flowMod * engine.atmosphereCurve.Evaluate((float)engine.part.staticPressureAtm) * engine.g * velMod;
+                //thrust += engine.GetCurrentThrust();
+            }
+            else return 0.0;
         }
 
         public float FuelFlow
