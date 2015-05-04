@@ -50,6 +50,7 @@
     <Compile Include="ListValueTest.cs" />
     <Compile Include="NoArgsSuffixTest.cs" />
     <Compile Include="Opcode\FakeCpu.cs" />
+    <Compile Include="Opcode\OpcodeGetIndexText.cs" />
     <Compile Include="Opcode\OpcodeSetIndexTest.cs" />
     <Compile Include="SetSuffixTest.cs" />
     <Compile Include="StructureSuffixIntegrationTest.cs" />

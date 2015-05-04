@@ -56,6 +56,26 @@ namespace kOS.Safe.Test
         }
 
         [Test]
+        public void ContainsReturnsTrueIfTheKeyIsPresent()
+        {
+            var lex = new Lexicon<double, object>();
+            
+            lex.Add(double.MinValue, "bar");
+
+            Assert.IsTrue(lex.ContainsKey(double.MinValue));
+        }
+
+        [Test]
+        public void ContainsReturnsFalseIfTheKeyIsMissing()
+        {
+            var lex = new Lexicon<double, object>();
+            
+            lex.Add(double.MinValue, "bar");
+
+            Assert.IsFalse(lex.ContainsKey(double.MaxValue));
+        }
+
+        [Test]
         public void WillReplaceWithDifferentCase()
         {
             var lex = new Lexicon<object, object>();

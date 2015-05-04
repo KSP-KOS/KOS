@@ -198,6 +198,11 @@ namespace kOS.Safe.Encapsulation
         {
             internalDictionary[(T) index] = (TU) value;
         }
+
+        public override string ToString()
+        {
+            return string.Format("LEXICON of {0} keys", Count);
+        }
     }
 
     public interface ILexicon

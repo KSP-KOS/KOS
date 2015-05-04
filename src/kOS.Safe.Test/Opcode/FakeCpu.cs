@@ -6,7 +6,7 @@ namespace kOS.Safe.Test.Opcode
 {
     public class FakeCpu : ICpu
     {
-        private Stack<object> fakeStack;
+        private readonly Stack<object> fakeStack;
 
         public FakeCpu()
         {
@@ -70,7 +70,7 @@ namespace kOS.Safe.Test.Opcode
 
         public object PopValue(bool barewordOkay = false)
         {
-            throw new NotImplementedException();
+            return PopStack();
         }
 
         public object PeekValue(int digDepth, bool barewordOkay = false)
