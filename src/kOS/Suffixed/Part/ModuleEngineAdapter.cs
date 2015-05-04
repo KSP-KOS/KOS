@@ -1,4 +1,5 @@
 ﻿using System;
+using kOS.Safe.Utilities;
 using kOS.Safe.Encapsulation.Part;
 using UnityEngine;
 
@@ -149,48 +150,63 @@ namespace kOS.Suffixed.Part
                 }
             }
         }
-        public static double GetEngineMaxThrust(ModuleEngines engine, float throttle = 1.0f)
+        public static double GetEngineMaxThrust(ModuleEngines engine)
         {
             if (engine != null)
             {
-                if (!engine.isOperational) return 0.0;
-                float flowMod = (float)(engine.part.atmDensity / 1.225f);
-                float velMod = 1.0f;
-                if (engine.atmChangeFlow && engine.atmCurve != null)
-                {
-                    flowMod = engine.atmCurve.Evaluate((float)(engine.part.atmDensity / 1.225));
-                }
-                if (engine.velCurve != null)
-                {
-                    velMod = velMod * engine.velCurve.Evaluate((float)engine.vessel.mach);
-                }
-                // thrust is modified fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
-                return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle) * flowMod * engine.atmosphereCurve.Evaluate((float)engine.part.staticPressureAtm) * engine.g * velMod;
-                //thrust += engine.GetCurrentThrust();
+                return GetEngineThrust(engine, 1.0f);
             }
             else return 0.0;
         }
-        public static double GetEngineThrust(ModuleEngines engine, float throttle = 1.0f)
+        public static double GetEngineAvailableThrust(ModuleEngines engine)
+        {
+            if (engine != null)
+            {
+                return GetEngineThrust(engine, useThrustLimit: true);
+            }
+            else return 0.0;
+        }
+        public static double GetEngineThrust(ModuleEngines engine, float throttle = 1.0f, bool useThrustLimit = false)
         {
             if (engine != null)
             {
                 if (!engine.isOperational) return 0.0;
-                float flowMod = (float)(engine.part.atmDensity / 1.225f);
+                if (useThrustLimit) { throttle = throttle * engine.thrustPercentage / 100.0f; }
+                float flowMod = 1.0f;
                 float velMod = 1.0f;
-                if (engine.atmChangeFlow && engine.atmCurve != null)
+                if (engine.atmChangeFlow)
                 {
-                    flowMod *= engine.atmCurve.Evaluate((float)(engine.part.atmDensity / 1.225));
+                    flowMod = (float)(engine.part.atmDensity / 1.225f);
                 }
-                if (engine.velCurve != null)
+                if (engine.useAtmCurve && engine.atmCurve != null)
+                {
+                    flowMod = engine.atmCurve.Evaluate((float)flowMod);
+                }
+                if (engine.useVelCurve && engine.velCurve != null)
                 {
                     velMod = velMod * engine.velCurve.Evaluate((float)engine.vessel.mach);
                 }
-                
                 // thrust is modified fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
-                return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle * engine.thrustPercentage / 100.0f) * flowMod * engine.atmosphereCurve.Evaluate((float)engine.part.staticPressureAtm) * engine.g * velMod;
-                //thrust += engine.GetCurrentThrust();
+                return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle) * flowMod * GetEngineIsp(engine) * engine.g * velMod;
             }
             else return 0.0;
+        }
+
+        public static float GetEngineIsp(ModuleEngines engine)
+        {
+            if (engine != null)
+            {
+                return GetEngineIsp(engine, (float)engine.part.staticPressureAtm);
+            }
+            else return 0.0f;
+        }
+        public static float GetEngineIsp(ModuleEngines engine, float staticPressureAtm)
+        {
+            if (engine != null)
+            {
+                return engine.atmosphereCurve.Evaluate(staticPressureAtm);
+            }
+            else return 0.0f;
         }
 
         public float FuelFlow
