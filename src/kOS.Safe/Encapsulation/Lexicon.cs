@@ -2,15 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class Lexicon<T, TU> : Structure, IDictionary<T,TU>, ILexicon
+    public class Lexicon<T, TU> : Structure, IDictionary<T,TU>, ILexicon 
     {
         public class LexiconComparer<TI> : IEqualityComparer<TI>
         {
             public bool Equals(TI x, TI y)
             {
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
                 if (x.GetType() != y.GetType())
                 {
                     return false;
@@ -18,9 +24,11 @@ namespace kOS.Safe.Encapsulation
 
                 if (x is string && y is string)
                 {
-                    return x.ToString() == y.ToString();
+                    var compare = string.Compare(x.ToString(), y.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                    return compare == 0;
                 }
-                throw new NotImplementedException();
+
+                return x.Equals(y);
             }
 
             public int GetHashCode(TI obj)
@@ -46,7 +54,8 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("CLEAR", new NoArgsSuffix(Clear,"Removes all items from Lexicon"));
             AddSuffix("KEYS", new Suffix<ListValue<object>>(GetKeys ,"Returns the available keys"));
             AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues ,"Returns the available list values"));
-            AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T) one)));
+            AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T) one), "Removes the value at the given key"));
+            AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T) one, (TU) two)));
         }
 
         public ListValue<object> GetValues()
@@ -111,7 +120,14 @@ namespace kOS.Safe.Encapsulation
 
         public void Add(T key, TU value)
         {
-            internalDictionary.Add(key, value);
+            if (internalDictionary.ContainsKey(key))
+            {
+                internalDictionary[key] = value;
+            }
+            else
+            {
+                internalDictionary.Add(key, value);
+            }
         }
 
         public bool Remove(T key)
@@ -126,15 +142,55 @@ namespace kOS.Safe.Encapsulation
 
         public TU this[T key]
         {
-            get { return internalDictionary[key]; }
-            set { internalDictionary[key] = value; }
+            get
+            {
+                if (internalDictionary.ContainsKey(key))
+                {
+                    return internalDictionary[key];
+                }
+                else
+                {
+                    throw new KOSKeyNotFoundException(key.ToString());
+                }
+            }
+            set
+            {
+                internalDictionary[key] = value;
+            }
         }
 
-        public ICollection<T> Keys { get { return internalDictionary.Keys; } }
-        public ICollection<TU> Values { get { return internalDictionary.Values; } }
+        public ICollection<T> Keys
+        {
+            get
+            {
+                return internalDictionary.Keys;
+            }
+        }
+
+        public ICollection<TU> Values
+        {
+            get
+            {
+                return internalDictionary.Values;
+            }
+        }
 
         public object GetKey(object key)
         {
+            T castKey;
+            if (key is T)
+            {
+                castKey = (T) key;
+            }
+            else
+            {
+                throw new KOSInvalidArgumentException("LexiconIndexer", "Index", key + " was invalid");
+            }
+
+            if (!ContainsKey(castKey))
+            {
+                throw new KOSKeyNotFoundException(key.ToString());
+            }
             return internalDictionary[(T) key];
         }
 

@@ -1,5 +1,5 @@
-﻿using System;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test
@@ -14,26 +14,132 @@ namespace kOS.Safe.Test
         }
 
         [Test]
-        public void CanConstruct()
+        public void CanAddAndGetKey()
         {
             var lex = new Lexicon<object, object>();
             
             lex.Add("foo", "bar");
+            var testValue = lex["foo"];
 
-            Assert.AreEqual("bar", lex["foo"]);
+            Assert.AreEqual("bar", testValue);
         }
 
         [Test]
-        public void IsCaseInsensitive()
+        public void HasCaseInsensitiveKeys()
         {
             var lex = new Lexicon<object, object>();
             
             lex.Add("foo", "bar");
-            lex.Add("FOO", "BAR");
 
-            Assert.AreEqual("bar", lex["foo"]);
+            Assert.AreEqual("bar", lex["FOO"]);
         }
 
+        [Test]
+        public void HashHitOnEqualValues()
+        {
+            var lex = new Lexicon<double, object>();
+            
+            lex.Add(double.MaxValue, "bar");
 
+            Assert.AreEqual("bar", lex[double.MaxValue]);
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSKeyNotFoundException))]
+        public void HashMissOnDifferentValues()
+        {
+            var lex = new Lexicon<double, object>();
+            
+            lex.Add(double.MinValue, "bar");
+
+            Assert.AreNotEqual("bar", lex[double.MaxValue]);
+        }
+
+        [Test]
+        public void WillReplaceWithDifferentCase()
+        {
+            var lex = new Lexicon<object, object>();
+            
+            lex.Add("foo", "bar");
+            Assert.AreEqual("bar", lex["foo"]);
+            Assert.AreEqual("bar", lex["FOO"]);
+            Assert.AreEqual("bar", lex["Foo"]);
+
+            lex.Add("FOO", "fizz");
+            Assert.AreEqual("fizz", lex["foo"]);
+            Assert.AreEqual("fizz", lex["FOO"]);
+            Assert.AreEqual("fizz", lex["Foo"]);
+
+            lex.Add("Foo", "bang");
+            Assert.AreEqual("bang", lex["foo"]);
+            Assert.AreEqual("bang", lex["FOO"]);
+            Assert.AreEqual("bang", lex["Foo"]);
+        }
+
+        [Test]
+        public void CanRemoveKeyOfDifferentCase()
+        {
+            var lex = new Lexicon<object, object>();
+            
+            lex.Add("foo", "bar");
+            Assert.AreEqual(1, lex.Count);
+
+            lex.Remove("foo");
+            Assert.AreEqual(0, lex.Count);
+
+            lex.Add("foo", "bar");
+            Assert.AreEqual(1, lex.Count);
+
+            lex.Remove("FOO");
+            Assert.AreEqual(0, lex.Count);
+
+            lex.Add("foo", "bar");
+            Assert.AreEqual(1, lex.Count);
+
+            lex.Remove("Foo");
+            Assert.AreEqual(0, lex.Count);
+        }
+
+        [Test]
+        public void DoesNotErrorOnRemoveNullKey()
+        {
+            var lex = new Lexicon<object, object>();
+            lex.Remove("foo");
+        }
+
+        [Test]
+        public void CanSetNewIndex()
+        {
+            var lex = new Lexicon<object, object>();
+            lex["foo"] = "bang";
+
+            Assert.AreEqual(1, lex.Count);
+        }
+
+        [Test]
+        public void CanSetAndGetIndex()
+        {
+            var lex = new Lexicon<object, object>();
+            lex.SetKey("fizz", "bang");
+            var value = lex.GetKey("fizz");
+
+            Assert.AreEqual("bang", value);
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSKeyNotFoundException))]
+        public void ErrorsOnGetEmptyKey()
+        {
+            var lex = new Lexicon<object, object>();
+            lex.GetKey("fizz");
+        }
+
+        [Test]
+        [ExpectedException(typeof(KOSInvalidArgumentException))]
+        public void ErrorsOnInvalidKeyType()
+        {
+            var lex = new Lexicon<double, object>();
+            lex.GetKey("fizz");
+        }
     }
 }

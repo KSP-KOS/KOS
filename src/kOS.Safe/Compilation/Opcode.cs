@@ -688,13 +688,14 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             object index = cpu.PopValue();
             object list = cpu.PopValue();
-            if (index is double || index is float)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
 
             if (list is IIndexable)
             {
+                if (index is double || index is float)
+                {
+                    index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+                }
+
                 if (value != null)
                 {
                     ((IIndexable)list).SetIndex((int)index, value);
@@ -704,7 +705,7 @@ namespace kOS.Safe.Compilation
             {
                 if (value != null)
                 {
-                    ((ILexicon)list).SetKey((int)index, value);
+                    ((ILexicon)list).SetKey(index, value);
                 }
             }
             else
