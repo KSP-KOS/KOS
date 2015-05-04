@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Binding;
+using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
 using TimeSpan = kOS.Suffixed.TimeSpan;
@@ -30,10 +31,12 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("NEXTNODE", () =>
             {
                 var vessel = shared.Vessel;
+                if (vessel.patchedConicSolver == null)
+                    throw new KOSSituationallyInvalidException(
+                        "A KSP limitation makes it impossible to access the manuever nodes of this vessel at this time. " +
+                        "(perhaps it's not the active vessel?)");
                 if (vessel.patchedConicSolver.maneuverNodes.Count == 0)
-                {
-                    throw new Exception("No maneuver nodes present!");
-                }
+                    throw new KOSSituationallyInvalidException("No maneuver nodes present!");
 
                 return Node.FromExisting(vessel, vessel.patchedConicSolver.maneuverNodes[0], shared);
             });
