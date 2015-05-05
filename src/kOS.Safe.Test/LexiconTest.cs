@@ -1,4 +1,6 @@
-﻿using kOS.Safe.Encapsulation;
+﻿using System;
+using System.Linq;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using NUnit.Framework;
 
@@ -160,6 +162,65 @@ namespace kOS.Safe.Test
         {
             var lex = new Lexicon<double, object>();
             lex.GetKey("fizz");
+        }
+
+        [Test]
+        public void CanDumpLexicon()
+        {
+            Lexicon<object,object> list = MakeNestedExample();
+            
+            string result = (string)InvokeDelegate(list, "DUMP");
+            
+            //TODO: build Asserts
+        }
+
+        [Test]
+        public void CanPrintLexicon()
+        {
+            Lexicon<object,object> list = MakeNestedExample();
+
+            string result = list.ToString();
+
+            //TODO: build Asserts
+        }
+
+        private Lexicon<object,object> MakeNestedExample()
+        {
+            const string OUTER_STRING = "String, outer value";
+            
+            var list = new Lexicon<object,object>();
+            var innerList1 = new Lexicon<object,object>();
+            var innerList2 = new Lexicon<object,object>();
+            var innerInnerList = new Lexicon<object,object>
+            {
+                {"inner", "inner string 1"}, 
+                {2, 2}
+            };
+
+            innerList1.Add("list", innerInnerList);
+            innerList1.Add("2", "string,one.two");
+            innerList1.Add("3", "string,one.three");
+
+            innerList2.Add("testing", "string,two.one" );
+            innerList2.Add("2", "string,two.two" );
+            
+            InvokeDelegate(list,"ADD", "first", 100);
+            InvokeDelegate(list,"ADD", "second", 200);
+            InvokeDelegate(list,"ADD", "inner", innerList1);            
+            InvokeDelegate(list,"ADD", "inner2", innerList2);            
+            InvokeDelegate(list,"ADD", "last", OUTER_STRING);
+            
+            return list;
+        }
+
+        private object InvokeDelegate(Lexicon<object, object> list, string suffixName, params object[] parameters)
+        {
+            var lengthObj = list.GetSuffix(suffixName);
+            Assert.IsNotNull(lengthObj);
+            var lengthDelegate = lengthObj as Delegate;
+            Assert.IsNotNull(lengthDelegate);
+            var length = lengthDelegate.DynamicInvoke(parameters);
+            return length;
         }
     }
 }

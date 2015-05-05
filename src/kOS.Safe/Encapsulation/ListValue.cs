@@ -160,7 +160,6 @@ namespace kOS.Safe.Encapsulation
             var toReturn = new List<string>();
 
             var listString = string.Format("LIST of {0} items", Count);
-            //listString = string.Empty.PadLeft(depth * INDENT_SPACES) + listString; 
             toReturn.Add(listString);
 
             if (limit <= 0) return toReturn.ToArray();
@@ -176,14 +175,13 @@ namespace kOS.Safe.Encapsulation
 
                     var itemDump = dumper.Dump(limit - 1, depth + 1);
 
-                    var itemString = string.Format("[{0}]= {1}", index, itemDump[0]);
+                    var itemString = string.Format("  [{0,2}]= {1}", index, itemDump[0]);
                     entry += itemString;
 
                     toReturn.Add(entry);
 
                     for (int i = 1; i < itemDump.Length; i++)
                     {
-                        //var subEntry = string.Empty.PadLeft(depth * INDENT_SPACES);
                         var subEntry = string.Format("{0}", itemDump[i]);
                         toReturn.Add(subEntry);
                     }
@@ -191,7 +189,7 @@ namespace kOS.Safe.Encapsulation
                 else
                 {
                     var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
-                    entry += string.Format("[{0}]= {1}", index, item);
+                    entry += string.Format("  [{0,2}]= {1}", index, item);
                     toReturn.Add(entry); 
                 }
             }

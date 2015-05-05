@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -43,6 +44,7 @@ namespace kOS.Safe.Encapsulation
         }
 
         private readonly IDictionary<T, TU> internalDictionary;
+        private const int INDENT_SPACES = 2;
 
         public Lexicon()
         {
@@ -57,7 +59,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the available list values"));
             AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T)one), "Removes the value at the given key"));
             AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T)one, (TU)two)));
-            AddSuffix("DUMP", new NoArgsSuffix<string>(() => Dump(99).ToString()));
+            AddSuffix("DUMP", new NoArgsSuffix<string>(() => string.Join(Environment.NewLine, Dump(99))));
         }
 
 
@@ -204,12 +206,50 @@ namespace kOS.Safe.Encapsulation
 
         public override string ToString()
         {
-            return string.Format("LEXICON of {0} keys", Count);
+            return string.Join(Environment.NewLine, Dump(1));
         }
 
         public string[] Dump(int limit, int depth = 0)
         {
-            throw new NotImplementedException();
+            var toReturn = new List<string>();
+
+            var listString = string.Format("LEXICON of {0} items", Count);
+            toReturn.Add(listString);
+
+            if (limit <= 0) return toReturn.ToArray();
+
+            var keys = internalDictionary.Keys.ToList();
+            for (int index = 0; index < keys.Count; index++)
+            {
+                var key = keys[index];
+                var item = internalDictionary[key];
+
+                var dumper = item as IDumper;
+                if (dumper != null)
+                {
+                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
+
+                    var itemDump = dumper.Dump(limit - 1, depth + 1);
+
+                    var itemString = string.Format("  [\"{0}\"]= {1}", key, itemDump[0]);
+                    entry += itemString;
+
+                    toReturn.Add(entry);
+
+                    for (int i = 1; i < itemDump.Length; i++)
+                    {
+                        var subEntry = string.Format("{0}", itemDump[i]);
+                        toReturn.Add(subEntry);
+                    }
+                }
+                else
+                {
+                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
+                    entry += string.Format("  [\"{0}\"]= {1}", key, item);
+                    toReturn.Add(entry); 
+                }
+            }
+            return toReturn.ToArray();
         }
     }
 
