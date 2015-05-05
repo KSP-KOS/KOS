@@ -365,7 +365,7 @@ namespace kOS.Utilities
                 {
                     if (pm.isEnabled && pm is ModuleEngines)
                     {
-                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm);
+                        thrust += ModuleEngineAdapter.GetEngineAvailableThrust((ModuleEngines)pm);
                     }
                 }
             }
