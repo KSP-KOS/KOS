@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Text;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using System;
@@ -153,10 +152,7 @@ namespace kOS.Safe.Encapsulation
                 {
                     return internalDictionary[key];
                 }
-                else
-                {
-                    throw new KOSKeyNotFoundException(key.ToString());
-                }
+                throw new KOSKeyNotFoundException(key.ToString());
             }
             set
             {
@@ -219,9 +215,8 @@ namespace kOS.Safe.Encapsulation
             if (limit <= 0) return toReturn.ToArray();
 
             var keys = internalDictionary.Keys.ToList();
-            for (int index = 0; index < keys.Count; index++)
+            foreach (var key in keys)
             {
-                var key = keys[index];
                 var item = internalDictionary[key];
 
                 var dumper = item as IDumper;
@@ -253,7 +248,7 @@ namespace kOS.Safe.Encapsulation
         }
     }
 
-    public interface IDumper
+    public interface IDumper : ISuffixed
     {
         string[] Dump(int limit, int depth = 0);
     }

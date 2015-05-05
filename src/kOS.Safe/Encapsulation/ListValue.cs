@@ -101,7 +101,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("CONTAINS", new OneArgsSuffix<bool, T>            (item => internalList.Contains(item)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
             AddSuffix("EMPTY",    new NoArgsSuffix<bool>                (() => !internalList.Any()));
-            AddSuffix("DUMP",     new NoArgsSuffix<string>              (() => Dump(99).ToString()));
+            AddSuffix("DUMP",     new NoArgsSuffix<string>              (() => string.Join(Environment.NewLine, Dump(99))));
         }
 
         // This test case was added to ensure there was an example method with more than 1 argument.

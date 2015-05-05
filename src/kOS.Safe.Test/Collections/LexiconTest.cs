@@ -166,7 +166,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanDumpLexicon()
         {
-            Lexicon<object,object> list = MakeNestedExample();
+            var list = MakeNestedExample();
             
             string result = (string)InvokeDelegate(list, "DUMP");
             
@@ -176,14 +176,14 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanPrintLexicon()
         {
-            Lexicon<object,object> list = MakeNestedExample();
+            var list = MakeNestedExample();
 
             string result = list.ToString();
 
             //TODO: build Asserts
         }
 
-        private Lexicon<object,object> MakeNestedExample()
+        private IDumper MakeNestedExample()
         {
             const string OUTER_STRING = "String, outer value";
             
@@ -212,7 +212,7 @@ namespace kOS.Safe.Test.Collections
             return list;
         }
 
-        private object InvokeDelegate(Lexicon<object, object> list, string suffixName, params object[] parameters)
+        private object InvokeDelegate(IDumper list, string suffixName, params object[] parameters)
         {
             var lengthObj = list.GetSuffix(suffixName);
             Assert.IsNotNull(lengthObj);
