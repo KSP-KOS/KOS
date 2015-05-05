@@ -43,10 +43,10 @@ namespace kOS.Suffixed
             AddSuffix("SQRMAGNITUDE", new Suffix<double>(() => new Vector3d(X,Y,Z).sqrMagnitude));
             AddSuffix("DIRECTION", new SetSuffix<Direction>(ToDirection, value =>
             {
-                    Vector3d newVal = value.Rotation * Vector3d.forward;
-                    X = newVal.x;
-                    Y = newVal.y;
-                    Z = newVal.z;
+                Vector3d newVal = value.Rotation * (Vector3d.forward * new Vector3d(X, Y, Z).magnitude);
+                X = newVal.x;
+                Y = newVal.y;
+                Z = newVal.z;
             }));
         }
 
