@@ -16,7 +16,7 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("COMMRANGE", () => int.MaxValue);
             shared.BindingMgr.AddGetter("ENCOUNTER", () => VesselUtils.TryGetEncounter(shared.Vessel,shared));
             shared.BindingMgr.AddGetter("ETA", () => new VesselEta(shared));
-            shared.BindingMgr.AddGetter("INCOMMRANGE", () => { throw new Safe.Exceptions.KOSDeprecationException("0.17.0", "INCOMMRANGE", "RTADDON:HASCONNECTION(VESSEL)", @"http://ksp-kos.github.io/KOS_DOC/addons/RemoteTech.html"); });
+            shared.BindingMgr.AddGetter("INCOMMRANGE", () => { throw new Safe.Exceptions.KOSDeprecationException("0.17.0", "INCOMMRANGE", "ADDONS:RT:HASCONNECTION(VESSEL)", @"http://ksp-kos.github.io/KOS_DOC/addons/RemoteTech.html"); });
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);
             shared.BindingMgr.AddGetter("OBT", () => new OrbitInfo(shared.Vessel.orbit,shared));
             shared.BindingMgr.AddGetter("TIME", () => new TimeSpan(Planetarium.GetUniversalTime()));
