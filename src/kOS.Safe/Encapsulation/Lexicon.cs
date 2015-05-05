@@ -1,12 +1,13 @@
+using System.Text;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Exceptions;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class Lexicon<T, TU> : Structure, IDictionary<T,TU>, ILexicon 
+    public class Lexicon<T, TU> : Structure, IDictionary<T, TU>, ILexicon, IDumper
     {
         public class LexiconComparer<TI> : IEqualityComparer<TI>
         {
@@ -51,12 +52,14 @@ namespace kOS.Safe.Encapsulation
 
         private void InitalizeSuffixes()
         {
-            AddSuffix("CLEAR", new NoArgsSuffix(Clear,"Removes all items from Lexicon"));
-            AddSuffix("KEYS", new Suffix<ListValue<object>>(GetKeys ,"Returns the available keys"));
-            AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues ,"Returns the available list values"));
-            AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T) one), "Removes the value at the given key"));
-            AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T) one, (TU) two)));
+            AddSuffix("CLEAR", new NoArgsSuffix(Clear, "Removes all items from Lexicon"));
+            AddSuffix("KEYS", new Suffix<ListValue<object>>(GetKeys, "Returns the available keys"));
+            AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the available list values"));
+            AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T)one), "Removes the value at the given key"));
+            AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T)one, (TU)two)));
+            AddSuffix("DUMP", new NoArgsSuffix<string>(() => Dump(99).ToString()));
         }
+
 
         public ListValue<object> GetValues()
         {
@@ -180,7 +183,7 @@ namespace kOS.Safe.Encapsulation
             T castKey;
             if (key is T)
             {
-                castKey = (T) key;
+                castKey = (T)key;
             }
             else
             {
@@ -191,23 +194,34 @@ namespace kOS.Safe.Encapsulation
             {
                 throw new KOSKeyNotFoundException(key.ToString());
             }
-            return internalDictionary[(T) key];
+            return internalDictionary[(T)key];
         }
 
         public void SetKey(object index, object value)
         {
-            internalDictionary[(T) index] = (TU) value;
+            internalDictionary[(T)index] = (TU)value;
         }
 
         public override string ToString()
         {
             return string.Format("LEXICON of {0} keys", Count);
         }
+
+        public StringBuilder Dump(int limit, int depth = 0)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public interface IDumper
+    {
+        StringBuilder Dump(int limit, int depth = 0);
     }
 
     public interface ILexicon
     {
         object GetKey(object key);
+
         void SetKey(object index, object value);
     }
 }

@@ -226,7 +226,6 @@ namespace kOS.Safe.Test
             Assert.IsTrue(result.Contains("inner string 1"),"CanDeepToString(): Listvalue:DUMP isn't going deep enough to print inner member 'inner string 1'\n"+result);
         }
 
-
         private object InvokeDelegate(ListValue list, string suffixName, params object[] parameters)
         {
             var lengthObj = list.GetSuffix(suffixName);
