@@ -207,7 +207,7 @@ namespace kOS.Safe.Encapsulation
             return string.Format("LEXICON of {0} keys", Count);
         }
 
-        public StringBuilder Dump(int limit, int depth = 0)
+        public string[] Dump(int limit, int depth = 0)
         {
             throw new NotImplementedException();
         }
@@ -215,7 +215,7 @@ namespace kOS.Safe.Encapsulation
 
     public interface IDumper
     {
-        StringBuilder Dump(int limit, int depth = 0);
+        string[] Dump(int limit, int depth = 0);
     }
 
     public interface ILexicon

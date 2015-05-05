@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -102,7 +101,7 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("CONTAINS", new OneArgsSuffix<bool, T>            (item => internalList.Contains(item)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
             AddSuffix("EMPTY",    new NoArgsSuffix<bool>                (() => !internalList.Any()));
-            AddSuffix("DUMP",     new NoArgsSuffix<string>              (() => Dump(99, 0).ToString()));
+            AddSuffix("DUMP",     new NoArgsSuffix<string>              (() => Dump(99).ToString()));
         }
 
         // This test case was added to ensure there was an example method with more than 1 argument.
@@ -156,39 +155,52 @@ namespace kOS.Safe.Encapsulation
             internalList[index] = (T)value;
         }
 
-        public StringBuilder Dump(int limit, int depth = 0)
+        public string[] Dump(int limit, int depth = 0)
         {
-            var toReturn = new StringBuilder();
+            var toReturn = new List<string>();
 
             var listString = string.Format("LIST of {0} items", Count);
-            listString = string.Empty.PadLeft(depth * INDENT_SPACES) + listString; 
-            toReturn.AppendLine(listString);
+            //listString = string.Empty.PadLeft(depth * INDENT_SPACES) + listString; 
+            toReturn.Add(listString);
 
-            if (limit <= 0) return toReturn;
+            if (limit <= 0) return toReturn.ToArray();
 
             for (int index = 0; index < internalList.Count; index++)
             {
                 var item = internalList[index];
 
-
                 var dumper = item as IDumper;
                 if (dumper != null)
                 {
-                    toReturn.Append(dumper.Dump(--limit, ++depth));
+                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
+
+                    var itemDump = dumper.Dump(limit - 1, depth + 1);
+
+                    var itemString = string.Format("[{0}]= {1}", index, itemDump[0]);
+                    entry += itemString;
+
+                    toReturn.Add(entry);
+
+                    for (int i = 1; i < itemDump.Length; i++)
+                    {
+                        //var subEntry = string.Empty.PadLeft(depth * INDENT_SPACES);
+                        var subEntry = string.Format("{0}", itemDump[i]);
+                        toReturn.Add(subEntry);
+                    }
                 }
                 else
                 {
-                    var itemString = string.Format("[[{0}] {1}]", index, item);
-                    itemString = string.Empty.PadLeft(depth * INDENT_SPACES) + itemString; 
-                    toReturn.AppendLine(itemString);
+                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
+                    entry += string.Format("[{0}]= {1}", index, item);
+                    toReturn.Add(entry); 
                 }
             }
-            return toReturn;
+            return toReturn.ToArray();
         }
 
         public override string ToString()
         {
-            return Dump(1).ToString();
+            return string.Join(Environment.NewLine, Dump(1));
         }
     }
 
