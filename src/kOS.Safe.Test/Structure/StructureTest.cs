@@ -1,16 +1,16 @@
 ﻿using System;
-using NSubstitute;
-using NUnit.Framework;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
+using NSubstitute;
+using NUnit.Framework;
 
-namespace kOS.Safe.Test
+namespace kOS.Safe.Test.Structure
 {
     [TestFixture]
     public class StructureTest
     {
-        public class TestStructure: Structure
+        public class TestStructure: Encapsulation.Structure
         {
             public static void TestAddGlobal<T>(string name, ISuffix suffix)
             {

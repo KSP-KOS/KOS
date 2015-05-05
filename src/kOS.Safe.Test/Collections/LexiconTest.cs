@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
 using NUnit.Framework;
 
-namespace kOS.Safe.Test
+namespace kOS.Safe.Test.Collections
 {
     [TestFixture]
     public class LexiconTest
