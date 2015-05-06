@@ -95,7 +95,6 @@ namespace kOS.Safe.Compilation
 
         protected virtual void AddEndOfProgram(CodePart linkedObject, bool isMainProgram)
         {
-            int nextIndex = linkedObject.MainCode.Count;
             if (isMainProgram)
             {
                 linkedObject.MainCode.Add(new OpcodeEOP());
