@@ -123,7 +123,7 @@ namespace kOS.Safe.Compilation.KS
             PushReversedParameters();
             VisitNode(tree.Nodes[0]);
             
-            if (addBranchDestination)
+            if (addBranchDestination || currentCodeSection.Count == 0)
             {
                 AddOpcode(new OpcodeNOP());
             }
@@ -663,7 +663,7 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.FunctionCode;
                         // verify if the program has been loaded
                         Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodePush(-1));
                         AddOpcode(new OpcodeCompareEqual());
                         OpcodeBranchIfFalse branchOpcode = new OpcodeBranchIfFalse();
                         AddOpcode(branchOpcode);
@@ -700,7 +700,7 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.InitializationCode;
                         // initialize the pointer to zero
                         AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodePush(-1));
                         AddOpcode(new OpcodeStore());
                     }
                 }
