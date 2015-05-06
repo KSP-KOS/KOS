@@ -10,6 +10,7 @@ namespace kOS
 {
     public class KSPLogger : Logger
     {
+        public const string LOGGER_PREFIX = "kOS:";
         public KSPLogger(SharedObjects shared) : base(shared)
         {
         }
@@ -22,7 +23,22 @@ namespace kOS
         public override void Log(string text)
         {
             base.Log(text);
-            UnityEngine.Debug.Log(text);
+            UnityEngine.Debug.Log(string.Format("{0} {1}", LOGGER_PREFIX, text));
+        }
+
+        public override void LogWarning(string s)
+        {
+            UnityEngine.Debug.LogWarning(string.Format("{0} {1}", LOGGER_PREFIX, s));
+        }
+
+        public override void LogException(Exception exception)
+        {
+            UnityEngine.Debug.LogException(exception);
+        }
+
+        public override void LogError(string s)
+        {
+            UnityEngine.Debug.LogError(string.Format("{0} {1}", LOGGER_PREFIX, s));
         }
 
         public override void Log(Exception e)
@@ -31,7 +47,8 @@ namespace kOS
 
             string traceText = TraceLog();
             LogToScreen(traceText);
-            UnityEngine.Debug.Log(traceText);
+            var kosText = string.Format("{0} {1}", LOGGER_PREFIX, traceText);
+            UnityEngine.Debug.Log(kosText);
             
             // -------------
             //    TODO
@@ -45,8 +62,13 @@ namespace kOS
 
             // print the call stack
             UnityEngine.Debug.Log(e);
+            
             // print a fragment of the code where the exception ocurred
-            List<string> codeFragment = Shared.Cpu.GetCodeFragment(16);
+            int logContextLines = 16;
+            #if DEBUG
+            logContextLines = 999999; // in debug mode let's just dump everything because it's easier that way.
+            #endif
+            List<string> codeFragment = Shared.Cpu.GetCodeFragment(logContextLines);
             var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine("Code Fragment");
             foreach (string instruction in codeFragment)
@@ -113,8 +135,8 @@ namespace kOS
             }
             catch (Exception ex) //INTENTIONAL POKEMON
             {
-                UnityEngine.Debug.Log("kOS: Logger: " + ex.Message);
-                UnityEngine.Debug.Log("kOS: Logger: " + ex.StackTrace);
+                UnityEngine.Debug.Log(string.Format("{0} Logger: {1}", LOGGER_PREFIX, ex.Message));
+                UnityEngine.Debug.Log(string.Format("{0} Logger: {1}", LOGGER_PREFIX, ex.StackTrace));
                 return BOGUS_MESSAGE;
             }
         }

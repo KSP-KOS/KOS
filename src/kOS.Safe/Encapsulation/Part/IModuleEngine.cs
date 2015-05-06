@@ -9,6 +9,8 @@
         float FinalThrust { get; }
         float FuelFlow { get; }
         float SpecificImpulse { get; }
+        float VacuumSpecificImpluse { get; }
+        float SeaLevelSpecificImpulse { get; }
         bool Flameout { get; }
         bool Ignition { get; }
         bool AllowRestart { get; }

@@ -21,6 +21,10 @@ Creation
 
     Here, a new :struct:`Vector` called ``vec`` is created . The object :struct:`Vector` represents a `three-dimensional euclidean vector <http://en.wikipedia.org/wiki/Euclidean_vector>`__ To deeply understand most vectors in kOS, you have to understand a bit about the :ref:`underlying coordinate system of KSP <ref frame>`. If you are having trouble making sense of the direction the axes point in, go read that page.
 
+.. note::
+    Remember that the XYZ grid in Kerbal Space Program uses a
+    :ref:`left-handed <left-handed>` coordinate system.
+
 Structure
 ---------
 
@@ -135,13 +139,14 @@ Operations and Methods
 ============================================================= =============
 Method / Operator                                              Return Type    
 ============================================================= =============
- :ref:`* (asterisk) <Vector *>`                                scalar or :struct:`Vector` 
- :ref:`+ (plus)     <Vector +->`                               :struct:`Vector`           
- :ref:`- (minus)    <Vector +->`                               :struct:`Vector`           
- :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* <Vector *>`    scalar               
- :func:`VCRS`, :func:`VECTORCROSSPRODUCT`                      :struct:`Vector`           
- :func:`VANG`, :func:`VECTORANGLE`                             scalar (deg)
- :func:`VXCL`, :func:`VECTOREXCLUDE`                           :struct:`Vector`           
+ :ref:`* (asterisk) <Vector *>`                               scalar or :struct:`Vector` 
+ :ref:`+ (plus)     <Vector +->`                              :struct:`Vector`
+ :ref:`- (minus)    <Vector +->`                              :struct:`Vector`
+ :ref:`- (unary)    <Vector +->`                              :struct:`Vector`
+ :func:`VDOT`, :func:`VECTORDOTPRODUCT`, :ref:`* <Vector *>`  scalar
+ :func:`VCRS`, :func:`VECTORCROSSPRODUCT`                     :struct:`Vector`
+ :func:`VANG`, :func:`VECTORANGLE`                            scalar (deg)
+ :func:`VXCL`, :func:`VECTOREXCLUDE`                          :struct:`Vector`
 ============================================================= =============
 
 .. index:: vector multiplication
@@ -156,6 +161,12 @@ Method / Operator                                              Return Type
         PRINT a * vec1.     // prints: V(2,4,6)
         PRINT vec1 * vec2.  // prints: 20
 
+    Note that the *unary* minus operator is really a multiplication of 
+    the vector by a scalar of (-1)::
+
+	PRINT -vec1.     // these two both print the
+	PRINT (-1)*vec1. // exact same thing.
+
 .. index:: vector addition
 .. index:: vector subtraction
 .. _Vector +-:
@@ -168,6 +179,13 @@ Method / Operator                                              Return Type
         SET vec2 TO V(2,3,4).
         PRINT vec1 + vec2.  // prints: V(3,5,7)
         PRINT vec2 - vec1.  // prints: V(1,1,1)
+
+    Note that the *unary* minus operator is the same thing as multiplying
+    the vector by a scalar of (-1), and is not technically an addition or
+    subtraction operator::
+
+	PRINT -vec1.     // these two both print the
+	PRINT (-1)*vec1. // exact same thing.
 
 .. function:: VDOT(v1,v2)
 
@@ -209,6 +227,12 @@ Method / Operator                                              Return Type
         // These will both print: V(-1,2,-1)
         PRINT VCRS(vec1, vec2).
         PRINT VECTORCROSSPRODUCT(vec1, vec2).
+
+    When visualizing the direction that a vector cross product will
+    point, remember that KSP is using a :ref:`left-handed <left-handed>`
+    coordinate system, and this means a cross-product of two vectors
+    will point in the opposite direction of what it would had KSP been
+    using a right-handed coordinate system.
 
 .. function:: VANG(v1,v2)::
 

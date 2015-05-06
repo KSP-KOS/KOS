@@ -9,7 +9,6 @@ namespace kOS.Safe.Binding
         public BindingGetDlg Get;
 
         private object currentValue;
-        private bool wasUpdated;
 
         public override object Value
         {
@@ -31,24 +30,13 @@ namespace kOS.Safe.Binding
             set
             {
                 if (Set == null) return;
-
-                currentValue = value;
-                wasUpdated = true;
+                Set(value);
             }
         }
 
-        public void ClearValue()
+        public void ClearCache()
         {
             currentValue = null;
-            wasUpdated = false;
-        }
-
-        public void SaveValue()
-        {
-            if (wasUpdated && currentValue != null)
-            {
-                Set(currentValue);
-            }
         }
     }
 }

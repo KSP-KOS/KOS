@@ -7,8 +7,30 @@ namespace kOS.Suffixed
 {
     public class GeoCoordinates : Structure
     {
-        public double Lat { get; private set; }
-        public double Lng { get; private set; }
+        private double lat;
+        private double lng;
+        public double Latitude
+        {
+            get
+            {
+                return Utils.DegreeFix(lat,-180);
+            }
+            private set
+            {
+                lat = value;
+            }
+        }
+        public double Longitude
+        {
+            get
+            {
+                return Utils.DegreeFix(lng,-180);
+            }
+            private set
+            {
+                lng = value;
+            }
+        }
         public CelestialBody Body { get; private set; }
         public SharedObjects Shared { get; set; } // for finding the current CPU's vessel, as per issue #107
 
@@ -25,8 +47,8 @@ namespace kOS.Suffixed
         {
             Shared = sharedObj;
             Vector p = orb.GetPosition();
-            Lat = orb.PositionToLatitude(p);
-            Lng = orb.PositionToLongitude(p);
+            Latitude = orb.PositionToLatitude(p);
+            Longitude = orb.PositionToLongitude(p);
             Body = orb.GetParentBody();
             GeoCoordsInitializeSuffixes();
         }
@@ -34,28 +56,40 @@ namespace kOS.Suffixed
         /// <summary>
         ///   Build a GeoCoordinates from any arbitrary lat/long pair of floats.
         /// </summary>
+        /// <param name="body">A different celestial body to select a lat/long for that might not be the current one</param>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
-        /// <param name="lat">latitude</param>
-        /// <param name="lng">longitude</param>
-        public GeoCoordinates(SharedObjects sharedObj, float lat, float lng)
+        /// <param name="latitude">latitude</param>
+        /// <param name="longitude">longitude</param>
+        public GeoCoordinates(CelestialBody body, SharedObjects sharedObj, double latitude, double longitude)
         {
-            Lat = lat;
-            Lng = lng;
+            Latitude = latitude;
+            Longitude = longitude;
             Shared = sharedObj;
-            Body = Shared.Vessel.GetOrbit().referenceBody;
+            Body = body;
             GeoCoordsInitializeSuffixes();
+        }
+
+        /// <summary>
+        ///   Build a GeoCoordinates from any arbitrary lat/long pair of floats.
+        /// </summary>
+        /// <param name="sharedObj">to know the current CPU's running vessel</param>
+        /// <param name="latitude">latitude</param>
+        /// <param name="longitude">longitude</param>
+        public GeoCoordinates(SharedObjects sharedObj, float latitude, float longitude) :
+            this(sharedObj.Vessel.GetOrbit().referenceBody, sharedObj, latitude, longitude)
+        {
         }
 
         /// <summary>
         ///   Build a GeoCoordinates from any arbitrary lat/long pair of doubles.
         /// </summary>
         /// <param name="sharedObj">to know the current CPU's running vessel</param>
-        /// <param name="lat">latitude</param>
-        /// <param name="lng">longitude</param>
-        public GeoCoordinates(SharedObjects sharedObj, double lat, double lng)
+        /// <param name="latitude">latitude</param>
+        /// <param name="longitude">longitude</param>
+        public GeoCoordinates(SharedObjects sharedObj, double latitude, double longitude)
         {
-            Lat = lat;
-            Lng = lng;
+            Latitude = latitude;
+            Longitude = longitude;
             Shared = sharedObj;
             Body = Shared.Vessel.GetOrbit().referenceBody;
             GeoCoordsInitializeSuffixes();
@@ -75,16 +109,16 @@ namespace kOS.Suffixed
         ///  Returns the ground's altitude above sea level at this geo position.
         /// </summary>
         /// <returns></returns>
-        private double GetTerrainAltitude()
+        public double GetTerrainAltitude()
         {
             double alt = 0.0;
             PQS bodyPQS = Body.pqsController;
-            if (bodyPQS != null) // The sun has no terrain.  Everthing else has a PQScontroller.
+            if (bodyPQS != null) // The sun has no terrain.  Everything else has a PQScontroller.
             {
                 // The PQS controller gives the theoretical ideal smooth surface curve terrain.
                 // The actual ground that exists in-game that you land on, however, is the terrain
                 // polygon mesh which is built dynamically from the PQS controller's altitude values,
-                // and it only approximates the PQS controller.  The discrepency between the two
+                // and it only approximates the PQS controller.  The discrepancy between the two
                 // can be as high as 20 meters on relatively mild rolling terrain and is probably worse
                 // in mountainous terrain with steeper slopes.  It also varies with the user terrain detail
                 // graphics setting.
@@ -104,8 +138,8 @@ namespace kOS.Suffixed
                 // Using that reference frame, you tell GetSurfaceHeight what the "up" vector is pointing through
                 // the spot on the surface you're querying for.
                 var bodyUpVector = new Vector3d(1,0,0);
-                bodyUpVector = QuaternionD.AngleAxis(Lat, Vector3d.forward/*around Z axis*/) * bodyUpVector;
-                bodyUpVector = QuaternionD.AngleAxis(Lng, Vector3d.down/*around -Y axis*/) * bodyUpVector;
+                bodyUpVector = QuaternionD.AngleAxis(Latitude, Vector3d.forward/*around Z axis*/) * bodyUpVector;
+                bodyUpVector = QuaternionD.AngleAxis(Longitude, Vector3d.down/*around -Y axis*/) * bodyUpVector;
 
                 alt = bodyPQS.GetSurfaceHeight( bodyUpVector ) - bodyPQS.radius ;
 
@@ -114,11 +148,11 @@ namespace kOS.Suffixed
                 const double HIGH_AGL = 1000.0;
                 const double POINT_AGL = 800.0;
                 // a point hopefully above the terrain:
-                Vector3d worldRayCastStart = Body.GetWorldSurfacePosition( Lat, Lng, alt+HIGH_AGL );
+                Vector3d worldRayCastStart = Body.GetWorldSurfacePosition( Latitude, Longitude, alt+HIGH_AGL );
                 // a point a bit below it, to aim down to the terrain:
-                Vector3d worldRayCastStop = Body.GetWorldSurfacePosition( Lat, Lng, alt+POINT_AGL );
+                Vector3d worldRayCastStop = Body.GetWorldSurfacePosition( Latitude, Longitude, alt+POINT_AGL );
                 RaycastHit hit;
-                if (Physics.Raycast(worldRayCastStart, (worldRayCastStop - worldRayCastStart), out hit, 1<<TERRAIN_MASK_BIT ))
+                if (Physics.Raycast(worldRayCastStart, (worldRayCastStop - worldRayCastStart), out hit, float.MaxValue, 1<<TERRAIN_MASK_BIT ))
                 {
                     // Ensure hit is on the topside of planet, near the worldRayCastStart, not on the far side.
                     if (Mathf.Abs(hit.distance) < 3000)
@@ -141,7 +175,7 @@ namespace kOS.Suffixed
             var up = Shared.Vessel.upAxis;
             var north = VesselUtils.GetNorthVector(Shared.Vessel);
 
-            var targetWorldCoords = Body.GetWorldSurfacePosition(Lat, Lng, GetTerrainAltitude() );
+            var targetWorldCoords = Body.GetWorldSurfacePosition(Latitude, Longitude, GetTerrainAltitude() );
 
             var vector = Vector3d.Exclude(up, targetWorldCoords - Shared.Vessel.findWorldCenterOfMass()).normalized;
             var headingQ =
@@ -158,25 +192,52 @@ namespace kOS.Suffixed
         /// <returns>distance scalar</returns>
         private double GetDistanceFrom()
         {
-            Vector3d latLongCoords = Body.GetWorldSurfacePosition( Lat, Lng, GetTerrainAltitude() );
+            return GetPosition().Magnitude();
+        }
+        
+        /// <summary>
+        ///   The surface point of this LAT/LONG from where
+        ///   the current CPU vessel is now.
+        /// </summary>
+        /// <returns>position vector</returns>
+        public Vector GetPosition()
+        {
+            return GetAltitudePosition(GetTerrainAltitude());
+        }
+        
+        /// <summary>
+        ///   The point above or below the surface of this LAT/LONG from where
+        ///   the current CPU vessel is now.
+        /// </summary>
+        /// <param name="altitude">The (sea level) altitude to get a position for</param>>
+        /// <returns>position vector</returns>
+        public Vector GetAltitudePosition(double altitude)
+        {
+            Vector3d latLongCoords = Body.GetWorldSurfacePosition(Latitude, Longitude, altitude);
             Vector3d hereCoords = Shared.Vessel.findWorldCenterOfMass();
-            return Vector3d.Distance( latLongCoords, hereCoords );
+            return new Vector(latLongCoords - hereCoords);
         }
 
         private void GeoCoordsInitializeSuffixes()
         {
-            AddSuffix("LAT", new Suffix<double>(()=> Lat));
-            AddSuffix("LNG", new Suffix<double>(()=> Lng));
+            AddSuffix("LAT", new Suffix<double>(()=> Latitude));
+            AddSuffix("LNG", new Suffix<double>(()=> Longitude));
             AddSuffix("BODY", new Suffix<BodyTarget>(()=> new BodyTarget(Body, Shared)));
             AddSuffix("TERRAINHEIGHT", new Suffix<double>(GetTerrainAltitude));
             AddSuffix("DISTANCE", new Suffix<double>(GetDistanceFrom));
             AddSuffix("HEADING", new Suffix<double>(GetHeadingFrom));
             AddSuffix("BEARING", new Suffix<double>(GetBearing));
+            AddSuffix("POSITION", new Suffix<Vector>(GetPosition,
+                                                     "Get the 3-D space position relative to the ship center, of this lat/long, " +
+                                                     "at a point on the terrain surface"));
+            AddSuffix("ALTITUDEPOSITION", new OneArgsSuffix<Vector,double>(GetAltitudePosition,
+                                                                           "Get the 3-D space position relative to the ship center, " +
+                                                                           "of this lat/long, at this (sea level) altitude"));
         }
 
         public override string ToString()
         {
-            return "LATLNG(" + Lat + ", " + Lng + ")";
+            return "LATLNG(" + Latitude + ", " + Longitude + ")";
         }
     }
 }

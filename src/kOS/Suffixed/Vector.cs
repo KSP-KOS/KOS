@@ -1,5 +1,6 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
 using UnityEngine;
 
 namespace kOS.Suffixed
@@ -10,33 +11,45 @@ namespace kOS.Suffixed
         public double Y { get; set; }
         public double Z { get; set; }
 
-        public Vector(Vector3d init)
-        {
-            X = init.x;
-            Y = init.y;
-            Z = init.z;
-        }
-
-        public Vector(Vector3 init) // Vector3 is the single-precision version of Vector3d.
-        {
-            X = init.x;
-            Y = init.y;
-            Z = init.z;
-        }
+        public Vector(Vector3d init) :this(init.x,init.y,init.z) { }
+        public Vector(Vector3 init) :this(init.x, init.y, init.z) { }
+        public Vector(float x, float y, float z) : this((double)x,(double)y,(double)z) { }
 
         public Vector(double x, double y, double z)
         {
             X = x;
             Y = y;
             Z = z;
+            InitializeSuffixes();
         }
 
-        public Vector(float x, float y, float z)
+        private void InitializeSuffixes()
         {
-            X = x;
-            Y = y;
-            Z = z;
+            AddSuffix("X", new SetSuffix<double>(() => X, value => X = value));
+            AddSuffix("Y", new SetSuffix<double>(() => Y, value => Y = value));
+            AddSuffix("Z", new SetSuffix<double>(() => Z, value => Z = value));
+            AddSuffix("MAG", new SetSuffix<double>(Magnitude, value =>
+            {
+                    double oldMag = new Vector3d(X, Y, Z).magnitude;
+
+                    if (oldMag == 0) return; // Avoid division by zero
+
+                    X = X/oldMag*value;
+                    Y = Y/oldMag*value;
+                    Z = Z/oldMag*value;
+            }));
+            AddSuffix("VEC", new Suffix<Vector>(() => new Vector(X,Y,Z)));
+            AddSuffix("NORMALIZED", new Suffix<Vector>(Normalized));
+            AddSuffix("SQRMAGNITUDE", new Suffix<double>(() => new Vector3d(X,Y,Z).sqrMagnitude));
+            AddSuffix("DIRECTION", new SetSuffix<Direction>(ToDirection, value =>
+            {
+                    Vector3d newVal = value.Rotation * Vector3d.forward;
+                    X = newVal.x;
+                    Y = newVal.y;
+                    Z = newVal.z;
+            }));
         }
+
 
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
@@ -96,106 +109,6 @@ namespace kOS.Suffixed
             return new Direction(ToVector3D(), false);
         }
 
-        public override object GetSuffix(string suffixName)
-        {
-            switch (suffixName)
-            {
-                case "X":
-                    return X;
-                case "Y":
-                    return Y;
-                case "Z":
-                    return Z;
-                case "MAG":
-                    return Magnitude();
-                case "VEC":
-                    return new Vector(X, Y, Z);
-                case "NORMALIZED":
-                    return Normalized();
-                case "SQRMAGNITUDE":
-                    return new Vector3d(X, Y, Z).sqrMagnitude;
-                case "DIRECTION":
-                    return ToDirection();
-            }
-
-            return base.GetSuffix(suffixName);
-        }
-
-        public override bool SetSuffix(string suffixName, object value)
-        {
-            double dblValue;
-            Direction dirValue = null;
-            bool isDouble = false;
-            bool isDirection = false;
-
-            if (value is double)
-            {
-                dblValue = (double)value;
-                isDouble = true;
-            }
-            else if (double.TryParse(value.ToString(), out dblValue))
-            {
-                isDouble = true;                
-            }
-            else if (value is Direction)
-            {
-                dirValue = (Direction)value;
-                isDirection = true;
-            }
-
-            // Type check (this is the sort of thing that it would be good
-            // to do automatically with a standard suffix handling system):
-            bool typeMismatch = false;
-            switch (suffixName)
-            {
-                case "X":
-                case "Y":
-                case "Z":
-                case "MAG":
-                    if (!isDouble)
-                        typeMismatch = true;
-                    break;
-                case "DIRECTION":
-                    if (!isDirection)
-                        typeMismatch = true;
-                    break;
-            }
-            if (typeMismatch)
-            {
-                throw new InvalidCastException("Can't set a vector's :" + suffixName + " to a " + value.GetType().Name);
-            }
-
-            switch (suffixName)
-            {
-                case "X":
-                    X = dblValue;
-                    return true;                        
-                case "Y":
-                    Y = dblValue;
-                    return true;
-                case "Z":
-                    Z = dblValue;
-                    return true;
-                case "MAG":
-                    double oldMag = new Vector3d(X, Y, Z).magnitude;
-
-                    if (oldMag == 0) return true; // Avoid division by zero
-
-                    X = X/oldMag*dblValue;
-                    Y = Y/oldMag*dblValue;
-                    Z = Z/oldMag*dblValue;
-                    return true;
-                case "DIRECTION":
-                    Vector3d newVal = dirValue.Rotation * Vector3d.forward;
-                    X = newVal.x;
-                    Y = newVal.y;
-                    Z = newVal.z;
-                    return true;
-            }
-
-            return base.SetSuffix(suffixName, value);
-        }
-
         public static Vector Zero
         {
             get { return new Vector(Vector3d.zero);}
@@ -249,6 +162,10 @@ namespace kOS.Suffixed
         public static Vector operator -(Vector a, Vector b)
         {
             return new Vector(a.ToVector3D() - b.ToVector3D());
+        }
+        public static Vector operator -(Vector a)
+        {
+            return a*(-1);
         }
     }
 }

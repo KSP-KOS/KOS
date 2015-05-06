@@ -63,7 +63,7 @@ namespace kOS.Safe.Compilation
                 // add the linked object to the final program
                 program.AddRange(linkedObject.MergeSections());
             }
-
+                       
             // replace all the labels references with the corresponding address
             ReplaceLabels(program);
 
@@ -98,6 +98,7 @@ namespace kOS.Safe.Compilation
             }
             else
             {
+                linkedObject.MainCode.Add(new OpcodePush(0)); // all Returns now need a dummy return value on them.
                 linkedObject.MainCode.Add(new OpcodeReturn());
             }
         }
@@ -129,7 +130,13 @@ namespace kOS.Safe.Compilation
                 else if (opcode is OpcodePushRelocateLater)
                 {
                     // Replace the OpcodePushRelocateLater with the proper OpcodePush:
-                    OpcodePush newOp = new OpcodePush(destinationIndex);
+                    Opcode newOp;
+                    if (opcode is OpcodePushDelegateRelocateLater)
+                    {
+                        newOp = new OpcodePushDelegate(destinationIndex, ((OpcodePushDelegateRelocateLater)opcode).WithClosure);
+                    }
+                    else
+                        newOp = new OpcodePush(destinationIndex);
                     newOp.SourceName = opcode.SourceName;
                     newOp.SourceLine = opcode.SourceLine;
                     newOp.SourceColumn = opcode.SourceColumn;
@@ -149,7 +156,7 @@ namespace kOS.Safe.Compilation
                     objectFile.EntryPointAddress = labels[objectFile.EntryPointLabel];
             }
         }
-
+        
         public int GetObjectFileEntryPointAddress(Guid objectFileId)
         {
             return objectFiles.ContainsKey(objectFileId) ? objectFiles[objectFileId].EntryPointAddress : 0;

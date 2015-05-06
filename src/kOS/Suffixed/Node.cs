@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 
 namespace kOS.Suffixed
 {
@@ -12,9 +14,9 @@ namespace kOS.Suffixed
         private Vessel vesselRef;
         private readonly SharedObjects shared;
         private double time;
-        private double pro;
-        private double radOut;
-        private double norm;
+        private double prograde;
+        private double radialOut;
+        private double normal;
 
         static Node()
         {
@@ -25,9 +27,9 @@ namespace kOS.Suffixed
             : this(shareObj)
         {
             this.time = time;
-            pro = prograde;
-            radOut = radialOut;
-            norm = normal;
+            this.prograde = prograde;
+            this.radialOut = radialOut;
+            this.normal = normal;
         }
 
         private Node(Vessel v, ManeuverNode existingNode, SharedObjects shareObj)
@@ -38,12 +40,75 @@ namespace kOS.Suffixed
 
             nodeLookup.Add(existingNode, this);
 
-            UpdateValues();
+            FromNodeRef();
         }
 
         private Node(SharedObjects shared)
         {
             this.shared = shared;
+            InitializeSuffixes();
+        }
+
+        private void InitializeSuffixes()
+        {
+            AddSuffix(new[] {"DELTAV", "BURNVECTOR"}, new Suffix<Vector>(GetBurnVector));
+
+            AddSuffix("ETA", new SetSuffix<double>(
+                () =>
+                {
+                    FromNodeRef();
+                    return time - Planetarium.GetUniversalTime();
+                },
+                value =>
+                {
+                    time = value + Planetarium.GetUniversalTime();
+                    ToNodeRef();
+                }
+            ));
+
+            AddSuffix("PROGRADE", new SetSuffix<double>(
+                () =>
+                {
+                    FromNodeRef();
+                    return prograde;
+                }, 
+                value =>
+                {
+                    prograde = value;
+                    ToNodeRef();
+                }
+            ));
+
+            AddSuffix("RADIALOUT", new SetSuffix<double>(
+                () =>
+                {
+                    FromNodeRef();
+                    return radialOut;
+                }, 
+                value => {
+                    radialOut = value;
+                    ToNodeRef();
+                }
+            ));
+
+            AddSuffix("NORMAL", new SetSuffix<double>(
+                () =>
+                {
+                    FromNodeRef();
+                    return normal;
+                }, 
+                value => {
+                    normal = value;
+                    ToNodeRef();
+                }
+            ));
+
+            AddSuffix("ORBIT", new Suffix<OrbitInfo>(() =>
+            {
+                if (nodeRef == null) throw new Exception("Node must be added to flight plan first");
+                return new OrbitInfo(nodeRef.nextPatch, shared);
+            }));
+
         }
 
         public static Node FromExisting(Vessel v, ManeuverNode existingNode, SharedObjects shared)
@@ -54,6 +119,10 @@ namespace kOS.Suffixed
         public void AddToVessel(Vessel v)
         {
             if (nodeRef != null) throw new Exception("Node has already been added");
+
+            string careerReason;
+            if (! Career.CanMakeNodes(out careerReason))
+                throw new KOSLowTechException("use maneuver nodes", careerReason);
 
             vesselRef = v;
             nodeRef = v.patchedConicSolver.AddManeuverNode(time);
@@ -72,73 +141,14 @@ namespace kOS.Suffixed
             return new Vector(nodeRef.GetBurnVector(vesselRef.GetOrbit()));
         }
 
-        public override object GetSuffix(string suffixName)
-        {
-            UpdateValues();
-
-            switch (suffixName)
-            {
-                case "DELTAV":
-                case "BURNVECTOR":
-                    return GetBurnVector();
-
-                case "ETA":
-                    return time - Planetarium.GetUniversalTime();
-
-                case "PROGRADE":
-                    return pro;
-
-                case "RADIALOUT":
-                    return radOut;
-
-                case "NORMAL":
-                    return norm;
-
-                case "ORBIT":
-                    if (nodeRef == null) throw new Exception("Node must be added to flight plan first");
-                    return new OrbitInfo(nodeRef.nextPatch, shared);
-            }
-
-            return base.GetSuffix(suffixName);
-        }
-
-        public override bool SetSuffix(string suffixName, object value)
-        {
-            UpdateValues();
-            value = ConvertToDoubleIfNeeded(value);
-
-            switch (suffixName)
-            {
-                case "DELTAV":
-                case "BURNVECTOR":
-                case "ORBIT":
-                    throw new Exception(string.Format("Suffix {0} is read only!", suffixName));
-                case "ETA":
-                    time = ((double)value) + Planetarium.GetUniversalTime();
-                    break;
-
-                case "PROGRADE":
-                    pro = (double)value;
-                    break;
-
-                case "RADIALOUT":
-                    radOut = (double)value;
-                    break;
-
-                case "NORMAL":
-                    norm = (double)value;
-                    break;
-
-                default:
-                    return false;
-            }
-            UpdateAll();
-            return true;
-        }
 
         public void Remove()
         {
             if (nodeRef == null) return;
+
+            string careerReason;
+            if (! Career.CanMakeNodes(out careerReason))
+                throw new KOSLowTechException("use maneuver nodes", careerReason);
 
             nodeLookup.Remove(nodeRef);
 
@@ -150,19 +160,19 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            UpdateValues();
-            return "NODE(" + time + "," + radOut + "," + norm + "," + pro + ")";
+            FromNodeRef();
+            return string.Format("NODE({0},{1},{2},{3})", (time - Planetarium.GetUniversalTime()), radialOut, normal, prograde);
         }
 
-        private void UpdateAll()
+        private void ToNodeRef()
         {
-            nodeRef.OnGizmoUpdated(new Vector3d(radOut, norm, pro), time);
+            nodeRef.OnGizmoUpdated(new Vector3d(radialOut, normal, prograde), time);
         }
 
         private void UpdateNodeDeltaV()
         {
             if (nodeRef == null) return;
-            var dv = new Vector3d(radOut, norm, pro);
+            var dv = new Vector3d(radialOut, normal, prograde);
             nodeRef.DeltaV = dv;
         }
 
@@ -174,15 +184,15 @@ namespace kOS.Suffixed
             }
         }
 
-        private void UpdateValues()
+        private void FromNodeRef()
         {
-            // If this node is attached, and the values on the attached node have chaged, I need to reflect that
+            // If this node is attached, and the values on the attached node have changed, I need to reflect that
             if (nodeRef == null) return;
 
             time = nodeRef.UT;
-            radOut = nodeRef.DeltaV.x;
-            norm = nodeRef.DeltaV.y;
-            pro = nodeRef.DeltaV.z;
+            radialOut = nodeRef.DeltaV.x;
+            normal = nodeRef.DeltaV.y;
+            prograde = nodeRef.DeltaV.z;
         }
     }
 }

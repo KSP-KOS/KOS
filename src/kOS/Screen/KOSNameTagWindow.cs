@@ -1,6 +1,7 @@
 ﻿using kOS.Utilities;
 using UnityEngine;
 using kOS.Module;
+using System;
 
 namespace kOS.Screen
 {    
@@ -12,12 +13,16 @@ namespace kOS.Screen
         // ReSharper disable RedundantDefaultFieldInitializer
         private bool wasFocusedOnce = false; // "explicit", not "redundant".
         private int numberOfRepaints = 0; // "explicit", not "redundant".
+        private bool gameEventHooksExist = false; // "explicit", not "redundant".
+        private int myWindowId; // must be unique for Unity to not mash two nametag windows togehter.
+        
         // ReSharper enable RedundantDefaultFieldInitializer
 
         public void Invoke(KOSNameTag module, string oldValue)
         {
             attachedModule = module;
             tagValue = oldValue;
+            myWindowId = GetInstanceID(); // Use the Id of this MonoBehaviour to guarantee unique window ID.
             
             Vector3 screenPos = GetViewportPosFor(attachedModule.part.transform.position);
 
@@ -38,12 +43,28 @@ namespace kOS.Screen
             // float xPixelWindow = (drawOnLeft ? screenPos.x - 0.3f : screenPos.x + 0.2f) * UnityEngine.Screen.width;
             // float tagLineWidth = (drawOnLeft) ? (xPixelPoint - xPixelWindow) : (xPixelWindow - xPixelPoint - windowWidth);
             // tagLineRect = new Rect(xPixelPoint, yPixelPoint, tagLineWidth, 3);
-            // Debug.Log("tagLineRect = " + tagLineRect );
+            // SafeHouse.Logger.Log("tagLineRect = " + tagLineRect );
 
             SetEnabled(true);
 
             if (HighLogic.LoadedSceneIsEditor)
                 attachedModule.part.SetHighlight(false, false);
+            
+        }
+        
+        /// <summary>
+        /// Catch the event of the part disappearing, from crashing or
+        /// from unloading from distance or scene change, and ensure
+        /// the window closes if it was open when that happens:
+        /// </summary>
+        /// <param name="whichPartWentAway">The callback is called for EVERY part
+        /// that ever goes away, so we have to check if it's the right one</param>
+        public void GoAwayEventCallback(Part whichPartWentAway)
+        {
+            if (whichPartWentAway != attachedModule.part)
+                return;
+            
+            Close();
         }
 
         /// <summary>
@@ -58,6 +79,25 @@ namespace kOS.Screen
             // ReSharper disable once RedundantCheckBeforeAssignment
             if (newVal != enabled)
                 enabled = newVal;
+
+            if (enabled)
+            {
+                if (! gameEventHooksExist)
+                {
+                    GameEvents.onPartDestroyed.Add(GoAwayEventCallback);
+                    GameEvents.onPartDie.Add(GoAwayEventCallback);
+                    gameEventHooksExist = true;
+                }
+            }
+            else
+            {
+                if (gameEventHooksExist)
+                {
+                    GameEvents.onPartDestroyed.Remove(GoAwayEventCallback);
+                    GameEvents.onPartDie.Remove(GoAwayEventCallback);                
+                    gameEventHooksExist = false;                    
+                }
+            }
         }
 
         /// <summary>
@@ -84,7 +124,7 @@ namespace kOS.Screen
                 EditorLogic.fetch.Lock(false, false, false, "KOSNameTagLock");
 
             GUI.skin = HighLogic.Skin;
-            GUILayout.Window(0, windowRect, DrawWindow,"KOS nametag");
+            GUILayout.Window(myWindowId, windowRect, DrawWindow,"KOS nametag");
             
             // Ensure that the first time the window is made, it gets keybaord focus,
             // but allow the focus to leave the window after that:
@@ -147,6 +187,11 @@ namespace kOS.Screen
 
             if (HighLogic.LoadedSceneIsEditor)
                 attachedModule.part.SetHighlight(false, false);
+        }
+        
+        public void OnDestroy()
+        {
+            SetEnabled(false);
         }
     }
 }

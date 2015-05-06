@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using ICSharpCode.SharpZipLib.GZip;
-using kOS.AddOns.RemoteTech2;
+using kOS.AddOns.RemoteTech;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
@@ -101,7 +101,7 @@ namespace kOS.Persistence
                 // result of this swap on writing:
                 returnValue = returnValue.Replace('/',',');
 
-                Debug.Logger.SuperVerbose("About to store the following Base64 string:\n" + returnValue);
+                SafeHouse.Logger.SuperVerbose("About to store the following Base64 string:\n" + returnValue);
 
                 return returnValue;
             }
@@ -140,7 +140,7 @@ namespace kOS.Persistence
             }
             catch (Exception e)
             {
-                Debug.Logger.Log(string.Format("Exception decoding: {0} | {1}", e, e.Message));
+                SafeHouse.Logger.Log(string.Format("Exception decoding: {0} | {1}", e, e.Message));
             }
         }
 

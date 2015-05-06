@@ -1,6 +1,251 @@
 kOS Mod Changelog
 =================
 
+# v0.17.1
+
+1.0 Release
+-----------
+
+### New Hotness
+
+* New infernal robotics integration
+* Better error reporting
+
+
+### Old and busted
+
+* fixes keyword lexxing 
+
+# v0.17.1
+
+Corrections and omissions   
+-------------------------
+
+### "New" features
+
+* Due to erendrake's inability to correctly use git. The new list constructor was omitted from the 0.17.0 release binaries.
+    
+### Bug Fixes:
+
+* Many Doc fixes
+* Fixed bug with setting KAC Alarm action to correct value
+* Fixed some unneeded log spamming 
+
+
+# v0.17.0
+
+FUNCTIONS! FUNCTIONS! FUNCTIONS!
+--------------------------------
+Big feature: You can make your own user-defined functions, that 
+can handle recursion, and can use local variable scoping.  You can
+build a library of your own function calls and load them into your
+script.
+
+**New Documentation change page**:
+
+For those users who just want to see what new features
+exist without reading the entire documentation again
+from scratch, we have created a changes page in the main documentation:
+
+* New Changes Page: http://ksp-kos.github.io/KOS_DOC/changes.html
+
+For the features mentioned below, you can go to the page above
+and get a more verbose description of the new features.
+
+### New Features:
+
+A brief list of what's new:
+
+* Variables can now be local
+* Kerboscript has User Functions
+* Community Examples Library
+* LIST() now takes args to initialize the list.
+* Physics Ticks not Update Ticks
+* Ability to use SAS modes from KSP 0.90
+* Blizzy ToolBar Support
+* Ability to define colors using HSV
+* Ability to highlight a part in color
+* Better user interface for selecting boot scripts
+* Disks can be made bigger with tweakable slider
+* You Can Transfer Resources
+* Kerbal Alarm Clock support
+* Query the docked elements of a vessel
+* Support for Action Groups Extended
+* ISDEAD suffix for Vessel
+
+This update is so full of new features that instead of describing all of their
+details here, you can go see them on the main docs page at the following link:
+
+http://ksp-kos.github.io/KOS_DOC/changes.html
+
+### Bug Fixes:
+
+- Using the same FOR iterator in two loops no longer name clashes because it's not global anymore.
+- Repaired a number of boot file selection bugs.
+- Removed a few unnecessary debug log spamming message.
+- Fixed a minor issue with the special hidden file .DS_Store that Macs insert into the Scripts folder.
+- Fixed bug spamming nullrefs when panel was open in the VAB/SPH editor.
+- Fixed bugs where setting warp could crash KSP. Now it clamps warp to valid values.
+- Fixed bug where kOS CPU's were drawing power from the batteries even when the game was paused.
+- Fixed bug where rate of power consumption varied depending on animation frame rate.
+- Fixed bug where WAIT 0 crashed scripts.  Now WAIT 0 waits the min. possible time (1 physics tick).
+- Fixed small order of operations problem with expressions containing unary operators like '-', '+', and 'not'.
+- Fixed problem where SET TARGET didn't really set it until the next physics tick.  Now it sets immediately.
+- Fixed some issues with the use of Action Groups above 10, when Action Groups Extended is installed.
+- Fixed bug where VOLUME:RENAMABLE returned the name string, rather than a boolean.
+- Fixed bun when printing a VOLUME to the screen and failing to "stringify" it properly.
+- Using the unary negation '-' on vectors and directions now works.
+- Fixed some major bugs in how the kOS toolbar panel was dealing with scene changes and getting "stuck" on screen.
+- Fixed some bugs with the kos Name Tag typing window getting stuck on screen and locking the user out of the UI.
+- Fixed bug with reboot not clearing out the state properly.
+- Fixed bug where any syntax error caught by the compiler resulted in bogus additional second error message.
+
+###BREAKING:
+
+- **RECOMPILE YOUR KSM FILES!!!** - If you used the COMPILE command in
+  the past, changes to the kOS machine code that were needed to support
+  variable scoping ended up invalidating any existing compiled KSM files.
+
+- **KSM FILES ARE BIGGER** - compiled KSM files are now larger than
+  they used to be for the same source code.  They might not be an
+  efficient way to pack your code down to a small disk footprint
+  anymore.
+
+- *CONFIG:IPU should be slightly increased*  The new default
+  we ship with is 200, to reflect both the change in ML code, and the
+  movement to Unity's FixedUpdate for physics ticks.  However if you
+  have played kOS in the past, your settings don't get automatically
+  overwritten.  You will need to change the setting manually.
+
+- *DECLARE has a new syntax*
+  DECLARE _VARNAME_ now requires an initializer syntax as follows:
+  - DECLARE _VARNAME_ TO _VALUE_.
+  If you leave the TO _VALUE_ off, it will now be a syntax error.
+  Also, you can say LOCAL or GLOBAL instead of, or in addition to,
+  the word DECLARE.
+
+- *DECLAREd variables are now local*
+  Using the DECLARE _VARNAME_ TO _VALUE_ statement now causes the
+  variable to have local scope that only exists within the local block
+  of curly braces ('{'...'}') that it was declared inside of. To get
+  the old behavior you can explicitly say:
+  DECLARE GLOBAL _VARNAME_ to _VALUE.
+
+- *FOR iterator now is local*
+  The _VARIABLE_ in loops of the form FOR _VARIABLE_ IN _SOMELIST_ now
+  has local scope to just that loop, meaning it stops existing after
+  the loop is done and you can't use it outside the loop's body.
+
+
+# v0.16.2
+
+##HOTFIX
+
+* Fixes #609 KOS ignores run command in FOR loop
+* Fixes #610 Print AT draws in the wrong place on telnet after clearscreen.
+* Fixes #612 doesn't update telnet screen when cur command is longer than prev and you up-arrow
+
+# v0.16.1
+
+##HOTFIX
+
+this fixes #603 the mess that I made of the Node structure, thanks Tabris from the forums for bringing this to our attention.
+
+# v0.16.0
+
+### BREAKING
+* Body:ANGULARVEL is now a Vector instead of a Direction.  (This is the same as the change that was done to Vessel:ANGULARVEL in v0.15.4, but we missed the fact that Body had the same problem).  It was pretty useless before so this shouldn't hurt many scripters :)
+* Both Body:ANGULARVEL and Vessel:ANGULARVEL now are expressed in the same SHIP_RAW coordinate system as everything else in kOS, rather than in their own private weirdly mirrored reference frame. (Thanks to forum user @thegreatgonz for finding the problem and the fix)
+* #536 the 1.5m kOS part has always had trouble with clipping into other parts due to the rim of the cylinder sticking up past the attachment points. The part definition has been changed to fix this, but in KSP new part definitions don't affect vessels that have already been built or have already had their design saved in a craft file in the VAB/SPH.  To see the fix you'll need to start a new vessel design from scratch, otherwise you'll still have the old clipping behavior.
+
+### New Features
+* TELNET SERVER.  The biggest new feature this update is the introduction of a **telnet server** you can use to access the terminals in game.  For security, it's turned off by default, but you can enable it with the config radio button.  Full documentation on this new feature is at http://ksp-kos.github.io/KOS_DOC/general/telnet.html
+	* Synopsis:
+		* Telnet to 127.0.0.1, port 5410
+		* Select CPU from welcome menu by typing a number and hitting Return.
+		* Your telnet client is now a clone of that CPU's terminal window and can control it.
+		* If you want to open it up to others to use (i.e. controlling your KSP game from a second computer),
+		  you can use an ssh tunnel to access the local loopback address, or if you just want to throw
+		  caution to the wind, you can tell it to stop using loopback and use your real IP address.
+		  Be aware of the security risk if you choose this.
+* Added HUDTEXT that lets you add text to the screen. Thanks @pgodd !
+	* more information here: http://ksp-kos.github.io/KOS_DOC/commands/terminal.html#HUDTEXT 
+* #72 - Added STAGE:NUMBER and STAGE:READY to allow for staging very close together
+* #522 - Added BODY:GEOPOSITIONOF and BODY:ALTITUDEOF for getting body-relative info about a 3D point in space.
+* #524 and #523 - mission waypoints now have 3d positions
+* In game Terminal is now resizable!  From a script with SET TERMINAL:WIDTH and SET TERMINAL:HEIGHT, or from dragging the lower-right corner of the GUI window.
+
+### Bug Fixes
+* Fixes #389 - LOCK STEERING broken for RCS-only (no torque) ships.
+* Fixes #516 - kOSTags are now applied in the correct MM pass
+* Fixes #541 - All BODY: suffixes should now work properly when the body is the Sun without crashing.
+* Fixes #544 - Terminal subbuffer won't shrink when up-arrowing to a previous smaller command.
+* Fixes #548 - If SHIP is not the same as ActiveVessel, then executing STAGE stages the wrong vessel.
+* Fixes #581 - SHIP:CONTROL:PILOTFORE and SHIP:CONTROL:PILOTSTARBOARD are no longer inverted.
+* Fixes #578 - renamed our use of RemoteTech2 to RemoteTech to follow their new naming.
+* Fixes #427 - Stack now clears when interactive commands throw exceptions.  (no longer reports false stack traces).
+* Fixes #409 - Delete no longer leaves file in memory.
+* Fixes #172 - Lock states no longer persist through power cycling unit. Now they become default for unlocked state
+   * Also #358, #362, #568
+* Fixes #580 - RT "signal lost. waiting to re-aquire signal" check previously disallowed manned terminal use.  Now it only disables the terminal if the vessel is unmanned.
+* Fixes #344 - KOSArgumentMismatchException reported wrong arg number (i.e. it would claim your 3rd argument is wrong when it's really your 1st argument).  Fixed.
+
+
+# v0.15.6
+
+### BREAKING
+* PART:UID is now a string. This will only break you if you were doing math on UIDs?
+* ELEMENT:PARTCOUNT was poorly named and duplicated by ELEMENT:PARTS:LENGTH so it was removed.
+
+### New Features
+* (AGX) Action Groups Extended Support! Thanks @SirDiazo
+	* Getting or setting groups 11-250 should behave the same as the stock groups if you have AGX installed.
+	* Groundwork is laid for getting parts and modules by the new action groups.	
+* Gimbals are now a well known module. providing read access to its state
+* Added PART:GETMODULEBYINDEX(int). This is most useful when you have a part with the same module twice. Thanks @jwvanderbeck
+* More documentation work. http://ksp-kos.github.io/KOS_DOC/
+
+### Bug Fixes
+* Fixes RemoteTech Integration
+* Structures can now be correctly ==, <> and concatenated with + 
+* STAGE:RESOURCE[?]:CAPACITY is now spell correctly :P
+
+# v0.15.5
+The KSP 0.90 compatibility release.
+(The full thematic following of KSP 0.90's new way of
+thinking will come in a future version. This is just
+to make sure everything works.)
+
+###BREAKING CHANGES
+* Now respects the limitations of [0.90 career mode upgrades](http://ksp-kos.github.io/KOS/general/career_limits.html), which may make a few features not work anymore in career mode until you get further progressed along in your building upgrades.
+
+###New Stuff
+* Thanks to a new dev team contributer Johann Goetz (@theodoregoetz on github), we have a new, much better and cleaner looking [documentation site](http://ksp-kos.github.io/KOS_DOC/)
+* Better flight input handling to detect the pilot controls and keep them isolated.
+* "plays nice" with other autopilots a bit better, using KSP 0.90's new autopiloting hooks.
+* Ability to read [more data about a ship resource](TODO - Are these in the docs?  Put URL here if so.) TODO:  i.e. SingleResourceValue:FLOWMODE, for example - see PR #452)
+* New [suffixes to handle directions better](http://ksp-kos.github.io/KOS/math/direction.html) as mentioned in [long detail in this video](https://www.youtube.com/watch?v=7byYiZZBBVc)
+* Separate Dry Mass, Wet Mass, and Current Mass readings for parts and for the vessel as a whole (TODO: Link here, but the public gh-pages hasn't be regenned yet so I don't know the link yet)
+* Added new [WAYPOINT object](http://ksp-kos.github.io/KOS/structures/waypoint.html) to help with locations of some contracts.
+* Added new :POSITION and :ALTITUDEPOSITION suffixes to [Geocoordinates](http://ksp-kos.github.io/KOS/math/geocoordinates.html) to obtain 3D vectors of their positions in ship-raw coordinate space.
+
+* ADDED muliple new ways to deal with resources.
+	* STAGE:RESOURCES, SHIP:RESOURCES and TARGET:RESOURCES will let you get a list of the resources for the craft, the difference being that SHIP: and TARGET: includes all resources and STAGE: includes only the resoures that are for "this stage". All three of these will let you get a list of :PARTS that can contain that resource.
+	* Part resources now gives you access to the resource's tweakable :ENABLE and :TOGGLEABLE can let you remove add a resource to the normal resource flow.
+
+###Bug Fixes
+* Better handling of range checking and loading the boot file when remotetech is installed (thanks to hvacengi for this contribution)
+* Boot file overwrite fix (thanks to pakrym)
+* (For developers) fixed compile error on UNIX platforms that was due to filename case-sensitivity differences.
+* LOG command to the Archive now appends to the file properly instead of rewriting the entire contents each time just to tack on one line.  It is now possible to read its output from outside KSP using a tool like the UNIX "tail -f" program.
+* Better calculations of stage resource values, using SQUAD'S provided API for it instead of trying to walk the tree ourselves (which broke in 0.90).
+* Fixed lonstanding [bug with geocoordinates:TERRAINHEIGHT](https://github.com/KSP-KOS/KOS/issues/478)
+
+###Small maintenence issues
+* Bundling a newer version of ModuleManager
+* Better use of the "skin" system for the app panel.  Should see no obvious effect on the surface.
+
+
 # v0.15.4
 ###BREAKING CHANGES
 * Issue #431: SHIP:ANGULARMOMENTUM and SHIP:ANGULARVEL have been changed from directions to vectors to me more consistant with their nature
@@ -48,51 +293,51 @@ Please follow the links to see the full information on the new features.
 * [Added pilot input to flight controls](http://ksp-kos.github.io/KOS_DOC/structure/control/index.html#pilot-commands) which lets you read/write the users control state, you can use this to set the exit behavior for the mainthrottle.
 
 * Several suffixes are now [methods that you can call](ksp-kos.github.io/KOS_DOC/#structure_methods) with arguments.
-    * eg before to add to a list it was SET LIST:ADD TO "FOO". Now it would be LIST:ADD("FOO").
+	* eg before to add to a list it was SET LIST:ADD TO "FOO". Now it would be LIST:ADD("FOO").
 
 * Suffix methods that perform an action do not need to be assigned to anything.  No more having to say *SET DUMMY TO MYLIST:CLEAR.*  You can now just say *MYLIST:CLEAR.* like it was a statement.
 
 * Added suffixes to OBT for [walking orbit conic patches](http://ksp-kos.github.io/KOS_DOC/structure/orbit/index.html)
-    * ORB:HASNEXTPATCH - A boolean that shows the presence of a future patch
-    * ORB:NEXTPATCH - The next OBT patch 
+	* ORB:HASNEXTPATCH - A boolean that shows the presence of a future patch
+	* ORB:NEXTPATCH - The next OBT patch 
 
 * Added better techniques for selecting the Part you want from a Vessel:
   * Ability to give any part any name you like with the [new nametag feature](http://ksp-kos.github.io/KOS_DOC/summary_topics/nametag/index.html).
   * [Directly querying a vessel for parts](http://ksp-kos.github.io/KOS_DOC/summary_topics/ship_parts_and_modules/index.html#parts), searching for [nametags](http://ksp-kos.github.io/KOS_DOC/summary_topics/nametag/index.html), or part names or part titles.
-    * SHIP:PARTSDUBBED(string)
-    * SHIP:PARTSNAMED(string)
-    * SHIP:PARTSTAGGED(string)
-    * SHIP:PARTSTITLED(string)
-    * SHIP:PARTSINGROUP(string)
-    * SHIP:MODULESNAMED(string)
+	* SHIP:PARTSDUBBED(string)
+	* SHIP:PARTSNAMED(string)
+	* SHIP:PARTSTAGGED(string)
+	* SHIP:PARTSTITLED(string)
+	* SHIP:PARTSINGROUP(string)
+	* SHIP:MODULESNAMED(string)
   * [Walking the parts Tree](http://ksp-kos.github.io/KOS_DOC/structure/part/index.html):
-    * PART:CHILDREN - A ListValue of parts that are descendant from the current part
-    * PART:PARENT - A PART that is the ancestor of the current part
-    * PART:HASPARENT - A boolean that shows the presence of a Parent PART
-    * SHIP:ROOTPART - The first part of a ship.  The start of the tree of parts.  identical to SHIP:PARTS[0].
+	* PART:CHILDREN - A ListValue of parts that are descendant from the current part
+	* PART:PARENT - A PART that is the ancestor of the current part
+	* PART:HASPARENT - A boolean that shows the presence of a Parent PART
+	* SHIP:ROOTPART - The first part of a ship.  The start of the tree of parts.  identical to SHIP:PARTS[0].
   * *SET MyList TO SHIP:PARTS.* now does the same thing as *LIST PARTS IN MyList.*
 
 * A [new system lets you access the PartModules](http://ksp-kos.github.io/KOS_DOC/structure/partmodule/index.html) that the stock game and modders put on the various parts.  Through this, you now have the ability to manipulate a lot of the things that are on the rightclick menus of parts:
   * PART Suffixes:
-    * GETMODULE(string)
-    * ALLMODULES.
+	* GETMODULE(string)
+	* ALLMODULES.
   * PartModule Suffixes:
-    * GETFIELD(field_name) - read a value from a rightclick menu
-    * SETFIELD(field_name, new value) - change a value on a rightclick menu, if it would normally be adjustable via a tweakable control.
-    * DOACTION(name_of_action_) - cause one of the actions that would normally be available to action groups *even if it hasn't been assigned to an action group*.
-    * DOEVENT(event_name) - "presses a button" on the rightclick part menu.
-    * Several others..
+	* GETFIELD(field_name) - read a value from a rightclick menu
+	* SETFIELD(field_name, new value) - change a value on a rightclick menu, if it would normally be adjustable via a tweakable control.
+	* DOACTION(name_of_action_) - cause one of the actions that would normally be available to action groups *even if it hasn't been assigned to an action group*.
+	* DOEVENT(event_name) - "presses a button" on the rightclick part menu.
+	* Several others..
 
 * [Lists are now saner to work with](http://ksp-kos.github.io/KOS_DOC/structure/list/index.html) with no longer needing to use weird side effects to get things done, now that there's proper methods available:
   * :ADD has changed:
-    * Old Way: *SET MyList:ADD TO NewVal.*
-    * New Way: *MyList:ADD(NewVal).*
+	* Old Way: *SET MyList:ADD TO NewVal.*
+	* New Way: *MyList:ADD(NewVal).*
   * :REMOVE has changed:
-    * Old Way: *SET MyList:REMOVE TO indexnumber.*
-    * New Way: *MyList:REMOVE(indexnumber).*
+	* Old Way: *SET MyList:REMOVE TO indexnumber.*
+	* New Way: *MyList:REMOVE(indexnumber).*
   * :CLEAR has changed:
-    * Old Way: *SET Dummy to MyList:CLEAR.*
-    * New Way: *MyList:CLEAR().*
+	* Old Way: *SET Dummy to MyList:CLEAR.*
+	* New Way: *MyList:CLEAR().*
 
 * Added ENGINE:AVAILABLETHRUST suffix. A value that respects the thrust limiter
 
@@ -153,17 +398,17 @@ Please follow the links to see the full information on the new features.
 * Updated fonts, Thanks @MrOnak
 * Now runtime errors show source location and call stack trace (Github issues #186 and #210).  Example:
 ~~~
-    Tried To push Infinity into the stack.
-    At MyProgramFile2 on Archive, line 12
-        PRINT var1/var2.
-                  ^
-    Called from MyProgramFile1 on Archive, line 213
-    RUN MyProgramFIle2("hello").
-    ^
-    Called from StartMission on Archive, line 2.
-    RUN MyProgramFile1.
-    ^
-    _
+	Tried To push Infinity into the stack.
+	At MyProgramFile2 on Archive, line 12
+		PRINT var1/var2.
+				  ^
+	Called from MyProgramFile1 on Archive, line 213
+	RUN MyProgramFIle2("hello").
+	^
+	Called from StartMission on Archive, line 2.
+	RUN MyProgramFile1.
+	^
+	_
 ~~~
 * (WHEN and ON) Triggers that are taking longer than an Update is meant to take, and thus can freeze KSP are caught and reported (Github issue #104).  Gives the user an explanatory message about the problem.
   * WARNING: Because of a change that had to be done for this, it is **_Highly_ recommended that you increase your *InstructionsPerUpdate* setting in config.xml to 150% as much** as it was before (i.e. from 100 to 150, or if it was 200, make it 300.).
@@ -205,9 +450,9 @@ Please follow the links to see the full information on the new features.
 * you can now get the FACING of all parts.
 * ITERATOR:END is now split into :NEXT and :ATEND
 * Direction can now always return a proper vector. 
-    * IE SHIP:FACING returned V(0,0,0) before
+	* IE SHIP:FACING returned V(0,0,0) before
 * Added a 3d Drawing tool for letting you draw lines and labels. 
-    * Tour: https://www.youtube.com/watch?v=Vn6lUozVUHA
+	* Tour: https://www.youtube.com/watch?v=Vn6lUozVUHA
 * Added a new and improved file editor so the edit command actually works again in game!
 * Added the ability to switch to MapView and back in code
 * ACTIVESHIP alias links to the ship that is currently under user direct control
@@ -292,28 +537,28 @@ Bug fixes
 * Added Ctrl+Shift+X hotkey to close the terminal window (jwvanderbeck)
 * Improved RemoteTech integration (jwvanderbeck) Current state is discussed https://github.com/erendrake/KOS/pull/51
 * Added engine stats to the enginevalue
-    * ACTIVE (get/set)
-    * ALLOWRESTART (get
-    * ALLOWSHUTDOWN (get)
-    * THROTTLELOCK (get)
-    * THRUSTLIMIT (get/set)
+	* ACTIVE (get/set)
+	* ALLOWRESTART (get
+	* ALLOWSHUTDOWN (get)
+	* THROTTLELOCK (get)
+	* THRUSTLIMIT (get/set)
 
 * Added to BODY:ATM:SEALEVELPRESSURE
 * Added a DockingPort Part Type, You can access it by "LIST DOCKINGPORTS IN ..."
 * Added PART:CONTROLFROM which centers the transform on that part.
 
 * Vector now has two new Suffixes
-    * NORMALIZED - Vector keeps same direction, but will have a magnitude of 1.
-    * SQRMAGNITUDE - https://docs.unity3d.com/Documentation/ScriptReference/Vector3-sqrMagnitude.html
+	* NORMALIZED - Vector keeps same direction, but will have a magnitude of 1.
+	* SQRMAGNITUDE - https://docs.unity3d.com/Documentation/ScriptReference/Vector3-sqrMagnitude.html
 
 * New math operators involving Vectors
-    * VECTORCROSSPRODUCT (VCRS)
-    * VECTORDOTPRODUCT (VDOT)
-    * VECTOREXCLUDE (VXCL) - projects one vector onto another
-    * VECTORANGLE (VANG) - Returns the angle in degrees between from and to.
+	* VECTORCROSSPRODUCT (VCRS)
+	* VECTORDOTPRODUCT (VDOT)
+	* VECTOREXCLUDE (VXCL) - projects one vector onto another
+	* VECTORANGLE (VANG) - Returns the angle in degrees between from and to.
 
 * Direct control of vessel and nearby vessels (SHIP:CONTROL, TARGET:CONTROL)
-    * __GETTERS__
+	* __GETTERS__
 	* YAW - Rotation (1 to -1)
 	* PITCH - Rotation (1 to -1)
 	* ROLL - Rotation (1 to -1)
@@ -326,7 +571,7 @@ Bug fixes
 	* MAINTHROTTLE (1 to -1)
 	* WHEELTHROTTLE (1 to -1)
 	* WHEELSTEER (1 to -1)
-    * __SETTERS__
+	* __SETTERS__
 	* YAW - Rotation (1 to -1)
 	* PITCH - Rotation (1 to -1)
 	* ROLL - Rotation (1 to -1)
@@ -340,9 +585,9 @@ Bug fixes
 	* WHEELTHROTTLE (1 to -1)
 	* WHEELSTEER (1 to -1)
 * changing systems vessel load distance 
-    * LOADDISTANCE get/set for adjusting load distance for every vessel
-    * VESSELTARGET:LOAD bool - is the vessel loaded
-    * VESSELTARGET:PACKDISTANCE - Setter for pack distance for every vessel.
+	* LOADDISTANCE get/set for adjusting load distance for every vessel
+	* VESSELTARGET:LOAD bool - is the vessel loaded
+	* VESSELTARGET:PACKDISTANCE - Setter for pack distance for every vessel.
 * Added RANDOM() generator (0 - 1)
 
 * Power requirements are now directly tied to the active volume's size, the ARCHIVE's size is unlimited so it is capped at the equivalent of 50KB. 
@@ -357,13 +602,13 @@ Bug fixes
 - Basic RemoveTech Intergration 
 - Added VOLUME:NAME to getting the current volume
 - Lists can now be populated with basic data that you can loop over or index [Full Info](/wiki/List/)
-    - Bodies (eg Kerbin, Mun, Duna)
-    - Targets - All Vessels other than current
-    - Engines - Engines on the craft
-    - Resources - All Ship Resources
-    - Parts - All Ship Parts (slow)
-    - Sensors - (eg Pres, Grav, Accel)
-    - Elements - All flights connected to the active vessel
+	- Bodies (eg Kerbin, Mun, Duna)
+	- Targets - All Vessels other than current
+	- Engines - Engines on the craft
+	- Resources - All Ship Resources
+	- Parts - All Ship Parts (slow)
+	- Sensors - (eg Pres, Grav, Accel)
+	- Elements - All flights connected to the active vessel
 - A Lot of bug fixes and refactoring
 - Constants (eg G, E, PI) are now retrieved using CONSTANT() rather than spreadout.
 - Commands resolve in order of descending specificity, rather than in the pseudorandom order they were in before
@@ -373,39 +618,39 @@ Bug fixes
 
 - Compatible with KSP 0.23 Thanks to Logris and MaHuJa for Commits
 - Added List() which creates a collection and the following commands 
-    - ADD - Adds the value of any variable
-    - CONTAINS - Tests and returns if the value exists in the list
-    - REMOVE - removes the item from the list if the list contains the item
-    - LENGTH - returns a count of the items in the list
-    - COPY - creates a copy of the list
-    - You can also index into a list with # (ie LIST#1 gives you the second item in the list).
+	- ADD - Adds the value of any variable
+	- CONTAINS - Tests and returns if the value exists in the list
+	- REMOVE - removes the item from the list if the list contains the item
+	- LENGTH - returns a count of the items in the list
+	- COPY - creates a copy of the list
+	- You can also index into a list with # (ie LIST#1 gives you the second item in the list).
 - Added the following stats
-    - OBT:PERIOD - http://en.wikipedia.org/wiki/Orbital_period
-    - OBT:INCLINATION - http://en.wikipedia.org/wiki/Orbital_inclination
-    - OBT:ECCENTRICITY - http://en.wikipedia.org/wiki/Orbital_eccentricity
-    - OBT:SEMIMAJORAXIS - http://en.wikipedia.org/wiki/Semi-major_axis
-    - OBT:SEMIMINORAXIS - http://en.wikipedia.org/wiki/Semi-major_axis
-    - VOLUME:NAME - Name of the current Volume
-    - ETA:TRANSITION - Seconds until next patch
-    - OBT:TRANSITION - Type of next patch: possibilities are
-        - FINAL
-        - ENCOUNTER
-        - ESCAPE
-        - MANEUVER
+	- OBT:PERIOD - http://en.wikipedia.org/wiki/Orbital_period
+	- OBT:INCLINATION - http://en.wikipedia.org/wiki/Orbital_inclination
+	- OBT:ECCENTRICITY - http://en.wikipedia.org/wiki/Orbital_eccentricity
+	- OBT:SEMIMAJORAXIS - http://en.wikipedia.org/wiki/Semi-major_axis
+	- OBT:SEMIMINORAXIS - http://en.wikipedia.org/wiki/Semi-major_axis
+	- VOLUME:NAME - Name of the current Volume
+	- ETA:TRANSITION - Seconds until next patch
+	- OBT:TRANSITION - Type of next patch: possibilities are
+		- FINAL
+		- ENCOUNTER
+		- ESCAPE
+		- MANEUVER
 - Adding a few BODY members
-    - RADIUS
-    - MU - G * Body Mass
-    - G - Gravitational Constant 
-    - ATM atmosphere info with sub elements
-        - EXISTS
-        - HASOXYGEN
-        - SCALE
-        - HEIGHT
-    
+	- RADIUS
+	- MU - G * Body Mass
+	- G - Gravitational Constant 
+	- ATM atmosphere info with sub elements
+		- EXISTS
+		- HASOXYGEN
+		- SCALE
+		- HEIGHT
+	
 - Added ORBIT to NODE
 - Added the following commands
-    - UNSET #VARIABLE - remove the variable, ALL removes all variables Thanks a1070
-    - FOR #USERVARIABLE IN #LIST takes a list and loops over it, exposing each item in the collection as a user defined variable
+	- UNSET #VARIABLE - remove the variable, ALL removes all variables Thanks a1070
+	- FOR #USERVARIABLE IN #LIST takes a list and loops over it, exposing each item in the collection as a user defined variable
 - New close window action binding
 - Performance fixes 
 

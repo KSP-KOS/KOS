@@ -22,7 +22,7 @@ namespace kOS.Safe.Persistence
         {
             get
             {
-                Debug.Logger.SuperVerbose("Volume: Get-FileList: " + files.Count);
+                SafeHouse.Logger.SuperVerbose("Volume: Get-FileList: " + files.Count);
                 return files.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
             }
         }
@@ -32,22 +32,12 @@ namespace kOS.Safe.Persistence
 
         protected Volume()
         {
-            Debug.Logger.SuperVerbose("Volume: CONSTRUCT");
+            SafeHouse.Logger.SuperVerbose("Volume: CONSTRUCT");
             Renameable = true;
             Capacity = -1;
             Name = "";
             files = new Dictionary<string, ProgramFile>(StringComparer.OrdinalIgnoreCase);
             InitializeVolumeSuffixes();
-        }
-
-        private void InitializeVolumeSuffixes()
-        {
-            AddSuffix("FREESPACE" , new Suffix<float>(() => GetFreeSpace()));
-            AddSuffix("CAPACITY" , new Suffix<float>(() => Capacity));
-            AddSuffix("NAME" , new Suffix<string>(() => Name));
-            AddSuffix("RENAMEABLE" , new Suffix<string>(() => Name));
-            AddSuffix("FILES" , new Suffix<ListValue>(() => ListValue.CreateList(GetFileList())));
-            AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
         }
 
         /// <summary>
@@ -58,7 +48,7 @@ namespace kOS.Safe.Persistence
         /// <returns>the file</returns>
         public virtual ProgramFile GetByName(string name, bool ksmDefault = false )
         {
-            Debug.Logger.SuperVerbose("Volume: GetByName: " + name);
+            SafeHouse.Logger.SuperVerbose("Volume: GetByName: " + name);
             var fullPath = FileSearch(name, ksmDefault);
             if (fullPath == null)
             {
@@ -70,7 +60,7 @@ namespace kOS.Safe.Persistence
 
         public virtual bool DeleteByName(string name)
         {
-            Debug.Logger.SuperVerbose("Volume: DeleteByName: " + name);
+            SafeHouse.Logger.SuperVerbose("Volume: DeleteByName: " + name);
 
             var fullPath = FileSearch(name);
             if (fullPath == null)
@@ -87,7 +77,7 @@ namespace kOS.Safe.Persistence
 
         public virtual bool RenameFile(string name, string newName)
         {
-            Debug.Logger.SuperVerbose("Volume: RenameFile: From: " + name + " To: " + newName);
+            SafeHouse.Logger.SuperVerbose("Volume: RenameFile: From: " + name + " To: " + newName);
             ProgramFile file = GetByName(name);
             if (file != null)
             {
@@ -101,7 +91,7 @@ namespace kOS.Safe.Persistence
 
         public virtual void AppendToFile(string name, string textToAppend)
         {
-            Debug.Logger.SuperVerbose("Volume: AppendToFile: " + name);
+            SafeHouse.Logger.SuperVerbose("Volume: AppendToFile: " + name);
             ProgramFile file = GetByName(name) ?? new ProgramFile(name);
 
             if (file.StringContent.Length > 0 && !file.StringContent.EndsWith("\n"))
@@ -115,7 +105,7 @@ namespace kOS.Safe.Persistence
 
         public virtual void AppendToFile(string name, byte[] bytesToAppend)
         {
-            Debug.Logger.SuperVerbose("Volume: AppendToFile: " + name);
+            SafeHouse.Logger.SuperVerbose("Volume: AppendToFile: " + name);
             ProgramFile file = GetByName(name) ?? new ProgramFile(name);
 
             file.BinaryContent = new byte[file.BinaryContent.Length + bytesToAppend.Length];
@@ -125,7 +115,7 @@ namespace kOS.Safe.Persistence
 
         public virtual void Add(ProgramFile file, bool withReplacement = false)
         {
-            Debug.Logger.SuperVerbose("Volume: Add: " + file.Filename);
+            SafeHouse.Logger.SuperVerbose("Volume: Add: " + file.Filename);
             if (withReplacement)
             {
                 files[file.Filename] = file;
@@ -138,7 +128,7 @@ namespace kOS.Safe.Persistence
 
         public virtual bool SaveFile(ProgramFile file)
         {
-            Debug.Logger.SuperVerbose("Volume: SaveFile: " + file.Filename);
+            SafeHouse.Logger.SuperVerbose("Volume: SaveFile: " + file.Filename);
             
             Add(file, true);
             return true;
@@ -153,7 +143,7 @@ namespace kOS.Safe.Persistence
 
         public List<CodePart> LoadObjectFile(string filePath, string prefix, byte[] content)
         {
-            Debug.Logger.SuperVerbose("Volume: LoadObjectFile: " + filePath);
+            SafeHouse.Logger.SuperVerbose("Volume: LoadObjectFile: " + filePath);
             List<CodePart> parts = CompiledObject.UnPack(filePath, prefix, content);
             return parts;
         }
@@ -168,15 +158,10 @@ namespace kOS.Safe.Persistence
 
         public virtual List<FileInfo> GetFileList()
         {
-            Debug.Logger.SuperVerbose("Volume: GetFileList: " + files.Count);
+            SafeHouse.Logger.SuperVerbose("Volume: GetFileList: " + files.Count);
             List<FileInfo> returnList = files.Values.Select(file => new FileInfo(file.Filename, file.GetSize())).ToList();
             returnList.Sort(FileInfoComparer); // make sure files will print in sorted form.
             return returnList;
-        }
-        
-        private int FileInfoComparer(FileInfo a, FileInfo b)
-        {
-            return String.Compare(a.Name,b.Name);
         }
 
         public virtual float RequiredPower()
@@ -187,9 +172,24 @@ namespace kOS.Safe.Persistence
             return powerRequired;
         }
 
+        public override string ToString()
+        {
+            return "Volume( " + Name + ", " + Capacity + ")";
+        }
+
+        private void InitializeVolumeSuffixes()
+        {
+            AddSuffix("FREESPACE" , new Suffix<float>(() => GetFreeSpace()));
+            AddSuffix("CAPACITY" , new Suffix<float>(() => Capacity));
+            AddSuffix("NAME" , new Suffix<string>(() => Name));
+            AddSuffix("RENAMEABLE" , new Suffix<bool>(() => Renameable));
+            AddSuffix("FILES" , new Suffix<ListValue<FileInfo>>(() => new ListValue<FileInfo>(GetFileList())));
+            AddSuffix("POWERREQUIREMENT" , new Suffix<float>(RequiredPower));
+        }
+
         private ProgramFile FileSearch(string name, bool ksmDefault = false)
         {
-            Debug.Logger.SuperVerbose("Volume: FileSearch: " + files.Count);
+            SafeHouse.Logger.SuperVerbose("Volume: FileSearch: " + files.Count);
             var kerboscriptFilename = PersistenceUtilities.CookedFilename(name, KERBOSCRIPT_EXTENSION, true);
             var kosMlFilename = PersistenceUtilities.CookedFilename(name, KOS_MACHINELANGUAGE_EXTENSION, true);
 
@@ -210,6 +210,11 @@ namespace kOS.Safe.Persistence
                 return kosMlFile;
             }
             return null;
+        }
+        
+        private int FileInfoComparer(FileInfo a, FileInfo b)
+        {
+            return String.CompareOrdinal(a.Name, b.Name);
         }
     }    
 }

@@ -33,7 +33,7 @@ Checks if the expression supplied returns true. If it does, ``IF`` executes the 
     SET X TO 1.
     IF X = 1 { PRINT "X equals one.". }     // Prints "X equals one."
     IF X > 10 { PRINT "X is greater than ten.". }  // Does nothing
-    
+
     // IF-ELSE structure:
     IF X > 10 { PRINT "X is large".  } ELSE { PRINT "X is small".  }
 
@@ -60,7 +60,7 @@ Checks if the expression supplied returns true. If it does, ``IF`` executes the 
 
         // syntax error - ELSE without IF.
         IF X > 10 { PRINT "Large". }. ELSE { PRINT "Small". }.
-        
+
 .. index:: LOCK
 .. _lock:
 
@@ -75,10 +75,19 @@ Locks an identifier to an expression. Each time the identifier is used in an exp
     SET X TO 4.
     PRINT Y.         // Outputs 6
 
-Unlike variables created with the ``SET`` or ``DECLARE`` commands, ``LOCK`` variables are local to the current program. If program **A** calls program **B**, and program **B** issues a ``LOCK`` command, program **A** will not be able to read that ``LOCK`` variable's result.
+LOCK follows the same scoping rules as the SET command.  If the variable
+name used already exists in local scope, then the lock command creates 
+a lock function that only lasts as long as the current scope and then 
+becomes unreachable after that.  If the variable name used does not exist
+in local scope, then LOCK will create it as a global variable, unless
+@NOLAZYGLOBAL is set to off, in which case it will be an error.
+
+Note that a LOCK expression is extremely similar to a user function.
+Every time you read the value of the "variable", it executes the expression
+again.
 
 .. note::
-    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each update tick <cpu_hardware>`.
+    If a ``LOCK`` expression is used with a flight control such as ``THROTTLE`` or ``STEERING``, then it will get continually evaluated in the background :ref:`each physics tick <cpu hardware>`.
 
 .. index:: UNLOCK
 .. _unlock:
@@ -120,7 +129,7 @@ Note that if you are creating a loop in which you are watching a physical value 
     }
 
 The full explanation why is :ref:`in the CPU hardware description
-page <cpu_hardware>`.
+page <cpu hardware>`.
 
 .. index:: FOR
 .. _for:
@@ -161,7 +170,15 @@ Halts execution for a specified amount of time, or until a specific set of crite
     WAIT UNTIL X > 40.            // Wait until X is greater than 40
     WAIT UNTIL APOAPSIS > 150000. // You can see where this is going
 
-Note that any ``WAIT`` statement, no matter what the actual expression is, will always result in a wait time that lasts at least :ref:`one physics tick <cpu_hardware>`.
+Note that any ``WAIT`` statement, no matter what the actual expression is, will always result in a wait time that lasts at least :ref:`one physics tick <cpu hardware>`.
+
+.. note::
+
+    The :ref:`WAIT <wait>` command only causes mainline code
+    to be suspended.  Trigger code such as WHEN, ON, LOCK STEERING,
+    and LOCK THROTTLE, will continue executing while your program
+    is sitting still on the WAIT command.
+    
 
 .. index:: WHEN
 .. _when:
@@ -175,7 +192,15 @@ does not halt execution. It starts a check in the background that will keep acti
 The body of a ``THEN`` or an ``ON`` statement interrupts the normal flow of a **kOS** program. When the event that triggers the body happens, the main **kOS** program is paused until the body of the ``THEN`` completes.
 
 .. warning::
-    Do not make the body of a ``WHEN``/``THEN`` take a long time to execute. If you attempt to run code that lasts too long in the body of your ``WHEN``/``THEN`` statement, :ref:`it will cause an error <cpu_hardware>`. Avoid looping during ``WHEN``/``THEN`` if you can. For details on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
+    With the advent of :ref:`local variable scoping <trigger_scope>` in kOS
+    version 0.17 and above, it's important to note that the variables
+    used within the expression of a WHEN or an ON statement should
+    be GLOBAL variables or the results are unpredictable.  If local
+    variables were used, the results could change depending on where
+    you are within the execution at the time.  
+
+.. warning::
+    Do not make the body of a ``WHEN``/``THEN`` take a long time to execute. If you attempt to run code that lasts too long in the body of your ``WHEN``/``THEN`` statement, :ref:`it will cause an error <cpu hardware>`. Avoid looping during ``WHEN``/``THEN`` if you can. For details on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
 
 .. note::
     .. versionchanged:: 0.12
@@ -193,10 +218,10 @@ Example::
         AG1 ON.
     }
 
-A ``WHEN``/``THEN`` trigger is removed when the program that created it exits, even if it has not occurred yet. The ``PRESERVE`` can be used inside the ``THEN`` clause of a ``WHEN`` statement. If you are going to make extensive use of ``WHEN``/``THEN`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu_hardware>`.
+A ``WHEN``/``THEN`` trigger is removed when the program that created it exits, even if it has not occurred yet. The ``PRESERVE`` can be used inside the ``THEN`` clause of a ``WHEN`` statement. If you are going to make extensive use of ``WHEN``/``THEN`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu hardware>`.
 
 .. index:: ON
-.. _on:
+.. _on_trigger:
 
 ``ON``
 ------
@@ -204,6 +229,14 @@ A ``WHEN``/``THEN`` trigger is removed when the program that created it exits, e
 The ``ON`` command is almost identical to the ``WHEN``/``THEN`` command. ``ON`` sets up a trigger in the background that will run the selected command exactly once when the boolean variable changes state from true to false or from false to true. This command is best used to listen for action group activations.
 
 Just like with the ``WHEN``/``THEN`` command, the ``PRESERVE`` command can be used inside the code block to cause the trigger to remain active and not go away.
+
+.. warning::
+    With the advent of :ref:`local variable scoping <scope>` in kOS
+    version 0.17 and above, it's important to note that the variables
+    used within the expression of a WHEN or an ON statement should
+    be GLOBAL variables or the results are unpredictable.  If local
+    variables were used, the results could change depending on where
+    you are within the execution at the time.  
 
 How does it differ from ``WHEN``/``THEN``? The ``WHEN``/``THEN`` triggers are executed whenever the conditional expression *becomes true*. ``ON`` triggers are executed whenever the boolean variable *changes state* either from false to true or from true to false.
 
@@ -219,9 +252,9 @@ The body of an ``ON`` statement can be a list of commands inside curly braces, j
     }
 
 .. warning::
-    DO NOT make the body of an ``ON`` statement take a long time to execute. If you attempt to run code that lasts too long in the body of your ``ON`` statement, :ref:`it will cause an error <cpu_hardware>`. For general help on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
+    DO NOT make the body of an ``ON`` statement take a long time to execute. If you attempt to run code that lasts too long in the body of your ``ON`` statement, :ref:`it will cause an error <cpu hardware>`. For general help on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
 
-Avoid looping during ``ON`` code blocks if you can. If you are going to make extensive use of ``ON`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu_hardware>`.
+Avoid looping during ``ON`` code blocks if you can. If you are going to make extensive use of ``ON`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu hardware>`.
 
 .. index:: PRESERVE
 .. _preserve:
@@ -253,6 +286,13 @@ The following example sets up a continuous background check to keep looking for 
 
 .. index:: Boolean Operators
 .. _booleans:
+
+``DECLARE FUNCTION``
+--------------------
+
+Covered in more depth :ref:`elsewhere in the documentation <user_functions>`, 
+the ``DECLARE FUNCTION`` statement creates a user-defined function that
+you can then call elsewhere in the code.
 
 Boolean Operators
 -----------------

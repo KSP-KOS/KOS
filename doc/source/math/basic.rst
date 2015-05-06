@@ -1,4 +1,4 @@
-.. _math:
+.. _basic math:
 
 .. _constants:
 .. index:: Fundamental Constants
@@ -58,6 +58,7 @@ Mathematical Functions
  :func:`MOD(a,b)`     modulus
  :func:`MIN(a,b)`     minimum
  :func:`MAX(a,b)`     maximum
+ :func:`RANDOM()`     random number
  :func:`ROUND(a)`     round to whole number
  :func:`ROUND(a,b)`   round to nearest place
  :func:`SQRT(a)`      square root
@@ -95,9 +96,11 @@ Mathematical Functions
 
 .. function:: MOD(a,b)
 
-    Returns remainder from integer division::
+    Returns remainder from integer division.
+    Keep in mind that it's not a traditional mathematical Euclidean division where the result is always positive. The result has the same absolute value as mathematical modulo operation but the sign is the same as the sign of dividend::
 
         PRINT MOD(21,6). // prints 3
+        PRINT MOD(-21,6). // prints -3
 
 .. function:: MIN(a,b)
 
@@ -110,6 +113,12 @@ Mathematical Functions
     Returns The higher of the two values::
 
         PRINT MAX(0,100). // prints 100
+
+.. function:: RANDOM()
+
+    Returns a random floating point number in the range [0,1]::
+
+        PRINT RANDOM(). //prints a random number
 
 .. function:: ROUND(a)
 
@@ -179,18 +188,18 @@ Trigonometric Functions
 
     :parameter x: (scalar)
     :return: (deg) angle whose sine is x
-    
+
     ::
-    
+
         PRINT ARCSIN(0.67). // prints 42.0670648
 
 .. function:: ARCCOS(x)
 
     :parameter x: (scalar)
     :return: (deg) angle whose cosine is x
-    
+
     ::
-    
+
         PRINT ARCCOS(0.67). // prints 47.9329352
 
 .. function:: ARCTAN(x)
@@ -207,10 +216,9 @@ Trigonometric Functions
     :parameter y: (scalar)
     :parameter x: (scalar)
     :return: (deg) angle whose tangent is :math:`\frac{y}{x}`
-    
+
     ::
 
         PRINT ARCTAN2(0.67, 0.89). // prints 36.9727625
 
     The two parameters resolve ambiguities when taking the arctangent. See the `wikipedia page about atan2 <http://en.wikipedia.org/wiki/Atan2>`_ for more details.
-

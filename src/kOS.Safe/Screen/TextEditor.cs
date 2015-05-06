@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
-using kOS.Safe.Utilities;
+using System;
+using kOS.Safe.UserIO;
 
 namespace kOS.Safe.Screen
 {
@@ -49,31 +50,33 @@ namespace kOS.Safe.Screen
             }
         }
 
-        public virtual void SpecialKey(kOSKeys key)
+        public virtual void SpecialKey(char key)
         {
             switch (key)
             {
-                case kOSKeys.LEFT:
+                case (char)UnicodeCommand.LEFTCURSORONE:
                     TryMoveCursor(-1);
                     break;
-                case kOSKeys.RIGHT:
+                case (char)UnicodeCommand.RIGHTCURSORONE:
                     TryMoveCursor(1);
                     break;
-                case kOSKeys.HOME:
+                case (char)0x0001: // control-A, same as home key
+                case (char)UnicodeCommand.HOMECURSOR:
                     LineCursorIndex = 0;
                     UpdateSubBufferCursor();
                     break;
-                case kOSKeys.END:
+                case (char)0x0005: // control-E, same as end key
+                case (char)UnicodeCommand.ENDCURSOR:
                     LineCursorIndex = LineBuilder.Length;
                     UpdateSubBufferCursor();
                     break;
-                case kOSKeys.DEL:
+                case (char)UnicodeCommand.DELETERIGHT:
                     RemoveChar();
                     break;
-                case kOSKeys.PGUP:
+                case (char)UnicodeCommand.PAGEUPCURSOR:
                     ScrollVertical(-10);
                     break;
-                case kOSKeys.PGDN:
+                case (char)UnicodeCommand.PAGEDOWNCURSOR:
                     ScrollVertical(10);
                     break;
             }
@@ -105,6 +108,7 @@ namespace kOS.Safe.Screen
                 if (LineCursorIndex >= 0 && LineCursorIndex < LineBuilder.Length)
                 {
                     LineBuilder.Remove(LineCursorIndex, 1);
+                    MarkRowsDirty(LineSubBuffer.PositionRow, LineSubBuffer.RowCount); // just in case removing it reduces the number of subbuffer lines.
                     UpdateLineSubBuffer();
                 }
             }
@@ -128,14 +132,16 @@ namespace kOS.Safe.Screen
         {
             string commandText = LineBuilder.ToString();
             List<string> lines = SplitIntoLinesPreserveNewLine(commandText);
-
+                        
             if (lines.Count != LineSubBuffer.RowCount)
+            {
                 LineSubBuffer.SetSize(lines.Count, LineSubBuffer.ColumnCount);
+            }
 
             for (int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
             {
                 char[] lineCharArray = lines[lineIndex].PadRight(LineSubBuffer.ColumnCount, ' ').ToCharArray();
-                lineCharArray.CopyTo(LineSubBuffer.Buffer[lineIndex], 0);   
+                LineSubBuffer.Buffer[lineIndex].ArrayCopyFrom(lineCharArray, 0, 0);
             }
 
             UpdateSubBufferCursor(lines);
@@ -159,7 +165,7 @@ namespace kOS.Safe.Screen
                 lineCursorIndex -= lines[lineIndex].Length;
                 // if the line is shorter than the width of the screen then move
                 // the cursor another position to compensate for the newline character
-                if (lines[lineIndex].Length < MAX_COLUMNS)
+                if (lines[lineIndex].Length < ColumnCount)
                     lineCursorIndex--;
                 lineIndex++;
             }
@@ -174,15 +180,15 @@ namespace kOS.Safe.Screen
         {
             // Check to see if wrapping or scrolling needs to be done
             // because the cursor went off the screen, and if so, do it:
-            if (CursorColumnShow >= MAX_COLUMNS)
+            if (CursorColumnShow >= ColumnCount)
             {
                 int tooBigColumn = CursorColumnShow;
-                cursorColumnBuffer = (tooBigColumn % MAX_COLUMNS);
-                cursorRowBuffer += (tooBigColumn / MAX_COLUMNS); // truncating integer division.
+                cursorColumnBuffer = (tooBigColumn % ColumnCount);
+                cursorRowBuffer += (tooBigColumn / ColumnCount); // truncating integer division.
             }
-            if (CursorRowShow >= MAX_ROWS)
+            if (CursorRowShow >= RowCount)
             {
-                int rowsToScroll = (CursorRowShow-MAX_ROWS) + 1;
+                int rowsToScroll = (CursorRowShow-RowCount) + 1;
                 CursorRow -= rowsToScroll;
                 ScrollVertical(rowsToScroll);
                 AddNewBufferLines(rowsToScroll);

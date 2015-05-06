@@ -23,7 +23,7 @@ Configuration of kOS
 
         * - :attr:`IPU`
           - integer
-          -
+          - 150
           - Instructions per update
         * - :attr:`UCP`
           - boolean
@@ -49,6 +49,18 @@ Configuration of kOS
           - boolean
           - False
           - Enable verbose exceptions
+        * - :attr:`TELNET`
+          - boolean
+          - False
+          - activate the telnet server
+        * - :attr:`TPORT`
+          - integer
+          - 5410
+          - set the port the telnet server will run on
+        * - :attr:`LOOPBACK`
+          - boolean
+          - True
+          - Force the telnet server to use loopback (127.0.0.1) address
 
 .. attribute:: Config:IPU
 
@@ -116,7 +128,6 @@ Configuration of kOS
 
     If false, then these operations are permitted, but the result may lead to code that does not function correctly if you are not careful about how you use it. Using a value that is not a real number may result in freezing Kerbal Space Program itself if that value is used in a variable that is passed into Kerbal Space Program's API routines. KSP's own API interface does not seem to have any protective checks in place and will faithfully try to use whatever values its given.
 
-
 .. attribute:: Config:VERBOSE
 
     :access: Get/Set
@@ -126,4 +137,58 @@ Configuration of kOS
 
     If true, then it enables a mode in which errors coming from kOS are very long and verbose, trying to explain every detail of the problem.
 
+.. attribute:: Config:TELNET
+
+    :access: Get/Set
+    :type: boolean
+
+    Configures the ``EnableTelnet`` setting.
+
+    When set to true, it activates a
+    `kOS telnet server in game <../../general/telnet.html>`__ that allows you to 
+    connect external terminal programs like Putty and Xterm to it.
+    Turning the option off or on immediately toggles the server.  (When
+    you change it from false to true, it will start the server right then.
+    When you change it from true to false, it will stop the server right
+    then.)  Therefore **to restart the server** after changing a setting like
+    :attr:`TPORT`, DO this::
+
+      // Restart telnet server:
+      SET CONFIG:TELNET TO FALSE.
+      WAIT 0.5. // important to give kOS a moment to notice and kill the old server.
+      SET CONFIG:TELNET TO TRUE.
+
+    Of course, you can do the equivalent of that by using the GUI config panel and just
+    clicking the button off then clicking it on.
+
+.. attribute:: Config:TPORT
+
+    :access: Get/Set
+    :type: boolean
+
+    Configures the ``TelnetPort`` setting.
+
+    Changes the TCP/IP port number that the
+    `kOS telnet server in game <../../general/telnet.html>`__ 
+    will listen to.
+
+    To make the change take effect you may have to
+    stop, then restart the telnet server, as described above.
+
+.. attribute:: Config:LOOPBACK
+
+    :access: Get/Set
+    :type: boolean
+
+    Configures the ``TelnetLoopback`` setting.
+
+    If true, then it tells the 
+    `kOS telnet server in game <../../general/telnet.html>`__ 
+    to refuse to use the computer's actual IP address, and 
+    instead use the loopback address (127.0.0.1).  This is
+    the default mode the kOS mod ships in, in order to
+    make it impossible get external access to your computer.
+
+    To make the change take effect you may have to
+    stop, then restart the telnet server, as described above.
 

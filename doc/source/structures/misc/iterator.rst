@@ -8,10 +8,7 @@ An iterator can be obtained from :attr:`List:ITERATOR`. Once a :struct:`List` ha
 A loop using an :struct:`Iterator` on a :struct:`List` might look like this::
 
     // Starting with a list that was built like this
-    SET MyList To LIST().
-    MyList:ADD( "Hello" ).
-    MyList:ADD( "Aloha" ).
-    MyList:ADD( "Bonjour" ).
+    SET MyList To LIST( "Hello", "Aloha", "Bonjour").
 
     // It could be looped over like this
     SET MyCurrent TO MyList:ITERATOR.

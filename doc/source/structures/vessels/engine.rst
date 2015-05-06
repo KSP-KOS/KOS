@@ -44,6 +44,18 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
         * - :attr:`ISP`
           - scalar
           - `Specific impulse <isp>`_
+        * - :attr:`VACUUMISP`
+          - scalar
+          - `Vacuum Specific impulse <isp>`_
+        * - :attr:`VISP`
+          - scalar
+          - `Synonym for VACUUMISP`_
+        * - :attr:`SEALEVELISP`
+          - scalar
+          - `Specific impulse at Kerbin sealevel <isp>`_
+        * - :attr:`SLISP`
+          - scalar
+          - `Synonym for SEALEVELISP`_
         * - :attr:`FLAMEOUT`
           - boolean
           - Check if no more fuel
@@ -77,7 +89,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 
 .. attribute:: Engine:THRUSTLIMIT
 
-    :access: Get only
+    :access: Get/Set
     :type: scalar (%)
 
     If this an engine with a thrust limiter (tweakable) enabled, what percentage is it limited to?
@@ -109,6 +121,34 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :type: scalar
 
     `Specific impulse <isp>`_
+
+.. attribute:: Engine:VACUUMISP
+
+    :access: Get only
+    :type: scalar
+
+    `Vacuum Specific impulse <isp>`_
+
+.. attribute:: Engine:VISP
+
+    :access: Get only
+    :type: scalar
+
+    `Synonym for :VACUUMISP`_
+
+.. attribute:: Engine:SEALEVELISP
+
+    :access: Get only
+    :type: scalar
+
+    `Specific impulse at Kerbin sealevel <isp>`_
+
+.. attribute:: Engine:SLISP
+
+    :access: Get only
+    :type: scalar
+
+    `Synonym for :SEALEVELISP`_
 
 .. attribute:: Engine:FLAMEOUT
 

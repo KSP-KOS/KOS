@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -123,7 +124,23 @@ namespace kOS.Safe.Encapsulation
 
         public virtual object TryOperation(string op, object other, bool reverseOrder)
         {
-            return null;
+            if (op == "==")
+            {
+                return Equals(other);
+            }
+            if (op == "<>")
+            {
+                return !Equals(other);
+            }
+            if (op == "+")
+            {
+                return ToString() + other;
+            }
+
+            var message = string.Format("Cannot perform the operation: {0} On Structures {1} and {2}", op, GetType(),
+                other.GetType());
+            SafeHouse.Logger.Log(message);
+            throw new InvalidOperationException(message);
         }
 
         protected object ConvertToDoubleIfNeeded(object value)

@@ -35,20 +35,28 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`BEARING`                       scalar (deg)              relative heading to this vessel
      :attr:`HEADING`                       scalar (deg)              Absolute heading to this vessel
      :attr:`MAXTHRUST`                     scalar                    Sum of active maximum thrusts
+     :attr:`AVAILABLETHRUST`               scalar                    Sum of active limited maximum thrusts 
      :attr:`FACING`                        :struct:`Direction`       The way the vessel is pointed
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
+     :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
+     :attr:`DRYMASS`                       scalar (metric tons)      Mass of the ship with no resources
      :attr:`VERTICALSPEED`                 scalar (m/s)              How fast the ship is moving "up"
      :attr:`SURFACESPEED`                  scalar (m/s)              How fast the ship is moving "horizontally"
      :attr:`AIRSPEED`                      scalar (m/s)              How fast the ship is moving relative to the air
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
-     :attr:`VESSELNAME`                    string                    The name of the vessel
+     :attr:`SHIPNAME`                      string                    The name of the vessel
+     :attr:`NAME`                          string                    Synomym for SHIPNAME
+     :attr:`STATUS`                        string                    Current ship status
+     :attr:`TYPE`                          string                    Ship type
      :attr:`ANGULARMOMENTUM`               :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
      :attr:`LOADED`                        Boolean                   loaded into KSP physics engine or "on rails"
+     :attr:`ISDEAD`                        Boolean                   True if the vessel refers to a ship that has gone away.
      :attr:`PATCHES`                       :struct:`List`            :struct:`Orbit` patches
      :attr:`ROOTPART`                      :struct:`Part`            Root :struct:`Part` of this vessel
      :attr:`PARTS`                         :struct:`List`            all :struct:`Parts <Part>`
+     :attr:`RESOURCES`                     :struct:`List`            all :struct:`AggrgateResources <AggregateResource>`
      :meth:`PARTSNAMED(name)`              :struct:`List`            :struct:`Parts <Part>` by :attr:`NAME <Part:NAME>`
      :meth:`PARTSTITLED(title)`            :struct:`List`            :struct:`Parts <Part>` by :attr:`TITLE <Part:TITLE>`
      :meth:`PARTSTAGGED(tag)`              :struct:`List`            :struct:`Parts <Part>` by :attr:`TAG <Part:TAG>`
@@ -71,14 +79,14 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: scalar
     :access: Get only
 
-    *relative* compass heading (degrees) to this vessel from the `CPU Vessel <../../summary_topics/CPU_Vessel/index.html>`__, taking into account the CPU Vessel's own heading.
+    *relative* compass heading (degrees) to this vessel from the :ref:`CPU Vessel <cpu vessel>`, taking into account the CPU Vessel's own heading.
 
 .. attribute:: Vessel:HEADING
 
     :type: scalar
     :access: Get only
 
-    *absolute* compass heading (degrees) to this vessel from the `CPU Vessel <../../summary_topics/CPU_Vessel/index.html>`__
+    *absolute* compass heading (degrees) to this vessel from the :ref:`CPU Vessel <cpu vessel>`
 
 .. attribute:: Vessel:MAXTHRUST
 
@@ -86,6 +94,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     Sum of all the Max thrust of all the currently active engines In Kilonewtons.
+    
+.. attribute:: vessel:AVAILABLETHRUST
+
+    :type: scalar
+    :access: Get only
+    
+    Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
 
 .. attribute:: Vessel:FACING
 
@@ -100,6 +115,20 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     The mass of the ship
+
+.. attribute:: Vessel:WETMASS
+
+    :type: scalar (metric tons)
+    :access: Get only
+
+    The mass of the ship if all resources were full
+
+.. attribute:: Vessel:DRYMASS
+
+    :type: scalar (metric tons)
+    :access: Get only
+
+    The mass of the ship if all resources were empty
 
 .. attribute:: Vessel:VERTICALSPEED
 
@@ -129,26 +158,56 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     terminal velocity of the vessel in freefall through atmosphere, based on the vessel's current altitude above sea level, and its drag properties. Warning, can cause values of Infinity if used in a vacuum, and kOS sometimes does not let you store Infinity in a variable.
 
-.. attribute:: Vessel:VESSELNAME
+.. attribute:: Vessel:SHIPNAME
 
     :type: string
-    :access: Get only
+    :access: Get/Set
 
-    The name of the vessel as it appears in the tracking station.
+    The name of the vessel as it appears in the tracking station. When you set this, it cannot be empty.
+
+.. attribute:: Vessel:NAME
+
+    Same as :attr:`Vessel:SHIPNAME`.
+
+.. attribute:: Vessel:STATUS
+
+    :type: string
+    :access: get only
+    
+    The current status of the vessel possible results are: `LANDED`, `SPLASHED`, `PRELAUNCH`, `FLYING`, `SUB_ORBITAL`, `ORBITING`, `ESCAPING` and `DOCKED`.
+    
+.. attribute:: Vessel:TYPE
+
+    :type: string
+    :access: Get/Set
+
+    The ship's type as described `on the KSP wiki <http://wiki.kerbalspaceprogram.com/wiki/Craft#Vessel_types>`_.
 
 .. attribute:: Vessel:ANGULARMOMENTUM
 
     :type: :struct:`Direction`
     :access: Get only
 
-    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. *As of* ``kOS 0.15.4`` *this has been changed to a vector, as it should have been all along.*  The vector represents the axis of the rotation, and its magnitude is the angular momentum of the rotation, which varies not only with the speed of the rotation, but also with the angular inertia of the vessel.
+    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. The vector represents the axis of the rotation, and its magnitude is the angular momentum of the rotation, which varies not only with the speed of the rotation, but also with the angular inertia of the vessel.
+
+    .. note::
+
+        .. versionchanged:: 0.15.4
+
+            This has been changed to a vector, as it should have been all along.
 
 .. attribute:: Vessel:ANGULARVEL
 
     :type: :struct:`Direction`
     :access: Get only
 
-    Given in :ref:`SHIP_RAW <ship-raw>` reference frame.  *As of* ``kOS 0.15.4`` *this has been changed to a vector, as it should have been all along.*  The vector represents the axis of the rotation, and its magnitude is the speed of that rotation (Presumably in degrees per second?  This is not documented in the KSP API and may take some experimentation to discover if it's radians or degrees).
+    Given in :ref:`SHIP_RAW <ship-raw>` reference frame. The vector represents the axis of the rotation, and its magnitude is the speed of that rotation (Presumably in degrees per second?  This is not documented in the KSP API and may take some experimentation to discover if it's radians or degrees).
+
+    .. note::
+
+        .. versionchanged:: 0.15.4
+
+            This has been changed to a vector, as it should have been all along.
 
 .. attribute:: Vessel:SENSORS
 
@@ -164,26 +223,46 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     true if the vessel is fully loaded into the complete KSP physics engine (false if it's "on rails").
 
+.. attribute:: Vessel:ISDEAD
+
+    :type: Boolean
+    :access: Get only
+
+    It is possible to have a variable that refers to a vessel that
+    doesn't exist in the Kerbal Space Program universe anymore, but
+    did back when you first got it.  For example: you could do:
+    SET VES TO VESSEL("OTHER"). WAIT 10. And in that intervening
+    waiting time, the vessel might have crashed into the ground.
+    Checking :ISDEAD lets you see if the vessel that was previously
+    valid isn't valid anymore.
+
 .. attribute:: Vessel:PATCHES
 
     :type: :struct:`List`
     :access: Get only
 
-    The list of `orbit patches <../orbit/index.html>`__ that describe this vessel's current travel path based on momentum alone with no thrusting changes. If the current path has no transitions to other bodies, then this will be a list of only one orbit. If the current path intersects other bodies, then this will be a list describing the transitions into and out of the intersecting body's sphere of influence. SHIP:PATCHES[0] is always exactly the same as SHIP:OBT, SHIP:PATCHES[1] is the same as SHIP:OBT:NEXTPATCH, SHIP:PATCHES[2] is the same as SHIP:OBT:NEXTPATCH:NEXTPATCH, and so on. Note that you will only see as far into the future as your KSP settings allow. (See the setting CONIC\_PATCH\_LIMIT in your settings.cfg file)
+    The list of :ref:`orbit patches <orbit>` that describe this vessel's current travel path based on momentum alone with no thrusting changes. If the current path has no transitions to other bodies, then this will be a list of only one orbit. If the current path intersects other bodies, then this will be a list describing the transitions into and out of the intersecting body's sphere of influence. SHIP:PATCHES[0] is always exactly the same as SHIP:OBT, SHIP:PATCHES[1] is the same as SHIP:OBT:NEXTPATCH, SHIP:PATCHES[2] is the same as SHIP:OBT:NEXTPATCH:NEXTPATCH, and so on. Note that you will only see as far into the future as your KSP settings allow. (See the setting CONIC\_PATCH\_LIMIT in your settings.cfg file)
 
 .. attribute:: Vessel:ROOTPART
 
     :type: :struct:`Part`
     :access: Get only
 
-    The first `part <../part/index.html>`__ that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree.
+    The ROOTPART is usually the first :struct:`Part` that was used to begin the ship design - the command core. Vessels in KSP are built in a tree-structure, and the first part that was placed is the root of that tree. It is possible to change the root part in VAB/SPH by using Root tool, so ROOTPART does not always point to command core or command pod. Vessel:ROOTPART may change in flight as a result of docking/undocking or decoupling of some part of a Vessel.
 
 .. attribute:: Vessel:PARTS
 
     :type: :struct:`List` of :struct:`Part` objects
     :access: Get only
 
-    A List of all the `parts <../part/index.html>`__ on the vessel. SET FOO TO SHIP:PARTS has exactly the same effect as LIST PARTS IN FOO. For more information, see `ship parts and modules <../../summary_topics/ship_parts_and_modules/index.html>`__
+    A List of all the :ref:`parts <part>` on the vessel. ``SET FOO TO SHIP:PARTS.`` has exactly the same effect as ``LIST PARTS IN FOO.``. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
+.. attribute:: Vessel:RESOURCES
+
+    :type: :struct:`List` of :struct:`AggregateResource` objects
+    :access: Get only
+
+    A List of all the :ref:`AggregateResources <AggregateResource>` on the vessel. ``SET FOO TO SHIP:RESOURCES.`` has exactly the same effect as ``LIST RESOURCES IN FOO.``.
 
 
 .. method:: Vessel:PARTSNAMED(name)
@@ -191,52 +270,52 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :parameter name: (string) Name of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
-    Part:NAME. The matching is done case-insensitively. For more information, see `ship parts and modules <../../summary_topics/ship_parts_and_modules/index.html>`__
+    Part:NAME. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. method:: Vessel:PARTSTITLED(title)
 
     :parameter title: (string) Title of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
-    Part:TITLE. The matching is done case-insensitively. For more information, see `ship parts and modules <../../summary_topics/ship_parts_and_modules/index.html>`__
+    Part:TITLE. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. method:: Vessel:PARTSTAGGED(tag)
 
     :parameter tag: (string) Tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
-    Part:TAG value. The matching is done case-insensitively. For more information, see `ship parts and modules <../../summary_topics/ship_parts_and_modules/index.html>`__
+    Part:TAG value. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. method:: Vessel:PARTSDUBBED(name)
 
     :parameter name: (string) name, title or tag of the parts
     :return: :struct:`List` of :struct:`Part` objects
 
-    name regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMED(val), :PARTSTITLED(val), :PARTSTAGGED(val). The matching is done case-insensitively. For more information, see `ship parts and modules <../../summary_topics/ship_parts_and_modules/index.html>`__
+    name regardless of whether that name is the Part:Name, the Part:Tag, or the Part:Title. It is effectively the distinct union of :PARTSNAMED(val), :PARTSTITLED(val), :PARTSTAGGED(val). The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. method:: Vessel:MODULESNAMED(name)
 
     :parameter name: (string) Name of the part modules
     :return: :struct:`List` of :struct:`PartModule` objects
 
-    match the given name. The matching is done case-insensitively. For more information, see `ship parts and modules <../../summary_topics/ship_parts_and_modules/index.html>`__
+    match the given name. The matching is done case-insensitively. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. method:: Vessel:PARTSINGROUP(group)
 
     :parameter group: (integer) the action group number
     :return: :struct:`List` of :struct:`Part` objects
 
-    one action triggered by the given action group. For more information, see `ship parts and modules <../../summary_topics/ship_parts_and_modules/index.html>`__
+    one action triggered by the given action group. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. method:: Vessel:MODULESINGROUP(group)
 
     :parameter group: (integer) the action group number
     :return: :struct:`List` of :struct:`PartModule` objects
 
-    have at least one action triggered by the given action group. For more information, see `ship parts and modules <../../summary_topics/ship_parts_and_modules/index.html>`__
+    have at least one action triggered by the given action group. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
 
 .. method:: Vessel:ALLPARTSTAGGED()
 
     :return: :struct:`List` of :struct:`Part` objects
 
-    nametag on them of any sort that is nonblank. For more information, see `ship parts and modules <../../summary_topics/ship_parts_and_modules/index.html>`__
+    nametag on them of any sort that is nonblank. For more information, see :ref:`ship parts and modules <parts and partmodules>`.

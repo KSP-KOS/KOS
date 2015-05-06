@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Utilities;
 using UnityEngine;
@@ -6,6 +7,7 @@ using kOS.Utilities;
 using kOS.Suffixed;
 using kOS.Safe.Module;
 using kOS.Module;
+using kOS.UserIO;
 
 namespace kOS.Screen
 {
@@ -28,6 +30,7 @@ namespace kOS.Screen
     public class KOSToolBarWindow : MonoBehaviour
     {
         private ApplicationLauncherButton launcherButton;
+        private IButton BlizzyButton;
 
         private const ApplicationLauncher.AppScenes APP_SCENES = 
             ApplicationLauncher.AppScenes.FLIGHT | 
@@ -35,9 +38,11 @@ namespace kOS.Screen
             ApplicationLauncher.AppScenes.VAB | 
             ApplicationLauncher.AppScenes.MAPVIEW;
 
-        private readonly Texture2D launcherButtonTexture;
-        private readonly Texture2D terminalClosedIconTexture;
-        private readonly Texture2D terminalOpenIconTexture;
+        private static Texture2D launcherButtonTexture;
+        private static Texture2D terminalClosedIconTexture;
+        private static Texture2D terminalOpenIconTexture;
+        private static Texture2D terminalClosedTelnetIconTexture;
+        private static Texture2D terminalOpenTelnetIconTexture;
         
         // ReSharper disable once RedundantDefaultFieldInitializer
         private bool clickedOn = false;
@@ -50,17 +55,17 @@ namespace kOS.Screen
         // ReSharper restore RedundantDefaultFieldInitializer
         private Vector2 scrollPos = new Vector2(200,350);
 
-        private Rect windowRect;
+        private static Rect windowRect;
         private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
-        private GUISkin panelSkin;
-        private GUIStyle headingLabelStyle;
-        private GUIStyle vesselNameStyle;
-        private GUIStyle partNameStyle;
-        private GUIStyle tooltipLabelStyle;
-        private GUIStyle boxDisabledStyle;
-        private GUIStyle boxOffStyle;
-        private GUIStyle boxOnStyle;
-        private string versionString;
+        private static GUISkin panelSkin;
+        private static GUIStyle headingLabelStyle;
+        private static GUIStyle vesselNameStyle;
+        private static GUIStyle partNameStyle;
+        private static GUIStyle tooltipLabelStyle;
+        private static GUIStyle boxDisabledStyle;
+        private static GUIStyle boxOffStyle;
+        private static GUIStyle boxOnStyle;
+        private static string versionString;
         
         ///<summary>Which CPU part description in the gui panel was the mouse hovering over during the current OnGUI call?</summary>
         private Part newHoverPart;
@@ -75,134 +80,176 @@ namespace kOS.Screen
         /// <summary>Our highlight color for kOS panel's part highlighting.</summary>
         private readonly Color ourPartHighlightColor = new Color(1.0f, 0.5f, 1.0f); // Bright purple.
         
-        // Some of these are for just debug messages, and others are
-        // necessary for tracking things to make it not spawn too many
-        // buttons or spawn them at the wrong times.  For now I want to
-        // keep the debug logging in the code so users have something they
-        // can show in bug reports until I'm more confident this is working
-        // perfectly:
-        
-        // ReSharper disable RedundantDefaultFieldInitializer
         private bool alreadyAwake = false;
-        private static int  countInstances = 0;
-        private int myInstanceNum = 0;
-        private bool thisInstanceHasHooks = false;
-        private static bool someInstanceHasHooks = false;
         private bool isOpen = false;
-        private bool onGUICalledThisInstance = false;
-        private bool onGUIWasOpenThisInstance = false;
-        // ReSharper enable RedundantDefaultFieldInitializer
+
+        private DateTime prevConfigTimeStamp = DateTime.MinValue;
+        
+        private List<int> backingConfigInts;
 
         public KOSToolBarWindow()
         {
-            // This really needs fixing - the name ambiguity between UnityEngine's Debug and ours forces this long fully qualified name:
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolbarWindow: PROOF that constructor was called.");
-            launcherButtonTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalClosedIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
-            terminalOpenIconTexture = new Texture2D(0, 0, TextureFormat.DXT1, false);
+            
         }
 
         /// <summary>
         /// Unity hates it when a MonoBehaviour has a constructor,
         /// so all the construction work is here instead:
         /// </summary>
-        public void FirstTimeSetup()
+        public static void FirstTimeSetup()
         {
-            ++countInstances;
-            myInstanceNum = countInstances;
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: Now making instance number "+myInstanceNum+" of KOSToolBarWindow");
-
-            const string LAUNCHER_BUTTON_PNG = "GameData/kOS/GFX/launcher-button.png";
-            const string TERMINAL_OPEN_ICON_PNG = "GameData/kOS/GFX/terminal-icon-open.png";
-            const string TERMINAL_CLOSED_ICON_PNG = "GameData/kOS/GFX/terminal-icon-closed.png";
-
-            // ReSharper disable SuggestUseVarKeywordEvident
-            WWW launcherButtonImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + LAUNCHER_BUTTON_PNG);
-            WWW terminalOpenIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_OPEN_ICON_PNG);
-            WWW terminalClosedIconImage = new WWW("file://" + KSPUtil.ApplicationRootPath.Replace("\\", "/") + TERMINAL_CLOSED_ICON_PNG);
-            // ReSharper enable SuggestUseVarKeywordEvident
-            launcherButtonImage.LoadImageIntoTexture(launcherButtonTexture);
-            terminalOpenIconImage.LoadImageIntoTexture(terminalOpenIconTexture);
-            terminalClosedIconImage.LoadImageIntoTexture(terminalClosedIconTexture);
-
-            windowRect = new Rect(0,0,width,height); // this origin point will move when opened/closed.
+            launcherButtonTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/launcher-button",false);
+            terminalOpenIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-open", false);
+            terminalClosedIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-closed", false);
+            terminalOpenTelnetIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-open-telnet", false);
+            terminalClosedTelnetIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-closed-telnet", false);
+                
+            windowRect = new Rect(0,0,1f,1f); // this origin point will move when opened/closed.
             panelSkin = BuildPanelSkin();
             versionString = Utils.GetAssemblyFileVersion();
+            //UnityEngine.Debug.Log("[kOSToolBarWindow] FirstTimeSetup Finished, v=" + versionString);
+        }
+
+        public void Awake ()
+        {
             
-            GameEvents.onGUIApplicationLauncherReady.Add(RunWhenReady);
-            GameEvents.onGUIApplicationLauncherDestroyed.Add(GoAway);
         }
 
         public void Start()
         {
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolbarWindow: PROOF that Start() was called.");
             // Prevent multiple calls of this:
             if (alreadyAwake) return;
             alreadyAwake = true;
 
             FirstTimeSetup();
+
+            //in 1.0 these Events are never fired (it seems), so we need to maka a workaround
+            GameEvents.onGUIApplicationLauncherReady.Add(RunWhenReady);
+            GameEvents.onGUIApplicationLauncherDestroyed.Add(GoAway);
+
+            if (ApplicationLauncher.Ready && launcherButton == null)
+            {
+                RunWhenReady();
+            }
+
+            SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Start succesful");
         }
-        
+
         public void RunWhenReady()
         {
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " is trying to ready the hooks");
-            // KSP claims the hook ApplicationLauncherReady.Add will not run until
-            // the application is ready, even though this is emphatically false.  It actually
-            // fires the event a few times before the one that "sticks" and works:
-            if (!ApplicationLauncher.Ready) return; 
-            if (someInstanceHasHooks) return;
-            thisInstanceHasHooks = true;
-            someInstanceHasHooks = true;
+            if (!ApplicationLauncher.Ready) return;
+
+            var useBlizzyOnly = false;
+
+            if (ToolbarManager.ToolbarAvailable)
+                useBlizzyOnly = Config.Instance.UseBlizzyToolbarOnly;
+
+            if (!useBlizzyOnly && launcherButton == null)
+            {
+                ApplicationLauncher launcher = ApplicationLauncher.Instance;
+
+                launcherButton = launcher.AddModApplication(
+                    CallbackOnTrue,
+                    CallbackOnFalse,
+                    CallbackOnHover,
+                    CallbackOnHoverOut,
+                    CallbackOnEnable,
+                    CallbackOnDisable,
+                    APP_SCENES,
+                    launcherButtonTexture);
+
+                launcher.AddOnShowCallback(CallbackOnShow);
+                launcher.AddOnHideCallback(CallbackOnHide);
+                launcher.EnableMutuallyExclusive(launcherButton);
+
+            }
+            if (BlizzyButton == null)
+                AddBlizzyButton();
+
+            SetupBackingConfigInts();
+            SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Launcher Icon init successful");
+        }
+
+        public void AddBlizzyButton()
+        {
+            if (!ToolbarManager.ToolbarAvailable) return;
+
+            BlizzyButton = ToolbarManager.Instance.add("kOS", "kOSButton");
+            BlizzyButton.TexturePath = "kOS/GFX/launcher-button-blizzy";
+            BlizzyButton.ToolTip = "kOS";
+            BlizzyButton.OnClick += (e) => CallbackOnClickBlizzy();
+        }
+        
+        /// <summary>
+        /// In order to support the changes to solve issue #565 (see github for kOS)
+        /// we have to store a temp value per integer field, that is NOT the actual
+        /// official integer value of the field, but just stores the value the user
+        /// is temporarily typing:
+        /// </summary>
+        public void SetupBackingConfigInts()
+        {
+            if (Config.Instance.TimeStamp() <= prevConfigTimeStamp)
+                return;            
+            prevConfigTimeStamp = DateTime.Now;
             
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: Instance number " + myInstanceNum + " will now actually make its hooks");
-            ApplicationLauncher launcher = ApplicationLauncher.Instance;
-            
-            launcherButton = launcher.AddModApplication(
-                CallbackOnTrue,
-                CallbackOnFalse,
-                CallbackOnHover,
-                CallbackOnHoverOut,
-                CallbackOnEnable,
-                CallbackOnDisable,
-                APP_SCENES,
-                launcherButtonTexture);
-                
-            launcher.AddOnShowCallback(CallbackOnShow);
-            launcher.AddOnHideCallback(CallbackOnHide);
-            launcher.EnableMutuallyExclusive(launcherButton);
+            List<ConfigKey> keys = Config.Instance.GetConfigKeys();
+            backingConfigInts = new List<int>();
+            // Fills exactly the expected number of needed ints, in the same
+            // order they will be encountered in when iterating over GetConfigKeys later
+            // in the gui drawing method:
+            foreach (ConfigKey key in keys)
+                if (key.Value is int)
+                    backingConfigInts.Add((int)(key.Value));
         }
         
         public void GoAway()
         {
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Instance " + myInstanceNum + " is in GoAway().");
-            if (thisInstanceHasHooks)
+            if (isOpen) Close();
+            clickedOn = false;
+
+            try
             {
-                kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Instance " + myInstanceNum + " has hooks and is entering the guts of GoAway().");
-                if (isOpen) Close();
-                clickedOn = false;
-                thisInstanceHasHooks = false;
-                someInstanceHasHooks = false; // if this is the instance that had hooks and it's going away, let another instance have a go.
-            
-                ApplicationLauncher launcher = ApplicationLauncher.Instance;
-                
-                launcher.DisableMutuallyExclusive(launcherButton);
-                launcher.RemoveOnRepositionCallback(CallbackOnShow);
-                launcher.RemoveOnHideCallback(CallbackOnHide);
-                launcher.RemoveOnShowCallback(CallbackOnShow);
-            
-                launcher.RemoveModApplication(launcherButton);
+                GameEvents.onGUIApplicationLauncherReady.Remove(RunWhenReady);
+                GameEvents.onGUIApplicationLauncherDestroyed.Remove(GoAway);
+
+                if (launcherButton != null && ApplicationLauncher.Instance != null)
+                {
+                    ApplicationLauncher launcher = ApplicationLauncher.Instance;
+
+                    launcher.DisableMutuallyExclusive(launcherButton);
+                    launcher.RemoveOnRepositionCallback(CallbackOnShow);
+                    launcher.RemoveOnHideCallback(CallbackOnHide);
+                    launcher.RemoveOnShowCallback(CallbackOnShow);
+                    launcher.RemoveModApplication(launcherButton);
+                    launcherButton = null;
+                }
             }
+            catch (Exception e)
+            {
+                SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Failed unregistering AppLauncher handlers," + e.Message);
+            }
+
+            if(BlizzyButton != null)
+                BlizzyButton.Destroy();
         }
-        
+
         public void OnDestroy()
         {
             GoAway();
+            SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] OnDestroy successful");
+        }
+
+        public void CallbackOnClickBlizzy()
+        {
+            if(!isOpen)
+                Open();
+            else
+                Close();           
         }
                         
         /// <summary>Callback for when the button is toggled on</summary>
         public void CallbackOnTrue()
         {
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnTrue()");
             clickedOn = true;
             Open();
         }
@@ -210,7 +257,6 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is toggled off</summary>
         public void CallbackOnFalse()
         {            
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnFalse()");
             clickedOn = false;
             Close();
         }
@@ -218,7 +264,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the mouse is hovering over the button</summary>
         public void CallbackOnHover()
         {            
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHover()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHover()");
             if (!clickedOn)
                 Open();
         }
@@ -226,7 +272,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the mouse is hover is off the button</summary>
         public void CallbackOnHoverOut()
         {            
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHoverOut()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHoverOut()");
             if (!clickedOn)
                 Close();
         }
@@ -234,7 +280,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the mouse is hovering over the button</summary>
         public void CallbackOnShow()
         {            
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnShow()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnShow()");
             if (!clickedOn && !isOpen)
                 Open();
         }
@@ -242,7 +288,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the mouse is hover is off the button</summary>
         public void CallbackOnHide()
         {            
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHide()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHide()");
             if (!clickedOn && isOpen)
             {
                 Close();
@@ -252,7 +298,7 @@ namespace kOS.Screen
         
         public void Open()
         {
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open()");
             
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
@@ -266,14 +312,14 @@ namespace kOS.Screen
             float topEdge = isTop ? (40f) : (UnityEngine.Screen.height - (height+40) );
             
             windowRect = new Rect(leftEdge, topEdge, 0, 0); // will resize upon first GUILayout-ing.
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open(), windowRect = " + windowRect);
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open(), windowRect = " + windowRect);
             
             isOpen = true;
         }
 
         public void Close()
         {
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Close()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Close()");
             if (! isOpen)
                 return;
 
@@ -283,14 +329,14 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is shown or enabled by the application launcher</summary>
         public void CallbackOnEnable()
         {
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnEnable()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnEnable()");
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
         
         /// <summary>Callback for when the button is hidden or disabled by the application launcher</summary>
         public void CallbackOnDisable()
         {            
-            kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnDisable()");
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnDisable()");
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
         
@@ -300,20 +346,8 @@ namespace kOS.Screen
             horizontalSectionCount = 0;
             verticalSectionCount = 0;
 
-            if (!onGUICalledThisInstance) // I want proof it was called, but without spamming the log:
-            {
-                kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: OnGUI() was called at least once on instance number " + myInstanceNum);
-                onGUICalledThisInstance = true;
-            }
-            
             if (!isOpen ) return;
 
-            if (!onGUIWasOpenThisInstance) // I want proof it was called, but without spamming the log:
-            {
-                kOS.Safe.Utilities.Debug.Logger.SuperVerbose("KOSToolBarWindow: PROOF: OnGUI() was called while the window was supposed to be open at least once on instance number " + myInstanceNum);
-                onGUIWasOpenThisInstance = true;
-            }
-            
             GUI.skin = HighLogic.Skin;
 
             windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
@@ -336,6 +370,10 @@ namespace kOS.Screen
             GUILayout.Label("CONFIG VALUES", headingLabelStyle);
             GUILayout.Label("Changes to these settings are saved and globally affect all saved games.", tooltipLabelStyle);
 
+            int whichInt = 0; // increments only when an integer field is encountered in the config keys, else stays put.
+
+            SetupBackingConfigInts();
+ 
             foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
                 CountBeginHorizontal();
@@ -345,16 +383,11 @@ namespace kOS.Screen
 
                 if (key.Value is bool)
                 {
-                    key.Value = GUILayout.Toggle((bool)key.Value,"", panelSkin.toggle);
+                    key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText));
                 }
                 else if (key.Value is int)
                 {
-                    string fieldValue = key.Value.ToString();
-                    fieldValue  = GUILayout.TextField(fieldValue, 6, panelSkin.textField, GUILayout.MinWidth(60));
-                    int newInt;
-                    if (int.TryParse(fieldValue, out newInt))
-                        key.Value = newInt;
-                    // else it reverts to what it was and wipes the typing if you don't assign it to anything.
+                    key.Value = DrawConfigIntField((int)(key.Value), whichInt++);
                 }
                 else
                 {
@@ -369,13 +402,72 @@ namespace kOS.Screen
             CountEndVertical();
  
             CountEndHorizontal();
-
+            
+            
             // This is where tooltip hover text will show up, rather than in a hover box wherever the pointer is like normal.
             // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
-            GUILayout.Label(GUI.tooltip, tooltipLabelStyle);
+            string whichMessage = (GUI.tooltip.Length > 0 ? GUI.tooltip : TelnetStatusMessage()); // when tooltip isn't showing, show telnet status instead.
+            GUILayout.Label(whichMessage, tooltipLabelStyle);
             CountEndVertical();
 
             EndHoverHousekeeping();
+            GUI.SetNextControlName(""); // because if you don't then there is no such thing as the "non" control to move the focus to.
+                                        // This is an invisible dummy control to "focus on" to, basically, unfocus, because Unity didn't
+                                        // provide an unfocus method.
+        }
+        
+        private int DrawConfigIntField(int keyVal, int whichInt)
+        {
+            int returnValue = keyVal; // no change, by default - return what was passed.
+            string fieldName = String.Format("CONFIG_intfield_{0}",whichInt);
+            
+            bool hasFocus = GUI.GetNameOfFocusedControl().Equals(fieldName);
+            bool userHitReturnThisPass = hasFocus && (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter);
+            int backInt = backingConfigInts[whichInt];
+            string fieldValue = (backInt == 0) ? "" : backInt.ToString(); // this lets the user temporarily delete the whole value instead of having it become a zero.
+            
+            GUI.SetNextControlName(fieldName);
+            fieldValue = GUILayout.TextField(fieldValue, 6, panelSkin.textField, GUILayout.MinWidth(60));
+
+            fieldValue = fieldValue.Trim(' ');
+            int newInt = -99; // Nonzero value to act as a flag to detect if the following line got triggered:
+            if (fieldValue.Length == 0 )
+                newInt = 0;// Empty or whitespace input should be a zero, instead of letting int.TryParse() call it an error.
+            if ( newInt == 0 || int.TryParse(fieldValue, out newInt))
+            {
+                backingConfigInts[whichInt] = newInt;
+                // Don't commit the temp value back to the CONFIGs unless RETURN is being pressed right now:
+                if (userHitReturnThisPass)
+                {
+                    returnValue = backingConfigInts[whichInt];
+                    GUI.FocusControl(""); // unfocus this textfield - it should give the user a visual clue that the edit has been committed.
+                }
+                // (Upon committing the value back to config, config will range-check it and clamp it if its out of range).
+            }
+            // else it reverts to what it was and wipes the typing if you don't assign it to anything.            
+            
+            // Lastly, check for losing the focus - when focus is lost (i.e. user clicks outside the textfield), then
+            // revert the backing value to the config value, throwing away edits.
+            if (!hasFocus)
+                backingConfigInts[whichInt] = keyVal;
+            
+            
+            return returnValue;
+        }
+
+        private string TelnetStatusMessage()
+        {
+            if (TelnetMainServer.Instance == null) // We can't control the order in which monobeavhiors are loaded, so TelnetMainServer might not be there yet. 
+                return "TelnetMainServer object not found"; // hopefully the user never sees this.  It should stop happening the the time the loading screen is over.
+            bool isOn = TelnetMainServer.Instance.IsListening;
+            if (!isOn)
+                return "Telnet server disabled.";
+            
+            string addr = TelnetMainServer.Instance.BindAddr.ToString();
+            int numClients = TelnetMainServer.Instance.ClientCount;
+            
+            return String.Format("Telnet server listening on {0}. ({1} client{2} connected).",
+                                 addr, (numClients == 0 ? "no" : numClients.ToString()), (numClients == 1 ? "" : "s"));
         }
         
         private void DrawActiveCPUsOnPanel()
@@ -449,8 +541,10 @@ namespace kOS.Screen
             GUILayout.Box( new GUIContent(powerLabelText, powerLabelTooltip), powerBoxStyle);
 
             if (GUILayout.Button((processorModule.WindowIsOpen() ? 
-                                  new GUIContent(terminalOpenIconTexture, "Click to close terminal window.") :
-                                  new GUIContent(terminalClosedIconTexture, "Click to open terminal window.")),
+                                  new GUIContent((processorModule.TelnetIsAttached() ? terminalOpenTelnetIconTexture : terminalOpenIconTexture),
+                                                 "Click to close terminal window.") :
+                                  new GUIContent((processorModule.TelnetIsAttached() ? terminalClosedTelnetIconTexture : terminalClosedIconTexture),
+                                                 "Click to open terminal window.")),
                                   panelSkin.button))
                 processorModule.ToggleWindow();
 
@@ -551,7 +645,7 @@ namespace kOS.Screen
         private void CountBeginVertical(string debugHelp="")
         {
             if (! String.IsNullOrEmpty(debugHelp))
-                kOS.Safe.Utilities.Debug.Logger.SuperVerbose("BeginVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
+                SafeHouse.Logger.SuperVerbose("BeginVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
             GUILayout.BeginVertical();
             ++verticalSectionCount;
         }
@@ -564,7 +658,7 @@ namespace kOS.Screen
             GUILayout.EndVertical();
             --verticalSectionCount;            
             if (! String.IsNullOrEmpty(debugHelp))
-                kOS.Safe.Utilities.Debug.Logger.SuperVerbose("EndVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
+                SafeHouse.Logger.SuperVerbose("EndVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
         }
         
         // Tracking the count to help detect when there's a mismatch:
@@ -573,7 +667,7 @@ namespace kOS.Screen
         private void CountBeginHorizontal(string debugHelp="")
         {
             if (! String.IsNullOrEmpty(debugHelp))
-                kOS.Safe.Utilities.Debug.Logger.SuperVerbose("BeginHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
+                SafeHouse.Logger.SuperVerbose("BeginHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
             GUILayout.BeginHorizontal();
             ++horizontalSectionCount;
         }
@@ -586,11 +680,11 @@ namespace kOS.Screen
             GUILayout.EndHorizontal();
             --horizontalSectionCount;            
             if (! String.IsNullOrEmpty(debugHelp))
-                kOS.Safe.Utilities.Debug.Logger.SuperVerbose("EndHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
+                SafeHouse.Logger.SuperVerbose("EndHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
         }
         
         
-        private GUISkin BuildPanelSkin()
+        private static GUISkin BuildPanelSkin()
         {
             GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
             // theSkin won't actually be used directly anymore because GetSkinCopy is missing a few key

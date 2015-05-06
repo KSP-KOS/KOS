@@ -5,9 +5,10 @@ namespace kOS.Safe.Screen
     public interface IInterpreter : IScreenBuffer
     {
         void Type(char ch);
-        void SpecialKey(kOSKeys key);
+        void SpecialKey(char key);
         string GetCommandHistoryAbsolute(int absoluteIndex);
         void SetInputLock(bool isLocked);
+        bool IsAtStartOfCommand();
         void Reset();
     }
 }

@@ -1,3 +1,5 @@
+.. _pilot:
+
 Pilot Input
 ===========
 
@@ -16,11 +18,11 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
     * - Suffix
       - Type, Range
       - Equivalent Key
-      
+
     * - :ref:`PILOTMAINTHROTTLE <SHIP CONTROL PILOTMAINTHROTTLE>`
       - scalar [0,1]
       - ``LEFT-CTRL``, ``LEFT-SHIFT``
-      
+
     * - :ref:`PILOTYAW <SHIP CONTROL PILOTYAW>`
       - scalar [-1,1]
       - ``D``, ``A``
@@ -31,9 +33,9 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
       - scalar [-1,1]
       - ``Q``, ``E``
     * - :ref:`PILOTROTATION <SHIP CONTROL PILOTROTATION>`
-      - :ref:`Vector <vector>`
+      - :struct:`Vector`
       - ``(YAW,PITCH,ROLL)``
-      
+
     * - :ref:`PILOTYAWTRIM <SHIP CONTROL PILOTYAWTRIM>`
       - scalar [-1,1]
       - ``ALT+D``, ``ALT+A``
@@ -54,8 +56,8 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
       - scalar [-1,1]
       - ``I``, ``K``
     * - :ref:`PILOTTRANSLATION <SHIP CONTROL PILOTTRANSLATION>`
-      - :ref:`Vector <vector>`
-      - ``(FORE,STARBOARD,TOP)``
+      - :struct:`Vector`
+      - ``(STARBOARD,TOP,FORE)``
 
     * - :ref:`PILOTWHEELSTEER <SHIP CONTROL PILOTWHEELSTEER>`
       - scalar [-1,1]
@@ -63,7 +65,7 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
     * - :ref:`PILOTWHEELTHROTTLE <SHIP CONTROL PILOTWHEELTHROTTLE>`
       - scalar [-1,1]
       - ``W``, ``S``
-      
+
     * - :ref:`PILOTWHEELSTEERTRIM <SHIP CONTROL PILOTWHEELSTEERTRIM>`
       - scalar [-1,1]
       - ``ALT+A``, ``ALT+D``
@@ -82,39 +84,39 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
     Returns the pilot's input for the throttle. This is the only ``PILOT`` variable that is settable and is used to set the throttle upon termination of the current **kOS** program.
 
 .. _SHIP CONTROL PILOTYAW:
-.. object:: SHIP:CONTROL:YAW
+.. object:: SHIP:CONTROL:PILOTYAW
 
     Returns the pilot's rotation input about the "up" vector as the pilot faces forward. Essentially left :math:`(-1)` or right :math:`(+1)`.
 
 .. _SHIP CONTROL PILOTPITCH:
-.. object:: SHIP:CONTROL:PITCH
+.. object:: SHIP:CONTROL:PILOTPITCH
 
     Returns the pilot's rotation input  about the starboard vector up :math:`(+1)` or down :math:`(-1)`.
 
 .. _SHIP CONTROL PILOTROLL:
-.. object:: SHIP:CONTROL:ROLL
+.. object:: SHIP:CONTROL:PILOTROLL
 
     Returns the pilot's rotation input  about the logintudinal axis of the ship left-wing-down :math:`(-1)` or left-wing-up :math:`(+1)`.
 
 .. _SHIP CONTROL PILOTROTATION:
-.. object:: SHIP:CONTROL:ROTATION
+.. object:: SHIP:CONTROL:PILOTROTATION
 
-    Returns the pilot's rotation input as a :ref:`Vector <vector>` object containing ``(YAW, PITCH, ROLL)`` in that order.
+    Returns the pilot's rotation input as a :struct:`Vector` object containing ``(YAW, PITCH, ROLL)`` in that order.
 
 
 
 .. _SHIP CONTROL PILOTYAWTRIM:
-.. object:: SHIP:CONTROL:YAWTRIM
+.. object:: SHIP:CONTROL:PILOTYAWTRIM
 
     Returns the pilot's input for the ``YAW`` of the rotational trim.
-    
+
 .. _SHIP CONTROL PILOTPITCHTRIM:
-.. object:: SHIP:CONTROL:PITCHTRIM
+.. object:: SHIP:CONTROL:PILOTPITCHTRIM
 
     Returns the pilot's input for the ``PITCH`` of the rotational trim.
-    
+
 .. _SHIP CONTROL PILOTROLLTRIM:
-.. object:: SHIP:CONTROL:ROLLTRIM
+.. object:: SHIP:CONTROL:PILOTROLLTRIM
 
     Returns the pilot's input for the ``ROLL`` of the rotational trim.
 
@@ -122,47 +124,47 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
 
 
 .. _SHIP CONTROL PILOTFORE:
-.. object:: SHIP:CONTROL:FORE
+.. object:: SHIP:CONTROL:PILOTFORE
 
     Returns the the pilot's input for the translation of the ship forward :math:`(+1)` or backward :math:`(-1)`.
 
 .. _SHIP CONTROL PILOTSTARBOARD:
-.. object:: SHIP:CONTROL:STARBOARD
+.. object:: SHIP:CONTROL:PILOTSTARBOARD
 
     Returns the the pilot's input for the translation of the ship to the right :math:`(+1)` or left :math:`(-1)` from the pilot's perspective.
 
 .. _SHIP CONTROL PILOTTOP:
-.. object:: SHIP:CONTROL:TOP
+.. object:: SHIP:CONTROL:PILOTTOP
 
     Returns the the pilot's input for the translation of the ship up :math:`(+1)` or down :math:`(-1)` from the pilot's perspective.
 
 .. _SHIP CONTROL PILOTTRANSLATION:
-.. object:: SHIP:CONTROL:TRANSLATION
+.. object:: SHIP:CONTROL:PILOTTRANSLATION
 
-    Returns the the pilot's input for translation as a :ref:`Vector <vector>` ``(FORE, STARBOARD, TOP)``.
+    Returns the the pilot's input for translation as a :struct:`Vector` ``(STARBOARD, TOP, FORE)``.
 
 .. _SHIP CONTROL PILOTWHEELSTEER:
-.. object:: SHIP:CONTROL:WHEELSTEER
+.. object:: SHIP:CONTROL:PILOTWHEELSTEER
 
     Returns the the pilot's input for wheel steering left :math:`(-1)` or right :math:`(+1)`.
 
 .. _SHIP CONTROL PILOTWHEELTHROTTLE:
-.. object:: SHIP:CONTROL:WHEELTHROTTLE
+.. object:: SHIP:CONTROL:PILOTWHEELTHROTTLE
 
     Returns the the pilot's input for the wheels to move the ship forward :math:`(+1)` or backward :math:`(-1)` while on the ground.
 
 .. _SHIP CONTROL PILOTWHEELSTEERTRIM:
-.. object:: SHIP:CONTROL:WHEELSTEERTRIM
+.. object:: SHIP:CONTROL:PILOTWHEELSTEERTRIM
 
     Returns the the pilot's input for the trim of the wheel steering.
 
 .. _SHIP CONTROL PILOTWHEELTHROTTLETRIM:
-.. object:: SHIP:CONTROL:WHEELTHROTTLETRIM
+.. object:: SHIP:CONTROL:PILOTWHEELTHROTTLETRIM
 
     Returns the the pilot's input for the trim of the wheel throttle.
 
 .. _SHIP CONTROL PILOTNEUTRAL:
-.. object:: SHIP:CONTROL:NEUTRAL
+.. object:: SHIP:CONTROL:PILOTNEUTRAL
 
     Returns true or false if the pilot is active or not.
 

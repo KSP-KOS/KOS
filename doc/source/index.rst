@@ -11,13 +11,17 @@ Welcome to the **kOS** Documentation Website!
     :maxdepth: 5
 
     Home <self>
+    Downloads and Links <downloads_links>
     Tutorials <tutorials>
+    Community Example Library <library>
     General <general>
     Language <language>
     Mathematics <math>
     Commands <commands>
     Structures <structures>
+    Addons <addons>
     Contribute <contribute>
+    Changes <changes>
     About <about>
 
 Introduction to **kOS** and **KerboScript**

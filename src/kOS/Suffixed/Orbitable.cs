@@ -1,4 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Utilities;
 using kOS.Utilities;
 using UnityEngine;
 
@@ -14,6 +16,7 @@ namespace kOS.Suffixed
         protected Orbitable(SharedObjects shareObj)
         {
             Shared = shareObj;
+            InitializeSuffixes();
         }
 
         /// <summary>
@@ -135,7 +138,7 @@ namespace kOS.Suffixed
         
         public CelestialBody GetParentBody()
         {
-            return Orbit.referenceBody;
+            return (Orbit == null) ? null : Orbit.referenceBody;
         }
         
         public Direction GetPrograde()
@@ -180,15 +183,15 @@ namespace kOS.Suffixed
 
         public double PositionToLatitude( Vector pos )
         {
-            CelestialBody parent = Orbit.referenceBody;
+            CelestialBody parent = GetParentBody();
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
             Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
-            return parent.GetLatitude(unityWorldPos);
+            return Utils.DegreeFix(parent.GetLatitude(unityWorldPos),-180);
         }
         public double PositionToLongitude( Vector pos )
         {
-            CelestialBody parent = Orbit.referenceBody;
+            CelestialBody parent = GetParentBody();
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
             Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
@@ -196,18 +199,49 @@ namespace kOS.Suffixed
         }
         public double PositionToAltitude( Vector pos )
         {
-            CelestialBody parent = Orbit.referenceBody;
+            CelestialBody parent = GetParentBody();
             if (parent == null) //happens when this Orbitable is the Sun
                 return 0.0;
             Vector3d unityWorldPos = GetPosition() + (Vector3d)Shared.Vessel.findWorldCenterOfMass();
             return parent.GetAltitude(unityWorldPos);
         }
 
-        private object BuildPatchList()
+        private void InitializeSuffixes()
+        {
+            AddSuffix("NAME", new Suffix<string>(GetName));
+            AddSuffix("APOAPSIS", new Suffix<double>(() => Orbit.ApA));
+            AddSuffix("PERIAPSIS", new Suffix<double>(() => Orbit.PeA));
+            AddSuffix("BODY", new Suffix<BodyTarget>(() => new BodyTarget(Orbit.referenceBody, Shared)));
+            AddSuffix("UP", new Suffix<Direction>(() => new Direction(GetUpVector(), false)));
+            AddSuffix("NORTH", new Suffix<Direction>(() => new Direction(GetNorthVector(), false)));
+            AddSuffix("PROGRADE", new Suffix<Direction>(GetPrograde));
+            AddSuffix("RETROGRADE", new Suffix<Direction>(GetRetrograde));
+            AddSuffix("SRFPROGRADE", new Suffix<Direction>(GetSurfacePrograde));
+            AddSuffix("SRFRETROGRADE", new Suffix<Direction>(GetSurfaceRetrograde));
+            AddSuffix("OBT", new Suffix<OrbitInfo>(GetOrbitInfo));
+            AddSuffix("POSITION", new Suffix<Vector>(GetPosition));
+            AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(GetVelocities));
+            AddSuffix("DISTANCE", new Suffix<double>(GetDistance));
+            AddSuffix("DIRECTION", new Suffix<Direction>(() => new Direction(GetPosition(), false)));
+            AddSuffix("LATITUDE", new Suffix<double>(()=> PositionToLatitude(GetPosition())));
+            AddSuffix("LONGITUDE", new Suffix<double>(() => PositionToLongitude(GetPosition())));
+            AddSuffix("ALTITUDE", new Suffix<double>(() => PositionToAltitude(GetPosition())));
+            AddSuffix("GEOPOSITION", new Suffix<GeoCoordinates>(() => new GeoCoordinates(this, Shared)));
+            AddSuffix("PATCHES", new Suffix<ListValue>(BuildPatchList));
+        }
+
+        private double GetDistance()
+        {
+            return GetPosition().Magnitude();
+        }
+
+        private ListValue BuildPatchList()
         {
             var list = new ListValue();
             var orb = Orbit;
-            while (true)
+            int index = 0;
+            int highestAllowedIndex = Career.PatchLimit();
+            while (index <= highestAllowedIndex)
             {
                 if (orb == null || (!orb.activePatch))
                 {
@@ -216,72 +250,9 @@ namespace kOS.Suffixed
 
                 list.Add(new OrbitInfo(orb, Shared));
                 orb = orb.nextPatch;
+                ++index;
             }
             return list;
-        }
-
-        public object GetOnlyOrbitableSuffixes( string suffixName )
-        {
-            // This is a separate call so that it is possible to distinguish
-            // those suffixes that are in the base class from the ones in
-            // the subclasses.  If you want ONLY the base class terms to be
-            // parsed, without parsing terms defined in subclasses, then
-            // call GetOnlyOrbitalSuffixes.
-            switch(suffixName)
-            {
-                // These first cases are an exact copy of what Orbit object did,
-                // for backward compatibility:
-
-                case "NAME":
-                    return GetName();
-                case "APOAPSIS":
-                    return Orbit.ApA;
-                case "PERIAPSIS":
-                    return Orbit.PeA;
-                    
-                // The cases after this point were added to Orbitable from either VesselTarget or BodyTarget:
-                case "BODY":
-                    return new BodyTarget(Orbit.referenceBody, Shared); 
-                case "UP":
-                    return new Direction(GetUpVector(), false);
-                case "NORTH":
-                    return new Direction(GetNorthVector(), false);
-                case "PROGRADE":
-                    return GetPrograde();
-                case "RETROGRADE":
-                    return GetRetrograde();
-                case "SRFPROGRADE":
-                    return GetSurfacePrograde();
-                case "SRFRETROGRADE":
-                    return GetSurfaceRetrograde();
-                case "OBT":
-                    return GetOrbitInfo();
-                case "POSITION":
-                    return GetPosition();
-                case "VELOCITY":
-                    return GetVelocities();
-                case "DISTANCE":
-                    return GetPosition().Magnitude();
-                case "DIRECTION":
-                    return new Direction(GetPosition(), false);
-                case "LATITUDE":
-                    return PositionToLatitude( GetPosition() );
-                case "LONGITUDE":
-                    return PositionToLongitude( GetPosition() );
-                case "ALTITUDE":
-                    return PositionToAltitude( GetPosition() );
-                case "GEOPOSITION":
-                    return new GeoCoordinates(this, Shared);
-                case "PATCHES":
-                    return BuildPatchList();
-            }
-            return null;
-        }
-
-        public override object GetSuffix( string suffixName )
-        {
-            object returnVal = GetOnlyOrbitableSuffixes(suffixName);
-            return returnVal ?? base.GetSuffix(suffixName);
         }
     }
 }

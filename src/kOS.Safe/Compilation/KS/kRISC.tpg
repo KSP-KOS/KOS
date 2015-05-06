@@ -7,55 +7,58 @@ PLUSMINUS    -> @"(\+|-)";
 MULT         -> @"\*";
 DIV          -> @"/";
 POWER        -> @"\^";
-E            -> @"e";
+E            -> @"\be\b";
 //Logic
-NOT          -> @"not";
-AND          -> @"and";
-OR           -> @"or";
-TRUEFALSE    -> @"true|false";
+NOT          -> @"\bnot\b";
+AND          -> @"\band\b";
+OR           -> @"\bor\b";
+TRUEFALSE    -> @"\btrue\b|\bfalse\b";
 COMPARATOR   -> @"<>|>=|<=|=|>|<";
 //Instructions tokens
-SET          -> @"set";
-TO           -> @"to";
-IF           -> @"if";
-ELSE         -> @"else";
-UNTIL        -> @"until";
-LOCK         -> @"lock";
-UNLOCK       -> @"unlock";
-PRINT        -> @"print";
-AT           -> @"at";
-ON           -> @"on";
-TOGGLE       -> @"toggle";
-WAIT         -> @"wait";
-WHEN         -> @"when";
-THEN         -> @"then";
-OFF          -> @"off";
-STAGE        -> @"stage";
-CLEARSCREEN  -> @"clearscreen";
-ADD          -> @"add";
-REMOVE       -> @"remove";
-LOG          -> @"log";
-BREAK        -> @"break";
-PRESERVE     -> @"preserve";
-DECLARE      -> @"declare";
-PARAMETER    -> @"parameter";
-SWITCH       -> @"switch";
-COPY         -> @"copy";
-FROM         -> @"from";
-RENAME       -> @"rename";
-VOLUME       -> @"volume";
-FILE         -> @"file";
-DELETE       -> @"delete";
-EDIT         -> @"edit";
-RUN          -> @"run";
-COMPILE      -> @"compile";
-LIST         -> @"list";
-REBOOT       -> @"reboot";
-SHUTDOWN     -> @"shutdown";
-FOR          -> @"for";
-UNSET        -> @"unset";
-BATCH        -> @"batch";
-DEPLOY       -> @"deploy";
+SET          -> @"\bset\b";
+TO           -> @"\bto\b";
+IS           -> @"\bis\b";
+IF           -> @"\bif\b";
+ELSE         -> @"\belse\b";
+UNTIL        -> @"\buntil\b";
+LOCK         -> @"\block\b";
+UNLOCK       -> @"\bunlock\b";
+PRINT        -> @"\bprint\b";
+AT           -> @"\bat\b";
+ON           -> @"\bon\b";
+TOGGLE       -> @"\btoggle\b";
+WAIT         -> @"\bwait\b";
+WHEN         -> @"\bwhen\b";
+THEN         -> @"\bthen\b";
+OFF          -> @"\boff\b";
+STAGE        -> @"\bstage\b";
+CLEARSCREEN  -> @"\bclearscreen\b";
+ADD          -> @"\badd\b";
+REMOVE       -> @"\bremove\b";
+LOG          -> @"\blog\b";
+BREAK        -> @"\bbreak\b";
+PRESERVE     -> @"\bpreserve\b";
+DECLARE      -> @"\bdeclare\b";
+LOCAL        -> @"\blocal\b";
+GLOBAL       -> @"\bglobal\b";
+PARAMETER    -> @"\bparameter\b";
+FUNCTION     -> @"\bfunction\b";
+RETURN       -> @"\breturn\b";
+SWITCH       -> @"\bswitch\b";
+COPY         -> @"\bcopy\b";
+FROM         -> @"\bfrom\b";
+RENAME       -> @"\brename\b";
+VOLUME       -> @"\bvolume\b";
+FILE         -> @"\bfile\b";
+DELETE       -> @"\bdelete\b";
+EDIT         -> @"\bedit\b";
+RUN          -> @"\brun\b";
+COMPILE      -> @"\bcompile\b";
+LIST         -> @"\blist\b";
+REBOOT       -> @"\breboot\b";
+SHUTDOWN     -> @"\bshutdown\b";
+FOR          -> @"\bfor\b";
+UNSET        -> @"\bunset\b";
 //Generic
 BRACKETOPEN  -> @"\(";
 BRACKETCLOSE -> @"\)";
@@ -65,15 +68,18 @@ SQUAREOPEN   -> @"\[";
 SQUARECLOSE  -> @"\]";
 COMMA        -> @",";
 COLON        -> @":";
-IN           -> @"in";
+IN           -> @"\bin\b";
 ARRAYINDEX   -> @"#";
-ALL          -> @"all";
+ALL          -> @"\ball\b";
 IDENTIFIER   -> @"[a-z_][a-z0-9_]*";
 FILEIDENT    -> @"[a-z_][a-z0-9_]*(\.[a-z0-9_][a-z0-9_]*)*";
 INTEGER      -> @"[0-9]+";
 DOUBLE       -> @"[0-9]*\.[0-9]+";
 STRING       -> @"@?\""(\""\""|[^\""])*\""";
 EOI          -> @"\.";
+//Compiler Directives
+ATSIGN       -> @"@";
+LAZYGLOBAL   -> @"\blazyglobal\b";
 //Special
 EOF          -> @"^$";
 [Skip]
@@ -84,11 +90,10 @@ COMMENTLINE  -> @"//[^\n]*\n?";
 // Rules
 // ===================================================
 Start -> (instruction)* EOF;
-instruction_block -> instruction | CURLYOPEN instruction* CURLYCLOSE EOI?;
+instruction_block -> CURLYOPEN instruction* CURLYCLOSE EOI?;
 instruction -> set_stmt | 
                if_stmt |
                until_stmt |
-               lock_stmt |
                unlock_stmt |
                print_stmt |
                on_stmt |
@@ -103,6 +108,7 @@ instruction -> set_stmt |
                break_stmt |
                preserve_stmt |
                declare_stmt |
+               return_stmt |
                switch_stmt |
                copy_stmt |
                rename_stmt |
@@ -115,23 +121,25 @@ instruction -> set_stmt |
                shutdown_stmt |
                for_stmt |
                unset_stmt |
-               batch_stmt |
-               deploy_stmt |
-               identifier_led_stmt; // any statement that starts with an identifier.
+               instruction_block |
+               identifier_led_stmt | // any statement that starts with an identifier.
+               directive; // allow directives anywhere for now, let the compiler decide if it's in the wrong place, not the parser.
 
+// ------------ directives --------------------
+lazyglobal_directive -> ATSIGN LAZYGLOBAL onoff_trailer EOI;
+directive            -> lazyglobal_directive; // Add to this list later if we make other directives.
 
 // ------------ statements --------------------
 
 set_stmt       -> SET varidentifier TO expr EOI;
-if_stmt        -> IF expr instruction_block (ELSE instruction_block)? EOI?;
-until_stmt     -> UNTIL expr instruction_block EOI?;
-lock_stmt      -> LOCK IDENTIFIER TO expr EOI;
+if_stmt        -> IF expr instruction (ELSE instruction)? EOI?;
+until_stmt     -> UNTIL expr instruction EOI?;
 unlock_stmt    -> UNLOCK (IDENTIFIER | ALL) EOI;
 print_stmt     -> PRINT expr (AT BRACKETOPEN expr COMMA expr BRACKETCLOSE)? EOI;
-on_stmt        -> ON varidentifier instruction_block EOI?;
+on_stmt        -> ON varidentifier instruction EOI?;
 toggle_stmt    -> TOGGLE varidentifier EOI;
 wait_stmt      -> WAIT UNTIL? expr EOI;
-when_stmt      -> WHEN expr THEN instruction_block EOI?;
+when_stmt      -> WHEN expr THEN instruction EOI?;
 onoff_stmt     -> varidentifier onoff_trailer EOI;
 onoff_trailer  -> (ON | OFF);
 stage_stmt     -> STAGE EOI;
@@ -141,7 +149,32 @@ remove_stmt    -> REMOVE expr EOI;
 log_stmt       -> LOG expr TO expr EOI;
 break_stmt     -> BREAK EOI;
 preserve_stmt  -> PRESERVE EOI;
-declare_stmt   -> DECLARE PARAMETER? IDENTIFIER (COMMA IDENTIFIER)* EOI;
+declare_identifier_clause -> IDENTIFIER (TO|IS) expr EOI;
+declare_parameter_clause  -> PARAMETER IDENTIFIER (COMMA IDENTIFIER)* EOI;
+declare_function_clause   -> FUNCTION IDENTIFIER instruction_block EOI?;
+declare_lock_clause       -> LOCK IDENTIFIER TO expr EOI;
+declare_stmt   -> // declare|global|local are all optional for function and parameter,
+                  // but mandatory for declaring an identifier.  This was the only
+                  // way to get the LL(1) parser to understand that without barfing on
+                  // ambiguity.
+                  (   
+                      declare_parameter_clause |
+                      declare_function_clause |
+                      declare_lock_clause |
+                      (
+                          (
+                              (DECLARE (LOCAL|GLOBAL)?) |
+                              (LOCAL|GLOBAL)
+                          )
+                          (
+                              declare_parameter_clause |
+                              declare_function_clause |
+                              declare_identifier_clause |
+                              declare_lock_clause
+                          )
+                      )
+                  );
+return_stmt    -> RETURN expr? EOI;
 switch_stmt    -> SWITCH TO expr EOI;
 copy_stmt      -> COPY expr (FROM | TO) expr EOI;
 rename_stmt    -> RENAME (VOLUME | FILE)? expr TO expr EOI;
@@ -152,10 +185,8 @@ compile_stmt   -> COMPILE expr (TO expr)? EOI;
 list_stmt      -> LIST (IDENTIFIER (IN IDENTIFIER)?)? EOI;
 reboot_stmt    -> REBOOT EOI;
 shutdown_stmt  -> SHUTDOWN EOI;
-for_stmt       -> FOR IDENTIFIER IN varidentifier instruction_block EOI?;
+for_stmt       -> FOR IDENTIFIER IN varidentifier instruction EOI?;
 unset_stmt     -> UNSET (IDENTIFIER | ALL) EOI;
-batch_stmt     -> BATCH EOI;
-deploy_stmt    -> DEPLOY EOI;
 
 
 // ---------- expressions ---------------------------
@@ -165,9 +196,9 @@ expr               -> and_expr (OR and_expr)*;
 and_expr           -> compare_expr (AND compare_expr)*;
 compare_expr       -> arith_expr (COMPARATOR arith_expr)*;
 arith_expr         -> multdiv_expr (PLUSMINUS multdiv_expr)*;
-multdiv_expr       -> factor ((MULT|DIV) factor)*;
+multdiv_expr       -> unary_expr ((MULT|DIV) unary_expr)*;
+unary_expr         -> (PLUSMINUS|NOT)? factor;
 factor             -> suffix (POWER suffix)*;
-
 suffix             -> suffixterm (suffix_trailer)*;
 suffix_trailer     -> (COLON suffixterm);
 
@@ -177,12 +208,12 @@ suffixterm_trailer -> (function_trailer | array_trailer);
 function_trailer   -> (BRACKETOPEN arglist? BRACKETCLOSE);
 array_trailer      -> ( (ARRAYINDEX (IDENTIFIER | INTEGER)) | (SQUAREOPEN expr SQUARECLOSE) );
 
-atom               -> (PLUSMINUS|NOT)? ( sci_number |
-                                         TRUEFALSE |
-                                         IDENTIFIER |
-                                         FILEIDENT |
-                                         BRACKETOPEN expr BRACKETCLOSE
-                                       ) | STRING;
+atom               -> ( sci_number |
+                        TRUEFALSE |
+                        IDENTIFIER |
+                        FILEIDENT |
+                        BRACKETOPEN expr BRACKETCLOSE
+                      ) | STRING;
 sci_number         -> number (E PLUSMINUS? INTEGER)?;
 number             -> (INTEGER | DOUBLE);
 

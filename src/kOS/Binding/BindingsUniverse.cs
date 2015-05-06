@@ -1,7 +1,9 @@
 ﻿using kOS.Safe.Binding;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace kOS.Binding
 {
@@ -18,7 +20,7 @@ namespace kOS.Binding
                 QuickSaveLoad.QuickSave();
                 return true;
             });
-            
+
             shared.BindingMgr.AddGetter("QUICKLOAD", () =>
                 {
                     if (!HighLogic.CurrentGame.Parameters.Flight.CanQuickLoad) return false;
@@ -28,7 +30,7 @@ namespace kOS.Binding
                     }
                     catch (Exception ex)
                     {
-                        UnityEngine.Debug.Log(ex.Message);
+                        SafeHouse.Logger.Log(ex.Message);
                         return false;
                     }
                     return true;
@@ -36,7 +38,7 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddSetter("SAVETO", val =>
                 {
-                    if (reservedSaveNames.Contains(val.ToString().ToLower())) return; 
+                    if (reservedSaveNames.Contains(val.ToString().ToLower())) return;
 
                     Game game = HighLogic.CurrentGame.Updated();
                     game.startScene = GameScenes.FLIGHT;
@@ -54,13 +56,28 @@ namespace kOS.Binding
                     FlightDriver.StartAndFocusVessel(game, game.flightState.activeVesselIdx);
                 });
 
-            shared.BindingMgr.AddGetter("LOADDISTANCE", () => Vessel.loadDistance);
+            shared.BindingMgr.AddGetter("LOADDISTANCE", () => PhysicsGlobals.Instance.VesselRangesDefault.orbit.load);
             shared.BindingMgr.AddSetter("LOADDISTANCE", val =>
             {
                 var distance = Convert.ToSingle(val);
-                Vessel.loadDistance = distance;
-                Vessel.unloadDistance = distance - 250;
+                PhysicsGlobals.Instance.VesselRangesDefault.landed.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.splashed.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.prelaunch.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.flying.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.orbit.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.subOrbital.load = distance;
+                PhysicsGlobals.Instance.VesselRangesDefault.escaping.load = distance;
+
+                var unloadDistance = distance - 250;
+                PhysicsGlobals.Instance.VesselRangesDefault.landed.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.splashed.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.prelaunch.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.flying.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.orbit.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.subOrbital.unload = unloadDistance;
+                PhysicsGlobals.Instance.VesselRangesDefault.escaping.unload = unloadDistance;
             });
+
             shared.BindingMgr.AddGetter("WARPMODE", () =>
                 {
                     switch (TimeWarp.WarpMode)
@@ -79,7 +96,7 @@ namespace kOS.Binding
                 {
                     TimeWarp.Modes toSet;
 
-                    switch (val.ToString())
+                    switch (val.ToString().ToUpper())
                     {
                         case "PHYSICS":
                             toSet = TimeWarp.Modes.LOW;
@@ -101,7 +118,17 @@ namespace kOS.Binding
                 int newRate;
                 if (int.TryParse(val.ToString(), out newRate))
                 {
-                    TimeWarp.SetRate(newRate, false);
+                    switch (TimeWarp.WarpMode)
+                    {
+                        case TimeWarp.Modes.HIGH:
+                            SetWarpRate(newRate, TimeWarp.fetch.warpRates.Length - 1);
+                            break;
+                        case TimeWarp.Modes.LOW:
+                            SetWarpRate(newRate, TimeWarp.fetch.maxPhysicsRate_index);
+                            break;
+                        default:
+                            throw new Exception(string.Format("WARPMODE '{0}' is unknown to kOS, please contact the devs", val));
+                    }
                 }
             });
             shared.BindingMgr.AddGetter("MAPVIEW", () => MapView.MapIsEnabled);
@@ -121,6 +148,18 @@ namespace kOS.Binding
                 var cBody = body;
                 shared.BindingMgr.AddGetter(body.name, () => new BodyTarget(cBody, shared));
             }
+
+            shared.BindingMgr.AddGetter("VERSION", () => Core.VersionInfo);
+        }
+
+        private static void SetWarpRate(int newRate, int maxRate)
+        {
+            var clampedValue = Mathf.Clamp(maxRate, 0, newRate);
+            if (clampedValue != maxRate)
+            {
+                SafeHouse.Logger.Log(string.Format("Clamped Timewarp rate. Was: {0} Is: {1}", clampedValue, maxRate));
+            }
+            TimeWarp.SetRate(clampedValue, false);
         }
     }
 }

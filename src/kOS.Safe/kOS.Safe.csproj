@@ -46,13 +46,15 @@
     <Compile Include="Compilation\CompileCache.cs" />
     <Compile Include="Compilation\CompiledObject.cs" />
     <Compile Include="Compilation\CompilerOptions.cs" />
+    <Compile Include="Compilation\KS\BreakInfo.cs" />
     <Compile Include="Compilation\KS\Compiler.cs" />
     <Compile Include="Compilation\KS\Context.cs" />
+    <Compile Include="Compilation\KS\Scope.cs" />
     <Compile Include="Compilation\KS\Subprogram.cs" />
     <Compile Include="Compilation\KS\KSScript.cs" />
-    <Compile Include="Compilation\KS\Lock.cs" />
-    <Compile Include="Compilation\KS\LockCollection.cs" />
-    <Compile Include="Compilation\KS\LockFunction.cs" />
+    <Compile Include="Compilation\KS\UserFunction.cs" />
+    <Compile Include="Compilation\KS\UserFunctionCollection.cs" />
+    <Compile Include="Compilation\KS\UserFunctionCodeFragment.cs" />
     <Compile Include="Compilation\KS\Parser.cs" />
     <Compile Include="Compilation\KS\ParseTree.cs" />
     <Compile Include="Compilation\KS\Scanner.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="Compilation\PseudoNull.cs" />
     <Compile Include="Compilation\Script.cs" />
     <Compile Include="Encapsulation\ConstantValue.cs" />
+    <Compile Include="Encapsulation\Enumerator.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
@@ -86,9 +89,15 @@
     <Compile Include="Encapsulation\Suffixes\Suffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixDelegates.cs" />
     <Compile Include="Encapsulation\Suffixes\TwoArgsSuffix.cs" />
+    <Compile Include="Encapsulation\TerminalStruct.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
+    <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSInvalidArgumentException.cs" />
+    <Compile Include="Exceptions\KOSIdentifierClashException.cs" />
+    <Compile Include="Exceptions\KOSInvalidDelegateContext.cs" />
+    <Compile Include="Exceptions\KOSLowTechException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
     <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
     <Compile Include="Exceptions\KOSCompileException.cs" />
@@ -102,14 +111,21 @@
     <Compile Include="Exceptions\KOSPatchesDeprecationException.cs" />
     <Compile Include="Exceptions\KOSPersistenceException.cs" />
     <Compile Include="Exceptions\KOSPreserveInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSReturnInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSSuffixUseException.cs" />
+    <Compile Include="Exceptions\KOSUnavailableAddonException.cs" />
     <Compile Include="Exceptions\KOSUndefinedIdentifierException.cs" />
     <Compile Include="Exceptions\KOSWaitInValidHereException.cs" />
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Execution\ICpu.cs" />
+    <Compile Include="Execution\IProgramContext.cs" />
+    <Compile Include="Execution\IStack.cs" />
+    <Compile Include="Execution\IUserDelegate.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
+    <Compile Include="Execution\UserDelegate.cs" />
     <Compile Include="Execution\Variable.cs" />
+    <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
     <Compile Include="Function\IFunctionManager.cs" />
     <Compile Include="ILogger.cs" />
@@ -130,16 +146,25 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Screen\IInterpreter.cs" />
+    <Compile Include="Screen\IScreenBuffer.cs" />
+    <Compile Include="Screen\IScreenBufferLine.cs" />
+    <Compile Include="Screen\IScreenSnapshot.cs" />
+    <Compile Include="Screen\ITermWindow.cs" />
     <Compile Include="Screen\ScreenBuffer.cs" />
+    <Compile Include="Screen\ScreenBufferLine.cs" />
+    <Compile Include="Screen\ScreenSnapshot.cs" />
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
     <Compile Include="SharedObjects.cs" />
     <Compile Include="UpdateHandler.cs" />
+    <Compile Include="UserIO\UnicodeCommand.cs" />
     <Compile Include="Utilities\Debug.cs" />
-    <Compile Include="Utilities\Environment.cs" />
+    <Compile Include="Utilities\EnumUtilities.cs" />
+    <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
     <Compile Include="Utilities\Math.cs" />
+    <Compile Include="Utilities\TickGen.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
@@ -151,6 +176,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

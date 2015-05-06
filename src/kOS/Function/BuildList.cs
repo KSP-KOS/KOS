@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Function;
 using kOS.Suffixed;
@@ -11,7 +12,7 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string listType = shared.Cpu.PopValue().ToString();
+            string listType = PopValueAssert(shared).ToString();
             var list = new ListValue();
 
             switch (listType)
@@ -38,13 +39,14 @@ namespace kOS.Function
                     list = ListValue.CreateList(shared.VolumeMgr.CurrentVolume.GetFileList());
                     break;
                 case "volumes":
-                    list = ListValue.CreateList(shared.VolumeMgr.Volumes);
+                    list = ListValue.CreateList(shared.VolumeMgr.Volumes.Values.ToList());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            AssertArgBottomAndConsume(shared);
 
-            shared.Cpu.PushStack(list);
+            ReturnValue = list;
         }
     }
 }

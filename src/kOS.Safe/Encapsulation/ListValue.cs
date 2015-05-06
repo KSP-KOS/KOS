@@ -1,56 +1,119 @@
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Diagnostics;
-
-using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Properties;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class ListValue : Structure, IIndexable
+    public class ListValue<T> : Structure, IList<T>, IIndexable
     {
-        private readonly IList<object> list;
-                
-        // It's nice for other parts of kOS's C# code to be able to operate on ListValues
-        // without having to go through the suffix system to do so.  Other wrappers should
-        // go here too, probably: Remove, element access with '[]', etc.
-        public int Count { get{ return list.Count;} }
+        private readonly IList<T> internalList;
 
         public ListValue()
+            : this(new List<T>())
         {
-            list = new List<object>();
+        }
+
+        public ListValue(IEnumerable<T> listValue)
+        {
+            internalList = listValue.ToList();
             ListInitializeSuffixes();
         }
 
-        private ListValue(IList<object> list)
+        public IEnumerator<T> GetEnumerator()
         {
-            this.list = list;
-            ListInitializeSuffixes();
+            return internalList.GetEnumerator();
         }
 
-        // This looks useful.  Why is it private?
-        private ListValue(ListValue toCopy)
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            list = new List<object>(toCopy.list);
-            ListInitializeSuffixes();
+            return GetEnumerator();
+        }
+
+        public void Add(T item)
+        {
+            internalList.Add(item);
+        }
+
+        public void Clear()
+        {
+            internalList.Clear();
+        }
+
+        public bool Contains(T item)
+        {
+            return internalList.Contains(item);
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            internalList.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(T item)
+        {
+            return internalList.Remove(item);
+        }
+
+        public int Count
+        {
+            get { return internalList.Count; }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return internalList.IsReadOnly; }
+        }
+
+        public int IndexOf(T item)
+        {
+            return internalList.IndexOf(item);
+        }
+
+        public void Insert(int index, T item)
+        {
+            internalList.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            internalList.RemoveAt(index);
+        }
+
+        public T this[int index]
+        {
+            get { return internalList[index]; }
+            set { internalList[index] = value; }
         }
 
         private void ListInitializeSuffixes()
         {
-            AddSuffix("ADD",      new OneArgsSuffix<object>             (toAdd => list.Add(toAdd), Resources.ListAddDescription));
-            AddSuffix("INSERT",   new TwoArgsSuffix<int, int>           ((index,toAdd) => list.Insert(index,toAdd)));
-            AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => list.RemoveAt(toRemove)));
-            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => list.Clear()));
-            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => list.Count));
-            AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>          (() => new Enumerator(list.GetEnumerator())));
-            AddSuffix("COPY",     new NoArgsSuffix<ListValue>           (() => new ListValue(this)));
-            AddSuffix("CONTAINS", new OneArgsSuffix<bool, object>       (item => list.Contains(item)));
+            AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => internalList.Add(toAdd), Resources.ListAddDescription));
+            AddSuffix("INSERT",   new TwoArgsSuffix<int, T>             ((index, toAdd) => internalList.Insert(index, toAdd)));
+            AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => internalList.RemoveAt(toRemove)));
+            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => internalList.Clear()));
+            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => internalList.Count));
+            AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>          (() => new Enumerator(internalList.GetEnumerator())));
+            AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
+            AddSuffix("CONTAINS", new OneArgsSuffix<bool, T>            (item => internalList.Contains(item)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
-            AddSuffix("EMPTY",    new NoArgsSuffix<bool>                (() => !list.Any()));
+            AddSuffix("EMPTY",    new NoArgsSuffix<bool>                (() => !internalList.Any()));
             AddSuffix("DUMP",     new NoArgsSuffix<string>              (ListDumpDeep));
+        }
+
+        // This test case was added to ensure there was an example method with more than 1 argument.
+        private ListValue SubListMethod(int start, int runLength)
+        {
+            var subList = new ListValue();
+            for (int i = start; i < internalList.Count && i < start + runLength; ++i)
+            {
+                subList.Add(internalList[i]);
+            }
+            return subList;
         }
 
         public override bool SetSuffix(string suffixName, object value)
@@ -78,28 +141,12 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        // This test case was added to ensure there was an example method with more than 1 argument.
-        private ListValue SubListMethod(int start, int runLength)
-        {
-            var subList = new ListValue();
-            for (int i = start; i < list.Count && i < start + runLength; ++i)
-            {
-                subList.Add(list[i]);
-            }
-            return subList;
-        }
-
-        public void Add(object toAdd)
-        {
-            list.Add(toAdd);
-        }
-        
         // Using Statics for this is not thread-safe, but kOS doesn't do threads at the moment.
         // TODO: find a better way later to track the nesting level through all the messy
         // calls of nested objects' ToStrings.
         private static int currentNestDepth;
         private static int maxVerboseDepth;
-        
+
         public override string ToString()
         {
             // If toString is nested inside another object's toString that was
@@ -136,7 +183,7 @@ namespace kOS.Safe.Encapsulation
             // (i starts at 1 not 0 deliberately.  That's not a bug - skipping to top stack
             // frame on purpose because the top stack frame is the current method we're in
             // the middle of executing):
-            for (int i = 1 ; i < callStack.Length ; ++i )
+            for (int i = 1; i < callStack.Length; ++i)
             {
                 var type = callStack[i].GetMethod().DeclaringType;
                 if (type == null) continue;
@@ -158,7 +205,7 @@ namespace kOS.Safe.Encapsulation
         /// <returns>short string without eoln</returns>
         private string TerseDump()
         {
-            return "LIST of " + list.Count + " item" + (list.Count==1 ? "" : "s");
+            return "LIST of " + internalList.Count + " item" + (internalList.Count == 1 ? "" : "s");
         }
 
         /// <summary>
@@ -174,7 +221,7 @@ namespace kOS.Safe.Encapsulation
             maxVerboseDepth = 1;
             return ListDump();
         }
-        
+
         /// <summary>
         /// Dump the contents of the list into a string, by descending through the
         /// list and appending the "ToString"'s of all the elements in the list.<br/>
@@ -188,7 +235,7 @@ namespace kOS.Safe.Encapsulation
             maxVerboseDepth = 99;
             return ListDump();
         }
-        
+
         /// <summary>
         /// This is the engine underneath ListDump shallow/deep.
         /// </summary>
@@ -202,74 +249,57 @@ namespace kOS.Safe.Encapsulation
 
             if (truncateHere)
             {
-                --currentNestDepth;                
+                --currentNestDepth;
                 return TerseDump();
             }
             var contents = new StringBuilder();
-            contents.AppendLine( TerseDump() + ":" );
-            var indent = new string(' ', currentNestDepth*SPACES_PER_INDENT);
-            for (int i = 0 ; i < list.Count ; ++i)
+            contents.AppendLine(TerseDump() + ":");
+            var indent = new string(' ', currentNestDepth * SPACES_PER_INDENT);
+            for (int i = 0; i < internalList.Count; ++i)
             {
-                contents.AppendLine( string.Format("{0}[{1,2}]= {2}", indent, i, list[i]) );
+                contents.AppendLine(string.Format("{0}[{1,2}]= {2}", indent, i, internalList[i]));
             }
-            --currentNestDepth;                
+            --currentNestDepth;
             return contents.ToString();
         }
-        public static ListValue CreateList<T>(IEnumerable<T> sourceList)
-        {
-            return new ListValue(sourceList.Cast<object>().ToList());
-        }
 
-        #region IIndexable Members
+        public static ListValue<T> CreateList<TU>(IEnumerable<TU> list)
+        {
+            return new ListValue<T>(list.Cast<T>());
+        }
 
         public object GetIndex(int index)
         {
-            return list[index];
+            return internalList[index];
         }
 
         public void SetIndex(int index, object value)
         {
-            list[index] = value;
+            internalList[index] = (T)value;
         }
-
-        #endregion IIndexable Members
     }
 
-    public class Enumerator : Structure
+    public class ListValue : ListValue<object>
     {
-        private readonly IEnumerator enumerator;
-        private int index = -1;
-        private bool status;
-
-        public Enumerator(IEnumerator enumerator)
+        public ListValue()
         {
-            this.enumerator = enumerator;
-            EnumeratorInitializeSuffixes();
+            InitializeSuffixes();
         }
 
-        private void EnumeratorInitializeSuffixes()
+        public ListValue(IEnumerable<object> toCopy)
+            : base(toCopy)
         {
-            AddSuffix("RESET",    new NoArgsSuffix    (() =>
-                {
-                    index = -1;
-                    status = false;
-                    enumerator.Reset();
-                }));
-            AddSuffix("NEXT",     new NoArgsSuffix<bool>  (() =>
-                {
-                    status = enumerator.MoveNext();
-                    index++;
-                    return status;
-                }));
-            AddSuffix("ATEND",    new NoArgsSuffix<bool>  (() => !status));
-            AddSuffix("INDEX",    new NoArgsSuffix<int>   (() => index));
-            AddSuffix("VALUE",    new NoArgsSuffix<object>(() => enumerator.Current));
-            AddSuffix("ITERATOR", new NoArgsSuffix<object>(() => this));
+            InitializeSuffixes();
         }
 
-        public override string ToString()
+        private void InitializeSuffixes()
         {
-            return string.Format("{0} Iterator", base.ToString());
+            AddSuffix("COPY", new NoArgsSuffix<ListValue>(() => new ListValue(this)));
+        }
+
+        public new static ListValue CreateList<T>(IEnumerable<T> toCopy)
+        {
+            return new ListValue(toCopy.Cast<object>());
         }
     }
 }

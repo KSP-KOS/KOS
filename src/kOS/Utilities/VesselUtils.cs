@@ -10,6 +10,11 @@ namespace kOS.Utilities
 {
     public static class VesselUtils
     {
+        public static bool HasCrewControl(this Vessel vessel)
+        {
+            return vessel.parts.Any(p => p.isControlSource && (p.protoModuleCrew.Any()));
+        }
+
         public static List<Part> GetListOfActivatedEngines(Vessel vessel)
         {
             var retList = new List<Part>();
@@ -47,7 +52,7 @@ namespace kOS.Utilities
             total = 0;
             PartResourceDefinition resourceDefinition =
                 PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(
-                    rd => rd.name.Equals(resourceName, StringComparison.OrdinalIgnoreCase));
+                    rd => rd.name.Equals(resourceName, StringComparison.CurrentCultureIgnoreCase));
             // Ensure the built-in resource types never produce an error, even if the particular vessel is incapable of carrying them
             if (resourceDefinition != null)
                 resourceIsFound = true;
@@ -73,7 +78,7 @@ namespace kOS.Utilities
             switch (partType.ToUpper())
             {
                 case "RESOURCES":
-                    list = AggregateResourceValue.PartsToList(partList);
+                    list = AggregateResourceValue.PartsToList(partList, sharedObj);
                     break;
 
                 case "PARTS":
@@ -89,7 +94,7 @@ namespace kOS.Utilities
                     break;
 
                 case "ELEMENTS":
-                    list = ElementValue.PartsToList(partList);
+                    list = ElementValue.PartsToList(partList, sharedObj);
                     break;
 
                 case "DOCKINGPORTS":
@@ -330,27 +335,17 @@ namespace kOS.Utilities
                                                         current + (p.mass + p.GetResourceMass()) * p.maximum_drag);
         }
 
-        private static double RealMaxAtmosphereAltitude(CelestialBody body)
+        public static float GetDryMass(this Vessel vessel)
         {
-            // This comes from MechJeb CelestialBodyExtensions.cs
-            if (!body.atmosphere) return 0;
-            //Atmosphere actually cuts out when exp(-altitude / scale height) = 1e-6
-            return -body.atmosphereScaleHeight * 1000 * Math.Log(1e-6);
+            return vessel.parts.Sum(part => part.GetDryMass());
         }
 
-        public static double GetTerminalVelocity(Vessel vessel)
+        public static float GetWetMass(this Vessel vessel)
         {
-            if (vessel.mainBody.GetAltitude(vessel.findWorldCenterOfMass()) > RealMaxAtmosphereAltitude(vessel.mainBody))
-                return double.PositiveInfinity;
-            double densityOfAir =
-                FlightGlobals.getAtmDensity(FlightGlobals.getStaticPressure(vessel.findWorldCenterOfMass(),
-                                                                            vessel.mainBody));
-            return
-                Math.Sqrt(2 * FlightGlobals.getGeeForceAtPosition(vessel.findWorldCenterOfMass()).magnitude *
-                          vessel.GetTotalMass() / (GetMassDrag(vessel) * FlightGlobals.DragMultiplier * densityOfAir));
+            return vessel.parts.Sum(part => part.GetWetMass());
         }
 
-        public static float GetVesselLattitude(Vessel vessel)
+        public static float GetVesselLatitude(Vessel vessel)
         {
             var retVal = (float)vessel.latitude;
 
@@ -407,6 +402,13 @@ namespace kOS.Utilities
             var vesselRotation = vessel.ReferenceTransform.rotation;
             Quaternion vesselFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vesselRotation) * Quaternion.identity);
             return new Direction(vesselFacing);
+        }
+        
+        public static Direction GetFacing(CelestialBody body)
+        {
+            var bodyRotation = body.transform.rotation;
+            Quaternion bodyFacing = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(bodyRotation) * Quaternion.identity);
+            return new Direction(bodyFacing);
         }
     }
 }

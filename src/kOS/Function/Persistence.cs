@@ -11,7 +11,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = shared.Cpu.PopValue(true);
+            object volumeId = PopValueAssert(shared, true);
+            AssertArgBottomAndConsume(shared);
 
             if (shared.VolumeMgr != null)
             {
@@ -33,7 +34,8 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string fileName = shared.Cpu.PopValue(true).ToString();
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
 
             // If no filename extension, then give it one:
             fileName = PersistenceUtilities.CookedFilename(fileName, Volume.KERBOSCRIPT_EXTENSION);
@@ -51,11 +53,12 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = shared.Cpu.PopValue(true);
-            string direction = shared.Cpu.PopValue().ToString();
-            string fileName = shared.Cpu.PopValue(true).ToString();
+            object volumeId = PopValueAssert(shared, true);
+            string direction = PopValueAssert(shared).ToString();
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
 
-            Debug.Logger.Log(string.Format("FunctionCopy: Volume: {0} Direction: {1} Filename: {2}", volumeId, direction, fileName));
+            SafeHouse.Logger.Log(string.Format("FunctionCopy: Volume: {0} Direction: {1} Filename: {2}", volumeId, direction, fileName));
 
             if (shared.VolumeMgr != null)
             {
@@ -106,9 +109,10 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            string newName = shared.Cpu.PopValue(true).ToString();
-            object oldName = shared.Cpu.PopValue(true);
-            string objectToRename = shared.Cpu.PopValue().ToString();
+            string newName = PopValueAssert(shared, true).ToString();
+            object oldName = PopValueAssert(shared, true);
+            string objectToRename = PopValueAssert(shared).ToString();
+            AssertArgBottomAndConsume(shared);
 
             if (shared.VolumeMgr != null)
             {
@@ -162,8 +166,9 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            object volumeId = shared.Cpu.PopValue(true);
-            string fileName = shared.Cpu.PopValue(true).ToString();
+            object volumeId = PopValueAssert(shared, true);
+            string fileName = PopValueAssert(shared, true).ToString();
+            AssertArgBottomAndConsume(shared);
 
             if (shared.VolumeMgr != null)
             {

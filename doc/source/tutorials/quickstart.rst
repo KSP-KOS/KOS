@@ -92,7 +92,7 @@ Step 7: Okay, but where is this program?
 To see where the "HELLO" program has been saved, Issue the command ``LIST FILES`` like this::
 
     LIST FILES.
-    
+
 (Note, that the default for the ``LIST`` command is to list ``FILES``, so you can leave the word "FILES" off if you like.)
 
 It should look like this, showing you the HELLO program you just wrote:
@@ -123,15 +123,16 @@ To work with the archive, and create a second "hello world" file there, you issu
     SWITCH TO 1.
     LIST FILES.
     RUN HELLO.
-    
+
 *But where is it stored behind the scenes?* The archive is currently slightly violating the design of **KSP** mods that puts everything in the GameData folder. The kSP Archive is actually stored in the ``Ships/Script`` folder of your MAIN **KSP** home, not inside GameData.
 
 If a file is stored inside the archive, it can actually be edited *by an external text editor of your choice* instead of using **kOS**'s in-game editor. This is usually a much better practice once you start doing more complex things with **kOS**. You can also make new files in the archive folder. Just make sure that all the files end with a ``.ks`` file name suffix or **kOS** won't use them.
 
 Further reading about files and volumes:
 
-- :ref:`Volumes`
-- :ref:`File Control`
+- :ref:`Volumes <volumes>`
+- :ref:`File Control <files>`
+- :ref:`File Information <fileinfo>`
 
 Second Example: Doing something real
 ------------------------------------
@@ -169,7 +170,7 @@ Okay, so type the lines below in an external *text editor of your choice* (i.e. 
         SET countdown TO countdown - 1.
         WAIT 1. // pauses the script here for 1 second.
     }
-    
+
 See those things with the two slashes ("//")? Those are comments in the kerboscript language and they're just ways to write things in the program that don't do anything - they're there for humans like you to read so you understand what's going on. In these examples you never actually have to type in the things you see after the slashes. They're there for your benefit when reading this document but you can leave them out if you wish.
 
 Save the file in your ``Ships/Script`` folder of your **KSP** installation under the filename "hellolaunch.ks". DO NOT save it anywhere under ``GameData/kOS/``. Do NOT. According to the **KSP** standard, normally **KSP** mods should put their files in ``GameData/[mod name]``, but **kOS** puts the archive outside the ``GameData`` folder because it represents content owned by you, the player, not content owned by the **kOS** mod.
@@ -178,11 +179,11 @@ By saving the file in ``Ships/Script``, you have actually put it in your archive
 
     SWITCH TO 0.
     LIST FILES.
-    
+
 after saving the file from your external text editor program, you will see a listing of your file "hellolaunch" right away. Okay, now copy it to your local drive and give it a try running it from there::
 
     SWITCH TO 1.
-    COPY HELLOLANCH FROM 0.
+    COPY HELLOLAUNCH FROM 0.
     RUN HELLOLAUNCH.
 
 .. figure:: /_images/tutorials/quickstart/example_2_1.png
@@ -206,7 +207,7 @@ Okay now go back into your *text editor of choice* and append a few more lines t
         SET countdown TO countdown - 1.
         WAIT 1. // pauses the script here for 1 second.
     }
-    
+
     PRINT "Main throttle up.  2 seconds to stabalize it.".
     LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
     WAIT 2. // give throttle time to adjust.
@@ -222,7 +223,7 @@ Okay now go back into your *text editor of choice* and append a few more lines t
     // back to manual piloting so that you can fly the ship by hand again.
     // If the pogram just ended here, then that would cause the throttle
     // to turn back off again right away and nothing would happen.
-    
+
 Save this file to hellolaunch.ks again, and re-copy it to your vessel that should still be sitting on the launchpad, then run it, like so::
 
     COPY HELLOLAUNCH FROM 0.
@@ -244,7 +245,7 @@ So to fix that problem, let's add steering control to the script.
 
 The easy way to control steering is to use the ``LOCK STEERING`` command.
 
-Once you have mastered the basics of **kOS**, you should go and read `the documentation on ship steering techniques <../ship_control/index.html>`__, but that's a more advanced topic for later.
+Once you have mastered the basics of **kOS**, you should go and read `the documentation on ship steering techniques <../commands/flight.html>`__, but that's a more advanced topic for later.
 
 The way to use the ``LOCK STEERING`` command is to set it to a thing called a :struct:`Vector` or a :struct:`Direction`. There are several Directions built-in to **kOS**, one of which is called "UP". "UP" is a Direction that always aims directly toward the sky (the center of the blue part of the navball).
 
@@ -303,11 +304,11 @@ Step 5: Add staging logic
 
 The logic for how and when to stage can be an interesting and fun thing to write yourself. This example will keep it very simple, and this is the part where it's important that you are using a vessel that only contains liquidfuel engines. If your vessel has some booster engines, then it would require a more sophisticated script to launch it correctly than this tutorial gives you.
 
-To add the logic to check when to stage, we introduce a new concept called the WHEN trigger. To see full documentation on it when you finish the tutorial, look for it on the `Flow Control page <../../command/flowControl/index.html>`__
+To add the logic to check when to stage, we introduce a new concept called the WHEN trigger. To see full documentation on it when you finish the tutorial, look for it on the `Flow Control page <../language/flow.html>`__
 
 The quick and dirty explanation is that a WHEN section is a short section of code that you set up to run LATER rather than right now. It creates a check in the background that will constantly look for some condition to occur, and when it happens, it interrupts whatever else the code is doing, and it will run the body of the WHEN code before continuing from where it left off in the main script.
 
-There are some complex dangers with writing WHEN triggers that can cause **KSP** itself to hang or stutter if you are not careful, but explaining them is beyond the scope of this tutorial. But when you want to start using WHEN triggers yourself, you really should read the section on WHEN in the `Flow Control page <../../command/flowControl/index.html>`__ before you do so.
+There are some complex dangers with writing WHEN triggers that can cause **KSP** itself to hang or stutter if you are not careful, but explaining them is beyond the scope of this tutorial. But when you want to start using WHEN triggers yourself, you really should read the section on WHEN in the `Flow Control page <../language/flow.html>`__ before you do so.
 
 The WHEN trigger we are going to add to the launch script looks like this::
 
@@ -316,7 +317,7 @@ The WHEN trigger we are going to add to the launch script looks like this::
         STAGE.
         PRESERVE.
     }
-    
+
 It says, "Whenever the amount of liquid fuel in the current stage is so small it may as well be zero (< 0.001), then activate the next stage." The PRESERVE keyword says, "don't stop checking this condition just because it's been triggered once. It should still keep checking for it again in the future."
 The check for < 0.001 is because sometimes **KSP** won't quite burn the last drop of fuel in a stage.
 If this block of code is inserted into the script, then it will set up a constant background check that will always hit the next stage as soon as the current stage has no liquidfuel in it.
@@ -385,7 +386,7 @@ So for example, HEADING(45,10) would aim northeast, 10 degrees above the horizon
         PRINT "Starting flat part.  Aiming to horizon.".
         LOCK STEERING TO HEADING(90,0). // east, horizontal.
     }
-    
+
 Note that these lack the command PRESERVE like the previous WHEN example had. This is because we want these to trigger just once and then never again. There's no point in constantly telling **kOS** to reset the steering to the same thing over and over as the script runs.
 
 Now, if you insert this new section to the script, we have a nice nifty example of a start of a launching script. Note that it works even if you insert it at the top of the script, because it sets up the triggers to occur LATER when the condition becomes true. They don't execute right away::
@@ -413,7 +414,7 @@ Now, if you insert this new section to the script, we have a nice nifty example 
     WAIT 2. // give throttle time to adjust.
 
     // The section below replaces previous UNTIL loop:
-    
+
     WHEN STAGE:LIQUIDFUEL < 0.001 THEN {
         PRINT "No liquidfuel.  Attempting to stage.".
         STAGE.
@@ -426,7 +427,7 @@ Now, if you insert this new section to the script, we have a nice nifty example 
     // back to manual piloting so that you can fly the ship by hand again.
     // If the program just ended here, then that would cause the throttle
     // to turn back off again right away and nothing would happen.
-    
+
 And here is it in action:
 
 .. figure:: /_images/tutorials/quickstart/example_2_5.png
@@ -436,7 +437,7 @@ And toward the end:
 
 .. figure:: /_images/tutorials/quickstart/example_2_6.png
     :width: 80 %
- 
+
 If we assume you made a vessel that has enough fuel and power to get up to orbit, this script should in principle work to get you to the point of leaving the atmosphere. It will probably still fall back down, because this script makes no attempt to ensure that the craft is going fast enough to maintain the orbit.
 
 As you can probably see, it would still have a long way to go before it would become a really GOOD launching autopilot. Think about the following features you could add yourself as you become more familiar with **kOS**:

@@ -1,7 +1,8 @@
-﻿using kOS.InterProcessor;
+﻿using kOS.Execution;
+using kOS.InterProcessor;
 using kOS.Binding;
-using kOS.Screen;
 using kOS.Factories;
+using kOS.Screen;
 
 namespace kOS
 {
@@ -9,10 +10,11 @@ namespace kOS
     {
         public Vessel Vessel { get; set; }
         public BindingManager BindingMgr { get; set; }  
-        public TermWindow Window { get; set; }
         public ProcessorManager ProcessorMgr { get; set; }
         public IFactory Factory { get; set; }
         public Part KSPPart { get; set; }
+        public TermWindow Window { get; set; }
+        public TransferManager TransferManager { get; set; }
 
         public SharedObjects()
         {
