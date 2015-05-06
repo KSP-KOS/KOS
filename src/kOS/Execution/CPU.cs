@@ -1013,7 +1013,6 @@ namespace kOS.Execution
         private bool ExecuteInstruction(IProgramContext context)
         {
             bool DEBUG_EACH_OPCODE = false;
-            DEBUG_EACH_OPCODE = true; // eraseme
             
             Opcode opcode = context.Program[context.InstructionPointer];
 
