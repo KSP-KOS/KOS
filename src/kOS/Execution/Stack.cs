@@ -44,8 +44,7 @@ namespace kOS.Execution
         {
             if (!Config.Instance.EnableSafeMode)
                 return;
-            // it worked somehow but in my view an additional test makes it more explicit
-            if (!(item is double) && !(item is float))
+            if (!(item is double))
                 return;
 
             if (Double.IsNaN((double)item)) {
