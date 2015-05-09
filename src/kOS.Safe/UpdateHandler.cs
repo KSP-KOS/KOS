@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace kOS.Safe
 {
@@ -59,5 +61,26 @@ namespace kOS.Safe
                 observer.KOSFixedUpdate(deltaTime);
             }
         }
+        
+        /// <summary>
+        /// Return all the registered fixed update handlers of a particular type
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public IEnumerable<IFixedUpdateObserver> GetAllFixedUpdatersOfType(Type t)
+        {
+            return fixedObservers.Where(item => t.IsAssignableFrom(item.GetType()));
+        }
+        
+        /// <summary>
+        /// Return all the registered update handlers of a particular type
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public IEnumerable<IUpdateObserver> GetAllUpdatersOfType(Type t)
+        {
+            return observers.Where(item => t.IsAssignableFrom(item.GetType()));
+        }
+
     }
 }
