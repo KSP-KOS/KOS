@@ -15,7 +15,7 @@ namespace kOS.Execution
         public void Push(object item)
         {
             ThrowIfInvalid(item);
-            item = ConvertRoundFloat(item);
+            // item = ConvertRoundFloat(item);
 
             stackPointer++;
             if (stackPointer < MAX_STACK_SIZE) {
@@ -25,26 +25,27 @@ namespace kOS.Execution
                 throw new Exception("Stack overflow!!");
         }
         
-        private object ConvertRoundFloat(object item)
-        {
-            // I'm not sure what will heppen if infinity or nan gets passed to here
-            // That's why I do this:
-            if (!Config.Instance.EnableSafeMode)
-                return item;
-            if (!(item is double))
-                return item;
-
-            if (item == Math.Truncate((double)item)) {
-                return Convert.ToInt64 (item);
-            }
-            return item;
-        }
+        // private object ConvertRoundFloat(object item)
+        // {
+        //     // I'm not sure what will heppen if infinity or nan gets passed to here
+        //     // That's why I do this:
+        //     if (!Config.Instance.EnableSafeMode)
+        //         return item;
+        //     if (!(item is double))
+        //         return item;
+        //     
+        //     if ((double)item == Math.Truncate((double)item)) {
+        //        
+        //     }
+        //     return item;
+        // }
         
         private void ThrowIfInvalid(object item)
         {
             if (!Config.Instance.EnableSafeMode)
                 return;
-            if (!(item is double))
+            // it worked somehow but in my view an additional test makes it more explicit
+            if (!(item is double) && !(item is float))
                 return;
 
             if (Double.IsNaN((double)item)) {
@@ -64,9 +65,13 @@ namespace kOS.Execution
         /// <returns></returns>
         private object ProcessItem(object item)
         {
-            if (item is float)
+            if (item is float) {
                 // promote floats to doubles
-                return Convert.ToDouble(item);
+                item = Convert.ToDouble (item);
+            }
+            if (item is double && (double)item == Math.Truncate((double)item)) {
+                return Convert.ToInt32 (item); // or should it just be (int)?
+            }
             return item;
         }
 
