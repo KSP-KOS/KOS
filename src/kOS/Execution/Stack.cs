@@ -15,7 +15,6 @@ namespace kOS.Execution
         public void Push(object item)
         {
             ThrowIfInvalid(item);
-            // item = ConvertRoundFloat(item);
 
             stackPointer++;
             if (stackPointer < MAX_STACK_SIZE) {
@@ -24,21 +23,6 @@ namespace kOS.Execution
                 // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
         }
-        
-        // private object ConvertRoundFloat(object item)
-        // {
-        //     // I'm not sure what will heppen if infinity or nan gets passed to here
-        //     // That's why I do this:
-        //     if (!Config.Instance.EnableSafeMode)
-        //         return item;
-        //     if (!(item is double))
-        //         return item;
-        //     
-        //     if ((double)item == Math.Truncate((double)item)) {
-        //        
-        //     }
-        //     return item;
-        // }
         
         private void ThrowIfInvalid(object item)
         {
