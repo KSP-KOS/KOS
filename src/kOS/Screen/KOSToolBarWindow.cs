@@ -274,15 +274,14 @@ namespace kOS.Screen
                 Close();
         }
 
-        /// <summary>Callback for when the mouse is hovering over the button</summary>
+        /// <summary>Callback for when the application launcher shows itself</summary>
         public void CallbackOnShow()
         {            
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnShow()");
-            if (!clickedOn && !isOpen)
-                Open();
+            // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
 
-        /// <summary>Callback for when the mouse is hover is off the button</summary>
+        /// <summary>Callback for when the application launcher hides itself</summary>
         public void CallbackOnHide()
         {            
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHide()");
