@@ -249,6 +249,7 @@ namespace kOS.Function
                 throw new KOSFileException("No filename to load was given.");
             
             ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName, (! justCompiling)); // if running, look for KSM first.  If compiling look for KS first.
+            if (file == null) throw new KOSFileException(string.Format("Can't find file '{0}'.", fileName));
             fileName = file.Filename; // just in case GetByName picked an extension that changed it.
 
             // filename is now guaranteed to have an extension.  To make default output name, replace the extension with KSM:
@@ -260,8 +261,6 @@ namespace kOS.Function
 
             if (shared.VolumeMgr == null) return;
             if (shared.VolumeMgr.CurrentVolume == null) throw new KOSFileException("Volume not found");
-
-            if (file == null) throw new KOSFileException(string.Format("File '{0}' not found", fileName));
 
             if (shared.ScriptHandler != null)
             {

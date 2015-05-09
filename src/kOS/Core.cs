@@ -1,43 +1,45 @@
-﻿using UnityEngine;
+﻿using System;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Persistence;
+using kOS.Suffixed.Part;
+using kOS.Suffixed;
+using kOS.Utilities;
+using System.Linq;
 
 namespace kOS
 {
-    public class Core : MonoBehaviour
+    public class Core : Structure
     {
-        public static VersionInfo VersionInfo = new VersionInfo(0, 17, 1);
+        public static VersionInfo VersionInfo;
+        private readonly SharedObjects shared;
 
-        public static Core Fetch; 
-        
-        public void Awake()
+        static Core()
         {
-            // This thing gets instantiated 4 times by KSP for some reason
-            if (Fetch != null) return;
-            Fetch = this;
-
+            var ver = typeof(Core).Assembly.GetName().Version;
+            VersionInfo = new VersionInfo(ver.Major, ver.Minor, ver.Build);
         }
 
-        public void SaveSettings()
+        public Core(SharedObjects shared)
         {
-            //var writer = KSP.IO.BinaryReader.CreateForType<File>(HighLogic.fetch.GameSaveFolder + "/");
+            this.shared = shared;
+            InitializeSuffixes();
         }
 
-        public static void Debug(string line)
+        private void InitializeSuffixes()
         {
+            AddSuffix("VERSION", new Suffix<VersionInfo>(() => VersionInfo));
+            AddSuffix("PART", new Suffix<PartValue>(() => new PartValue(shared.KSPPart, shared)));
+            AddSuffix("VESSEL", new Suffix<VesselTarget>(() => new VesselTarget(shared.KSPPart.vessel, shared)));
+            AddSuffix("ELEMENT", new Suffix<ElementValue>(GetEelement));
+            AddSuffix("VOLUME", new Suffix<Volume>(() => { throw new NotImplementedException(); }));
         }
 
-        void OnGUI()
+        private ElementValue GetEelement()
         {
-        }
-
-    }
-
-    public class CoreInitializer : KSP.Testing.UnitTest
-    {
-        public CoreInitializer()
-        {
-            var gameobject = new GameObject("kOSCore", typeof (Core));
-            Object.DontDestroyOnLoad(gameobject);
+            var elList = shared.KSPPart.vessel.PartList("elements", shared);
+            var part = new PartValue(shared.KSPPart, shared);
+            return elList.Cast<ElementValue>().FirstOrDefault(el => el.Parts.Contains(part));
         }
     }
 }

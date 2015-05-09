@@ -93,6 +93,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Suffixed\VesselAlt.cs" />
+    <Compile Include="Suffixed\VesselEta.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
@@ -199,7 +201,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="AddOns\KerbalAlarmClock\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

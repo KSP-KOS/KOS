@@ -11,7 +11,8 @@ namespace kOS.Safe.Execution
         void PushAboveStack(object thing);
         object PopAboveStack(int howMany);
         List<VariableScope> GetCurrentClosure();
-        IUserDelegate MakeUserDelegate(int entryPoint);
+        IUserDelegate MakeUserDelegate(int entryPoint, bool withClosure);
+        void AssertValidDelegateCall(IUserDelegate userDelegate);
         object GetValue(object testValue, bool barewordOkay = false);
         object PopValue(bool barewordOkay = false);
         object PeekValue(int digDepth, bool barewordOkay = false);        

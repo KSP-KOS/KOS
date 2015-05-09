@@ -123,7 +123,7 @@ namespace kOS.Safe.Compilation.KS
             PushReversedParameters();
             VisitNode(tree.Nodes[0]);
             
-            if (addBranchDestination)
+            if (addBranchDestination || currentCodeSection.Count == 0)
             {
                 AddOpcode(new OpcodeNOP());
             }
@@ -191,12 +191,32 @@ namespace kOS.Safe.Compilation.KS
         private void PreProcess(ParseTree tree)
         {
             ParseNode rootNode = tree.Nodes[0];
+            LowercaseConversions(rootNode);
             TraverseScopeBranch(rootNode);
             IterateUserFunctions(rootNode, IdentifyUserFunctions);
             PreProcessStatements(rootNode);
             IterateUserFunctions(rootNode, PreProcessUserFunctionStatement);
         }
-
+        
+        /// <summary>
+        /// Lowercase every IDENTIFIER and FILEIDENT token in the parse.
+        /// </summary>
+        /// <param name="node">branch head to start from in the compiler</param>
+        private void LowercaseConversions(ParseNode node)
+        {
+            switch (node.Token.Type)
+            {
+                case TokenType.IDENTIFIER:
+                case TokenType.FILEIDENT:
+                    node.Token.Text = node.Token.Text.ToLower();
+                    break;
+                default:
+                    foreach (ParseNode child in node.Nodes)
+                        LowercaseConversions(child);
+                    break;
+            }
+        }
+        
         private void IterateUserFunctions(ParseNode node, Action<ParseNode> action)
         {
             switch (node.Token.Type)
@@ -429,7 +449,7 @@ namespace kOS.Safe.Compilation.KS
                     return hitScope.ScopeId;
                 current = current.Parent;
             }
-            return (Int16)0;
+            return 0;
         }
         
         private bool IsLockStatement(ParseNode node)
@@ -532,7 +552,7 @@ namespace kOS.Safe.Compilation.KS
                 // build default dummy function to be used when this is a LOCK:
                 currentCodeSection = userFuncObject.GetUserFunctionOpcodes(0);
                 AddOpcode(new OpcodePush("$" + userFuncObject.ScopelessIdentifier)).Label = userFuncObject.DefaultLabel;
-                AddOpcode(new OpcodeReturn());
+                AddOpcode(new OpcodeReturn(0));
             }
 
             // lock expression's or function body's code
@@ -549,19 +569,24 @@ namespace kOS.Safe.Compilation.KS
 
                 VisitNode(bodyNode);
 
+                Int16 implicitReturnScopeDepth = 0;
+                
                 if (isDefFunc)
                     nextBraceIsFunction = false;
                 if (isLock) // locks need to behave as if they had braces even though they don't - so they get lexical scope ids for closure reasons:
-                    EndScope(bodyNode);
+                {
+                    EndScope(bodyNode, false);
+                    implicitReturnScopeDepth = 1;
+                }
 
                 if (needImplicitReturn)
                 {
                     if (isDefFunc)
                         AddOpcode(new OpcodePush(0)); // Functions must push a dummy return val when making implicit returns. Locks already leave an expr atop the stack.
-                    AddOpcode(new OpcodeReturn());
+                    AddOpcode(new OpcodeReturn(implicitReturnScopeDepth));
                 }
                 userFuncObject.ScopeNode = GetContainingBlockNode(node); // This limits the scope of the function to the instruction_block the DEFINE was in.
-                userFuncObject.IsFunction = !(isLock);;
+                userFuncObject.IsFunction = !(isLock);
             }
         }
         
@@ -609,7 +634,7 @@ namespace kOS.Safe.Compilation.KS
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
             // if the declaration is a parameter,
             // and this is NOT contained inside a DEFINE FUNCTION block and
-            // is therefore a global program paramter (for the run statement):
+            // is therefore a global program parameter (for the run statement):
             if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
                 (!(IsInsideDefineFunctionStatement(node))))
             {
@@ -627,8 +652,8 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             if (options.LoadProgramsInSameAddressSpace)
             {
-                bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
-                if (!hasON)
+                bool hasOn = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
+                if (!hasOn)
                 {
                     string subprogramName = node.Nodes[1].Token.Text; // It assumes it already knows at compile-time how many unique program filenames exist, 
                     if (!context.Subprograms.Contains(subprogramName)) // which it uses to decide how many of these blocks to make,
@@ -638,7 +663,7 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.FunctionCode;
                         // verify if the program has been loaded
                         Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodePush(-1));
                         AddOpcode(new OpcodeCompareEqual());
                         OpcodeBranchIfFalse branchOpcode = new OpcodeBranchIfFalse();
                         AddOpcode(branchOpcode);
@@ -660,13 +685,13 @@ namespace kOS.Safe.Compilation.KS
                         
                         // maybe TODO?  Right now the RETURN command is being prevented from being used outside 
                         // a function declaration.  But in principle we could have programs return exit codes
-                        // using the same archetecture, and in fact that is why this dummy return value is needed,
+                        // using the same architecture, and in fact that is why this dummy return value is needed,
                         // because OpcodeReturn now expects such a return value to exist and throws an exception when it
                         // does not.
                         // If an EXIT command was implemented, it would maybe allow an exit code that can be read here:
                         AddOpcode(new OpcodePop()); // for now: throw away return code from subprogram.
                         AddOpcode(new OpcodePush(0)); // Replace it with new dummy return code.
-                        AddOpcode(new OpcodeReturn()); // return that.
+                        AddOpcode(new OpcodeReturn(0)); // return that.
 
                         // set the function start label
                         subprogramObject.FunctionLabel = functionStart.Label;
@@ -675,7 +700,7 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.InitializationCode;
                         // initialize the pointer to zero
                         AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodePush(-1));
                         AddOpcode(new OpcodeStore());
                     }
                 }
@@ -737,21 +762,20 @@ namespace kOS.Safe.Compilation.KS
             if (breakList.Count > 0)
             {
                 BreakInfo list = breakList[breakList.Count - 1];
-                if (list != null)
-                {
-                    breakList.Remove(list);
-                    foreach (Opcode opcode in list.Opcodes)
-                    {
-                        OpcodePopScope popScopeOp = opcode as OpcodePopScope;
-                        if (popScopeOp != null)
-                            // calculate how many nesting levels it needs to really pop
-                            // by comparing the nest level where the break statement was to
-                            // the nest level where the break context started:
-                            popScopeOp.NumLevels = (Int16)(popScopeOp.NumLevels - list.NestLevel);
+                if (list == null) return;
 
-                        else // assume all others are branch opcodes of some sort:
-                            opcode.DestinationLabel = label;
-                    }
+                breakList.Remove(list);
+                foreach (Opcode opcode in list.Opcodes)
+                {
+                    OpcodePopScope popScopeOp = opcode as OpcodePopScope;
+                    if (popScopeOp != null)
+                        // calculate how many nesting levels it needs to really pop
+                        // by comparing the nest level where the break statement was to
+                        // the nest level where the break context started:
+                        popScopeOp.NumLevels = (Int16)(popScopeOp.NumLevels - list.NestLevel);
+
+                    else // assume all others are branch opcodes of some sort:
+                        opcode.DestinationLabel = label;
                 }
             }
         }
@@ -800,8 +824,11 @@ namespace kOS.Safe.Compilation.KS
         /// <summary>
         /// Insert the Opcode to finish a lexical scope
         /// Call upon every close brace "}"
+        /// <param name="withPopScope">Should this code insert its own popscope.  Only say false when
+        /// you intend to immediately do a return statement and have the return statement be
+        /// responsible for the popscope itself.</param>
         /// </summary>
-        private void EndScope(ParseNode node)
+        private void EndScope(ParseNode node, bool withPopScope = true)
         {
             node = node.Parent;
 
@@ -819,13 +846,14 @@ namespace kOS.Safe.Compilation.KS
                 braceNestLevel = 0;
             }
 
-            AddOpcode(new OpcodePopScope());
+            if (withPopScope)
+                AddOpcode(new OpcodePopScope());
         }
         
         /// <summary>
         /// Because the compile occurs a bit out of order (doing the most deeply nested function
         /// first, then working out from there) it walks the scope nesting in the wrong order. 
-        /// Therefore before doing the complie, run through in one pass just recording the nesting
+        /// Therefore before doing the compile, run through in one pass just recording the nesting
         /// levels and lexical parent tree of the scoping before we begin, so we can
         /// use that information later in the parse:
         /// </summary>
@@ -982,12 +1010,6 @@ namespace kOS.Safe.Compilation.KS
                     break;
                 case TokenType.unset_stmt:
                     VisitUnsetStatement(node);
-                    break;
-                case TokenType.batch_stmt:
-                    VisitBatchStatement(node);
-                    break;
-                case TokenType.deploy_stmt:
-                    VisitDeployStatement(node);
                     break;
                 case TokenType.arglist:
                     VisitArgList(node);
@@ -1414,7 +1436,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                 }
                 
-                // In the case of a lock function withiout parentheses, it needs this special case:
+                // In the case of a lock function without parentheses, it needs this special case:
                 if (suffixTerm.Nodes.Count <= 1)
                 {
                     if (isDirect && isUserFunc)
@@ -1448,12 +1470,18 @@ namespace kOS.Safe.Compilation.KS
                     ++nodeIndex;
                 }
 
-                bool remember = identifierIsSuffix;
+                // Temporarily turn off these flags while evaluating the expression inside
+                // the array index square brackets.  These flags apply to this outer containing
+                // thing, the array access, not to the expression in the index brackets:
+                bool rememberIdentIsSuffix = identifierIsSuffix;
                 identifierIsSuffix = false;
+                bool rememberCompSetDest = compilingSetDestination;
+                compilingSetDestination = false;
+                
+                VisitNode(trailerNode.Nodes[nodeIndex]); // pushes the result of expression inside square brackets.
 
-                VisitNode(trailerNode.Nodes[nodeIndex]);
-
-                identifierIsSuffix = remember;
+                compilingSetDestination = rememberCompSetDest;
+                identifierIsSuffix = rememberIdentIsSuffix;
 
                 // Two ways to check if this is the last index (i.e. the 'k' in arr[i][j][k]'),
                 // depending on whether using the "#" syntax or the "[..]" syntax:
@@ -1928,7 +1956,7 @@ namespace kOS.Safe.Compilation.KS
             // a global function in another script are the same scope, since we don't nest files in their own scope.
             // If we ever change the design to create file scoping, the lastmost check above can probably go away.
             //
-            // That last check deliberately takes advantage of short-curcuiting to avoid the expense of IsNew() if it can.
+            // That last check deliberately takes advantage of short-circuiting to avoid the expense of IsNew() if it can.
 
             foreach (UserFunction func in theseFuncs)
             {
@@ -1936,15 +1964,15 @@ namespace kOS.Safe.Compilation.KS
                 // By storing the mapping from identifier name to instruction jump point in
                 // a local variable, we're masking the function from view when its variable
                 // identifier is out of scope.  (For example if a function's body of Opcodes
-                // is stored at locations K100_021 trhough K100_141, then those 100 opcodes
+                // is stored at locations K100_021 through K100_141, then those 100 opcodes
                 // are compiled statically and are always present in memory in a way that ignores scope,
                 // but the variable "$MyFunc*" that contains the value K100_021 to tell you where
-                // to jump to to start the function will stop existing once MyFunc is out of scope).
-                // This is typical of an OOP langauge.  The physical code is always static for all
+                // to jump to start the function will stop existing once MyFunc is out of scope).
+                // This is typical of an OOP language.  The physical code is always static for all
                 // methods and functions, and always has exactly one copy in memory whether there are
                 // one, many, or zero "instances" of it present in scope at the moment.
                 AddOpcode(new OpcodePush(func.ScopelessPointerIdentifier));
-                AddOpcode(new OpcodePushRelocateLater(null), func.GetFuncLabel());
+                AddOpcode(new OpcodePushDelegateRelocateLater(null,false), func.GetFuncLabel());
                 if (node == null) // global scope, so unconditionally use a normal Store:
                     AddOpcode(new OpcodeStore()); //
                 else
@@ -1971,7 +1999,7 @@ namespace kOS.Safe.Compilation.KS
             string functionLabel = lockObject.GetUserFunctionLabel(expressionHash);
             // lock variable
             AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
-            AddOpcode(new OpcodePushDelegateRelocateLater(null), functionLabel);
+            AddOpcode(new OpcodePushDelegateRelocateLater(null,true), functionLabel);
             AddOpcode(CreateAppropriateStoreCode(whereToStore, allowLazyGlobal));
 
             if (lockObject.IsSystemLock())
@@ -2186,7 +2214,7 @@ namespace kOS.Safe.Compilation.KS
             if (node.Nodes.Count == 0) // sanity check - really should never be called on terminal nodes like this.
                 return modifier;
             
-            // It may look wierd to do this as a switch when there's only one condition and it
+            // It may look weird to do this as a switch when there's only one condition and it
             // looks like it should be an if.  It's leaving room for expansion later if the need
             // arises:
             switch (node.Token.Type)
@@ -2328,8 +2356,8 @@ namespace kOS.Safe.Compilation.KS
 
             // process program arguments
             AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // regardless of whether it's called directly or indirectly, we still need at least one.
-            bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
-            if (!hasON && options.LoadProgramsInSameAddressSpace)
+            bool hasOn = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
+            if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
                 // When running in the same address space, we need an extra arg marker under the args, because
                 // of the double-indirect call where we call the subroutine that was built in PreProcessRunStatement,
@@ -2344,7 +2372,7 @@ namespace kOS.Safe.Compilation.KS
                 volumeIndex += 3;
             }
 
-            if (!hasON && options.LoadProgramsInSameAddressSpace)
+            if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
                 string subprogramName = node.Nodes[1].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
                 if (context.Subprograms.Contains(subprogramName))  // and instead have to do RUN FILEIDENT, in the parser def.
@@ -2517,7 +2545,7 @@ namespace kOS.Safe.Compilation.KS
             // in the final program.  The reason for not just doing it now is
             // that we have to wait until the bottom of the nested braces to
             // find out where to jump to anyway, so this opcode will have to be
-            // revisted then anyway:
+            // revisited then anyway:
             Opcode popScope = AddOpcode(new OpcodePopScope(braceNestLevel));
             AddToBreakList(popScope);
  
@@ -2532,18 +2560,16 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            int nestLevelOfFuncBraces = GetReturnNestLevel();
+            Int16 nestLevelOfFuncBraces = (Int16)GetReturnNestLevel();
 
             if (nestLevelOfFuncBraces < 0)
                 throw new KOSReturnInvalidHereException();
 
             // Push the return expression onto the stack, or if it was a naked RETURN
             // keyword with no expression, then push a secret dummy return value of zero:
-            if (node.Nodes.Count > 1)
+            if (node.Nodes.Count > 2)
             {
                 VisitNode(node.Nodes[1]);
-                AddOpcode(new OpcodeEval()); // vital because we can't return a local var to the caller,
-                                             // we must return the value it contained instead.
             }
             else
             {
@@ -2554,8 +2580,8 @@ namespace kOS.Safe.Compilation.KS
             // simpler than the BREAK case because RETURN already knows to use the function
             // call stack to figure out where to return to, so we don't have to wait until
             // later to decide where to jump to like we do in BREAK:
-            AddOpcode(new OpcodePopScope(1 + braceNestLevel - nestLevelOfFuncBraces));
-            AddOpcode(new OpcodeReturn());
+            int depth = 1 + braceNestLevel - nestLevelOfFuncBraces;
+            AddOpcode(new OpcodeReturn((Int16)depth));
         }
 
         private void VisitPreserveStatement(ParseNode node)
@@ -2652,18 +2678,6 @@ namespace kOS.Safe.Compilation.KS
             }
 
             AddOpcode(new OpcodeUnset());
-        }
-
-        private void VisitBatchStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            throw new Exception("Batch mode can only be used when in immediate mode.");
-        }
-
-        private void VisitDeployStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            throw new Exception("Batch mode can only be used when in immediate mode.");
         }
 
         private void VisitIdentifierLedStatement(ParseNode node)

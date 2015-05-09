@@ -92,9 +92,12 @@
     <Compile Include="Encapsulation\TerminalStruct.cs" />
     <Compile Include="Encapsulation\VersionInfo.cs" />
     <Compile Include="Exceptions\KOSArgumentMismatchException.cs" />
+    <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />
+    <Compile Include="Exceptions\KOSBadJumpException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSInvalidArgumentException.cs" />
     <Compile Include="Exceptions\KOSIdentifierClashException.cs" />
+    <Compile Include="Exceptions\KOSInvalidDelegateContext.cs" />
     <Compile Include="Exceptions\KOSLowTechException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
     <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Execution\ICpu.cs" />
+    <Compile Include="Execution\IProgramContext.cs" />
     <Compile Include="Execution\IStack.cs" />
     <Compile Include="Execution\IUserDelegate.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />

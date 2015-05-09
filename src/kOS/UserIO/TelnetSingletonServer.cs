@@ -44,7 +44,7 @@ namespace kOS.UserIO
         private readonly object inQueueAccess = new object(); // To make all access of the inQueue atomic between threads.
 
         /// <summary>
-        /// The queue that other parts of kOS can use to write characters to the telent client.
+        /// The queue that other parts of kOS can use to write characters to the telnet client.
         /// </summary>
         private volatile Queue<char> outQueue;
         private readonly object outQueueAccess = new object(); // To make all access of the outQueue atomic between threads.
@@ -221,7 +221,7 @@ namespace kOS.UserIO
         }
         
         /// <summary>
-        /// Get a string of all available charactesr from the client.
+        /// Get a string of all available characters from the client.
         /// If no such chars are available it will not throw an exception.  Instead it just returns a zero length string.
         /// </summary>
         /// <returns>All currently available input characters returned in one string.</returns>
@@ -254,7 +254,7 @@ namespace kOS.UserIO
         
         /// <summary>
         /// Write a character out to the telnet client.  You can pretend the telnet client is a
-        /// psuedo-terminal that understands the command codes in UnicodeCommand.
+        /// pseudo-terminal that understands the command codes in UnicodeCommand.
         /// <br/>
         /// This TelnetSingletonServer will run what you give it through a command code
         /// mapper for whichever terminal type is actually attached to the telnet client.
@@ -274,7 +274,7 @@ namespace kOS.UserIO
 
         /// <summary>
         /// Write a string out to the telnet client.  You can pretend the telnet client is a
-        /// psuedo-terminal that understands the command codes in UnicodeCommand.
+        /// pseudo-terminal that understands the command codes in UnicodeCommand.
         /// <br/>
         /// This TelnetSingletonServer will run what you give it through a command code
         /// mapper for whichever terminal type is actually attached to the telnet client.
@@ -339,12 +339,6 @@ namespace kOS.UserIO
                     // Not using SuperVerbose because it's flagged by verboseDebugSend and maybe we want to ask users
                     // to be able to send us logs when they issue bug reports:
                     logMessage.Append("Send buff["+i+"] = (int)"+ (int)buff[i] + " = '" + (char)buff[i] + "'\n");
-                    
-                    //    ----  Note to Erendrake: -----
-                    // Can we at some point change the naming convention in such a way that we stop getting the following
-                    // error messages from the compiler? 
-                    //       'Debug' is an ambiguous reference between 'kOS.Safe.Utilities.Debug' and 'UnityEngine.Debug'.
-                    // That message is the reason I have the long fully qualified name for the Log() method above.
                 }
                 SafeHouse.Logger.Log(logMessage.ToString());
             }
@@ -432,8 +426,8 @@ namespace kOS.UserIO
         /// <summary>
         /// Detect if the client is stuck, using some dummy sends.
         /// The low level TCP keepalive would be another way to do this, but .NET did a little bit TOO much abstraction
-        /// of network sockets, and hid the abilty to change that setting.   It's stuck at its default value of 2 hours.
-        /// To change it from 2 hours would requre dropping into the Windows OS-specific libraries and we're trying to
+        /// of network sockets, and hid the ability to change that setting.   It's stuck at its default value of 2 hours.
+        /// To change it from 2 hours would require dropping into the Windows OS-specific libraries and we're trying to
         /// avoid that so KOS can run on Mac and Linux.  (Rant: The ability to choose the TCP/IP keepalive interval
         /// is old bog-standard Internet stuff and in no way is it Windows-specific so there's no reason to restrict
         /// it to the windows-specific part of the API, dammit!  It should be part of .NET because every OS can do it!!)
@@ -659,7 +653,7 @@ namespace kOS.UserIO
                                 rawIndex += TelnetConsumeWont(inRawBuff, rawIndex);
                                 break;
                             case RFC854_IAC:
-                                break; // pass through to normal behaviour when two IAC's are back to back - that's how a real IAC char is encoded.
+                                break; // pass through to normal behavior when two IAC's are back to back - that's how a real IAC char is encoded.
                             case RFC854_BREAK:
                             case RFC854_IP:
                                 lock (inQueueAccess) { inQueue.Enqueue((char)UnicodeCommand.BREAK); } // async send it out of order, right now

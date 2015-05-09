@@ -16,14 +16,7 @@ namespace kOS.Suffixed.PartModuleField
         {
             AddSuffix("LOCK", new SetSuffix<bool>(() => gimbal.gimbalLock, value =>
             {
-                if (value)
-                {
-                    gimbal.LockGimbal();
-                }
-                else
-                {
-                    gimbal.FreeGimbal();
-                }
+                gimbal.gimbalLock = value;
             }, "Is the Gimbal free to travel?"));
             AddSuffix("RANGE", new Suffix<float>(() => gimbal.gimbalRange ,"The Gimbal's Possible Range of movement"));
             AddSuffix("RESPONSESPEED", new Suffix<float>(() => gimbal.gimbalResponseSpeed, "The Gimbal's Possible Rate of travel"));

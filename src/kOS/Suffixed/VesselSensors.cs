@@ -42,7 +42,7 @@ namespace kOS.Suffixed
                                 acceleration = new Vector(target.acceleration);
                                 break;
                             case "PRES":
-                                pressure = target.staticPressure;
+                                pressure = target.staticPressurekPa;
                                 break;
                             case "TEMP":
                                 temperature = part.temperature;

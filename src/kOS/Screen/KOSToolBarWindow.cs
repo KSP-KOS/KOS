@@ -36,7 +36,8 @@ namespace kOS.Screen
             ApplicationLauncher.AppScenes.FLIGHT | 
             ApplicationLauncher.AppScenes.SPH | 
             ApplicationLauncher.AppScenes.VAB | 
-            ApplicationLauncher.AppScenes.MAPVIEW;
+            ApplicationLauncher.AppScenes.MAPVIEW |
+            ApplicationLauncher.AppScenes.SPACECENTER;
 
         private static Texture2D launcherButtonTexture;
         private static Texture2D terminalClosedIconTexture;
@@ -112,7 +113,14 @@ namespace kOS.Screen
 
         public void Awake ()
         {
-            
+            GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
+
+            RunWhenReady();
+        }
+
+        void OnGameSceneLoadRequestedForAppLauncher(GameScenes SceneToLoad)
+        {
+            GoAway();
         }
 
         public void Start()
@@ -122,9 +130,6 @@ namespace kOS.Screen
             alreadyAwake = true;
 
             FirstTimeSetup();
-
-            GameEvents.onGUIApplicationLauncherReady.Add(RunWhenReady);
-            GameEvents.onGUIApplicationLauncherDestroyed.Add(GoAway);
 
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Start succesful");
         }
@@ -157,7 +162,8 @@ namespace kOS.Screen
                 launcher.EnableMutuallyExclusive(launcherButton);
 
             }
-            AddBlizzyButton();
+            if (BlizzyButton == null)
+                AddBlizzyButton();
 
             SetupBackingConfigInts();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Launcher Icon init successful");
@@ -202,9 +208,6 @@ namespace kOS.Screen
 
             try
             {
-                GameEvents.onGUIApplicationLauncherReady.Remove(RunWhenReady);
-                GameEvents.onGUIApplicationLauncherDestroyed.Remove(GoAway);
-
                 if (launcherButton != null && ApplicationLauncher.Instance != null)
                 {
                     ApplicationLauncher launcher = ApplicationLauncher.Instance;
@@ -228,6 +231,7 @@ namespace kOS.Screen
 
         public void OnDestroy()
         {
+            GameEvents.onGameSceneLoadRequested.Remove(OnGameSceneLoadRequestedForAppLauncher);
             GoAway();
             SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] OnDestroy successful");
         }
@@ -566,7 +570,7 @@ namespace kOS.Screen
             // So for the meantime let's use our own text label and leave it at that.
             
             KOSNameTag partTag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
-
+            
             string labelText = String.Format("{0}\n({1})",
                                              part.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
                                              ((partTag==null) ? "" : partTag.nameTag)

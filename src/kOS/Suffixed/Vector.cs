@@ -1,6 +1,6 @@
-﻿using System;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using System;
 using UnityEngine;
 
 namespace kOS.Suffixed
@@ -8,12 +8,25 @@ namespace kOS.Suffixed
     public class Vector : Structure
     {
         public double X { get; set; }
+
         public double Y { get; set; }
+
         public double Z { get; set; }
 
-        public Vector(Vector3d init) :this(init.x,init.y,init.z) { }
-        public Vector(Vector3 init) :this(init.x, init.y, init.z) { }
-        public Vector(float x, float y, float z) : this((double)x,(double)y,(double)z) { }
+        public Vector(Vector3d init)
+            : this(init.x, init.y, init.z)
+        {
+        }
+
+        public Vector(Vector3 init)
+            : this(init.x, init.y, init.z)
+        {
+        }
+
+        public Vector(float x, float y, float z)
+            : this((double)x, (double)y, (double)z)
+        {
+        }
 
         public Vector(double x, double y, double z)
         {
@@ -30,26 +43,28 @@ namespace kOS.Suffixed
             AddSuffix("Z", new SetSuffix<double>(() => Z, value => Z = value));
             AddSuffix("MAG", new SetSuffix<double>(Magnitude, value =>
             {
-                    double oldMag = new Vector3d(X, Y, Z).magnitude;
+                double oldMag = new Vector3d(X, Y, Z).magnitude;
 
-                    if (oldMag == 0) return; // Avoid division by zero
+                if (oldMag == 0) return; // Avoid division by zero
 
-                    X = X/oldMag*value;
-                    Y = Y/oldMag*value;
-                    Z = Z/oldMag*value;
+                X = X / oldMag * value;
+                Y = Y / oldMag * value;
+                Z = Z / oldMag * value;
             }));
-            AddSuffix("VEC", new Suffix<Vector>(() => new Vector(X,Y,Z)));
+            AddSuffix("VEC", new Suffix<Vector>(() => new Vector(X, Y, Z)));
             AddSuffix("NORMALIZED", new Suffix<Vector>(Normalized));
-            AddSuffix("SQRMAGNITUDE", new Suffix<double>(() => new Vector3d(X,Y,Z).sqrMagnitude));
+            AddSuffix("SQRMAGNITUDE", new Suffix<double>(() => new Vector3d(X, Y, Z).sqrMagnitude));
             AddSuffix("DIRECTION", new SetSuffix<Direction>(ToDirection, value =>
             {
-                    Vector3d newVal = value.Rotation * Vector3d.forward;
-                    X = newVal.x;
-                    Y = newVal.y;
-                    Z = newVal.z;
+                var newMagnitude = Vector3d.forward * new Vector3d(X, Y, Z).magnitude;
+
+                var newVector = value.Rotation * newMagnitude;
+
+                X = newVector.x;
+                Y = newVector.y;
+                Z = newVector.z;
             }));
         }
-
 
         public override object TryOperation(string op, object other, bool reverseOrder)
         {
@@ -58,9 +73,10 @@ namespace kOS.Suffixed
             switch (op)
             {
                 case "*":
-                    if (other is Vector) return this*(Vector) other;
-                    if (other is double) return this*(double) other;
+                    if (other is Vector) return this * (Vector)other;
+                    if (other is double) return this * (double)other;
                     break;
+
                 case "/":
                     if (!reverseOrder)
                     {
@@ -72,36 +88,38 @@ namespace kOS.Suffixed
                         throw new NotImplementedException("Cannot divide by a vector.");
                     }
                     break;
+
                 case "+":
-                    if (other is Vector) return this + (Vector) other;
+                    if (other is Vector) return this + (Vector)other;
                     break;
+
                 case "-":
                     if (!reverseOrder)
                     {
-                        if (other is Vector) return this - (Vector) other;
+                        if (other is Vector) return this - (Vector)other;
                     }
                     else
                     {
-                        if (other is Vector) return (Vector) other - this;
+                        if (other is Vector) return (Vector)other - this;
                     }
                     break;
-                    
+
                 default:
                     throw new NotImplementedException(string.Format(
-                        "Cannot perform operation: {0} {1} {2}", this, op, other ) );
+                        "Cannot perform operation: {0} {1} {2}", this, op, other));
             }
 
             return null;
         }
-        
+
         public double Magnitude()
         {
-            return new Vector3d(X,Y,Z).magnitude;
+            return new Vector3d(X, Y, Z).magnitude;
         }
-        
+
         public Vector Normalized()
         {
-            return new Vector( new Vector3d(X,Y,Z).normalized );
+            return new Vector(new Vector3d(X, Y, Z).normalized);
         }
 
         public Direction ToDirection()
@@ -111,7 +129,7 @@ namespace kOS.Suffixed
 
         public static Vector Zero
         {
-            get { return new Vector(Vector3d.zero);}
+            get { return new Vector(Vector3d.zero); }
         }
 
         public Vector3d ToVector3D()
@@ -146,12 +164,12 @@ namespace kOS.Suffixed
 
         public static Vector operator *(Vector a, float b)
         {
-            return new Vector(a.X*b, a.Y*b, a.Z*b);
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
         }
 
         public static Vector operator *(Vector a, double b)
         {
-            return new Vector(a.X*b, a.Y*b, a.Z*b);
+            return new Vector(a.X * b, a.Y * b, a.Z * b);
         }
 
         public static Vector operator +(Vector a, Vector b)
@@ -163,9 +181,10 @@ namespace kOS.Suffixed
         {
             return new Vector(a.ToVector3D() - b.ToVector3D());
         }
+
         public static Vector operator -(Vector a)
         {
-            return a*(-1);
+            return a * (-1);
         }
     }
 }

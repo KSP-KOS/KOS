@@ -7,60 +7,58 @@ PLUSMINUS    -> @"(\+|-)";
 MULT         -> @"\*";
 DIV          -> @"/";
 POWER        -> @"\^";
-E            -> @"e";
+E            -> @"(?i)\be\b";
 //Logic
-NOT          -> @"not";
-AND          -> @"and";
-OR           -> @"or";
-TRUEFALSE    -> @"true|false";
+NOT          -> @"(?i)\bnot\b";
+AND          -> @"(?i)\band\b";
+OR           -> @"(?i)\bor\b";
+TRUEFALSE    -> @"(?i)\btrue\b|\bfalse\b";
 COMPARATOR   -> @"<>|>=|<=|=|>|<";
 //Instructions tokens
-SET          -> @"set";
-TO           -> @"to";
-IS           -> @"is";
-IF           -> @"if";
-ELSE         -> @"else";
-UNTIL        -> @"until";
-LOCK         -> @"lock";
-UNLOCK       -> @"unlock";
-PRINT        -> @"print";
-AT           -> @"at";
-ON           -> @"on";
-TOGGLE       -> @"toggle";
-WAIT         -> @"wait";
-WHEN         -> @"when";
-THEN         -> @"then";
-OFF          -> @"off";
-STAGE        -> @"stage";
-CLEARSCREEN  -> @"clearscreen";
-ADD          -> @"add";
-REMOVE       -> @"remove";
-LOG          -> @"log";
-BREAK        -> @"break";
-PRESERVE     -> @"preserve";
-DECLARE      -> @"declare";
-LOCAL        -> @"local";
-GLOBAL       -> @"global";
-PARAMETER    -> @"parameter";
-FUNCTION     -> @"function";
-RETURN       -> @"return";
-SWITCH       -> @"switch";
-COPY         -> @"copy";
-FROM         -> @"from";
-RENAME       -> @"rename";
-VOLUME       -> @"volume";
-FILE         -> @"file";
-DELETE       -> @"delete";
-EDIT         -> @"edit";
-RUN          -> @"run";
-COMPILE      -> @"compile";
-LIST         -> @"list";
-REBOOT       -> @"reboot";
-SHUTDOWN     -> @"shutdown";
-FOR          -> @"for";
-UNSET        -> @"unset";
-BATCH        -> @"batch";
-DEPLOY       -> @"deploy";
+SET          -> @"(?i)\bset\b";
+TO           -> @"(?i)\bto\b";
+IS           -> @"(?i)\bis\b";
+IF           -> @"(?i)\bif\b";
+ELSE         -> @"(?i)\belse\b";
+UNTIL        -> @"(?i)\buntil\b";
+LOCK         -> @"(?i)\block\b";
+UNLOCK       -> @"(?i)\bunlock\b";
+PRINT        -> @"(?i)\bprint\b";
+AT           -> @"(?i)\bat\b";
+ON           -> @"(?i)\bon\b";
+TOGGLE       -> @"(?i)\btoggle\b";
+WAIT         -> @"(?i)\bwait\b";
+WHEN         -> @"(?i)\bwhen\b";
+THEN         -> @"(?i)\bthen\b";
+OFF          -> @"(?i)\boff\b";
+STAGE        -> @"(?i)\bstage\b";
+CLEARSCREEN  -> @"(?i)\bclearscreen\b";
+ADD          -> @"(?i)\badd\b";
+REMOVE       -> @"(?i)\bremove\b";
+LOG          -> @"(?i)\blog\b";
+BREAK        -> @"(?i)\bbreak\b";
+PRESERVE     -> @"(?i)\bpreserve\b";
+DECLARE      -> @"(?i)\bdeclare\b";
+LOCAL        -> @"(?i)\blocal\b";
+GLOBAL       -> @"(?i)\bglobal\b";
+PARAMETER    -> @"(?i)\bparameter\b";
+FUNCTION     -> @"(?i)\bfunction\b";
+RETURN       -> @"(?i)\breturn\b";
+SWITCH       -> @"(?i)\bswitch\b";
+COPY         -> @"(?i)\bcopy\b";
+FROM         -> @"(?i)\bfrom\b";
+RENAME       -> @"(?i)\brename\b";
+VOLUME       -> @"(?i)\bvolume\b";
+FILE         -> @"(?i)\bfile\b";
+DELETE       -> @"(?i)\bdelete\b";
+EDIT         -> @"(?i)\bedit\b";
+RUN          -> @"(?i)\brun\b";
+COMPILE      -> @"(?i)\bcompile\b";
+LIST         -> @"(?i)\blist\b";
+REBOOT       -> @"(?i)\breboot\b";
+SHUTDOWN     -> @"(?i)\bshutdown\b";
+FOR          -> @"(?i)\bfor\b";
+UNSET        -> @"(?i)\bunset\b";
 //Generic
 BRACKETOPEN  -> @"\(";
 BRACKETCLOSE -> @"\)";
@@ -70,18 +68,18 @@ SQUAREOPEN   -> @"\[";
 SQUARECLOSE  -> @"\]";
 COMMA        -> @",";
 COLON        -> @":";
-IN           -> @"in";
+IN           -> @"(?i)\bin\b";
 ARRAYINDEX   -> @"#";
-ALL          -> @"all";
-IDENTIFIER   -> @"[a-z_][a-z0-9_]*";
-FILEIDENT    -> @"[a-z_][a-z0-9_]*(\.[a-z0-9_][a-z0-9_]*)*";
+ALL          -> @"(?i)\ball\b";
+IDENTIFIER   -> @"(?i)[a-z_][a-z0-9_]*";
+FILEIDENT    -> @"(?i)[a-z_][a-z0-9_]*(\.[a-z0-9_][a-z0-9_]*)*";
 INTEGER      -> @"[0-9]+";
 DOUBLE       -> @"[0-9]*\.[0-9]+";
 STRING       -> @"@?\""(\""\""|[^\""])*\""";
 EOI          -> @"\.";
 //Compiler Directives
 ATSIGN       -> @"@";
-LAZYGLOBAL   -> @"lazyglobal";
+LAZYGLOBAL   -> @"(?i)\blazyglobal\b";
 //Special
 EOF          -> @"^$";
 [Skip]
@@ -123,8 +121,6 @@ instruction -> set_stmt |
                shutdown_stmt |
                for_stmt |
                unset_stmt |
-               batch_stmt |
-               deploy_stmt |
                instruction_block |
                identifier_led_stmt | // any statement that starts with an identifier.
                directive; // allow directives anywhere for now, let the compiler decide if it's in the wrong place, not the parser.
@@ -191,8 +187,6 @@ reboot_stmt    -> REBOOT EOI;
 shutdown_stmt  -> SHUTDOWN EOI;
 for_stmt       -> FOR IDENTIFIER IN varidentifier instruction EOI?;
 unset_stmt     -> UNSET (IDENTIFIER | ALL) EOI;
-batch_stmt     -> BATCH EOI;
-deploy_stmt    -> DEPLOY EOI;
 
 
 // ---------- expressions ---------------------------
