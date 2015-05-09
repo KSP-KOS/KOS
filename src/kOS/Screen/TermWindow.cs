@@ -19,11 +19,10 @@ namespace kOS.Screen
         
         private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private static readonly Color color = new Color(1, 1, 1, 1);
-        private static readonly Color colorAlpha = new Color(0.9f, 0.9f, 0.9f, 0.6f);
+        private static readonly Color borderColor = new Color(0.8f, 1, 0.8f, 1);
+        private static readonly Color borderColorUnfocused = new Color(0.9f, 0.9f, 0.9f, 0.4f);
         private static readonly Color textColor = new Color(0.45f, 0.92f, 0.23f, 0.9f);
-        private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
-        private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
         private Rect closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.        
         private Rect resizeButtonCoords = new Rect(0,0,0,0); // will be resized later.
         private Vector2 resizeOldSize;
@@ -194,7 +193,7 @@ namespace kOS.Screen
             
             GUI.skin = HighLogic.Skin;
             
-            GUI.color = isLocked ? color : colorAlpha;
+            GUI.color = isLocked ? borderColor : borderColorUnfocused;
 
             // Should probably make "gui screen name for my CPU part" into some sort of utility method:
             ChangeTitle(CalcualteTitle());
@@ -499,7 +498,7 @@ namespace kOS.Screen
             }
             IScreenBuffer screen = shared.Screen;
 
-            GUI.color = isLocked ? color : colorAlpha;
+            GUI.color = color;
             GUI.DrawTexture(new Rect(15, 20, WindowRect.width-30, WindowRect.height-55), terminalImage);
 
             if (telnets.Count > 0)
@@ -528,14 +527,7 @@ namespace kOS.Screen
             }
 
 
-            if (IsPowered)
-            {
-                currentTextColor = isLocked ? textColor : textColorAlpha;
-            }
-            else
-            {
-                currentTextColor = isLocked ? textColorOff : textColorOffAlpha;
-            }
+            currentTextColor = IsPowered ? textColor : textColorOff;
 
             GUI.BeginGroup(new Rect(28, 38, screen.ColumnCount*CHARSIZE, screen.RowCount*CHARSIZE));
 
