@@ -230,6 +230,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction:
                 case TokenType.if_stmt:
                 case TokenType.until_stmt:
+                case TokenType.for_stmt:
                 case TokenType.on_stmt:
                 case TokenType.when_stmt:
                 case TokenType.declare_function_clause:
