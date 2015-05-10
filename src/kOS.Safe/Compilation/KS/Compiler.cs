@@ -2466,7 +2466,7 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                AddOpcode(new OpcodePush(node.Nodes[2].Token.Type == TokenType.FROM ? "file" : "volume"));
+                AddOpcode(new OpcodePush(node.Nodes[1].Token.Type == TokenType.FILE ? "file" : "volume"));
             }
 
             VisitNode(node.Nodes[oldNameIndex]);
