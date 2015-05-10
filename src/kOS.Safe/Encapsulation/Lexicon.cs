@@ -51,16 +51,36 @@ namespace kOS.Safe.Encapsulation
             InitalizeSuffixes();
         }
 
+        private Lexicon(IEnumerable<KeyValuePair<T, TU>> lexicon) : this()
+        {
+            foreach (var u in lexicon)
+            {
+                internalDictionary.Add(u);
+            }
+        }
+
         private void InitalizeSuffixes()
         {
             AddSuffix("CLEAR", new NoArgsSuffix(Clear, "Removes all items from Lexicon"));
             AddSuffix("KEYS", new Suffix<ListValue<object>>(GetKeys, "Returns the available keys"));
+            AddSuffix("HASKEY", new OneArgsSuffix<bool,object>(HasKey, "Returns the available keys"));
+            AddSuffix("HASVALUE", new OneArgsSuffix<bool,object>(HasValue, "Returns the available keys"));
             AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the available list values"));
+            AddSuffix("COPY", new NoArgsSuffix<Lexicon<T,TU>>(()=> new Lexicon<T,TU>(this), "Returns the available list values"));
             AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T)one), "Removes the value at the given key"));
             AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T)one, (TU)two)));
             AddSuffix("DUMP", new NoArgsSuffix<string>(() => string.Join(Environment.NewLine, Dump(99))));
         }
 
+        private bool HasValue(object value)
+        {
+            return internalDictionary.Values.Contains((TU) value);
+        }
+
+        private bool HasKey(object key)
+        {
+            return internalDictionary.ContainsKey((T) key);
+        }
 
         public ListValue<object> GetValues()
         {

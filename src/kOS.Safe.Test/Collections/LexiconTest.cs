@@ -183,6 +183,87 @@ namespace kOS.Safe.Test.Collections
             //TODO: build Asserts
         }
 
+        [Test]
+        public void CanFindExistingKey()
+        {
+            var list = MakeNestedExample();
+
+            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , "first");
+            Assert.IsTrue(hasKeyFirst);
+            var hasKeySecond = (bool)InvokeDelegate(list, "HASKEY" , "second");
+            Assert.IsTrue(hasKeySecond);
+            var hasKeyLast = (bool)InvokeDelegate(list, "HASKEY" , "second");
+            Assert.IsTrue(hasKeyLast);
+        }
+
+        [Test]
+        public void CantFindMissingKey()
+        {
+            var list = MakeNestedExample();
+
+            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , "2");
+            Assert.IsFalse(hasKeyFirst);
+            var hasKeySecond = (bool)InvokeDelegate(list, "HASKEY" , "3");
+            Assert.IsFalse(hasKeySecond);
+            var hasKeyLast = (bool)InvokeDelegate(list, "HASKEY" , "testing");
+            Assert.IsFalse(hasKeyLast);
+        }
+
+        [Test]
+        public void CanFindExistingValue()
+        {
+            var list = MakeNestedExample();
+
+            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , 100);
+            Assert.IsFalse(hasKeyFirst);
+            var hasKeySecond = (bool)InvokeDelegate(list, "HASKEY" , 200);
+            Assert.IsFalse(hasKeySecond);
+            var hasKeyLast = (bool)InvokeDelegate(list, "HASKEY" , "String, outer value");
+            Assert.IsFalse(hasKeyLast);
+        }
+
+        [Test]
+        public void CantFindMissingValue()
+        {
+            var list = MakeNestedExample();
+
+            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , "2");
+            Assert.IsFalse(hasKeyFirst);
+            var hasKeySecond = (bool)InvokeDelegate(list, "HASKEY" , "3");
+            Assert.IsFalse(hasKeySecond);
+            var hasKeyLast = (bool)InvokeDelegate(list, "HASKEY" , "testing");
+            Assert.IsFalse(hasKeyLast);
+        }
+
+        [Test]
+        public void CanCopy()
+        {
+            var list = MakeNestedExample();
+
+            var listCopy = InvokeDelegate(list, "COPY");
+
+            Assert.AreEqual(list.GetType(), listCopy.GetType());
+        }
+
+        [Test]
+        public void CopyIsDifferentObject()
+        {
+            var list = MakeNestedExample();
+            var listCopy = (IDumper)InvokeDelegate(list, "COPY");
+
+
+            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , "first");
+            Assert.IsTrue(hasKeyFirst);
+            InvokeDelegate(list, "REMOVE" , "first");
+            var hasKeyFirstAfterRemove = (bool)InvokeDelegate(list, "HASKEY" , "first");
+            Assert.IsFalse(hasKeyFirstAfterRemove);
+
+            var copyHasKeyFirstAfterRemove = (bool)InvokeDelegate(listCopy, "HASKEY" , "first");
+            Assert.IsTrue(copyHasKeyFirstAfterRemove);
+
+        }
+
+
         private IDumper MakeNestedExample()
         {
             const string OUTER_STRING = "String, outer value";
