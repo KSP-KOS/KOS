@@ -30,12 +30,16 @@ namespace kOS.Execution
                 return;
             if (!(item is double) && !(item is float))
                 return;
+			
+            double unboxed = Convert.ToDouble(item);
 
-            if (Double.IsNaN((double)item)) {
+            if (Double.IsNaN(unboxed))
+            {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Tried to push NaN into the stack.");
             }
-            if (Double.IsInfinity((double)item)) {
+            if (Double.IsInfinity(unboxed))
+            {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Tried to push Infinity into the stack.");
             }
@@ -54,9 +58,12 @@ namespace kOS.Execution
             }
             if (item is double)
             {
-                int intPart = Convert.ToInt32(item);
-                if ((double)item == (double)intPart)
-                    return intPart;
+                if (Int32.MinValue < (double)item && (double)item < Int32.MaxValue)
+                {
+                    int intPart = Convert.ToInt32(item);
+                    if ((double)item == (double)intPart)
+                        item = intPart;
+                }
             }
             return item;
         }
