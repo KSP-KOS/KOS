@@ -214,12 +214,12 @@ namespace kOS.Safe.Test.Collections
         {
             var list = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , 100);
-            Assert.IsFalse(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(list, "HASKEY" , 200);
-            Assert.IsFalse(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(list, "HASKEY" , "String, outer value");
-            Assert.IsFalse(hasKeyLast);
+            var hasKeyFirst = (bool)InvokeDelegate(list, "HASVALUE" , 100);
+            Assert.IsTrue(hasKeyFirst);
+            var hasKeySecond = (bool)InvokeDelegate(list, "HASVALUE" , 200);
+            Assert.IsTrue(hasKeySecond);
+            var hasKeyLast = (bool)InvokeDelegate(list, "HASVALUE" , "String, outer value");
+            Assert.IsTrue(hasKeyLast);
         }
 
         [Test]
@@ -227,16 +227,16 @@ namespace kOS.Safe.Test.Collections
         {
             var list = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , "2");
+            var hasKeyFirst = (bool)InvokeDelegate(list, "HASVALUE" , "2");
             Assert.IsFalse(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(list, "HASKEY" , "3");
+            var hasKeySecond = (bool)InvokeDelegate(list, "HASVALUE" , "3");
             Assert.IsFalse(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(list, "HASKEY" , "testing");
+            var hasKeyLast = (bool)InvokeDelegate(list, "HASVALUE" , "testing");
             Assert.IsFalse(hasKeyLast);
         }
 
         [Test]
-        public void CanCopy()
+        public void CopyGetsCollectionOfSameType()
         {
             var list = MakeNestedExample();
 

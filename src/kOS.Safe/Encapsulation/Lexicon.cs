@@ -62,11 +62,11 @@ namespace kOS.Safe.Encapsulation
         private void InitalizeSuffixes()
         {
             AddSuffix("CLEAR", new NoArgsSuffix(Clear, "Removes all items from Lexicon"));
-            AddSuffix("KEYS", new Suffix<ListValue<object>>(GetKeys, "Returns the available keys"));
-            AddSuffix("HASKEY", new OneArgsSuffix<bool,object>(HasKey, "Returns the available keys"));
-            AddSuffix("HASVALUE", new OneArgsSuffix<bool,object>(HasValue, "Returns the available keys"));
-            AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the available list values"));
-            AddSuffix("COPY", new NoArgsSuffix<Lexicon<T,TU>>(()=> new Lexicon<T,TU>(this), "Returns the available list values"));
+            AddSuffix("KEYS", new Suffix<ListValue<object>>(GetKeys, "Returns the lexicon keys"));
+            AddSuffix("HASKEY", new OneArgsSuffix<bool, object>(HasKey, "Returns true if a key is in the Lexicon"));
+            AddSuffix("HASVALUE", new OneArgsSuffix<bool, object>(HasValue, "Returns true if value is in the Lexicon"));
+            AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the lexicon values"));
+            AddSuffix("COPY", new NoArgsSuffix<Lexicon<T,TU>>(()=> new Lexicon<T,TU>(this), "Returns a copy of Lexicon"));
             AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T)one), "Removes the value at the given key"));
             AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T)one, (TU)two)));
             AddSuffix("DUMP", new NoArgsSuffix<string>(() => string.Join(Environment.NewLine, Dump(99))));
