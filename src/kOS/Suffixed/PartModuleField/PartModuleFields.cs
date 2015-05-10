@@ -192,6 +192,24 @@ namespace kOS.Suffixed.PartModuleField
         }
         
         /// <summary>
+        /// Return a list of all the strings of all KSPfields registered to this PartModule
+        /// which are currently showing on the part's RMB menu, without formating.
+        /// </summary>
+        /// <returns>List of all the strings field names.</returns>
+        private ListValue AllFieldNames()
+        {            
+            var returnValue = new ListValue();
+
+            IEnumerable<BaseField> visibleFields = partModule.Fields.Cast<BaseField>().Where(FieldIsVisible);
+
+            foreach (BaseField field in visibleFields)
+            {
+                returnValue.Add(field.guiName.ToLower());
+            }
+            return returnValue;
+        }
+        
+        /// <summary>
         /// Determine if the Partmodule has this KSPField on it, which is publicly
         /// usable by a kOS script at the moment:
         /// </summary>
@@ -235,6 +253,24 @@ namespace kOS.Suffixed.PartModuleField
         }
         
         /// <summary>
+        /// Return a list of all the KSPEvents the module has in it which are currently
+        /// visible on the RMB menu, without formatting.
+        /// </summary>
+        /// <returns>List of Event Names</returns>
+        private ListValue AllEventNames()
+        {            
+            var returnValue = new ListValue();
+
+            IEnumerable<BaseEvent> visibleEvents = partModule.Events.Where( EventIsVisible );
+
+            foreach (BaseEvent kspEvent in visibleEvents)
+            {
+                returnValue.Add(kspEvent.guiName.ToLower());
+            }
+            return returnValue;
+        }
+        
+        /// <summary>
         /// Determine if the Partmodule has this KSPEvent on it, which is publicly
         /// usable by a kOS script:
         /// </summary>
@@ -270,6 +306,21 @@ namespace kOS.Suffixed.PartModuleField
                                               "callable",
                                               kspAction.guiName.ToLower(),
                                               "KSPAction") );
+            }
+            return returnValue;
+        }
+        
+        /// <summary>
+        /// Return a list of all the KSPActions the module has in it, without formatting.
+        /// </summary>
+        /// <returns>List of Action Names</returns>
+        private ListValue AllActionNames()
+        {            
+            var returnValue = new ListValue();
+
+            foreach (BaseAction kspAction  in partModule.Actions)
+            {
+                returnValue.Add(kspAction.guiName.ToLower());
             }
             return returnValue;
         }
@@ -330,10 +381,13 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("NAME",       new Suffix<string>(() => partModule.moduleName));
             AddSuffix("PART",       new Suffix<PartValue>(() => PartValueFactory.Construct(partModule.part,shared)));
             AddSuffix("ALLFIELDS",  new Suffix<ListValue>(() => AllFields("({0}) {1}, is {2}")));
+            AddSuffix("ALLFIELDNAMES", new Suffix<ListValue> (AllFieldNames));
             AddSuffix("HASFIELD",   new OneArgsSuffix<bool, string>(HasField));
             AddSuffix("ALLEVENTS",  new Suffix<ListValue>(() => AllEvents("({0}) {1}, is {2}")));
+            AddSuffix("AllEVENTNAMES", new Suffix<ListValue> (AllEventNames));
             AddSuffix("HASEVENT",   new OneArgsSuffix<bool, string>(HasEvent));
             AddSuffix("ALLACTIONS", new Suffix<ListValue>(() => AllActions("({0}) {1}, is {2}")));
+            AddSuffix("ALLACTIONNAMES", new Suffix<ListValue> (AllActionNames));
             AddSuffix("HASACTION",  new OneArgsSuffix<bool, string>(HasAction));
             AddSuffix("GETFIELD",   new OneArgsSuffix<object, string>(GetKSPFieldValue));
             AddSuffix("SETFIELD",   new TwoArgsSuffix<string, object>(SetKSPFieldValue));
