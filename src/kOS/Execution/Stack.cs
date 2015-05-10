@@ -28,7 +28,7 @@ namespace kOS.Execution
         {
             if (!Config.Instance.EnableSafeMode)
                 return;
-            if (!(item is double))
+            if (!(item is double) && !(item is float))
                 return;
 
             if (Double.IsNaN((double)item)) {
@@ -52,8 +52,11 @@ namespace kOS.Execution
                 // promote floats to doubles
                 item = Convert.ToDouble (item);
             }
-            if (item is double && (double)item == Math.Truncate((double)item)) {
-                return Convert.ToInt32 (item); // or should it just be (int)?
+            if (item is double)
+            {
+                int intPart = Convert.ToInt32(item);
+                if ((double)item == (double)intPart)
+                    return intPart;
             }
             return item;
         }
