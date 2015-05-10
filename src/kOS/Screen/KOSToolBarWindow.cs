@@ -36,8 +36,8 @@ namespace kOS.Screen
             ApplicationLauncher.AppScenes.FLIGHT |
             ApplicationLauncher.AppScenes.SPH |
             ApplicationLauncher.AppScenes.VAB |
-            ApplicationLauncher.AppScenes.MAPVIEW; // |
-            //ApplicationLauncher.AppScenes.SPACECENTER;
+            ApplicationLauncher.AppScenes.MAPVIEW |
+            ApplicationLauncher.AppScenes.SPACECENTER;
 
         private static Texture2D launcherButtonTexture;
         private static Texture2D terminalClosedIconTexture;
@@ -247,6 +247,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is toggled on</summary>
         public void CallbackOnTrue()
         {
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnTrue()");
             clickedOn = true;
             Open();
         }
@@ -254,6 +255,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is toggled off</summary>
         public void CallbackOnFalse()
         {            
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnFalse()");
             clickedOn = false;
             Close();
         }
@@ -295,7 +297,7 @@ namespace kOS.Screen
         public void Open()
         {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open()");
-            
+
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
             // Left edge is offset from the right
