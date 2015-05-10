@@ -36,8 +36,7 @@ namespace kOS.Screen
             ApplicationLauncher.AppScenes.FLIGHT |
             ApplicationLauncher.AppScenes.SPH |
             ApplicationLauncher.AppScenes.VAB |
-            ApplicationLauncher.AppScenes.MAPVIEW |
-            ApplicationLauncher.AppScenes.SPACECENTER;
+            ApplicationLauncher.AppScenes.MAPVIEW;
 
         private static Texture2D launcherButtonTexture;
         private static Texture2D terminalClosedIconTexture;
