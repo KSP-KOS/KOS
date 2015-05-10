@@ -1,4 +1,5 @@
 using kOS.Safe.Binding;
+using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
@@ -63,6 +64,30 @@ namespace kOS.Binding
 
                 return null;
             });
+
+            shared.BindingMgr.AddGetter("VELOCITYMODE", () => FlightUIController.speedDisplayMode.ToString());
+            shared.BindingMgr.AddSetter("VELOCITYMODE",
+             val =>
+             {
+                 switch (val.ToString())
+                 {
+                     case "ORBIT":
+                         FlightUIController.speedDisplayMode = FlightUIController.SpeedDisplayModes.Orbit;
+                         break;
+
+                     case "SURFACE":
+                         FlightUIController.speedDisplayMode = FlightUIController.SpeedDisplayModes.Surface;
+                         break;
+
+                     case "TARGET":
+                         FlightUIController.speedDisplayMode = FlightUIController.SpeedDisplayModes.Target;
+                         break;
+
+                     default:
+                         throw new KOSInvalidArgumentException("VELOCITYMODE", "Value", val + " is out of range");
+                 }
+             }
+             );
         }
     }
 }
