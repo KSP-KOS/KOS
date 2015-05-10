@@ -1,0 +1,13 @@
+﻿<Properties StartupItem="kOS\kOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="kOS\Execution\Stack.cs">
+    <Files>
+      <File FileName="kOS\Execution\Stack.cs" Line="36" Column="4" />
+      <File FileName="kOS\Screen\KOSToolBarWindow.cs" Line="3" Column="19" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
