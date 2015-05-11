@@ -58,7 +58,7 @@ namespace kOS.Execution
             }
             if (item is double)
             {
-                if (Int32.MinValue < (double)item && (double)item < Int32.MaxValue)
+                if (!Double.IsNaN((double)item) && Int32.MinValue < (double)item && (double)item < Int32.MaxValue)
                 {
                     int intPart = Convert.ToInt32(item);
                     if ((double)item == (double)intPart)
