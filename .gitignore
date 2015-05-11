@@ -1,5 +1,20 @@
-bin/
-obj/
+# VisualStudio
+[Bb]in/
+[Oo]bj/
 *.suo
 packages/
 /src/kOS.sln.ide
+
+# Monodevelop
+[Ee]xported[Oo]bj/
+/*.userprefs
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+/*.pidb
+/*.user
+
+# OS Specific
+.DS_STORE*
+[Tt]humbs.db
