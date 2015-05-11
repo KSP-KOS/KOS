@@ -166,9 +166,9 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanDumpLexicon()
         {
-            var list = MakeNestedExample();
+            var map = MakeNestedExample();
             
-            string result = (string)InvokeDelegate(list, "DUMP");
+            string result = (string)InvokeDelegate(map, "DUMP");
             
             //TODO: build Asserts
         }
@@ -176,9 +176,9 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanPrintLexicon()
         {
-            var list = MakeNestedExample();
+            var map = MakeNestedExample();
 
-            string result = list.ToString();
+            string result = map.ToString();
 
             //TODO: build Asserts
         }
@@ -186,79 +186,79 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanFindExistingKey()
         {
-            var list = MakeNestedExample();
+            var map = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , "first");
+            var hasKeyFirst = (bool)InvokeDelegate(map, "HASKEY" , "first");
             Assert.IsTrue(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(list, "HASKEY" , "second");
+            var hasKeySecond = (bool)InvokeDelegate(map, "HASKEY" , "second");
             Assert.IsTrue(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(list, "HASKEY" , "second");
+            var hasKeyLast = (bool)InvokeDelegate(map, "HASKEY" , "second");
             Assert.IsTrue(hasKeyLast);
         }
 
         [Test]
         public void CantFindMissingKey()
         {
-            var list = MakeNestedExample();
+            var map = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , "2");
+            var hasKeyFirst = (bool)InvokeDelegate(map, "HASKEY" , "2");
             Assert.IsFalse(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(list, "HASKEY" , "3");
+            var hasKeySecond = (bool)InvokeDelegate(map, "HASKEY" , "3");
             Assert.IsFalse(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(list, "HASKEY" , "testing");
+            var hasKeyLast = (bool)InvokeDelegate(map, "HASKEY" , "testing");
             Assert.IsFalse(hasKeyLast);
         }
 
         [Test]
         public void CanFindExistingValue()
         {
-            var list = MakeNestedExample();
+            var map = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(list, "HASVALUE" , 100);
+            var hasKeyFirst = (bool)InvokeDelegate(map, "HASVALUE" , 100);
             Assert.IsTrue(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(list, "HASVALUE" , 200);
+            var hasKeySecond = (bool)InvokeDelegate(map, "HASVALUE" , 200);
             Assert.IsTrue(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(list, "HASVALUE" , "String, outer value");
+            var hasKeyLast = (bool)InvokeDelegate(map, "HASVALUE" , "String, outer value");
             Assert.IsTrue(hasKeyLast);
         }
 
         [Test]
         public void CantFindMissingValue()
         {
-            var list = MakeNestedExample();
+            var map = MakeNestedExample();
 
-            var hasKeyFirst = (bool)InvokeDelegate(list, "HASVALUE" , "2");
+            var hasKeyFirst = (bool)InvokeDelegate(map, "HASVALUE" , "2");
             Assert.IsFalse(hasKeyFirst);
-            var hasKeySecond = (bool)InvokeDelegate(list, "HASVALUE" , "3");
+            var hasKeySecond = (bool)InvokeDelegate(map, "HASVALUE" , "3");
             Assert.IsFalse(hasKeySecond);
-            var hasKeyLast = (bool)InvokeDelegate(list, "HASVALUE" , "testing");
+            var hasKeyLast = (bool)InvokeDelegate(map, "HASVALUE" , "testing");
             Assert.IsFalse(hasKeyLast);
         }
 
         [Test]
         public void CopyGetsCollectionOfSameType()
         {
-            var list = MakeNestedExample();
+            var map = MakeNestedExample();
 
-            var listCopy = InvokeDelegate(list, "COPY");
+            var mapCopy = InvokeDelegate(map, "COPY");
 
-            Assert.AreEqual(list.GetType(), listCopy.GetType());
+            Assert.AreEqual(map.GetType(), mapCopy.GetType());
         }
 
         [Test]
         public void CopyIsDifferentObject()
         {
-            var list = MakeNestedExample();
-            var listCopy = (IDumper)InvokeDelegate(list, "COPY");
+            var map = MakeNestedExample();
+            var mapCopy = (IDumper)InvokeDelegate(map, "COPY");
 
 
-            var hasKeyFirst = (bool)InvokeDelegate(list, "HASKEY" , "first");
+            var hasKeyFirst = (bool)InvokeDelegate(map, "HASKEY" , "first");
             Assert.IsTrue(hasKeyFirst);
-            InvokeDelegate(list, "REMOVE" , "first");
-            var hasKeyFirstAfterRemove = (bool)InvokeDelegate(list, "HASKEY" , "first");
+            InvokeDelegate(map, "REMOVE" , "first");
+            var hasKeyFirstAfterRemove = (bool)InvokeDelegate(map, "HASKEY" , "first");
             Assert.IsFalse(hasKeyFirstAfterRemove);
 
-            var copyHasKeyFirstAfterRemove = (bool)InvokeDelegate(listCopy, "HASKEY" , "first");
+            var copyHasKeyFirstAfterRemove = (bool)InvokeDelegate(mapCopy, "HASKEY" , "first");
             Assert.IsTrue(copyHasKeyFirstAfterRemove);
 
         }
@@ -268,39 +268,39 @@ namespace kOS.Safe.Test.Collections
         {
             const string OUTER_STRING = "String, outer value";
             
-            var list = new Lexicon<object,object>();
-            var innerList1 = new Lexicon<object,object>();
-            var innerList2 = new Lexicon<object,object>();
-            var innerInnerList = new Lexicon<object,object>
+            var map = new Lexicon<object,object>();
+            var innerMap1 = new Lexicon<object,object>();
+            var innerMap2 = new Lexicon<object,object>();
+            var innerInnerMap = new Lexicon<object,object>
             {
                 {"inner", "inner string 1"}, 
                 {2, 2}
             };
 
-            innerList1.Add("list", innerInnerList);
-            innerList1.Add("2", "string,one.two");
-            innerList1.Add("3", "string,one.three");
+            innerMap1.Add("map", innerInnerMap);
+            innerMap1.Add("2", "string,one.two");
+            innerMap1.Add("3", "string,one.three");
 
-            innerList2.Add("testing", "string,two.one" );
-            innerList2.Add("2", "string,two.two" );
+            innerMap2.Add("testing", "string,two.one" );
+            innerMap2.Add("2", "string,two.two" );
             
-            InvokeDelegate(list,"ADD", "first", 100);
-            InvokeDelegate(list,"ADD", "second", 200);
-            InvokeDelegate(list,"ADD", "inner", innerList1);            
-            InvokeDelegate(list,"ADD", "inner2", innerList2);            
-            InvokeDelegate(list,"ADD", "last", OUTER_STRING);
+            InvokeDelegate(map,"ADD", "first", 100);
+            InvokeDelegate(map,"ADD", "second", 200);
+            InvokeDelegate(map,"ADD", "inner", innerMap1);            
+            InvokeDelegate(map,"ADD", "inner2", innerMap2);            
+            InvokeDelegate(map,"ADD", "last", OUTER_STRING);
             
-            return list;
+            return map;
         }
 
-        private object InvokeDelegate(IDumper list, string suffixName, params object[] parameters)
+        private object InvokeDelegate(IDumper map, string suffixName, params object[] parameters)
         {
-            var lengthObj = list.GetSuffix(suffixName);
+            var lengthObj = map.GetSuffix(suffixName);
             Assert.IsNotNull(lengthObj);
             var lengthDelegate = lengthObj as Delegate;
             Assert.IsNotNull(lengthDelegate);
-            var length = lengthDelegate.DynamicInvoke(parameters);
-            return length;
+            var toReturn = lengthDelegate.DynamicInvoke(parameters);
+            return toReturn;
         }
     }
 }

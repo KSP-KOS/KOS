@@ -3003,14 +3003,14 @@ namespace kOS.Safe.Compilation.KS
                 }
                 ancestor = ancestor.Parent;
             }
-            // Check 2 - see if I am at the top.  The only statements allowed to preceed me are other directives:
+            // Check 2 - see if I am at the top.  The only statements allowed to precede me are other directives:
             if (validLocation && ancestor != null && ancestor.Token.Type == TokenType.Start)
             {
                 // ancestor is now the Start node for the compile:
                 int myInstructionIndex = ancestor.Nodes.IndexOf(myInstructionContainer); // would be an expensive walk - except this should only exist once, near the top.
                 for (int i = 0; validLocation && i < myInstructionIndex; ++i)
                 {
-                    // if a statement preceeding me is anything other than another directive, it's wrong:
+                    // if a statement preceding me is anything other than another directive, it's wrong:
                     if (ancestor.Nodes[i].Token.Type != TokenType.directive ||
                             (ancestor.Nodes[i].Token.Type == TokenType.instruction &&
                              ancestor.Nodes[i].Nodes[0].Token.Type != TokenType.directive)
