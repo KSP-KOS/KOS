@@ -1,6 +1,17 @@
 kOS Mod Changelog
 =================
 
+# v0.17.3
+
+1.0.2 Release
+-----------
+
+### BREAKING CHANGES
+
+### New Hotness
+
+### Old and busted
+
 # v0.17.2
 
 1.0 Release
