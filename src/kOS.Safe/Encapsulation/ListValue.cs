@@ -129,7 +129,7 @@ namespace kOS.Safe.Encapsulation
                     throw new Exception("Old syntax \n" +
                                            "   SET _somelist_:CONTAINS TO _value_\n" +
                                            "is no longer supported. Try replacing it with: \n" +
-                                           "   SET _somelist_:CONTAINS(_value_) TO _value_\n");
+                                           "   SET test TO _somelist_:CONTAINS(_value_)\n");
                 case "REMOVE":
                     throw new Exception("Old syntax \n" +
                                            "   SET _somelist_:REMOVE TO _number_\n" +

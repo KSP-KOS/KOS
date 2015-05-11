@@ -217,7 +217,14 @@ namespace kOS.Safe.Encapsulation
 
         public void SetKey(object index, object value)
         {
-            internalDictionary[(T)index] = (TU)value;
+            if (index is T)
+            {
+                internalDictionary[(T)index] = (TU)value;
+            }
+            else
+            {
+                throw new KOSInvalidArgumentException("LexiconIndexer", "Index", string.Format("{0} is an invalid type: {1} Expected: {2}", index, index.GetType(), typeof (T)));
+            }
         }
 
         public override string ToString()
@@ -260,23 +267,20 @@ namespace kOS.Safe.Encapsulation
                 else
                 {
                     var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
-                    entry += string.Format("  [\"{0}\"]= {1}", key, item);
+
+                    if (key is double || key is int || key is float)
+                    {
+                        entry += string.Format("  [{0}]= {1}", key, item);
+                    }
+                    else
+                    {
+                        entry += string.Format("  [\"{0}\"]= {1}", key, item);
+                    }
+
                     toReturn.Add(entry); 
                 }
             }
             return toReturn.ToArray();
         }
-    }
-
-    public interface IDumper : ISuffixed
-    {
-        string[] Dump(int limit, int depth = 0);
-    }
-
-    public interface ILexicon
-    {
-        object GetKey(object key);
-
-        void SetKey(object index, object value);
     }
 }

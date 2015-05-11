@@ -263,6 +263,26 @@ namespace kOS.Safe.Test.Collections
 
         }
 
+        [Test]
+        public void CanFormatNeumericKeys()
+        {
+            var map = MakeNestedExample();
+
+            var hasKeyInner = (bool)InvokeDelegate(map, "HASKEY" , "inner");
+            Assert.IsTrue(hasKeyInner);
+
+            var inner = (Lexicon<object, object>) ((Lexicon<object,object>)map)["inner"];
+            Assert.IsNotNull(inner);
+
+            var hasNumericKey = (bool)InvokeDelegate(inner, "HASKEY" , 3);
+            Assert.IsTrue(hasNumericKey);
+
+            var innerString = inner.ToString();
+
+            Assert.IsTrue(innerString.Contains("[\"2\"]"));
+            Assert.IsTrue(innerString.Contains("[3]"));
+
+        }
 
         private IDumper MakeNestedExample()
         {
@@ -279,7 +299,7 @@ namespace kOS.Safe.Test.Collections
 
             innerMap1.Add("map", innerInnerMap);
             innerMap1.Add("2", "string,one.two");
-            innerMap1.Add("3", "string,one.three");
+            innerMap1.Add(3, "string,one.three");
 
             innerMap2.Add("testing", "string,two.one" );
             innerMap2.Add("2", "string,two.two" );

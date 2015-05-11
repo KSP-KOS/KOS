@@ -689,6 +689,11 @@ namespace kOS.Safe.Compilation
             object index = cpu.PopValue();
             object list = cpu.PopValue();
 
+            if (index == null || value == null)
+            {
+                throw new KOSException("Neither the key or the index of a collection may be null");
+            }
+
             if (list is IIndexable)
             {
                 if (index is double || index is float)
@@ -696,29 +701,22 @@ namespace kOS.Safe.Compilation
                     index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
                 }
 
-                if (!(index is int)) throw new Exception("The index must be an integer number");
+                if (!(index is int)) throw new KOSException("The index must be an integer number");
 
-                if (value != null)
-                {
-                    ((IIndexable)list).SetIndex((int)index, value);
-                }
+                ((IIndexable)list).SetIndex((int)index, value);
             }
             else if (list is ILexicon)
             {
-                if (value != null)
-                {
-                    ((ILexicon)list).SetKey(index, value);
-                }
+                ((ILexicon)list).SetKey(index, value);
             }
             else
             {
-                throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+                throw new KOSException(string.Format("Can't iterate on an object of type {0}", list.GetType()));
             }
 
         }
     }
 
-    
     public class OpcodeEOF : Opcode
     {
         protected override string Name { get { return "EOF"; } }
