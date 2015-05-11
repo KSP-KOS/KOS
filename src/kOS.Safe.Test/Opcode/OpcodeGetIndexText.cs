@@ -55,6 +55,26 @@ namespace kOS.Safe.Test.Opcode
         }
 
         [Test]
+        public void CanGetDoubleIndex()
+        {
+            var list = new ListValue();
+            list.Add("bar");
+            list.Add("foo");
+            list.Add("fizz");
+            cpu.PushStack(list);
+
+            const double INDEX = 2.5;
+            cpu.PushStack(INDEX);
+
+            var opcode = new OpcodeGetIndex();
+
+            opcode.Execute(cpu);
+
+            Assert.AreEqual(3, list.Count);
+            Assert.AreEqual("fizz", cpu.PopStack());
+        }
+
+        [Test]
         public void CanGetLexiconIndex()
         {
             var list = new Lexicon<object,object>();

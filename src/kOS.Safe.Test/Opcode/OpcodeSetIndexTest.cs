@@ -1,6 +1,7 @@
 ﻿using System;
 using kOS.Safe.Compilation;
 using kOS.Safe.Encapsulation;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Execution;
 using NUnit.Framework;
 
@@ -84,7 +85,7 @@ namespace kOS.Safe.Test.Opcode
         }
 
         [Test]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(KOSException))]
         public void WillThrowOnNonIntListIndex()
         {
             var list = new ListValue();
@@ -125,7 +126,7 @@ namespace kOS.Safe.Test.Opcode
         }
 
         [Test]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(KOSException))]
         public void WillThrowOnNonListType()
         {
             const string INDEX = "foo";
