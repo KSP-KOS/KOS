@@ -433,7 +433,6 @@ namespace kOS.Module
             }
             UpdateVessel();
             UpdateObservers();
-            ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
 
         public void FixedUpdate()
@@ -441,6 +440,7 @@ namespace kOS.Module
             if (!IsAlive()) return;
 
             UpdateFixedObservers();
+            ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
 
         private void UpdateVessel()
