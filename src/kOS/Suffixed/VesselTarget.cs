@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
-using kOS.Binding;
-using UnityEngine;
+﻿using kOS.Binding;
+using kOS.Module;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
@@ -9,14 +7,16 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed.Part;
 using kOS.Suffixed.PartModuleField;
 using kOS.Utilities;
-using kOS.Module;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace kOS.Suffixed
 {
     public class VesselTarget : Orbitable, IKOSTargetable
     {
-        override public Orbit Orbit { get{return Vessel.orbit;} }
+        override public Orbit Orbit { get { return Vessel.orbit; } }
 
         override public string GetName()
         {
@@ -25,14 +25,14 @@ namespace kOS.Suffixed
 
         override public Vector GetPosition()
         {
-            return new Vector( Vessel.findWorldCenterOfMass() - CurrentVessel.findWorldCenterOfMass() );
+            return new Vector(Vessel.findWorldCenterOfMass() - CurrentVessel.findWorldCenterOfMass());
         }
 
         override public OrbitableVelocity GetVelocities()
         {
             return new OrbitableVelocity(Vessel);
         }
-        
+
         /// <summary>
         ///   Calculates the position of this vessel at some future universal timestamp,
         ///   taking into account all currently predicted SOI transition patches, and also
@@ -46,12 +46,12 @@ namespace kOS.Suffixed
         override public Vector GetPositionAtUT(TimeSpan timeStamp)
         {
             string blockingTech;
-            if (! Career.CanMakeNodes(out blockingTech))
+            if (!Career.CanMakeNodes(out blockingTech))
                 throw new KOSLowTechException("use POSITIONAT on a vessel", blockingTech);
 
             double desiredUT = timeStamp.ToUnixStyleTime();
 
-            Orbit patch = GetOrbitAtUT( desiredUT );
+            Orbit patch = GetOrbitAtUT(desiredUT);
             Vector3d pos = patch.getPositionAtUT(desiredUT);
 
             // This is an ugly workaround to fix what is probably a bug in KSP's API:
@@ -68,7 +68,7 @@ namespace kOS.Suffixed
                 pos = pos + offset;
             }
 
-            return new Vector( pos - Shared.Vessel.findWorldCenterOfMass() ); // Convert to ship-centered frame.
+            return new Vector(pos - Shared.Vessel.findWorldCenterOfMass()); // Convert to ship-centered frame.
         }
 
         /// <summary>
@@ -84,15 +84,15 @@ namespace kOS.Suffixed
         override public OrbitableVelocity GetVelocitiesAtUT(TimeSpan timeStamp)
         {
             string blockingTech;
-            if (! Career.CanMakeNodes(out blockingTech))
+            if (!Career.CanMakeNodes(out blockingTech))
                 throw new KOSLowTechException("use VELOCITYAT on a vessel", blockingTech);
 
             double desiredUT = timeStamp.ToUnixStyleTime();
 
-            Orbit patch = GetOrbitAtUT( desiredUT );
-                        
+            Orbit patch = GetOrbitAtUT(desiredUT);
+
             Vector3d orbVel = patch.getOrbitalVelocityAtUT(desiredUT);
- 
+
             // This is an ugly workaround to fix what is probably a bug in KSP's API:
             // If looking at a future orbit patch around a child body of the current body, then
             // the various get{Thingy}AtUT() methods return numbers calculated incorrectly as
@@ -107,55 +107,54 @@ namespace kOS.Suffixed
 
             // For some weird reason orbital velocities are returned by the KSP API
             // with Y and Z swapped, so swap them back:
-            orbVel = new Vector3d( orbVel.x, orbVel.z, orbVel.y );
-            
+            orbVel = new Vector3d(orbVel.x, orbVel.z, orbVel.y);
 
             CelestialBody parent = patch.referenceBody;
             Vector surfVel;
             if (parent != null)
             {
-                Vector3d pos = GetPositionAtUT( timeStamp );
-                surfVel = new Vector( orbVel - parent.getRFrmVel( pos + Shared.Vessel.findWorldCenterOfMass()) );
+                Vector3d pos = GetPositionAtUT(timeStamp);
+                surfVel = new Vector(orbVel - parent.getRFrmVel(pos + Shared.Vessel.findWorldCenterOfMass()));
             }
             else
-                surfVel = new Vector( orbVel.x, orbVel.y, orbVel.z );
+                surfVel = new Vector(orbVel.x, orbVel.y, orbVel.z);
 
-            return new OrbitableVelocity( new Vector(orbVel), surfVel );
+            return new OrbitableVelocity(new Vector(orbVel), surfVel);
         }
-        
+
         override public Vector GetUpVector()
         {
-            return new Vector( Vessel.upAxis );
+            return new Vector(Vessel.upAxis);
         }
 
         override public Vector GetNorthVector()
         {
-            return new Vector( VesselUtils.GetNorthVector(Vessel) );
+            return new Vector(VesselUtils.GetNorthVector(Vessel));
         }
-        
+
         /// <summary>
         ///   Calculate which orbit patch contains the timestamp given.
         /// </summary>
         /// <param name="desiredUT">The timestamp to look for</param>
         /// <returns>the orbit patch the vessel is expected to be in at the given time.</returns>
         override public Orbit GetOrbitAtUT(double desiredUT)
-        {            
+        {
             // After much trial and error this seems to be the only way to do this:
 
             // Find the lastmost maneuver node that occurs prior to timestamp:
             List<ManeuverNode> nodes = Vessel.patchedConicSolver.maneuverNodes;
             Orbit orbitPatch = Vessel.orbit;
-            for (int nodeIndex = 0 ; nodeIndex < nodes.Count && nodes[nodeIndex].UT <= desiredUT ; ++nodeIndex)
+            for (int nodeIndex = 0; nodeIndex < nodes.Count && nodes[nodeIndex].UT <= desiredUT; ++nodeIndex)
             {
                 orbitPatch = nodes[nodeIndex].nextPatch; // the orbit patch that starts with this node.
             }
-            
+
             // Walk the orbit patch list from there looking for the lastmost orbit patch that
             // contains this timestamp, or if this timestamp is later than the end of the last
             // patch, then just return the last patch (this can happen because a patches' EndUT
             // is one period of time and we might be predicting for a point in time more than one
             // period into the future.)
-            while ( !( orbitPatch.StartUT < desiredUT && desiredUT < orbitPatch.EndUT ) )
+            while (!(orbitPatch.StartUT < desiredUT && desiredUT < orbitPatch.EndUT))
             {
                 // Sadly the way to detect that you are at the end of the orbitPatch list is
                 // messy and inconsistent.  Sometimes KSP's API gives you a list that ends
@@ -172,14 +171,14 @@ namespace kOS.Suffixed
                     break;
                 }
             }
-            
+
             return orbitPatch;
         }
 
         static VesselTarget()
         {
             // TODO: These need to be refactored into the new suffix system at some point:
-            
+
             ShortCuttableShipSuffixes = new[]
                 {
                     "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
@@ -190,13 +189,17 @@ namespace kOS.Suffixed
                 };
         }
 
-        public VesselTarget(Vessel target, SharedObjects shared) :base(shared)
+        public VesselTarget(Vessel target, SharedObjects shared)
+            : base(shared)
         {
             Vessel = target;
             InitializeSuffixes();
         }
 
-        public VesselTarget(SharedObjects shared) : this(shared.Vessel, shared) { }
+        public VesselTarget(SharedObjects shared)
+            : this(shared.Vessel, shared)
+        {
+        }
 
         private Vessel CurrentVessel { get { return Shared.Vessel; } }
 
@@ -220,7 +223,7 @@ namespace kOS.Suffixed
         {
             return "SHIP(\"" + Vessel.vesselName + "\")";
         }
-        
+
         public ListValue GetAllParts()
         {
             return PartValueFactory.Construct(Vessel.Parts, Shared);
@@ -242,17 +245,19 @@ namespace kOS.Suffixed
         {
             return PartValueFactory.Construct(GetRawPartsNamed(partName), Shared);
         }
+
         private IEnumerable<global::Part> GetRawPartsNamed(string partName)
         {
             // Get the list of all the parts where the part's KSP API title matches:
             return Vessel.parts.FindAll(
-                part =>  String.Equals(part.name, partName, StringComparison.CurrentCultureIgnoreCase));
+                part => String.Equals(part.name, partName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         private ListValue GetPartsTitled(string partTitle)
         {
             return PartValueFactory.Construct(GetRawPartsTitled(partTitle), Shared);
         }
+
         private IEnumerable<global::Part> GetRawPartsTitled(string partTitle)
         {
             // Get the list of all the parts where the part's GUI title matches:
@@ -264,13 +269,14 @@ namespace kOS.Suffixed
         {
             return PartValueFactory.Construct(GetRawPartsTagged(tagName), Shared);
         }
+
         private IEnumerable<global::Part> GetRawPartsTagged(string tagName)
         {
             return Vessel.parts
-                .Where( p => p.Modules.OfType<KOSNameTag>()
+                .Where(p => p.Modules.OfType<KOSNameTag>()
                 .Any(tag => String.Equals(tag.nameTag, tagName, StringComparison.CurrentCultureIgnoreCase)));
         }
-        
+
         /// <summary>
         /// Get all the parts which have at least SOME non-default name:
         /// </summary>
@@ -278,10 +284,10 @@ namespace kOS.Suffixed
         private ListValue GetAllTaggedParts()
         {
             IEnumerable<global::Part> partsWithName = Vessel.parts
-                .Where( p => p.Modules.OfType<KOSNameTag>()
+                .Where(p => p.Modules.OfType<KOSNameTag>()
                 .Any(tag => !(String.Equals(tag.nameTag, "", StringComparison.CurrentCultureIgnoreCase))));
 
-            return PartValueFactory.Construct(partsWithName,Shared);
+            return PartValueFactory.Construct(partsWithName, Shared);
         }
 
         private ListValue GetModulesNamed(string modName)
@@ -289,36 +295,36 @@ namespace kOS.Suffixed
             // This is slow - maybe there should be a faster lookup string hash, but
             // KSP's data model seems to have not implemented it:
             IEnumerable<PartModule> modules = Vessel.parts
-                .SelectMany( p => p.Modules.Cast<PartModule>()
-                .Where( pMod => String.Equals(pMod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase)));
+                .SelectMany(p => p.Modules.Cast<PartModule>()
+                .Where(pMod => String.Equals(pMod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase)));
 
-            return PartModuleFieldsFactory.Construct(modules,Shared);
+            return PartModuleFieldsFactory.Construct(modules, Shared);
         }
-        
+
         private ListValue GetPartsInGroup(string groupName)
         {
             var matchGroup = KSPActionGroup.None;
             string upperName = groupName.ToUpper();
-            
+
             // TODO: later refactor:  put this in a Dictionary lookup instead, and then share it
             // by both this code and the code in ActionGroup.cs:
-            if (upperName == "SAS")    { matchGroup = KSPActionGroup.SAS; }
-            if (upperName == "GEAR")   { matchGroup = KSPActionGroup.Gear; }
+            if (upperName == "SAS") { matchGroup = KSPActionGroup.SAS; }
+            if (upperName == "GEAR") { matchGroup = KSPActionGroup.Gear; }
             if (upperName == "LIGHTS") { matchGroup = KSPActionGroup.Light; }
             if (upperName == "BRAKES") { matchGroup = KSPActionGroup.Brakes; }
-            if (upperName == "RCS")    { matchGroup = KSPActionGroup.RCS; }
-            if (upperName == "ABORT")  { matchGroup = KSPActionGroup.Abort; }
-            if (upperName == "AG1")    { matchGroup = KSPActionGroup.Custom01; }
-            if (upperName == "AG2")    { matchGroup = KSPActionGroup.Custom02; }
-            if (upperName == "AG3")    { matchGroup = KSPActionGroup.Custom03; }
-            if (upperName == "AG4")    { matchGroup = KSPActionGroup.Custom04; }
-            if (upperName == "AG5")    { matchGroup = KSPActionGroup.Custom05; }
-            if (upperName == "AG6")    { matchGroup = KSPActionGroup.Custom06; }
-            if (upperName == "AG7")    { matchGroup = KSPActionGroup.Custom07; }
-            if (upperName == "AG8")    { matchGroup = KSPActionGroup.Custom08; }
-            if (upperName == "AG9")    { matchGroup = KSPActionGroup.Custom09; }
-            if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
-            
+            if (upperName == "RCS") { matchGroup = KSPActionGroup.RCS; }
+            if (upperName == "ABORT") { matchGroup = KSPActionGroup.Abort; }
+            if (upperName == "AG1") { matchGroup = KSPActionGroup.Custom01; }
+            if (upperName == "AG2") { matchGroup = KSPActionGroup.Custom02; }
+            if (upperName == "AG3") { matchGroup = KSPActionGroup.Custom03; }
+            if (upperName == "AG4") { matchGroup = KSPActionGroup.Custom04; }
+            if (upperName == "AG5") { matchGroup = KSPActionGroup.Custom05; }
+            if (upperName == "AG6") { matchGroup = KSPActionGroup.Custom06; }
+            if (upperName == "AG7") { matchGroup = KSPActionGroup.Custom07; }
+            if (upperName == "AG8") { matchGroup = KSPActionGroup.Custom08; }
+            if (upperName == "AG9") { matchGroup = KSPActionGroup.Custom09; }
+            if (upperName == "AG10") { matchGroup = KSPActionGroup.Custom10; }
+
             ListValue kScriptParts = new ListValue();
             if (matchGroup == KSPActionGroup.None) return kScriptParts;
 
@@ -328,46 +334,46 @@ namespace kOS.Suffixed
                 bool hasPartAction = p.Actions.Any(a => a.actionGroup.Equals(matchGroup));
                 if (hasPartAction)
                 {
-                    kScriptParts.Add(PartValueFactory.Construct(p,Shared));
+                    kScriptParts.Add(PartValueFactory.Construct(p, Shared));
                     continue;
                 }
 
                 var modules = p.Modules.Cast<PartModule>();
-                bool hasModuleAction = modules.Any(pm => pm.Actions.Any(a=>a.actionGroup.Equals(matchGroup)));
+                bool hasModuleAction = modules.Any(pm => pm.Actions.Any(a => a.actionGroup.Equals(matchGroup)));
                 if (hasModuleAction)
                 {
-                        kScriptParts.Add(PartValueFactory.Construct(p,Shared));
+                    kScriptParts.Add(PartValueFactory.Construct(p, Shared));
                 }
             }
             return kScriptParts;
         }
-        
+
         private ListValue GetModulesInGroup(string groupName)
         {
             var matchGroup = KSPActionGroup.None;
             string upperName = groupName.ToUpper();
-            
+
             // TODO: later refactor:  put this in a Dictionary lookup instead, and then share it
             // by both this code and the code in ActionGroup.cs:
-            if (upperName == "SAS")    { matchGroup = KSPActionGroup.SAS; }
-            if (upperName == "GEAR")   { matchGroup = KSPActionGroup.Gear; }
+            if (upperName == "SAS") { matchGroup = KSPActionGroup.SAS; }
+            if (upperName == "GEAR") { matchGroup = KSPActionGroup.Gear; }
             if (upperName == "LIGHTS") { matchGroup = KSPActionGroup.Light; }
             if (upperName == "BRAKES") { matchGroup = KSPActionGroup.Brakes; }
-            if (upperName == "RCS")    { matchGroup = KSPActionGroup.RCS; }
-            if (upperName == "ABORT")  { matchGroup = KSPActionGroup.Abort; }
-            if (upperName == "AG1")    { matchGroup = KSPActionGroup.Custom01; }
-            if (upperName == "AG2")    { matchGroup = KSPActionGroup.Custom02; }
-            if (upperName == "AG3")    { matchGroup = KSPActionGroup.Custom03; }
-            if (upperName == "AG4")    { matchGroup = KSPActionGroup.Custom04; }
-            if (upperName == "AG5")    { matchGroup = KSPActionGroup.Custom05; }
-            if (upperName == "AG6")    { matchGroup = KSPActionGroup.Custom06; }
-            if (upperName == "AG7")    { matchGroup = KSPActionGroup.Custom07; }
-            if (upperName == "AG8")    { matchGroup = KSPActionGroup.Custom08; }
-            if (upperName == "AG9")    { matchGroup = KSPActionGroup.Custom09; }
-            if (upperName == "AG10")   { matchGroup = KSPActionGroup.Custom10; }
-            
+            if (upperName == "RCS") { matchGroup = KSPActionGroup.RCS; }
+            if (upperName == "ABORT") { matchGroup = KSPActionGroup.Abort; }
+            if (upperName == "AG1") { matchGroup = KSPActionGroup.Custom01; }
+            if (upperName == "AG2") { matchGroup = KSPActionGroup.Custom02; }
+            if (upperName == "AG3") { matchGroup = KSPActionGroup.Custom03; }
+            if (upperName == "AG4") { matchGroup = KSPActionGroup.Custom04; }
+            if (upperName == "AG5") { matchGroup = KSPActionGroup.Custom05; }
+            if (upperName == "AG6") { matchGroup = KSPActionGroup.Custom06; }
+            if (upperName == "AG7") { matchGroup = KSPActionGroup.Custom07; }
+            if (upperName == "AG8") { matchGroup = KSPActionGroup.Custom08; }
+            if (upperName == "AG9") { matchGroup = KSPActionGroup.Custom09; }
+            if (upperName == "AG10") { matchGroup = KSPActionGroup.Custom10; }
+
             ListValue kScriptParts = new ListValue();
-            
+
             // This is almost identical to the logic in GetPartsInGroup and it might be a nice idea
             // later to merge them somehow:
             //
@@ -387,13 +393,13 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue,string>(GetPartsNamed));
-            AddSuffix("PARTSTITLED", new OneArgsSuffix<ListValue,string>(GetPartsTitled));
-            AddSuffix("PARTSDUBBED", new OneArgsSuffix<ListValue,string>(GetPartsDubbed));
-            AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue,string>(GetModulesNamed));
-            AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue,string>(GetPartsInGroup));
-            AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue,string>(GetModulesInGroup));
-            AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue,string>(GetPartsTagged));
+            AddSuffix("PARTSNAMED", new OneArgsSuffix<ListValue, string>(GetPartsNamed));
+            AddSuffix("PARTSTITLED", new OneArgsSuffix<ListValue, string>(GetPartsTitled));
+            AddSuffix("PARTSDUBBED", new OneArgsSuffix<ListValue, string>(GetPartsDubbed));
+            AddSuffix("MODULESNAMED", new OneArgsSuffix<ListValue, string>(GetModulesNamed));
+            AddSuffix("PARTSINGROUP", new OneArgsSuffix<ListValue, string>(GetPartsInGroup));
+            AddSuffix("MODULESINGROUP", new OneArgsSuffix<ListValue, string>(GetModulesInGroup));
+            AddSuffix("PARTSTAGGED", new OneArgsSuffix<ListValue, string>(GetPartsTagged));
             AddSuffix("ALLTAGGEDPARTS", new NoArgsSuffix<ListValue>(GetAllTaggedParts));
             AddSuffix("PARTS", new NoArgsSuffix<ListValue>(GetAllParts));
             AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("dockingports", Shared)));
@@ -412,11 +418,11 @@ namespace kOS.Suffixed
             AddSuffix("MASS", new Suffix<float>(() => Vessel.GetTotalMass()));
             AddSuffix("VERTICALSPEED", new Suffix<double>(() => Vessel.verticalSpeed));
             AddSuffix("SURFACESPEED", new Suffix<double>(() => Vessel.horizontalSrfSpeed));
-            AddSuffix("AIRSPEED", new Suffix<double>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude,"the velocity of the vessel relative to the air"));
-            AddSuffix(new[] {"SHIPNAME", "NAME"}, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
+            AddSuffix("AIRSPEED", new Suffix<double>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
+            AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
-            AddSuffix("TERMVELOCITY", new Suffix<double>(() => { throw new KOSAtmosphereDeprecationException("17.2", "TERMVELOCITY", "<None>", string.Empty);}));
+            AddSuffix("TERMVELOCITY", new Suffix<double>(() => { throw new KOSAtmosphereDeprecationException("17.2", "TERMVELOCITY", "<None>", string.Empty); }));
             AddSuffix("LOADED", new Suffix<bool>(() => Vessel.loaded));
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
             AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
@@ -429,11 +435,11 @@ namespace kOS.Suffixed
                 },
                 value =>
                 {
-                      Vessel.vesselRanges.landed.pack = value;
-                      Vessel.vesselRanges.splashed.pack = value;
-                      Vessel.vesselRanges.prelaunch.pack = value;
+                    Vessel.vesselRanges.landed.pack = value;
+                    Vessel.vesselRanges.splashed.pack = value;
+                    Vessel.vesselRanges.prelaunch.pack = value;
                 }));
-            AddSuffix("ISDEAD", new NoArgsSuffix<bool>(() => (Vessel.state == Vessel.State.DEAD) ));
+            AddSuffix("ISDEAD", new NoArgsSuffix<bool>(() => (Vessel.state == Vessel.State.DEAD)));
             AddSuffix("STATUS", new Suffix<String>(() => Vessel.situation.ToString()));
 
             //// Although there is an implementation of lat/long/alt in Orbitible,
@@ -442,8 +448,7 @@ namespace kOS.Suffixed
             AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLatitude(Vessel)));
             AddSuffix("LONGITUDE", new Suffix<double>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<double>(() => Vessel.altitude));
-
-       }
+        }
 
         public double GetAvailableThrustAt(double atmPressure)
         {
@@ -467,9 +472,9 @@ namespace kOS.Suffixed
                 Vessel.vesselName = value;
             }
         }
-        
+
         /// <summary>
-        /// Annoyingly, KSP returns vessel.angularVelociy in a frame of reference 
+        /// Annoyingly, KSP returns vessel.angularVelociy in a frame of reference
         /// relative to the ship facing instead of the universe facing.  This would be
         /// wonderful if that was their philosophy everywhere, but it's not - its just a
         /// weird exception for this one case.  This transforms it back into raw universe
@@ -488,7 +493,7 @@ namespace kOS.Suffixed
             // Most suffixes are handled by the newer AddSuffix system, except for the
             // resource levels, which have to use this older technique as a fallback because
             // the AddSuffix system doesn't support this type of late-binding string matching:
-            
+
             // Is this a resource?
             double dblValue;
             if (VesselUtils.TryGetResource(Vessel, suffixName, out dblValue))
@@ -509,7 +514,7 @@ namespace kOS.Suffixed
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((VesselTarget) obj);
+            return Equals((VesselTarget)obj);
         }
 
         public override int GetHashCode()

@@ -1,6 +1,5 @@
-﻿using System;
-using kOS.Safe.Utilities;
-using kOS.Safe.Encapsulation.Part;
+﻿using kOS.Safe.Encapsulation.Part;
+using System;
 using UnityEngine;
 
 namespace kOS.Suffixed.Part
@@ -36,9 +35,11 @@ namespace kOS.Suffixed.Part
                 case EngineType.Engine:
                     engineModule.Activate();
                     break;
+
                 case EngineType.EngineFx:
                     engineModuleFx.Activate();
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -51,9 +52,11 @@ namespace kOS.Suffixed.Part
                 case EngineType.Engine:
                     engineModule.Shutdown();
                     break;
+
                 case EngineType.EngineFx:
                     engineModuleFx.Shutdown();
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -101,8 +104,10 @@ namespace kOS.Suffixed.Part
                 {
                     case EngineType.Engine:
                         return (float)GetEngineThrust(engineModule);
+
                     case EngineType.EngineFx:
                         return (float)GetEngineThrust(engineModuleFx);
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -117,8 +122,10 @@ namespace kOS.Suffixed.Part
                 {
                     case EngineType.Engine:
                         return (float)GetEngineThrust(engineModule, useThrustLimit: true);
+
                     case EngineType.EngineFx:
                         return (float)GetEngineThrust(engineModuleFx, useThrustLimit: true);
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -178,6 +185,7 @@ namespace kOS.Suffixed.Part
             }
             else return 0.0f;
         }
+
         public static float GetEngineIsp(ModuleEngines engine, double staticPressureAtm)
         {
             if (engine != null)
@@ -222,6 +230,7 @@ namespace kOS.Suffixed.Part
                 }
             }
         }
+
         public float VacuumSpecificImpluse
         {
             get
@@ -239,6 +248,7 @@ namespace kOS.Suffixed.Part
                 }
             }
         }
+
         public float SeaLevelSpecificImpulse
         {
             get
@@ -346,38 +356,47 @@ namespace kOS.Suffixed.Part
                 }
             }
         }
+
         public float IspAtAtm(double atmPressure)
         {
             switch (engineType)
             {
                 case EngineType.Engine:
                     return ModuleEngineAdapter.GetEngineIsp(engineModule, atmPressure);
+
                 case EngineType.EngineFx:
                     return ModuleEngineAdapter.GetEngineIsp(engineModuleFx, atmPressure);
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
         public float MaxThrustAtAtm(double atmPressure)
         {
             switch (engineType)
             {
                 case EngineType.Engine:
                     return (float)ModuleEngineAdapter.GetEngineThrust(engineModule, atmPressure: atmPressure);
+
                 case EngineType.EngineFx:
                     return (float)ModuleEngineAdapter.GetEngineThrust(engineModuleFx, atmPressure: atmPressure);
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
         public float AvailableThrustAtAtm(double atmPressure)
         {
             switch (engineType)
             {
                 case EngineType.Engine:
                     return (float)ModuleEngineAdapter.GetEngineThrust(engineModule, useThrustLimit: true, atmPressure: atmPressure);
+
                 case EngineType.EngineFx:
                     return (float)ModuleEngineAdapter.GetEngineThrust(engineModuleFx, useThrustLimit: true, atmPressure: atmPressure);
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
