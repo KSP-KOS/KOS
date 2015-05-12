@@ -150,11 +150,11 @@ namespace kOS.Suffixed.Part
             }
         }
 
-        public static double GetEngineThrust(ModuleEngines engine, float throttle = 1.0f, bool useThrustLimit = false, double atmPressure = -1.0)
+        public static float GetEngineThrust(ModuleEngines engine, float throttle = 1.0f, bool useThrustLimit = false, double atmPressure = -1.0)
         {
             if (engine != null)
             {
-                if (!engine.isOperational) return 0.0;
+                if (!engine.isOperational) return 0.0f;
                 if (useThrustLimit) { throttle = throttle * engine.thrustPercentage / 100.0f; }
                 if (atmPressure < 0) { atmPressure = engine.part.staticPressureAtm; }
                 float flowMod = 1.0f;
@@ -165,7 +165,7 @@ namespace kOS.Suffixed.Part
                 }
                 if (engine.useAtmCurve && engine.atmCurve != null)
                 {
-                    flowMod = engine.atmCurve.Evaluate((float)flowMod);
+                    flowMod = engine.atmCurve.Evaluate(flowMod);
                 }
                 if (engine.useVelCurve && engine.velCurve != null)
                 {
@@ -174,14 +174,14 @@ namespace kOS.Suffixed.Part
                 // thrust is modified fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
                 return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle) * flowMod * GetEngineIsp(engine, atmPressure) * engine.g * velMod;
             }
-            else return 0.0;
+            else return 0.0f;
         }
 
         public static float GetEngineIsp(ModuleEngines engine)
         {
             if (engine != null)
             {
-                return GetEngineIsp(engine, (float)engine.part.staticPressureAtm);
+                return GetEngineIsp(engine, engine.part.staticPressureAtm);
             }
             else return 0.0f;
         }
@@ -377,10 +377,10 @@ namespace kOS.Suffixed.Part
             switch (engineType)
             {
                 case EngineType.Engine:
-                    return (float)ModuleEngineAdapter.GetEngineThrust(engineModule, atmPressure: atmPressure);
+                    return ModuleEngineAdapter.GetEngineThrust(engineModule, atmPressure: atmPressure);
 
                 case EngineType.EngineFx:
-                    return (float)ModuleEngineAdapter.GetEngineThrust(engineModuleFx, atmPressure: atmPressure);
+                    return ModuleEngineAdapter.GetEngineThrust(engineModuleFx, atmPressure: atmPressure);
 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -392,10 +392,10 @@ namespace kOS.Suffixed.Part
             switch (engineType)
             {
                 case EngineType.Engine:
-                    return (float)ModuleEngineAdapter.GetEngineThrust(engineModule, useThrustLimit: true, atmPressure: atmPressure);
+                    return ModuleEngineAdapter.GetEngineThrust(engineModule, useThrustLimit: true, atmPressure: atmPressure);
 
                 case EngineType.EngineFx:
-                    return (float)ModuleEngineAdapter.GetEngineThrust(engineModuleFx, useThrustLimit: true, atmPressure: atmPressure);
+                    return ModuleEngineAdapter.GetEngineThrust(engineModuleFx, useThrustLimit: true, atmPressure: atmPressure);
 
                 default:
                     throw new ArgumentOutOfRangeException();
