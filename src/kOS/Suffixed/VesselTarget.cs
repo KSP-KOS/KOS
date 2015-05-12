@@ -403,7 +403,9 @@ namespace kOS.Suffixed
             AddSuffix("BEARING", new Suffix<float>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));
             AddSuffix("HEADING", new Suffix<float>(() => VesselUtils.GetTargetHeading(CurrentVessel, Vessel)));
             AddSuffix("AVAILABLETHRUST", new Suffix<double>(() => VesselUtils.GetAvailableThrust(Vessel)));
+            AddSuffix("AVAILABLETHRUSTAT", new OneArgsSuffix<double, double>(GetAvailableThrustAt));
             AddSuffix("MAXTHRUST", new Suffix<double>(() => VesselUtils.GetMaxThrust(Vessel)));
+            AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<double, double>(GetMaxThrustAt));
             AddSuffix("FACING", new Suffix<Direction>(() => VesselUtils.GetFacing(Vessel)));
             AddSuffix("ANGULARMOMENTUM", new Suffix<Vector>(() => new Vector(Vessel.angularMomentum)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Vessel.angularVelocity)));
@@ -443,6 +445,15 @@ namespace kOS.Suffixed
 
        }
 
+        public double GetAvailableThrustAt(double atmPressure)
+        {
+            return VesselUtils.GetAvailableThrust(Vessel, atmPressure);
+        }
+
+        public double GetMaxThrustAt(double atmPressure)
+        {
+            return VesselUtils.GetMaxThrust(Vessel, atmPressure);
+        }
 
         private void RetypeVessel(string value)
         {

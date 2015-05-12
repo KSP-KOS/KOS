@@ -32,6 +32,10 @@ namespace kOS.Suffixed.Part
             AddSuffix("ALLOWRESTART", new Suffix<bool>(() => engine.AllowRestart));
             AddSuffix("ALLOWSHUTDOWN", new Suffix<bool>(() => engine.AllowShutdown));
             AddSuffix("THROTTLELOCK", new Suffix<bool>(() => engine.ThrottleLock));
+            AddSuffix("ISPAT", new OneArgsSuffix<float, double>(GetIspAtAtm));
+            AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<float, double>(GetMaxThrustAtAtm));
+            AddSuffix("AVAILABLETHRUST", new Suffix<float>(() => engine.AvailableThrust));
+            AddSuffix("AVAILABLETHRUSTAT", new OneArgsSuffix<float, double>(GetAvailableThrustAtAtm));
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
@@ -54,6 +58,18 @@ namespace kOS.Suffixed.Part
                 }
             }
             return toReturn;
+        }
+        public float GetIspAtAtm(double atmPressure)
+        {
+            return engine.IspAtAtm(atmPressure);
+        }
+        public float GetMaxThrustAtAtm(double atmPressure)
+        {
+            return engine.MaxThrustAtAtm(atmPressure);
+        }
+        public float GetAvailableThrustAtAtm(double atmPressure)
+        {
+            return engine.AvailableThrustAtAtm(atmPressure);
         }
     }
 }

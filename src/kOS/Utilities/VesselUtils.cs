@@ -104,7 +104,7 @@ namespace kOS.Utilities
             return list;
         }
 
-        public static double GetMaxThrust(Vessel vessel)
+        public static double GetMaxThrust(Vessel vessel, double atmPressure = -1.0)
         {
             var thrust = 0.0;
 
@@ -115,7 +115,7 @@ namespace kOS.Utilities
                     if (!pm.isEnabled) continue;
                     if (pm is ModuleEngines)
                     {
-                        thrust += ModuleEngineAdapter.GetEngineMaxThrust((ModuleEngines)pm);
+                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, atmPressure: atmPressure);
                     }
                 }
             }
@@ -355,7 +355,7 @@ namespace kOS.Utilities
             FlightGlobals.fetch.SetVesselTarget(null);
         }
 
-        public static double GetAvailableThrust(Vessel vessel)
+        public static double GetAvailableThrust(Vessel vessel, double atmPressure = -1.0)
         {
             var thrust = 0.0;
 
@@ -365,7 +365,7 @@ namespace kOS.Utilities
                 {
                     if (pm.isEnabled && pm is ModuleEngines)
                     {
-                        thrust += ModuleEngineAdapter.GetEngineAvailableThrust((ModuleEngines)pm);
+                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, useThrustLimit: true, atmPressure: atmPressure);
                     }
                 }
             }
