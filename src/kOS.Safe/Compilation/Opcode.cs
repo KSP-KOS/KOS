@@ -1590,7 +1590,7 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodePushRelocateLater : Opcode
     {
-        [MLField(1,true)]
+        [MLField(0,true)]
         public override sealed string DestinationLabel {get;set;}
 
         protected override string Name { get { return "PushRelocateLater"; } }
@@ -1858,7 +1858,7 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodePushDelegateRelocateLater : OpcodePushRelocateLater
     {
-        [MLField(1,false)]
+        [MLField(100,false)]
         public bool WithClosure { get; set; }
 
         protected override string Name { get { return "PushDelegateRelocateLater"; } }
@@ -1875,11 +1875,12 @@ namespace kOS.Safe.Compilation
         protected OpcodePushDelegateRelocateLater() : base() {}
         
         public override void PopulateFromMLFields(List<object> fields)
-        {
+        {            
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodePushDelegateRelocatelater seems to be missing.  Version mismatch?");
-            WithClosure = (bool)fields[0];
+            DestinationLabel = (string)( fields[0] ); // this is really from the base class.
+            WithClosure = (bool)fields[1];
         }
     }
     

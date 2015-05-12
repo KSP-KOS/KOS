@@ -227,6 +227,11 @@ namespace kOS.Utilities
 
         public static object TryGetEncounter(Vessel vessel, SharedObjects sharedObj)
         {
+            // If not the active vessel, it will be on rails, and therefore won't
+            // be able to have "encounters" via its patchedConicSolver.
+            if (vessel.patchedConicSolver == null)
+                return "None";
+
             foreach (var patch in vessel.patchedConicSolver.flightPlan)
             {
                 if (patch.patchStartTransition == Orbit.PatchTransitionType.ENCOUNTER)

@@ -1015,6 +1015,7 @@ namespace kOS.Execution
             bool DEBUG_EACH_OPCODE = false;
             
             Opcode opcode = context.Program[context.InstructionPointer];
+
             if (DEBUG_EACH_OPCODE)
             {
                 executeLog.Append(String.Format("Executing Opcode {0:0000}/{1:0000} {2} {3}\n",
@@ -1025,7 +1026,13 @@ namespace kOS.Execution
                 if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
                 {
                     opcode.Execute(this);
+                    int prevPointer = context.InstructionPointer;
                     context.InstructionPointer += opcode.DeltaInstructionPointer;
+                    if (context.InstructionPointer < 0 || context.InstructionPointer >= context.Program.Count())
+                    {
+                        throw new KOSBadJumpException(
+                            context.InstructionPointer, String.Format("after executing {0:0000} {1} {2}", prevPointer, opcode.Label, opcode.ToString()));
+                    }
                     return true;
                 }
                 if (opcode is OpcodeEOP)

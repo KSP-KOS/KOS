@@ -123,7 +123,7 @@ namespace kOS.Safe.Compilation.KS
             PushReversedParameters();
             VisitNode(tree.Nodes[0]);
             
-            if (addBranchDestination)
+            if (addBranchDestination || currentCodeSection.Count == 0)
             {
                 AddOpcode(new OpcodeNOP());
             }
@@ -230,6 +230,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction:
                 case TokenType.if_stmt:
                 case TokenType.until_stmt:
+                case TokenType.for_stmt:
                 case TokenType.on_stmt:
                 case TokenType.when_stmt:
                 case TokenType.declare_function_clause:
@@ -663,7 +664,7 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.FunctionCode;
                         // verify if the program has been loaded
                         Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodePush(-1));
                         AddOpcode(new OpcodeCompareEqual());
                         OpcodeBranchIfFalse branchOpcode = new OpcodeBranchIfFalse();
                         AddOpcode(branchOpcode);
@@ -700,7 +701,7 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.InitializationCode;
                         // initialize the pointer to zero
                         AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodePush(-1));
                         AddOpcode(new OpcodeStore());
                     }
                 }
@@ -2465,7 +2466,7 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                AddOpcode(new OpcodePush(node.Nodes[2].Token.Type == TokenType.FROM ? "file" : "volume"));
+                AddOpcode(new OpcodePush(node.Nodes[1].Token.Type == TokenType.FILE ? "file" : "volume"));
             }
 
             VisitNode(node.Nodes[oldNameIndex]);
