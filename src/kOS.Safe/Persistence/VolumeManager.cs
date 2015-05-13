@@ -63,6 +63,10 @@ namespace kOS.Safe.Persistence
             {
                 return GetVolume((int)volumeId);
             }
+            else if (volumeId is double || volumeId is float)
+            {
+                return GetVolume(Convert.ToInt32(volumeId));
+            }
             return GetVolume(volumeId.ToString());
         }
 
