@@ -104,7 +104,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar (kN)
 
-    Sum of all the Max thrust of all the currently active engines In Kilonewtons at the given atmospheric pressure.
+    Sum of all the Max thrust of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: vessel:AVAILABLETHRUST
 
@@ -118,7 +118,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar (kN)
 
-    Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.
+    Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Vessel:FACING
 

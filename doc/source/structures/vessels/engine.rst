@@ -118,7 +118,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar (kN)
 
-    How much thrust would this engine give if the throttle was max at the current velocity, and at the given atmospheric pressure.
+    How much thrust would this engine give if the throttle was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Engine:THRUST
 
@@ -139,7 +139,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar (kN)
 
-    How much thrust would this engine give if the throttle was max at the current thrust limit and velocity, and at the given atmospheric pressure.
+    How much thrust would this engine give if the throttle was max at the current thrust limit and velocity, and at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Engine:FUELFLOW
 
@@ -160,7 +160,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar
 
-    `Specific impulse <isp>`_ at the given atmospheric pressure.
+    `Specific impulse <isp>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Engine:VACUUMISP
 
