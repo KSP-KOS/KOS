@@ -113,6 +113,7 @@
     <Compile Include="Exceptions\KOSPersistenceException.cs" />
     <Compile Include="Exceptions\KOSPreserveInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSReturnInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSSituationallyInvalidException.cs" />
     <Compile Include="Exceptions\KOSSuffixUseException.cs" />
     <Compile Include="Exceptions\KOSUnavailableAddonException.cs" />
     <Compile Include="Exceptions\KOSUndefinedIdentifierException.cs" />

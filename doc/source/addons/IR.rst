@@ -190,6 +190,10 @@ Access structure IRAddon via `ADDONS:IR`.
      :attr:`SPEED`                         float                     Servo speed multiplier, from tweakable.
      :attr:`CURRENTSPEED`                  float (readonly)          Current Servo speed.
      :attr:`ACCELERATION`                  float                     Servo acceleration multiplier, from tweakable.
+     :attr:`ISMOVING`                      bool (readonly)           True if Servo is moving
+     :attr:`ISFREEMOVING`                  bool (readonly)           True if Servo is uncontrollable (ex. docking washer)
+     :attr:`LOCKED`                        bool                      Servo's locked status, set true to lock servo.
+     :attr:`INVERTED`                      bool                      Servo's inverted status, set true to invert servo's axis.
 
      :meth:`MOVERIGHT()`                   void                      Commands servo to move in positive direction
      :meth:`MOVELEFT()`                    void                      Commands servo to move in negative direction
@@ -283,6 +287,34 @@ Access structure IRAddon via `ADDONS:IR`.
     :access: Get/Set
 
     Servo acceleration multiplier, from tweakable.
+
+.. attribute:: IRServo:ISMOVING
+
+    :type: bool
+    :access: Get
+
+    True if Servo is moving
+
+.. attribute:: IRServo:ISFREEMOVING
+
+    :type: bool
+    :access: Get
+
+    True if Servo is uncontrollable (ex. docking washer)
+
+.. attribute:: IRServo:LOCKED
+
+    :type: bool
+    :access: Get/Set
+
+    Servo's locked status, set true to lock servo.
+
+.. attribute:: IRServo:INVERTED
+
+    :type: bool
+    :access: Get/Set
+
+    Servo's inverted status, set true to invert servo's axis.
 
 
 .. method:: IRServo:MOVERIGHT()

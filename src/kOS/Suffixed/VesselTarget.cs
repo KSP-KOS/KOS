@@ -143,7 +143,7 @@ namespace kOS.Suffixed
             // After much trial and error this seems to be the only way to do this:
 
             // Find the lastmost maneuver node that occurs prior to timestamp:
-            List<ManeuverNode> nodes = Vessel.patchedConicSolver.maneuverNodes;
+            List<ManeuverNode> nodes = (Vessel.patchedConicSolver == null) ? new List<ManeuverNode>() : Vessel.patchedConicSolver.maneuverNodes;
             Orbit orbitPatch = Vessel.orbit;
             for (int nodeIndex = 0 ; nodeIndex < nodes.Count && nodes[nodeIndex].UT <= desiredUT ; ++nodeIndex)
             {

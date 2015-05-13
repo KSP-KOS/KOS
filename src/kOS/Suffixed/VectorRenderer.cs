@@ -5,6 +5,7 @@ using UnityEngine;
 using kOS.Safe;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
+using System.Collections.Generic;
 
 namespace kOS.Suffixed
 {
@@ -73,6 +74,20 @@ namespace kOS.Suffixed
             SetShow(false);
         }
 
+        /// <summary>Make all vector renderers invisible everywhere in the kOS module.</summary>
+        static public void ClearAll(UpdateHandler handler)
+        {
+            // Take a copy of the list because the items will be deleted from the update handler
+            // as SetShow() gets called, and .NET won't let you iterate over the collection
+            // directly while you do that:
+            List<VectorRenderer> allOfMe = new List<VectorRenderer>();
+            foreach(VectorRenderer item in handler.GetAllUpdatersOfType(typeof(VectorRenderer)))
+                allOfMe.Add(item);
+
+            // Now actually turn them all off:
+            foreach(VectorRenderer vecRend in allOfMe)
+                vecRend.SetShow(false);
+        }
         
         /// <summary>
         /// Move the origin point of the vector drawings to move with the

@@ -1,7 +1,29 @@
 kOS Mod Changelog
 =================
 
-# v0.17.1
+# v0.17.3
+
+1.0.2 Release
+-----------
+
+### BREAKING CHANGES
+* Deprecated INCOMMRANGE - now throws an exception with instructions to use the new addons:rt methods.
+* Updated maxtthrust and availablethrust calculations for KSP v1.0.x.  Due to the way KSP handles thrust, neither available thrust nor maxthrust values are constant at all altitudes around bodies with atmospheres.  
+
+### New Hotness
+* New struct object CORE to interact with the currently running processor.
+* Added vessel:dockingports and vessel:elements suffixes.
+* Added element:dockingports and element:vessel suffixes.
+* Added availablethrust suffix to engines which mirrors the availablethrust suffix for vessels.
+* Added maxthrustat, availablethrustat, and ispat suffixes to engines to read the values at specified atmoshperic pressures.  See the documentation for details.
+* Added maxthrustat and availablethrustat suffixes to vessels to read the values at a specified atmoshperic pressures.  See the documentation for details.
+
+### Old and busted
+* Fixed empty return statements crashing with an argument count exception.
+* Fix setting vector:mag to a new value actually setting the magnitude to 1.
+* Fix electricity being consumed while the game was paused.
+
+# v0.17.2
 
 1.0 Release
 -----------

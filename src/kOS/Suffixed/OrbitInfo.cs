@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using System;
 
 namespace kOS.Suffixed
 {
@@ -38,8 +39,8 @@ namespace kOS.Suffixed
             AddSuffix("SEMIMINORAXIS", new Suffix<double>(() => orbit.semiMinorAxis));
             AddSuffix(new[]{"LAN", "LONGITUDEOFASCENDINGNODE"}, new Suffix<double>(() => orbit.LAN));
             AddSuffix("ARGUMENTOFPERIAPSIS", new Suffix<double>(() => orbit.argumentOfPeriapsis));
-            AddSuffix("TRUEANOMALY", new Suffix<double>(() => orbit.trueAnomaly));
-            AddSuffix("MEANANOMALYATEPOCH", new Suffix<double>(() => orbit.meanAnomalyAtEpoch));
+            AddSuffix("TRUEANOMALY", new Suffix<double>(() => Utilities.Utils.DegreeFix(orbit.trueAnomaly,0.0)));
+            AddSuffix("MEANANOMALYATEPOCH", new Suffix<double>(() => Utilities.Utils.DegreeFix(orbit.meanAnomalyAtEpoch * 180.0 / Math.PI, 0.0)));
             AddSuffix("TRANSITION", new Suffix<string>(() => orbit.patchEndTransition.ToString()));
             AddSuffix("POSITION", new Suffix<Vector>(() => GetPositionAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(() => GetVelocityAtUT( new TimeSpan(Planetarium.GetUniversalTime() ) )));

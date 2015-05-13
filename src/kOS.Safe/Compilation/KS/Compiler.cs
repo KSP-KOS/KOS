@@ -230,6 +230,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction:
                 case TokenType.if_stmt:
                 case TokenType.until_stmt:
+                case TokenType.for_stmt:
                 case TokenType.on_stmt:
                 case TokenType.when_stmt:
                 case TokenType.declare_function_clause:
@@ -2465,7 +2466,7 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                AddOpcode(new OpcodePush(node.Nodes[2].Token.Type == TokenType.FROM ? "file" : "volume"));
+                AddOpcode(new OpcodePush(node.Nodes[1].Token.Type == TokenType.FILE ? "file" : "volume"));
             }
 
             VisitNode(node.Nodes[oldNameIndex]);
