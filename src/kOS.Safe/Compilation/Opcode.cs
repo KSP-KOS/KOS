@@ -654,19 +654,10 @@ namespace kOS.Safe.Compilation
 
             object value;
 
-            if (list is IIndexable)
+            var indexable = list as IIndexable;
+            if (indexable != null)
             {
-                if (index is double || index is float)
-                {
-                    index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-                }
-                if (!(index is int)) throw new Exception("The index must be an integer number");
-
-                value = ((IIndexable)list).GetIndex((int)index);
-            }
-            else if (list is ILexicon)
-            {
-                value = ((ILexicon)list).GetKey(index);
+                value = indexable.GetIndex(index);
             }
             else
             {
@@ -691,23 +682,13 @@ namespace kOS.Safe.Compilation
 
             if (index == null || value == null)
             {
-                throw new KOSException("Neither the key or the index of a collection may be null");
+                throw new KOSException("Neither the key nor the index of a collection may be null");
             }
 
-            if (list is IIndexable)
+            var indexable = list as IIndexable;
+            if (indexable != null)
             {
-                if (index is double || index is float)
-                {
-                    index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-                }
-
-                if (!(index is int)) throw new KOSException("The index must be an integer number");
-
-                ((IIndexable)list).SetIndex((int)index, value);
-            }
-            else if (list is ILexicon)
-            {
-                ((ILexicon)list).SetKey(index, value);
+                indexable.SetIndex(index, value);
             }
             else
             {

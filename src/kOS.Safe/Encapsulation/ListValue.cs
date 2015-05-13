@@ -1,4 +1,5 @@
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Safe.Properties;
 using System;
 using System.Collections;
@@ -145,14 +146,27 @@ namespace kOS.Safe.Encapsulation
             return new ListValue<T>(list.Cast<T>());
         }
 
-        public object GetIndex(int index)
+        public object GetIndex(object index)
         {
-            return internalList[index];
+            if (index is double || index is float)
+            {
+                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+            }
+            if (!(index is int)) throw new Exception("The index must be an integer number");
+
+            return internalList[(int)index];
         }
 
-        public void SetIndex(int index, object value)
+        public void SetIndex(object index, object value)
         {
-            internalList[index] = (T)value;
+            if (index is double || index is float)
+            {
+                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+            }
+
+            if (!(index is int)) throw new KOSException("The index must be an integer number");
+
+            internalList[(int)index] = (T)value;
         }
 
         public string[] Dump(int limit, int depth = 0)

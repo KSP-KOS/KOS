@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class Lexicon<T, TU> : Structure, IDictionary<T, TU>, ILexicon, IDumper
+    public class Lexicon<T, TU> : Structure, IDictionary<T, TU>, IIndexable, IDumper
     {
         public class LexiconComparer<TI> : IEqualityComparer<TI>
         {
@@ -196,7 +196,7 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public object GetKey(object key)
+        public object GetIndex(object key)
         {
             T castKey;
             if (key is T)
@@ -215,7 +215,7 @@ namespace kOS.Safe.Encapsulation
             return internalDictionary[(T)key];
         }
 
-        public void SetKey(object index, object value)
+        public void SetIndex(object index, object value)
         {
             if (index is T)
             {

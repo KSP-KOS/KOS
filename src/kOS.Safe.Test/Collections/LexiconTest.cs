@@ -141,8 +141,8 @@ namespace kOS.Safe.Test.Collections
         public void CanSetAndGetIndex()
         {
             var lex = new Lexicon<object, object>();
-            lex.SetKey("fizz", "bang");
-            var value = lex.GetKey("fizz");
+            lex.SetIndex("fizz", "bang");
+            var value = lex.GetIndex("fizz");
 
             Assert.AreEqual("bang", value);
         }
@@ -152,7 +152,7 @@ namespace kOS.Safe.Test.Collections
         public void ErrorsOnGetEmptyKey()
         {
             var lex = new Lexicon<object, object>();
-            lex.GetKey("fizz");
+            lex.GetIndex("fizz");
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace kOS.Safe.Test.Collections
         public void ErrorsOnInvalidKeyType()
         {
             var lex = new Lexicon<double, object>();
-            lex.GetKey("fizz");
+            lex.GetIndex("fizz");
         }
 
         [Test]
