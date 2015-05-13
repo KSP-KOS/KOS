@@ -7,7 +7,7 @@ packages/
 
 # Monodevelop
 [Ee]xported[Oo]bj/
-/*.userprefs
+*.userprefs
 
 # Unity
 [Ll]ibrary/
