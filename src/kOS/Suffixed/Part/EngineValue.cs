@@ -1,7 +1,7 @@
 ﻿using kOS.Safe.Encapsulation;
-using System.Collections.Generic;
 using kOS.Safe.Encapsulation.Part;
 using kOS.Safe.Encapsulation.Suffixes;
+using System.Collections.Generic;
 
 namespace kOS.Suffixed.Part
 {
@@ -25,13 +25,17 @@ namespace kOS.Suffixed.Part
             AddSuffix("THRUST", new Suffix<float>(() => engine.FinalThrust));
             AddSuffix("FUELFLOW", new Suffix<float>(() => engine.FuelFlow));
             AddSuffix("ISP", new Suffix<float>(() => engine.SpecificImpulse));
-            AddSuffix(new[] {"VISP", "VACUUMISP"}, new Suffix<float>(() => engine.VacuumSpecificImpluse));
-            AddSuffix(new[] {"SLISP", "SEALEVELISP"}, new Suffix<float>(() => engine.SeaLevelSpecificImpulse));
+            AddSuffix(new[] { "VISP", "VACUUMISP" }, new Suffix<float>(() => engine.VacuumSpecificImpluse));
+            AddSuffix(new[] { "SLISP", "SEALEVELISP" }, new Suffix<float>(() => engine.SeaLevelSpecificImpulse));
             AddSuffix("FLAMEOUT", new Suffix<bool>(() => engine.Flameout));
             AddSuffix("IGNITION", new Suffix<bool>(() => engine.Ignition));
             AddSuffix("ALLOWRESTART", new Suffix<bool>(() => engine.AllowRestart));
             AddSuffix("ALLOWSHUTDOWN", new Suffix<bool>(() => engine.AllowShutdown));
             AddSuffix("THROTTLELOCK", new Suffix<bool>(() => engine.ThrottleLock));
+            AddSuffix("ISPAT", new OneArgsSuffix<float, double>(GetIspAtAtm));
+            AddSuffix("MAXTHRUSTAT", new OneArgsSuffix<float, double>(GetMaxThrustAtAtm));
+            AddSuffix("AVAILABLETHRUST", new Suffix<float>(() => engine.AvailableThrust));
+            AddSuffix("AVAILABLETHRUSTAT", new OneArgsSuffix<float, double>(GetAvailableThrustAtAtm));
         }
 
         public static ListValue PartsToList(IEnumerable<global::Part> parts, SharedObjects sharedObj)
@@ -54,6 +58,21 @@ namespace kOS.Suffixed.Part
                 }
             }
             return toReturn;
+        }
+
+        public float GetIspAtAtm(double atmPressure)
+        {
+            return engine.IspAtAtm(atmPressure);
+        }
+
+        public float GetMaxThrustAtAtm(double atmPressure)
+        {
+            return engine.MaxThrustAtAtm(atmPressure);
+        }
+
+        public float GetAvailableThrustAtAtm(double atmPressure)
+        {
+            return engine.AvailableThrustAtAtm(atmPressure);
         }
     }
 }
