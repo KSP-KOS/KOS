@@ -23,19 +23,23 @@ namespace kOS.Execution
                 // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
         }
-
+        
         private void ThrowIfInvalid(object item)
         {
             if (!Config.Instance.EnableSafeMode)
                 return;
-            if (!(item is double))
+            if (!(item is double) && !(item is float))
                 return;
+			
+            double unboxed = Convert.ToDouble(item);
 
-            if (Double.IsNaN((double)item)) {
+            if (Double.IsNaN(unboxed))
+            {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Tried to push NaN into the stack.");
             }
-            if (Double.IsInfinity((double)item)) {
+            if (Double.IsInfinity(unboxed))
+            {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Tried to push Infinity into the stack.");
             }
@@ -48,9 +52,19 @@ namespace kOS.Execution
         /// <returns></returns>
         private object ProcessItem(object item)
         {
-            if (item is float)
+            if (item is float) {
                 // promote floats to doubles
-                return Convert.ToDouble(item);
+                item = Convert.ToDouble (item);
+            }
+            if (item is double)
+            {
+                if (!Double.IsNaN((double)item) && Int32.MinValue < (double)item && (double)item < Int32.MaxValue)
+                {
+                    int intPart = Convert.ToInt32(item);
+                    if ((double)item == (double)intPart)
+                        item = intPart;
+                }
+            }
             return item;
         }
 
