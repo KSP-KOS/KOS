@@ -1,5 +1,6 @@
-﻿using System;
-using kOS.Safe.Encapsulation.Part;
+﻿using kOS.Safe.Encapsulation.Part;
+using System;
+using UnityEngine;
 
 namespace kOS.Suffixed.Part
 {
@@ -34,9 +35,11 @@ namespace kOS.Suffixed.Part
                 case EngineType.Engine:
                     engineModule.Activate();
                     break;
+
                 case EngineType.EngineFx:
                     engineModuleFx.Activate();
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -49,9 +52,11 @@ namespace kOS.Suffixed.Part
                 case EngineType.Engine:
                     engineModule.Shutdown();
                     break;
+
                 case EngineType.EngineFx:
                     engineModuleFx.Shutdown();
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -98,10 +103,28 @@ namespace kOS.Suffixed.Part
                 switch (engineType)
                 {
                     case EngineType.Engine:
-                        return engineModule.maxThrust;
+                        return (float)GetEngineThrust(engineModule);
 
                     case EngineType.EngineFx:
-                        return engineModuleFx.maxThrust;
+                        return (float)GetEngineThrust(engineModuleFx);
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        public float AvailableThrust
+        {
+            get
+            {
+                switch (engineType)
+                {
+                    case EngineType.Engine:
+                        return (float)GetEngineThrust(engineModule, useThrustLimit: true);
+
+                    case EngineType.EngineFx:
+                        return (float)GetEngineThrust(engineModuleFx, useThrustLimit: true);
 
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -125,6 +148,51 @@ namespace kOS.Suffixed.Part
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+
+        public static float GetEngineThrust(ModuleEngines engine, float throttle = 1.0f, bool useThrustLimit = false, double atmPressure = -1.0)
+        {
+            if (engine != null)
+            {
+                if (!engine.isOperational) return 0.0f;
+                if (useThrustLimit) { throttle = throttle * engine.thrustPercentage / 100.0f; }
+                if (atmPressure < 0) { atmPressure = engine.part.staticPressureAtm; }
+                float flowMod = 1.0f;
+                float velMod = 1.0f;
+                if (engine.atmChangeFlow)
+                {
+                    flowMod = (float)(engine.part.atmDensity / 1.225f);
+                }
+                if (engine.useAtmCurve && engine.atmCurve != null)
+                {
+                    flowMod = engine.atmCurve.Evaluate(flowMod);
+                }
+                if (engine.useVelCurve && engine.velCurve != null)
+                {
+                    velMod = velMod * engine.velCurve.Evaluate((float)engine.vessel.mach);
+                }
+                // thrust is modified fuel flow rate times isp time g times the velocity modifier for jet engines (as of KSP 1.0)
+                return Mathf.Lerp(engine.minFuelFlow, engine.maxFuelFlow, throttle) * flowMod * GetEngineIsp(engine, atmPressure) * engine.g * velMod;
+            }
+            else return 0.0f;
+        }
+
+        public static float GetEngineIsp(ModuleEngines engine)
+        {
+            if (engine != null)
+            {
+                return GetEngineIsp(engine, engine.part.staticPressureAtm);
+            }
+            else return 0.0f;
+        }
+
+        public static float GetEngineIsp(ModuleEngines engine, double staticPressureAtm)
+        {
+            if (engine != null)
+            {
+                return engine.atmosphereCurve.Evaluate((float)staticPressureAtm);
+            }
+            else return 0.0f;
         }
 
         public float FuelFlow
@@ -162,6 +230,7 @@ namespace kOS.Suffixed.Part
                 }
             }
         }
+
         public float VacuumSpecificImpluse
         {
             get
@@ -179,6 +248,7 @@ namespace kOS.Suffixed.Part
                 }
             }
         }
+
         public float SeaLevelSpecificImpulse
         {
             get
@@ -284,6 +354,51 @@ namespace kOS.Suffixed.Part
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            }
+        }
+
+        public float IspAtAtm(double atmPressure)
+        {
+            switch (engineType)
+            {
+                case EngineType.Engine:
+                    return ModuleEngineAdapter.GetEngineIsp(engineModule, atmPressure);
+
+                case EngineType.EngineFx:
+                    return ModuleEngineAdapter.GetEngineIsp(engineModuleFx, atmPressure);
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public float MaxThrustAtAtm(double atmPressure)
+        {
+            switch (engineType)
+            {
+                case EngineType.Engine:
+                    return ModuleEngineAdapter.GetEngineThrust(engineModule, atmPressure: atmPressure);
+
+                case EngineType.EngineFx:
+                    return ModuleEngineAdapter.GetEngineThrust(engineModuleFx, atmPressure: atmPressure);
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public float AvailableThrustAtAtm(double atmPressure)
+        {
+            switch (engineType)
+            {
+                case EngineType.Engine:
+                    return ModuleEngineAdapter.GetEngineThrust(engineModule, useThrustLimit: true, atmPressure: atmPressure);
+
+                case EngineType.EngineFx:
+                    return ModuleEngineAdapter.GetEngineThrust(engineModuleFx, useThrustLimit: true, atmPressure: atmPressure);
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
