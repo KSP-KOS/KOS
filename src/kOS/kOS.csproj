@@ -30,10 +30,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\KSP_LIB\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\Resources\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\..\KSP_LIB\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\Resources\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,10 +42,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\KSP_LIB\UnityEngine.dll</HintPath>
+      <HintPath>..\..\Resources\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="KSPAPIExtensions">
-      <HintPath>..\..\..\KSP_LIB\KSPAPIExtensions.dll</HintPath>
+      <HintPath>..\..\Resources\KSPAPIExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
