@@ -138,6 +138,8 @@
     <Compile Include="Suffixed\SingleResourceValue.cs" />
     <Compile Include="Suffixed\StageValues.cs" />
     <Compile Include="Suffixed\VectorRenderer.cs" />
+    <Compile Include="Suffixed\VesselAlt.cs" />
+    <Compile Include="Suffixed\VesselEta.cs" />
     <Compile Include="Suffixed\WaypointValue.cs" />
     <Compile Include="Execution\TransferManager.cs" />
     <Compile Include="UserIO\TelnetMainServer.cs" />
