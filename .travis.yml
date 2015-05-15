@@ -3,20 +3,16 @@ solution: src/kOS.sln
 
 # Before the install the library dlls need to be downloaded
 before_install:
-- @Echo off
 - cd Resources
 - wget --user=$KOS_LIB_USER --password=$KOS_LIB_PASSWORD $KOS_LIB_URL -O kos.tar
 - tar -xvf kos.tar
 - cd ../
-- @Echo on
 
 # Cleanup the downloaded resources
 after_script:
-- @Echo off
 - cd Resources
 - rm *.dll
 - cd ../
-- @Echo on
 
 env:
   # URL
