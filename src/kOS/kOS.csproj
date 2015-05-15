@@ -191,7 +191,11 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+        cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
+    </PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+      xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
     </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
