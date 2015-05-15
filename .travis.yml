@@ -15,6 +15,7 @@ after_script:
 - cd ../
 
 env:
+  global:
   # URL
   - secure: X9LS8796tt9smsR0Zl9oNa3yDB5G0eLGLtfTfh0h2ePaKrsDLntJaIttzVE5MKBFj3/SiMU6Exkc5k5WFoVH2CpUOY15OcCZVf8n/6UI/QaaGrunuitsTcShm6Kdepvfn+JN38AkLMLqEZoxNrnRMYxu8oCAd5+wlqcSoiOzj1M=
   # User
