@@ -1,6 +1,7 @@
 language: csharp
 solution: src/kOS.sln
 
+# Before the install the library dlls need to be downloaded
 before_install:
 - @Echo off
 - cd Resources
@@ -9,6 +10,7 @@ before_install:
 - cd ../
 - @Echo on
 
+# Cleanup the downloaded resources
 after_script:
 - @Echo off
 - cd Resources
