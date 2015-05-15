@@ -8,6 +8,7 @@ notifications:
 # Before the install the library dlls need to be downloaded
 before_install:
 - cd Resources
+- wget --quiet --user=$KOS_LIB_USER --password=$KOS_LIB_PASSWORD $KOS_LIB_URL -O kos.tar
 - tar -xvf kos.tar
 - cd ../
 
