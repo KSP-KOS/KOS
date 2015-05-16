@@ -341,7 +341,7 @@ namespace kOS.Screen
             GUI.skin = HighLogic.Skin;
 
             windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
-            windowRect = RectExtensions.ClampToRectEdge(windowRect, rectToFit);
+            windowRect = RectExtensions.ClampToRectAngle(windowRect, rectToFit);
         }
         
         public void DrawWindow(int windowID)
