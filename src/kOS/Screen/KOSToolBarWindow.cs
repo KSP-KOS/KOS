@@ -46,10 +46,7 @@ namespace kOS.Screen
         
         // ReSharper disable once RedundantDefaultFieldInitializer
         private bool clickedOn = false;
-        private float height = 1f; // will be automatically resized by GUILayout.
-        private float width = 1f; // will be automatically resized by GUILayout.
-        private float maxX = 0f; // will be changed in Open()
-        private float maxY = 0f; // will be changed in Open()
+        private Rect rectToFit = new Rect(0, 0, 1, 1); // will be changed in Open()
         
         // ReSharper disable RedundantDefaultFieldInitializer
         private int verticalSectionCount  = 0;
@@ -57,7 +54,7 @@ namespace kOS.Screen
         // ReSharper restore RedundantDefaultFieldInitializer
         private Vector2 scrollPos = new Vector2(200,350);
 
-        private static Rect windowRect;
+        private static Rect windowRect; // does anybody know why this is ststic?
         private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
         private static GUISkin panelSkin;
         private static GUIStyle headingLabelStyle;
@@ -298,14 +295,14 @@ namespace kOS.Screen
 
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
-            maxX = UnityEngine.Screen.width - (HighLogic.LoadedSceneIsEditor ? 64f : 0);
-            float leftEdge = UnityEngine.Screen.width;  // will be adgusted in  OnGUI()
+            float fitWidth = UnityEngine.Screen.width - (HighLogic.LoadedSceneIsEditor ? 64f : 0);
+            float fitHeight = UnityEngine.Screen.height - 40f - 40f;
+            rectToFit = new Rect(0, 40f, fitWidth, fitHeight);
 
-            maxY = UnityEngine.Screen.height - 40f;  // I hope that KSP window will be bigger than kOS window
-            float topEdge = isTop ? 40f : UnityEngine.Screen.height;  // will be adgusted in  OnGUI()
+            float leftEdge = UnityEngine.Screen.width;
+            float topEdge = isTop ? 0f : UnityEngine.Screen.height;
 
-            windowRect = new Rect(leftEdge, topEdge, 0, 0); // will resize upon first GUILayout-ing.
-            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open(), windowRect = " + windowRect);
+            windowRect = new Rect(leftEdge, topEdge, 0, 0); // will resize and move upon first GUILayout-ing.
             
             isOpen = true;
         }
@@ -344,11 +341,7 @@ namespace kOS.Screen
             GUI.skin = HighLogic.Skin;
 
             windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
-
-            width = windowRect.width;
-            height = windowRect.height;
-            windowRect.x = Mathf.Min(windowRect.x, maxX - width);
-            windowRect.y = Mathf.Min(windowRect.y, maxY - height);
+            windowRect = RectExtensions.ClampToRectEdge(windowRect, rectToFit);
         }
         
         public void DrawWindow(int windowID)
@@ -466,7 +459,7 @@ namespace kOS.Screen
         
         private void DrawActiveCPUsOnPanel()
         {
-            scrollPos = GUILayout.BeginScrollView(scrollPos, panelSkin.scrollView, GUILayout.MinWidth(260), GUILayout.Height(height-60));
+            scrollPos = GUILayout.BeginScrollView(scrollPos, panelSkin.scrollView, GUILayout.MinWidth(260), GUILayout.Height(windowRect.height-60));
             
             CountBeginVertical();
             Vessel prevVessel = null;
