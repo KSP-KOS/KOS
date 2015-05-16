@@ -175,6 +175,7 @@
     <Compile Include="AddOns\KerbalAlarmClock\Addon.cs" />
     <Compile Include="AddOns\ActionGroupsExtended\Addon.cs" />
     <Compile Include="AddOns\InfernalRobotics\Addon.cs" />
+    <Compile Include="Screen\RectExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
