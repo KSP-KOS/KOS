@@ -19,10 +19,10 @@ namespace kOS.Screen
 
         public static Rect EnsurePartiallyInside(Rect pos, Rect target, float min = 16.0f)
         {
-            float xMin = min - pos.width;
-            float xMax = target.width - min;
-            float yMin = min - pos.height;
-            float yMax = target.height - min;
+            float xMin = target.x + min - pos.width;
+            float xMax = target.xMax - min;
+            float yMin = target.y + min - pos.height;
+            float yMax = target.yMax - min;
 
             pos.x = Mathf.Clamp(pos.x, xMin, xMax);
             pos.y = Mathf.Clamp(pos.y, yMin, yMax);
@@ -37,13 +37,13 @@ namespace kOS.Screen
 
         public static Rect EnsureCompletelyInside(Rect pos, Rect target)
         {
-            const float X_MIN = 0;
-            float xMax = target.width - pos.width;
-            const float Y_MIN = 0;
-            float yMax = target.height - pos.height;
+            float xMin = target.x;
+            float xMax = target.xMax - pos.width;
+            float yMin = target.y;
+            float yMax = target.yMax - pos.height;
 
-            pos.x = Mathf.Clamp(pos.x, X_MIN, xMax);
-            pos.y = Mathf.Clamp(pos.y, Y_MIN, yMax);
+            pos.x = Mathf.Clamp(pos.x, xMin, xMax);
+            pos.y = Mathf.Clamp(pos.y, yMin, yMax);
 
             return pos;
         }
@@ -55,29 +55,29 @@ namespace kOS.Screen
 
         public static Rect ClampToRectEdge(Rect pos, Rect target)
         {
-            float topSeparation = Math.Abs(pos.y);
-            float bottomSeparation = Math.Abs(target.height - pos.y - pos.height);
-            float leftSeparation = Math.Abs(pos.x);
-            float rightSeparation = Math.Abs(target.width - pos.x - pos.width);
+            float topSeparation = Math.Abs(target.y - pos.y);
+            float bottomSeparation = Math.Abs(target.yMax - pos.yMax);
+            float leftSeparation = Math.Abs(target.x - pos.x);
+            float rightSeparation = Math.Abs(target.xMax - pos.xMax);
 
             if (topSeparation <= bottomSeparation && topSeparation <= leftSeparation && topSeparation <= rightSeparation)
             {
-                pos.y = 0;
+                pos.y = target.y;
             }
             else if (leftSeparation <= topSeparation && leftSeparation <= bottomSeparation &&
                 leftSeparation <= rightSeparation)
             {
-                pos.x = 0;
+                pos.x = target.x;
             }
             else if (bottomSeparation <= topSeparation && bottomSeparation <= leftSeparation &&
                 bottomSeparation <= rightSeparation)
             {
-                pos.y = target.height - pos.height;
+                pos.y = target.yMax - pos.height;
             }
             else if (rightSeparation <= topSeparation && rightSeparation <= bottomSeparation &&
                 rightSeparation <= leftSeparation)
             {
-                pos.x = target.width - pos.width;
+                pos.x = target.xMax - pos.width;
             }
 
             return pos;
@@ -90,25 +90,25 @@ namespace kOS.Screen
 
         public static Rect ClampToRectAngle(Rect pos, Rect target)
         {
-            float topSeparation = Math.Abs(pos.y);
-            float bottomSeparation = Math.Abs(target.height - pos.y - pos.height);
-            float leftSeparation = Math.Abs(pos.x);
-            float rightSeparation = Math.Abs(target.width - pos.x - pos.width);
+            float topSeparation = Math.Abs(target.y - pos.y);
+            float bottomSeparation = Math.Abs(target.yMax - pos.yMax);
+            float leftSeparation = Math.Abs(target.x - pos.x);
+            float rightSeparation = Math.Abs(target.xMax - pos.xMax);
 
             if (topSeparation <= bottomSeparation) {
-                pos.y = 0;
+                pos.y = target.y;
             } 
             else 
             {
-                pos.y = target.height - pos.height;
+                pos.y = target.yMax - pos.height;
             }
             if (leftSeparation <= rightSeparation)
             {
-                pos.x = 0;
+                pos.x = target.x;
             }
             else
             {
-                pos.x = target.width - pos.width;
+                pos.x = target.xMax - pos.width;
             }
 
             return pos;
