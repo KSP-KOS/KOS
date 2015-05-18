@@ -62,7 +62,7 @@ namespace kOS.Function
         {
             int argc = CountRemainingArgs(shared);
             int decimals = 0;
-            if argc >= 2
+            if (argc >= 2)
             {
               decimals = GetInt(PopValueAssert(shared));
             }
