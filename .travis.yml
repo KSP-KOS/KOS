@@ -24,7 +24,7 @@ before_deploy:
 
 deploy:
   provider: s3
-  access_key_id: "AKIAJM7LBXADKYDJ777Q"
+  access_key_id: "AKIAINHSGTBU5O3DKV2Q"
   secret_access_key: "$S3_DEPLOY_SECRET"
   bucket: "kos-artifacts"
   skip_cleanup: true
