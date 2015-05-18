@@ -31,9 +31,9 @@ operator symbols:
 
 **Instructions and keywords**::
 
-    set  to  if  else  until  lock  unlock  print  at  on  toggle
+    set  to  if  else from until step do lock  unlock  print  at  on  toggle
     wait  when  then  off  stage  clearscreen  add  remove  log
-    break  preserve  declare  parameter  switch  copy  from  rename
+    break  preserve  declare  parameter  switch  copy  rename
     volume  file  delete  edit  run  compile  list  reboot  shutdown
     for  unset  batch  deploy  in  all
 

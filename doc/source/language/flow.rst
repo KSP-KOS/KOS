@@ -103,8 +103,8 @@ Releases a lock on a variable. See ``LOCK``::
 .. index:: UNTIL
 .. _until:
 
-``UNTIL``
----------
+``UNTIL`` loop
+--------------
 
 Performs a loop until a certain condition is met::
 
@@ -113,6 +113,11 @@ Performs a loop until a certain condition is met::
         PRINT X.
         SET X to X + 1.
     }
+
+.. note::
+    If you are writing an ``UNTIL`` loop that looks much like the
+    example above, consider the possibility of writing it as a
+    :ref:`FROM <from>` loop instead.
 
 Note that if you are creating a loop in which you are watching a physical value that you expect to change each iteration, it's vital that you insert a small WAIT at the bottom of the loop like so::
 
@@ -134,8 +139,8 @@ page <cpu hardware>`.
 .. index:: FOR
 .. _for:
 
-``FOR``
--------
+``FOR`` loop
+------------
 
 Loops over a list collection, letting you access one element at a time. Syntax::
 
@@ -144,7 +149,7 @@ Loops over a list collection, letting you access one element at a time. Syntax::
 Where:
 
 - `variable1` is a variable to hold each element one at a time.
-- `varaible2` is a LIST variable to iterate over.
+- `variable2` is a LIST variable to iterate over.
 
 Example::
 
@@ -158,8 +163,210 @@ Example::
     }
     PRINT "There are " + numOut + "Flamed out engines.".
 
+.. note::
+    If you are an experienced programmer looking for something more
+    like the for-loop from C, with its 3-part clauses of init,
+    check, and increment in the header, see the :ref:`FROM <from>` loop
+    description.  The kerboscript 'for' loop is more like a
+    'foreach' loop from other modern languages like C#.
+
+.. index:: FROM
+.. _from:
+
+``FROM`` loop
+-------------
+
+Identical to the :ref:`UNTIL <until>` loop, except that it also contains
+an explicit initializer and incrementer section in the header.
+
+Syntax:
+~~~~~~~
+
+  ``FROM`` { one or more statements } ``UNTIL`` Boolean_expression
+  ``STEP`` { one or more statements } ``DO`` one statement or a block of statements inside braces '{}'
+
+Quick Example::
+
+    print "Countdown initiated:".
+    FROM {local x is 10.} UNTIL x = 0 STEP {set x to x-1.} DO {
+      print "T -" + x.
+    }
+
+.. note::
+    If you are an experienced programmer, you can think of the ``FROM``
+    loop as just being Kerboscript's version of the generic 3-part
+    for-loop ``for( int x=10; x > 0; --x ) {...}`` that first appeared
+    in C and is now so common to many programming languages, except
+    that its Boolean check uses the reverse of that logic because it's
+    based on UNTIL loops instead of WHILE loops.
+
+What the parts mean
+~~~~~~~~~~~~~~~~~~~
+
+- ``FROM`` { one or more statements }
+  - Perform these statements at the beginning before starting the first
+    pass through the loop.  They may contain local declarations of new
+    variables.  If they do, then the variables will be local to the body
+    of the loop and won't be visible outside the loop.  In this case the
+    braces ``{`` and ``}`` are mandatory even when there is only one 
+    statement present.  To create a a null FROM clause, give it an empty
+    set of braces.
+- ``UNTIL`` expression
+  - Exactly like the :ref:`UNTIL <until>` loop.  The loop will run this
+    expression at the start of each pass through the loop body, and if
+    it's true, it will abort and stop running the loop.  It checks before
+    the initial first pass of the loop as well, so it's possible for the
+    check to prevent the loop body from even executing once.  Braces
+    ``{``..``}`` are not used here because this is not technically a 
+    complete statement.  It is just an expression that evaluates to a
+    value.
+- ``STEP`` { one or more statements }
+  - Perform these statements at the bottom of each loop pass.  The purpose
+    is typically to increment or decrement the variable you declared in
+    your ``FROM`` clause to get it ready for the next loop pass.  In this
+    case the braces ``{`` and ``}`` are mandatory even when there is
+    only one statement present.  To create a null FROM clause, give
+    it an empty set of braces.
+- ``DO`` one statement or a block of statements inside braxes ``{``..``}``:
+  - This is where the loop body gets put.  Much like with the UNTIL and FOR
+    loops, these braces are not mandatory when there is only exactly one
+    statement in the body, but are a very good idea to have anyway.
+    
+Why some braces are mandatory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Some braces are mandatory (for the ``FROM`` and ``STEP`` clauses) even
+when there is only one statement inside them, because the period that
+ends a single statement would look like it's terminating the entire 
+FROM loop if it was open and bare.  Wrapping it inside braces makes it 
+more visually obvious that it's not the end of the FROM loop.
+
+Why ``DO`` is mandatory
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Other loop types don't require a keyword to begin the loop body.  You
+can just start in with the opening left-brace ``{``.  The reason the
+additional ``DO`` keyword exists in the FROM loop is because otherwise
+you'd have two back-to-back brace sections (The  end of the ``STEP``
+clause would abut against the start of the loop body) without any
+punctuation between them, and that would look too much like it was
+starting a brand new thing from scratch.
+
+Other formatting examples
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    // prints a count from 1 to 10:
+    FROM {local x is 1.} UNTIL x > 10 STEP {set x to x+1.} DO { print x.}
+
+    // Entire header in one line, body indented:
+    // --------------------------------------------
+    FROM {local x is 1.} UNTIL x > 10 STEP {set x to x+1.} DO {
+      print x.
+    }
+
+    // Each header part on its own line, body indented:
+    // --------------------------------------------
+    FROM {local x is 1.}
+    UNTIL x > 10
+    STEP {set x to x+1.}
+    DO {
+      print x.
+    }
+
+    // Fully exploded out: Each header part on its own line,
+    //  each clause indented separately:
+    // --------------------------------------------
+    FROM
+    {
+      local x is 1.  // x will count upward from 1.
+      local y is 10. // while y is counting downward from 10.
+    }
+    UNTIL
+      x > 10 or y = 0
+    STEP
+    {
+      set x to x+1.
+      set y to y-1.
+    }
+    DO
+    {
+      print "x is " + x + ", y is " + y.
+    }
+
+    // ETC.
+
+Any such combination of indenting styles, or mix and match of them, is
+understood by the compiler.  The compiler ignores the spacing and
+indenting.  It is recommended that you pick just two of them and stick
+with them - one compact one to use for short headers, and one longer exploded
+one to use for more wordy headers when you have to split it up across lines.  
+
+The literal meaning of ``FROM``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you have a ``FROM`` loop, it ends up being exactly identical to an
+:ref:`UNTIL <until>` loop written as follows:
+
+If we assume that AAAA, BBBB, CCCC, and DDDD are placeholders referring
+to the actual script syntax, then in the generic case, the following
+is how all FROM loops work:
+
+FROM LOOP::
+
+    FROM { AAAA } UNTIL BBBB STEP { CCCC } DO { DDDD }
+
+Is exactly the same as doing this::
+
+    { // start a brace to keep the scope of AAAA local to the loop.
+        AAAA
+        UNTIL BBBB {
+            DDDD
+
+            CCCC
+        }
+    } // end a brace to throw away the local scope of AAAA
+
+
+An example of why the FROM loop is useful
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Given that the ``FROM`` loop is really just an alternate way to write a
+certain format of UNTIL loop, you might ask why bother having it.
+The reason is that in the long run it makes your script easier to
+edit and maintain.  It makes things more self-contained and cut-and-pasteable:
+
+Above, in the documentation for :ref:`UNTIL <until>` loops, this example was
+given::
+
+    SET X to 1.
+    UNTIL X > 10 {      // Prints the numbers 1-10
+        PRINT X.
+        SET X to X + 1.
+    }
+
+The same example, expressed as a ``FROM`` loop is this::
+
+    FROM {SET X to 1.} UNTIL X > 10 {SET X to X + 1.} DO {
+        PRINT X.
+    }
+
+Kerboscript ``FROM`` loop provides a way to place those sections in the
+loop header so they are declared up front and let people see the layout
+of how the loop iterates, leaving the body to just contain the statements
+to be done for that iteration.
+
+If you are editing your script and need to cut a loop section and move it
+elsewhere, the FROM loop makes it more visually obvious how to cut
+that loop and move it.  It makes the important parts of the loop be self
+contained in the header, so you don't leave the initializer behind when 
+moving the loop.
+
+
 .. index:: WAIT
 .. _wait:
+
 
 ``WAIT``
 --------
