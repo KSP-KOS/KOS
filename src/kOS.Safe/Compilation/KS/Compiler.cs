@@ -38,8 +38,6 @@ namespace kOS.Safe.Compilation.KS
 
         private readonly Dictionary<string, string> functionsOverloads = new Dictionary<string, string>
         { 
-            { "round|1", "roundnearest" },
-            { "round|2", "round"} 
         };
         
         private enum StorageModifier {
