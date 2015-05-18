@@ -20,7 +20,7 @@ after_script:
 
 before_deploy:
 - mkdir KOS/bin/dist 
-- tar -zcvf KOS/bin/dist/build_$TRAVIS_BUILD_ID.tgz KOS/bin/Release/.
+- tar -zcvf KOS/bin/dist/build_$TRAVIS_BUILD_NUMBER.tgz KOS/bin/Release/.
 
 deploy:
   provider: s3
