@@ -1,27 +1,19 @@
 language: csharp
 solution: src/kOS.sln
 
+# Pre-shared token for pushing notifications to slack chat
+notifications:
+  slack: ksp-kos:51DTQ4ZBP9SlGNnLWJ5D84vp
+
 # Before the install the library dlls need to be downloaded
 before_install:
-- @Echo off
 - cd Resources
-- wget --user=$KOS_LIB_USER --password=$KOS_LIB_PASSWORD $KOS_LIB_URL -O kos.tar
+- wget --quiet --user=$KOS_LIB_USER --password=$KOS_LIB_PASSWORD $KOS_LIB_URL -O kos.tar
 - tar -xvf kos.tar
 - cd ../
-- @Echo on
 
 # Cleanup the downloaded resources
 after_script:
-- @Echo off
 - cd Resources
 - rm *.dll
 - cd ../
-- @Echo on
-
-env:
-  # URL
-  - secure: X9LS8796tt9smsR0Zl9oNa3yDB5G0eLGLtfTfh0h2ePaKrsDLntJaIttzVE5MKBFj3/SiMU6Exkc5k5WFoVH2CpUOY15OcCZVf8n/6UI/QaaGrunuitsTcShm6Kdepvfn+JN38AkLMLqEZoxNrnRMYxu8oCAd5+wlqcSoiOzj1M=
-  # User
-  - secure: LP58fCjvJnl+08pFUa9aURJvGzW7tsHRH5DYny/dkhQl1Afgl0Zu8VsWIJ2u1INgXAVu6iOB0kzdxVj7rCqYmZVquKg0ZdM/8z2Y4PH7YuCl2NpOi/fLNsjV6yrPiFzNlPaH7+Ua74I6jScqUW7vMa7EqOOTzCSI41eXRBTvKvE=
-  # Password
-  - secure: IKPqWL8XAwyM1DM4SMKM/jaJznmwlYggoE88MupGVCjysCYRtpHGcJPc2p4nZfhBb+07nbuuWC2R23xpFHu3TCFNrgBH2yyVPuyUlj2uO/LA/81RF4IMkTuA1bY0XJGPx2ZjF1hYNUNtLxyjKJj3FwCaoocjFZsMTnMQHrIgtzg=
