@@ -19,6 +19,8 @@ after_script:
 - cd ../
 
 before_deploy:
+- ls -la
+- pwd
 - mkdir KSP-KOS/KOS/src/kOS/bin/dist 
 - tar -zcvf KSP-KOS/KOS/src/kOS/bin/dist/build_$TRAVIS_BUILD_NUMBER.tgz KSP-KOS/KOS/src/kOS/bin/Release/.
 
