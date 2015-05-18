@@ -19,8 +19,8 @@ after_script:
 - cd ../
 
 before_deploy:
-- mkdir KOS/bin/dist 
-- tar -zcvf KOS/bin/dist/build_$TRAVIS_BUILD_NUMBER.tgz KOS/bin/Release/.
+- mkdir KSP-KOS/KOS/bin/dist 
+- tar -zcvf KSP-KOS/KOS/bin/dist/build_$TRAVIS_BUILD_NUMBER.tgz KSP-KOS/KOS/bin/Release/.
 
 deploy:
   provider: s3
@@ -28,4 +28,4 @@ deploy:
   secret_access_key: "$S3_DEPLOY_SECRET"
   bucket: "kos-artifacts"
   skip_cleanup: true
-  local_dir: "KOS/bin/dist/"
+  local_dir: "KSP-KOS/KOS/bin/dist/"
