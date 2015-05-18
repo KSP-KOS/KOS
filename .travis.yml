@@ -20,8 +20,7 @@ after_script:
 
 before_deploy:
 - mkdir src/kOS/bin/dist 
-- tar -zcvf src/kOS/bin/dist/build_$TRAVIS_BUILD_NUMBER.tgz src/kOS/bin/Release/.
-
+- tar -zcvf src/kOS/bin/dist/build_$TRAVIS_BUILD_NUMBER.tgz src/kOS/bin/Release/kOS.*.dll
 deploy:
   provider: s3
   access_key_id: "AKIAJM7LBXADKYDJ777Q"
