@@ -18,9 +18,14 @@ after_script:
 - rm *.dll
 - cd ../
 
+before_deploy:
+- mkdir KOS/bin/dist 
+- tar -zcvf KOS/bin/dist/build_$TRAVIS_BUILD_ID.tgz KOS/bin/Release/.
+
 deploy:
-- provider: s3
-- access_key_id: $S3_DEPLOY_KEY
-- secret_access_key: $S3_DEPLOY_SECRET
-- bucket: kos-artifacts
-- skip_cleanup: true
+  provider: s3
+  access_key_id: "AKIAJM7LBXADKYDJ777Q"
+  secret_access_key: "$S3_DEPLOY_SECRET"
+  bucket: "kos-artifacts"
+  skip_cleanup: true
+  local_dir: "KOS/bin/dist/"
