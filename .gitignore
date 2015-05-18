@@ -15,6 +15,10 @@ packages/
 /*.pidb
 /*.user
 
+# Build products and files generated during gameplay
+Resources/GameData/kOS/Plugins/
+!Resources/GameData/kOS/ICSharpCode.SharpZipLib.dll
+
 # OS Specific
 .DS_STORE*
 [Tt]humbs.db
