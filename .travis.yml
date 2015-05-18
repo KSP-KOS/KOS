@@ -17,3 +17,10 @@ after_script:
 - cd Resources
 - rm *.dll
 - cd ../
+
+deploy:
+- provider: s3
+- access_key_id: $S3_DEPLOY_KEY
+- secret_access_key: $S3_DEPLOY_SECRET
+- bucket: kos-artifacts
+- skip_cleanup: true
