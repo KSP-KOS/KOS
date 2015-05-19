@@ -58,6 +58,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     :attr:`ANGULARVEL`               :struct:`Direction` in :ref:`SHIP-RAW <ship-raw>`
     :attr:`GEOPOSITIONOF`            :struct:`GeoCoordinates` in :ref:`SHIP-RAW <ship-raw>`
     :attr:`ALTITUDEOF`               scalar (m)
+    :attr:`SOIRADIUS`                scalar (m)
     ================================ ============
 
 .. attribute:: Body:NAME
@@ -106,3 +107,6 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 
     The altitude of the given vector position, above this body's 'sea level'.  SHIP:BODY:ALTITUDEOF(SHIP:POSITION) should, in principle, give the same thing as SHIP:ALTITUDE.  Example: Eve:ALTITUDEOF(GILLY:POSITION) gives the altitude of gilly's current position above Eve, even if you're not actually anywhere near the SOI of Eve at the time.  Be careful not to confuse this with :ALTITUDE (no "OF" in the name), which is also a suffix of Body by virtue of the fact that Body is an Orbitable, but it doesn't mean the same thing.
 
+.. attribute:: Body:SOIRADIUS
+
+    The radius of the body's sphere of influence. Measured from the body's center.
