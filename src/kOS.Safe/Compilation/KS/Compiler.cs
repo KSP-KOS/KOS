@@ -36,7 +36,7 @@ namespace kOS.Safe.Compilation.KS
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
 
-        private readonly Dictionary<string, string> functionsOverloads = new Dictionary<string, string>
+        private readonly Dictionary<string, string> functionsOverloads = new Dictionary<string, string> // TODO: remove this
         { 
         };
         
