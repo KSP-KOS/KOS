@@ -204,14 +204,17 @@ namespace kOS.Function
             {
                 foreach (PartModule module in part.Modules)
                 {
-                    var engineMod = module as ModuleEngines;
-                    if (engineMod != null) {
-                        list.AddItem(part.uid(), part.inverseStage, engineMod.moduleName);
-                    }
-
-                    var engineModFx = module as ModuleEnginesFX;
-                    if (engineModFx != null) {
-                        list.AddItem(part.uid(), part.inverseStage, engineModFx.moduleName);
+                    if (module != null)
+                    {
+                        // TODO: Remove redundant ModuleEnginesFX reference when Squad cleans up the "new" properties (isOperational mainly)
+                        if (module is ModuleEnginesFX)
+                        {
+                            list.AddItem(part.uid(), part.inverseStage, ((ModuleEnginesFX)module).moduleName);
+                        }
+                        else if (module is ModuleEngines)
+                        {
+                            list.AddItem(part.uid(), part.inverseStage, ((ModuleEngines)module).moduleName);
+                        }
                     }
                 }
             }
