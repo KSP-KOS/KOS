@@ -36,10 +36,6 @@ namespace kOS.Safe.Compilation.KS
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
 
-        private readonly Dictionary<string, string> functionsOverloads = new Dictionary<string, string> // TODO: remove this
-        { 
-        };
-        
         private enum StorageModifier {
             /// <summary>The storage will definitely be at the localmost scope.</summary>
             LOCAL,
@@ -1283,7 +1279,6 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            int parameterCount = 0;
             ParseNode trailerNode = node; // the function_trailer rule is here.
 
             // Need to tell OpcodeCall where in the stack the bottom of the arg list is.
@@ -1293,9 +1288,6 @@ namespace kOS.Safe.Compilation.KS
 
             if (trailerNode.Nodes[1].Token.Type == TokenType.arglist)
             {
-
-                parameterCount = (trailerNode.Nodes[1].Nodes.Count / 2) + 1;
-
                 bool remember = identifierIsSuffix;
                 identifierIsSuffix = false;
 
@@ -1306,28 +1298,15 @@ namespace kOS.Safe.Compilation.KS
 
             if (isDirect)
             {
-                string functionName = directName;
-
-                string overloadedFunctionName = GetFunctionOverload(functionName, parameterCount);
-                if (options.FuncManager.Exists(overloadedFunctionName)) // if the name is a built-in, then add the "()" after it.
-                    overloadedFunctionName += "()";
-                AddOpcode(new OpcodeCall(overloadedFunctionName));
+                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then add the "()" after it.
+                    directName += "()";
+                AddOpcode(new OpcodeCall(directName));
             }
             else
             {
-                OpcodeCall op = new OpcodeCall(string.Empty) { Direct = false };
+                var op = new OpcodeCall(string.Empty) { Direct = false };
                 AddOpcode(op);
             }
-        }
-
-        private string GetFunctionOverload(string functionName, int parameterCount)
-        {
-            string functionKey = string.Format("{0}|{1}", functionName, parameterCount);
-            if (functionsOverloads.ContainsKey(functionKey))
-            {
-                return functionsOverloads[functionKey];
-            }
-            return functionName;
         }
 
         private void VisitArgList(ParseNode node)

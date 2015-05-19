@@ -60,12 +60,21 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            int argc = CountRemainingArgs(shared);
-            int decimals = 0;
-            if (argc >= 2)
+            int decimals;
+            int argCount = CountRemainingArgs(shared);
+
+            switch (argCount)
             {
-              decimals = GetInt(PopValueAssert(shared));
+                case 1:
+                    decimals = 0;
+                    break;
+                case 2:
+                    decimals = GetInt(PopValueAssert(shared));
+                    break;
+                default:
+                    throw new KOSArgumentMismatchException(new []{1,2}, argCount);
             }
+
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = Math.Round(argument, decimals);
