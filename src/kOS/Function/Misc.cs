@@ -398,7 +398,7 @@ namespace kOS.Function
                     ut = GetDouble(PopValueAssert(shared));
                     break;
                 default:
-                    break;
+                    throw new KOSArgumentMismatchException(new[] { 1, 2, 3 }, args);
             }
             AssertArgBottomAndConsume(shared);
             TimeWarp.fetch.WarpTo(ut, maxTimeWarping: maxWarp, minTimeWarping: minWarp);
