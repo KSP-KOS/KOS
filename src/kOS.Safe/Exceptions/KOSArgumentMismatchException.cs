@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace kOS.Safe.Exceptions
 {
@@ -18,9 +20,6 @@ namespace kOS.Safe.Exceptions
             get { return string.Empty; }
         }
         
-        private int expectedNum;
-        private int actualNum;
-        
         /// <summary>
         /// Describe an error in the number of arguments.
         /// </summary>
@@ -28,10 +27,19 @@ namespace kOS.Safe.Exceptions
         /// <param name="actual">number of actual arguments</param>
         /// <param name="message">optional message</param>
         public KOSArgumentMismatchException(int expected, int actual, string message = "" ) :
+            base( BuildTerseMessage(new[] {expected},actual) + message )
+        {
+        }
+
+        /// <summary>
+        /// Describe an error in the number of arguments.
+        /// </summary>
+        /// <param name="expected">number of expected arguments</param>
+        /// <param name="actual">number of actual arguments</param>
+        /// <param name="message">optional message</param>
+        public KOSArgumentMismatchException(IList<int> expected, int actual, string message = "" ) :
             base( BuildTerseMessage(expected,actual) + message )
         {
-            expectedNum = expected;
-            actualNum = actual;
         }
 
         /// <summary>
@@ -41,15 +49,16 @@ namespace kOS.Safe.Exceptions
         public KOSArgumentMismatchException(string message = "") :
             base( BuildTerseMessage() + " " + message )
         {
-            expectedNum = 0;
-            actualNum = 0;
         }
         
-        private static string BuildTerseMessage(int expected, int actual)
+        private static string BuildTerseMessage(IList<int> expected, int actual)
         {
-            return String.Format("Incorrect number of arguments.  Expected {0} argument{1}, but found {2}",
-                                 (expected==0?"no":expected.ToString()), (expected==1?"":"s"), (actual==0?"none":actual.ToString())
-                                );
+            var expectedDisplay = (expected.Any() ? "no" : String.Join(", ", new List<int>(expected).ConvertAll(i => i.ToString()).ToArray()));
+            var pluralDecorator = (expected.Count() == 1 ? "" : "s");
+            var actualArgs = (actual == 0 ? "none" : actual.ToString());
+
+            return string.Format("Incorrect number of arguments.  Expected {0} argument{1}, but found {2}",
+                                 expectedDisplay, pluralDecorator, actualArgs );
         }
 
         private static string BuildTerseMessage()
