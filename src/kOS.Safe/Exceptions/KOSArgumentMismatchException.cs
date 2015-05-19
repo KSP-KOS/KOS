@@ -34,7 +34,7 @@ namespace kOS.Safe.Exceptions
         /// <summary>
         /// Describe an error in the number of arguments.
         /// </summary>
-        /// <param name="expected">number of expected arguments</param>
+        /// <param name="expected">a list of the expected arguments</param>
         /// <param name="actual">number of actual arguments</param>
         /// <param name="message">optional message</param>
         public KOSArgumentMismatchException(IList<int> expected, int actual, string message = "" ) :
@@ -53,7 +53,7 @@ namespace kOS.Safe.Exceptions
         
         private static string BuildTerseMessage(IList<int> expected, int actual)
         {
-            var expectedDisplay = (expected.Any() ? "no" : String.Join(", ", new List<int>(expected).ConvertAll(i => i.ToString()).ToArray()));
+            var expectedDisplay = (expected.Any() ? String.Join(", ", new List<int>(expected).ConvertAll(i => i.ToString()).ToArray()) : "no");
             var pluralDecorator = (expected.Count() == 1 ? "" : "s");
             var actualArgs = (actual == 0 ? "none" : actual.ToString());
 
