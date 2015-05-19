@@ -373,4 +373,35 @@ namespace kOS.Function
             ReturnValue = shared.Cpu.DumpVariables();
         }
     }
+
+    [Function("warpto")]
+    public class WarpTo : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int args = CountRemainingArgs(shared);
+            double maxWarp = 8.0;
+            double minWarp = 2.5;
+            double ut = 0.0;
+            switch (args)
+            {
+                case 3:
+                    minWarp = GetDouble(PopValueAssert(shared));
+                    maxWarp = GetDouble(PopValueAssert(shared));
+                    ut = GetDouble(PopValueAssert(shared));
+                    break;
+                case 2:
+                    maxWarp = GetDouble(PopValueAssert(shared));
+                    ut = GetDouble(PopValueAssert(shared));
+                    break;
+                case 1:
+                    ut = GetDouble(PopValueAssert(shared));
+                    break;
+                default:
+                    break;
+            }
+            AssertArgBottomAndConsume(shared);
+            TimeWarp.fetch.WarpTo(ut, maxTimeWarping: maxWarp, minTimeWarping: minWarp);
+        }
+    }
 }
