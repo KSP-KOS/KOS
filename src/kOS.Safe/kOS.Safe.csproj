@@ -185,7 +185,7 @@
         cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
+      xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y || exit /B 0
     </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
