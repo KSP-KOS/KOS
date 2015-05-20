@@ -79,6 +79,7 @@ namespace kOS.Safe.Compilation
         POPSCOPE       = 0x5b,
         STOREEXIST     = 0x5c,
         PUSHDELEGATE   = 0x5d,
+        BRANCHTRUE     = 0x5e,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -759,6 +760,18 @@ namespace kOS.Safe.Compilation
         {
             bool condition = Convert.ToBoolean(cpu.PopValue());
             DeltaInstructionPointer = !condition ? Distance : 1;
+        }
+    }
+    
+    public class OpcodeBranchIfTrue : BranchOpcode
+    {
+        protected override string Name { get { return "br.true"; } }
+        public override ByteCode Code { get { return ByteCode.BRANCHTRUE; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            bool condition = Convert.ToBoolean(cpu.PopValue());
+            DeltaInstructionPointer = condition ? Distance : 1;
         }
     }
 
