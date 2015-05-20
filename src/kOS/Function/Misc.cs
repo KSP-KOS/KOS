@@ -383,32 +383,35 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
+            // TODO: As of KSP v1.0.2, the maxTimeWarping and minTimeWarping parameters behave unpredictably.  Disabling for now, we should revisit it in a later version.
             int args = CountRemainingArgs(shared);
-            double maxWarp = 8.0;
-            double minWarp = 2.5;
+            //double maxWarp = 8.0;
+            //double minWarp = 2.5;
             double ut = 0.0;
             switch (args)
             {
-                case 3:
-                    minWarp = GetDouble(PopValueAssert(shared));
-                    maxWarp = GetDouble(PopValueAssert(shared));
-                    ut = GetDouble(PopValueAssert(shared));
-                    break;
+                //case 3:
+                //    minWarp = GetDouble(PopValueAssert(shared));
+                //    maxWarp = GetDouble(PopValueAssert(shared));
+                //    ut = GetDouble(PopValueAssert(shared));
+                //    break;
 
-                case 2:
-                    maxWarp = GetDouble(PopValueAssert(shared));
-                    ut = GetDouble(PopValueAssert(shared));
-                    break;
+                //case 2:
+                //    maxWarp = GetDouble(PopValueAssert(shared));
+                //    ut = GetDouble(PopValueAssert(shared));
+                //    break;
 
                 case 1:
                     ut = GetDouble(PopValueAssert(shared));
                     break;
 
                 default:
-                    throw new KOSArgumentMismatchException(new[] { 1, 2, 3 }, args);
+                    throw new KOSArgumentMismatchException(new[] { 1 }, args);
+                    //throw new KOSArgumentMismatchException(new[] { 1, 2, 3 }, args);
             }
             AssertArgBottomAndConsume(shared);
-            TimeWarp.fetch.WarpTo(ut, maxTimeWarping: maxWarp, minTimeWarping: minWarp);
+            TimeWarp.fetch.WarpTo(ut);
+            //TimeWarp.fetch.WarpTo(ut, maxTimeWarping: maxWarp, minTimeWarping: minWarp);
         }
     }
 }
