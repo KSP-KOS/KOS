@@ -186,6 +186,7 @@ namespace kOS.Safe.Compilation.KS
         {
             ParseNode rootNode = tree.Nodes[0];
             LowercaseConversions(rootNode);
+            RearrangeParseNodes(rootNode);
             TraverseScopeBranch(rootNode);
             IterateUserFunctions(rootNode, IdentifyUserFunctions);
             PreProcessStatements(rootNode);
@@ -209,6 +210,27 @@ namespace kOS.Safe.Compilation.KS
                         LowercaseConversions(child);
                     break;
             }
+        }
+        
+        /// <summary>
+        /// Some of the parse rules in Kerboscript may be implemented on the back
+        /// of other rules.  In this case all the compiler really does is just 
+        /// re-arrange a more complex parse rule to be expressed in the form of
+        /// building blocks made of other simpler rules before continuing the compile that way. 
+        /// </summary>
+        /// <param name="node">make the transformation from this point downward</param>
+        private void RearrangeParseNodes(ParseNode node)
+        {
+            if (node.Token.Type == TokenType.fromloop_stmt) // change to switch stmt if more such rules get added later.
+            {
+                RearrangeLoopFromNode(node);
+            }
+
+            // Recurse children EVEN IF the node got re-arranged.  If the node got re-arranged, then its children will now look
+            // different than they did before, but they still need to be iterated over to look for other rearrangements.
+            // (for example, a loopfrom loop nested inside another loopfrom loop).
+            foreach (ParseNode child in node.Nodes)
+                RearrangeParseNodes(child);
         }
         
         private void IterateUserFunctions(ParseNode node, Action<ParseNode> action)
@@ -246,6 +268,99 @@ namespace kOS.Safe.Compilation.KS
                     action.Invoke(node);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Edit the parse branch for a loopfrom statement, rearranging its component
+        /// parts into a simpler unrolled form.<br/>
+        /// When given this rule:<br/>
+        /// <br/>
+        /// FROM {(init statements)} UNTIL expr STEP {(inc statements)} DO {(body statements)} <br/>
+        /// <br/>
+        /// It will edit its own child nodes and transform them into a new parse tree branch as if this had
+        /// been what was in the source code instead:<br/>
+        /// <br/>
+        /// { (init statements) UNTIL expr { (body statements) (inc statements) } }<br/>
+        /// <br/>
+        /// Thus any variables declared inside (init statements) are in scope during the body of the loop.<br/>
+        /// The actual logic of doing an UNTIL loop will fall upon VisitUntilNode to deal with later in the compile.<br/>
+        /// </summary>
+        /// <param name="node"></param>
+        private void RearrangeLoopFromNode(ParseNode node)
+        {
+            // Safety check to see if I've already been rearranged into my final form, just in case
+            // the recursion logic is messed up and this gets called twice on the same node:
+            if (node.Nodes.Count == 1 && node.Nodes[0].Token.Type == TokenType.instruction_block)
+                return;
+            
+            // ReSharper disable RedundantDefaultFieldInitializer
+            ParseNode initBlock = null;
+            ParseNode checkExpression = null;
+            ParseNode untilTokenNode = null;
+            ParseNode stepBlock = null;
+            ParseNode doBlock = null;
+            // ReSharper enable RedundantDefaultFieldInitializer
+            
+            for( int index = 0 ; index < node.Nodes.Count - 1 ; index += 2 )
+            {
+                switch (node.Nodes[index].Token.Type)
+                {
+                    case TokenType.FROM:
+                        initBlock = node.Nodes[index+1];
+                        break;
+                    case TokenType.UNTIL:
+                        untilTokenNode = node.Nodes[index];
+                        checkExpression = node.Nodes[index+1];
+                        break;
+                    case TokenType.STEP:
+                        stepBlock = node.Nodes[index+1];
+                        break;
+                    case TokenType.DO:
+                        doBlock = node.Nodes[index+1];
+                        break;
+                    // no default because anything else is a syntax error and it won't even get as far as this method in that case.
+                }
+            }
+            
+            // These probably can't happen because the parser would have barfed before it got to this method:
+            if (initBlock == null)
+                throw new KOSCompileException("Missing FROM block in FROM loop.");
+            if (checkExpression == null || untilTokenNode == null)
+                throw new KOSCompileException("Missing UNTIL check expression in FROM loop.");
+            if (stepBlock == null)
+                throw new KOSCompileException("Missing STEP block in FROM loop.");
+            if (doBlock == null)
+                throw new KOSCompileException("Missing loop body (DO block) in FROM loop.");
+            
+            // Append the step instructions to the tail end of the body block's instructions:
+            foreach (ParseNode child in stepBlock.Nodes)
+                doBlock.Nodes.Add(child);
+            
+            // Make a new empty until loop node, which will get added to the init block eventually:
+            Token untilStatementTok = new Token();
+            untilStatementTok.Type = TokenType.until_stmt;
+            untilStatementTok.Line = untilTokenNode.Token.Line;
+            untilStatementTok.Column = untilTokenNode.Token.Column;
+            untilStatementTok.File = untilTokenNode.Token.File;
+            ParseNode untilNode = initBlock.CreateNode(untilStatementTok, untilStatementTok.ToString());
+
+            // (The direct manipulation of the tree's parent pointers, seen below, is bad form,
+            // but TinyPg doesn't seem to have given us good primitives to append an existing node to the tree to do it for us.
+            // CreateNode() makes a brand new empty node attached to the parent, but there seems to be no way to take an
+            // existing node and attach it elsewhere without directly changing the Parent property as seen in the lines below:)
+
+            // Populate that until loop node with the parts from this rule:
+            untilNode.Nodes.Add(untilTokenNode); untilTokenNode.Parent = untilNode;
+            untilNode.Nodes.Add(checkExpression); checkExpression.Parent = untilNode;
+            untilNode.Nodes.Add(doBlock); doBlock.Parent = untilNode;
+            
+            // And now append that until loop to the tail end of the init block:
+            initBlock.Nodes.Add(untilNode); // parent already assigned by initBlock.CreateNode() above.
+            
+            // The init block is now actually the entire loop, having been exploded and unrolled into its
+            // new form, make that be our only node node:
+            node.Nodes.Clear();
+            node.Nodes.Add(initBlock);  // initBlock's parent already points at node to begin with.
         }
         
         private void PreProcessStatements(ParseNode node)
@@ -921,6 +1036,9 @@ namespace kOS.Safe.Compilation.KS
                     break;
                 case TokenType.until_stmt:
                     VisitUntilStatement(node);
+                    break;
+                case TokenType.fromloop_stmt:
+                    VisitChildNodes(node); // The loopfrom should have been altered by now, in RearrangeParseNodes().
                     break;
                 case TokenType.return_stmt:
                     VisitReturnStatement(node);

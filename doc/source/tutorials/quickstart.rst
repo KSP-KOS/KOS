@@ -163,11 +163,9 @@ Okay, so type the lines below in an external *text editor of your choice* (i.e. 
 
     // My First Launcher.
 
-    SET countdown TO 10.
     PRINT "Counting down:".
-    UNTIL countdown = 0 {
+    FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
-        SET countdown TO countdown - 1.
         WAIT 1. // pauses the script here for 1 second.
     }
 
@@ -200,11 +198,9 @@ Okay now go back into your *text editor of choice* and append a few more lines t
 
     // My First Launcher.
 
-    SET countdown TO 10.
     PRINT "Counting down:".
-    UNTIL countdown = 0 {
+    FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
-        SET countdown TO countdown - 1.
         WAIT 1. // pauses the script here for 1 second.
     }
 
@@ -257,11 +253,9 @@ So if you just add this one line to your script, you'll get something that shoul
 
     // My First Launcher.
 
-    SET countdown TO 10.
     PRINT "Counting down:".
-    UNTIL countdown = 0 {
+    FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
-        SET countdown TO countdown - 1.
         WAIT 1. // pauses the script here for 1 second.
     }
     PRINT "Main throttle up.  2 seconds to stabalize it.".
@@ -327,11 +321,9 @@ Now your script should look like this::
 
     // My First Launcher.
 
-    SET countdown TO 10.
     PRINT "Counting down:".
-    UNTIL countdown = 0 {
+    FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
-        SET countdown TO countdown - 1.
         WAIT 1. // pauses the script here for 1 second.
     }
     PRINT "Main throttle up.  2 seconds to stabalize it.".
@@ -401,11 +393,9 @@ Now, if you insert this new section to the script, we have a nice nifty example 
         PRINT "Starting flat part.  Aiming to horizon.".
         LOCK STEERING TO HEADING(90,0). // east, horizontal.
     }
-    SET countdown TO 10.
     PRINT "Counting down:".
-    UNTIL countdown = 0 {
+    FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
-        SET countdown TO countdown - 1.
         WAIT 1. // pauses the script here for 1 second.
     }
     PRINT "Main throttle up.  2 seconds to stabalize it.".
