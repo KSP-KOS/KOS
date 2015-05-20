@@ -10,6 +10,7 @@
 
 ### Build
 * Build kOS solution in release mode
+* Delete Resources\GameData\kOS\Plugins\PluginData, if it exists
 * Create zip file with a root starting in the \Resources\ directory
 * Name the zip file with the following pattern kOS.v<major>.<minor>.<patch>.zip (eg kOS.v0.14.2.zip )
 * Build the documentation in \docs\
