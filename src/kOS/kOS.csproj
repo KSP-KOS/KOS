@@ -192,10 +192,12 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-        cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
+      cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
+      test -h "$(SolutionDir)/../KSPdirlink" &#x26;&#x26; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins"
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y || exit /B 0
+      xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
+      IF EXIST "$(SolutionDir)\..\KSPdirlink\" xcopy "$(TargetPath)" "$(SolutionDir)\..\KSPdirlink\GameData\kOS\Plugins" /y || exit /B 0
     </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
