@@ -337,11 +337,14 @@ namespace kOS.Safe.Compilation.KS
                 doBlock.Nodes.Add(child);
             
             // Make a new empty until loop node, which will get added to the init block eventually:
-            Token untilStatementTok = new Token();
-            untilStatementTok.Type = TokenType.until_stmt;
-            untilStatementTok.Line = untilTokenNode.Token.Line;
-            untilStatementTok.Column = untilTokenNode.Token.Column;
-            untilStatementTok.File = untilTokenNode.Token.File;
+            Token untilStatementTok = new Token
+            {
+                Type = TokenType.until_stmt,
+                Line = untilTokenNode.Token.Line,
+                Column = untilTokenNode.Token.Column,
+                File = untilTokenNode.Token.File
+            };
+
             ParseNode untilNode = initBlock.CreateNode(untilStatementTok, untilStatementTok.ToString());
 
             // (The direct manipulation of the tree's parent pointers, seen below, is bad form,
@@ -2336,9 +2339,9 @@ namespace kOS.Safe.Compilation.KS
                 (lastSubNode.Token.Type == TokenType.declare_lock_clause ? StorageModifier.GLOBAL : StorageModifier.LOCAL);
             bool storageKeywordMissing = true;
             
-            for (int i = 0 ; i < node.Nodes.Count ; ++i)
+            foreach (ParseNode t in node.Nodes)
             {
-                switch (node.Nodes[i].Token.Type)
+                switch (t.Token.Type)
                 {
                     case TokenType.GLOBAL:
                         modifier = StorageModifier.GLOBAL;
