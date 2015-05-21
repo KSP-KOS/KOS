@@ -11,7 +11,7 @@ namespace kOS.Suffixed
 {
     public class FlightControl : Structure , IDisposable
     {
-        private const float SETTING_EPILSON = 0.01f;
+        private const float SETTING_EPILSON = 0.00001f;
         // For rotation x = yaw, y = pitch, and z = roll
         private float yaw;
         private float yawTrim;
