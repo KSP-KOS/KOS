@@ -30,7 +30,7 @@ Structure
 	  - get and set
 	  - Terminal height in characters
 
-        * - :attr:`REVERSESCREEN`
+        * - :attr:`REVERSE
 	  - Boolean
 	  - get and set
 	  - Determines if the screen is displayed with foreground and background colors swapped.
@@ -70,7 +70,7 @@ Structure
     This setting is different per kOS CPU part.  Different terminal
     windows can have different settings for this value.
 
-.. attribute:: Terminal:REVERSESCREEN
+.. attribute:: Terminal:REVERSE
 
     :access: Get/Set
     :type: Boolean.
