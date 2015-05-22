@@ -30,7 +30,7 @@ Structure
 	  - get and set
 	  - Terminal height in characters
 
-        * - :attr:`REVERSE
+        * - :attr:`REVERSE`
 	  - Boolean
 	  - get and set
 	  - Determines if the screen is displayed with foreground and background colors swapped.
