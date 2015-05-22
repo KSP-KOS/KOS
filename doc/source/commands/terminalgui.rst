@@ -21,10 +21,12 @@ Terminal and game environment
 .. global:: SET TERMINAL:WIDTH. GET TERMINAL:WIDTH
 
      Gets or sets the terminal's width in characters.
+     For more information see :ref:`terminal struct <terminal>`.
 
 .. global:: SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT
 
      Gets or sets the terminal's height in characters.
+     For more information see :ref:`terminal struct <terminal>`.
 
 .. function:: AT(col,line)
 

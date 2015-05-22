@@ -44,6 +44,10 @@ namespace kOS.Safe.Screen
                 case 13:  // enter
                     NewLine();
                     break;
+                case 7:
+                case (char)UnicodeCommand.BEEP:
+                    ++base.BeepsPending;
+                    break;
                 default:
                     InsertChar(ch);
                     break;
@@ -78,6 +82,10 @@ namespace kOS.Safe.Screen
                     break;
                 case (char)UnicodeCommand.PAGEDOWNCURSOR:
                     ScrollVertical(10);
+                    break;
+                case (char)0x007:
+                case (char)UnicodeCommand.BEEP:
+                    ++base.BeepsPending;
                     break;
             }
         }
