@@ -143,10 +143,10 @@ namespace kOS.Function
             AssertArgBottomAndConsume(shared);
 
             // Now the args it is going to be passing on to the program:
-            List<Object> prog_args = new List<Object>();
+            var progArgs = new List<Object>();
             int argc = CountRemainingArgs(shared);
             for (int i = 0; i < argc; ++i)
-                prog_args.Add(PopValueAssert(shared, true));
+                progArgs.Add(PopValueAssert(shared, true));
             AssertArgBottomAndConsume(shared);
 
             if (shared.VolumeMgr == null) return;
@@ -197,7 +197,7 @@ namespace kOS.Function
                     {
                         codeParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         // If it died due to a compile error, then we won't really be able to switch to program context
                         // as was implied by calling Cpu.SwitchToProgramContext() up above.  The CPU needs to be
@@ -219,7 +219,7 @@ namespace kOS.Function
 
             // Put the args for the program being called back on in the same order they were in before (so read the list backward):
             for (int i = argc - 1; i >= 0; --i)
-                shared.Cpu.PushStack(prog_args[i]);
+                shared.Cpu.PushStack(progArgs[i]);
         }
     }
 
@@ -383,35 +383,20 @@ namespace kOS.Function
     {
         public override void Execute(SharedObjects shared)
         {
-            // TODO: As of KSP v1.0.2, the maxTimeWarping and minTimeWarping parameters behave unpredictably.  Disabling for now, we should revisit it in a later version.
+            // TODO: As of KSP v1.0.2, the maxTimeWarping and minTimeWarping parameters behave as time limiters, not actual warp limiters
             int args = CountRemainingArgs(shared);
-            //double maxWarp = 8.0;
-            //double minWarp = 2.5;
-            double ut = 0.0;
+            double ut;
             switch (args)
             {
-                //case 3:
-                //    minWarp = GetDouble(PopValueAssert(shared));
-                //    maxWarp = GetDouble(PopValueAssert(shared));
-                //    ut = GetDouble(PopValueAssert(shared));
-                //    break;
-
-                //case 2:
-                //    maxWarp = GetDouble(PopValueAssert(shared));
-                //    ut = GetDouble(PopValueAssert(shared));
-                //    break;
-
                 case 1:
                     ut = GetDouble(PopValueAssert(shared));
                     break;
 
                 default:
                     throw new KOSArgumentMismatchException(new[] { 1 }, args);
-                    //throw new KOSArgumentMismatchException(new[] { 1, 2, 3 }, args);
             }
             AssertArgBottomAndConsume(shared);
             TimeWarp.fetch.WarpTo(ut);
-            //TimeWarp.fetch.WarpTo(ut, maxTimeWarping: maxWarp, minTimeWarping: minWarp);
         }
     }
 }
