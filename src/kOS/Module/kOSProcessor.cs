@@ -276,6 +276,7 @@ namespace kOS.Module
             shared.FunctionManager = new FunctionManager(shared);
             shared.TransferManager = new TransferManager(shared);
             shared.Cpu = new CPU(shared);
+            shared.SoundMaker = Sound.SoundMaker.Instance;
 
             // Make the window that is going to correspond to this kOS part:
             var gObj = new GameObject("kOSTermWindow", typeof(Screen.TermWindow));

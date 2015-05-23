@@ -54,8 +54,9 @@ namespace kOS.Safe.Screen
             }
         }
 
-        public virtual void SpecialKey(char key)
+        public virtual bool SpecialKey(char key)
         {
+            bool gotUsed = true;
             switch (key)
             {
                 case (char)UnicodeCommand.LEFTCURSORONE:
@@ -87,7 +88,11 @@ namespace kOS.Safe.Screen
                 case (char)UnicodeCommand.BEEP:
                     ++base.BeepsPending;
                     break;
+                default:
+                    gotUsed = false;
+                    break;
             }
+            return gotUsed;
         }
 
         protected void SaveCursorPos()

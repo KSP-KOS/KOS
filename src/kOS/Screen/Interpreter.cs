@@ -59,14 +59,14 @@ namespace kOS.Screen
             }
         }
 
-        public override void SpecialKey(char key)
+        public override bool SpecialKey(char key)
         {
             if (key == (char)UnicodeCommand.BREAK)
             {
                 Shared.Cpu.BreakExecution(true);
             }
 
-            if (locked) return;
+            if (locked) return false;
 
             switch (key)
             {
@@ -77,9 +77,10 @@ namespace kOS.Screen
                     ShowCommandHistoryEntry(1);
                     break;
                 default:
-                    base.SpecialKey(key);
+                    return base.SpecialKey(key);
                     break;
             }
+            return true;
         }
 
         private void AddCommandHistoryEntry(string commandText)
