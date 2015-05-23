@@ -1,6 +1,7 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test.Collections
@@ -249,6 +250,31 @@ namespace kOS.Safe.Test.Collections
             Assert.IsTrue(innerString.Contains("[\"2\"]"));
             Assert.IsTrue(innerString.Contains("[3]"));
 
+        }
+
+        [Test]
+        public void CanClearOnCaseChange()
+        {
+            var map = MakeNestedExample();
+
+            var length = (int)InvokeDelegate(map, "LENGTH");
+
+            Assert.IsTrue(length > 0);
+
+            map.SetSuffix("CASESENSITIVE", true);
+
+            length = (int)InvokeDelegate(map, "LENGTH");
+            Assert.IsTrue(length == 0);
+
+            InvokeDelegate(map,"ADD", "first", 100);
+
+            length = (int)InvokeDelegate(map, "LENGTH");
+            Assert.IsTrue(length > 0);
+
+            map.SetSuffix("CASESENSITIVE", false);
+
+            length = (int)InvokeDelegate(map, "LENGTH");
+            Assert.IsTrue(length == 0);
         }
 
         private IDumper MakeNestedExample()

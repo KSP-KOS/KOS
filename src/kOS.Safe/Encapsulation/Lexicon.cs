@@ -49,7 +49,7 @@ namespace kOS.Safe.Encapsulation
         public Lexicon()
         {
             internalDictionary = new Dictionary<T, TU>(new LexiconComparer<T>());
-            caseSensitive = true;
+            caseSensitive = false;
             InitalizeSuffixes();
         }
 
@@ -69,20 +69,22 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("HASVALUE", new OneArgsSuffix<bool, object>(HasValue, "Returns true if value is in the Lexicon"));
             AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the lexicon values"));
             AddSuffix("COPY", new NoArgsSuffix<Lexicon<T,TU>>(()=> new Lexicon<T,TU>(this), "Returns a copy of Lexicon"));
+            AddSuffix("LENGTH", new NoArgsSuffix<int>(()=> internalDictionary.Count, "Returns the number of elements in the collection"));
             AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T)one), "Removes the value at the given key"));
             AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T)one, (TU)two), "Adds a new item to the lexicon, will error if the key already exists"));
             AddSuffix("DUMP", new NoArgsSuffix<string>(() => string.Join(Environment.NewLine, Dump(99)), "Serializes the collection to a string for printing"));
             AddSuffix("CASESENSITIVE", new SetSuffix<bool>(() => caseSensitive, SetCaseSensitivity, "Lets you get/set the case sensitivity on the collection, changing sensitivity will clear the collection"));
         }
 
-        private void SetCaseSensitivity(bool caseSensitivity)
+        private void SetCaseSensitivity(bool newCase)
         {
-            if (caseSensitivity == caseSensitive)
+            if (newCase == caseSensitive)
             {
                 return;
             }
+            caseSensitive = newCase;
 
-            internalDictionary = caseSensitivity ? 
+            internalDictionary = newCase ? 
                 new Dictionary<T, TU>() : 
                 new Dictionary<T, TU>(new LexiconComparer<T>());
         }
