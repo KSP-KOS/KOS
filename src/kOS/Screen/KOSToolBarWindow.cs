@@ -33,11 +33,10 @@ namespace kOS.Screen
         private IButton BlizzyButton;
 
         private const ApplicationLauncher.AppScenes APP_SCENES = 
-            ApplicationLauncher.AppScenes.FLIGHT | 
-            ApplicationLauncher.AppScenes.SPH | 
-            ApplicationLauncher.AppScenes.VAB | 
-            ApplicationLauncher.AppScenes.MAPVIEW |
-            ApplicationLauncher.AppScenes.SPACECENTER;
+            ApplicationLauncher.AppScenes.FLIGHT |
+            ApplicationLauncher.AppScenes.SPH |
+            ApplicationLauncher.AppScenes.VAB |
+            ApplicationLauncher.AppScenes.MAPVIEW;
 
         private static Texture2D launcherButtonTexture;
         private static Texture2D terminalClosedIconTexture;
@@ -47,8 +46,7 @@ namespace kOS.Screen
         
         // ReSharper disable once RedundantDefaultFieldInitializer
         private bool clickedOn = false;
-        private float height = 1f; // will be automatically resized by GUILayout.
-        private float width = 1f; // will be automatically resized by GUILayout.
+        private Rect rectToFit = new Rect(0, 0, 1, 1); // will be changed in Open()
         
         // ReSharper disable RedundantDefaultFieldInitializer
         private int verticalSectionCount  = 0;
@@ -56,7 +54,7 @@ namespace kOS.Screen
         // ReSharper restore RedundantDefaultFieldInitializer
         private Vector2 scrollPos = new Vector2(200,350);
 
-        private static Rect windowRect;
+        private static Rect windowRect; // does anybody know why this is ststic?
         private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
         private static GUISkin panelSkin;
         private static GUIStyle headingLabelStyle;
@@ -247,6 +245,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is toggled on</summary>
         public void CallbackOnTrue()
         {
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnTrue()");
             clickedOn = true;
             Open();
         }
@@ -254,6 +253,7 @@ namespace kOS.Screen
         /// <summary>Callback for when the button is toggled off</summary>
         public void CallbackOnFalse()
         {            
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnFalse()");
             clickedOn = false;
             Close();
         }
@@ -274,42 +274,35 @@ namespace kOS.Screen
                 Close();
         }
 
-        /// <summary>Callback for when the mouse is hovering over the button</summary>
+        /// <summary>Callback for when the application launcher shows itself</summary>
         public void CallbackOnShow()
         {            
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnShow()");
-            if (!clickedOn && !isOpen)
+            if (clickedOn)
                 Open();
         }
 
-        /// <summary>Callback for when the mouse is hover is off the button</summary>
+        /// <summary>Callback for when the application launcher hides itself</summary>
         public void CallbackOnHide()
         {            
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHide()");
-            if (!clickedOn && isOpen)
-            {
-                Close();
-                clickedOn = false;
-            }
+            Close();
         }
         
         public void Open()
         {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open()");
-            
+
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
-            // Left edge is offset from the right
-            // edge of the screen by enough to hold the width of the window and maybe more offset
-            // if in the editor where there's a staging list we don't want to cover up:
-            float leftEdge = ( (UnityEngine.Screen.width - width) - (HighLogic.LoadedSceneIsEditor ? 64f : 0) );
+            float fitWidth = UnityEngine.Screen.width - (HighLogic.LoadedSceneIsEditor ? 64f : 0);
+            float fitHeight = UnityEngine.Screen.height - 40f - 40f;
+            rectToFit = new Rect(0, 40f, fitWidth, fitHeight);
 
-            // Top edge is either just under the button itself (which contains 40 pixel icons), or just above
-            // the screen bottom by enough room to hold the window height plus the 40 pixel icons):
-            float topEdge = isTop ? (40f) : (UnityEngine.Screen.height - (height+40) );
-            
-            windowRect = new Rect(leftEdge, topEdge, 0, 0); // will resize upon first GUILayout-ing.
-            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open(), windowRect = " + windowRect);
+            float leftEdge = UnityEngine.Screen.width;
+            float topEdge = isTop ? 0f : UnityEngine.Screen.height;
+
+            windowRect = new Rect(leftEdge, topEdge, 0, 0); // will resize and move upon first GUILayout-ing.
             
             isOpen = true;
         }
@@ -348,10 +341,7 @@ namespace kOS.Screen
             GUI.skin = HighLogic.Skin;
 
             windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
-
-            width = windowRect.width;
-            height = windowRect.height;
-
+            windowRect = RectExtensions.ClampToRectAngle(windowRect, rectToFit);
         }
         
         public void DrawWindow(int windowID)
@@ -469,7 +459,7 @@ namespace kOS.Screen
         
         private void DrawActiveCPUsOnPanel()
         {
-            scrollPos = GUILayout.BeginScrollView(scrollPos, panelSkin.scrollView, GUILayout.MinWidth(260), GUILayout.Height(height-60));
+            scrollPos = GUILayout.BeginScrollView(scrollPos, panelSkin.scrollView, GUILayout.MinWidth(260), GUILayout.Height(windowRect.height-60));
             
             CountBeginVertical();
             Vessel prevVessel = null;
