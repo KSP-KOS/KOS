@@ -255,7 +255,7 @@ namespace kOS.Safe.Persistence
                 byte[] binaryLine = System.Text.Encoding.UTF8.GetBytes((textToAppend + "\n").ToCharArray());
                 outfile.Write(binaryLine);
             }
-            return true;  // is this correect?
+            return true;
         }
 
         public override bool AppendToFile(string name, byte[] bytesToAppend)
@@ -270,7 +270,7 @@ namespace kOS.Safe.Persistence
             {
                 outfile.Write(bytesToAppend);
             }
-            return true;  // is this correect?
+            return true;
         }
     }
 }
