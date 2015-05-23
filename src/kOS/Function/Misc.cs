@@ -271,7 +271,11 @@ namespace kOS.Function
                 if (justCompiling)
                 {
                     List<CodePart> compileParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, String.Empty, options);
-                    shared.VolumeMgr.CurrentVolume.SaveObjectFile(fileNameOut, compileParts);
+                    bool success = shared.VolumeMgr.CurrentVolume.SaveObjectFile(fileNameOut, compileParts);
+                    if (!success)
+                    {
+                        throw new KOSFileException("Can't save compiled file: not enough space or access forbidden");
+                    }
                 }
                 else
                 {
@@ -330,7 +334,10 @@ namespace kOS.Function
                 Volume volume = shared.VolumeMgr.CurrentVolume;
                 if (volume != null)
                 {
-                    volume.AppendToFile(fileName, expressionResult);
+                    if (!volume.AppendToFile(fileName, expressionResult)) 
+                    {
+                        throw new KOSFileException("Can't append to file: not enough space or access forbidden");
+                    }
                 }
                 else
                 {
