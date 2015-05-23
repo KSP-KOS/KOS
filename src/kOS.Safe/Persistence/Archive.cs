@@ -241,7 +241,7 @@ namespace kOS.Safe.Persistence
             }
         }
 
-        public override void AppendToFile(string name, string textToAppend)
+        public override bool AppendToFile(string name, string textToAppend)
         {
             SafeHouse.Logger.SuperVerbose("Archive: AppendToFile: " + name);
             System.IO.FileInfo info = FileSearch(name);
@@ -255,9 +255,10 @@ namespace kOS.Safe.Persistence
                 byte[] binaryLine = System.Text.Encoding.UTF8.GetBytes((textToAppend + "\n").ToCharArray());
                 outfile.Write(binaryLine);
             }
+            return true;  // is this correect?
         }
 
-        public override void AppendToFile(string name, byte[] bytesToAppend)
+        public override bool AppendToFile(string name, byte[] bytesToAppend)
         {
             SafeHouse.Logger.SuperVerbose("Archive: AppendToFile: " + name);
             System.IO.FileInfo info = FileSearch(name);
@@ -269,6 +270,7 @@ namespace kOS.Safe.Persistence
             {
                 outfile.Write(bytesToAppend);
             }
+            return true;  // is this correect?
         }
     }
 }
