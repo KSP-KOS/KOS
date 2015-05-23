@@ -42,12 +42,14 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        private readonly IDictionary<T, TU> internalDictionary;
+        private IDictionary<T, TU> internalDictionary;
+        private bool caseSensitive;
         private const int INDENT_SPACES = 2;
 
         public Lexicon()
         {
             internalDictionary = new Dictionary<T, TU>(new LexiconComparer<T>());
+            caseSensitive = true;
             InitalizeSuffixes();
         }
 
@@ -68,8 +70,21 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the lexicon values"));
             AddSuffix("COPY", new NoArgsSuffix<Lexicon<T,TU>>(()=> new Lexicon<T,TU>(this), "Returns a copy of Lexicon"));
             AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T)one), "Removes the value at the given key"));
-            AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T)one, (TU)two)));
-            AddSuffix("DUMP", new NoArgsSuffix<string>(() => string.Join(Environment.NewLine, Dump(99))));
+            AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T)one, (TU)two), "Adds a new item to the lexicon, will error if the key already exists"));
+            AddSuffix("DUMP", new NoArgsSuffix<string>(() => string.Join(Environment.NewLine, Dump(99)), "Serializes the collection to a string for printing"));
+            AddSuffix("CASESENSITIVE", new SetSuffix<bool>(() => caseSensitive, SetCaseSensitivity, "Lets you get/set the case sensitivity on the collection, changing sensitivity will clear the collection"));
+        }
+
+        private void SetCaseSensitivity(bool caseSensitivity)
+        {
+            if (caseSensitivity == caseSensitive)
+            {
+                return;
+            }
+
+            internalDictionary = caseSensitivity ? 
+                new Dictionary<T, TU>() : 
+                new Dictionary<T, TU>(new LexiconComparer<T>());
         }
 
         private bool HasValue(object value)
@@ -104,6 +119,10 @@ namespace kOS.Safe.Encapsulation
 
         public void Add(KeyValuePair<T, TU> item)
         {
+            if (internalDictionary.ContainsKey(item.Key))
+            {
+                throw new KOSDuplicateKeyException(item.Key.ToString(), caseSensitive);
+            }
             internalDictionary.Add(item);
         }
 
@@ -146,12 +165,9 @@ namespace kOS.Safe.Encapsulation
         {
             if (internalDictionary.ContainsKey(key))
             {
-                internalDictionary[key] = value;
+                throw new KOSDuplicateKeyException(key.ToString(), caseSensitive);
             }
-            else
-            {
-                internalDictionary.Add(key, value);
-            }
+            internalDictionary.Add(key, value);
         }
 
         public bool Remove(T key)
@@ -172,7 +188,7 @@ namespace kOS.Safe.Encapsulation
                 {
                     return internalDictionary[key];
                 }
-                throw new KOSKeyNotFoundException(key.ToString());
+                throw new KOSKeyNotFoundException(key.ToString(), caseSensitive);
             }
             set
             {
@@ -210,7 +226,7 @@ namespace kOS.Safe.Encapsulation
 
             if (!ContainsKey(castKey))
             {
-                throw new KOSKeyNotFoundException(key.ToString());
+                throw new KOSKeyNotFoundException(key.ToString(), caseSensitive);
             }
             return internalDictionary[(T)key];
         }

@@ -17,9 +17,8 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void CanAddAndGetKey()
         {
-            var lex = new Lexicon<object, object>();
-            
-            lex.Add("foo", "bar");
+            var lex = new Lexicon<object, object> {{"foo", "bar"}};
+
             var testValue = lex["foo"];
 
             Assert.AreEqual("bar", testValue);
@@ -28,9 +27,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void HasCaseInsensitiveKeys()
         {
-            var lex = new Lexicon<object, object>();
-            
-            lex.Add("foo", "bar");
+            var lex = new Lexicon<object, object> {{"foo", "bar"}};
 
             Assert.AreEqual("bar", lex["FOO"]);
         }
@@ -38,9 +35,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void HashHitOnEqualValues()
         {
-            var lex = new Lexicon<double, object>();
-            
-            lex.Add(double.MaxValue, "bar");
+            var lex = new Lexicon<double, object> {{double.MaxValue, "bar"}};
 
             Assert.AreEqual("bar", lex[double.MaxValue]);
         }
@@ -49,9 +44,7 @@ namespace kOS.Safe.Test.Collections
         [ExpectedException(typeof(KOSKeyNotFoundException))]
         public void HashMissOnDifferentValues()
         {
-            var lex = new Lexicon<double, object>();
-            
-            lex.Add(double.MinValue, "bar");
+            var lex = new Lexicon<double, object> {{double.MinValue, "bar"}};
 
             Assert.AreNotEqual("bar", lex[double.MaxValue]);
         }
@@ -59,9 +52,7 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void ContainsReturnsTrueIfTheKeyIsPresent()
         {
-            var lex = new Lexicon<double, object>();
-            
-            lex.Add(double.MinValue, "bar");
+            var lex = new Lexicon<double, object> {{double.MinValue, "bar"}};
 
             Assert.IsTrue(lex.ContainsKey(double.MinValue));
         }
@@ -69,40 +60,16 @@ namespace kOS.Safe.Test.Collections
         [Test]
         public void ContainsReturnsFalseIfTheKeyIsMissing()
         {
-            var lex = new Lexicon<double, object>();
-            
-            lex.Add(double.MinValue, "bar");
+            var lex = new Lexicon<double, object> {{double.MinValue, "bar"}};
 
             Assert.IsFalse(lex.ContainsKey(double.MaxValue));
         }
 
         [Test]
-        public void WillReplaceWithDifferentCase()
-        {
-            var lex = new Lexicon<object, object>();
-            
-            lex.Add("foo", "bar");
-            Assert.AreEqual("bar", lex["foo"]);
-            Assert.AreEqual("bar", lex["FOO"]);
-            Assert.AreEqual("bar", lex["Foo"]);
-
-            lex.Add("FOO", "fizz");
-            Assert.AreEqual("fizz", lex["foo"]);
-            Assert.AreEqual("fizz", lex["FOO"]);
-            Assert.AreEqual("fizz", lex["Foo"]);
-
-            lex.Add("Foo", "bang");
-            Assert.AreEqual("bang", lex["foo"]);
-            Assert.AreEqual("bang", lex["FOO"]);
-            Assert.AreEqual("bang", lex["Foo"]);
-        }
-
-        [Test]
         public void CanRemoveKeyOfDifferentCase()
         {
-            var lex = new Lexicon<object, object>();
-            
-            lex.Add("foo", "bar");
+            var lex = new Lexicon<object, object> {{"foo", "bar"}};
+
             Assert.AreEqual(1, lex.Count);
 
             lex.Remove("foo");
@@ -168,7 +135,7 @@ namespace kOS.Safe.Test.Collections
         {
             var map = MakeNestedExample();
             
-            string result = (string)InvokeDelegate(map, "DUMP");
+            var result = (string)InvokeDelegate(map, "DUMP");
             
             //TODO: build Asserts
         }
