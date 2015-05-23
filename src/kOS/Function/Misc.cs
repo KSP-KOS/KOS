@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using kOS.Execution;
+﻿using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Function;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
-using kOS.Suffixed;
 using kOS.Safe.Utilities;
+using kOS.Suffixed;
+using System;
+using System.Collections.Generic;
 
 namespace kOS.Function
 {
@@ -31,12 +31,11 @@ namespace kOS.Function
             shared.Screen.Print(textToPrint);
         }
     }
-    
+
     [Function("hudtext")]
     public class FunctionHudText : FunctionBase
     {
-        public override void Execute (SharedObjects shared)
-
+        public override void Execute(SharedObjects shared)
         {
             bool      echo      = Convert.ToBoolean(PopValueAssert(shared));
             RgbaColor rgba      = GetRgba(PopValueAssert(shared));
@@ -45,31 +44,36 @@ namespace kOS.Function
             int       delay     = Convert.ToInt32 (PopValueAssert(shared));
             string    textToHud = PopValueAssert(shared).ToString();
             AssertArgBottomAndConsume(shared);
-            string   htmlColour = rgba.ToHexNotation();
+            string htmlColour = rgba.ToHexNotation();
             switch (style)
             {
                 case 1:
-                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_LEFT);
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>", delay, ScreenMessageStyle.UPPER_LEFT);
                     break;
+
                 case 2:
-                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_CENTER);
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>", delay, ScreenMessageStyle.UPPER_CENTER);
                     break;
+
                 case 3:
-                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.UPPER_RIGHT);
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>", delay, ScreenMessageStyle.UPPER_RIGHT);
                     break;
+
                 case 4:
-                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>",delay,ScreenMessageStyle.LOWER_CENTER);
+                    ScreenMessages.PostScreenMessage("<color=" + htmlColour + "><size=" + size + ">" + textToHud + "</size></color>", delay, ScreenMessageStyle.LOWER_CENTER);
                     break;
+
                 default:
                     ScreenMessages.PostScreenMessage("*" + textToHud, 3f, ScreenMessageStyle.UPPER_CENTER);
                     break;
             }
-            if (echo) {
-                shared.Screen.Print ("HUD: " + textToHud);
+            if (echo)
+            {
+                shared.Screen.Print("HUD: " + textToHud);
             }
         }
     }
-    
+
     [Function("printat")]
     public class FunctionPrintAt : FunctionBase
     {
@@ -137,11 +141,11 @@ namespace kOS.Function
             object volumeId = PopValueAssert(shared, true);
             string fileName = PopValueAssert(shared, true).ToString();
             AssertArgBottomAndConsume(shared);
-            
+
             // Now the args it is going to be passing on to the program:
             List<Object> prog_args = new List<Object>();
             int argc = CountRemainingArgs(shared);
-            for (int i = 0 ; i < argc ; ++i)
+            for (int i = 0; i < argc; ++i)
                 prog_args.Add(PopValueAssert(shared, true));
             AssertArgBottomAndConsume(shared);
 
@@ -159,8 +163,8 @@ namespace kOS.Function
                 {
                     if (shared.ProcessorMgr != null)
                     {
-                        string filePath = string.Format("{0}/{1}", shared.VolumeMgr.GetVolumeRawIdentifier(targetVolume), fileName) ;
-                        var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager};
+                        string filePath = string.Format("{0}/{1}", shared.VolumeMgr.GetVolumeRawIdentifier(targetVolume), fileName);
+                        var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
                         List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
                         var builder = new ProgramBuilder();
                         builder.AddRange(parts);
@@ -177,8 +181,8 @@ namespace kOS.Function
             {
                 // clear the "program" compilation context
                 shared.ScriptHandler.ClearContext("program");
-                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName ;
-                var options = new CompilerOptions {LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager};
+                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + fileName;
+                var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager };
                 var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
 
                 List<CodePart> codeParts;
@@ -189,7 +193,7 @@ namespace kOS.Function
                 }
                 else
                 {
-                    try 
+                    try
                     {
                         codeParts = shared.ScriptHandler.Compile(filePath, 1, file.StringContent, "program", options);
                     }
@@ -205,16 +209,16 @@ namespace kOS.Function
                 }
                 programContext.AddParts(codeParts);
             }
-            
+
             // Because run() returns FIRST, and THEN the CPU jumps to the new program's first instruction that it set up,
-            // it needs to put the return stack in a weird order.  Its return value needs to be buried UNDER the args to the 
+            // it needs to put the return stack in a weird order.  Its return value needs to be buried UNDER the args to the
             // program it's calling:
             UsesAutoReturn = false;
-            
+
             shared.Cpu.PushStack(0); // dummy return that all functions have.
 
             // Put the args for the program being called back on in the same order they were in before (so read the list backward):
-            for (int i = argc-1 ; i >= 0 ; --i)
+            for (int i = argc - 1; i >= 0; --i)
                 shared.Cpu.PushStack(prog_args[i]);
         }
     }
@@ -242,13 +246,13 @@ namespace kOS.Function
             topStack = PopValueAssert(shared, true);
             if (topStack != null)
                 fileName = topStack.ToString();
-            
+
             AssertArgBottomAndConsume(shared);
 
             if (fileName == null)
                 throw new KOSFileException("No filename to load was given.");
-            
-            ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName, (! justCompiling)); // if running, look for KSM first.  If compiling look for KS first.
+
+            ProgramFile file = shared.VolumeMgr.CurrentVolume.GetByName(fileName, (!justCompiling)); // if running, look for KSM first.  If compiling look for KS first.
             if (file == null) throw new KOSFileException(string.Format("Can't find file '{0}'.", fileName));
             fileName = file.Filename; // just in case GetByName picked an extension that changed it.
 
@@ -371,6 +375,43 @@ namespace kOS.Function
         {
             AssertArgBottomAndConsume(shared);
             ReturnValue = shared.Cpu.DumpVariables();
+        }
+    }
+
+    [Function("warpto")]
+    public class WarpTo : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            // TODO: As of KSP v1.0.2, the maxTimeWarping and minTimeWarping parameters behave unpredictably.  Disabling for now, we should revisit it in a later version.
+            int args = CountRemainingArgs(shared);
+            //double maxWarp = 8.0;
+            //double minWarp = 2.5;
+            double ut = 0.0;
+            switch (args)
+            {
+                //case 3:
+                //    minWarp = GetDouble(PopValueAssert(shared));
+                //    maxWarp = GetDouble(PopValueAssert(shared));
+                //    ut = GetDouble(PopValueAssert(shared));
+                //    break;
+
+                //case 2:
+                //    maxWarp = GetDouble(PopValueAssert(shared));
+                //    ut = GetDouble(PopValueAssert(shared));
+                //    break;
+
+                case 1:
+                    ut = GetDouble(PopValueAssert(shared));
+                    break;
+
+                default:
+                    throw new KOSArgumentMismatchException(new[] { 1 }, args);
+                    //throw new KOSArgumentMismatchException(new[] { 1, 2, 3 }, args);
+            }
+            AssertArgBottomAndConsume(shared);
+            TimeWarp.fetch.WarpTo(ut);
+            //TimeWarp.fetch.WarpTo(ut, maxTimeWarping: maxWarp, minTimeWarping: minWarp);
         }
     }
 }
