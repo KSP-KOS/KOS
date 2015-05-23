@@ -569,7 +569,7 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "getmember"; } }
         public override ByteCode Code { get { return ByteCode.GETMEMBER; } }
-        protected bool isMethodCallAttempt = false;
+        protected bool IsMethodCallAttempt = false;
 
         public override void Execute(ICpu cpu)
         {
@@ -583,7 +583,7 @@ namespace kOS.Safe.Compilation
             }
 
             object value = specialValue.GetSuffix(suffixName);
-            if (value is Delegate && !isMethodCallAttempt)
+            if (value is Delegate && !IsMethodCallAttempt)
             {
                 // This is what happens when someone tries to call a suffix method as if
                 // it wasn't a method (i.e. leaving the parentheses off the call).  The
@@ -611,7 +611,7 @@ namespace kOS.Safe.Compilation
         public override ByteCode Code { get { return ByteCode.GETMETHOD; } }
         public override void Execute(ICpu cpu)
         {
-            isMethodCallAttempt = true;
+            IsMethodCallAttempt = true;
             base.Execute(cpu);
         }
     }

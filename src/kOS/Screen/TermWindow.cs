@@ -32,7 +32,6 @@ namespace kOS.Screen
         private bool resizeMouseDown;
         
         private bool consumeEvent;
-        private bool keyClickEnabled;
         
         private bool collapseFastBeepsToOneBeep = false; // This is a setting we might want to fiddle with depending on opinion.
 
@@ -45,9 +44,9 @@ namespace kOS.Screen
         private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool isLocked;
         /// <summary>How long blinks should last for, for various blinking needs</summary>
-        private TimeSpan blinkDuration = TimeSpan.FromMilliseconds(150);
+        private readonly TimeSpan blinkDuration = TimeSpan.FromMilliseconds(150);
         /// <summary>How long to pad between consecutive blinks to ensure they are visibly detectable as distinct blinks.</summary>
-        private TimeSpan blinkCoolDownDuration = TimeSpan.FromMilliseconds(50);
+        private readonly TimeSpan blinkCoolDownDuration = TimeSpan.FromMilliseconds(50);
         /// <summary>At what milliseconds-from-epoch timestamp will the current blink be over.</summary>
         private DateTime blinkEndTime;
 
@@ -58,6 +57,8 @@ namespace kOS.Screen
         private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Texture2D resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Texture2D networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
+        private WWW beepURL;
+        private AudioSource beepSource;
         private int guiTerminalBeepsPending;
         
         private SharedObjects shared;
@@ -94,14 +95,26 @@ namespace kOS.Screen
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
             LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
             LoadTexture("GameData/kOS/GFX/network-zigzag.png", ref networkZigZagImage);
+
+            LoadAudio();
             
-            tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle);
-            tinyToggleStyle.fontSize = 10;
-            
+            tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle)
+            {
+                fontSize = 10
+            };
+
             var gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
             DontDestroyOnLoad(gObj);
             popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
             popupEditor.SetUniqueId(UniqueId + 5);
+        }
+        
+        private void LoadAudio()
+        {
+            beepURL = new WWW("file://"+ root + "GameData/kOS/GFX/terminal-beep.wav");
+            AudioClip beepClip = beepURL.audioClip;            
+            beepSource = gameObject.AddComponent<AudioSource>();
+            beepSource.clip = beepClip;
         }
 
         public void LoadTexture(String relativePath, ref Texture2D targetTexture)
@@ -302,12 +315,16 @@ namespace kOS.Screen
                 
                 // Turning this timer on tells GUI repainter elsewhere in this class to paint in reverse until it expires:
                 blinkEndTime = nowTime + blinkDuration;
-                return true;
             }
             else
             {
-                return shared.SoundMaker.BeginSound("beep");
+                if (!beepSource.clip.isReadyToPlay || beepSource.isPlaying)
+                    return false; // prev beep sound still is happening.
+                
+                // This is nonblocking.  Begins playing sound in background.  Code will not wait for it to finish:
+                beepSource.Play();
             }
+            return true;
         }
 
         void TelnetOutputUpdate()
@@ -446,7 +463,7 @@ namespace kOS.Screen
         /// <param name="whichTelnet">If this came from a telnet session, which one did it come from?
         /// Set to null in order to say it wasn't from a telnet but was from the interactive GUI</param>
         public void ProcessOneInputChar(char ch, TelnetSingletonServer whichTelnet)
-        {            
+        {
             // Weird exceptions for multi-char data combos that would have been begun on previous calls to this method:
             switch (inputExpected)
             {
@@ -470,7 +487,7 @@ namespace kOS.Screen
             // bigger task than it may first seem.)
             if (0x0020 <= ch && ch <= 0x007f)
             {
-                Type(ch);
+                 Type(ch);
             }
             else
             {
@@ -530,8 +547,6 @@ namespace kOS.Screen
             if (shared != null && shared.Interpreter != null)
             {
                 shared.Interpreter.Type(ch);
-                if( IsOpen && keyClickEnabled)
-                    shared.SoundMaker.BeginSound("click");
             }
         }
 
@@ -539,9 +554,7 @@ namespace kOS.Screen
         {
             if (shared != null && shared.Interpreter != null)
             {
-                bool wasUsed = shared.Interpreter.SpecialKey(key);
-                if (IsOpen && keyClickEnabled && wasUsed)
-                    shared.SoundMaker.BeginSound("click");
+                shared.Interpreter.SpecialKey(key);
             }
         }
         
@@ -592,9 +605,8 @@ namespace kOS.Screen
                 DrawTelnetStatus();
 
             closeButtonRect = new Rect(WindowRect.width-75, WindowRect.height-30, 50, 25);
-            Rect reverseButtonRect = new Rect(WindowRect.width-180, WindowRect.height-42, 100, 18);
-            Rect visualBeepButtonRect = new Rect(WindowRect.width-180, WindowRect.height-22, 100, 18);
-            Rect keyClickButtonRect = new Rect(10, WindowRect.height-22, 85, 18);
+            var reverseButtonRect = new Rect(WindowRect.width-180, WindowRect.height-42, 100, 18);
+            var visualBeepButtonRect = new Rect(WindowRect.width-180, WindowRect.height-22, 100, 18);
             
             resizeButtonCoords = new Rect(WindowRect.width-resizeButtonImage.width,
                                           WindowRect.height-resizeButtonImage.height,
@@ -618,7 +630,6 @@ namespace kOS.Screen
             
             screen.ReverseScreen = GUI.Toggle(reverseButtonRect, screen.ReverseScreen, "Reverse Screen", tinyToggleStyle);
             screen.VisualBeep = GUI.Toggle(visualBeepButtonRect, screen.VisualBeep, "Visual Beep", tinyToggleStyle);
-            keyClickEnabled = GUI.Toggle(keyClickButtonRect, keyClickEnabled, "Keyclicker", tinyToggleStyle);
 
 
             if (IsPowered)
