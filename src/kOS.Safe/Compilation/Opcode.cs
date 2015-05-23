@@ -187,7 +187,7 @@ namespace kOS.Safe.Compilation
         // This is populated by using Reflection to scan all the Opcodes for their MLField Attributes.
         private static Dictionary<Type,List<MLArgInfo>> mapOpcodeToArgs;
                 
-        private static string forceDefaultConstructorMsg =
+        private const string FORCE_DEFAULT_CONSTRUCTOR_MSG =
             "+----------- ERROR IN OPCODE DEFINITION ----------------------------------+\n" +
             "|                                                                         |\n" +
             "|         This is a message that only developers of the kOS mod are       |\n" +
@@ -211,12 +211,13 @@ namespace kOS.Safe.Compilation
         public int DeltaInstructionPointer { get; protected set; } 
         public int MLIndex { get; set; } // index into the Machine Language code file for the COMPILE command.
         public string Label {get{return label;} set {label = value;} }
-        private string label = "";
         public virtual string DestinationLabel {get;set;}
         public string SourceName;
 
         public short SourceLine { get; set; } // line number in the source code that this was compiled from.
         public short SourceColumn { get; set; }  // column number of the token nearest the cause of this Opcode.
+
+        private string label = string.Empty;
         
         public virtual void Execute(ICpu cpu)
         {
@@ -295,7 +296,7 @@ namespace kOS.Safe.Compilation
                     }
                     catch (MissingMethodException)
                     {
-                        SafeHouse.Logger.Log( String.Format(forceDefaultConstructorMsg, opType.Name) );
+                        SafeHouse.Logger.Log( String.Format(FORCE_DEFAULT_CONSTRUCTOR_MSG, opType.Name) );
                         Debug.AddNagMessage( Debug.NagType.NAGFOREVER, "ERROR IN OPCODE DEFINITION " + opType.Name );
                         return;
                     }

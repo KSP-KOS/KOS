@@ -337,7 +337,7 @@ namespace kOS.Safe.Compilation.KS
                 doBlock.Nodes.Add(child);
             
             // Make a new empty until loop node, which will get added to the init block eventually:
-            Token untilStatementTok = new Token
+            var untilStatementTok = new Token
             {
                 Type = TokenType.until_stmt,
                 Line = untilTokenNode.Token.Line,
@@ -2403,7 +2403,7 @@ namespace kOS.Safe.Compilation.KS
         {
             // The default case for anything not explicitly mentioned below.
             // i.e. if you call this on a SET statement, you'll get this:
-            StorageModifier modifier = StorageModifier.LAZYGLOBAL;
+            var modifier = StorageModifier.LAZYGLOBAL;
             
             if (node.Nodes.Count == 0) // sanity check - really should never be called on terminal nodes like this.
                 return modifier;
@@ -2754,7 +2754,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            Int16 nestLevelOfFuncBraces = (Int16)GetReturnNestLevel();
+            var nestLevelOfFuncBraces = (Int16)GetReturnNestLevel();
 
             if (nestLevelOfFuncBraces < 0)
                 throw new KOSReturnInvalidHereException();
