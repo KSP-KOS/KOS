@@ -187,7 +187,7 @@ namespace kOS.AddOns.RemoteTech
             progressBarSubBuffer.Buffer[2].ArrayCopyFrom(bars.ToCharArray(), 0, 0);
         }
 
-        public override void SpecialKey(char key)
+        public override bool SpecialKey(char key)
         {
             if (key == (char)UnicodeCommand.BREAK && deploymentInProgress)
             {
@@ -195,10 +195,11 @@ namespace kOS.AddOns.RemoteTech
                 else commandQueue.Clear();
                 
                 StopDeployment();
+                return true;
             }
             else
             {
-                base.SpecialKey(key);
+                return base.SpecialKey(key);
             }
         }
 

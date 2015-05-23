@@ -158,6 +158,7 @@
     <Compile Include="Screen\SubBuffer.cs" />
     <Compile Include="Screen\TextEditor.cs" />
     <Compile Include="SharedObjects.cs" />
+    <Compile Include="Sound\ISoundMaker.cs" />
     <Compile Include="UpdateHandler.cs" />
     <Compile Include="UserIO\UnicodeCommand.cs" />
     <Compile Include="Utilities\Debug.cs" />
@@ -178,7 +179,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Sound" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

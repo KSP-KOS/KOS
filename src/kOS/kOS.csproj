@@ -93,6 +93,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
@@ -188,7 +189,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Sound" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

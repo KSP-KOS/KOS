@@ -22,6 +22,7 @@ namespace kOS.Suffixed
         public bool EnableRTIntegration { get { return GetPropValue<bool>(PropId.EnableRTIntegration); } set { SetPropValue(PropId.EnableRTIntegration, value); } }
         public bool StartOnArchive { get { return GetPropValue<bool>(PropId.StartOnArchive); } set { SetPropValue(PropId.StartOnArchive, value); } }
         public bool EnableSafeMode { get { return GetPropValue<bool>(PropId.EnableSafeMode); } set { SetPropValue(PropId.EnableSafeMode, value); } }
+        public bool AudibleExceptions { get { return GetPropValue<bool>(PropId.AudibleExceptions); } set { SetPropValue(PropId.AudibleExceptions, value); } }
         public bool VerboseExceptions { get { return GetPropValue<bool>(PropId.VerboseExceptions); } set { SetPropValue(PropId.VerboseExceptions, value); } }
         public bool EnableTelnet { get { return GetPropValue<bool>(PropId.EnableTelnet); } set { SetPropValue(PropId.EnableTelnet, value); } }
         public int TelnetPort { get { return GetPropValue<int>(PropId.TelnetPort); } set { SetPropValue(PropId.TelnetPort, value); } }
@@ -46,6 +47,7 @@ namespace kOS.Suffixed
             AddConfigKey(PropId.EnableRTIntegration, new ConfigKey("EnableRTIntegration", "RT", "Enable RT integration", true, false, true, typeof(bool)));
             AddConfigKey(PropId.StartOnArchive, new ConfigKey("StartOnArchive", "ARCH", "Start on Archive volume", false, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableSafeMode, new ConfigKey("EnableSafeMode", "SAFE", "Enable safe mode", true, false, true, typeof(bool)));
+            AddConfigKey(PropId.AudibleExceptions, new ConfigKey("AudibleExceptions", "AUDIOERR", "Sound effect when KOS gives an error", true, false, true, typeof(bool)));
             AddConfigKey(PropId.VerboseExceptions, new ConfigKey("VerboseExceptions", "VERBOSE", "Enable verbose exception msgs", true, false, true, typeof(bool)));
             AddConfigKey(PropId.EnableTelnet, new ConfigKey("EnableTelnet", "TELNET", "Enable Telnet server", false, false, true, typeof(bool)));
             AddConfigKey(PropId.TelnetPort, new ConfigKey("TelnetPort", "TPORT", "Telnet port number (must restart telnet to take effect)", 5410, 1024, 65535, typeof(int)));
@@ -198,11 +200,12 @@ namespace kOS.Suffixed
             EnableRTIntegration = 4,
             StartOnArchive = 5,
             EnableSafeMode = 6,
-            VerboseExceptions = 7,
-            EnableTelnet = 8,
-            TelnetPort = 9,
-            TelnetLoopback = 10,
-            UseBlizzyToolbarOnly = 11
+            AudibleExceptions = 7,
+            VerboseExceptions = 8,
+            EnableTelnet = 9,
+            TelnetPort = 10,
+            TelnetLoopback = 11,
+            UseBlizzyToolbarOnly = 12
         }
     }
 

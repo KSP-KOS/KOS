@@ -380,7 +380,7 @@ namespace kOS.Screen
 
                 if (key.Value is bool)
                 {
-                    key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText));
+                    key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText), panelSkin.toggle);
                 }
                 else if (key.Value is int)
                 {
@@ -694,17 +694,13 @@ namespace kOS.Screen
             theSkin.box.padding = new RectOffset(5,3,3,5);
             theSkin.box.margin = new RectOffset(1,1,1,1);
             theSkin.label.fontSize = 11;
-            theSkin.label.padding = new RectOffset(2,2,2,2);
-            theSkin.label.margin = new RectOffset(1,1,1,1);
             theSkin.textField.fontSize = 11;
             theSkin.textField.padding = new RectOffset(0,0,0,0);
             theSkin.textField.margin = new RectOffset(1,1,1,1);
             theSkin.textArea.fontSize = 11;
             theSkin.textArea.padding = new RectOffset(0,0,0,0);
             theSkin.textArea.margin = new RectOffset(1,1,1,1);
-            theSkin.toggle.fontSize = 11;
-            theSkin.toggle.padding = new RectOffset(0,0,0,0);
-            theSkin.toggle.margin = new RectOffset(1,1,1,1);
+            theSkin.toggle.fontSize = 10;
             theSkin.button.fontSize =11;
             theSkin.button.padding = new RectOffset(0,0,0,0);
             theSkin.button.margin = new RectOffset(1,1,1,1);

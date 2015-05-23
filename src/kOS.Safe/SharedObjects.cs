@@ -4,6 +4,7 @@ using kOS.Safe.Function;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
 using kOS.Safe.Screen;
+using kOS.Safe.Sound;
 
 namespace kOS.Safe
 {
@@ -18,5 +19,6 @@ namespace kOS.Safe
         public UpdateHandler UpdateHandler { get; set; }
         public IFunctionManager FunctionManager { get; set; }
         public VolumeManager VolumeMgr { get; set; }
+        public ISoundMaker SoundMaker { get; set; }
     }
 }
