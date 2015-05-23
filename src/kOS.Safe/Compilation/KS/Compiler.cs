@@ -1130,13 +1130,17 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.arglist:
                     VisitArgList(node);
                     break;
-                case TokenType.expr:
                 case TokenType.compare_expr: // for issue #20
-                case TokenType.and_expr:
                 case TokenType.arith_expr:
                 case TokenType.multdiv_expr:
                 case TokenType.factor:
-                    VisitExpression(node);
+                    VisitExpressionChain(node);
+                    break;
+                case TokenType.expr: // expr is really the rule for doing an expression with optional trailing or-expression.
+                                     // 'or' just happens to have the lowest operator precedence level so it ends up being
+                                     // the outermost expression rule, thus getting the generic name 'expr'.
+                case TokenType.and_expr:
+                    VisitShortCircuitBoolean(node);
                     break;
                 case TokenType.suffix:
                     VisitSuffix(node);
@@ -1233,7 +1237,22 @@ namespace kOS.Safe.Compilation.KS
             identifierIsVariable = false;
         }
 
-        private void VisitExpression(ParseNode node)
+        /// <summary>
+        /// Performs the work for a number of different expressions that all
+        /// share the following universal basic properties:<br/>
+        /// - They contain optional binary operators.<br/>
+        /// - The terms are all at the same precedence level.<br/>
+        /// - Because of the tie of precedence level, the terms are to be evaluated left-to-right.<br/>
+        /// - No special extra work is needed, such that simply doing "push expr1, push expr2, then do operator" is all that's needed.<br/>
+        /// <br/>
+        /// Examples:<br/>
+        ///   5 + 4 - x + 2 // because + and - are in the same parse rule, these all get the same flat precedence.<br/>
+        ///   x * y * z<br/>
+        /// In cases like that where all the operators "tie", the entire chain of terms lives in the same ParseNode,<br/>
+        /// and we have to unroll those terms and presume left-to-right precedence.  That is what this method does.<br/>
+        /// </summary>
+        /// <param name="node"></param>
+        private void VisitExpressionChain(ParseNode node)
         {
             NodeStartHousekeeping(node);
             if (node.Nodes.Count > 1)
@@ -1241,26 +1260,102 @@ namespace kOS.Safe.Compilation.KS
                 // it should always be odd, two arguments and one operator
                 if ((node.Nodes.Count % 2) != 1) return;
 
-                VisitNode(node.Nodes[0]);
+                VisitNode(node.Nodes[0]); // pushes lefthand side on stack.
 
                 int nodeIndex = 2;
                 while (nodeIndex < node.Nodes.Count)
                 {
-                    VisitNode(node.Nodes[nodeIndex]);
+                    VisitNode(node.Nodes[nodeIndex]); // pushes righthand side on stack.
                     nodeIndex -= 1;
-                    VisitNode(node.Nodes[nodeIndex]);
-                    nodeIndex += 3;
+                    VisitNode(node.Nodes[nodeIndex]); // operator, i.e '*', '+', '-', '/', etc.
+                    nodeIndex += 3; // Move to the next term over (if there's more than 2 terms in the chain).
+
+                    // If there are more terms to process, then the value that the operation leaves behind on the stack
+                    // from operating on these two terms will become the 'lefthand side' for the next iteration of this loop.
                 }
             }
-            else
+            else if (node.Nodes.Count == 1)
             {
-                if (node.Nodes.Count == 1)
-                {
-                    VisitNode(node.Nodes[0]);
-                }
+                VisitNode(node.Nodes[0]); // This ParseNode isn't *realy* an expression of binary operators, because
+                                          // the regex chain of "zero or more" righthand terms.. had zero such terms.
+                                          // So just delve in deeper to compile whatever part of speech it is further down.
             }
         }
 
+        /// <summary>
+        /// Handles the short-circuit logic of boolean OR and boolean AND
+        /// chains.  It is like VisitExpressionChain (see elsewhere) but
+        /// in this case it has the special logic to short circuit and skip
+        /// executing the righthand expression if it can.  (The generic VisitExpressionXhain
+        /// always evaluates both the left and right sides of the operator first, then
+        /// does the operation).
+        /// </summary>
+        /// <param name="node"></param>
+        private void VisitShortCircuitBoolean(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            
+            if (node.Nodes.Count > 1)
+            {
+                // it should always be odd, two arguments and one operator
+                if ((node.Nodes.Count % 2) != 1) return;
+
+                // Determine if this is a chain of ANDs or a chain or ORs.  The parser will
+                // never mix ANDs and ORs into the same ParseNode level.  We are guaranteed
+                // that all the operators in this chain match the first operator in the chain:
+                // That guarantee is important.  Without it, we can't do short-circuiting like this
+                // because you can't short-circuit a mix of AND and OR at the same precedence.
+                TokenType operation = node.Nodes[1].Token.Type; // Guaranteed to be either TokenType.AND or TokenType.OR
+                
+                // For remembering the instruction pointers from which short-circuit branch jumps came:
+                List<int> shortCircuitFromIndeces = new List<int>();
+                
+                int nodeIndex = 0;
+                while (nodeIndex < node.Nodes.Count)
+                {
+                    if (nodeIndex > 0) // After each term, insert the branch test (which consumes the expr from the stack regardless of if it branches):
+                    {
+                       shortCircuitFromIndeces.Add(currentCodeSection.Count());
+                       if (operation == TokenType.AND)
+                           AddOpcode(new OpcodeBranchIfFalse());
+                       else if (operation == TokenType.OR)
+                           AddOpcode(new OpcodeBranchIfTrue());
+                       else
+                           throw new KOSException("Assertion check:  Broken kerboscript compiler (VisitShortCircuitBoolean).  See kOS devs");
+                    }
+                    
+                    VisitNode(node.Nodes[nodeIndex]); // pushes the next term onto the stack.
+                    nodeIndex += 2; // Skip the operator, moving to the next term over.
+                }
+                // If it gets to the end of all that and it still hasn't aborted, then the whole expression's
+                // Boolean value is just the value of its lastmost term, that's already gotten pushed atop the stack.
+                // Leave the lastmost term there, and just skip ahead past the short-circuit landing target:
+                OpcodeBranchJump skipShortCircuitTarget = new OpcodeBranchJump();
+                skipShortCircuitTarget.Distance = 2; // Hardcoded +2 jump distance skips the upcoming OpcodePush and just lands on
+                                                     // whatever comes next after this VisitNode.  Avoids using DestinationLabel
+                                                     // for later relocation because it would be messy to reassign this label later
+                                                     // in whatever VisitNode happens to come up next, when that could be anything.
+                AddOpcode(skipShortCircuitTarget);
+                
+                // Build the instruction all the short circuit checks will jump to if aborting partway through.
+                // (AND's abort when they're false.  OR's abort when they're true.)
+                AddOpcode(operation == TokenType.AND ? new OpcodePush(false) : new OpcodePush(true));
+                string shortCircuitTargetLabel = currentCodeSection[currentCodeSection.Count()-1].Label;
+                
+                // Retroactively re-assign the jump labels of all the short circuit branch operations:
+                foreach (int index in shortCircuitFromIndeces)
+                {
+                    currentCodeSection[index].DestinationLabel = shortCircuitTargetLabel;
+                }
+            }
+            else if (node.Nodes.Count == 1)
+            {
+                VisitNode(node.Nodes[0]); // This ParseNode isn't *realy* an expression of AND or OR operators, because
+                                          // the regex chain of "zero or more" righthand terms.. had zero such terms.
+                                          // So just delve in deeper to compile whatever part of speech it is further down.
+            }
+        }
+        
         private void VisitUnaryExpression(ParseNode node)
         {
             NodeStartHousekeeping(node);

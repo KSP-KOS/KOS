@@ -412,7 +412,7 @@ namespace kOS.Safe.Compilation
     {
         public override object Add(object argument1, object argument2)
         {
-            return Convert.ToBoolean(argument1) | Convert.ToBoolean(argument2);
+            throw new KOSBinaryOperandTypeException(argument2, "add", "to", argument1);
         }
 
         public override object Subtract(object argument1, object argument2)
@@ -422,7 +422,7 @@ namespace kOS.Safe.Compilation
 
         public override object Multiply(object argument1, object argument2)
         {
-            return Convert.ToBoolean(argument1) & Convert.ToBoolean(argument2);
+            throw new KOSBinaryOperandTypeException(argument2, "multiply", "by", argument1);
         }
 
         public override object Divide(object argument1, object argument2)
@@ -437,27 +437,22 @@ namespace kOS.Safe.Compilation
 
         public override object GreaterThan(object argument1, object argument2)
         {
-            // true > false
-            return Convert.ToBoolean(argument1) & !Convert.ToBoolean(argument2);
+            throw new KOSBinaryOperandTypeException(argument1, "ordinate", ">", argument2);
         }
 
         public override object LessThan(object argument1, object argument2)
         {
-            return !Convert.ToBoolean(argument1) & Convert.ToBoolean(argument2);
+            throw new KOSBinaryOperandTypeException(argument1, "ordinate", "<", argument2);
         }
 
         public override object GreaterThanEqual(object argument1, object argument2)
         {
-            bool arg1 = Convert.ToBoolean(argument1);
-            bool arg2 = Convert.ToBoolean(argument2);
-            return (arg1 & !arg2) | (arg1 == arg2);
+            throw new KOSBinaryOperandTypeException(argument1, "ordinate", ">=", argument2);
         }
 
         public override object LessThanEqual(object argument1, object argument2)
         {
-            bool arg1 = Convert.ToBoolean(argument1);
-            bool arg2 = Convert.ToBoolean(argument2);
-            return (!arg1 & arg2) | (arg1 == arg2);
+            throw new KOSBinaryOperandTypeException(argument1, "ordinate", "<=", argument2);
         }
 
         public override object NotEqual(object argument1, object argument2)
@@ -472,16 +467,12 @@ namespace kOS.Safe.Compilation
 
         public override object Min(object argument1, object argument2)
         {
-            bool arg1 = Convert.ToBoolean(argument1);
-            bool arg2 = Convert.ToBoolean(argument2);
-            return arg1 && arg2;
+            throw new KOSBinaryOperandTypeException(argument1, "get minimum of", "and", argument2);
         }
 
         public override object Max(object argument1, object argument2)
         {
-            bool arg1 = Convert.ToBoolean(argument1);
-            bool arg2 = Convert.ToBoolean(argument2);
-            return arg1 || arg2;
+            throw new KOSBinaryOperandTypeException(argument1, "get maximum of", "and", argument2);
         }
     }
 
