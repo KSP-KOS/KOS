@@ -1,9 +1,9 @@
-using System.Linq;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -53,7 +53,8 @@ namespace kOS.Safe.Encapsulation
             InitalizeSuffixes();
         }
 
-        private Lexicon(IEnumerable<KeyValuePair<T, TU>> lexicon) : this()
+        private Lexicon(IEnumerable<KeyValuePair<T, TU>> lexicon)
+            : this()
         {
             foreach (var u in lexicon)
             {
@@ -68,12 +69,12 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("HASKEY", new OneArgsSuffix<bool, object>(HasKey, "Returns true if a key is in the Lexicon"));
             AddSuffix("HASVALUE", new OneArgsSuffix<bool, object>(HasValue, "Returns true if value is in the Lexicon"));
             AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the lexicon values"));
-            AddSuffix("COPY", new NoArgsSuffix<Lexicon<T,TU>>(()=> new Lexicon<T,TU>(this), "Returns a copy of Lexicon"));
-            AddSuffix("LENGTH", new NoArgsSuffix<int>(()=> internalDictionary.Count, "Returns the number of elements in the collection"));
+            AddSuffix("COPY", new NoArgsSuffix<Lexicon<T, TU>>(() => new Lexicon<T, TU>(this), "Returns a copy of Lexicon"));
+            AddSuffix("LENGTH", new NoArgsSuffix<int>(() => internalDictionary.Count, "Returns the number of elements in the collection"));
             AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T)one), "Removes the value at the given key"));
             AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T)one, (TU)two), "Adds a new item to the lexicon, will error if the key already exists"));
             AddSuffix("DUMP", new NoArgsSuffix<string>(() => string.Join(Environment.NewLine, Dump(99)), "Serializes the collection to a string for printing"));
-            AddSuffix("CASESENSITIVE", new SetSuffix<bool>(() => caseSensitive, SetCaseSensitivity, "Lets you get/set the case sensitivity on the collection, changing sensitivity will clear the collection"));
+            AddSuffix(new[] { "CASESENSITIVE", "CASE" }, new SetSuffix<bool>(() => caseSensitive, SetCaseSensitivity, "Lets you get/set the case sensitivity on the collection, changing sensitivity will clear the collection"));
         }
 
         private void SetCaseSensitivity(bool newCase)
@@ -84,19 +85,19 @@ namespace kOS.Safe.Encapsulation
             }
             caseSensitive = newCase;
 
-            internalDictionary = newCase ? 
-                new Dictionary<T, TU>() : 
+            internalDictionary = newCase ?
+                new Dictionary<T, TU>() :
                 new Dictionary<T, TU>(new LexiconComparer<T>());
         }
 
         private bool HasValue(object value)
         {
-            return internalDictionary.Values.Contains((TU) value);
+            return internalDictionary.Values.Contains((TU)value);
         }
 
         private bool HasKey(object key)
         {
-            return internalDictionary.ContainsKey((T) key);
+            return internalDictionary.ContainsKey((T)key);
         }
 
         public ListValue<object> GetValues()
@@ -241,7 +242,7 @@ namespace kOS.Safe.Encapsulation
             }
             else
             {
-                throw new KOSInvalidArgumentException("LexiconIndexer", "Index", string.Format("{0} is an invalid type: {1} Expected: {2}", index, index.GetType(), typeof (T)));
+                throw new KOSInvalidArgumentException("LexiconIndexer", "Index", string.Format("{0} is an invalid type: {1} Expected: {2}", index, index.GetType(), typeof(T)));
             }
         }
 
@@ -295,7 +296,7 @@ namespace kOS.Safe.Encapsulation
                         entry += string.Format("  [\"{0}\"]= {1}", key, item);
                     }
 
-                    toReturn.Add(entry); 
+                    toReturn.Add(entry);
                 }
             }
             return toReturn.ToArray();
