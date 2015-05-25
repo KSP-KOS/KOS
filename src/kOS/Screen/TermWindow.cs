@@ -548,6 +548,8 @@ namespace kOS.Screen
             if (shared != null && shared.Interpreter != null)
             {
                 shared.Interpreter.Type(ch);
+                if (IsOpen && keyClickEnabled)
+                    shared.SoundMaker.BeginSound("click");
             }
         }
 
@@ -555,7 +557,9 @@ namespace kOS.Screen
         {
             if (shared != null && shared.Interpreter != null)
             {
-                shared.Interpreter.SpecialKey(key);
+                bool wasUsed = shared.Interpreter.SpecialKey(key);
+                if (IsOpen && keyClickEnabled && wasUsed)
+                    shared.SoundMaker.BeginSound("click");
             }
         }
         
