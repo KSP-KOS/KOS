@@ -32,6 +32,7 @@ namespace kOS.Screen
         private bool resizeMouseDown;
         
         private bool consumeEvent;
+        private bool keyClickEnabled;
         
         private bool collapseFastBeepsToOneBeep = false; // This is a setting we might want to fiddle with depending on opinion.
 
@@ -605,8 +606,9 @@ namespace kOS.Screen
                 DrawTelnetStatus();
 
             closeButtonRect = new Rect(WindowRect.width-75, WindowRect.height-30, 50, 25);
-            var reverseButtonRect = new Rect(WindowRect.width-180, WindowRect.height-42, 100, 18);
-            var visualBeepButtonRect = new Rect(WindowRect.width-180, WindowRect.height-22, 100, 18);
+            Rect reverseButtonRect = new Rect(WindowRect.width-180, WindowRect.height-42, 100, 18);
+            Rect visualBeepButtonRect = new Rect(WindowRect.width-180, WindowRect.height-22, 100, 18);
+            Rect keyClickButtonRect = new Rect(10, WindowRect.height - 22, 85, 18);
             
             resizeButtonCoords = new Rect(WindowRect.width-resizeButtonImage.width,
                                           WindowRect.height-resizeButtonImage.height,
@@ -630,6 +632,7 @@ namespace kOS.Screen
             
             screen.ReverseScreen = GUI.Toggle(reverseButtonRect, screen.ReverseScreen, "Reverse Screen", tinyToggleStyle);
             screen.VisualBeep = GUI.Toggle(visualBeepButtonRect, screen.VisualBeep, "Visual Beep", tinyToggleStyle);
+            keyClickEnabled = GUI.Toggle(keyClickButtonRect, keyClickEnabled, "Keyclicker", tinyToggleStyle);
 
 
             if (IsPowered)
