@@ -34,7 +34,7 @@ namespace kOS
             AddSuffix("ELEMENT", new Suffix<ElementValue>(GetEelement));
             AddSuffix("VOLUME", new Suffix<Volume>(() => { throw new NotImplementedException(); }));
             AddSuffix("BOOTFILENAME", new SetSuffix<string>(GetBootFileName, SetBootFileName, "The name of the processor's boot file."));
-            AddSuffix("CURRENTVOLUME", new Suffix<Volume>(GetCurrentVolume));
+            AddSuffix("CURRENTVOLUME", new Suffix<Volume>(GetCurrentVolume, "The currently selected volume"));
         }
 
         private ElementValue GetEelement()

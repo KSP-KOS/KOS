@@ -114,19 +114,24 @@ namespace kOS.Execution
             else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { SafeHouse.Logger.Log("Boot volume not in range"); }
             else if (shared.VolumeMgr.CurrentVolume == null) { SafeHouse.Logger.Log("No current volume"); }
             else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
-            else if (shared.VolumeMgr.CurrentVolume.GetByName(shared.Processor.GetBootFileName()) == null) { SafeHouse.Logger.Log("Boot File is Missing"); }
             else
             {
                 string filename = shared.Processor.GetBootFileName();
-                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + filename; ;
-                shared.ScriptHandler.ClearContext("program");
-
-                var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
-                programContext.Silent = true;
-                var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
-                List<CodePart> parts = shared.ScriptHandler.Compile(
-                    filePath, 1, String.Format("run {0}.", filename), "program", options);
-                programContext.AddParts(parts);
+                // Check to make sure the boot file name is valid, and then that the boot file exists.
+                if (String.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
+                else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
+                else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(String.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
+                else
+                {
+                    string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + filename; ;
+                    shared.ScriptHandler.ClearContext("program");
+                    var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
+                    programContext.Silent = true;
+                    var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
+                    List<CodePart> parts = shared.ScriptHandler.Compile(
+                        filePath, 1, String.Format("run {0}.", filename), "program", options);
+                    programContext.AddParts(parts);
+                }
             }
         }
 

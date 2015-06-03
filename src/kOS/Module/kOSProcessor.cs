@@ -313,9 +313,6 @@ namespace kOS.Module
             }
             
             InitProcessorTracking();
-
-            // move Cpu.Boot() to within the first Update() to prevent boot script errors from killing OnStart
-            // shared.Cpu.Boot();
         }
 
         private void InitProcessorTracking()
