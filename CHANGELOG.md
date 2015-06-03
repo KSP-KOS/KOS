@@ -8,7 +8,8 @@ kOS Mod Changelog
 
 ### BREAKING CHANGES
 * Deprecated INCOMMRANGE - now throws an exception with instructions to use the new addons:rt methods.
-* Updated maxtthrust and availablethrust calculations for KSP v1.0.x.  Due to the way KSP handles thrust, neither available thrust nor maxthrust values are constant at all altitudes around bodies with atmospheres.  
+* Updated maxtthrust and availablethrust calculations for KSP v1.0.x.  Due to the way KSP handles thrust, neither available thrust nor maxthrust values are constant at all altitudes around bodies with atmospheres.
+* Boot files are now stored on local hard drives with their original names.  You may get or set the boot file name using CORE:BOOTFILENAME suffix.
 
 ### New Hotness
 * New struct object CORE to interact with the currently running processor.
