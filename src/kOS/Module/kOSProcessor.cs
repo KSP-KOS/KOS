@@ -293,13 +293,13 @@ namespace kOS.Module
             {
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
-                if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None")
+                if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !Config.Instance.StartOnArchive)
                 {
                     var bootProgramFile = archive.GetByName(bootFile);
                     if (bootProgramFile != null)
                     {
                         // Copy to HardDisk as "boot".
-                        var boot = new ProgramFile(bootProgramFile) { Filename = "boot.ks" };
+                        var boot = new ProgramFile(bootProgramFile) { Filename = bootFile };
                         HardDisk.Add(boot);
                     }
                 }
@@ -426,12 +426,6 @@ namespace kOS.Module
                 
             }
             if (!IsAlive()) return;
-            if (firstUpdate)
-            {
-                SafeHouse.Logger.LogWarning("First Update()");
-                firstUpdate = false;
-                shared.Cpu.Boot();
-            }
             UpdateVessel();
             UpdateObservers();
         }
@@ -440,6 +434,12 @@ namespace kOS.Module
         {
             if (!IsAlive()) return;
 
+            if (firstUpdate)
+            {
+                SafeHouse.Logger.LogWarning("First Update()");
+                firstUpdate = false;
+                shared.Cpu.Boot();
+            }
             UpdateFixedObservers();
             ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
@@ -665,6 +665,15 @@ namespace kOS.Module
         {
             RUIToggleButton[] modeButtons = FindObjectOfType<VesselAutopilotUI>().modeButtons;
             modeButtons.ElementAt(mode).SetTrue();
+        }
+
+        public string GetBootFileName()
+        {
+            return this.bootFile;
+        }
+        public void SetBootFileName(string name)
+        {
+            this.bootFile = name;
         }
     }
 }

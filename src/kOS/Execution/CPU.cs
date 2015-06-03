@@ -39,6 +39,9 @@ namespace kOS.Execution
         private double totalUpdateTime;
         private double totalTriggersTime;
         private double totalExecutionTime;
+        private double maxUpdateTime;
+        private double maxTriggersTime;
+        private double maxExecutionTime;
         private int maxMainlineInstructionsSoFar;
         private int maxTriggerInstructionsSoFar;
         private readonly StringBuilder executeLog = new StringBuilder();
@@ -71,6 +74,9 @@ namespace kOS.Execution
             currentStatus = Status.Running;
             currentTime = 0;
             timeWaitUntil = 0;
+            maxUpdateTime = 0.0;
+            maxTriggersTime = 0.0;
+            maxExecutionTime = 0.0;
             // clear stack (which also orphans all local variables so they can get garbage collected)
             stack.Clear();
             // clear global variables
@@ -108,15 +114,18 @@ namespace kOS.Execution
             else if (!shared.VolumeMgr.CheckCurrentVolumeRange(shared.Vessel)) { SafeHouse.Logger.Log("Boot volume not in range"); }
             else if (shared.VolumeMgr.CurrentVolume == null) { SafeHouse.Logger.Log("No current volume"); }
             else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
-            else if (shared.VolumeMgr.CurrentVolume.GetByName("boot") == null) { SafeHouse.Logger.Log("Boot File is Missing"); }
-            else {
+            else if (shared.VolumeMgr.CurrentVolume.GetByName(shared.Processor.GetBootFileName()) == null) { SafeHouse.Logger.Log("Boot File is Missing"); }
+            else
+            {
+                string filename = shared.Processor.GetBootFileName();
+                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + filename; ;
                 shared.ScriptHandler.ClearContext("program");
 
                 var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
                 programContext.Silent = true;
                 var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
-                string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + "boot";
-                List<CodePart> parts = shared.ScriptHandler.Compile(filePath, 1, "run boot.", "program", options);
+                List<CodePart> parts = shared.ScriptHandler.Compile(
+                    filePath, 1, String.Format("run {0}.", filename), "program", options);
                 programContext.AddParts(parts);
             }
         }
@@ -853,6 +862,9 @@ namespace kOS.Execution
             Stopwatch updateWatch = null;
             Stopwatch triggerWatch = null;
             Stopwatch executionWatch = null;
+            double updateElapsed = 0.0;
+            double triggerElapsed = 0.0;
+            double executionElapsed = 0.0;
             
             // If the script changes config value, it doesn't take effect until next update:
             instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
@@ -876,7 +888,8 @@ namespace kOS.Execution
                     if (showStatistics)
                     {
                         triggerWatch.Stop();
-                        totalTriggersTime += triggerWatch.ElapsedMilliseconds;
+                        triggerElapsed = triggerWatch.ElapsedMilliseconds;
+                        totalTriggersTime += triggerElapsed;
                     }
 
                     ProcessWait();
@@ -889,9 +902,13 @@ namespace kOS.Execution
                         if (showStatistics)
                         {
                             executionWatch.Stop();
-                            totalExecutionTime += executionWatch.ElapsedMilliseconds;
+                            executionElapsed = executionWatch.ElapsedMilliseconds;
+                            totalExecutionTime += executionElapsed;
                         }
                     }
+                }
+                if (showStatistics)
+                {
                 }
 
                 PostUpdateBindings();
@@ -922,11 +939,18 @@ namespace kOS.Execution
             if (showStatistics)
             {
                 updateWatch.Stop();
-                totalUpdateTime += updateWatch.ElapsedMilliseconds;
+                updateElapsed = updateWatch.ElapsedMilliseconds;
+                totalUpdateTime += updateElapsed;
                 if (maxTriggerInstructionsSoFar < numTriggerInstructions)
                     maxTriggerInstructionsSoFar = numTriggerInstructions;
                 if (maxMainlineInstructionsSoFar < numMainlineInstructions)
                     maxMainlineInstructionsSoFar = numMainlineInstructions;
+                if (maxUpdateTime < updateElapsed)
+                    maxUpdateTime = updateElapsed;
+                if (maxTriggersTime < triggerElapsed)
+                    maxTriggersTime = triggerElapsed;
+                if (maxExecutionTime < executionElapsed)
+                    maxExecutionTime = executionElapsed;
             }
         }
 
@@ -1101,6 +1125,9 @@ namespace kOS.Execution
             shared.Screen.Print(string.Format("Total update time: {0:F3}ms", totalUpdateTime));
             shared.Screen.Print(string.Format("Total triggers time: {0:F3}ms", totalTriggersTime));
             shared.Screen.Print(string.Format("Total execution time: {0:F3}ms", totalExecutionTime));
+            shared.Screen.Print(string.Format("Maximum update time: {0:F3}ms", maxUpdateTime));
+            shared.Screen.Print(string.Format("Maximum triggers time: {0:F3}ms", maxTriggersTime));
+            shared.Screen.Print(string.Format("Maximum execution time: {0:F3}ms", maxExecutionTime));
             shared.Screen.Print(string.Format("Most Trigger instructions in one update: {0}", maxTriggerInstructionsSoFar));
             shared.Screen.Print(string.Format("Most Mainline instructions in one update: {0}", maxMainlineInstructionsSoFar));
             shared.Screen.Print(" ");
@@ -1109,6 +1136,9 @@ namespace kOS.Execution
             totalUpdateTime = 0D;
             totalTriggersTime = 0D;
             totalExecutionTime = 0D;
+            maxUpdateTime = 0.0;
+            maxTriggersTime = 0.0;
+            maxExecutionTime = 0.0;
             maxMainlineInstructionsSoFar = 0;
             maxTriggerInstructionsSoFar = 0;
         }

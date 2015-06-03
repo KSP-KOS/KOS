@@ -33,6 +33,8 @@ namespace kOS
             AddSuffix("VESSEL", new Suffix<VesselTarget>(() => new VesselTarget(shared.KSPPart.vessel, shared)));
             AddSuffix("ELEMENT", new Suffix<ElementValue>(GetEelement));
             AddSuffix("VOLUME", new Suffix<Volume>(() => { throw new NotImplementedException(); }));
+            AddSuffix("BOOTFILENAME", new SetSuffix<string>(GetBootFileName, SetBootFileName, "The name of the processor's boot file."));
+            AddSuffix("CURRENTVOLUME", new Suffix<Volume>(GetCurrentVolume));
         }
 
         private ElementValue GetEelement()
@@ -41,5 +43,10 @@ namespace kOS
             var part = new PartValue(shared.KSPPart, shared);
             return elList.Cast<ElementValue>().FirstOrDefault(el => el.Parts.Contains(part));
         }
+
+        private Volume GetCurrentVolume() { return shared.VolumeMgr.CurrentVolume; }
+
+        private string GetBootFileName() { return shared.Processor.GetBootFileName(); }
+        private void SetBootFileName(string name) { shared.Processor.SetBootFileName(name); }
     }
 }
