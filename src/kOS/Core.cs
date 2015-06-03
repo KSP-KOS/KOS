@@ -1,10 +1,10 @@
-﻿using System;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Persistence;
-using kOS.Suffixed.Part;
 using kOS.Suffixed;
+using kOS.Suffixed.Part;
 using kOS.Utilities;
+using System;
 using System.Linq;
 
 namespace kOS
@@ -44,9 +44,19 @@ namespace kOS
             return elList.Cast<ElementValue>().FirstOrDefault(el => el.Parts.Contains(part));
         }
 
-        private Volume GetCurrentVolume() { return shared.VolumeMgr.CurrentVolume; }
+        private Volume GetCurrentVolume()
+        {
+            return shared.VolumeMgr.CurrentVolume;
+        }
 
-        private string GetBootFileName() { return shared.Processor.GetBootFileName(); }
-        private void SetBootFileName(string name) { shared.Processor.SetBootFileName(name); }
+        private string GetBootFileName()
+        {
+            return shared.Processor.GetBootFileName();
+        }
+
+        private void SetBootFileName(string name)
+        {
+            shared.Processor.SetBootFileName(name);
+        }
     }
 }

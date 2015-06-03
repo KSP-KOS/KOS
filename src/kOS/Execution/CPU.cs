@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
+﻿using kOS.Persistence;
 using kOS.Safe.Binding;
 using kOS.Safe.Compilation;
-using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using kOS.Safe.Persistence;
 using kOS.Safe.Utilities;
 using kOS.Suffixed;
-using kOS.Persistence;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
 
 namespace kOS.Execution
 {
-    public class CPU: ICpu
+    public class CPU : ICpu
     {
         private enum Status
         {
@@ -33,7 +33,7 @@ namespace kOS.Execution
         private VariableScope savedPointers;
         private int instructionsSoFarInUpdate;
         private int instructionsPerUpdate;
-        
+
         // statistics
         private double totalCompileTime;
         private double totalUpdateTime;
@@ -53,7 +53,6 @@ namespace kOS.Execution
         }
 
         public double SessionTime { get { return currentTime; } }
-
 
         public CPU(SharedObjects shared)
         {
@@ -84,7 +83,7 @@ namespace kOS.Execution
             // clear interpreter
             if (shared.Interpreter != null) shared.Interpreter.Reset();
             // load functions
-            if(shared.FunctionManager != null)shared.FunctionManager.Load();
+            if (shared.FunctionManager != null) shared.FunctionManager.Load();
             // load bindings
             if (shared.BindingMgr != null) shared.BindingMgr.Load();
             // Booting message
@@ -92,7 +91,7 @@ namespace kOS.Execution
             {
                 shared.Screen.ClearScreen();
                 string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n", Core.VersionInfo);
-                List<string>nags = Safe.Utilities.Debug.GetPendingNags();
+                List<string> nags = Safe.Utilities.Debug.GetPendingNags();
                 if (nags.Count > 0)
                 {
                     bootMessage +=
@@ -185,16 +184,16 @@ namespace kOS.Execution
                 }
             }
         }
-        
+
         /// <summary>
         /// Push a single thing onto the secret "over" stack.
         /// </summary>
         public void PushAboveStack(object thing)
         {
             PushStack(thing);
-            MoveStackPointer(-1);            
+            MoveStackPointer(-1);
         }
-        
+
         /// <summary>
         /// Pop one or more things from the secret "over" stack, only returning the
         /// finalmost thing popped.  (i.e if you pop 3 things then you get:
@@ -219,7 +218,7 @@ namespace kOS.Execution
                 PopContext();
             }
         }
-        
+
         /// <summary>
         /// Build a clone of the current state of the scope stack, for the sake of capturing a closure.
         /// </summary>
@@ -235,7 +234,7 @@ namespace kOS.Execution
                 scope.IsClosure = true;
             return closureList;
         }
-        
+
         /// <summary>
         /// Build a delegate call for the given function entry point, in which it will capture a closure of the current
         /// runtime scoping state to be used when that function gets called later by OpcodeCall:
@@ -253,7 +252,7 @@ namespace kOS.Execution
         {
             return contexts[0];
         }
-        
+
         public IProgramContext SwitchToProgramContext()
         {
             if (contexts.Count == 1)
@@ -262,12 +261,12 @@ namespace kOS.Execution
             }
             return currentContext;
         }
-        
+
         public Opcode GetCurrentOpcode()
         {
             return currentContext.Program[currentContext.InstructionPointer];
         }
-        
+
         public Opcode GetOpcodeAt(int instructionPtr)
         {
             if (instructionPtr < 0 || instructionPtr >= currentContext.Program.Count)
@@ -285,8 +284,8 @@ namespace kOS.Execution
             // presuming the only such pointers that need to exist are going to be
             // global.  This was written by marianoapp before I added locals,
             // and I don't understand what it's for -- Dunbaratu
-            
-            savedPointers = new VariableScope(0,-1);
+
+            savedPointers = new VariableScope(0, -1);
             var pointers = new List<string>(globalVariables.Variables.Keys.Where(v => v.Contains('*')));
 
             foreach (var pointerName in pointers)
@@ -305,7 +304,7 @@ namespace kOS.Execution
             // presuming the only such pointers that need to exist are going to be
             // global.  This was written by marianoapp before I added locals,
             // and I don't understand what it's for -- Dunbaratu
-            
+
             int restoredPointers = 0;
             int deletedPointers = 0;
 
@@ -391,20 +390,21 @@ namespace kOS.Execution
         {
             stack.MoveStackPointer(delta);
         }
-        
+
         /// <summary>Throw exception if the user delegate is not one the CPU can call right now.</summary>
         /// <param name="userDelegate">The userdelegate being checked</param>
         /// <exception cref="KOSInvalidDelegate">thrown if the cpu is in a state where it can't call this delegate.</exception>
         public void AssertValidDelegateCall(IUserDelegate userDelegate)
         {
-            if (userDelegate.ProgContext != currentContext) {
+            if (userDelegate.ProgContext != currentContext)
+            {
                 throw new KOSInvalidDelegateContext(
-                    (currentContext == contexts[0] ? "the interpreter" : "a program" ),
-                    (currentContext == contexts[0] ? "a program" : "the interpreter" )
+                    (currentContext == contexts[0] ? "the interpreter" : "a program"),
+                    (currentContext == contexts[0] ? "a program" : "the interpreter")
                     );
             }
         }
-        
+
         /// <summary>
         /// Gets the dictionary N levels of nesting down the dictionary stack,
         /// where zero is the current localmost level.
@@ -418,7 +418,7 @@ namespace kOS.Execution
         private VariableScope GetNestedDictionary(int peekDepth)
         {
             object stackItem = true; // any non-null value will do here, just to get the loop started.
-            for (int rawStackDepth = 0 ; stackItem != null && peekDepth >= 0; ++rawStackDepth)
+            for (int rawStackDepth = 0; stackItem != null && peekDepth >= 0; ++rawStackDepth)
             {
                 stackItem = stack.Peek(-1 - rawStackDepth);
                 if (stackItem is VariableScope)
@@ -426,9 +426,9 @@ namespace kOS.Execution
                 if (stackItem is SubroutineContext)
                     stackItem = null; // once we hit the bottom of the current subroutine on the runtime stack - jump all the way out to global.
             }
-            return stackItem == null ? globalVariables : (VariableScope) stackItem;
+            return stackItem == null ? globalVariables : (VariableScope)stackItem;
         }
-        
+
         /// <summary>
         /// Gets the dictionary that contains the given identifier, starting the
         /// search at the local level and scanning the scopes upward all the
@@ -446,14 +446,14 @@ namespace kOS.Execution
         /// <returns>The dictionary found, or null if no dictionary contains the identifier.</returns>
         private VariableScope GetNestedDictionary(string identifier, List<VariableScope> searchReport = null)
         {
-            if (searchReport != null) 
+            if (searchReport != null)
                 searchReport.Clear();
-            Int16 rawStackDepth = 0 ;
+            Int16 rawStackDepth = 0;
             while (true) /*all of this loop's exits are explicit break or return statements*/
             {
                 object stackItem;
                 bool stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
-                if (stackExhausted) 
+                if (stackExhausted)
                     break;
                 VariableScope localDict = stackItem as VariableScope;
                 if (localDict == null) // some items on the stack might not be variable scopes.  skip them.
@@ -464,17 +464,17 @@ namespace kOS.Execution
 
                 if (searchReport != null)
                     searchReport.Add(localDict);
-                
+
                 if (localDict.Variables.ContainsKey(identifier))
                     return localDict;
-                
+
                 // Get the next VariableScope that is valid, where valid means:
                 //    It is the lexical (not runtime) parent of this scope.
                 // -------------------------------------------------------------------------------
 
                 // Scan the stack until the variable scope with the right parent ID is seen:
                 Int16 skippedLevels = 0;
-                while ( !(stackExhausted))
+                while (!(stackExhausted))
                 {
                     bool needsIncrement = true;
                     VariableScope scopeFrame = stackItem as VariableScope;
@@ -502,7 +502,7 @@ namespace kOS.Execution
                     }
                     stackExhausted = !(stack.PeekCheck(-1 - rawStackDepth, out stackItem));
                 }
-                
+
                 // Record how many levels had to be skipped for that to work.  In future calls of this
                 // method, it will know how far to jump in the stack without doing that scan.  This can
                 // be quite a speedup when dealing with nested recursion, where the runtime stack might
@@ -536,15 +536,15 @@ namespace kOS.Execution
         /// <returns></returns>
         private Variable GetOrCreateVariable(string identifier)
         {
-            Variable variable = GetVariable(identifier,false,true);
+            Variable variable = GetVariable(identifier, false, true);
             if (variable == null)
             {
-                variable = new Variable {Name = identifier};
+                variable = new Variable { Name = identifier };
                 AddVariable(variable, identifier, false);
             }
             return variable;
         }
-        
+
         public string DumpVariables()
         {
             var msg = new StringBuilder();
@@ -594,12 +594,12 @@ namespace kOS.Execution
             if (barewordOkay)
             {
                 string strippedIdent = identifier.TrimStart('$');
-                return new Variable {Name = strippedIdent, Value = strippedIdent};
+                return new Variable { Name = strippedIdent, Value = strippedIdent };
             }
             if (failOkay)
                 return null;
             else
-                throw new KOSUndefinedIdentifierException(identifier.TrimStart('$'),"");
+                throw new KOSUndefinedIdentifierException(identifier.TrimStart('$'), "");
         }
 
         /// <summary>
@@ -615,12 +615,12 @@ namespace kOS.Execution
         public void AddVariable(Variable variable, string identifier, bool local, bool overwrite = false)
         {
             identifier = identifier.ToLower();
-            
+
             if (!identifier.StartsWith("$"))
             {
                 identifier = "$" + identifier;
             }
-            
+
             VariableScope whichDict;
             if (local)
                 whichDict = GetNestedDictionary(0);
@@ -654,10 +654,10 @@ namespace kOS.Execution
             VariableScope foundDict = GetNestedDictionary(identifier);
             if (foundDict != null && VariableIsRemovable(foundDict.Variables[identifier]))
             {
-                // Tell Variable to orphan its old value now.  Faster than relying 
+                // Tell Variable to orphan its old value now.  Faster than relying
                 // on waiting several seconds for GC to eventually call ~Variable()
                 foundDict.Variables[identifier].Value = null;
-                
+
                 foundDict.Variables.Remove(identifier);
             }
         }
@@ -686,7 +686,7 @@ namespace kOS.Execution
             if (testValue is string &&
                 ((string)testValue).Length > 1 &&
                 ((string)testValue)[0] == '$' &&
-                ((string)testValue)[1] != '<' )
+                ((string)testValue)[1] != '<')
             {
                 var identifier = (string)testValue;
                 Variable variable = GetVariable(identifier, barewordOkay);
@@ -703,7 +703,7 @@ namespace kOS.Execution
         /// This does NOT scan up the scoping stack like SetValue() does.
         /// It operates at the local level only.<br/>
         /// <br/>
-        /// This is the normal way to make a new local variable.  You cannot make a 
+        /// This is the normal way to make a new local variable.  You cannot make a
         /// local variable without attempting to give it a value.
         /// </summary>
         /// <param name="identifier">variable name to attempt to store into</param>
@@ -712,10 +712,10 @@ namespace kOS.Execution
         {
             Variable variable;
             VariableScope localDict = GetNestedDictionary(0);
-            if (! localDict.Variables.TryGetValue(identifier, out variable))
+            if (!localDict.Variables.TryGetValue(identifier, out variable))
             {
-                variable = new Variable {Name = identifier};
-                AddVariable(variable, identifier, true);                
+                variable = new Variable { Name = identifier };
+                AddVariable(variable, identifier, true);
             }
             variable.Value = value;
         }
@@ -736,10 +736,10 @@ namespace kOS.Execution
             // Attempt to get it as a global.  Make a new one if it's not found.
             // This preserves the "bound-ness" of the variable if it's a
             // BoundVariable, whereas unconditionally making a new Variable wouldn't:
-            if (! globalVariables.Variables.TryGetValue(identifier, out variable))
+            if (!globalVariables.Variables.TryGetValue(identifier, out variable))
             {
-                variable = new Variable {Name = identifier};
-                AddVariable(variable, identifier, false, true);                
+                variable = new Variable { Name = identifier };
+                AddVariable(variable, identifier, false, true);
             }
             variable.Value = value;
         }
@@ -753,7 +753,7 @@ namespace kOS.Execution
         /// If no such value is found, all the way up to the global level,
         /// then it resorts to making a global variable with the name and using that.<br/>
         /// <br/>
-        /// This is the normal way to make a new global variable.  You cannot make a 
+        /// This is the normal way to make a new global variable.  You cannot make a
         /// global variable without attempting to give it a value.
         /// </summary>
         /// <param name="identifier">variable name to attempt to store into</param>
@@ -763,7 +763,7 @@ namespace kOS.Execution
             Variable variable = GetOrCreateVariable(identifier);
             variable.Value = value;
         }
-        
+
         /// <summary>
         /// Try to set the value of the identifier at the localmost
         /// level possible, by scanning up the scope stack to find
@@ -794,7 +794,7 @@ namespace kOS.Execution
         {
             return GetValue(PopStack(), barewordOkay);
         }
-        
+
         /// <summary>
         /// Peek at a value atop the stack without popping it, and if it's a variable name then get its value,
         /// else just return it as it is.<br/>
@@ -820,14 +820,14 @@ namespace kOS.Execution
         /// </summary>
         /// <param name="digDepth">Peek at the element this far down the stack (0 means top, 1 means just under the top, etc)</param>
         /// <param name="checkOkay">Tells you whether or not the stack was exhausted.  If it's false, then the peek went too deep.</param>
-        /// <returns>value off the stack</returns>        
+        /// <returns>value off the stack</returns>
         public object PeekRaw(int digDepth, out bool checkOkay)
         {
             object returnValue;
-            checkOkay = stack.PeekCheck(digDepth,out returnValue);
+            checkOkay = stack.PeekCheck(digDepth, out returnValue);
             return returnValue;
         }
-        
+
         public int GetStackSize()
         {
             return stack.GetLogicalSize();
@@ -870,7 +870,7 @@ namespace kOS.Execution
             double updateElapsed = 0.0;
             double triggerElapsed = 0.0;
             double executionElapsed = 0.0;
-            
+
             // If the script changes config value, it doesn't take effect until next update:
             instructionsPerUpdate = Config.Instance.InstructionsPerUpdate;
             instructionsSoFarInUpdate = 0;
@@ -918,7 +918,6 @@ namespace kOS.Execution
 
                 PostUpdateBindings();
             }
-            
             catch (Exception e)
             {
                 if (shared.Logger != null)
@@ -1000,7 +999,7 @@ namespace kOS.Execution
                     currentContext.InstructionPointer = triggerPointer;
 
                     bool executeNext = true;
-                    executeLog.Remove(0,executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
+                    executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
                     while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
                     {
                         executeNext = ExecuteInstruction(currentContext);
@@ -1026,8 +1025,8 @@ namespace kOS.Execution
         private void ContinueExecution()
         {
             bool executeNext = true;
-            executeLog.Remove(0,executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
-            while (currentStatus == Status.Running && 
+            executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
+            while (currentStatus == Status.Running &&
                    instructionsSoFarInUpdate < instructionsPerUpdate &&
                    executeNext &&
                    currentContext != null)
@@ -1042,7 +1041,7 @@ namespace kOS.Execution
         private bool ExecuteInstruction(IProgramContext context)
         {
             bool DEBUG_EACH_OPCODE = false;
-            
+
             Opcode opcode = context.Program[context.InstructionPointer];
 
             if (DEBUG_EACH_OPCODE)
@@ -1087,7 +1086,7 @@ namespace kOS.Execution
 
             string currentSourceName = currentContext.Program[currentContext.InstructionPointer].SourceName;
 
-            while (currentContext.InstructionPointer < currentContext.Program.Count && 
+            while (currentContext.InstructionPointer < currentContext.Program.Count &&
                    currentContext.Program[currentContext.InstructionPointer].SourceName == currentSourceName)
             {
                 currentContext.InstructionPointer++;
@@ -1098,7 +1097,7 @@ namespace kOS.Execution
         {
             shared.FunctionManager.CallFunction(functionName);
         }
-        
+
         public bool BuiltInExists(string functionName)
         {
             return shared.FunctionManager.Exists(functionName);
@@ -1214,11 +1213,11 @@ namespace kOS.Execution
                 try
                 {
                     SafeHouse.Logger.Log("Parsing Context:\n\n" + scriptBuilder);
-                    
+
                     // TODO - make this set up compiler options and pass them in properly, so we can detect built-ins properly.
                     // (for the compiler to detect the difference between a user function call and a built-in, it needs to be
                     // passed the FunctionManager object from Shared.)
-                    // this isn't fixed mainly because this OnLoad() code is a major bug fire already anyway and needs to be 
+                    // this isn't fixed mainly because this OnLoad() code is a major bug fire already anyway and needs to be
                     // fixed, but that's way out of scope for the moment:
                     programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
                     List<Opcode> program = programBuilder.BuildProgram();
