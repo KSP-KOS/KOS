@@ -20,6 +20,8 @@ namespace kOS.AddOns.RemoteTech
 
             AddSuffix("HASKSCCONNECTION", new OneArgsSuffix<bool, VesselTarget>(RTHasKSCConnection, "True if ship has connection to KSC"));
 
+            AddSuffix("HASLOCALCONTROL", new OneArgsSuffix<bool, VesselTarget>(RTHasLocalControl, "True if ship has connection to KSC"));
+
         }
 
         private static double RTGetDelay(VesselTarget tgtVessel)
@@ -53,6 +55,18 @@ namespace kOS.AddOns.RemoteTech
             if (RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
             {
                 result = RemoteTechHook.Instance.HasAnyConnection(tgtVessel.Vessel.id);
+            }
+
+            return result;
+        }
+
+        private static bool RTHasLocalControl(VesselTarget tgtVessel)
+        {
+            bool result = false;
+
+            if (RemoteTechHook.IsAvailable(tgtVessel.Vessel.id))
+            {
+                result = RemoteTechHook.Instance.HasLocalControl(tgtVessel.Vessel.id);
             }
 
             return result;
