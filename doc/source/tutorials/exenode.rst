@@ -54,7 +54,7 @@ Now we are ready to burn. It is usually done in the `until` loop, checking main 
 
         //throttle is 100% until there is less than 1 second of time left to burn
         //when there is less than 1 second - decrease the throttle linearly
-        set tset to min(nd:deltav:mag/maxa_acc, 1).
+        set tset to min(nd:deltav:mag/max_acc, 1).
 
         //here's the tricky part, we need to cut the throttle as soon as our nd:deltav and initial deltav start facing opposite directions
         //this check is done via checking the dot product of those 2 vectors
