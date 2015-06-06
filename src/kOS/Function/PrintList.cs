@@ -215,12 +215,7 @@ namespace kOS.Function
                 {
                     if (module != null)
                     {
-                        // TODO: Remove redundant ModuleEnginesFX reference when Squad cleans up the "new" properties (isOperational mainly)
-                        if (module is ModuleEnginesFX)
-                        {
-                            list.AddItem(part.uid(), part.inverseStage, ((ModuleEnginesFX)module).moduleName);
-                        }
-                        else if (module is ModuleEngines)
+                        if (module is ModuleEngines)
                         {
                             list.AddItem(part.uid(), part.inverseStage, ((ModuleEngines)module).moduleName);
                         }
