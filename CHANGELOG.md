@@ -17,11 +17,13 @@ kOS Mod Changelog
 * Added availablethrust suffix to engines which mirrors the availablethrust suffix for vessels.
 * Added maxthrustat, availablethrustat, and ispat suffixes to engines to read the values at specified atmoshperic pressures.  See the documentation for details.
 * Added maxthrustat and availablethrustat suffixes to vessels to read the values at a specified atmoshperic pressures.  See the documentation for details.
+* Exposed RemoteTech's HasLocalControl method as a suffix.
 
 ### Old and busted
 * Fixed empty return statements crashing with an argument count exception.
 * Fix setting vector:mag to a new value actually setting the magnitude to 1.
 * Fix electricity being consumed while the game was paused.
+* Fix terminal lockout when RemoteTech has no connection to the KSC, but the ship has local control.
 
 # v0.17.2
 
