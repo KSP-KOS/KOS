@@ -15,6 +15,17 @@ Interaction with kOS
 
 When you have RemoteTech installed you can only interact with the core's terminal when you have a connection to KSC on any unmanned craft. Scripts launched when you still had a connection will continue to execute even if your unmanned craft loses connection to KSC. But you should note, that when there is no connection to KSC the archive volume is inaccessible. This will require you to plan ahead and copy necessary scripts for your mission to probe hard disk, if your kerbals and/or other scripts need to use them while not connected.
 
+It is possible to activate/deactivate RT antennas, as well as set their targets using kOS::
+
+  SET p TO SHIP:PARTSNAMED("mediumDishAntenna")[0].
+  SET m to p:GETMODULE("ModuleRTAntenna").
+  m:DOEVENT("activate").
+  m:SETFIELD("target", "mission-control").
+  // or
+  m:SETFIELD("target", mun).
+
+Acceptable values for `target` are: `no-target`, `active-vessel`, `mission-control`, a :struct:`Body` or a :struct:`Vessel`.
+
 Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
 
 .. structure:: RTAddon

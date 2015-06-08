@@ -19,7 +19,7 @@ namespace kOS.Suffixed.PartModuleField
     /// </summary>
     public class PartModuleFields : Structure
     {
-        private readonly PartModule partModule;
+        protected readonly PartModule partModule;
         private readonly SharedObjects shared;
         
         /// <summary>
@@ -175,7 +175,7 @@ namespace kOS.Suffixed.PartModuleField
         /// which are currently showing on the part's RMB menu.
         /// </summary>
         /// <returns>List of all the strings field names.</returns>
-        private ListValue AllFields(string formatter)
+        protected virtual ListValue AllFields(string formatter)
         {            
             var returnValue = new ListValue();
             
@@ -196,7 +196,7 @@ namespace kOS.Suffixed.PartModuleField
         /// which are currently showing on the part's RMB menu, without formating.
         /// </summary>
         /// <returns>List of all the strings field names.</returns>
-        private ListValue AllFieldNames()
+        protected ListValue AllFieldNames()
         {            
             var returnValue = new ListValue();
 
@@ -225,7 +225,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="cookedGuiName">The case-insensitive guiName of the field.</param>
         /// <returns>a BaseField - a KSP type that can be used to get the value, or its GUI name or its reflection info.</returns>
-        private BaseField GetField(string cookedGuiName)
+        protected BaseField GetField(string cookedGuiName)
         {
             return partModule.Fields.Cast<BaseField>().
                 FirstOrDefault(field => String.Equals(field.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
@@ -394,7 +394,7 @@ namespace kOS.Suffixed.PartModuleField
             AddSuffix("DOEVENT",    new OneArgsSuffix<string>(CallKSPEvent));
             AddSuffix("DOACTION",   new TwoArgsSuffix<string, bool>(CallKSPAction));
         }
-        
+
         private static bool FieldIsVisible(BaseField field)
         {
             return (field != null) && (HighLogic.LoadedSceneIsEditor ? field.guiActiveEditor : field.guiActive);
@@ -414,7 +414,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="suffixName"></param>
         /// <returns></returns>
-        private object GetKSPFieldValue(string suffixName)
+        protected object GetKSPFieldValue(string suffixName)
         {
             BaseField field = GetField(suffixName);
             if (field==null)
@@ -430,7 +430,7 @@ namespace kOS.Suffixed.PartModuleField
         /// </summary>
         /// <param name="suffixName"></param>
         /// <param name="newValue"></param>
-        private void SetKSPFieldValue(string suffixName, object newValue)
+        protected void SetKSPFieldValue(string suffixName, object newValue)
         {
             BaseField field = GetField(suffixName);
             if (field==null)
