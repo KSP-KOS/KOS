@@ -1025,8 +1025,6 @@ namespace kOS.Execution
                 }
                 else
                     triggerPointer = triggerList[triggerIndex];
-
-                Console.WriteLine("eraseme: executing trigger " + triggerIndex + " Of " + triggerList.Count + " triggers.  Starts on IP="+triggerPointer);
                 try
                 {
                     currentContext.InstructionPointer = triggerPointer;
@@ -1048,16 +1046,11 @@ namespace kOS.Execution
                 }
                 if (instructionsSoFarInUpdate >= instructionsPerUpdate)
                 {
-                    // TODO - we may be able to remove this exception entirely from the kOS source code:
-                    // throw new KOSLongTriggerException(instructionsSoFarInUpdate);
-                    
                     // remember where to continue from next time.
                     interruptedTriggerIndex = triggerIndex;
                     interruptedTriggerIP = currentContext.InstructionPointer;
-                    Console.WriteLine("eraseme: trigger number " + interruptedTriggerIndex + " interrupted on IP = " +interruptedTriggerIP);
                     break; // quit the for each trigger loop - we'll pick up where we left off next FixedUpdate.
                 }
-                else Console.WriteLine("eraseme: trigger number " + triggerIndex + " complete.");
             }
 
             currentContext.InstructionPointer = currentInstructionPointer;
