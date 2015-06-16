@@ -34,6 +34,41 @@ namespace kOS.Execution
         private int instructionsSoFarInUpdate;
         private int instructionsPerUpdate;
         
+        /// <summary>
+        /// This setting forces the main code to have a chance to run at least this many of its instructions before allowing
+        /// the trigger checks to be run again.  This is to prevent the case where the main code never executes
+        /// because the triggers just happen to consume the right amount of instructions to land on an update
+        /// boundary in between triggers and main code.  If there aren't at least this many instructions available
+        /// within the update when it gets to where it might start the main code, then it won't check the triggers
+        /// yet next update.  This gives the main code a chance to use a FixedUpdate first before it goes back to the
+        /// triggers again, in that case.
+        /// Note the main code does not need to actually consume this many instructions - just have had the chance to
+        /// have had that many if it wanted to use them.  (During a WAIT, mainline code doesn't execute, which is why
+        /// that clarification matters).
+        /// WARNING: IF we ever let users set CONFIG:IPU to a number smaller than this, triggers will never happen.
+        /// This number must be kept smaller than the min allowed clamped CONFIG:IPU val.
+        /// </summary>
+        private const int minInstructionsBetweenTriggers = 10;
+
+        /// <summary>
+        /// Remembers a snapshot of what the list of triggers was the last time the FixedUpdate started working on triggers from scratch.
+        /// If a new trigger is added while still running triggers, and the FixedUpdate gets interrupted and has to continue in a
+        /// subsequent FixedUpdate, that new trigger won't be checked until the existing set of triggers has been processed all the
+        /// way through.  In other words, this list is only recalcualted during those FixedUpdates where it gets to start from
+        /// the top again.
+        /// </summary>
+        private List<int> triggerList;
+        /// <summary>
+        /// Remembers which trigger from triggerList is the one that was interrupted when the prev FixedUpdate stopped itself
+        /// partway through.
+        /// </summary>
+        private int interruptedTriggerIndex;
+        /// <summary>
+        /// Remembers which Instruction Pointer within triggerList is the one where it was interrupted when the prev FixedUpdate
+        /// stopped itself partway through.
+        /// </summary>
+        private int interruptedTriggerIP;
+        
         // statistics
         private double totalCompileTime;
         private double totalUpdateTime;
@@ -71,6 +106,7 @@ namespace kOS.Execution
             currentStatus = Status.Running;
             currentTime = 0;
             timeWaitUntil = 0;
+            triggerList = null;
             // clear stack (which also orphans all local variables so they can get garbage collected)
             stack.Clear();
             // clear global variables
@@ -878,6 +914,11 @@ namespace kOS.Execution
                         triggerWatch.Stop();
                         totalTriggersTime += triggerWatch.ElapsedMilliseconds;
                     }
+                    // Allow the trigger list to start from scratch again next FixedUpdate if we finished the current path through it and
+                    // still have some instructions to spare for the main.  Else don't reset because there's still more triggers to go,
+                    // or main hasn't had its chance to go yet:
+                    if (instructionsSoFarInUpdate < instructionsPerUpdate - minInstructionsBetweenTriggers)
+                        triggerList = null;
 
                     ProcessWait();
 
@@ -959,13 +1000,33 @@ namespace kOS.Execution
 
         private void ProcessTriggers()
         {
-            if (currentContext.Triggers.Count <= 0) return;
-
+            if (currentContext.Triggers.Count <= 0) return;            
             int currentInstructionPointer = currentContext.InstructionPointer;
-            var triggerList = new List<int>(currentContext.Triggers);
 
-            foreach (int triggerPointer in triggerList)
+            // Reset the list of triggers when we are starting from the top again
+            // and not continuing a previously interrupted trigger:
+            if (triggerList == null || interruptedTriggerIndex < 0)
             {
+                triggerList = new List<int>(currentContext.Triggers);
+                interruptedTriggerIndex = 0;
+                interruptedTriggerIP = -1;
+            }
+
+            // This is like a foreach walk through the triggerlist, except that it's
+            // tracking how far it got, and it might quit partway through and pick up
+            // where it left off next KOSFixedUpdate():
+            for (int triggerIndex = interruptedTriggerIndex ; triggerIndex < triggerList.Count ; ++triggerIndex)
+            {
+                int triggerPointer;
+                if (interruptedTriggerIP >= 0)
+                {
+                    triggerPointer = interruptedTriggerIP;
+                    interruptedTriggerIP = -1;
+                }
+                else
+                    triggerPointer = triggerList[triggerIndex];
+
+                Console.WriteLine("eraseme: executing trigger " + triggerIndex + " Of " + triggerList.Count + " triggers.  Starts on IP="+triggerPointer);
                 try
                 {
                     currentContext.InstructionPointer = triggerPointer;
@@ -987,8 +1048,16 @@ namespace kOS.Execution
                 }
                 if (instructionsSoFarInUpdate >= instructionsPerUpdate)
                 {
-                    throw new KOSLongTriggerException(instructionsSoFarInUpdate);
+                    // TODO - we may be able to remove this exception entirely from the kOS source code:
+                    // throw new KOSLongTriggerException(instructionsSoFarInUpdate);
+                    
+                    // remember where to continue from next time.
+                    interruptedTriggerIndex = triggerIndex;
+                    interruptedTriggerIP = currentContext.InstructionPointer;
+                    Console.WriteLine("eraseme: trigger number " + interruptedTriggerIndex + " interrupted on IP = " +interruptedTriggerIP);
+                    break; // quit the for each trigger loop - we'll pick up where we left off next FixedUpdate.
                 }
+                else Console.WriteLine("eraseme: trigger number " + triggerIndex + " complete.");
             }
 
             currentContext.InstructionPointer = currentInstructionPointer;

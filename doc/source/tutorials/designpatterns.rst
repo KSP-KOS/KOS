@@ -181,7 +181,14 @@ Finally, as a bit of foreshadowing, this bit of code is actually a "`proportiona
 2. Minimize Trigger Conditions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There is a lot of power in developing multi-level LOCK variables in combination with WHEN/THEN triggers. However, it can be easy to hit kOS's hard limit in the number of operations allowed for trigger checking. This will happen when several WHEN/THEN triggers are dependent on the same complex LOCK variable. This results in the LOCK variable being calculated multiple times every update. If the LOCK is deep enough, the calculations become too expensive to do and kOS stops executing and complains.
+There is a lot of power in developing multi-level LOCK variables in
+combination with WHEN/THEN triggers. However, be careful when using
+deeply nested LOCK expressions or triggers in conjunction with the
+LOCK STEERING or LOCK THROTTLE commands.  The more code you have
+being executed inside of such triggers, the more time they are stealing
+away from your mainline program, as the kOS computer wants to run these
+trigger statements again and again each *physics tick* if it can.
+
 
 With this in mind, consider an extension of the example script in the previous section. This time, the g-force setpoint changes as the rocket climbs through 10km, 20km and 30km:
 
@@ -252,4 +259,4 @@ This example does what is expected of it without problems. But the ship's altitu
         WAIT 0.1.
     }
 
-Now this is quite elegant! The number of triggers have been reduced to two per update for the entire running of this script. The trigger at 1km sets up the next trigger which will happen at 10km which sets up then next at 20km and so on. This can save a lot of processing time for triggers that will happen sequentially. As a general rule, one should try to nest WHEN/THEN statements whenever possible. Again, both examples above will work, but when scripts start to have deep and complicated triggers, this nested construct can save it from the dreaded kOS trigger limit.
+Now this is quite elegant! The number of triggers have been reduced to two per update for the entire running of this script. The trigger at 1km sets up the next trigger which will happen at 10km which sets up then next at 20km and so on. This can save a lot of processing time for triggers that will happen sequentially. As a general rule, one should try to nest WHEN/THEN statements whenever possible. Again, both examples above will work, but when scripts start to have deep and complicated triggers, this nested construct can save it from wasting the CPU's time with conditions that can't be true until other conditions are true.  (i.e. If you haven't triggered WHEN SHIP:ALTITUDE > 10000 yet, then there's no point in checking for WHEN SHIP:ALTITUDE > 20000 yet.  The nesting shown here is designed to not bother starting a check until it's predecessor has happened.)

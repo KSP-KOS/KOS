@@ -383,8 +383,8 @@ Note that any ``WAIT`` statement, no matter what the actual expression is, will 
 
     The :ref:`WAIT <wait>` command only causes mainline code
     to be suspended.  Trigger code such as WHEN, ON, LOCK STEERING,
-    and LOCK THROTTLE, will continue executing while your program
-    is sitting still on the WAIT command.
+    and LOCK THROTTLE, will continue executing while your mainline
+    program is waiting for its WAIT to finish.
     
 
 .. index:: WHEN
@@ -407,7 +407,11 @@ The body of a ``THEN`` or an ``ON`` statement interrupts the normal flow of a **
     you are within the execution at the time.  
 
 .. warning::
-    Do not make the body of a ``WHEN``/``THEN`` take a long time to execute. If you attempt to run code that lasts too long in the body of your ``WHEN``/``THEN`` statement, :ref:`it will cause an error <cpu hardware>`. Avoid looping during ``WHEN``/``THEN`` if you can. For details on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
+    Do not make the body of a ``WHEN``/``THEN`` take a long time to execute.
+    :ref:`it will cause your mainline code to be starved of CPU time
+    <cpu hardware>`.  Avoid spending too much time during ``WHEN``/``THEN``
+    if you can.  For details on how to deal with this, see the :ref:`tutorial on
+    design patterns <designpatterns>`.
 
 .. note::
     .. versionchanged:: 0.12
@@ -459,7 +463,11 @@ The body of an ``ON`` statement can be a list of commands inside curly braces, j
     }
 
 .. warning::
-    DO NOT make the body of an ``ON`` statement take a long time to execute. If you attempt to run code that lasts too long in the body of your ``ON`` statement, :ref:`it will cause an error <cpu hardware>`. For general help on how to deal with this, see the :ref:`tutorial on design patterns <designpatterns>`.
+    Do not make the body of an ``ON`` take a long time to execute.
+    :ref:`it will cause your mainline code to be starved of CPU time
+    <cpu hardware>`.  Avoid spending too much time during ``ON`` bodies
+    if you can.  For details on how to deal with this, see the :ref:`tutorial on
+    design patterns <designpatterns>`.
 
 Avoid looping during ``ON`` code blocks if you can. If you are going to make extensive use of ``ON`` triggers, it's important to understand more details of how they :ref:`work in the kOS CPU <cpu hardware>`.
 

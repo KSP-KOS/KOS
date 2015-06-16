@@ -302,7 +302,7 @@ To add the logic to check when to stage, we introduce a new concept called the W
 
 The quick and dirty explanation is that a WHEN section is a short section of code that you set up to run LATER rather than right now. It creates a check in the background that will constantly look for some condition to occur, and when it happens, it interrupts whatever else the code is doing, and it will run the body of the WHEN code before continuing from where it left off in the main script.
 
-There are some complex dangers with writing WHEN triggers that can cause **KSP** itself to hang or stutter if you are not careful, but explaining them is beyond the scope of this tutorial. But when you want to start using WHEN triggers yourself, you really should read the section on WHEN in the `Flow Control page <../language/flow.html>`__ before you do so.
+There are some complex dangers with writing WHEN triggers that can cause **KSP** to slow down your main program if you are not careful, but explaining them is beyond the scope of this tutorial. But when you want to start using WHEN triggers yourself, you really should read the section on WHEN in the `Flow Control page <../language/flow.html>`__ before you do so.
 
 The WHEN trigger we are going to add to the launch script looks like this::
 
