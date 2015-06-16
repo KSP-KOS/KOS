@@ -338,7 +338,7 @@ namespace kOS.Function
                 Volume volume = shared.VolumeMgr.CurrentVolume;
                 if (volume != null)
                 {
-                    if (!volume.AppendToFile(fileName, expressionResult)) 
+                    if (!volume.AppendToFile(fileName, expressionResult))
                     {
                         throw new KOSFileException("Can't append to file: not enough space or access forbidden");
                     }
