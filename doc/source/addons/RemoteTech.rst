@@ -23,8 +23,9 @@ It is possible to activate/deactivate RT antennas, as well as set their targets 
   m:SETFIELD("target", "mission-control").
   // or
   m:SETFIELD("target", mun).
+  m:SETFIELD("target", "minmus").
 
-Acceptable values for `target` are: `no-target`, `active-vessel`, `mission-control`, a :struct:`Body` or a :struct:`Vessel`.
+Acceptable values for `"target"` are: `"no-target"`, `"active-vessel"`, `"mission-control"`, a :struct:`Body`, a :struct:`Vessel`, or a string containing the name of a body or vessel.
 
 Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
 
