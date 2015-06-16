@@ -20,7 +20,7 @@ namespace kOS.Suffixed.PartModuleField
     public class PartModuleFields : Structure
     {
         protected readonly PartModule partModule;
-        private readonly SharedObjects shared;
+        protected readonly SharedObjects shared;
         
         /// <summary>
         /// Create a kOS-user variable wrapper around a KSP PartModule attached to a part.

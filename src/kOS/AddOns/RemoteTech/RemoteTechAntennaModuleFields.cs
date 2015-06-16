@@ -77,7 +77,7 @@ namespace kOS.AddOns.RemoteTech
 
         protected new object GetKSPFieldValue(string suffixName)
         {
-            if (suffixName.Equals(RTTargetField))
+            if (suffixName.Equals(RTTargetField, StringComparison.InvariantCultureIgnoreCase))
             {
                 BaseField field = GetField(RTOriginalField);
                 Guid guid = (Guid)field.GetValue(partModule);
@@ -100,7 +100,7 @@ namespace kOS.AddOns.RemoteTech
                 {
                     if (CelestialBodyGuid(body).Equals(guid))
                     {
-                        return body;
+                        return new BodyTarget(body, this.shared);
                     }
                 }
 
@@ -108,7 +108,7 @@ namespace kOS.AddOns.RemoteTech
                 {
                     if (vessel.id.Equals(guid))
                     {
-                        return vessel;
+                        return new VesselTarget(vessel, this.shared);
                     }
                 }
 
@@ -124,17 +124,38 @@ namespace kOS.AddOns.RemoteTech
             if (target is String)
             {
                 String targetString = (String)target;
-                if (targetString.Equals(NoTargetString))
+                if (targetString.Equals(NoTargetString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return new Guid(NoTargetGuid);
                 }
-                else if (targetString.Equals(ActiveVesselString))
+                else if (targetString.Equals(ActiveVesselString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return new Guid(ActiveVesselGuid);
                 }
-                else if (targetString.Equals(MissionControlString))
+                else if (targetString.Equals(MissionControlString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return new Guid(MissionControlGuid);
+                }
+                else
+                {
+                    var body = FlightGlobals.Bodies.Where(b => b.bodyName.Equals(targetString, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                    if (body != null)
+                    {
+                        return CelestialBodyGuid(body);
+                    }
+                    else
+                    {
+                        var vessel = FlightGlobals.Vessels.Where(v => v.vesselName.Equals(targetString, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                        if (vessel != null)
+                        {
+                            if (partModule.vessel.id.Equals(vessel.id))
+                            {
+                                throw new KOSInvalidFieldValueException("Current vessel can't be the target");
+                            }
+
+                            return vessel.id;
+                        }
+                    }
                 }
             }
             else if (target is BodyTarget)
@@ -161,7 +182,7 @@ namespace kOS.AddOns.RemoteTech
 
         protected new void SetKSPFieldValue(string suffixName, object newValue)
         {
-            if (suffixName.Equals(RTTargetField))
+            if (suffixName.Equals(RTTargetField, StringComparison.InvariantCultureIgnoreCase))
             {
                 Guid guid = GetTargetGuid(newValue);
 
