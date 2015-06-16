@@ -77,21 +77,46 @@ other way around.
 
     As of version 0.17.0, The kOS CPU runs every *physics tick*.
 
-On each physics tick, each kOS CPU that's within physics range (i.e. 2.5 km), wakes up and performs the following steps, in this order:
+On each physics tick, each kOS CPU that's within physics range (i.e. 2.5 km),
+wakes up and *attempts to* perform the following steps, in this order:
 
-1. Run the conditional checks of all TRIGGERS (see below)
-2. For any TRIGGERS who's conditional checks are true, execute the entire body of the trigger.
-3. If there's a pending WAIT statement, check if it's done. If so wake up.
-4. If awake, then execute the next :attr:`Config:IPU` number of instructions of the main program.
+1. For each *trigger*, run the trigger's test condition, followed by its
+   body if the condition is true. (Triggers are explained in the next
+   section below).
+2. If there's a pending WAIT statement, do none of the main program's 
+   instructions.
+3. Use whatever remaining instructions are left in this update tick's
+   alloted running time to run statements from the main program.
+
+However, it only *attempts* to perform all those steps.  It's possible
+for it to decide that performing all 3 steps to completion is taking too
+long and it is in danger of stealing time away from the rest of the KSP
+game.  If it comes to the decision that the above steps are taking too
+long (usually because of the amount of code being executed in the triggers
+in step 1), then it will stop partway through step 1 and mark where it was
+and come back to continue from there in the next *physics tick*.  When this
+happens it means your main program will be slowed down by the trigger code.
+
+There is a facility in place to ensure that triggers can't steal ALL the time
+away from mainline code, and that at least an opportunity for a few mainline
+instructions to run must exist before it will check for triggers again, but it
+is possible for you to write very long triggers that will steal MOST of the
+time away from your main program.  Be wary of doing this.
 
 Note that the number of instructions being executed (CONFIG:IPU) are NOT lines of code or kerboscript statements, but rather the smaller instruction opcodes that they are compiled into behind the scenes. A single kerboscript statement might become anywhere from one to ten or so instructions when compiled.
 
 Triggers
 --------
 
-There are multiple things within kerboscript that run "in the background" always updating, while the main script continues on. The way these work is a bit like a real computer's multithreading, but not *quite*. Collectively all of these things are called "triggers".
+There are multiple things within kerboscript that run "in the background"
+always updating, while the main script continues on. The way these work is
+a bit like a real computer's multithreading, but not *quite*.  The kOS
+computer doesn't truly multithread, but it does allow mainline code to
+be interrupted by triggers. (Triggers on the other hand, can't be
+interrupted by other triggers).
 
-Triggers are all of the following:
+These things that occur in the background are called "triggers" and
+include all of the following:
 
 -  LOCKS which are attached to flight controls (THROTTLE, STEERING,
    etc), but not other LOCKS.
@@ -106,29 +131,54 @@ Triggers are all of the following:
     is sitting still on the WAIT command.
 
 
-The way these work is that once per **physics tick**, all the LOCK expressions which directly affect flight control are re-executed, and then each conditional trigger's condition is checked, and if true, then the entire body of the trigger is executed all the way to the bottom \*before any more instructions of the main body are executed\*. This means that execution of a trigger never gets interleaved with the main code. Once a trigger happens, the entire trigger occurs all in one go before the rest of the main body continues.
+The way these work is that once per **physics tick**, all the LOCK
+expressions which directly affect flight control are re-executed, and
+then each conditional trigger's condition is checked, and if true,
+then the entire body of the trigger is executed all the way to the
+bottom \*before any more instructions of the main body are executed\*.
+This means that execution of a trigger never gets interleaved with the
+main code. Once a trigger happens, the entire trigger occurs all in one
+go before the rest of the main body continues.
 
 Do Not Loop a Long Time in a Trigger Body!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Because the entire body of a trigger will execute all the way to the bottom on *within a single* **physics tick**, *before* any other code continues, it is vital that you not write code in a trigger body that takes a long time to execute. The body of a trigger must be kept quick. An infinite loop in a trigger body could literally freeze all of KSP, because the kOS mod will never finish executing its update.
+Triggers are meant to be ways you can write small pieces of code that
+watch for conditions in the background that interrupt your main code,
+do some small thing, then let your main code continue where it left off.
 
-*As of kOS version 0.14 and higher, this condition is now being checked for* and the script will be **terminated with a runtime error** if the triggers like WHEN/THEN and ON take more than :attr:`Config:IPU` instructions to execute. The sum total of all the code within your WHEN/THEN and ON code blocks MUST be designed to complete within one physicd tick.
+Using a trigger to constantly run a loop is not generally a good idea,
+because triggers can steal a lot of CPU time away from your main code,
+and because triggers don't interrupt other triggers, so while your
+trigger is running, other triggers can't fire off until it finishes.
 
-**This may seem harsh**. Ideally, kOS would only generate a runtime error if it thought your script was stuck in an **infinite loop**, and allow it to exceed the :attr:`Config:IPU` number of instructions if it was going to finish and just needed a little longer to to finish its work. But, because of a well known problem in computer science called `the halting problem <http://en.wikipedia.org/wiki/Halting_problem>`__, it's literally impossible for kOS, or any other software for that matter, to detect the difference between another program's infinite loop versus another program's loop that will end soon. kOS only knows how long your triggers have taken so far, not how long they're going to take before they're done, or even if they'll be done.
+As of version kOS 0.17.4, Triggers are now capable of taking longer than
+one update to execute.  They simply starve the main code of executing 
+time while they do so.  The previous versions of kOS had a restriction
+to force all triggers to fit in one small update.  This limitation no
+longer exists, but it's still a good idea to keep triggers small for good
+performance.  Now you can let a trigger take several *physics ticks* to
+finish, but be careful not to let it starve your mainline code by setting
+up a long background loop in a trigger.
 
-If you suspect that your trigger body would have ended if it was allowed to run a little longer, try setting your :attr:`Config:IPU` setting a bit higher and see if that makes the error go away.
-
-If it does not make the error go away, then you will need to redesign your script to not depend on running a long-lasting amount of code inside triggers.
 
 But I Want a Loop!!
 ~~~~~~~~~~~~~~~~~~~
 
-If you want a trigger body that is meant to loop, the only acceptable way to do it is to design it to execute just once, but then use the PRESERVE keyword to keep the trigger around for the next physics update. Thus your trigger becomes a sort of "loop" that executes one iteration per **physics tick**.
+If you want a trigger body that is meant to loop, but don't want it to
+steal time away from the mainline code, one useful way to do it is to
+design it to execute just once, but then use the PRESERVE keyword to
+keep the trigger around to be checked again and again. Thus your trigger
+becomes a sort of "loop" that executes roughly one iteration per
+**physics tick** (less often if you have other triggers that are taking
+long to execute and you can't fit all your trigger code in one **physics
+tick**).
 
-It is also important to consider the way triggers execute for performance reasons too. Every time you write an expression for a trigger, you are creating a bit of code that gets executed fully to the end before your main body will continue, once each **physics tick**. A complex expression in a trigger condition, which in turn calls other complex LOCK expressions, which call other complex LOCK expressions, and so on, may cause kOS to bog itself down during each physics tick. (And as of version 0.14, it may cause kOS to stop your program and issue a runtime error if it's taking too long.)
-
-Because of how WAIT works, you cannot put a WAIT statement inside a trigger. If you try, it will have no effect. This is because WAIT requires the ability of the program to go to sleep and then in a later physics tick, continue from where it left off. Because triggers run to the bottom entirely within one physics tick, they can't do that.
+Because triggers aren't interruptable by other triggers, WAIT statements
+are disallowed inside a trigger. This is because, while it's possible to
+have a trigger wait to execute the rest of its code later, it will be
+preventing the mainline program from executing while it does so, and this
+is bad form.
 
 Wait!!!
 ~~~~~~~
@@ -148,9 +198,13 @@ Then even though the condition is immediately true, it will still wait one physi
 .. note::
 
     The :ref:`WAIT <wait>` command only causes mainline code
-    to be suspended.  Trigger code such as WHEN, ON, LOCK STEERING,
-    and LOCK THROTTLE, will continue executing while your program
-    is sitting still on the WAIT command.
+    to be suspended.  If you execute a WAIT command from
+    your mainline code, then the Trigger code such as WHEN,
+    ON, LOCK STEERING, and LOCK THROTTLE, will continue
+    executing while your program is sitting still on the
+    main program's WAIT command.  This is deliberate, as the
+    intent is to allow triggers to fire if their conditions
+    become true while you are waiting.
 
 
 The Frozen Universe
