@@ -71,7 +71,7 @@ namespace kOS.Function
             }
         }
 
-        private kList GetFileList(SharedObjects shared)
+        private kList GetFileList(Safe.SharedObjects shared)
         {
             var list = new kList();
             list.AddColumn("Name", 30, ColumnAlignment.Left);
@@ -97,22 +97,21 @@ namespace kOS.Function
             return list;
         }
 
-        private kList GetVolumeList(SharedObjects shared)
+        private kList GetVolumeList(Safe.SharedObjects shared)
         {
             var list = new kList { Title = "Volumes" };
             list.AddColumn("ID", 6, ColumnAlignment.Left);
             list.AddColumn("Name", 24, ColumnAlignment.Left);
             list.AddColumn("Size", 7, ColumnAlignment.Right);
 
-            if (shared.VolumeMgr != null)
+            if (shared.VolumeMgr == null) return list;
+
+            foreach (KeyValuePair<int, Volume> kvp in shared.VolumeMgr.Volumes)
             {
-                foreach (KeyValuePair<int, Volume> kvp in shared.VolumeMgr.Volumes)
-                {
-                    Volume volume = kvp.Value;
-                    string id = kvp.Key.ToString() + (shared.VolumeMgr.VolumeIsCurrent(volume) ? "*" : "");
-                    string size = volume.Capacity.ToString();
-                    list.AddItem(id, volume.Name, size);
-                }
+                Volume volume = kvp.Value;
+                string id = kvp.Key.ToString() + (shared.VolumeMgr.VolumeIsCurrent(volume) ? "*" : "");
+                string size = volume.Capacity.ToString();
+                list.AddItem(id, volume.Name, size);
             }
 
             return list;
@@ -140,11 +139,10 @@ namespace kOS.Function
 
             foreach (Vessel vessel in FlightGlobals.Vessels)
             {
-                if (vessel != shared.Vessel)
-                {
-                    var vT = new VesselTarget(vessel, shared);
-                    list.AddItem(vT.Vessel.vesselName, vT.GetDistance());
-                }
+                if (vessel == shared.Vessel) continue;
+
+                var vT = new VesselTarget(vessel, shared);
+                list.AddItem(vT.Vessel.vesselName, vT.GetDistance());
             }
 
             return list;
@@ -213,12 +211,12 @@ namespace kOS.Function
             {
                 foreach (PartModule module in part.Modules)
                 {
-                    if (module != null)
+                    if (module == null) continue;
+
+                    var engines = module as ModuleEngines;
+                    if (engines != null)
                     {
-                        if (module is ModuleEngines)
-                        {
-                            list.AddItem(part.uid(), part.inverseStage, ((ModuleEngines)module).moduleName);
-                        }
+                        list.AddItem(part.uid(), part.inverseStage, engines.moduleName);
                     }
                 }
             }
