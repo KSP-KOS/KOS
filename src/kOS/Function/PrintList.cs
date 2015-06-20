@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Function;
 using kOS.Safe.Persistence;
 using kOS.Suffixed;
 using kOS.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace kOS.Function
 {
@@ -26,30 +26,39 @@ namespace kOS.Function
                 case "files":
                     list = GetFileList(shared);
                     break;
+
                 case "volumes":
                     list = GetVolumeList(shared);
                     break;
+
                 case "bodies":
                     list = GetBodyList(shared);
                     break;
+
                 case "targets":
                     list = GetTargetList(shared);
                     break;
+
                 case "resources":
                     list = GetResourceList(shared);
                     break;
+
                 case "parts":
                     list = GetPartList(shared);
                     break;
+
                 case "engines":
                     list = GetEngineList(shared);
                     break;
+
                 case "sensors":
                     list = GetSensorList(shared);
                     break;
+
                 case "config":
                     list = GetConfigList();
                     break;
+
                 default:
                     throw new Exception("List type not supported");
             }
@@ -74,7 +83,7 @@ namespace kOS.Function
                 if (volume != null)
                 {
                     list.Title = "Volume " + shared.VolumeMgr.GetVolumeBestIdentifier(volume);
-                    
+
                     foreach (FileInfo info in volume.GetFileList())
                     {
                         list.AddItem(info.Name, info.Size);
@@ -90,7 +99,7 @@ namespace kOS.Function
 
         private kList GetVolumeList(SharedObjects shared)
         {
-            var list = new kList {Title = "Volumes"};
+            var list = new kList { Title = "Volumes" };
             list.AddColumn("ID", 6, ColumnAlignment.Left);
             list.AddColumn("Name", 24, ColumnAlignment.Left);
             list.AddColumn("Size", 7, ColumnAlignment.Right);
@@ -114,7 +123,7 @@ namespace kOS.Function
             var list = new kList();
             list.AddColumn("Name", 15, ColumnAlignment.Left);
             list.AddColumn("Distance", 22, ColumnAlignment.Right, "0");
-            
+
             foreach (var body in FlightGlobals.fetch.bodies)
             {
                 list.AddItem(body.bodyName, Vector3d.Distance(body.position, shared.Vessel.findWorldCenterOfMass()));
@@ -175,7 +184,7 @@ namespace kOS.Function
 
                 list.AddItem(stageStr, resourceName, kvp.Value);
             }
-            
+
             return list;
         }
 
@@ -204,14 +213,12 @@ namespace kOS.Function
             {
                 foreach (PartModule module in part.Modules)
                 {
-                    var engineMod = module as ModuleEngines;
-                    if (engineMod != null) {
-                        list.AddItem(part.uid(), part.inverseStage, engineMod.moduleName);
-                    }
-
-                    var engineModFx = module as ModuleEnginesFX;
-                    if (engineModFx != null) {
-                        list.AddItem(part.uid(), part.inverseStage, engineModFx.moduleName);
+                    if (module != null)
+                    {
+                        if (module is ModuleEngines)
+                        {
+                            list.AddItem(part.uid(), part.inverseStage, ((ModuleEngines)module).moduleName);
+                        }
                     }
                 }
             }
@@ -250,11 +257,10 @@ namespace kOS.Function
             foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
                 list.AddItem(key.Alias, key.Name, key.Value);
-            }            
+            }
 
             return list;
         }
-
 
         #region List class
 
@@ -342,7 +348,7 @@ namespace kOS.Function
                         {
                             field = fields[index].ToString();
                         }
-                        
+
                         stringFields[index] = field.Substring(0, Math.Min(columns[index].ItemWidth, field.Length));
                     }
 
@@ -389,12 +395,16 @@ namespace kOS.Function
             }
 
             public string Title { get; private set; }
+
             public int Width { get; private set; }
+
             public int ItemWidth { get; set; }
+
             public ColumnAlignment Alignment { get; private set; }
+
             public string Format { get; private set; }
         }
 
-        #endregion
+        #endregion List class
     }
 }
