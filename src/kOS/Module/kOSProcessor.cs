@@ -624,14 +624,9 @@ namespace kOS.Module
                 switch (newProcessorMode)
                 {
                     case ProcessorModes.READY:
-                        if (Config.Instance.StartOnArchive)
-                        {
-                            shared.VolumeMgr.SwitchTo(shared.VolumeMgr.GetVolume(0));
-                        }
-                        else
-                        {
-                            shared.VolumeMgr.SwitchTo(HardDisk);
-                        }
+                        shared.VolumeMgr.SwitchTo(Config.Instance.StartOnArchive
+                            ? shared.VolumeMgr.GetVolume(0)
+                            : HardDisk);
                         if (shared.Cpu != null) shared.Cpu.Boot();
                         if (shared.Interpreter != null) shared.Interpreter.SetInputLock(false);
                         if (shared.Window != null) shared.Window.IsPowered = true;
@@ -663,14 +658,10 @@ namespace kOS.Module
             modeButtons.ElementAt(mode).SetTrue();
         }
 
-        public string GetBootFileName()
+        public string BootFilename
         {
-            return this.bootFile;
-        }
-
-        public void SetBootFileName(string name)
-        {
-            this.bootFile = name;
+            get { return bootFile; }
+            set { bootFile = value; }
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {

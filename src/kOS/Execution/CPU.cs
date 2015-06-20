@@ -115,14 +115,14 @@ namespace kOS.Execution
             else if (shared.ScriptHandler == null) { SafeHouse.Logger.Log("No script handler"); }
             else
             {
-                string filename = shared.Processor.GetBootFileName();
+                string filename = shared.Processor.BootFilename;
                 // Check to make sure the boot file name is valid, and then that the boot file exists.
                 if (String.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
                 else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
                 else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(String.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
                 else
                 {
-                    string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + filename; ;
+                    string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + filename;
                     shared.ScriptHandler.ClearContext("program");
                     var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
                     programContext.Silent = true;
@@ -240,7 +240,7 @@ namespace kOS.Execution
         /// runtime scoping state to be used when that function gets called later by OpcodeCall:
         /// </summary>
         /// <param name="entryPoint">Integer location in memory to jump to to start the call</param>
-        /// <param name="withClosure">Should the closure be captured for this delegate or ignored</param></param>
+        /// <param name="withClosure">Should the closure be captured for this delegate or ignored</param>
         /// <returns>The delegate object you can store in a variable.</returns>
         public IUserDelegate MakeUserDelegate(int entryPoint, bool withClosure)
         {
@@ -393,7 +393,7 @@ namespace kOS.Execution
 
         /// <summary>Throw exception if the user delegate is not one the CPU can call right now.</summary>
         /// <param name="userDelegate">The userdelegate being checked</param>
-        /// <exception cref="KOSInvalidDelegate">thrown if the cpu is in a state where it can't call this delegate.</exception>
+        /// <exception cref="KOSInvalidDelegateContext">thrown if the cpu is in a state where it can't call this delegate.</exception>
         public void AssertValidDelegateCall(IUserDelegate userDelegate)
         {
             if (userDelegate.ProgContext != currentContext)
@@ -438,7 +438,7 @@ namespace kOS.Execution
         /// of the parse tree.  (i.e. if a function calls a function elsewhere).<br/>
         /// Returns null when no hit was found.<br/>
         /// </summary>
-        /// <param name="identifier">identifier name to search for.  Pass an empty string to guarentee no hits will
+        /// <param name="identifier">identifier name to search for.  Pass an empty string to guarantee no hits will
         ///   be found (which is useful to do when using the searchReport argument).</param>
         /// <param name="searchReport">If you want to see the list of all the scopes that constituted the search
         ///   path, not just the final hit, pass an empty list here and this method will fill it for you with
@@ -867,7 +867,6 @@ namespace kOS.Execution
             Stopwatch updateWatch = null;
             Stopwatch triggerWatch = null;
             Stopwatch executionWatch = null;
-            double updateElapsed = 0.0;
             double triggerElapsed = 0.0;
             double executionElapsed = 0.0;
 
@@ -943,7 +942,7 @@ namespace kOS.Execution
             if (showStatistics)
             {
                 updateWatch.Stop();
-                updateElapsed = updateWatch.ElapsedMilliseconds;
+                double updateElapsed = updateWatch.ElapsedMilliseconds;
                 totalUpdateTime += updateElapsed;
                 if (maxTriggerInstructionsSoFar < numTriggerInstructions)
                     maxTriggerInstructionsSoFar = numTriggerInstructions;
@@ -1040,7 +1039,7 @@ namespace kOS.Execution
 
         private bool ExecuteInstruction(IProgramContext context)
         {
-            bool DEBUG_EACH_OPCODE = false;
+            const bool DEBUG_EACH_OPCODE = false;
 
             Opcode opcode = context.Program[context.InstructionPointer];
 
@@ -1059,7 +1058,7 @@ namespace kOS.Execution
                     if (context.InstructionPointer < 0 || context.InstructionPointer >= context.Program.Count())
                     {
                         throw new KOSBadJumpException(
-                            context.InstructionPointer, String.Format("after executing {0:0000} {1} {2}", prevPointer, opcode.Label, opcode.ToString()));
+                            context.InstructionPointer, String.Format("after executing {0:0000} {1} {2}", prevPointer, opcode.Label, opcode));
                     }
                     return true;
                 }
