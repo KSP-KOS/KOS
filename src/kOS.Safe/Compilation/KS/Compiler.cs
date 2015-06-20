@@ -565,6 +565,26 @@ namespace kOS.Safe.Compilation.KS
             return 0;
         }
         
+        /// <summary>
+        /// Much like UserFunctionCollection.GetUserFunction(), except that it won't
+        /// generate a function if one doesn't exist.  Instead it will try to walk up
+        /// the parent scopes until it finds a func or lock with the given name.  If it 
+        /// cannot find an existing function, it will return null rather than make one.
+        /// </summary>
+        /// <param name="funcIdentifier">identifier for the lock or function</param>
+        /// <param name="node">ParseNode to begin looking from (for scope reasons).  It will walk the parents looking for scopes that have the ident.</param>
+        /// <returns>The found UserFunction, or null if none found</returns>
+        private UserFunction FindExistingUserFunction(string funcIdentifier, ParseNode node)
+        {
+            for (ParseNode containingNode = node ; containingNode != null ; containingNode = containingNode.Parent)
+            {
+                Int16 thisNodeScope = GetContainingScopeId(containingNode);
+                if (context.UserFunctions.Contains(funcIdentifier, thisNodeScope))
+                    return context.UserFunctions.GetUserFunction(funcIdentifier, thisNodeScope, containingNode);
+            }
+            return null;
+        }
+        
         private bool IsLockStatement(ParseNode node)
         {
             return
@@ -2230,7 +2250,13 @@ namespace kOS.Safe.Compilation.KS
             else
             {
                 string lockIdentifier = node.Nodes[1].Token.Text;
-                UserFunction lockObject = context.UserFunctions.GetUserFunction(lockIdentifier, GetContainingScopeId(node), node);
+                UserFunction lockObject = FindExistingUserFunction(lockIdentifier, node);
+                if (lockObject == null)
+                {
+                    // If it is null, it's okay to silently do nothing.  It just means someone tried to unlock
+                    // an identifier that was never locked in the first place, at least not in this scope or a parent scope.
+                    return;
+                }
                 UnlockIdentifier(lockObject);
             }
         }
