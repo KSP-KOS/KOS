@@ -20,7 +20,7 @@ namespace kOS.AddOns.RemoteTech
 
             AddSuffix("HASKSCCONNECTION", new OneArgsSuffix<bool, VesselTarget>(RTHasKSCConnection, "True if ship has connection to KSC"));
 
-            AddSuffix("HASLOCALCONTROL", new OneArgsSuffix<bool, VesselTarget>(RTHasLocalControl, "True if ship has connection to KSC"));
+            AddSuffix("HASLOCALCONTROL", new OneArgsSuffix<bool, VesselTarget>(RTHasLocalControl, "True if ship has locacl control (i.e. a pilot in a command module)"));
 
         }
 
