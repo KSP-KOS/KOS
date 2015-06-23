@@ -406,15 +406,4 @@ namespace kOS.Function
             TimeWarp.fetch.WarpTo(ut);
         }
     }
-
-    [Function("typeof")]
-    public class kOSTypeOf : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            object obj = PopValueAssert(shared);
-            AssertArgBottomAndConsume(shared);
-            ReturnValue = obj.GetType().Name;
-        }
-    }
 }
