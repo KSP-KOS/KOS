@@ -19,6 +19,7 @@ kOS Mod Changelog
 * Added maxthrustat, availablethrustat, and ispat suffixes to engines to read the values at specified atmoshperic pressures.  See the documentation for details.
 * Added maxthrustat and availablethrustat suffixes to vessels to read the values at a specified atmoshperic pressures.  See the documentation for details.
 * Exposed RemoteTech's HasLocalControl method as a suffix.
+* Added target field to ModuleRTAntenna modules (RemoteTech) to read and set antenna's target.  See the documentation for details.
 
 ### Old and busted
 * Fixed empty return statements crashing with an argument count exception.

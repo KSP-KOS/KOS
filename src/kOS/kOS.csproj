@@ -177,6 +177,7 @@
     <Compile Include="AddOns\ActionGroupsExtended\Addon.cs" />
     <Compile Include="AddOns\InfernalRobotics\Addon.cs" />
     <Compile Include="Screen\RectExtensions.cs" />
+    <Compile Include="AddOns\RemoteTech\RemoteTechAntennaModuleFields.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
