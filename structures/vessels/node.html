@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Maneuver Node &mdash; kOS 0.17.1 documentation</title>
+  <title>Maneuver Node &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Part" href="part.html"/>
         <link rel="prev" title="Gimbal" href="gimbal.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -190,6 +192,22 @@
 </ul>
 </div></blockquote>
 <p>A planned velocity change along an orbit. These are the nodes that you can set in the KSP user interface. Setting one through kOS will make it appear on the in-game map view, and creating one manually on the in-game map view will cause it to be visible to kOS.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>Be aware that a limitation of KSP makes it so that some vessels&#8217;
+manuever node systems cannot be accessed.  KSP appears to limit the
+maneuver node system to only functioning on the current PLAYER
+vessel, under the presumption that its the only vessel that needs
+them, as ever other vessel cannot be manuevered. kOS can manuever a
+vessel that is not the player vessel, but it cannot overcome this
+limitation of the base game that unloads the maneuver node system
+for other vessels.</p>
+<p class="last">Be aware that the effect this has is that when you try to use some of
+these commands on some vessels, they won&#8217;t work because those vessels
+do not have their manuever node system in play.  This is mostly only
+going to happen when you try to run a script on a vessel that is not
+the current player active vessel.</p>
+</div>
 <div class="section" id="creation">
 <h2>Creation<a class="headerlink" href="#creation" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -236,6 +254,10 @@ been attached to anything yet. To attach a node to the flight path, you must use
 <p>You should immediately see it appear on the map view when you do this. The <a class="reference internal" href="#global:ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> command can add nodes anywhere within the flight plan. To insert a node earlier in the flight than an existing node, simply give it a smaller <a class="reference internal" href="#attribute:MANEUVERNODE:ETA" title="MANEUVERNODE:ETA attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ETA</span></tt></a> time and then <a class="reference internal" href="#global:ADD" title="ADD global"><tt class="xref ks ks-global docutils literal"><span class="pre">ADD</span></tt></a> it.</p>
 </dd></dl>
 
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">As per the warning above at the top of the section, ADD won&#8217;t work on vessels that are not the active vessel.</p>
+</div>
 <dl class="global">
 <dt id="global:REMOVE">
 <tt class="descname">REMOVE</tt><a class="headerlink" href="#global:REMOVE" title="Permalink to this definition">¶</a></dt>
@@ -245,6 +267,10 @@ been attached to anything yet. To attach a node to the flight path, you must use
 </div>
 </dd></dl>
 
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">As per the warning above at the top of the section, REMOVE won&#8217;t work on vessels that are not the active vessel.</p>
+</div>
 <dl class="global">
 <dt id="global:NEXTNODE">
 <tt class="descname">NEXTNODE</tt><a class="headerlink" href="#global:NEXTNODE" title="Permalink to this definition">¶</a></dt>
@@ -255,13 +281,17 @@ REMOVE :global:`NEXTNODE`.
 </pre></div>
 </div>
 <p>Currently, if you attempt to query <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> and there is no node on your flight plan, it produces a run-time error. (This needs to be fixed in a future release so it is possible to query whether or not you have a next node).</p>
-<p>If you need to query whether or not you have a <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a>, the following has been suggested as a workaround in the meantime: Set a node really far into the future, beyond any reasonable amount of time. Add it to your flight plan. Then check <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> to see if it returns THAT node, or an earlier one. If it returns an earlier one, then that earlier one was there all along and is the real <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a>. If it returns the fake far-future node you made instead, then there were no nodes before that point. In either case, remove the far-future node after you perform the test.</p>
-<p>The special identifier <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> is a euphemism for &#8220;whichever node is coming up soonest on my flight path&#8221;. Therefore you can remove a node even if you no longer have the maneuver node variable around, by doing this:</p>
-<div class="highlight-c"><div class="highlight"><pre>REMOVE :global:`NEXTNODE`.
-</pre></div>
-</div>
 </dd></dl>
 
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>As per the warning above at the top of the section, NEXTNODE won&#8217;t work on vessels that are not the active vessel.</p>
+<p>If you need to query whether or not you have a <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a>, the following has been suggested as a workaround in the meantime: Set a node really far into the future, beyond any reasonable amount of time. Add it to your flight plan. Then check <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> to see if it returns THAT node, or an earlier one. If it returns an earlier one, then that earlier one was there all along and is the real <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a>. If it returns the fake far-future node you made instead, then there were no nodes before that point. In either case, remove the far-future node after you perform the test.</p>
+<p>The special identifier <a class="reference internal" href="#global:NEXTNODE" title="NEXTNODE global"><tt class="xref ks ks-global docutils literal"><span class="pre">NEXTNODE</span></tt></a> is a euphemism for &#8220;whichever node is coming up soonest on my flight path&#8221;. Therefore you can remove a node even if you no longer have the maneuver node variable around, by doing this:</p>
+<div class="last highlight-c"><div class="highlight"><pre>REMOVE :global:`NEXTNODE`.
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="structure">
 <h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
@@ -491,7 +521,7 @@ ManeuverNode:<tt class="descname">ORBIT</tt><a class="headerlink" href="#attribu
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

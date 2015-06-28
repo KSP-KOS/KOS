@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vessels and Parts &mdash; kOS 0.17.2 documentation</title>
+  <title>Core &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
     <link rel="top" title="kOS 0.17.2 documentation" href="../index.html"/>
         <link rel="up" title="Structure Reference" href="../structures.html"/>
-        <link rel="next" title="AggregateResource" href="vessels/aggregateresource.html"/>
-        <link rel="prev" title="Body" href="celestial_bodies/body.html"/> 
+        <link rel="next" title="Addon Reference" href="../addons.html"/>
+        <link rel="prev" title="Drawing Vectors on the Screen" href="misc/vecdraw.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -121,10 +121,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../structures.html">Structures</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="orbits.html">Orbits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="celestial_bodies.html">Celestial Bodies</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
@@ -166,10 +166,10 @@
       
           <li><a href="../structures.html">Structure Reference</a> &raquo;</li>
       
-    <li>Vessels and Parts</li>
+    <li>Core</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/structures/vessels.txt" rel="nofollow"> View page source</a>
+          <a href="../_sources/structures/core.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
@@ -177,25 +177,142 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="vessels-and-parts">
-<span id="vessels"></span><h1>Vessels and Parts<a class="headerlink" href="#vessels-and-parts" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="vessels/aggregateresource.html">AggregateResource</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/dockingport.html">DockingPort</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/element.html">Element</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/engine.html">Engine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/gimbal.html">Gimbal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/node.html">Maneuver Node</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/part.html">Part</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/partmodule.html">PartModule</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/resource.html">Resource</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/sensor.html">Sensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/stage.html">Stage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/vessel.html">Vessel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vessels/vesselsensors.html">VesselSensors</a></li>
-</ul>
-</div>
+  <div class="section" id="core">
+<span id="id1"></span><h1>Core<a class="headerlink" href="#core" title="Permalink to this headline">¶</a></h1>
+<p>Core represents your ability to identify and interact directly with the running kOS processor.  You can use it to access the parent vessel, or to perform operations on the processor&#8217;s part.  You obtain a CORE structure by using the bound variable <tt class="docutils literal"><span class="pre">core</span></tt>.</p>
+<dl class="structure">
+<dt id="structure:CORE">
+<em class="property">structure </em><tt class="descname">CORE</tt><a class="headerlink" href="#structure:CORE" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<caption><strong>Members</strong></caption>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CORE:PART" title="CORE:PART attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PART</span></tt></a></td>
+<td><cite>Part</cite></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CORE:VESSEL" title="CORE:VESSEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VESSEL</span></tt></a></td>
+<td><cite>Vessel</cite></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CORE:ELEMENT" title="CORE:ELEMENT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ELEMENT</span></tt></a></td>
+<td><cite>Element</cite></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CORE:VERSION" title="CORE:VERSION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VERSION</span></tt></a></td>
+<td><cite>Version</cite></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CORE:BOOTFILENAME" title="CORE:BOOTFILENAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">BOOTFILENAME</span></tt></a></td>
+<td><cite>String</cite></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CORE:CURRENTVOLUME" title="CORE:CURRENTVOLUME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CURRENTVOLUME</span></tt></a></td>
+<td><cite>Volume</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CORE:PART">
+CORE:<tt class="descname">PART</tt><a class="headerlink" href="#attribute:CORE:PART" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Part</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The Part object for the current processor.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CORE:VESSEL">
+CORE:<tt class="descname">VESSEL</tt><a class="headerlink" href="#attribute:CORE:VESSEL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><cite>VesselTarget</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The vessel containing the current processor.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CORE:ELEMENT">
+CORE:<tt class="descname">ELEMENT</tt><a class="headerlink" href="#attribute:CORE:ELEMENT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><cite>Element</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The element object containing the current processor.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CORE:VERSION">
+CORE:<tt class="descname">VERSION</tt><a class="headerlink" href="#attribute:CORE:VERSION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><cite>VersionInfo</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The kOS version currently running.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CORE:BOOTFILENAME">
+CORE:<tt class="descname">BOOTFILENAME</tt><a class="headerlink" href="#attribute:CORE:BOOTFILENAME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><cite>String</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get or Set</td>
+</tr>
+</tbody>
+</table>
+<p>The filename for the boot file on the current processor.  This may be set to an empty string <cite>&#8220;&#8221;</cite> or to <cite>&#8220;None&#8221;</cite> to disable the use of a boot file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CORE:CURRENTVOLUME">
+CORE:<tt class="descname">CURRENTVOLUME</tt><a class="headerlink" href="#attribute:CORE:CURRENTVOLUME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><cite>Volume</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The currently selected volume for the current processor.  This may be useful to prevent deleting files on the Archive, or for interacting with multiple local hard disks.</p>
+</dd></dl>
+
 </div>
 
 
@@ -204,10 +321,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="vessels/aggregateresource.html" class="btn btn-neutral float-right" title="AggregateResource">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../addons.html" class="btn btn-neutral float-right" title="Addon Reference">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="celestial_bodies/body.html" class="btn btn-neutral" title="Body"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="misc/vecdraw.html" class="btn btn-neutral" title="Drawing Vectors on the Screen"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

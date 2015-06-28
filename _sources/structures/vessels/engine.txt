@@ -35,27 +35,39 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
         * - :attr:`MAXTHRUST`
           - scalar (kN)
           - Untweaked thrust limit
+        * - :meth:`MAXTHRUSTAT(pressure)`
+          - scalar (kN)
+          - Max thrust at the specified pressure (in standard Kerbin atmospheres).
         * - :attr:`THRUST`
           - scalar (kN)
           - Current thrust
+        * - :attr:`AVAILABLETHRUST`
+          - scalar (kN)
+          - Available thrust at full throttle accounting for thrust limiter
+        * - :meth:`AVAILABLETHRUSTAT(pressure)`
+          - scalar (kN)
+          - Available thrust at the specified pressure (in standard Kerbin atmospheres).
         * - :attr:`FUELFLOW`
           - scalar (l/s maybe)
           - Rate of fuel burn
         * - :attr:`ISP`
           - scalar
           - `Specific impulse <isp>`_
+        * - :meth:`ISPAT(pressure)`
+          - scalar
+          - `Specific impulse <isp>`_ at the given pressure (in standard Kerbin atmospheres).
         * - :attr:`VACUUMISP`
           - scalar
           - `Vacuum Specific impulse <isp>`_
         * - :attr:`VISP`
           - scalar
-          - `Synonym for VACUUMISP`_
+          - `Synonym for VACUUMISP <vacuumisp>`_
         * - :attr:`SEALEVELISP`
           - scalar
           - `Specific impulse at Kerbin sealevel <isp>`_
         * - :attr:`SLISP`
           - scalar
-          - `Synonym for SEALEVELISP`_
+          - `Synonym for SEALEVELISP <sealevelisp>`_
         * - :attr:`FLAMEOUT`
           - boolean
           - Check if no more fuel
@@ -94,12 +106,23 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 
     If this an engine with a thrust limiter (tweakable) enabled, what percentage is it limited to?
 
+.. _engine_MAXTHRUST:
+
 .. attribute:: Engine:MAXTHRUST
 
     :access: Get only
     :type: scalar (kN)
 
-    How much thrust would this engine give if the throttle was max and conditions were ideal.
+    How much thrust would this engine give at its current atmospheric pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine's actual max thrust it could have under other air pressure conditions.  Some engines have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.  Also, some jet engines have a very different value for MAXTHRUST depending on how fast they are currently being rammed through the air.
+
+.. _engine_MAXTHRUSTAT:
+
+.. method:: Engine:MAXTHRUSTAT(pressure)
+
+    :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+    :type: scalar (kN)
+
+    How much thrust would this engine give if both the throttle and thrust limtier was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).
 
 .. attribute:: Engine:THRUST
 
@@ -107,6 +130,24 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :type: scalar (kN)
 
     How much thrust is this engine giving at this very moment.
+
+.. _engine_AVAILABLETHRUST:
+
+.. attribute:: Engine:AVAILABLETHRUST
+
+    :access: Get only
+    :type: scalar (kN)
+
+    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions.
+
+.. _engine_AVAILABLETHRUSTAT:
+
+.. method:: Engine:AVAILABLETHRUSTAT(pressure)
+
+    :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+    :type: scalar (kN)
+
+    Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM's, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.
 
 .. attribute:: Engine:FUELFLOW
 
@@ -122,6 +163,13 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
 
     `Specific impulse <isp>`_
 
+.. method:: Engine:ISPAT(pressure)
+
+    :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+    :type: scalar
+
+    `Specific impulse <isp>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+
 .. attribute:: Engine:VACUUMISP
 
     :access: Get only
@@ -134,7 +182,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: scalar
 
-    `Synonym for :VACUUMISP`_
+    Synonym for :VACUUMISP
 
 .. attribute:: Engine:SEALEVELISP
 
@@ -148,7 +196,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: scalar
 
-    `Synonym for :SEALEVELISP`_
+    Synonym for :SEALEVELISP
 
 .. attribute:: Engine:FLAMEOUT
 

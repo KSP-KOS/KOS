@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration of kOS &mdash; kOS 0.17.1 documentation</title>
+  <title>Configuration of kOS &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="File Information" href="fileinfo.html"/>
         <link rel="prev" title="Colors" href="colors.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -231,22 +233,27 @@
 <td>False</td>
 <td>Enable safe mode</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:VERBOSE" title="CONFIG:VERBOSE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VERBOSE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:AUDIOERR" title="CONFIG:AUDIOERR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AUDIOERR</span></tt></a></td>
+<td>boolean</td>
+<td>False</td>
+<td>Enable sound effect on kOS error</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:VERBOSE" title="CONFIG:VERBOSE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VERBOSE</span></tt></a></td>
 <td>boolean</td>
 <td>False</td>
 <td>Enable verbose exceptions</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:TELNET" title="CONFIG:TELNET attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TELNET</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:TELNET" title="CONFIG:TELNET attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TELNET</span></tt></a></td>
 <td>boolean</td>
 <td>False</td>
 <td>activate the telnet server</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:TPORT" title="CONFIG:TPORT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:TPORT" title="CONFIG:TPORT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TPORT</span></tt></a></td>
 <td>integer</td>
 <td>5410</td>
 <td>set the port the telnet server will run on</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:CONFIG:LOOPBACK" title="CONFIG:LOOPBACK attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOOPBACK</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CONFIG:LOOPBACK" title="CONFIG:LOOPBACK attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOOPBACK</span></tt></a></td>
 <td>boolean</td>
 <td>True</td>
 <td>Force the telnet server to use loopback (127.0.0.1) address</td>
@@ -363,6 +370,27 @@ Config:<tt class="descname">SAFE</tt><a class="headerlink" href="#attribute:CONF
 </div>
 <p>They will be triggered any time any mathematical operation would result in something that is not a real number, such as dividing by zero, or trying to take the square root of a negative number, or the arccos of a number larger than 1. Performing such an operation will immediately terminate the program with one of the error messages shown above.</p>
 <p>If false, then these operations are permitted, but the result may lead to code that does not function correctly if you are not careful about how you use it. Using a value that is not a real number may result in freezing Kerbal Space Program itself if that value is used in a variable that is passed into Kerbal Space Program&#8217;s API routines. KSP&#8217;s own API interface does not seem to have any protective checks in place and will faithfully try to use whatever values its given.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:CONFIG:AUDIOERR">
+Config:<tt class="descname">AUDIOERR</tt><a class="headerlink" href="#attribute:CONFIG:AUDIOERR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>Configures the <tt class="docutils literal"><span class="pre">AudibleExceptions</span></tt> setting.</p>
+<p>If true, then it enables a mode in which errors coming from kOS will
+generte a sound effect of a short little warning bleep to remind you that
+an exception occurred.  This can be useful when you are flying
+hands-off and need to realize your autopilot script just died so
+you can take over.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -500,7 +528,7 @@ stop, then restart the telnet server, as described above.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

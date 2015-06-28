@@ -45,6 +45,10 @@ Configuration of kOS
           - boolean
           - False
           - Enable safe mode
+        * - :attr:`AUDIOERR`
+          - boolean
+          - False
+          - Enable sound effect on kOS error
         * - :attr:`VERBOSE`
           - boolean
           - False
@@ -127,6 +131,19 @@ Configuration of kOS
     They will be triggered any time any mathematical operation would result in something that is not a real number, such as dividing by zero, or trying to take the square root of a negative number, or the arccos of a number larger than 1. Performing such an operation will immediately terminate the program with one of the error messages shown above.
 
     If false, then these operations are permitted, but the result may lead to code that does not function correctly if you are not careful about how you use it. Using a value that is not a real number may result in freezing Kerbal Space Program itself if that value is used in a variable that is passed into Kerbal Space Program's API routines. KSP's own API interface does not seem to have any protective checks in place and will faithfully try to use whatever values its given.
+
+.. attribute:: Config:AUDIOERR
+
+    :access: Get/Set
+    :type: boolean
+
+    Configures the ``AudibleExceptions`` setting.
+
+    If true, then it enables a mode in which errors coming from kOS will
+    generte a sound effect of a short little warning bleep to remind you that
+    an exception occurred.  This can be useful when you are flying
+    hands-off and need to realize your autopilot script just died so
+    you can take over.
 
 .. attribute:: Config:VERBOSE
 

@@ -13,6 +13,111 @@ of documentation again from scratch.
     :local:
     :depth: 3
 
+Changes in 0.17.3
+-----------------
+
+New Looping control flow, the FROM loop
+:::::::::::::::::::::::::::::::::::::::
+
+There is now a new kind of loop, :ref:`the FROM loop <from>`,
+which is a bit like the typical 3-part for-loop seen in a
+lot of other languages with a separate init, check, and increment
+section.
+
+Short-Circuit Booleans
+::::::::::::::::::::::
+
+Previously, kerboscript's AND and OR operators were not 
+short-circuiting.  :ref:`Now they are <short_circuit>`.
+
+New Infernal Robotics interface
+:::::::::::::::::::::::::::::::
+
+There are a few new helper addon utilities for the Infernal
+Robotics mod, on the :ref:`IR addon page <IR>`.
+
+New RemoteTech interface
+::::::::::::::::::::::::
+
+There are a few new helper addon utilities for the RemoteTech
+mod, on the :ref:`RemoteTech addon page <remotetech>`.
+
+Deprecated INCOMMRANGE
+::::::::::::::::::::::::::
+
+Reading from the INCOMMRANGE bound variable will now throw a
+deprecation exception with instructions to use the new
+:struct:`RTAddon` structure for the RT mod.
+
+Updated thrust calculations for 1.0.x
+:::::::::::::::::::::::::::::::::::::
+
+KSP 1.0 caused the thrust calculations to become a LOT more
+complex than they used to be and kOS hadn't caught up yet.
+For a lot of scripts, trying to figure out a good throttle
+setting is no longer a matter of just taking a fraction of the
+engine's MAXTHRUST.
+
+We fixed the existing suffixes of MAXTHRUST and AVAILABLETHRUST for
+:struct:`engine` and :struct:`vessel` to account for the new changes
+in thrust based on
+ISP at different altitudes.  MAXTHRUST is now the max the engine can
+put out at the CURRENT atmospheric pressure and current velocity.
+It might not be the maximum it could put out under other conditions.
+The AVAILABLETHRUST suffix is now implemented for engines (it was
+previously only available on vessels).  There are also new
+suffixes MAXTHRUSTAT (engines and vessels), AVAILABLETHRUSTAT
+(engines and vessels), and ISPAT (engines only) to
+read the applicable value at a given atmospheric pressure.
+
+New CORE struct
+:::::::::::::::
+
+The :ref:`core <core>` bound variable gives you a structure you can use
+to access properties of the current in-game CPU the script is running on,
+including the vessel part it's inside of, and the vessel it's inside
+of, as well as the currently selected volume.  Moving forward this
+will be the struct where we enable features that interact with
+the processor itself, like local configuration or current
+operational status.
+
+Updated boot file name handling
+:::::::::::::::::::::::::::::::
+
+Boot files are now copied to the local hard disk using their original
+file name.  This allows for uniform file name access either on the
+archive or local drive and fixes boot files not working when kOS is
+configured to start on the Archive.  You can also get or set the boot
+file using the BOOTFILENAME suffix of the :struct:`CORE` bound variable.
+
+Docking port, element, and vessel references
+::::::::::::::::::::::::::::::::::::::::::::
+
+You can now get a list of docking ports on any element or vessel using
+the DOCKINGPORTS suffix.  Vessels also expose a list of their elements
+(the ELEMENTS suffix) and an element will refernce it's parent vessel
+(the VESSEL suffix).
+
+New sounds and terminal features
+::::::::::::::::::::::::::::::::
+
+For purely cosmetic purpopses, there are new sound features and
+ a few terminal tweaks.
+
+- A terminal keyclick option for the in-game GUI terminal.
+- The ability to BEEP when printing ascii code 7 (BEL), although
+  the only way currently to achieve this is with the KSlib's spec_char.ksm
+  file, as kOS has no BEL char, but this will be addressed later.
+- A sound effect on exceptions, which can be turned off on the CONFIG panel.
+
+Clear vecdraws all at once
+::::::::::::::::::::::::::
+
+For convenience, you can clear all vecdraws off the screen at once
+now with the :ref:`clearvecdraws() <clearvecdraws>` function.
+
+****
+
 Changes in 0.17.0
 -----------------
 
@@ -139,3 +244,4 @@ Vessels now have an :ISDEAD suffix you can use to detect if the
 vessel has gone away since the last time you got the handle to it.
 (for example, you LIST TARGETS IN FOO, then the ship foo[3] blows
 up, then foo[3]:ISDEAD should become true to clue you in to this fact.)
+

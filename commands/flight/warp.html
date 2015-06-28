@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Time Warping &mdash; kOS 0.17.1 documentation</title>
+  <title>Time Warping &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Predictions of Flight Path" href="../prediction.html"/>
         <link rel="prev" title="Ship Systems" href="systems.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../structures/vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -182,7 +184,11 @@
 <dl class="global">
 <dt id="global:WARP">
 <tt class="descname">WARP</tt><a class="headerlink" href="#global:WARP" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <a class="reference internal" href="#global:WARP" title="WARP global"><tt class="xref ks ks-global docutils literal"><span class="pre">WARP</span></tt></a> global variable can be set to change the game warp to a value between 0 and 7 (for rails warp) or 0 to 3 (for physics warp):</p>
+<dd><p>You may use the WARPTO(time) function to automatically warp to the specified time (given in seconds game universal time).  If you need more precise control, you can use the other options below.:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">WARPTO</span><span class="p">(</span><span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span> <span class="o">+</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">10</span><span class="p">).</span> <span class="c1">// warp to a time 10 minutes in the future</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="#global:WARP" title="WARP global"><tt class="xref ks ks-global docutils literal"><span class="pre">WARP</span></tt></a> global variable can be set to change the game warp to a value between 0 and 7 (for rails warp) or 0 to 3 (for physics warp):</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">WARP</span> <span class="n">TO</span> <span class="mf">5.</span> <span class="c1">// Sets warp to 1000x</span>
 <span class="n">SET</span> <span class="n">WARP</span> <span class="n">TO</span> <span class="mf">0.</span> <span class="c1">// Sets warp to 1x (real time)</span>
 </pre></div>
@@ -305,7 +311,7 @@ that term is confusingly ambiguous.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

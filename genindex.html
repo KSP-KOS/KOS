@@ -8,7 +8,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; kOS 0.17.1 documentation</title>
+  <title>Index &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -34,7 +34,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="index.html"/> 
+    <link rel="top" title="kOS 0.17.2 documentation" href="index.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -122,12 +122,14 @@
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
@@ -356,7 +358,11 @@
   </dt>
 
       
-  <dt><a href="language/flow.html#index-10">Boolean Operators</a>
+  <dt><a href="structures/celestial_bodies/body.html#attribute:BODY:SOIRADIUS">Body:SOIRADIUS</a>
+  </dt>
+
+      
+  <dt><a href="language/flow.html#index-11">Boolean Operators</a>
   </dt>
 
       
@@ -402,11 +408,19 @@
   </dt>
 
       
+  <dt><a href="structures/misc/vecdraw.html#function:CLEARVECDRAWS">CLEARVECDRAWS()</a>
+  </dt>
+
+      
   <dt><a href="structures/misc/config.html#structure:CONFIG">Config [struct]</a>
   </dt>
 
       
   <dt><a href="structures/misc/config.html#attribute:CONFIG:ARCH">Config:ARCH</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/config.html#attribute:CONFIG:AUDIOERR">Config:AUDIOERR</a>
   </dt>
 
       
@@ -417,8 +431,6 @@
   <dt><a href="structures/misc/config.html#attribute:CONFIG:LOOPBACK">Config:LOOPBACK</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/config.html#attribute:CONFIG:RT2">Config:RT2</a>
   </dt>
@@ -427,6 +439,8 @@
   <dt><a href="structures/misc/config.html#attribute:CONFIG:SAFE">Config:SAFE</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/config.html#attribute:CONFIG:STAT">Config:STAT</a>
   </dt>
@@ -449,6 +463,34 @@
 
       
   <dt><a href="commands/flight/pilot.html#structure:CONTROL">Control [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/core.html#structure:CORE">CORE [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/core.html#attribute:CORE:BOOTFILENAME">CORE:BOOTFILENAME</a>
+  </dt>
+
+      
+  <dt><a href="structures/core.html#attribute:CORE:CURRENTVOLUME">CORE:CURRENTVOLUME</a>
+  </dt>
+
+      
+  <dt><a href="structures/core.html#attribute:CORE:ELEMENT">CORE:ELEMENT</a>
+  </dt>
+
+      
+  <dt><a href="structures/core.html#attribute:CORE:PART">CORE:PART</a>
+  </dt>
+
+      
+  <dt><a href="structures/core.html#attribute:CORE:VERSION">CORE:VERSION</a>
+  </dt>
+
+      
+  <dt><a href="structures/core.html#attribute:CORE:VESSEL">CORE:VESSEL</a>
   </dt>
 
       
@@ -558,6 +600,10 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/element.html#attribute:ELEMENT:DOCKINGPORTS">Element:DOCKINGPORTS</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/element.html#attribute:ELEMENT:NAME">Element:NAME</a>
   </dt>
 
@@ -571,6 +617,10 @@
 
       
   <dt><a href="structures/vessels/element.html#attribute:ELEMENT:UID">Element:UID</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/element.html#attribute:ELEMENT:VESSEL">Element:VESSEL</a>
   </dt>
 
       
@@ -590,15 +640,23 @@
   </dt>
 
       
-  <dt><a href="structures/vessels/engine.html#attribute:ENGINE:FLAMEOUT">Engine:FLAMEOUT</a>
+  <dt><a href="structures/vessels/engine.html#attribute:ENGINE:AVAILABLETHRUST">Engine:AVAILABLETHRUST</a>
   </dt>
 
       
-  <dt><a href="structures/vessels/engine.html#attribute:ENGINE:FUELFLOW">Engine:FUELFLOW</a>
+  <dt><a href="structures/vessels/engine.html#method:ENGINE:AVAILABLETHRUSTAT">Engine:AVAILABLETHRUSTAT()</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/engine.html#attribute:ENGINE:FLAMEOUT">Engine:FLAMEOUT</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="structures/vessels/engine.html#attribute:ENGINE:FUELFLOW">Engine:FUELFLOW</a>
+  </dt>
+
       
   <dt><a href="structures/vessels/engine.html#attribute:ENGINE:IGNITION">Engine:IGNITION</a>
   </dt>
@@ -608,7 +666,15 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/engine.html#method:ENGINE:ISPAT">Engine:ISPAT()</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/engine.html#attribute:ENGINE:MAXTHRUST">Engine:MAXTHRUST</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/engine.html#method:ENGINE:MAXTHRUSTAT">Engine:MAXTHRUSTAT()</a>
   </dt>
 
       
@@ -681,6 +747,10 @@
 
       
   <dt><a href="language/flow.html#index-5">FOR</a>
+  </dt>
+
+      
+  <dt><a href="language/flow.html#index-6">FROM</a>
   </dt>
 
       
@@ -814,6 +884,172 @@
   </dt>
 
       
+  <dt><a href="addons/IR.html#structure:IRADDON">IRAddon [struct]</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRADDON:ALLSERVOS">IRAddon:ALLSERVOS</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRADDON:AVAILABLE">IRAddon:AVAILABLE</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRADDON:GROUPS">IRAddon:GROUPS</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#structure:IRCONTROLGROUP">IRControlGroup [struct]</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRCONTROLGROUP:EXPANDED">IRControlGroup:EXPANDED</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRCONTROLGROUP:FORWARDKEY">IRControlGroup:FORWARDKEY</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRCONTROLGROUP:MOVECENTER">IRControlGroup:MOVECENTER()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRCONTROLGROUP:MOVELEFT">IRControlGroup:MOVELEFT()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRCONTROLGROUP:MOVENEXTPRESET">IRControlGroup:MOVENEXTPRESET()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRCONTROLGROUP:MOVEPREVPRESET">IRControlGroup:MOVEPREVPRESET()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRCONTROLGROUP:MOVERIGHT">IRControlGroup:MOVERIGHT()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRCONTROLGROUP:NAME">IRControlGroup:NAME</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRCONTROLGROUP:REVERSEKEY">IRControlGroup:REVERSEKEY</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRCONTROLGROUP:SERVOS">IRControlGroup:SERVOS</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRCONTROLGROUP:SPEED">IRControlGroup:SPEED</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRCONTROLGROUP:STOP">IRControlGroup:STOP()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#structure:IRSERVO">IRServo [struct]</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:ACCELERATION">IRServo:ACCELERATION</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:CONFIGSPEED">IRServo:CONFIGSPEED</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:CURRENTSPEED">IRServo:CURRENTSPEED</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:HIGHLIGHT">IRServo:HIGHLIGHT</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:INVERTED">IRServo:INVERTED</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:ISFREEMOVING">IRServo:ISFREEMOVING</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:ISMOVING">IRServo:ISMOVING</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:LOCKED">IRServo:LOCKED</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:MAXCFGPOSITION">IRServo:MAXCFGPOSITION</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:MAXPOSITION">IRServo:MAXPOSITION</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:MINCFGPOSITION">IRServo:MINCFGPOSITION</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:MINPOSITION">IRServo:MINPOSITION</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRSERVO:MOVECENTER">IRServo:MOVECENTER()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRSERVO:MOVELEFT">IRServo:MOVELEFT()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRSERVO:MOVENEXTPRESET">IRServo:MOVENEXTPRESET()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRSERVO:MOVEPREVPRESET">IRServo:MOVEPREVPRESET()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRSERVO:MOVERIGHT">IRServo:MOVERIGHT()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRSERVO:MOVETO">IRServo:MOVETO()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:NAME">IRServo:NAME</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:POSITION">IRServo:POSITION</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:SPEED">IRServo:SPEED</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#method:IRSERVO:STOP">IRServo:STOP()</a>
+  </dt>
+
+      
+  <dt><a href="addons/IR.html#attribute:IRSERVO:UID">IRServo:UID</a>
+  </dt>
+
+      
   <dt><a href="structures/misc/iterator.html#structure:ITERATOR">Iterator [struct]</a>
   </dt>
 
@@ -825,8 +1061,6 @@
   <dt><a href="structures/misc/iterator.html#attribute:ITERATOR:INDEX">Iterator:INDEX</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/iterator.html#method:ITERATOR:NEXT">Iterator:NEXT()</a>
   </dt>
@@ -1078,7 +1312,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="language/flow.html#index-8">ON</a>
+  <dt><a href="language/flow.html#index-9">ON</a>
   </dt>
 
       
@@ -1369,12 +1603,12 @@
   <dt><a href="structures/vessels/part.html#attribute:PART:TITLE">Part:TITLE</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/part.html#attribute:PART:UID">Part:UID</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/part.html#attribute:PART:WETMASS">Part:WETMASS</a>
   </dt>
@@ -1384,11 +1618,23 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/partmodule.html#attribute:PARTMODULE:ALLACTIONNAMES">PartModule:ALLACTIONNAMES</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/partmodule.html#attribute:PARTMODULE:ALLACTIONS">PartModule:ALLACTIONS</a>
   </dt>
 
       
+  <dt><a href="structures/vessels/partmodule.html#attribute:PARTMODULE:ALLEVENTNAMES">PartModule:ALLEVENTNAMES</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/partmodule.html#attribute:PARTMODULE:ALLEVENTS">PartModule:ALLEVENTS</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/partmodule.html#attribute:PARTMODULE:ALLFIELDNAMES">PartModule:ALLFIELDNAMES</a>
   </dt>
 
       
@@ -1440,7 +1686,7 @@
   </dt>
 
       
-  <dt><a href="language/flow.html#index-9">PRESERVE</a>
+  <dt><a href="language/flow.html#index-10">PRESERVE</a>
   </dt>
 
       
@@ -1590,6 +1836,10 @@
   </dt>
 
       
+  <dt><a href="addons/RemoteTech.html#method:RTADDON:HASLOCALCONTROL">RTAddon:HASLOCALCONTROL()</a>
+  </dt>
+
+      
   <dt><a href="addons/RemoteTech.html#method:RTADDON:KSCDELAY">RTAddon:KSCDELAY()</a>
   </dt>
 
@@ -1696,6 +1946,14 @@
   </dt>
 
       
+  <dt><a href="structures/misc/terminal.html#attribute:TERMINAL:REVERSE">Terminal:REVERSE</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/terminal.html#attribute:TERMINAL:VISUALBEEP">Terminal:VISUALBEEP</a>
+  </dt>
+
+      
   <dt><a href="structures/misc/terminal.html#attribute:TERMINAL:WIDTH">Terminal:WIDTH</a>
   </dt>
 
@@ -1707,12 +1965,12 @@
   <dt><a href="structures/misc/time.html#structure:TIMESPAN">TimeSpan [struct]</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/time.html#attribute:TIMESPAN:CALENDAR">TimeSpan:CALENDAR</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/time.html#attribute:TIMESPAN:CLOCK">TimeSpan:CLOCK</a>
   </dt>
@@ -1792,7 +2050,7 @@
   </dt>
 
       
-  <dt><a href="structures/misc/vecdraw.html#function:VECDRAW">VECDRAW()</a>
+  <dt><a href="structures/misc/vecdraw.html#function:VECDRAW">VECDRAW()</a>, <a href="structures/misc/vecdraw.html#function:VECDRAW">[1]</a>
   </dt>
 
       
@@ -1825,10 +2083,6 @@
 
       
   <dt><a href="commands/terminalgui.html#global:VECDRAWARGS">VECDRAWARGS</a>
-  </dt>
-
-      
-  <dt><a href="structures/misc/vecdraw.html#function:VECDRAWARGS">VECDRAWARGS()</a>
   </dt>
 
       
@@ -1919,12 +2173,16 @@
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:ANGULARVEL">Vessel:ANGULARVEL</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:AVAILABLETHRUST">vessel:AVAILABLETHRUST</a>
+  <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:AVAILABLETHRUST">Vessel:AVAILABLETHRUST</a>
   </dt>
 
+      
+  <dt><a href="structures/vessels/vessel.html#method:VESSEL:AVAILABLETHRUSTAT">Vessel:AVAILABLETHRUSTAT()</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:BEARING">Vessel:BEARING</a>
   </dt>
@@ -1934,7 +2192,15 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:DOCKINGPORTS">Vessel:DOCKINGPORTS</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:DRYMASS">Vessel:DRYMASS</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:ELEMENTS">Vessel:ELEMENTS</a>
   </dt>
 
       
@@ -1959,6 +2225,10 @@
 
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:MAXTHRUST">Vessel:MAXTHRUST</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/vessel.html#method:VESSEL:MAXTHRUSTAT">Vessel:MAXTHRUSTAT()</a>
   </dt>
 
       
@@ -2076,7 +2346,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="language/flow.html#index-6">WAIT</a>
+  <dt><a href="language/flow.html#index-7">WAIT</a>
   </dt>
 
       
@@ -2134,7 +2404,7 @@
   </dt>
 
       
-  <dt><a href="language/flow.html#index-7">WHEN</a>
+  <dt><a href="language/flow.html#index-8">WHEN</a>
   </dt>
 
       
@@ -2185,7 +2455,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

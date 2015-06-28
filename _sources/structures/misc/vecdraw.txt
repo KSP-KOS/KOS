@@ -3,7 +3,7 @@
 Drawing Vectors on the Screen
 =============================
 
-.. function:: VECDRAW()
+.. function:: VECDRAW() or VECDRAWARGS()
 
     Build the suffix fields one at a time using the :struct:`VecDraw` empty construction function. This creates an empty :struct:`VecDraw` with nothing populated yet. You have to follow it up with calls to the suffixes as shown here::
 
@@ -19,17 +19,29 @@ Drawing Vectors on the Screen
         SET anArrow:LABEL TO "See the arrow?".
         SET anArrow:SCALE TO 5.0.
 
-.. function:: VECDRAWARGS(start, vec, color, label, scale, show)
 
-    This builds the :struct:`VecDraw` all at once with the :func:`VECDRAWARGS()` construction function. :func:`VECDRAWARGS()` lets you specify all of the attributes in a list of arguments at once::
+.. function:: VECDRAW(start, vec, color, label, scale, show) or VECDRAWARGS(start, vec, color, label, scale, show) 
 
+    This variant builds the :struct:`VecDraw` all at once.  It lets you specify all of the attributes in a list of arguments at once::
+
+        SET anArrow TO VECDRAW(
+              V(0,0,0),
+              V(a,b,c),
+              RGB(1,0,0),
+              "See the arrow?",
+              5.0,
+              TRUE
+            ).
+
+        // Saying VECDRAWARGS gives the same exact result:
         SET anArrow TO VECDRAWARGS(
-            V(0,0,0),
-            V(a,b,c),
-            RGB(1,0,0),
-            "See the arrow?",
-            5.0,
-            TRUE                  ).
+              V(0,0,0),
+              V(a,b,c),
+              RGB(1,0,0),
+              "See the arrow?",
+              5.0,
+              TRUE
+            ).
 
 The above two examples make the same thing. The arrow should be visible on both the map view and the in-flight view, but on the map view it will have to be a long arrow to be visible. :struct:`VecDraw`'s do not auto-update for changes in the vector like a LOCK would, but if you repeatedly SET the :VEC suffix in a loop, it will adjust the arrow picture to match as you do so::
 
@@ -40,7 +52,29 @@ The above two examples make the same thing. The arrow should be visible on both 
 To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHOW` to false or just UNSET the variable, or re-assign it. An example using :struct:`VecDraw` can be seen in the documentation for :func:`POSITIONAT()`.
 
 
+.. note::
+    Historical note: Once upon a time VECDRAW() took zero arguments,
+    and VECDRAWARGS() took the 6 arguments.  This was before we added
+    the ability to have varying numbers of arguments for built-in
+    functions.  Now that varying arguments exist, both names have
+    become synonyms for the same thing, for backward compatibility.
+    You can use them interchangably.
 
+.. _clearvecdraws:
+
+.. function:: CLEARVECDRAWS()
+
+    Sets all visible vecdraws to invisible, everywhere in this kOS CPU.
+    This is useful if you have lost track of the handles to them and can't
+    turn them off one by one, or if you don't have the variable scopes
+    present anymore to access the variables that hold them.  The system
+    does attempt to clear any vecdraws that go "out of scope", however
+    the "closures" that keep local variables alive for LOCK statements
+    and for other reasons can keep them from every truely going away
+    in some circumstances.  To make the arrow drawings all go away, just call
+    CLEARVECDRAWS() and it will have the same effect as if you had
+    done ``SET varname:show to FALSE`` for all vecdraw varnames in the
+    entire system.
 
 .. structure:: VecDraw
 
