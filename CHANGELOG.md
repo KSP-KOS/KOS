@@ -1,7 +1,69 @@
 kOS Mod Changelog
 =================
 
-# v0.17.1
+# v0.17.3
+
+1.0.4 Release
+-----------
+
+### BREAKING CHANGES
+* Removed all `ETA_` and `ALT_` bindings, please use `ETA:` and `ALT:` instead
+* `TRUEANOMALY` and `MEANANOMALYATEPOCH` are now expressed in degrees to conform to our policy
+* Deprecated INCOMMRANGE - now throws an exception with instructions to use the new addons:rt methods.
+* Updated maxtthrust and availablethrust calculations for KSP v1.0.x.  Due to the way KSP handles thrust, neither available thrust nor maxthrust values are constant at all altitudes around bodies with atmospheres.
+* Boot files are now stored on local hard drives with their original names.  You may get or set the boot file name using CORE:BOOTFILENAME suffix.
+* Some undocumented and nonsensical bool math operations have been removed
+* The Steering deadzone is much smaller now, this will allow for every precise RCS manauvers.
+
+### New Hotness
+* You can now point RemoteTech antenna directly from script
+* You can now get RemoteTech's 'local conrol' status
+* Infernal Robotics integration improvements 
+* New loop structure to allow for more flexable itteration 
+* New struct object `CORE:` to interact with the currently running processor.
+* Added vessel:dockingports and vessel:elements suffixes.
+* Added element:dockingports and element:vessel suffixes.
+* Added availablethrust suffix to engines which mirrors the availablethrust suffix for vessels.
+* Added maxthrustat, availablethrustat, and ispat suffixes to engines to read the values at specified atmoshperic pressures.  See the documentation for details.
+* Added maxthrustat and availablethrustat suffixes to vessels to read the values at a specified atmoshperic pressures.  See the documentation for details.
+* You can now use bootfiles while "Start on Archive volume" is enabled
+* Many new sound effects have been added (error, beep, and an option for key click)
+* Boolean AND and OR operations can now short circut
+* Add new WARPTO command that uses the new KSP function
+* Added new `BODY:SOIRADIUS`
+* Added new suffixes to part that lets you get the bare names of events, actions, and modules
+* You can now use bootfiles while "Start on Archive volume" is enabled
+* Many new sound effects have been added (error, beep, and an option for key click)
+* Boolean AND and OR operations can now short circut
+* Added `CLEARVECDRAWS` that will remove all VECDRAWS
+* Any floating point value that has no floating component will be converted to an integer
+
+### Old and busted
+* Fixed empty return statements crashing with an argument count exception #934
+* Fix setting vector:mag to a new value actually setting the magnitude to 1 #952
+* Fix electricity being consumed while the game was paused #526
+* Fix Part Resource string representation #1062
+* Fix UNLOCK inside brace statements #1048 #1051
+* Fix setting PHYSICS warp mode #989
+* Fix printing engine list duplication #1026, #1057
+* Fix terminal lockout when RemoteTech has no connection to the KSC, but the ship has local control.
+* Fixed a crappy parser error that was causing `,` to do bazzare things to some code #925
+* Fix running an empty program resetting the parent #858
+* Fix some error printing related to nodes #905
+* Fix kOS processor sinking into launch pad #980
+* Fix `rename file` command #971
+* Fix `return` statement breaking closure #923
+* Fix docking port query #937
+* better expression support inside square brackets #935
+* you can now `LOCK` in a loop #954
+* the kOS toolbar button should be better behaved now
+* Volume indexes will truncate floating values rather than throwing an error
+* `LIST FILES IN` syntax now works for archive
+* electricity consumption is better behaved
+* setting the target to an empty string will always unset target
+
+
+# v0.17.2
 
 1.0 Release
 -----------

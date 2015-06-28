@@ -44,14 +44,19 @@ namespace kOS.Safe.Screen
                 case 13:  // enter
                     NewLine();
                     break;
+                case 7:
+                case (char)UnicodeCommand.BEEP:
+                    ++base.BeepsPending;
+                    break;
                 default:
                     InsertChar(ch);
                     break;
             }
         }
 
-        public virtual void SpecialKey(char key)
+        public virtual bool SpecialKey(char key)
         {
+            bool gotUsed = true;
             switch (key)
             {
                 case (char)UnicodeCommand.LEFTCURSORONE:
@@ -79,7 +84,15 @@ namespace kOS.Safe.Screen
                 case (char)UnicodeCommand.PAGEDOWNCURSOR:
                     ScrollVertical(10);
                     break;
+                case (char)0x007:
+                case (char)UnicodeCommand.BEEP:
+                    ++base.BeepsPending;
+                    break;
+                default:
+                    gotUsed = false;
+                    break;
             }
+            return gotUsed;
         }
 
         protected void SaveCursorPos()

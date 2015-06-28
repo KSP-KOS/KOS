@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using kOS.Safe.Exceptions;
+using System.Collections.Generic;
 
 namespace kOS.Safe.Compilation.KS
 {
@@ -19,50 +19,38 @@ namespace kOS.Safe.Compilation.KS
 
         public override List<CodePart> Compile(string filePath, int startLineNum, string scriptText, string contextId, CompilerOptions options)
         {
-            List<CodePart> parts = null;
-            
-            // make the code lowercase
-            scriptText = MakeLowerCase(scriptText);
-            scriptText = ReplaceIdentifiers(scriptText);
-            
-            //if (contextId != "interpreter") parts = _cache.GetFromCache(scriptText);
-
-            // if parts is null means the code doesn't exists in the cache
-            if (parts == null)
+            var parts = new List<CodePart>();
+            ParseTree parseTree = parser.Parse(scriptText);
+            if (parseTree.Errors.Count == 0)
             {
-                parts = new List<CodePart>();
-                ParseTree parseTree = parser.Parse(scriptText);
-                if (parseTree.Errors.Count == 0)
-                {
-                    var compiler = new Compiler();
-                    LoadContext(contextId);
+                var compiler = new Compiler();
+                LoadContext(contextId);
 
-                    // TODO: handle compile errors (e.g. wrong run parameter count)
-                    CodePart mainPart = compiler.Compile(startLineNum, parseTree, currentContext, options);
+                // TODO: handle compile errors (e.g. wrong run parameter count)
+                CodePart mainPart = compiler.Compile(startLineNum, parseTree, currentContext, options);
 
-                    // add locks and triggers
-                    parts.AddRange(currentContext.UserFunctions.GetNewParts());
-                    parts.AddRange(currentContext.Triggers.GetNewParts());
-                    parts.AddRange(currentContext.Subprograms.GetNewParts());
+                // add locks and triggers
+                parts.AddRange(currentContext.UserFunctions.GetNewParts());
+                parts.AddRange(currentContext.Triggers.GetNewParts());
+                parts.AddRange(currentContext.Subprograms.GetNewParts());
 
-                    parts.Add(mainPart);
+                parts.Add(mainPart);
 
-                    AssignSourceId(parts, filePath);
+                AssignSourceId(parts, filePath);
 
-                    //if (contextId != "interpreter") _cache.AddToCache(scriptText, parts);
-                }
-                else
-                {
-                    // TODO: Come back here and check on the possiblity of reporting more
-                    // errors than just the first one.  It appears that TinyPG builds a
-                    // whole array of error messages so people could see multiple syntax
-                    // errors in one go if we supported the reporting of it.  It may be that
-                    // it was deliberately not done because it might be too verbose that way
-                    // for the small text terminal.
-                    
-                    ParseError error = parseTree.Errors[0];
-                    throw new KOSParseException(error, scriptText);
-                } 
+                //if (contextId != "interpreter") _cache.AddToCache(scriptText, parts);
+            }
+            else
+            {
+                // TODO: Come back here and check on the possiblity of reporting more
+                // errors than just the first one.  It appears that TinyPG builds a
+                // whole array of error messages so people could see multiple syntax
+                // errors in one go if we supported the reporting of it.  It may be that
+                // it was deliberately not done because it might be too verbose that way
+                // for the small text terminal.
+
+                ParseError error = parseTree.Errors[0];
+                throw new KOSParseException(error, scriptText);
             }
 
             return parts;
@@ -120,6 +108,7 @@ namespace kOS.Safe.Compilation.KS
                     case '{':
                         openCurlyBrackets++;
                         break;
+
                     case '}':
                         openCurlyBrackets--;
                         break;
@@ -127,6 +116,7 @@ namespace kOS.Safe.Compilation.KS
                     case '(':
                         openParentheses++;
                         break;
+
                     case ')':
                         openParentheses--;
                         break;

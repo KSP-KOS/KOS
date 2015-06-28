@@ -36,12 +36,6 @@ namespace kOS.Safe.Compilation.KS
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
 
-        private readonly Dictionary<string, string> functionsOverloads = new Dictionary<string, string>
-        { 
-            { "round|1", "roundnearest" },
-            { "round|2", "round"} 
-        };
-        
         private enum StorageModifier {
             /// <summary>The storage will definitely be at the localmost scope.</summary>
             LOCAL,
@@ -123,7 +117,7 @@ namespace kOS.Safe.Compilation.KS
             PushReversedParameters();
             VisitNode(tree.Nodes[0]);
             
-            if (addBranchDestination)
+            if (addBranchDestination || currentCodeSection.Count == 0)
             {
                 AddOpcode(new OpcodeNOP());
             }
@@ -191,12 +185,54 @@ namespace kOS.Safe.Compilation.KS
         private void PreProcess(ParseTree tree)
         {
             ParseNode rootNode = tree.Nodes[0];
+            LowercaseConversions(rootNode);
+            RearrangeParseNodes(rootNode);
             TraverseScopeBranch(rootNode);
             IterateUserFunctions(rootNode, IdentifyUserFunctions);
             PreProcessStatements(rootNode);
             IterateUserFunctions(rootNode, PreProcessUserFunctionStatement);
         }
+        
+        /// <summary>
+        /// Lowercase every IDENTIFIER and FILEIDENT token in the parse.
+        /// </summary>
+        /// <param name="node">branch head to start from in the compiler</param>
+        private void LowercaseConversions(ParseNode node)
+        {
+            switch (node.Token.Type)
+            {
+                case TokenType.IDENTIFIER:
+                case TokenType.FILEIDENT:
+                    node.Token.Text = node.Token.Text.ToLower();
+                    break;
+                default:
+                    foreach (ParseNode child in node.Nodes)
+                        LowercaseConversions(child);
+                    break;
+            }
+        }
+        
+        /// <summary>
+        /// Some of the parse rules in Kerboscript may be implemented on the back
+        /// of other rules.  In this case all the compiler really does is just 
+        /// re-arrange a more complex parse rule to be expressed in the form of
+        /// building blocks made of other simpler rules before continuing the compile that way. 
+        /// </summary>
+        /// <param name="node">make the transformation from this point downward</param>
+        private void RearrangeParseNodes(ParseNode node)
+        {
+            if (node.Token.Type == TokenType.fromloop_stmt) // change to switch stmt if more such rules get added later.
+            {
+                RearrangeLoopFromNode(node);
+            }
 
+            // Recurse children EVEN IF the node got re-arranged.  If the node got re-arranged, then its children will now look
+            // different than they did before, but they still need to be iterated over to look for other rearrangements.
+            // (for example, a loopfrom loop nested inside another loopfrom loop).
+            foreach (ParseNode child in node.Nodes)
+                RearrangeParseNodes(child);
+        }
+        
         private void IterateUserFunctions(ParseNode node, Action<ParseNode> action)
         {
             switch (node.Token.Type)
@@ -210,6 +246,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction:
                 case TokenType.if_stmt:
                 case TokenType.until_stmt:
+                case TokenType.for_stmt:
                 case TokenType.on_stmt:
                 case TokenType.when_stmt:
                 case TokenType.declare_function_clause:
@@ -231,6 +268,102 @@ namespace kOS.Safe.Compilation.KS
                     action.Invoke(node);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Edit the parse branch for a loopfrom statement, rearranging its component
+        /// parts into a simpler unrolled form.<br/>
+        /// When given this rule:<br/>
+        /// <br/>
+        /// FROM {(init statements)} UNTIL expr STEP {(inc statements)} DO {(body statements)} <br/>
+        /// <br/>
+        /// It will edit its own child nodes and transform them into a new parse tree branch as if this had
+        /// been what was in the source code instead:<br/>
+        /// <br/>
+        /// { (init statements) UNTIL expr { (body statements) (inc statements) } }<br/>
+        /// <br/>
+        /// Thus any variables declared inside (init statements) are in scope during the body of the loop.<br/>
+        /// The actual logic of doing an UNTIL loop will fall upon VisitUntilNode to deal with later in the compile.<br/>
+        /// </summary>
+        /// <param name="node"></param>
+        private void RearrangeLoopFromNode(ParseNode node)
+        {
+            // Safety check to see if I've already been rearranged into my final form, just in case
+            // the recursion logic is messed up and this gets called twice on the same node:
+            if (node.Nodes.Count == 1 && node.Nodes[0].Token.Type == TokenType.instruction_block)
+                return;
+            
+            // ReSharper disable RedundantDefaultFieldInitializer
+            ParseNode initBlock = null;
+            ParseNode checkExpression = null;
+            ParseNode untilTokenNode = null;
+            ParseNode stepBlock = null;
+            ParseNode doBlock = null;
+            // ReSharper enable RedundantDefaultFieldInitializer
+            
+            for( int index = 0 ; index < node.Nodes.Count - 1 ; index += 2 )
+            {
+                switch (node.Nodes[index].Token.Type)
+                {
+                    case TokenType.FROM:
+                        initBlock = node.Nodes[index+1];
+                        break;
+                    case TokenType.UNTIL:
+                        untilTokenNode = node.Nodes[index];
+                        checkExpression = node.Nodes[index+1];
+                        break;
+                    case TokenType.STEP:
+                        stepBlock = node.Nodes[index+1];
+                        break;
+                    case TokenType.DO:
+                        doBlock = node.Nodes[index+1];
+                        break;
+                    // no default because anything else is a syntax error and it won't even get as far as this method in that case.
+                }
+            }
+            
+            // These probably can't happen because the parser would have barfed before it got to this method:
+            if (initBlock == null)
+                throw new KOSCompileException("Missing FROM block in FROM loop.");
+            if (checkExpression == null || untilTokenNode == null)
+                throw new KOSCompileException("Missing UNTIL check expression in FROM loop.");
+            if (stepBlock == null)
+                throw new KOSCompileException("Missing STEP block in FROM loop.");
+            if (doBlock == null)
+                throw new KOSCompileException("Missing loop body (DO block) in FROM loop.");
+            
+            // Append the step instructions to the tail end of the body block's instructions:
+            foreach (ParseNode child in stepBlock.Nodes)
+                doBlock.Nodes.Add(child);
+            
+            // Make a new empty until loop node, which will get added to the init block eventually:
+            var untilStatementTok = new Token
+            {
+                Type = TokenType.until_stmt,
+                Line = untilTokenNode.Token.Line,
+                Column = untilTokenNode.Token.Column,
+                File = untilTokenNode.Token.File
+            };
+
+            ParseNode untilNode = initBlock.CreateNode(untilStatementTok, untilStatementTok.ToString());
+
+            // (The direct manipulation of the tree's parent pointers, seen below, is bad form,
+            // but TinyPg doesn't seem to have given us good primitives to append an existing node to the tree to do it for us.
+            // CreateNode() makes a brand new empty node attached to the parent, but there seems to be no way to take an
+            // existing node and attach it elsewhere without directly changing the Parent property as seen in the lines below:)
+
+            // Populate that until loop node with the parts from this rule:
+            untilNode.Nodes.Add(untilTokenNode); untilTokenNode.Parent = untilNode;
+            untilNode.Nodes.Add(checkExpression); checkExpression.Parent = untilNode;
+            untilNode.Nodes.Add(doBlock); doBlock.Parent = untilNode;
+            
+            // And now append that until loop to the tail end of the init block:
+            initBlock.Nodes.Add(untilNode); // parent already assigned by initBlock.CreateNode() above.
+            
+            // The init block is now actually the entire loop, having been exploded and unrolled into its
+            // new form, make that be our only node node:
+            node.Nodes.Clear();
+            node.Nodes.Add(initBlock);  // initBlock's parent already points at node to begin with.
         }
         
         private void PreProcessStatements(ParseNode node)
@@ -429,7 +562,27 @@ namespace kOS.Safe.Compilation.KS
                     return hitScope.ScopeId;
                 current = current.Parent;
             }
-            return (Int16)0;
+            return 0;
+        }
+        
+        /// <summary>
+        /// Much like UserFunctionCollection.GetUserFunction(), except that it won't
+        /// generate a function if one doesn't exist.  Instead it will try to walk up
+        /// the parent scopes until it finds a func or lock with the given name.  If it 
+        /// cannot find an existing function, it will return null rather than make one.
+        /// </summary>
+        /// <param name="funcIdentifier">identifier for the lock or function</param>
+        /// <param name="node">ParseNode to begin looking from (for scope reasons).  It will walk the parents looking for scopes that have the ident.</param>
+        /// <returns>The found UserFunction, or null if none found</returns>
+        private UserFunction FindExistingUserFunction(string funcIdentifier, ParseNode node)
+        {
+            for (ParseNode containingNode = node ; containingNode != null ; containingNode = containingNode.Parent)
+            {
+                Int16 thisNodeScope = GetContainingScopeId(containingNode);
+                if (context.UserFunctions.Contains(funcIdentifier, thisNodeScope))
+                    return context.UserFunctions.GetUserFunction(funcIdentifier, thisNodeScope, containingNode);
+            }
+            return null;
         }
         
         private bool IsLockStatement(ParseNode node)
@@ -532,7 +685,7 @@ namespace kOS.Safe.Compilation.KS
                 // build default dummy function to be used when this is a LOCK:
                 currentCodeSection = userFuncObject.GetUserFunctionOpcodes(0);
                 AddOpcode(new OpcodePush("$" + userFuncObject.ScopelessIdentifier)).Label = userFuncObject.DefaultLabel;
-                AddOpcode(new OpcodeReturn());
+                AddOpcode(new OpcodeReturn(0));
             }
 
             // lock expression's or function body's code
@@ -549,19 +702,24 @@ namespace kOS.Safe.Compilation.KS
 
                 VisitNode(bodyNode);
 
+                Int16 implicitReturnScopeDepth = 0;
+                
                 if (isDefFunc)
                     nextBraceIsFunction = false;
                 if (isLock) // locks need to behave as if they had braces even though they don't - so they get lexical scope ids for closure reasons:
-                    EndScope(bodyNode);
+                {
+                    EndScope(bodyNode, false);
+                    implicitReturnScopeDepth = 1;
+                }
 
                 if (needImplicitReturn)
                 {
                     if (isDefFunc)
                         AddOpcode(new OpcodePush(0)); // Functions must push a dummy return val when making implicit returns. Locks already leave an expr atop the stack.
-                    AddOpcode(new OpcodeReturn());
+                    AddOpcode(new OpcodeReturn(implicitReturnScopeDepth));
                 }
                 userFuncObject.ScopeNode = GetContainingBlockNode(node); // This limits the scope of the function to the instruction_block the DEFINE was in.
-                userFuncObject.IsFunction = !(isLock);;
+                userFuncObject.IsFunction = !(isLock);
             }
         }
         
@@ -609,7 +767,7 @@ namespace kOS.Safe.Compilation.KS
             ParseNode lastSubNode = node.Nodes[node.Nodes.Count-1];
             // if the declaration is a parameter,
             // and this is NOT contained inside a DEFINE FUNCTION block and
-            // is therefore a global program paramter (for the run statement):
+            // is therefore a global program parameter (for the run statement):
             if (lastSubNode.Token.Type == TokenType.declare_parameter_clause &&
                 (!(IsInsideDefineFunctionStatement(node))))
             {
@@ -627,8 +785,8 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             if (options.LoadProgramsInSameAddressSpace)
             {
-                bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
-                if (!hasON)
+                bool hasOn = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
+                if (!hasOn)
                 {
                     string subprogramName = node.Nodes[1].Token.Text; // It assumes it already knows at compile-time how many unique program filenames exist, 
                     if (!context.Subprograms.Contains(subprogramName)) // which it uses to decide how many of these blocks to make,
@@ -638,7 +796,7 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.FunctionCode;
                         // verify if the program has been loaded
                         Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodePush(-1));
                         AddOpcode(new OpcodeCompareEqual());
                         OpcodeBranchIfFalse branchOpcode = new OpcodeBranchIfFalse();
                         AddOpcode(branchOpcode);
@@ -660,13 +818,13 @@ namespace kOS.Safe.Compilation.KS
                         
                         // maybe TODO?  Right now the RETURN command is being prevented from being used outside 
                         // a function declaration.  But in principle we could have programs return exit codes
-                        // using the same archetecture, and in fact that is why this dummy return value is needed,
+                        // using the same architecture, and in fact that is why this dummy return value is needed,
                         // because OpcodeReturn now expects such a return value to exist and throws an exception when it
                         // does not.
                         // If an EXIT command was implemented, it would maybe allow an exit code that can be read here:
                         AddOpcode(new OpcodePop()); // for now: throw away return code from subprogram.
                         AddOpcode(new OpcodePush(0)); // Replace it with new dummy return code.
-                        AddOpcode(new OpcodeReturn()); // return that.
+                        AddOpcode(new OpcodeReturn(0)); // return that.
 
                         // set the function start label
                         subprogramObject.FunctionLabel = functionStart.Label;
@@ -675,7 +833,7 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.InitializationCode;
                         // initialize the pointer to zero
                         AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodePush(-1));
                         AddOpcode(new OpcodeStore());
                     }
                 }
@@ -737,21 +895,20 @@ namespace kOS.Safe.Compilation.KS
             if (breakList.Count > 0)
             {
                 BreakInfo list = breakList[breakList.Count - 1];
-                if (list != null)
-                {
-                    breakList.Remove(list);
-                    foreach (Opcode opcode in list.Opcodes)
-                    {
-                        OpcodePopScope popScopeOp = opcode as OpcodePopScope;
-                        if (popScopeOp != null)
-                            // calculate how many nesting levels it needs to really pop
-                            // by comparing the nest level where the break statement was to
-                            // the nest level where the break context started:
-                            popScopeOp.NumLevels = (Int16)(popScopeOp.NumLevels - list.NestLevel);
+                if (list == null) return;
 
-                        else // assume all others are branch opcodes of some sort:
-                            opcode.DestinationLabel = label;
-                    }
+                breakList.Remove(list);
+                foreach (Opcode opcode in list.Opcodes)
+                {
+                    OpcodePopScope popScopeOp = opcode as OpcodePopScope;
+                    if (popScopeOp != null)
+                        // calculate how many nesting levels it needs to really pop
+                        // by comparing the nest level where the break statement was to
+                        // the nest level where the break context started:
+                        popScopeOp.NumLevels = (Int16)(popScopeOp.NumLevels - list.NestLevel);
+
+                    else // assume all others are branch opcodes of some sort:
+                        opcode.DestinationLabel = label;
                 }
             }
         }
@@ -800,8 +957,11 @@ namespace kOS.Safe.Compilation.KS
         /// <summary>
         /// Insert the Opcode to finish a lexical scope
         /// Call upon every close brace "}"
+        /// <param name="withPopScope">Should this code insert its own popscope.  Only say false when
+        /// you intend to immediately do a return statement and have the return statement be
+        /// responsible for the popscope itself.</param>
         /// </summary>
-        private void EndScope(ParseNode node)
+        private void EndScope(ParseNode node, bool withPopScope = true)
         {
             node = node.Parent;
 
@@ -819,13 +979,14 @@ namespace kOS.Safe.Compilation.KS
                 braceNestLevel = 0;
             }
 
-            AddOpcode(new OpcodePopScope());
+            if (withPopScope)
+                AddOpcode(new OpcodePopScope());
         }
         
         /// <summary>
         /// Because the compile occurs a bit out of order (doing the most deeply nested function
         /// first, then working out from there) it walks the scope nesting in the wrong order. 
-        /// Therefore before doing the complie, run through in one pass just recording the nesting
+        /// Therefore before doing the compile, run through in one pass just recording the nesting
         /// levels and lexical parent tree of the scoping before we begin, so we can
         /// use that information later in the parse:
         /// </summary>
@@ -898,6 +1059,9 @@ namespace kOS.Safe.Compilation.KS
                     break;
                 case TokenType.until_stmt:
                     VisitUntilStatement(node);
+                    break;
+                case TokenType.fromloop_stmt:
+                    VisitChildNodes(node); // The loopfrom should have been altered by now, in RearrangeParseNodes().
                     break;
                 case TokenType.return_stmt:
                     VisitReturnStatement(node);
@@ -986,13 +1150,17 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.arglist:
                     VisitArgList(node);
                     break;
-                case TokenType.expr:
                 case TokenType.compare_expr: // for issue #20
-                case TokenType.and_expr:
                 case TokenType.arith_expr:
                 case TokenType.multdiv_expr:
                 case TokenType.factor:
-                    VisitExpression(node);
+                    VisitExpressionChain(node);
+                    break;
+                case TokenType.expr: // expr is really the rule for doing an expression with optional trailing or-expression.
+                                     // 'or' just happens to have the lowest operator precedence level so it ends up being
+                                     // the outermost expression rule, thus getting the generic name 'expr'.
+                case TokenType.and_expr:
+                    VisitShortCircuitBoolean(node);
                     break;
                 case TokenType.suffix:
                     VisitSuffix(node);
@@ -1089,7 +1257,22 @@ namespace kOS.Safe.Compilation.KS
             identifierIsVariable = false;
         }
 
-        private void VisitExpression(ParseNode node)
+        /// <summary>
+        /// Performs the work for a number of different expressions that all
+        /// share the following universal basic properties:<br/>
+        /// - They contain optional binary operators.<br/>
+        /// - The terms are all at the same precedence level.<br/>
+        /// - Because of the tie of precedence level, the terms are to be evaluated left-to-right.<br/>
+        /// - No special extra work is needed, such that simply doing "push expr1, push expr2, then do operator" is all that's needed.<br/>
+        /// <br/>
+        /// Examples:<br/>
+        ///   5 + 4 - x + 2 // because + and - are in the same parse rule, these all get the same flat precedence.<br/>
+        ///   x * y * z<br/>
+        /// In cases like that where all the operators "tie", the entire chain of terms lives in the same ParseNode,<br/>
+        /// and we have to unroll those terms and presume left-to-right precedence.  That is what this method does.<br/>
+        /// </summary>
+        /// <param name="node"></param>
+        private void VisitExpressionChain(ParseNode node)
         {
             NodeStartHousekeeping(node);
             if (node.Nodes.Count > 1)
@@ -1097,26 +1280,102 @@ namespace kOS.Safe.Compilation.KS
                 // it should always be odd, two arguments and one operator
                 if ((node.Nodes.Count % 2) != 1) return;
 
-                VisitNode(node.Nodes[0]);
+                VisitNode(node.Nodes[0]); // pushes lefthand side on stack.
 
                 int nodeIndex = 2;
                 while (nodeIndex < node.Nodes.Count)
                 {
-                    VisitNode(node.Nodes[nodeIndex]);
+                    VisitNode(node.Nodes[nodeIndex]); // pushes righthand side on stack.
                     nodeIndex -= 1;
-                    VisitNode(node.Nodes[nodeIndex]);
-                    nodeIndex += 3;
+                    VisitNode(node.Nodes[nodeIndex]); // operator, i.e '*', '+', '-', '/', etc.
+                    nodeIndex += 3; // Move to the next term over (if there's more than 2 terms in the chain).
+
+                    // If there are more terms to process, then the value that the operation leaves behind on the stack
+                    // from operating on these two terms will become the 'lefthand side' for the next iteration of this loop.
                 }
             }
-            else
+            else if (node.Nodes.Count == 1)
             {
-                if (node.Nodes.Count == 1)
-                {
-                    VisitNode(node.Nodes[0]);
-                }
+                VisitNode(node.Nodes[0]); // This ParseNode isn't *realy* an expression of binary operators, because
+                                          // the regex chain of "zero or more" righthand terms.. had zero such terms.
+                                          // So just delve in deeper to compile whatever part of speech it is further down.
             }
         }
 
+        /// <summary>
+        /// Handles the short-circuit logic of boolean OR and boolean AND
+        /// chains.  It is like VisitExpressionChain (see elsewhere) but
+        /// in this case it has the special logic to short circuit and skip
+        /// executing the righthand expression if it can.  (The generic VisitExpressionXhain
+        /// always evaluates both the left and right sides of the operator first, then
+        /// does the operation).
+        /// </summary>
+        /// <param name="node"></param>
+        private void VisitShortCircuitBoolean(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            
+            if (node.Nodes.Count > 1)
+            {
+                // it should always be odd, two arguments and one operator
+                if ((node.Nodes.Count % 2) != 1) return;
+
+                // Determine if this is a chain of ANDs or a chain or ORs.  The parser will
+                // never mix ANDs and ORs into the same ParseNode level.  We are guaranteed
+                // that all the operators in this chain match the first operator in the chain:
+                // That guarantee is important.  Without it, we can't do short-circuiting like this
+                // because you can't short-circuit a mix of AND and OR at the same precedence.
+                TokenType operation = node.Nodes[1].Token.Type; // Guaranteed to be either TokenType.AND or TokenType.OR
+                
+                // For remembering the instruction pointers from which short-circuit branch jumps came:
+                List<int> shortCircuitFromIndeces = new List<int>();
+                
+                int nodeIndex = 0;
+                while (nodeIndex < node.Nodes.Count)
+                {
+                    if (nodeIndex > 0) // After each term, insert the branch test (which consumes the expr from the stack regardless of if it branches):
+                    {
+                       shortCircuitFromIndeces.Add(currentCodeSection.Count());
+                       if (operation == TokenType.AND)
+                           AddOpcode(new OpcodeBranchIfFalse());
+                       else if (operation == TokenType.OR)
+                           AddOpcode(new OpcodeBranchIfTrue());
+                       else
+                           throw new KOSException("Assertion check:  Broken kerboscript compiler (VisitShortCircuitBoolean).  See kOS devs");
+                    }
+                    
+                    VisitNode(node.Nodes[nodeIndex]); // pushes the next term onto the stack.
+                    nodeIndex += 2; // Skip the operator, moving to the next term over.
+                }
+                // If it gets to the end of all that and it still hasn't aborted, then the whole expression's
+                // Boolean value is just the value of its lastmost term, that's already gotten pushed atop the stack.
+                // Leave the lastmost term there, and just skip ahead past the short-circuit landing target:
+                OpcodeBranchJump skipShortCircuitTarget = new OpcodeBranchJump();
+                skipShortCircuitTarget.Distance = 2; // Hardcoded +2 jump distance skips the upcoming OpcodePush and just lands on
+                                                     // whatever comes next after this VisitNode.  Avoids using DestinationLabel
+                                                     // for later relocation because it would be messy to reassign this label later
+                                                     // in whatever VisitNode happens to come up next, when that could be anything.
+                AddOpcode(skipShortCircuitTarget);
+                
+                // Build the instruction all the short circuit checks will jump to if aborting partway through.
+                // (AND's abort when they're false.  OR's abort when they're true.)
+                AddOpcode(operation == TokenType.AND ? new OpcodePush(false) : new OpcodePush(true));
+                string shortCircuitTargetLabel = currentCodeSection[currentCodeSection.Count()-1].Label;
+                
+                // Retroactively re-assign the jump labels of all the short circuit branch operations:
+                foreach (int index in shortCircuitFromIndeces)
+                {
+                    currentCodeSection[index].DestinationLabel = shortCircuitTargetLabel;
+                }
+            }
+            else if (node.Nodes.Count == 1)
+            {
+                VisitNode(node.Nodes[0]); // This ParseNode isn't *realy* an expression of AND or OR operators, because
+                                          // the regex chain of "zero or more" righthand terms.. had zero such terms.
+                                          // So just delve in deeper to compile whatever part of speech it is further down.
+            }
+        }
+        
         private void VisitUnaryExpression(ParseNode node)
         {
             NodeStartHousekeeping(node);
@@ -1256,7 +1515,6 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            int parameterCount = 0;
             ParseNode trailerNode = node; // the function_trailer rule is here.
 
             // Need to tell OpcodeCall where in the stack the bottom of the arg list is.
@@ -1266,9 +1524,6 @@ namespace kOS.Safe.Compilation.KS
 
             if (trailerNode.Nodes[1].Token.Type == TokenType.arglist)
             {
-
-                parameterCount = (trailerNode.Nodes[1].Nodes.Count / 2) + 1;
-
                 bool remember = identifierIsSuffix;
                 identifierIsSuffix = false;
 
@@ -1279,28 +1534,15 @@ namespace kOS.Safe.Compilation.KS
 
             if (isDirect)
             {
-                string functionName = directName;
-
-                string overloadedFunctionName = GetFunctionOverload(functionName, parameterCount);
-                if (options.FuncManager.Exists(overloadedFunctionName)) // if the name is a built-in, then add the "()" after it.
-                    overloadedFunctionName += "()";
-                AddOpcode(new OpcodeCall(overloadedFunctionName));
+                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then add the "()" after it.
+                    directName += "()";
+                AddOpcode(new OpcodeCall(directName));
             }
             else
             {
-                OpcodeCall op = new OpcodeCall(string.Empty) { Direct = false };
+                var op = new OpcodeCall(string.Empty) { Direct = false };
                 AddOpcode(op);
             }
-        }
-
-        private string GetFunctionOverload(string functionName, int parameterCount)
-        {
-            string functionKey = string.Format("{0}|{1}", functionName, parameterCount);
-            if (functionsOverloads.ContainsKey(functionKey))
-            {
-                return functionsOverloads[functionKey];
-            }
-            return functionName;
         }
 
         private void VisitArgList(ParseNode node)
@@ -1408,7 +1650,7 @@ namespace kOS.Safe.Compilation.KS
                     }
                 }
                 
-                // In the case of a lock function withiout parentheses, it needs this special case:
+                // In the case of a lock function without parentheses, it needs this special case:
                 if (suffixTerm.Nodes.Count <= 1)
                 {
                     if (isDirect && isUserFunc)
@@ -1442,12 +1684,18 @@ namespace kOS.Safe.Compilation.KS
                     ++nodeIndex;
                 }
 
-                bool remember = identifierIsSuffix;
+                // Temporarily turn off these flags while evaluating the expression inside
+                // the array index square brackets.  These flags apply to this outer containing
+                // thing, the array access, not to the expression in the index brackets:
+                bool rememberIdentIsSuffix = identifierIsSuffix;
                 identifierIsSuffix = false;
+                bool rememberCompSetDest = compilingSetDestination;
+                compilingSetDestination = false;
+                
+                VisitNode(trailerNode.Nodes[nodeIndex]); // pushes the result of expression inside square brackets.
 
-                VisitNode(trailerNode.Nodes[nodeIndex]);
-
-                identifierIsSuffix = remember;
+                compilingSetDestination = rememberCompSetDest;
+                identifierIsSuffix = rememberIdentIsSuffix;
 
                 // Two ways to check if this is the last index (i.e. the 'k' in arr[i][j][k]'),
                 // depending on whether using the "#" syntax or the "[..]" syntax:
@@ -1922,7 +2170,7 @@ namespace kOS.Safe.Compilation.KS
             // a global function in another script are the same scope, since we don't nest files in their own scope.
             // If we ever change the design to create file scoping, the lastmost check above can probably go away.
             //
-            // That last check deliberately takes advantage of short-curcuiting to avoid the expense of IsNew() if it can.
+            // That last check deliberately takes advantage of short-circuiting to avoid the expense of IsNew() if it can.
 
             foreach (UserFunction func in theseFuncs)
             {
@@ -1930,11 +2178,11 @@ namespace kOS.Safe.Compilation.KS
                 // By storing the mapping from identifier name to instruction jump point in
                 // a local variable, we're masking the function from view when its variable
                 // identifier is out of scope.  (For example if a function's body of Opcodes
-                // is stored at locations K100_021 trhough K100_141, then those 100 opcodes
+                // is stored at locations K100_021 through K100_141, then those 100 opcodes
                 // are compiled statically and are always present in memory in a way that ignores scope,
                 // but the variable "$MyFunc*" that contains the value K100_021 to tell you where
-                // to jump to to start the function will stop existing once MyFunc is out of scope).
-                // This is typical of an OOP langauge.  The physical code is always static for all
+                // to jump to start the function will stop existing once MyFunc is out of scope).
+                // This is typical of an OOP language.  The physical code is always static for all
                 // methods and functions, and always has exactly one copy in memory whether there are
                 // one, many, or zero "instances" of it present in scope at the moment.
                 AddOpcode(new OpcodePush(func.ScopelessPointerIdentifier));
@@ -2002,7 +2250,13 @@ namespace kOS.Safe.Compilation.KS
             else
             {
                 string lockIdentifier = node.Nodes[1].Token.Text;
-                UserFunction lockObject = context.UserFunctions.GetUserFunction(lockIdentifier, GetContainingScopeId(node), node);
+                UserFunction lockObject = FindExistingUserFunction(lockIdentifier, node);
+                if (lockObject == null)
+                {
+                    // If it is null, it's okay to silently do nothing.  It just means someone tried to unlock
+                    // an identifier that was never locked in the first place, at least not in this scope or a parent scope.
+                    return;
+                }
                 UnlockIdentifier(lockObject);
             }
         }
@@ -2175,12 +2429,12 @@ namespace kOS.Safe.Compilation.KS
         {
             // The default case for anything not explicitly mentioned below.
             // i.e. if you call this on a SET statement, you'll get this:
-            StorageModifier modifier = StorageModifier.LAZYGLOBAL;
+            var modifier = StorageModifier.LAZYGLOBAL;
             
             if (node.Nodes.Count == 0) // sanity check - really should never be called on terminal nodes like this.
                 return modifier;
             
-            // It may look wierd to do this as a switch when there's only one condition and it
+            // It may look weird to do this as a switch when there's only one condition and it
             // looks like it should be an if.  It's leaving room for expansion later if the need
             // arises:
             switch (node.Token.Type)
@@ -2206,9 +2460,9 @@ namespace kOS.Safe.Compilation.KS
                 (lastSubNode.Token.Type == TokenType.declare_lock_clause ? StorageModifier.GLOBAL : StorageModifier.LOCAL);
             bool storageKeywordMissing = true;
             
-            for (int i = 0 ; i < node.Nodes.Count ; ++i)
+            foreach (ParseNode t in node.Nodes)
             {
-                switch (node.Nodes[i].Token.Type)
+                switch (t.Token.Type)
                 {
                     case TokenType.GLOBAL:
                         modifier = StorageModifier.GLOBAL;
@@ -2322,8 +2576,8 @@ namespace kOS.Safe.Compilation.KS
 
             // process program arguments
             AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // regardless of whether it's called directly or indirectly, we still need at least one.
-            bool hasON = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
-            if (!hasON && options.LoadProgramsInSameAddressSpace)
+            bool hasOn = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
+            if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
                 // When running in the same address space, we need an extra arg marker under the args, because
                 // of the double-indirect call where we call the subroutine that was built in PreProcessRunStatement,
@@ -2338,7 +2592,7 @@ namespace kOS.Safe.Compilation.KS
                 volumeIndex += 3;
             }
 
-            if (!hasON && options.LoadProgramsInSameAddressSpace)
+            if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
                 string subprogramName = node.Nodes[1].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
                 if (context.Subprograms.Contains(subprogramName))  // and instead have to do RUN FILEIDENT, in the parser def.
@@ -2431,7 +2685,7 @@ namespace kOS.Safe.Compilation.KS
             }
             else
             {
-                AddOpcode(new OpcodePush(node.Nodes[2].Token.Type == TokenType.FROM ? "file" : "volume"));
+                AddOpcode(new OpcodePush(node.Nodes[1].Token.Type == TokenType.FILE ? "file" : "volume"));
             }
 
             VisitNode(node.Nodes[oldNameIndex]);
@@ -2511,7 +2765,7 @@ namespace kOS.Safe.Compilation.KS
             // in the final program.  The reason for not just doing it now is
             // that we have to wait until the bottom of the nested braces to
             // find out where to jump to anyway, so this opcode will have to be
-            // revisted then anyway:
+            // revisited then anyway:
             Opcode popScope = AddOpcode(new OpcodePopScope(braceNestLevel));
             AddToBreakList(popScope);
  
@@ -2526,18 +2780,16 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            int nestLevelOfFuncBraces = GetReturnNestLevel();
+            var nestLevelOfFuncBraces = (Int16)GetReturnNestLevel();
 
             if (nestLevelOfFuncBraces < 0)
                 throw new KOSReturnInvalidHereException();
 
             // Push the return expression onto the stack, or if it was a naked RETURN
             // keyword with no expression, then push a secret dummy return value of zero:
-            if (node.Nodes.Count > 1)
+            if (node.Nodes.Count > 2)
             {
                 VisitNode(node.Nodes[1]);
-                AddOpcode(new OpcodeEval()); // vital because we can't return a local var to the caller,
-                                             // we must return the value it contained instead.
             }
             else
             {
@@ -2548,8 +2800,8 @@ namespace kOS.Safe.Compilation.KS
             // simpler than the BREAK case because RETURN already knows to use the function
             // call stack to figure out where to return to, so we don't have to wait until
             // later to decide where to jump to like we do in BREAK:
-            AddOpcode(new OpcodePopScope(1 + braceNestLevel - nestLevelOfFuncBraces));
-            AddOpcode(new OpcodeReturn());
+            int depth = 1 + braceNestLevel - nestLevelOfFuncBraces;
+            AddOpcode(new OpcodeReturn((Int16)depth));
         }
 
         private void VisitPreserveStatement(ParseNode node)

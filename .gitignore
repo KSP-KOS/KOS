@@ -1,5 +1,27 @@
-bin/
-obj/
+# VisualStudio
+[Bb]in/
+[Oo]bj/
 *.suo
 packages/
 /src/kOS.sln.ide
+
+# Monodevelop
+[Ee]xported[Oo]bj/
+*.userprefs
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+/*.pidb
+/*.user
+
+# Build products and files generated during gameplay
+Resources/GameData/kOS/Plugins/
+!Resources/GameData/kOS/ICSharpCode.SharpZipLib.dll
+
+# Symlink to KSP directory
+KSPdirlink
+
+# OS Specific
+.DS_STORE*
+[Tt]humbs.db

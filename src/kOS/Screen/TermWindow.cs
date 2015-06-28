@@ -20,16 +20,21 @@ namespace kOS.Screen
         private static readonly string root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         private static readonly Color color = new Color(1, 1, 1, 1);
         private static readonly Color colorAlpha = new Color(0.9f, 0.9f, 0.9f, 0.6f);
+        private static readonly Color bgColor = new Color(0.0f, 0.2f, 0.0f, 0.9f);
         private static readonly Color textColor = new Color(0.45f, 0.92f, 0.23f, 0.9f);
         private static readonly Color textColorAlpha = new Color(0.45f, 0.92f, 0.23f, 0.5f);
         private static readonly Color textColorOff = new Color(0.8f, 0.8f, 0.8f, 0.7f);
         private static readonly Color textColorOffAlpha = new Color(0.8f, 0.8f, 0.8f, 0.3f);
         private Rect closeButtonRect = new Rect(0, 0, 0, 0); // will be resized later.        
         private Rect resizeButtonCoords = new Rect(0,0,0,0); // will be resized later.
+        private GUIStyle tinyToggleStyle;
         private Vector2 resizeOldSize;
         private bool resizeMouseDown;
         
         private bool consumeEvent;
+        private bool keyClickEnabled;
+        
+        private bool collapseFastBeepsToOneBeep = false; // This is a setting we might want to fiddle with depending on opinion.
 
         private KeyBinding rememberThrottleCutoffKey;
         private KeyBinding rememberThrottleFullKey;
@@ -39,10 +44,24 @@ namespace kOS.Screen
         private float cursorBlinkTime;
         private Texture2D fontImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private bool isLocked;
+        /// <summary>How long blinks should last for, for various blinking needs</summary>
+        private readonly TimeSpan blinkDuration = TimeSpan.FromMilliseconds(150);
+        /// <summary>How long to pad between consecutive blinks to ensure they are visibly detectable as distinct blinks.</summary>
+        private readonly TimeSpan blinkCoolDownDuration = TimeSpan.FromMilliseconds(50);
+        /// <summary>At what milliseconds-from-epoch timestamp will the current blink be over.</summary>
+        private DateTime blinkEndTime;
+
+        /// <summary>Telnet repaints happen less often than Update()s.  Not every Update() has a telnet repaint happening.
+        /// This tells you whether there was one this update.</summary>
+        private bool telnetsGotRepainted;
+        
         private Texture2D terminalImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Texture2D resizeButtonImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
         private Texture2D networkZigZagImage = new Texture2D(0, 0, TextureFormat.DXT1, false);
-
+        private WWW beepURL;
+        private AudioSource beepSource;
+        private int guiTerminalBeepsPending;
+        
         private SharedObjects shared;
         private KOSTextEditPopup popupEditor;
         private Color currentTextColor = new Color(1,1,1,1); // a dummy color at first just so it won't crash before TerminalGUI() where it's *really* set.
@@ -77,11 +96,26 @@ namespace kOS.Screen
             LoadTexture("GameData/kOS/GFX/monitor_minimal.png", ref terminalImage);
             LoadTexture("GameData/kOS/GFX/resize-button.png", ref resizeButtonImage);
             LoadTexture("GameData/kOS/GFX/network-zigzag.png", ref networkZigZagImage);
+
+            LoadAudio();
             
+            tinyToggleStyle = new GUIStyle(HighLogic.Skin.toggle)
+            {
+                fontSize = 10
+            };
+
             var gObj = new GameObject( "texteditPopup", typeof(KOSTextEditPopup) );
             DontDestroyOnLoad(gObj);
             popupEditor = (KOSTextEditPopup)gObj.GetComponent(typeof(KOSTextEditPopup));
             popupEditor.SetUniqueId(UniqueId + 5);
+        }
+        
+        private void LoadAudio()
+        {
+            beepURL = new WWW("file://"+ root + "GameData/kOS/GFX/terminal-beep.wav");
+            AudioClip beepClip = beepURL.audioClip;            
+            beepSource = gameObject.AddComponent<AudioSource>();
+            beepSource.clip = beepClip;
         }
 
         public void LoadTexture(String relativePath, ref Texture2D targetTexture)
@@ -112,6 +146,7 @@ namespace kOS.Screen
         {
             base.Open();
             BringToFront();
+            guiTerminalBeepsPending = 0; // Closing and opening the window will wipe pending beeps from the beep queue.
         }
 
         public override void Close()
@@ -219,10 +254,20 @@ namespace kOS.Screen
             GetNewestBuffer();
             TelnetOutputUpdate();
             ProcessTelnetInput(); // want to do this even when the terminal isn't actually displaying.
+            if (telnetsGotRepainted)
+            {
+                // Move the beeps from the screenbuffer "queue" to my own local terminal "queue".
+                // This is only done in the Update() when telentRepaint got triggered
+                // because otherwise the GUI terminal could wipe shared.Screen.BeepsPending to zero during an update
+                // where the telnet terminal never saw the beeps pending and never knew to print the beeps out.
+                guiTerminalBeepsPending += shared.Screen.BeepsPending;
+                shared.Screen.BeepsPending = 0; // Presume all the beeping has been dealt with for both the telnets and the GUI terminal.
+            }
 
             if (!IsOpen ) return;
          
             UpdateLogic();
+            UpdateGUIBeeps();
 
             if (!isLocked) return;
 
@@ -230,9 +275,63 @@ namespace kOS.Screen
             if (cursorBlinkTime > 1) cursorBlinkTime -= 1;
         }
         
+        void UpdateGUIBeeps()
+        {
+            // Eat just one beep off the pending queue.  Wait for a future
+            // Update() to consume more, if there are any more:
+            if (guiTerminalBeepsPending > 0)
+            {
+                // Behavior depending on whether we'd like BEEP, BEEP, BEEP to
+                // emit 3 back to back beeps, or just one beep ingoring overlapping beeps.
+                // Many hardware terminals only emit one beep when given a string
+                // of lots of beeps.
+                if (collapseFastBeepsToOneBeep)
+                {
+                    Beep();
+                    guiTerminalBeepsPending = 0;
+                }
+                else
+                {
+                    if (Beep())
+                        --guiTerminalBeepsPending;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Attempts to make Unity start a playthrough of the beep audio clip.  The playthrough will continue
+        /// on its own in the background while the rest of the code continues on.  It will do nothing if the previous
+        /// beep is still being played.  (We only gave ourselves one audio beep source per GUI terminal so we can't play beeps
+        /// simultaneously.)<br/>
+        /// Addendum: It will redirect into a visual beep if that is called for instead.
+        /// </summary>
+        /// <returns>true if it beeped.  false if it coudn't beep yet (because the audio source is still busy emitting the previous beep).</returns>
+        bool Beep()
+        {
+            if (shared.Screen.VisualBeep)
+            {
+                DateTime nowTime = DateTime.Now;
+                if (nowTime < (blinkEndTime + (blinkCoolDownDuration))) // prev blink not done yet.
+                    return false;
+                
+                // Turning this timer on tells GUI repainter elsewhere in this class to paint in reverse until it expires:
+                blinkEndTime = nowTime + blinkDuration;
+            }
+            else
+            {
+                if (!beepSource.clip.isReadyToPlay || beepSource.isPlaying)
+                    return false; // prev beep sound still is happening.
+                
+                // This is nonblocking.  Begins playing sound in background.  Code will not wait for it to finish:
+                beepSource.Play();
+            }
+            return true;
+        }
+
         void TelnetOutputUpdate()
         {
             DateTime newTime = DateTime.Now;
+            telnetsGotRepainted = false;
             
             // Throttle it back so the faster Update() rates don't cause pointlessly repeated work:
             // Needs to be no faster than the fastest theoretical typist or script might change the view.
@@ -243,6 +342,7 @@ namespace kOS.Screen
                 {
                     RepaintTelnet(telnet, false); // try the incremental differ update.
                 }
+                telnetsGotRepainted = true;
             }
         }
 
@@ -448,6 +548,8 @@ namespace kOS.Screen
             if (shared != null && shared.Interpreter != null)
             {
                 shared.Interpreter.Type(ch);
+                if (IsOpen && keyClickEnabled)
+                    shared.SoundMaker.BeginSound("click");
             }
         }
 
@@ -455,7 +557,9 @@ namespace kOS.Screen
         {
             if (shared != null && shared.Interpreter != null)
             {
-                shared.Interpreter.SpecialKey(key);
+                bool wasUsed = shared.Interpreter.SpecialKey(key);
+                if (IsOpen && keyClickEnabled && wasUsed)
+                    shared.SoundMaker.BeginSound("click");
             }
         }
         
@@ -506,7 +610,10 @@ namespace kOS.Screen
                 DrawTelnetStatus();
 
             closeButtonRect = new Rect(WindowRect.width-75, WindowRect.height-30, 50, 25);
-
+            Rect reverseButtonRect = new Rect(WindowRect.width-180, WindowRect.height-42, 100, 18);
+            Rect visualBeepButtonRect = new Rect(WindowRect.width-180, WindowRect.height-22, 100, 18);
+            Rect keyClickButtonRect = new Rect(10, WindowRect.height - 22, 85, 18);
+            
             resizeButtonCoords = new Rect(WindowRect.width-resizeButtonImage.width,
                                           WindowRect.height-resizeButtonImage.height,
                                           resizeButtonImage.width,
@@ -526,6 +633,10 @@ namespace kOS.Screen
                 Close();
                 Event.current.Use();
             }
+            
+            screen.ReverseScreen = GUI.Toggle(reverseButtonRect, screen.ReverseScreen, "Reverse Screen", tinyToggleStyle);
+            screen.VisualBeep = GUI.Toggle(visualBeepButtonRect, screen.VisualBeep, "Visual Beep", tinyToggleStyle);
+            keyClickEnabled = GUI.Toggle(keyClickButtonRect, keyClickEnabled, "Keyclicker", tinyToggleStyle);
 
 
             if (IsPowered)
@@ -541,6 +652,14 @@ namespace kOS.Screen
 
             List<IScreenBufferLine> buffer = mostRecentScreen.Buffer; // just to keep the name shorter below:
 
+            DateTime nowTime = DateTime.Now;
+            bool reversingScreen = (nowTime > blinkEndTime) ? screen.ReverseScreen : (!screen.ReverseScreen);
+            if (reversingScreen)
+            {   // In reverse screen mode, draw a big rectangle in foreground color across the whole active screen area:
+                GUI.color = currentTextColor;
+                GUI.DrawTexture(new Rect(0, 0, screen.ColumnCount * CHARSIZE, screen.RowCount * CHARSIZE), Texture2D.whiteTexture, ScaleMode.ScaleAndCrop );
+            }
+            
             // Sometimes the buffer is shorter than the terminal height if the resize JUST happened in the last Update():
             int rowsToPaint = Math.Min(screen.RowCount, buffer.Count);
 
@@ -550,7 +669,7 @@ namespace kOS.Screen
                 for (int column = 0; column < lineBuffer.Length; column++)
                 {
                     char c = lineBuffer[column];
-                    if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(c, column, row, currentTextColor);
+                    if (c != 0 && c != 9 && c != 32) ShowCharacterByAscii(c, column, row, currentTextColor, reversingScreen);
                 }
             }
 
@@ -561,8 +680,10 @@ namespace kOS.Screen
             
             if (blinkOn)
             {
-                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor);
+                ShowCharacterByAscii((char)1, screen.CursorColumnShow, screen.CursorRowShow, currentTextColor, reversingScreen);
             }
+            
+            GUI.color = currentTextColor; // put it back after all that mucking about we did above.
             GUI.EndGroup();
             
             GUI.Label(new Rect(WindowRect.width/2-40,WindowRect.height-20,100,10),screen.ColumnCount+"x"+screen.RowCount);
@@ -612,18 +733,18 @@ namespace kOS.Screen
             }
         }
         
-        void ShowCharacterByAscii(char ch, int x, int y, Color charTextColor)
+        void ShowCharacterByAscii(char ch, int x, int y, Color charTextColor, bool reversingScreen)
         {
             int tx = ch % FONTIMAGE_CHARS_PER_ROW;
             int ty = ch / FONTIMAGE_CHARS_PER_ROW;
 
-            ShowCharacterByXY(x, y, tx, ty, charTextColor);
+            ShowCharacterByXY(x, y, tx, ty, charTextColor, reversingScreen);
         }
 
-        void ShowCharacterByXY(int x, int y, int tx, int ty, Color charTextColor)
+        void ShowCharacterByXY(int x, int y, int tx, int ty, Color charTextColor, bool reversingScreen)
         {
             GUI.BeginGroup(new Rect((x * CHARSIZE), (y * CHARSIZE), CHARSIZE, CHARSIZE));
-            GUI.color = charTextColor;
+            GUI.color = (reversingScreen ? bgColor : charTextColor);
             GUI.DrawTexture(new Rect(tx * -CHARSIZE, ty * -CHARSIZE, fontImage.width, fontImage.height), fontImage);
             GUI.EndGroup();
         }
@@ -744,10 +865,24 @@ namespace kOS.Screen
                 return;
             }
             
+            // If the state of the screen reverse, or the visual bell flags, has changed since last time,
+            // spit out the characters to change the state:
+            if (telnet.ReverseScreen != shared.Screen.ReverseScreen)
+            {
+                telnet.Write(shared.Screen.ReverseScreen ? ((char)UnicodeCommand.REVERSESCREENMODE) : ((char)UnicodeCommand.NORMALSCREENMODE));
+                telnet.ReverseScreen = shared.Screen.ReverseScreen;
+            }
+            if (telnet.VisualBeep != shared.Screen.VisualBeep)
+            {
+                telnet.Write(shared.Screen.VisualBeep ? ((char)UnicodeCommand.VISUALBEEPMODE) : ((char)UnicodeCommand.AUDIOBEEPMODE));
+                telnet.VisualBeep = shared.Screen.VisualBeep;
+            }            
             string updateText = mostRecentScreen.DiffFrom(prevTelnetScreens[telnet]);
             telnet.Write(updateText);
             
             prevTelnetScreens[telnet] = mostRecentScreen.DeepCopy();
+            for (int i = 0 ; i < shared.Screen.BeepsPending ; ++i)
+                telnet.Write((char)UnicodeCommand.BEEP); // The terminal's UnicodeMapper will convert this to ascii 0x07 if the right terminal type.
         }
         
         /// <summary>

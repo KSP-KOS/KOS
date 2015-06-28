@@ -13,6 +13,23 @@ Predictions of Flight Path
 
     Using the Add and Remove commands as described on that page, you may alter the flight plan of the CPU\_vessel, however kOS does not automatically execute the nodes. You still have to write the code to decide how to successfully execute a planned maneuver node.
 
+.. warning::
+
+    Be aware that a limitation of KSP makes it so that some vessels'
+    manuever node systems cannot be accessed.  KSP appears to limit the
+    maneuver node system to only functioning on the current PLAYER
+    vessel, under the presumption that its the only vessel that needs
+    them, as ever other vessel cannot be manuevered. kOS can manuever a
+    vessel that is not the player vessel, but it cannot overcome this
+    limitation of the base game that unloads the maneuver node system
+    for other vessels. 
+
+    Be aware that the effect this has is that when you try to predict
+    another vessel's position, it will sometimes give you answers that
+    presume that other vessel will be purely drifting, and not following
+    its maneuver nodes.
+
+
 The following prediction functions do take into account the future maneuver nodes planned, and operate under the assumption that they will be executed as planned.
 
 These return predicted information about the future position and velocity of an object.

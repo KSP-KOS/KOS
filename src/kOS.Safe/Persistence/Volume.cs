@@ -89,7 +89,7 @@ namespace kOS.Safe.Persistence
             return false;
         }
 
-        public virtual void AppendToFile(string name, string textToAppend)
+        public virtual bool AppendToFile(string name, string textToAppend)
         {
             SafeHouse.Logger.SuperVerbose("Volume: AppendToFile: " + name);
             ProgramFile file = GetByName(name) ?? new ProgramFile(name);
@@ -100,17 +100,17 @@ namespace kOS.Safe.Persistence
             }
 
             file.StringContent = file.StringContent + textToAppend;
-            SaveFile(file);
+            return SaveFile(file);
         }
 
-        public virtual void AppendToFile(string name, byte[] bytesToAppend)
+        public virtual bool AppendToFile(string name, byte[] bytesToAppend)
         {
             SafeHouse.Logger.SuperVerbose("Volume: AppendToFile: " + name);
             ProgramFile file = GetByName(name) ?? new ProgramFile(name);
 
             file.BinaryContent = new byte[file.BinaryContent.Length + bytesToAppend.Length];
             Array.Copy(bytesToAppend, 0, file.BinaryContent, file.BinaryContent.Length, bytesToAppend.Length);
-            SaveFile(file);
+            return SaveFile(file);
         }
 
         public virtual void Add(ProgramFile file, bool withReplacement = false)
@@ -137,8 +137,7 @@ namespace kOS.Safe.Persistence
         public virtual bool SaveObjectFile(string fileNameOut, List<CodePart> parts)
         {
             var newFile = new ProgramFile(fileNameOut) {BinaryContent = CompiledObject.Pack(parts)};
-            SaveFile(newFile);
-            return true;
+            return SaveFile(newFile);
         }
 
         public List<CodePart> LoadObjectFile(string filePath, string prefix, byte[] content)

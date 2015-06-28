@@ -162,7 +162,7 @@ namespace kOS.AddOns.InfernalRobotics
             {
                 get
                 {
-                    if (apiReady == null)
+                    if (apiReady == null || actualServoGroups == null)
                         return false;
 
                     return (bool)apiReady.GetValue(null, null);

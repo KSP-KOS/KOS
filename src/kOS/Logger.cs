@@ -56,6 +56,10 @@ namespace kOS
                     message += "\n\nMore Information at:\n" + url + "\n";
                 message += LINE_RULE;
             }
+
+            if (Config.Instance.AudibleExceptions && e is KOSException)
+                Shared.SoundMaker.BeginSound("error");
+
             LogToScreen(message);
             
             ExceptionHistory.Add(e);

@@ -59,7 +59,7 @@ namespace kOS.Safe.Persistence
 
         public Volume GetVolume(object volumeId)
         {
-            if (volumeId is int)
+            if (volumeId is int || volumeId is double || volumeId is float)
             {
                 return GetVolume((int)volumeId);
             }
@@ -135,7 +135,7 @@ namespace kOS.Safe.Persistence
         {
             // Remove volumes that are no longer attached
             var removals = new List<int>();
-            foreach (KeyValuePair<int, Volume> kvp in volumes)
+            foreach (var kvp in volumes)
             {
                 if (!(kvp.Value is Archive) && !attachedVolumes.Contains(kvp.Value))
                 {

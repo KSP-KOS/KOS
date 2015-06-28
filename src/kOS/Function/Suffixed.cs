@@ -312,6 +312,16 @@ namespace kOS.Function
         }
     }
 
+    [Function("clearvecdraws")]
+    public class FunctionHideAllVecdraws : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            AssertArgBottomAndConsume(shared);
+            VectorRenderer.ClearAll(shared.UpdateHandler);
+        }
+    }
+    
     [Function("positionat")]
     public class FunctionPositionAt : FunctionBase
     {

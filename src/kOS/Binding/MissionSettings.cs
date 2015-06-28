@@ -1,5 +1,4 @@
 using kOS.Safe.Binding;
-using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 using kOS.Suffixed.Part;
 using kOS.Utilities;
@@ -11,6 +10,8 @@ namespace kOS.Binding
     {
         public override void AddTo(SharedObjects shared)
         {
+            shared.BindingMgr.AddGetter("CORE", () => new Core(shared));
+
             shared.BindingMgr.AddSetter("TARGET", val =>
             {
                 var targetable = val as IKOSTargetable;
@@ -20,18 +21,21 @@ namespace kOS.Binding
                     return;
                 }
 
-                var body = VesselUtils.GetBodyByName(val.ToString());
-                if (body != null)
+                if (!string.IsNullOrEmpty(val.ToString().Trim()))
                 {
-                    VesselUtils.SetTarget(body);
-                    return;
-                }
+                    var body = VesselUtils.GetBodyByName(val.ToString());
+                    if (body != null)
+                    {
+                        VesselUtils.SetTarget(body);
+                        return;
+                    }
 
-                var vessel = VesselUtils.GetVesselByName(val.ToString(), shared.Vessel);
-                if (vessel != null)
-                {
-                    VesselUtils.SetTarget(vessel);
-                    return;
+                    var vessel = VesselUtils.GetVesselByName(val.ToString(), shared.Vessel);
+                    if (vessel != null)
+                    {
+                        VesselUtils.SetTarget(vessel);
+                        return;
+                    }
                 }
                 //Target not found, if we have a target we clear it
                 VesselUtils.UnsetTarget();

@@ -1,6 +1,5 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Suffixed.Part;
 
 namespace kOS.Suffixed
 {
@@ -32,7 +31,7 @@ namespace kOS.Suffixed
 
         public override string ToString()
         {
-            return string.Format("RESOURCE({0},{1},{2}", partResource.resourceName, partResource.amount, partResource.maxAmount);
+            return string.Format("RESOURCE({0},{1},{2})", partResource.resourceName, partResource.amount, partResource.maxAmount);
         }
     }
 }

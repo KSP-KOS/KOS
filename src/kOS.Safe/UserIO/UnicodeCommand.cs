@@ -221,6 +221,40 @@
         /// (For example a height of 66, which is hex 0x32 would end up being sent as the capital letter 'B' which is Unicode 0x0032.).
         /// </summary>
         RESIZESCREEN,        
+        
+        /// <summary>
+        /// Our homemade unicode char that maps to the ascii BEL character that causes a terminal to beep.
+        /// </summary>
+        BEEP,
+        
+        /// <summary>
+        /// Send this char to put the terminal into reversed color mode.
+        /// </summary>
+        REVERSESCREENMODE,
+
+        /// <summary>
+        /// Send this char to put the terminal into normal foreground color mode.
+        /// </summary>
+        NORMALSCREENMODE,
+        
+        /// <summary>
+        /// Send this char to put the terminal into visual beep (beeps flash the screen) mode.
+        /// NOTE that most terminals refuse to implement an escape code for this, setting the beep mode
+        /// is purely a client-side thing on the setup screen for them, so there's a good chance this will get ignored.
+        /// As of this writing, none of the Terminal Mappers in kOS actually use this, but it's here in case we
+        /// ever support a more modern terminal class in the future that does implement it.
+        /// </summary>
+        VISUALBEEPMODE,
+
+        /// <summary>
+        /// Send this char to put the terminal into normal audio beep mode (beeps make a sound and don't flash the screen).
+        /// NOTE that most terminals refuse to implement an escape code for this, setting the beep mode
+        /// is purely a client-side thing on the setup screen for them, so there's a good chance this will get ignored.
+        /// As of this writing, none of the Terminal Mappers in kOS actually use this, but it's here in case we
+        /// ever support a more modern terminal class in the future that does implement it.
+        /// </summary>
+        AUDIOBEEPMODE
+        
     }
     
     // For tracking multiple-character input sequences to remember where it is in the sequence:

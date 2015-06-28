@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using kOS.Safe.Encapsulation;
+using kOS.AddOns.RemoteTech;
 
 namespace kOS.Suffixed.PartModuleField
 {
@@ -20,6 +21,11 @@ namespace kOS.Suffixed.PartModuleField
             var moduleGimbal = mod as ModuleGimbal;
             if (moduleGimbal != null)
                 return new GimbalFields(moduleGimbal, shared);
+
+            if (mod.moduleName.Equals(RemoteTechAntennaModuleFields.RTAntennaModule)) {
+                return new RemoteTechAntennaModuleFields(mod, shared);
+            }
+
             // This seems pointlessly do-nothing for a special factory now,
             // but it's here so that it can possibly become more
             // sophisticated later if need be:

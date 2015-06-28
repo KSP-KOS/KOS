@@ -69,7 +69,7 @@ namespace kOS.AddOns.RemoteTech
             if (!BatchMode) throw new Exception("Batch mode is not active.");
             if (batchQueue.Count == 0) throw new Exception("There are no commands to deploy.");
 
-            waitTotal = RemoteTechUtility.GetTotalWaitTime(Shared.Vessel);
+            waitTotal = RemoteTechUtility.GetInputWaitTime(Shared.Vessel);
             if (double.IsPositiveInfinity(waitTotal)) throw new Exception("No connection available.");
                 
             Print("Deploying...");
@@ -97,7 +97,7 @@ namespace kOS.AddOns.RemoteTech
         {
             if (!deploymentInProgress && commandQueue.Count > 0 && !BatchMode)
             {
-                waitTotal = RemoteTechUtility.GetTotalWaitTime(Shared.Vessel);
+                waitTotal = RemoteTechUtility.GetInputWaitTime(Shared.Vessel);
                 StartDeployment();
                 deltaTime = 0; // so the elapsed time is zero in this update
             }
@@ -110,7 +110,7 @@ namespace kOS.AddOns.RemoteTech
 
         private void UpdateDeployment(double deltaTime)
         {
-            if (!RemoteTechHook.Instance.HasAnyConnection(Shared.Vessel.id))
+            if (!RemoteTechUtility.HasConnectionOrControl(Shared.Vessel))
             {
                 if (!signalLossWarning)
                 {
@@ -187,7 +187,7 @@ namespace kOS.AddOns.RemoteTech
             progressBarSubBuffer.Buffer[2].ArrayCopyFrom(bars.ToCharArray(), 0, 0);
         }
 
-        public override void SpecialKey(char key)
+        public override bool SpecialKey(char key)
         {
             if (key == (char)UnicodeCommand.BREAK && deploymentInProgress)
             {
@@ -195,10 +195,11 @@ namespace kOS.AddOns.RemoteTech
                 else commandQueue.Clear();
                 
                 StopDeployment();
+                return true;
             }
             else
             {
-                base.SpecialKey(key);
+                return base.SpecialKey(key);
             }
         }
 

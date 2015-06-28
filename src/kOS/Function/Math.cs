@@ -55,24 +55,26 @@ namespace kOS.Function
         }
     }
 
-    [Function("roundnearest")]
-    public class FunctionRoundNearest : FunctionBase
-    {
-        public override void Execute(SharedObjects shared)
-        {
-            double argument = GetDouble(PopValueAssert(shared));
-            AssertArgBottomAndConsume(shared);
-            double result = Math.Round(argument);
-            ReturnValue = result;
-        }
-    }
-
     [Function("round")]
     public class FunctionRound : FunctionBase
     {
         public override void Execute(SharedObjects shared)
         {
-            int decimals = GetInt(PopValueAssert(shared));
+            int decimals;
+            int argCount = CountRemainingArgs(shared);
+
+            switch (argCount)
+            {
+                case 1:
+                    decimals = 0;
+                    break;
+                case 2:
+                    decimals = GetInt(PopValueAssert(shared));
+                    break;
+                default:
+                    throw new KOSArgumentMismatchException(new []{1,2}, argCount);
+            }
+
             double argument = GetDouble(PopValueAssert(shared));
             AssertArgBottomAndConsume(shared);
             double result = Math.Round(argument, decimals);

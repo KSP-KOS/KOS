@@ -34,7 +34,12 @@ namespace kOS.AddOns.InfernalRobotics
             AddSuffix("CURRENTSPEED", new SetSuffix<float>(() => servo.CurrentSpeed, value => servo.CurrentSpeed = value));
             AddSuffix("SPEED", new SetSuffix<float>(() => servo.Speed, value => servo.Speed = value));
             AddSuffix("ACCELERATION", new SetSuffix<float>(() => servo.Acceleration, value => servo.Acceleration = value));
-            
+
+            AddSuffix("ISMOVING", new Suffix<bool>(() => servo.IsMoving));
+            AddSuffix("ISFREEMOVING", new Suffix<bool>(() => servo.IsFreeMoving));
+            AddSuffix("LOCKED", new SetSuffix<bool>(() => servo.IsLocked, value => servo.IsLocked = value));
+            AddSuffix("INVERTED", new SetSuffix<bool>(() => servo.IsAxisInverted, value => servo.IsAxisInverted = value));
+
             AddSuffix("MOVERIGHT", new NoArgsSuffix(MoveRight));
             AddSuffix("MOVELEFT", new NoArgsSuffix(MoveLeft));
             AddSuffix("MOVECENTER", new NoArgsSuffix(MoveCenter));

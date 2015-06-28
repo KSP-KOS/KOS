@@ -29,12 +29,21 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
         * - :attr:`ALLFIELDS`
           - :struct:`List` of strings
           - Accessible fields
+        * - :attr:`ALLFIELDNAMES`
+          - :struct:`List` of strings
+          - Accessible fields (name only)
         * - :attr:`ALLEVENTS`
           - :struct:`List` of strings
           - Triggerable events
+        * - :attr:`ALLEVENTNAMES`
+          - :struct:`List` of strings
+          - Triggerable event names
         * - :attr:`ALLACTIONS`
           - :struct:`List` of strings
           - Triggerable actions
+        * - :attr:`ALLACTIONNAMES`
+          - :struct:`List` of strings
+          - Triggerable event names
         * - :meth:`GETFIELD(name)`
           -
           - Get value of a field by name
@@ -81,6 +90,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Get a list of all the names of KSPFields on this PartModule that the kos script is CURRENTLY allowed to get or set with :GETFIELD or :SETFIELD. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
 
+.. attribute:: PartModule:ALLFIELDNAMES
+
+     :access: Get only
+     :test: :struct:`List` of strings
+     
+     Similar to :ALLFIELDS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+     
 .. attribute:: PartModule:ALLEVENTS
 
     :access: Get only
@@ -88,6 +104,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Get a list of all the names of KSPEvents on this PartModule that the kos script is CURRENTLY allowed to trigger with :DOEVENT. Note the Security access comments below. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
 
+.. attribute:: PartModule:ALLEVENTNAMES
+
+     :access: Get only
+     :test: :struct:`List` of strings
+     
+     Similar to :ALLEVENTS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+     
 .. attribute:: PartModule:ALLACTIONS
 
     :access: Get only
@@ -95,6 +118,13 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Get a list of all the names of KSPActions on this PartModule that the kos script is CURRENTLY allowed to trigger with :DOACTION. Note the Security access comments below.
 
+.. attribute:: PartModule:ALLACTIONNAMES
+
+     :access: Get only
+     :test: :struct:`List` of strings
+     
+     Similar to :ALLACTIONS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.
+     
 .. method:: PartModule:GETFIELD(name)
 
     :parameter name: (string) Name of the field

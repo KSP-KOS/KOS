@@ -33,7 +33,7 @@ namespace kOS.Safe.Compilation
         // The explicit picking of the hex numbers is not strictly necessary,
         // but it's being done to aid in debugging the ML load/unload process,
         // as it makes it possible to look at hexdumps of the machine code
-        // and comapre that to this list: 
+        // and compare that to this list: 
         EOF            = 0x31,
         EOP            = 0x32,
         NOP            = 0x33,
@@ -79,6 +79,7 @@ namespace kOS.Safe.Compilation
         POPSCOPE       = 0x5b,
         STOREEXIST     = 0x5c,
         PUSHDELEGATE   = 0x5d,
+        BRANCHTRUE     = 0x5e,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -186,7 +187,7 @@ namespace kOS.Safe.Compilation
         // This is populated by using Reflection to scan all the Opcodes for their MLField Attributes.
         private static Dictionary<Type,List<MLArgInfo>> mapOpcodeToArgs;
                 
-        private static string forceDefaultConstructorMsg =
+        private const string FORCE_DEFAULT_CONSTRUCTOR_MSG =
             "+----------- ERROR IN OPCODE DEFINITION ----------------------------------+\n" +
             "|                                                                         |\n" +
             "|         This is a message that only developers of the kOS mod are       |\n" +
@@ -210,12 +211,13 @@ namespace kOS.Safe.Compilation
         public int DeltaInstructionPointer { get; protected set; } 
         public int MLIndex { get; set; } // index into the Machine Language code file for the COMPILE command.
         public string Label {get{return label;} set {label = value;} }
-        private string label = "";
         public virtual string DestinationLabel {get;set;}
         public string SourceName;
 
         public short SourceLine { get; set; } // line number in the source code that this was compiled from.
         public short SourceColumn { get; set; }  // column number of the token nearest the cause of this Opcode.
+
+        private string label = string.Empty;
         
         public virtual void Execute(ICpu cpu)
         {
@@ -294,7 +296,7 @@ namespace kOS.Safe.Compilation
                     }
                     catch (MissingMethodException)
                     {
-                        SafeHouse.Logger.Log( String.Format(forceDefaultConstructorMsg, opType.Name) );
+                        SafeHouse.Logger.Log( String.Format(FORCE_DEFAULT_CONSTRUCTOR_MSG, opType.Name) );
                         Debug.AddNagMessage( Debug.NagType.NAGFOREVER, "ERROR IN OPCODE DEFINITION " + opType.Name );
                         return;
                     }
@@ -567,7 +569,7 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "getmember"; } }
         public override ByteCode Code { get { return ByteCode.GETMEMBER; } }
-        protected bool isMethodCallAttempt = false;
+        protected bool IsMethodCallAttempt = false;
 
         public override void Execute(ICpu cpu)
         {
@@ -581,7 +583,7 @@ namespace kOS.Safe.Compilation
             }
 
             object value = specialValue.GetSuffix(suffixName);
-            if (value is Delegate && !isMethodCallAttempt)
+            if (value is Delegate && !IsMethodCallAttempt)
             {
                 // This is what happens when someone tries to call a suffix method as if
                 // it wasn't a method (i.e. leaving the parentheses off the call).  The
@@ -609,7 +611,7 @@ namespace kOS.Safe.Compilation
         public override ByteCode Code { get { return ByteCode.GETMETHOD; } }
         public override void Execute(ICpu cpu)
         {
-            isMethodCallAttempt = true;
+            IsMethodCallAttempt = true;
             base.Execute(cpu);
         }
     }
@@ -759,6 +761,18 @@ namespace kOS.Safe.Compilation
         {
             bool condition = Convert.ToBoolean(cpu.PopValue());
             DeltaInstructionPointer = !condition ? Distance : 1;
+        }
+    }
+    
+    public class OpcodeBranchIfTrue : BranchOpcode
+    {
+        protected override string Name { get { return "br.true"; } }
+        public override ByteCode Code { get { return ByteCode.BRANCHTRUE; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            bool condition = Convert.ToBoolean(cpu.PopValue());
+            DeltaInstructionPointer = condition ? Distance : 1;
         }
     }
 
@@ -1401,32 +1415,64 @@ namespace kOS.Safe.Compilation
         }
     }
     
+    /// <summary>
+    /// Returns from an OpcodeCall, popping a number of scope depths off
+    /// the stack as it does so.  It evals the topmost thing on the stack.
+    /// to remove any local variable references and replace them with their
+    /// current values, and then performs the equivalent of a popscope, then
+    /// jumps back to where the routine was called from.
+    /// It also checks to ensure that the argument stack contains the arg
+    /// bottom marker.  If it does not, that proves the number of parameters
+    /// consumed did not match the number of arguments passed and it throws
+    /// an exception (to avoid stack misalignment that would happen if it
+    /// tried to continue).
+    /// </summary>
     public class OpcodeReturn : Opcode
     {
         protected override string Name { get { return "return"; } }
         public override ByteCode Code { get { return ByteCode.RETURN; } }
+        
+        [MLField(0,true)]
+        public Int16 Depth { get; private set; } // Determines how many levels to popscope.
 
+        public override void PopulateFromMLFields(List<object> fields)
+        {
+            // Expect fields in the same order as the [MLField] properties of this class:
+            if (fields == null || fields.Count<1)
+                throw new Exception("Saved field in ML file for OpcodeCall seems to be missing.  Version mismatch?");
+            Depth = (Int16)fields[0];
+        }
+        
+        // Default constructor is needed for PopulateFromMLFields but shouldn't be used outside the KSM file handler:
+        private OpcodeReturn()
+        {
+        }
+        
+        /// <summary>
+        /// Make a return, telling it how many levels of the scope stack it should
+        /// be popping as it does so.  It combines the behavior of a PopScope inside
+        /// itself, AFTER it reads and evaluates the thing atop the stack for return
+        /// purposes (that way it evals the top thing BEFORE it pops the scope and forgets
+        /// what variables exist).<br/
+        /// <br/>
+        /// Doing this:<br/>
+        ///   push $val<br/>
+        ///   return 2 deep<br/>
+        /// is the same as this:<br/>
+        ///   push $val<br/>
+        ///   eval<br/>
+        ///   popscope 2<br/>
+        ///   return 0 deep<br/>
+        /// <br/>
+        /// </summary>
+        /// <param name="popScopes"></param>
+        public OpcodeReturn(Int16 depth)
+        {
+            Depth = depth;
+        }
+        
         public override void Execute(ICpu cpu)
         {
-            // The only thing on the "above stack" now that is allowed to get in the way of
-            // finding the context record that tells us where to jump back to, are the potential
-            // closure scope frames that might have been pushed if this subroutine was
-            // called via a delegate reference.  Consume any of those that are in
-            // the way, then expect the context record.  Any other pattern encountered
-            // is proof the stack alignment got screwed up:
-            bool okay;
-            VariableScope peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
-            while (okay && peeked != null && peeked.IsClosure)
-            {
-                cpu.PopAboveStack(1);
-                peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
-            }
-            object shouldBeContextRecord = cpu.PopAboveStack(1);
-            if ( !(shouldBeContextRecord is SubroutineContext) )
-            {
-                // This should never happen with any user code:
-                throw new Exception( "kOS internal error: Stack misalignment detected when returning from routine.");
-            }
 
             // Return value should be atop the stack - we have to pop it so that
             // we can reach the arg start marker under it:
@@ -1449,14 +1495,42 @@ namespace kOS.Safe.Compilation
             // back, where it belongs, now that the arg start marker was popped off:
             cpu.PushStack(returnVal);
             
+            // Now, after the eval was done, NOW finally pop the scope, after we don't need local vars anymore:
+            if( Depth > 0 )
+                OpcodePopScope.DoPopScope(cpu, Depth);
+
+            // The only thing on the "above stack" now that is allowed to get in the way of
+            // finding the context record that tells us where to jump back to, are the potential
+            // closure scope frames that might have been pushed if this subroutine was
+            // called via a delegate reference.  Consume any of those that are in
+            // the way, then expect the context record.  Any other pattern encountered
+            // is proof the stack alignment got screwed up:
+            bool okay;
+            VariableScope peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
+            while (okay && peeked != null && peeked.IsClosure)
+            {
+                cpu.PopAboveStack(1);
+                peeked = cpu.PeekRaw(-1, out okay) as VariableScope;
+            }
+            object shouldBeContextRecord = cpu.PopAboveStack(1);
+            if ( !(shouldBeContextRecord is SubroutineContext) )
+            {
+                // This should never happen with any user code:
+                throw new Exception( "kOS internal error: Stack misalignment detected when returning from routine.");
+            }
+            
             var contextRecord = shouldBeContextRecord as SubroutineContext;
             
             int destinationPointer = contextRecord.CameFromInstPtr;
             int currentPointer = cpu.InstructionPointer;
             DeltaInstructionPointer = destinationPointer - currentPointer;
         }
-    }
 
+        public override string ToString()
+        {
+            return String.Format("{0} {1} deep", Name, Depth);
+        }
+    }
     #endregion
 
     #region Stack
@@ -1530,7 +1604,7 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodePushRelocateLater : Opcode
     {
-        [MLField(1,true)]
+        [MLField(0,true)]
         public override sealed string DestinationLabel {get;set;}
 
         protected override string Name { get { return "PushRelocateLater"; } }
@@ -1726,7 +1800,21 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            cpu.PopAboveStack(NumLevels);
+            DoPopScope(cpu, NumLevels);
+        }
+        
+        /// <summary>
+        /// Do the actual work of the Execute() method.  This was pulled out
+        /// to a separate static method so that others can call it without needing
+        /// an actual popscope object.  Everything OpcodePopScope.Execute() does
+        /// should actually be done here, so as to ensure that external callers of
+        /// this get exactly the same behaviour as a full popstack opcode.
+        /// </summary>
+        /// <param name="cpuObj">the shared.cpu to operate on.</param>
+        /// <param name="levels">number of levels to popscope.</param>
+        public static void DoPopScope(ICpu cpuObj, Int16 levels)
+        {
+            cpuObj.PopAboveStack(levels);
         }
 
         public override string ToString()
@@ -1784,7 +1872,7 @@ namespace kOS.Safe.Compilation
     /// </summary>
     public class OpcodePushDelegateRelocateLater : OpcodePushRelocateLater
     {
-        [MLField(1,false)]
+        [MLField(100,false)]
         public bool WithClosure { get; set; }
 
         protected override string Name { get { return "PushDelegateRelocateLater"; } }
@@ -1801,11 +1889,12 @@ namespace kOS.Safe.Compilation
         protected OpcodePushDelegateRelocateLater() : base() {}
         
         public override void PopulateFromMLFields(List<object> fields)
-        {
+        {            
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for OpcodePushDelegateRelocatelater seems to be missing.  Version mismatch?");
-            WithClosure = (bool)fields[0];
+            DestinationLabel = (string)( fields[0] ); // this is really from the base class.
+            WithClosure = (bool)fields[1];
         }
     }
     

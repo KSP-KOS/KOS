@@ -39,7 +39,7 @@ declare function display_block {
     startCol, startRow. // define where the block of text should be positioned
 
   print round(seekAlt,2) + "m    " at (startCol,startRow).
-  print round(alt_radar,2) + "m    " at (startCol,startRow+1).
+  print round(alt:radar,2) + "m    " at (startCol,startRow+1).
   print round(myth,3) + "      " at (startCol,startRow+3).
 }.
 
@@ -55,7 +55,7 @@ set hoverPID to pid_init( 0.05, 0.01, 0.1 ). // Kp, Ki, Kd vals.
 gear on.  gear off. // on then off because of the weird KSP 'have to hit g twice' bug.
 
 until gear {
-  set myTh to pid_seek( hoverPID, seekAlt, alt_radar ).
+  set myTh to pid_seek( hoverPID, seekAlt, alt:radar ).
   display_block(18,11).
   wait 0.001.
 }.
@@ -64,4 +64,3 @@ set ship:control:pilotmainthrottle to throttle.
 print "------------------------------".
 print "Releasing control back to you.".
 print "------------------------------".
-

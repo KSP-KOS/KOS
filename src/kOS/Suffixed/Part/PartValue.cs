@@ -117,8 +117,8 @@ namespace kOS.Suffixed.Part
 
         private void ControlFrom()
         {
-            var dockingModule = Part.Modules.OfType<ModuleDockingNode>().First();
-            var commandModule = Part.Modules.OfType<ModuleCommand>().First();
+            var dockingModule = Part.Modules.OfType<ModuleDockingNode>().FirstOrDefault();
+            var commandModule = Part.Modules.OfType<ModuleCommand>().FirstOrDefault();
 
             if (commandModule != null)
             {
@@ -130,7 +130,7 @@ namespace kOS.Suffixed.Part
             }
             else
             {
-                Part.vessel.SetReferenceTransform(Part);
+                throw new KOSCommandInvalidHere("CONTROLFROM", "a generic part value", "a docking port or command part");
             }
         }
 

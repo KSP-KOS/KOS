@@ -45,6 +45,12 @@ namespace kOS.Safe.Encapsulation
                                                         MINCOLUMNS,
                                                         MAXCOLUMNS,
                                                         "Get or Set the number of columns on the screen.  Value is limited to the range [" + MINCOLUMNS + "," + MAXCOLUMNS + "]"));
+            AddSuffix("REVERSE", new SetSuffix<bool>(() => Shared.Screen.ReverseScreen,
+                                                     value => Shared.Screen.ReverseScreen = value,
+                                                     "Get or set the value of whether or not the terminal is in reversed mode."));
+            AddSuffix("VISUALBEEP", new SetSuffix<bool>(() => Shared.Screen.VisualBeep,
+                                                       value => Shared.Screen.VisualBeep = value,
+                                                       "Get or set the value of whether or not the terminal shows beeps silently with a visual flash."));
         }
         
         public override string ToString()
