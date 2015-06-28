@@ -79,6 +79,44 @@ Structures also often contain methods. A method is a suffix of a structure that 
 
 For more information, see the :ref:`Structures Section <language structures>`. A full list of structure types can be found on the :ref:`Structures <structures>` page. For a more detailed breakdown of the language, see the :ref:`Language Syntax Constructs <syntax>` page.
 
+
+.. _short_circuit:
+
+Short-curcuiting booleans
+-------------------------
+
+Further reading: https://en.wikipedia.org/wiki/Short-circuit_evaluation
+
+When performing any boolean operation involving the use of the AND or the OR
+operator, kerboscript will short-circuit the boolean check.  What this means
+is that if it gets to a point in the expression where it already knows the
+result is a forgone conclusion, it doesn't bother calculating the rest of
+the expression and just quits there.
+
+Example::
+
+    set x to true.
+    if x or y+2 > 10 {
+        print "yes".
+    } else {
+        print "no".
+    }.
+
+In this case, the fact that x is true means that when evaluating
+the boolean expression ``x or y+2 > 10`` it never even bothers trying
+to add y and 2 to find out if it's greater than 10.  It already knew
+as soon as it got to the ``x or whatever`` that given that x is true,
+the *whatever* doesn't matter one bit.  Once one side of an OR is true,
+the other side can either be true or false and it won't change the fact 
+that the whole expression will be true anyway.
+
+A similar short circuiting happens with AND.  Once the left side of the
+AND operator is false, then the entire AND expression is guaranteed
+to be false regardless of what's on the right side, so kerboscript 
+doesn't bother calculating the righthand side once the lefthand side is false.
+
+Read the link above for implications of why this matters in programming.
+
 Late Typing
 -----------
 
