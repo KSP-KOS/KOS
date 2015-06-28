@@ -1,0 +1,1113 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Infernal Robotics &mdash; kOS 0.17.2 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../index.html"/>
+        <link rel="up" title="Addon Reference" href="../addons.html"/>
+        <link rel="next" title="Contribute" href="../contribute.html"/>
+        <link rel="prev" title="Kerbal Alarm Clock" href="KAC.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/exenode.html">Execute Node script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Infernal Robotics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../addons.html">Addon Reference</a> &raquo;</li>
+      
+    <li>Infernal Robotics</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/addons/IR.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="infernal-robotics">
+<span id="ir"></span><h1>Infernal Robotics<a class="headerlink" href="#infernal-robotics" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>Download: <a class="reference external" href="http://kerbal.curseforge.com/ksp-mods/220267">http://kerbal.curseforge.com/ksp-mods/220267</a></li>
+<li>Alternative download: <a class="reference external" href="https://kerbalstuff.com/mod/8/Magic_Smoke_Industries_Infernal_Robotics">https://kerbalstuff.com/mod/8/Magic_Smoke_Industries_Infernal_Robotics</a></li>
+<li>Forum thread, including full instructions: <a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/116064">http://forum.kerbalspaceprogram.com/threads/116064</a></li>
+</ul>
+<p>Infernal Robotics introduces robotics parts to the game, letting you create moving or spinning contraptions that just aren&#8217;t possible under stock KSP.
+.. figure:: <a class="reference external" href="http://i.imgur.com/O94LBvF.png">http://i.imgur.com/O94LBvF.png</a></p>
+<p>Starting version 0.20 of the Infernal Robotics, mod creators introduced API to for easier access to robotic features.</p>
+<p>Access structure IRAddon via <cite>ADDONS:IR</cite>.</p>
+<dl class="structure">
+<dt id="structure:IRADDON">
+<em class="property">structure </em><tt class="descname">IRAddon</tt><a class="headerlink" href="#structure:IRADDON" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="15%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRADDON:AVAILABLE" title="IRADDON:AVAILABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLE</span></tt></a></td>
+<td>bool(readonly)</td>
+<td>Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRADDON:GROUPS" title="IRADDON:GROUPS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GROUPS</span></tt></a></td>
+<td>List (readonly)</td>
+<td>Lists all Servo Groups for current focused vessel</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRADDON:ALLSERVOS" title="IRADDON:ALLSERVOS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLSERVOS</span></tt></a></td>
+<td>List (readonly)</td>
+<td>Lists all Servos for current focused vessel</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRADDON:AVAILABLE">
+IRAddon:<tt class="descname">AVAILABLE</tt><a class="headerlink" href="#attribute:IRADDON:AVAILABLE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft.
+Example of use:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="n">ADDONS</span><span class="o">:</span><span class="n">IR</span><span class="o">:</span><span class="n">AVAILABLE</span>
+<span class="p">{</span>
+    <span class="c1">//some IR dependent code</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRADDON:GROUPS">
+IRAddon:<tt class="descname">GROUPS</tt><a class="headerlink" href="#attribute:IRADDON:GROUPS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">List of <a class="reference internal" href="#structure:IRCONTROLGROUP" title="IRCONTROLGROUP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">IRControlGroup</span></tt></a> objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Lists all Servo Groups for current focused vessel. Example of use:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">for</span> <span class="n">g</span> <span class="n">in</span> <span class="n">ADDONS</span><span class="o">:</span><span class="n">IR</span><span class="o">:</span><span class="n">GROUPS</span>
+<span class="p">{</span>
+    <span class="n">Print</span> <span class="n">g</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot; contains &quot;</span> <span class="o">+</span> <span class="n">g</span><span class="o">:</span><span class="n">SERVOS</span><span class="o">:</span><span class="n">LENGTH</span> <span class="o">+</span> <span class="s">&quot; servos&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRADDON:ALLSERVOS">
+IRAddon:<tt class="descname">ALLSERVOS</tt><a class="headerlink" href="#attribute:IRADDON:ALLSERVOS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">List of <a class="reference internal" href="#structure:IRSERVO" title="IRSERVO structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">IRServo</span></tt></a> objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Lists all Servos for current focused vessel. Example of use:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">for</span> <span class="n">s</span> <span class="n">in</span> <span class="n">ADDONS</span><span class="o">:</span><span class="n">IR</span><span class="o">:</span><span class="n">ALLSERVOS</span>
+<span class="p">{</span>
+    <span class="n">print</span> <span class="s">&quot;Name: &quot;</span> <span class="o">+</span> <span class="n">s</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot;, position: &quot;</span> <span class="o">+</span> <span class="n">s</span><span class="o">:</span><span class="n">POSITION</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="structure">
+<dt id="structure:IRCONTROLGROUP">
+<em class="property">structure </em><tt class="descname">IRControlGroup</tt><a class="headerlink" href="#structure:IRCONTROLGROUP" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="21%" />
+<col width="49%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:NAME" title="IRCONTROLGROUP:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+<td>Name of the Control Group</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:SPEED" title="IRCONTROLGROUP:SPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SPEED</span></tt></a></td>
+<td>float</td>
+<td>Speed multiplier set in the IR UI</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:EXPANDED" title="IRCONTROLGROUP:EXPANDED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">EXPANDED</span></tt></a></td>
+<td>bool</td>
+<td>True if Group is expanded in IR UI</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:FORWARDKEY" title="IRCONTROLGROUP:FORWARDKEY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FORWARDKEY</span></tt></a></td>
+<td>string</td>
+<td>Key assigned to forward movement</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:REVERSEKEY" title="IRCONTROLGROUP:REVERSEKEY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">REVERSEKEY</span></tt></a></td>
+<td>string</td>
+<td>Key assigned to reverse movement</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRCONTROLGROUP:SERVOS" title="IRCONTROLGROUP:SERVOS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SERVOS</span></tt></a></td>
+<td>List (readonly)</td>
+<td>List of servos in the group</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRCONTROLGROUP:MOVERIGHT" title="IRCONTROLGROUP:MOVERIGHT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVERIGHT()</span></tt></a></td>
+<td>void</td>
+<td>Commands servos in the group to move in positive direction</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRCONTROLGROUP:MOVELEFT" title="IRCONTROLGROUP:MOVELEFT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVELEFT()</span></tt></a></td>
+<td>void</td>
+<td>Commands servos in the group to move in negative direction</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRCONTROLGROUP:MOVECENTER" title="IRCONTROLGROUP:MOVECENTER method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVECENTER()</span></tt></a></td>
+<td>void</td>
+<td>Commands servos in the group to move to default position</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRCONTROLGROUP:MOVENEXTPRESET" title="IRCONTROLGROUP:MOVENEXTPRESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVENEXTPRESET()</span></tt></a></td>
+<td>void</td>
+<td>Commands servos in the group to move to next preset</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRCONTROLGROUP:MOVEPREVPRESET" title="IRCONTROLGROUP:MOVEPREVPRESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVEPREVPRESET()</span></tt></a></td>
+<td>void</td>
+<td>Commands servos in the group to move to previous preset</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRCONTROLGROUP:STOP" title="IRCONTROLGROUP:STOP method"><tt class="xref ks ks-meth docutils literal"><span class="pre">STOP()</span></tt></a></td>
+<td>void</td>
+<td>Commands servos in the group to stop</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRCONTROLGROUP:NAME">
+IRControlGroup:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:IRCONTROLGROUP:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Name of the Control Group (cannot be empty).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRCONTROLGROUP:SPEED">
+IRControlGroup:<tt class="descname">SPEED</tt><a class="headerlink" href="#attribute:IRCONTROLGROUP:SPEED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Speed multiplier as set in the IR user interface. Avoid setting it to 0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRCONTROLGROUP:EXPANDED">
+IRControlGroup:<tt class="descname">EXPANDED</tt><a class="headerlink" href="#attribute:IRCONTROLGROUP:EXPANDED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>True if Group is expanded in IR UI</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRCONTROLGROUP:FORWARDKEY">
+IRControlGroup:<tt class="descname">FORWARDKEY</tt><a class="headerlink" href="#attribute:IRCONTROLGROUP:FORWARDKEY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Key assigned to forward movement. Can be empty.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRCONTROLGROUP:REVERSEKEY">
+IRControlGroup:<tt class="descname">REVERSEKEY</tt><a class="headerlink" href="#attribute:IRCONTROLGROUP:REVERSEKEY" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Key assigned to reverse movement. Can be empty.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRCONTROLGROUP:SERVOS">
+IRControlGroup:<tt class="descname">SERVOS</tt><a class="headerlink" href="#attribute:IRCONTROLGROUP:SERVOS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">List of <a class="reference internal" href="#structure:IRSERVO" title="IRSERVO structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">IRServo</span></tt></a> objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Lists Servos in the Group. Example of use:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">for</span> <span class="n">g</span> <span class="n">in</span> <span class="n">ADDONS</span><span class="o">:</span><span class="n">IR</span><span class="o">:</span><span class="n">GROUPS</span>
+<span class="p">{</span>
+    <span class="n">Print</span> <span class="n">g</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot; contains &quot;</span> <span class="o">+</span> <span class="n">g</span><span class="o">:</span><span class="n">SERVOS</span><span class="o">:</span><span class="n">LENGTH</span> <span class="o">+</span> <span class="s">&quot; servos:&quot;</span><span class="p">.</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="n">in</span> <span class="n">g</span><span class="o">:</span><span class="n">servos</span>
+    <span class="p">{</span>
+        <span class="n">print</span> <span class="s">&quot;    &quot;</span> <span class="o">+</span> <span class="n">s</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot;, position: &quot;</span> <span class="o">+</span> <span class="n">s</span><span class="o">:</span><span class="n">POSITION</span><span class="p">.</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRCONTROLGROUP:MOVERIGHT">
+IRControlGroup:<tt class="descname">MOVERIGHT</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRCONTROLGROUP:MOVERIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servos in the group to move in positive direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRCONTROLGROUP:MOVELEFT">
+IRControlGroup:<tt class="descname">MOVELEFT</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRCONTROLGROUP:MOVELEFT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servos in the group to move in negative direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRCONTROLGROUP:MOVECENTER">
+IRControlGroup:<tt class="descname">MOVECENTER</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRCONTROLGROUP:MOVECENTER" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servos in the group to move to default position.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRCONTROLGROUP:MOVENEXTPRESET">
+IRControlGroup:<tt class="descname">MOVENEXTPRESET</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRCONTROLGROUP:MOVENEXTPRESET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servos in the group to move to next preset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRCONTROLGROUP:MOVEPREVPRESET">
+IRControlGroup:<tt class="descname">MOVEPREVPRESET</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRCONTROLGROUP:MOVEPREVPRESET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servos in the group to move to previous preset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRCONTROLGROUP:STOP">
+IRControlGroup:<tt class="descname">STOP</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRCONTROLGROUP:STOP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servos in the group to stop</p>
+</dd></dl>
+
+<dl class="structure">
+<dt id="structure:IRSERVO">
+<em class="property">structure </em><tt class="descname">IRServo</tt><a class="headerlink" href="#structure:IRSERVO" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="20%" />
+<col width="52%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:NAME" title="IRSERVO:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<td>string</td>
+<td>Name of the Servo</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:UID" title="IRSERVO:UID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UID</span></tt></a></td>
+<td>int</td>
+<td>Unique ID of the servo part (part.flightID).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:HIGHLIGHT" title="IRSERVO:HIGHLIGHT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HIGHLIGHT</span></tt></a></td>
+<td>bool (set-only)</td>
+<td>Set Hightlight status of the part.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:POSITION" title="IRSERVO:POSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">POSITION</span></tt></a></td>
+<td>float (readonly)</td>
+<td>Current position of the servo.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:MINCFGPOSITION" title="IRSERVO:MINCFGPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MINCFGPOSITION</span></tt></a></td>
+<td>float (readonly)</td>
+<td>Minimum position for servo as defined by part creator in part.cfg</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:MAXCFGPOSITION" title="IRSERVO:MAXCFGPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MAXCFGPOSITION</span></tt></a></td>
+<td>float (readonly)</td>
+<td>Maximum position for servo as defined by part creator in part.cfg</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:MINPOSITION" title="IRSERVO:MINPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MINPOSITION</span></tt></a></td>
+<td>float</td>
+<td>Minimum position for servo, from tweakable.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:MAXPOSITION" title="IRSERVO:MAXPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MAXPOSITION</span></tt></a></td>
+<td>float</td>
+<td>Maximum position for servo, from tweakable.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:CONFIGSPEED" title="IRSERVO:CONFIGSPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CONFIGSPEED</span></tt></a></td>
+<td>float (readonly)</td>
+<td>Servo movement speed as defined by part creator in part.cfg</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:SPEED" title="IRSERVO:SPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SPEED</span></tt></a></td>
+<td>float</td>
+<td>Servo speed multiplier, from tweakable.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:CURRENTSPEED" title="IRSERVO:CURRENTSPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CURRENTSPEED</span></tt></a></td>
+<td>float (readonly)</td>
+<td>Current Servo speed.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:ACCELERATION" title="IRSERVO:ACCELERATION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ACCELERATION</span></tt></a></td>
+<td>float</td>
+<td>Servo acceleration multiplier, from tweakable.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:ISMOVING" title="IRSERVO:ISMOVING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ISMOVING</span></tt></a></td>
+<td>bool (readonly)</td>
+<td>True if Servo is moving</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:ISFREEMOVING" title="IRSERVO:ISFREEMOVING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ISFREEMOVING</span></tt></a></td>
+<td>bool (readonly)</td>
+<td>True if Servo is uncontrollable (ex. docking washer)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:LOCKED" title="IRSERVO:LOCKED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOCKED</span></tt></a></td>
+<td>bool</td>
+<td>Servo&#8217;s locked status, set true to lock servo.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:IRSERVO:INVERTED" title="IRSERVO:INVERTED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">INVERTED</span></tt></a></td>
+<td>bool</td>
+<td>Servo&#8217;s inverted status, set true to invert servo&#8217;s axis.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVERIGHT" title="IRSERVO:MOVERIGHT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVERIGHT()</span></tt></a></td>
+<td>void</td>
+<td>Commands servo to move in positive direction</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:MOVELEFT" title="IRSERVO:MOVELEFT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVELEFT()</span></tt></a></td>
+<td>void</td>
+<td>Commands servo to move in negative direction</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVECENTER" title="IRSERVO:MOVECENTER method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVECENTER()</span></tt></a></td>
+<td>void</td>
+<td>Commands servo to move to default position</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:MOVENEXTPRESET" title="IRSERVO:MOVENEXTPRESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVENEXTPRESET()</span></tt></a></td>
+<td>void</td>
+<td>Commands servo to move to next preset</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVEPREVPRESET" title="IRSERVO:MOVEPREVPRESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVEPREVPRESET()</span></tt></a></td>
+<td>void</td>
+<td>Commands servo to move to previous preset</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:STOP" title="IRSERVO:STOP method"><tt class="xref ks ks-meth docutils literal"><span class="pre">STOP()</span></tt></a></td>
+<td>void</td>
+<td>Commands servo to stop</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVETO" title="IRSERVO:MOVETO method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVETO(position,</span> <span class="pre">speedMult)</span></tt></a></td>
+<td>void</td>
+<td>Commands servo to move to <cite>position</cite> with <cite>speedMult</cite> multiplier</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:NAME">
+IRServo:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:IRSERVO:NAME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Name of the Control Group (cannot be empty).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:UID">
+IRServo:<tt class="descname">UID</tt><a class="headerlink" href="#attribute:IRSERVO:UID" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Unique ID of the servo part (part.flightID).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:HIGHLIGHT">
+IRServo:<tt class="descname">HIGHLIGHT</tt><a class="headerlink" href="#attribute:IRSERVO:HIGHLIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Set</td>
+</tr>
+</tbody>
+</table>
+<p>Set Hightlight status of the part.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:POSITION">
+IRServo:<tt class="descname">POSITION</tt><a class="headerlink" href="#attribute:IRSERVO:POSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Current position of the servo.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:MINCFGPOSITION">
+IRServo:<tt class="descname">MINCFGPOSITION</tt><a class="headerlink" href="#attribute:IRSERVO:MINCFGPOSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Minimum position for servo as defined by part creator in part.cfg</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:MAXCFGPOSITION">
+IRServo:<tt class="descname">MAXCFGPOSITION</tt><a class="headerlink" href="#attribute:IRSERVO:MAXCFGPOSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Maximum position for servo as defined by part creator in part.cfg</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:MINPOSITION">
+IRServo:<tt class="descname">MINPOSITION</tt><a class="headerlink" href="#attribute:IRSERVO:MINPOSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Minimum position for servo, from tweakable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:MAXPOSITION">
+IRServo:<tt class="descname">MAXPOSITION</tt><a class="headerlink" href="#attribute:IRSERVO:MAXPOSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Maximum position for servo, from tweakable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:CONFIGSPEED">
+IRServo:<tt class="descname">CONFIGSPEED</tt><a class="headerlink" href="#attribute:IRSERVO:CONFIGSPEED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Servo movement speed as defined by part creator in part.cfg</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:SPEED">
+IRServo:<tt class="descname">SPEED</tt><a class="headerlink" href="#attribute:IRSERVO:SPEED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Servo speed multiplier, from tweakable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:CURRENTSPEED">
+IRServo:<tt class="descname">CURRENTSPEED</tt><a class="headerlink" href="#attribute:IRSERVO:CURRENTSPEED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Current Servo speed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:ACCELERATION">
+IRServo:<tt class="descname">ACCELERATION</tt><a class="headerlink" href="#attribute:IRSERVO:ACCELERATION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Servo acceleration multiplier, from tweakable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:ISMOVING">
+IRServo:<tt class="descname">ISMOVING</tt><a class="headerlink" href="#attribute:IRSERVO:ISMOVING" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>True if Servo is moving</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:ISFREEMOVING">
+IRServo:<tt class="descname">ISFREEMOVING</tt><a class="headerlink" href="#attribute:IRSERVO:ISFREEMOVING" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>True if Servo is uncontrollable (ex. docking washer)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:LOCKED">
+IRServo:<tt class="descname">LOCKED</tt><a class="headerlink" href="#attribute:IRSERVO:LOCKED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Servo&#8217;s locked status, set true to lock servo.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:IRSERVO:INVERTED">
+IRServo:<tt class="descname">INVERTED</tt><a class="headerlink" href="#attribute:IRSERVO:INVERTED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Servo&#8217;s inverted status, set true to invert servo&#8217;s axis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRSERVO:MOVERIGHT">
+IRServo:<tt class="descname">MOVERIGHT</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRSERVO:MOVERIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servo to move in positive direction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRSERVO:MOVELEFT">
+IRServo:<tt class="descname">MOVELEFT</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRSERVO:MOVELEFT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servo to move in negative direction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRSERVO:MOVECENTER">
+IRServo:<tt class="descname">MOVECENTER</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRSERVO:MOVECENTER" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servo to move to default position</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRSERVO:MOVENEXTPRESET">
+IRServo:<tt class="descname">MOVENEXTPRESET</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRSERVO:MOVENEXTPRESET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servo to move to next preset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRSERVO:MOVEPREVPRESET">
+IRServo:<tt class="descname">MOVEPREVPRESET</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRSERVO:MOVEPREVPRESET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servo to move to previous preset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRSERVO:STOP">
+IRServo:<tt class="descname">STOP</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRSERVO:STOP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">void</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servo to stop</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:IRSERVO:MOVETO">
+IRServo:<tt class="descname">MOVETO</tt><big>(</big>position, speedMult<big>)</big><a class="headerlink" href="#method:IRSERVO:MOVETO" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>position</strong> &#8211; (float) Position to move to</li>
+<li><strong>speedMult</strong> &#8211; (float) Speed multiplier</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">void</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Commands servo to move to <cite>position</cite> with <cite>speedMult</cite> multiplier.</p>
+</dd></dl>
+
+<p>Example code:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="s">&quot;IR Iavailable: &quot;</span> <span class="o">+</span> <span class="n">ADDONS</span><span class="o">:</span><span class="n">IR</span><span class="o">:</span><span class="n">AVAILABLE</span><span class="p">.</span>
+
+<span class="n">Print</span> <span class="s">&quot;Groups:&quot;</span><span class="p">.</span>
+
+<span class="k">for</span> <span class="n">g</span> <span class="n">in</span> <span class="n">ADDONS</span><span class="o">:</span><span class="n">IR</span><span class="o">:</span><span class="n">GROUPS</span>
+<span class="p">{</span>
+    <span class="n">Print</span> <span class="n">g</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot; contains &quot;</span> <span class="o">+</span> <span class="n">g</span><span class="o">:</span><span class="n">SERVOS</span><span class="o">:</span><span class="n">LENGTH</span> <span class="o">+</span> <span class="s">&quot; servos:&quot;</span><span class="p">.</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="n">in</span> <span class="n">g</span><span class="o">:</span><span class="n">servos</span>
+    <span class="p">{</span>
+        <span class="n">print</span> <span class="s">&quot;    &quot;</span> <span class="o">+</span> <span class="n">s</span><span class="o">:</span><span class="n">NAME</span> <span class="o">+</span> <span class="s">&quot;, position: &quot;</span> <span class="o">+</span> <span class="n">s</span><span class="o">:</span><span class="n">POSITION</span><span class="p">.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">g</span><span class="o">:</span><span class="n">NAME</span> <span class="o">=</span> <span class="s">&quot;Hinges&quot;</span> <span class="n">and</span> <span class="n">s</span><span class="o">:</span><span class="n">POSITION</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nl">s:</span><span class="n">MOVETO</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2</span><span class="p">).</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">g</span><span class="o">:</span><span class="n">NAME</span> <span class="o">=</span> <span class="s">&quot;Hinges&quot;</span> <span class="n">and</span> <span class="n">s</span><span class="o">:</span><span class="n">POSITION</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nl">s:</span><span class="n">MOVETO</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../contribute.html" class="btn btn-neutral float-right" title="Contribute">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="KAC.html" class="btn btn-neutral" title="Kerbal Alarm Clock"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.17.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
