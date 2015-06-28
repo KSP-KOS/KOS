@@ -16,6 +16,32 @@ of documentation again from scratch.
 Changes in 0.17.3
 -----------------
 
+New Looping control flow, the FROM loop
+:::::::::::::::::::::::::::::::::::::::
+
+There is now a new kind of loop, :ref:`the FROM loop <from>`,
+which is a bit like the typical 3-part for-loop seen in a
+lot of other languages with a separate init, check, and increment
+section.
+
+Short-Circuit Booleans
+::::::::::::::::::::::
+
+Previously, kerboscript's AND and OR operators were not 
+short-circuiting.  :ref:`Now they are <short_circuit>`.
+
+New Infernal Robotics interface
+:::::::::::::::::::::::::::::::
+
+There are a few new helper addon utilities for the Infernal
+Robotics mod, on the :ref:`IR addon page <IR>`.
+
+New RemoteTech interface
+::::::::::::::::::::::::
+
+There are a few new helper addon utilities for the RemoteTech
+mod, on the :ref:`RemoteTech addon page <remotetech>`.
+
 Deprecated INCOMMRANGE
 ::::::::::::::::::::::::::
 
@@ -47,7 +73,7 @@ read the applicable value at a given atmospheric pressure.
 New CORE struct
 :::::::::::::::
 
-The :struct:`CORE` bound variable gives you a structure you can use
+The :ref:`core <core>` bound variable gives you a structure you can use
 to access properties of the current in-game CPU the script is running on,
 including the vessel part it's inside of, and the vessel it's inside
 of, as well as the currently selected volume.  Moving forward this
@@ -71,6 +97,24 @@ You can now get a list of docking ports on any element or vessel using
 the DOCKINGPORTS suffix.  Vessels also expose a list of their elements
 (the ELEMENTS suffix) and an element will refernce it's parent vessel
 (the VESSEL suffix).
+
+New sounds and terminal features
+::::::::::::::::::::::::::::::::
+
+For purely cosmetic purpopses, there are new sound features and
+ a few terminal tweaks.
+
+- A terminal keyclick option for the in-game GUI terminal.
+- The ability to BEEP when printing ascii code 7 (BEL), although
+  the only way currently to achieve this is with the KSlib's spec_char.ksm
+  file, as kOS has no BEL char, but this will be addressed later.
+- A sound effect on exceptions, which can be turned off on the CONFIG panel.
+
+Clear vecdraws all at once
+::::::::::::::::::::::::::
+
+For convenience, you can clear all vecdraws off the screen at once
+now with the :ref:`clearvecdraws() <clearvecdraws>` function.
 
 ****
 
