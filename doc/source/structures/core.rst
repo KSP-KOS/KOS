@@ -7,7 +7,7 @@ Core
     :local:
     :depth: 2
 
-Core represents your ability to identify and interact directly with the running kOS processor.  You can use it to access the parent vessel, or to perform operations on the processor's part.
+Core represents your ability to identify and interact directly with the running kOS processor.  You can use it to access the parent vessel, or to perform operations on the processor's part.  You obtain a CORE structure by using the bound variable ``core``.
 
 .. structure:: CORE
 

@@ -1,4 +1,4 @@
-.. _terminal:
+.. _terminalgui:
 
 Terminal and game environment
 =============================

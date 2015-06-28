@@ -101,8 +101,8 @@ Examples::
     This global function creates a color from hue, saturation and value::
 
         SET myColor TO HSV(h,s,v).
-		
-	`More Information about HSV <http://en.wikipedia.org/wiki/HSL_and_HSV>`_,
+                
+        `More Information about HSV <http://en.wikipedia.org/wiki/HSL_and_HSV>`_,
 
     where:
 
@@ -126,7 +126,8 @@ Examples::
 
 .. structure:: HSVA
 
-	The HSVA structure contains all of the suffixes from the RGBA structure in addition to these
+    The HSVA structure contains all of the suffixes from the RGBA structure in addition to these
+
     .. list-table:: Members
         :header-rows: 1
         :widths: 2 1 4
@@ -144,7 +145,7 @@ Examples::
         * - :V or :VALUE
           - scalar
           - the value component of the color. It has a value from 0.0 to 1.0
-		  
+                  
 
 Examples::
 
