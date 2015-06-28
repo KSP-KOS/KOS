@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Addon Reference &mdash; kOS 0.17.1 documentation</title>
+  <title>Addon Reference &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,9 +33,9 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="index.html"/>
         <link rel="next" title="Action Groups Extended" href="addons/AGX.html"/>
-        <link rel="prev" title="Drawing Vectors on the Screen" href="structures/misc/vecdraw.html"/> 
+        <link rel="prev" title="Core" href="structures/core.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -123,12 +123,14 @@
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
@@ -187,6 +189,7 @@
 <li class="toctree-l2"><a class="reference internal" href="addons/KAC.html#available-functions">Available Functions</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </div>
 <p>To help KOS scripts identify whether or not certain mod is installed and available following suffixed functions were introduced in version 0.17</p>
@@ -196,11 +199,15 @@
 </div>
 <div class="section" id="addons-rt-available">
 <h2><tt class="docutils literal"><span class="pre">ADDONS:RT:AVAILABLE</span></tt><a class="headerlink" href="#addons-rt-available" title="Permalink to this headline">¶</a></h2>
-<p>Returns True if mod RemoteTech is installed and available to KOS. See more RemoteTech functions here &lt;addons/RemoteTech&gt;.</p>
+<p>Returns True if mod RemoteTech is installed and available to KOS. See more RemoteTech functions <a class="reference internal" href="addons/RemoteTech.html"><em>here</em></a>.</p>
 </div>
 <div class="section" id="addons-kac-available">
 <h2><tt class="docutils literal"><span class="pre">ADDONS:KAC:AVAILABLE</span></tt><a class="headerlink" href="#addons-kac-available" title="Permalink to this headline">¶</a></h2>
 <p>Returns True if mod Kerbal Alarm Clock is installed and available to KOS.</p>
+</div>
+<div class="section" id="addons-ir-available">
+<h2><tt class="docutils literal"><span class="pre">ADDONS:IR:AVAILABLE</span></tt><a class="headerlink" href="#addons-ir-available" title="Permalink to this headline">¶</a></h2>
+<p>Returns True if mod Infernal Robotics is installed, available to KOS and applicable to current craft. See more <a class="reference internal" href="addons/IR.html"><em>here</em></a>.</p>
 </div>
 </div>
 
@@ -213,7 +220,7 @@
         <a href="addons/AGX.html" class="btn btn-neutral float-right" title="Action Groups Extended">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="structures/misc/vecdraw.html" class="btn btn-neutral" title="Drawing Vectors on the Screen"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="structures/core.html" class="btn btn-neutral" title="Core"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -243,7 +250,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

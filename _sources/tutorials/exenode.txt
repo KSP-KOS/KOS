@@ -5,7 +5,7 @@ Advanced Tutorial
 
 Let's try to automate one of the most common tasks in orbital maneuvering - execution of the maneuver node. In this tutorial I'll try to show you how to write a script for precise maneuver node execution.
 
-So to start our script we need to get the next available :ref:`maneuver node <_maneuver node>`::
+So to start our script we need to get the next available :ref:`maneuver node <maneuver node>`::
 
     set nd to nextnode().
 
@@ -54,7 +54,7 @@ Now we are ready to burn. It is usually done in the `until` loop, checking main 
 
         //throttle is 100% until there is less than 1 second of time left to burn
         //when there is less than 1 second - decrease the throttle linearly
-        set tset to min(nd:deltav:mag/maxa_acc, 1).
+        set tset to min(nd:deltav:mag/max_acc, 1).
 
         //here's the tricky part, we need to cut the throttle as soon as our nd:deltav and initial deltav start facing opposite directions
         //this check is done via checking the dot product of those 2 vectors

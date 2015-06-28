@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Engine &mdash; kOS 0.17.1 documentation</title>
+  <title>Engine &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Gimbal" href="gimbal.html"/>
         <link rel="prev" title="Element" href="element.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -223,17 +225,33 @@
 <td>scalar (kN)</td>
 <td>Untweaked thrust limit</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:THRUST" title="ENGINE:THRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">THRUST</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:ENGINE:MAXTHRUSTAT" title="ENGINE:MAXTHRUSTAT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MAXTHRUSTAT(pressure)</span></tt></a></td>
+<td>scalar (kN)</td>
+<td>Max thrust at the specified pressure (in standard Kerbin atmospheres).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:THRUST" title="ENGINE:THRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">THRUST</span></tt></a></td>
 <td>scalar (kN)</td>
 <td>Current thrust</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:FUELFLOW" title="ENGINE:FUELFLOW attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FUELFLOW</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:AVAILABLETHRUST" title="ENGINE:AVAILABLETHRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLETHRUST</span></tt></a></td>
+<td>scalar (kN)</td>
+<td>Available thrust at full throttle accounting for thrust limiter</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:ENGINE:AVAILABLETHRUSTAT" title="ENGINE:AVAILABLETHRUSTAT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">AVAILABLETHRUSTAT(pressure)</span></tt></a></td>
+<td>scalar (kN)</td>
+<td>Available thrust at the specified pressure (in standard Kerbin atmospheres).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:FUELFLOW" title="ENGINE:FUELFLOW attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FUELFLOW</span></tt></a></td>
 <td>scalar (l/s maybe)</td>
 <td>Rate of fuel burn</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:ISP" title="ENGINE:ISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ISP</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:ISP" title="ENGINE:ISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ISP</span></tt></a></td>
 <td>scalar</td>
 <td><a class="reference external" href="isp">Specific impulse</a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:ENGINE:ISPAT" title="ENGINE:ISPAT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">ISPAT(pressure)</span></tt></a></td>
+<td>scalar</td>
+<td><a class="reference external" href="isp">Specific impulse</a> at the given pressure (in standard Kerbin atmospheres).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:VACUUMISP" title="ENGINE:VACUUMISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VACUUMISP</span></tt></a></td>
 <td>scalar</td>
@@ -241,7 +259,7 @@
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:VISP" title="ENGINE:VISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VISP</span></tt></a></td>
 <td>scalar</td>
-<td><a href="#id5"><span class="problematic" id="id6">`Synonym for VACUUMISP`_</span></a></td>
+<td><a class="reference external" href="vacuumisp">Synonym for VACUUMISP</a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:SEALEVELISP" title="ENGINE:SEALEVELISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SEALEVELISP</span></tt></a></td>
 <td>scalar</td>
@@ -249,7 +267,7 @@
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:SLISP" title="ENGINE:SLISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SLISP</span></tt></a></td>
 <td>scalar</td>
-<td><a href="#id7"><span class="problematic" id="id8">`Synonym for SEALEVELISP`_</span></a></td>
+<td><a class="reference external" href="sealevelisp">Synonym for SEALEVELISP</a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:FLAMEOUT" title="ENGINE:FLAMEOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FLAMEOUT</span></tt></a></td>
 <td>boolean</td>
@@ -307,7 +325,7 @@ Engine:<tt class="descname">THRUSTLIMIT</tt><a class="headerlink" href="#attribu
 <p>If this an engine with a thrust limiter (tweakable) enabled, what percentage is it limited to?</p>
 </dd></dl>
 
-<dl class="attribute">
+<span class="target" id="engine-maxthrust"></span><dl class="attribute">
 <dt id="attribute:ENGINE:MAXTHRUST">
 Engine:<tt class="descname">MAXTHRUST</tt><a class="headerlink" href="#attribute:ENGINE:MAXTHRUST" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -320,7 +338,27 @@ Engine:<tt class="descname">MAXTHRUST</tt><a class="headerlink" href="#attribute
 </tr>
 </tbody>
 </table>
-<p>How much thrust would this engine give if the throttle was max and conditions were ideal.</p>
+<p>How much thrust would this engine give at its current atmospheric pressure and velocity if the throttle was max at 1.0, and the thrust limiter was max at 100%.  Note this might not be the engine&#8217;s actual max thrust it could have under other air pressure conditions.  Some engines have a very different value for MAXTHRUST in vacuum as opposed to at sea level pressure.  Also, some jet engines have a very different value for MAXTHRUST depending on how fast they are currently being rammed through the air.</p>
+</dd></dl>
+
+<span class="target" id="engine-maxthrustat"></span><dl class="method">
+<dt id="method:ENGINE:MAXTHRUSTAT">
+Engine:<tt class="descname">MAXTHRUSTAT</tt><big>(</big>pressure<big>)</big><a class="headerlink" href="#method:ENGINE:MAXTHRUSTAT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pressure</strong> &#8211; atmospheric pressure (in standard Kerbin atmospheres)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">scalar (kN)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>How much thrust would this engine give if both the throttle and thrust limtier was max at the current velocity, and at the given atmospheric pressure.  Use a pressure of 0.0 for vacuum, and 1.0 for sea level (on Kerbin) (or more than 1 for thicker atmospheres like on Eve).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -337,6 +375,42 @@ Engine:<tt class="descname">THRUST</tt><a class="headerlink" href="#attribute:EN
 </tbody>
 </table>
 <p>How much thrust is this engine giving at this very moment.</p>
+</dd></dl>
+
+<span class="target" id="engine-availablethrust"></span><dl class="attribute">
+<dt id="attribute:ENGINE:AVAILABLETHRUST">
+Engine:<tt class="descname">AVAILABLETHRUST</tt><a class="headerlink" href="#attribute:ENGINE:AVAILABLETHRUST" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar (kN)</td>
+</tr>
+</tbody>
+</table>
+<p>Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and atmospheric pressure and velocity conditions.</p>
+</dd></dl>
+
+<span class="target" id="engine-availablethrustat"></span><dl class="method">
+<dt id="method:ENGINE:AVAILABLETHRUSTAT">
+Engine:<tt class="descname">AVAILABLETHRUSTAT</tt><big>(</big>pressure<big>)</big><a class="headerlink" href="#method:ENGINE:AVAILABLETHRUSTAT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pressure</strong> &#8211; atmospheric pressure (in standard Kerbin atmospheres)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">scalar (kN)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Taking into account the thrust limiter tweakable setting, how much thrust would this engine give if the throttle was max at its current thrust limit setting and velocity, but at a different atmospheric pressure you pass into it.  The pressure is measured in ATM&#8217;s, meaning 0.0 is a vacuum, 1.0 is seal level at Kerbin.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -371,6 +445,26 @@ Engine:<tt class="descname">ISP</tt><a class="headerlink" href="#attribute:ENGIN
 <p><a class="reference external" href="isp">Specific impulse</a></p>
 </dd></dl>
 
+<dl class="method">
+<dt id="method:ENGINE:ISPAT">
+Engine:<tt class="descname">ISPAT</tt><big>(</big>pressure<big>)</big><a class="headerlink" href="#method:ENGINE:ISPAT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pressure</strong> &#8211; atmospheric pressure (in standard Kerbin atmospheres)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">scalar</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="isp">Specific impulse</a> at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="attribute:ENGINE:VACUUMISP">
 Engine:<tt class="descname">VACUUMISP</tt><a class="headerlink" href="#attribute:ENGINE:VACUUMISP" title="Permalink to this definition">¶</a></dt>
@@ -400,7 +494,7 @@ Engine:<tt class="descname">VISP</tt><a class="headerlink" href="#attribute:ENGI
 </tr>
 </tbody>
 </table>
-<p><a href="#id9"><span class="problematic" id="id10">`Synonym for :VACUUMISP`_</span></a></p>
+<p>Synonym for :VACUUMISP</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -432,7 +526,7 @@ Engine:<tt class="descname">SLISP</tt><a class="headerlink" href="#attribute:ENG
 </tr>
 </tbody>
 </table>
-<p><a href="#id11"><span class="problematic" id="id12">`Synonym for :SEALEVELISP`_</span></a></p>
+<p>Synonym for :SEALEVELISP</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -556,7 +650,7 @@ Engine:<tt class="descname">THROTTLELOCK</tt><a class="headerlink" href="#attrib
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

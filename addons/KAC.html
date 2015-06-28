@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Kerbal Alarm Clock &mdash; kOS 0.17.1 documentation</title>
+  <title>Kerbal Alarm Clock &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,9 +33,9 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
-        <link rel="next" title="Contribute" href="../contribute.html"/>
+        <link rel="next" title="Infernal Robotics" href="IR.html"/>
         <link rel="prev" title="RemoteTech" href="RemoteTech.html"/> 
 
   
@@ -124,12 +124,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../addons.html">Addons</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -551,7 +553,7 @@ KACAlarm:<tt class="descname">TARGETBODY</tt><a class="headerlink" href="#attrib
 <dt id="function:LISTALARMS">
 <tt class="descname">LISTALARMS</tt><big>(</big>alarmType<big>)</big><a class="headerlink" href="#function:LISTALARMS" title="Permalink to this definition">¶</a></dt>
 <dd><p>If <cite>alarmType</cite> equals &#8220;All&#8221;, returns <a class="reference internal" href="../structures/misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <em>all</em> <a class="reference internal" href="#structure:KACALARM" title="KACALARM structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">KACAlarm</span></tt></a> objects attached to current vessel or have no vessel attached.
-Otherwise returns <a class="reference internal" href="../structures/misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of all <a class="reference internal" href="#structure:KACALARM" title="KACALARM structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">KACAlarm</span></tt></a> objects with <cite>KACAlarm:TYPE</cite> equeal to <a href="#id1"><span class="problematic" id="id2">`</span></a>alarmType&#8217; and attached to current vessel or have no vessel attached.:</p>
+Otherwise returns <a class="reference internal" href="../structures/misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of all <a class="reference internal" href="#structure:KACALARM" title="KACALARM structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">KACAlarm</span></tt></a> objects with <cite>KACAlarm:TYPE</cite> equeal to <cite>alarmType</cite> and attached to current vessel or have no vessel attached.:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">al</span> <span class="n">to</span> <span class="n">listAlarms</span><span class="p">(</span><span class="s">&quot;All&quot;</span><span class="p">).</span>
 <span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="n">al</span>
 <span class="p">{</span>
@@ -583,7 +585,7 @@ Otherwise returns <a class="reference internal" href="../structures/misc/list.ht
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../contribute.html" class="btn btn-neutral float-right" title="Contribute">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="IR.html" class="btn btn-neutral float-right" title="Infernal Robotics">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="RemoteTech.html" class="btn btn-neutral" title="RemoteTech"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -616,7 +618,7 @@ Otherwise returns <a class="reference internal" href="../structures/misc/list.ht
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

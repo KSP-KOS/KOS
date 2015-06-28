@@ -13,6 +13,24 @@ Maneuver Node
 
 A planned velocity change along an orbit. These are the nodes that you can set in the KSP user interface. Setting one through kOS will make it appear on the in-game map view, and creating one manually on the in-game map view will cause it to be visible to kOS.
 
+.. warning::
+
+    Be aware that a limitation of KSP makes it so that some vessels'
+    manuever node systems cannot be accessed.  KSP appears to limit the
+    maneuver node system to only functioning on the current PLAYER
+    vessel, under the presumption that its the only vessel that needs
+    them, as ever other vessel cannot be manuevered. kOS can manuever a
+    vessel that is not the player vessel, but it cannot overcome this
+    limitation of the base game that unloads the maneuver node system
+    for other vessels. 
+
+    Be aware that the effect this has is that when you try to use some of
+    these commands on some vessels, they won't work because those vessels
+    do not have their manuever node system in play.  This is mostly only
+    going to happen when you try to run a script on a vessel that is not
+    the current player active vessel.
+
+
 Creation
 --------
 
@@ -46,11 +64,19 @@ Creation
 
     You should immediately see it appear on the map view when you do this. The :global:`ADD` command can add nodes anywhere within the flight plan. To insert a node earlier in the flight than an existing node, simply give it a smaller :attr:`ETA <ManeuverNode:ETA>` time and then :global:`ADD` it.
 
+.. warning::
+
+    As per the warning above at the top of the section, ADD won't work on vessels that are not the active vessel.
+
 .. global:: REMOVE
 
     To remove a maneuver node from the flight path of the cur:rent :ref:`CPU vessel <cpu vessel>` (i.e. ``SHIP``), just :global:`REMOVE` it like so::
 
         REMOVE myNode.
+
+.. warning::
+
+    As per the warning above at the top of the section, REMOVE won't work on vessels that are not the active vessel.
 
 .. global:: NEXTNODE
 
@@ -61,6 +87,10 @@ Creation
         REMOVE :global:`NEXTNODE`.
 
     Currently, if you attempt to query :global:`NEXTNODE` and there is no node on your flight plan, it produces a run-time error. (This needs to be fixed in a future release so it is possible to query whether or not you have a next node).
+
+.. warning::
+
+    As per the warning above at the top of the section, NEXTNODE won't work on vessels that are not the active vessel.
 
     If you need to query whether or not you have a :global:`NEXTNODE`, the following has been suggested as a workaround in the meantime: Set a node really far into the future, beyond any reasonable amount of time. Add it to your flight plan. Then check :global:`NEXTNODE` to see if it returns THAT node, or an earlier one. If it returns an earlier one, then that earlier one was there all along and is the real :global:`NEXTNODE`. If it returns the fake far-future node you made instead, then there were no nodes before that point. In either case, remove the far-future node after you perform the test.
 

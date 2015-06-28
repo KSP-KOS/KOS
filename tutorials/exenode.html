@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Advanced Tutorial &mdash; kOS 0.17.1 documentation</title>
+  <title>Advanced Tutorial &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../index.html"/>
         <link rel="up" title="Tutorials" href="../tutorials.html"/>
         <link rel="next" title="Community Examples Library" href="../library.html"/>
         <link rel="prev" title="PID Loops in kOS" href="pidloops.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -178,7 +180,7 @@
   <div class="section" id="advanced-tutorial">
 <span id="exenode"></span><h1>Advanced Tutorial<a class="headerlink" href="#advanced-tutorial" title="Permalink to this headline">¶</a></h1>
 <p>Let&#8217;s try to automate one of the most common tasks in orbital maneuvering - execution of the maneuver node. In this tutorial I&#8217;ll try to show you how to write a script for precise maneuver node execution.</p>
-<p>So to start our script we need to get the next available <em class="xref std std-ref">maneuver node</em>:</p>
+<p>So to start our script we need to get the next available <a class="reference internal" href="../structures/vessels/node.html#maneuver-node"><em>maneuver node</em></a>:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">nd</span> <span class="n">to</span> <span class="n">nextnode</span><span class="p">().</span>
 </pre></div>
 </div>
@@ -225,7 +227,7 @@
 
     <span class="c1">//throttle is 100% until there is less than 1 second of time left to burn</span>
     <span class="c1">//when there is less than 1 second - decrease the throttle linearly</span>
-    <span class="n">set</span> <span class="n">tset</span> <span class="n">to</span> <span class="n">min</span><span class="p">(</span><span class="n">nd</span><span class="o">:</span><span class="n">deltav</span><span class="o">:</span><span class="n">mag</span><span class="o">/</span><span class="n">maxa_acc</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span>
+    <span class="n">set</span> <span class="n">tset</span> <span class="n">to</span> <span class="n">min</span><span class="p">(</span><span class="n">nd</span><span class="o">:</span><span class="n">deltav</span><span class="o">:</span><span class="n">mag</span><span class="o">/</span><span class="n">max_acc</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span>
 
     <span class="c1">//here&#39;s the tricky part, we need to cut the throttle as soon as our nd:deltav and initial deltav start facing opposite directions</span>
     <span class="c1">//this check is done via checking the dot product of those 2 vectors</span>
@@ -302,7 +304,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

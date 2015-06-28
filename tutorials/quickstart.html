@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quick Start Tutorial &mdash; kOS 0.17.1 documentation</title>
+  <title>Quick Start Tutorial &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../index.html"/>
         <link rel="up" title="Tutorials" href="../tutorials.html"/>
         <link rel="next" title="Design Patterns and Considerations with kOS" href="designpatterns.html"/>
         <link rel="prev" title="Tutorials" href="../tutorials.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -335,11 +337,9 @@
 <p>Okay, so type the lines below in an external <em>text editor of your choice</em> (i.e. Notepad on Windows, or TextEdit on Mac, or whatever you fancy):</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// My First Launcher.</span>
 
-<span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="mf">10.</span>
 <span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">{</span>
+<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
     <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span>
     <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 </pre></div>
@@ -368,11 +368,9 @@
 <p>Okay now go back into your <em>text editor of choice</em> and append a few more lines to the hellolaunch.ks file so it now looks like this:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// My First Launcher.</span>
 
-<span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="mf">10.</span>
 <span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">{</span>
+<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
     <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span>
     <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 
@@ -418,11 +416,9 @@
 <p>So if you just add this one line to your script, you&#8217;ll get something that should keep the craft aimed straight up and not let it tip over. Add the line just after the line that sets the THROTTLE, like so:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// My First Launcher.</span>
 
-<span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="mf">10.</span>
 <span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">{</span>
+<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
     <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span>
     <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 <span class="n">PRINT</span> <span class="s">&quot;Main throttle up.  2 seconds to stabalize it.&quot;</span><span class="p">.</span>
@@ -481,11 +477,9 @@ UNLIKE with all the previous edits this tutorial has asked you to make to the sc
 <p>Now your script should look like this:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// My First Launcher.</span>
 
-<span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="mf">10.</span>
 <span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">{</span>
+<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
     <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span>
     <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 <span class="n">PRINT</span> <span class="s">&quot;Main throttle up.  2 seconds to stabalize it.&quot;</span><span class="p">.</span>
@@ -552,11 +546,9 @@ gravity turn?</em></p>
     <span class="n">PRINT</span> <span class="s">&quot;Starting flat part.  Aiming to horizon.&quot;</span><span class="p">.</span>
     <span class="n">LOCK</span> <span class="n">STEERING</span> <span class="n">TO</span> <span class="n">HEADING</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">0</span><span class="p">).</span> <span class="c1">// east, horizontal.</span>
 <span class="p">}</span>
-<span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="mf">10.</span>
 <span class="n">PRINT</span> <span class="s">&quot;Counting down:&quot;</span><span class="p">.</span>
-<span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">{</span>
+<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">countdown</span> <span class="n">is</span> <span class="mf">10.</span><span class="p">}</span> <span class="n">UNTIL</span> <span class="n">countdown</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">STEP</span> <span class="p">{</span><span class="n">SET</span> <span class="n">countdown</span> <span class="n">to</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">}</span> <span class="n">DO</span> <span class="p">{</span>
     <span class="n">PRINT</span> <span class="s">&quot;...&quot;</span> <span class="o">+</span> <span class="n">countdown</span><span class="p">.</span>
-    <span class="n">SET</span> <span class="n">countdown</span> <span class="n">TO</span> <span class="n">countdown</span> <span class="o">-</span> <span class="mf">1.</span>
     <span class="n">WAIT</span> <span class="mf">1.</span> <span class="c1">// pauses the script here for 1 second.</span>
 <span class="p">}</span>
 <span class="n">PRINT</span> <span class="s">&quot;Main throttle up.  2 seconds to stabalize it.&quot;</span><span class="p">.</span>
@@ -641,7 +633,7 @@ gravity turn?</em></p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>PartModule &mdash; kOS 0.17.1 documentation</title>
+  <title>PartModule &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Resource" href="resource.html"/>
         <link rel="prev" title="Part" href="part.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -211,39 +213,51 @@
 <td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
 <td>Accessible fields</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTS" title="PARTMODULE:ALLEVENTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLEVENTS</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="PARTMODULE:ALLFIELDNAMES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLFIELDNAMES</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<td>Accessible fields (name only)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTS" title="PARTMODULE:ALLEVENTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLEVENTS</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
 <td>Triggerable events</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="PARTMODULE:ALLEVENTNAMES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLEVENTNAMES</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<td>Triggerable event names</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONS" title="PARTMODULE:ALLACTIONS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLACTIONS</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
 <td>Triggerable actions</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:GETFIELD" title="PARTMODULE:GETFIELD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">GETFIELD(name)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="PARTMODULE:ALLACTIONNAMES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ALLACTIONNAMES</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+<td>Triggerable event names</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:GETFIELD" title="PARTMODULE:GETFIELD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">GETFIELD(name)</span></tt></a></td>
 <td>&nbsp;</td>
 <td>Get value of a field by name</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:SETFIELD" title="PARTMODULE:SETFIELD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">SETFIELD(name,value)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:SETFIELD" title="PARTMODULE:SETFIELD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">SETFIELD(name,value)</span></tt></a></td>
 <td>&nbsp;</td>
 <td>Set value of a field by name</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:DOEVENT" title="PARTMODULE:DOEVENT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">DOEVENT(name)</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:DOEVENT" title="PARTMODULE:DOEVENT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">DOEVENT(name)</span></tt></a></td>
 <td>&nbsp;</td>
 <td>Trigger an event button</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:DOACTION" title="PARTMODULE:DOACTION method"><tt class="xref ks ks-meth docutils literal"><span class="pre">DOACTION(name,bool)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:DOACTION" title="PARTMODULE:DOACTION method"><tt class="xref ks ks-meth docutils literal"><span class="pre">DOACTION(name,bool)</span></tt></a></td>
 <td>&nbsp;</td>
 <td>Activate action by name with True or False</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:HASFIELD" title="PARTMODULE:HASFIELD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASFIELD(name)</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:HASFIELD" title="PARTMODULE:HASFIELD method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASFIELD(name)</span></tt></a></td>
 <td>boolean</td>
 <td>Check if field exists</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:HASEVENT" title="PARTMODULE:HASEVENT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASEVENT(name)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:HASEVENT" title="PARTMODULE:HASEVENT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASEVENT(name)</span></tt></a></td>
 <td>boolean</td>
 <td>Check if event exists</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:PARTMODULE:HASACTION" title="PARTMODULE:HASACTION method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASACTION(name)</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:PARTMODULE:HASACTION" title="PARTMODULE:HASACTION method"><tt class="xref ks ks-meth docutils literal"><span class="pre">HASACTION(name)</span></tt></a></td>
 <td>boolean</td>
 <td>Check if action exists</td>
 </tr>
@@ -300,6 +314,22 @@ PartModule:<tt class="descname">ALLFIELDS</tt><a class="headerlink" href="#attri
 </dd></dl>
 
 <dl class="attribute">
+<dt id="attribute:PARTMODULE:ALLFIELDNAMES">
+PartModule:<tt class="descname">ALLFIELDNAMES</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLFIELDNAMES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+</tr>
+</tbody>
+</table>
+<p>Similar to :ALLFIELDS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="attribute:PARTMODULE:ALLEVENTS">
 PartModule:<tt class="descname">ALLEVENTS</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -316,6 +346,22 @@ PartModule:<tt class="descname">ALLEVENTS</tt><a class="headerlink" href="#attri
 </dd></dl>
 
 <dl class="attribute">
+<dt id="attribute:PARTMODULE:ALLEVENTNAMES">
+PartModule:<tt class="descname">ALLEVENTNAMES</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLEVENTNAMES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+</tr>
+</tbody>
+</table>
+<p>Similar to :ALLEVENTS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="attribute:PARTMODULE:ALLACTIONS">
 PartModule:<tt class="descname">ALLACTIONS</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONS" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -329,6 +375,22 @@ PartModule:<tt class="descname">ALLACTIONS</tt><a class="headerlink" href="#attr
 </tbody>
 </table>
 <p>Get a list of all the names of KSPActions on this PartModule that the kos script is CURRENTLY allowed to trigger with :DOACTION. Note the Security access comments below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PARTMODULE:ALLACTIONNAMES">
+PartModule:<tt class="descname">ALLACTIONNAMES</tt><a class="headerlink" href="#attribute:PARTMODULE:ALLACTIONNAMES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Test:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of strings</td>
+</tr>
+</tbody>
+</table>
+<p>Similar to :ALLACTIONS except that it returns the string without the formatting to make it easier to use in a script. This list can become obsolete as the game continues running depending on what the PartModule chooses to do.</p>
 </dd></dl>
 
 <dl class="method">
@@ -571,7 +633,7 @@ PartModule:<tt class="descname">HASACTION</tt><big>(</big>name<big>)</big><a cla
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
