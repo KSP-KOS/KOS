@@ -1,7 +1,7 @@
 .. _core:
 
 Core
-=========
+====
 
 .. contents::
     :local:

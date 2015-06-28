@@ -60,6 +60,8 @@ To make a :struct:`VecDraw` disappear, you can either set its :attr:`VecDraw:SHO
     become synonyms for the same thing, for backward compatibility.
     You can use them interchangably.
 
+.. _clearvecdraws:
+
 .. function:: CLEARVECDRAWS()
 
     Sets all visible vecdraws to invisible, everywhere in this kOS CPU.

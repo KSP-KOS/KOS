@@ -189,10 +189,11 @@
 <li><a class="reference internal" href="#structure-methods" id="id7">4. Structure Methods</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#late-typing" id="id8">Late Typing</a></li>
-<li><a class="reference internal" href="#lazy-globals-variable-declarations-optional" id="id9">Lazy Globals (variable declarations optional)</a></li>
-<li><a class="reference internal" href="#user-functions" id="id10">User Functions</a></li>
-<li><a class="reference internal" href="#language-structures" id="id11">Structures</a></li>
+<li><a class="reference internal" href="#short-curcuiting-booleans" id="id8">Short-curcuiting booleans</a></li>
+<li><a class="reference internal" href="#late-typing" id="id9">Late Typing</a></li>
+<li><a class="reference internal" href="#lazy-globals-variable-declarations-optional" id="id10">Lazy Globals (variable declarations optional)</a></li>
+<li><a class="reference internal" href="#user-functions" id="id11">User Functions</a></li>
+<li><a class="reference internal" href="#language-structures" id="id12">Structures</a></li>
 </ul>
 </div>
 <div class="section" id="case-insensitivity">
@@ -260,8 +261,38 @@
 <p>For more information, see the <a class="reference internal" href="#language-structures"><em>Structures Section</em></a>. A full list of structure types can be found on the <a class="reference internal" href="../structures.html#structures"><em>Structures</em></a> page. For a more detailed breakdown of the language, see the <a class="reference internal" href="syntax.html#syntax"><em>Language Syntax Constructs</em></a> page.</p>
 </div>
 </div>
+<div class="section" id="short-curcuiting-booleans">
+<span id="short-circuit"></span><h2><a class="toc-backref" href="#id8">Short-curcuiting booleans</a><a class="headerlink" href="#short-curcuiting-booleans" title="Permalink to this headline">¶</a></h2>
+<p>Further reading: <a class="reference external" href="https://en.wikipedia.org/wiki/Short-circuit_evaluation">https://en.wikipedia.org/wiki/Short-circuit_evaluation</a></p>
+<p>When performing any boolean operation involving the use of the AND or the OR
+operator, kerboscript will short-circuit the boolean check.  What this means
+is that if it gets to a point in the expression where it already knows the
+result is a forgone conclusion, it doesn&#8217;t bother calculating the rest of
+the expression and just quits there.</p>
+<p>Example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">x</span> <span class="n">to</span> <span class="nb">true</span><span class="p">.</span>
+<span class="k">if</span> <span class="n">x</span> <span class="n">or</span> <span class="n">y</span><span class="o">+</span><span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="p">{</span>
+    <span class="n">print</span> <span class="s">&quot;yes&quot;</span><span class="p">.</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">print</span> <span class="s">&quot;no&quot;</span><span class="p">.</span>
+<span class="p">}.</span>
+</pre></div>
+</div>
+<p>In this case, the fact that x is true means that when evaluating
+the boolean expression <tt class="docutils literal"><span class="pre">x</span> <span class="pre">or</span> <span class="pre">y+2</span> <span class="pre">&gt;</span> <span class="pre">10</span></tt> it never even bothers trying
+to add y and 2 to find out if it&#8217;s greater than 10.  It already knew
+as soon as it got to the <tt class="docutils literal"><span class="pre">x</span> <span class="pre">or</span> <span class="pre">whatever</span></tt> that given that x is true,
+the <em>whatever</em> doesn&#8217;t matter one bit.  Once one side of an OR is true,
+the other side can either be true or false and it won&#8217;t change the fact
+that the whole expression will be true anyway.</p>
+<p>A similar short circuiting happens with AND.  Once the left side of the
+AND operator is false, then the entire AND expression is guaranteed
+to be false regardless of what&#8217;s on the right side, so kerboscript
+doesn&#8217;t bother calculating the righthand side once the lefthand side is false.</p>
+<p>Read the link above for implications of why this matters in programming.</p>
+</div>
 <div class="section" id="late-typing">
-<h2><a class="toc-backref" href="#id8">Late Typing</a><a class="headerlink" href="#late-typing" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">Late Typing</a><a class="headerlink" href="#late-typing" title="Permalink to this headline">¶</a></h2>
 <p>Kerboscript is a language in which there is only one type of variable
 and it just generically holds any sort of object of any kind.  If
 you attempt to assign, for example, a string into a variable that is
@@ -272,7 +303,7 @@ integer, becoming a string now.</p>
 runtime depending on what you assign into it.</p>
 </div>
 <div class="section" id="lazy-globals-variable-declarations-optional">
-<h2><a class="toc-backref" href="#id9">Lazy Globals (variable declarations optional)</a><a class="headerlink" href="#lazy-globals-variable-declarations-optional" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id10">Lazy Globals (variable declarations optional)</a><a class="headerlink" href="#lazy-globals-variable-declarations-optional" title="Permalink to this headline">¶</a></h2>
 <p>Kerboscript is a language in which variables need not be declared ahead
 of time.  If you simply set a variable to a value, that just &#8220;magically&#8221;
 makes the variable exist if it didn&#8217;t already.  When you do this,
@@ -286,7 +317,7 @@ disable it.  If you wish to do so, a syntax exists to do so called
 :ref:<tt class="docutils literal"><span class="pre">NOLAZYGLOBAL</span></tt>.</p>
 </div>
 <div class="section" id="user-functions">
-<span id="feature-functions"></span><h2><a class="toc-backref" href="#id10">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
+<span id="feature-functions"></span><h2><a class="toc-backref" href="#id11">User Functions</a><a class="headerlink" href="#user-functions" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
@@ -314,7 +345,7 @@ see the <a class="reference internal" href="syntax.html#syntax-functions"><em>La
 section.</p>
 </div>
 <div class="section" id="language-structures">
-<span id="id1"></span><h2><a class="toc-backref" href="#id11">Structures</a><a class="headerlink" href="#language-structures" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2><a class="toc-backref" href="#id12">Structures</a><a class="headerlink" href="#language-structures" title="Permalink to this headline">¶</a></h2>
 <p>Structures, <a class="reference internal" href="#features-structures"><em>introduced above</em></a>, are variable <em>types</em> that contain more than one piece of information. All structures contain sub-values or <a class="reference internal" href="#features-methods"><em>methods</em></a> that can be accessed with a colon (<tt class="docutils literal"><span class="pre">:</span></tt>) operator. Multiple structures can be chained together with more than one colon (<tt class="docutils literal"><span class="pre">:</span></tt>) operator:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">myCraft</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="p">.</span>
 <span class="n">SET</span> <span class="n">myMass</span> <span class="n">TO</span> <span class="n">myCraft</span><span class="o">:</span><span class="n">MASS</span><span class="p">.</span>
