@@ -204,6 +204,7 @@ What the parts mean
 ~~~~~~~~~~~~~~~~~~~
 
 - ``FROM`` { one or more statements }
+
   - Perform these statements at the beginning before starting the first
     pass through the loop.  They may contain local declarations of new
     variables.  If they do, then the variables will be local to the body
@@ -211,7 +212,9 @@ What the parts mean
     braces ``{`` and ``}`` are mandatory even when there is only one 
     statement present.  To create a a null FROM clause, give it an empty
     set of braces.
+
 - ``UNTIL`` expression
+
   - Exactly like the :ref:`UNTIL <until>` loop.  The loop will run this
     expression at the start of each pass through the loop body, and if
     it's true, it will abort and stop running the loop.  It checks before
@@ -220,14 +223,18 @@ What the parts mean
     ``{``..``}`` are not used here because this is not technically a 
     complete statement.  It is just an expression that evaluates to a
     value.
+
 - ``STEP`` { one or more statements }
+
   - Perform these statements at the bottom of each loop pass.  The purpose
     is typically to increment or decrement the variable you declared in
     your ``FROM`` clause to get it ready for the next loop pass.  In this
     case the braces ``{`` and ``}`` are mandatory even when there is
     only one statement present.  To create a null FROM clause, give
     it an empty set of braces.
+
 - ``DO`` one statement or a block of statements inside braxes ``{``..``}``:
+
   - This is where the loop body gets put.  Much like with the UNTIL and FOR
     loops, these braces are not mandatory when there is only exactly one
     statement in the body, but are a very good idea to have anyway.

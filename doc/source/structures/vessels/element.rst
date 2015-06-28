@@ -1,7 +1,7 @@
 .. _element:
 
 Element
-======
+=======
 
 An element is a *docked component* of a :struct:`Vessel`.  When you dock several
 vessels together to create one larger vessel, you can obtain the "chunks" of the

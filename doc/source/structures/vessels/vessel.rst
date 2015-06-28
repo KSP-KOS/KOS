@@ -97,28 +97,28 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: scalar
     :access: Get only
 
-    Sum of all the Max thrust of all the currently active engines In Kilonewtons.
+    Sum of all the :ref:`engines' MAXTHRUSTs <engine_MAXTHRUST>` of all the currently active engines In Kilonewtons.
     
-.. method:: Engine:MAXTHRUSTAT(pressure)
+.. method:: Vessel:MAXTHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar (kN)
 
-    Sum of all the Max thrust of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    Sum of all the :ref:`engines' MAXTHRUSTATs <engine_MAXTHRUSTAT>` of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
-.. attribute:: vessel:AVAILABLETHRUST
+.. attribute:: Vessel:AVAILABLETHRUST
 
     :type: scalar
     :access: Get only
     
-    Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
+    Sum of all the :ref:`engines' AVAILABLETHRUSTs <engine_AVAILABLETHRUST>` of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
 
-.. method:: Engine:AVAILABLETHRUSTAT(pressure)
+.. method:: Vessel:AVAILABLETHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar (kN)
 
-    Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into acount their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Vessel:FACING
 
