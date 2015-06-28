@@ -3,7 +3,7 @@ kOS Mod Changelog
 
 # v0.17.3
 
-1.0.2 Release
+1.0.4 Release
 -----------
 
 ### BREAKING CHANGES
