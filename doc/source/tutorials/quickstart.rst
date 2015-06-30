@@ -276,7 +276,7 @@ So if you just add this one line to your script, you'll get something that shoul
     // If the program just ended here, then that would cause the throttle
     // to turn back off again right away and nothing would happen.
 
-Again, copy this and run it, like before. If your craft crashed in the previous step, which it probably did, then revert to the VAB and re-launch it. *NOTE: Due to a bug sometimes reverting just to the launchpad does not work well and you need to revert all the way back to the VAB.*::
+Again, copy this and run it, like before. If your craft crashed in the previous step, which it probably did, then revert to the VAB and re-launch it.::
 
     SWITCH TO 1. // should be the default already, but just in case.
     COPY HELLOLAUNCH FROM 0.
@@ -356,9 +356,9 @@ gravity turn?*
 
 Well, a true and proper gravity turn is a very complex bit of math that is best left as an exercise for the reader, given that the goal of **kOS** is to let you write your OWN autopilot, not to write it for you. But to give some basic examples of commands, lets just make a crude gravity turn approximation that simply flies the ship like a lot of new **KSP** pilots learn to do it for the first time:
 
-- Fly straight up to 10000m.
-- Aim at 45 degrees down toward the east until 40000m.
-- Thrust horizontally east after that.
+- Fly straight up until your velocity is 100m/s.
+- Pitch ten degrees towards the East.
+- Continue to pitch 10 degrees down for each 100m/s of velocity.
 
 To make this work, we introduce a new way to make a Direction, called the HEADING function. Whenever you call the function HEADING(a,b), it makes a Direction oriented as follows on the navball:
 
@@ -431,7 +431,7 @@ As you can probably see, it would still have a long way to go before it would be
 
 - You could change the steering logic to make a more smooth gravity turn by constantly adjusting the pitch in the HEADING according to some math formula. The example shown here tends to create a "too high" launch that's a bit inefficient.
 - You could complete the launching script by making sure once the vessel breaks the atmosphere it actually makes a circular orbit rather than just stopping after 70000m and coasting.
-- This script just stupidly leaves the throttle at max the whole way. You could make it more sophisticated by adjusting the throttle as necessary to avoid too much wasted energy fighting air friction. (The way **KSP**'s stock areodynamic model works, the optimal speed is terminal velocity, by the way). This is partly addressed in the :ref:`PID Loop Tutorial <pidloops>`.
+- This script just stupidly leaves the throttle at max the whole way. You could make it more sophisticated by adjusting the throttle as necessary to avoid high gee forces.
 - With more sophisticated staging checks, the script could be made to work with solid fuel engines as well.
 - With even more sophisticated checks, the script could be made to work with fancy staging methods like asaparagus.
 - Using the PRINT AT command, you can make fancier status readouts in the termainl window as the script runs.
