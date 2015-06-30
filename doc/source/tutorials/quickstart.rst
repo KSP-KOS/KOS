@@ -34,7 +34,7 @@ Put the vessel on the launchpad. For this first example it doesn't matter if the
 Step 4: Invoke the terminal
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Rightclick for the SCS part on the vessel and then click the button that says "Open Terminal".
+Right click for the SCS part on the vessel and then click the button that says "Open Terminal".
 
 Note that if the terminal is semi-transparent, this means it's not currently selected. If you click on the terminal, then your keyboard input is directed to the terminal INSTEAD of to piloting. In other words if you type ``W`` ``A`` ``S`` ``D``, you'll actually get the word "wasd" to appear on the terminal, rather than the ``W`` ``A`` ``S`` ``D`` keys steering the ship. To switch back to manual control of the game instead of typing into the terminal, click outside the terminal window anywhere on the background of the screen.
 
@@ -74,7 +74,7 @@ Type this text into the window::
     PRINT "THIS IS THE FIRST SCRIPT I WROTE IN kOS.".
     PRINT "=========================================".
 
-Click "Save" then "Exit" in the editor popup window.
+Click "Save" then "Exit" in the editor pop-up window.
 
 - *Side Note: The editor font* - Experienced programmers may have noticed that the editor's font is proportional width rather than monospaced and that this is not ideal for programming work. You are right, but there is little that can be done about it for a variety of technical reasons that are too complex to go into right now.
 
@@ -187,7 +187,7 @@ after saving the file from your external text editor program, you will see a lis
 .. figure:: /_images/tutorials/quickstart/example_2_1.png
     :width: 80 %
 
-Okay so the program doesn't actaully DO anything yet other than just countdown from 10 to 0. A bit of a dissapointment, but we haven't written the rest of the program yet.
+Okay so the program doesn't actually DO anything yet other than just countdown from 10 to 0. A bit of a disappointment, but we haven't written the rest of the program yet.
 
 You'll note that what you've done is switch to the local volume (1) and then copy the program from the archive (0) to the local volume (1) and then run it from the local volume. Technically you didn't need to do this. You could have just run it directly from the archive. For those looking at the **KSP** game as a bit of a role-play experience, it makes sense to never run programs directly from the archive, and instead live with the limitation that software should be copied to the craft for it to be able to run it.
 
@@ -217,7 +217,7 @@ Okay now go back into your *text editor of choice* and append a few more lines t
     // NOTE that it is vital to not just let the script end right away
     // here.  Once a kOS script just ends, it releases all the controls
     // back to manual piloting so that you can fly the ship by hand again.
-    // If the pogram just ended here, then that would cause the throttle
+    // If the program just ended here, then that would cause the throttle
     // to turn back off again right away and nothing would happen.
 
 Save this file to hellolaunch.ks again, and re-copy it to your vessel that should still be sitting on the launchpad, then run it, like so::
@@ -276,7 +276,7 @@ So if you just add this one line to your script, you'll get something that shoul
     // NOTE that it is vital to not just let the script end right away
     // here.  Once a kOS script just ends, it releases all the controls
     // back to manual piloting so that you can fly the ship by hand again.
-    // If the pogram just ended here, then that would cause the throttle
+    // If the program just ended here, then that would cause the throttle
     // to turn back off again right away and nothing would happen.
 
 Again, copy this and run it, like before. If your craft crashed in the previous step, which it probably did, then revert to the VAB and re-launch it. *NOTE: Due to a bug sometimes reverting just to the launchpad does not work well and you need to revert all the way back to the VAB.*::
@@ -357,7 +357,7 @@ Step 6: Now to make it turn
 *Okay that's fine but it still just goes straight up! What about a
 gravity turn?*
 
-Well, a true and proper gravity turn is a very complex bit of math that is best left as an excercise for the reader, given that the goal of **kOS** is to let you write your OWN autopilot, not to write it for you. But to give some basic examples of commands, lets just make a crude gravity turn approximation that simply flies the ship like a lot of new **KSP** pilots learn to do it for the first time:
+Well, a true and proper gravity turn is a very complex bit of math that is best left as an exercise for the reader, given that the goal of **kOS** is to let you write your OWN autopilot, not to write it for you. But to give some basic examples of commands, lets just make a crude gravity turn approximation that simply flies the ship like a lot of new **KSP** pilots learn to do it for the first time:
 
 - Fly straight up to 10000m.
 - Aim at 45 degrees down toward the east until 40000m.
