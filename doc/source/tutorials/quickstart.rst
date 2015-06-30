@@ -146,15 +146,12 @@ But in order to give you an example that you can start with from scratch, that's
 Step 1: Make a vessel
 ^^^^^^^^^^^^^^^^^^^^^
 
-Make any sort of rocket that can lift you to orbit that fills the following pattern:
+Please make the vessel you see here:
 
--  It uses ONLY liquid fuel rockets. The example code here will assume this is the case. **kOS** can deal with solid fuel boosters as well, but to keep the example simple we'll use liquid fuel only here.
--  Make the vessel's staging list set up in the right order for a launch. (Make sure it has no need to manually rightclick parts to stage things weirdly, and no need to use action groups to activate stages weirdly).
--  Make sure the vessel has plenty of torque power to stay steady without a lot of wobble.
--  Make the vessel have at least these parts on it:
--  battery power of at least 400 charge
--  ability to recharge equal to at least 6 solar panel sections or 1 RTG unit
--  the **kOS** SCS part somewhere in the stack, near the top bit where it won't fall off due to staging.
+.. figure:: /_images/tutorials/quickstart/example_2_0.png
+    :width: 80 %
+
+If you prefer, you can download the .craft file `here <https://www.dropbox.com/s/fnoilignjel2lqd/My%20First%20Rocket.craft?dl=0>`_.
 
 Step 2: Make the start of the script
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -346,7 +343,7 @@ Now your script should look like this::
     // If the pogram just ended here, then that would cause the throttle
     // to turn back off again right away and nothing would happen.
 
-Again, relaunch the ship, copy the script as before, and run it again. This time you should see it activate your later upper stages correctly. (again, assuming you made the entire vessel with only liquidfuel engines.)
+Again, relaunch the ship, copy the script as before, and run it again. This time you should see it activate your later upper stages correctly.
 
 .. figure:: /_images/tutorials/quickstart/example_2_4.png
     :width: 80 %
@@ -428,7 +425,7 @@ And toward the end:
 .. figure:: /_images/tutorials/quickstart/example_2_6.png
     :width: 80 %
 
-If we assume you made a vessel that has enough fuel and power to get up to orbit, this script should in principle work to get you to the point of leaving the atmosphere. It will probably still fall back down, because this script makes no attempt to ensure that the craft is going fast enough to maintain the orbit.
+This script should, in principle, work to get you to the point of leaving the atmosphere. It will probably still fall back down, because this script makes no attempt to ensure that the craft is going fast enough to maintain the orbit.
 
 As you can probably see, it would still have a long way to go before it would become a really GOOD launching autopilot. Think about the following features you could add yourself as you become more familiar with **kOS**:
 
