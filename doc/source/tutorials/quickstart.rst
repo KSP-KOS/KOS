@@ -158,8 +158,12 @@ Step 2: Make the start of the script
 
 Okay, so type the lines below in an external *text editor of your choice* (i.e. Notepad on Windows, or TextEdit on Mac, or whatever you fancy)::
 
-    // My First Launcher.
+    //hellolaunch
+    
+    //First, we'll clear the terminal screen to make it look nice
+    CLEARSCREEN.
 
+    //This is our countdown loop, which cycles from 10 to 0
     PRINT "Counting down:".
     FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
@@ -193,23 +197,28 @@ Step 3: Make the script actually do something
 
 Okay now go back into your *text editor of choice* and append a few more lines to the hellolaunch.ks file so it now looks like this::
 
-    // My First Launcher.
+    //hellolaunch
 
+    //First, we'll clear the terminal screen to make it look nice
+    CLEARSCREEN.
+
+    //Next, we'll lock our throttle to 100%.
+    LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
+
+    //This is our countdown loop, which cycles from 10 to 0
     PRINT "Counting down:".
     FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
         WAIT 1. // pauses the script here for 1 second.
     }
 
-    PRINT "Main throttle up.  2 seconds to stabalize it.".
-    LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
-    WAIT 2. // give throttle time to adjust.
     UNTIL SHIP:MAXTHRUST > 0 {
         WAIT 0.5. // pause half a second between stage attempts.
         PRINT "Stage activated.".
         STAGE. // same as hitting the spacebar.
     }
-    WAIT UNTIL SHIP:ALTITUDE > 70000. // pause here until ship is high up.
+    
+    WAIT UNTIL SHIP:ALTITUDE > 70000.
 
     // NOTE that it is vital to not just let the script end right away
     // here.  Once a kOS script just ends, it releases all the controls
@@ -248,27 +257,31 @@ So to steer always UP, just do this::
 
 So if you just add this one line to your script, you'll get something that should keep the craft aimed straight up and not let it tip over. Add the line just after the line that sets the THROTTLE, like so::
 
-    // My First Launcher.
+    //hellolaunch
 
+    //First, we'll clear the terminal screen to make it look nice
+    CLEARSCREEN.
+
+    //Next, we'll lock our throttle to 100%.
+    LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
+
+    //This is our countdown loop, which cycles from 10 to 0
     PRINT "Counting down:".
     FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
         WAIT 1. // pauses the script here for 1 second.
     }
-    PRINT "Main throttle up.  2 seconds to stabalize it.".
-    LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
+    
+    //This is the line we added
+    LOCK STEERING TO UP.
 
-
-    LOCK STEERING TO UP.  // This is the new line to add
-
-
-    WAIT 2. // give throttle time to adjust.
     UNTIL SHIP:MAXTHRUST > 0 {
         WAIT 0.5. // pause half a second between stage attempts.
         PRINT "Stage activated.".
         STAGE. // same as hitting the spacebar.
     }
-    WAIT UNTIL SHIP:ALTITUDE > 70000. // pause here until ship is high up.
+    
+    WAIT UNTIL SHIP:ALTITUDE > 70000.
 
     // NOTE that it is vital to not just let the script end right away
     // here.  Once a kOS script just ends, it releases all the controls
@@ -303,44 +316,51 @@ There are some complex dangers with writing WHEN triggers that can cause **KSP**
 
 The WHEN trigger we are going to add to the launch script looks like this::
 
-    WHEN STAGE:LIQUIDFUEL < 0.001 THEN {
-        PRINT "No liquidfuel.  Attempting to stage.".
+    WHEN MAXTHRUST = 0 THEN {
+        PRINT "Staging".
         STAGE.
         PRESERVE.
-    }
+    }.
 
-It says, "Whenever the amount of liquid fuel in the current stage is so small it may as well be zero (< 0.001), then activate the next stage." The PRESERVE keyword says, "don't stop checking this condition just because it's been triggered once. It should still keep checking for it again in the future."
-The check for < 0.001 is because sometimes **KSP** won't quite burn the last drop of fuel in a stage.
-If this block of code is inserted into the script, then it will set up a constant background check that will always hit the next stage as soon as the current stage has no liquidfuel in it.
+It says, "Whenever the maximum thrust of our vehicle is zero, then activate the next stage." The PRESERVE keyword says, "don't stop checking this condition just because it's been triggered once. It should still keep checking for it again in the future."
+If this block of code is inserted into the script, then it will set up a constant background check that will always hit the next stage as soon as the current stage has no thrust.
 UNLIKE with all the previous edits this tutorial has asked you to make to the script, this time you're going to be asked to delete something and replace it. The new WHEN section above should actually **REPLACE** the existing "UNTIL SHIP:MAXTHRUST > 0" loop that you had before.
 
 Now your script should look like this::
 
-    // My First Launcher.
+    //hellolaunch
 
+    //First, we'll clear the terminal screen to make it look nice
+    CLEARSCREEN.
+
+    //Next, we'll lock our throttle to 100%.
+    LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
+
+    //This is our countdown loop, which cycles from 10 to 0
     PRINT "Counting down:".
     FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
         WAIT 1. // pauses the script here for 1 second.
     }
-    PRINT "Main throttle up.  2 seconds to stabalize it.".
-    LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
-    LOCK STEERING TO UP.
-    WAIT 2. // give throttle time to adjust.
 
-    // The section below replaces previous UNTIL loop:
-
-    WHEN STAGE:LIQUIDFUEL < 0.001 THEN {
-        PRINT "No liquidfuel.  Attempting to stage.".
+    //This is a trigger that constantly checks to see if our thrust is zero.
+    //If it is, it will attempt to stage and then return to where the script
+    //left off. The PRESERVE keyword keeps the trigger active even after it
+    //has been triggered.
+    WHEN MAXTHRUST = 0 THEN {
+        PRINT "Staging".
         STAGE.
         PRESERVE.
-    }
-    WAIT UNTIL SHIP:ALTITUDE > 70000. // pause here until ship is high up.
+    }.
+    
+    LOCK STEERING TO UP.
+    
+    WAIT UNTIL ALTITUDE > 70000.
 
     // NOTE that it is vital to not just let the script end right away
     // here.  Once a kOS script just ends, it releases all the controls
     // back to manual piloting so that you can fly the ship by hand again.
-    // If the pogram just ended here, then that would cause the throttle
+    // If the program just ended here, then that would cause the throttle
     // to turn back off again right away and nothing would happen.
 
 Again, relaunch the ship, copy the script as before, and run it again. This time you should see it activate your later upper stages correctly.
@@ -365,64 +385,221 @@ To make this work, we introduce a new way to make a Direction, called the HEADIN
 - Point at the compass heading A.
 - Pitch up a number of degrees from the horizon = to B.
 
-So for example, HEADING(45,10) would aim northeast, 10 degrees above the horizon. Combining this with the WHEN command from before, we get this section::
+So for example, HEADING(45,10) would aim northeast, 10 degrees above the horizon. We can use this to easily set our orientation. For example::
 
-    WHEN SHIP:ALTITUDE > 10000 THEN {
-        PRINT "Starting turn.  Aiming to 45 degree pitch.".
-        LOCK STEERING TO HEADING(90,45). // east, 45 degrees pitch.
-    }
-    WHEN SHIP:ALTITUDE > 40000 THEN {
-        PRINT "Starting flat part.  Aiming to horizon.".
-        LOCK STEERING TO HEADING(90,0). // east, horizontal.
-    }
+    //This locks our steering to due east, pitched 45 degrees above the horizon.
+    LOCK STEERING TO HEADING(90,45).
 
-Note that these lack the command PRESERVE like the previous WHEN example had. This is because we want these to trigger just once and then never again. There's no point in constantly telling **kOS** to reset the steering to the same thing over and over as the script runs.
+Instead of using WAIT UNTIL to pause the script and keep it from exiting, we can use an UNTIL loop to constantly perform actions until a certain condition is met. For example::
 
-Now, if you insert this new section to the script, we have a nice nifty example of a start of a launching script. Note that it works even if you insert it at the top of the script, because it sets up the triggers to occur LATER when the condition becomes true. They don't execute right away::
+    UNTIL APOAPSIS > 100000 {
+        LOCK STEERING TO HEADING(90,90). //90 degrees east and pitched up 90 degrees (straight up)
+        PRINT SHIP:APOAPSIS AT (0,15).
+        //We use the PRINT AT() command here to keep from printing the same thing over and
+        //over on a new line every time the loop iterates. Instead, this will always print 
+        //the apoapsis at the same point on the screen.
+    }.
 
-    // My First Launcher.
+This loop will continue to execute all of its instructions until the apoapsis reaches 100km. Once the apoapsis is past 100km, the loop exits and the rest of the code continues.
 
-    WHEN SHIP:ALTITUDE > 10000 THEN {
-        PRINT "Starting turn.  Aiming to 45 degree pitch.".
-        LOCK STEERING TO HEADING(90,45). // east, 45 degrees pitch.
-    }
-    WHEN SHIP:ALTITUDE > 40000 THEN {
-        PRINT "Starting flat part.  Aiming to horizon.".
-        LOCK STEERING TO HEADING(90,0). // east, horizontal.
-    }
+We can combine this with IF statements in order to have one main loop that only executes certain chunks of its code under certain conditions. For example::
+
+    UNTIL SHIP:APOAPSIS > 100000 { //Remember, all altitudes will be in meters, not kilometers
+        
+        //For the initial ascent, we want our steering to be straight
+        //up and rolled due east
+        IF SHIP:VELOCITY:SURFACE:MAG < 100 {
+            //This sets our steering 90 degrees up and yawed to the compass
+            //heading of 90 degrees (east)
+            LOCK STEERING TO HEADING(90,90).
+        
+        //Once we pass 100m/s, we want to pitch down ten degrees
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 100 AND SHIP:VELOCITY:SURFACE:MAG < 200 {
+            LOCK STEERING TO HEADING(90,80).
+            PRINT "Pitching to 80 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+        }.
+    }.
+
+Each time this loop iterates, it will check the surface velocity. If the velocity is below 100m/s, it will continuously execute the first block of instructions.
+Once the velocity reaches 100m/s, it will stop executing the first block and start executing the second block, which will pitch the nose down to 80 degrees above the horizon.
+
+Putting this into your script, it should look like this::
+
+    //hellolaunch
+
+    //First, we'll clear the terminal screen to make it look nice
+    CLEARSCREEN.
+
+    //Next, we'll lock our throttle to 100%.
+    LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
+
+    //This is our countdown loop, which cycles from 10 to 0
     PRINT "Counting down:".
     FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
         PRINT "..." + countdown.
         WAIT 1. // pauses the script here for 1 second.
     }
-    PRINT "Main throttle up.  2 seconds to stabalize it.".
-    LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
-    LOCK STEERING TO UP.
-    WAIT 2. // give throttle time to adjust.
 
-    // The section below replaces previous UNTIL loop:
-
-    WHEN STAGE:LIQUIDFUEL < 0.001 THEN {
-        PRINT "No liquidfuel.  Attempting to stage.".
+    //This is a trigger that constantly checks to see if our thrust is zero.
+    //If it is, it will attempt to stage and then return to where the script
+    //left off. The PRESERVE keyword keeps the trigger active even after it
+    //has been triggered.
+    WHEN MAXTHRUST = 0 THEN {
+        PRINT "Staging".
         STAGE.
         PRESERVE.
-    }
-    WAIT UNTIL SHIP:ALTITUDE > 70000. // pause here until ship is high up.
+    }.
 
-    // NOTE that it is vital to not just let the script end right away
-    // here.  Once a kOS script just ends, it releases all the controls
-    // back to manual piloting so that you can fly the ship by hand again.
-    // If the program just ended here, then that would cause the throttle
-    // to turn back off again right away and nothing would happen.
-
-And here is it in action:
+    //This will be our main control loop for the ascent. It will
+    //cycle through continuously until our apoapsis is greater
+    //than 100km. Each cycle, it will check each of the IF
+    //statements inside and perform them if their conditions
+    //are met
+    UNTIL SHIP:APOAPSIS > 100000 { //Remember, all altitudes will be in meters, not kilometers
+        
+        //For the initial ascent, we want our steering to be straight
+        //up and rolled due east
+        IF SHIP:VELOCITY:SURFACE:MAG < 100 {
+            //This sets our steering 90 degrees up and yawed to the compass
+            //heading of 90 degrees (east)
+            LOCK STEERING TO HEADING(90,90).
+        
+        //Once we pass 100m/s, we want to pitch down ten degrees
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 100 {
+            LOCK STEERING TO HEADING(90,80).
+            PRINT "Pitching to 80 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+        }.
+    }.
+    
+Again, copy this into your script and run it. You should see your countdown occur, then it will launch. Once the ship passes 100m/s surface velocity, it will
+pitch down to 80 degrees and continuously print the apoapsis until the apoapsis reaches 100km, staging if necessary. The script will then end.
 
 .. figure:: /_images/tutorials/quickstart/example_2_5.png
     :width: 80 %
 
-And toward the end:
+Step 7: Putting it all together
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We now have every element of the script necessary to do a proper (albeit simple) gravity turn. We just need to extend it all the way through the ascent.
+
+Adding additional IF statements inside our main loop will allow us to perform further actions based on our velocity. Each IF statement you see in the script below
+covers a 100m/s block of velocity, and will adjust the pitch 10 degrees farther down than the previous block.
+
+You can see that with the AND statement, we can check multiple conditions and only execute that block when all of those conditions are true. We can carefully set up
+the conditions for each IF statement to allow a block of code to be executed no matter what our surface velocity is.
+
+Copy this into your script and run it. It should take you nearly to orbit::
+    
+    //hellolaunch
+
+    //First, we'll clear the terminal screen to make it look nice
+    CLEARSCREEN.
+
+    //Next, we'll lock our throttle to 100%.
+    LOCK THROTTLE TO 1.0.   // 1.0 is the max, 0.0 is idle.
+
+    //This is our countdown loop, which cycles from 10 to 0
+    PRINT "Counting down:".
+    FROM {local countdown is 10.} UNTIL countdown = 0 STEP {SET countdown to countdown - 1.} DO {
+        PRINT "..." + countdown.
+        WAIT 1. // pauses the script here for 1 second.
+    }
+
+    //This is a trigger that constantly checks to see if our thrust is zero.
+    //If it is, it will attempt to stage and then return to where the script
+    //left off. The PRESERVE keyword keeps the trigger active even after it
+    //has been triggered.
+    WHEN MAXTHRUST = 0 THEN {
+        PRINT "Staging".
+        STAGE.
+        PRESERVE.
+    }.
+
+    //This will be our main control loop for the ascent. It will
+    //cycle through continuously until our apoapsis is greater
+    //than 100km. Each cycle, it will check each of the IF
+    //statements inside and perform them if their conditions
+    //are met
+    UNTIL SHIP:APOAPSIS > 100000 { //Remember, all altitudes will be in meters, not kilometers
+        
+        //For the initial ascent, we want our steering to be straight
+        //up and rolled due east
+        IF SHIP:VELOCITY:SURFACE:MAG < 100 {
+            //This sets our steering 90 degrees up and yawed to the compass
+            //heading of 90 degrees (east)
+            LOCK STEERING TO HEADING(90,90).
+        
+        //Once we pass 100m/s, we want to pitch down ten degrees
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 100 AND SHIP:VELOCITY:SURFACE:MAG < 200 {
+            LOCK STEERING TO HEADING(90,80).
+            PRINT "Pitching to 80 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+        
+        //Each successive IF statement checks to see if our velocity
+        //is within a 100m/s block and adjusts our heading down another
+        //ten degrees if so
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 200 AND SHIP:VELOCITY:SURFACE:MAG < 300 {
+            LOCK STEERING TO HEADING(90,70).
+            PRINT "Pitching to 70 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+        
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 300 AND SHIP:VELOCITY:SURFACE:MAG < 400 {
+            LOCK STEERING TO HEADING(90,60).
+            PRINT "Pitching to 60 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+        
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 400 AND SHIP:VELOCITY:SURFACE:MAG < 500 {
+            LOCK STEERING TO HEADING(90,50).
+            PRINT "Pitching to 50 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+        
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 500 AND SHIP:VELOCITY:SURFACE:MAG < 600 {
+            LOCK STEERING TO HEADING(90,40).
+            PRINT "Pitching to 40 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+        
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 600 AND SHIP:VELOCITY:SURFACE:MAG < 700 {
+            LOCK STEERING TO HEADING(90,30).
+            PRINT "Pitching to 30 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+        
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 700 AND SHIP:VELOCITY:SURFACE:MAG < 800 {
+            LOCK STEERING TO HEADING(90,11).
+            PRINT "Pitching to 20 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+        
+        //Beyond 800m/s, we can keep facing towards 10 degrees above the horizon and wait
+        //for the main loop to recognize that our apoapsis is above 100km
+        } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 800 {
+            LOCK STEERING TO HEADING(90,10).
+            PRINT "Pitching to 10 degrees" AT(0,15).
+            PRINT SHIP:APOAPSIS AT (0,16).
+            
+        }.
+        
+    }.
+
+    PRINT "100km apoapsis reached, cutting throttle".
+
+    //At this point, our apoapsis is above 100km and our main loop has ended. Next
+    //we'll make sure our throttle is zero and that we're pointed prograde
+    LOCK THROTTLE TO 0.
+
+    //This sets the user's throttle setting to zero to prevent the throttle
+    //from returning to the position it was at before the script was run.
+    SET SHIP:CONTROL:PILOTMAINTHROTTLE TO 0.
+
+
+And here is it in action:
 
 .. figure:: /_images/tutorials/quickstart/example_2_6.png
+    :width: 80 %
+
+And toward the end:
+
+.. figure:: /_images/tutorials/quickstart/example_2_7.png
     :width: 80 %
 
 This script should, in principle, work to get you to the point of leaving the atmosphere. It will probably still fall back down, because this script makes no attempt to ensure that the craft is going fast enough to maintain the orbit.
@@ -430,8 +607,6 @@ This script should, in principle, work to get you to the point of leaving the at
 As you can probably see, it would still have a long way to go before it would become a really GOOD launching autopilot. Think about the following features you could add yourself as you become more familiar with **kOS**:
 
 - You could change the steering logic to make a more smooth gravity turn by constantly adjusting the pitch in the HEADING according to some math formula. The example shown here tends to create a "too high" launch that's a bit inefficient.
-- You could complete the launching script by making sure once the vessel breaks the atmosphere it actually makes a circular orbit rather than just stopping after 70000m and coasting.
 - This script just stupidly leaves the throttle at max the whole way. You could make it more sophisticated by adjusting the throttle as necessary to avoid high gee forces.
-- With more sophisticated staging checks, the script could be made to work with solid fuel engines as well.
-- With even more sophisticated checks, the script could be made to work with fancy staging methods like asaparagus.
-- Using the PRINT AT command, you can make fancier status readouts in the termainl window as the script runs.
+- This script does not attempt to circularize. With some simple checks of the time to apoapsis and the orbital velocity, you can execute a burn that circularizes your orbit.
+- Using the PRINT AT command, you can make fancier status readouts in the terminal window as the script runs.
