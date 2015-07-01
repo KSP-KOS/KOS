@@ -152,7 +152,8 @@ You need to make the vessel you see here:
 .. figure:: /_images/tutorials/quickstart/example_2_0.png
     :width: 80 %
 
-If you prefer, you can instead download the .craft file `here <https://www.dropbox.com/s/fnoilignjel2lqd/My%20First%20Rocket.craft?dl=0>`_.
+If you prefer, you can instead download the .craft file 
+`here </_images/tutorials/quickstart/My First Rocket.craft>`
 
 Step 2: Make the start of the script
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
