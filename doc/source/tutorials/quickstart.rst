@@ -146,12 +146,13 @@ But in order to give you an example that you can start with from scratch, that's
 Step 1: Make a vessel
 ^^^^^^^^^^^^^^^^^^^^^
 
-Please make the vessel you see here:
+This tutorial is designed to work with a very specific rocket design.
+You need to make the vessel you see here:
 
 .. figure:: /_images/tutorials/quickstart/example_2_0.png
     :width: 80 %
 
-If you prefer, you can download the .craft file `here <https://www.dropbox.com/s/fnoilignjel2lqd/My%20First%20Rocket.craft?dl=0>`_.
+If you prefer, you can instead download the .craft file `here <https://www.dropbox.com/s/fnoilignjel2lqd/My%20First%20Rocket.craft?dl=0>`_.
 
 Step 2: Make the start of the script
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -394,7 +395,7 @@ Instead of using WAIT UNTIL to pause the script and keep it from exiting, we can
 
     UNTIL APOAPSIS > 100000 {
         LOCK STEERING TO HEADING(90,90). //90 degrees east and pitched up 90 degrees (straight up)
-        PRINT SHIP:APOAPSIS AT (0,15).
+        PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16). // prints new number, rounded to the nearest integer.
         //We use the PRINT AT() command here to keep from printing the same thing over and
         //over on a new line every time the loop iterates. Instead, this will always print 
         //the apoapsis at the same point on the screen.
@@ -417,7 +418,7 @@ We can combine this with IF statements in order to have one main loop that only 
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 100 AND SHIP:VELOCITY:SURFACE:MAG < 200 {
             LOCK STEERING TO HEADING(90,80).
             PRINT "Pitching to 80 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         }.
     }.
 
@@ -469,7 +470,7 @@ Putting this into your script, it should look like this::
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 100 {
             LOCK STEERING TO HEADING(90,80).
             PRINT "Pitching to 80 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         }.
     }.
     
@@ -535,7 +536,7 @@ Copy this into your script and run it. It should take you nearly to orbit::
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 100 AND SHIP:VELOCITY:SURFACE:MAG < 200 {
             LOCK STEERING TO HEADING(90,80).
             PRINT "Pitching to 80 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         //Each successive IF statement checks to see if our velocity
         //is within a 100m/s block and adjusts our heading down another
@@ -543,39 +544,39 @@ Copy this into your script and run it. It should take you nearly to orbit::
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 200 AND SHIP:VELOCITY:SURFACE:MAG < 300 {
             LOCK STEERING TO HEADING(90,70).
             PRINT "Pitching to 70 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 300 AND SHIP:VELOCITY:SURFACE:MAG < 400 {
             LOCK STEERING TO HEADING(90,60).
             PRINT "Pitching to 60 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 400 AND SHIP:VELOCITY:SURFACE:MAG < 500 {
             LOCK STEERING TO HEADING(90,50).
             PRINT "Pitching to 50 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 500 AND SHIP:VELOCITY:SURFACE:MAG < 600 {
             LOCK STEERING TO HEADING(90,40).
             PRINT "Pitching to 40 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 600 AND SHIP:VELOCITY:SURFACE:MAG < 700 {
             LOCK STEERING TO HEADING(90,30).
             PRINT "Pitching to 30 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 700 AND SHIP:VELOCITY:SURFACE:MAG < 800 {
             LOCK STEERING TO HEADING(90,11).
             PRINT "Pitching to 20 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
         
         //Beyond 800m/s, we can keep facing towards 10 degrees above the horizon and wait
         //for the main loop to recognize that our apoapsis is above 100km
         } ELSE IF SHIP:VELOCITY:SURFACE:MAG >= 800 {
             LOCK STEERING TO HEADING(90,10).
             PRINT "Pitching to 10 degrees" AT(0,15).
-            PRINT SHIP:APOAPSIS AT (0,16).
+            PRINT ROUND(SHIP:APOAPSIS,0) AT (0,16).
             
         }.
         
@@ -609,4 +610,5 @@ As you can probably see, it would still have a long way to go before it would be
 - You could change the steering logic to make a more smooth gravity turn by constantly adjusting the pitch in the HEADING according to some math formula. The example shown here tends to create a "too high" launch that's a bit inefficient. In addition, this method relies on velocity to determine pitch angle, which could result in some very firey launches for other ships with a higher TWR profile.
 - This script just stupidly leaves the throttle at max the whole way. You could make it more sophisticated by adjusting the throttle as necessary to avoid velocities that result in high atmospheric heating.
 - This script does not attempt to circularize. With some simple checks of the time to apoapsis and the orbital velocity, you can execute a burn that circularizes your orbit.
+- With even more sophisticated checks, the script could be made to work with fancy staging methods like asaparagus.
 - Using the PRINT AT command, you can make fancier status readouts in the terminal window as the script runs.
