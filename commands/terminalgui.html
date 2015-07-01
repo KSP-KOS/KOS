@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Terminal and game environment &mdash; kOS 0.17.1 documentation</title>
+  <title>Terminal and game environment &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../index.html"/>
         <link rel="up" title="Command Reference" href="../commands.html"/>
         <link rel="next" title="Transferring resources" href="resource_transfer.html"/>
         <link rel="prev" title="File I/O" href="files.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
@@ -176,7 +178,7 @@
           <div role="main" class="document">
             
   <div class="section" id="terminal-and-game-environment">
-<span id="terminal"></span><h1>Terminal and game environment<a class="headerlink" href="#terminal-and-game-environment" title="Permalink to this headline">¶</a></h1>
+<span id="terminalgui"></span><h1>Terminal and game environment<a class="headerlink" href="#terminal-and-game-environment" title="Permalink to this headline">¶</a></h1>
 <dl class="global">
 <dt id="global:CLEARSCREEN">
 <tt class="descname">CLEARSCREEN</tt><a class="headerlink" href="#global:CLEARSCREEN" title="Permalink to this definition">¶</a></dt>
@@ -200,13 +202,15 @@ PRINT “4 times 8 is: “ + (4*8).
 <dl class="global">
 <dt id="global:SET TERMINAL:WIDTH. GET TERMINAL:WIDTH">
 <tt class="descname">SET TERMINAL:WIDTH. GET TERMINAL:WIDTH</tt><a class="headerlink" href="#global:SET TERMINAL:WIDTH. GET TERMINAL:WIDTH" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets or sets the terminal&#8217;s width in characters.</p>
+<dd><p>Gets or sets the terminal&#8217;s width in characters.
+For more information see <a class="reference internal" href="../structures/misc/terminal.html#terminal"><em>terminal struct</em></a>.</p>
 </dd></dl>
 
 <dl class="global">
 <dt id="global:SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT">
 <tt class="descname">SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT</tt><a class="headerlink" href="#global:SET TERMINAL:HEIGHT. GET TERMINAL:HEIGHT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets or sets the terminal&#8217;s height in characters.</p>
+<dd><p>Gets or sets the terminal&#8217;s height in characters.
+For more information see <a class="reference internal" href="../structures/misc/terminal.html#terminal"><em>terminal struct</em></a>.</p>
 </dd></dl>
 
 <dl class="function">
@@ -376,7 +380,7 @@ or the RGB constructor to make one up</a></dd>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

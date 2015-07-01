@@ -68,10 +68,10 @@ Structure
           - `argument of periapsis`_
         * - :attr:`TRUEANOMALY`
           - scalar
-          - `true anomaly`_
+          - `true anomaly`_ in degrees (not radians)
         * - :attr:`MEANANOMALYATEPOCH`
           - scalar
-          - `mean anomaly`_
+          - `mean anomaly`_ in degrees (not radians)
         * - :attr:`TRANSITION`
           - string
           - :ref:`Transition from this orbit <transitions>`
@@ -177,14 +177,21 @@ Structure
     :type: scalar
     :access: Get only
 
-    `true anomaly`_
+    `true anomaly`_ in degrees.  Even though orbital parameters are
+    traditionally done in radians, in keeping with the kOS standard
+    of making everything into degrees, they are given as degrees by
+    kOS.
 
 .. attribute:: Orbit:MEANANOMALYATEPOCH
 
     :type: scalar
     :access: Get only
 
-    `mean anomaly`_
+    `mean anomaly`_  in degrees. Even though orbital parameters are
+    traditionally done in radians, in keeping with the kOS standard
+    of making everything into degrees, they are given as degrees by
+    kOS.
+
 
 .. attribute:: Orbit:TRANSITION
 

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ship Systems &mdash; kOS 0.17.1 documentation</title>
+  <title>Ship Systems &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Time Warping" href="warp.html"/>
         <link rel="prev" title="Pilot Input" href="pilot.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../structures/vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../structures/core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -226,17 +228,17 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body"><p class="first">Get/Set</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
-<p>Getting this variable will return the currently selected mode.  Where <tt class="docutils literal"><span class="pre">value</span></tt> is one of the valid strings listed below, this will set the stock SAS mode for the cpu vessel:</p>
-<p>SET SASMODE TO value.</p>
-<p class="last">It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity).  Valid strings for <tt class="docutils literal"><span class="pre">value</span></tt> are <tt class="docutils literal"><span class="pre">&quot;PROGRADE&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RETROGRADE&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;NORMAL&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;ANTINORMAL&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RADIALOUT&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RADIALIN&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></tt>, <tt class="docutils literal"><span class="pre">MANEUVER</span></tt>, <tt class="docutils literal"><span class="pre">&quot;STABILITYASSIST&quot;</span></tt>, and <tt class="docutils literal"><span class="pre">&quot;STABILITY&quot;</span></tt>.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if <tt class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></tt> or <tt class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></tt> are used, but no target is selected.</p>
-</td>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>
+<p>Getting this variable will return the currently selected mode.  Where <tt class="docutils literal"><span class="pre">value</span></tt> is one of the valid strings listed below, this will set the stock SAS mode for the cpu vessel:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">SASMODE</span> <span class="n">TO</span> <span class="n">value</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>It is the equivalent to clicking on the buttons next to the nav ball while manually piloting the craft, and will respect the current mode of the nav ball (orbital, surface, or target velocity).  Valid strings for <tt class="docutils literal"><span class="pre">value</span></tt> are <tt class="docutils literal"><span class="pre">&quot;PROGRADE&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RETROGRADE&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;NORMAL&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;ANTINORMAL&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RADIALOUT&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;RADIALIN&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></tt>, <tt class="docutils literal"><span class="pre">MANEUVER</span></tt>, <tt class="docutils literal"><span class="pre">&quot;STABILITYASSIST&quot;</span></tt>, and <tt class="docutils literal"><span class="pre">&quot;STABILITY&quot;</span></tt>.  A null or empty string will default to stability assist mode, however any other invalid string will throw an exception.  This feature will respect career mode limitations, and will throw an exception if the current vessel is not able to use the mode passed to the command.  An exception is also thrown if <tt class="docutils literal"><span class="pre">&quot;TARGET&quot;</span></tt> or <tt class="docutils literal"><span class="pre">&quot;ANTITARGET&quot;</span></tt> are used, but no target is selected.</p>
 </dd></dl>
 
 <div class="admonition warning">
@@ -339,7 +341,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

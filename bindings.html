@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Catalog of Bound Variable Names &mdash; kOS 0.17.1 documentation</title>
+  <title>Catalog of Bound Variable Names &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="index.html"/>
         <link rel="up" title="General Topics" href="general.html"/>
         <link rel="next" title="CPU Vessel (SHIP)" href="general/cpu_vessel.html"/>
         <link rel="prev" title="General Topics" href="general.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2"><a class="reference internal" href="structures/vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures/core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a><ul class="simple">
@@ -308,11 +310,32 @@ page, as they are all just instances of the standard vessel suffixes.</p>
 <tr class="row-even"><td>STATUS</td>
 <td>Same as SHIP:STATUS</td>
 </tr>
-<tr class="row-odd"><td>VESSELNAME</td>
+<tr class="row-odd"><td>SHIPNAME</td>
 <td>Same as SHIP:NAME</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="terminal">
+<h2>Terminal<a class="headerlink" href="#terminal" title="Permalink to this headline">¶</a></h2>
+<p>Get-only. <tt class="docutils literal"><span class="pre">terminal</span></tt> returns a <a class="reference internal" href="structures/misc/terminal.html#structure:TERMINAL" title="TERMINAL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">terminal</span></tt></a> structure describing
+the attributes of the current terminal screen associated with the
+CPU this script is running on.</p>
+</div>
+<div class="section" id="core">
+<h2>Core<a class="headerlink" href="#core" title="Permalink to this headline">¶</a></h2>
+<p>Get-only. <tt class="docutils literal"><span class="pre">core</span></tt> returns a <a class="reference internal" href="structures/core.html#structure:CORE" title="CORE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">core</span></tt></a> structure referring to the CPU you
+are running on.</p>
+</div>
+<div class="section" id="stage">
+<h2>Stage<a class="headerlink" href="#stage" title="Permalink to this headline">¶</a></h2>
+<p>Get-only. <tt class="docutils literal"><span class="pre">stage</span></tt> returns a <a class="reference internal" href="structures/vessels/stage.html#structure:STAGE" title="STAGE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">stage</span></tt></a> structure used to count resources
+in the current stage.  Not to be confused with the COMMAND stage
+which triggers the next stage.</p>
+</div>
+<div class="section" id="nextnode">
+<h2>NextNode<a class="headerlink" href="#nextnode" title="Permalink to this headline">¶</a></h2>
+<p>Get-only. <tt class="docutils literal"><span class="pre">nextnode</span></tt> returns the next planned manuever <tt class="xref ks ks-struct docutils literal"><span class="pre">node</span></tt> in the SHIP&#8217;s flight plan.  Bombs out if no such node exists.</p>
 </div>
 <div class="section" id="resource-types">
 <h2>Resource Types<a class="headerlink" href="#resource-types" title="Permalink to this headline">¶</a></h2>
@@ -329,7 +352,7 @@ corner of the screen in the KSP window. <img alt="Resources" src="_images/resour
 </div>
 <p>All of the above resources can be queried using either the prefix SHIP
 or STAGE, depending on whether you are trying to query how much is left
-in the curent stage or the entire ship:</p>
+in the current stage or the entire ship:</p>
 <p>How much liquid fuel is left in the entire ship:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;There is &quot;</span> <span class="o">+</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">LIQUIDFUEL</span> <span class="o">+</span> <span class="s">&quot; liquid fuel on the ship.&quot;</span><span class="p">.</span>
 </pre></div>
@@ -578,61 +601,9 @@ fly-by-wire plane works.)</p>
 </div>
 </div>
 </div>
-<div class="section" id="system-variables">
-<h2>System Variables<a class="headerlink" href="#system-variables" title="Permalink to this headline">¶</a></h2>
-<p>Returns values about kOS and hardware</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">VERSION</span><span class="p">.</span>            <span class="c1">// Returns operating system version number. i.e. 0.8.6</span>
-<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">MAJOR</span><span class="p">.</span>      <span class="c1">// Returns major version number. e.g. 0</span>
-<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">MINOR</span><span class="p">.</span>      <span class="c1">// Returns minor version number. e.g. 8</span>
-<span class="n">PRINT</span> <span class="n">SESSIONTIME</span><span class="p">.</span>        <span class="c1">// Returns amount of time, in seconds, from vessel load.</span>
-</pre></div>
-</div>
-<p>NOTE the following important difference:</p>
-<p>SESSIONTIME is the time since the last time this vessel was loaded from
-on-rails into full physics.</p>
-<p>TIME is the time since the entire saved game campaign started, in the
-kerbal universe&#8217;s time. i.e. TIME = 0 means a brand new campaign was
-just started.</p>
-<div class="section" id="warping">
-<h3>WARPING<a class="headerlink" href="#warping" title="Permalink to this headline">¶</a></h3>
-<p>Time warp can be controlled with WARP, and WARPMODE.  See
-<a class="reference internal" href="commands/flight/warp.html#warp"><em>WARP</em></a></p>
-</div>
-</div>
-<div class="section" id="config">
-<h2>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h2>
-<p>CONFIG is a special variable name that refers to the configuration
-settings for
-the kOS mod, and can be used to set or get various options.</p>
-<p><a class="reference external" href="structures/misc/config.html">CONFIG has its own page</a> for further
-details.</p>
-</div>
-<div class="section" id="game-state">
-<h2>Game State<a class="headerlink" href="#game-state" title="Permalink to this headline">¶</a></h2>
-<p>Variables that have something to do with the state of the universe.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="3%" />
-<col width="14%" />
-<col width="83%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Variable</th>
-<th class="head">Type</th>
-<th class="head">Meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>TIME</td>
-<td><a class="reference external" href="structures/misc/time.html">Time</a></td>
-<td>Simulated amount of time that passed since the beginning of the game&#8217;s universe epoch. (A brand new campaign that just started begins at TIME zero.)</td>
-</tr>
-<tr class="row-odd"><td>MAPVIEW</td>
-<td>boolean</td>
-<td>Both settable and gettable. If you query MAPVIEW, it&#8217;s true if on the map screen, and false if on the flight view screen.  If you SET MAPVIEW, you can cause the game to switch between mapview and flight view or visa versa.</td>
-</tr>
-</tbody>
-</table>
+<div class="section" id="time">
+<h2>Time<a class="headerlink" href="#time" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="structures/misc/time.html">Time</a> is the simulated amount of time that passed since the beginning of the game&#8217;s universe epoch. (A brand new campaign that just started begins at TIME zero.)</p>
 <p>TIME is a useful system variable for calculating the passage of time
 between taking
 physical measurements (i.e. to calculate how fast a phenomenon is
@@ -653,6 +624,65 @@ is what TIME returns.</p>
 <p>It&#8217;s important to be aware of the <a class="reference external" href="general/CPU_hardware.html#FROZEN">frozen update
 nature</a> of the kOS
 computer when reading TIME.</p>
+</div>
+<div class="section" id="system-variables">
+<h2>System Variables<a class="headerlink" href="#system-variables" title="Permalink to this headline">¶</a></h2>
+<p>This section is about variables that describe the things that are slightly
+outside the simulated universe of the game and are more about
+the game&#8217;s user interface or the kOS mod itself.  They represent things
+that slightly &#8220;break the fourth wall&#8221; and let your script access
+something entirely outside the in-character experience.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">VERSION</span><span class="p">.</span>            <span class="c1">// Returns operating system version number. e.g. 0.8.6</span>
+<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">MAJOR</span><span class="p">.</span>      <span class="c1">// Returns major version number. e.g. 0</span>
+<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">MINOR</span><span class="p">.</span>      <span class="c1">// Returns minor version number. e.g. 8</span>
+<span class="n">PRINT</span> <span class="n">VERSION</span><span class="o">:</span><span class="n">BUILD</span><span class="p">.</span>      <span class="c1">// Returns build version number. e.g. 6</span>
+<span class="n">PRINT</span> <span class="n">SESSIONTIME</span><span class="p">.</span>        <span class="c1">// Returns amount of time, in seconds, from vessel load.</span>
+</pre></div>
+</div>
+<p>NOTE the following important difference:</p>
+<p>SESSIONTIME is the time since the last time this vessel was loaded from
+on-rails into full physics.</p>
+<p>TIME is the time since the entire saved game campaign started, in the
+kerbal universe&#8217;s time. i.e. TIME = 0 means a brand new campaign was
+just started.</p>
+<div class="section" id="config">
+<h3>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h3>
+<p>CONFIG is a special variable name that refers to the configuration
+settings for the kOS mod, and can be used to set or get various
+options.</p>
+<p><a class="reference external" href="structures/misc/config.html">CONFIG has its own page</a> for further
+details.</p>
+</div>
+<div class="section" id="warp-and-warpmode">
+<h3>WARP and WARPMODE<a class="headerlink" href="#warp-and-warpmode" title="Permalink to this headline">¶</a></h3>
+<p>Time warp can be controlled with the variables
+WARP and WARPMODE.  See <a class="reference internal" href="commands/flight/warp.html#warp"><em>WARP</em></a></p>
+</div>
+<div class="section" id="mapview">
+<h3>MAPVIEW<a class="headerlink" href="#mapview" title="Permalink to this headline">¶</a></h3>
+<p>A boolean that is both gettable and settable.</p>
+<p>If you query MAPVIEW, it&#8217;s true if on the map screen, and false if on the flight view screen.  If you SET MAPVIEW, you can cause the game to switch between mapview and flight view or visa versa.</p>
+</div>
+<div class="section" id="loaddistance">
+<h3>LOADDISTANCE<a class="headerlink" href="#loaddistance" title="Permalink to this headline">¶</a></h3>
+<p>LOADDISTANCE sets the distance from the active vessel at
+which vessels get removed from the full physics engine and put
+on-rails, or visa versa.  Note that as of KSP 1.0 the stock game
+supports multiple different load distance settings for different
+situations such that the value changes depending on where you are.
+But kOS does not support this at the moment so in kOS if you set
+the LOADDISTANCE, you are setting it to the same value
+universally for all situations.</p>
+</div>
+</div>
+<div class="section" id="addons">
+<h2>Addons<a class="headerlink" href="#addons" title="Permalink to this headline">¶</a></h2>
+<p>Get-only.  <tt class="docutils literal"><span class="pre">addons</span></tt> is a special variable used to access various extensions
+to kOS that are designed to support the features introduced by some other mods.  More info can be found on the <a class="reference internal" href="addons.html#addons"><em>addons</em></a> page.</p>
+</div>
+<div class="section" id="colors">
+<h2>Colors<a class="headerlink" href="#colors" title="Permalink to this headline">¶</a></h2>
+<p>There are several bound variables associated with <a class="reference internal" href="structures/misc/colors.html#colors"><em>hardcoded colors</em></a> such as WHITE, BLACK, RED, etc.  See the linked page for the full list.</p>
 </div>
 </div>
 
@@ -695,7 +725,7 @@ computer when reading TIME.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

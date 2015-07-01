@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Terminal &mdash; kOS 0.17.1 documentation</title>
+  <title>Terminal &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Time Span" href="time.html"/>
         <link rel="prev" title="Resource Transfer" href="resource_transfer.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -212,6 +214,16 @@ some of the information about the screen you are running on.</p>
 <td>get and set</td>
 <td>Terminal height in characters</td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:TERMINAL:REVERSE" title="TERMINAL:REVERSE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">REVERSE</span></tt></a></td>
+<td>Boolean</td>
+<td>get and set</td>
+<td>Determines if the screen is displayed with foreground and background colors swapped.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:TERMINAL:VISUALBEEP" title="TERMINAL:VISUALBEEP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VISUALBEEP</span></tt></a></td>
+<td>Boolean</td>
+<td>get and set</td>
+<td>Turns beeps into silent visual screen flashes instead.</td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -235,6 +247,8 @@ If there&#8217;s multiple terminals connected to the same CPU part via telnet cl
 then kOS will attempt to keep them all the same size, and one terminal being resized
 will resize them all.  (caveat: Some terminal types cannot be resized from the
 server side, and therefore this doesn&#8217;t always work in both directions).</p>
+<p>This setting is different per kOS CPU part.  Different terminal
+windows can have different settings for this value.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -256,6 +270,63 @@ If there&#8217;s multiple terminals connected to the same CPU part via telnet cl
 then kOS will attempt to keep them all the same size, and one terminal being resized
 will resize them all.  (caveat: Some terminal types cannot be resized from the
 server side, and therefore this doesn&#8217;t always work in both directions).</p>
+<p>This setting is different per kOS CPU part.  Different terminal
+windows can have different settings for this value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TERMINAL:REVERSE">
+Terminal:<tt class="descname">REVERSE</tt><a class="headerlink" href="#attribute:TERMINAL:REVERSE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Boolean.</td>
+</tr>
+</tbody>
+</table>
+<p>If true, then the terminal window is currently set to show
+the whole screen in reversed color - swapping the background
+and foreground colors.   Both the telnet terminals and the in-game
+GUI terminal respond to this setting equally.</p>
+<p>Note, this setting can also be toggled with a radio-button on the
+in-game GUI terminal window.</p>
+<p>This setting is different per kOS CPU part.  Different terminal
+windows can have different settings for this value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:TERMINAL:VISUALBEEP">
+Terminal:<tt class="descname">VISUALBEEP</tt><a class="headerlink" href="#attribute:TERMINAL:VISUALBEEP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">Boolean.</td>
+</tr>
+</tbody>
+</table>
+<p>If true, then the terminal window is currently set to show any
+BEEP characters by silently flashing the screen for a moment
+(inverting the background/foreground for a fraction of a second),
+instead of making a sound.</p>
+<p>Note, this setting can also be toggled with a radio-button on the
+in-game GUI terminal window.</p>
+<p>This will only typically affect the in-game GUI terminal window,
+and <strong>not a telnet client&#8217;s</strong> terminal window.</p>
+<p>To affect the window you are using in a telnet session, you will
+have to use whatever your terminal or terminal emulator&#8217;s local
+settings panel has for it.  Most do have some sort of visual
+beep setting, but it is usually not settable via a control character
+sequence sent across the connection.  The terminals are designed to
+assume it&#8217;s a local user preference that isn&#8217;t overridable
+by the software you are running.</p>
+<p>This setting is different per kOS CPU part.  Different terminal
+windows can have different settings for this value.</p>
 </dd></dl>
 
 </div>
@@ -300,7 +371,7 @@ server side, and therefore this doesn&#8217;t always work in both directions).</
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

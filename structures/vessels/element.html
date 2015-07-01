@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Element &mdash; kOS 0.17.1 documentation</title>
+  <title>Element &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Engine" href="engine.html"/>
         <link rel="prev" title="DockingPort" href="dockingport.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -222,6 +224,14 @@ elements and what they do.</p>
 <td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td>all <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></tt></a></td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ELEMENT:DOCKINGPORTS" title="ELEMENT:DOCKINGPORTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DOCKINGPORTS</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<td>all <a class="reference internal" href="dockingport.html#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPorts</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ELEMENT:VESSEL" title="ELEMENT:VESSEL attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VESSEL</span></tt></a></td>
+<td><a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+<td>the parent <a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+</tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ELEMENT:RESOURCES" title="ELEMENT:RESOURCES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RESOURCES</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td>all <a class="reference internal" href="aggregateresource.html#structure:AGGREGATERESOURCE" title="AGGREGATERESOURCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">AggrgateResources</span></tt></a></td>
@@ -276,6 +286,38 @@ Element:<tt class="descname">PARTS</tt><a class="headerlink" href="#attribute:EL
 </tbody>
 </table>
 <p>A List of all the <a class="reference internal" href="part.html#part"><em>parts</em></a> on the Element. <tt class="docutils literal"><span class="pre">SET</span> <span class="pre">FOO</span> <span class="pre">TO</span> <span class="pre">SHIP:PARTS.</span></tt> has exactly the same effect as <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span> <span class="pre">IN</span> <span class="pre">FOO.</span></tt>. For more information, see <a class="reference internal" href="../../general/parts_and_partmodules.html#parts-and-partmodules"><em>ship parts and modules</em></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ELEMENT:DOCKINGPORTS">
+Element:<tt class="descname">DOCKINGPORTS</tt><a class="headerlink" href="#attribute:ELEMENT:DOCKINGPORTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="dockingport.html#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a> objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>A List of all the <a class="reference internal" href="dockingport.html#dockingport"><em>docking ports</em></a> on the Element.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ELEMENT:VESSEL">
+Element:<tt class="descname">VESSEL</tt><a class="headerlink" href="#attribute:ELEMENT:VESSEL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The parent vessel containing the element.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -335,7 +377,7 @@ Element:<tt class="descname">RESOURCES</tt><a class="headerlink" href="#attribut
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

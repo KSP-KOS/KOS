@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vessel &mdash; kOS 0.17.1 documentation</title>
+  <title>Vessel &mdash; kOS 0.17.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.1 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.17.2 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="VesselSensors" href="vesselsensors.html"/>
         <link rel="prev" title="Stage" href="stage.html"/> 
@@ -124,12 +124,14 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
@@ -233,9 +235,17 @@
 <td>scalar</td>
 <td>Sum of active maximum thrusts</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:AVAILABLETHRUST" title="VESSEL:AVAILABLETHRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLETHRUST</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:MAXTHRUSTAT" title="VESSEL:MAXTHRUSTAT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MAXTHRUSTAT(pressure)</span></tt></a></td>
+<td>scalar</td>
+<td>Sum of active maximum thrusts at the given atmospheric pressure</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:AVAILABLETHRUST" title="VESSEL:AVAILABLETHRUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AVAILABLETHRUST</span></tt></a></td>
 <td>scalar</td>
 <td>Sum of active limited maximum thrusts</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:VESSEL:AVAILABLETHRUSTAT" title="VESSEL:AVAILABLETHRUSTAT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">AVAILABLETHRUSTAT(pressure)</span></tt></a></td>
+<td>scalar</td>
+<td>Sum of active limited maximum thrusts at the given atmospheric pressure</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:FACING" title="VESSEL:FACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FACING</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
@@ -316,6 +326,14 @@
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:PARTS" title="VESSEL:PARTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PARTS</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
 <td>all <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Parts</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:DOCKINGPORTS" title="VESSEL:DOCKINGPORTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DOCKINGPORTS</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<td>all <a class="reference internal" href="dockingport.html#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPorts</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:ELEMENTS" title="VESSEL:ELEMENTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ELEMENTS</span></tt></a></td>
+<td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
+<td>all <a class="reference internal" href="element.html#structure:ELEMENT" title="ELEMENT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Elements</span></tt></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:VESSEL:RESOURCES" title="VESSEL:RESOURCES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RESOURCES</span></tt></a></td>
 <td><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a></td>
@@ -418,12 +436,32 @@ Vessel:<tt class="descname">MAXTHRUST</tt><a class="headerlink" href="#attribute
 </tr>
 </tbody>
 </table>
-<p>Sum of all the Max thrust of all the currently active engines In Kilonewtons.</p>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-maxthrust"><em>engines&#8217; MAXTHRUSTs</em></a> of all the currently active engines In Kilonewtons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:VESSEL:MAXTHRUSTAT">
+Vessel:<tt class="descname">MAXTHRUSTAT</tt><big>(</big>pressure<big>)</big><a class="headerlink" href="#method:VESSEL:MAXTHRUSTAT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pressure</strong> &#8211; atmospheric pressure (in standard Kerbin atmospheres)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">scalar (kN)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-maxthrustat"><em>engines&#8217; MAXTHRUSTATs</em></a> of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="attribute:VESSEL:AVAILABLETHRUST">
-vessel:<tt class="descname">AVAILABLETHRUST</tt><a class="headerlink" href="#attribute:VESSEL:AVAILABLETHRUST" title="Permalink to this definition">¶</a></dt>
+Vessel:<tt class="descname">AVAILABLETHRUST</tt><a class="headerlink" href="#attribute:VESSEL:AVAILABLETHRUST" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -434,7 +472,27 @@ vessel:<tt class="descname">AVAILABLETHRUST</tt><a class="headerlink" href="#att
 </tr>
 </tbody>
 </table>
-<p>Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.</p>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-availablethrust"><em>engines&#8217; AVAILABLETHRUSTs</em></a> of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:VESSEL:AVAILABLETHRUSTAT">
+Vessel:<tt class="descname">AVAILABLETHRUSTAT</tt><big>(</big>pressure<big>)</big><a class="headerlink" href="#method:VESSEL:AVAILABLETHRUSTAT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pressure</strong> &#8211; atmospheric pressure (in standard Kerbin atmospheres)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">scalar (kN)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Sum of all the <a class="reference internal" href="engine.html#engine-availablethrustat"><em>engines&#8217; AVAILABLETHRUSTATs</em></a> of all the currently active engines taking into acount their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -766,6 +824,38 @@ Vessel:<tt class="descname">PARTS</tt><a class="headerlink" href="#attribute:VES
 </dd></dl>
 
 <dl class="attribute">
+<dt id="attribute:VESSEL:DOCKINGPORTS">
+Vessel:<tt class="descname">DOCKINGPORTS</tt><a class="headerlink" href="#attribute:VESSEL:DOCKINGPORTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="dockingport.html#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a> objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>A List of all the <a class="reference internal" href="dockingport.html#dockingport"><em>docking ports</em></a> on the Vessel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:VESSEL:ELEMENTS">
+Vessel:<tt class="descname">ELEMENTS</tt><a class="headerlink" href="#attribute:VESSEL:ELEMENTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../misc/list.html#structure:LIST" title="LIST structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">List</span></tt></a> of <a class="reference internal" href="element.html#structure:ELEMENT" title="ELEMENT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Element</span></tt></a> objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>A List of all the <a class="reference internal" href="element.html#element"><em>elements</em></a> on the Vessel.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="attribute:VESSEL:RESOURCES">
 Vessel:<tt class="descname">RESOURCES</tt><a class="headerlink" href="#attribute:VESSEL:RESOURCES" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -976,7 +1066,7 @@ Vessel:<tt class="descname">ALLPARTSTAGGED</tt><big>(</big><big>)</big><a class=
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.1',
+            VERSION:'0.17.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

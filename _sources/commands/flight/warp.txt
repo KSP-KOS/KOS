@@ -6,6 +6,10 @@ Time Warping
 
 .. global:: WARP
 
+    You may use the WARPTO(time) function to automatically warp to the specified time (given in seconds game universal time).  If you need more precise control, you can use the other options below.::
+
+        WARPTO(TIME:SECONDS + 60 * 10). // warp to a time 10 minutes in the future
+
     The :global:`WARP` global variable can be set to change the game warp to a value between 0 and 7 (for rails warp) or 0 to 3 (for physics warp)::
 
         SET WARP TO 5. // Sets warp to 1000x
