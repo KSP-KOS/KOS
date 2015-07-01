@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Exceptions;
 using kOS.Utilities;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,13 @@ namespace kOS.Suffixed
         private double? GetResourceOfCurrentStage(string resourceName)
         {
             PartResourceDefinition resourceDef = PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(pr => string.Equals(pr.name, resourceName, StringComparison.CurrentCultureIgnoreCase));
-            List<PartResource> list = new List<PartResource>();
+
+            if (resourceDef == null)
+            {
+                throw new KOSInvalidArgumentException("STAGE", resourceName, "The resource definition could not be found");
+            }
+
+            var list = new List<PartResource>();
             if (resourceDef.resourceFlowMode == ResourceFlowMode.STACK_PRIORITY_SEARCH)
             {
                 var engines = VesselUtils.GetListOfActivatedEngines(shared.Vessel);
