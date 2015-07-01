@@ -153,7 +153,7 @@ You need to make the vessel you see here:
     :width: 80 %
 
 If you prefer, you can instead download the
-`.craft file here </_images/tutorials/quickstart/MyFirstRocket.craft>`_
+`.craft file here </_static/tutorials/quickstart/MyFirstRocket.craft>`_
 
 Step 2: Make the start of the script
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
