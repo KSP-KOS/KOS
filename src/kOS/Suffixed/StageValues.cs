@@ -1,7 +1,9 @@
-﻿using System;
-using System.Linq;
-using kOS.Safe.Encapsulation;
+﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace kOS.Suffixed
 {
@@ -21,7 +23,6 @@ namespace kOS.Suffixed
             AddSuffix("NUMBER", new Suffix<int>(() => Staging.CurrentStage));
             AddSuffix("READY", new Suffix<bool>(() => shared.Vessel.isActiveVessel && Staging.separate_ready));
             AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
-
         }
 
         private ListValue<ActiveResourceValue> GetResourceManifest()
@@ -56,9 +57,32 @@ namespace kOS.Suffixed
 
         private double? GetResourceOfCurrentStage(string resourceName)
         {
-            var resource = shared.Vessel.GetActiveResources();
-            var match = resource.FirstOrDefault(r => string.Equals(r.info.name, resourceName, StringComparison.InvariantCultureIgnoreCase));
-            return match == null ? null : (double?) Math.Round(match.amount, 2);
+            PartResourceDefinition resourceDef = PartResourceLibrary.Instance.resourceDefinitions.FirstOrDefault(pr => string.Equals(pr.name, resourceName, StringComparison.CurrentCultureIgnoreCase));
+            List<PartResource> list = new List<PartResource>();
+            if (resourceDef.resourceFlowMode == ResourceFlowMode.STACK_PRIORITY_SEARCH)
+            {
+                var engines = VesselUtils.GetListOfActivatedEngines(shared.Vessel);
+                foreach (var engine in engines)
+                {
+                    engine.GetConnectedResources(resourceDef.id, resourceDef.resourceFlowMode, list);
+                }
+            }
+            else
+            {
+                shared.Vessel.rootPart.GetConnectedResources(resourceDef.id, resourceDef.resourceFlowMode, list);
+            }
+            if (list.Count == 0)
+            {
+                return null;
+            }
+            double available = 0.0;
+            double capacity = 0.0;
+            foreach (var resource in list)
+            {
+                available += resource.amount;
+                capacity += resource.maxAmount;
+            }
+            return Math.Round(available, 2);
         }
 
         public override string ToString()
