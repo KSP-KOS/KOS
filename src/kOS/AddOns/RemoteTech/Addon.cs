@@ -1,6 +1,7 @@
-﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
+using kOS.Suffixed.Part;
 
 namespace kOS.AddOns.RemoteTech
 {
@@ -48,6 +49,18 @@ namespace kOS.AddOns.RemoteTech
             }
 
             return waitTotal;
+        }
+
+        private static bool RTAntennaHasConnection(PartValue part)
+        {
+            bool result = false;
+
+            if (RemoteTechHook.IsAvailable(part.Part.vessel.id))
+            {
+                result = RemoteTechHook.Instance.AntennaHasConnection(part.Part);
+            }
+
+            return result;
         }
 
         private static BooleanValue RTHasConnection(VesselTarget tgtVessel)
