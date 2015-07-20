@@ -1,5 +1,6 @@
 language: csharp
 solution: src/kOS.sln
+sudo: false
 
 # Pre-shared token for pushing notifications to slack chat
 notifications:
