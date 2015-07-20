@@ -4,6 +4,7 @@ namespace kOS.AddOns.RemoteTech
 {
     public interface IRemoteTechAPIv1
     {
+        Func<Guid, bool> HasLocalControl { get; }
         Func<Guid, bool> HasFlightComputer { get; }
         Action<Guid, Action<FlightCtrlState>> AddSanctionedPilot { get; }
         Action<Guid, Action<FlightCtrlState>> RemoveSanctionedPilot { get; }

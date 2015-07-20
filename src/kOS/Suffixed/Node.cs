@@ -177,6 +177,8 @@ namespace kOS.Suffixed
 
         private void ToNodeRef()
         {
+            if (nodeRef == null) return;
+
             nodeRef.OnGizmoUpdated(new Vector3d(radialOut, normal, prograde), time);
         }
 

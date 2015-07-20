@@ -104,7 +104,7 @@ namespace kOS.Utilities
             return list;
         }
 
-        public static double GetMaxThrust(Vessel vessel)
+        public static double GetMaxThrust(Vessel vessel, double atmPressure = -1.0)
         {
             var thrust = 0.0;
 
@@ -113,21 +113,9 @@ namespace kOS.Utilities
                 foreach (PartModule pm in p.Modules)
                 {
                     if (!pm.isEnabled) continue;
-                    if (!(pm is ModuleEngines || pm is ModuleEnginesFX)) continue;
-
-                    var engine = pm as ModuleEngines;
-                    var enginefx = pm as ModuleEnginesFX;
-
-                    if (enginefx != null)
+                    if (pm is ModuleEngines)
                     {
-                        if (!enginefx.isOperational) continue;
-                        thrust += enginefx.maxThrust;
-                    }
-
-                    if (engine != null)
-                    {
-                        if (!engine.isOperational) continue;
-                        thrust += engine.maxThrust;
+                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, atmPressure: atmPressure);
                     }
                 }
             }
@@ -372,7 +360,7 @@ namespace kOS.Utilities
             FlightGlobals.fetch.SetVesselTarget(null);
         }
 
-        public static double GetAvailableThrust(Vessel vessel)
+        public static double GetAvailableThrust(Vessel vessel, double atmPressure = -1.0)
         {
             var thrust = 0.0;
 
@@ -380,22 +368,9 @@ namespace kOS.Utilities
             {
                 foreach (PartModule pm in p.Modules)
                 {
-                    if (!pm.isEnabled) continue;
-                    if (!(pm is ModuleEngines || pm is ModuleEnginesFX)) continue;
-
-                    var engine = pm as ModuleEngines;
-                    var enginefx = pm as ModuleEnginesFX;
-
-                    if (enginefx != null)
+                    if (pm.isEnabled && pm is ModuleEngines)
                     {
-                        if (!enginefx.isOperational) continue;
-                        thrust += enginefx.maxThrust * enginefx.thrustPercentage / 100;
-                    }
-
-                    if (engine != null)
-                    {
-                        if (!engine.isOperational) continue;
-                        thrust += engine.maxThrust * engine.thrustPercentage / 100;
+                        thrust += ModuleEngineAdapter.GetEngineThrust((ModuleEngines)pm, useThrustLimit: true, atmPressure: atmPressure);
                     }
                 }
             }

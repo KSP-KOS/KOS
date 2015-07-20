@@ -35,7 +35,9 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`BEARING`                       scalar (deg)              relative heading to this vessel
      :attr:`HEADING`                       scalar (deg)              Absolute heading to this vessel
      :attr:`MAXTHRUST`                     scalar                    Sum of active maximum thrusts
+     :meth:`MAXTHRUSTAT(pressure)`         scalar                    Sum of active maximum thrusts at the given atmospheric pressure
      :attr:`AVAILABLETHRUST`               scalar                    Sum of active limited maximum thrusts 
+     :meth:`AVAILABLETHRUSTAT(pressure)`   scalar                    Sum of active limited maximum thrusts at the given atmospheric pressure
      :attr:`FACING`                        :struct:`Direction`       The way the vessel is pointed
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
      :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
@@ -95,14 +97,28 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: scalar
     :access: Get only
 
-    Sum of all the Max thrust of all the currently active engines In Kilonewtons.
+    Sum of all the :ref:`engines' MAXTHRUSTs <engine_MAXTHRUST>` of all the currently active engines In Kilonewtons.
     
-.. attribute:: vessel:AVAILABLETHRUST
+.. method:: Vessel:MAXTHRUSTAT(pressure)
+
+    :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+    :type: scalar (kN)
+
+    Sum of all the :ref:`engines' MAXTHRUSTATs <engine_MAXTHRUSTAT>` of all the currently active engines In Kilonewtons at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+
+.. attribute:: Vessel:AVAILABLETHRUST
 
     :type: scalar
     :access: Get only
     
-    Sum of all the Max thrust of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
+    Sum of all the :ref:`engines' AVAILABLETHRUSTs <engine_AVAILABLETHRUST>` of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
+
+.. method:: Vessel:AVAILABLETHRUSTAT(pressure)
+
+    :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
+    :type: scalar (kN)
+
+    Sum of all the :ref:`engines' AVAILABLETHRUSTATs <engine_AVAILABLETHRUSTAT>` of all the currently active engines taking into acount their throttlelimits at the given atmospheric pressure. Result is in Kilonewtons.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Vessel:FACING
 

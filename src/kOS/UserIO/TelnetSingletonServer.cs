@@ -27,6 +27,11 @@ namespace kOS.UserIO
         // actually part of the algorithm:
         // ReSharper disable RedundantDefaultFieldInitializer
         
+        // These exist just to track the state of whether or not the telnet client
+        // got told about a change to these statuses yet or not:
+        public bool ReverseScreen {get; set;}
+        public bool VisualBeep {get; set;}
+        
         private volatile TcpClient client;
         
         private readonly TelnetMainServer whoLaunchedMe;

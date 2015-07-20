@@ -7,13 +7,20 @@ packages/
 
 # Monodevelop
 [Ee]xported[Oo]bj/
-/*.userprefs
+*.userprefs
 
 # Unity
 [Ll]ibrary/
 [Tt]emp/
 /*.pidb
 /*.user
+
+# Build products and files generated during gameplay
+Resources/GameData/kOS/Plugins/
+!Resources/GameData/kOS/ICSharpCode.SharpZipLib.dll
+
+# Symlink to KSP directory
+KSPdirlink
 
 # OS Specific
 .DS_STORE*

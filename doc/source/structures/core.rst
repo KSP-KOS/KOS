@@ -1,13 +1,13 @@
 .. _core:
 
 Core
-=========
+====
 
 .. contents::
     :local:
     :depth: 2
 
-Core represents your ability to identify and interact directly with the running kOS processor.  You can use it to access the parent vessel, or to perform operations on the processor's part.
+Core represents your ability to identify and interact directly with the running kOS processor.  You can use it to access the parent vessel, or to perform operations on the processor's part.  You obtain a CORE structure by using the bound variable ``core``.
 
 .. structure:: CORE
 
@@ -26,6 +26,10 @@ Core represents your ability to identify and interact directly with the running 
           - `Element`
         * - :attr:`VERSION`
           - `Version`
+        * - :attr:`BOOTFILENAME`
+          - `String`
+        * - :attr:`CURRENTVOLUME`
+          - `Volume`
 
 
 .. attribute:: CORE:PART
@@ -45,14 +49,28 @@ Core represents your ability to identify and interact directly with the running 
 
 .. attribute:: CORE:ELEMENT
 
-    :type: Element
+    :type: `Element`
     :access: Get only
 
-    The element object containing the current procesor.
+    The element object containing the current processor.
 
 .. attribute:: CORE:VERSION
 
-    :type: VersionInfo
+    :type: `VersionInfo`
     :access: Get only
 
     The kOS version currently running.
+
+.. attribute:: CORE:BOOTFILENAME
+
+    :type: `String`
+    :access: Get or Set
+
+    The filename for the boot file on the current processor.  This may be set to an empty string `""` or to `"None"` to disable the use of a boot file.
+
+.. attribute:: CORE:CURRENTVOLUME
+
+    :type: `Volume`
+    :access: Get only
+
+    The currently selected volume for the current processor.  This may be useful to prevent deleting files on the Archive, or for interacting with multiple local hard disks.

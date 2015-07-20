@@ -1,8 +1,8 @@
-﻿using System;
+﻿using kOS.Safe.Execution;
+using kOS.Suffixed;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using kOS.Safe.Execution;
-using kOS.Suffixed;
 
 namespace kOS.Execution
 {
@@ -17,9 +17,11 @@ namespace kOS.Execution
             ThrowIfInvalid(item);
 
             stackPointer++;
-            if (stackPointer < MAX_STACK_SIZE) {
+            if (stackPointer < MAX_STACK_SIZE)
+            {
                 stack.Insert(stackPointer, ProcessItem(item));
-            } else
+            }
+            else
                 // TODO: make an IKOSException for this:
                 throw new Exception("Stack overflow!!");
         }
@@ -28,14 +30,18 @@ namespace kOS.Execution
         {
             if (!Config.Instance.EnableSafeMode)
                 return;
-            if (!(item is double))
+            if (!(item is double) && !(item is float))
                 return;
 
-            if (Double.IsNaN((double)item)) {
+            double unboxed = Convert.ToDouble(item);
+
+            if (Double.IsNaN(unboxed))
+            {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Tried to push NaN into the stack.");
             }
-            if (Double.IsInfinity((double)item)) {
+            if (Double.IsInfinity(unboxed))
+            {
                 // TODO: make an IKOSException for this:
                 throw new Exception("Tried to push Infinity into the stack.");
             }
@@ -49,8 +55,21 @@ namespace kOS.Execution
         private object ProcessItem(object item)
         {
             if (item is float)
+            {
                 // promote floats to doubles
-                return Convert.ToDouble(item);
+                item = Convert.ToDouble(item);
+            }
+            if (item is double)
+            {
+                var outOfBounds = Int32.MinValue < (double) item && (double) item < Int32.MaxValue;
+
+                if (!Double.IsNaN((double)item) && outOfBounds)
+                {
+                    int intPart = Convert.ToInt32(item);
+                    if ((double)item == intPart)
+                        item = intPart;
+                }
+            }
             return item;
         }
 
@@ -58,7 +77,8 @@ namespace kOS.Execution
         {
             object item = null;
 
-            if (stack.Count > 0) {
+            if (stack.Count > 0)
+            {
                 item = stack[stackPointer];
                 stack.RemoveAt(stackPointer);
                 stackPointer--;
@@ -77,7 +97,7 @@ namespace kOS.Execution
         /// so on.  Note you CAN peek a negative number, which looks at the secret stack above the
         /// stack - where the subroutine contexts and local variable contexts are.</param>
         /// <returns>The object at that depth.  Returns null when digDepth is too large and the stack isn't
-        /// big enough to dig that deep.  Note that this conflates with the case where there really is a 
+        /// big enough to dig that deep.  Note that this conflates with the case where there really is a
         /// null stored on the stack and makes it impossible to tell the difference between peeking too far
         /// versus actually finding a null.  If you need to know the difference, use PeekCheck.</returns>
         public object Peek(int digDepth)
@@ -118,7 +138,7 @@ namespace kOS.Execution
         {
             return stackPointer + 1;
         }
-        
+
         public void MoveStackPointer(int delta)
         {
             stackPointer += delta;
@@ -138,21 +158,23 @@ namespace kOS.Execution
             // Print in reverse order so the top of the stack is on top of the printout:
             // (actually given the double nature of the stack, one of the two sub-stacks
             // inside it will always be backwardly printed):
-            for (int index = stack.Count - 1; index >= 0; --index) {
+            for (int index = stack.Count - 1; index >= 0; --index)
+            {
                 object item = stack[index];
                 builder.AppendLine(string.Format("{0:000} {1,4} {2}", index, (index == stackPointer ? "SP->" : ""), item));
                 VariableScope dict = item as VariableScope;
-                if (dict != null) {
+                if (dict != null)
+                {
                     builder.AppendFormat("          ScopeId={0}, ParentScopeId={1}, ParentSkipLevels={2} IsClosure={3}",
                                          dict.ScopeId, dict.ParentScopeId, dict.ParentSkipLevels, dict.IsClosure);
                     builder.AppendLine();
                     // Dump the local variable context stored here on the stack:
-                    foreach (string varName in dict.Variables.Keys) {
+                    foreach (string varName in dict.Variables.Keys)
+                    {
                         builder.AppendFormat("            local var {0} is {1} with value = {2}", varName, varName.GetType().FullName, dict.Variables[varName].Value);
                         builder.AppendLine();
                     }
                 }
-
             }
 
             return builder.ToString();
@@ -166,8 +188,10 @@ namespace kOS.Execution
         public List<int> GetCallTrace()
         {
             var trace = new List<int>();
-            for (int index = stackPointer + 1; index < stack.Count; ++index) {
-                if (stack[index] is SubroutineContext) {
+            for (int index = stackPointer + 1; index < stack.Count; ++index)
+            {
+                if (stack[index] is SubroutineContext)
+                {
                     trace.Add(((SubroutineContext)(stack[index])).CameFromInstPtr - 1);
                 }
             }

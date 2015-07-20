@@ -40,6 +40,7 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :struct:`Highlight`
     * :struct:`Iterator`
     * :struct:`Terminal`
+    * :struct:`core`
     * :ref:`Colors <colors>`
     * :ref:`Time <time>`
     * :ref:`Drawing Vectors <vecdraw>`
@@ -52,3 +53,4 @@ A general discussion of structures :ref:`can be found here <language structures>
     Vessels & Parts  <structures/vessels>
     Waypoints        <structures/waypoint>
     Miscellaneous    <structures/misc>
+    Core             <structures/core>

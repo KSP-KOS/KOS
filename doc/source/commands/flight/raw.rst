@@ -217,7 +217,8 @@ These "Raw" controls allow you the direct control of flight parameters while the
 Unlocking controls
 ------------------
 
-Once any of the ``SET SHIP:CONTROL`` commands have been used to control the ship, then the manual control by the player is locked out. To give control back to the player you must execute::
+Setting any one of ``SHIP:CONTROL`` values will prevent player from manipulating that specific control manually. Other controls will not be locked.
+To free any single control, set it back to zero. To give all controls back to the player you must execute::
 
     SET SHIP:CONTROL:NEUTRALIZE to TRUE.
 

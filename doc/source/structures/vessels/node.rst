@@ -73,7 +73,7 @@ Creation
     To remove a maneuver node from the flight path of the cur:rent :ref:`CPU vessel <cpu vessel>` (i.e. ``SHIP``), just :global:`REMOVE` it like so::
 
         REMOVE myNode.
-`
+
 .. warning::
 
     As per the warning above at the top of the section, REMOVE won't work on vessels that are not the active vessel.

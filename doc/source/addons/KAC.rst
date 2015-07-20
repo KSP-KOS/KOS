@@ -193,7 +193,7 @@ Available Functions
 .. function:: LISTALARMS(alarmType)
 
     If `alarmType` equals "All", returns :struct:`List` of *all* :struct:`KACAlarm` objects attached to current vessel or have no vessel attached.
-    Otherwise returns :struct:`List` of all :struct:`KACAlarm` objects with `KACAlarm:TYPE` equeal to `alarmType' and attached to current vessel or have no vessel attached.::
+    Otherwise returns :struct:`List` of all :struct:`KACAlarm` objects with `KACAlarm:TYPE` equeal to `alarmType` and attached to current vessel or have no vessel attached.::
 
         set al to listAlarms("All").
         for i in al

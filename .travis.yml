@@ -1,0 +1,31 @@
+language: csharp
+solution: src/kOS.sln
+
+# Pre-shared token for pushing notifications to slack chat
+notifications:
+  slack: ksp-kos:51DTQ4ZBP9SlGNnLWJ5D84vp
+
+# Before the install the library dlls need to be downloaded
+before_install:
+- cd Resources
+- wget --quiet --user=$KOS_LIB_USER --password=$KOS_LIB_PASSWORD $KOS_LIB_URL -O kos.tar
+- tar -xvf kos.tar
+- cd ../
+
+# Cleanup the downloaded resources
+after_script:
+- cd Resources
+- rm *.dll
+- cd ../
+
+before_deploy:
+- mkdir src/kOS/bin/dist 
+- tar -zcvf src/kOS/bin/dist/build_$TRAVIS_BUILD_NUMBER.tgz src/kOS/bin/Release/kOS*.dll
+
+deploy:
+  provider: s3
+  access_key_id: "AKIAINHSGTBU5O3DKV2Q"
+  secret_access_key: "$S3_DEPLOY_SECRET"
+  bucket: "kos-artifacts"
+  skip_cleanup: true
+  local_dir: "src/kOS/bin/dist/"

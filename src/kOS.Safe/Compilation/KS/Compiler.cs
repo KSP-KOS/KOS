@@ -36,12 +36,6 @@ namespace kOS.Safe.Compilation.KS
         private CompilerOptions options;
         private const bool TRACE_PARSE = false; // set to true to Debug Log each ParseNode as it's visited.
 
-        private readonly Dictionary<string, string> functionsOverloads = new Dictionary<string, string>
-        { 
-            { "round|1", "roundnearest" },
-            { "round|2", "round"} 
-        };
-        
         private enum StorageModifier {
             /// <summary>The storage will definitely be at the localmost scope.</summary>
             LOCAL,
@@ -192,6 +186,7 @@ namespace kOS.Safe.Compilation.KS
         {
             ParseNode rootNode = tree.Nodes[0];
             LowercaseConversions(rootNode);
+            RearrangeParseNodes(rootNode);
             TraverseScopeBranch(rootNode);
             IterateUserFunctions(rootNode, IdentifyUserFunctions);
             PreProcessStatements(rootNode);
@@ -215,6 +210,27 @@ namespace kOS.Safe.Compilation.KS
                         LowercaseConversions(child);
                     break;
             }
+        }
+        
+        /// <summary>
+        /// Some of the parse rules in Kerboscript may be implemented on the back
+        /// of other rules.  In this case all the compiler really does is just 
+        /// re-arrange a more complex parse rule to be expressed in the form of
+        /// building blocks made of other simpler rules before continuing the compile that way. 
+        /// </summary>
+        /// <param name="node">make the transformation from this point downward</param>
+        private void RearrangeParseNodes(ParseNode node)
+        {
+            if (node.Token.Type == TokenType.fromloop_stmt) // change to switch stmt if more such rules get added later.
+            {
+                RearrangeLoopFromNode(node);
+            }
+
+            // Recurse children EVEN IF the node got re-arranged.  If the node got re-arranged, then its children will now look
+            // different than they did before, but they still need to be iterated over to look for other rearrangements.
+            // (for example, a loopfrom loop nested inside another loopfrom loop).
+            foreach (ParseNode child in node.Nodes)
+                RearrangeParseNodes(child);
         }
         
         private void IterateUserFunctions(ParseNode node, Action<ParseNode> action)
@@ -252,6 +268,102 @@ namespace kOS.Safe.Compilation.KS
                     action.Invoke(node);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Edit the parse branch for a loopfrom statement, rearranging its component
+        /// parts into a simpler unrolled form.<br/>
+        /// When given this rule:<br/>
+        /// <br/>
+        /// FROM {(init statements)} UNTIL expr STEP {(inc statements)} DO {(body statements)} <br/>
+        /// <br/>
+        /// It will edit its own child nodes and transform them into a new parse tree branch as if this had
+        /// been what was in the source code instead:<br/>
+        /// <br/>
+        /// { (init statements) UNTIL expr { (body statements) (inc statements) } }<br/>
+        /// <br/>
+        /// Thus any variables declared inside (init statements) are in scope during the body of the loop.<br/>
+        /// The actual logic of doing an UNTIL loop will fall upon VisitUntilNode to deal with later in the compile.<br/>
+        /// </summary>
+        /// <param name="node"></param>
+        private void RearrangeLoopFromNode(ParseNode node)
+        {
+            // Safety check to see if I've already been rearranged into my final form, just in case
+            // the recursion logic is messed up and this gets called twice on the same node:
+            if (node.Nodes.Count == 1 && node.Nodes[0].Token.Type == TokenType.instruction_block)
+                return;
+            
+            // ReSharper disable RedundantDefaultFieldInitializer
+            ParseNode initBlock = null;
+            ParseNode checkExpression = null;
+            ParseNode untilTokenNode = null;
+            ParseNode stepBlock = null;
+            ParseNode doBlock = null;
+            // ReSharper enable RedundantDefaultFieldInitializer
+            
+            for( int index = 0 ; index < node.Nodes.Count - 1 ; index += 2 )
+            {
+                switch (node.Nodes[index].Token.Type)
+                {
+                    case TokenType.FROM:
+                        initBlock = node.Nodes[index+1];
+                        break;
+                    case TokenType.UNTIL:
+                        untilTokenNode = node.Nodes[index];
+                        checkExpression = node.Nodes[index+1];
+                        break;
+                    case TokenType.STEP:
+                        stepBlock = node.Nodes[index+1];
+                        break;
+                    case TokenType.DO:
+                        doBlock = node.Nodes[index+1];
+                        break;
+                    // no default because anything else is a syntax error and it won't even get as far as this method in that case.
+                }
+            }
+            
+            // These probably can't happen because the parser would have barfed before it got to this method:
+            if (initBlock == null)
+                throw new KOSCompileException("Missing FROM block in FROM loop.");
+            if (checkExpression == null || untilTokenNode == null)
+                throw new KOSCompileException("Missing UNTIL check expression in FROM loop.");
+            if (stepBlock == null)
+                throw new KOSCompileException("Missing STEP block in FROM loop.");
+            if (doBlock == null)
+                throw new KOSCompileException("Missing loop body (DO block) in FROM loop.");
+            
+            // Append the step instructions to the tail end of the body block's instructions:
+            foreach (ParseNode child in stepBlock.Nodes)
+                doBlock.Nodes.Add(child);
+            
+            // Make a new empty until loop node, which will get added to the init block eventually:
+            var untilStatementTok = new Token
+            {
+                Type = TokenType.until_stmt,
+                Line = untilTokenNode.Token.Line,
+                Column = untilTokenNode.Token.Column,
+                File = untilTokenNode.Token.File
+            };
+
+            ParseNode untilNode = initBlock.CreateNode(untilStatementTok, untilStatementTok.ToString());
+
+            // (The direct manipulation of the tree's parent pointers, seen below, is bad form,
+            // but TinyPg doesn't seem to have given us good primitives to append an existing node to the tree to do it for us.
+            // CreateNode() makes a brand new empty node attached to the parent, but there seems to be no way to take an
+            // existing node and attach it elsewhere without directly changing the Parent property as seen in the lines below:)
+
+            // Populate that until loop node with the parts from this rule:
+            untilNode.Nodes.Add(untilTokenNode); untilTokenNode.Parent = untilNode;
+            untilNode.Nodes.Add(checkExpression); checkExpression.Parent = untilNode;
+            untilNode.Nodes.Add(doBlock); doBlock.Parent = untilNode;
+            
+            // And now append that until loop to the tail end of the init block:
+            initBlock.Nodes.Add(untilNode); // parent already assigned by initBlock.CreateNode() above.
+            
+            // The init block is now actually the entire loop, having been exploded and unrolled into its
+            // new form, make that be our only node node:
+            node.Nodes.Clear();
+            node.Nodes.Add(initBlock);  // initBlock's parent already points at node to begin with.
         }
         
         private void PreProcessStatements(ParseNode node)
@@ -451,6 +563,26 @@ namespace kOS.Safe.Compilation.KS
                 current = current.Parent;
             }
             return 0;
+        }
+        
+        /// <summary>
+        /// Much like UserFunctionCollection.GetUserFunction(), except that it won't
+        /// generate a function if one doesn't exist.  Instead it will try to walk up
+        /// the parent scopes until it finds a func or lock with the given name.  If it 
+        /// cannot find an existing function, it will return null rather than make one.
+        /// </summary>
+        /// <param name="funcIdentifier">identifier for the lock or function</param>
+        /// <param name="node">ParseNode to begin looking from (for scope reasons).  It will walk the parents looking for scopes that have the ident.</param>
+        /// <returns>The found UserFunction, or null if none found</returns>
+        private UserFunction FindExistingUserFunction(string funcIdentifier, ParseNode node)
+        {
+            for (ParseNode containingNode = node ; containingNode != null ; containingNode = containingNode.Parent)
+            {
+                Int16 thisNodeScope = GetContainingScopeId(containingNode);
+                if (context.UserFunctions.Contains(funcIdentifier, thisNodeScope))
+                    return context.UserFunctions.GetUserFunction(funcIdentifier, thisNodeScope, containingNode);
+            }
+            return null;
         }
         
         private bool IsLockStatement(ParseNode node)
@@ -928,6 +1060,9 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.until_stmt:
                     VisitUntilStatement(node);
                     break;
+                case TokenType.fromloop_stmt:
+                    VisitChildNodes(node); // The loopfrom should have been altered by now, in RearrangeParseNodes().
+                    break;
                 case TokenType.return_stmt:
                     VisitReturnStatement(node);
                     break;
@@ -1015,13 +1150,17 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.arglist:
                     VisitArgList(node);
                     break;
-                case TokenType.expr:
                 case TokenType.compare_expr: // for issue #20
-                case TokenType.and_expr:
                 case TokenType.arith_expr:
                 case TokenType.multdiv_expr:
                 case TokenType.factor:
-                    VisitExpression(node);
+                    VisitExpressionChain(node);
+                    break;
+                case TokenType.expr: // expr is really the rule for doing an expression with optional trailing or-expression.
+                                     // 'or' just happens to have the lowest operator precedence level so it ends up being
+                                     // the outermost expression rule, thus getting the generic name 'expr'.
+                case TokenType.and_expr:
+                    VisitShortCircuitBoolean(node);
                     break;
                 case TokenType.suffix:
                     VisitSuffix(node);
@@ -1118,7 +1257,22 @@ namespace kOS.Safe.Compilation.KS
             identifierIsVariable = false;
         }
 
-        private void VisitExpression(ParseNode node)
+        /// <summary>
+        /// Performs the work for a number of different expressions that all
+        /// share the following universal basic properties:<br/>
+        /// - They contain optional binary operators.<br/>
+        /// - The terms are all at the same precedence level.<br/>
+        /// - Because of the tie of precedence level, the terms are to be evaluated left-to-right.<br/>
+        /// - No special extra work is needed, such that simply doing "push expr1, push expr2, then do operator" is all that's needed.<br/>
+        /// <br/>
+        /// Examples:<br/>
+        ///   5 + 4 - x + 2 // because + and - are in the same parse rule, these all get the same flat precedence.<br/>
+        ///   x * y * z<br/>
+        /// In cases like that where all the operators "tie", the entire chain of terms lives in the same ParseNode,<br/>
+        /// and we have to unroll those terms and presume left-to-right precedence.  That is what this method does.<br/>
+        /// </summary>
+        /// <param name="node"></param>
+        private void VisitExpressionChain(ParseNode node)
         {
             NodeStartHousekeeping(node);
             if (node.Nodes.Count > 1)
@@ -1126,26 +1280,102 @@ namespace kOS.Safe.Compilation.KS
                 // it should always be odd, two arguments and one operator
                 if ((node.Nodes.Count % 2) != 1) return;
 
-                VisitNode(node.Nodes[0]);
+                VisitNode(node.Nodes[0]); // pushes lefthand side on stack.
 
                 int nodeIndex = 2;
                 while (nodeIndex < node.Nodes.Count)
                 {
-                    VisitNode(node.Nodes[nodeIndex]);
+                    VisitNode(node.Nodes[nodeIndex]); // pushes righthand side on stack.
                     nodeIndex -= 1;
-                    VisitNode(node.Nodes[nodeIndex]);
-                    nodeIndex += 3;
+                    VisitNode(node.Nodes[nodeIndex]); // operator, i.e '*', '+', '-', '/', etc.
+                    nodeIndex += 3; // Move to the next term over (if there's more than 2 terms in the chain).
+
+                    // If there are more terms to process, then the value that the operation leaves behind on the stack
+                    // from operating on these two terms will become the 'lefthand side' for the next iteration of this loop.
                 }
             }
-            else
+            else if (node.Nodes.Count == 1)
             {
-                if (node.Nodes.Count == 1)
-                {
-                    VisitNode(node.Nodes[0]);
-                }
+                VisitNode(node.Nodes[0]); // This ParseNode isn't *realy* an expression of binary operators, because
+                                          // the regex chain of "zero or more" righthand terms.. had zero such terms.
+                                          // So just delve in deeper to compile whatever part of speech it is further down.
             }
         }
 
+        /// <summary>
+        /// Handles the short-circuit logic of boolean OR and boolean AND
+        /// chains.  It is like VisitExpressionChain (see elsewhere) but
+        /// in this case it has the special logic to short circuit and skip
+        /// executing the righthand expression if it can.  (The generic VisitExpressionXhain
+        /// always evaluates both the left and right sides of the operator first, then
+        /// does the operation).
+        /// </summary>
+        /// <param name="node"></param>
+        private void VisitShortCircuitBoolean(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            
+            if (node.Nodes.Count > 1)
+            {
+                // it should always be odd, two arguments and one operator
+                if ((node.Nodes.Count % 2) != 1) return;
+
+                // Determine if this is a chain of ANDs or a chain or ORs.  The parser will
+                // never mix ANDs and ORs into the same ParseNode level.  We are guaranteed
+                // that all the operators in this chain match the first operator in the chain:
+                // That guarantee is important.  Without it, we can't do short-circuiting like this
+                // because you can't short-circuit a mix of AND and OR at the same precedence.
+                TokenType operation = node.Nodes[1].Token.Type; // Guaranteed to be either TokenType.AND or TokenType.OR
+                
+                // For remembering the instruction pointers from which short-circuit branch jumps came:
+                List<int> shortCircuitFromIndeces = new List<int>();
+                
+                int nodeIndex = 0;
+                while (nodeIndex < node.Nodes.Count)
+                {
+                    if (nodeIndex > 0) // After each term, insert the branch test (which consumes the expr from the stack regardless of if it branches):
+                    {
+                       shortCircuitFromIndeces.Add(currentCodeSection.Count());
+                       if (operation == TokenType.AND)
+                           AddOpcode(new OpcodeBranchIfFalse());
+                       else if (operation == TokenType.OR)
+                           AddOpcode(new OpcodeBranchIfTrue());
+                       else
+                           throw new KOSException("Assertion check:  Broken kerboscript compiler (VisitShortCircuitBoolean).  See kOS devs");
+                    }
+                    
+                    VisitNode(node.Nodes[nodeIndex]); // pushes the next term onto the stack.
+                    nodeIndex += 2; // Skip the operator, moving to the next term over.
+                }
+                // If it gets to the end of all that and it still hasn't aborted, then the whole expression's
+                // Boolean value is just the value of its lastmost term, that's already gotten pushed atop the stack.
+                // Leave the lastmost term there, and just skip ahead past the short-circuit landing target:
+                OpcodeBranchJump skipShortCircuitTarget = new OpcodeBranchJump();
+                skipShortCircuitTarget.Distance = 2; // Hardcoded +2 jump distance skips the upcoming OpcodePush and just lands on
+                                                     // whatever comes next after this VisitNode.  Avoids using DestinationLabel
+                                                     // for later relocation because it would be messy to reassign this label later
+                                                     // in whatever VisitNode happens to come up next, when that could be anything.
+                AddOpcode(skipShortCircuitTarget);
+                
+                // Build the instruction all the short circuit checks will jump to if aborting partway through.
+                // (AND's abort when they're false.  OR's abort when they're true.)
+                AddOpcode(operation == TokenType.AND ? new OpcodePush(false) : new OpcodePush(true));
+                string shortCircuitTargetLabel = currentCodeSection[currentCodeSection.Count()-1].Label;
+                
+                // Retroactively re-assign the jump labels of all the short circuit branch operations:
+                foreach (int index in shortCircuitFromIndeces)
+                {
+                    currentCodeSection[index].DestinationLabel = shortCircuitTargetLabel;
+                }
+            }
+            else if (node.Nodes.Count == 1)
+            {
+                VisitNode(node.Nodes[0]); // This ParseNode isn't *realy* an expression of AND or OR operators, because
+                                          // the regex chain of "zero or more" righthand terms.. had zero such terms.
+                                          // So just delve in deeper to compile whatever part of speech it is further down.
+            }
+        }
+        
         private void VisitUnaryExpression(ParseNode node)
         {
             NodeStartHousekeeping(node);
@@ -1285,7 +1515,6 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            int parameterCount = 0;
             ParseNode trailerNode = node; // the function_trailer rule is here.
 
             // Need to tell OpcodeCall where in the stack the bottom of the arg list is.
@@ -1295,9 +1524,6 @@ namespace kOS.Safe.Compilation.KS
 
             if (trailerNode.Nodes[1].Token.Type == TokenType.arglist)
             {
-
-                parameterCount = (trailerNode.Nodes[1].Nodes.Count / 2) + 1;
-
                 bool remember = identifierIsSuffix;
                 identifierIsSuffix = false;
 
@@ -1308,28 +1534,15 @@ namespace kOS.Safe.Compilation.KS
 
             if (isDirect)
             {
-                string functionName = directName;
-
-                string overloadedFunctionName = GetFunctionOverload(functionName, parameterCount);
-                if (options.FuncManager.Exists(overloadedFunctionName)) // if the name is a built-in, then add the "()" after it.
-                    overloadedFunctionName += "()";
-                AddOpcode(new OpcodeCall(overloadedFunctionName));
+                if (options.FuncManager.Exists(directName)) // if the name is a built-in, then add the "()" after it.
+                    directName += "()";
+                AddOpcode(new OpcodeCall(directName));
             }
             else
             {
-                OpcodeCall op = new OpcodeCall(string.Empty) { Direct = false };
+                var op = new OpcodeCall(string.Empty) { Direct = false };
                 AddOpcode(op);
             }
-        }
-
-        private string GetFunctionOverload(string functionName, int parameterCount)
-        {
-            string functionKey = string.Format("{0}|{1}", functionName, parameterCount);
-            if (functionsOverloads.ContainsKey(functionKey))
-            {
-                return functionsOverloads[functionKey];
-            }
-            return functionName;
         }
 
         private void VisitArgList(ParseNode node)
@@ -2037,7 +2250,13 @@ namespace kOS.Safe.Compilation.KS
             else
             {
                 string lockIdentifier = node.Nodes[1].Token.Text;
-                UserFunction lockObject = context.UserFunctions.GetUserFunction(lockIdentifier, GetContainingScopeId(node), node);
+                UserFunction lockObject = FindExistingUserFunction(lockIdentifier, node);
+                if (lockObject == null)
+                {
+                    // If it is null, it's okay to silently do nothing.  It just means someone tried to unlock
+                    // an identifier that was never locked in the first place, at least not in this scope or a parent scope.
+                    return;
+                }
                 UnlockIdentifier(lockObject);
             }
         }
@@ -2210,7 +2429,7 @@ namespace kOS.Safe.Compilation.KS
         {
             // The default case for anything not explicitly mentioned below.
             // i.e. if you call this on a SET statement, you'll get this:
-            StorageModifier modifier = StorageModifier.LAZYGLOBAL;
+            var modifier = StorageModifier.LAZYGLOBAL;
             
             if (node.Nodes.Count == 0) // sanity check - really should never be called on terminal nodes like this.
                 return modifier;
@@ -2241,9 +2460,9 @@ namespace kOS.Safe.Compilation.KS
                 (lastSubNode.Token.Type == TokenType.declare_lock_clause ? StorageModifier.GLOBAL : StorageModifier.LOCAL);
             bool storageKeywordMissing = true;
             
-            for (int i = 0 ; i < node.Nodes.Count ; ++i)
+            foreach (ParseNode t in node.Nodes)
             {
-                switch (node.Nodes[i].Token.Type)
+                switch (t.Token.Type)
                 {
                     case TokenType.GLOBAL:
                         modifier = StorageModifier.GLOBAL;
@@ -2561,7 +2780,7 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
 
-            Int16 nestLevelOfFuncBraces = (Int16)GetReturnNestLevel();
+            var nestLevelOfFuncBraces = (Int16)GetReturnNestLevel();
 
             if (nestLevelOfFuncBraces < 0)
                 throw new KOSReturnInvalidHereException();

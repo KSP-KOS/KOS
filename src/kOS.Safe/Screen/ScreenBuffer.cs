@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using kOS.Safe.UserIO;
 
 namespace kOS.Safe.Screen
 {
@@ -12,7 +13,20 @@ namespace kOS.Safe.Screen
         private int topRow;
         private readonly List<IScreenBufferLine> buffer;
         private readonly List<SubBuffer> subBuffers;
+        
+        public int BeepsPending {get; set;}
+        
+        // These next two things really belong in TermWindow, but then they can't be reached from
+        // TerminalStruct over in kOS.Safe because TermWindow is just too full of
+        // Unity stuff to move it to kOS.Safe, or even provide all its interfaces
+        // in an ITermWindow:
+        
+        /// <summary>True means the terminal screen should be shown in reversed colors.</summary>
+        public bool ReverseScreen {get; set;}
+        /// <summary>True means a beep should make the terminal screen flash silently in lieu of an audio beep.</summary>
+        public bool VisualBeep {get; set;}
 
+        
         public int ColumnCount { get; private set; }
 
         public virtual int CursorRowShow { get { return CursorRow; } }
@@ -319,8 +333,29 @@ namespace kOS.Safe.Screen
         private void PrintLine(string textToPrint)
         {
             IScreenBufferLine lineBuffer = buffer[AbsoluteCursorRow];
+            textToPrint = StripUnprintables(textToPrint);
             lineBuffer.ArrayCopyFrom(textToPrint.ToCharArray(), 0, CursorColumn);
             MoveColumn(textToPrint.Length);
+        }
+        
+        private string StripUnprintables(string textToPrint)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char ch in textToPrint)
+            {
+                switch (ch)
+                {
+                    case (char)0x0007:
+                    case (char)UnicodeCommand.BEEP:
+                        ++BeepsPending;
+                        break;
+                    default:
+                        if (0x0020 <= ch)
+                            sb.Append(ch);
+                        break;
+                }
+            }
+            return sb.ToString();
         }
     }
 }

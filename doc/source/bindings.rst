@@ -71,8 +71,33 @@ SRFPROGRADE      Same as SHIP:SRFPROGRADE
 SRFREROGRADE     Same as SHIP:SRFREROGRADE
 OBT              Same as SHIP:OBT
 STATUS           Same as SHIP:STATUS
-VESSELNAME       Same as SHIP:NAME
+SHIPNAME         Same as SHIP:NAME
 ================ ==============================================================================
+
+Terminal
+--------
+
+Get-only. ``terminal`` returns a :struct:`terminal` structure describing
+the attributes of the current terminal screen associated with the
+CPU this script is running on.
+
+Core
+----
+
+Get-only. ``core`` returns a :struct:`core` structure referring to the CPU you
+are running on.
+
+Stage
+-----
+
+Get-only. ``stage`` returns a :struct:`stage` structure used to count resources
+in the current stage.  Not to be confused with the COMMAND stage
+which triggers the next stage.
+
+NextNode
+--------
+
+Get-only. ``nextnode`` returns the next planned manuever :struct:`node` in the SHIP's flight plan.  Bombs out if no such node exists.
 
 Resource Types
 --------------
@@ -117,6 +142,8 @@ query-able this way, provided that you spell
 the term exactly as it appears in the resources window.
 
 You can also get a list of all resources, either in SHIP: or STAGE: with the :RESOURCES suffix. 
+
+.. |Resources| image:: /_images/reference/bindings/resources.png
 
 ALT ALIAS
 ---------
@@ -229,55 +256,10 @@ Controls that must be used with LOCK
     WHEELTHROTTLE       // Separate throttle for wheels
     WHEELSTEERING       // Separate steering system for wheels
 
-System Variables
-----------------
+Time
+----
 
-Returns values about kOS and hardware
-
-::
-
-    PRINT VERSION.            // Returns operating system version number. e.g. 0.8.6
-    PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
-    PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
-    PRINT VERSION:BUILD.      // Returns build version number. e.g. 6
-    PRINT SESSIONTIME.        // Returns amount of time, in seconds, from vessel load.
-
-NOTE the following important difference:
-
-SESSIONTIME is the time since the last time this vessel was loaded from
-on-rails into full physics.
-
-TIME is the time since the entire saved game campaign started, in the
-kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
-just started.
-
-WARPING
-~~~~~~~
-
-Time warp can be controlled with WARP, and WARPMODE.  See
-:ref:`WARP <warp>`
-
-Config
-------
-
-CONFIG is a special variable name that refers to the configuration
-settings for
-the kOS mod, and can be used to set or get various options.
-
-`CONFIG has its own page <structures/misc/config.html>`__ for further
-details.
-
-Game State
-----------
-
-Variables that have something to do with the state of the universe.
-
-========= ====================================== ==============
-Variable  Type                                   Meaning
-========= ====================================== ==============
-TIME      `Time <structures/misc/time.html>`__   Simulated amount of time that passed since the beginning of the game's universe epoch. (A brand new campaign that just started begins at TIME zero.)
-MAPVIEW    boolean                               Both settable and gettable. If you query MAPVIEW, it's true if on the map screen, and false if on the flight view screen.  If you SET MAPVIEW, you can cause the game to switch between mapview and flight view or visa versa.
-========= ====================================== ==============
+`Time <structures/misc/time.html>`__ is the simulated amount of time that passed since the beginning of the game's universe epoch. (A brand new campaign that just started begins at TIME zero.)
 
 TIME is a useful system variable for calculating the passage of time
 between taking
@@ -301,4 +283,74 @@ It's important to be aware of the `frozen update
 nature <general/CPU_hardware.html#FROZEN>`__ of the kOS
 computer when reading TIME.
 
-.. |Resources| image:: /_images/reference/bindings/resources.png
+System Variables
+----------------
+
+This section is about variables that describe the things that are slightly
+outside the simulated universe of the game and are more about
+the game's user interface or the kOS mod itself.  They represent things
+that slightly "break the fourth wall" and let your script access
+something entirely outside the in-character experience.
+
+::
+
+    PRINT VERSION.            // Returns operating system version number. e.g. 0.8.6
+    PRINT VERSION:MAJOR.      // Returns major version number. e.g. 0
+    PRINT VERSION:MINOR.      // Returns minor version number. e.g. 8
+    PRINT VERSION:BUILD.      // Returns build version number. e.g. 6
+    PRINT SESSIONTIME.        // Returns amount of time, in seconds, from vessel load.
+
+NOTE the following important difference:
+
+SESSIONTIME is the time since the last time this vessel was loaded from
+on-rails into full physics.
+
+TIME is the time since the entire saved game campaign started, in the
+kerbal universe's time. i.e. TIME = 0 means a brand new campaign was
+just started.
+
+Config
+~~~~~~
+
+CONFIG is a special variable name that refers to the configuration
+settings for the kOS mod, and can be used to set or get various
+options.
+
+`CONFIG has its own page <structures/misc/config.html>`__ for further
+details.
+
+WARP and WARPMODE
+~~~~~~~~~~~~~~~~~
+
+Time warp can be controlled with the variables
+WARP and WARPMODE.  See :ref:`WARP <warp>`
+
+MAPVIEW
+~~~~~~~
+
+A boolean that is both gettable and settable.
+
+If you query MAPVIEW, it's true if on the map screen, and false if on the flight view screen.  If you SET MAPVIEW, you can cause the game to switch between mapview and flight view or visa versa.
+
+LOADDISTANCE
+~~~~~~~~~~~~
+
+LOADDISTANCE sets the distance from the active vessel at
+which vessels get removed from the full physics engine and put
+on-rails, or visa versa.  Note that as of KSP 1.0 the stock game
+supports multiple different load distance settings for different
+situations such that the value changes depending on where you are.
+But kOS does not support this at the moment so in kOS if you set
+the LOADDISTANCE, you are setting it to the same value
+universally for all situations.
+
+Addons
+------
+
+Get-only.  ``addons`` is a special variable used to access various extensions
+to kOS that are designed to support the features introduced by some other mods.  More info can be found on the :ref:`addons <addons>` page.
+
+Colors
+------
+
+There are several bound variables associated with :ref:`hardcoded colors <colors>` such as WHITE, BLACK, RED, etc.  See the linked page for the full list.

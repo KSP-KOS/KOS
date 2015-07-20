@@ -110,6 +110,26 @@ namespace kOS.UserIO
                                 sb.AppendFormat("{0}1K", csi);
                                 break;
 
+                            case (char)UnicodeCommand.BEEP:
+                                sb.Append(BELL_CHAR);
+                                break;
+                                
+                            case (char)UnicodeCommand.REVERSESCREENMODE:
+                                sb.AppendFormat("{0}?5h", csi);
+                                break;
+                                
+                            case (char)UnicodeCommand.NORMALSCREENMODE:
+                                sb.AppendFormat("{0}?5l", csi);
+                                break;
+                                
+                            case (char)UnicodeCommand.VISUALBEEPMODE:
+                                // sadly, have to consume and ignore - no vt100 code for this, so it's not supported.
+                                break;
+                                
+                            case (char)UnicodeCommand.AUDIOBEEPMODE:
+                                // sadly, have to consume and ignore - no vt100 code for this. so it's not supported.
+                                break;
+                                
                             default:
                                 sb.Append(t); // default passhtrough
                                 break;
@@ -150,6 +170,10 @@ namespace kOS.UserIO
 
                     case DELETE_CHARACTER: 
                         outChars.Add((char)UnicodeCommand.DELETELEFT); // Map to the same as backspace, because Vt100 sends it for the backspace key, annoyingly.
+                        break;
+
+                    case BELL_CHAR:
+                        outChars.Add((char)UnicodeCommand.BEEP);
                         break;
 
                     default:

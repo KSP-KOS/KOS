@@ -79,6 +79,7 @@ namespace kOS.Safe.Compilation
         POPSCOPE       = 0x5b,
         STOREEXIST     = 0x5c,
         PUSHDELEGATE   = 0x5d,
+        BRANCHTRUE     = 0x5e,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -186,7 +187,7 @@ namespace kOS.Safe.Compilation
         // This is populated by using Reflection to scan all the Opcodes for their MLField Attributes.
         private static Dictionary<Type,List<MLArgInfo>> mapOpcodeToArgs;
                 
-        private static string forceDefaultConstructorMsg =
+        private const string FORCE_DEFAULT_CONSTRUCTOR_MSG =
             "+----------- ERROR IN OPCODE DEFINITION ----------------------------------+\n" +
             "|                                                                         |\n" +
             "|         This is a message that only developers of the kOS mod are       |\n" +
@@ -210,12 +211,13 @@ namespace kOS.Safe.Compilation
         public int DeltaInstructionPointer { get; protected set; } 
         public int MLIndex { get; set; } // index into the Machine Language code file for the COMPILE command.
         public string Label {get{return label;} set {label = value;} }
-        private string label = "";
         public virtual string DestinationLabel {get;set;}
         public string SourceName;
 
         public short SourceLine { get; set; } // line number in the source code that this was compiled from.
         public short SourceColumn { get; set; }  // column number of the token nearest the cause of this Opcode.
+
+        private string label = string.Empty;
         
         public virtual void Execute(ICpu cpu)
         {
@@ -294,7 +296,7 @@ namespace kOS.Safe.Compilation
                     }
                     catch (MissingMethodException)
                     {
-                        SafeHouse.Logger.Log( String.Format(forceDefaultConstructorMsg, opType.Name) );
+                        SafeHouse.Logger.Log( String.Format(FORCE_DEFAULT_CONSTRUCTOR_MSG, opType.Name) );
                         Debug.AddNagMessage( Debug.NagType.NAGFOREVER, "ERROR IN OPCODE DEFINITION " + opType.Name );
                         return;
                     }
@@ -567,7 +569,7 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "getmember"; } }
         public override ByteCode Code { get { return ByteCode.GETMEMBER; } }
-        protected bool isMethodCallAttempt = false;
+        protected bool IsMethodCallAttempt = false;
 
         public override void Execute(ICpu cpu)
         {
@@ -581,7 +583,7 @@ namespace kOS.Safe.Compilation
             }
 
             object value = specialValue.GetSuffix(suffixName);
-            if (value is Delegate && !isMethodCallAttempt)
+            if (value is Delegate && !IsMethodCallAttempt)
             {
                 // This is what happens when someone tries to call a suffix method as if
                 // it wasn't a method (i.e. leaving the parentheses off the call).  The
@@ -609,7 +611,7 @@ namespace kOS.Safe.Compilation
         public override ByteCode Code { get { return ByteCode.GETMETHOD; } }
         public override void Execute(ICpu cpu)
         {
-            isMethodCallAttempt = true;
+            IsMethodCallAttempt = true;
             base.Execute(cpu);
         }
     }
@@ -759,6 +761,18 @@ namespace kOS.Safe.Compilation
         {
             bool condition = Convert.ToBoolean(cpu.PopValue());
             DeltaInstructionPointer = !condition ? Distance : 1;
+        }
+    }
+    
+    public class OpcodeBranchIfTrue : BranchOpcode
+    {
+        protected override string Name { get { return "br.true"; } }
+        public override ByteCode Code { get { return ByteCode.BRANCHTRUE; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            bool condition = Convert.ToBoolean(cpu.PopValue());
+            DeltaInstructionPointer = condition ? Distance : 1;
         }
     }
 

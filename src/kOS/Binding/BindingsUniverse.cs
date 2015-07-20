@@ -124,7 +124,7 @@ namespace kOS.Binding
                             SetWarpRate(newRate, TimeWarp.fetch.warpRates.Length - 1);
                             break;
                         case TimeWarp.Modes.LOW:
-                            SetWarpRate(newRate, TimeWarp.fetch.maxPhysicsRate_index);
+                            SetWarpRate(newRate, TimeWarp.fetch.physicsWarpRates.Length - 1);
                             break;
                         default:
                             throw new Exception(string.Format("WARPMODE '{0}' is unknown to kOS, please contact the devs", val));
@@ -154,10 +154,10 @@ namespace kOS.Binding
 
         private static void SetWarpRate(int newRate, int maxRate)
         {
-            var clampedValue = Mathf.Clamp(maxRate, 0, newRate);
-            if (clampedValue != maxRate)
+            var clampedValue = Mathf.Clamp(newRate, 0, maxRate);
+            if (clampedValue != newRate)
             {
-                SafeHouse.Logger.Log(string.Format("Clamped Timewarp rate. Was: {0} Is: {1}", clampedValue, maxRate));
+                SafeHouse.Logger.Log(string.Format("Clamped Timewarp rate. Was: {0} Is: {1}", newRate, clampedValue));
             }
             TimeWarp.SetRate(clampedValue, false);
         }

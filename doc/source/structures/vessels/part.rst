@@ -34,8 +34,8 @@ These are the generic properties every PART has. You can obtain a list of values
           - string
           - Name-tag if assigned by the player
         * - :attr:`CONTROLFROM`
-          - boolean
-          - Set control-from to this part
+          - Void
+          - Call to control-from to this part
         * - :attr:`STAGE`
           - scalar
           - The stage this is associated with
@@ -131,10 +131,10 @@ These are the generic properties every PART has. You can obtain a list of values
 
 .. attribute:: Part:CONTROLFROM
 
-    :access: Get only
-    :type: boolean
+    :access: Callable function only
+    :type: void
 
-    Set to TRUE to cause the game to do the same thing as when you right-click a part on a vessel and select "control from here" on the menu. It rotates the control orientation so that fore/aft/left/right/up/down now match the orientation of this part. NOTE that this will not work for every type of part. It only works for those parts that KSP itself allows this for (control cores and docking ports).
+    Call this function to cause the game to do the same thing as when you right-click a part on a vessel and select "control from here" on the menu. It rotates the control orientation so that fore/aft/left/right/up/down now match the orientation of this part. NOTE that this will not work for every type of part. It only works for those parts that KSP itself allows this for (control cores and docking ports).  It accepts no arguments, and returns no value.
 
 .. attribute:: Part:STAGE
 

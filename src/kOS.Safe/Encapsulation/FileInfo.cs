@@ -40,6 +40,7 @@ namespace kOS.Safe.Encapsulation
         {
             Name = fileInfo.Name;
             Size = (int) fileInfo.Length;
+            InitializeSuffixes();
         }
 
         public override string ToString()

@@ -1,13 +1,13 @@
-﻿using System;
+﻿using kOS.Module;
+using kOS.Safe.Module;
+using kOS.Safe.Utilities;
+using kOS.Suffixed;
+using kOS.UserIO;
+using kOS.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using kOS.Safe.Utilities;
 using UnityEngine;
-using kOS.Utilities;
-using kOS.Suffixed;
-using kOS.Safe.Module;
-using kOS.Module;
-using kOS.UserIO;
 
 namespace kOS.Screen
 {
@@ -16,7 +16,7 @@ namespace kOS.Screen
     /// Note that there should only be one of these at a time, unlike some of the
     /// other KOSManagedWindows.
     /// <br></br>
-    /// Frustratingly, The only two choices that KSP gives for the boolean 
+    /// Frustratingly, The only two choices that KSP gives for the boolean
     /// value "once" in the KSPAddon attribute are these:<br/>
     /// <br/>
     /// Set it to True to have your class instanced only exactly once in the entire game.<br/>
@@ -26,37 +26,38 @@ namespace kOS.Screen
     /// does not seem to be an option.  Therefore this class has a lot of silly counters to
     /// track how many times its been instanced.
     /// </summary>
-    [KSPAddon(KSPAddon.Startup.EveryScene,false)]
+    [KSPAddon(KSPAddon.Startup.EveryScene, false)]
     public class KOSToolBarWindow : MonoBehaviour
     {
         private ApplicationLauncherButton launcherButton;
-        private IButton BlizzyButton;
+        private IButton blizzyButton;
 
-        private const ApplicationLauncher.AppScenes APP_SCENES = 
-            ApplicationLauncher.AppScenes.FLIGHT | 
-            ApplicationLauncher.AppScenes.SPH | 
-            ApplicationLauncher.AppScenes.VAB | 
-            ApplicationLauncher.AppScenes.MAPVIEW |
-            ApplicationLauncher.AppScenes.SPACECENTER;
+        private const ApplicationLauncher.AppScenes APP_SCENES =
+            ApplicationLauncher.AppScenes.FLIGHT |
+            ApplicationLauncher.AppScenes.SPH |
+            ApplicationLauncher.AppScenes.VAB |
+            ApplicationLauncher.AppScenes.MAPVIEW;
 
         private static Texture2D launcherButtonTexture;
         private static Texture2D terminalClosedIconTexture;
         private static Texture2D terminalOpenIconTexture;
         private static Texture2D terminalClosedTelnetIconTexture;
         private static Texture2D terminalOpenTelnetIconTexture;
-        
+
         // ReSharper disable once RedundantDefaultFieldInitializer
         private bool clickedOn = false;
-        private float height = 1f; // will be automatically resized by GUILayout.
-        private float width = 1f; // will be automatically resized by GUILayout.
-        
-        // ReSharper disable RedundantDefaultFieldInitializer
-        private int verticalSectionCount  = 0;
-        private int horizontalSectionCount = 0;
-        // ReSharper restore RedundantDefaultFieldInitializer
-        private Vector2 scrollPos = new Vector2(200,350);
 
-        private static Rect windowRect;
+        private Rect rectToFit = new Rect(0, 0, 1, 1); // will be changed in Open()
+
+        // ReSharper disable RedundantDefaultFieldInitializer
+        private int verticalSectionCount = 0;
+
+        private int horizontalSectionCount = 0;
+
+        // ReSharper restore RedundantDefaultFieldInitializer
+        private Vector2 scrollPos = new Vector2(200, 350);
+
+        private static Rect windowRect; // does anybody know why this is ststic?
         private const int UNIQUE_ID = 8675309; // Jenny, I've got your number.
         private static GUISkin panelSkin;
         private static GUIStyle headingLabelStyle;
@@ -67,7 +68,7 @@ namespace kOS.Screen
         private static GUIStyle boxOffStyle;
         private static GUIStyle boxOnStyle;
         private static string versionString;
-        
+
         ///<summary>Which CPU part description in the gui panel was the mouse hovering over during the current OnGUI call?</summary>
         private Part newHoverPart;
 
@@ -76,22 +77,18 @@ namespace kOS.Screen
 
         /// <summary>Use this to remember the part's previous highlight color before we messed with it.</summary>
         private Color originalPartHighlightColor = new Color(1.0f, 1.0f, 1.0f); // Should get overwritten with the real color later.
-                                                                                // This first value is a safety in case we don't do that
-                                                                                // properly.  We don't want to "restore" the color to null.
+
+        // This first value is a safety in case we don't do that
+        // properly.  We don't want to "restore" the color to null.
         /// <summary>Our highlight color for kOS panel's part highlighting.</summary>
         private readonly Color ourPartHighlightColor = new Color(1.0f, 0.5f, 1.0f); // Bright purple.
-        
-        private bool alreadyAwake = false;
-        private bool isOpen = false;
+
+        private bool alreadyAwake;
+        private bool isOpen;
 
         private DateTime prevConfigTimeStamp = DateTime.MinValue;
-        
-        private List<int> backingConfigInts;
 
-        public KOSToolBarWindow()
-        {
-            
-        }
+        private List<int> backingConfigInts;
 
         /// <summary>
         /// Unity hates it when a MonoBehaviour has a constructor,
@@ -99,26 +96,26 @@ namespace kOS.Screen
         /// </summary>
         public static void FirstTimeSetup()
         {
-            launcherButtonTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/launcher-button",false);
-            terminalOpenIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-open", false);
-            terminalClosedIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-closed", false);
-            terminalOpenTelnetIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-open-telnet", false);
-            terminalClosedTelnetIconTexture = GameDatabase.Instance.GetTexture ("kOS/GFX/terminal-icon-closed-telnet", false);
-                
-            windowRect = new Rect(0,0,1f,1f); // this origin point will move when opened/closed.
+            launcherButtonTexture = GameDatabase.Instance.GetTexture("kOS/GFX/launcher-button", false);
+            terminalOpenIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-open", false);
+            terminalClosedIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-closed", false);
+            terminalOpenTelnetIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-open-telnet", false);
+            terminalClosedTelnetIconTexture = GameDatabase.Instance.GetTexture("kOS/GFX/terminal-icon-closed-telnet", false);
+
+            windowRect = new Rect(0, 0, 1f, 1f); // this origin point will move when opened/closed.
             panelSkin = BuildPanelSkin();
             versionString = Utils.GetAssemblyFileVersion();
             //UnityEngine.Debug.Log("[kOSToolBarWindow] FirstTimeSetup Finished, v=" + versionString);
         }
 
-        public void Awake ()
+        public void Awake()
         {
             GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
 
             RunWhenReady();
         }
 
-        void OnGameSceneLoadRequestedForAppLauncher(GameScenes SceneToLoad)
+        private void OnGameSceneLoadRequestedForAppLauncher(GameScenes sceneToLoad)
         {
             GoAway();
         }
@@ -160,9 +157,8 @@ namespace kOS.Screen
                 launcher.AddOnShowCallback(CallbackOnShow);
                 launcher.AddOnHideCallback(CallbackOnHide);
                 launcher.EnableMutuallyExclusive(launcherButton);
-
             }
-            if (BlizzyButton == null)
+            if (blizzyButton == null)
                 AddBlizzyButton();
 
             SetupBackingConfigInts();
@@ -173,12 +169,12 @@ namespace kOS.Screen
         {
             if (!ToolbarManager.ToolbarAvailable) return;
 
-            BlizzyButton = ToolbarManager.Instance.add("kOS", "kOSButton");
-            BlizzyButton.TexturePath = "kOS/GFX/launcher-button-blizzy";
-            BlizzyButton.ToolTip = "kOS";
-            BlizzyButton.OnClick += (e) => CallbackOnClickBlizzy();
+            blizzyButton = ToolbarManager.Instance.add("kOS", "kOSButton");
+            blizzyButton.TexturePath = "kOS/GFX/launcher-button-blizzy";
+            blizzyButton.ToolTip = "kOS";
+            blizzyButton.OnClick += e => CallbackOnClickBlizzy();
         }
-        
+
         /// <summary>
         /// In order to support the changes to solve issue #565 (see github for kOS)
         /// we have to store a temp value per integer field, that is NOT the actual
@@ -188,9 +184,9 @@ namespace kOS.Screen
         public void SetupBackingConfigInts()
         {
             if (Config.Instance.TimeStamp() <= prevConfigTimeStamp)
-                return;            
+                return;
             prevConfigTimeStamp = DateTime.Now;
-            
+
             List<ConfigKey> keys = Config.Instance.GetConfigKeys();
             backingConfigInts = new List<int>();
             // Fills exactly the expected number of needed ints, in the same
@@ -200,7 +196,7 @@ namespace kOS.Screen
                 if (key.Value is int)
                     backingConfigInts.Add((int)(key.Value));
         }
-        
+
         public void GoAway()
         {
             if (isOpen) Close();
@@ -225,8 +221,8 @@ namespace kOS.Screen
                 SafeHouse.Logger.SuperVerbose("[kOSToolBarWindow] Failed unregistering AppLauncher handlers," + e.Message);
             }
 
-            if(BlizzyButton != null)
-                BlizzyButton.Destroy();
+            if (blizzyButton != null)
+                blizzyButton.Destroy();
         }
 
         public void OnDestroy()
@@ -238,29 +234,31 @@ namespace kOS.Screen
 
         public void CallbackOnClickBlizzy()
         {
-            if(!isOpen)
+            if (!isOpen)
                 Open();
             else
-                Close();           
+                Close();
         }
-                        
+
         /// <summary>Callback for when the button is toggled on</summary>
         public void CallbackOnTrue()
         {
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnTrue()");
             clickedOn = true;
             Open();
         }
 
         /// <summary>Callback for when the button is toggled off</summary>
         public void CallbackOnFalse()
-        {            
+        {
+            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnFalse()");
             clickedOn = false;
             Close();
         }
 
         /// <summary>Callback for when the mouse is hovering over the button</summary>
         public void CallbackOnHover()
-        {            
+        {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHover()");
             if (!clickedOn)
                 Open();
@@ -268,56 +266,49 @@ namespace kOS.Screen
 
         /// <summary>Callback for when the mouse is hover is off the button</summary>
         public void CallbackOnHoverOut()
-        {            
+        {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHoverOut()");
             if (!clickedOn)
                 Close();
         }
 
-        /// <summary>Callback for when the mouse is hovering over the button</summary>
+        /// <summary>Callback for when the application launcher shows itself</summary>
         public void CallbackOnShow()
-        {            
+        {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnShow()");
-            if (!clickedOn && !isOpen)
+            if (clickedOn)
                 Open();
         }
 
-        /// <summary>Callback for when the mouse is hover is off the button</summary>
+        /// <summary>Callback for when the application launcher hides itself</summary>
         public void CallbackOnHide()
-        {            
+        {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnHide()");
-            if (!clickedOn && isOpen)
-            {
-                Close();
-                clickedOn = false;
-            }
+            Close();
         }
-        
+
         public void Open()
         {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open()");
-            
+
             bool isTop = ApplicationLauncher.Instance.IsPositionedAtTop;
 
-            // Left edge is offset from the right
-            // edge of the screen by enough to hold the width of the window and maybe more offset
-            // if in the editor where there's a staging list we don't want to cover up:
-            float leftEdge = ( (UnityEngine.Screen.width - width) - (HighLogic.LoadedSceneIsEditor ? 64f : 0) );
+            float fitWidth = UnityEngine.Screen.width - (HighLogic.LoadedSceneIsEditor ? 64f : 0);
+            float fitHeight = UnityEngine.Screen.height - 40f - 40f;
+            rectToFit = new Rect(0, 40f, fitWidth, fitHeight);
 
-            // Top edge is either just under the button itself (which contains 40 pixel icons), or just above
-            // the screen bottom by enough room to hold the window height plus the 40 pixel icons):
-            float topEdge = isTop ? (40f) : (UnityEngine.Screen.height - (height+40) );
-            
-            windowRect = new Rect(leftEdge, topEdge, 0, 0); // will resize upon first GUILayout-ing.
-            SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Open(), windowRect = " + windowRect);
-            
+            float leftEdge = UnityEngine.Screen.width;
+            float topEdge = isTop ? 0f : UnityEngine.Screen.height;
+
+            windowRect = new Rect(leftEdge, topEdge, 0, 0); // will resize and move upon first GUILayout-ing.
+
             isOpen = true;
         }
 
         public void Close()
         {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: Close()");
-            if (! isOpen)
+            if (!isOpen)
                 return;
 
             isOpen = false;
@@ -329,31 +320,27 @@ namespace kOS.Screen
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnEnable()");
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
-        
+
         /// <summary>Callback for when the button is hidden or disabled by the application launcher</summary>
         public void CallbackOnDisable()
-        {            
+        {
             SafeHouse.Logger.SuperVerbose("KOSToolBarWindow: PROOF: CallbackOnDisable()");
             // do nothing, but leaving the hook here as a way to document "this thing exists and might be used".
         }
-        
 
         public void OnGUI()
         {
             horizontalSectionCount = 0;
             verticalSectionCount = 0;
 
-            if (!isOpen ) return;
+            if (!isOpen) return;
 
             GUI.skin = HighLogic.Skin;
 
             windowRect = GUILayout.Window(UNIQUE_ID, windowRect, DrawWindow, "kOS " + versionString);
-
-            width = windowRect.width;
-            height = windowRect.height;
-
+            windowRect = RectExtensions.ClampToRectAngle(windowRect, rectToFit);
         }
-        
+
         public void DrawWindow(int windowID)
         {
             BeginHoverHousekeeping();
@@ -370,7 +357,7 @@ namespace kOS.Screen
             int whichInt = 0; // increments only when an integer field is encountered in the config keys, else stays put.
 
             SetupBackingConfigInts();
- 
+
             foreach (ConfigKey key in Config.Instance.GetConfigKeys())
             {
                 CountBeginHorizontal();
@@ -380,7 +367,7 @@ namespace kOS.Screen
 
                 if (key.Value is bool)
                 {
-                    key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText));
+                    key.Value = GUILayout.Toggle((bool) key.Value, new GUIContent("", toolTipText), panelSkin.toggle);
                 }
                 else if (key.Value is int)
                 {
@@ -391,16 +378,15 @@ namespace kOS.Screen
                     GUILayout.Label(key.Alias + " is a new type this dialog doesn't support.  Contact kOS devs.");
                 }
                 GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
-                GUILayout.Label(new GUIContent(labelText,toolTipText), panelSkin.label);
+                GUILayout.Label(new GUIContent(labelText, toolTipText), panelSkin.label);
                 GUILayout.EndHorizontal();
 
                 CountEndHorizontal();
             }
             CountEndVertical();
- 
+
             CountEndHorizontal();
-            
-            
+
             // This is where tooltip hover text will show up, rather than in a hover box wherever the pointer is like normal.
             // Unity doesn't do hovering tooltips and you have to specify a zone for them to appear like this:
             string whichMessage = (GUI.tooltip.Length > 0 ? GUI.tooltip : TelnetStatusMessage()); // when tooltip isn't showing, show telnet status instead.
@@ -409,28 +395,28 @@ namespace kOS.Screen
 
             EndHoverHousekeeping();
             GUI.SetNextControlName(""); // because if you don't then there is no such thing as the "non" control to move the focus to.
-                                        // This is an invisible dummy control to "focus on" to, basically, unfocus, because Unity didn't
-                                        // provide an unfocus method.
+            // This is an invisible dummy control to "focus on" to, basically, unfocus, because Unity didn't
+            // provide an unfocus method.
         }
-        
+
         private int DrawConfigIntField(int keyVal, int whichInt)
         {
             int returnValue = keyVal; // no change, by default - return what was passed.
-            string fieldName = String.Format("CONFIG_intfield_{0}",whichInt);
-            
+            string fieldName = String.Format("CONFIG_intfield_{0}", whichInt);
+
             bool hasFocus = GUI.GetNameOfFocusedControl().Equals(fieldName);
             bool userHitReturnThisPass = hasFocus && (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter);
             int backInt = backingConfigInts[whichInt];
             string fieldValue = (backInt == 0) ? "" : backInt.ToString(); // this lets the user temporarily delete the whole value instead of having it become a zero.
-            
+
             GUI.SetNextControlName(fieldName);
             fieldValue = GUILayout.TextField(fieldValue, 6, panelSkin.textField, GUILayout.MinWidth(60));
 
             fieldValue = fieldValue.Trim(' ');
             int newInt = -99; // Nonzero value to act as a flag to detect if the following line got triggered:
-            if (fieldValue.Length == 0 )
+            if (fieldValue.Length == 0)
                 newInt = 0;// Empty or whitespace input should be a zero, instead of letting int.TryParse() call it an error.
-            if ( newInt == 0 || int.TryParse(fieldValue, out newInt))
+            if (newInt == 0 || int.TryParse(fieldValue, out newInt))
             {
                 backingConfigInts[whichInt] = newInt;
                 // Don't commit the temp value back to the CONFIGs unless RETURN is being pressed right now:
@@ -441,76 +427,75 @@ namespace kOS.Screen
                 }
                 // (Upon committing the value back to config, config will range-check it and clamp it if its out of range).
             }
-            // else it reverts to what it was and wipes the typing if you don't assign it to anything.            
-            
+            // else it reverts to what it was and wipes the typing if you don't assign it to anything.
+
             // Lastly, check for losing the focus - when focus is lost (i.e. user clicks outside the textfield), then
             // revert the backing value to the config value, throwing away edits.
             if (!hasFocus)
                 backingConfigInts[whichInt] = keyVal;
-            
-            
+
             return returnValue;
         }
 
         private string TelnetStatusMessage()
         {
-            if (TelnetMainServer.Instance == null) // We can't control the order in which monobeavhiors are loaded, so TelnetMainServer might not be there yet. 
+            if (TelnetMainServer.Instance == null) // We can't control the order in which monobeavhiors are loaded, so TelnetMainServer might not be there yet.
                 return "TelnetMainServer object not found"; // hopefully the user never sees this.  It should stop happening the the time the loading screen is over.
             bool isOn = TelnetMainServer.Instance.IsListening;
             if (!isOn)
                 return "Telnet server disabled.";
-            
+
             string addr = TelnetMainServer.Instance.BindAddr.ToString();
             int numClients = TelnetMainServer.Instance.ClientCount;
-            
+
             return String.Format("Telnet server listening on {0}. ({1} client{2} connected).",
                                  addr, (numClients == 0 ? "no" : numClients.ToString()), (numClients == 1 ? "" : "s"));
         }
-        
+
         private void DrawActiveCPUsOnPanel()
         {
-            scrollPos = GUILayout.BeginScrollView(scrollPos, panelSkin.scrollView, GUILayout.MinWidth(260), GUILayout.Height(height-60));
-            
+            scrollPos = GUILayout.BeginScrollView(scrollPos, panelSkin.scrollView, GUILayout.MinWidth(260), GUILayout.Height(windowRect.height - 60));
+
             CountBeginVertical();
             Vessel prevVessel = null;
             bool atLeastOne = false;
-            
+
             foreach (kOSProcessor kModule in kOSProcessor.AllInstances())
             {
-                atLeastOne = true;   
+                atLeastOne = true;
                 Part thisPart = kModule.part;
-                Vessel thisVessel = (thisPart==null) ? null : thisPart.vessel;
+                Vessel thisVessel = (thisPart == null) ? null : thisPart.vessel;
 
                 // For each new vessel in the list, start a new vessel section:
                 if (thisVessel != null && thisVessel != prevVessel)
                 {
-                    GUILayout.Box(thisVessel.GetName(),vesselNameStyle);
+                    GUILayout.Box(thisVessel.GetName(), vesselNameStyle);
                     prevVessel = thisVessel;
                 }
                 DrawPartRow(thisPart);
             }
-            if (! atLeastOne)
+            if (!atLeastOne)
                 GUILayout.Label("No Loaded CPUs Found.\n" +
                                 "-------------------------\n" +
                                 "There are either no kOS CPU's\n" +
                                 "in this universe, or there are\n " +
-                                "but they are all \"on rails\".", panelSkin.label );
+                                "but they are all \"on rails\".", panelSkin.label);
             CountEndVertical();
 
             GUILayout.EndScrollView();
         }
-        
+
         private void DrawPartRow(Part part)
         {
             CountBeginHorizontal();
-            
+
             DrawPart(part);
-            
+
             kOSProcessor processorModule = part.Modules.OfType<kOSProcessor>().FirstOrDefault();
 
             if (processorModule == null)
             {
-                throw new ArgumentException("Part does not have a kOSProcessor module", "part");
+                throw new ArgumentException(@"Part does not have a kOSProcessor module", "part");
             }
 
             GUIStyle powerBoxStyle;
@@ -518,26 +503,26 @@ namespace kOS.Screen
             string powerLabelTooltip;
             if (processorModule.ProcessorMode == ProcessorModes.STARVED)
             {
-                 powerBoxStyle = boxDisabledStyle;
-                 powerLabelText = "power\n<starved>";
-                 powerLabelTooltip = "Highlighted CPU has no ElectricCharge.";
+                powerBoxStyle = boxDisabledStyle;
+                powerLabelText = "power\n<starved>";
+                powerLabelTooltip = "Highlighted CPU has no ElectricCharge.";
             }
             else if (processorModule.ProcessorMode == ProcessorModes.READY)
             {
-                 powerBoxStyle = boxOnStyle;
-                 powerLabelText = "power\non";
-                 powerLabelTooltip = "Highlighted CPU is turned on and running.\n";
+                powerBoxStyle = boxOnStyle;
+                powerLabelText = "power\non";
+                powerLabelTooltip = "Highlighted CPU is turned on and running.\n";
             }
             else
             {
-                 powerBoxStyle = boxOffStyle;
-                 powerLabelText = "power\noff";
-                 powerLabelTooltip = "Highlighted CPU is turned off.";
+                powerBoxStyle = boxOffStyle;
+                powerLabelText = "power\noff";
+                powerLabelTooltip = "Highlighted CPU is turned off.";
             }
 
-            GUILayout.Box( new GUIContent(powerLabelText, powerLabelTooltip), powerBoxStyle);
+            GUILayout.Box(new GUIContent(powerLabelText, powerLabelTooltip), powerBoxStyle);
 
-            if (GUILayout.Button((processorModule.WindowIsOpen() ? 
+            if (GUILayout.Button((processorModule.WindowIsOpen() ?
                                   new GUIContent((processorModule.TelnetIsAttached() ? terminalOpenTelnetIconTexture : terminalOpenIconTexture),
                                                  "Click to close terminal window.") :
                                   new GUIContent((processorModule.TelnetIsAttached() ? terminalClosedTelnetIconTexture : terminalClosedIconTexture),
@@ -549,7 +534,7 @@ namespace kOS.Screen
 
             CheckHoverOnPreviousGUIElement(part);
         }
-        
+
         private void DrawPart(Part part)
         {
             // Someday we may work on making this into something that
@@ -568,39 +553,39 @@ namespace kOS.Screen
             // documentation with zero examples.
 
             // So for the meantime let's use our own text label and leave it at that.
-            
+
             KOSNameTag partTag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
-            
+
             string labelText = String.Format("{0}\n({1})",
                                              part.partInfo.title.Split(' ')[0], // just the first word of the name, i.e "CX-4181"
-                                             ((partTag==null) ? "" : partTag.nameTag)
+                                             ((partTag == null) ? "" : partTag.nameTag)
                                             );
             GUILayout.Box(new GUIContent(labelText, "This is the currently highlighted part on the vessel"), partNameStyle);
         }
-        
+
         public void BeginHoverHousekeeping()
         {
             // OnGUI() gets called many times in different modes for different reasons.
             // This logic only works right when used during the Repaint pass of OnGUI().
             if (Event.current.type != EventType.Repaint)
                 return;
-            
+
             // Track whether or not the mouse is over the desired GUI element on *this* OnGUI
             // by clearing out what it was before first:
             newHoverPart = null;
         }
-        
+
         /// <summary>
         /// Control the highlighting of parts in the vessel depending on whether or not
         /// the mouse was hovering in the right spot to cause a highlight.
         /// </summary>
         public void EndHoverHousekeeping()
         {
-            // OnGUI() gets called many times in different modes for different reasons.  
+            // OnGUI() gets called many times in different modes for different reasons.
             // This logic only works right when used during the Repaint pass of OnGUI().
             if (Event.current.type != EventType.Repaint)
                 return;
-            
+
             // If we were already highlighting a part, and are no longer hovering over
             // that part area in the panel, then de-highlight it:
             if (prevHoverPart != null && prevHoverPart != newHoverPart)
@@ -608,7 +593,7 @@ namespace kOS.Screen
                 prevHoverPart.SetHighlightColor(originalPartHighlightColor);
                 prevHoverPart.SetHighlight(false, false);
             }
-            
+
             // If we are now hovering over a part area in the panel, then start highlighting it,
             // remembering what it was before so it cab be set back again.
             if (newHoverPart != null && prevHoverPart != newHoverPart)
@@ -626,85 +611,79 @@ namespace kOS.Screen
         /// <param name="part">The part that just had info drawn for it</param>
         public void CheckHoverOnPreviousGUIElement(Part part)
         {
-            // OnGUI() gets called many times in different modes for different reasons.  
+            // OnGUI() gets called many times in different modes for different reasons.
             // This logic only works right when used during the Repaint pass of OnGUI().
             if (Event.current.type != EventType.Repaint)
                 return;
-            
+
             if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
                 newHoverPart = part;
         }
-        
-        
+
         // Tracking the count to help detect when there's a mismatch:
         // To help detect if a begin matches with an end, put the same
         // string in both of them and see if they get the same count here.
-        private void CountBeginVertical(string debugHelp="")
+        private void CountBeginVertical(string debugHelp = "")
         {
-            if (! String.IsNullOrEmpty(debugHelp))
-                SafeHouse.Logger.SuperVerbose("BeginVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
+            if (!String.IsNullOrEmpty(debugHelp))
+                SafeHouse.Logger.SuperVerbose("BeginVertical(\"" + debugHelp + "\") Nest " + verticalSectionCount);
             GUILayout.BeginVertical();
             ++verticalSectionCount;
         }
-        
+
         // Tracking the count to help detect when there's a mismatch:
         // To help detect if a begin matches with an end, put the same
         // string in both of them and see if they get the same count here.
-        private void CountEndVertical(string debugHelp="")
+        private void CountEndVertical(string debugHelp = "")
         {
             GUILayout.EndVertical();
-            --verticalSectionCount;            
-            if (! String.IsNullOrEmpty(debugHelp))
-                SafeHouse.Logger.SuperVerbose("EndVertical(\""+debugHelp+"\") Nest "+verticalSectionCount);
+            --verticalSectionCount;
+            if (!String.IsNullOrEmpty(debugHelp))
+                SafeHouse.Logger.SuperVerbose("EndVertical(\"" + debugHelp + "\") Nest " + verticalSectionCount);
         }
-        
+
         // Tracking the count to help detect when there's a mismatch:
         // To help detect if a begin matches with an end, put the same
         // string in both of them and see if they get the same count here.
-        private void CountBeginHorizontal(string debugHelp="")
+        private void CountBeginHorizontal(string debugHelp = "")
         {
-            if (! String.IsNullOrEmpty(debugHelp))
-                SafeHouse.Logger.SuperVerbose("BeginHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
+            if (!String.IsNullOrEmpty(debugHelp))
+                SafeHouse.Logger.SuperVerbose("BeginHorizontal(\"" + debugHelp + "\"): Nest " + horizontalSectionCount);
             GUILayout.BeginHorizontal();
             ++horizontalSectionCount;
         }
-        
+
         // Tracking the count to help detect when there's a mismatch:
         // To help detect if a begin matches with an end, put the same
         // string in both of them and see if they get the same count here.
-        private void CountEndHorizontal(string debugHelp="")
+        private void CountEndHorizontal(string debugHelp = "")
         {
             GUILayout.EndHorizontal();
-            --horizontalSectionCount;            
-            if (! String.IsNullOrEmpty(debugHelp))
-                SafeHouse.Logger.SuperVerbose("EndHorizontal(\""+debugHelp+"\"): Nest "+horizontalSectionCount);
+            --horizontalSectionCount;
+            if (!String.IsNullOrEmpty(debugHelp))
+                SafeHouse.Logger.SuperVerbose("EndHorizontal(\"" + debugHelp + "\"): Nest " + horizontalSectionCount);
         }
-        
-        
+
         private static GUISkin BuildPanelSkin()
         {
             GUISkin theSkin = Utils.GetSkinCopy(HighLogic.Skin);
             // theSkin won't actually be used directly anymore because GetSkinCopy is missing a few key
             // fields.  Instead we'll have to set all the GUIStyle's manually everywhere - ugly.
-            
+
             // Now alter the parts of theSkin that we want to change:
             //
             theSkin.window = new GUIStyle(HighLogic.Skin.window);
             theSkin.box.fontSize = 11;
-            theSkin.box.padding = new RectOffset(5,3,3,5);
-            theSkin.box.margin = new RectOffset(1,1,1,1);
+            theSkin.box.padding = new RectOffset(5, 3, 3, 5);
+            theSkin.box.margin = new RectOffset(1, 1, 1, 1);
             theSkin.label.fontSize = 11;
-            theSkin.label.padding = new RectOffset(2,2,2,2);
-            theSkin.label.margin = new RectOffset(1,1,1,1);
             theSkin.textField.fontSize = 11;
-            theSkin.textField.padding = new RectOffset(0,0,0,0);
-            theSkin.textField.margin = new RectOffset(1,1,1,1);
+            theSkin.textField.padding = new RectOffset(0, 0, 0, 0);
+            theSkin.textField.margin = new RectOffset(1, 1, 1, 1);
             theSkin.textArea.fontSize = 11;
-            theSkin.textArea.padding = new RectOffset(0,0,0,0);
-            theSkin.textArea.margin = new RectOffset(1,1,1,1);
-            theSkin.toggle.fontSize = 11;
-            theSkin.toggle.padding = new RectOffset(0,0,0,0);
-            theSkin.toggle.margin = new RectOffset(1,1,1,1);
+            theSkin.textArea.padding = new RectOffset(0, 0, 0, 0);
+            theSkin.textArea.margin = new RectOffset(1, 1, 1, 1);
+            theSkin.toggle.fontSize = 10;
             theSkin.button.fontSize =11;
             theSkin.button.padding = new RectOffset(0,0,0,0);
             theSkin.button.margin = new RectOffset(1,1,1,1);
@@ -713,41 +692,40 @@ namespace kOS.Screen
             //
             headingLabelStyle = new GUIStyle(theSkin.label)
             {
-                fontSize = 13, 
+                fontSize = 13,
                 padding = new RectOffset(2, 2, 2, 2)
             };
             vesselNameStyle = new GUIStyle(theSkin.box)
             {
-                fontSize = 12, 
-                normal = {textColor = Color.white}
+                fontSize = 12,
+                normal = { textColor = Color.white }
             };
             tooltipLabelStyle = new GUIStyle(theSkin.label)
             {
                 fontSize = 11,
                 padding = new RectOffset(0, 2, 0, 2),
-                normal = {textColor = Color.white}
+                normal = { textColor = Color.white }
             };
             partNameStyle = new GUIStyle(theSkin.box)
             {
-                hover = {textColor = new Color(0.6f,1.0f,1.0f)}
+                hover = { textColor = new Color(0.6f, 1.0f, 1.0f) }
             };
             boxOnStyle = new GUIStyle(theSkin.box)
             {
-                hover = {textColor = new Color(0.6f,1.0f,1.0f)},
-                normal = {textColor = new Color(0.4f,1.0f,0.4f)} // brighter green, higher saturation.
+                hover = { textColor = new Color(0.6f, 1.0f, 1.0f) },
+                normal = { textColor = new Color(0.4f, 1.0f, 0.4f) } // brighter green, higher saturation.
             };
             boxOffStyle = new GUIStyle(theSkin.box)
             {
-                hover = {textColor = new Color(0.6f,1.0f,1.0f)},
-                normal = {textColor = new Color(0.6f,0.7f,0.6f)} // dimmer green, more washed out and grey.
+                hover = { textColor = new Color(0.6f, 1.0f, 1.0f) },
+                normal = { textColor = new Color(0.6f, 0.7f, 0.6f) } // dimmer green, more washed out and grey.
             };
             boxDisabledStyle = new GUIStyle(theSkin.box)
             {
-                hover = {textColor = new Color(0.6f,1.0f,1.0f)},
-                normal = {textColor = Color.white}
+                hover = { textColor = new Color(0.6f, 1.0f, 1.0f) },
+                normal = { textColor = Color.white }
             };
             return theSkin;
         }
- 
     }
 }
