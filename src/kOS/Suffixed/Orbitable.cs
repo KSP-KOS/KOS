@@ -218,7 +218,7 @@ namespace kOS.Suffixed
             AddSuffix("RETROGRADE", new Suffix<Direction>(GetRetrograde));
             AddSuffix("SRFPROGRADE", new Suffix<Direction>(GetSurfacePrograde));
             AddSuffix("SRFRETROGRADE", new Suffix<Direction>(GetSurfaceRetrograde));
-            AddSuffix("OBT", new Suffix<OrbitInfo>(GetOrbitInfo));
+            AddSuffix(new[] {"OBT","ORBIT"}, new Suffix<OrbitInfo>(GetOrbitInfo));
             AddSuffix("POSITION", new Suffix<Vector>(GetPosition));
             AddSuffix("VELOCITY", new Suffix<OrbitableVelocity>(GetVelocities));
             AddSuffix("DISTANCE", new Suffix<double>(GetDistance));
