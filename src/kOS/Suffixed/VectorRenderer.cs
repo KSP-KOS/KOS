@@ -45,7 +45,7 @@ namespace kOS.Suffixed
         private bool          isOnMap; // true = Map view, false = Flight view.
         private bool          prevIsOnMap;
         private const int     MAP_LAYER = 10; // found through trial-and-error
-        private const int     FLIGHT_LAYER = 0; // found through trial-and-error
+        private const int     FLIGHT_LAYER = 15; // Supposedly the layer for UI effects in flight camera.
 
         public VectorRenderer( UpdateHandler updateHand, SharedObjects shared )
         {
