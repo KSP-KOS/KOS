@@ -1148,89 +1148,12 @@ namespace kOS.Execution
 
         public void OnSave(ConfigNode node)
         {
-            try
-            {
-                var contextNode = new ConfigNode("context");
-
-                // Save variables
-                if (globalVariables.Variables.Count > 0)
-                {
-                    var varNode = new ConfigNode("variables");
-
-                    foreach (var kvp in globalVariables.Variables)
-                    {
-                        if (!(kvp.Value is BoundVariable) &&
-                            (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
-                        {
-                            if (kvp.Value.Value.GetType().ToString() == "System.String")  // if the variable is a string, enclose the value in ""
-                            {
-                                varNode.AddValue(kvp.Key.TrimStart('$'), (char)34 + PersistenceUtilities.EncodeLine(kvp.Value.Value.ToString()) + (char)34);
-                            }
-                            else
-                            {
-                                varNode.AddValue(kvp.Key.TrimStart('$'), PersistenceUtilities.EncodeLine(kvp.Value.Value.ToString()));
-                            }
-                        }
-                    }
-
-                    contextNode.AddNode(varNode);
-                }
-
-                node.AddNode(contextNode);
-            }
-            catch (Exception e)
-            {
-                if (shared.Logger != null) shared.Logger.Log(e);
-            }
+            // the saving of global variables has been removed for now.
         }
 
         public void OnLoad(ConfigNode node)
         {
-            try
-            {
-                var scriptBuilder = new StringBuilder();
-
-                foreach (ConfigNode contextNode in node.GetNodes("context"))
-                {
-                    foreach (ConfigNode varNode in contextNode.GetNodes("variables"))
-                    {
-                        foreach (ConfigNode.Value value in varNode.values)
-                        {
-                            string varValue = PersistenceUtilities.DecodeLine(value.value);
-                            scriptBuilder.AppendLine(string.Format("set {0} to {1}.", value.name, varValue));
-                        }
-                    }
-                }
-
-                if (shared.ScriptHandler == null || scriptBuilder.Length <= 0) return;
-
-                var programBuilder = new ProgramBuilder();
-                // TODO: figure out how to store the filename and reload it for arg 1 below:
-                // (Possibly all of OnLoad needs work because it never seemed to bring
-                // back the context fully right anyway, which is why this hasn't been
-                // addressed yet).
-                try
-                {
-                    SafeHouse.Logger.Log("Parsing Context:\n\n" + scriptBuilder);
-
-                    // TODO - make this set up compiler options and pass them in properly, so we can detect built-ins properly.
-                    // (for the compiler to detect the difference between a user function call and a built-in, it needs to be
-                    // passed the FunctionManager object from Shared.)
-                    // this isn't fixed mainly because this OnLoad() code is a major bug fire already anyway and needs to be
-                    // fixed, but that's way out of scope for the moment:
-                    programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
-                    List<Opcode> program = programBuilder.BuildProgram();
-                    RunProgram(program, true);
-                }
-                catch (NullReferenceException ex)
-                {
-                    SafeHouse.Logger.Log("program builder failed on load. " + ex.Message);
-                }
-            }
-            catch (Exception e)
-            {
-                if (shared.Logger != null) shared.Logger.Log(e);
-            }
+            // the resoring of global variables has been removed for now.
         }
 
         public void Dispose()
