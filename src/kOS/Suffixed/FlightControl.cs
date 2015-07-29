@@ -366,24 +366,52 @@ namespace kOS.Suffixed
 
         private void PushNewSetting(ref FlightCtrlState st)
         {
-            if(Math.Abs(yaw) > SETTING_EPILSON) st.yaw = yaw;
-            if(Math.Abs(pitch) > SETTING_EPILSON) st.pitch = pitch;
-            if(Math.Abs(roll) > SETTING_EPILSON) st.roll = roll;
+            if (Math.Abs(yaw) > SETTING_EPILSON) st.yaw = yaw;
+            if (Math.Abs(pitch) > SETTING_EPILSON) st.pitch = pitch;
+            if (Math.Abs(roll) > SETTING_EPILSON) st.roll = roll;
 
-            if(Math.Abs(yawTrim) > SETTING_EPILSON) st.yawTrim = yawTrim;
-            if(Math.Abs(pitchTrim) > SETTING_EPILSON) st.pitchTrim = pitchTrim;
-            if(Math.Abs(rollTrim) > SETTING_EPILSON) st.rollTrim = rollTrim;
+            if (Math.Abs(starboard) > SETTING_EPILSON) st.X = Invert(starboard);
+            if (Math.Abs(top) > SETTING_EPILSON) st.Y = top;
+            if (Math.Abs(fore) > SETTING_EPILSON) st.Z = Invert(fore);
 
-            if(Math.Abs(starboard) > SETTING_EPILSON) st.X = Invert(starboard);
-            if(Math.Abs(top) > SETTING_EPILSON) st.Y = top;
-            if(Math.Abs(fore) > SETTING_EPILSON) st.Z = Invert(fore);
+            if (Math.Abs(wheelSteer) > SETTING_EPILSON) st.wheelSteer = wheelSteer;
+            if (Math.Abs(wheelThrottle) > SETTING_EPILSON) st.wheelThrottle = wheelThrottle;
+            if (Math.Abs(mainThrottle) > SETTING_EPILSON) st.mainThrottle = mainThrottle;
 
-            if(Math.Abs(wheelSteer) > SETTING_EPILSON) st.wheelSteer = wheelSteer;
-            if(Math.Abs(wheelThrottle) > SETTING_EPILSON) st.wheelThrottle = wheelThrottle;
-            if(Math.Abs(mainThrottle) > SETTING_EPILSON) st.mainThrottle = mainThrottle;
+            if (Math.Abs(yawTrim) > SETTING_EPILSON)
+            {
+                st.yawTrim = yawTrim;
+                if (Vessel == FlightGlobals.ActiveVessel)
+                    FlightInputHandler.state.yawTrim = yawTrim;
+            }
 
-            if(Math.Abs(wheelSteerTrim) > SETTING_EPILSON) st.wheelSteerTrim = wheelSteerTrim;
-            if(Math.Abs(wheelThrottleTrim) > SETTING_EPILSON) st.wheelThrottleTrim = wheelThrottleTrim;
+            if (Math.Abs(pitchTrim) > SETTING_EPILSON)
+            {
+                st.pitchTrim = pitchTrim;
+                if (Vessel == FlightGlobals.ActiveVessel)
+                    FlightInputHandler.state.pitchTrim = pitchTrim;
+            }
+
+            if (Math.Abs(rollTrim) > SETTING_EPILSON)
+            {
+                st.rollTrim = rollTrim;
+                if (Vessel == FlightGlobals.ActiveVessel)
+                    FlightInputHandler.state.rollTrim = rollTrim;
+            }
+
+            if (Math.Abs(wheelSteerTrim) > SETTING_EPILSON)
+            {
+                st.wheelSteerTrim = wheelSteerTrim;
+                if (Vessel == FlightGlobals.ActiveVessel)
+                    FlightInputHandler.state.wheelSteerTrim = wheelSteerTrim;
+            }
+
+            if (Math.Abs(wheelThrottleTrim) > SETTING_EPILSON)
+            {
+                st.wheelThrottleTrim = wheelThrottleTrim;
+                if (Vessel == FlightGlobals.ActiveVessel)
+                    FlightInputHandler.state.wheelThrottleTrim = wheelThrottleTrim;
+            }
 
         }
     }
