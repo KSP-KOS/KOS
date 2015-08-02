@@ -267,15 +267,23 @@ namespace kOS.Binding
             private readonly BindingManager binding;
             private object value;
             private bool enabled;
+            SharedObjects shared;
+            SteeringManager steeringManager;
 
             public FlightCtrlParam(string name, SharedObjects sharedObjects)
             {
                 this.name = name;
+                shared = sharedObjects;
                 control = GetControllerByVessel(sharedObjects.Vessel);
                 
                 binding = sharedObjects.BindingMgr;
                 Enabled = false;
                 value = null;
+
+                if (string.Equals(name, "steering", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    steeringManager = new SteeringManager(sharedObjects);
+                }
 
                 HookEvents();
             }
@@ -295,6 +303,10 @@ namespace kOS.Binding
                     SafeHouse.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
                     enabled = value;
+                    if (enabled && name.Equals("steering", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        steeringManager.InitVectorRenderers();
+                    }
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
                     {
                         HandleRemoteTechPilot();
@@ -385,22 +397,27 @@ namespace kOS.Binding
             private void SteerByWire(FlightCtrlState c)
             {
                 if (!Enabled) return;
-                if (value is string && ((string)value).ToUpper() == "KILL")
-                {
-                    SteeringHelper.KillRotation(c, control.Vessel);
-                }
-                else if (value is Direction)
-                {
-                    SteeringHelper.SteerShipToward((Direction)value, c, control.Vessel);
-                }
-                else if (value is Vector)
-                {
-                    SteeringHelper.SteerShipToward(((Vector)value).ToDirection(), c, control.Vessel);
-                }
-                else if (value is Node)
-                {
-                    SteeringHelper.SteerShipToward(((Node)value).GetBurnVector().ToDirection(), c, control.Vessel);
-                }
+                steeringManager.Value = this.value;
+                steeringManager.OnFlyByWire(c);
+                //if (value is string && ((string)value).ToUpper() == "KILL")
+                //{
+                //    SteeringHelper.KillRotation(c, control.Vessel);
+                //}
+                //else if (value is Direction)
+                //{
+                //    SteeringHelper.SteerShipToward((Direction)value, c, control.Vessel);
+                //}
+                //else if (value is Vector)
+                //{
+                //    //SteeringHelper.SteerShipToward(((Vector)value).ToDirection(), c, control.Vessel);
+                //    SteeringHelper.SteerShipToward(
+                //        Direction.LookRotation((Vector)value, control.Vessel.mainBody.position - control.Vessel.GetWorldPos3D()), 
+                //        c, control.Vessel);
+                //}
+                //else if (value is Node)
+                //{
+                //    SteeringHelper.SteerShipToward(((Node)value).GetBurnVector().ToDirection(), c, control.Vessel);
+                //}
             }
 
             private void WheelSteer(FlightCtrlState c)
