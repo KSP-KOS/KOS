@@ -303,9 +303,13 @@ namespace kOS.Binding
                     SafeHouse.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
                     enabled = value;
-                    if (enabled && name.Equals("steering", StringComparison.CurrentCultureIgnoreCase))
+                    if (name.Equals("steering", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        steeringManager.InitVectorRenderers();
+                        if (steeringManager != null)
+                        {
+                            if (enabled) steeringManager.InitVectorRenderers();
+                            else steeringManager.HideVectorsDraws();
+                        }
                     }
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
                     {

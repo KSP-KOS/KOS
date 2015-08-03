@@ -322,9 +322,39 @@ namespace kOS.Binding
 
         public void HideVectorsDraws()
         {
-            vForward.SetShow(false);
-            vTop.SetShow(false);
-            vStarboard.SetShow(false);
+            if (vForward != null)
+            {
+                vForward.SetShow(false);
+                vTop.SetShow(false);
+                vStarboard.SetShow(false);
+
+                vTgtForward.SetShow(false);
+                vTgtTop.SetShow(false);
+                vTgtStarboard.SetShow(false);
+
+                vTgtTorqueX.SetShow(false);
+                vTgtTorqueY.SetShow(false);
+                vTgtTorqueZ.SetShow(false);
+
+                vWorldX.SetShow(false);
+                vWorldY.SetShow(false);
+                vWorldZ.SetShow(false);
+
+                vOmegaX.SetShow(false);
+                vOmegaY.SetShow(false);
+                vOmegaZ.SetShow(false);
+            }
+
+            foreach (string key in vEngines.Keys.ToArray())
+            {
+                if (vEngines[key] != null) vEngines[key].SetShow(false);
+                vEngines.Remove(key);
+            }
+            foreach (string key in vRcs.Keys.ToArray())
+            {
+                if (vRcs[key] != null) vRcs[key].SetShow(false);
+                vRcs.Remove(key);
+            }
         }
 
         public void Update(Vessel vsl)
@@ -461,7 +491,7 @@ namespace kOS.Binding
             //double dt2 = 1d - Math.Pow(phi / Math.PI, 2);
             double dt2 = TimeWarp.fixedDeltaTime;
             //double dtRoll1 = 5d * Math.Pow(phiRoll / Math.PI, 2) + 5d * phiRoll / Math.PI + 0.25;
-            double dtRoll1 = 2d;
+            double dtRoll1 = 0.5d;
             //double dtRoll2 = 1d - Math.Pow(phiRoll / Math.PI, 2);
             double dtRoll2 = TimeWarp.fixedDeltaTime * 2;
 
@@ -490,7 +520,8 @@ namespace kOS.Binding
             maxYawOmega = controlTorque.z * 0.5d / momentOfInertia.z;
             if (Math.Abs(tgtYawOmega) > maxYawOmega)
                 tgtYawOmega = maxYawOmega * Math.Sign(tgtYawOmega);
-            maxRollOmega = Math.PI / 10;
+            maxRollOmega = controlTorque.y * 0.5d / momentOfInertia.y;
+            //maxRollOmega = Math.PI / 10;
             if (Math.Abs(tgtRollOmega) > maxRollOmega)
                 tgtRollOmega = maxRollOmega * Math.Sign(tgtRollOmega);
 
