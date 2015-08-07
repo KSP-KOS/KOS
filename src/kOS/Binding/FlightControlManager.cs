@@ -303,13 +303,9 @@ namespace kOS.Binding
                     SafeHouse.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
                     enabled = value;
-                    if (name.Equals("steering", StringComparison.CurrentCultureIgnoreCase))
+                    if (steeringManager != null)
                     {
-                        if (steeringManager != null)
-                        {
-                            if (enabled) steeringManager.InitVectorRenderers();
-                            else steeringManager.HideVectorsDraws();
-                        }
+                        steeringManager.Enabled = enabled;
                     }
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
                     {
@@ -464,6 +460,10 @@ namespace kOS.Binding
             public void UpdateFlightControl(Vessel vessel)
             {
                 control = GetControllerByVessel(vessel);
+                if (steeringManager != null)
+                {
+                    steeringManager.Update(vessel);
+                }
             }
             
             public override string ToString() // added to aid in debugging.
