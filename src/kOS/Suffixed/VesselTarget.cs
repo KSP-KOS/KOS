@@ -448,6 +448,22 @@ namespace kOS.Suffixed
             AddSuffix("LATITUDE", new Suffix<float>(() => VesselUtils.GetVesselLatitude(Vessel)));
             AddSuffix("LONGITUDE", new Suffix<double>(() => VesselUtils.GetVesselLongitude(Vessel)));
             AddSuffix("ALTITUDE", new Suffix<double>(() => Vessel.altitude));
+            AddSuffix("CREW", new NoArgsSuffix<ListValue>(GetCrew));
+            AddSuffix("CREWCAPACITY", new NoArgsSuffix<int> (GetCrewCapacity));
+        }
+
+        public int GetCrewCapacity() {
+            return Vessel.GetCrewCapacity();
+        }
+
+        public ListValue GetCrew() {
+            ListValue crew = new ListValue();
+
+            foreach (ProtoCrewMember crewMember in Vessel.GetVesselCrew()) {
+                crew.Add(new CrewMember(crewMember, Shared));
+            }
+
+            return crew;
         }
 
         public double GetAvailableThrustAt(double atmPressure)
