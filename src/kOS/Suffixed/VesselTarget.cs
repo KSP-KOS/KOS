@@ -440,7 +440,7 @@ namespace kOS.Suffixed
                     Vessel.vesselRanges.prelaunch.pack = value;
                 }));
             AddSuffix("ISDEAD", new NoArgsSuffix<bool>(() => (Vessel.state == Vessel.State.DEAD)));
-            AddSuffix("STATUS", new Suffix<String>(() => Vessel.situation.ToString()));
+            AddSuffix("STATUS", new Suffix<string>(() => Vessel.situation.ToString()));
 
             //// Although there is an implementation of lat/long/alt in Orbitible,
             //// it's better to use the methods for vessels that are faster if they're
@@ -457,9 +457,9 @@ namespace kOS.Suffixed
         }
 
         public ListValue GetCrew() {
-            ListValue crew = new ListValue();
+            var crew = new ListValue();
 
-            foreach (ProtoCrewMember crewMember in Vessel.GetVesselCrew()) {
+            foreach (var crewMember in Vessel.GetVesselCrew()) {
                 crew.Add(new CrewMember(crewMember, Shared));
             }
 

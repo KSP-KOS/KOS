@@ -1,5 +1,4 @@
 ﻿using kOS.Safe.Encapsulation;
-using System;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed.Part;
 
@@ -7,14 +6,14 @@ namespace kOS.Suffixed
 {
     public class CrewMember : Structure
     {
-        private ProtoCrewMember crewMember;
-        private SharedObjects shared;
+        private readonly ProtoCrewMember crewMember;
+        private readonly SharedObjects shared;
 
-        public String Name {
+        public string Name {
             get { return crewMember.name; }
         }
 
-        public String Gender {
+        public string Gender {
             get { return crewMember.gender.ToString(); }
         }
 
@@ -22,7 +21,7 @@ namespace kOS.Suffixed
             get { return crewMember.experienceLevel; }
         }
 
-        public String Trait {
+        public string Trait {
             get { return crewMember.experienceTrait.Title; }
         }
 
@@ -35,17 +34,17 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("NAME", new Suffix<String>(() => Name));
+            AddSuffix("NAME", new Suffix<string>(() => Name));
             AddSuffix("TOURIST", new Suffix<bool>(() => crewMember.type == ProtoCrewMember.KerbalType.Tourist));
-            AddSuffix("GENDER", new Suffix<String>(() => Gender));
-            AddSuffix("TRAIT", new Suffix<String>(() => Trait));
+            AddSuffix("GENDER", new Suffix<string>(() => Gender));
+            AddSuffix("TRAIT", new Suffix<string>(() => Trait));
             AddSuffix("EXPERIENCE", new Suffix<int>(() => Experience));
             AddSuffix("PART", new Suffix<PartValue>(() => PartValueFactory.Construct(crewMember.seat.part, shared)));
         }
 
         public override string ToString()
         {
-            return Name + " " + Gender[0] + ", " + Trait + " " + new String('*', Experience);
+            return Name + " " + Gender[0] + ", " + Trait + " " + new string('*', Experience);
         }
     }
 }
