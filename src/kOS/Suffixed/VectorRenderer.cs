@@ -20,6 +20,7 @@ namespace kOS.Suffixed
         private LineRenderer  line;
         private LineRenderer  hat;
         private bool          enable;
+        private bool watchScope;
         private readonly UpdateHandler updateHandler;
         private readonly SharedObjects shared;
         private GameObject    lineObj;
@@ -47,7 +48,7 @@ namespace kOS.Suffixed
         private const int     MAP_LAYER = 10; // found through trial-and-error
         private const int     FLIGHT_LAYER = 0; // found through trial-and-error
 
-        public VectorRenderer( UpdateHandler updateHand, SharedObjects shared )
+        public VectorRenderer(UpdateHandler updateHand, SharedObjects shared, bool watchScope = true)
         {
             Vector  = new Vector3d(0,0,0);
             Color   = new RgbaColor(1,1,1);
@@ -57,6 +58,7 @@ namespace kOS.Suffixed
             
             updateHandler = updateHand;
             this.shared = shared;
+            this.watchScope = watchScope;
             InitializeSuffixes();
         }
 
@@ -71,7 +73,7 @@ namespace kOS.Suffixed
             // (Note that if I didn't do this,
             // then as far as C# thinks, I wouldn't be orphaned because
             // UpdateHandler is holding a reference to me.)
-            SetShow(false);
+            if (watchScope) SetShow(false);
         }
 
         /// <summary>Make all vector renderers invisible everywhere in the kOS module.</summary>
@@ -220,6 +222,7 @@ namespace kOS.Suffixed
         
         public void SetShow( bool newShowVal )
         {
+            if (enable == newShowVal) return;
             if (newShowVal)
             {
                 if (line == null || hat == null )

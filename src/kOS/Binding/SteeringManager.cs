@@ -687,6 +687,11 @@ namespace kOS.Binding
             controlTorque.x += controlEngineTorque.x;
             controlTorque.z += controlEngineTorque.z;
             controlTorque.y += controlEngineTorque.y;
+
+            double minTorque = 0.0001;
+            if (controlTorque.x < minTorque) controlTorque.x = minTorque;
+            if (controlTorque.y < minTorque) controlTorque.y = minTorque;
+            if (controlTorque.z < minTorque) controlTorque.z = minTorque;
         }
 
         // Keeping the old UpdatePrediction method for reference while implementing PI based control, can be deleted later.
