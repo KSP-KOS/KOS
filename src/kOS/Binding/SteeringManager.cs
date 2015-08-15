@@ -552,23 +552,52 @@ namespace kOS.Binding
                             for (int i = 0; i < rcs.thrusterTransforms.Count; i++)
                             {
                                 Transform thrustdir = rcs.thrusterTransforms[i];
-                                string key = part.flightID.ToString() + thrustdir.name + i.ToString();
-                                if (!vRcs.ContainsKey(key))
+                                // We need to adjust the relative center of mass because the rigid body will report the position of the parent part
+                                relCom = thrustdir.position - centerOfMass;
+                                Vector3d torque = Vector3d.Cross(relCom, thrustdir.up * rcs.thrusterPower);
+
+                                // component values of the local torque are calculated using the dot product of the rotation axis.
+                                // Only using positive contributions, which is only valid when symmetric placement is assumed
+                                controlTorque.x += Math.Max(Vector3d.Dot(torque, vesselStarboard), 0);
+                                controlTorque.z += Math.Max(Vector3d.Dot(torque, vesselTop), 0);
+                                controlTorque.y += Math.Max(Vector3d.Dot(torque, vesselForward), 0);
+
+                                if (i == 0)
                                 {
-                                    Color c = UnityEngine.Color.magenta;
-                                    var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
+                                    string key = part.flightID.ToString() + thrustdir.name + i.ToString();
+                                    if (!vRcs.ContainsKey(key))
                                     {
-                                        Color = new RgbaColor(c.r, c.g, c.b),
-                                        Start = new Vector3d(0, 0, 0),
-                                        Vector = new Vector3d(0, 0, 0),
-                                        Width = 0.25
-                                    };
-                                    vecdraw.SetLabel(key);
-                                    vecdraw.SetShow(true);
-                                    vRcs.Add(key, vecdraw);
+                                        Color c = UnityEngine.Color.magenta;
+                                        var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
+                                        {
+                                            Color = new RgbaColor(c.r, c.g, c.b),
+                                            Start = new Vector3d(0, 0, 0),
+                                            Vector = new Vector3d(0, 0, 0),
+                                            Width = 0.25
+                                        };
+                                        vecdraw.SetShow(true);
+                                        vRcs.Add(key, vecdraw);
+                                    }
+                                    vRcs[key].Vector = thrustdir.up * rcs.thrusterPower;
+                                    vRcs[key].Start = relCom;
+
+                                    key = part.flightID.ToString() + thrustdir.name + "torque" + i.ToString();
+                                    if (!vRcs.ContainsKey(key))
+                                    {
+                                        Color c = UnityEngine.Color.yellow;
+                                        var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
+                                        {
+                                            Color = new RgbaColor(c.r, c.g, c.b),
+                                            Start = new Vector3d(0, 0, 0),
+                                            Vector = new Vector3d(0, 0, 0),
+                                            Width = 0.1
+                                        };
+                                        vecdraw.SetShow(true);
+                                        vRcs.Add(key, vecdraw);
+                                    }
+                                    vRcs[key].Vector = torque;
+                                    vRcs[key].Start = relCom;
                                 }
-                                vRcs[key].Vector = thrustdir.forward * rcs.thrusterPower;
-                                vRcs[key].Start = relCom;
                             }
                             continue;
                         }
