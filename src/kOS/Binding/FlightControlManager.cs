@@ -87,7 +87,7 @@ namespace kOS.Binding
 
             // If it gets this far, that means the part the kOSProcessor module is inside of
             // got disconnected from its original vessel and became a member
-            // of a new child vessel, either do to undocking, decoupling, or breakage.
+            // of a new child vessel, either due to undocking, decoupling, or breakage.
 
             // currentVessel is now a stale reference to the vessel this manager used to be a member of,
             // while Shared.Vessel is the new vessel it is now contained in.
@@ -282,7 +282,7 @@ namespace kOS.Binding
 
                 if (string.Equals(name, "steering", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    steeringManager = new SteeringManager(sharedObjects);
+                    steeringManager = SteeringManager.GetInstance(sharedObjects);
                 }
 
                 HookEvents();
@@ -305,7 +305,9 @@ namespace kOS.Binding
                     enabled = value;
                     if (steeringManager != null)
                     {
-                        steeringManager.Enabled = enabled;
+                        if (enabled) steeringManager.EnableControl(this.shared);
+                        else steeringManager.DisableControl();
+                        //steeringManager.Enabled = enabled;
                     }
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
                     {
@@ -455,6 +457,11 @@ namespace kOS.Binding
             public void Dispose()
             {
                 Enabled = false;
+                if (steeringManager != null)
+                {
+                    steeringManager.RemoveInstance(shared);
+                    steeringManager = null;
+                }
             }
 
             public void UpdateFlightControl(Vessel vessel)
