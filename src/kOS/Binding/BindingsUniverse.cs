@@ -150,6 +150,8 @@ namespace kOS.Binding
             }
 
             shared.BindingMgr.AddGetter("VERSION", () => Core.VersionInfo);
+
+            shared.BindingMgr.AddGetter("STEERINGMANAGER", () => SteeringManager.GetInstance(shared.Vessel));
         }
 
         private static void SetWarpRate(int newRate, int maxRate)
