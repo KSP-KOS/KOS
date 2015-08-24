@@ -1,15 +1,11 @@
-﻿using System;
+﻿using kOS.Safe.Encapsulation;
+using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Suffixed;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.IO;
-using kOS.Safe.Utilities;
 using UnityEngine;
-//using KSP.IO;
-using kOS.Suffixed;
 using Math = System.Math;
-using kOS.Safe.Encapsulation;
-using kOS.Safe.Encapsulation.Suffixes;
 
 namespace kOS.Binding
 {
@@ -31,6 +27,7 @@ namespace kOS.Binding
             AllInstances.Add(key, sm);
             return sm;
         }
+
         public static SteeringManager GetInstance(Vessel vessel)
         {
             string key = vessel.id.ToString();
@@ -45,12 +42,13 @@ namespace kOS.Binding
 
         public List<uint> SubscribedParts = new List<uint>();
 
-        SharedObjects shared;
+        private SharedObjects shared;
         //Vessel vessel;
 
-        uint partId = 0;
+        private uint partId = 0;
 
         private bool enabled = false;
+
         public bool Enabled
         {
             get { return enabled; }
@@ -83,101 +81,108 @@ namespace kOS.Binding
         }
 
         public bool ShowFacingVectors { get; set; }
+
         public bool ShowAngularVectors { get; set; }
+
         public bool ShowThrustVectors { get; set; }
+
         public bool ShowRCSVectors { get; set; }
+
         public bool ShowSteeringStats { get; set; }
+
         public bool WriteCSVFiles { get; set; }
 
-        string fileBaseName = "{0}-{1}-{2}.csv";
-        string fileDateString = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        private string fileBaseName = "{0}-{1}-{2}.csv";
+        private string fileDateString = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
         public object Value { get; set; }
+
         public Direction TargetDirection { get { return this.GetDirectionFromValue(); } }
 
-        Transform vesselTransform;
+        private Transform vesselTransform;
 
-        TorquePI pitchPI = new TorquePI();
-        TorquePI yawPI = new TorquePI();
-        TorquePI rollPI = new TorquePI();
+        private TorquePI pitchPI = new TorquePI();
+        private TorquePI yawPI = new TorquePI();
+        private TorquePI rollPI = new TorquePI();
 
-        //RatePI pitchRatePI = new RatePI();
-        //RatePI yawRatePI = new RatePI();
-        //RatePI rollRatePI = new RatePI();
+        private PIDLoop pitchRatePI = new PIDLoop(1, 0.1, 0, extraUnwind: true);
+        private PIDLoop yawRatePI = new PIDLoop(1, 0.1, 0, extraUnwind: true);
+        private PIDLoop rollRatePI = new PIDLoop(1, 0.1, 0, extraUnwind: true);
 
-        PIDLoop pitchRatePI = new PIDLoop(1, 0.1, 0, extraUnwind: true);
-        PIDLoop yawRatePI = new PIDLoop(1, 0.1, 0, extraUnwind: true);
-        PIDLoop rollRatePI = new PIDLoop(1, 0.1, 0, extraUnwind: true);
+        private KSP.IO.TextWriter pitchRateWriter;
+        private KSP.IO.TextWriter yawRateWriter;
+        private KSP.IO.TextWriter rollRateWriter;
 
-        KSP.IO.TextWriter pitchRateWriter;
-        KSP.IO.TextWriter yawRateWriter;
-        KSP.IO.TextWriter rollRateWriter;
+        private KSP.IO.TextWriter pitchTorqueWriter;
+        private KSP.IO.TextWriter yawTorqueWriter;
+        private KSP.IO.TextWriter rollTorqueWriter;
 
-        KSP.IO.TextWriter pitchTorqueWriter;
-        KSP.IO.TextWriter yawTorqueWriter;
-        KSP.IO.TextWriter rollTorqueWriter;
+        private MovingAverage pitchRate = new MovingAverage() { SampleLimit = 5 };
+        private MovingAverage yawRate = new MovingAverage() { SampleLimit = 5 };
+        private MovingAverage rollRate = new MovingAverage() { SampleLimit = 5 };
 
-        MovingAverage pitchRate = new MovingAverage() { SampleLimit = 5 };
-        MovingAverage yawRate = new MovingAverage() { SampleLimit = 5 };
-        MovingAverage rollRate = new MovingAverage() { SampleLimit = 5 };
-
-        List<ThrustVector> allEngineVectors = new List<ThrustVector>();
+        private List<ThrustVector> allEngineVectors = new List<ThrustVector>();
 
         #region doubles
-        double accPitch = 0;
-        double accYaw = 0;
-        double accRoll = 0;
 
-        double phi;
-        double phiPitch;
-        double phiYaw;
-        double phiRoll;
+        private double accPitch = 0;
+        private double accYaw = 0;
+        private double accRoll = 0;
 
-        double maxPitchOmega;
-        double maxYawOmega;
-        double maxRollOmega;
+        private double phi;
+        private double phiPitch;
+        private double phiYaw;
+        private double phiRoll;
 
-        double tgtPitchOmega;
-        double tgtYawOmega;
-        double tgtRollOmega;
+        private double maxPitchOmega;
+        private double maxYawOmega;
+        private double maxRollOmega;
 
-        double tgtPitchTorque;
-        double tgtYawTorque;
-        double tgtRollTorque;
+        private double tgtPitchOmega;
+        private double tgtYawOmega;
+        private double tgtRollOmega;
 
-        double renderMultiplier = 50;
+        private double tgtPitchTorque;
+        private double tgtYawTorque;
+        private double tgtRollTorque;
+
+        private double renderMultiplier = 50;
+
         #endregion doubles
 
-        Quaternion vesselRotation;
-        Quaternion targetRot;
+        private Quaternion vesselRotation;
+        private Quaternion targetRot;
 
         #region Vectors
-        Vector3d centerOfMass;
-        Vector3d vesselUp;
 
-        Vector3d vesselForward;
-        Vector3d vesselTop;
-        Vector3d vesselStarboard;
+        private Vector3d centerOfMass;
+        private Vector3d vesselUp;
 
-        Vector3d targetForward;
-        Vector3d targetTop;
-        Vector3d targetStarboard;
+        private Vector3d vesselForward;
+        private Vector3d vesselTop;
+        private Vector3d vesselStarboard;
 
-        Vector3d omega;
-        Vector3d momentOfInertia;
-        Vector3d staticTorque = Vector3d.zero;
-        Vector3d controlTorque = Vector3d.zero;
-        Vector3d staticEngineTorque = Vector3d.zero;
-        Vector3d controlEngineTorque = Vector3d.zero;
+        private Vector3d targetForward;
+        private Vector3d targetTop;
+        private Vector3d targetStarboard;
 
-        List<ForceVector> rcsVectors = new List<ForceVector>();
-        List<ForceVector> engineNeutVectors = new List<ForceVector>();
-        List<ForceVector> enginePitchVectors = new List<ForceVector>();
-        List<ForceVector> engineYawVectors = new List<ForceVector>();
-        List<ForceVector> engineRollVectors = new List<ForceVector>();
+        private Vector3d omega;
+        private Vector3d momentOfInertia;
+        private Vector3d staticTorque = Vector3d.zero;
+        private Vector3d controlTorque = Vector3d.zero;
+        private Vector3d staticEngineTorque = Vector3d.zero;
+        private Vector3d controlEngineTorque = Vector3d.zero;
+
+        private List<ForceVector> rcsVectors = new List<ForceVector>();
+        private List<ForceVector> engineNeutVectors = new List<ForceVector>();
+        private List<ForceVector> enginePitchVectors = new List<ForceVector>();
+        private List<ForceVector> engineYawVectors = new List<ForceVector>();
+        private List<ForceVector> engineRollVectors = new List<ForceVector>();
+
         #endregion Vectors
 
         #region VectorRenderers
+
         private VectorRenderer vForward;
         private VectorRenderer vTop;
         private VectorRenderer vStarboard;
@@ -198,9 +203,10 @@ namespace kOS.Binding
         private VectorRenderer vTgtTorqueY;
         private VectorRenderer vTgtTorqueZ;
 
-        Dictionary<string, VectorRenderer> vEngines = new Dictionary<string, VectorRenderer>();
-        Dictionary<string, VectorRenderer> vRcs = new Dictionary<string, VectorRenderer>();
-        #endregion VectorRenders
+        private Dictionary<string, VectorRenderer> vEngines = new Dictionary<string, VectorRenderer>();
+        private Dictionary<string, VectorRenderer> vRcs = new Dictionary<string, VectorRenderer>();
+
+        #endregion VectorRenderers
 
         public SteeringManager(SharedObjects sharedObj)
         {
@@ -258,6 +264,7 @@ namespace kOS.Binding
             ResetIs();
             Enabled = true;
         }
+
         public void DisableControl()
         {
             if (enabled && this.partId != shared.KSPPart.flightID)
@@ -535,7 +542,7 @@ namespace kOS.Binding
                 vRcs.Remove(key);
             }
         }
-        
+
         private void ResetIs()
         {
             pitchPI.ResetI();
@@ -632,8 +639,6 @@ namespace kOS.Binding
             // This fixes that rotation.
             vesselRotation = vesselTransform.rotation * Quaternion.Euler(-90, 0, 0);
 
-            deltaRotation = vesselRotation.Inverse() * targetRot;
-
             vesselForward = vesselRotation * Vector3d.forward;
             vesselTop = vesselRotation * Vector3d.up;
             vesselStarboard = vesselRotation * Vector3d.right;
@@ -649,6 +654,7 @@ namespace kOS.Binding
             //omega.y *= -1;
             omega.z *= -1;
         }
+
         public void UpdateTorque()
         {
             // staticTorque will represent engine torque due to imbalanced placement
@@ -674,7 +680,7 @@ namespace kOS.Binding
                     ModuleReactionWheel wheel = pm as ModuleReactionWheel;
                     if (wheel != null)
                     {
-                        if (wheel.isActiveAndEnabled  && wheel.State == ModuleReactionWheel.WheelState.Active)
+                        if (wheel.isActiveAndEnabled && wheel.State == ModuleReactionWheel.WheelState.Active)
                         {
                             // TODO: Check to see if the component values depend on part orientation, and implement if needed.
                             controlTorque.x += wheel.PitchTorque;
@@ -695,7 +701,7 @@ namespace kOS.Binding
                                 {
                                     Force = thrustdir.up * rcs.thrusterPower,
                                     Position = thrustdir.position - centerOfMass,
-                                    // We need to adjust the relative center of mass because the rigid body 
+                                    // We need to adjust the relative center of mass because the rigid body
                                     // will report the position of the parent part
                                     ID = part.flightID.ToString() + "-" + i.ToString()
                                 };
@@ -853,7 +859,7 @@ namespace kOS.Binding
             phiRoll = Vector3d.Angle(vesselTop, Vector3d.Exclude(vesselForward, targetTop)) * Math.PI / 180d;
             if (Vector3d.Angle(vesselStarboard, Vector3d.Exclude(vesselForward, targetTop)) > 90)
                 phiRoll *= -1;
-            
+
             // dt1 is the dt factor for the angular velocity calculation
             // dt2 is the dt factor for the torque calculation
             double dt1 = 0.5d;
@@ -882,7 +888,7 @@ namespace kOS.Binding
             //maxRollOmega = Math.PI / 10;
             if (Math.Abs(tgtRollOmega) > maxRollOmega)
                 tgtRollOmega = maxRollOmega * Math.Sign(tgtRollOmega);
-            
+
             // Calculate the desired torque to match to target
             tgtPitchTorque = momentOfInertia.x * (tgtPitchOmega - omega.x) / dt2;
             tgtYawTorque = momentOfInertia.z * (tgtYawOmega - omega.y) / dt2;
@@ -906,22 +912,10 @@ namespace kOS.Binding
             if (Vector3d.Angle(vesselStarboard, Vector3d.Exclude(vesselForward, targetTop)) > 90)
                 phiRoll *= -1;
 
-            // Adjust MOI if it's values are too low
-            //if (momentOfInertia.x < 0.01)
-            //    momentOfInertia.x = 0.01;
-            if (momentOfInertia.y < 0.1)
-                momentOfInertia.y = 0.1;
-            //if (momentOfInertia.z < 0.01)
-            //    momentOfInertia.z = 0.01;
-
             // Calculate the maximum allowable angular velocity and apply the limit, something we can stop in a reasonable amount of time
             maxPitchOmega = controlTorque.x * 1d / momentOfInertia.x;
             maxYawOmega = controlTorque.z * 1d / momentOfInertia.z;
             maxRollOmega = controlTorque.y * 1d / momentOfInertia.y;
-
-            //pitchRatePI.Kp = maxPitchOmega * 2d / Math.PI;
-            //yawRatePI.Kp = maxYawOmega * 2d / Math.PI;
-            //rollRatePI.Kp = maxRollOmega * 2d / Math.PI;
 
             double sampletime = shared.UpdateHandler.CurrentFixedTime;
             tgtPitchOmega = Math.Max(Math.Min(pitchRatePI.Update(sampletime, -phiPitch, 0, maxPitchOmega), maxPitchOmega), -maxPitchOmega);
@@ -969,22 +963,18 @@ namespace kOS.Binding
 
                 //TODO: include adjustment for static torque (due to engines)
 
-                //c.pitch = 0;
                 accPitch = Math.Min(Math.Max(tgtPitchTorque / controlTorque.x, -1), 1);
                 if (Math.Abs(accPitch) < epsilon)
                     accPitch = 0;
                 c.pitch = (float)accPitch;
-                //c.yaw = 0;
                 accYaw = Math.Min(Math.Max(tgtYawTorque / controlTorque.z, -1), 1);
                 if (Math.Abs(accYaw) < epsilon)
                     accYaw = 0;
                 c.yaw = (float)accYaw;
-                //c.roll = 0;
                 accRoll = Math.Min(Math.Max(tgtRollTorque / controlTorque.y, -1), 1);
                 if (Math.Abs(accRoll) < epsilon)
                     accRoll = 0;
                 c.roll = (float)accRoll;
-                //c.NeutralizeStick();
             }
         }
 
@@ -1170,7 +1160,6 @@ namespace kOS.Binding
 
             if (ShowRCSVectors)
             {
-
                 foreach (var force in rcsVectors)
                 {
                     string key = force.ID;
@@ -1224,6 +1213,7 @@ namespace kOS.Binding
             shared.Screen.Print(string.Format("phiRoll: {0}", phiRoll * 180d / Math.PI));
             shared.Screen.Print("    Pitch Values:");
             shared.Screen.Print(string.Format("phiPitch: {0}", phiPitch * 180d / Math.PI));
+            //shared.Screen.Print(string.Format("phiPitch: {0}", deltaRotation.eulerAngles.x));
             shared.Screen.Print(string.Format("I pitch: {0}", momentOfInertia.x));
             shared.Screen.Print(string.Format("torque pitch: {0}", controlTorque.x));
             shared.Screen.Print(string.Format("torque gimbal: {0}", controlEngineTorque.x));
@@ -1234,6 +1224,7 @@ namespace kOS.Binding
             shared.Screen.Print(string.Format("accPitch: {0}", accPitch));
             shared.Screen.Print("    Yaw Values:");
             shared.Screen.Print(string.Format("phiYaw: {0}", phiYaw * 180d / Math.PI));
+            //shared.Screen.Print(string.Format("phiYaw: {0}", deltaRotation.eulerAngles.y));
             shared.Screen.Print(string.Format("I yaw: {0}", momentOfInertia.z));
             shared.Screen.Print(string.Format("torque yaw: {0}", controlTorque.z));
             shared.Screen.Print(string.Format("torque gimbal: {0}", controlEngineTorque.z));
@@ -1244,6 +1235,7 @@ namespace kOS.Binding
             shared.Screen.Print(string.Format("accYaw: {0}", accYaw));
             shared.Screen.Print("    Roll Values:");
             shared.Screen.Print(string.Format("phiRoll: {0}", phiRoll * 180d / Math.PI));
+            //shared.Screen.Print(string.Format("phiRoll: {0}", deltaRotation.eulerAngles.z));
             shared.Screen.Print(string.Format("I roll: {0}", momentOfInertia.y));
             shared.Screen.Print(string.Format("torque roll: {0}", controlTorque.y));
             shared.Screen.Print(string.Format("torque gimbal: {0}", controlEngineTorque.y));
@@ -1442,8 +1434,11 @@ namespace kOS.Binding
         public struct ForceVector
         {
             public Vector3d Force { get; set; }
+
             public Vector3d Position { get; set; }
+
             public Vector3d Torque { get { return Vector3d.Cross(Force, Position); } }
+
             public string ID { get; set; }
         }
 
@@ -1454,9 +1449,11 @@ namespace kOS.Binding
             public float ThrustMag = 0;
             public Vector3d Position = Vector3d.zero;
             public string PartId;
+
             public ThrustVector()
             {
             }
+
             public Vector3d Thrust { get { return Rotation * Vector3d.forward * ThrustMag; } }
 
             public Vector3d[] GetTorque(Vector3d forward, Vector3d top, Vector3d starboard)
@@ -1510,10 +1507,12 @@ namespace kOS.Binding
                 }
                 return ret;
             }
+
             public Quaternion GetAngledRotation(Vector3d forward, Vector3d top, Vector3d starboard)
             {
                 return Rotation * Quaternion.AngleAxis(GimbalRange, starboard);
             }
+
             public Vector3d GetGimbaledThrust(Vector3d forward, Vector3d top, Vector3d starboard)
             {
                 Vector3d thrust = Thrust;
@@ -1534,17 +1533,13 @@ namespace kOS.Binding
         public class TorquePI
         {
             private PIDLoop Loop { get; set; }
-            //public double Kp { get; private set; }
-            //public double Ki { get; private set; }
-            //public double Input { get; set; }
-            //public double Setpoint { get; set; }
-            //public double Error { get; private set; }
-            //public double Output { get; private set; }
+
             public double I { get; private set; }
-            //public double MaxOutput { get; private set; }
-            //public double AdjustedMaxTorque { get; private set; }
+
             public MovingAverage TorqueAdjust { get; set; }
+
             private double tr;
+
             public double Tr
             {
                 get { return tr; }
@@ -1554,91 +1549,38 @@ namespace kOS.Binding
                     ts = 4.0 * tr / 2.76;
                 }
             }
+
             private double ts;
+
             public double Ts
             {
                 get { return ts; }
-                set {
+                set
+                {
                     ts = value;
                     tr = 2.76 * ts / 4.0;
                 }
             }
-            //public double ErrorSum { get; private set; }
-            //public double LastSampleTime { get; private set; }
-            
+
             public TorquePI()
             {
                 Loop = new PIDLoop();
-                //Ki = 1;
-                //Kp = 1;
                 Ts = 1;
-                //Output = 0;
-                //Error = 0;
-                //ErrorSum = 0;
-                //LastSampleTime = double.MaxValue;
-                //AdjustedMaxTorque = 0;
                 TorqueAdjust = new MovingAverage();
             }
 
-            //public double Update(double sampleTime, double error, double momentOfInertia, double maxOutput)
-            //{
-            //    return Update(sampleTime, 0, error, momentOfInertia, maxOutput);
-            //}
-
             public double Update(double sampleTime, double input, double setpoint, double momentOfInertia, double maxOutput)
             {
-                //double lastSampleTime = Loop.LastSampleTime;
-                //if (lastSampleTime < sampleTime)
-                //{
-                //    double changeRate = (input - Loop.Input) / (sampleTime - Loop.LastSampleTime);
-                //    double effectiveTorque = changeRate * I;
-                //    AdjustedMaxTorque = effectiveTorque;
-                    //double torqueDif = effectiveTorque - Loop.Output;
-                    //double scaledDif = torqueDif * Loop.MaxOutput / Loop.Output;
-                    //if (!(double.IsNaN(scaledDif) || double.IsInfinity(scaledDif)))
-                    //{
-                    //    AdjustedMaxTorque = TorqueAdjust.Update(scaledDif) + maxOutput;
-                    //    if (TorqueAdjust.Values.Count < TorqueAdjust.SampleLimit / 10) { AdjustedMaxTorque = maxOutput; }
-                    //}
-                    //else { AdjustedMaxTorque = maxOutput; }
-                //}
-                //else { AdjustedMaxTorque = 0; }
-
                 I = momentOfInertia;
 
                 Loop.Ki = momentOfInertia * Math.Pow(4.0 / ts, 2);
                 Loop.Kp = 2 * Math.Pow(momentOfInertia * Loop.Ki, 0.5);
                 return Loop.Update(sampleTime, input, setpoint, maxOutput);
-                //double error = setpoint - input;
-                //Error = error;
-                //Ki = momentOfInertia * Math.Pow(4.0 / ts, 2);
-                //Kp = 2 * Math.Pow(momentOfInertia * Ki, 0.5);
-                //if (LastSampleTime < sampleTime && Ki != 0)
-                //{
-                //    double dt = sampleTime - LastSampleTime;
-                //    ErrorSum += error * dt;
-                //}
-                //double pTerm = error * Kp;
-                //double iTerm = ErrorSum * Ki;
-                //Output = pTerm + iTerm;
-                //if (Math.Abs(Output) > maxOutput)
-                //{
-                //    Output = Math.Sign(Output) * maxOutput;
-                //    if (LastSampleTime < sampleTime && Ki != 0) ErrorSum = (Output - Math.Max(Math.Min(pTerm, maxOutput), -maxOutput)) / Ki;
-                //}
-                //Input = input;
-                //Setpoint = setpoint;
-                //MaxOutput = maxOutput;
-                //LastSampleTime = sampleTime;
-                //I = momentOfInertia;
-                //return Output;
             }
 
             public void ResetI()
             {
                 Loop.ResetI();
-                //ErrorSum = 0;
-                //LastSampleTime = double.MaxValue;
             }
 
             public override string ToString()
@@ -1654,112 +1596,12 @@ namespace kOS.Binding
             }
         }
 
-        //public class RatePI
-        //{
-        //    public double Kp { get; private set; }
-        //    public double Ki { get; private set; }
-        //    public double Kd { get; private set; }
-        //    public double Input { get; private set; }
-        //    public double Setpoint { get; private set; }
-        //    public double Error { get; private set; }
-        //    public double Output { get; private set; }
-        //    public double MaxOutput { get; private set; }
-        //    private double tr;
-        //    public double Tr
-        //    {
-        //        get { return tr; }
-        //        set
-        //        {
-        //            tr = value;
-        //        }
-        //    }
-        //    private double ts;
-        //    public double Ts
-        //    {
-        //        get { return ts; }
-        //        set
-        //        {
-        //            ts = value;
-        //        }
-        //    }
-        //    public double ErrorSum { get; private set; }
-        //    public double LastSampleTime { get; private set; }
-
-        //    public RatePI()
-        //    {
-        //        Ki = 1;
-        //        Kp = 1;
-        //        Ts = 0.25;
-        //        Tr = 0;
-        //        Output = 0;
-        //        Error = 0;
-        //        ErrorSum = 0;
-        //        LastSampleTime = double.MaxValue;
-        //    }
-
-        //    public double Update(double sampleTime, double input, double setpoint, double maxOutput)
-        //    {
-        //        double error = setpoint - input;
-        //        Input = input;
-        //        //if (Math.Abs((Error - error) / Math.Max(Math.Abs(error), Math.Abs(Error))) > 0.5) ResetI();
-        //        //Ki = 0.25;
-        //        Ki = 0.1;
-        //        Kp = 1.0;
-        //        //Kp = 0.5;
-        //        Kd = 0.05;
-        //        double dTerm = 0;
-        //        if (LastSampleTime < sampleTime && Ki != 0)
-        //        {
-        //            double dt = sampleTime - LastSampleTime;
-        //            if (dt < 1)
-        //            {
-        //                ErrorSum += error * dt;
-        //                //dTerm = (error - Error) / dt * Kd;
-        //            }
-        //        }
-        //        if (Math.Sign(error) != Math.Sign(ErrorSum)) { Ki *= 2; }
-        //        double pTerm = error * Kp;
-        //        double iTerm = ErrorSum * Ki;
-        //        Output = pTerm + iTerm + dTerm;
-        //        if (Math.Abs(Output) > maxOutput)
-        //        {
-        //            Output = Math.Sign(Output) * maxOutput;
-        //            if (Ki != 0 && LastSampleTime < sampleTime) ErrorSum = (Output - Math.Max(Math.Min(pTerm + dTerm, maxOutput), -maxOutput)) / Ki;
-        //            if (Math.Abs(ErrorSum) > maxOutput)
-        //            {
-        //                if (Ki != 0 && LastSampleTime < sampleTime) ErrorSum = Output / Ki;
-        //            }
-        //        }
-        //        Error = error;
-        //        MaxOutput = maxOutput;
-        //        LastSampleTime = sampleTime;
-        //        return Output;
-        //    }
-
-        //    public void ResetI()
-        //    {
-        //        //kOS.Safe.Utilities.SafeHouse.Logger.LogWarning("Resetting ErrorSum");
-        //        ErrorSum = 0;
-        //        LastSampleTime = double.MaxValue;
-        //    }
-
-        //    public override string ToString()
-        //    {
-        //        return string.Format("RatePI[Kp:{0}, Ki:{1}, Kd:{7}, Output:{2}, Error:{3}, ErrorSum:{4}, Tr:{5}, Ts:{6}",
-        //            Kp, Ki, Output, Error, ErrorSum, Tr, Ts, Kd);
-        //    }
-
-        //    public string ToCSVString()
-        //    {
-        //        return string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
-        //            LastSampleTime, Error, ErrorSum, Output, Kp, Ki, Kd, MaxOutput);
-        //    }
-        //}
-
         public class MovingAverage
         {
             public List<double> Values { get; set; }
+
             public int SampleLimit { get; set; }
+
             public MovingAverage()
             {
                 Values = new List<double>();
