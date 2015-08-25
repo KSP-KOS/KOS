@@ -253,6 +253,10 @@ namespace kOS.Binding
             AddSuffix("PITCHTS", new SetSuffix<double>(() => pitchPI.Ts, value => pitchPI.Ts = value));
             AddSuffix("YAWTS", new SetSuffix<double>(() => yawPI.Ts, value => yawPI.Ts = value));
             AddSuffix("ROLLTS", new SetSuffix<double>(() => rollPI.Ts, value => rollPI.Ts = value));
+            AddSuffix("ANGLEERROR", new Suffix<double>(() => phi));
+            AddSuffix("PITCHERROR", new Suffix<double>(() => phiPitch));
+            AddSuffix("YAWERROR", new Suffix<double>(() => phiYaw));
+            AddSuffix("ROLLERROR", new Suffix<double>(() => phiRoll));
         }
 
         public void EnableControl(SharedObjects shared)
