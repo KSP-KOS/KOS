@@ -262,6 +262,10 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.UNSET, regex);
             Tokens.Add(TokenType.UNSET);
 
+            regex = new Regex(@"\b__ARGBOTTOM\b");
+            Patterns.Add(TokenType.__ARGBOTTOM, regex);
+            Tokens.Add(TokenType.__ARGBOTTOM);
+
             regex = new Regex(@"\(");
             Patterns.Add(TokenType.BRACKETOPEN, regex);
             Tokens.Add(TokenType.BRACKETOPEN);
@@ -630,28 +634,29 @@ namespace kOS.Safe.Compilation.KS
             SHUTDOWN= 117,
             FOR     = 118,
             UNSET   = 119,
-            BRACKETOPEN= 120,
-            BRACKETCLOSE= 121,
-            CURLYOPEN= 122,
-            CURLYCLOSE= 123,
-            SQUAREOPEN= 124,
-            SQUARECLOSE= 125,
-            COMMA   = 126,
-            COLON   = 127,
-            IN      = 128,
-            ARRAYINDEX= 129,
-            ALL     = 130,
-            IDENTIFIER= 131,
-            FILEIDENT= 132,
-            INTEGER = 133,
-            DOUBLE  = 134,
-            STRING  = 135,
-            EOI     = 136,
-            ATSIGN  = 137,
-            LAZYGLOBAL= 138,
-            EOF     = 139,
-            WHITESPACE= 140,
-            COMMENTLINE= 141
+            __ARGBOTTOM= 120,
+            BRACKETOPEN= 121,
+            BRACKETCLOSE= 122,
+            CURLYOPEN= 123,
+            CURLYCLOSE= 124,
+            SQUAREOPEN= 125,
+            SQUARECLOSE= 126,
+            COMMA   = 127,
+            COLON   = 128,
+            IN      = 129,
+            ARRAYINDEX= 130,
+            ALL     = 131,
+            IDENTIFIER= 132,
+            FILEIDENT= 133,
+            INTEGER = 134,
+            DOUBLE  = 135,
+            STRING  = 136,
+            EOI     = 137,
+            ATSIGN  = 138,
+            LAZYGLOBAL= 139,
+            EOF     = 140,
+            WHITESPACE= 141,
+            COMMENTLINE= 142
     }
 
     public class Token

@@ -80,6 +80,7 @@ namespace kOS.Safe.Compilation
         STOREEXIST     = 0x5c,
         PUSHDELEGATE   = 0x5d,
         BRANCHTRUE     = 0x5e,
+        ARGBOTTOM      = 0x5f,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -403,8 +404,21 @@ namespace kOS.Safe.Compilation
         {
             return mapOpcodeToArgs[GetType()];
         }
-    }
         
+        /// <summary>
+        /// A utility function that will do a cpu.PopValue, but with an additional check to ensure
+        /// the value atop the stack isn't the arg bottom marker.
+        /// </summary>
+        /// <returns>object popped if it all worked fine</returns>
+        protected object PopValueAssert(ICpu cpu, bool barewordOkay = false)
+        {
+            object returnValue = cpu.PopValue(barewordOkay);
+            if (returnValue != null && returnValue.GetType() == OpcodeCall.ARG_MARKER_TYPE)
+                throw new KOSArgumentMismatchException("Called with not enough arguments.");
+            return returnValue;
+        }
+    }
+
     public abstract class BinaryOpcode : Opcode
     {
         protected object Argument1 { get; private set; }
@@ -458,7 +472,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
+            object value = PopValueAssert(cpu);
             var identifier = (string)cpu.PopStack();
             cpu.SetValue(identifier, value);
         }
@@ -480,7 +494,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
+            object value = PopValueAssert(cpu);
             var identifier = (string)cpu.PopStack();
             cpu.SetValueExists(identifier, value);
         }
@@ -513,7 +527,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
+            object value = PopValueAssert(cpu);
             var identifier = (string)cpu.PopStack();
             cpu.SetNewLocal(identifier, value);
         }
@@ -540,7 +554,7 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object value = cpu.PopValue();
+            object value = PopValueAssert(cpu);
             var identifier = (string)cpu.PopStack();
             cpu.SetGlobal(identifier, value);
         }
@@ -589,7 +603,7 @@ namespace kOS.Safe.Compilation
                 // it wasn't a method (i.e. leaving the parentheses off the call).  The
                 // member returned is a delegate that needs to be called to get its actual
                 // value.  Borrowing the same routine that OpcodeCall uses for its method calls:
-                cpu.PushStack(OpcodeCall.ARG_MARKER_STRING);
+                cpu.PushStack(new KOSArgMarkerType());
                 value = OpcodeCall.ExecuteDelegate(cpu, (Delegate)value);
             }
 
@@ -1103,7 +1117,7 @@ namespace kOS.Safe.Compilation
         protected override string Name { get { return "call"; } }
         public override ByteCode Code { get { return ByteCode.CALL; } }
 
-        public const string ARG_MARKER_STRING = "$<argstart>"; // guaranteed to not be a legal variable name.
+        public static Type ARG_MARKER_TYPE = typeof(KOSArgMarkerType); // Don't query with reflection at runtime - get the type just once and keep it here.
 
         /// <summary>
         /// The Direct property flags which mode the opcode will be operating in:<br/>
@@ -1190,7 +1204,7 @@ namespace kOS.Safe.Compilation
                 for (digDepth = 0; (! foundBottom) && digDepth < cpu.GetStackSize() ; ++digDepth)
                 {
                     object arg = cpu.PeekValue(digDepth);
-                    if (arg is string && arg.ToString() == ARG_MARKER_STRING)
+                    if (arg != null && arg.GetType() == OpcodeCall.ARG_MARKER_TYPE)
                         foundBottom = true;
                     else
                         ++argsCount;
@@ -1302,7 +1316,7 @@ namespace kOS.Safe.Compilation
             for (int i = paramArray.Length - 1 ; i >= 0 ; --i)
             {
                 object arg = cpu.PopValue();
-                if (arg is string && ((string)arg) == ARG_MARKER_STRING)
+                if (arg != null && arg.GetType() == OpcodeCall.ARG_MARKER_TYPE)
                     throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i+1));
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
@@ -1339,7 +1353,7 @@ namespace kOS.Safe.Compilation
             while (cpu.GetStackSize() > 0 && !foundArgMarker)
             {
                 object marker = cpu.PopValue();
-                if (marker is string && ((string)marker) == ARG_MARKER_STRING)
+                if (marker != null && marker.GetType() == OpcodeCall.ARG_MARKER_TYPE)
                     foundArgMarker = true;
                 else
                     ++numExtraArgs;
@@ -1387,7 +1401,7 @@ namespace kOS.Safe.Compilation
         {
             List<object> args = new List<object>();
             object arg = cpu.PopValue();
-            while (arg != null && (!(arg.ToString().Equals(ARG_MARKER_STRING))))
+            while (arg == null || arg.GetType() != OpcodeCall.ARG_MARKER_TYPE)
             {
                 args.Add(arg);
 
@@ -1403,7 +1417,7 @@ namespace kOS.Safe.Compilation
                 arg = cpu.PopValue();
             }
             // Push the arg marker back on again.
-            cpu.PushStack(ARG_MARKER_STRING);
+            cpu.PushStack(new KOSArgMarkerType());
             // Push the arguments back on again, which will invert their order:
             foreach (object item in args)
                 cpu.PushStack(item);
@@ -1474,27 +1488,15 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
 
-            // Return value should be atop the stack - we have to pop it so that
-            // we can reach the arg start marker under it:
+            // Return value should be atop the stack.
+            // Pop it, eval it, and push it back,
+            // i.e. if the statement was RETURN X, and X is 2, then you want
+            // it to return the number 2, not the variable name $x, which could
+            // be a variable local to this function which is about to go out of scope
+            // so the caller can't access it:
             object returnVal = cpu.PopValue();
-
-            // The next thing on the stack under the return value should be the marker that indicated where
-            // the parameters started.  It should be thrown away now.  If the next thing is NOT the marker
-            // of where the parameters started, that is proof the stack is misaligned, probably because the
-            // number of args passed didn't match the number of DECLARE PARAMETER statements in the function:
-            string shouldBeArgMarker = cpu.PopStack() as string;
-
-            if ( (shouldBeArgMarker == null) || (!(shouldBeArgMarker.Equals(OpcodeCall.ARG_MARKER_STRING))) )
-            {
-                throw new KOSArgumentMismatchException(
-                    string.Format("(detected when returning from function and the stack still had {0} on it)", 
-                    (shouldBeArgMarker ?? "a non-string value"))
-                );
-            }
-            // If the proper argument marker was found, then it's all okay, so put the return value
-            // back, where it belongs, now that the arg start marker was popped off:
             cpu.PushStack(returnVal);
-            
+
             // Now, after the eval was done, NOW finally pop the scope, after we don't need local vars anymore:
             if( Depth > 0 )
                 OpcodePopScope.DoPopScope(cpu, Depth);
@@ -1659,6 +1661,25 @@ namespace kOS.Safe.Compilation
         }
     }
 
+    /// <summary>
+    /// Asserts that the next thing on the stack is the argument bottom marker,
+    /// and it pops it off.  If it's not the argument bottom, it throws an error.
+    /// </summary>
+    public class OpcodeArgBottom : Opcode
+    {
+        protected override string Name { get { return "argbottom"; } }
+        public override ByteCode Code { get { return ByteCode.ARGBOTTOM; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            object shouldBeArgMarker = cpu.PopStack();
+
+            if ( (shouldBeArgMarker == null) || (!(shouldBeArgMarker.GetType() == OpcodeCall.ARG_MARKER_TYPE)) )
+            {
+                throw new KOSArgumentMismatchException(string.Format("Called with too many arguments."));
+            }
+        }
+    }
     
     public class OpcodeDup : Opcode
     {

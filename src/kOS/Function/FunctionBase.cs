@@ -133,7 +133,7 @@ namespace kOS.Function
         protected void AssertArgBottomAndConsume(SharedObjects shared)
         {
             object shouldBeBottom = shared.Cpu.PopStack();
-            if (shouldBeBottom is string && ((string)shouldBeBottom).Equals(OpcodeCall.ARG_MARKER_STRING))
+            if (shouldBeBottom != null && shouldBeBottom.GetType() == OpcodeCall.ARG_MARKER_TYPE)
                 return; // Assert passed.
             
             throw new KOSArgumentMismatchException("Too many arguments were passed to " + GetFuncName());
@@ -153,7 +153,7 @@ namespace kOS.Function
             while (stillInStack && !found)
             {
                 object peekItem = shared.Cpu.PeekRaw(depth, out stillInStack);
-                if (stillInStack && peekItem is string && ((string)peekItem).Equals(OpcodeCall.ARG_MARKER_STRING))
+                if (stillInStack && peekItem != null && peekItem.GetType() == OpcodeCall.ARG_MARKER_TYPE)
                     found = true;
                 else
                     ++depth;
@@ -173,7 +173,7 @@ namespace kOS.Function
         protected object PopValueAssert(SharedObjects shared, bool barewordOkay = false)
         {
             object returnValue = shared.Cpu.PopValue(barewordOkay);
-            if (returnValue is string && ((string)returnValue).Equals(OpcodeCall.ARG_MARKER_STRING))
+            if (returnValue != null && returnValue.GetType() == OpcodeCall.ARG_MARKER_TYPE)
                 throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
             return returnValue;
         }
@@ -187,7 +187,7 @@ namespace kOS.Function
         protected object PopStackAssert(SharedObjects shared)
         {
             object returnValue = shared.Cpu.PopStack();
-            if (returnValue is string && ((string)returnValue).Equals(OpcodeCall.ARG_MARKER_STRING))
+            if (returnValue != null && returnValue.GetType() == OpcodeCall.ARG_MARKER_TYPE)
                 throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
             return returnValue;
         }

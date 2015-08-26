@@ -8,7 +8,7 @@ namespace kOS.Execution
 {
     public class Stack : IStack
     {
-        private const int MAX_STACK_SIZE = 1000;
+        private const int MAX_STACK_SIZE = 3000;
         private readonly List<object> stack = new List<object>();
         private int stackPointer = -1;
 
@@ -17,7 +17,7 @@ namespace kOS.Execution
             ThrowIfInvalid(item);
 
             stackPointer++;
-            if (stackPointer < MAX_STACK_SIZE)
+            if (stack.Count < MAX_STACK_SIZE)
             {
                 stack.Insert(stackPointer, ProcessItem(item));
             }

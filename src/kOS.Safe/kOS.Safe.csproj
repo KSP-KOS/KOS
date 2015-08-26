@@ -124,6 +124,7 @@
     <Compile Include="Execution\IProgramContext.cs" />
     <Compile Include="Execution\IStack.cs" />
     <Compile Include="Execution\IUserDelegate.cs" />
+    <Compile Include="Execution\KOSArgMarkerType.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\UserDelegate.cs" />
     <Compile Include="Execution\Variable.cs" />
@@ -186,7 +187,7 @@
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
       cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
-      (test -h "$(SolutionDir)/../KSPdirlink" &#x26;&#x26; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
+      (test -h "$(SolutionDir)/../KSPdirlink" &amp;&amp; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
       xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y

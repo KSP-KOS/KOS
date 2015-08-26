@@ -127,7 +127,13 @@ namespace kOS.Screen
 
             try
             {
-                CompilerOptions options = new CompilerOptions { LoadProgramsInSameAddressSpace = false, FuncManager = Shared.FunctionManager };
+                CompilerOptions options = new CompilerOptions
+                {
+                    LoadProgramsInSameAddressSpace = false,
+                    FuncManager = Shared.FunctionManager,
+                    IsCalledFromRun = false
+                };
+
                 List<CodePart> commandParts = Shared.ScriptHandler.Compile("interpreter history", commandHistoryIndex, commandText, "interpreter", options);
                 if (commandParts == null) return;
 
