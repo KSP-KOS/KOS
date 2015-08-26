@@ -18,7 +18,10 @@ namespace kOS.Function
             switch (listType)
             {
                 case "bodies":
-                    list = ListValue.CreateList(FlightGlobals.fetch.bodies);
+                    foreach (CelestialBody cBody in FlightGlobals.fetch.bodies)
+                    {                        
+                        list.Add(new BodyTarget(cBody, shared));
+                    }
                     break;
                 case "targets":
                     foreach (var vessel in FlightGlobals.Vessels)
