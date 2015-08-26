@@ -1117,9 +1117,6 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.declare_stmt:
                     VisitDeclareStatement(node);
                     break;
-                case TokenType.__ARGBOTTOM:
-                    VisitArgBottomStatement(node);
-                    break;
                 case TokenType.switch_stmt:
                     VisitSwitchStatement(node);
                     break;
@@ -2477,22 +2474,7 @@ namespace kOS.Safe.Compilation.KS
             // Note: DECLARE FUNCTION is dealt with entirely during
             // PreprocessDeclareStatement, with nothing for VisitNode to do.
         }
-        
-        /// <summary>
-        /// Note that an ArgBottom Statement doesn't really exist in Kerboscript.  It's a fake
-        /// statement inserted into the Statement Block by Compiler.cs itself in order to
-        /// mark the spot where the lastmost PARAMETER statement was seen.
-        /// <br/><br/>
-        /// The location where the statement was inserted is where the arg bottom check will be
-        /// inserted into the code.
-        /// </summary>
-        /// <param name="node"></param>
-        private void VisitArgBottomStatement(ParseNode node)
-        {
-            NodeStartHousekeeping(node);
-            AddOpcode(new OpcodeArgBottom());
-        }
-        
+                
         /// <summary>
         /// Make the right sort of opcodestore-ish opcode for what storage
         /// mode we're in.

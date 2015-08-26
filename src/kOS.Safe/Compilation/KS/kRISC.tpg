@@ -62,10 +62,6 @@ SHUTDOWN     -> @"(?i)\bshutdown\b";
 FOR          -> @"(?i)\bfor\b";
 UNSET        -> @"(?i)\bunset\b";
 
-// THIS ONE IS MAGIC.  It is not meant to exist in a kerboscript program, but be inserted by the compiler
-// as a 'fake' bit of syntax after parsing, to help it remember where the last PARAMETER statement was in the block:
-__ARGBOTTOM  -> @"\b__ARGBOTTOM\b";
-
 //Generic
 BRACKETOPEN  -> @"\(";
 BRACKETCLOSE -> @"\)";
