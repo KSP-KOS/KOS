@@ -22,6 +22,7 @@ namespace kOS.Safe.Execution
         void SetValueExists(string identifier, object value);
         void SetNewLocal(string identifier, object value);
         void SetGlobal(string identifier, object value);
+        bool IdentifierExistsInScope(string identifier);
         string DumpVariables();
         void RemoveVariable(string identifier);
         int InstructionPointer { get; set; }
