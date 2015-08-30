@@ -119,6 +119,7 @@
     <Compile Include="Exceptions\KOSUndefinedIdentifierException.cs" />
     <Compile Include="Exceptions\KOSWaitInValidHereException.cs" />
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
+    <Compile Include="Exceptions\KOSWrongControlValueType.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Execution\ICpu.cs" />
     <Compile Include="Execution\IProgramContext.cs" />
@@ -186,7 +187,7 @@
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
       cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
-      (test -h "$(SolutionDir)/../KSPdirlink" &#x26;&#x26; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
+      (test -h "$(SolutionDir)/../KSPdirlink" &amp;&amp; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
       xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
