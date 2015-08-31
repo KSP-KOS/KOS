@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-// TODO: Change this namespace to something specific to your plugin here.
 namespace kOS.AddOns.InfernalRobotics
 {
     public class IRWrapper

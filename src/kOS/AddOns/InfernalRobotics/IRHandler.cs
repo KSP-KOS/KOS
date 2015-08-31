@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace kOS.AddOns.InfernalRobotics
 {
