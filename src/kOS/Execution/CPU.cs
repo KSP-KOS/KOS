@@ -1,16 +1,16 @@
-﻿using kOS.Persistence;
-using kOS.Safe.Binding;
-using kOS.Safe.Compilation;
-using kOS.Safe.Exceptions;
-using kOS.Safe.Execution;
-using kOS.Safe.Persistence;
-using kOS.Safe.Utilities;
-using kOS.Suffixed;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using kOS.Persistence;
+using kOS.Safe.Binding;
+using kOS.Safe.Compilation;
+using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
+using kOS.Safe.Utilities;
+using kOS.Suffixed;
+using Debug = kOS.Safe.Utilities.Debug;
 
 namespace kOS.Execution
 {
@@ -91,7 +91,7 @@ namespace kOS.Execution
             {
                 shared.Screen.ClearScreen();
                 string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n", Core.VersionInfo);
-                List<string> nags = Safe.Utilities.Debug.GetPendingNags();
+                List<string> nags = Debug.GetPendingNags();
                 if (nags.Count > 0)
                 {
                     bootMessage +=
@@ -448,7 +448,7 @@ namespace kOS.Execution
         {
             if (searchReport != null)
                 searchReport.Clear();
-            Int16 rawStackDepth = 0;
+            short rawStackDepth = 0;
             while (true) /*all of this loop's exits are explicit break or return statements*/
             {
                 object stackItem;
@@ -1153,7 +1153,7 @@ namespace kOS.Execution
 
         public void OnLoad(ConfigNode node)
         {
-            // the resoring of global variables has been removed for now.
+            // the restoring of global variables has been removed for now.
         }
 
         public void Dispose()
