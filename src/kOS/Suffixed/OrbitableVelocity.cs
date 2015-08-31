@@ -24,7 +24,7 @@ namespace kOS.Suffixed
 
         private void InitializeSuffixes()
         {
-            AddSuffix("ORBIT", new Suffix<Vector>(() => Orbital));
+            AddSuffix(new[] {"OBT", "ORBIT"}, new Suffix<Vector>(() => Orbital));
             AddSuffix("SURFACE", new Suffix<Vector>(() => Surface));
         }
 

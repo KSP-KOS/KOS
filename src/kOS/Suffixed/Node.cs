@@ -103,7 +103,7 @@ namespace kOS.Suffixed
                 }
             ));
 
-            AddSuffix("ORBIT", new Suffix<OrbitInfo>(() =>
+            AddSuffix(new[] {"OBT", "ORBIT"}, new Suffix<OrbitInfo>(() =>
             {
                 if (nodeRef == null) throw new Exception("Node must be added to flight plan first");
                 return new OrbitInfo(nodeRef.nextPatch, shared);
