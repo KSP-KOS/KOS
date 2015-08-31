@@ -730,10 +730,20 @@ namespace kOS.Safe.Compilation
     
     public abstract class BranchOpcode : Opcode
     {
-        // This is identical to the base DestinationLabel, except that it has
-        // the MLFIeld attached to it:
+        // This stores EITHER the label OR the relative distance,
+        // depending, in the KSM packed file.  Only if the label is
+        // an empty string does it store the integer distance instead.
         [MLField(1,true)]
-        public override string DestinationLabel {get;set;}
+        public object KSMLabelOrDistance
+        {
+            get
+            {
+                if (DestinationLabel == String.Empty)
+                    return Distance;
+                else
+                    return DestinationLabel;
+            }
+        }
         
         public int Distance { get; set; }
 
@@ -742,12 +752,19 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for BranchOpcode seems to be missing.  Version mismatch?");
-            DestinationLabel = (string)(fields[0]);  // should throw exception if not an integer-ish type.
+            // This class does something strange - it expects the KSM file to encode EITHER a string label OR an integer,
+            // but never both.  Therefore it has to determine the type of the arg to decide which it was:
+            if (fields[0] is string)
+                DestinationLabel = (string)(fields[0]);
+            else
+                Distance = (int)fields[0];
         }
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", Name, Distance);
+            // Format string forces printing of '+/-' sign always, even for positive numbers.
+            // The intent is to make it more clear that this is a relative, not absolute jump:
+            return string.Format("{0} {1:+#;-#;+0}", Name, Distance);
         }
     }
 
