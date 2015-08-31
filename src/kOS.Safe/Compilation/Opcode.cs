@@ -738,7 +738,7 @@ namespace kOS.Safe.Compilation
         {
             get
             {
-                if (DestinationLabel == String.Empty)
+                if (DestinationLabel == string.Empty)
                     return Distance;
                 else
                     return DestinationLabel;
