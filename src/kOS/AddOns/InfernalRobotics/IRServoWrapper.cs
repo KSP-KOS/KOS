@@ -48,6 +48,8 @@ namespace kOS.AddOns.InfernalRobotics
             AddSuffix("STOP", new NoArgsSuffix(Stop));
 
             AddSuffix("MOVETO", new TwoArgsSuffix<float, float>(MoveTo));
+
+            AddSuffix("PART", new Suffix<kOS.Suffixed.Part.PartValue>(GetPart));
         }
 
         
@@ -84,6 +86,18 @@ namespace kOS.AddOns.InfernalRobotics
         public void MoveTo(float position, float speed)
         {
             servo.MoveTo(position, speed);
+        }
+
+        public kOS.Suffixed.Part.PartValue GetPart()
+        {
+            var v = shared.Vessel;
+
+            var p = v.Parts.Find (s => s.craftID == servo.UID);
+
+            if (p != null)
+                return new kOS.Suffixed.Part.PartValue (p, shared);
+            else
+                return null;
         }
     }
 }
