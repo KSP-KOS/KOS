@@ -124,6 +124,7 @@ namespace kOS.Binding
         private List<ThrustVector> allEngineVectors = new List<ThrustVector>();
 
         #region doubles
+        public const double RadToDeg = 180d / Math.PI;
 
         private double accPitch = 0;
         private double accYaw = 0;
@@ -148,6 +149,13 @@ namespace kOS.Binding
 
         private double renderMultiplier = 50;
 
+        public double PitchTorqueAdjust { get; set; }
+        public double YawTorqueAdjust { get; set; }
+        public double RollTorqueAdjust { get; set; }
+
+        public double PitchTorqueFactor { get; set; }
+        public double YawTorqueFactor { get; set; }
+        public double RollTorqueFactor { get; set; }
         #endregion doubles
 
         private Quaternion vesselRotation;
@@ -233,6 +241,15 @@ namespace kOS.Binding
             pitchTorqueWriter = null;
             yawTorqueWriter = null;
             rollTorqueWriter = null;
+
+            PitchTorqueAdjust = 0;
+            YawTorqueAdjust = 0;
+            RollTorqueAdjust = 0;
+
+            PitchTorqueFactor = 1;
+            YawTorqueFactor = 1;
+            RollTorqueFactor = 1;
+
             InitializeSuffixes();
         }
 
@@ -253,10 +270,16 @@ namespace kOS.Binding
             AddSuffix("PITCHTS", new SetSuffix<double>(() => pitchPI.Ts, value => pitchPI.Ts = value));
             AddSuffix("YAWTS", new SetSuffix<double>(() => yawPI.Ts, value => yawPI.Ts = value));
             AddSuffix("ROLLTS", new SetSuffix<double>(() => rollPI.Ts, value => rollPI.Ts = value));
-            AddSuffix("ANGLEERROR", new Suffix<double>(() => phi));
-            AddSuffix("PITCHERROR", new Suffix<double>(() => phiPitch));
-            AddSuffix("YAWERROR", new Suffix<double>(() => phiYaw));
-            AddSuffix("ROLLERROR", new Suffix<double>(() => phiRoll));
+            AddSuffix("ANGLEERROR", new Suffix<double>(() => phi * RadToDeg));
+            AddSuffix("PITCHERROR", new Suffix<double>(() => phiPitch * RadToDeg));
+            AddSuffix("YAWERROR", new Suffix<double>(() => phiYaw * RadToDeg));
+            AddSuffix("ROLLERROR", new Suffix<double>(() => phiRoll * RadToDeg));
+            AddSuffix("PITCHTORQUEADJUST", new SetSuffix<double>(() => PitchTorqueAdjust, value => PitchTorqueAdjust = value));
+            AddSuffix("YAWTORQUEADJUST", new SetSuffix<double>(() => YawTorqueAdjust, value => YawTorqueAdjust = value));
+            AddSuffix("ROLLTORQUEADJUST", new SetSuffix<double>(() => RollTorqueAdjust, value => RollTorqueAdjust = value));
+            AddSuffix("PITCHTORQUEFACTOR", new SetSuffix<double>(() => PitchTorqueFactor, value => PitchTorqueFactor = value));
+            AddSuffix("YAWTORQUEFACTOR", new SetSuffix<double>(() => YawTorqueFactor, value => YawTorqueFactor = value));
+            AddSuffix("ROLLTORQUEFACTOR", new SetSuffix<double>(() => RollTorqueFactor, value => RollTorqueFactor = value));
         }
 
         public void EnableControl(SharedObjects shared)
@@ -837,6 +860,10 @@ namespace kOS.Binding
             controlTorque.z += controlEngineTorque.z;
             controlTorque.y += controlEngineTorque.y;
 
+            controlTorque.x = (controlTorque.x + PitchTorqueAdjust) * PitchTorqueFactor;
+            controlTorque.z = (controlTorque.z + YawTorqueAdjust) * YawTorqueFactor;
+            controlTorque.y = (controlTorque.y + RollTorqueAdjust) * RollTorqueFactor;
+
             //if (momentOfInertia.x < 4.5) controlTorque.x /= 10d;
             //if (momentOfInertia.z < 4.5) controlTorque.z /= 10d;
             //if (momentOfInertia.y < 4.5) controlTorque.y /= 10d;
@@ -851,16 +878,16 @@ namespace kOS.Binding
         public void UpdatePrediction()
         {
             // calculate phi and pitch, yaw, roll components of phi (angular error)
-            phi = Vector3d.Angle(vesselForward, targetForward) * Math.PI / 180d;
+            phi = Vector3d.Angle(vesselForward, targetForward) / RadToDeg;
             if (Vector3d.Angle(vesselTop, targetForward) > 90)
                 phi *= -1;
-            phiPitch = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselStarboard, targetForward)) * Math.PI / 180d;
+            phiPitch = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselStarboard, targetForward)) / RadToDeg;
             if (Vector3d.Angle(vesselTop, Vector3d.Exclude(vesselStarboard, targetForward)) > 90)
                 phiPitch *= -1;
-            phiYaw = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselTop, targetForward)) * Math.PI / 180d;
+            phiYaw = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselTop, targetForward)) / RadToDeg;
             if (Vector3d.Angle(vesselStarboard, Vector3d.Exclude(vesselTop, targetForward)) > 90)
                 phiYaw *= -1;
-            phiRoll = Vector3d.Angle(vesselTop, Vector3d.Exclude(vesselForward, targetTop)) * Math.PI / 180d;
+            phiRoll = Vector3d.Angle(vesselTop, Vector3d.Exclude(vesselForward, targetTop)) / RadToDeg;
             if (Vector3d.Angle(vesselStarboard, Vector3d.Exclude(vesselForward, targetTop)) > 90)
                 phiRoll *= -1;
 
@@ -903,16 +930,16 @@ namespace kOS.Binding
         public void UpdatePredictionPI()
         {
             // calculate phi and pitch, yaw, roll components of phi (angular error)
-            phi = Vector3d.Angle(vesselForward, targetForward) * Math.PI / 180d;
+            phi = Vector3d.Angle(vesselForward, targetForward) / RadToDeg;
             if (Vector3d.Angle(vesselTop, targetForward) > 90)
                 phi *= -1;
-            phiPitch = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselStarboard, targetForward)) * Math.PI / 180d;
+            phiPitch = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselStarboard, targetForward)) / RadToDeg;
             if (Vector3d.Angle(vesselTop, Vector3d.Exclude(vesselStarboard, targetForward)) > 90)
                 phiPitch *= -1;
-            phiYaw = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselTop, targetForward)) * Math.PI / 180d;
+            phiYaw = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselTop, targetForward)) / RadToDeg;
             if (Vector3d.Angle(vesselStarboard, Vector3d.Exclude(vesselTop, targetForward)) > 90)
                 phiYaw *= -1;
-            phiRoll = Vector3d.Angle(vesselTop, Vector3d.Exclude(vesselForward, targetTop)) * Math.PI / 180d;
+            phiRoll = Vector3d.Angle(vesselTop, Vector3d.Exclude(vesselForward, targetTop)) / RadToDeg;
             if (Vector3d.Angle(vesselStarboard, Vector3d.Exclude(vesselForward, targetTop)) > 90)
                 phiRoll *= -1;
 
@@ -1213,10 +1240,10 @@ namespace kOS.Binding
         public void PrintDebug()
         {
             shared.Screen.ClearScreen();
-            shared.Screen.Print(string.Format("phi: {0}", phi * 180d / Math.PI));
-            shared.Screen.Print(string.Format("phiRoll: {0}", phiRoll * 180d / Math.PI));
+            shared.Screen.Print(string.Format("phi: {0}", phi * RadToDeg));
+            shared.Screen.Print(string.Format("phiRoll: {0}", phiRoll * RadToDeg));
             shared.Screen.Print("    Pitch Values:");
-            shared.Screen.Print(string.Format("phiPitch: {0}", phiPitch * 180d / Math.PI));
+            shared.Screen.Print(string.Format("phiPitch: {0}", phiPitch * RadToDeg));
             //shared.Screen.Print(string.Format("phiPitch: {0}", deltaRotation.eulerAngles.x));
             shared.Screen.Print(string.Format("I pitch: {0}", momentOfInertia.x));
             shared.Screen.Print(string.Format("torque pitch: {0}", controlTorque.x));
@@ -1227,7 +1254,7 @@ namespace kOS.Binding
             shared.Screen.Print(string.Format("tgtPitchTorque: {0}", tgtPitchTorque));
             shared.Screen.Print(string.Format("accPitch: {0}", accPitch));
             shared.Screen.Print("    Yaw Values:");
-            shared.Screen.Print(string.Format("phiYaw: {0}", phiYaw * 180d / Math.PI));
+            shared.Screen.Print(string.Format("phiYaw: {0}", phiYaw * RadToDeg));
             //shared.Screen.Print(string.Format("phiYaw: {0}", deltaRotation.eulerAngles.y));
             shared.Screen.Print(string.Format("I yaw: {0}", momentOfInertia.z));
             shared.Screen.Print(string.Format("torque yaw: {0}", controlTorque.z));
@@ -1238,7 +1265,7 @@ namespace kOS.Binding
             shared.Screen.Print(string.Format("tgtYawTorque: {0}", tgtYawTorque));
             shared.Screen.Print(string.Format("accYaw: {0}", accYaw));
             shared.Screen.Print("    Roll Values:");
-            shared.Screen.Print(string.Format("phiRoll: {0}", phiRoll * 180d / Math.PI));
+            shared.Screen.Print(string.Format("phiRoll: {0}", phiRoll * RadToDeg));
             //shared.Screen.Print(string.Format("phiRoll: {0}", deltaRotation.eulerAngles.z));
             shared.Screen.Print(string.Format("I roll: {0}", momentOfInertia.y));
             shared.Screen.Print(string.Format("torque roll: {0}", controlTorque.y));
