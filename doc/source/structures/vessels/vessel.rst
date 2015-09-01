@@ -43,7 +43,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
      :attr:`DRYMASS`                       scalar (metric tons)      Mass of the ship with no resources
      :attr:`VERTICALSPEED`                 scalar (m/s)              How fast the ship is moving "up"
-     :attr:`GROUNDSPEED`                  scalar (m/s)              How fast the ship is moving "horizontally"
+     :attr:`GROUNDSPEED`                   scalar (m/s)              How fast the ship is moving "horizontally"
      :attr:`AIRSPEED`                      scalar (m/s)              How fast the ship is moving relative to the air
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
      :attr:`SHIPNAME`                      string                    The name of the vessel
