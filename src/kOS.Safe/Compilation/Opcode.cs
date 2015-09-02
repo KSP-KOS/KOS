@@ -1487,7 +1487,6 @@ namespace kOS.Safe.Compilation
         
         public override void Execute(ICpu cpu)
         {
-
             // Return value should be atop the stack.
             // Pop it, eval it, and push it back,
             // i.e. if the statement was RETURN X, and X is 2, then you want
@@ -1495,6 +1494,22 @@ namespace kOS.Safe.Compilation
             // be a variable local to this function which is about to go out of scope
             // so the caller can't access it:
             object returnVal = cpu.PopValue();
+
+            // Now dig down through the stack until the argbottom is found.
+            // anything still leftover above that should be unread parameters we
+            // should throw away:
+            object shouldBeArgMarker = (int)0; // just a temp to force the loop to execute at least once.
+            while (shouldBeArgMarker == null || (shouldBeArgMarker.GetType() != OpcodeCall.ARG_MARKER_TYPE))
+            {
+                if (cpu.GetStackSize() <= 0)
+                {
+                    throw new KOSArgumentMismatchException(
+                        string.Format("Something is wrong with the stack - no arg bottom mark when doing a return.  This is an internal problem with kOS")
+                    );
+                }
+                shouldBeArgMarker = cpu.PopStack();
+            }
+            
             cpu.PushStack(returnVal);
 
             // Now, after the eval was done, NOW finally pop the scope, after we don't need local vars anymore:
@@ -1662,8 +1677,11 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
-    /// Asserts that the next thing on the stack is the argument bottom marker,
-    /// and it pops it off.  If it's not the argument bottom, it throws an error.
+    /// Asserts that the next thing on the stack is the argument bottom marker.
+    /// If it's not the argument bottom, it throws an error.
+    /// This does NOT pop the value from the stack - it merely peeks at the stack top.
+    /// The actual popping of the arg bottom value comes later when doing a return,
+    /// or a program bottom exit.
     /// </summary>
     public class OpcodeArgBottom : Opcode
     {
@@ -1672,9 +1690,10 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object shouldBeArgMarker = cpu.PopStack();
+            bool worked;
+            object shouldBeArgMarker = cpu.PeekRaw(0,out worked);
 
-            if ( (shouldBeArgMarker == null) || (!(shouldBeArgMarker.GetType() == OpcodeCall.ARG_MARKER_TYPE)) )
+            if ( !worked || (shouldBeArgMarker == null) || (!(shouldBeArgMarker.GetType() == OpcodeCall.ARG_MARKER_TYPE)) )
             {
                 throw new KOSArgumentMismatchException(string.Format("Called with too many arguments."));
             }
