@@ -162,6 +162,7 @@ namespace kOS.Binding
             {
                 flightControl.Unbind();
             }
+            SteeringManager.RemoveInstance(currentVessel.id);
         }
 
         public void Dispose()
@@ -469,6 +470,7 @@ namespace kOS.Binding
                 control = GetControllerByVessel(vessel);
                 if (steeringManager != null)
                 {
+                    steeringManager = SteeringManager.SwapInstance(shared, steeringManager);
                     steeringManager.Update(vessel);
                 }
             }

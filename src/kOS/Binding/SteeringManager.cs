@@ -18,7 +18,11 @@ namespace kOS.Binding
             string key = shared.Vessel.id.ToString();
             if (AllInstances.Keys.Contains(key))
             {
-                AllInstances[key].SubscribedParts.Add(shared.KSPPart.flightID);
+                SteeringManager instance = AllInstances[key];
+                if (!instance.SubscribedParts.Contains(shared.KSPPart.flightID))
+                {
+                    AllInstances[key].SubscribedParts.Add(shared.KSPPart.flightID);
+                }
                 return AllInstances[key];
             }
             SteeringManager sm = new SteeringManager(shared);
@@ -36,6 +40,59 @@ namespace kOS.Binding
                 return AllInstances[key];
             }
             return null;
+        }
+
+        public static SteeringManager SwapInstance(SharedObjects shared, SteeringManager oldInstance)
+        {
+            if (shared.Vessel.id.ToString() == oldInstance.KeyId) return oldInstance;
+            if (oldInstance.SubscribedParts.Contains(shared.KSPPart.flightID)) oldInstance.SubscribedParts.Remove(shared.KSPPart.flightID);
+            SteeringManager instance = GetInstance(shared);
+            if (oldInstance.enabled)
+            {
+                if (oldInstance.partId == shared.KSPPart.flightID)
+                {
+                    oldInstance.DisableControl();
+                    instance.EnableControl(shared);
+                    instance.Value = oldInstance.Value;
+                    instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
+                    instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
+                    instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
+                    instance.ShowSteeringStats = oldInstance.ShowSteeringStats;
+                    instance.ShowThrustVectors = oldInstance.ShowThrustVectors;
+                    instance.PitchTorqueAdjust = oldInstance.PitchTorqueAdjust;
+                    instance.PitchTorqueFactor = oldInstance.PitchTorqueFactor;
+                    instance.RollTorqueAdjust = oldInstance.RollTorqueAdjust;
+                    instance.RollTorqueFactor = oldInstance.RollTorqueFactor;
+                    instance.WriteCSVFiles = oldInstance.WriteCSVFiles;
+                    instance.YawTorqueAdjust = oldInstance.YawTorqueAdjust;
+                    instance.YawTorqueFactor = oldInstance.YawTorqueFactor;
+                }
+            }
+            else
+            {
+                instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
+                instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
+                instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
+                instance.ShowSteeringStats = oldInstance.ShowSteeringStats;
+                instance.ShowThrustVectors = oldInstance.ShowThrustVectors;
+                instance.PitchTorqueAdjust = oldInstance.PitchTorqueAdjust;
+                instance.PitchTorqueFactor = oldInstance.PitchTorqueFactor;
+                instance.RollTorqueAdjust = oldInstance.RollTorqueAdjust;
+                instance.RollTorqueFactor = oldInstance.RollTorqueFactor;
+                instance.WriteCSVFiles = oldInstance.WriteCSVFiles;
+                instance.YawTorqueAdjust = oldInstance.YawTorqueAdjust;
+                instance.YawTorqueFactor = oldInstance.YawTorqueFactor;
+            }
+            return instance;
+        }
+
+        public static void RemoveInstance(Guid vesselId)
+        {
+            if (AllInstances.ContainsKey(vesselId.ToString()))
+            {
+                AllInstances[vesselId.ToString()].Dispose();
+                AllInstances.Remove(vesselId.ToString());
+            }
         }
 
         public string KeyId;
@@ -57,12 +114,12 @@ namespace kOS.Binding
                 enabled = value;
                 if (enabled)
                 {
-                    InitVectorRenderers();
                     ResetIs();
                 }
                 else
                 {
-                    HideVectorsRenderers();
+                    UpdateVectorRenders();
+
                     if (pitchRateWriter != null) pitchRateWriter.Dispose();
                     if (yawRateWriter != null) yawRateWriter.Dispose();
                     if (rollRateWriter != null) rollRateWriter.Dispose();
@@ -120,6 +177,8 @@ namespace kOS.Binding
         private MovingAverage pitchRate = new MovingAverage() { SampleLimit = 5 };
         private MovingAverage yawRate = new MovingAverage() { SampleLimit = 5 };
         private MovingAverage rollRate = new MovingAverage() { SampleLimit = 5 };
+
+        public MovingAverage AverageDuration = new MovingAverage() { SampleLimit = 60 };
 
         private List<ThrustVector> allEngineVectors = new List<ThrustVector>();
 
@@ -280,6 +339,7 @@ namespace kOS.Binding
             AddSuffix("PITCHTORQUEFACTOR", new SetSuffix<double>(() => PitchTorqueFactor, value => PitchTorqueFactor = value));
             AddSuffix("YAWTORQUEFACTOR", new SetSuffix<double>(() => YawTorqueFactor, value => YawTorqueFactor = value));
             AddSuffix("ROLLTORQUEFACTOR", new SetSuffix<double>(() => RollTorqueFactor, value => RollTorqueFactor = value));
+            AddSuffix("AVERAGEDURATION", new Suffix<double>(() => AverageDuration.GetValue()));
         }
 
         public void EnableControl(SharedObjects shared)
@@ -310,264 +370,6 @@ namespace kOS.Binding
                 Width = width
             };
             return rend;
-        }
-
-        public void InitVectorRenderers()
-        {
-            if (vForward != null)
-            {
-                vForward.SetShow(false);
-            }
-            Color c = UnityEngine.Color.red;
-            vForward = InitVectorRenderer(c, 0.5, shared);
-            vForward = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1
-            };
-            //vForward.SetLabel("vForward");
-            vForward.SetShow(true);
-            if (vTop != null)
-            {
-                vTop.SetShow(false);
-            }
-            vTop = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1
-            };
-            //vTop.SetLabel("vTop");
-            vTop.SetShow(true);
-            if (vStarboard != null)
-            {
-                vStarboard.SetShow(false);
-            }
-            vStarboard = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1
-            };
-            //vStarboard.SetLabel("vStarboard");
-            vStarboard.SetShow(true);
-
-            if (vTgtForward != null)
-            {
-                vTgtForward.SetShow(false);
-            }
-            c = UnityEngine.Color.blue;
-            //c = new UnityEngine.Color(1.0f, 0.647f, 0f);
-            vTgtForward = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1.5
-            };
-            //vTgtForward.SetLabel("vTgtForward");
-            vTgtForward.SetShow(true);
-            if (vTgtTop != null)
-            {
-                vTgtTop.SetShow(false);
-            }
-            vTgtTop = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1.5
-            };
-            //vTgtTop.SetLabel("vTgtTop");
-            vTgtTop.SetShow(true);
-            if (vTgtStarboard != null)
-            {
-                vTgtStarboard.SetShow(false);
-            }
-            vTgtStarboard = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1.5
-            };
-            //vTgtStarboard.SetLabel("vTgtStarboard");
-            vTgtStarboard.SetShow(true);
-
-            if (vWorldX != null)
-            {
-                vWorldX.SetShow(false);
-            }
-            c = UnityEngine.Color.white;
-            vWorldX = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(50, 0, 0),
-                Width = 0.25
-            };
-            //vWorldX.SetLabel("vWorldX");
-            vWorldX.SetShow(true);
-            if (vWorldY != null)
-            {
-                vWorldY.SetShow(false);
-            }
-            vWorldY = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 50, 0),
-                Width = 0.25
-            };
-            //vWorldY.SetLabel("vWorldY");
-            vWorldY.SetShow(true);
-            if (vWorldZ != null)
-            {
-                vWorldZ.SetShow(false);
-            }
-            vWorldZ = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 50),
-                Width = 0.25
-            };
-            //vWorldZ.SetLabel("vWorldZ");
-            vWorldZ.SetShow(true);
-
-            if (vOmegaX != null)
-            {
-                vOmegaX.SetShow(false);
-            }
-            c = UnityEngine.Color.cyan;
-            vOmegaX = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1
-            };
-            //vOmegaX.SetLabel("vOmegaX");
-            vOmegaX.SetShow(true);
-            if (vOmegaY != null)
-            {
-                vOmegaY.SetShow(false);
-            }
-            vOmegaY = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1
-            };
-            //vOmegaY.SetLabel("vOmegaY");
-            vOmegaY.SetShow(true);
-            if (vOmegaZ != null)
-            {
-                vOmegaZ.SetShow(false);
-            }
-            vOmegaZ = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1
-            };
-            //vOmegaZ.SetLabel("vOmegaZ");
-            vOmegaZ.SetShow(true);
-
-            if (vTgtTorqueX != null)
-            {
-                vTgtTorqueX.SetShow(false);
-            }
-            c = UnityEngine.Color.green;
-            vTgtTorqueX = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1.5
-            };
-            //vTgtTorqueX.SetLabel("vTgtTorqueX");
-            vTgtTorqueX.SetShow(true);
-            if (vTgtTorqueY != null)
-            {
-                vTgtTorqueY.SetShow(false);
-            }
-            vTgtTorqueY = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1.5
-            };
-            //vTgtTorqueY.SetLabel("vTgtTorqueY");
-            vTgtTorqueY.SetShow(true);
-            if (vTgtTorqueZ != null)
-            {
-                vTgtTorqueZ.SetShow(false);
-            }
-            vTgtTorqueZ = new VectorRenderer(shared.UpdateHandler, shared)
-            {
-                Color = new RgbaColor(c.r, c.g, c.b),
-                Start = new Vector3d(0, 0, 0),
-                Vector = new Vector3d(0, 0, 0),
-                Width = 1.5
-            };
-            //vTgtTorqueZ.SetLabel("vTgtTorqueZ");
-            vTgtTorqueZ.SetShow(true);
-
-            foreach (string key in vEngines.Keys.ToArray())
-            {
-                if (vEngines[key] != null) vEngines[key].SetShow(false);
-                vEngines.Remove(key);
-            }
-            foreach (string key in vRcs.Keys.ToArray())
-            {
-                if (vRcs[key] != null) vRcs[key].SetShow(false);
-                vRcs.Remove(key);
-            }
-        }
-
-        public void HideVectorsRenderers()
-        {
-            if (vForward != null)
-            {
-                vForward.SetShow(false);
-                vTop.SetShow(false);
-                vStarboard.SetShow(false);
-
-                vTgtForward.SetShow(false);
-                vTgtTop.SetShow(false);
-                vTgtStarboard.SetShow(false);
-
-                vTgtTorqueX.SetShow(false);
-                vTgtTorqueY.SetShow(false);
-                vTgtTorqueZ.SetShow(false);
-
-                vWorldX.SetShow(false);
-                vWorldY.SetShow(false);
-                vWorldZ.SetShow(false);
-
-                vOmegaX.SetShow(false);
-                vOmegaY.SetShow(false);
-                vOmegaZ.SetShow(false);
-            }
-
-            foreach (string key in vEngines.Keys.ToArray())
-            {
-                if (vEngines[key] != null) vEngines[key].SetShow(false);
-                vEngines.Remove(key);
-            }
-            foreach (string key in vRcs.Keys.ToArray())
-            {
-                if (vRcs[key] != null) vRcs[key].SetShow(false);
-                vRcs.Remove(key);
-            }
         }
 
         private void ResetIs()
@@ -602,10 +404,14 @@ namespace kOS.Binding
             update(c);
         }
 
+        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+
         private void update(FlightCtrlState c)
         {
             if (Value != null)
             {
+                sw.Reset();
+                sw.Start();
                 UpdateStateVectors();
                 UpdateTorque();
                 //UpdatePrediction();
@@ -614,6 +420,8 @@ namespace kOS.Binding
                 if (ShowSteeringStats) PrintDebug();
                 if (WriteCSVFiles) WriteCSVs();
                 UpdateVectorRenders();
+                sw.Stop();
+                AverageDuration.Update((double)sw.ElapsedTicks / (double)System.TimeSpan.TicksPerMillisecond);
             }
         }
 
@@ -625,7 +433,7 @@ namespace kOS.Binding
                 return Direction.LookRotation((Vector)Value, vesselUp);
             else if (Value is string)
             {
-                if (string.Equals((string)Value, "kill", StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals((string)Value, "KILL", StringComparison.OrdinalIgnoreCase))
                 {
                     return new Direction(vesselRotation);
                 }
@@ -677,9 +485,9 @@ namespace kOS.Binding
 
             // omega is angular rotation.  need to correct the signs to agree with the facing axis
             omega = Quaternion.Inverse(vesselRotation) * shared.Vessel.rigidbody.angularVelocity;
-            omega.x *= -1;
+            omega.x *= -1; //positive values pull the nose to the starboard.
             //omega.y *= -1;
-            omega.z *= -1;
+            omega.z *= -1; //positive values pull the nose up.
         }
 
         public void UpdateTorque()
@@ -1011,15 +819,54 @@ namespace kOS.Binding
 
         public void UpdateVectorRenders()
         {
-            if (ShowFacingVectors)
+            if (ShowFacingVectors && enabled)
             {
+                if (vForward == null)
+                {
+                    vForward = InitVectorRenderer(UnityEngine.Color.red, 1, shared);
+                }
+                if (vTop == null)
+                {
+                    vTop = InitVectorRenderer(UnityEngine.Color.red, 1, shared);
+                }
+                if (vStarboard == null)
+                {
+                    vStarboard = InitVectorRenderer(UnityEngine.Color.red, 1, shared);
+                }
+
                 vForward.Vector = vesselForward * renderMultiplier;
                 vTop.Vector = vesselTop * renderMultiplier;
                 vStarboard.Vector = vesselStarboard * renderMultiplier;
 
+                if (vTgtForward == null)
+                {
+                    vTgtForward = InitVectorRenderer(UnityEngine.Color.blue, 1, shared);
+                }
+                if (vTgtTop == null)
+                {
+                    vTgtTop = InitVectorRenderer(UnityEngine.Color.blue, 1, shared);
+                }
+                if (vTgtStarboard == null)
+                {
+                    vTgtStarboard = InitVectorRenderer(UnityEngine.Color.blue, 1, shared);
+                }
+
                 vTgtForward.Vector = targetForward * renderMultiplier * 0.75f;
                 vTgtTop.Vector = targetTop * renderMultiplier * 0.75f;
                 vTgtStarboard.Vector = targetStarboard * renderMultiplier * 0.75f;
+
+                if (vWorldX == null)
+                {
+                    vWorldX = InitVectorRenderer(UnityEngine.Color.white, 1, shared);
+                }
+                if (vWorldY == null)
+                {
+                    vWorldY = InitVectorRenderer(UnityEngine.Color.white, 1, shared);
+                }
+                if (vWorldZ == null)
+                {
+                    vWorldZ = InitVectorRenderer(UnityEngine.Color.white, 1, shared);
+                }
 
                 vWorldX.Vector = new Vector3d(1, 0, 0) * renderMultiplier * 2;
                 vWorldY.Vector = new Vector3d(0, 1, 0) * renderMultiplier * 2;
@@ -1039,27 +886,98 @@ namespace kOS.Binding
             }
             else
             {
-                if (vForward.GetShow()) vForward.SetShow(false);
-                if (vTop.GetShow()) vTop.SetShow(false);
-                if (vStarboard.GetShow()) vStarboard.SetShow(false);
+                if (vForward != null)
+                {
+                    if (vForward.GetShow()) vForward.SetShow(false);
+                    vForward.Dispose();
+                    vForward = null;
+                }
+                if (vTop != null)
+                {
+                    if (vTop.GetShow()) vTop.SetShow(false);
+                    vTop.Dispose();
+                    vTop = null;
+                }
+                if (vStarboard != null)
+                {
+                    if (vStarboard.GetShow()) vStarboard.SetShow(false);
+                    vStarboard.Dispose();
+                    vStarboard = null;
+                }
 
-                if (vTgtForward.GetShow()) vTgtForward.SetShow(false);
-                if (vTgtTop.GetShow()) vTgtTop.SetShow(false);
-                if (vTgtStarboard.GetShow()) vTgtStarboard.SetShow(false);
+                if (vTgtForward != null)
+                {
+                    if (vTgtForward.GetShow()) vTgtForward.SetShow(false);
+                    vTgtForward.Dispose();
+                    vTgtForward = null;
+                }
+                if (vTgtTop != null)
+                {
+                    if (vTgtTop.GetShow()) vTgtTop.SetShow(false);
+                    vTgtTop.Dispose();
+                    vTgtTop = null;
+                }
+                if (vTgtStarboard != null)
+                {
+                    if (vTgtStarboard.GetShow()) vTgtStarboard.SetShow(false);
+                    vTgtStarboard.Dispose();
+                    vTgtStarboard = null;
+                }
 
-                if (vWorldX.GetShow()) vWorldX.SetShow(false);
-                if (vWorldY.GetShow()) vWorldY.SetShow(false);
-                if (vWorldZ.GetShow()) vWorldZ.SetShow(false);
+                if (vWorldX != null)
+                {
+                    if (vWorldX.GetShow()) vWorldX.SetShow(false);
+                    vWorldX.Dispose();
+                    vWorldX = null;
+                }
+                if (vWorldY != null)
+                {
+                    if (vWorldY.GetShow()) vWorldY.SetShow(false);
+                    vWorldY.Dispose();
+                    vWorldY = null;
+                }
+                if (vWorldZ != null)
+                {
+                    if (vWorldZ.GetShow()) vWorldZ.SetShow(false);
+                    vWorldZ.Dispose();
+                    vWorldZ = null;
+                }
             }
 
-            if (ShowAngularVectors)
+            if (ShowAngularVectors && enabled)
             {
+                if (vOmegaX == null)
+                {
+                    vOmegaX = InitVectorRenderer(UnityEngine.Color.cyan, 1, shared);
+                }
+                if (vOmegaY == null)
+                {
+                    vOmegaY = InitVectorRenderer(UnityEngine.Color.cyan, 1, shared);
+                }
+                if (vOmegaZ == null)
+                {
+                    vOmegaZ = InitVectorRenderer(UnityEngine.Color.cyan, 1, shared);
+                }
+
                 vOmegaX.Vector = vesselTop * omega.x * renderMultiplier * 100f;
                 vOmegaX.Start = vesselForward * renderMultiplier;
                 vOmegaY.Vector = vesselStarboard * omega.y * renderMultiplier * 100f;
                 vOmegaY.Start = vesselForward * renderMultiplier;
                 vOmegaZ.Vector = vesselStarboard * omega.z * renderMultiplier * 100f;
                 vOmegaZ.Start = vesselTop * renderMultiplier;
+
+                if (vTgtTorqueX == null)
+                {
+                    vTgtTorqueX = InitVectorRenderer(UnityEngine.Color.green, 1, shared);
+                }
+                if (vTgtTorqueY == null)
+                {
+                    vTgtTorqueY = InitVectorRenderer(UnityEngine.Color.green, 1, shared);
+                }
+                if (vTgtTorqueZ == null)
+                {
+                    vTgtTorqueZ = InitVectorRenderer(UnityEngine.Color.green, 1, shared);
+                }
 
                 vTgtTorqueX.Vector = vesselTop * tgtPitchOmega * renderMultiplier * 100f;
                 vTgtTorqueX.Start = vesselForward * renderMultiplier;
@@ -1081,16 +999,46 @@ namespace kOS.Binding
             }
             else
             {
-                if (vOmegaX.GetShow()) vOmegaX.SetShow(false);
-                if (vOmegaY.GetShow()) vOmegaY.SetShow(false);
-                if (vOmegaZ.GetShow()) vOmegaZ.SetShow(false);
+                if (vOmegaX != null)
+                {
+                    if (vOmegaX.GetShow()) vOmegaX.SetShow(false);
+                    vOmegaX.Dispose();
+                    vOmegaX = null;
+                }
+                if (vOmegaY != null)
+                {
+                    if (vOmegaY.GetShow()) vOmegaY.SetShow(false);
+                    vOmegaY.Dispose();
+                    vOmegaY = null;
+                }
+                if (vOmegaZ != null)
+                {
+                    if (vOmegaZ.GetShow()) vOmegaZ.SetShow(false);
+                    vOmegaZ.Dispose();
+                    vOmegaZ = null;
+                }
 
-                if (vTgtTorqueX.GetShow()) vTgtTorqueX.SetShow(false);
-                if (vTgtTorqueY.GetShow()) vTgtTorqueY.SetShow(false);
-                if (vTgtTorqueZ.GetShow()) vTgtTorqueZ.SetShow(false);
+                if (vTgtTorqueX != null)
+                {
+                    if (vTgtTorqueX.GetShow()) vTgtTorqueX.SetShow(false);
+                    vTgtTorqueX.Dispose();
+                    vTgtTorqueX = null;
+                }
+                if (vTgtTorqueY != null)
+                {
+                    if (vTgtTorqueY.GetShow()) vTgtTorqueY.SetShow(false);
+                    vTgtTorqueY.Dispose();
+                    vTgtTorqueY = null;
+                }
+                if (vTgtTorqueZ != null)
+                {
+                    if (vTgtTorqueZ.GetShow()) vTgtTorqueZ.SetShow(false);
+                    vTgtTorqueZ.Dispose();
+                    vTgtTorqueZ = null;
+                }
             }
 
-            if (ShowThrustVectors)
+            if (ShowThrustVectors && enabled)
             {
                 foreach (var tv in allEngineVectors)
                 {
@@ -1098,15 +1046,7 @@ namespace kOS.Binding
                     string key = tv.PartId;
                     if (!vEngines.ContainsKey(key))
                     {
-                        Color c = UnityEngine.Color.yellow;
-                        var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
-                        {
-                            Color = new RgbaColor(c.r, c.g, c.b),
-                            Start = new Vector3d(0, 0, 0),
-                            Vector = new Vector3d(0, 0, 0),
-                            Width = 0.25
-                        };
-                        //vecdraw.SetLabel(key);
+                        var vecdraw = InitVectorRenderer(UnityEngine.Color.yellow, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1116,14 +1056,7 @@ namespace kOS.Binding
                     key = tv.PartId + "gimbaled";
                     if (!vEngines.ContainsKey(key))
                     {
-                        Color c = UnityEngine.Color.magenta;
-                        var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
-                        {
-                            Color = new RgbaColor(c.r, c.g, c.b),
-                            Start = new Vector3d(0, 0, 0),
-                            Vector = new Vector3d(0, 0, 0),
-                            Width = 0.25
-                        };
+                        var vecdraw = InitVectorRenderer(UnityEngine.Color.magenta, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1133,14 +1066,7 @@ namespace kOS.Binding
                     key = tv.PartId + "torque";
                     if (!vEngines.ContainsKey(key))
                     {
-                        Color c = UnityEngine.Color.red;
-                        var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
-                        {
-                            Color = new RgbaColor(c.r, c.g, c.b),
-                            Start = new Vector3d(0, 0, 0),
-                            Vector = new Vector3d(0, 0, 0),
-                            Width = 0.25
-                        };
+                        var vecdraw = InitVectorRenderer(UnityEngine.Color.red, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1150,14 +1076,7 @@ namespace kOS.Binding
                     key = tv.PartId + "control";
                     if (!vEngines.ContainsKey(key))
                     {
-                        Color c = UnityEngine.Color.blue;
-                        var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
-                        {
-                            Color = new RgbaColor(c.r, c.g, c.b),
-                            Start = new Vector3d(0, 0, 0),
-                            Vector = new Vector3d(0, 0, 0),
-                            Width = 0.25
-                        };
+                        var vecdraw = InitVectorRenderer(UnityEngine.Color.blue, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1167,14 +1086,7 @@ namespace kOS.Binding
                     key = tv.PartId + "position";
                     if (!vEngines.ContainsKey(key))
                     {
-                        Color c = UnityEngine.Color.cyan;
-                        var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
-                        {
-                            Color = new RgbaColor(c.r, c.g, c.b),
-                            Start = new Vector3d(0, 0, 0),
-                            Vector = new Vector3d(0, 0, 0),
-                            Width = 0.25
-                        };
+                        var vecdraw = InitVectorRenderer(UnityEngine.Color.cyan, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1183,27 +1095,21 @@ namespace kOS.Binding
             }
             else
             {
-                foreach (VectorRenderer vr in vEngines.Values)
+                foreach (string key in vEngines.Keys)
                 {
-                    if (vr.GetShow()) vr.SetShow(false);
+                    vEngines[key].SetShow(false);
+                    vEngines.Remove(key);
                 }
             }
 
-            if (ShowRCSVectors)
+            if (ShowRCSVectors && enabled)
             {
                 foreach (var force in rcsVectors)
                 {
                     string key = force.ID;
                     if (!vRcs.ContainsKey(key))
                     {
-                        Color c = UnityEngine.Color.magenta;
-                        var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
-                        {
-                            Color = new RgbaColor(c.r, c.g, c.b),
-                            Start = new Vector3d(0, 0, 0),
-                            Vector = new Vector3d(0, 0, 0),
-                            Width = 0.25
-                        };
+                        var vecdraw = InitVectorRenderer(UnityEngine.Color.magenta, 0.25, shared);
                         vecdraw.SetShow(true);
                         vRcs.Add(key, vecdraw);
                     }
@@ -1213,14 +1119,7 @@ namespace kOS.Binding
                     key = force.ID + "torque";
                     if (!vRcs.ContainsKey(key))
                     {
-                        Color c = UnityEngine.Color.yellow;
-                        var vecdraw = new VectorRenderer(shared.UpdateHandler, shared)
-                        {
-                            Color = new RgbaColor(c.r, c.g, c.b),
-                            Start = new Vector3d(0, 0, 0),
-                            Vector = new Vector3d(0, 0, 0),
-                            Width = 0.1
-                        };
+                        var vecdraw = InitVectorRenderer(UnityEngine.Color.yellow, 0.25, shared);
                         vecdraw.SetShow(true);
                         vRcs.Add(key, vecdraw);
                     }
@@ -1230,9 +1129,10 @@ namespace kOS.Binding
             }
             else
             {
-                foreach (VectorRenderer vr in vRcs.Values)
+                foreach (string key in vRcs.Keys)
                 {
-                    if (vr.GetShow()) vr.SetShow(false);
+                    vRcs[key].SetShow(false);
+                    vRcs.Remove(key);
                 }
             }
         }
@@ -1275,9 +1175,9 @@ namespace kOS.Binding
             shared.Screen.Print(string.Format("rollOmega: {0}", omega.z));
             shared.Screen.Print(string.Format("tgtRollTorque: {0}", tgtRollTorque));
             shared.Screen.Print(string.Format("accRoll: {0}", accRoll));
-            shared.Screen.Print("    Dictionary Counts:");
-            shared.Screen.Print(string.Format("vRCS count: {0}", vRcs.Count));
-            shared.Screen.Print(string.Format("vEngines count: {0}", vEngines.Count));
+            shared.Screen.Print("    Processing Stats:");
+            shared.Screen.Print(string.Format("Average Duration: {0}", AverageDuration.GetValue()));
+            shared.Screen.Print(string.Format("Based on count: {0}", AverageDuration.Values.Count));
         }
 
         public void WriteCSVs()
@@ -1337,13 +1237,13 @@ namespace kOS.Binding
             if (SubscribedParts.Contains(shared.KSPPart.flightID)) SubscribedParts.Remove(shared.KSPPart.flightID);
             if (SubscribedParts.Count == 0)
             {
+                if (AllInstances.ContainsKey(KeyId)) AllInstances.Remove(KeyId);
                 this.Dispose();
             }
         }
 
-        public void Dispose()
+        public void DisposeVectorRenderers()
         {
-            HideVectorsRenderers();
             if (vForward != null)
             {
                 vForward.Dispose();
@@ -1386,10 +1286,10 @@ namespace kOS.Binding
                 vTgtTorqueY.Dispose();
                 vTgtTorqueY = null;
             }
-            if (vForward != null)
+            if (vTgtTorqueZ != null)
             {
                 vTgtTorqueZ.Dispose();
-                vTop = null;
+                vTgtTorqueZ = null;
             }
 
             if (vWorldX != null)
@@ -1442,6 +1342,11 @@ namespace kOS.Binding
                 }
                 vRcs.Remove(key);
             }
+        }
+
+        public void Dispose()
+        {
+            DisposeVectorRenderers();
 
             if (pitchRateWriter != null) pitchRateWriter.Dispose();
             if (yawRateWriter != null) yawRateWriter.Dispose();
@@ -1644,13 +1549,19 @@ namespace kOS.Binding
                 if (!(double.IsInfinity(value) || double.IsNaN(value)))
                 {
                     Values.Add(value);
-                    while (Values.Count >= SampleLimit)
+                    while (Values.Count > SampleLimit)
                     {
                         Values.RemoveAt(0);
                     }
                     return Values.Average();
                 }
                 return value;
+            }
+
+            public double GetValue()
+            {
+                if (Values.Count > 0) return Values.Average();
+                else return 0;
             }
         }
     }
