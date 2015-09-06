@@ -522,13 +522,11 @@ namespace kOS.Safe.Compilation.KS
             if (IsLockStatement(node))
             {
                 funcIdentifier = lastSubNode.Nodes[1].Token.Text;
-                Console.WriteLine("eraseme: Identified lock with identifier " + funcIdentifier);
                 bodyNode = lastSubNode.Nodes[3];
             }
             else if (IsDefineFunctionStatement(node))
             {
                 funcIdentifier = lastSubNode.Nodes[1].Token.Text;
-                Console.WriteLine("eraseme: Identified userfunc with identifier " + funcIdentifier);
                 bodyNode = lastSubNode.Nodes[2];
             }
             else
@@ -2244,7 +2242,6 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             if (node.Nodes[1].Token.Type == TokenType.ALL)
             {
-                Console.WriteLine("eraseme: VisitUnlockNode starting, for unlock ALL.");
                 // unlock all locks
                 foreach (UserFunction userFuncObject in context.UserFunctions.GetUserFunctionList())
                     if (! userFuncObject.IsFunction)
@@ -2253,16 +2250,13 @@ namespace kOS.Safe.Compilation.KS
             else
             {
                 string lockIdentifier = node.Nodes[1].Token.Text;
-                Console.WriteLine("eraseme: VisitUnlockNode starting, for unlock " + lockIdentifier);
                 UserFunction lockObject = FindExistingUserFunction(lockIdentifier, node);
                 if (lockObject == null)
                 {
-                    Console.WriteLine("eraseme: VisitUnlockNode thinks the lockObject is null.");
                     // If it is null, it's okay to silently do nothing.  It just means someone tried to unlock
                     // an identifier that was never locked in the first place, at least not in this scope or a parent scope.
                     return;
                 }
-                Console.WriteLine("eraseme: VisitUnlockNode thinks the lockObject does exist.");
                 UnlockIdentifier(lockObject);
             }
         }
