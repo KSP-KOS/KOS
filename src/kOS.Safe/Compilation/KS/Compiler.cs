@@ -187,7 +187,6 @@ namespace kOS.Safe.Compilation.KS
             ParseNode rootNode = tree.Nodes[0];
             LowercaseConversions(rootNode);
             RearrangeParseNodes(rootNode);
-            Console.WriteLine("eraseme: dumping parse tree:\n" + tree.PrintTree());
             TraverseScopeBranch(rootNode);
             IterateUserFunctions(rootNode, IdentifyUserFunctions);
             PreProcessStatements(rootNode);
