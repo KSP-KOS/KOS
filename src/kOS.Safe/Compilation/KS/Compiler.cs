@@ -187,6 +187,7 @@ namespace kOS.Safe.Compilation.KS
             ParseNode rootNode = tree.Nodes[0];
             LowercaseConversions(rootNode);
             RearrangeParseNodes(rootNode);
+            Console.WriteLine("eraseme: dumping parse tree:\n" + tree.PrintTree());
             TraverseScopeBranch(rootNode);
             IterateUserFunctions(rootNode, IdentifyUserFunctions);
             PreProcessStatements(rootNode);
@@ -245,6 +246,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction_block:
                 case TokenType.instruction:
                 case TokenType.if_stmt:
+                case TokenType.fromloop_stmt:
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.on_stmt:
@@ -361,9 +363,12 @@ namespace kOS.Safe.Compilation.KS
             initBlock.Nodes.Add(untilNode); // parent already assigned by initBlock.CreateNode() above.
             
             // The init block is now actually the entire loop, having been exploded and unrolled into its
-            // new form, make that be our only node node:
+            // new form, make that be our only node:
             node.Nodes.Clear();
             node.Nodes.Add(initBlock);  // initBlock's parent already points at node to begin with.
+            
+            // The FROM loop node is still in the parent's list, but it contains this new rearranged sub-tree
+            // instead of its original.
         }
         
         private void PreProcessStatements(ParseNode node)
@@ -380,6 +385,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction_block:
                 case TokenType.instruction:
                 case TokenType.if_stmt:
+                case TokenType.fromloop_stmt:
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.declare_function_clause:

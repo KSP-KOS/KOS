@@ -108,6 +108,9 @@ namespace kOS.Safe.Compilation
 
         private void ReplaceLabels(List<Opcode> program)
         {
+            Console.WriteLine("eraseme: At the start of ReplaceLabels, the program looks like this:_______");
+            Console.WriteLine(kOS.Safe.Utilities.Debug.GetCodeFragment(program));//eraseme
+            
             var labels = new Dictionary<string, int>();
 
             // get the index of every label
