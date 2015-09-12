@@ -21,6 +21,9 @@ A single resource value a thing holds (i.e. fuel, electric charge, etc). This is
         * - :attr:`AMOUNT`
           - scalar
           - Amount of this resource left
+        * - :attr:`DENSITY`
+          - scalar
+          - Density of this resource
         * - :attr:`CAPACITY`
           - scalar
           - Maximum amount of this resource
@@ -45,6 +48,16 @@ A single resource value a thing holds (i.e. fuel, electric charge, etc). This is
     :type: scalar
 
     The value of how much resource is left.
+
+.. attribute:: Resource:DENSITY
+
+    :access: Get only
+    :type: scalar
+
+    The density value of this resource, expressed in Megagrams f mass
+    per Unit of resource.  (i.e. a value of 0.005 would mean that each
+    unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
+    the usual unit that most mass in the game is represented in.)
 
 .. attribute:: Resource:CAPACITY
 

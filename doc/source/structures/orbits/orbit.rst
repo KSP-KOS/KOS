@@ -198,7 +198,7 @@ Structure
     :type: string
     :access: Get only
 
-    Describes the way in which this orbit will end and become a different orbit, with a value taken `from this list <transitions>`_.
+    Describes the way in which this orbit will end and become a different orbit, with a value taken :ref:`from this list <transitions>`.
 
 .. attribute:: Orbit:POSITION
 

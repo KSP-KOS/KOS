@@ -11,12 +11,6 @@ If you store this in a variable and wait, the numbers are frozen in time and won
 
 .. structure:: VesselSensors
 
-    .. warning::
-
-        **BUG**
-
-        This information is currenlty being read from the Active Vessel even when the Active Vessel is not the :ref:`CPU Vessel <cpu vessel>`. This comment will be removed when that bug is fixed.
-
     .. list-table:: Members
         :header-rows: 1
         :widths: 1 1 3

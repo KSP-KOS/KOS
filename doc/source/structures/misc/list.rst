@@ -272,3 +272,37 @@ A 2-D array is a :struct:`List` who's elements are themselves also :struct:`List
     
     PRINT FOO#2#0.   // Prints 3.14159, using deprecated syntax.
 
+Comparing two lists
+-------------------
+
+Note that if you have two lists, LISTA and LISTB, and you tried to compare
+if they were the same, in this way::
+
+    if LISTA = LISTB {
+      print "they are equal".
+    }
+
+Then the check will only be true if LISTA and LISTB are both actually the
+same list - not just two lists with equal contents, but in fact just two
+variables pointing to the same list.
+
+This is because a LIST is a complex structure object, and like most complex
+structure objects, the equality check is just testing whether or not
+they refer to the same object, not whether or not they have equivalent
+content.
+
+To test if the contents are equivalent, you have to check them item
+by item, like so::
+
+    set still_same to true.
+    FROM {local i is 0.}
+      UNTIL i > LISTA:LENGTH or not still_same
+      STEP {set i to i + 1.}
+    DO
+    {
+      set still_same to (LISTA[i] = LISTB[i]).
+    }
+    if still_same {
+      print "they are equal".
+    }
+
