@@ -4,9 +4,17 @@ Ship Systems
 ============
 
 .. _CONTROLFROM:
-.. object:: SET somepart:CONTROLFROM TO (true|false).
 
-    If you have a handle on a part, from ``LIST PARTS``, you can select that part to set the orientation of the craft, just like using the "control from here" in the right-click menu in the game. For more information see :attr:`Part:CONTROLFROM`.
+    e.g.::
+
+        set somepart to ship:partstagged("my favorite docking port")[0].
+        somepart:CONTROLFROM().
+
+    If you have a handle on a part, from ``LIST PARTS``, you can select that part to set the orientation of the craft, just like using the "control from here" in the right-click menu in the game. For more information see :attr:`Part:CONTROLFROM`. 
+    All vessels must have at least one "control from"
+    part on them somewhere, which is why there's no mechanism for un-setting
+    the "control from" setting other than to pick another part and set it
+    to that part instead.
 
 .. global:: RCS
 
