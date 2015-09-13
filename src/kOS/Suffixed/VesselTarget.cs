@@ -183,7 +183,7 @@ namespace kOS.Suffixed
                 {
                     "HEADING", "PROGRADE", "RETROGRADE", "FACING", "MAXTHRUST", "AVAILABLETHRUST", "VELOCITY", "GEOPOSITION", "LATITUDE",
                     "LONGITUDE",
-                    "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED",
+                    "UP", "NORTH", "BODY", "ANGULARMOMENTUM", "ANGULARVEL", "MASS", "VERTICALSPEED", "SURFACESPEED", "GROUNDSPEED",
                     "AIRSPEED", "VESSELNAME", "SHIPNAME",
                     "ALTITUDE", "APOAPSIS", "PERIAPSIS", "SENSOR", "SRFPROGRADE", "SRFRETROGRADE"
                 };
@@ -417,7 +417,8 @@ namespace kOS.Suffixed
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Vessel.angularVelocity)));
             AddSuffix("MASS", new Suffix<float>(() => Vessel.GetTotalMass()));
             AddSuffix("VERTICALSPEED", new Suffix<double>(() => Vessel.verticalSpeed));
-            AddSuffix("SURFACESPEED", new Suffix<double>(() => Vessel.horizontalSrfSpeed));
+            AddSuffix("GROUNDSPEED", new Suffix<double>(() => GetHorizontalSrfSpeed()));
+            AddSuffix("SURFACESPEED", new Suffix<double>(() => { throw new KOSDeprecationException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
             AddSuffix("AIRSPEED", new Suffix<double>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
             AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
@@ -487,6 +488,32 @@ namespace kOS.Suffixed
             {
                 Vessel.vesselName = value;
             }
+        }
+        
+        private double GetHorizontalSrfSpeed()
+        {
+            // NOTE: THIS Function replaces the functionality of the 
+            // single KSP API CALL:
+            //       Vessel.horizontalSrfSpeed;
+            // Which broke in KSP 1.0.3, badly, so we're just going to
+            // calculate it manually instead.
+            
+            // The logic, shamefully copied from the Kerbal Engineer mod,
+            // which had the same problem, is this:
+            //    Run the Pythagorean Theorem slightly backward.
+            //    If we know that:
+            //        srfspd == sqrt( a^2 + b^2 + c^2).
+            //    And we want to get what the speed would be if dimension C was excluded so it was projected
+            //    into the plane of just the a and b components, we can do this:
+            //        srfspd^2 == a^2 + b^2 + c^2.
+            //    solve for (a^2+b^2):
+            //        srfspd^2 - c^2 == a^2 + b^2.
+            //    We know that, in just the two dimensions:
+            //        speed_2D = sqrt(a^2+b^2).
+            //    Therefore:
+            //        speed_2D = sqrt(srfspd^2 - c^2)
+            //    Since C in our case is the vertical speed we want to remove, we get the following formula:            
+            return System.Math.Sqrt(Vessel.srfSpeed*Vessel.srfSpeed - Vessel.verticalSpeed*Vessel.verticalSpeed);            
         }
 
         /// <summary>
