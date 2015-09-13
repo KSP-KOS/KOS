@@ -2268,37 +2268,34 @@ namespace kOS.Safe.Compilation.KS
 
         private void UnlockIdentifier(UserFunction lockObject)
         {
-            if (lockObject.IsInitialized())
+            if (lockObject.IsSystemLock())
             {
-                if (lockObject.IsSystemLock())
+                // disable this FlyByWire parameter
+                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
+                AddOpcode(new OpcodePush(false));
+                AddOpcode(new OpcodeCall("toggleflybywire()"));
+                // add a pop to clear out the dummy return value from toggleflybywire()
+                AddOpcode(new OpcodePop());
+
+                // remove update trigger
+                string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
+                if (context.Triggers.Contains(triggerIdentifier))
                 {
-                    // disable this FlyByWire parameter
-                    AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
-                    AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
-                    AddOpcode(new OpcodePush(false));
-                    AddOpcode(new OpcodeCall("toggleflybywire()"));
-                    // add a pop to clear out the dummy return value from toggleflybywire()
-                    AddOpcode(new OpcodePop());
-
-                    // remove update trigger
-                    string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
-                    if (context.Triggers.Contains(triggerIdentifier))
-                    {
-                        Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-                        AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                        AddOpcode(new OpcodeRemoveTrigger());
-                    }
+                    Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
+                    AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
+                    AddOpcode(new OpcodeRemoveTrigger());
                 }
-
-                // unlock variable
-                // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
-                AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
-                AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
-                if (allowLazyGlobal)
-                    AddOpcode(new OpcodeStore());
-                else
-                    AddOpcode(new OpcodeStoreExist());
             }
+
+            // unlock variable
+            // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
+            AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
+            AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
+            if (allowLazyGlobal)
+                AddOpcode(new OpcodeStore());
+            else
+                AddOpcode(new OpcodeStoreExist());
         }
 
         private void VisitOnStatement(ParseNode node)
