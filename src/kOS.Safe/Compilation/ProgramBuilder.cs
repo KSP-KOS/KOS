@@ -107,7 +107,7 @@ namespace kOS.Safe.Compilation
         }
 
         private void ReplaceLabels(List<Opcode> program)
-        {
+        {            
             var labels = new Dictionary<string, int>();
 
             // get the index of every label
