@@ -577,9 +577,17 @@ namespace kOS.Safe.Compilation
             object popValue = cpu.PopValue();
 
             var specialValue = popValue as ISuffixed;
+            
             if (specialValue == null)
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                if (popValue is String)
+                {
+                    specialValue = new StringValue((String)popValue);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                }
             }
 
             object value = specialValue.GetSuffix(suffixName);
@@ -631,7 +639,14 @@ namespace kOS.Safe.Compilation
             var specialValue = popValue as ISuffixed;
             if (specialValue == null)
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                if (popValue is String)
+                {
+                    specialValue = new StringValue((String)popValue);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                }
             }
 
             if (!specialValue.SetSuffix(suffixName, value))
@@ -656,6 +671,11 @@ namespace kOS.Safe.Compilation
             }
             object list = cpu.PopValue();
 
+            if (list is String)
+            {
+                list = new StringValue((String)list);
+            }
+
             if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
             if (!(index is int)) throw new Exception("The index must be an integer number");
 
@@ -679,7 +699,7 @@ namespace kOS.Safe.Compilation
             {
                 index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
             }
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            if (!(list is IIndexable)) throw new Exception(string.Format("Can't set indexed elements on an object of type {0}", list.GetType()));
             if (!(index is int)) throw new Exception("The index must be an integer number");
 
             if (value != null)
