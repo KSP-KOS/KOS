@@ -162,7 +162,6 @@ namespace kOS.Binding
             {
                 flightControl.Unbind();
             }
-            SteeringManager.RemoveInstance(currentVessel.id);
         }
 
         public void Dispose()
@@ -172,6 +171,7 @@ namespace kOS.Binding
 
             UnBind();
             flightControls.Remove(currentVessel.rootPart.flightID);
+            SteeringManager.RemoveInstance(currentVessel.id);
         }
 
         private bool VesselIsValid(Vessel vessel)

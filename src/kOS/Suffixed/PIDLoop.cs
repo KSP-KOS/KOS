@@ -6,6 +6,30 @@ namespace kOS.Suffixed
 {
     public class PIDLoop : Structure
     {
+        public static PIDLoop DeepCopy(PIDLoop source)
+        {
+            PIDLoop newLoop = new PIDLoop()
+            {
+                LastSampleTime = source.LastSampleTime,
+                Kp = source.Kp,
+                Ki = source.Ki,
+                Kd = source.Kd,
+                Input = source.Input,
+                Setpoint = source.Setpoint,
+                Error = source.Error,
+                Output = source.Output,
+                MaxOutput = source.MaxOutput,
+                ErrorSum = source.ErrorSum,
+                PTerm = source.PTerm,
+                ITerm = source.ITerm,
+                DTerm = source.DTerm,
+                ExtraUnwind = source.ExtraUnwind,
+                ChangeRate = source.ChangeRate,
+                unWinding = source.unWinding
+            };
+            return newLoop;
+        }
+
         public double LastSampleTime { get; set; }
 
         public double Kp { get; set; }
@@ -43,7 +67,7 @@ namespace kOS.Suffixed
         {
         }
 
-        public PIDLoop(double kp, double ki, double kd, double maxoutput = 1, bool extraUnwind = false)
+        public PIDLoop(double kp, double ki, double kd, double maxoutput = double.MaxValue, bool extraUnwind = false)
         {
             LastSampleTime = double.MaxValue;
             Kp = kp;

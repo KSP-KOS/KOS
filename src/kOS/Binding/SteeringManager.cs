@@ -32,21 +32,11 @@ namespace kOS.Binding
             return sm;
         }
 
-        public static SteeringManager GetInstance(Vessel vessel)
-        {
-            string key = vessel.id.ToString();
-            if (AllInstances.Keys.Contains(key))
-            {
-                return AllInstances[key];
-            }
-            return null;
-        }
-
         public static SteeringManager SwapInstance(SharedObjects shared, SteeringManager oldInstance)
         {
             if (shared.Vessel.id.ToString() == oldInstance.KeyId) return oldInstance;
             if (oldInstance.SubscribedParts.Contains(shared.KSPPart.flightID)) oldInstance.SubscribedParts.Remove(shared.KSPPart.flightID);
-            SteeringManager instance = GetInstance(shared);
+            SteeringManager instance = DeepCopy(oldInstance, shared);
             if (oldInstance.enabled)
             {
                 if (oldInstance.partId == shared.KSPPart.flightID)
@@ -54,34 +44,7 @@ namespace kOS.Binding
                     oldInstance.DisableControl();
                     instance.EnableControl(shared);
                     instance.Value = oldInstance.Value;
-                    instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
-                    instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
-                    instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
-                    instance.ShowSteeringStats = oldInstance.ShowSteeringStats;
-                    instance.ShowThrustVectors = oldInstance.ShowThrustVectors;
-                    instance.PitchTorqueAdjust = oldInstance.PitchTorqueAdjust;
-                    instance.PitchTorqueFactor = oldInstance.PitchTorqueFactor;
-                    instance.RollTorqueAdjust = oldInstance.RollTorqueAdjust;
-                    instance.RollTorqueFactor = oldInstance.RollTorqueFactor;
-                    instance.WriteCSVFiles = oldInstance.WriteCSVFiles;
-                    instance.YawTorqueAdjust = oldInstance.YawTorqueAdjust;
-                    instance.YawTorqueFactor = oldInstance.YawTorqueFactor;
                 }
-            }
-            else
-            {
-                instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
-                instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
-                instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
-                instance.ShowSteeringStats = oldInstance.ShowSteeringStats;
-                instance.ShowThrustVectors = oldInstance.ShowThrustVectors;
-                instance.PitchTorqueAdjust = oldInstance.PitchTorqueAdjust;
-                instance.PitchTorqueFactor = oldInstance.PitchTorqueFactor;
-                instance.RollTorqueAdjust = oldInstance.RollTorqueAdjust;
-                instance.RollTorqueFactor = oldInstance.RollTorqueFactor;
-                instance.WriteCSVFiles = oldInstance.WriteCSVFiles;
-                instance.YawTorqueAdjust = oldInstance.YawTorqueAdjust;
-                instance.YawTorqueFactor = oldInstance.YawTorqueFactor;
             }
             return instance;
         }
@@ -93,6 +56,37 @@ namespace kOS.Binding
                 AllInstances[vesselId.ToString()].Dispose();
                 AllInstances.Remove(vesselId.ToString());
             }
+        }
+
+        public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)
+        {
+            SteeringManager instance = GetInstance(shared);
+            instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
+            instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
+            instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
+            instance.ShowThrustVectors = oldInstance.ShowThrustVectors;
+            instance.ShowSteeringStats = oldInstance.ShowSteeringStats;
+            instance.WriteCSVFiles = oldInstance.WriteCSVFiles;
+            instance.MaxStoppingTime = oldInstance.MaxStoppingTime;
+
+            instance.pitchPI.Ts = oldInstance.pitchPI.Ts;
+            instance.yawPI.Ts = oldInstance.yawPI.Ts;
+            instance.rollPI.Ts = oldInstance.rollPI.Ts;
+            instance.pitchPI.Loop = PIDLoop.DeepCopy(oldInstance.pitchPI.Loop);
+            instance.yawPI.Loop = PIDLoop.DeepCopy(oldInstance.yawPI.Loop);
+            instance.rollPI.Loop = PIDLoop.DeepCopy(oldInstance.rollPI.Loop);
+
+            instance.pitchRatePI = PIDLoop.DeepCopy(oldInstance.pitchRatePI);
+            instance.yawRatePI = PIDLoop.DeepCopy(oldInstance.yawRatePI);
+            instance.rollRatePI = PIDLoop.DeepCopy(oldInstance.rollRatePI);
+
+            instance.PitchTorqueAdjust = oldInstance.PitchTorqueAdjust;
+            instance.PitchTorqueFactor = oldInstance.PitchTorqueFactor;
+            instance.RollTorqueAdjust = oldInstance.RollTorqueAdjust;
+            instance.RollTorqueFactor = oldInstance.RollTorqueFactor;
+            instance.YawTorqueAdjust = oldInstance.YawTorqueAdjust;
+            instance.YawTorqueFactor = oldInstance.YawTorqueFactor;
+            return instance;
         }
 
         public string KeyId;
@@ -1098,7 +1092,7 @@ namespace kOS.Binding
                 foreach (string key in vEngines.Keys)
                 {
                     vEngines[key].SetShow(false);
-                    vEngines.Remove(key);
+                vEngines.Clear();
                 }
             }
 
@@ -1132,7 +1126,7 @@ namespace kOS.Binding
                 foreach (string key in vRcs.Keys)
                 {
                     vRcs[key].SetShow(false);
-                    vRcs.Remove(key);
+                vRcs.Clear();
                 }
             }
         }
@@ -1468,7 +1462,7 @@ namespace kOS.Binding
 
         public class TorquePI
         {
-            private PIDLoop Loop { get; set; }
+            public PIDLoop Loop { get; set; }
 
             public double I { get; private set; }
 
