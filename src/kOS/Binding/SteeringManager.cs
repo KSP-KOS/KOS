@@ -179,6 +179,8 @@ namespace kOS.Binding
         #region doubles
         public const double RadToDeg = 180d / Math.PI;
 
+        public double MaxStoppingTime { get; set; }
+
         private double accPitch = 0;
         private double accYaw = 0;
         private double accRoll = 0;
@@ -295,6 +297,8 @@ namespace kOS.Binding
             yawTorqueWriter = null;
             rollTorqueWriter = null;
 
+            MaxStoppingTime = 1;
+
             PitchTorqueAdjust = 0;
             YawTorqueAdjust = 0;
             RollTorqueAdjust = 0;
@@ -323,6 +327,7 @@ namespace kOS.Binding
             AddSuffix("PITCHTS", new SetSuffix<double>(() => pitchPI.Ts, value => pitchPI.Ts = value));
             AddSuffix("YAWTS", new SetSuffix<double>(() => yawPI.Ts, value => yawPI.Ts = value));
             AddSuffix("ROLLTS", new SetSuffix<double>(() => rollPI.Ts, value => rollPI.Ts = value));
+            AddSuffix("MAXSTOPPINGTIME", new SetSuffix<double>(() => MaxStoppingTime, value => MaxStoppingTime = value));
             AddSuffix("ANGLEERROR", new Suffix<double>(() => phi * RadToDeg));
             AddSuffix("PITCHERROR", new Suffix<double>(() => phiPitch * RadToDeg));
             AddSuffix("YAWERROR", new Suffix<double>(() => phiYaw * RadToDeg));
@@ -521,7 +526,8 @@ namespace kOS.Binding
                     ModuleRCS rcs = pm as ModuleRCS;
                     if (rcs != null)
                     {
-                        if (shared.Vessel.ActionGroups[KSPActionGroup.RCS] && rcs.rcsEnabled && !rcs.part.ShieldedFromAirstream)
+                        //if (shared.Vessel.ActionGroups[KSPActionGroup.RCS] && rcs.rcsEnabled && !rcs.part.ShieldedFromAirstream)
+                        if (shared.Vessel.ActionGroups[KSPActionGroup.RCS] && !rcs.part.ShieldedFromAirstream)
                         {
                             for (int i = 0; i < rcs.thrusterTransforms.Count; i++)
                             {
@@ -746,9 +752,9 @@ namespace kOS.Binding
                 phiRoll *= -1;
 
             // Calculate the maximum allowable angular velocity and apply the limit, something we can stop in a reasonable amount of time
-            maxPitchOmega = controlTorque.x * 1d / momentOfInertia.x;
-            maxYawOmega = controlTorque.z * 1d / momentOfInertia.z;
-            maxRollOmega = controlTorque.y * 1d / momentOfInertia.y;
+            maxPitchOmega = controlTorque.x * MaxStoppingTime / momentOfInertia.x;
+            maxYawOmega = controlTorque.z * MaxStoppingTime / momentOfInertia.z;
+            maxRollOmega = controlTorque.y * MaxStoppingTime / momentOfInertia.y;
 
             double sampletime = shared.UpdateHandler.CurrentFixedTime;
             tgtPitchOmega = Math.Max(Math.Min(pitchRatePI.Update(sampletime, -phiPitch, 0, maxPitchOmega), maxPitchOmega), -maxPitchOmega);
@@ -1036,7 +1042,6 @@ namespace kOS.Binding
             {
                 foreach (var tv in allEngineVectors)
                 {
-                    Vector3d[] vectors = tv.GetTorque(vesselForward, vesselTop, vesselStarboard);
                     string key = tv.PartId;
                     if (!vEngines.ContainsKey(key))
                     {
@@ -1044,7 +1049,7 @@ namespace kOS.Binding
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = tv.Thrust;
+                    vEngines[key].Vector = tv.NeutralForce.Force;
                     vEngines[key].Start = tv.Position;
 
                     key = tv.PartId + "gimbaled";
@@ -1054,7 +1059,7 @@ namespace kOS.Binding
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = tv.GetGimbaledThrust(vesselForward, vesselTop, vesselStarboard);
+                    vEngines[key].Vector = tv.PitchForce.Force;
                     vEngines[key].Start = tv.Position;
 
                     key = tv.PartId + "torque";
@@ -1064,7 +1069,7 @@ namespace kOS.Binding
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = vectors[0];
+                    vEngines[key].Vector = tv.NeutralForce.Torque;
                     vEngines[key].Start = tv.Position;
 
                     key = tv.PartId + "control";
@@ -1074,7 +1079,7 @@ namespace kOS.Binding
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = vectors[1];
+                    vEngines[key].Vector = tv.PitchForce.Torque;
                     vEngines[key].Start = tv.Position;
 
                     key = tv.PartId + "position";
@@ -1380,6 +1385,11 @@ namespace kOS.Binding
             public Vector3d Position = Vector3d.zero;
             public string PartId;
 
+            public ForceVector NeutralForce;
+            public ForceVector PitchForce;
+            public ForceVector YawForce;
+            public ForceVector RollForce;
+
             public ThrustVector()
             {
             }
@@ -1393,40 +1403,54 @@ namespace kOS.Binding
                 {
                     Vector3d thrust = Thrust;
                     Vector3d neut = thrust;
-                    ret[0] = Vector3d.Cross(thrust, Position);
+                    NeutralForce = new ForceVector()
+                    {
+                        Force = Thrust,
+                        Position = Position
+                    };
+                    ret[0] = NeutralForce.Torque;
                     if (GimbalRange > 0.0001)
                     {
                         Vector3d pitchAxis = Vector3d.Exclude(neut, starboard);
                         Vector3d yawAxis = Vector3d.Exclude(neut, top);
                         Vector3d rollAxis = Vector3d.Exclude(forward, Position);
-                        Quaternion rot = Quaternion.AngleAxis(GimbalRange, pitchAxis);
-                        thrust = rot * neut;
-                        ret[1] = Vector3d.Cross(thrust, Position);
-                        rot = Quaternion.AngleAxis(GimbalRange, yawAxis);
-                        thrust = rot * neut;
-                        ret[2] = Vector3d.Cross(thrust, Position);
-                        //rot = Rotation * Quaternion.AngleAxis(GimbalRange, forward);
-                        double angle = Vector3d.Angle(forward, Position);
-                        if (angle > 179 || angle < 1)
+                        PitchForce = new ForceVector()
                         {
-                            ret[3] = ret[0];
-                        }
-                        else
+                            Force = Quaternion.AngleAxis(GimbalRange, pitchAxis) * neut,
+                            Position = Position
+                        };
+                        YawForce = new ForceVector()
                         {
-                            rot = Quaternion.AngleAxis(GimbalRange, rollAxis);
-                            thrust = rot * neut;
-                            ret[3] = Vector3d.Cross(thrust, Position);
-                        }
+                            Force = Quaternion.AngleAxis(GimbalRange, yawAxis) * neut,
+                            Position = Position
+                        };
+                        RollForce = new ForceVector()
+                        {
+                            Force = Quaternion.AngleAxis(GimbalRange, rollAxis) * neut,
+                            Position = Position
+                        };
                     }
                     else
                     {
-                        ret[1] = Vector3d.zero;
-                        ret[2] = Vector3d.zero;
-                        ret[3] = Vector3d.zero;
-                        //ret[1] = ret[0];
-                        //ret[2] = ret[0];
-                        //ret[3] = ret[0];
+                        PitchForce = new ForceVector()
+                        {
+                            Force = NeutralForce.Force,
+                            Position = NeutralForce.Position
+                        };
+                        YawForce = new ForceVector()
+                        {
+                            Force = NeutralForce.Force,
+                            Position = NeutralForce.Position
+                        };
+                        RollForce = new ForceVector()
+                        {
+                            Force = NeutralForce.Force,
+                            Position = NeutralForce.Position
+                        };
                     }
+                    ret[1] = PitchForce.Torque;
+                    ret[2] = YawForce.Torque;
+                    ret[3] = RollForce.Torque;
                 }
                 else
                 {
@@ -1436,27 +1460,6 @@ namespace kOS.Binding
                     ret[3] = Vector3d.zero;
                 }
                 return ret;
-            }
-
-            public Quaternion GetAngledRotation(Vector3d forward, Vector3d top, Vector3d starboard)
-            {
-                return Rotation * Quaternion.AngleAxis(GimbalRange, starboard);
-            }
-
-            public Vector3d GetGimbaledThrust(Vector3d forward, Vector3d top, Vector3d starboard)
-            {
-                Vector3d thrust = Thrust;
-                double angle = Vector3d.Angle(forward, Position);
-                if (angle > 179 || angle < 1)
-                {
-                    return thrust;
-                }
-                //Vector3d axis = Vector3d.Exclude(thrust, starboard);
-                //Vector3d axis = Vector3d.Exclude(thrust, top);
-                //Vector3d axis = Vector3d.Exclude(thrust, forward);
-                Vector3d axis = Vector3d.Exclude(forward, Position);
-                return Quaternion.AngleAxis(GimbalRange, axis) * thrust;
-                //return Rotation * thrust;
             }
         }
 
