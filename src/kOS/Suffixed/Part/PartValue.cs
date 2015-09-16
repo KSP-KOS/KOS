@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using kOS.Module;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
@@ -13,7 +15,7 @@ namespace kOS.Suffixed.Part
 {
     public class PartValue : Structure, IKOSTargetable
     {
-        private readonly SharedObjects shared;
+        protected readonly SharedObjects shared;
 
         public global::Part Part { get; private set; }
 
@@ -42,6 +44,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
+            AddSuffix("HASMODULE", new OneArgsSuffix<PartModuleFields, string>(GetModule));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>(GetModule));
             AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, int>(GetModuleIndex));
             AddSuffix(new[] { "MODULES", "ALLMODULES" }, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
@@ -61,13 +64,22 @@ namespace kOS.Suffixed.Part
             foreach (PartModule mod in Part.Modules)
             {
                 SafeHouse.Logger.Log(string.Format("Does \"{0}\" == \"{1}\"?", mod.moduleName.ToUpper(), modName.ToUpper()));
-                if (String.Equals(mod.moduleName, modName, StringComparison.CurrentCultureIgnoreCase))
+                if (String.Equals(mod.moduleName, modName, StringComparison.OrdinalIgnoreCase))
                 {
                     SafeHouse.Logger.Log("yes it does");
                     return PartModuleFieldsFactory.Construct(mod,shared);
                 }
             }
             throw new KOSLookupFailException( "module", modName.ToUpper(), this );
+        }
+
+        private bool HasModule(string modName)
+        {
+            foreach (PartModule mod in Part.Modules)
+            {
+                if (String.Equals(mod.moduleName, modName, StringComparison.OrdinalIgnoreCase)) return true;
+            }
+            return false;
         }
 
         private PartModuleFields GetModuleIndex(int moduleIndex)
