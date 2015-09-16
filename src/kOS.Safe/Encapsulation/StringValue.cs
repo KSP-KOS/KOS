@@ -63,7 +63,8 @@ namespace kOS.Safe.Encapsulation
             return internalString.IndexOf(s);
         }
 
-        // This was named FindAt because IndexOfAt made little sense
+        // IndexOf with a start position.
+        // This was named FindAt because IndexOfAt made little sense.
         public int FindAt(String s, int start)
         {
             return internalString.IndexOf(s, start);
@@ -144,11 +145,13 @@ namespace kOS.Safe.Encapsulation
             return internalString[index];
         }
 
+        // Required by the interface but unimplemented, because strings are immutable.
         public void SetIndex(int index, object value)
         {
             throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
         }
 
+        // As the regular Split, except returning a ListValue rather than an array.
         public ListValue<String> SplitToList(String separator)
         {
             String[] split = internalString.Split(new string[] { separator }, StringSplitOptions.None);

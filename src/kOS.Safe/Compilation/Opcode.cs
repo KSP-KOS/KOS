@@ -639,6 +639,7 @@ namespace kOS.Safe.Compilation
             var specialValue = popValue as ISuffixed;
             if (specialValue == null)
             {
+                // Box strings if necessary to allow suffixes
                 if (popValue is String)
                 {
                     specialValue = new StringValue((String)popValue);
@@ -671,6 +672,7 @@ namespace kOS.Safe.Compilation
             }
             object list = cpu.PopValue();
 
+            // Box strings if necessary to allow them to be indexed
             if (list is String)
             {
                 list = new StringValue((String)list);
@@ -699,6 +701,8 @@ namespace kOS.Safe.Compilation
             {
                 index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
             }
+
+            // Adjusted error message to reflect that there are now read-only indexable objects
             if (!(list is IIndexable)) throw new Exception(string.Format("Can't set indexed elements on an object of type {0}", list.GetType()));
             if (!(index is int)) throw new Exception("The index must be an integer number");
 
