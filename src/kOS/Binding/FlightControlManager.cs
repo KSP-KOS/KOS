@@ -237,10 +237,11 @@ namespace kOS.Binding
                         SelectAutopilotMode(VesselAutopilot.AutopilotMode.Antinormal);
                         break;
                     case "radialin":
-                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialIn);
+                        // TODO: As of KSP 1.0.4, RadialIn and RadialOut are swapped.  Check if still true in future versions.
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialOut);
                         break;
                     case "radialout":
-                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialOut);
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialIn);
                         break;
                     case "target":
                         SelectAutopilotMode(VesselAutopilot.AutopilotMode.Target);
