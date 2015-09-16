@@ -1097,8 +1097,8 @@ namespace kOS.Binding
                 foreach (string key in vEngines.Keys)
                 {
                     vEngines[key].SetShow(false);
-                vEngines.Clear();
                 }
+                vEngines.Clear();
             }
 
             if (ShowRCSVectors && enabled)
@@ -1131,8 +1131,8 @@ namespace kOS.Binding
                 foreach (string key in vRcs.Keys)
                 {
                     vRcs[key].SetShow(false);
-                vRcs.Clear();
                 }
+                vRcs.Clear();
             }
         }
 
