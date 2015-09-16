@@ -78,6 +78,7 @@
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
+    <Compile Include="Encapsulation\StringValue.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
@@ -179,14 +180,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sound" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
       cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
-      (test -h "$(SolutionDir)/../KSPdirlink" &#x26;&#x26; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
+      (test -h "$(SolutionDir)/../KSPdirlink" &amp;&amp; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
       xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y
