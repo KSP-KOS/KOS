@@ -267,7 +267,7 @@
 <td>scalar (m/s)</td>
 <td>How fast the ship is moving &#8220;up&#8221;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:SURFACESPEED" title="VESSEL:SURFACESPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SURFACESPEED</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:VESSEL:GROUNDSPEED" title="VESSEL:GROUNDSPEED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GROUNDSPEED</span></tt></a></td>
 <td>scalar (m/s)</td>
 <td>How fast the ship is moving &#8220;horizontally&#8221;</td>
 </tr>
@@ -576,8 +576,8 @@ Vessel:<tt class="descname">VERTICALSPEED</tt><a class="headerlink" href="#attri
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:VESSEL:SURFACESPEED">
-Vessel:<tt class="descname">SURFACESPEED</tt><a class="headerlink" href="#attribute:VESSEL:SURFACESPEED" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:VESSEL:GROUNDSPEED">
+Vessel:<tt class="descname">GROUNDSPEED</tt><a class="headerlink" href="#attribute:VESSEL:GROUNDSPEED" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -588,7 +588,19 @@ Vessel:<tt class="descname">SURFACESPEED</tt><a class="headerlink" href="#attrib
 </tr>
 </tbody>
 </table>
-<p>How fast the ship is moving in the plane horizontal to the SOI body&#8217;s sea level surface.</p>
+<p>How fast the ship is moving in the two dimensional plane horizontal
+to the SOI body&#8217;s sea level surface.  The vertical component of the
+ship&#8217;s velocity is ignored when calculating this.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.18.</span></p>
+</div>
+<p class="last">The old name for this value was SURFACESPEED.  The name was changed
+because it was confusing before.  &#8220;surface speed&#8221; implied it&#8217;s the
+scalar magnitude of &#8220;surface velocity&#8221;, but it wasn&#8217;t, because of how
+it ignores the vertical component.</p>
+</div>
 </dd></dl>
 
 <dl class="attribute">

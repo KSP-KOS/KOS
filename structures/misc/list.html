@@ -35,7 +35,7 @@
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
     <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Resource Transfer" href="resource_transfer.html"/>
+        <link rel="next" title="PIDLoop" href="pidloop.html"/>
         <link rel="prev" title="Iterator" href="iterator.html"/> 
 
   
@@ -574,6 +574,38 @@ PRINT FOO#2#0.   // Prints 3.14159, using deprecated syntax.
 </li>
 </ul>
 </div>
+<div class="section" id="comparing-two-lists">
+<h2>Comparing two lists<a class="headerlink" href="#comparing-two-lists" title="Permalink to this headline">¶</a></h2>
+<p>Note that if you have two lists, LISTA and LISTB, and you tried to compare
+if they were the same, in this way:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="n">LISTA</span> <span class="o">=</span> <span class="n">LISTB</span> <span class="p">{</span>
+  <span class="n">print</span> <span class="s">&quot;they are equal&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then the check will only be true if LISTA and LISTB are both actually the
+same list - not just two lists with equal contents, but in fact just two
+variables pointing to the same list.</p>
+<p>This is because a LIST is a complex structure object, and like most complex
+structure objects, the equality check is just testing whether or not
+they refer to the same object, not whether or not they have equivalent
+content.</p>
+<p>To test if the contents are equivalent, you have to check them item
+by item, like so:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">still_same</span> <span class="n">to</span> <span class="nb">true</span><span class="p">.</span>
+<span class="n">FROM</span> <span class="p">{</span><span class="n">local</span> <span class="n">i</span> <span class="n">is</span> <span class="mf">0.</span><span class="p">}</span>
+  <span class="n">UNTIL</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">LISTA</span><span class="o">:</span><span class="n">LENGTH</span> <span class="n">or</span> <span class="n">not</span> <span class="n">still_same</span>
+  <span class="n">STEP</span> <span class="p">{</span><span class="n">set</span> <span class="n">i</span> <span class="n">to</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">}</span>
+<span class="n">DO</span>
+<span class="p">{</span>
+  <span class="n">set</span> <span class="n">still_same</span> <span class="n">to</span> <span class="p">(</span><span class="n">LISTA</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">LISTB</span><span class="p">[</span><span class="n">i</span><span class="p">]).</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="n">still_same</span> <span class="p">{</span>
+  <span class="n">print</span> <span class="s">&quot;they are equal&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -582,7 +614,7 @@ PRINT FOO#2#0.   // Prints 3.14159, using deprecated syntax.
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="resource_transfer.html" class="btn btn-neutral float-right" title="Resource Transfer">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pidloop.html" class="btn btn-neutral float-right" title="PIDLoop">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="iterator.html" class="btn btn-neutral" title="Iterator"><span class="fa fa-arrow-circle-left"></span> Previous</a>

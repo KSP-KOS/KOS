@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>PIDLoop &mdash; kOS 0.17.3 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
+        <link rel="next" title="Resource Transfer" href="resource_transfer.html"/>
+        <link rel="prev" title="List" href="list.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
+      
+    <li>PIDLoop</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/structures/misc/pidloop.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="pidloop">
+<span id="id1"></span><h1>PIDLoop<a class="headerlink" href="#pidloop" title="Permalink to this headline">¶</a></h1>
+<p>The <cite>PIDLoop</cite> has multiple constructors available.  Valid syntax can be seen here:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Create a loop with default parameters</span>
+<span class="c1">// kp = 1, ki = 0, kd = 0</span>
+<span class="c1">// maxValue = maximum number value, extraunwind = false.</span>
+<span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">().</span>
+
+<span class="c1">// Other constructors include:</span>
+<span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">(</span><span class="n">KP</span><span class="p">).</span>
+<span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">(</span><span class="n">KP</span><span class="p">,</span> <span class="n">KI</span><span class="p">,</span> <span class="n">KD</span><span class="p">).</span>
+<span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">(</span><span class="n">KP</span><span class="p">,</span> <span class="n">KI</span><span class="p">,</span> <span class="n">KD</span><span class="p">,</span> <span class="n">MAXOUTPUT</span><span class="p">).</span>
+<span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">(</span><span class="n">KP</span><span class="p">,</span> <span class="n">KI</span><span class="p">,</span> <span class="n">KD</span><span class="p">,</span> <span class="n">MAXOUTPUT</span><span class="p">,</span> <span class="n">EXTRAUNWIND</span><span class="p">).</span>
+
+<span class="c1">// PIDLOOP&#39;s max value is symmetric, if you require an asymmetric</span>
+<span class="c1">// limit, you must apply an output offset yourself.  The following</span>
+<span class="c1">// code will set OUT to a value between 0 and 1.</span>
+<span class="n">SET</span> <span class="n">OFFSET</span> <span class="n">TO</span> <span class="mf">0.5</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">PID</span><span class="o">:</span><span class="n">MAXOUTPUT</span> <span class="n">TO</span> <span class="mf">0.5</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">OUT</span> <span class="n">TO</span> <span class="n">PID</span><span class="o">:</span><span class="n">UPDATE</span><span class="p">(</span><span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span><span class="p">,</span> <span class="n">IN</span><span class="p">)</span> <span class="o">+</span> <span class="n">OFFSET</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Please see the bottom of this page for information on the derivation of the loop&#8217;s output.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.18: </span>While the <cite>PIDLOOP</cite> structure was added in version 0.18, you may feel free to continue to use any
+previously implemented PID logic.  This loop is intended to be a basic and flexible PID, but you
+may still find benefit in using customized logic.</p>
+</div>
+</div>
+<dl class="structure">
+<dt id="structure:PIDLOOP">
+<em class="property">structure </em><tt class="descname">PIDLoop</tt><a class="headerlink" href="#structure:PIDLOOP" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="23%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:LASTSAMPLETIME" title="PIDLOOP:LASTSAMPLETIME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LASTSAMPLETIME</span></tt></a></td>
+<td>scalar</td>
+<td>decimal value of the last sample time</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:KP" title="PIDLOOP:KP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">KP</span></tt></a></td>
+<td>scalar</td>
+<td>The proportional gain factor</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:KI" title="PIDLOOP:KI attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">KI</span></tt></a></td>
+<td>scalar</td>
+<td>The integral gain factor</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:KD" title="PIDLOOP:KD attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">KD</span></tt></a></td>
+<td>scalar</td>
+<td>The derivative gain factor</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:INPUT" title="PIDLOOP:INPUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">INPUT</span></tt></a></td>
+<td>scalar</td>
+<td>The most recent input value</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:SETPOINT" title="PIDLOOP:SETPOINT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SETPOINT</span></tt></a></td>
+<td>scalar</td>
+<td>The current setpoint</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:ERROR" title="PIDLOOP:ERROR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ERROR</span></tt></a></td>
+<td>scalar</td>
+<td>The most recent error value</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:OUTPUT" title="PIDLOOP:OUTPUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">OUTPUT</span></tt></a></td>
+<td>scalar</td>
+<td>The most recent output value</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:MAXOUTPUT" title="PIDLOOP:MAXOUTPUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MAXOUTPUT</span></tt></a></td>
+<td>scalar</td>
+<td>The maximum output value</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:ERRORSUM" title="PIDLOOP:ERRORSUM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></tt></a></td>
+<td>scalar</td>
+<td>The time weighted sum of error</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:PTERM" title="PIDLOOP:PTERM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PTERM</span></tt></a></td>
+<td>scalar</td>
+<td>The proportional component of output</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:ITERM" title="PIDLOOP:ITERM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></tt></a></td>
+<td>scalar</td>
+<td>The integral component of output</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:DTERM" title="PIDLOOP:DTERM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DTERM</span></tt></a></td>
+<td>scalar</td>
+<td>The derivative component of output</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:EXTRAUNWIND" title="PIDLOOP:EXTRAUNWIND attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">EXTRAUNWIND</span></tt></a></td>
+<td>bool</td>
+<td>Enables the use of aggressive integral unwind</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:CHANGERATE" title="PIDLOOP:CHANGERATE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CHANGERATE</span></tt></a></td>
+<td>scalar (/s)</td>
+<td>The most recent input rate of change</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:PIDLOOP:RESET" title="PIDLOOP:RESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">RESET</span></tt></a></td>
+<td>none</td>
+<td>Reset the integral component</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#method:PIDLOOP:UPDATE" title="PIDLOOP:UPDATE method"><tt class="xref ks ks-meth docutils literal"><span class="pre">UPDATE(time,</span> <span class="pre">input)</span></tt></a></td>
+<td>scalar</td>
+<td>Returns output based on time and input</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:LASTSAMPLETIME">
+PIDLoop:<tt class="descname">LASTSAMPLETIME</tt><a class="headerlink" href="#attribute:PIDLOOP:LASTSAMPLETIME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The value representing the time of the last sample.  This value is equal to the time parameter of the <tt class="xref ks ks-meth docutils literal"><span class="pre">UPDATE</span></tt> method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:KP">
+PIDLoop:<tt class="descname">KP</tt><a class="headerlink" href="#attribute:PIDLOOP:KP" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The proportional gain factor.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:KI">
+PIDLoop:<tt class="descname">KI</tt><a class="headerlink" href="#attribute:PIDLOOP:KI" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The integral gain factor.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:KD">
+PIDLoop:<tt class="descname">KD</tt><a class="headerlink" href="#attribute:PIDLOOP:KD" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The derivative gain factor</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:INPUT">
+PIDLoop:<tt class="descname">INPUT</tt><a class="headerlink" href="#attribute:PIDLOOP:INPUT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The value representing the input of the last sample.  This value is equal to the input parameter of the <tt class="xref ks ks-meth docutils literal"><span class="pre">UPDATE</span></tt> method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:SETPOINT">
+PIDLoop:<tt class="descname">SETPOINT</tt><a class="headerlink" href="#attribute:PIDLOOP:SETPOINT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The current setpoint.  This is the value to which input is compared when <tt class="xref ks ks-meth docutils literal"><span class="pre">UPDATE</span></tt> is called.  It may not be synced with the last sample.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:ERROR">
+PIDLoop:<tt class="descname">ERROR</tt><a class="headerlink" href="#attribute:PIDLOOP:ERROR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The calculated error from the last sample (setpoint - input).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:OUTPUT">
+PIDLoop:<tt class="descname">OUTPUT</tt><a class="headerlink" href="#attribute:PIDLOOP:OUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The calculated output from the last sample.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:MAXOUTPUT">
+PIDLoop:<tt class="descname">MAXOUTPUT</tt><a class="headerlink" href="#attribute:PIDLOOP:MAXOUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The current maximum output value.  This value controls the maximum and minimum output values, as well as regulating integral wind up mitigation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:ERRORSUM">
+PIDLoop:<tt class="descname">ERRORSUM</tt><a class="headerlink" href="#attribute:PIDLOOP:ERRORSUM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The value representing the time weighted sum of all errrors.  It will be equal to <tt class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></tt> / <tt class="xref ks ks-attr docutils literal"><span class="pre">KI</span></tt>.  This value is adjusted by the integral windup mitigation logic.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:PTERM">
+PIDLoop:<tt class="descname">PTERM</tt><a class="headerlink" href="#attribute:PIDLOOP:PTERM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The value representing the proportional component of <tt class="xref ks ks-attr docutils literal"><span class="pre">OUTPUT</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:ITERM">
+PIDLoop:<tt class="descname">ITERM</tt><a class="headerlink" href="#attribute:PIDLOOP:ITERM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The value representing the integral component of <tt class="xref ks ks-attr docutils literal"><span class="pre">OUTPUT</span></tt>.  This value is adjusted by the integral windup mitigation logic.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:DTERM">
+PIDLoop:<tt class="descname">DTERM</tt><a class="headerlink" href="#attribute:PIDLOOP:DTERM" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The value representing the derivative component of <tt class="xref ks ks-attr docutils literal"><span class="pre">OUTPUT</span></tt>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:EXTRAUNWIND">
+PIDLoop:<tt class="descname">EXTRAUNWIND</tt><a class="headerlink" href="#attribute:PIDLOOP:EXTRAUNWIND" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>When true, <tt class="xref ks ks-attr docutils literal"><span class="pre">KI</span></tt> will be multiplied by 2 when the sign (+ or -) of <tt class="xref ks ks-attr docutils literal"><span class="pre">ERROR</span></tt> does not match the sign of <tt class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></tt>.  This can help to unwind the integral component more quickly after a zero crossing, and may decrease settling time.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:CHANGERATE">
+PIDLoop:<tt class="descname">CHANGERATE</tt><a class="headerlink" href="#attribute:PIDLOOP:CHANGERATE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The rate of change of the <tt class="xref ks ks-attr docutils literal"><span class="pre">INPUT</span></tt> during the last sample.  It will be equal to (input - last input) / (change in time).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PIDLOOP:RESET">
+PIDLoop:<tt class="descname">RESET</tt><big>(</big><big>)</big><a class="headerlink" href="#method:PIDLOOP:RESET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+<p>Call this method to clear the <tt class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></tt> and <tt class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></tt> components of the PID calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:PIDLOOP:UPDATE">
+PIDLoop:<tt class="descname">UPDATE</tt><big>(</big>time, input<big>)</big><a class="headerlink" href="#method:PIDLOOP:UPDATE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>time</strong> &#8211; (double) the decimal time in seconds</li>
+<li><strong>input</strong> &#8211; (double) the input variable to compare to the setpoint</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">scalar representing the calculated output</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (<cite>TIME:SECONDS</cite>), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXOUTPUT</span></tt> and <tt class="xref ks ks-attr docutils literal"><span class="pre">EXTRAUNWIND</span></tt>.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.</p>
+</dd></dl>
+
+<div class="section" id="pidloop-update-derivation">
+<h2>PIDLoop Update Derivation<a class="headerlink" href="#pidloop-update-derivation" title="Permalink to this headline">¶</a></h2>
+<p>The internal update method of the <a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure is the equivalent of the following in kerboscript</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// assume that the terms LastSampleTime, Kp, Ki, Kd, Setpoint, and MaxOutput are previously defined</span>
+<span class="n">declare</span> <span class="n">function</span> <span class="n">Update</span> <span class="p">{</span>
+    <span class="n">declare</span> <span class="n">parameter</span> <span class="n">sampleTime</span><span class="p">,</span> <span class="n">input</span><span class="p">.</span>
+    <span class="n">set</span> <span class="n">Error</span> <span class="n">to</span> <span class="n">Setpoint</span> <span class="o">-</span> <span class="n">input</span><span class="p">.</span>
+    <span class="n">set</span> <span class="n">PTerm</span> <span class="n">to</span> <span class="n">error</span> <span class="o">*</span> <span class="n">Kp</span><span class="p">.</span>
+    <span class="n">set</span> <span class="n">ITerm</span> <span class="n">to</span> <span class="mf">0.</span>
+    <span class="n">set</span> <span class="n">DTerm</span> <span class="n">to</span> <span class="mf">0.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">LastSampleTime</span> <span class="o">&lt;</span> <span class="n">sampleTime</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">set</span> <span class="n">dt</span> <span class="n">to</span> <span class="n">sampleTime</span> <span class="o">-</span> <span class="n">LastSampleTime</span><span class="p">.</span>
+        <span class="k">if</span> <span class="n">dt</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="p">{</span>
+            <span class="c1">// only calculate integral and derivative if the time</span>
+            <span class="c1">// difference is less than one second, and their gain is not 0.</span>
+            <span class="k">if</span> <span class="n">Ki</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+                <span class="n">ITerm</span> <span class="o">=</span> <span class="p">(</span><span class="n">ErrorSum</span> <span class="o">+</span> <span class="n">Error</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">Ki</span><span class="p">.</span>
+            <span class="p">}</span>
+            <span class="n">set</span> <span class="n">ChangeRate</span> <span class="n">to</span> <span class="p">(</span><span class="n">input</span> <span class="o">-</span> <span class="n">LastInput</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span><span class="p">.</span>
+            <span class="k">if</span> <span class="n">Kd</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+                <span class="n">DTerm</span> <span class="o">=</span> <span class="n">ChangeRate</span> <span class="o">*</span> <span class="n">Kd</span><span class="p">.</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">set</span> <span class="n">Output</span> <span class="n">to</span> <span class="n">pTerm</span> <span class="o">+</span> <span class="n">iTerm</span> <span class="o">+</span> <span class="n">dTerm</span><span class="p">.</span>
+    <span class="k">if</span> <span class="n">abs</span><span class="p">(</span><span class="n">Output</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MaxOutput</span> <span class="p">{</span>
+        <span class="c1">// if the output goes beyond the max/min limits, reset it.</span>
+        <span class="k">if</span> <span class="n">Output</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="n">set</span> <span class="n">Output</span> <span class="n">to</span> <span class="n">MaxOutput</span><span class="p">.</span>
+        <span class="k">else</span> <span class="n">set</span> <span class="n">Output</span> <span class="n">to</span> <span class="o">-</span><span class="n">MaxOutput</span><span class="p">.</span>
+        <span class="c1">// adjust the value of ITerm as well to prevent the value</span>
+        <span class="c1">// from winding up out of control.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Ki</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">and</span> <span class="p">(</span><span class="n">LastSampleTime</span> <span class="o">&lt;</span> <span class="n">sampleTime</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">set</span> <span class="n">ITerm</span> <span class="n">to</span> <span class="n">Output</span> <span class="o">-</span> <span class="n">Pterm</span> <span class="o">-</span> <span class="n">DTerm</span><span class="p">.</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">LastSampleTime</span> <span class="o">=</span> <span class="n">sampleTime</span><span class="p">.</span>
+    <span class="k">if</span> <span class="n">Ki</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span> <span class="n">set</span> <span class="n">ErrorSum</span> <span class="n">to</span> <span class="n">ITerm</span> <span class="o">/</span> <span class="n">Ki</span><span class="p">.</span>
+    <span class="k">else</span> <span class="n">ErrorSum</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="k">return</span> <span class="n">Output</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="resource_transfer.html" class="btn btn-neutral float-right" title="Resource Transfer">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="list.html" class="btn btn-neutral" title="List"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.17.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

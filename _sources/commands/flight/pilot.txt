@@ -79,7 +79,7 @@ Will ensure that the throttle will be 0 when execution stops. These suffixes all
 
 
 .. _SHIP CONTROL PILOTMAINTHROTTLE:
-.. object:: SHIP:CONTROL:MAINTHROTTLE
+.. object:: SHIP:CONTROL:PILOTMAINTHROTTLE
 
     Returns the pilot's input for the throttle. This is the only ``PILOT`` variable that is settable and is used to set the throttle upon termination of the current **kOS** program.
 

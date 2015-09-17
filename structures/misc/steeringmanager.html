@@ -1,0 +1,805 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SteeringManager &mdash; kOS 0.17.3 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
+        <link rel="next" title="Terminal" href="terminal.html"/>
+        <link rel="prev" title="Resource Transfer" href="resource_transfer.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
+      
+    <li>SteeringManager</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/structures/misc/steeringmanager.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="steeringmanager">
+<span id="id1"></span><h1>SteeringManager<a class="headerlink" href="#steeringmanager" title="Permalink to this headline">¶</a></h1>
+<p>The SteeringManager is a bound variable, not a suffix to a specific vessel.  This prevents access to the SteeringManager of other vessels.  You can access the steering manager as shown below:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Display the ship facing, target facing, and world coordinates vectors.</span>
+<span class="n">SET</span> <span class="n">STEERINGMANAGER</span><span class="o">:</span><span class="n">SHOWFACINGVECTORS</span> <span class="n">TO</span> <span class="n">TRUE</span><span class="p">.</span>
+
+<span class="c1">// Change the torque calculation to multiply the available torque by 1.5.</span>
+<span class="n">SET</span> <span class="n">STEERINGMANAGER</span><span class="o">:</span><span class="n">ROLLTORQUEFACTOR</span> <span class="n">TO</span> <span class="mf">1.5</span><span class="p">.</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.18: </span>The <a class="reference internal" href="#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></tt></a> was added to improve the accuracy of kOS&#8217;s cooked steering.  While this code is a significant improvement over the old system, it is not perfect.  Specifically it does not properly calculate the effects of control surfaces, nor does it account for atmospheric drag.  It also does not adjust for asymetric RCS or Engine thrust.  It does allow for some modifications to the built in logic through the torque adjustments and factors.  However, if there is a condition for which the new steering manager is unable to provide accurate control, you should continue to fall back to raw controls.</p>
+</div>
+</div>
+<dl class="structure">
+<dt id="structure:STEERINGMANAGER">
+<em class="property">structure </em><tt class="descname">SteeringManager</tt><a class="headerlink" href="#structure:STEERINGMANAGER" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="18%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHPID" title="STEERINGMANAGER:PITCHPID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PITCHPID</span></tt></a></td>
+<td><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a></td>
+<td>The PIDLoop for the pitch direction.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWPID" title="STEERINGMANAGER:YAWPID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">YAWPID</span></tt></a></td>
+<td><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a></td>
+<td>The PIDLoop for the yaw direction.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLPID" title="STEERINGMANAGER:ROLLPID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROLLPID</span></tt></a></td>
+<td><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a></td>
+<td>The PIDLoop for the roll direction.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ENABLED" title="STEERINGMANAGER:ENABLED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></tt></a></td>
+<td>bool</td>
+<td>Returns true if the <cite>SteeringManager</cite> is currently controlling the vessel</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:TARGET" title="STEERINGMANAGER:TARGET attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TARGET</span></tt></a></td>
+<td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+<td>The direction that the vessel is currently steering towards</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:STEERINGMANAGER:RESETPIDS" title="STEERINGMANAGER:RESETPIDS method"><tt class="xref ks ks-meth docutils literal"><span class="pre">RESETPIDS()</span></tt></a></td>
+<td>none</td>
+<td>Called to call <cite>RESET</cite> on all steering PID loops.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWFACINGVECTORS" title="STEERINGMANAGER:SHOWFACINGVECTORS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHOWFACINGVECTORS</span></tt></a></td>
+<td>bool</td>
+<td>Enable/disable display of ship facing, target, and world coordinates vectors.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWANGULARVECTORS" title="STEERINGMANAGER:SHOWANGULARVECTORS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHOWANGULARVECTORS</span></tt></a></td>
+<td>bool</td>
+<td>Enable/disable display of angular rotation vectors</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWTHRUSTVECTORS" title="STEERINGMANAGER:SHOWTHRUSTVECTORS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHOWTHRUSTVECTORS</span></tt></a></td>
+<td>bool</td>
+<td>Enable/disable display of engine thrust vectors</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWRCSVECTORS" title="STEERINGMANAGER:SHOWRCSVECTORS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHOWRCSVECTORS</span></tt></a></td>
+<td>bool</td>
+<td>Enable/disable display of rcs thrust vectors</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:SHOWSTEERINGSTATS" title="STEERINGMANAGER:SHOWSTEERINGSTATS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SHOWSTEERINGSTATS</span></tt></a></td>
+<td>bool</td>
+<td>Enable/disable printing of the steering information on the terminal</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:WRITECSVFILES" title="STEERINGMANAGER:WRITECSVFILES attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">WRITECSVFILES</span></tt></a></td>
+<td>bool</td>
+<td>Enable/disable logging steering to csv files.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTS" title="STEERINGMANAGER:PITCHTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PITCHTS</span></tt></a></td>
+<td>scalar (s)</td>
+<td>Settling time for the pitch torque calculation</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTS" title="STEERINGMANAGER:YAWTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">YAWTS</span></tt></a></td>
+<td>scalar (s)</td>
+<td>Settling time for the yaw torque calculation</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTS" title="STEERINGMANAGER:ROLLTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROLLTS</span></tt></a></td>
+<td>scalar (s)</td>
+<td>Settling time for the roll torque calculation</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:MAXSTOPPINGTIME" title="STEERINGMANAGER:MAXSTOPPINGTIME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt></a></td>
+<td>scalar (s)</td>
+<td>The maximum amount of stopping time to limit angular turn rate.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ANGLEERROR" title="STEERINGMANAGER:ANGLEERROR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ANGLEERROR</span></tt></a></td>
+<td>scalar (deg)</td>
+<td>The angle between vessel:facing and target directions</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHERROR" title="STEERINGMANAGER:PITCHERROR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PITCHERROR</span></tt></a></td>
+<td>scalar (deg)</td>
+<td>The angular error in the pitch direction</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWERROR" title="STEERINGMANAGER:YAWERROR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">YAWERROR</span></tt></a></td>
+<td>scalar (deg)</td>
+<td>The angular error in the yaw direction</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLERROR" title="STEERINGMANAGER:ROLLERROR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROLLERROR</span></tt></a></td>
+<td>scalar (deg)</td>
+<td>The angular error in the roll direction</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTORQUEADJUST" title="STEERINGMANAGER:PITCHTORQUEADJUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PITCHTORQUEADJUST</span></tt></a></td>
+<td>scalar (kN)</td>
+<td>Additive adjustment to pitch torque (calculated)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTORQUEADJUST" title="STEERINGMANAGER:YAWTORQUEADJUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">YAWTORQUEADJUST</span></tt></a></td>
+<td>scalar (kN)</td>
+<td>Additive adjustment to yaw torque (calculated)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTORQUEADJUST" title="STEERINGMANAGER:ROLLTORQUEADJUST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROLLTORQUEADJUST</span></tt></a></td>
+<td>scalar (kN)</td>
+<td>Additive adjustment to roll torque (calculated)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTORQUEFACTOR" title="STEERINGMANAGER:PITCHTORQUEFACTOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PITCHTORQUEFACTOR</span></tt></a></td>
+<td>scalar</td>
+<td>Multiplicative adjustment to pitch torque (calculated)</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTORQUEFACTOR" title="STEERINGMANAGER:YAWTORQUEFACTOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">YAWTORQUEFACTOR</span></tt></a></td>
+<td>scalar</td>
+<td>Multiplicative adjustment to yaw torque (calculated)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTORQUEFACTOR" title="STEERINGMANAGER:ROLLTORQUEFACTOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROLLTORQUEFACTOR</span></tt></a></td>
+<td>scalar</td>
+<td>Multiplicative adjustment to roll torque (calculated)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:PITCHPID">
+SteeringManager:<tt class="descname">PITCHPID</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:PITCHPID" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the PIDLoop object for the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure.  The loop&#8217;s <cite>MAXOUTPUT</cite> value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:YAWPID">
+SteeringManager:<tt class="descname">YAWPID</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:YAWPID" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the PIDLoop object for the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure.  The loop&#8217;s <cite>MAXOUTPUT</cite> value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:ROLLPID">
+SteeringManager:<tt class="descname">ROLLPID</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:ROLLPID" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the PIDLoop object for the roll direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure.  The loop&#8217;s <cite>MAXOUTPUT</cite> value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:ENABLED">
+SteeringManager:<tt class="descname">ENABLED</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:ENABLED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns true if the SteeringManager is currently controlling the vessel steering.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:TARGET">
+SteeringManager:<tt class="descname">TARGET</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:TARGET" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction.  If steering is locked to &#8220;kill&#8221;, this will return the vessel&#8217;s last facing direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:STEERINGMANAGER:RESETPIDS">
+SteeringManager:<tt class="descname">RESETPIDS</tt><big>(</big><big>)</big><a class="headerlink" href="#method:STEERINGMANAGER:RESETPIDS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">none</td>
+</tr>
+</tbody>
+</table>
+<p>Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction.  If steering is locked to &#8220;kill&#8221;, this will return the vessel&#8217;s last facing direction.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:SHOWFACINGVECTORS">
+SteeringManager:<tt class="descname">SHOWFACINGVECTORS</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:SHOWFACINGVECTORS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Setting this suffix to true will cause the steering manager to display graphical vectors (see <a class="reference internal" href="vecdraw.html#structure:VECDRAW" title="VECDRAW structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></tt></a>) representing the forward, top, and starboard of the facing direction, as well as the world x, y, and z axis orientation (centered on the vessel).  Setting to false will hide the vectors, as will disabling locked steering.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:SHOWANGULARVECTORS">
+SteeringManager:<tt class="descname">SHOWANGULARVECTORS</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:SHOWANGULARVECTORS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Setting this suffix to true will cause the steering manager to display graphical vectors (see <a class="reference internal" href="vecdraw.html#structure:VECDRAW" title="VECDRAW structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></tt></a>) representing the current and target angular velocities in the pitch, yaw, and roll directions.  Setting to false will hide the vectors, as will disabling locked steering.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:SHOWTHRUSTVECTORS">
+SteeringManager:<tt class="descname">SHOWTHRUSTVECTORS</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:SHOWTHRUSTVECTORS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Setting this suffix to true will cause the steering manager to display graphical vectors (see <a class="reference internal" href="vecdraw.html#structure:VECDRAW" title="VECDRAW structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></tt></a>) representing the thrust and torque for each active engine.  Setting to false will hide the vectors, as will disabling locked steering.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:SHOWRCSVECTORS">
+SteeringManager:<tt class="descname">SHOWRCSVECTORS</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:SHOWRCSVECTORS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Setting this suffix to true will cause the steering manager to display graphical vectors (see <a class="reference internal" href="vecdraw.html#structure:VECDRAW" title="VECDRAW structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">VecDraw</span></tt></a>) representing the thrust and torque for each active RCS block.  Setting to false will hide the vectors, as will disabling locked steering.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:SHOWSTEERINGSTATS">
+SteeringManager:<tt class="descname">SHOWSTEERINGSTATS</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:SHOWSTEERINGSTATS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Setting this suffix to true will cause the steering manager to clear the terminal screen and print steering data each update.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:WRITECSVFILES">
+SteeringManager:<tt class="descname">WRITECSVFILES</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:WRITECSVFILES" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Setting this suffix to true will cause the steering manager log the data from all 6 PIDLoops calculating target angular velocity and target torque.  The files are stored in the <cite>[KSP Root]GameDatakOSPluginsPluginDatakOS</cite> folder, with one file per loop and a new file created for each new manager instance (i.e. every launch, every revert, and every vessel load).  These files can grow quite large, and add up quickly, so it is recommended to only set this value to true for testing or debugging and not normal operation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:PITCHTS">
+SteeringManager:<tt class="descname">PITCHTS</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:PITCHTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Represents the settling time for the PID calculating pitch torque based on target angular velocity.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the pitch direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:YAWTS">
+SteeringManager:<tt class="descname">YAWTS</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:YAWTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Represents the settling time for the PID calculating yaw torque based on target angular velocity.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the yaw direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:ROLLTS">
+SteeringManager:<tt class="descname">ROLLTS</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:ROLLTS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>Represents the settling time for the PID calculating roll torque based on target angular velocity.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:MAXSTOPPINGTIME">
+SteeringManager:<tt class="descname">MAXSTOPPINGTIME</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:MAXSTOPPINGTIME" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (s)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>This value is used to limit the turning rate when calculating target angular velocity.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:ANGLEERROR">
+SteeringManager:<tt class="descname">ANGLEERROR</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:ANGLEERROR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The angle between the ship&#8217;s facing direction forward vector and the target direction&#8217;s forward.  This is the combined pitch and yaw error.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:PITCHERROR">
+SteeringManager:<tt class="descname">PITCHERROR</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:PITCHERROR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The pitch angle between the ship&#8217;s facing direction and the target direction.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:YAWERROR">
+SteeringManager:<tt class="descname">YAWERROR</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:YAWERROR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The yaw angle between the ship&#8217;s facing direction and the target direction.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:ROLLERROR">
+SteeringManager:<tt class="descname">ROLLERROR</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:ROLLERROR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (deg)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The roll angle between the ship&#8217;s facing direction and the target direction.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:PITCHTORQUEADJUST">
+SteeringManager:<tt class="descname">PITCHTORQUEADJUST</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:PITCHTORQUEADJUST" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (kNm)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>You can set this value to provide an additive bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST * PITCHTORQUEFACTOR.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:YAWTORQUEADJUST">
+SteeringManager:<tt class="descname">YAWTORQUEADJUST</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:YAWTORQUEADJUST" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (kNm)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>You can set this value to provide an additive bias to the calculated available yaw torque. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:ROLLTORQUEADJUST">
+SteeringManager:<tt class="descname">ROLLTORQUEADJUST</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:ROLLTORQUEADJUST" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (kNm)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>You can set this value to provide an additive bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST * ROLLTORQUEFACTOR.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:PITCHTORQUEFACTOR">
+SteeringManager:<tt class="descname">PITCHTORQUEFACTOR</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:PITCHTORQUEFACTOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (kNm)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>You can set this value to provide an multiplicative factor bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST * PITCHTORQUEFACTOR.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:YAWTORQUEFACTOR">
+SteeringManager:<tt class="descname">YAWTORQUEFACTOR</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:YAWTORQUEFACTOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (kNm)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>You can set this value to provide an multiplicative factor bias to the calculated available yaw torque. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:STEERINGMANAGER:ROLLTORQUEFACTOR">
+SteeringManager:<tt class="descname">ROLLTORQUEFACTOR</tt><a class="headerlink" href="#attribute:STEERINGMANAGER:ROLLTORQUEFACTOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar (kNm)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>You can set this value to provide an multiplicative factor bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST * ROLLTORQUEFACTOR.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="terminal.html" class="btn btn-neutral float-right" title="Terminal">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="resource_transfer.html" class="btn btn-neutral" title="Resource Transfer"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.17.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

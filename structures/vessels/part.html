@@ -372,7 +372,11 @@ Part:<tt class="descname">CONTROLFROM</tt><a class="headerlink" href="#attribute
 </tr>
 </tbody>
 </table>
-<p>Call this function to cause the game to do the same thing as when you right-click a part on a vessel and select &#8220;control from here&#8221; on the menu. It rotates the control orientation so that fore/aft/left/right/up/down now match the orientation of this part. NOTE that this will not work for every type of part. It only works for those parts that KSP itself allows this for (control cores and docking ports).  It accepts no arguments, and returns no value.</p>
+<p>Call this function to cause the game to do the same thing as when you right-click a part on a vessel and select &#8220;control from here&#8221; on the menu. It rotates the control orientation so that fore/aft/left/right/up/down now match the orientation of this part. NOTE that this will not work for every type of part. It only works for those parts that KSP itself allows this for (control cores and docking ports).  It accepts no arguments, and returns no value.
+All vessels must have at least one &#8220;control from&#8221;
+part on them somewhere, which is why there&#8217;s no mechanism for un-setting
+the &#8220;control from&#8221; setting other than to pick another part and set it
+to that part instead.</p>
 </dd></dl>
 
 <dl class="attribute">

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Resource &mdash; kOS 0.17.3 documentation</title>
+  <title>ALT &mdash; kOS 0.17.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
     <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="Sensor" href="sensor.html"/>
-        <link rel="prev" title="PartModule" href="partmodule.html"/> 
+        <link rel="next" title="DockingPort" href="dockingport.html"/>
+        <link rel="prev" title="AggregateResource" href="aggregateresource.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -168,10 +168,10 @@
       
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
       
-    <li>Resource</li>
+    <li>ALT</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../../_sources/structures/vessels/resource.txt" rel="nofollow"> View page source</a>
+          <a href="../../_sources/structures/vessels/alt.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
@@ -179,12 +179,16 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="resource">
-<span id="id1"></span><h1>Resource<a class="headerlink" href="#resource" title="Permalink to this headline">¶</a></h1>
-<p>A single resource value a thing holds (i.e. fuel, electric charge, etc). This is the type returned by the <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>:RESOURCES suffix</p>
+  <div class="section" id="alt">
+<span id="id1"></span><h1>ALT<a class="headerlink" href="#alt" title="Permalink to this headline">¶</a></h1>
+<p>ALT is a special object that exists just to help you get the
+altitudes of interest for a vessel future.  It is grandfathered
+in for the sake of backward compatibility, but this information
+is also available on the Vessel structure as well, which is
+the better new way to do it:</p>
 <dl class="structure">
-<dt id="structure:RESOURCE">
-<em class="property">structure </em><tt class="descname">Resource</tt><a class="headerlink" href="#structure:RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:ALT">
+<em class="property">structure </em><tt class="descname">ALT</tt><a class="headerlink" href="#structure:ALT" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="29%" />
@@ -198,131 +202,20 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:NAME" title="RESOURCE:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
-<td>string</td>
-<td>Resource name</td>
+<tr class="row-even"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">APOAPSIS</span></tt></td>
+<td>Number, meters</td>
+<td>altitude in meters of SHIP&#8217;s apoapsis.  Same as SHIP:APOAPSIS.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:AMOUNT" title="RESOURCE:AMOUNT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AMOUNT</span></tt></a></td>
-<td>scalar</td>
-<td>Amount of this resource left</td>
+<tr class="row-odd"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">PERIAPSIS</span></tt></td>
+<td>Number, meters</td>
+<td>altitude in meters of SHIP&#8217;s periapsis.  Same as SHIP:PERIAPSIS.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:DENSITY" title="RESOURCE:DENSITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DENSITY</span></tt></a></td>
-<td>scalar</td>
-<td>Density of this resource</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:CAPACITY" title="RESOURCE:CAPACITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></tt></a></td>
-<td>scalar</td>
-<td>Maximum amount of this resource</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:TOGGLEABLE" title="RESOURCE:TOGGLEABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TOGGLEABLE</span></tt></a></td>
-<td>boolean</td>
-<td>Can this tank be removed from the fuel flow</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:ENABLED" title="RESOURCE:ENABLED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></tt></a></td>
-<td>boolean</td>
-<td>Is this tank currently in the fuel flow</td>
+<tr class="row-even"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">RADAR</span></tt></td>
+<td>Number, meters</td>
+<td>Altitude of SHIP above the ground terrain, rather than above sea level.</td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCE:NAME">
-Resource:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:RESOURCE:NAME" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
-<p>The name of the resource, i.e. &#8220;LIQUIDFUEL&#8221;, &#8220;ELECTRICCHARGE&#8221;, &#8220;MONOPROP&#8221;.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCE:AMOUNT">
-Resource:<tt class="descname">AMOUNT</tt><a class="headerlink" href="#attribute:RESOURCE:AMOUNT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
-</tr>
-</tbody>
-</table>
-<p>The value of how much resource is left.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCE:DENSITY">
-Resource:<tt class="descname">DENSITY</tt><a class="headerlink" href="#attribute:RESOURCE:DENSITY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
-</tr>
-</tbody>
-</table>
-<p>The density value of this resource, expressed in Megagrams f mass
-per Unit of resource.  (i.e. a value of 0.005 would mean that each
-unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
-the usual unit that most mass in the game is represented in.)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCE:CAPACITY">
-Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#attribute:RESOURCE:CAPACITY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
-</tr>
-</tbody>
-</table>
-<p>What AMOUNT would be if the resource was filled to the top.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCE:TOGGLEABLE">
-Resource:<tt class="descname">TOGGLEABLE</tt><a class="headerlink" href="#attribute:RESOURCE:TOGGLEABLE" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
-</tr>
-</tbody>
-</table>
-<p>Many, but not all, resources can be turned on and off, this removes them from the fuel flow.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCE:ENABLED">
-Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#attribute:RESOURCE:ENABLED" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
-</tr>
-</tbody>
-</table>
-<p>If the resource is TOGGLEABLE, setting this to false will prevent the resource from being taken out normally.</p>
 </dd></dl>
 
 </div>
@@ -333,10 +226,10 @@ Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#attribute
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="sensor.html" class="btn btn-neutral float-right" title="Sensor">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="dockingport.html" class="btn btn-neutral float-right" title="DockingPort">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="partmodule.html" class="btn btn-neutral" title="PartModule"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="aggregateresource.html" class="btn btn-neutral" title="AggregateResource"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

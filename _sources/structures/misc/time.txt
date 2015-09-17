@@ -26,7 +26,7 @@ Special variable TIME
 .. global:: TIME
 
     :access: Get only
-    :type: integer
+    :type: :struct:`TimeSpan`
 
     The special variable **TIME** is used to get the current time.
 
@@ -109,7 +109,7 @@ You can use the TIME special variable to detect whether or not a real physics 't
           - integer
           - Year-hand number
         * - :attr:`SECONDS`
-          - integer
+          - Number (float)
           - Total Seconds since Epoch
 
 
@@ -167,8 +167,10 @@ You can use the TIME special variable to detect whether or not a real physics 't
 .. attribute:: TimeSpan:SECONDS
 
     :access: Get only
-    :type: integer
+    :type: Number (float)
 
-    Total Seconds since Epoch.
+    Total Seconds since Epoch.  Epoch is defined as the moment your 
+    current saved game's universe began (the point where you started
+    your campaign).  Can be very precise.
 
 

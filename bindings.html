@@ -277,40 +277,43 @@ page, as they are all just instances of the standard vessel suffixes.</p>
 <tr class="row-odd"><td>VERTICALSPEED</td>
 <td>Same as SHIP:VERTICALSPEED</td>
 </tr>
-<tr class="row-even"><td>SURFACESPEED</td>
-<td>Same as SHIP:SURFACESPEED</td>
+<tr class="row-even"><td>GROUNDSPEED</td>
+<td>Same as SHIP:GROUNDSPEED</td>
 </tr>
-<tr class="row-odd"><td>AIRSPEED</td>
+<tr class="row-odd"><td>SURFACESPEED</td>
+<td>This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.</td>
+</tr>
+<tr class="row-even"><td>AIRSPEED</td>
 <td>Same as SHIP:AIRSPEED</td>
 </tr>
-<tr class="row-even"><td>VESSELNAME</td>
+<tr class="row-odd"><td>VESSELNAME</td>
 <td>Same as SHIP:VESSELNAME</td>
 </tr>
-<tr class="row-odd"><td>ALTITUDE</td>
+<tr class="row-even"><td>ALTITUDE</td>
 <td>Same as SHIP:ALTITUDE</td>
 </tr>
-<tr class="row-even"><td>APOAPSIS</td>
+<tr class="row-odd"><td>APOAPSIS</td>
 <td>Same as SHIP:APOAPSIS</td>
 </tr>
-<tr class="row-odd"><td>PERIAPSIS</td>
+<tr class="row-even"><td>PERIAPSIS</td>
 <td>Same as SHIP:PERIAPSIS</td>
 </tr>
-<tr class="row-even"><td>SENSORS</td>
+<tr class="row-odd"><td>SENSORS</td>
 <td>Same as SHIP:SENSORS</td>
 </tr>
-<tr class="row-odd"><td>SRFPROGRADE</td>
+<tr class="row-even"><td>SRFPROGRADE</td>
 <td>Same as SHIP:SRFPROGRADE</td>
 </tr>
-<tr class="row-even"><td>SRFREROGRADE</td>
+<tr class="row-odd"><td>SRFREROGRADE</td>
 <td>Same as SHIP:SRFREROGRADE</td>
 </tr>
-<tr class="row-odd"><td>OBT</td>
+<tr class="row-even"><td>OBT</td>
 <td>Same as SHIP:OBT</td>
 </tr>
-<tr class="row-even"><td>STATUS</td>
+<tr class="row-odd"><td>STATUS</td>
 <td>Same as SHIP:STATUS</td>
 </tr>
-<tr class="row-odd"><td>SHIPNAME</td>
+<tr class="row-even"><td>SHIPNAME</td>
 <td>Same as SHIP:NAME</td>
 </tr>
 </tbody>
@@ -372,78 +375,30 @@ the term exactly as it appears in the resources window.</p>
 </div>
 <div class="section" id="alt-alias">
 <h2>ALT ALIAS<a class="headerlink" href="#alt-alias" title="Permalink to this headline">¶</a></h2>
-<p>The special variable ALT is a unique exception. It behaves like a
-structure with suffixes but it&#8217;s actually a bit &#8220;fake&#8221; in that it&#8217;s not
-really a structure. The following terms are just exceptions that don&#8217;t
-fit anywhere else:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="13%" />
-<col width="7%" />
-<col width="79%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Variable</th>
-<th class="head">Type</th>
-<th class="head">Meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>ALT:APOAPSIS</td>
-<td>number</td>
-<td>The altitude of the apoapsis of the current ship.  Identical to SHIP:APOAPSIS.</td>
-</tr>
-<tr class="row-odd"><td>ALT:PERIAPSIS</td>
-<td>number</td>
-<td>The altitude of the periapsis of the current ship.  Identical to SHIP:PERIAPSIS.</td>
-</tr>
-<tr class="row-even"><td>ALT:RADAR</td>
-<td>number</td>
-<td>The altitude of the current ship above the terrain.  Does not have an alias anywhere.</td>
-</tr>
-</tbody>
-</table>
+<p>The special variable <a class="reference external" href="structures/vessels/alt.html">ALT</a> gives you
+access to a few altitude predictions:</p>
+<p>ALT:APOAPSIS</p>
+<p>ALT:PERIAPSIS</p>
+<p>ALT:RADAR</p>
+<p>Further details are found on the <a class="reference external" href="structures/vessels/alt.html">ALT page</a> .</p>
 </div>
 <div class="section" id="eta-alias">
 <h2>ETA ALIAS<a class="headerlink" href="#eta-alias" title="Permalink to this headline">¶</a></h2>
-<p>The special variable ETA is a unique exception. It behaves like a
-structure with suffixes but it&#8217;s actually a bit &#8220;fake&#8221; in that it&#8217;s not
-really a structure. The following terms are just exceptions that don&#8217;t
-fit anywhere else:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="15%" />
-<col width="9%" />
-<col width="76%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Variable</th>
-<th class="head">Type</th>
-<th class="head">Meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>ETA:APOAPSIS</td>
-<td>number</td>
-<td>seconds until SHIP will reach its apoapsis.</td>
-</tr>
-<tr class="row-odd"><td>ETA:PERIAPSIS</td>
-<td>number</td>
-<td>seconds until SHIP will reach its periapsis.</td>
-</tr>
-<tr class="row-even"><td>ETA:TRANSITION</td>
-<td>number</td>
-<td>seconds until SHIP will leave its SOI to enter the SOI of another body.</td>
-</tr>
-</tbody>
-</table>
+<p>The special variable <a class="reference external" href="structures/vessels/eta.html">ETA</a> gives you
+access to a few time predictions:</p>
+<p>ETA:APOAPSIS</p>
+<p>ETA:PERIAPSIS</p>
+<p>ETA:TRANSITION</p>
+<p>Further details are found on the <a class="reference external" href="structures/vessels/eta.html">ETA page</a> .</p>
 </div>
 <div class="section" id="encounter">
 <h2>ENCOUNTER<a class="headerlink" href="#encounter" title="Permalink to this headline">¶</a></h2>
-<p>The body being encountered next by the current vessel. Returns the
-special string &#8220;None&#8221; if there is no expected encounter, or an object of
-type <a class="reference external" href="structures/celestial_bodies/body.html">Body</a> if an encounter is
-expected.</p>
+<p>The orbit patch describing the next encounter with a body the current
+vessel will enter. If there is no such encounter coming, it will return
+the special string &#8220;None&#8221;.  If there is an encounter coming, it will
+return an object <a class="reference internal" href="structures/orbits/orbit.html#orbit"><em>of type Orbit</em></a>.  (i.e. to obtain the name
+of the planet the encounter is with, you can do:
+<tt class="docutils literal"><span class="pre">print</span> <span class="pre">ENCOUNTER:BODY:NAME.</span></tt>, for example.).</p>
 </div>
 <div class="section" id="boolean-toggle-fields">
 <h2>BOOLEAN TOGGLE FIELDS:<a class="headerlink" href="#boolean-toggle-fields" title="Permalink to this headline">¶</a></h2>
