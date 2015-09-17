@@ -87,7 +87,7 @@ namespace kOS.Binding
 
             // If it gets this far, that means the part the kOSProcessor module is inside of
             // got disconnected from its original vessel and became a member
-            // of a new child vessel, either do to undocking, decoupling, or breakage.
+            // of a new child vessel, either due to undocking, decoupling, or breakage.
 
             // currentVessel is now a stale reference to the vessel this manager used to be a member of,
             // while Shared.Vessel is the new vessel it is now contained in.
@@ -171,6 +171,7 @@ namespace kOS.Binding
 
             UnBind();
             flightControls.Remove(currentVessel.rootPart.flightID);
+            SteeringManager.RemoveInstance(currentVessel.id);
         }
 
         private bool VesselIsValid(Vessel vessel)
@@ -268,15 +269,23 @@ namespace kOS.Binding
             private readonly BindingManager binding;
             private object value;
             private bool enabled;
+            SharedObjects shared;
+            SteeringManager steeringManager;
 
             public FlightCtrlParam(string name, SharedObjects sharedObjects)
             {
                 this.name = name;
+                shared = sharedObjects;
                 control = GetControllerByVessel(sharedObjects.Vessel);
                 
                 binding = sharedObjects.BindingMgr;
                 Enabled = false;
                 value = null;
+
+                if (string.Equals(name, "steering", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    steeringManager = SteeringManager.GetInstance(sharedObjects);
+                }
 
                 HookEvents();
             }
@@ -296,6 +305,12 @@ namespace kOS.Binding
                     SafeHouse.Logger.Log(string.Format("FlightCtrlParam: Enabled: {0} {1} => {2}", name, enabled, value));
 
                     enabled = value;
+                    if (steeringManager != null)
+                    {
+                        if (enabled) steeringManager.EnableControl(this.shared);
+                        else steeringManager.DisableControl();
+                        //steeringManager.Enabled = enabled;
+                    }
                     if (RemoteTechHook.IsAvailable(control.Vessel.id))
                     {
                         HandleRemoteTechPilot();
@@ -386,22 +401,27 @@ namespace kOS.Binding
             private void SteerByWire(FlightCtrlState c)
             {
                 if (!Enabled) return;
-                if (value is string && ((string)value).ToUpper() == "KILL")
-                {
-                    SteeringHelper.KillRotation(c, control.Vessel);
-                }
-                else if (value is Direction)
-                {
-                    SteeringHelper.SteerShipToward((Direction)value, c, control.Vessel);
-                }
-                else if (value is Vector)
-                {
-                    SteeringHelper.SteerShipToward(((Vector)value).ToDirection(), c, control.Vessel);
-                }
-                else if (value is Node)
-                {
-                    SteeringHelper.SteerShipToward(((Node)value).GetBurnVector().ToDirection(), c, control.Vessel);
-                }
+                steeringManager.Value = this.value;
+                steeringManager.OnFlyByWire(c);
+                //if (value is string && ((string)value).ToUpper() == "KILL")
+                //{
+                //    SteeringHelper.KillRotation(c, control.Vessel);
+                //}
+                //else if (value is Direction)
+                //{
+                //    SteeringHelper.SteerShipToward((Direction)value, c, control.Vessel);
+                //}
+                //else if (value is Vector)
+                //{
+                //    //SteeringHelper.SteerShipToward(((Vector)value).ToDirection(), c, control.Vessel);
+                //    SteeringHelper.SteerShipToward(
+                //        Direction.LookRotation((Vector)value, control.Vessel.mainBody.position - control.Vessel.GetWorldPos3D()), 
+                //        c, control.Vessel);
+                //}
+                //else if (value is Node)
+                //{
+                //    SteeringHelper.SteerShipToward(((Node)value).GetBurnVector().ToDirection(), c, control.Vessel);
+                //}
             }
 
             private void WheelSteer(FlightCtrlState c)
@@ -439,11 +459,21 @@ namespace kOS.Binding
             public void Dispose()
             {
                 Enabled = false;
+                if (steeringManager != null)
+                {
+                    steeringManager.RemoveInstance(shared);
+                    steeringManager = null;
+                }
             }
 
             public void UpdateFlightControl(Vessel vessel)
             {
                 control = GetControllerByVessel(vessel);
+                if (steeringManager != null)
+                {
+                    steeringManager = SteeringManager.SwapInstance(shared, steeringManager);
+                    steeringManager.Update(vessel);
+                }
             }
             
             public override string ToString() // added to aid in debugging.
