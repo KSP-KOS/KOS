@@ -48,6 +48,8 @@ namespace kOS.Suffixed
 
         public double MaxOutput { get; set; }
 
+        public double MinOutput { get; set; }
+
         public double ErrorSum { get; set; }
 
         public double PTerm { get; set; }
@@ -67,7 +69,7 @@ namespace kOS.Suffixed
         {
         }
 
-        public PIDLoop(double kp, double ki, double kd, double maxoutput = double.MaxValue, bool extraUnwind = false)
+        public PIDLoop(double kp, double ki, double kd, double maxoutput, double minoutput, bool extraUnwind = false)
         {
             LastSampleTime = double.MaxValue;
             Kp = kp;
@@ -78,12 +80,18 @@ namespace kOS.Suffixed
             Error = 0;
             Output = 0;
             MaxOutput = maxoutput;
+            MinOutput = minoutput;
             ErrorSum = 0;
             PTerm = 0;
             ITerm = 0;
             DTerm = 0;
             ExtraUnwind = extraUnwind;
             InitializeSuffixes();
+        }
+
+        public PIDLoop(double kp, double ki, double kd, double maxoutput = double.MaxValue, bool extraUnwind = false)
+            : this(kp, ki, kd, maxoutput, -maxoutput, extraUnwind)
+        {
         }
 
         public void InitializeSuffixes()
@@ -97,21 +105,27 @@ namespace kOS.Suffixed
             AddSuffix("ERROR", new Suffix<double>(() => Error));
             AddSuffix("OUTPUT", new Suffix<double>(() => Output));
             AddSuffix("MAXOUTPUT", new SetSuffix<double>(() => MaxOutput, value => MaxOutput = value));
+            AddSuffix("MINOUTPUT", new SetSuffix<double>(() => MinOutput, value => MinOutput = value));
             AddSuffix("ERRORSUM", new Suffix<double>(() => ErrorSum));
             AddSuffix("PTERM", new Suffix<double>(() => PTerm));
             AddSuffix("ITERM", new Suffix<double>(() => ITerm));
             AddSuffix("DTERM", new Suffix<double>(() => DTerm));
-            AddSuffix("EXTRAUNWIND", new SetSuffix<bool>(() => ExtraUnwind, value => ExtraUnwind = value));
             AddSuffix("CHANGERATE", new Suffix<double>(() => ChangeRate));
             AddSuffix("RESET", new NoArgsSuffix(ResetI));
             AddSuffix("UPDATE", new TwoArgsSuffix<double, double, double>(Update));
         }
 
-        public double Update(double sampleTime, double input, double setpoint, double maxOutput)
+        public double Update(double sampleTime, double input, double setpoint, double maxOutput, double minOutput)
         {
             MaxOutput = maxOutput;
+            MinOutput = minOutput;
             Setpoint = setpoint;
             return Update(sampleTime, input);
+        }
+
+        public double Update(double sampleTime, double input, double setpoint, double maxOutput)
+        {
+            return Update(sampleTime, input, setpoint, maxOutput, -maxOutput);
         }
 
         public double Update(double sampleTime, double input)
@@ -153,12 +167,20 @@ namespace kOS.Suffixed
                 }
             }
             Output = pTerm + iTerm + dTerm;
-            if (Math.Abs(Output) > MaxOutput)
+            if (Output > MaxOutput)
             {
-                Output = Math.Sign(Output) * MaxOutput;
+                Output = MaxOutput;
                 if (Ki != 0 && LastSampleTime < sampleTime)
                 {
-                    iTerm = Output - Math.Max(Math.Min(pTerm + dTerm, MaxOutput), -MaxOutput);
+                    iTerm = Output - Math.Min(pTerm + dTerm, MaxOutput);
+                }
+            }
+            if (Output < MinOutput)
+            {
+                Output = MinOutput;
+                if (Ki != 0 && LastSampleTime < sampleTime)
+                {
+                    iTerm = Output - Math.Max(pTerm + dTerm, MinOutput);
                 }
             }
             LastSampleTime = sampleTime;
