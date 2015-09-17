@@ -1,7 +1,7 @@
 .. _steeringmanager:
 
 SteeringManager
-======
+===============
 
 The SteeringManager is a bound variable, not a suffix to a specific vessel.  This prevents access to the SteeringManager of other vessels.  You can access the steering manager as shown below: ::
 

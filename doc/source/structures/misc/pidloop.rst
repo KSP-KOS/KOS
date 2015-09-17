@@ -1,7 +1,7 @@
 .. _pidloop:
 
 PIDLoop
-======
+=======
 
 The `PIDLoop` has multiple constructors available.  Valid syntax can be seen here: ::
 
@@ -39,23 +39,23 @@ Please see the bottom of this page for information on the derivation of the loop
     ===================================== ========================= =============
      Suffix                                Type                      Description
     ===================================== ========================= =============
-     :attr:`LASTSAMPLETIME`                scalar                    decimal value of the last sample time
-     :attr:`KP`                            scalar                    The proportional gain factor
-     :attr:`KI`                            scalar                    The integral gain factor
-     :attr:`KD`                            scalar                    The derivative gain factor
-     :attr:`INPUT`                         scalar                    The most recent input value
-     :attr:`SETPOINT`                      scalar                    The current setpoint
-     :attr:`ERROR`                         scalar                    The most recent error value
-     :attr:`OUTPUT`                        scalar                    The most recent output value
-     :attr:`MAXOUTPUT`                     scalar                    The maximum output value
-     :attr:`ERRORSUM`                      scalar                    The time weighted sum of error
-     :attr:`PTERM`                         scalar                    The proportional component of output
-     :attr:`ITERM`                         scalar                    The integral component of output
-     :attr:`DTERM`                         scalar                    The derivative component of output
-     :attr:`EXTRAUNWIND`                   bool                      Enables the use of aggressive integral unwind
-     :attr:`CHANGERATE`                    scalar (/s)               The most recent input rate of change
-     :meth:`RESET`                         none                      Reset the integral component
-     :meth:`UPDATE(time, input)`           scalar                    Returns output based on time and input
+    :attr:`LASTSAMPLETIME`                scalar                    decimal value of the last sample time
+    :attr:`KP`                            scalar                    The proportional gain factor
+    :attr:`KI`                            scalar                    The integral gain factor
+    :attr:`KD`                            scalar                    The derivative gain factor
+    :attr:`INPUT`                         scalar                    The most recent input value
+    :attr:`SETPOINT`                      scalar                    The current setpoint
+    :attr:`ERROR`                         scalar                    The most recent error value
+    :attr:`OUTPUT`                        scalar                    The most recent output value
+    :attr:`MAXOUTPUT`                     scalar                    The maximum output value
+    :attr:`ERRORSUM`                      scalar                    The time weighted sum of error
+    :attr:`PTERM`                         scalar                    The proportional component of output
+    :attr:`ITERM`                         scalar                    The integral component of output
+    :attr:`DTERM`                         scalar                    The derivative component of output
+    :attr:`EXTRAUNWIND`                   bool                      Enables the use of aggressive integral unwind
+    :attr:`CHANGERATE`                    scalar (/s)               The most recent input rate of change
+    :meth:`RESET`                         none                      Reset the integral component
+    :meth:`UPDATE(time, input)`           scalar                    Returns output based on time and input
     ===================================== ========================= =============
 
 .. attribute:: PIDLoop:LASTSAMPLETIME
