@@ -69,6 +69,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :meth:`PARTSINGROUP(group)`           :struct:`List`            :struct:`Parts <Part>` by action group
      :meth:`MODULESINGROUP(group)`         :struct:`List`            :struct:`PartModules <PartModule>` by action group
      :meth:`ALLPARTSTAGGED()`              :struct:`List`            :struct:`Parts <Part>` that have non-blank nametags
+     :attr:`CREWCAPACITY`                  scalar                    Crew capacity of this vessel
+     :meth:`CREW()`                        :struct:`List`            all :struct:`CrewMembers <CrewMember>`
     ===================================== ========================= =============
 
 .. attribute:: Vessel:CONTROL
@@ -363,3 +365,17 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :return: :struct:`List` of :struct:`Part` objects
 
     nametag on them of any sort that is nonblank. For more information, see :ref:`ship parts and modules <parts and partmodules>`.
+
+.. attribute:: Vessel:CREWCAPACITY
+
+    :type: scalar
+    :access: Get only
+
+    crew capacity of this vessel
+
+.. method:: Vessel:CREW()
+
+    :return: :struct:`List` of :struct:`CrewMember` objects
+
+    list of all kerbonauts aboard this vessel
+
