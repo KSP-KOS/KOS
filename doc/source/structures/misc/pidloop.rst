@@ -7,21 +7,26 @@ The `PIDLoop` has multiple constructors available.  Valid syntax can be seen her
 
     // Create a loop with default parameters
     // kp = 1, ki = 0, kd = 0
-    // maxValue = maximum number value, extraunwind = false.
+    // maxoutput = maximum number value
+    // minoutput = minimum number value
     SET PID TO PIDLOOP().
 
     // Other constructors include:
     SET PID TO PIDLOOP(KP).
     SET PID TO PIDLOOP(KP, KI, KD).
-    SET PID TO PIDLOOP(KP, KI, KD, MAXOUTPUT).
-    SET PID TO PIDLOOP(KP, KI, KD, MAXOUTPUT, EXTRAUNWIND).
+    // you must specify both minimum and maximum output directly.
+    SET PID TO PIDLOOP(KP, KI, KD, MINOUTPUT, MAXOUTPUT).
 
-    // PIDLOOP's max value is symmetric, if you require an asymmetric
-    // limit, you must apply an output offset yourself.  The following
-    // code will set OUT to a value between 0 and 1.
-    SET OFFSET TO 0.5.
-    SET PID:MAXOUTPUT TO 0.5.
-    SET OUT TO PID:UPDATE(TIME:SECONDS, IN) + OFFSET.
+    // remember to update both minimum and maximum output if the value changes symmetrically
+    SET LIMIT TO 0.5.
+    SET PID:MAXOUTPUT TO LIMIT.
+    SET PID:MINOUTPUT TO -LIMIT.
+
+    // call the update suffix to get the output
+    SET OUT TO PID:UPDATE(TIME:SECONDS, IN).
+
+    // you can also get the output value later from the PIDLoop object
+    SET OUT TO PID:OUTPUT.
 
 Please see the bottom of this page for information on the derivation of the loop's output.
 
@@ -48,11 +53,11 @@ Please see the bottom of this page for information on the derivation of the loop
     :attr:`ERROR`                         scalar                    The most recent error value
     :attr:`OUTPUT`                        scalar                    The most recent output value
     :attr:`MAXOUTPUT`                     scalar                    The maximum output value
+    :attr:`MINOUTPUT`                     scalar                    The maximum output value
     :attr:`ERRORSUM`                      scalar                    The time weighted sum of error
     :attr:`PTERM`                         scalar                    The proportional component of output
     :attr:`ITERM`                         scalar                    The integral component of output
     :attr:`DTERM`                         scalar                    The derivative component of output
-    :attr:`EXTRAUNWIND`                   bool                      Enables the use of aggressive integral unwind
     :attr:`CHANGERATE`                    scalar (/s)               The most recent input rate of change
     :meth:`RESET`                         none                      Reset the integral component
     :meth:`UPDATE(time, input)`           scalar                    Returns output based on time and input
@@ -119,7 +124,14 @@ Please see the bottom of this page for information on the derivation of the loop
     :type: scalar
     :access: Get/Set
 
-    The current maximum output value.  This value controls the maximum and minimum output values, as well as regulating integral wind up mitigation.
+    The current maximum output value.  This value also helps with regulating integral wind up mitigation.
+
+.. attribute:: PIDLoop:MINOUTPUT
+
+    :type: scalar
+    :access: Get/Set
+
+    The current minimum output value.  This value also helps with regulating integral wind up mitigation.
 
 .. attribute:: PIDLoop:ERRORSUM
 
@@ -149,13 +161,6 @@ Please see the bottom of this page for information on the derivation of the loop
 
     The value representing the derivative component of :attr:`OUTPUT`.
 
-.. attribute:: PIDLoop:EXTRAUNWIND
-
-    :type: scalar
-    :access: Get/Set
-
-    When true, :attr:`KI` will be multiplied by 2 when the sign (+ or -) of :attr:`ERROR` does not match the sign of :attr:`ERRORSUM`.  This can help to unwind the integral component more quickly after a zero crossing, and may decrease settling time.
-
 .. attribute:: PIDLoop:CHANGERATE
 
     :type: scalar
@@ -171,18 +176,18 @@ Please see the bottom of this page for information on the derivation of the loop
 
 .. method:: PIDLoop:UPDATE(time, input)
 
-    :parameter time: (double) the decimal time in seconds
-    :parameter input: (double) the input variable to compare to the setpoint
+    :parameter time: (scalar) the decimal time in seconds
+    :parameter input: (scalar) the input variable to compare to the setpoint
     :return: scalar representing the calculated output
 
-    Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (`TIME:SECONDS`), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on :attr:`MAXOUTPUT` and :attr:`EXTRAUNWIND`.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.
+    Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (`TIME:SECONDS`), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on :attr:`MAXOUTPUT` and :attr:`MINOUTPUT`.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.
 
 PIDLoop Update Derivation
 -------------------------
 
 The internal update method of the :struct:`PIDLoop` structure is the equivalent of the following in kerboscript ::
 
-    // assume that the terms LastSampleTime, Kp, Ki, Kd, Setpoint, and MaxOutput are previously defined
+    // assume that the terms LastSampleTime, Kp, Ki, Kd, Setpoint, MinOutput, and MaxOutput are previously defined
     declare function Update {
         declare parameter sampleTime, input.
         set Error to Setpoint - input.
@@ -204,10 +209,17 @@ The internal update method of the :struct:`PIDLoop` structure is the equivalent 
             }
         }
         set Output to pTerm + iTerm + dTerm.
-        if abs(Output) > MaxOutput {
-            // if the output goes beyond the max/min limits, reset it.
-            if Output > 0 set Output to MaxOutput.
-            else set Output to -MaxOutput.
+        // if the output goes beyond the max/min limits, reset it and adjust ITerm.
+        if Output > MaxOutput {
+            set Output to MaxOutput.
+            // adjust the value of ITerm as well to prevent the value
+            // from winding up out of control.
+            if (Ki != 0) and (LastSampleTime < sampleTime) {
+                set ITerm to Output - Pterm - DTerm.
+            }
+        }
+        else if Output < MinOutput {
+            set Output to MinOutput.
             // adjust the value of ITerm as well to prevent the value
             // from winding up out of control.
             if (Ki != 0) and (LastSampleTime < sampleTime) {

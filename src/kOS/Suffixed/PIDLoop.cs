@@ -69,7 +69,7 @@ namespace kOS.Suffixed
         {
         }
 
-        public PIDLoop(double kp, double ki, double kd, double maxoutput, double minoutput, bool extraUnwind = false)
+        public PIDLoop(double kp, double ki, double kd, double maxoutput = double.MaxValue, double minoutput = double.MinValue, bool extraUnwind = false)
         {
             LastSampleTime = double.MaxValue;
             Kp = kp;
@@ -87,11 +87,6 @@ namespace kOS.Suffixed
             DTerm = 0;
             ExtraUnwind = extraUnwind;
             InitializeSuffixes();
-        }
-
-        public PIDLoop(double kp, double ki, double kd, double maxoutput = double.MaxValue, bool extraUnwind = false)
-            : this(kp, ki, kd, maxoutput, -maxoutput, extraUnwind)
-        {
         }
 
         public void InitializeSuffixes()
@@ -115,7 +110,7 @@ namespace kOS.Suffixed
             AddSuffix("UPDATE", new TwoArgsSuffix<double, double, double>(Update));
         }
 
-        public double Update(double sampleTime, double input, double setpoint, double maxOutput, double minOutput)
+        public double Update(double sampleTime, double input, double setpoint, double minOutput, double maxOutput)
         {
             MaxOutput = maxOutput;
             MinOutput = minOutput;
@@ -125,7 +120,7 @@ namespace kOS.Suffixed
 
         public double Update(double sampleTime, double input, double setpoint, double maxOutput)
         {
-            return Update(sampleTime, input, setpoint, maxOutput, -maxOutput);
+            return Update(sampleTime, input, setpoint, -maxOutput, maxOutput);
         }
 
         public double Update(double sampleTime, double input)

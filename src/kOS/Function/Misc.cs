@@ -417,7 +417,7 @@ namespace kOS.Function
             double ki;
             double kp;
             double maxoutput;
-            bool extraUnwind;
+            double minoutput;
             switch (args)
             {
                 case 0:
@@ -433,25 +433,16 @@ namespace kOS.Function
                     kp = GetDouble(PopValueAssert(shared));
                     this.ReturnValue = new PIDLoop(kp, ki, kd);
                     break;
-                case 4:
-                    maxoutput = GetDouble(PopValueAssert(shared));
-                    kd = GetDouble(PopValueAssert(shared));
-                    ki = GetDouble(PopValueAssert(shared));
-                    kp = GetDouble(PopValueAssert(shared));
-                    this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput);
-                    break;
                 case 5:
-                    var arg = PopValueAssert(shared);
-                    if (!(arg is bool)) throw new KOSCastException(arg.GetType(), typeof(Double));
-                    extraUnwind = (bool)arg;
                     maxoutput = GetDouble(PopValueAssert(shared));
+                    minoutput = GetDouble(PopValueAssert(shared));
                     kd = GetDouble(PopValueAssert(shared));
                     ki = GetDouble(PopValueAssert(shared));
                     kp = GetDouble(PopValueAssert(shared));
-                    this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput, extraUnwind);
+                    this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput, minoutput);
                     break;
                 default:
-                    throw new KOSArgumentMismatchException(new[] { 0, 1, 3, 4, 5 }, args);
+                    throw new KOSArgumentMismatchException(new[] { 0, 1, 3, 5 }, args);
             }
             AssertArgBottomAndConsume(shared);
         }
