@@ -1,9 +1,7 @@
-﻿using System;
-using kOS.Safe.Binding;
+﻿using kOS.Safe.Binding;
 using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
-using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Binding
 {
@@ -17,14 +15,9 @@ namespace kOS.Binding
             shared.BindingMgr.AddGetter("COMMRANGE", () => int.MaxValue);
             shared.BindingMgr.AddGetter("ENCOUNTER", () => VesselUtils.TryGetEncounter(shared.Vessel,shared));
             shared.BindingMgr.AddGetter("ETA", () => new VesselEta(shared));
-            shared.BindingMgr.AddGetter("INCOMMRANGE", () => { throw new Safe.Exceptions.KOSDeprecationException("0.17.0", "INCOMMRANGE", "ADDONS:RT:HASCONNECTION(VESSEL)", @"http://ksp-kos.github.io/KOS_DOC/addons/RemoteTech.html"); });
+            shared.BindingMgr.AddGetter("INCOMMRANGE", () => { throw new KOSDeprecationException("0.17.0", "INCOMMRANGE", "ADDONS:RT:HASCONNECTION(VESSEL)", @"http://ksp-kos.github.io/KOS_DOC/addons/RemoteTech.html"); });
             shared.BindingMgr.AddGetter("MISSIONTIME", () => shared.Vessel.missionTime);
-
-            // Note: shared.BindingMgr.AddGetter does not have an alias array mechanaism like GetSuffix does,
-            // else the next two would be mashed together into one.
-            shared.BindingMgr.AddGetter("OBT", () => new OrbitInfo(shared.Vessel.orbit,shared));
-            shared.BindingMgr.AddGetter("ORBIT", () => new OrbitInfo(shared.Vessel.orbit,shared));
-            
+            shared.BindingMgr.AddGetter(new [] { "OBT" , "ORBIT"}, () => new OrbitInfo(shared.Vessel.orbit,shared));
             shared.BindingMgr.AddGetter("TIME", () => new TimeSpan(Planetarium.GetUniversalTime()));
             shared.BindingMgr.AddGetter("SHIP", () => new VesselTarget(shared));
             shared.BindingMgr.AddGetter("ACTIVESHIP", () => new VesselTarget(FlightGlobals.ActiveVessel, shared));

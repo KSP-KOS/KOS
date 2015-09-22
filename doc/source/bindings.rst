@@ -60,7 +60,8 @@ ANGULARVELOCITY  Same as SHIP:ANGULARVEL
 COMMRANGE        Same as SHIP:COMMRANGE
 MASS             Same as SHIP:MASS
 VERTICALSPEED    Same as SHIP:VERTICALSPEED
-SURFACESPEED     Same as SHIP:SURFACESPEED
+GROUNDSPEED      Same as SHIP:GROUNDSPEED 
+SURFACESPEED     This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.
 AIRSPEED         Same as SHIP:AIRSPEED
 VESSELNAME       Same as SHIP:VESSELNAME
 ALTITUDE         Same as SHIP:ALTITUDE
@@ -148,42 +149,41 @@ You can also get a list of all resources, either in SHIP: or STAGE: with the :RE
 ALT ALIAS
 ---------
 
-The special variable ALT is a unique exception. It behaves like a
-structure with suffixes but it's actually a bit "fake" in that it's not
-really a structure. The following terms are just exceptions that don't
-fit anywhere else:
+The special variable `ALT <structures/vessels/alt.html>`__ gives you
+access to a few altitude predictions:
 
-============== ======== ==========
-Variable       Type      Meaning
-============== ======== ==========
-ALT:APOAPSIS   number   The altitude of the apoapsis of the current ship.  Identical to SHIP:APOAPSIS.
-ALT:PERIAPSIS  number   The altitude of the periapsis of the current ship.  Identical to SHIP:PERIAPSIS.
-ALT:RADAR      number   The altitude of the current ship above the terrain.  Does not have an alias anywhere.
-============== ======== ==========
+ALT:APOAPSIS 
+
+ALT:PERIAPSIS
+
+ALT:RADAR
+
+Further details are found on the `ALT page<structures/vessels/alt.html>`__ .
+
 
 ETA ALIAS
 ---------
 
-The special variable ETA is a unique exception. It behaves like a
-structure with suffixes but it's actually a bit "fake" in that it's not
-really a structure. The following terms are just exceptions that don't
-fit anywhere else:
+The special variable `ETA <structures/vessels/eta.html>`__ gives you
+access to a few time predictions:
 
-============== ======== ==========
-Variable       Type      Meaning
-============== ======== ==========
-ETA:APOAPSIS   number   seconds until SHIP will reach its apoapsis.
-ETA:PERIAPSIS  number   seconds until SHIP will reach its periapsis.
-ETA:TRANSITION number   seconds until SHIP will leave its SOI to enter the SOI of another body.
-============== ======== ==========
+ETA:APOAPSIS 
+
+ETA:PERIAPSIS
+
+ETA:TRANSITION
+
+Further details are found on the `ETA page<structures/vessels/eta.html>`__ .
 
 ENCOUNTER
 ---------
 
-The body being encountered next by the current vessel. Returns the
-special string "None" if there is no expected encounter, or an object of
-type `Body <structures/celestial_bodies/body.html>`__ if an encounter is
-expected.
+The orbit patch describing the next encounter with a body the current
+vessel will enter. If there is no such encounter coming, it will return
+the special string "None".  If there is an encounter coming, it will
+return an object :ref:`of type Orbit <orbit>`.  (i.e. to obtain the name
+of the planet the encounter is with, you can do:
+``print ENCOUNTER:BODY:NAME.``, for example.).
 
 BOOLEAN TOGGLE FIELDS:
 ----------------------

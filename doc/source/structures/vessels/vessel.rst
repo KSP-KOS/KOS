@@ -43,7 +43,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
      :attr:`DRYMASS`                       scalar (metric tons)      Mass of the ship with no resources
      :attr:`VERTICALSPEED`                 scalar (m/s)              How fast the ship is moving "up"
-     :attr:`SURFACESPEED`                  scalar (m/s)              How fast the ship is moving "horizontally"
+     :attr:`GROUNDSPEED`                   scalar (m/s)              How fast the ship is moving "horizontally"
      :attr:`AIRSPEED`                      scalar (m/s)              How fast the ship is moving relative to the air
      :attr:`TERMVELOCITY`                  scalar (m/s)              terminal velocity of the vessel
      :attr:`SHIPNAME`                      string                    The name of the vessel
@@ -155,12 +155,24 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     How fast the ship is moving. in the "up" direction relative to the SOI Body's sea level surface.
 
-.. attribute:: Vessel:SURFACESPEED
+.. attribute:: Vessel:GROUNDSPEED
 
     :type: scalar (m/s)
     :access: Get only
 
-    How fast the ship is moving in the plane horizontal to the SOI body's sea level surface.
+    How fast the ship is moving in the two dimensional plane horizontal
+    to the SOI body's sea level surface.  The vertical component of the
+    ship's velocity is ignored when calculating this.
+
+    .. note::
+    
+        .. versionadded:: 0.18
+
+        The old name for this value was SURFACESPEED.  The name was changed
+        because it was confusing before.  "surface speed" implied it's the
+        scalar magnitude of "surface velocity", but it wasn't, because of how
+        it ignores the vertical component.
+      
 
 .. attribute:: Vessel:AIRSPEED
 

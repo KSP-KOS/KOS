@@ -77,9 +77,25 @@ namespace kOS.Binding
             AddBoundVariable(name, dlg, null);
         }
 
+        public void AddGetter(IEnumerable<string> names, BindingGetDlg dlg)
+        {
+            foreach (var name in names)
+            {
+                AddBoundVariable(name, dlg, null);
+            }
+        }
+
         public void AddSetter(string name, BindingSetDlg dlg)
         {
             AddBoundVariable(name, null, dlg);
+        }
+
+        public void AddSetter(IEnumerable<string> names, BindingSetDlg dlg)
+        {
+            foreach (var name in names)
+            {
+                AddBoundVariable(name, null, dlg);
+            }
         }
 
         public void PreUpdate()

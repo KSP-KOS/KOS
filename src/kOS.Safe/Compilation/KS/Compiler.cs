@@ -245,6 +245,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction_block:
                 case TokenType.instruction:
                 case TokenType.if_stmt:
+                case TokenType.fromloop_stmt:
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.on_stmt:
@@ -361,9 +362,12 @@ namespace kOS.Safe.Compilation.KS
             initBlock.Nodes.Add(untilNode); // parent already assigned by initBlock.CreateNode() above.
             
             // The init block is now actually the entire loop, having been exploded and unrolled into its
-            // new form, make that be our only node node:
+            // new form, make that be our only node:
             node.Nodes.Clear();
             node.Nodes.Add(initBlock);  // initBlock's parent already points at node to begin with.
+            
+            // The FROM loop node is still in the parent's list, but it contains this new rearranged sub-tree
+            // instead of its original.
         }
         
         private void PreProcessStatements(ParseNode node)
@@ -380,6 +384,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction_block:
                 case TokenType.instruction:
                 case TokenType.if_stmt:
+                case TokenType.fromloop_stmt:
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.declare_function_clause:
@@ -2263,37 +2268,34 @@ namespace kOS.Safe.Compilation.KS
 
         private void UnlockIdentifier(UserFunction lockObject)
         {
-            if (lockObject.IsInitialized())
+            if (lockObject.IsSystemLock())
             {
-                if (lockObject.IsSystemLock())
+                // disable this FlyByWire parameter
+                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
+                AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
+                AddOpcode(new OpcodePush(false));
+                AddOpcode(new OpcodeCall("toggleflybywire()"));
+                // add a pop to clear out the dummy return value from toggleflybywire()
+                AddOpcode(new OpcodePop());
+
+                // remove update trigger
+                string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
+                if (context.Triggers.Contains(triggerIdentifier))
                 {
-                    // disable this FlyByWire parameter
-                    AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
-                    AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
-                    AddOpcode(new OpcodePush(false));
-                    AddOpcode(new OpcodeCall("toggleflybywire()"));
-                    // add a pop to clear out the dummy return value from toggleflybywire()
-                    AddOpcode(new OpcodePop());
-
-                    // remove update trigger
-                    string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
-                    if (context.Triggers.Contains(triggerIdentifier))
-                    {
-                        Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-                        AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                        AddOpcode(new OpcodeRemoveTrigger());
-                    }
+                    Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
+                    AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
+                    AddOpcode(new OpcodeRemoveTrigger());
                 }
-
-                // unlock variable
-                // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
-                AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
-                AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
-                if (allowLazyGlobal)
-                    AddOpcode(new OpcodeStore());
-                else
-                    AddOpcode(new OpcodeStoreExist());
             }
+
+            // unlock variable
+            // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
+            AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
+            AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
+            if (allowLazyGlobal)
+                AddOpcode(new OpcodeStore());
+            else
+                AddOpcode(new OpcodeStoreExist());
         }
 
         private void VisitOnStatement(ParseNode node)
