@@ -2,9 +2,9 @@
 {
     public class KOSKeyNotFoundException : KOSException
     {
-        private const string MSG = "The given key {0} was not present in the case-{1} collection. Use CONTAINS for checking safety.";
+        private const string MSG = "The given key, ({0}), was not present in the case-{1} collection. Use :HASKEY for checking safety.";
 
-        public KOSKeyNotFoundException(string key, bool caseSensitive) : base(string.Format(MSG, key, caseSensitive ? "insensitive" : "sensitive"))
+        public KOSKeyNotFoundException(string key, bool caseSensitive) : base(string.Format(MSG, key, caseSensitive ? "sensitive" : "insensitive"))
         {
 
         }
