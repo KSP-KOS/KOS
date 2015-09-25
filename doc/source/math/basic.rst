@@ -30,7 +30,7 @@ constants about the universe that you may find handy in your math operations.
     * - :global:`E`
       - Base of the natural log (Euler's number)
     * - :global:`PI`
-      - :math:`I?`
+      - :math:`\pi`
     * - :global:`c`
       - Speed of light in a vacuum, in m/s.
     * - :global:`AtmToKPa`
