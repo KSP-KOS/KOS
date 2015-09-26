@@ -23,7 +23,7 @@ Represents a single crew member of a vessel.
           - "Male" or "Female"
         * - :attr:`EXPERIENCE`
           - scalar
-          - experience level
+          - experience level (number of stars)
         * - :attr:`TRAIT`
           - string
           - "Pilot", "Engineer" or "Scientist"
@@ -54,7 +54,7 @@ Represents a single crew member of a vessel.
     :type: scalar
     :access: Get only
 
-    experience level
+    experience level (number of stars)
 
 .. attribute:: CrewMember:TRAIT
 

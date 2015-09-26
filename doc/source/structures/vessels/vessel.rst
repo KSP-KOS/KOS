@@ -377,5 +377,5 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     :return: :struct:`List` of :struct:`CrewMember` objects
 
-    list of all kerbonauts aboard this vessel
+    list of all :struct:`kerbonauts <CrewMember>` aboard this vessel
 
