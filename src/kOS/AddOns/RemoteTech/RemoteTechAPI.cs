@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace kOS.AddOns.RemoteTech
 {
@@ -15,5 +16,12 @@ namespace kOS.AddOns.RemoteTech
         public Func<Guid, double> GetSignalDelayToKSC { get; internal set; }
         public Func<Guid, Guid, double> GetSignalDelayToSatellite { get; internal set; }
         public Action<BaseEvent> InvokeOriginalEvent { get; internal set; }
-    }
+        public Func<IEnumerable<String>> GetGroundStations { get; internal set; }
+        public Func<String, Guid> GetGroundStationGuid { get; internal set; }
+        public Func<CelestialBody, Guid> GetCelestialBodyGuid { get; internal set; }
+        public Func<Part, Guid> GetAntennaTarget { get; internal set; }
+        public Action<Part, Guid> SetAntennaTarget { get; internal set; }
+        public Func<Guid> GetNoTargetGuid { get; internal set; }
+        public Func<Guid> GetActiveVesselGuid { get; internal set; }
+   }
 }
