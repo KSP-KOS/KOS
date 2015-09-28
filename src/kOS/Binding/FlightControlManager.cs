@@ -382,7 +382,7 @@ namespace kOS.Binding
                     // perform the "unlock" so this message won't spew every FixedUpdate:
                     Enabled = false;
                     ClearValue();
-                    throw new KOSWrongControlValueType(
+                    throw new KOSWrongControlValueTypeException(
                         "THROTTLE", value.GetType().Name, "Number in the range [0..1]");
                 }
             }
@@ -401,7 +401,7 @@ namespace kOS.Binding
                     // perform the "unlock" so this message won't spew every FixedUpdate:
                     Enabled = false;
                     ClearValue();
-                    throw new KOSWrongControlValueType(
+                    throw new KOSWrongControlValueTypeException(
                         "WHEELTHROTTLE", value.GetType().Name, "Number in the range [-1..1]");
                 }
             }
@@ -430,7 +430,7 @@ namespace kOS.Binding
                     // perform the "unlock" so this message won't spew every FixedUpdate:
                     Enabled = false;
                     ClearValue();
-                    throw new KOSWrongControlValueType(
+                    throw new KOSWrongControlValueTypeException(
                         "STEERING", value.GetType().Name, "Direction, Vector, Manuever Node, or special string \"KILL\"");
                 }
             }
@@ -467,7 +467,7 @@ namespace kOS.Binding
                         // perform the "unlock" so this message won't spew every FixedUpdate:
                         Enabled = false;
                         ClearValue();
-                        throw new KOSWrongControlValueType(
+                        throw new KOSWrongControlValueTypeException(
                             "WHEELSTEER", value.GetType().Name, "Vessel, LATLNG, or Number (compass heading)");
                     }
                 }
