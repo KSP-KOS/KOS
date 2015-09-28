@@ -1,22 +1,17 @@
 ﻿using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
-using kOS.Suffixed.Part;
-using System;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
-using System.Collections.Generic;
-using kOS.Suffixed.PartModuleField;
 
 namespace kOS.Suffixed.PartModuleField
 {
     public class ScienceExperimentFields : PartModuleFields
     {
-
         private readonly ModuleScienceExperiment module;
         private readonly MethodInfo gatherDataMethod, resetExperimentMethod, sendDataToCommsMethod, dumpDataMethod;
 
-        public ScienceExperimentFields (ModuleScienceExperiment module, SharedObjects sharedObj) : base(module, sharedObj)
+        public ScienceExperimentFields(ModuleScienceExperiment module, SharedObjects sharedObj) : base(module, sharedObj)
         {
             this.module = module;
 
@@ -34,10 +29,10 @@ namespace kOS.Suffixed.PartModuleField
 
         private void InitializeSuffixes()
         {
-            AddSuffix("DEPLOY", new NoArgsSuffix(() => DeployExperiment(), "Deploy and run this experiment"));
-            AddSuffix("RESET", new NoArgsSuffix(() => ResetExperiment(), "Reset this experiment"));
-            AddSuffix("TRANSMIT", new NoArgsSuffix(() => TransmitData(), "Transmit experiment data back to Kerbin"));
-            AddSuffix("DUMP", new NoArgsSuffix(() => DumpData(), "Dump experiment data"));
+            AddSuffix("DEPLOY", new NoArgsSuffix(DeployExperiment, "Deploy and run this experiment"));
+            AddSuffix("RESET", new NoArgsSuffix(ResetExperiment, "Reset this experiment"));
+            AddSuffix("TRANSMIT", new NoArgsSuffix(TransmitData, "Transmit experiment data back to Kerbin"));
+            AddSuffix("DUMP", new NoArgsSuffix(DumpData, "Dump experiment data"));
             AddSuffix("INOPERABLE", new Suffix<bool>(() => module.Inoperable, "Is this experiment inoperable"));
             AddSuffix("DEPLOYED", new Suffix<bool>(() => module.Deployed, "Is this experiment deployed"));
             AddSuffix("RERUNNABLE", new Suffix<bool>(() => module.rerunnable, "Is this experiment rerunnable"));
@@ -46,11 +41,13 @@ namespace kOS.Suffixed.PartModuleField
 
         private void DeployExperiment()
         {
-            if (module.GetData().Any()) {
+            if (module.GetData().Any())
+            {
                 throw new KOSException("Experiment already contains data");
             }
 
-            if (module.Inoperable) {
+            if (module.Inoperable)
+            {
                 throw new KOSException("Experiment is inoperable");
             }
 
@@ -63,7 +60,8 @@ namespace kOS.Suffixed.PartModuleField
 
         private void ResetExperiment()
         {
-            if (module.Inoperable) {
+            if (module.Inoperable)
+            {
                 throw new KOSException("Experiment is inoperable");
             }
 
@@ -76,20 +74,23 @@ namespace kOS.Suffixed.PartModuleField
 
         private void TransmitData()
         {
-            if (!module.GetData().Any()) {
+            if (!module.GetData().Any())
+            {
                 throw new KOSException("Experiment contains no data");
             }
 
             ScienceData[] dataArray = module.GetData();
 
-            foreach (ScienceData data in dataArray) {
+            foreach (ScienceData data in dataArray)
+            {
                 sendDataToCommsMethod.Invoke(module, new object[] { data });
             }
         }
 
         private void DumpData()
         {
-            if (!module.rerunnable) {
+            if (!module.rerunnable)
+            {
                 module.SetInoperable();
             }
 
@@ -97,4 +98,3 @@ namespace kOS.Suffixed.PartModuleField
         }
     }
 }
-
