@@ -75,6 +75,21 @@ STATUS           Same as SHIP:STATUS
 SHIPNAME         Same as SHIP:NAME
 ================ ==============================================================================
 
+Constants (pi, e, etc)
+----------------------
+
+Get-only.
+
+The variable ``constant`` provides a way to access a few
+:ref:`basic math and physics constants <constants>`, such as Pi, Euler's
+number, and so on.
+
+Example::
+
+    print "Kerbin's circumference: " + (2*constant:pi*Kerbin:radius) + "meters.".
+
+The full list is here: :ref:`constants page <constants>`.
+
 Terminal
 --------
 

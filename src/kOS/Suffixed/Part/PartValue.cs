@@ -21,7 +21,6 @@ namespace kOS.Suffixed.Part
         {
             Part = part;
             shared = sharedObj;
-            
             // This cannot be called from inside InitializeSuffixes because the base constructor calls
             // InitializeSuffixes first before this constructor has set "Part" to a real value.
             PartInitializeSuffixes();

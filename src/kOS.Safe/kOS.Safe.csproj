@@ -70,11 +70,13 @@
     <Compile Include="Encapsulation\Enumerator.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
+    <Compile Include="Encapsulation\IDumper.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
     <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
     <Compile Include="Encapsulation\ISuffix.cs" />
     <Compile Include="Encapsulation\ISuffixed.cs" />
+    <Compile Include="Encapsulation\Lexicon.cs" />
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
@@ -95,9 +97,11 @@
     <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />
     <Compile Include="Exceptions\KOSBadJumpException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSDuplicateKeyException.cs" />
     <Compile Include="Exceptions\KOSInvalidArgumentException.cs" />
     <Compile Include="Exceptions\KOSIdentifierClashException.cs" />
     <Compile Include="Exceptions\KOSInvalidDelegateContext.cs" />
+    <Compile Include="Exceptions\KOSKeyNotFoundException.cs" />
     <Compile Include="Exceptions\KOSLowTechException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
     <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
@@ -179,14 +183,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sound" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
       cp "$(TargetPath)" "$(SolutionDir)/../Resources/GameData/kOS/Plugins"
-      (test -h "$(SolutionDir)/../KSPdirlink" &#x26;&#x26; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
+      (test -h "$(SolutionDir)/../KSPdirlink" &amp;&amp; cp "$(TargetPath)" "$(SolutionDir)/../KSPdirlink/GameData/kOS/Plugins") || true
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
       xcopy "$(TargetPath)" "$(SolutionDir)\..\Resources\GameData\kOS\Plugins" /y

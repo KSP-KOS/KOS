@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Binding;
 using kOS.Safe.Utilities;
+using kOS.Safe.Encapsulation;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
@@ -143,6 +144,7 @@ namespace kOS.Binding
                     MapView.ExitMapView();
                 }
             });
+            shared.BindingMgr.AddGetter("CONSTANT", () => new ConstantValue());
             foreach (var body in FlightGlobals.fetch.bodies)
             {
                 var cBody = body;
