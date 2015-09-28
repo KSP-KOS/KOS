@@ -8,7 +8,7 @@ namespace kOS.Safe.Exceptions
     /// semantic reason that it can't be used WHERE it's being used.
     /// Example:  Trying to PRESERVE when *not* in a trigger body.
     /// </summary>
-    public class KOSCommandInvalidHere: KOSCompileException
+    public class KOSCommandInvalidHereException : KOSCompileException
     {
         private const string TERSE_MSG_FMT = "'{0}' command found {1}. It only works {2}.";
 
@@ -19,7 +19,8 @@ namespace kOS.Safe.Exceptions
             "places of the code.  This is one of those cases.\n";
 
         // Just nothing by default:
-        public override string HelpURL { get{ return "";} }
+        public override string HelpURL { get { return ""; } }
+
         public override string VerboseMessage { get { return VerbosePrefix; } }
 
         /// <summary>
@@ -30,8 +31,8 @@ namespace kOS.Safe.Exceptions
         /// Use a phrasing that starts with a preposition, i.e. "in a loop", "outside a loop"</param>
         /// <param name="goodPlace">describing what sort of code the it is meant to be used in instead.
         /// Use a phrasing that starts with a preposition, i.e. "in a loop", "outside a loop"</param>
-        public KOSCommandInvalidHere(string command, string badPlace, string goodPlace) :
-            base(String.Format(TERSE_MSG_FMT, command, badPlace, goodPlace))
+        public KOSCommandInvalidHereException(string command, string badPlace, string goodPlace) :
+            base(string.Format(TERSE_MSG_FMT, command, badPlace, goodPlace))
         {
         }
     }

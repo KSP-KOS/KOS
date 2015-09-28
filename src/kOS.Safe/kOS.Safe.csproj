@@ -100,11 +100,11 @@
     <Compile Include="Exceptions\KOSDuplicateKeyException.cs" />
     <Compile Include="Exceptions\KOSInvalidArgumentException.cs" />
     <Compile Include="Exceptions\KOSIdentifierClashException.cs" />
-    <Compile Include="Exceptions\KOSInvalidDelegateContext.cs" />
+    <Compile Include="Exceptions\KOSInvalidDelegateContextException.cs" />
     <Compile Include="Exceptions\KOSKeyNotFoundException.cs" />
     <Compile Include="Exceptions\KOSLowTechException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
-    <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
+    <Compile Include="Exceptions\KOSCommandInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSCompileException.cs" />
     <Compile Include="Exceptions\KOSBinaryOperandTypeException.cs" />
     <Compile Include="Exceptions\KOSDeprecationException.cs" />
