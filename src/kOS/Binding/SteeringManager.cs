@@ -94,7 +94,6 @@ namespace kOS.Binding
         public List<uint> SubscribedParts = new List<uint>();
 
         private SharedObjects shared;
-        //Vessel vessel;
 
         private uint partId = 0;
 
@@ -120,6 +119,7 @@ namespace kOS.Binding
                     if (pitchTorqueWriter != null) pitchTorqueWriter.Dispose();
                     if (yawTorqueWriter != null) yawTorqueWriter.Dispose();
                     if (rollTorqueWriter != null) rollTorqueWriter.Dispose();
+                    if (adjustTorqueWriter != null) adjustTorqueWriter.Dispose();
 
                     pitchRateWriter = null;
                     yawRateWriter = null;
@@ -127,6 +127,7 @@ namespace kOS.Binding
                     pitchTorqueWriter = null;
                     yawTorqueWriter = null;
                     rollTorqueWriter = null;
+                    adjustTorqueWriter = null;
                 }
             }
         }
@@ -168,9 +169,23 @@ namespace kOS.Binding
         private KSP.IO.TextWriter yawTorqueWriter;
         private KSP.IO.TextWriter rollTorqueWriter;
 
+        private KSP.IO.TextWriter adjustTorqueWriter;
+
         private MovingAverage pitchRate = new MovingAverage() { SampleLimit = 5 };
         private MovingAverage yawRate = new MovingAverage() { SampleLimit = 5 };
         private MovingAverage rollRate = new MovingAverage() { SampleLimit = 5 };
+
+        private MovingAverage pitchTorqueCalc = new MovingAverage() { SampleLimit = 5 };
+        private MovingAverage yawTorqueCalc = new MovingAverage() { SampleLimit = 5 };
+        private MovingAverage rollTorqueCalc = new MovingAverage() { SampleLimit = 5 };
+
+        private bool EnableTorqueAdjust { get; set; }
+
+        private MovingAverage pitchMOICalc = new MovingAverage() { SampleLimit = 5 };
+        private MovingAverage yawMOICalc = new MovingAverage() { SampleLimit = 5 };
+        private MovingAverage rollMOICalc = new MovingAverage() { SampleLimit = 5 };
+
+        private bool EnableMOIAdjust { get; set; }
 
         public MovingAverage AverageDuration = new MovingAverage() { SampleLimit = 60 };
 
@@ -178,6 +193,11 @@ namespace kOS.Binding
 
         #region doubles
         public const double RadToDeg = 180d / Math.PI;
+
+        private double epsilon = 0.00001;
+
+        private double sessionTime = double.MaxValue;
+        private double lastSessionTime = double.MaxValue;
 
         public double MaxStoppingTime { get; set; }
 
@@ -229,12 +249,19 @@ namespace kOS.Binding
         private Vector3d targetTop;
         private Vector3d targetStarboard;
 
-        private Vector3d omega;
-        private Vector3d momentOfInertia;
-        private Vector3d staticTorque = Vector3d.zero;
-        private Vector3d controlTorque = Vector3d.zero;
-        private Vector3d staticEngineTorque = Vector3d.zero;
-        private Vector3d controlEngineTorque = Vector3d.zero;
+        private Vector3d omega = Vector3d.zero; // x: pitch, y: yaw, z: roll
+        private Vector3d lastOmega = Vector3d.zero;
+        private Vector3d angularAcceleration = Vector3d.zero;
+        private Vector3d momentOfInertia = Vector3d.zero; // x: pitch, z: yaw, y: roll
+        private Vector3d measuredMomentOfInertia = Vector3d.zero;
+        private Vector3d adjustMomentOfInertia = Vector3d.one;
+        private Vector3d measuredTorque = Vector3d.zero;
+        private Vector3d adjustTorque = Vector3d.zero;
+        private Vector3d staticTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
+        private Vector3d controlTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
+        private Vector3d rawTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
+        private Vector3d staticEngineTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
+        private Vector3d controlEngineTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
 
         private List<ForceVector> rcsVectors = new List<ForceVector>();
         private List<ForceVector> engineNeutVectors = new List<ForceVector>();
@@ -274,8 +301,8 @@ namespace kOS.Binding
         public SteeringManager(SharedObjects sharedObj)
         {
             shared = sharedObj;
-            ShowFacingVectors = true;
-            ShowAngularVectors = true;
+            ShowFacingVectors = false;
+            ShowAngularVectors = false;
             ShowThrustVectors = false;
             ShowRCSVectors = false;
             ShowSteeringStats = false;
@@ -289,6 +316,8 @@ namespace kOS.Binding
             if (yawTorqueWriter != null) yawTorqueWriter.Dispose();
             if (rollTorqueWriter != null) rollTorqueWriter.Dispose();
 
+            if (adjustTorqueWriter != null) adjustTorqueWriter.Dispose();
+
             pitchRateWriter = null;
             yawRateWriter = null;
             rollRateWriter = null;
@@ -296,6 +325,14 @@ namespace kOS.Binding
             pitchTorqueWriter = null;
             yawTorqueWriter = null;
             rollTorqueWriter = null;
+
+            adjustTorqueWriter = null;
+
+            adjustTorque = Vector3d.zero;
+            adjustMomentOfInertia = Vector3d.one;
+
+            EnableMOIAdjust = false;
+            EnableTorqueAdjust = true;
 
             MaxStoppingTime = 1;
 
@@ -338,7 +375,19 @@ namespace kOS.Binding
             AddSuffix("PITCHTORQUEFACTOR", new SetSuffix<double>(() => PitchTorqueFactor, value => PitchTorqueFactor = value));
             AddSuffix("YAWTORQUEFACTOR", new SetSuffix<double>(() => YawTorqueFactor, value => YawTorqueFactor = value));
             AddSuffix("ROLLTORQUEFACTOR", new SetSuffix<double>(() => RollTorqueFactor, value => RollTorqueFactor = value));
-            AddSuffix("AVERAGEDURATION", new Suffix<double>(() => AverageDuration.GetValue()));
+            AddSuffix("AVERAGEDURATION", new Suffix<double>(() => AverageDuration.Mean));
+#if DEBUG
+            AddSuffix("MOI", new Suffix<Vector>(() => new Vector(momentOfInertia)));
+            AddSuffix("ACTUATION", new Suffix<Vector>(() => new Vector(accPitch, accRoll, accYaw)));
+            AddSuffix("CONTROLTORQUE", new Suffix<Vector>(() => new Vector(controlTorque)));
+            AddSuffix("MEASUREDTORQUE", new Suffix<Vector>(() => new Vector(measuredTorque)));
+            AddSuffix("RAWTORQUE", new Suffix<Vector>(() => new Vector(rawTorque)));
+            AddSuffix("TARGETTORQUE", new Suffix<Vector>(() => new Vector(tgtPitchTorque, tgtRollTorque, tgtYawTorque)));
+            AddSuffix("ANGULARVELOCITY", new Suffix<Vector>(() => new Vector(omega)));
+            AddSuffix("ANGULARACCELERATION", new Suffix<Vector>(() => new Vector(angularAcceleration)));
+            AddSuffix("ENABLETORQUEADJUST", new SetSuffix<bool>(() => EnableTorqueAdjust, value => EnableTorqueAdjust = value));
+            AddSuffix("ENABLEMOIADJUST", new SetSuffix<bool>(() => EnableMOIAdjust, value => EnableMOIAdjust = value));
+#endif
         }
 
         public void EnableControl(SharedObjects shared)
@@ -349,6 +398,13 @@ namespace kOS.Binding
             this.partId = shared.KSPPart.flightID;
             ResetIs();
             Enabled = true;
+            lastSessionTime = double.MaxValue;
+            pitchTorqueCalc.Reset();
+            rollTorqueCalc.Reset();
+            yawTorqueCalc.Reset();
+
+            adjustTorque = Vector3d.zero;
+            adjustMomentOfInertia = Vector3d.one;
         }
 
         public void DisableControl()
@@ -409,11 +465,15 @@ namespace kOS.Binding
         {
             if (Value != null)
             {
+                lastSessionTime = sessionTime;
+                sessionTime = Math.Round(Planetarium.GetUniversalTime(), 3);
+                //if (sessionTime > lastSessionTime)
+                //{
+                //}
                 sw.Reset();
                 sw.Start();
                 UpdateStateVectors();
                 UpdateTorque();
-                //UpdatePrediction();
                 UpdatePredictionPI();
                 UpdateControl(c);
                 if (ShowSteeringStats) PrintDebug();
@@ -449,24 +509,9 @@ namespace kOS.Binding
                 shared.Logger.LogWarning(string.Format("SteeringManager target direction is null, Value = {0}", Value));
                 return;
             }
+
             targetRot = targetdir.Rotation;
             centerOfMass = shared.Vessel.findWorldCenterOfMass();
-            momentOfInertia = shared.Vessel.findLocalMOI(centerOfMass);
-
-            // Adjust MOI if it's values are too low
-            if (momentOfInertia.x < 0.1)
-                momentOfInertia.x = 0.1;
-            if (momentOfInertia.y < 0.1)
-                momentOfInertia.y = 0.1;
-            if (momentOfInertia.z < 0.1)
-                momentOfInertia.z = 0.1;
-
-            if (momentOfInertia.x < 4.5)
-                momentOfInertia.x *= 10d;
-            if (momentOfInertia.y < 4.5)
-                momentOfInertia.y *= 10d;
-            if (momentOfInertia.z < 4.5)
-                momentOfInertia.z *= 10d;
 
             vesselTransform = shared.Vessel.ReferenceTransform;
             // Found that the default rotation has top pointing forward, forward pointing down, and right pointing starboard.
@@ -482,11 +527,64 @@ namespace kOS.Binding
             targetTop = targetRot * Vector3d.up;
             targetStarboard = targetRot * Vector3d.right;
 
+            Vector3d oldOmega = omega;
             // omega is angular rotation.  need to correct the signs to agree with the facing axis
             omega = Quaternion.Inverse(vesselRotation) * shared.Vessel.rigidbody.angularVelocity;
             omega.x *= -1; //positive values pull the nose to the starboard.
-            //omega.y *= -1;
-            omega.z *= -1; //positive values pull the nose up.
+            //omega.y *= -1; // positive values pull the nose up.
+            omega.z *= -1; // positive values pull the starboard side up.
+
+            if (sessionTime > lastSessionTime)
+            {
+                double dt = sessionTime - lastSessionTime;
+                angularAcceleration = (omega - oldOmega) / dt;
+                angularAcceleration = new Vector3d(angularAcceleration.x, angularAcceleration.z, angularAcceleration.y);
+                if (EnableMOIAdjust)
+                {
+                    measuredMomentOfInertia = new Vector3d(tgtPitchTorque / angularAcceleration.x, tgtRollTorque / angularAcceleration.y, tgtYawTorque / angularAcceleration.z);
+
+                    if (Math.Abs(accPitch) > epsilon)
+                    {
+                        adjustMomentOfInertia.x = pitchMOICalc.Update(Math.Abs(measuredMomentOfInertia.x) / momentOfInertia.x);
+                    }
+                    if (Math.Abs(accYaw) > epsilon)
+                    {
+                        adjustMomentOfInertia.z = yawMOICalc.Update(Math.Abs(measuredMomentOfInertia.z) / momentOfInertia.z);
+                    }
+                    if (Math.Abs(accRoll) > epsilon)
+                    {
+                        adjustMomentOfInertia.y = rollMOICalc.Update(Math.Abs(measuredMomentOfInertia.y) / momentOfInertia.y);
+                    }
+                }
+            }
+
+            momentOfInertia = shared.Vessel.findLocalMOI(centerOfMass);
+            momentOfInertia.Scale(adjustMomentOfInertia);
+            adjustTorque = Vector3d.zero;
+            measuredTorque = Vector3d.Scale(momentOfInertia, angularAcceleration);
+
+            if (sessionTime > lastSessionTime && EnableTorqueAdjust)
+            {
+
+                if (Math.Abs(accPitch) > epsilon)
+                {
+                    adjustTorque.x = Math.Min(Math.Abs(pitchTorqueCalc.Update(measuredTorque.x / accPitch)) - rawTorque.x, 0);
+                    //adjustTorque.x = Math.Abs(pitchTorqueCalc.Update(measuredTorque.x / accPitch) / rawTorque.x);
+                }
+                else adjustTorque.x = Math.Abs(pitchTorqueCalc.Update(pitchTorqueCalc.Mean));
+                if (Math.Abs(accYaw) > epsilon)
+                {
+                    adjustTorque.z = Math.Min(Math.Abs(yawTorqueCalc.Update(measuredTorque.z / accYaw)) - rawTorque.z, 0);
+                    //adjustTorque.z = Math.Abs(yawTorqueCalc.Update(measuredTorque.z / accYaw) / rawTorque.z);
+                }
+                else adjustTorque.z = Math.Abs(yawTorqueCalc.Update(yawTorqueCalc.Mean));
+                if (Math.Abs(accRoll) > epsilon)
+                {
+                    adjustTorque.y = Math.Min(Math.Abs(rollTorqueCalc.Update(measuredTorque.y / accRoll)) - rawTorque.y, 0);
+                    //adjustTorque.y = Math.Abs(rollTorqueCalc.Update(measuredTorque.y / accRoll) / rawTorque.y);
+                }
+                else adjustTorque.y = Math.Abs(rollTorqueCalc.Update(rollTorqueCalc.Mean));
+            }
         }
 
         public void UpdateTorque()
@@ -495,6 +593,7 @@ namespace kOS.Binding
             staticTorque = new Vector3d(0, 0, 0);
             // controlTorque is the maximum amount of torque applied by setting a control to 1.0.
             controlTorque = new Vector3d(0, 0, 0);
+            rawTorque = Vector3d.zero;
             Vector3d relCom;
             // clear all of the force vector storage lists to be refreshed during the update.
             allEngineVectors.Clear();
@@ -517,9 +616,9 @@ namespace kOS.Binding
                         if (wheel.isActiveAndEnabled && wheel.State == ModuleReactionWheel.WheelState.Active)
                         {
                             // TODO: Check to see if the component values depend on part orientation, and implement if needed.
-                            controlTorque.x += wheel.PitchTorque;
-                            controlTorque.z += wheel.YawTorque;
-                            controlTorque.y += wheel.RollTorque;
+                            rawTorque.x += wheel.PitchTorque;
+                            rawTorque.z += wheel.YawTorque;
+                            rawTorque.y += wheel.RollTorque;
                         }
                         continue;
                     }
@@ -545,9 +644,9 @@ namespace kOS.Binding
 
                                 // component values of the local torque are calculated using the dot product with the rotation axis.
                                 // Only using positive contributions, which is only valid when symmetric placement is assumed
-                                controlTorque.x += Math.Max(Vector3d.Dot(torque, vesselStarboard), 0);
-                                controlTorque.z += Math.Max(Vector3d.Dot(torque, vesselTop), 0);
-                                controlTorque.y += Math.Max(Vector3d.Dot(torque, vesselForward), 0);
+                                rawTorque.x += Math.Max(Vector3d.Dot(torque, vesselStarboard), 0);
+                                rawTorque.z += Math.Max(Vector3d.Dot(torque, vesselTop), 0);
+                                rawTorque.y += Math.Max(Vector3d.Dot(torque, vesselForward), 0);
                             }
                             continue;
                         }
@@ -578,6 +677,7 @@ namespace kOS.Binding
                                 transform.localRotation = gimbal.initRots[i];
                                 //vEngines[key].Start = transform.localPosition;
                                 gimbalRotation = transform.rotation;
+                                //gimbalRange = gimbal.gimbalRange * gimbal.gimbalLimiter / 100;
                                 gimbalRange = gimbal.gimbalRange;
                                 transform.localRotation = initRotation;
                                 foreach (ThrustVector tv in engineVectors)
@@ -664,19 +764,19 @@ namespace kOS.Binding
             controlEngineTorque.z = yawControl.magnitude;
             controlEngineTorque.y = rollControl.magnitude;
 
-            controlTorque.x += controlEngineTorque.x;
-            controlTorque.z += controlEngineTorque.z;
-            controlTorque.y += controlEngineTorque.y;
+            rawTorque.x += controlEngineTorque.x;
+            rawTorque.z += controlEngineTorque.z;
+            rawTorque.y += controlEngineTorque.y;
 
-            controlTorque.x = (controlTorque.x + PitchTorqueAdjust) * PitchTorqueFactor;
-            controlTorque.z = (controlTorque.z + YawTorqueAdjust) * YawTorqueFactor;
-            controlTorque.y = (controlTorque.y + RollTorqueAdjust) * RollTorqueFactor;
+            rawTorque.x = (rawTorque.x + PitchTorqueAdjust) * PitchTorqueFactor;
+            rawTorque.z = (rawTorque.z + YawTorqueAdjust) * YawTorqueFactor;
+            rawTorque.y = (rawTorque.y + RollTorqueAdjust) * RollTorqueFactor;
 
-            //if (momentOfInertia.x < 4.5) controlTorque.x /= 10d;
-            //if (momentOfInertia.z < 4.5) controlTorque.z /= 10d;
-            //if (momentOfInertia.y < 4.5) controlTorque.y /= 10d;
+            controlTorque = rawTorque + adjustTorque;
+            //controlTorque = Vector3d.Scale(rawTorque, adjustTorque);
+            //controlTorque = rawTorque;
 
-            double minTorque = 0.0001;
+            double minTorque = epsilon;
             if (controlTorque.x < minTorque) controlTorque.x = minTorque;
             if (controlTorque.y < minTorque) controlTorque.y = minTorque;
             if (controlTorque.z < minTorque) controlTorque.z = minTorque;
@@ -757,8 +857,9 @@ namespace kOS.Binding
             maxRollOmega = controlTorque.y * MaxStoppingTime / momentOfInertia.y;
 
             double sampletime = shared.UpdateHandler.CurrentFixedTime;
-            tgtPitchOmega = Math.Max(Math.Min(pitchRatePI.Update(sampletime, -phiPitch, 0, maxPitchOmega), maxPitchOmega), -maxPitchOmega);
-            tgtYawOmega = Math.Max(Math.Min(yawRatePI.Update(sampletime, -phiYaw, 0, maxYawOmega), maxYawOmega), -maxYawOmega);
+            // Because the value of phi is already error, we say the input is -error and the setpoint is 0 so the PID has the correct sign
+            tgtPitchOmega = pitchRatePI.Update(sampletime, -phiPitch, 0, maxPitchOmega);
+            tgtYawOmega = yawRatePI.Update(sampletime, -phiYaw, 0, maxYawOmega);
             if (Math.Abs(phi) > 5 * Math.PI / 180d)
             {
                 tgtRollOmega = 0;
@@ -766,17 +867,18 @@ namespace kOS.Binding
             }
             else
             {
-                tgtRollOmega = Math.Max(Math.Min(rollRatePI.Update(sampletime, -phiRoll, 0, maxRollOmega), maxRollOmega), -maxRollOmega);
+                tgtRollOmega = rollRatePI.Update(sampletime, -phiRoll, 0, maxRollOmega);
             }
 
             // Calculate target torque based on PID
-            tgtPitchTorque = pitchPI.Update(shared.UpdateHandler.CurrentFixedTime, omega.x, tgtPitchOmega, momentOfInertia.x, controlTorque.x);
-            tgtYawTorque = yawPI.Update(shared.UpdateHandler.CurrentFixedTime, omega.y, tgtYawOmega, momentOfInertia.z, controlTorque.z);
-            tgtRollTorque = rollPI.Update(shared.UpdateHandler.CurrentFixedTime, omega.z, tgtRollOmega, momentOfInertia.y, controlTorque.y);
+            tgtPitchTorque = pitchPI.Update(sampletime, omega.x, tgtPitchOmega, momentOfInertia.x, controlTorque.x);
+            tgtYawTorque = yawPI.Update(sampletime, omega.y, tgtYawOmega, momentOfInertia.z, controlTorque.z);
+            tgtRollTorque = rollPI.Update(sampletime, omega.z, tgtRollOmega, momentOfInertia.y, controlTorque.y);
 
-            tgtPitchTorque = pitchPI.Update(shared.UpdateHandler.CurrentFixedTime, pitchRate.Update(omega.x), tgtPitchOmega, momentOfInertia.x, controlTorque.x);
-            tgtYawTorque = yawPI.Update(shared.UpdateHandler.CurrentFixedTime, yawRate.Update(omega.y), tgtYawOmega, momentOfInertia.z, controlTorque.z);
-            tgtRollTorque = rollPI.Update(shared.UpdateHandler.CurrentFixedTime, rollRate.Update(omega.z), tgtRollOmega, momentOfInertia.y, controlTorque.y);
+
+            //tgtPitchTorque = pitchPI.Update(sampletime, pitchRate.Update(omega.x), tgtPitchOmega, momentOfInertia.x, controlTorque.x);
+            //tgtYawTorque = yawPI.Update(sampletime, yawRate.Update(omega.y), tgtYawOmega, momentOfInertia.z, controlTorque.z);
+            //tgtRollTorque = rollPI.Update(sampletime, rollRate.Update(omega.z), tgtRollOmega, momentOfInertia.y, controlTorque.y);
         }
 
         public void UpdateControl(FlightCtrlState c)
@@ -798,19 +900,17 @@ namespace kOS.Binding
             }
             else
             {
-                double epsilon = 0.0001;
-
                 //TODO: include adjustment for static torque (due to engines)
 
-                accPitch = Math.Min(Math.Max(tgtPitchTorque / controlTorque.x, -1), 1);
+                accPitch = tgtPitchTorque / controlTorque.x;
                 if (Math.Abs(accPitch) < epsilon)
                     accPitch = 0;
                 c.pitch = (float)accPitch;
-                accYaw = Math.Min(Math.Max(tgtYawTorque / controlTorque.z, -1), 1);
+                accYaw = tgtYawTorque / controlTorque.z;
                 if (Math.Abs(accYaw) < epsilon)
                     accYaw = 0;
                 c.yaw = (float)accYaw;
-                accRoll = Math.Min(Math.Max(tgtRollTorque / controlTorque.y, -1), 1);
+                accRoll = tgtRollTorque / controlTorque.y;
                 if (Math.Abs(accRoll) < epsilon)
                     accRoll = 0;
                 c.roll = (float)accRoll;
@@ -1059,7 +1159,9 @@ namespace kOS.Binding
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = tv.PitchForce.Force;
+                    //vEngines[key].Vector = tv.PitchForce.Force;
+                    //vEngines[key].Vector = tv.YawForce.Force;
+                    vEngines[key].Vector = tv.RollForce.Force;
                     vEngines[key].Start = tv.Position;
 
                     key = tv.PartId + "torque";
@@ -1079,7 +1181,9 @@ namespace kOS.Binding
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = tv.PitchForce.Torque;
+                    //vEngines[key].Vector = tv.PitchForce.Torque;
+                    //vEngines[key].Vector = tv.YawForce.Torque;
+                    vEngines[key].Vector = tv.RollForce.Torque;
                     vEngines[key].Start = tv.Position;
 
                     key = tv.PartId + "position";
@@ -1175,8 +1279,8 @@ namespace kOS.Binding
             shared.Screen.Print(string.Format("tgtRollTorque: {0}", tgtRollTorque));
             shared.Screen.Print(string.Format("accRoll: {0}", accRoll));
             shared.Screen.Print("    Processing Stats:");
-            shared.Screen.Print(string.Format("Average Duration: {0}", AverageDuration.GetValue()));
-            shared.Screen.Print(string.Format("Based on count: {0}", AverageDuration.Values.Count));
+            shared.Screen.Print(string.Format("Average Duration: {0}", AverageDuration.Mean));
+            shared.Screen.Print(string.Format("Based on count: {0}", AverageDuration.ValueCount));
         }
 
         public void WriteCSVs()
@@ -1217,6 +1321,12 @@ namespace kOS.Binding
                     string.Format(fileBaseName, fileDateString, shared.Vessel.vesselName, "rollTorque"));
                 rollTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MaxOutput");
             }
+            if (adjustTorqueWriter == null)
+            {
+                adjustTorqueWriter = KSP.IO.File.AppendText<SteeringManager>(
+                    string.Format(fileBaseName, fileDateString, shared.Vessel.vesselName, "adjustTorque"));
+                adjustTorqueWriter.WriteLine("LastSampleTime,Target Pitch,Measured Pitch,Average Adjust Pitch,Raw Pitch,Target Yaw,Measured Yaw,Average Adjust Yaw,Raw Yaw,Target Roll,Measured Roll,Average Adjust Roll,Raw Roll,Samples Roll");
+            }
 
             pitchRateWriter.WriteLine(pitchRatePI.ToCSVString());
             yawRateWriter.WriteLine(yawRatePI.ToCSVString());
@@ -1225,6 +1335,23 @@ namespace kOS.Binding
             pitchTorqueWriter.WriteLine(pitchPI.ToCSVString());
             yawTorqueWriter.WriteLine(yawPI.ToCSVString());
             rollTorqueWriter.WriteLine(rollPI.ToCSVString());
+
+            adjustTorqueWriter.WriteLine(string.Join(",", new string[] {
+                sessionTime.ToString(),
+                tgtPitchTorque.ToString(),
+                measuredTorque.x.ToString(),
+                pitchTorqueCalc.Mean.ToString(),
+                rawTorque.x.ToString(),
+                tgtYawTorque.ToString(),
+                measuredTorque.z.ToString(),
+                yawTorqueCalc.Mean.ToString(),
+                rawTorque.z.ToString(),
+                tgtRollTorque.ToString(),
+                measuredTorque.y.ToString(),
+                rollTorqueCalc.Mean.ToString(),
+                rawTorque.y.ToString(),
+                rollTorqueCalc.ValueCount.ToString()
+            }));
         }
 
         public void RemoveInstance(SharedObjects shared)
@@ -1355,6 +1482,8 @@ namespace kOS.Binding
             if (yawTorqueWriter != null) yawTorqueWriter.Dispose();
             if (rollTorqueWriter != null) rollTorqueWriter.Dispose();
 
+            if (adjustTorqueWriter != null) adjustTorqueWriter.Dispose();
+
             pitchRateWriter = null;
             yawRateWriter = null;
             rollRateWriter = null;
@@ -1362,6 +1491,8 @@ namespace kOS.Binding
             pitchTorqueWriter = null;
             yawTorqueWriter = null;
             rollTorqueWriter = null;
+
+            adjustTorqueWriter = null;
 
             if (AllInstances.Keys.Contains(KeyId)) AllInstances.Remove(KeyId);
         }
@@ -1424,11 +1555,27 @@ namespace kOS.Binding
                             Force = Quaternion.AngleAxis(GimbalRange, yawAxis) * neut,
                             Position = Position
                         };
-                        RollForce = new ForceVector()
+                        if (rollAxis.sqrMagnitude < 0.02)
                         {
-                            Force = Quaternion.AngleAxis(GimbalRange, rollAxis) * neut,
-                            Position = Position
-                        };
+                            //RollForce = new ForceVector()
+                            //{
+                            //    Force = NeutralForce.Force,
+                            //    Position = NeutralForce.Position
+                            //};
+                            RollForce = new ForceVector()
+                            {
+                                Force = Vector3d.zero,
+                                Position = Vector3d.zero
+                            };
+                        }
+                        else
+                        {
+                            RollForce = new ForceVector()
+                            {
+                                Force = Quaternion.AngleAxis(GimbalRange, rollAxis) * neut,
+                                Position = Position
+                            };
+                        }
                     }
                     else
                     {
@@ -1454,6 +1601,26 @@ namespace kOS.Binding
                 }
                 else
                 {
+                    NeutralForce = new ForceVector()
+                    {
+                        Force = Vector3d.zero,
+                        Position = Vector3d.zero
+                    };
+                    PitchForce = new ForceVector()
+                    {
+                        Force = Vector3d.zero,
+                        Position = Vector3d.zero
+                    };
+                    YawForce = new ForceVector()
+                    {
+                        Force = Vector3d.zero,
+                        Position = Vector3d.zero
+                    };
+                    RollForce = new ForceVector()
+                    {
+                        Force = Vector3d.zero,
+                        Position = Vector3d.zero
+                    };
                     ret[0] = Vector3d.zero;
                     ret[1] = Vector3d.zero;
                     ret[2] = Vector3d.zero;
@@ -1533,12 +1700,23 @@ namespace kOS.Binding
         {
             public List<double> Values { get; set; }
 
+            public double Mean { get; private set; }
+
+            public int ValueCount { get { return Values.Count; } }
+
             public int SampleLimit { get; set; }
 
             public MovingAverage()
             {
-                Values = new List<double>();
+                Reset();
                 SampleLimit = 30;
+            }
+
+            public void Reset()
+            {
+                Mean = 0;
+                if (Values == null) Values = new List<double>();
+                else Values.Clear();
             }
 
             public double Update(double value)
@@ -1550,15 +1728,57 @@ namespace kOS.Binding
                     {
                         Values.RemoveAt(0);
                     }
-                    return Values.Average();
+                    //if (Values.Count > 5) Mean = Values.OrderBy(e => e).Skip(1).Take(Values.Count - 2).Average();
+                    //else Mean = Values.Average();
+                    //Mean = Values.Average();
+                    double sum = 0;
+                    double count = 0;
+                    double max = double.MinValue;
+                    double min = double.MaxValue;
+                    for (int i = 0; i < Values.Count; i++)
+                    {
+                        double val = Values[i];
+                        if (val > max)
+                        {
+                            if (max != double.MinValue)
+                            {
+                                sum += max;
+                                count++;
+                            }
+                            max = val;
+                        }
+                        else if (val < min)
+                        {
+                            if (min != double.MaxValue)
+                            {
+                                sum += min;
+                                count++;
+                            }
+                            min = val;
+                        }
+                        else
+                        {
+                            sum += val;
+                            count++;
+                        }
+                    }
+                    if (count == 0)
+                    {
+                        if (max != double.MinValue)
+                        {
+                            sum += max;
+                            count++;
+                        }
+                        if (min != double.MaxValue)
+                        {
+                            sum += min;
+                            count++;
+                        }
+                    }
+                    Mean = sum / count;
+                    return Mean;
                 }
                 return value;
-            }
-
-            public double GetValue()
-            {
-                if (Values.Count > 0) return Values.Average();
-                else return 0;
             }
         }
     }
