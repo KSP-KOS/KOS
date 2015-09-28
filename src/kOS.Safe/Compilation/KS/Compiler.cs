@@ -1388,6 +1388,7 @@ namespace kOS.Safe.Compilation.KS
 
             bool addNegation = false;
             bool addNot = false;
+            bool addDefined = false;
             int nodeIndex = 0;
 
             if (node.Nodes[0].Token.Type == TokenType.PLUSMINUS)
@@ -1403,6 +1404,11 @@ namespace kOS.Safe.Compilation.KS
                 nodeIndex++;
                 addNot = true;
             }
+            else if (node.Nodes[0].Token.Type == TokenType.DEFINED)
+            {
+                nodeIndex++;
+                addDefined = true;
+            }
             
             VisitNode(node.Nodes[nodeIndex]);
 
@@ -1413,6 +1419,10 @@ namespace kOS.Safe.Compilation.KS
             if (addNot)
             {
                 AddOpcode(new OpcodeLogicNot());
+            }
+            if (addDefined)
+            {
+                AddOpcode(new OpcodeExists());
             }
         }
 

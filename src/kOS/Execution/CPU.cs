@@ -544,6 +544,19 @@ namespace kOS.Execution
             }
             return variable;
         }
+        
+        /// <summary>
+        /// Test if an identifier is a variable you can get the value of
+        /// at the moment (var name exists and is in scope).  Return
+        /// true if you can, false if you can't.
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
+        public bool IdentifierExistsInScope(string identifier)
+        {
+            Variable dummyVal = GetVariable(identifier,false,true);
+            return (dummyVal != null);
+        }
 
         public string DumpVariables()
         {
