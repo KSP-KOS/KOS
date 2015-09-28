@@ -123,6 +123,7 @@
     <Compile Include="Exceptions\KOSUndefinedIdentifierException.cs" />
     <Compile Include="Exceptions\KOSWaitInValidHereException.cs" />
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
+    <Compile Include="Exceptions\KOSWrongControlValueType.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Execution\ICpu.cs" />
     <Compile Include="Execution\IProgramContext.cs" />
