@@ -108,6 +108,11 @@ namespace kOS.Safe.Test.Opcode
             throw new NotImplementedException();
         }
 
+        public bool IdentifierExistsInScope(string identifier)
+        {
+            throw new NotImplementedException();
+        }
+
         public string DumpVariables()
         {
             throw new NotImplementedException();
