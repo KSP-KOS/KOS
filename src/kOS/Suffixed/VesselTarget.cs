@@ -417,14 +417,14 @@ namespace kOS.Suffixed
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Vessel.angularVelocity)));
             AddSuffix("MASS", new Suffix<float>(() => Vessel.GetTotalMass()));
             AddSuffix("VERTICALSPEED", new Suffix<double>(() => Vessel.verticalSpeed));
-            AddSuffix("GROUNDSPEED", new Suffix<double>(() => GetHorizontalSrfSpeed()));
+            AddSuffix("GROUNDSPEED", new Suffix<double>(GetHorizontalSrfSpeed));
             AddSuffix("SURFACESPEED", new Suffix<double>(() => { throw new KOSDeprecationException("0.18.0","SURFACESPEED","GROUNDSPEED",""); }));
             AddSuffix("AIRSPEED", new Suffix<double>(() => (Vessel.orbit.GetVel() - FlightGlobals.currentMainBody.getRFrmVel(Vessel.findWorldCenterOfMass())).magnitude, "the velocity of the vessel relative to the air"));
             AddSuffix(new[] { "SHIPNAME", "NAME" }, new SetSuffix<string>(() => Vessel.vesselName, RenameVessel, "The KSP name for a craft, cannot be empty"));
             AddSuffix("TYPE", new SetSuffix<string>(() => Vessel.vesselType.ToString(), RetypeVessel, "The Ship's KSP type (e.g. rover, base, probe)"));
             AddSuffix("SENSORS", new Suffix<VesselSensors>(() => new VesselSensors(Vessel)));
             AddSuffix("TERMVELOCITY", new Suffix<double>(() => { throw new KOSAtmosphereDeprecationException("17.2", "TERMVELOCITY", "<None>", string.Empty); }));
-            AddSuffix(new [] { "DYNAMICPRESSURE" , "Q"} , new Suffix<double>(() => Vessel.dynamicPressurekPa*1000));
+            AddSuffix(new [] { "DYNAMICPRESSURE" , "Q"} , new Suffix<double>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
             AddSuffix("LOADED", new Suffix<bool>(() => Vessel.loaded));
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
             AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
