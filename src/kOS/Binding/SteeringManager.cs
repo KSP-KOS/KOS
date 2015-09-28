@@ -306,7 +306,7 @@ namespace kOS.Binding
             ShowThrustVectors = false;
             ShowRCSVectors = false;
             ShowSteeringStats = false;
-            WriteCSVFiles = true;
+            WriteCSVFiles = false;
 
             if (pitchRateWriter != null) pitchRateWriter.Dispose();
             if (yawRateWriter != null) yawRateWriter.Dispose();
