@@ -173,7 +173,7 @@ ALT:PERIAPSIS
 
 ALT:RADAR
 
-Further details are found on the `ALT page<structures/vessels/alt.html>`__ .
+Further details are found on the `ALT page <structures/vessels/alt.html>`__ .
 
 
 ETA ALIAS
@@ -188,7 +188,7 @@ ETA:PERIAPSIS
 
 ETA:TRANSITION
 
-Further details are found on the `ETA page<structures/vessels/eta.html>`__ .
+Further details are found on the `ETA page <structures/vessels/eta.html>`__ .
 
 ENCOUNTER
 ---------
