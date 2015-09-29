@@ -59,6 +59,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
     :attr:`GEOPOSITIONOF`            :struct:`GeoCoordinates` in :ref:`SHIP-RAW <ship-raw>`
     :attr:`ALTITUDEOF`               scalar (m)
     :attr:`SOIRADIUS`                scalar (m)
+    :attr:`ROTATIONANGLE`            scalar (deg)
     ================================ ============
 
 .. attribute:: Body:NAME
@@ -110,3 +111,14 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 .. attribute:: Body:SOIRADIUS
 
     The radius of the body's sphere of influence. Measured from the body's center.
+
+.. attribute:: Body:ROTATIONANGLE
+
+    The rotation angle is the number of degrees between the 
+    :ref:`Universal Reference Vector <referencevector>` and the 
+    current positon of the body's prime meridian (body longitude
+    of zero).
+
+    The value is in constant motion, and once per body's day, its
+    ``:rotationangle`` will wrap around through a full 360 degrees.
+

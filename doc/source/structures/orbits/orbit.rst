@@ -163,7 +163,17 @@ Structure
     :type: scalar (deg)
     :access: Get only
 
-    Longitude of the ascending node. It's unclear what the basis line the game uses for this is, though. The real-world basis is the constellation Ares, which of course doesn't exist in the Kerbal universe.
+    The Longitude of the ascening node is the "celestial longitude" where
+    the orbit crosses the body's equator from its southern hemisphere to
+    its northern hemisphere
+
+    Note that the "celestial longitude" in this case is NOT the planetary
+    longitude of the orbit body.  "Celestial longitudes" are expressed
+    as the angle from the :ref:`universal reference vector <referencevector`,
+    not from the body's longitude.  In order to find out where it is
+    relative to the body's longitude, you will have to take into account
+    ``body:rotationangle``, and take into account that the body will
+    rotate by the time you get there.
 
 .. attribute:: Orbit:ARGUMENTOFPERIAPSIS
 

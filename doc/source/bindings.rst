@@ -359,6 +359,37 @@ But kOS does not support this at the moment so in kOS if you set
 the LOADDISTANCE, you are setting it to the same value
 universally for all situations.
 
+.. _referencevector:
+
+REFERENCEVECTOR
+---------------
+
+Gives the Reference :struct:`Vector` for the Solar System itself, in
+current Ship-Raw XYZ coordinates.
+
+Both the :attr:`Orbit:LONGITUDEOFASCENDINGNODE` orbit suffix and the
+:attr:`Body:ROTATIONANGLE` body suffix are expressed in terms of
+degree offsets from this *Universal Reference Vector*.
+
+What is the Reference Vector?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The reference vector is an arbitrary vector in space used to measure
+some orbital parameters that are supposed to remain fixed to space
+regardless of how the planets underneath the orbit rotate, or where the
+Sun is.  In a sense it can be thought of as the celestial "prime
+meridian" of the entire solar system, rather than the "prime meridian" of
+any one particular rotating planet or moon.
+
+In a hypothetical Earthling's solar system our Kerbal scientists have
+hypothesized may exist in a galaxy far away, Earthbound astronomers use
+a reference they called the
+`First Point of Aries <https://en.wikipedia.org/wiki/First_Point_of_Aries>`__,
+as their reference vector.
+
+For Kerbals, it refers to a more arbitrary line in space, pointing at a fixed
+point in the firmament, also known as the "skybox".
+
 Addons
 ------
 
