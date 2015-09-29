@@ -27,6 +27,7 @@ namespace kOS.Suffixed
             AddSuffix("REVERTTOEDITOR", new NoArgsSuffix(RevertToEditor));
             AddSuffix("REVERTTO", new OneArgsSuffix<string>(RevertTo));
             AddSuffix("ORIGINEDITOR", new Suffix<string>(OriginatingEditor));
+            AddSuffix("DEFAULTLOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(PhysicsGlobals.Instance.VesselRangesDefault)));
         }
 
         public void RevertToLaunch()

@@ -96,6 +96,7 @@
     <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
     <Compile Include="Suffixed\KUniverseValue.cs" />
+    <Compile Include="Suffixed\LoadDistanceValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
