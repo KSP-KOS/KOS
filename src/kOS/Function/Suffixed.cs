@@ -197,6 +197,17 @@ namespace kOS.Function
         }
     }
 
+    [Function("lex", "lexicon")]
+    public class FunctionLexicon : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            AssertArgBottomAndConsume(shared);
+            var listValue = new Lexicon<object,object>();
+            ReturnValue = listValue;
+        }
+    }
+
     [Function("hsv")]
     public class FunctionHsv : FunctionBase
     {

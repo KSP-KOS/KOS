@@ -21,7 +21,6 @@ namespace kOS.Suffixed.Part
         {
             Part = part;
             shared = sharedObj;
-            
             // This cannot be called from inside InitializeSuffixes because the base constructor calls
             // InitializeSuffixes first before this constructor has set "Part" to a real value.
             PartInitializeSuffixes();
@@ -130,7 +129,7 @@ namespace kOS.Suffixed.Part
             }
             else
             {
-                throw new KOSCommandInvalidHere("CONTROLFROM", "a generic part value", "a docking port or command part");
+                throw new KOSCommandInvalidHereException("CONTROLFROM", "a generic part value", "a docking port or command part");
             }
         }
 

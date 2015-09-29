@@ -1,6 +1,7 @@
 ﻿using kOS.AddOns.RemoteTech;
 using kOS.Safe.Binding;
 using kOS.Safe.Utilities;
+using kOS.Safe.Exceptions;
 using kOS.Suffixed;
 using kOS.Utilities;
 using System;
@@ -237,10 +238,11 @@ namespace kOS.Binding
                         SelectAutopilotMode(VesselAutopilot.AutopilotMode.Antinormal);
                         break;
                     case "radialin":
-                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialIn);
+                        // TODO: As of KSP 1.0.4, RadialIn and RadialOut are swapped.  Check if still true in future versions.
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialOut);
                         break;
                     case "radialout":
-                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialOut);
+                        SelectAutopilotMode(VesselAutopilot.AutopilotMode.RadialIn);
                         break;
                     case "target":
                         SelectAutopilotMode(VesselAutopilot.AutopilotMode.Target);
@@ -369,17 +371,39 @@ namespace kOS.Binding
             private void UpdateThrottle(FlightCtrlState c)
             {
                 if (!Enabled) return;
-                double doubleValue = Convert.ToDouble(value);
-                if (!double.IsNaN(doubleValue))
-                    c.mainThrottle = (float)Safe.Utilities.Math.Clamp(doubleValue, 0, 1);
+                try
+                {
+                    double doubleValue = Convert.ToDouble(value);
+                    if (!double.IsNaN(doubleValue))
+                        c.mainThrottle = (float)Safe.Utilities.Math.Clamp(doubleValue, 0, 1);
+                }
+                catch (InvalidCastException e) // Note, very few types actually fail Convert.ToDouble(), so it's hard to get this to occur.
+                {
+                    // perform the "unlock" so this message won't spew every FixedUpdate:
+                    Enabled = false;
+                    ClearValue();
+                    throw new KOSWrongControlValueTypeException(
+                        "THROTTLE", value.GetType().Name, "Number in the range [0..1]");
+                }
             }
 
             private void UpdateWheelThrottle(FlightCtrlState c)
             {
                 if (!Enabled) return;
-                double doubleValue = Convert.ToDouble(value);
-                if (!double.IsNaN(doubleValue))
-                    c.wheelThrottle = (float)Safe.Utilities.Math.Clamp(doubleValue, -1, 1);
+                try
+                {
+                    double doubleValue = Convert.ToDouble(value);
+                    if (!double.IsNaN(doubleValue))
+                        c.wheelThrottle = (float)Safe.Utilities.Math.Clamp(doubleValue, -1, 1);
+                }
+                catch (InvalidCastException e) // Note, very few types actually fail Convert.ToDouble(), so it's hard to get this to occur.
+                {
+                    // perform the "unlock" so this message won't spew every FixedUpdate:
+                    Enabled = false;
+                    ClearValue();
+                    throw new KOSWrongControlValueTypeException(
+                        "WHEELTHROTTLE", value.GetType().Name, "Number in the range [-1..1]");
+                }
             }
 
             private void SteerByWire(FlightCtrlState c)
@@ -401,6 +425,14 @@ namespace kOS.Binding
                 {
                     SteeringHelper.SteerShipToward(((Node)value).GetBurnVector().ToDirection(), c, control.Vessel);
                 }
+                else
+                {
+                    // perform the "unlock" so this message won't spew every FixedUpdate:
+                    Enabled = false;
+                    ClearValue();
+                    throw new KOSWrongControlValueTypeException(
+                        "STEERING", value.GetType().Name, "Direction, Vector, Manuever Node, or special string \"KILL\"");
+                }
             }
 
             private void WheelSteer(FlightCtrlState c)
@@ -416,11 +448,28 @@ namespace kOS.Binding
                 {
                     bearing = (float) ((GeoCoordinates)value).GetBearing();
                 }
-                else if (value is double)
+                else
                 {
-                    double doubleValue = Convert.ToDouble(value);
-                    if (Utils.IsValidNumber(doubleValue))
-                        bearing = (float)(Math.Round(doubleValue) - Mathf.Round(FlightGlobals.ship_heading));
+                    try
+                    {
+                        double doubleValue = Convert.ToDouble(value);
+                        if (Utils.IsValidNumber(doubleValue))
+                        {
+                            bearing = (float)(Math.Round(doubleValue) - Mathf.Round(FlightGlobals.ship_heading));
+                            if (bearing < -180)
+                                bearing += 360; // i.e. 359 degrees to the left is really 1 degree to the right.
+                            else if (bearing > 180)
+                                bearing -= 360; // i.e. 359 degrees to the right is really 1 degree to the left
+                        }
+                    }
+                    catch (InvalidCastException e) // Note, very few types actually fail Convert.ToDouble(), so it's hard to get this to occur.
+                    {
+                        // perform the "unlock" so this message won't spew every FixedUpdate:
+                        Enabled = false;
+                        ClearValue();
+                        throw new KOSWrongControlValueTypeException(
+                            "WHEELSTEER", value.GetType().Name, "Vessel, LATLNG, or Number (compass heading)");
+                    }
                 }
 
                 if (!(control.Vessel.horizontalSrfSpeed > 0.1f)) return;

@@ -4,7 +4,7 @@
     /// A version of KOSCommandInvalidHere describing an attempt to use
     /// the BREAK command when not in the body of a loop.
     /// </summary>
-    public class KOSBreakInvalidHereException : KOSCommandInvalidHere
+    public class KOSBreakInvalidHereException : KOSCommandInvalidHereException
     {
         public override string HelpURL
         {

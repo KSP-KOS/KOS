@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
+    <Compile Include="Suffixed\KUniverseValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Screen\RectExtensions.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechAntennaModuleFields.cs" />
     <Compile Include="Suffixed\CrewMember.cs" />
+    <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

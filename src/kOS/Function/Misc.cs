@@ -126,7 +126,7 @@ namespace kOS.Function
             }
             else if (!shared.Vessel.isActiveVessel)
             {
-                throw new KOSCommandInvalidHere("STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
+                throw new KOSCommandInvalidHereException("STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
             }
         }
     }
@@ -406,4 +406,5 @@ namespace kOS.Function
             TimeWarp.fetch.WarpTo(ut);
         }
     }
+    
 }
