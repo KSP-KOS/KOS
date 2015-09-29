@@ -15,6 +15,7 @@ namespace kOS.Binding
 
         public override void AddTo(SharedObjects shared)
         {
+            shared.BindingMgr.AddGetter("KUNIVERSE", () => new KUniverseValue(shared));
             shared.BindingMgr.AddGetter("QUICKSAVE", () =>
             {
                 if (!HighLogic.CurrentGame.Parameters.Flight.CanQuickSave) return false;
