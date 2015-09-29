@@ -393,12 +393,12 @@ namespace kOS.Execution
 
         /// <summary>Throw exception if the user delegate is not one the CPU can call right now.</summary>
         /// <param name="userDelegate">The userdelegate being checked</param>
-        /// <exception cref="KOSInvalidDelegateContext">thrown if the cpu is in a state where it can't call this delegate.</exception>
+        /// <exception cref="KOSInvalidDelegateContextException">thrown if the cpu is in a state where it can't call this delegate.</exception>
         public void AssertValidDelegateCall(IUserDelegate userDelegate)
         {
             if (userDelegate.ProgContext != currentContext)
             {
-                throw new KOSInvalidDelegateContext(
+                throw new KOSInvalidDelegateContextException(
                     (currentContext == contexts[0] ? "the interpreter" : "a program"),
                     (currentContext == contexts[0] ? "a program" : "the interpreter")
                     );

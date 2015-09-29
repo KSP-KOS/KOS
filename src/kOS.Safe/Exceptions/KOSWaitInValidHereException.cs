@@ -4,7 +4,7 @@
     /// A version of KOSCommandInvalidHere describing an attempt to use
     /// the WAIT keyword when in a trigger.
     /// </summary>
-    public class KOSWaitInvalidHereException : KOSCommandInvalidHere
+    public class KOSWaitInvalidHereException : KOSCommandInvalidHereException
     {
         public override string HelpURL
         {
