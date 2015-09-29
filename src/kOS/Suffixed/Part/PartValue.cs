@@ -15,7 +15,7 @@ namespace kOS.Suffixed.Part
 {
     public class PartValue : Structure, IKOSTargetable
     {
-        protected readonly SharedObjects shared;
+        protected SharedObjects shared { get; private set; }
 
         public global::Part Part { get; private set; }
 
