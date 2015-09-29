@@ -490,6 +490,8 @@ namespace kOS.Binding
                 return (Direction)Value;
             else if (Value is Vector)
                 return Direction.LookRotation((Vector)Value, vesselUp);
+            else if (Value is Node)
+                return Direction.LookRotation(((Node)Value).GetBurnVector(), vesselUp);
             else if (Value is string)
             {
                 if (string.Equals((string)Value, "KILL", StringComparison.OrdinalIgnoreCase))
@@ -497,8 +499,9 @@ namespace kOS.Binding
                     return new Direction(vesselRotation);
                 }
             }
-            //return new Direction(new Vector3d(0, 0, 0), false);
-            return null;
+            DisableControl();
+            throw new kOS.Safe.Exceptions.KOSWrongControlValueTypeException(
+                "STEERING", Value.GetType().Name, "Direction, Vector, Manuever Node, or special string \"KILL\"");
         }
 
         public void UpdateStateVectors()
@@ -534,6 +537,8 @@ namespace kOS.Binding
             //omega.y *= -1; // positive values pull the nose up.
             omega.z *= -1; // positive values pull the starboard side up.
 
+            // TODO: Currently adjustments to MOI are only enabled in debug compiles.  Using this feature seems to be buggy, but it has potential
+            // to be more resiliant against random spikes in angular velocity.
             if (sessionTime > lastSessionTime)
             {
                 double dt = sessionTime - lastSessionTime;
@@ -780,58 +785,6 @@ namespace kOS.Binding
             if (controlTorque.x < minTorque) controlTorque.x = minTorque;
             if (controlTorque.y < minTorque) controlTorque.y = minTorque;
             if (controlTorque.z < minTorque) controlTorque.z = minTorque;
-        }
-
-        // Keeping the old UpdatePrediction method for reference while implementing PI based control, can be deleted later.
-        public void UpdatePrediction()
-        {
-            // calculate phi and pitch, yaw, roll components of phi (angular error)
-            phi = Vector3d.Angle(vesselForward, targetForward) / RadToDeg;
-            if (Vector3d.Angle(vesselTop, targetForward) > 90)
-                phi *= -1;
-            phiPitch = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselStarboard, targetForward)) / RadToDeg;
-            if (Vector3d.Angle(vesselTop, Vector3d.Exclude(vesselStarboard, targetForward)) > 90)
-                phiPitch *= -1;
-            phiYaw = Vector3d.Angle(vesselForward, Vector3d.Exclude(vesselTop, targetForward)) / RadToDeg;
-            if (Vector3d.Angle(vesselStarboard, Vector3d.Exclude(vesselTop, targetForward)) > 90)
-                phiYaw *= -1;
-            phiRoll = Vector3d.Angle(vesselTop, Vector3d.Exclude(vesselForward, targetTop)) / RadToDeg;
-            if (Vector3d.Angle(vesselStarboard, Vector3d.Exclude(vesselForward, targetTop)) > 90)
-                phiRoll *= -1;
-
-            // dt1 is the dt factor for the angular velocity calculation
-            // dt2 is the dt factor for the torque calculation
-            double dt1 = 0.5d;
-            double dt2 = TimeWarp.fixedDeltaTime * 8;
-            double dtRoll1 = 0.5d;
-            double dtRoll2 = TimeWarp.fixedDeltaTime * 2;
-
-            // Calculate the target angular velocity based on the error (phi)
-            tgtPitchOmega = phiPitch / dt1;
-            tgtYawOmega = phiYaw / dt1;
-            //double tgtYawOmega = Math.Pow(Math.Sin(phiYaw), 2) * 10d;
-            tgtRollOmega = phiRoll / dtRoll1;
-
-            // kill roll rotation until within 45 degrees of the target direction
-            if (Math.Abs(phi) > 45 * Math.PI / 180d)
-                tgtRollOmega = 0;
-
-            // Calculate the maximum allowable angular velocity and apply the limit, something we can stop in a reasonable amount of time
-            maxPitchOmega = controlTorque.x * 0.5d / momentOfInertia.x;
-            if (Math.Abs(tgtPitchOmega) > maxPitchOmega)
-                tgtPitchOmega = maxPitchOmega * Math.Sign(tgtPitchOmega);
-            maxYawOmega = controlTorque.z * 0.5d / momentOfInertia.z;
-            if (Math.Abs(tgtYawOmega) > maxYawOmega)
-                tgtYawOmega = maxYawOmega * Math.Sign(tgtYawOmega);
-            maxRollOmega = controlTorque.y * 0.5d / momentOfInertia.y;
-            //maxRollOmega = Math.PI / 10;
-            if (Math.Abs(tgtRollOmega) > maxRollOmega)
-                tgtRollOmega = maxRollOmega * Math.Sign(tgtRollOmega);
-
-            // Calculate the desired torque to match to target
-            tgtPitchTorque = momentOfInertia.x * (tgtPitchOmega - omega.x) / dt2;
-            tgtYawTorque = momentOfInertia.z * (tgtYawOmega - omega.y) / dt2;
-            tgtRollTorque = momentOfInertia.y * (tgtRollOmega - omega.z) / dtRoll2;
         }
 
         // Update prediction based on PI controls, sets the target angular velocity and the target torque for the vessel

@@ -424,35 +424,16 @@ namespace kOS.Binding
             private void SteerByWire(FlightCtrlState c)
             {
                 if (!Enabled) return;
-                steeringManager.Value = this.value;
-                steeringManager.OnFlyByWire(c);
-                //if (value is string && ((string)value).ToUpper() == "KILL")
-                //{
-                //    SteeringHelper.KillRotation(c, control.Vessel);
-                //}
-                //else if (value is Direction)
-                //{
-                //    SteeringHelper.SteerShipToward((Direction)value, c, control.Vessel);
-                //}
-                //else if (value is Vector)
-                //{
-                //    //SteeringHelper.SteerShipToward(((Vector)value).ToDirection(), c, control.Vessel);
-                //    SteeringHelper.SteerShipToward(
-                //        Direction.LookRotation((Vector)value, control.Vessel.mainBody.position - control.Vessel.GetWorldPos3D()), 
-                //        c, control.Vessel);
-                //}
-                //else if (value is Node)
-                //{
-                //    SteeringHelper.SteerShipToward(((Node)value).GetBurnVector().ToDirection(), c, control.Vessel);
-                //}
-                //else
-                //{
-                //    // perform the "unlock" so this message won't spew every FixedUpdate:
-                //    Enabled = false;
-                //    ClearValue();
-                //    throw new KOSWrongControlValueTypeException(
-                //        "STEERING", value.GetType().Name, "Direction, Vector, Manuever Node, or special string \"KILL\"");
-                //}
+                if (steeringManager.Enabled)
+                {
+                    steeringManager.Value = this.value;
+                    steeringManager.OnFlyByWire(c);
+                }
+                else
+                {
+                    Enabled = false;
+                    ClearValue();
+                }
             }
 
             private void WheelSteer(FlightCtrlState c)

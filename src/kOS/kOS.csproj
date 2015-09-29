@@ -154,7 +154,6 @@
     <Compile Include="UserIO\TerminalXtermMapper.cs" />
     <Compile Include="Utilities\BetaShim.cs" />
     <Compile Include="Utilities\PartUtilities.cs" />
-    <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Screen\TermWindow.cs" />
     <Compile Include="Suffixed\Timespan.cs" />
     <Compile Include="Utilities\Utils.cs" />
