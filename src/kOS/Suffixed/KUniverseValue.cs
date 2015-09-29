@@ -28,8 +28,8 @@ namespace kOS.Suffixed
             AddSuffix("REVERTTO", new OneArgsSuffix<string>(RevertTo));
             AddSuffix("ORIGINEDITOR", new Suffix<string>(OriginatingEditor));
             AddSuffix("DEFAULTLOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(PhysicsGlobals.Instance.VesselRangesDefault)));
-            AddSuffix("SETACTIVEVESSEL", new OneArgsSuffix<Vessel>(SetActiveVessel));
-            AddSuffix("FORCESETACTIVEVESSEL", new OneArgsSuffix<Vessel>(ForceSetActiveVessel));
+            AddSuffix("ACTIVEVESSEL", new SetSuffix<VesselTarget>(() => new VesselTarget(FlightGlobals.ActiveVessel, shared), SetActiveVessel));
+            AddSuffix("FORCESETACTIVEVESSEL", new OneArgsSuffix<VesselTarget>(ForceSetActiveVessel));
         }
 
         public void RevertToLaunch()
@@ -100,16 +100,18 @@ namespace kOS.Suffixed
             return "";
         }
 
-        public void SetActiveVessel(Vessel vessel)
+        public void SetActiveVessel(VesselTarget vesselTarget)
         {
+            Vessel vessel = vesselTarget.Vessel;
             if (!vessel.isActiveVessel)
             {
                 FlightGlobals.SetActiveVessel(vessel);
             }
         }
 
-        public void ForceSetActiveVessel(Vessel vessel)
+        public void ForceSetActiveVessel(VesselTarget vesselTarget)
         {
+            Vessel vessel = vesselTarget.Vessel;
             if (!vessel.isActiveVessel)
             {
                 FlightGlobals.ForceSetActiveVessel(vessel);
