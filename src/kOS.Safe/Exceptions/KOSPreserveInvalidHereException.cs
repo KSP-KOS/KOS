@@ -1,10 +1,10 @@
 ﻿namespace kOS.Safe.Exceptions
 {
     /// <summary>
-    /// A version of KOSCommandInvalidHere describing an attempt to use
+    /// A version of KOSCommandInvalidHereException describing an attempt to use
     /// the PRESERVE keyword when not in a trigger.
     /// </summary>
-    public class KOSPreserveInvalidHereException : KOSCommandInvalidHere
+    public class KOSPreserveInvalidHereException : KOSCommandInvalidHereException
     {
         public override string HelpURL
         {

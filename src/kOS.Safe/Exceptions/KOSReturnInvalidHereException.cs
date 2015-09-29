@@ -4,7 +4,7 @@
     /// A version of KOSCommandInvalidHere describing an attempt to use
     /// the RETURN command when not in the body of a user function.
     /// </summary>
-    public class KOSReturnInvalidHereException : KOSCommandInvalidHere
+    public class KOSReturnInvalidHereException : KOSCommandInvalidHereException
     {
         public override string HelpURL
         {
