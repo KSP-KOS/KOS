@@ -1063,9 +1063,21 @@ namespace kOS.Execution
             }
             try
             {
-                if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
+                opcode.AbortContext = false;
+                opcode.AbortProgram = false;
+                opcode.Execute(this);
+                if (opcode.AbortProgram)
                 {
-                    opcode.Execute(this);
+                    BreakExecution(false);
+                    SafeHouse.Logger.Log("Execution Broken");
+                    return false;
+                }
+                else if (opcode.AbortContext)
+                {
+                    return false;
+                }
+                else
+                {
                     int prevPointer = context.InstructionPointer;
                     context.InstructionPointer += opcode.DeltaInstructionPointer;
                     if (context.InstructionPointer < 0 || context.InstructionPointer >= context.Program.Count())
@@ -1074,11 +1086,6 @@ namespace kOS.Execution
                             context.InstructionPointer, String.Format("after executing {0:0000} {1} {2}", prevPointer, opcode.Label, opcode));
                     }
                     return true;
-                }
-                if (opcode is OpcodeEOP)
-                {
-                    BreakExecution(false);
-                    SafeHouse.Logger.Log("Execution Broken");
                 }
             }
             catch (Exception)
@@ -1089,7 +1096,6 @@ namespace kOS.Execution
                     SafeHouse.Logger.Log(executeLog.ToString());
                 throw;
             }
-            return false;
         }
 
         private void SkipCurrentInstructionId()
