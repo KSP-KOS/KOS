@@ -1009,6 +1009,8 @@ namespace kOS.Execution
             {
                 try
                 {
+                    // If the program is ended from within a trigger, the trigger list will be empty and the pointer
+                    // will be invalid.  Only execute the trigger if it still exists.
                     if (currentContext.Triggers.Contains(triggerPointer))
                     {
                         currentContext.InstructionPointer = triggerPointer;
@@ -1035,6 +1037,8 @@ namespace kOS.Execution
                 }
             }
 
+            // since `run` opcodes don't work in triggers, we can use the opcode count to determine if the
+            // program has been aborted.  If the count isn't right, leave the pointer where it is.
             if (oldCount == currentContext.Program.Count)
             {
                 currentContext.InstructionPointer = currentInstructionPointer;
