@@ -1000,6 +1000,7 @@ namespace kOS.Execution
         private void ProcessTriggers()
         {
             if (currentContext.Triggers.Count <= 0) return;
+            int oldCount = currentContext.Program.Count;
 
             int currentInstructionPointer = currentContext.InstructionPointer;
             var triggerList = new List<int>(currentContext.Triggers);
@@ -1008,17 +1009,20 @@ namespace kOS.Execution
             {
                 try
                 {
-                    currentContext.InstructionPointer = triggerPointer;
-
-                    bool executeNext = true;
-                    executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
-                    while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
+                    if (currentContext.Triggers.Contains(triggerPointer))
                     {
-                        executeNext = ExecuteInstruction(currentContext);
-                        instructionsSoFarInUpdate++;
+                        currentContext.InstructionPointer = triggerPointer;
+
+                        bool executeNext = true;
+                        executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
+                        while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
+                        {
+                            executeNext = ExecuteInstruction(currentContext);
+                            instructionsSoFarInUpdate++;
+                        }
+                        if (executeLog.Length > 0)
+                            SafeHouse.Logger.Log(executeLog.ToString());
                     }
-                    if (executeLog.Length > 0)
-                        SafeHouse.Logger.Log(executeLog.ToString());
                 }
                 catch (Exception e)
                 {
@@ -1031,7 +1035,10 @@ namespace kOS.Execution
                 }
             }
 
-            currentContext.InstructionPointer = currentInstructionPointer;
+            if (oldCount == currentContext.Program.Count)
+            {
+                currentContext.InstructionPointer = currentInstructionPointer;
+            }
         }
 
         private void ContinueExecution()
