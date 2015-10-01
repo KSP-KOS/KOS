@@ -36,7 +36,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`HEADING`                       scalar (deg)              Absolute heading to this vessel
      :attr:`MAXTHRUST`                     scalar                    Sum of active maximum thrusts
      :meth:`MAXTHRUSTAT(pressure)`         scalar                    Sum of active maximum thrusts at the given atmospheric pressure
-     :attr:`AVAILABLETHRUST`               scalar                    Sum of active limited maximum thrusts 
+     :attr:`AVAILABLETHRUST`               scalar                    Sum of active limited maximum thrusts
      :meth:`AVAILABLETHRUSTAT(pressure)`   scalar                    Sum of active limited maximum thrusts at the given atmospheric pressure
      :attr:`FACING`                        :struct:`Direction`       The way the vessel is pointed
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
@@ -54,6 +54,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`ANGULARVEL`                    :struct:`Vector`          In :ref:`SHIP_RAW <ship-raw>`
      :attr:`SENSORS`                       :struct:`VesselSensors`   Sensor data
      :attr:`LOADED`                        Boolean                   loaded into KSP physics engine or "on rails"
+     :attr:`LOADDISTANCE`                  :struct:`LoadDistance`    the :struct:`LoadDistance` object for this vessel
      :attr:`ISDEAD`                        Boolean                   True if the vessel refers to a ship that has gone away.
      :attr:`PATCHES`                       :struct:`List`            :struct:`Orbit` patches
      :attr:`ROOTPART`                      :struct:`Part`            Root :struct:`Part` of this vessel
@@ -100,7 +101,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     Sum of all the :ref:`engines' MAXTHRUSTs <engine_MAXTHRUST>` of all the currently active engines In Kilonewtons.
-    
+
 .. method:: Vessel:MAXTHRUSTAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
@@ -112,7 +113,7 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     :type: scalar
     :access: Get only
-    
+
     Sum of all the :ref:`engines' AVAILABLETHRUSTs <engine_AVAILABLETHRUST>` of all the currently active engines taking into acount their throttlelimits. Result is in Kilonewtons.
 
 .. method:: Vessel:AVAILABLETHRUSTAT(pressure)
@@ -167,14 +168,14 @@ All vessels share a structure. To get a variable referring to any vessel you can
     ship's velocity is ignored when calculating this.
 
     .. note::
-    
+
         .. versionadded:: 0.18
 
         The old name for this value was SURFACESPEED.  The name was changed
         because it was confusing before.  "surface speed" implied it's the
         scalar magnitude of "surface velocity", but it wasn't, because of how
         it ignores the vertical component.
-      
+
 
 .. attribute:: Vessel:AIRSPEED
 
@@ -205,9 +206,9 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     :type: string
     :access: get only
-    
+
     The current status of the vessel possible results are: `LANDED`, `SPLASHED`, `PRELAUNCH`, `FLYING`, `SUB_ORBITAL`, `ORBITING`, `ESCAPING` and `DOCKED`.
-    
+
 .. attribute:: Vessel:TYPE
 
     :type: string
@@ -255,6 +256,13 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     true if the vessel is fully loaded into the complete KSP physics engine (false if it's "on rails").
 
+.. attribute:: Vessel:LOADDISTANCE
+
+    :type: :struct:`LoadDistance`
+    :access: Get only
+
+    Returns the load distance object for this vessel.  The suffixes of this object may be adjusted to change the loading behavior of this vessel. Note: these settings are not persistant across flight instances, and will reset the next time you lauch a craft from an editor or the tracking station.
+
 .. attribute:: Vessel:ISDEAD
 
     :type: Boolean
@@ -294,14 +302,14 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :type: :struct:`List` of :struct:`DockingPort` objects
     :access: Get only
 
-    A List of all the :ref:`docking ports <DockingPort>` on the Vessel. 
+    A List of all the :ref:`docking ports <DockingPort>` on the Vessel.
 
 .. attribute:: Vessel:ELEMENTS
 
     :type: :struct:`List` of :struct:`Element` objects
     :access: Get only
 
-    A List of all the :ref:`elements <Element>` on the Vessel. 
+    A List of all the :ref:`elements <Element>` on the Vessel.
 
 .. attribute:: Vessel:RESOURCES
 
@@ -378,4 +386,3 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :return: :struct:`List` of :struct:`CrewMember` objects
 
     list of all :struct:`kerbonauts <CrewMember>` aboard this vessel
-
