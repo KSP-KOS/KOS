@@ -5,6 +5,7 @@ using System.Text;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Execution;
 
 namespace kOS.Suffixed
 {
@@ -34,6 +35,7 @@ namespace kOS.Suffixed
             if (CanRevertToLaunch())
             {
                 FlightDriver.RevertToLaunch();
+                ((CPU)shared.Cpu).GetCurrentOpcode().AbortProgram = true;
             }
             else throw new KOSCommandInvalidHereException("REVERTTOLAUNCH", "When revert is disabled", "When revert is enabled");
         }
@@ -44,6 +46,7 @@ namespace kOS.Suffixed
             {
                 EditorFacility fac = ShipConstruction.ShipType;
                 FlightDriver.RevertToPrelaunch(fac);
+                ((CPU)shared.Cpu).GetCurrentOpcode().AbortProgram = true;
             }
             else throw new KOSCommandInvalidHereException("REVERTTOEDITOR", "When revert is disabled", "When revert is enabled");
         }
@@ -66,6 +69,7 @@ namespace kOS.Suffixed
                         break;
                 }
                 FlightDriver.RevertToPrelaunch(fac);
+                ((CPU)shared.Cpu).GetCurrentOpcode().AbortProgram = true;
             }
             else throw new KOSCommandInvalidHereException("REVERTTO", "When revert is disabled", "When revert is enabled");
         }
