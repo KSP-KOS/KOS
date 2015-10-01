@@ -19,6 +19,7 @@ namespace kOS.Suffixed
 
         public LoadDistanceValue(VesselRanges ranges)
         {
+            vesselRanges = ranges;
             InitializeSuffixes();
         }
 
