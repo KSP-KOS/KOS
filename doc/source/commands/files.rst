@@ -207,10 +207,19 @@ Example::
     RENAME VOLUME 1 TO AwesomeDisk
     RENAME FILE MyFile TO AutoLaunch.
 
-``RUN <program>.``
+``RUN [ONCE] <program>.``
 ------------------
 
 Runs the specified file as a program, optionally passing information to the program in the form of a comma-separated list of arguments in parentheses.
+
+If the optional ``ONCE`` keyword is used after the word ``RUN``, it means
+the run will not actually occur if the program has already been run once
+during the current program context.  This is intended mostly for loading library
+program files that may have mainline code in them for initialization purposes
+that you don't want to get run a second time just because you use the library
+in two different subprograms.
+
+``RUN ONCE`` means "Run unless it's already been run, in which case skip it."
 
 Arguments
 ^^^^^^^^^
@@ -226,6 +235,8 @@ Example::
     RUN AutoLaunch( 75000, true, "hello" ).
     RUN AutoLaunch.ks( 75000, true, "hello" ).
     RUN AutoLaunch.ksm( 75000, true, "hello" ).
+
+    RUN ONCE myLibrary. // run myLibrary unless it's been run already.
 
 The program that is reading the arguments sees them in the variables it
 mentions in :ref:`DECLARE PARAMETER`.
