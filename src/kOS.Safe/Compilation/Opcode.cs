@@ -6,6 +6,7 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Execution;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Utilities;
+
 namespace kOS.Safe.Compilation
 {
     /// A very short numerical ID for the opcode. <br/>
@@ -81,6 +82,7 @@ namespace kOS.Safe.Compilation
         PUSHDELEGATE   = 0x5d,
         BRANCHTRUE     = 0x5e,
         EXISTS         = 0x5f,
+        PUSHUSERDELEGATE = 0x60,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -1225,14 +1227,38 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            object functionPointer;
+            object functionPointer = null;
             object delegateReturn = null;
 
             if (Direct)
             {
-                functionPointer = cpu.GetValue(Destination);
+                string destinationString = Destination as string;
+                if (destinationString != null)
+                {
+                    if (!destinationString.StartsWith("$"))
+                    {
+                        destinationString = "$" + destinationString;
+                    }
+
+                    try
+                    {
+                        functionPointer = cpu.GetValue(destinationString);
+                    }
+                    catch (KOSUndefinedIdentifierException)
+                    {
+
+                    }
+                }
+
                 if (functionPointer == null)
+                {
+                    functionPointer = cpu.GetValue(Destination);
+                }
+
+                if (functionPointer == null)
+                {
                     throw new KOSException("Attempt to call function failed - Value of function pointer for " + Destination + " is null.");
+                }
             }
             else // for indirect calls, dig down to find what's underneath the argument list in the stack and use that:
             {
@@ -1874,6 +1900,25 @@ namespace kOS.Safe.Compilation
             return Name + " " + NumLevels;
         }
   
+    }
+
+    public class OpcodePushUserDelegate : Opcode
+    {
+        protected override string Name { get { return "pushuserdelegate"; } }
+        public override ByteCode Code { get { return ByteCode.PUSHUSERDELEGATE; } }
+
+        public override void Execute(ICpu cpu)
+        {
+            string ident = cpu.PopStack() as string;
+            IUserDelegate userDelegate = cpu.GetValue("$" + ident + "*") as IUserDelegate;
+
+            if (userDelegate == null)
+            {
+                throw new Exception("Function identifier expected");
+            }
+
+            cpu.PushStack(new UserDelegateValue(cpu, userDelegate.ProgContext, userDelegate.EntryPoint, true, ident));
+        }
     }
     
     public class OpcodePushDelegate : Opcode

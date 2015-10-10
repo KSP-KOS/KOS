@@ -130,7 +130,6 @@
     <Compile Include="Execution\IStack.cs" />
     <Compile Include="Execution\IUserDelegate.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
-    <Compile Include="Execution\UserDelegate.cs" />
     <Compile Include="Execution\Variable.cs" />
     <Compile Include="Execution\VariableScope.cs" />
     <Compile Include="Function\FunctionAttribute.cs" />
@@ -173,6 +172,8 @@
     <Compile Include="Utilities\kOSKeys.cs" />
     <Compile Include="Utilities\Math.cs" />
     <Compile Include="Utilities\TickGen.cs" />
+    <Compile Include="Execution\UserDelegate.cs" />
+    <Compile Include="Encapsulation\UserDelegateValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compilation\CompiledObject-doc.md" />
