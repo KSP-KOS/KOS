@@ -180,7 +180,7 @@ The above example prints this::
     subprogram: next counter ID = 6
     
 whereas, had you used just ``run counterlib.`` instead of
-``run once counterlib.``, then it would have printed this:
+``run once counterlib.``, then it would have printed this::
 
     prog1:      next counter ID = 1
     prog1:      next counter ID = 2
