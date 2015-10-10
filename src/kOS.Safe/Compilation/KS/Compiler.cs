@@ -790,10 +790,15 @@ namespace kOS.Safe.Compilation.KS
             NodeStartHousekeeping(node);
             if (options.LoadProgramsInSameAddressSpace)
             {
+                int progNameIndex = 1;
+                if (node.Nodes[1].Token.Type == TokenType.ONCE)
+                {
+                    ++progNameIndex;
+                }
                 bool hasOn = node.Nodes.Any(cn => cn.Token.Type == TokenType.ON);
                 if (!hasOn)
                 {
-                    string subprogramName = node.Nodes[1].Token.Text; // It assumes it already knows at compile-time how many unique program filenames exist, 
+                    string subprogramName = node.Nodes[progNameIndex].Token.Text; // It assumes it already knows at compile-time how many unique program filenames exist, 
                     if (!context.Subprograms.Contains(subprogramName)) // which it uses to decide how many of these blocks to make,
                     {                                                   // which is why we can't defer run filenames until runtime like we can with the others.
                         Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
@@ -803,9 +808,27 @@ namespace kOS.Safe.Compilation.KS
                         Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
                         AddOpcode(new OpcodePush(-1));
                         AddOpcode(new OpcodeCompareEqual());
-                        OpcodeBranchIfFalse branchOpcode = new OpcodeBranchIfFalse();
-                        AddOpcode(branchOpcode);
-                        // if it wasn't then load it now
+                        // branch to where the compiler loads the code:
+                        OpcodeBranchIfTrue branchToLoad = new OpcodeBranchIfTrue();
+                        AddOpcode(branchToLoad);
+                        // Now the top of the stack should be the argument pushed by
+                        // VisitRunStatement that flags if there was a 'once' keyword:
+                        // If there was no 'once', then branch to where the already
+                        // loaded code gets run, even though it's been run before:
+                        OpcodeBranchIfFalse branchToRun = new OpcodeBranchIfFalse();
+                        AddOpcode(branchToRun);
+                        // If it falls through to here, that means the code was already
+                        // loaded, AND the 'once' keyword was present in the instance
+                        // where this loading function got called, so just do nothing
+                        // and return.
+                        AddOpcode(new OpcodePush(0));
+                        AddOpcode(new OpcodeReturn(0));
+                        // if it wasn't then load it now:
+                        // First throw away the 'once' argument since it doesn't matter when
+                        // we're going to be compiling regardless:
+                        OpcodePop firstOpcodeOfLoadSection = new OpcodePop();
+                        AddOpcode(firstOpcodeOfLoadSection);
+                        branchToLoad.DestinationLabel = firstOpcodeOfLoadSection.Label;
                         AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
                         AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
                         AddOpcode(new OpcodePush(subprogramObject.SubprogramName));
@@ -818,7 +841,7 @@ namespace kOS.Safe.Compilation.KS
                         // call the program
                         Opcode callOpcode = AddOpcode(new OpcodeCall(subprogramObject.PointerIdentifier));
                         // set the call opcode as the destination of the previous branch
-                        branchOpcode.DestinationLabel = callOpcode.Label;
+                        branchToRun.DestinationLabel = callOpcode.Label;
                         // return to the caller address, after adding a dummy return val:
                         
                         // maybe TODO?  Right now the RETURN command is being prevented from being used outside 
@@ -2585,6 +2608,18 @@ namespace kOS.Safe.Compilation.KS
         {
             NodeStartHousekeeping(node);
             int volumeIndex = 3;
+            int argListIndex = 3;
+            int progNameIndex = 1;
+            bool hasOnce = false;
+            if (node.Nodes[1].Token.Type == TokenType.ONCE)
+            {
+                hasOnce = true;
+                ++volumeIndex;
+                ++argListIndex;
+                ++progNameIndex;
+            }
+            if (hasOnce && ! options.LoadProgramsInSameAddressSpace)
+                throw new KOSOnceInvalidHereException();
 
             // process program arguments
             AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING)); // regardless of whether it's called directly or indirectly, we still need at least one.
@@ -2595,21 +2630,22 @@ namespace kOS.Safe.Compilation.KS
                 // of the double-indirect call where we call the subroutine that was built in PreProcessRunStatement,
                 // and IT in turn calls the actual subprogram (after deciding whether or not it needs to compile it
                 // into existence).
-                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));                
+                AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));
             }
             
-            if (node.Nodes.Count > 3 && node.Nodes[3].Token.Type == TokenType.arglist)
+            if (node.Nodes.Count > argListIndex && node.Nodes[argListIndex].Token.Type == TokenType.arglist)
             {
-                VisitNode(node.Nodes[3]);
+                VisitNode(node.Nodes[argListIndex]);
                 volumeIndex += 3;
             }
 
             if (!hasOn && options.LoadProgramsInSameAddressSpace)
             {
-                string subprogramName = node.Nodes[1].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
+                string subprogramName = node.Nodes[progNameIndex].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
                 if (context.Subprograms.Contains(subprogramName))  // and instead have to do RUN FILEIDENT, in the parser def.
                 {
                     Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
+                    AddOpcode(new OpcodePush(hasOnce)); // tell that routine whether or not to skip the run when already compiled.
                     AddOpcode(new OpcodeCall(null)).DestinationLabel = subprogramObject.FunctionLabel;
                     AddOpcode(new OpcodePop()); // ditch the dummy return value for now - maybe we can use it in a later version.
                 }
@@ -2622,7 +2658,7 @@ namespace kOS.Safe.Compilation.KS
                 AddOpcode(new OpcodePush(OpcodeCall.ARG_MARKER_STRING));                
 
                 // program name
-                VisitNode(node.Nodes[1]);
+                VisitNode(node.Nodes[progNameIndex]);
 
                 // volume where program should be executed (null means local)
                 if (volumeIndex < node.Nodes.Count)

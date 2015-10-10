@@ -1958,6 +1958,20 @@ namespace kOS.Safe.Compilation.KS
             }
 
             
+            tok = scanner.LookAhead(TokenType.ONCE);
+            if (tok.Type == TokenType.ONCE)
+            {
+                tok = scanner.Scan(TokenType.ONCE);
+                n = node.CreateNode(tok, tok.ToString() );
+                node.Token.UpdateRange(tok);
+                node.Nodes.Add(n);
+                if (tok.Type != TokenType.ONCE) {
+                    tree.Errors.Add(new ParseError("Unexpected token '" + tok.Text.Replace("\n", "") + "' found. Expected " + TokenType.ONCE.ToString(), 0x1001, tok));
+                    return;
+                }
+            }
+
+            
             tok = scanner.Scan(TokenType.FILEIDENT);
             n = node.CreateNode(tok, tok.ToString() );
             node.Token.UpdateRange(tok);
