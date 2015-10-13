@@ -189,8 +189,6 @@ namespace kOS.Binding
 
         public MovingAverage AverageDuration = new MovingAverage() { SampleLimit = 60 };
 
-        private List<ThrustVector> allEngineVectors = new List<ThrustVector>();
-
         #region doubles
         public const double RadToDeg = 180d / Math.PI;
 
@@ -1180,60 +1178,59 @@ namespace kOS.Binding
 
             if (ShowThrustVectors && enabled)
             {
-                foreach (var tv in allEngineVectors)
+                foreach (var fv in engineNeutVectors)
                 {
-                    string key = tv.PartId;
+                    string key = fv.ID;
                     if (!vEngines.ContainsKey(key))
                     {
                         var vecdraw = InitVectorRenderer(UnityEngine.Color.yellow, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = tv.NeutralForce.Force;
-                    vEngines[key].Start = tv.Position;
+                    vEngines[key].Vector = fv.Force;
+                    vEngines[key].Start = fv.Position;
 
-                    key = tv.PartId + "gimbaled";
-                    if (!vEngines.ContainsKey(key))
-                    {
-                        var vecdraw = InitVectorRenderer(UnityEngine.Color.magenta, 0.25, shared);
-                        vEngines.Add(key, vecdraw);
-                        vEngines[key].SetShow(true);
-                    }
-                    //vEngines[key].Vector = tv.PitchForce.Force;
-                    //vEngines[key].Vector = tv.YawForce.Force;
-                    vEngines[key].Vector = tv.RollForce.Force;
-                    vEngines[key].Start = tv.Position;
-
-                    key = tv.PartId + "torque";
+                    key = fv.ID + "torque";
                     if (!vEngines.ContainsKey(key))
                     {
                         var vecdraw = InitVectorRenderer(UnityEngine.Color.red, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = tv.NeutralForce.Torque;
-                    vEngines[key].Start = tv.Position;
+                    vEngines[key].Vector = fv.Torque;
+                    vEngines[key].Start = fv.Position;
 
-                    key = tv.PartId + "control";
-                    if (!vEngines.ContainsKey(key))
-                    {
-                        var vecdraw = InitVectorRenderer(UnityEngine.Color.blue, 0.25, shared);
-                        vEngines.Add(key, vecdraw);
-                        vEngines[key].SetShow(true);
-                    }
-                    //vEngines[key].Vector = tv.PitchForce.Torque;
-                    //vEngines[key].Vector = tv.YawForce.Torque;
-                    vEngines[key].Vector = tv.RollForce.Torque;
-                    vEngines[key].Start = tv.Position;
-
-                    key = tv.PartId + "position";
+                    key = fv.ID + "position";
                     if (!vEngines.ContainsKey(key))
                     {
                         var vecdraw = InitVectorRenderer(UnityEngine.Color.cyan, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = tv.Position;
+                    vEngines[key].Vector = fv.Position;
+                }
+                foreach (var fv in engineRollVectors)
+                {
+
+                    string key = fv.ID + "gimbaled";
+                    if (!vEngines.ContainsKey(key))
+                    {
+                        var vecdraw = InitVectorRenderer(UnityEngine.Color.magenta, 0.25, shared);
+                        vEngines.Add(key, vecdraw);
+                        vEngines[key].SetShow(true);
+                    }
+                    vEngines[key].Vector = fv.Force;
+                    vEngines[key].Start = fv.Position;
+
+                    key = fv.ID + "control";
+                    if (!vEngines.ContainsKey(key))
+                    {
+                        var vecdraw = InitVectorRenderer(UnityEngine.Color.blue, 0.25, shared);
+                        vEngines.Add(key, vecdraw);
+                        vEngines[key].SetShow(true);
+                    }
+                    vEngines[key].Vector = fv.Torque;
+                    vEngines[key].Start = fv.Position;
                 }
             }
             else
@@ -1546,128 +1543,6 @@ namespace kOS.Binding
             public Vector3d Torque { get { return Vector3d.Cross(Force, Position); } }
 
             public string ID { get; set; }
-        }
-
-        public class ThrustVector
-        {
-            public Quaternion Rotation;
-            public float GimbalRange = 0;
-            public float ThrustMag = 0;
-            public Vector3d Position = Vector3d.zero;
-            public string PartId;
-
-            public ForceVector NeutralForce;
-            public ForceVector PitchForce;
-            public ForceVector YawForce;
-            public ForceVector RollForce;
-
-            public ThrustVector()
-            {
-            }
-
-            public Vector3d Thrust { get { return Rotation * Vector3d.forward * ThrustMag; } }
-
-            public Vector3d[] GetTorque(Vector3d forward, Vector3d top, Vector3d starboard)
-            {
-                Vector3d[] ret = new Vector3d[4];
-                if (ThrustMag > 0.0001)
-                {
-                    Vector3d thrust = Thrust;
-                    Vector3d neut = thrust;
-                    NeutralForce = new ForceVector()
-                    {
-                        Force = Thrust,
-                        Position = Position
-                    };
-                    ret[0] = NeutralForce.Torque;
-                    if (GimbalRange > 0.0001)
-                    {
-                        Vector3d pitchAxis = Vector3d.Exclude(neut, starboard);
-                        Vector3d yawAxis = Vector3d.Exclude(neut, top);
-                        Vector3d rollAxis = Vector3d.Exclude(forward, Position);
-                        PitchForce = new ForceVector()
-                        {
-                            Force = Quaternion.AngleAxis(GimbalRange, pitchAxis) * neut,
-                            Position = Position
-                        };
-                        YawForce = new ForceVector()
-                        {
-                            Force = Quaternion.AngleAxis(GimbalRange, yawAxis) * neut,
-                            Position = Position
-                        };
-                        if (rollAxis.sqrMagnitude < 0.02)
-                        {
-                            //RollForce = new ForceVector()
-                            //{
-                            //    Force = NeutralForce.Force,
-                            //    Position = NeutralForce.Position
-                            //};
-                            RollForce = new ForceVector()
-                            {
-                                Force = Vector3d.zero,
-                                Position = Vector3d.zero
-                            };
-                        }
-                        else
-                        {
-                            RollForce = new ForceVector()
-                            {
-                                Force = Quaternion.AngleAxis(GimbalRange, rollAxis) * neut,
-                                Position = Position
-                            };
-                        }
-                    }
-                    else
-                    {
-                        PitchForce = new ForceVector()
-                        {
-                            Force = NeutralForce.Force,
-                            Position = NeutralForce.Position
-                        };
-                        YawForce = new ForceVector()
-                        {
-                            Force = NeutralForce.Force,
-                            Position = NeutralForce.Position
-                        };
-                        RollForce = new ForceVector()
-                        {
-                            Force = NeutralForce.Force,
-                            Position = NeutralForce.Position
-                        };
-                    }
-                    ret[1] = PitchForce.Torque;
-                    ret[2] = YawForce.Torque;
-                    ret[3] = RollForce.Torque;
-                }
-                else
-                {
-                    NeutralForce = new ForceVector()
-                    {
-                        Force = Vector3d.zero,
-                        Position = Vector3d.zero
-                    };
-                    PitchForce = new ForceVector()
-                    {
-                        Force = Vector3d.zero,
-                        Position = Vector3d.zero
-                    };
-                    YawForce = new ForceVector()
-                    {
-                        Force = Vector3d.zero,
-                        Position = Vector3d.zero
-                    };
-                    RollForce = new ForceVector()
-                    {
-                        Force = Vector3d.zero,
-                        Position = Vector3d.zero
-                    };
-                    ret[0] = Vector3d.zero;
-                    ret[1] = Vector3d.zero;
-                    ret[2] = Vector3d.zero;
-                    ret[3] = Vector3d.zero;
-                }
-                return ret;
-            }
         }
 
         public class TorquePI
