@@ -44,7 +44,7 @@ namespace kOS.Suffixed.Part
             AddSuffix("RESOURCES", new Suffix<ListValue>(() => GatherResources(Part)));
             AddSuffix("TARGETABLE", new Suffix<bool>(() => Part.Modules.OfType<ITargetable>().Any()));
             AddSuffix("SHIP", new Suffix<VesselTarget>(() => new VesselTarget(Part.vessel, shared)));
-            AddSuffix("HASMODULE", new OneArgsSuffix<PartModuleFields, string>(GetModule));
+            AddSuffix("HASMODULE", new OneArgsSuffix<bool, string>(HasModule));
             AddSuffix("GETMODULE", new OneArgsSuffix<PartModuleFields,string>(GetModule));
             AddSuffix("GETMODULEBYINDEX", new OneArgsSuffix<PartModuleFields, int>(GetModuleIndex));
             AddSuffix(new[] { "MODULES", "ALLMODULES" }, new Suffix<ListValue>(GetAllModules, "A List of all the modules' names on this part"));
