@@ -175,9 +175,9 @@ namespace kOS.Binding
         private MovingAverage yawRate = new MovingAverage() { SampleLimit = 5 };
         private MovingAverage rollRate = new MovingAverage() { SampleLimit = 5 };
 
-        private MovingAverage pitchTorqueCalc = new MovingAverage() { SampleLimit = 5 };
-        private MovingAverage yawTorqueCalc = new MovingAverage() { SampleLimit = 5 };
-        private MovingAverage rollTorqueCalc = new MovingAverage() { SampleLimit = 5 };
+        private MovingAverage pitchTorqueCalc = new MovingAverage() { SampleLimit = 15 };
+        private MovingAverage yawTorqueCalc = new MovingAverage() { SampleLimit = 15 };
+        private MovingAverage rollTorqueCalc = new MovingAverage() { SampleLimit = 15 };
 
         private bool EnableTorqueAdjust { get; set; }
 
@@ -546,7 +546,10 @@ namespace kOS.Binding
                 angularAcceleration = new Vector3d(angularAcceleration.x, angularAcceleration.z, angularAcceleration.y);
                 if (EnableMOIAdjust)
                 {
-                    measuredMomentOfInertia = new Vector3d(tgtPitchTorque / angularAcceleration.x, tgtRollTorque / angularAcceleration.y, tgtYawTorque / angularAcceleration.z);
+                    measuredMomentOfInertia = new Vector3d(
+                        controlTorque.x * accPitch / angularAcceleration.x, 
+                        controlTorque.y * accRoll / angularAcceleration.y, 
+                        controlTorque.z * accYaw / angularAcceleration.z);
 
                     if (Math.Abs(accPitch) > epsilon)
                     {
@@ -854,18 +857,23 @@ namespace kOS.Binding
             else
             {
                 //TODO: include adjustment for static torque (due to engines)
-
+                double clampAccPitch = Math.Max(Math.Abs(accPitch), 0.005) * 2;
                 accPitch = tgtPitchTorque / controlTorque.x;
                 if (Math.Abs(accPitch) < epsilon)
                     accPitch = 0;
+                accPitch = Math.Max(Math.Min(accPitch, clampAccPitch), -clampAccPitch);
                 c.pitch = (float)accPitch;
+                double clampAccYaw = Math.Max(Math.Abs(accYaw), 0.005) * 2;
                 accYaw = tgtYawTorque / controlTorque.z;
                 if (Math.Abs(accYaw) < epsilon)
                     accYaw = 0;
+                accYaw = Math.Max(Math.Min(accYaw, clampAccYaw), -clampAccYaw);
                 c.yaw = (float)accYaw;
+                double clampAccRoll = Math.Max(Math.Abs(accRoll), 0.005) * 2;
                 accRoll = tgtRollTorque / controlTorque.y;
                 if (Math.Abs(accRoll) < epsilon)
                     accRoll = 0;
+                accRoll = Math.Max(Math.Min(accRoll, clampAccRoll), -clampAccRoll);
                 c.roll = (float)accRoll;
             }
         }
