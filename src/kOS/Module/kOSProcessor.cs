@@ -293,6 +293,12 @@ namespace kOS.Module
             if (HardDisk == null)
             {
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+
+                if (!String.IsNullOrEmpty(Tag))
+                {
+                    HardDisk.Name = Tag;
+                }
+
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
                 if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !Config.Instance.StartOnArchive)
                 {
