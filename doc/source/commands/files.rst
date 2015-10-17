@@ -102,7 +102,7 @@ placed on a separate page.
 Please see :ref:`the details of the Kerboscript ML
 Executable <compiling>`.
 
-``COPY programFile FROM/TO voumeNumber.``
+``COPY programFile FROM/TO Volume|volumeId|volumeName.``
 -----------------------------------------
 
 Arguments
@@ -112,7 +112,7 @@ Arguments
 -  argument 2: Target volume.
 
 Copies a file to or from another volume. Volumes can be referenced by
-their ID numbers or their names if they’ve been given one. See LIST,
+instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one. See LIST,
 SWITCH and RENAME.
 
 Understanding how :ref:`volumes
@@ -121,19 +121,22 @@ understanding this command.
 
 Example::
 
-    SWITCH TO 1.             // Makes volume 1 the active volume
-    COPY file1 FROM 0.       // Copies a file called file1.ks from volume 0 to volume 1
-    COPY file2 TO 0.         // Copies a file called file1.ks from volume 1 to volume 0
-    COPY file1.ks FROM 0.    // Copies a file called file1.ks from volume 0 to volume 1
-    COPY file2.ksm TO 0.     // Copies a file called file1.ksm from volume 1 to volume 0
-    COPY "file1.ksm" FROM 0. // Copies a file called file1.ksm from volume 0 to volume 1
+    SWITCH TO 1.                      // Makes volume 1 the active volume
+    COPY file1 FROM 0.                // Copies a file called file1.ks from volume 0 to volume 1
+    COPY file2 TO 0.                  // Copies a file called file2.ks from volume 1 to volume 0
+    COPY file1.ks FROM 0.             // Copies a file called file1.ks from volume 0 to volume 1
+    COPY file2.ksm TO 0.              // Copies a file called file2.ksm from volume 1 to volume 0
+    COPY "file1.ksm" FROM 0.          // Copies a file called file1.ksm from volume 0 to volume 1
     COPY "file1" + "." + "ks" FROM 0. // Copies a file called file1.ks from volume 0 to volume 1
+    COPY file2.ksm TO CORE:VOLUME.    // Copies a file called file2.ksm to active processor's volume
+    COPY file2.ksm TO "other".        // Copies a file called file2.ksm to volume named 'other'
 
 
-``DELETE filename FROM volumeNumber.``
+``DELETE filename FROM Volume|volumeId|volumeName.``
 --------------------------------------
 
-Deletes a file. You can delete a file from the current volume, or from a named volume.
+Deletes a file. Volumes can be referenced by instances of :struct:`Volume`, their ID numbers or their names
+if they’ve been given one.
 
 Arguments
 ^^^^^^^^^
@@ -143,11 +146,13 @@ Arguments
 
 Example::
 
-    DELETE file1.         // Deletes file1.ks from the active volume.
-    DELETE "file1".       // Deletes file1.ks from the active volume.
-    DELETE file1.txt.     // Deletes file1.txt from the active volume.
-    DELETE "file1.txt".   // Deletes file1.txt from the active volume.
-    DELETE file1 FROM 1.  // Deletes file1.ks from volume 1
+    DELETE file1.                   // Deletes file1.ks from the active volume.
+    DELETE "file1".                 // Deletes file1.ks from the active volume.
+    DELETE file1.txt.               // Deletes file1.txt from the active volume.
+    DELETE "file1.txt".             // Deletes file1.txt from the active volume.
+    DELETE file1 FROM 1.            // Deletes file1.ks from volume 1
+    DELETE file1 FROM CORE:VOLUME.  // Deletes file1.ks from active processor's volume
+    DELETE file1 FROM "other".      // Deletes file1.ks from volume name 'other'
 
 
 ``EDIT program.``
@@ -191,10 +196,13 @@ Example::
     LOG “4 times 8 is: “ + (4*8) to mylog.   // logs to mylog.ks because .ks is the default extension.
 
 
-``RENAME name1 TO name2.``
+``RENAME VOLUME Volume|volumeId|oldVolumeName TO name.``
+--------------------------
+``RENAME FILE oldName TO newName.``
 --------------------------
 
-Renames a file or volume.
+Renames a file or volume. Volumes can be referenced by
+instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one.
 
 Arguments
 ^^^^^^^^^
@@ -257,13 +265,12 @@ RUN only works when the filename is a bareword filename. It cannot use expressio
     large re-write of some of the architecture of the virtual machine.
 
 
-``SWITCH TO <volumeNumber>.``
+``SWITCH TO Volume|volumeId|volumeName.``
 -----------------------------
 
-Switches to the specified volume. Volumes can be specified by number, or
-it’s name (if it has one). See LIST and RENAME. Understanding how
-:ref:`volumes work <volumes>` is important
-to understanding this command.
+Switches to the specified volume. Volumes can be referenced by
+instances of :struct:`Volume`, their ID numbers or their names if they’ve been given one. See LIST and RENAME. Understanding how
+:ref:`volumes work <volumes>` is important to understanding this command.
 
 Example::
 
