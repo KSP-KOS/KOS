@@ -8,6 +8,8 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
+using kOS.Suffixed.PartModuleField;
+using kOS.Module;
 
 namespace kOS.Function
 {
@@ -404,6 +406,33 @@ namespace kOS.Function
             }
             AssertArgBottomAndConsume(shared);
             TimeWarp.fetch.WarpTo(ut);
+        }
+    }
+
+    [Function("processor")]
+    public class FunctionProcessor : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            object processorTagOrVolume = PopValueAssert(shared, true);
+            AssertArgBottomAndConsume(shared);
+
+            kOSProcessor processor;
+
+            if (processorTagOrVolume is Volume) {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as Volume);
+            } else if (processorTagOrVolume is string) {
+                processor = shared.ProcessorMgr.GetProcessor(processorTagOrVolume as string);
+            } else {
+                throw new KOSInvalidArgumentException("processor", "processorId", "String or Volume expected");
+            }
+
+            if (processor == null)
+            {
+                throw new KOSInvalidArgumentException("processor", "processorId", "Processor with that volume or name was not found");
+            }
+
+            ReturnValue = PartModuleFieldsFactory.Construct(processor, shared);
         }
     }
     

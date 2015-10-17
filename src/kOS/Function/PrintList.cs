@@ -6,6 +6,7 @@ using kOS.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using kOS.Module;
 
 namespace kOS.Function
 {
@@ -29,6 +30,10 @@ namespace kOS.Function
 
                 case "volumes":
                     list = GetVolumeList(shared);
+                    break;
+
+                case "processors":
+                    list = GetProcessorList(shared);
                     break;
 
                 case "bodies":
@@ -112,6 +117,25 @@ namespace kOS.Function
                 string id = kvp.Key.ToString() + (shared.VolumeMgr.VolumeIsCurrent(volume) ? "*" : "");
                 string size = volume.Capacity.ToString();
                 list.AddItem(id, volume.Name, size);
+            }
+
+            return list;
+        }
+
+        private kList GetProcessorList(SharedObjects shared)
+        {
+            var list = new kList { Title = "Processors" };
+            list.AddColumn("Name", 16, ColumnAlignment.Left);
+            list.AddColumn("Tag", 12, ColumnAlignment.Left);
+            list.AddColumn("Volume ID", 6, ColumnAlignment.Left);
+
+            if (shared.VolumeMgr == null) return list;
+
+            foreach (kOSProcessor processor in shared.ProcessorMgr.processors.Values)
+            {
+                string name = processor.name + (shared.Processor == processor ? "*" : "");
+                int volumeId = shared.VolumeMgr.GetVolumeId(processor.HardDisk);
+                list.AddItem(name, processor.Tag, volumeId);
             }
 
             return list;
