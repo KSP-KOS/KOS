@@ -134,7 +134,7 @@ namespace kOS.Safe.Encapsulation
             }
             if (!(index is int)) throw new Exception("The index must be an integer number");
 
-            return internalString[(int)index];
+            return internalString[(int)index].ToString();
         }
 
         // Required by the interface but unimplemented, because strings are immutable.

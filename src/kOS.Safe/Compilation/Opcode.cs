@@ -714,9 +714,7 @@ namespace kOS.Safe.Compilation
                 throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
             }
 
-
             if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
 
             cpu.PushStack(value);
         }
@@ -739,20 +737,12 @@ namespace kOS.Safe.Compilation
                 throw new KOSException("Neither the key nor the index of a collection may be null");
             }
 
-            // Adjusted error message to reflect that there are now read-only indexable objects
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't set indexed elements on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
-
             var indexable = list as IIndexable;
-            if (indexable != null)
+            if (indexable == null)
             {
-                indexable.SetIndex(index, value);
+                throw new KOSException(string.Format("Can't set indexed elements on an object of type {0}", list.GetType()));
             }
-            else
-            {
-                throw new KOSException(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            }
-
+            indexable.SetIndex(index, value);
         }
     }
 
