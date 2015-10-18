@@ -13,7 +13,7 @@ IN MyList <list command> ::
     LIST RESOURCES IN RESLIST.
     FOR RES IN RESLIST {
         PRINT "Resource " + RES:NAME.
-        PRINT "    value = " + AMOUNT.
+        PRINT "    value = " + RES:AMOUNT.
         PRINT "    which is "
               + ROUND(100*RES:AMOUNT/RES:CAPACITY)
               + "% full.".
@@ -25,7 +25,7 @@ This is also the type returned by STAGE:RESOURCES ::
     SET RESLIST TO STAGE:RESOURCES.
     FOR RES IN RESLIST {
         PRINT "Resource " + RES:NAME.
-        PRINT "    value = " + AMOUNT.
+        PRINT "    value = " + RES:AMOUNT.
         PRINT "    which is "
               + ROUND(100*RES:AMOUNT/RES:CAPACITY)
               + "% full.".

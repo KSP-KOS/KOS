@@ -2492,14 +2492,14 @@ namespace kOS.Safe.Compilation.KS
                 lastSubNode.Token.Type == TokenType.declare_identifier_clause &&
                 !allowLazyGlobal)
             {
-                throw new KOSCommandInvalidHere("a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
+                throw new KOSCommandInvalidHereException("a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
                                                 "in an identifier initialization while under a @LAZYGLOBAL OFF directive",
                                                 "in a file where the default @LAZYGLOBAL behavior is on");
             }
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_function_clause)
-                throw new KOSCommandInvalidHere("GLOBAL", "in a function declaration", "in a variable declaration");
+                throw new KOSCommandInvalidHereException("GLOBAL", "in a function declaration", "in a variable declaration");
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_parameter_clause)
-                throw new KOSCommandInvalidHere("GLOBAL", "in a parameter declaration", "in a variable declaration");
+                throw new KOSCommandInvalidHereException("GLOBAL", "in a parameter declaration", "in a variable declaration");
 
             return modifier;
         }
@@ -3029,7 +3029,7 @@ namespace kOS.Safe.Compilation.KS
                 }
             }
             if (!validLocation)
-                throw new KOSCommandInvalidHere("@LAZYGLOBAL",
+                throw new KOSCommandInvalidHereException("@LAZYGLOBAL",
                                                 "after the first command in the file",
                                                 "at the start of a script file, prior to any other statements");
 
