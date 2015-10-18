@@ -22,6 +22,12 @@ The type of structures returned by kOS when querying a module that contains a kO
         * - :attr:`MODE`
           - `String`
           - `OFF`, `READY` or `STARVED`
+        * - :meth:`ACTIVATE`
+          - None
+          - Activates this processor
+        * - :meth:`DEACTIVATE`
+          - None
+          - Deactivates this processor
         * - :attr:`TAG`
           - `String`
           - This processor's name tag
@@ -42,6 +48,18 @@ The type of structures returned by kOS when querying a module that contains a kO
     :type: `String`
 
     Indicates the current state of this processor. `OFF` - deactivated, `READY` - active, or `STARVED` - no power.
+
+.. method:: kOSProcessor:ACTIVATE
+
+    :returns: None
+
+    Activate this processor
+
+.. method:: kOSProcessor:DEACTIVATE
+
+    :returns: None
+
+    Deactivate this processor
 
 .. attribute:: kOSProcessor:TAG
 
