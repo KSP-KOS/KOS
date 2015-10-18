@@ -1,10 +1,8 @@
-﻿using kOS.Safe.Encapsulation.Suffixes;
+﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace kOS.Safe.Encapsulation
 {
@@ -21,13 +19,13 @@ namespace kOS.Safe.Encapsulation
         private readonly string internalString;
 
         public StringValue(): 
-            this ("")
+            this (string.Empty)
         {
         }
 
         public StringValue(string stringValue)
         {
-            this.internalString = stringValue;
+            internalString = stringValue;
             StringInitializeSuffixes();
         }
 
@@ -36,152 +34,146 @@ namespace kOS.Safe.Encapsulation
             get { return internalString.Length; }
         }
 
-        public String Substring(int start, int count)
+        public string Substring(int start, int count)
         {
             return internalString.Substring(start, count);
         }
 
-        public bool Contains(String s)
+        public bool Contains(string s)
         {
-            return internalString.Contains(s);
+            return internalString.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        public bool EndsWith(String s)
+        public bool EndsWith(string s)
         {
-            return internalString.EndsWith(s);
+            return internalString.EndsWith(s,true, CultureInfo.CurrentCulture);
         }
 
-        // To match C# naming
-        public int IndexOf(String s)
+        public int IndexOf(string s)
         {
-            return internalString.IndexOf(s);
-        }
-
-        // To be consistant with FindAt, below
-        public int Find(String s)
-        {
-            return internalString.IndexOf(s);
+            return internalString.IndexOf(s, StringComparison.OrdinalIgnoreCase);
         }
 
         // IndexOf with a start position.
         // This was named FindAt because IndexOfAt made little sense.
-        public int FindAt(String s, int start)
+        public int FindAt(string s, int start)
         {
-            return internalString.IndexOf(s, start);
+            return internalString.IndexOf(s, start, StringComparison.OrdinalIgnoreCase);
         }
 
-        public String Insert(int location, String s)
+        public string Insert(int location, string s)
         {
             return internalString.Insert(location, s);
         }
 
-        public int LastIndexOf(String s)
+        public int LastIndexOf(string s)
         {
-            return internalString.LastIndexOf(s);
+            return internalString.LastIndexOf(s, StringComparison.OrdinalIgnoreCase);
         }
 
-        public int FindLast(String s)
+        public int FindLastAt(string s, int start)
         {
-            return internalString.LastIndexOf(s);
+            return internalString.LastIndexOf(s, start, StringComparison.OrdinalIgnoreCase);
         }
 
-        public int FindLastAt(String s, int start)
-        {
-            return internalString.LastIndexOf(s, start);
-        }
-
-        public String PadLeft(int width)
+        public string PadLeft(int width)
         {
             return internalString.PadLeft(width);
         }
 
-        public String PadRight(int width)
+        public string PadRight(int width)
         {
             return internalString.PadRight(width);
         }
 
-        public String Remove(int start, int count)
+        public string Remove(int start, int count)
         {
             return internalString.Remove(start, count);
         }
 
-        public String Replace(String oldString, String newString)
+        public string Replace(string oldString, string newString)
         {
             return internalString.Replace(oldString, newString);
         }
 
-        public String ToLower()
+        public string ToLower()
         {
             return internalString.ToLower();
         }
 
-        public String ToUpper()
+        public string ToUpper()
         {
             return internalString.ToUpper();
         }
 
-        public bool StartsWith(String s)
+        public bool StartsWith(string s)
         {
-            return internalString.StartsWith(s);
+            return internalString.StartsWith(s, true, CultureInfo.CurrentCulture);
         }
 
-        public String Trim()
+        public string Trim()
         {
             return internalString.Trim();
         }
 
-        public String TrimEnd()
+        public string TrimEnd()
         {
             return internalString.TrimEnd();
         }
 
-        public String TrimStart()
+        public string TrimStart()
         {
             return internalString.TrimStart();
         }
 
-        public object GetIndex(int index)
+        public object GetIndex(object index)
         {
-            return internalString[index];
+            if (index is double || index is float)
+            {
+                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
+            }
+            if (!(index is int)) throw new Exception("The index must be an integer number");
+
+            return internalString[(int)index];
         }
 
         // Required by the interface but unimplemented, because strings are immutable.
-        public void SetIndex(int index, object value)
+        public void SetIndex(object index, object value)
         {
             throw new KOSException("String are immutable; they can not be modified using the syntax \"SET string[1] TO 'a'\", etc.");
         }
 
         // As the regular Split, except returning a ListValue rather than an array.
-        public ListValue<String> SplitToList(String separator)
+        public ListValue<string> SplitToList(string separator)
         {
-            String[] split = internalString.Split(new string[] { separator }, StringSplitOptions.None);
-            return new ListValue<String>(split);
+            string[] split = Regex.Split(internalString, separator, RegexOptions.IgnoreCase);
+            return new ListValue<string>(split);
         }
 
         private void StringInitializeSuffixes()
         {
             AddSuffix("LENGTH",     new NoArgsSuffix<int>                           (() => Length));
-            AddSuffix("SUBSTRING",  new TwoArgsSuffix<String, int, int>             (Substring));
-            AddSuffix("CONTAINS",   new OneArgsSuffix<bool, String>                 (Contains));
-            AddSuffix("ENDSWITH",   new OneArgsSuffix<bool, String>                 (EndsWith));
-            AddSuffix("FINDAT",     new TwoArgsSuffix<int, String, int>             (FindAt));
-            AddSuffix("INSERT",     new TwoArgsSuffix<String, int, String>          (Insert));
-            AddSuffix("FINDLASTAT", new TwoArgsSuffix<int, String, int>             (FindLastAt));
-            AddSuffix("PADLEFT",    new OneArgsSuffix<String, int>                  (PadLeft));
-            AddSuffix("PADRIGHT",   new OneArgsSuffix<String, int>                  (PadRight));
-            AddSuffix("REMOVE",     new TwoArgsSuffix<String, int, int>             (Remove));
-            AddSuffix("REPLACE",    new TwoArgsSuffix<String, String, String>       (Replace));
-            AddSuffix("SPLIT",      new OneArgsSuffix<ListValue<String>, String>    (SplitToList));
-            AddSuffix("STARTSWITH", new OneArgsSuffix<bool, String>                 (StartsWith));
-            AddSuffix("TOLOWER",    new NoArgsSuffix<String>                        (ToLower));
-            AddSuffix("TOUPPER",    new NoArgsSuffix<String>                        (ToUpper));
-            AddSuffix("TRIM",       new NoArgsSuffix<String>                        (Trim));
-            AddSuffix("TRIMEND",    new NoArgsSuffix<String>                        (TrimEnd));
-            AddSuffix("TRIMSTART",  new NoArgsSuffix<String>                        (TrimStart));
+            AddSuffix("SUBSTRING",  new TwoArgsSuffix<string, int, int>             (Substring));
+            AddSuffix("CONTAINS",   new OneArgsSuffix<bool, string>                 (Contains));
+            AddSuffix("ENDSWITH",   new OneArgsSuffix<bool, string>                 (EndsWith));
+            AddSuffix("FINDAT",     new TwoArgsSuffix<int, string, int>             (FindAt));
+            AddSuffix("INSERT",     new TwoArgsSuffix<string, int, string>          (Insert));
+            AddSuffix("FINDLASTAT", new TwoArgsSuffix<int, string, int>             (FindLastAt));
+            AddSuffix("PADLEFT",    new OneArgsSuffix<string, int>                  (PadLeft));
+            AddSuffix("PADRIGHT",   new OneArgsSuffix<string, int>                  (PadRight));
+            AddSuffix("REMOVE",     new TwoArgsSuffix<string, int, int>             (Remove));
+            AddSuffix("REPLACE",    new TwoArgsSuffix<string, string, string>       (Replace));
+            AddSuffix("SPLIT",      new OneArgsSuffix<ListValue<string>, string>    (SplitToList));
+            AddSuffix("STARTSWITH", new OneArgsSuffix<bool, string>                 (StartsWith));
+            AddSuffix("TOLOWER",    new NoArgsSuffix<string>                        (ToLower));
+            AddSuffix("TOUPPER",    new NoArgsSuffix<string>                        (ToUpper));
+            AddSuffix("TRIM",       new NoArgsSuffix<string>                        (Trim));
+            AddSuffix("TRIMEND",    new NoArgsSuffix<string>                        (TrimEnd));
+            AddSuffix("TRIMSTART",  new NoArgsSuffix<string>                        (TrimStart));
 
             // Aliased "IndexOf" with "Find" to match "FindAt" (since IndexOfAt doesn't make sense, but I wanted to stick with common/C# names when possible)
-            AddSuffix(new string[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<int, String>   (IndexOf));
-            AddSuffix(new string[] { "LASTINDEXOF", "FINDLAST" }, new OneArgsSuffix<int, String>   (LastIndexOf));
+            AddSuffix(new[] { "INDEXOF",     "FIND" },     new OneArgsSuffix<int, string>   (IndexOf));
+            AddSuffix(new[] { "LASTINDEXOF", "FINDLAST" }, new OneArgsSuffix<int, string>   (LastIndexOf));
 
         }
 
@@ -189,6 +181,11 @@ namespace kOS.Safe.Encapsulation
         public static implicit operator string(StringValue value)
         {
             return value.internalString;
+        }
+
+        public override string ToString()
+        {
+            return this;
         }
     }
 }

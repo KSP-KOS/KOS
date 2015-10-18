@@ -607,9 +607,10 @@ namespace kOS.Safe.Compilation
             
             if (specialValue == null)
             {
-                if (popValue is String)
+                var s = popValue as string;
+                if (s != null)
                 {
-                    specialValue = new StringValue((String)popValue);
+                    specialValue = new StringValue(s);
                 }
                 else
                 {
@@ -667,9 +668,10 @@ namespace kOS.Safe.Compilation
             if (specialValue == null)
             {
                 // Box strings if necessary to allow suffixes
-                if (popValue is String)
+                var s = popValue as string;
+                if (s != null)
                 {
-                    specialValue = new StringValue((String)popValue);
+                    specialValue = new StringValue(s);
                 }
                 else
                 {
@@ -702,21 +704,20 @@ namespace kOS.Safe.Compilation
             {
                 value = indexable.GetIndex(index);
             }
+            // Box strings if necessary to allow them to be indexed
+            else if (list is string)
+            {
+                value = new StringValue((string) list).GetIndex(index);
+            }
             else
             {
                 throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
             }
 
-            // Box strings if necessary to allow them to be indexed
-            if (list is String)
-            {
-                list = new StringValue((String)list);
-            }
 
             if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
             if (!(index is int)) throw new Exception("The index must be an integer number");
 
-            object value = ((IIndexable)list).GetIndex((int)index);
             cpu.PushStack(value);
         }
     }
