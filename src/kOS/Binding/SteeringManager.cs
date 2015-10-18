@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
+using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
@@ -11,32 +12,12 @@ namespace kOS.Binding
 {
     public class SteeringManager : Structure, IDisposable
     {
-        public static Dictionary<string, SteeringManager> AllInstances = new Dictionary<string, SteeringManager>();
-
-        public static SteeringManager GetInstance(SharedObjects shared)
-        {
-            string key = shared.Vessel.id.ToString();
-            if (AllInstances.Keys.Contains(key))
-            {
-                SteeringManager instance = AllInstances[key];
-                if (!instance.SubscribedParts.Contains(shared.KSPPart.flightID))
-                {
-                    AllInstances[key].SubscribedParts.Add(shared.KSPPart.flightID);
-                }
-                return AllInstances[key];
-            }
-            SteeringManager sm = new SteeringManager(shared);
-            sm.KeyId = key;
-            sm.SubscribedParts.Add(shared.KSPPart.flightID);
-            AllInstances.Add(key, sm);
-            return sm;
-        }
-
         public static SteeringManager SwapInstance(SharedObjects shared, SteeringManager oldInstance)
         {
-            if (shared.Vessel.id.ToString() == oldInstance.KeyId) return oldInstance;
+            if (shared.Vessel == oldInstance.Vessel) return oldInstance;
             if (oldInstance.SubscribedParts.Contains(shared.KSPPart.flightID)) oldInstance.SubscribedParts.Remove(shared.KSPPart.flightID);
             SteeringManager instance = DeepCopy(oldInstance, shared);
+
             if (oldInstance.enabled)
             {
                 if (oldInstance.partId == shared.KSPPart.flightID)
@@ -49,18 +30,10 @@ namespace kOS.Binding
             return instance;
         }
 
-        public static void RemoveInstance(Guid vesselId)
-        {
-            if (AllInstances.ContainsKey(vesselId.ToString()))
-            {
-                AllInstances[vesselId.ToString()].Dispose();
-                AllInstances.Remove(vesselId.ToString());
-            }
-        }
 
         public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)
         {
-            SteeringManager instance = GetInstance(shared);
+            SteeringManager instance = SteeringManagerProvider.GetInstance(shared);
             instance.ShowAngularVectors = oldInstance.ShowAngularVectors;
             instance.ShowFacingVectors = oldInstance.ShowFacingVectors;
             instance.ShowRCSVectors = oldInstance.ShowRCSVectors;
@@ -89,7 +62,13 @@ namespace kOS.Binding
             return instance;
         }
 
-        public string KeyId;
+        public Vessel Vessel
+        {
+            get
+            {
+                return shared.Vessel;
+            }
+        }
 
         public List<uint> SubscribedParts = new List<uint>();
 
@@ -144,18 +123,18 @@ namespace kOS.Binding
 
         public bool WriteCSVFiles { get; set; }
 
-        private string fileBaseName = "{0}-{1}-{2}.csv";
-        private string fileDateString = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        private const string FILE_BASE_NAME = "{0}-{1}-{2}.csv";
+        private readonly string fileDateString = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
         public object Value { get; set; }
 
-        public Direction TargetDirection { get { return this.GetDirectionFromValue(); } }
+        public Direction TargetDirection { get { return GetDirectionFromValue(); } }
 
         private Transform vesselTransform;
 
-        private TorquePI pitchPI = new TorquePI();
-        private TorquePI yawPI = new TorquePI();
-        private TorquePI rollPI = new TorquePI();
+        private readonly TorquePI pitchPI = new TorquePI();
+        private readonly TorquePI yawPI = new TorquePI();
+        private readonly TorquePI rollPI = new TorquePI();
 
         private PIDLoop pitchRatePI = new PIDLoop(1, 0.1, 0, extraUnwind: true);
         private PIDLoop yawRatePI = new PIDLoop(1, 0.1, 0, extraUnwind: true);
@@ -171,28 +150,25 @@ namespace kOS.Binding
 
         private KSP.IO.TextWriter adjustTorqueWriter;
 
-        private MovingAverage pitchRate = new MovingAverage() { SampleLimit = 5 };
-        private MovingAverage yawRate = new MovingAverage() { SampleLimit = 5 };
-        private MovingAverage rollRate = new MovingAverage() { SampleLimit = 5 };
-
-        private MovingAverage pitchTorqueCalc = new MovingAverage() { SampleLimit = 15 };
-        private MovingAverage yawTorqueCalc = new MovingAverage() { SampleLimit = 15 };
-        private MovingAverage rollTorqueCalc = new MovingAverage() { SampleLimit = 15 };
+        private readonly MovingAverage pitchTorqueCalc = new MovingAverage { SampleLimit = 15 };
+        private readonly MovingAverage yawTorqueCalc = new MovingAverage { SampleLimit = 15 };
+        private readonly MovingAverage rollTorqueCalc = new MovingAverage { SampleLimit = 15 };
 
         private bool EnableTorqueAdjust { get; set; }
 
-        private MovingAverage pitchMOICalc = new MovingAverage() { SampleLimit = 5 };
-        private MovingAverage yawMOICalc = new MovingAverage() { SampleLimit = 5 };
-        private MovingAverage rollMOICalc = new MovingAverage() { SampleLimit = 5 };
+        private readonly MovingAverage pitchMOICalc = new MovingAverage { SampleLimit = 5 };
+        private readonly MovingAverage yawMOICalc = new MovingAverage { SampleLimit = 5 };
+        private readonly MovingAverage rollMOICalc = new MovingAverage { SampleLimit = 5 };
 
-        private bool EnableMOIAdjust { get; set; }
+        private bool enableMoiAdjust;
 
-        public MovingAverage AverageDuration = new MovingAverage() { SampleLimit = 60 };
+        public MovingAverage AverageDuration = new MovingAverage { SampleLimit = 60 };
 
         #region doubles
+
         public const double RadToDeg = 180d / Math.PI;
 
-        private double epsilon = 0.00001;
+        private const double EPSILON = 0.00001;
 
         private double sessionTime = double.MaxValue;
         private double lastSessionTime = double.MaxValue;
@@ -220,7 +196,7 @@ namespace kOS.Binding
         private double tgtYawTorque;
         private double tgtRollTorque;
 
-        private double renderMultiplier = 50;
+        private const double RENDER_MULTIPLIER = 50;
 
         public double PitchTorqueAdjust { get; set; }
         public double YawTorqueAdjust { get; set; }
@@ -230,14 +206,15 @@ namespace kOS.Binding
         public double YawTorqueFactor { get; set; }
         public double RollTorqueFactor { get; set; }
 
-        double vesselParts = 0;
-        double vesselMass = 0;
+        private int vesselParts = 0;
+        private double vesselMass = 0;
+
         #endregion doubles
 
-        List<ModuleReactionWheel> reactionWheelModules = new List<ModuleReactionWheel>();
-        List<ModuleRCS> rcsModules = new List<ModuleRCS>();
-        List<ModuleEngines> engineModules = new List<ModuleEngines>();
-        List<ModuleGimbal> gimbalModules = new List<ModuleGimbal>();
+        private readonly List<ModuleReactionWheel> reactionWheelModules = new List<ModuleReactionWheel>();
+        private readonly List<ModuleRCS> rcsModules = new List<ModuleRCS>();
+        private readonly List<ModuleEngines> engineModules = new List<ModuleEngines>();
+        private readonly List<ModuleGimbal> gimbalModules = new List<ModuleGimbal>();
 
         private Quaternion vesselRotation;
         private Quaternion targetRot;
@@ -269,11 +246,11 @@ namespace kOS.Binding
         private Vector3d staticEngineTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
         private Vector3d controlEngineTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
 
-        private List<ForceVector> rcsVectors = new List<ForceVector>();
-        private List<ForceVector> engineNeutVectors = new List<ForceVector>();
-        private List<ForceVector> enginePitchVectors = new List<ForceVector>();
-        private List<ForceVector> engineYawVectors = new List<ForceVector>();
-        private List<ForceVector> engineRollVectors = new List<ForceVector>();
+        private readonly List<ForceVector> rcsVectors = new List<ForceVector>();
+        private readonly List<ForceVector> engineNeutVectors = new List<ForceVector>();
+        private readonly List<ForceVector> enginePitchVectors = new List<ForceVector>();
+        private readonly List<ForceVector> engineYawVectors = new List<ForceVector>();
+        private readonly List<ForceVector> engineRollVectors = new List<ForceVector>();
 
         #endregion Vectors
 
@@ -289,7 +266,7 @@ namespace kOS.Binding
 
         private VectorRenderer vWorldX;
         private VectorRenderer vWorldY;
-        public VectorRenderer vWorldZ;
+        private VectorRenderer vWorldZ;
 
         private VectorRenderer vOmegaX;
         private VectorRenderer vOmegaY;
@@ -299,8 +276,8 @@ namespace kOS.Binding
         private VectorRenderer vTgtTorqueY;
         private VectorRenderer vTgtTorqueZ;
 
-        private Dictionary<string, VectorRenderer> vEngines = new Dictionary<string, VectorRenderer>();
-        private Dictionary<string, VectorRenderer> vRcs = new Dictionary<string, VectorRenderer>();
+        private readonly Dictionary<string, VectorRenderer> vEngines = new Dictionary<string, VectorRenderer>();
+        private readonly Dictionary<string, VectorRenderer> vRcs = new Dictionary<string, VectorRenderer>();
 
         #endregion VectorRenderers
 
@@ -337,7 +314,7 @@ namespace kOS.Binding
             adjustTorque = Vector3d.zero;
             adjustMomentOfInertia = Vector3d.one;
 
-            EnableMOIAdjust = false;
+            enableMoiAdjust = false;
             EnableTorqueAdjust = true;
 
             MaxStoppingTime = 1;
@@ -392,16 +369,16 @@ namespace kOS.Binding
             AddSuffix("ANGULARVELOCITY", new Suffix<Vector>(() => new Vector(omega)));
             AddSuffix("ANGULARACCELERATION", new Suffix<Vector>(() => new Vector(angularAcceleration)));
             AddSuffix("ENABLETORQUEADJUST", new SetSuffix<bool>(() => EnableTorqueAdjust, value => EnableTorqueAdjust = value));
-            AddSuffix("ENABLEMOIADJUST", new SetSuffix<bool>(() => EnableMOIAdjust, value => EnableMOIAdjust = value));
+            AddSuffix("ENABLEMOIADJUST", new SetSuffix<bool>(() => enableMoiAdjust, value => enableMoiAdjust = value));
 #endif
         }
 
-        public void EnableControl(SharedObjects shared)
+        public void EnableControl(SharedObjects sharedObj)
         {
-            if (enabled && this.partId != shared.KSPPart.flightID)
-                throw new kOS.Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
-            this.shared = shared;
-            this.partId = shared.KSPPart.flightID;
+            if (enabled && partId != sharedObj.KSPPart.flightID)
+                throw new Safe.Exceptions.KOSException("Steering Manager on this ship is already in use by another processor.");
+            shared = sharedObj;
+            partId = sharedObj.KSPPart.flightID;
             ResetIs();
             Enabled = true;
             lastSessionTime = double.MaxValue;
@@ -415,15 +392,15 @@ namespace kOS.Binding
 
         public void DisableControl()
         {
-            if (enabled && this.partId != shared.KSPPart.flightID)
-                throw new kOS.Safe.Exceptions.KOSException("Cannon unbind Steering Manager on this ship in use by another processor.");
-            this.partId = 0;
+            if (enabled && partId != shared.KSPPart.flightID)
+                throw new Safe.Exceptions.KOSException("Cannon unbind Steering Manager on this ship in use by another processor.");
+            partId = 0;
             Enabled = false;
         }
 
-        public VectorRenderer InitVectorRenderer(UnityEngine.Color c, double width, SharedObjects shared)
+        public VectorRenderer InitVectorRenderer(Color c, double width, SharedObjects sharedObj)
         {
-            VectorRenderer rend = new VectorRenderer(shared.UpdateHandler, shared)
+            VectorRenderer rend = new VectorRenderer(sharedObj.UpdateHandler, sharedObj)
             {
                 Color = new RgbaColor(c.r, c.g, c.b),
                 Start = Vector3d.zero,
@@ -457,38 +434,37 @@ namespace kOS.Binding
 
         public void OnFlyByWire(FlightCtrlState c)
         {
-            update(c);
+            Update(c);
         }
 
         public void OnRemoteTechPilot(FlightCtrlState c)
         {
-            update(c);
+            Update(c);
         }
 
-        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        private readonly System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
-        private void update(FlightCtrlState c)
+        private void Update(FlightCtrlState c)
         {
-            if (Value != null)
-            {
-                lastSessionTime = sessionTime;
-                sessionTime = Math.Round(Planetarium.GetUniversalTime(), 3);
-                //if (sessionTime > lastSessionTime)
-                //{
-                //}
-                sw.Reset();
-                sw.Start();
-                UpdateStateVectors();
-                UpdateControlParts();
-                UpdateTorque();
-                UpdatePredictionPI();
-                UpdateControl(c);
-                if (ShowSteeringStats) PrintDebug();
-                if (WriteCSVFiles) WriteCSVs();
-                UpdateVectorRenders();
-                sw.Stop();
-                AverageDuration.Update((double)sw.ElapsedTicks / (double)System.TimeSpan.TicksPerMillisecond);
-            }
+            if (Value == null) return;
+
+            lastSessionTime = sessionTime;
+            sessionTime = Math.Round(Planetarium.GetUniversalTime(), 3);
+            //if (sessionTime > lastSessionTime)
+            //{
+            //}
+            sw.Reset();
+            sw.Start();
+            UpdateStateVectors();
+            UpdateControlParts();
+            UpdateTorque();
+            UpdatePredictionPI();
+            UpdateControl(c);
+            if (ShowSteeringStats) PrintDebug();
+            if (WriteCSVFiles) WriteCSVs();
+            UpdateVectorRenders();
+            sw.Stop();
+            AverageDuration.Update((double)sw.ElapsedTicks / (double)System.TimeSpan.TicksPerMillisecond);
         }
 
         private Direction GetDirectionFromValue()
@@ -507,7 +483,7 @@ namespace kOS.Binding
                 }
             }
             DisableControl();
-            throw new kOS.Safe.Exceptions.KOSWrongControlValueTypeException(
+            throw new Safe.Exceptions.KOSWrongControlValueTypeException(
                 "STEERING", Value.GetType().Name, "Direction, Vector, Manuever Node, or special string \"KILL\"");
         }
 
@@ -551,22 +527,22 @@ namespace kOS.Binding
                 double dt = sessionTime - lastSessionTime;
                 angularAcceleration = (omega - oldOmega) / dt;
                 angularAcceleration = new Vector3d(angularAcceleration.x, angularAcceleration.z, angularAcceleration.y);
-                if (EnableMOIAdjust)
+                if (enableMoiAdjust)
                 {
                     measuredMomentOfInertia = new Vector3d(
-                        controlTorque.x * accPitch / angularAcceleration.x, 
-                        controlTorque.y * accRoll / angularAcceleration.y, 
+                        controlTorque.x * accPitch / angularAcceleration.x,
+                        controlTorque.y * accRoll / angularAcceleration.y,
                         controlTorque.z * accYaw / angularAcceleration.z);
 
-                    if (Math.Abs(accPitch) > epsilon)
+                    if (Math.Abs(accPitch) > EPSILON)
                     {
                         adjustMomentOfInertia.x = pitchMOICalc.Update(Math.Abs(measuredMomentOfInertia.x) / momentOfInertia.x);
                     }
-                    if (Math.Abs(accYaw) > epsilon)
+                    if (Math.Abs(accYaw) > EPSILON)
                     {
                         adjustMomentOfInertia.z = yawMOICalc.Update(Math.Abs(measuredMomentOfInertia.z) / momentOfInertia.z);
                     }
-                    if (Math.Abs(accRoll) > epsilon)
+                    if (Math.Abs(accRoll) > EPSILON)
                     {
                         adjustMomentOfInertia.y = rollMOICalc.Update(Math.Abs(measuredMomentOfInertia.y) / momentOfInertia.y);
                     }
@@ -580,20 +556,19 @@ namespace kOS.Binding
 
             if (sessionTime > lastSessionTime && EnableTorqueAdjust)
             {
-
-                if (Math.Abs(accPitch) > epsilon)
+                if (Math.Abs(accPitch) > EPSILON)
                 {
                     adjustTorque.x = Math.Min(Math.Abs(pitchTorqueCalc.Update(measuredTorque.x / accPitch)) - rawTorque.x, 0);
                     //adjustTorque.x = Math.Abs(pitchTorqueCalc.Update(measuredTorque.x / accPitch) / rawTorque.x);
                 }
                 else adjustTorque.x = Math.Abs(pitchTorqueCalc.Update(pitchTorqueCalc.Mean));
-                if (Math.Abs(accYaw) > epsilon)
+                if (Math.Abs(accYaw) > EPSILON)
                 {
                     adjustTorque.z = Math.Min(Math.Abs(yawTorqueCalc.Update(measuredTorque.z / accYaw)) - rawTorque.z, 0);
                     //adjustTorque.z = Math.Abs(yawTorqueCalc.Update(measuredTorque.z / accYaw) / rawTorque.z);
                 }
                 else adjustTorque.z = Math.Abs(yawTorqueCalc.Update(yawTorqueCalc.Mean));
-                if (Math.Abs(accRoll) > epsilon)
+                if (Math.Abs(accRoll) > EPSILON)
                 {
                     adjustTorque.y = Math.Min(Math.Abs(rollTorqueCalc.Update(measuredTorque.y / accRoll)) - rawTorque.y, 0);
                     //adjustTorque.y = Math.Abs(rollTorqueCalc.Update(measuredTorque.y / accRoll) / rawTorque.y);
@@ -763,40 +738,40 @@ namespace kOS.Binding
                         };
                         engineNeutVectors.Add(NeutralForce);
                         staticEngineTorque += NeutralForce.Torque;
-                        if (gimbalRange > epsilon)
+                        if (gimbalRange > EPSILON)
                         {
                             Vector3d pitchAxis = Vector3d.Exclude(neut, vesselStarboard);
                             Vector3d yawAxis = Vector3d.Exclude(neut, vesselTop);
                             Vector3d rollAxis = Vector3d.Exclude(vesselForward, relCom);
-                            ForceVector PitchForce = new ForceVector()
+                            ForceVector pitchForce = new ForceVector
                             {
                                 Force = Quaternion.AngleAxis(gimbalRange, pitchAxis) * neut,
                                 Position = relCom
                             };
-                            enginePitchVectors.Add(PitchForce);
-                            pitchControl += PitchForce.Torque;
-                            ForceVector YawForce = new ForceVector()
+                            enginePitchVectors.Add(pitchForce);
+                            pitchControl += pitchForce.Torque;
+                            ForceVector yawForce = new ForceVector
                             {
                                 Force = Quaternion.AngleAxis(gimbalRange, yawAxis) * neut,
                                 Position = relCom
                             };
-                            engineYawVectors.Add(YawForce);
-                            yawControl += YawForce.Torque;
-                            ForceVector RollForce;
+                            engineYawVectors.Add(yawForce);
+                            yawControl += yawForce.Torque;
+                            ForceVector rollForce;
                             if (rollAxis.sqrMagnitude < 0.02)
                             {
-                                RollForce = NeutralForce;
+                                rollForce = NeutralForce;
                             }
                             else
                             {
-                                RollForce = new ForceVector()
+                                rollForce = new ForceVector
                                 {
                                     Force = Quaternion.AngleAxis(gimbalRange, rollAxis) * neut,
                                     Position = relCom
                                 };
                             }
-                            engineRollVectors.Add(RollForce);
-                            rollControl += RollForce.Torque;
+                            engineRollVectors.Add(rollForce);
+                            rollControl += rollForce.Torque;
                         }
                         else
                         {
@@ -861,7 +836,7 @@ namespace kOS.Binding
             //controlTorque = Vector3d.Scale(rawTorque, adjustTorque);
             //controlTorque = rawTorque;
 
-            double minTorque = epsilon;
+            double minTorque = EPSILON;
             if (controlTorque.x < minTorque) controlTorque.x = minTorque;
             if (controlTorque.y < minTorque) controlTorque.y = minTorque;
             if (controlTorque.z < minTorque) controlTorque.z = minTorque;
@@ -908,7 +883,6 @@ namespace kOS.Binding
             tgtYawTorque = yawPI.Update(sampletime, omega.y, tgtYawOmega, momentOfInertia.z, controlTorque.z);
             tgtRollTorque = rollPI.Update(sampletime, omega.z, tgtRollOmega, momentOfInertia.y, controlTorque.y);
 
-
             //tgtPitchTorque = pitchPI.Update(sampletime, pitchRate.Update(omega.x), tgtPitchOmega, momentOfInertia.x, controlTorque.x);
             //tgtYawTorque = yawPI.Update(sampletime, yawRate.Update(omega.y), tgtYawOmega, momentOfInertia.z, controlTorque.z);
             //tgtRollTorque = rollPI.Update(sampletime, rollRate.Update(omega.z), tgtRollOmega, momentOfInertia.y, controlTorque.y);
@@ -929,26 +903,25 @@ namespace kOS.Binding
                     shared.Vessel.Autopilot.SAS.LockHeading(target, true);
                 else
                     shared.Vessel.Autopilot.SAS.lockedHeading = target;
-                return;
             }
             else
             {
                 //TODO: include adjustment for static torque (due to engines)
                 double clampAccPitch = Math.Max(Math.Abs(accPitch), 0.005) * 2;
                 accPitch = tgtPitchTorque / controlTorque.x;
-                if (Math.Abs(accPitch) < epsilon)
+                if (Math.Abs(accPitch) < EPSILON)
                     accPitch = 0;
                 accPitch = Math.Max(Math.Min(accPitch, clampAccPitch), -clampAccPitch);
                 c.pitch = (float)accPitch;
                 double clampAccYaw = Math.Max(Math.Abs(accYaw), 0.005) * 2;
                 accYaw = tgtYawTorque / controlTorque.z;
-                if (Math.Abs(accYaw) < epsilon)
+                if (Math.Abs(accYaw) < EPSILON)
                     accYaw = 0;
                 accYaw = Math.Max(Math.Min(accYaw, clampAccYaw), -clampAccYaw);
                 c.yaw = (float)accYaw;
                 double clampAccRoll = Math.Max(Math.Abs(accRoll), 0.005) * 2;
                 accRoll = tgtRollTorque / controlTorque.y;
-                if (Math.Abs(accRoll) < epsilon)
+                if (Math.Abs(accRoll) < EPSILON)
                     accRoll = 0;
                 accRoll = Math.Max(Math.Min(accRoll, clampAccRoll), -clampAccRoll);
                 c.roll = (float)accRoll;
@@ -961,54 +934,54 @@ namespace kOS.Binding
             {
                 if (vForward == null)
                 {
-                    vForward = InitVectorRenderer(UnityEngine.Color.red, 1, shared);
+                    vForward = InitVectorRenderer(Color.red, 1, shared);
                 }
                 if (vTop == null)
                 {
-                    vTop = InitVectorRenderer(UnityEngine.Color.red, 1, shared);
+                    vTop = InitVectorRenderer(Color.red, 1, shared);
                 }
                 if (vStarboard == null)
                 {
-                    vStarboard = InitVectorRenderer(UnityEngine.Color.red, 1, shared);
+                    vStarboard = InitVectorRenderer(Color.red, 1, shared);
                 }
 
-                vForward.Vector = vesselForward * renderMultiplier;
-                vTop.Vector = vesselTop * renderMultiplier;
-                vStarboard.Vector = vesselStarboard * renderMultiplier;
+                vForward.Vector = vesselForward * RENDER_MULTIPLIER;
+                vTop.Vector = vesselTop * RENDER_MULTIPLIER;
+                vStarboard.Vector = vesselStarboard * RENDER_MULTIPLIER;
 
                 if (vTgtForward == null)
                 {
-                    vTgtForward = InitVectorRenderer(UnityEngine.Color.blue, 1, shared);
+                    vTgtForward = InitVectorRenderer(Color.blue, 1, shared);
                 }
                 if (vTgtTop == null)
                 {
-                    vTgtTop = InitVectorRenderer(UnityEngine.Color.blue, 1, shared);
+                    vTgtTop = InitVectorRenderer(Color.blue, 1, shared);
                 }
                 if (vTgtStarboard == null)
                 {
-                    vTgtStarboard = InitVectorRenderer(UnityEngine.Color.blue, 1, shared);
+                    vTgtStarboard = InitVectorRenderer(Color.blue, 1, shared);
                 }
 
-                vTgtForward.Vector = targetForward * renderMultiplier * 0.75f;
-                vTgtTop.Vector = targetTop * renderMultiplier * 0.75f;
-                vTgtStarboard.Vector = targetStarboard * renderMultiplier * 0.75f;
+                vTgtForward.Vector = targetForward * RENDER_MULTIPLIER * 0.75f;
+                vTgtTop.Vector = targetTop * RENDER_MULTIPLIER * 0.75f;
+                vTgtStarboard.Vector = targetStarboard * RENDER_MULTIPLIER * 0.75f;
 
                 if (vWorldX == null)
                 {
-                    vWorldX = InitVectorRenderer(UnityEngine.Color.white, 1, shared);
+                    vWorldX = InitVectorRenderer(Color.white, 1, shared);
                 }
                 if (vWorldY == null)
                 {
-                    vWorldY = InitVectorRenderer(UnityEngine.Color.white, 1, shared);
+                    vWorldY = InitVectorRenderer(Color.white, 1, shared);
                 }
                 if (vWorldZ == null)
                 {
-                    vWorldZ = InitVectorRenderer(UnityEngine.Color.white, 1, shared);
+                    vWorldZ = InitVectorRenderer(Color.white, 1, shared);
                 }
 
-                vWorldX.Vector = new Vector3d(1, 0, 0) * renderMultiplier * 2;
-                vWorldY.Vector = new Vector3d(0, 1, 0) * renderMultiplier * 2;
-                vWorldZ.Vector = new Vector3d(0, 0, 1) * renderMultiplier * 2;
+                vWorldX.Vector = new Vector3d(1, 0, 0) * RENDER_MULTIPLIER * 2;
+                vWorldY.Vector = new Vector3d(0, 1, 0) * RENDER_MULTIPLIER * 2;
+                vWorldZ.Vector = new Vector3d(0, 0, 1) * RENDER_MULTIPLIER * 2;
 
                 if (!vForward.GetShow()) vForward.SetShow(true);
                 if (!vTop.GetShow()) vTop.SetShow(true);
@@ -1086,45 +1059,45 @@ namespace kOS.Binding
             {
                 if (vOmegaX == null)
                 {
-                    vOmegaX = InitVectorRenderer(UnityEngine.Color.cyan, 1, shared);
+                    vOmegaX = InitVectorRenderer(Color.cyan, 1, shared);
                 }
                 if (vOmegaY == null)
                 {
-                    vOmegaY = InitVectorRenderer(UnityEngine.Color.cyan, 1, shared);
+                    vOmegaY = InitVectorRenderer(Color.cyan, 1, shared);
                 }
                 if (vOmegaZ == null)
                 {
-                    vOmegaZ = InitVectorRenderer(UnityEngine.Color.cyan, 1, shared);
+                    vOmegaZ = InitVectorRenderer(Color.cyan, 1, shared);
                 }
 
-                vOmegaX.Vector = vesselTop * omega.x * renderMultiplier * 100f;
-                vOmegaX.Start = vesselForward * renderMultiplier;
-                vOmegaY.Vector = vesselStarboard * omega.y * renderMultiplier * 100f;
-                vOmegaY.Start = vesselForward * renderMultiplier;
-                vOmegaZ.Vector = vesselStarboard * omega.z * renderMultiplier * 100f;
-                vOmegaZ.Start = vesselTop * renderMultiplier;
+                vOmegaX.Vector = vesselTop * omega.x * RENDER_MULTIPLIER * 100f;
+                vOmegaX.Start = vesselForward * RENDER_MULTIPLIER;
+                vOmegaY.Vector = vesselStarboard * omega.y * RENDER_MULTIPLIER * 100f;
+                vOmegaY.Start = vesselForward * RENDER_MULTIPLIER;
+                vOmegaZ.Vector = vesselStarboard * omega.z * RENDER_MULTIPLIER * 100f;
+                vOmegaZ.Start = vesselTop * RENDER_MULTIPLIER;
 
                 if (vTgtTorqueX == null)
                 {
-                    vTgtTorqueX = InitVectorRenderer(UnityEngine.Color.green, 1, shared);
+                    vTgtTorqueX = InitVectorRenderer(Color.green, 1, shared);
                 }
                 if (vTgtTorqueY == null)
                 {
-                    vTgtTorqueY = InitVectorRenderer(UnityEngine.Color.green, 1, shared);
+                    vTgtTorqueY = InitVectorRenderer(Color.green, 1, shared);
                 }
                 if (vTgtTorqueZ == null)
                 {
-                    vTgtTorqueZ = InitVectorRenderer(UnityEngine.Color.green, 1, shared);
+                    vTgtTorqueZ = InitVectorRenderer(Color.green, 1, shared);
                 }
 
-                vTgtTorqueX.Vector = vesselTop * tgtPitchOmega * renderMultiplier * 100f;
-                vTgtTorqueX.Start = vesselForward * renderMultiplier;
+                vTgtTorqueX.Vector = vesselTop * tgtPitchOmega * RENDER_MULTIPLIER * 100f;
+                vTgtTorqueX.Start = vesselForward * RENDER_MULTIPLIER;
                 //vTgtTorqueX.SetLabel("tgtPitchOmega: " + tgtPitchOmega);
-                vTgtTorqueY.Vector = vesselStarboard * tgtRollOmega * renderMultiplier * 100f;
-                vTgtTorqueY.Start = vesselTop * renderMultiplier;
+                vTgtTorqueY.Vector = vesselStarboard * tgtRollOmega * RENDER_MULTIPLIER * 100f;
+                vTgtTorqueY.Start = vesselTop * RENDER_MULTIPLIER;
                 //vTgtTorqueY.SetLabel("tgtRollOmega: " + tgtRollOmega);
-                vTgtTorqueZ.Vector = vesselStarboard * tgtYawOmega * renderMultiplier * 100f;
-                vTgtTorqueZ.Start = vesselForward * renderMultiplier;
+                vTgtTorqueZ.Vector = vesselStarboard * tgtYawOmega * RENDER_MULTIPLIER * 100f;
+                vTgtTorqueZ.Start = vesselForward * RENDER_MULTIPLIER;
                 //vTgtTorqueZ.SetLabel("tgtYawOmega: " + tgtYawOmega);
 
                 if (!vOmegaX.GetShow()) vOmegaX.SetShow(true);
@@ -1183,7 +1156,7 @@ namespace kOS.Binding
                     string key = fv.ID;
                     if (!vEngines.ContainsKey(key))
                     {
-                        var vecdraw = InitVectorRenderer(UnityEngine.Color.yellow, 0.25, shared);
+                        var vecdraw = InitVectorRenderer(Color.yellow, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1193,7 +1166,7 @@ namespace kOS.Binding
                     key = fv.ID + "torque";
                     if (!vEngines.ContainsKey(key))
                     {
-                        var vecdraw = InitVectorRenderer(UnityEngine.Color.red, 0.25, shared);
+                        var vecdraw = InitVectorRenderer(Color.red, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1203,7 +1176,7 @@ namespace kOS.Binding
                     key = fv.ID + "position";
                     if (!vEngines.ContainsKey(key))
                     {
-                        var vecdraw = InitVectorRenderer(UnityEngine.Color.cyan, 0.25, shared);
+                        var vecdraw = InitVectorRenderer(Color.cyan, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1211,11 +1184,10 @@ namespace kOS.Binding
                 }
                 foreach (var fv in engineRollVectors)
                 {
-
                     string key = fv.ID + "gimbaled";
                     if (!vEngines.ContainsKey(key))
                     {
-                        var vecdraw = InitVectorRenderer(UnityEngine.Color.magenta, 0.25, shared);
+                        var vecdraw = InitVectorRenderer(Color.magenta, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1225,7 +1197,7 @@ namespace kOS.Binding
                     key = fv.ID + "control";
                     if (!vEngines.ContainsKey(key))
                     {
-                        var vecdraw = InitVectorRenderer(UnityEngine.Color.blue, 0.25, shared);
+                        var vecdraw = InitVectorRenderer(Color.blue, 0.25, shared);
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
@@ -1249,7 +1221,7 @@ namespace kOS.Binding
                     string key = force.ID;
                     if (!vRcs.ContainsKey(key))
                     {
-                        var vecdraw = InitVectorRenderer(UnityEngine.Color.magenta, 0.25, shared);
+                        var vecdraw = InitVectorRenderer(Color.magenta, 0.25, shared);
                         vecdraw.SetShow(true);
                         vRcs.Add(key, vecdraw);
                     }
@@ -1259,7 +1231,7 @@ namespace kOS.Binding
                     key = force.ID + "torque";
                     if (!vRcs.ContainsKey(key))
                     {
-                        var vecdraw = InitVectorRenderer(UnityEngine.Color.yellow, 0.25, shared);
+                        var vecdraw = InitVectorRenderer(Color.yellow, 0.25, shared);
                         vecdraw.SetShow(true);
                         vRcs.Add(key, vecdraw);
                     }
@@ -1325,43 +1297,43 @@ namespace kOS.Binding
             if (pitchRateWriter == null)
             {
                 pitchRateWriter = KSP.IO.File.AppendText<PIDLoop>(
-                    string.Format(fileBaseName, fileDateString, shared.Vessel.vesselName, "pitchRate"));
+                    string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "pitchRate"));
                 pitchRateWriter.WriteLine("LastSampleTime,Error,ErrorSum,Output,Kp,Ki,Kd,MaxOutput");
             }
             if (yawRateWriter == null)
             {
                 yawRateWriter = KSP.IO.File.AppendText<PIDLoop>(
-                    string.Format(fileBaseName, fileDateString, shared.Vessel.vesselName, "yawRate"));
+                    string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "yawRate"));
                 yawRateWriter.WriteLine("LastSampleTime,Error,ErrorSum,Output,Kp,Ki,Kd,MaxOutput");
             }
             if (rollRateWriter == null)
             {
                 rollRateWriter = KSP.IO.File.AppendText<PIDLoop>(
-                    string.Format(fileBaseName, fileDateString, shared.Vessel.vesselName, "rollRate"));
+                    string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "rollRate"));
                 rollRateWriter.WriteLine("LastSampleTime,Error,ErrorSum,Output,Kp,Ki,Kd,MaxOutput");
             }
             if (pitchTorqueWriter == null)
             {
                 pitchTorqueWriter = KSP.IO.File.AppendText<PIDLoop>(
-                    string.Format(fileBaseName, fileDateString, shared.Vessel.vesselName, "pitchTorque"));
+                    string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "pitchTorque"));
                 pitchTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MaxOutput");
             }
             if (yawTorqueWriter == null)
             {
                 yawTorqueWriter = KSP.IO.File.AppendText<PIDLoop>(
-                    string.Format(fileBaseName, fileDateString, shared.Vessel.vesselName, "yawTorque"));
+                    string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "yawTorque"));
                 yawTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MaxOutput");
             }
             if (rollTorqueWriter == null)
             {
                 rollTorqueWriter = KSP.IO.File.AppendText<PIDLoop>(
-                    string.Format(fileBaseName, fileDateString, shared.Vessel.vesselName, "rollTorque"));
+                    string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "rollTorque"));
                 rollTorqueWriter.WriteLine("LastSampleTime,Input,Setpoint,Error,ErrorSum,Output,Kp,Ki,Tr,Ts,I,MaxOutput");
             }
             if (adjustTorqueWriter == null)
             {
                 adjustTorqueWriter = KSP.IO.File.AppendText<SteeringManager>(
-                    string.Format(fileBaseName, fileDateString, shared.Vessel.vesselName, "adjustTorque"));
+                    string.Format(FILE_BASE_NAME, fileDateString, shared.Vessel.vesselName, "adjustTorque"));
                 adjustTorqueWriter.WriteLine("LastSampleTime,Target Pitch,Measured Pitch,Average Adjust Pitch,Raw Pitch,Target Yaw,Measured Yaw,Average Adjust Yaw,Raw Yaw,Target Roll,Measured Roll,Average Adjust Roll,Raw Roll,Samples Roll");
             }
 
@@ -1373,7 +1345,7 @@ namespace kOS.Binding
             yawTorqueWriter.WriteLine(yawPI.ToCSVString());
             rollTorqueWriter.WriteLine(rollPI.ToCSVString());
 
-            adjustTorqueWriter.WriteLine(string.Join(",", new string[] {
+            adjustTorqueWriter.WriteLine(string.Join(",", new[] {
                 sessionTime.ToString(),
                 tgtPitchTorque.ToString(),
                 measuredTorque.x.ToString(),
@@ -1391,7 +1363,7 @@ namespace kOS.Binding
             }));
         }
 
-        public void RemoveInstance(SharedObjects shared)
+        public void RemoveInstance(Vessel vessel)
         {
             if (enabled && partId == shared.KSPPart.flightID)
             {
@@ -1400,7 +1372,7 @@ namespace kOS.Binding
             if (SubscribedParts.Contains(shared.KSPPart.flightID)) SubscribedParts.Remove(shared.KSPPart.flightID);
             if (SubscribedParts.Count == 0)
             {
-                if (AllInstances.ContainsKey(KeyId)) AllInstances.Remove(KeyId);
+                SteeringManagerProvider.RemoveInstance(vessel);
                 this.Dispose();
             }
         }
@@ -1531,10 +1503,10 @@ namespace kOS.Binding
 
             adjustTorqueWriter = null;
 
-            if (AllInstances.Keys.Contains(KeyId)) AllInstances.Remove(KeyId);
+            SteeringManagerProvider.RemoveInstance(shared.Vessel);
         }
 
-        public struct ForceVector
+        private struct ForceVector
         {
             public Vector3d Force { get; set; }
 
@@ -1608,92 +1580,6 @@ namespace kOS.Binding
             {
                 return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
                     Loop.LastSampleTime, Loop.Input, Loop.Setpoint, Loop.Error, Loop.ErrorSum, Loop.Output, Loop.Kp, Loop.Ki, Tr, Ts, I, Loop.MaxOutput);
-            }
-        }
-
-        public class MovingAverage
-        {
-            public List<double> Values { get; set; }
-
-            public double Mean { get; private set; }
-
-            public int ValueCount { get { return Values.Count; } }
-
-            public int SampleLimit { get; set; }
-
-            public MovingAverage()
-            {
-                Reset();
-                SampleLimit = 30;
-            }
-
-            public void Reset()
-            {
-                Mean = 0;
-                if (Values == null) Values = new List<double>();
-                else Values.Clear();
-            }
-
-            public double Update(double value)
-            {
-                if (!(double.IsInfinity(value) || double.IsNaN(value)))
-                {
-                    Values.Add(value);
-                    while (Values.Count > SampleLimit)
-                    {
-                        Values.RemoveAt(0);
-                    }
-                    //if (Values.Count > 5) Mean = Values.OrderBy(e => e).Skip(1).Take(Values.Count - 2).Average();
-                    //else Mean = Values.Average();
-                    //Mean = Values.Average();
-                    double sum = 0;
-                    double count = 0;
-                    double max = double.MinValue;
-                    double min = double.MaxValue;
-                    for (int i = 0; i < Values.Count; i++)
-                    {
-                        double val = Values[i];
-                        if (val > max)
-                        {
-                            if (max != double.MinValue)
-                            {
-                                sum += max;
-                                count++;
-                            }
-                            max = val;
-                        }
-                        else if (val < min)
-                        {
-                            if (min != double.MaxValue)
-                            {
-                                sum += min;
-                                count++;
-                            }
-                            min = val;
-                        }
-                        else
-                        {
-                            sum += val;
-                            count++;
-                        }
-                    }
-                    if (count == 0)
-                    {
-                        if (max != double.MinValue)
-                        {
-                            sum += max;
-                            count++;
-                        }
-                        if (min != double.MaxValue)
-                        {
-                            sum += min;
-                            count++;
-                        }
-                    }
-                    Mean = sum / count;
-                    return Mean;
-                }
-                return value;
             }
         }
     }

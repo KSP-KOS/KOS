@@ -8,6 +8,7 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
 {

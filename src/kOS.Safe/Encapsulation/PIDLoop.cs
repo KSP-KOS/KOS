@@ -1,14 +1,13 @@
-﻿using kOS.Safe.Encapsulation;
-using kOS.Safe.Encapsulation.Suffixes;
 using System;
+using kOS.Safe.Encapsulation.Suffixes;
 
-namespace kOS.Suffixed
+namespace kOS.Safe.Encapsulation
 {
     public class PIDLoop : Structure
     {
         public static PIDLoop DeepCopy(PIDLoop source)
         {
-            PIDLoop newLoop = new PIDLoop()
+            PIDLoop newLoop = new PIDLoop
             {
                 LastSampleTime = source.LastSampleTime,
                 Kp = source.Kp,
@@ -62,7 +61,7 @@ namespace kOS.Suffixed
 
         public double ChangeRate { get; set; }
 
-        private bool unWinding = false;
+        private bool unWinding;
 
         public PIDLoop()
             : this(1, 0, 0)
