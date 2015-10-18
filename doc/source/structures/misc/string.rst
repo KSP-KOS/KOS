@@ -22,6 +22,9 @@ of existing strings. For example::
     SET s TO "Hello, Strings!".
     SET t TO s:REPLACE("Hello", "Goodbye").
 
+
+**NOTE: All string operations are currently case insensive, there are future plans to add mechanisms that will let you choose which style you perfer**	
+	
 Structure
 ---------
 
@@ -37,10 +40,10 @@ Structure
 
         * - :meth:`CONTAINS(string)`
           - boolean
-          - True if the given string is contained within this string (case sensitive) 
+          - True if the given string is contained within this string  
         * - :meth:`ENDSWITH(string)`
           - boolean
-          - True if this string ends with the given string (case sensitive)
+          - True if this string ends with the given string 
         * - :meth:`FIND(string)`
           - integer
           - Returns the index of the first occurrence of the given string in this string (starting from 0)
@@ -82,7 +85,7 @@ Structure
           - Breaks this string up into a list of smaller strings on each occurrence of the given separator
         * - :meth:`STARTSWITH(string)`
           - boolean
-          - True if this string starts with the given string (case sensitive)
+          - True if this string starts with the given string 
         * - :meth:`SUBSTRING(start, count)`
           - :struct:`String`
           - Returns a new string with the given count of characters from this string starting from the given start position
@@ -108,14 +111,14 @@ Structure
     :parameter string: :struct:`String` to look for
     :type: boolean
     
-    True if the given string is contained within this string. This is a case-sensitive search.
+    True if the given string is contained within this string.
 
 .. method:: String:ENDSWITH(string)
 
     :parameter string: :struct:`String` to look for
     :type: boolean
 
-    True if this string ends with the given string. This is a case-sensitive search.
+    True if this string ends with the given string.
 
 .. method:: String:FIND(string)
 
@@ -213,7 +216,7 @@ Structure
     :parameter string: :struct:`String` to look for
     :type: boolean
 
-    True if this string starts with the given string (case sensitive).
+    True if this string starts with the given string .
 
 .. method:: String:SUBSTRING(start,count)
 
