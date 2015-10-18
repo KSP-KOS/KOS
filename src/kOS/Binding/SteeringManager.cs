@@ -30,7 +30,6 @@ namespace kOS.Binding
             return instance;
         }
 
-
         public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)
         {
             SteeringManager instance = SteeringManagerProvider.GetInstance(shared);
@@ -206,7 +205,7 @@ namespace kOS.Binding
         public double YawTorqueFactor { get; set; }
         public double RollTorqueFactor { get; set; }
 
-        private int vesselParts = 0;
+        private int vesselParts;
         private double vesselMass = 0;
 
         #endregion doubles
@@ -232,14 +231,15 @@ namespace kOS.Binding
         private Vector3d targetTop;
         private Vector3d targetStarboard;
 
+        private Vector3d adjustTorque;
+        private Vector3d adjustMomentOfInertia;
+
         private Vector3d omega = Vector3d.zero; // x: pitch, y: yaw, z: roll
         private Vector3d lastOmega = Vector3d.zero;
         private Vector3d angularAcceleration = Vector3d.zero;
         private Vector3d momentOfInertia = Vector3d.zero; // x: pitch, z: yaw, y: roll
         private Vector3d measuredMomentOfInertia = Vector3d.zero;
-        private Vector3d adjustMomentOfInertia = Vector3d.one;
         private Vector3d measuredTorque = Vector3d.zero;
-        private Vector3d adjustTorque = Vector3d.zero;
         private Vector3d staticTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
         private Vector3d controlTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
         private Vector3d rawTorque = Vector3d.zero; // x: pitch, z: yaw, y: roll
@@ -642,8 +642,6 @@ namespace kOS.Binding
             Vector3d yawControl = Vector3d.zero;
             Vector3d rollControl = Vector3d.zero;
 
-            Vector3d relCom;
-
             rcsVectors.Clear();
             engineNeutVectors.Clear();
             enginePitchVectors.Clear();
@@ -669,7 +667,7 @@ namespace kOS.Binding
                         for (int i = 0; i < rcs.thrusterTransforms.Count; i++)
                         {
                             Transform thrustdir = rcs.thrusterTransforms[i];
-                            ForceVector force = new ForceVector()
+                            ForceVector force = new ForceVector
                             {
                                 Force = thrustdir.up * rcs.thrusterPower,
                                 Position = thrustdir.position - centerOfMass,
@@ -728,16 +726,16 @@ namespace kOS.Binding
                     {
                         if (!hasGimbal)
                             gimbalRotation = transform.rotation;
-                        relCom = transform.position - centerOfMass;
+                        var relCom = transform.position - centerOfMass;
                         Vector3d neut = gimbalRotation * Vector3d.forward;
-                        ForceVector NeutralForce = new ForceVector()
+                        ForceVector neutralForce = new ForceVector
                         {
                             Force = neut * engine.finalThrust,
                             ID = engine.part.flightID.ToString(),
                             Position = relCom,
                         };
-                        engineNeutVectors.Add(NeutralForce);
-                        staticEngineTorque += NeutralForce.Torque;
+                        engineNeutVectors.Add(neutralForce);
+                        staticEngineTorque += neutralForce.Torque;
                         if (gimbalRange > EPSILON)
                         {
                             Vector3d pitchAxis = Vector3d.Exclude(neut, vesselStarboard);
@@ -760,7 +758,7 @@ namespace kOS.Binding
                             ForceVector rollForce;
                             if (rollAxis.sqrMagnitude < 0.02)
                             {
-                                rollForce = NeutralForce;
+                                rollForce = neutralForce;
                             }
                             else
                             {
@@ -775,13 +773,13 @@ namespace kOS.Binding
                         }
                         else
                         {
-                            enginePitchVectors.Add(NeutralForce);
-                            engineYawVectors.Add(NeutralForce);
-                            engineRollVectors.Add(NeutralForce);
+                            enginePitchVectors.Add(neutralForce);
+                            engineYawVectors.Add(neutralForce);
+                            engineRollVectors.Add(neutralForce);
 
-                            pitchControl += NeutralForce.Torque;
-                            yawControl += NeutralForce.Torque;
-                            rollControl += NeutralForce.Torque;
+                            pitchControl += neutralForce.Torque;
+                            yawControl += neutralForce.Torque;
+                            rollControl += neutralForce.Torque;
                         }
                     }
                 }
@@ -1373,7 +1371,7 @@ namespace kOS.Binding
             if (SubscribedParts.Count == 0)
             {
                 SteeringManagerProvider.RemoveInstance(vessel);
-                this.Dispose();
+                Dispose();
             }
         }
 
