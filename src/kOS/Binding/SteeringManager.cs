@@ -1361,20 +1361,6 @@ namespace kOS.Binding
             }));
         }
 
-        public void RemoveInstance(Vessel vessel)
-        {
-            if (enabled && partId == shared.KSPPart.flightID)
-            {
-                DisableControl();
-            }
-            if (SubscribedParts.Contains(shared.KSPPart.flightID)) SubscribedParts.Remove(shared.KSPPart.flightID);
-            if (SubscribedParts.Count == 0)
-            {
-                SteeringManagerProvider.RemoveInstance(vessel);
-                Dispose();
-            }
-        }
-
         public void DisposeVectorRenderers()
         {
             if (vForward != null)
