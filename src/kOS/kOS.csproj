@@ -72,6 +72,7 @@
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\RoverStats.cs" />
     <Compile Include="Binding\SteeringManager.cs" />
+    <Compile Include="Binding\SteeringManagerProvider.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechFactory.cs" />
@@ -96,7 +97,6 @@
     </Compile>
     <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
-    <Compile Include="Suffixed\PIDLoop.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
