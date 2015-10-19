@@ -490,7 +490,7 @@ namespace kOS.Binding
                 Enabled = false;
                 if (steeringManager != null)
                 {
-                    steeringManager.RemoveInstance(shared.Vessel);
+                    SteeringManagerProvider.RemoveInstance(shared.Vessel);
                     steeringManager = null;
                 }
             }
