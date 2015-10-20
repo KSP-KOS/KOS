@@ -12,24 +12,6 @@ namespace kOS.Binding
 {
     public class SteeringManager : Structure, IDisposable
     {
-        public static SteeringManager SwapInstance(SharedObjects shared, SteeringManager oldInstance)
-        {
-            if (shared.Vessel == oldInstance.Vessel) return oldInstance;
-            if (oldInstance.SubscribedParts.Contains(shared.KSPPart.flightID)) oldInstance.SubscribedParts.Remove(shared.KSPPart.flightID);
-            SteeringManager instance = DeepCopy(oldInstance, shared);
-
-            if (oldInstance.enabled)
-            {
-                if (oldInstance.partId == shared.KSPPart.flightID)
-                {
-                    oldInstance.DisableControl();
-                    instance.EnableControl(shared);
-                    instance.Value = oldInstance.Value;
-                }
-            }
-            return instance;
-        }
-
         public static SteeringManager DeepCopy(SteeringManager oldInstance, SharedObjects shared)
         {
             SteeringManager instance = SteeringManagerProvider.GetInstance(shared);
@@ -74,6 +56,8 @@ namespace kOS.Binding
         private SharedObjects shared;
 
         private uint partId = 0;
+
+        public uint PartId { get { return partId; } }
 
         private bool enabled = false;
 

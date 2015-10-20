@@ -500,7 +500,7 @@ namespace kOS.Binding
                 control = GetControllerByVessel(vessel);
                 if (steeringManager != null)
                 {
-                    steeringManager = SteeringManager.SwapInstance(shared, steeringManager);
+                    steeringManager = SteeringManagerProvider.SwapInstance(shared, steeringManager);
                     steeringManager.Update(vessel);
                 }
             }

@@ -32,9 +32,28 @@ namespace kOS.Binding
             var id = vessel.id.ToString();
             if (AllInstances.ContainsKey(id))
             {
-                AllInstances[id].Dispose();
+                var instance = AllInstances[id];
                 AllInstances.Remove(id);
+                instance.Dispose();
             }
+        }
+
+        public static SteeringManager SwapInstance(SharedObjects shared, SteeringManager oldInstance)
+        {
+            if (shared.Vessel == oldInstance.Vessel) return oldInstance;
+            if (oldInstance.SubscribedParts.Contains(shared.KSPPart.flightID)) oldInstance.SubscribedParts.Remove(shared.KSPPart.flightID);
+            SteeringManager instance = SteeringManager.DeepCopy(oldInstance, shared);
+
+            if (oldInstance.Enabled)
+            {
+                if (oldInstance.PartId == shared.KSPPart.flightID)
+                {
+                    oldInstance.DisableControl();
+                    instance.EnableControl(shared);
+                    instance.Value = oldInstance.Value;
+                }
+            }
+            return instance;
         }
     }
 }
