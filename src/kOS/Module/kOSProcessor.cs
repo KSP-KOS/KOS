@@ -436,6 +436,7 @@ namespace kOS.Module
                 firstUpdate = false;
                 shared.Cpu.Boot();
             }
+            UpdateVessel();
             UpdateFixedObservers();
             ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
