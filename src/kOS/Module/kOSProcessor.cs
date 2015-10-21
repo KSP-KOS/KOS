@@ -35,7 +35,7 @@ namespace kOS.Module
             get
             {
                 KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
-                return tag != null ? tag.nameTag : null;
+                return tag == null ? string.Empty : tag.nameTag;
             }
         }
 
