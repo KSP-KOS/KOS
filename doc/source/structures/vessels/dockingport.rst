@@ -5,6 +5,12 @@ DockingPort
 
 Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :struct:`DockingPort`.
 
+.. note::
+
+    .. versionadded:: 0.18
+
+        The spelling of suffixes `AQUIRERANGE`, `AQUIREFORCE`, and `AQUIRETORQURE` on the :struct:`DockingPort` structure has been corrected.  Please use `ACQUIRERANGE`, `ACQUIREFORCE`, and `ACQUIRETORQURE` instead.  Using the old incorrect spelling, a deprecation exception will be thrown, with instruction to use the new spelling.
+
 
 .. structure:: DockingPort
 
@@ -20,13 +26,13 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
           -
           - A :struct:`DockingPort` is a kind of :struct:`Part`
 
-        * - :attr:`AQUIRERANGE`
+        * - :attr:`ACQUIRERANGE`
           - scalar
           - active range of the port
-        * - :attr:`AQUIREFORCE`
+        * - :attr:`ACQUIREFORCE`
           - scalar
           - force experienced when docking
-        * - :attr:`AQUIRETORQUE`
+        * - :attr:`ACQUIRETORQUE`
           - scalar
           - torque experienced when docking
         * - :attr:`REENGAGEDDISTANCE`
@@ -42,7 +48,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
           - string
           - current state of the port
         * - :meth:`UNDOCK`
-          - 
+          -
           - callable to release the dock
         * - :attr:`TARGETABLE`
           - boolean
@@ -126,6 +132,3 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
     :access: Get only
 
     True if this part can be picked with ``SET TARGET TO``.
-
-
-
