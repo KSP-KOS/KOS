@@ -63,10 +63,8 @@ namespace kOS.Suffixed.Part
         {
             foreach (PartModule mod in Part.Modules)
             {
-                SafeHouse.Logger.Log(string.Format("Does \"{0}\" == \"{1}\"?", mod.moduleName.ToUpper(), modName.ToUpper()));
                 if (String.Equals(mod.moduleName, modName, StringComparison.OrdinalIgnoreCase))
                 {
-                    SafeHouse.Logger.Log("yes it does");
                     return PartModuleFieldsFactory.Construct(mod,shared);
                 }
             }

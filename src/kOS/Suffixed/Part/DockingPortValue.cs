@@ -18,9 +18,9 @@ namespace kOS.Suffixed.Part
 
         private void DockingInitializeSuffixes()
         {
-            AddSuffix("AQUIRERANGE", new Suffix<float>(() => { throw new kOS.Safe.Exceptions.KOSDeprecationException("18.0", "AQUIRERANGE", "ACQUIRERANGE", string.Empty); }));
-            AddSuffix("AQUIREFORCE", new Suffix<float>(() => { throw new kOS.Safe.Exceptions.KOSDeprecationException("18.0", "AQUIREFORCE", "ACQUIREFORCE", string.Empty); }));
-            AddSuffix("AQUIRETORQUE", new Suffix<float>(() => { throw new kOS.Safe.Exceptions.KOSDeprecationException("18.0", "AQUIRETORQUE", "ACQUIRETORQUE", string.Empty); }));
+            AddSuffix("AQUIRERANGE", new Suffix<float>(() => { throw new kOS.Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIRERANGE", "ACQUIRERANGE", string.Empty); }));
+            AddSuffix("AQUIREFORCE", new Suffix<float>(() => { throw new kOS.Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIREFORCE", "ACQUIREFORCE", string.Empty); }));
+            AddSuffix("AQUIRETORQUE", new Suffix<float>(() => { throw new kOS.Safe.Exceptions.KOSDeprecationException("0.18.0", "AQUIRETORQUE", "ACQUIRETORQUE", string.Empty); }));
             AddSuffix("ACQUIRERANGE", new Suffix<float>(() => module.acquireRange));
             AddSuffix("ACQUIREFORCE", new Suffix<float>(() => module.acquireForce));
             AddSuffix("ACQUIRETORQUE", new Suffix<float>(() => module.acquireTorque));
