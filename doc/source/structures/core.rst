@@ -26,6 +26,8 @@ Core represents your ability to identify and interact directly with the running 
           - `Element`
         * - :attr:`VERSION`
           - `Version`
+        * - :attr:`VOLUME`
+          - :struct:`Volume`
         * - :attr:`BOOTFILENAME`
           - `String`
         * - :attr:`CURRENTVOLUME`
@@ -67,6 +69,13 @@ Core represents your ability to identify and interact directly with the running 
     :access: Get or Set
 
     The filename for the boot file on the current processor.  This may be set to an empty string `""` or to `"None"` to disable the use of a boot file.
+
+.. attribute:: CORE:VOLUME
+
+    :type: :struct:`Volume`
+    :access: Get only
+
+    This processor's volume.
 
 .. attribute:: CORE:CURRENTVOLUME
 
