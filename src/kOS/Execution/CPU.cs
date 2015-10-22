@@ -891,7 +891,7 @@ namespace kOS.Execution
 
             if (showStatistics) updateWatch = Stopwatch.StartNew();
 
-            currentTime = shared.UpdateHandler.CurrentTime;
+            currentTime = shared.UpdateHandler.CurrentFixedTime;
 
             try
             {
