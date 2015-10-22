@@ -41,6 +41,12 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
         * - :attr:`DOCKEDSHIPNAME`
           - string
           - name of vessel the port is docked to
+        * - :attr:`NODEPOSITION`
+          - vector
+          - coords of where the docking node attachment point is in SHIP-RAW xyz
+        * - :attr:`NODETYPE`
+          - string
+          - two nodes are only dockable together if their NODETYPE strings match
         * - :attr:`PORTFACING`
           - :struct:`Direction`
           - facing of the port
@@ -59,21 +65,21 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
     :struct:`DockingPort` is a type of :struct:`Part`, and therefore can use all the suffixes of :struct:`Part`. Shown below are only the suffixes that are unique to :struct:`DockingPort`.
 
 
-.. attribute:: DockingPort:AQUIRERANGE
+.. attribute:: DockingPort:ACQUIRERANGE
 
     :type: scalar
     :access: Get only
 
     gets the range at which the port will "notice" another port and pull on it.
 
-.. attribute:: DockingPort:AQUIREFORCE
+.. attribute:: DockingPort:ACQUIREFORCE
 
     :type: scalar
     :access: Get only
 
     gets the force with which the port pulls on another port.
 
-.. attribute:: DockingPort:AQUIRETORQUE
+.. attribute:: DockingPort:ACQUIRETORQUE
 
     :type: scalar
     :access: Get only
@@ -93,6 +99,40 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type :
     :access: Get only
 
     name of vessel on the other side of the docking port.
+
+.. attribute:: DockingPort:NODEPOSITION
+
+    :type: vector
+    :access: Get only
+
+    The coordinates of the point on the docking port part where the
+    port attachment spot is located.  This is different from the 
+    part's position itself because that's the position of the center
+    of the whole part.  This is the position of the face of the
+    docking port.  Coordinates are in SHIP-RAW xyz coords.
+
+.. attribute:: DockingPort:NODETYPE
+
+    :type: string
+    :access: Get only
+
+    Each docking port has a node type string that specifies its
+    compatibility with other docking ports.  In order for two docking
+    ports to be able to attach to each other, the values for their
+    NODETYPEs must be the same.
+
+    The base KSP stock docking port parts all use one of the following
+    three values:
+
+        - "size0" for all Junior-sized docking ports.
+        - "size1" for all Normal-sized docking ports.
+        - "size2" for all Senior-sized docking ports.
+
+    Mods that provide their own new kinds of docking port might use
+    any other value they feel like here, but only if they are trying
+    to declare that the new part isn't supposed to be able to connect
+    to stock docking ports.  Any docking port that is meant to connect
+    to stock ports will have to adhere to the above scheme.
 
 .. attribute:: DockingPort:PORTFACING
 
