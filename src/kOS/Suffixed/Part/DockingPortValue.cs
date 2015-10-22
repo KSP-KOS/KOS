@@ -50,7 +50,6 @@ namespace kOS.Suffixed.Part
             {
                 foreach (PartModule module in part.Modules)
                 {
-                    SafeHouse.Logger.Log("Module Found: " + module);
                     var dockingNode = module as ModuleDockingNode;
                     if (dockingNode != null)
                     {
