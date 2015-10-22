@@ -362,6 +362,7 @@ namespace kOS.Function
                 AssertArgBottomAndConsume(shared); // not sure if this matters when rebooting anwyway.
                 shared.Processor.SetMode(ProcessorModes.OFF);
                 shared.Processor.SetMode(ProcessorModes.READY);
+                ((CPU)shared.Cpu).GetCurrentOpcode().AbortProgram = true;
             }
         }
     }
@@ -373,6 +374,7 @@ namespace kOS.Function
         {
             AssertArgBottomAndConsume(shared); // not sure if this matters when shutting down anwyway.
             if (shared.Processor != null) shared.Processor.SetMode(ProcessorModes.OFF);
+            ((CPU)shared.Cpu).GetCurrentOpcode().AbortProgram = true;
         }
     }
 

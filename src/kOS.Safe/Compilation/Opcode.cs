@@ -219,6 +219,9 @@ namespace kOS.Safe.Compilation
         public short SourceColumn { get; set; }  // column number of the token nearest the cause of this Opcode.
 
         private string label = string.Empty;
+
+        public bool AbortProgram { get; set; }
+        public bool AbortContext { get; set; }
         
         public virtual void Execute(ICpu cpu)
         {
@@ -232,6 +235,8 @@ namespace kOS.Safe.Compilation
         protected Opcode()
         {
             DeltaInstructionPointer = 1;
+            AbortProgram = false;
+            AbortContext = false;
         }
         
         /// <summary>
@@ -750,6 +755,10 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "EOF"; } }
         public override ByteCode Code { get { return ByteCode.EOF; } }
+        public override void Execute(ICpu cpu)
+        {
+            AbortContext = true;
+        }
     }
 
     
@@ -757,6 +766,10 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "EOP"; } }
         public override ByteCode Code { get { return ByteCode.EOP; } }
+        public override void Execute(ICpu cpu)
+        {
+            AbortProgram = true;
+        }
     }
 
     

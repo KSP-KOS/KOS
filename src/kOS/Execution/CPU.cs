@@ -1000,6 +1000,7 @@ namespace kOS.Execution
         private void ProcessTriggers()
         {
             if (currentContext.Triggers.Count <= 0) return;
+            int oldCount = currentContext.Program.Count;
 
             int currentInstructionPointer = currentContext.InstructionPointer;
             var triggerList = new List<int>(currentContext.Triggers);
@@ -1008,17 +1009,22 @@ namespace kOS.Execution
             {
                 try
                 {
-                    currentContext.InstructionPointer = triggerPointer;
-
-                    bool executeNext = true;
-                    executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
-                    while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
+                    // If the program is ended from within a trigger, the trigger list will be empty and the pointer
+                    // will be invalid.  Only execute the trigger if it still exists.
+                    if (currentContext.Triggers.Contains(triggerPointer))
                     {
-                        executeNext = ExecuteInstruction(currentContext);
-                        instructionsSoFarInUpdate++;
+                        currentContext.InstructionPointer = triggerPointer;
+
+                        bool executeNext = true;
+                        executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
+                        while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
+                        {
+                            executeNext = ExecuteInstruction(currentContext);
+                            instructionsSoFarInUpdate++;
+                        }
+                        if (executeLog.Length > 0)
+                            SafeHouse.Logger.Log(executeLog.ToString());
                     }
-                    if (executeLog.Length > 0)
-                        SafeHouse.Logger.Log(executeLog.ToString());
                 }
                 catch (Exception e)
                 {
@@ -1031,7 +1037,12 @@ namespace kOS.Execution
                 }
             }
 
-            currentContext.InstructionPointer = currentInstructionPointer;
+            // since `run` opcodes don't work in triggers, we can use the opcode count to determine if the
+            // program has been aborted.  If the count isn't right, leave the pointer where it is.
+            if (oldCount == currentContext.Program.Count)
+            {
+                currentContext.InstructionPointer = currentInstructionPointer;
+            }
         }
 
         private void ContinueExecution()
@@ -1063,9 +1074,21 @@ namespace kOS.Execution
             }
             try
             {
-                if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
+                opcode.AbortContext = false;
+                opcode.AbortProgram = false;
+                opcode.Execute(this);
+                if (opcode.AbortProgram)
                 {
-                    opcode.Execute(this);
+                    BreakExecution(false);
+                    SafeHouse.Logger.Log("Execution Broken");
+                    return false;
+                }
+                else if (opcode.AbortContext)
+                {
+                    return false;
+                }
+                else
+                {
                     int prevPointer = context.InstructionPointer;
                     context.InstructionPointer += opcode.DeltaInstructionPointer;
                     if (context.InstructionPointer < 0 || context.InstructionPointer >= context.Program.Count())
@@ -1074,11 +1097,6 @@ namespace kOS.Execution
                             context.InstructionPointer, String.Format("after executing {0:0000} {1} {2}", prevPointer, opcode.Label, opcode));
                     }
                     return true;
-                }
-                if (opcode is OpcodeEOP)
-                {
-                    BreakExecution(false);
-                    SafeHouse.Logger.Log("Execution Broken");
                 }
             }
             catch (Exception)
@@ -1089,7 +1107,6 @@ namespace kOS.Execution
                     SafeHouse.Logger.Log(executeLog.ToString());
                 throw;
             }
-            return false;
         }
 
         private void SkipCurrentInstructionId()
