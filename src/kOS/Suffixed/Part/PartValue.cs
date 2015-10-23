@@ -135,7 +135,7 @@ namespace kOS.Suffixed.Part
             }
             else
             {
-                throw new KOSCommandInvalidHere("CONTROLFROM", "a generic part value", "a docking port or command part");
+                throw new KOSCommandInvalidHereException("CONTROLFROM", "a generic part value", "a docking port or command part");
             }
         }
 

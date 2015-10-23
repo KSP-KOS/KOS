@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using NUnit.Framework;
-using kOS.Safe.Encapsulation;
 
-namespace kOS.Safe.Test
+namespace kOS.Safe.Test.Collections
 {
     [TestFixture]
     public class ListValueTest
@@ -226,8 +226,18 @@ namespace kOS.Safe.Test
             Assert.IsTrue(result.Contains("inner string 1"),"CanDeepToString(): Listvalue:DUMP isn't going deep enough to print inner member 'inner string 1'\n"+result);
         }
 
+        [Test]
+        public void DoesNotContainInvalidToString()
+        {
+            ListValue list = MakeNestedExample();
 
-        private object InvokeDelegate(ListValue list, string suffixName, params object[] parameters)
+            string result = (string) InvokeDelegate(list, "DUMP");
+
+            Assert.IsFalse(result.Contains("System"));
+            Assert.IsFalse(result.Contains("string[]"));
+        }
+
+        private object InvokeDelegate(IDumper list, string suffixName, params object[] parameters)
         {
             var lengthObj = list.GetSuffix(suffixName);
             Assert.IsNotNull(lengthObj);

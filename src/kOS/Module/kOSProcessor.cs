@@ -374,7 +374,7 @@ namespace kOS.Module
             bool isAvailable;
             try
             {
-                isAvailable = RemoteTechHook.IsAvailable(vessel.id);
+                isAvailable = RemoteTechHook.IsAvailable();
             }
             catch
             {
@@ -436,6 +436,7 @@ namespace kOS.Module
                 firstUpdate = false;
                 shared.Cpu.Boot();
             }
+            UpdateVessel();
             UpdateFixedObservers();
             ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }

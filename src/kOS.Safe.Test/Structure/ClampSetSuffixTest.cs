@@ -1,7 +1,7 @@
 ﻿using kOS.Safe.Encapsulation.Suffixes;
 using NUnit.Framework;
 
-namespace kOS.Safe.Test
+namespace kOS.Safe.Test.Structure
 {
     [TestFixture]
     public class ClampSetSuffixTest

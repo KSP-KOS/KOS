@@ -28,8 +28,7 @@ the better new way to do it:
           - Number, meters
           - altitude in meters of SHIP's periapsis.  Same as SHIP:PERIAPSIS.
 
-        * - :attr:`RADAR
+        * - :attr:`RADAR`
           - Number, meters
           - Altitude of SHIP above the ground terrain, rather than above sea level.
 		  
-

@@ -75,6 +75,21 @@ STATUS           Same as SHIP:STATUS
 SHIPNAME         Same as SHIP:NAME
 ================ ==============================================================================
 
+Constants (pi, e, etc)
+----------------------
+
+Get-only.
+
+The variable ``constant`` provides a way to access a few
+:ref:`basic math and physics constants <constants>`, such as Pi, Euler's
+number, and so on.
+
+Example::
+
+    print "Kerbin's circumference: " + (2*constant:pi*Kerbin:radius) + "meters.".
+
+The full list is here: :ref:`constants page <constants>`.
+
 Terminal
 --------
 
@@ -158,7 +173,7 @@ ALT:PERIAPSIS
 
 ALT:RADAR
 
-Further details are found on the `ALT page<structures/vessels/alt.html>`__ .
+Further details are found on the `ALT page <structures/vessels/alt.html>`__ .
 
 
 ETA ALIAS
@@ -173,7 +188,7 @@ ETA:PERIAPSIS
 
 ETA:TRANSITION
 
-Further details are found on the `ETA page<structures/vessels/eta.html>`__ .
+Further details are found on the `ETA page <structures/vessels/eta.html>`__ .
 
 ENCOUNTER
 ---------

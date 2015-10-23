@@ -393,12 +393,12 @@ namespace kOS.Execution
 
         /// <summary>Throw exception if the user delegate is not one the CPU can call right now.</summary>
         /// <param name="userDelegate">The userdelegate being checked</param>
-        /// <exception cref="KOSInvalidDelegateContext">thrown if the cpu is in a state where it can't call this delegate.</exception>
+        /// <exception cref="KOSInvalidDelegateContextException">thrown if the cpu is in a state where it can't call this delegate.</exception>
         public void AssertValidDelegateCall(IUserDelegate userDelegate)
         {
             if (userDelegate.ProgContext != currentContext)
             {
-                throw new KOSInvalidDelegateContext(
+                throw new KOSInvalidDelegateContextException(
                     (currentContext == contexts[0] ? "the interpreter" : "a program"),
                     (currentContext == contexts[0] ? "a program" : "the interpreter")
                     );
@@ -543,6 +543,19 @@ namespace kOS.Execution
                 AddVariable(variable, identifier, false);
             }
             return variable;
+        }
+        
+        /// <summary>
+        /// Test if an identifier is a variable you can get the value of
+        /// at the moment (var name exists and is in scope).  Return
+        /// true if you can, false if you can't.
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
+        public bool IdentifierExistsInScope(string identifier)
+        {
+            Variable dummyVal = GetVariable(identifier,false,true);
+            return (dummyVal != null);
         }
 
         public string DumpVariables()

@@ -80,6 +80,7 @@ namespace kOS.Safe.Compilation
         STOREEXIST     = 0x5c,
         PUSHDELEGATE   = 0x5d,
         BRANCHTRUE     = 0x5e,
+        EXISTS         = 0x5f,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -465,6 +466,32 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
+    /// Tests if the identifier atop the stack is an identifier that exists in the system
+    /// and is accessible in scope at the moment.  If the identifier doesn't
+    /// exist, or if it does but it's out of scope right now, then it results in
+    /// a FALSE, else it results in a TRUE.  The result is pushed onto the stack
+    /// for reading.
+    /// Note that the ident atop the stack must be formatted like a variable
+    /// name (i.e. have the leading '$').
+    /// </summary>
+    public class OpcodeExists : Opcode
+    {
+        protected override string Name { get { return "exists"; } }
+        public override ByteCode Code { get { return ByteCode.EXISTS; } }
+        
+        public override void Execute(ICpu cpu)
+        {
+            bool result = false; //pessimistic default
+            string ident = cpu.PopStack() as string;
+            if (ident != null && cpu.IdentifierExistsInScope(ident))
+            {
+                result = true;
+            }
+            cpu.PushStack(result);
+        }
+    }
+
+    /// <summary>
     /// Consumes the topmost 2 values of the stack, storing the topmost stack
     /// value into a variable described by the next value down the stack. <br/>
     /// <br/>
@@ -485,7 +512,7 @@ namespace kOS.Safe.Compilation
             cpu.SetValueExists(identifier, value);
         }
     }
-
+    
     /// <summary>
     /// Consumes the topmost 2 values of the stack, storing the topmost stack
     /// value into a variable described by the next value down the stack. <br/>
@@ -577,9 +604,18 @@ namespace kOS.Safe.Compilation
             object popValue = cpu.PopValue();
 
             var specialValue = popValue as ISuffixed;
+            
             if (specialValue == null)
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                var s = popValue as string;
+                if (s != null)
+                {
+                    specialValue = new StringValue(s);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                }
             }
 
             object value = specialValue.GetSuffix(suffixName);
@@ -631,7 +667,16 @@ namespace kOS.Safe.Compilation
             var specialValue = popValue as ISuffixed;
             if (specialValue == null)
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                // Box strings if necessary to allow suffixes
+                var s = popValue as string;
+                if (s != null)
+                {
+                    specialValue = new StringValue(s);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                }
             }
 
             if (!specialValue.SetSuffix(suffixName, value))
@@ -650,16 +695,27 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object index = cpu.PopValue();
-            if (index is double || index is float)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
             object list = cpu.PopValue();
 
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
+            object value;
 
-            object value = ((IIndexable)list).GetIndex((int)index);
+            var indexable = list as IIndexable;
+            if (indexable != null)
+            {
+                value = indexable.GetIndex(index);
+            }
+            // Box strings if necessary to allow them to be indexed
+            else if (list is string)
+            {
+                value = new StringValue((string) list).GetIndex(index);
+            }
+            else
+            {
+                throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            }
+
+            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+
             cpu.PushStack(value);
         }
     }
@@ -675,21 +731,21 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             object index = cpu.PopValue();
             object list = cpu.PopValue();
-            if (index is double || index is float)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
 
-            if (value != null)
+            if (index == null || value == null)
             {
-                ((IIndexable)list).SetIndex((int)index, value);
+                throw new KOSException("Neither the key nor the index of a collection may be null");
             }
+
+            var indexable = list as IIndexable;
+            if (indexable == null)
+            {
+                throw new KOSException(string.Format("Can't set indexed elements on an object of type {0}", list.GetType()));
+            }
+            indexable.SetIndex(index, value);
         }
     }
 
-    
     public class OpcodeEOF : Opcode
     {
         protected override string Name { get { return "EOF"; } }
