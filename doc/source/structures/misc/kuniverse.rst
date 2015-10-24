@@ -44,7 +44,7 @@ KUniverse 4th wall methods
         * - :attr:`ORIGINEDITOR`
           - string
           - Get
-          - Returns the name of this vessel's editor.
+          - Returns the name of this vessel's editor, "SPH" or "VAB".
 
 .. attribute:: KUniverse:CANREVERT
 
@@ -65,7 +65,9 @@ KUniverse 4th wall methods
     :access: Get
     :type: boolean.
 
-    Returns true if either revert to the editor is available.
+    Returns true if either revert to the editor is available.  This tends
+    to be false after reloading from a saved game where the vessel was
+    already in existence in the saved file when you loaded the game.
 
 .. attribute:: KUniverse:REVERTTOLAUNCH
 
@@ -93,21 +95,32 @@ KUniverse 4th wall methods
     :access: Get
     :type: string.
 
-    Returns identifier of the orginating editor based on the vessel type.
+    Returns the name of the orginating editor based on the vessel type.
+    The value is one of:
+    
+    - "SPH" for things built in the space plane hangar,
+    - "VAB" for things built in the vehicle assembly building.
+    - "" (empty string) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
 
 .. attribute:: KUniverse:DEFAULTLOADDISTANCE
 
     :access: Get
     :type: :struct:`LoadDistance`.
 
-    Get or set the default loading distance for vessels loaded in the future.  Note: this setting will not affect any vessel currently in the universe for the current flight session.  It will take effect the next time you enter a flight scene from the editor or tracking station.
+    Get or set the default loading distances for vessels loaded in the future.  Note: this setting will not affect any vessel currently in the universe for the current flight session.  It will take effect the next time you enter a flight scene from the editor or tracking station, even on vessels that have already
+    existed beforehand.  The act of loading a new scene causes all the vessels
+    in that scene to inherit these new default values, forgetting the
+    values they may have had before.
+
+    (To affect the value on an already existing, already loaded vessel,
+    you have to use the :LOADDISTANCE suffix of the Vessel structure.)
 
 .. attribute:: KUniverse:ACTIVEVESSEL
 
     :access: Get/Set
     :type: :struct:`Vessel`.
 
-    Returns the active vessel object and allows you to set the active vessel.  Note: KSP will not allow you to change vessels by default when in the atmosphere or when the vessel is under acceleration.  Use :method:`FORCEACTIVE` under those circumstances.
+    Returns the active vessel object and allows you to set the active vessel.  Note: KSP will not allow you to change vessels by default when the current active vessel is in the atmosphere or under acceleration.  Use :method:`FORCEACTIVE` under those circumstances.
 
 .. method:: KUniverse:FORCEACTIVE(vessel)
 
@@ -115,3 +128,24 @@ KUniverse 4th wall methods
     :return: none
 
     Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.
+
+
+Examples:
+
+Switch to an active vessel called "vessel 2"::
+
+    SET KUNIVERSE:ACTIVEVESSEL TO VESSEL("vessel 2").
+
+Revert to VAB, but only if allowed::
+
+    PRINT "ATTEMPTING TO REVERT TO THE Vehicle Assembly Building."
+    IF KUNIVERSE:CANREVERT {
+      IF KUNIVERSE:ORIGINEDITOR = "VAB" {
+        PRINT "REVERTING TO VAB.".
+        KUNIVERSE:REVERTTOEDITOR().
+      } ELSE {
+        PRINT "COULD REVERT, But only to space plane hanger, so I won't.".
+      }
+    } ELSE {
+      PRINT "Cannot revert to any editor.".
+    }

@@ -219,6 +219,9 @@ namespace kOS.Safe.Compilation
         public short SourceColumn { get; set; }  // column number of the token nearest the cause of this Opcode.
 
         private string label = string.Empty;
+
+        public bool AbortProgram { get; set; }
+        public bool AbortContext { get; set; }
         
         public virtual void Execute(ICpu cpu)
         {
@@ -232,6 +235,8 @@ namespace kOS.Safe.Compilation
         protected Opcode()
         {
             DeltaInstructionPointer = 1;
+            AbortProgram = false;
+            AbortContext = false;
         }
         
         /// <summary>
@@ -604,9 +609,18 @@ namespace kOS.Safe.Compilation
             object popValue = cpu.PopValue();
 
             var specialValue = popValue as ISuffixed;
+            
             if (specialValue == null)
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                var s = popValue as string;
+                if (s != null)
+                {
+                    specialValue = new StringValue(s);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                }
             }
 
             object value = specialValue.GetSuffix(suffixName);
@@ -658,7 +672,16 @@ namespace kOS.Safe.Compilation
             var specialValue = popValue as ISuffixed;
             if (specialValue == null)
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                // Box strings if necessary to allow suffixes
+                var s = popValue as string;
+                if (s != null)
+                {
+                    specialValue = new StringValue(s);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                }
             }
 
             if (!specialValue.SetSuffix(suffixName, value))
@@ -686,10 +709,17 @@ namespace kOS.Safe.Compilation
             {
                 value = indexable.GetIndex(index);
             }
+            // Box strings if necessary to allow them to be indexed
+            else if (list is string)
+            {
+                value = new StringValue((string) list).GetIndex(index);
+            }
             else
             {
                 throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
             }
+
+            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
 
             cpu.PushStack(value);
         }
@@ -713,15 +743,11 @@ namespace kOS.Safe.Compilation
             }
 
             var indexable = list as IIndexable;
-            if (indexable != null)
+            if (indexable == null)
             {
-                indexable.SetIndex(index, value);
+                throw new KOSException(string.Format("Can't set indexed elements on an object of type {0}", list.GetType()));
             }
-            else
-            {
-                throw new KOSException(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            }
-
+            indexable.SetIndex(index, value);
         }
     }
 
@@ -729,6 +755,10 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "EOF"; } }
         public override ByteCode Code { get { return ByteCode.EOF; } }
+        public override void Execute(ICpu cpu)
+        {
+            AbortContext = true;
+        }
     }
 
     
@@ -736,6 +766,10 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "EOP"; } }
         public override ByteCode Code { get { return ByteCode.EOP; } }
+        public override void Execute(ICpu cpu)
+        {
+            AbortProgram = true;
+        }
     }
 
     

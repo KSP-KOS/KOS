@@ -26,6 +26,8 @@ namespace kOS.Binding
 
             shared.BindingMgr.AddSetter("SHIPNAME", value => shared.Vessel.vesselName = value.ToString());
 
+            shared.BindingMgr.AddGetter("STEERINGMANAGER", () => SteeringManagerProvider.GetInstance(shared));
+
             shared.BindingMgr.AddGetter("NEXTNODE", () =>
             {
                 var vessel = shared.Vessel;
