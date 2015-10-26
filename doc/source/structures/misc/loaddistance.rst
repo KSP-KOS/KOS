@@ -10,7 +10,7 @@ Vessel Load Distance
 
     :struct:`LoadDistance` describes the set of distances at which the game
     causes vessels to unload, and the distances that cause a vessel to
-    become "packed". This requires some explanation.  
+    become "packed". This requires some explanation.
 
     Before entering into that explanation, first here's a list of
     example cases where you might want to use this feature to change
@@ -28,22 +28,19 @@ Vessel Load Distance
 
     Most players of KSP eventually discover a concept called being
     "on rails".  This is a term used by the player community to
-    describe the fact that vessels that are far away from the main
-    vessel aren't being micro-managed under the full physics engine.
-
-    Most players understand that a vessel that's far away has its movement
-    calculated purely by predicting its motion by its ellipse
-    parameters that are calculated from its current position and velocity
-    at the moment it first went on rails.  After that point, further
-    changes due to things like the atmosphere, are not applied.
+    describe the fact that vessels that are far away from the active
+    vessel aren't being micro-managed under the full physics engine.  At that
+    distance, changes in movement due to things like the atmosphere, are not
+    applied.  The vessel's physics are calculated based only on orbital motion,
+    much like the effects of using timewarp (not physics warp).
 
     But the actual behavior in the game is a bit more complex than that,
-    and understanding it is neccessary to use this structure.
+    and understanding it is necessary to use this structure.
 
     The term "on rails" actually refers to two entirely different things
     that are controlled by separate settings, as described below:
 
-    _*loaded*_ : A vessel is LOADED when all its parts are being 
+    _*loaded*_ : A vessel is LOADED when all its parts are being
     rendered by the graphics engine and it's possible to actually see
     what it looks like.  A vessel that is UNLOADED doesn't even
     have its parts in memory and is just a single dot in space
@@ -54,7 +51,7 @@ Vessel Load Distance
 
     _*packed*_ : A vessel is PACKED when it is close enough to be
     *loaded* (see above), but still far enough away that its full
-    capabilities aren't enabled.  A vessel that is *loaded*, but 
+    capabilities aren't enabled.  A vessel that is *loaded*, but
     still *packed* will be unable to have its parts interact, and
     the vessel will appear stuck in the same location, unmoving.
     You can *see* a vessel that is loaded but packed, but the vessel
@@ -107,7 +104,7 @@ Vessel Load Distance
     is the classic "space kraken" that KSP players talk about a lot.  Computer
     floating point numbers get less precise the farther from zero they are.
     So allowing the game to try to perform microcalculations on tiny time
-    scales using floating point numbers that have imprecision because they are 
+    scales using floating point numbers that have imprecision because they are
     large in magnitude (i.e. the positions of parts that are many kilometers
     away from you), can cause phantom collisions, which make the game
     explode things for "no reason".
@@ -164,7 +161,7 @@ Vessel Load Distance
 Situation Load Distance
 ======================
 
-Each of the above 
+Each of the above
 
 .. structure:: SituationLoadDistance
 
@@ -213,7 +210,7 @@ Each of the above
     when that vessel becomes this distance *or closer* to the active
     vessel, it will transition from being *unloaded* to being *loaded*.
     See the description above for what it means for a vessel to be *loaded*.
-    
+
     This value must be greater than :attr:`UNLOAD`, and will automatically
     be adjusted accordingly.
 
@@ -241,7 +238,7 @@ Each of the above
     when that vessel becomes this distance *or closer* to the active
     vessel, it will transition from being *packed* to being *unpacked*.
     See the description above for what it means for a vessel to be *packed*.
-    
+
     This value must be less than :attr:`PACK`, and will automatically be adjusted accordingly.
 
 .. attribute:: SituationLoadDistance:PACK
@@ -251,18 +248,18 @@ Each of the above
 
     Get or set the pack distance.  When another vessel is getting farther
     away from you, because you are moving away from it or it is moving
-    away from you, when that vessel becomes this distance *or greater* 
+    away from you, when that vessel becomes this distance *or greater*
     from the active vessel, it will transition from being *unpacked* to
     being *packed*.  See the description above for what it means for
     a vessel to be *packed*.
-    
+
     This value must be greater than :attr:`UNPACK`, and will automatically be adjusted accordingly.
 
 
 ===Examples===
 
 Print out all the current settings::
-    
+
     SET distances TO KUNIVERSE:DEFAULTLOADDISTANCE.
 
     PRINT "escaping distances:".
@@ -312,11 +309,9 @@ Kerbal Space Center at a greater distances from each other::
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
     SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:UNLOAD TO 29500.
-    WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:LOAD TO 30000.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:PACK TO 29999.
-    WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:FLYING:UNPACK TO 29000.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
 
@@ -326,11 +321,9 @@ Kerbal Space Center at a greater distances from each other::
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
     SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:UNLOAD TO 29500.
-    WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:LOAD TO 30000.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:PACK TO 39999.
-    WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:LANDED:UNPACK TO 29000.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
 
@@ -340,11 +333,9 @@ Kerbal Space Center at a greater distances from each other::
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
     SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:UNLOAD TO 29500.
-    WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:LOAD TO 30000.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:PACK TO 29999.
-    WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:SPLASHED:UNPACK TO 29000.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
 
@@ -354,11 +345,8 @@ Kerbal Space Center at a greater distances from each other::
     // place to prevent invalid values will deny your attempt
     // to change some of the values:
     SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:UNLOAD TO 29500.
-    WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:LOAD TO 30000.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:PACK TO 29999.
-    WAIT 0.001. // See paragraph above: "wait between load and pack changes"
     SET KUNIVERSE:DEFAULTLOADDISTANCE:PRELAUNCH:UNPACK TO 29000.
     WAIT 0.001. // See paragraph above: "wait between load and pack changes"
-

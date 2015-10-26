@@ -97,7 +97,7 @@ KUniverse 4th wall methods
 
     Returns the name of the orginating editor based on the vessel type.
     The value is one of:
-    
+
     - "SPH" for things built in the space plane hangar,
     - "VAB" for things built in the vehicle assembly building.
     - "" (empty string) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)
@@ -107,12 +107,15 @@ KUniverse 4th wall methods
     :access: Get
     :type: :struct:`LoadDistance`.
 
-    Get or set the default loading distances for vessels loaded in the future.  Note: this setting will not affect any vessel currently in the universe for the current flight session.  It will take effect the next time you enter a flight scene from the editor or tracking station, even on vessels that have already
-    existed beforehand.  The act of loading a new scene causes all the vessels
-    in that scene to inherit these new default values, forgetting the
+    Get or set the default loading distances for vessels loaded in the future.
+    Note: this setting will not affect any vessel currently in the universe for
+    the current flight session.  It will take effect the next time you enter a
+    flight scene from the editor or tracking station, even on vessels that have
+    already existed beforehand.  The act of loading a new scene causes all the
+    vessels in that scene to inherit these new default values, forgetting the
     values they may have had before.
 
-    (To affect the value on an already existing, already loaded vessel,
+    (To affect the value on a vessel already existing in the current scene
     you have to use the :LOADDISTANCE suffix of the Vessel structure.)
 
 .. attribute:: KUniverse:ACTIVEVESSEL
@@ -139,7 +142,7 @@ Switch to an active vessel called "vessel 2"::
 Revert to VAB, but only if allowed::
 
     PRINT "ATTEMPTING TO REVERT TO THE Vehicle Assembly Building."
-    IF KUNIVERSE:CANREVERT {
+    IF KUNIVERSE:CANREVERTTOEDITOR {
       IF KUNIVERSE:ORIGINEDITOR = "VAB" {
         PRINT "REVERTING TO VAB.".
         KUNIVERSE:REVERTTOEDITOR().
