@@ -153,7 +153,7 @@ namespace kOS.Binding
 
         private void AddNewFlightParam(string name, SharedObjects shared)
         {
-            flightParameters.Add(name, new FlightCtrlParam(name, shared));
+            flightParameters[name] = new FlightCtrlParam(name, shared);
         }
 
         private void AddMissingFlightParam(string name, SharedObjects shared)
