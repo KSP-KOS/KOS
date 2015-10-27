@@ -52,22 +52,22 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
           - Rate of fuel burn
         * - :attr:`ISP`
           - scalar
-          - `Specific impulse <isp>`_
+          - Specific impulse
         * - :meth:`ISPAT(pressure)`
           - scalar
-          - `Specific impulse <isp>`_ at the given pressure (in standard Kerbin atmospheres).
+          - Specific impulse at the given pressure (in standard Kerbin atmospheres).
         * - :attr:`VACUUMISP`
           - scalar
-          - `Vacuum Specific impulse <isp>`_
+          - Vacuum Specific impulse
         * - :attr:`VISP`
           - scalar
-          - `Synonym for VACUUMISP <vacuumisp>`_
+          - Synonym for VACUUMISP
         * - :attr:`SEALEVELISP`
           - scalar
-          - `Specific impulse at Kerbin sealevel <isp>`_
+          - Specific impulse at Kerbin sealevel
         * - :attr:`SLISP`
           - scalar
-          - `Synonym for SEALEVELISP <sealevelisp>`_
+          - Synonym for SEALEVELISP
         * - :attr:`FLAMEOUT`
           - boolean
           - Check if no more fuel
