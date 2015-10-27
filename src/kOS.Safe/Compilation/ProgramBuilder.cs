@@ -115,6 +115,16 @@ namespace kOS.Safe.Compilation
             {
                 if (program[index].Label != string.Empty)
                 {
+                    if (labels.ContainsKey(program[index].Label))
+                    {
+                        foreach (string s in labels.Keys)
+                        {
+                            Safe.Utilities.SafeHouse.Logger.LogWarning(string.Format("label: {0}  index: {1}", s, labels[s]));
+                        }
+                        Safe.Utilities.SafeHouse.Logger.LogWarning(string.Format("Program count: {0}", program.Count));
+                        throw new kOS.Safe.Exceptions.KOSCompileException(string.Format(
+                            "Program Builder: Cannot add label {0}, label already exists.  Opcode: {1}", program[index].Label, program[index].ToString()));
+                    }
                     labels.Add(program[index].Label, index);
                 }
             }
