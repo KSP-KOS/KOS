@@ -278,13 +278,15 @@ namespace kOS.Execution
 
         private void SaveAndClearPointers()
         {
-            // To be honest, I'm a little afraid of this.  It appears to be doing
-            // something with locks (and now user functions) whenever you
-            // switch contexts from interpreter to program and it seems to be
-            // presuming the only such pointers that need to exist are going to be
-            // global.  This was written by marianoapp before I added locals,
-            // and I don't understand what it's for -- Dunbaratu
-
+            // Any global variable that ends in an asterisk (*) is a system pointer
+            // that shouldn't be inherited by other program contexts.  These sorts of
+            // variables should only exist for the current program context.
+            // This method stashes all such variables in a storage area for the program
+            // context, then clears them.  The stash can be used later by RestorePointers()
+            // to bring them back into existence when coming back to this program context again.
+            // Pointer variables include:
+            //   IP jump location for subprograms.
+            //   IP jump location for functions.
             savedPointers = new VariableScope(0, -1);
             var pointers = new List<string>(globalVariables.Variables.Keys.Where(v => v.Contains('*')));
 
@@ -298,12 +300,9 @@ namespace kOS.Execution
 
         private void RestorePointers()
         {
-            // To be honest, I'm a little afraid of this.  It appears to be doing
-            // something with locks (and now user functions) whenever you
-            // switch contexts from program to interpreter and it seems to be
-            // presuming the only such pointers that need to exist are going to be
-            // global.  This was written by marianoapp before I added locals,
-            // and I don't understand what it's for -- Dunbaratu
+            // Pointer variables that were stashed by SaveAndClearPointers() get brought
+            // back again by this method when returning to the previous programming
+            // programming context.
 
             int restoredPointers = 0;
             int deletedPointers = 0;

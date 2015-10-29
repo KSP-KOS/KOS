@@ -801,7 +801,9 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.FunctionCode;
                         // verify if the program has been loaded
                         Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        // if the subprogram's identifier already exists, skip over compiling the code.
+                        // Becuse of Cpu.SaveAndClearPointers(), the subprogram's pointer identifier won't
+                        // exist in this program context until it has been compiled once.  If it does exist,
+                        // then skip the compiling step and just run the code that's already there:
                         AddOpcode(new OpcodeExists());
                         OpcodeBranchIfTrue branchOpcode = new OpcodeBranchIfTrue();
                         AddOpcode(branchOpcode);
