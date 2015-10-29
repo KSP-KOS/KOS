@@ -419,7 +419,7 @@ namespace kOS.Safe.Compilation
         protected object PopValueAssert(ICpu cpu, bool barewordOkay = false)
         {
             object returnValue = cpu.PopValue(barewordOkay);
-            if (returnValue != null && returnValue.GetType() == OpcodeCall.ARG_MARKER_TYPE)
+            if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
                 throw new KOSArgumentMismatchException("Called with not enough arguments.");
             return returnValue;
         }
@@ -1203,7 +1203,7 @@ namespace kOS.Safe.Compilation
         protected override string Name { get { return "call"; } }
         public override ByteCode Code { get { return ByteCode.CALL; } }
 
-        public static Type ARG_MARKER_TYPE = typeof(KOSArgMarkerType); // Don't query with reflection at runtime - get the type just once and keep it here.
+        public static Type ArgMarkerType { get; private set; } // Don't query with reflection at runtime - get the type just once and keep it here.
 
         /// <summary>
         /// The Direct property flags which mode the opcode will be operating in:<br/>
@@ -1261,7 +1261,12 @@ namespace kOS.Safe.Compilation
         /// This variant of the constructor is just for machine language file read/write to use.
         /// </summary>
         protected OpcodeCall() { }
-        
+
+        static OpcodeCall()
+        {
+            ArgMarkerType = typeof(KOSArgMarkerType);
+        }
+
         public override void PopulateFromMLFields(List<object> fields)
         {
             // Expect fields in the same order as the [MLField] properties of this class:
@@ -1290,7 +1295,7 @@ namespace kOS.Safe.Compilation
                 for (digDepth = 0; (! foundBottom) && digDepth < cpu.GetStackSize() ; ++digDepth)
                 {
                     object arg = cpu.PeekValue(digDepth);
-                    if (arg != null && arg.GetType() == OpcodeCall.ARG_MARKER_TYPE)
+                    if (arg != null && arg.GetType() == ArgMarkerType)
                         foundBottom = true;
                     else
                         ++argsCount;
@@ -1402,7 +1407,7 @@ namespace kOS.Safe.Compilation
             for (int i = paramArray.Length - 1 ; i >= 0 ; --i)
             {
                 object arg = cpu.PopValue();
-                if (arg != null && arg.GetType() == OpcodeCall.ARG_MARKER_TYPE)
+                if (arg != null && arg.GetType() == ArgMarkerType)
                     throw new KOSArgumentMismatchException(paramArray.Length, paramArray.Length - (i+1));
                 Type argType = arg.GetType();
                 ParameterInfo paramInfo = paramArray[i];
@@ -1439,7 +1444,7 @@ namespace kOS.Safe.Compilation
             while (cpu.GetStackSize() > 0 && !foundArgMarker)
             {
                 object marker = cpu.PopValue();
-                if (marker != null && marker.GetType() == OpcodeCall.ARG_MARKER_TYPE)
+                if (marker != null && marker.GetType() == ArgMarkerType)
                     foundArgMarker = true;
                 else
                     ++numExtraArgs;
@@ -1487,7 +1492,7 @@ namespace kOS.Safe.Compilation
         {
             List<object> args = new List<object>();
             object arg = cpu.PopValue();
-            while (arg == null || arg.GetType() != OpcodeCall.ARG_MARKER_TYPE)
+            while (arg == null || arg.GetType() != ArgMarkerType)
             {
                 args.Add(arg);
 
@@ -1585,7 +1590,7 @@ namespace kOS.Safe.Compilation
             // anything still leftover above that should be unread parameters we
             // should throw away:
             object shouldBeArgMarker = (int)0; // just a temp to force the loop to execute at least once.
-            while (shouldBeArgMarker == null || (shouldBeArgMarker.GetType() != OpcodeCall.ARG_MARKER_TYPE))
+            while (shouldBeArgMarker == null || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType))
             {
                 if (cpu.GetStackSize() <= 0)
                 {
@@ -1779,9 +1784,9 @@ namespace kOS.Safe.Compilation
             bool worked;
             object shouldBeArgMarker = cpu.PeekRaw(0,out worked);
 
-            if ( !worked || (shouldBeArgMarker == null) || (!(shouldBeArgMarker.GetType() == OpcodeCall.ARG_MARKER_TYPE)) )
+            if ( !worked || (shouldBeArgMarker == null) || (shouldBeArgMarker.GetType() != OpcodeCall.ArgMarkerType) )
             {
-                throw new KOSArgumentMismatchException(string.Format("Called with too many arguments."));
+                throw new KOSArgumentMismatchException("Called with too many arguments.");
             }
         }
     }
