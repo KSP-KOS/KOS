@@ -131,6 +131,7 @@ namespace kOS.Binding
             }
 
             shared.BindingMgr.AddGetter("VERSION", () => Core.VersionInfo);
+            shared.BindingMgr.AddGetter("SOLARPRIMEVECTOR", () => new Vector(Planetarium.right));
         }
 
         private static void SetWarpRate(int newRate, int maxRate)
