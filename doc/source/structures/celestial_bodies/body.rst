@@ -115,7 +115,7 @@ All of the main celestial bodies in the game are reserved variable names. The fo
 .. attribute:: Body:ROTATIONANGLE
 
     The rotation angle is the number of degrees between the 
-    :ref:`Universal Reference Vector <referencevector>` and the 
+    :ref:`Solar Prime Vector <solarprimevector>` and the 
     current positon of the body's prime meridian (body longitude
     of zero).
 
