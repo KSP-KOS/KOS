@@ -1,16 +1,16 @@
-﻿using kOS.Persistence;
-using kOS.Safe.Binding;
-using kOS.Safe.Compilation;
-using kOS.Safe.Exceptions;
-using kOS.Safe.Execution;
-using kOS.Safe.Persistence;
-using kOS.Safe.Utilities;
-using kOS.Suffixed;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using kOS.Persistence;
+using kOS.Safe.Binding;
+using kOS.Safe.Compilation;
+using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
+using kOS.Safe.Utilities;
+using kOS.Suffixed;
+using Debug = kOS.Safe.Utilities.Debug;
 
 namespace kOS.Execution
 {
@@ -91,7 +91,7 @@ namespace kOS.Execution
             {
                 shared.Screen.ClearScreen();
                 string bootMessage = string.Format("kOS Operating System\n" + "KerboScript v{0}\n \n" + "Proceed.\n", Core.VersionInfo);
-                List<string> nags = Safe.Utilities.Debug.GetPendingNags();
+                List<string> nags = Debug.GetPendingNags();
                 if (nags.Count > 0)
                 {
                     bootMessage +=
@@ -393,12 +393,12 @@ namespace kOS.Execution
 
         /// <summary>Throw exception if the user delegate is not one the CPU can call right now.</summary>
         /// <param name="userDelegate">The userdelegate being checked</param>
-        /// <exception cref="KOSInvalidDelegateContext">thrown if the cpu is in a state where it can't call this delegate.</exception>
+        /// <exception cref="KOSInvalidDelegateContextException">thrown if the cpu is in a state where it can't call this delegate.</exception>
         public void AssertValidDelegateCall(IUserDelegate userDelegate)
         {
             if (userDelegate.ProgContext != currentContext)
             {
-                throw new KOSInvalidDelegateContext(
+                throw new KOSInvalidDelegateContextException(
                     (currentContext == contexts[0] ? "the interpreter" : "a program"),
                     (currentContext == contexts[0] ? "a program" : "the interpreter")
                     );
@@ -448,7 +448,7 @@ namespace kOS.Execution
         {
             if (searchReport != null)
                 searchReport.Clear();
-            Int16 rawStackDepth = 0;
+            short rawStackDepth = 0;
             while (true) /*all of this loop's exits are explicit break or return statements*/
             {
                 object stackItem;
@@ -543,6 +543,19 @@ namespace kOS.Execution
                 AddVariable(variable, identifier, false);
             }
             return variable;
+        }
+        
+        /// <summary>
+        /// Test if an identifier is a variable you can get the value of
+        /// at the moment (var name exists and is in scope).  Return
+        /// true if you can, false if you can't.
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
+        public bool IdentifierExistsInScope(string identifier)
+        {
+            Variable dummyVal = GetVariable(identifier,false,true);
+            return (dummyVal != null);
         }
 
         public string DumpVariables()
@@ -878,7 +891,7 @@ namespace kOS.Execution
 
             if (showStatistics) updateWatch = Stopwatch.StartNew();
 
-            currentTime = shared.UpdateHandler.CurrentTime;
+            currentTime = shared.UpdateHandler.CurrentFixedTime;
 
             try
             {
@@ -987,6 +1000,7 @@ namespace kOS.Execution
         private void ProcessTriggers()
         {
             if (currentContext.Triggers.Count <= 0) return;
+            int oldCount = currentContext.Program.Count;
 
             int currentInstructionPointer = currentContext.InstructionPointer;
             var triggerList = new List<int>(currentContext.Triggers);
@@ -995,17 +1009,22 @@ namespace kOS.Execution
             {
                 try
                 {
-                    currentContext.InstructionPointer = triggerPointer;
-
-                    bool executeNext = true;
-                    executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
-                    while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
+                    // If the program is ended from within a trigger, the trigger list will be empty and the pointer
+                    // will be invalid.  Only execute the trigger if it still exists.
+                    if (currentContext.Triggers.Contains(triggerPointer))
                     {
-                        executeNext = ExecuteInstruction(currentContext);
-                        instructionsSoFarInUpdate++;
+                        currentContext.InstructionPointer = triggerPointer;
+
+                        bool executeNext = true;
+                        executeLog.Remove(0, executeLog.Length); // why doesn't StringBuilder just have a Clear() operator?
+                        while (executeNext && instructionsSoFarInUpdate < instructionsPerUpdate)
+                        {
+                            executeNext = ExecuteInstruction(currentContext);
+                            instructionsSoFarInUpdate++;
+                        }
+                        if (executeLog.Length > 0)
+                            SafeHouse.Logger.Log(executeLog.ToString());
                     }
-                    if (executeLog.Length > 0)
-                        SafeHouse.Logger.Log(executeLog.ToString());
                 }
                 catch (Exception e)
                 {
@@ -1018,7 +1037,12 @@ namespace kOS.Execution
                 }
             }
 
-            currentContext.InstructionPointer = currentInstructionPointer;
+            // since `run` opcodes don't work in triggers, we can use the opcode count to determine if the
+            // program has been aborted.  If the count isn't right, leave the pointer where it is.
+            if (oldCount == currentContext.Program.Count)
+            {
+                currentContext.InstructionPointer = currentInstructionPointer;
+            }
         }
 
         private void ContinueExecution()
@@ -1050,9 +1074,21 @@ namespace kOS.Execution
             }
             try
             {
-                if (!(opcode is OpcodeEOF || opcode is OpcodeEOP))
+                opcode.AbortContext = false;
+                opcode.AbortProgram = false;
+                opcode.Execute(this);
+                if (opcode.AbortProgram)
                 {
-                    opcode.Execute(this);
+                    BreakExecution(false);
+                    SafeHouse.Logger.Log("Execution Broken");
+                    return false;
+                }
+                else if (opcode.AbortContext)
+                {
+                    return false;
+                }
+                else
+                {
                     int prevPointer = context.InstructionPointer;
                     context.InstructionPointer += opcode.DeltaInstructionPointer;
                     if (context.InstructionPointer < 0 || context.InstructionPointer >= context.Program.Count())
@@ -1061,11 +1097,6 @@ namespace kOS.Execution
                             context.InstructionPointer, String.Format("after executing {0:0000} {1} {2}", prevPointer, opcode.Label, opcode));
                     }
                     return true;
-                }
-                if (opcode is OpcodeEOP)
-                {
-                    BreakExecution(false);
-                    SafeHouse.Logger.Log("Execution Broken");
                 }
             }
             catch (Exception)
@@ -1076,7 +1107,6 @@ namespace kOS.Execution
                     SafeHouse.Logger.Log(executeLog.ToString());
                 throw;
             }
-            return false;
         }
 
         private void SkipCurrentInstructionId()
@@ -1148,89 +1178,12 @@ namespace kOS.Execution
 
         public void OnSave(ConfigNode node)
         {
-            try
-            {
-                var contextNode = new ConfigNode("context");
-
-                // Save variables
-                if (globalVariables.Variables.Count > 0)
-                {
-                    var varNode = new ConfigNode("variables");
-
-                    foreach (var kvp in globalVariables.Variables)
-                    {
-                        if (!(kvp.Value is BoundVariable) &&
-                            (kvp.Value.Name.IndexOfAny(new[] { '*', '-' }) == -1))  // variables that have this characters are internal and shouldn't be persisted
-                        {
-                            if (kvp.Value.Value.GetType().ToString() == "System.String")  // if the variable is a string, enclose the value in ""
-                            {
-                                varNode.AddValue(kvp.Key.TrimStart('$'), (char)34 + PersistenceUtilities.EncodeLine(kvp.Value.Value.ToString()) + (char)34);
-                            }
-                            else
-                            {
-                                varNode.AddValue(kvp.Key.TrimStart('$'), PersistenceUtilities.EncodeLine(kvp.Value.Value.ToString()));
-                            }
-                        }
-                    }
-
-                    contextNode.AddNode(varNode);
-                }
-
-                node.AddNode(contextNode);
-            }
-            catch (Exception e)
-            {
-                if (shared.Logger != null) shared.Logger.Log(e);
-            }
+            // the saving of global variables has been removed for now.
         }
 
         public void OnLoad(ConfigNode node)
         {
-            try
-            {
-                var scriptBuilder = new StringBuilder();
-
-                foreach (ConfigNode contextNode in node.GetNodes("context"))
-                {
-                    foreach (ConfigNode varNode in contextNode.GetNodes("variables"))
-                    {
-                        foreach (ConfigNode.Value value in varNode.values)
-                        {
-                            string varValue = PersistenceUtilities.DecodeLine(value.value);
-                            scriptBuilder.AppendLine(string.Format("set {0} to {1}.", value.name, varValue));
-                        }
-                    }
-                }
-
-                if (shared.ScriptHandler == null || scriptBuilder.Length <= 0) return;
-
-                var programBuilder = new ProgramBuilder();
-                // TODO: figure out how to store the filename and reload it for arg 1 below:
-                // (Possibly all of OnLoad needs work because it never seemed to bring
-                // back the context fully right anyway, which is why this hasn't been
-                // addressed yet).
-                try
-                {
-                    SafeHouse.Logger.Log("Parsing Context:\n\n" + scriptBuilder);
-
-                    // TODO - make this set up compiler options and pass them in properly, so we can detect built-ins properly.
-                    // (for the compiler to detect the difference between a user function call and a built-in, it needs to be
-                    // passed the FunctionManager object from Shared.)
-                    // this isn't fixed mainly because this OnLoad() code is a major bug fire already anyway and needs to be
-                    // fixed, but that's way out of scope for the moment:
-                    programBuilder.AddRange(shared.ScriptHandler.Compile("reloaded file", 1, scriptBuilder.ToString()));
-                    List<Opcode> program = programBuilder.BuildProgram();
-                    RunProgram(program, true);
-                }
-                catch (NullReferenceException ex)
-                {
-                    SafeHouse.Logger.Log("program builder failed on load. " + ex.Message);
-                }
-            }
-            catch (Exception e)
-            {
-                if (shared.Logger != null) shared.Logger.Log(e);
-            }
+            // the restoring of global variables has been removed for now.
         }
 
         public void Dispose()

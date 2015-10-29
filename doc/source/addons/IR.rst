@@ -194,6 +194,7 @@ Access structure IRAddon via `ADDONS:IR`.
      :attr:`ISFREEMOVING`                  bool (readonly)           True if Servo is uncontrollable (ex. docking washer)
      :attr:`LOCKED`                        bool                      Servo's locked status, set true to lock servo.
      :attr:`INVERTED`                      bool                      Servo's inverted status, set true to invert servo's axis.
+     :attr:`PART`                          :struct:`Part`            A reference to a Part containing servo module.
 
      :meth:`MOVERIGHT()`                   void                      Commands servo to move in positive direction
      :meth:`MOVELEFT()`                    void                      Commands servo to move in negative direction
@@ -315,6 +316,13 @@ Access structure IRAddon via `ADDONS:IR`.
     :access: Get/Set
 
     Servo's inverted status, set true to invert servo's axis.
+
+.. attribute:: IRServo:PART
+
+    :type: :struct:`Part`
+    :access: Get
+
+    Returns reference to the :struct:`Part` containing servo module. Please note that Part:UID does not equal IRServo:UID.
 
 
 .. method:: IRServo:MOVERIGHT()

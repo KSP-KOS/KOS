@@ -6,7 +6,17 @@
 Fundamental Constants
 =====================
 
-A few fundamental constants can be obtained by using the expression ``CONSTANT()`` followed by a colon (``:``) followed by one of the following:
+There is a bound variable called CONSTANT which contains some basic fundamental
+constants about the universe that you may find handy in your math operations.
+
+.. versionadded:: 0.18
+
+    Prior to kOS version 0.18, ``constant`` was a function call, and
+    therefore to say ``constant:pi``, you had to say ``constant():pi``.
+    The function call ``constant()`` still exists and still works, but
+    the new way without the parentheses is preferred going forward,
+    and the way with the parentheses may become deprecated later.
+    For the moment, both ways of doing it work.
 
 .. list-table::
     :header-rows: 1
@@ -18,28 +28,90 @@ A few fundamental constants can be obtained by using the expression ``CONSTANT()
     * - :global:`G`
       - Newton's Gravitational Constant
     * - :global:`E`
-      - Natural Log
+      - Base of the natural log (Euler's number)
     * - :global:`PI`
-      - :math:`π`
+      - :math:`\pi`
+    * - :global:`c`
+      - Speed of light in a vacuum, in m/s.
+    * - :global:`AtmToKPa`
+      - Conversion constant: Atmospheres to kiloPascals.
+    * - :global:`KPaToAtm`
+      - Conversion constant: kiloPascals to Atmospheres.
+    * - :global:`DegToRad`
+      - Conversion constant: Degrees to Radians.
+    * - :global:`RadToDeg`
+      - Conversion constant: Radians to Degrees.
 
 
-.. global:: Constant():G
+.. global:: Constant:G
 
     Newton's Gravitational Constant, 6.67384E-11::
 
         PRINT "Gravitational parameter of Kerbin is:".
-        PRINT constant():G * Kerbin:Mass.
+        PRINT constant:G * Kerbin:Mass.
 
-.. global:: Constant():E
+.. global:: Constant:E
 
     Natural Log base "e"::
 
         PRINT "e^2 is:".
-        PRINT constant():e ^ 2.
+        PRINT constant:e ^ 2.
 
-.. global:: Constant():PI
+.. global:: Constant:PI
 
     Ratio of circumference of a circle to its diameter
+
+.. global:: Constant:C
+
+    Speed of light in a vacuum, in meters per second.
+
+    .. note::
+        In Kerbal Space Program, all physics motion is purely Newtonian.
+        You can go faster than the speed of light provided you have enough
+        delta-V, and no time dilation effects will occur.  The universe
+        will behave entirely linearly even at speeds near *c*.
+
+    This constant is provided mainly for the benefit of people who are
+    playing with the mod "RemoteTech" installed, who may want to perform
+    calculations about signal delays to hypothetical probes.  (Note that
+    if the probe already has a connection, you can 
+    :ref:`ask Remotetech directly <remotetech>` what the signal delay is.
+
+.. global:: Constant:AtmToKPa
+
+    A conversion constant.
+
+    If you have a pressure measurement expressed in atmospheres of pressure,
+    you can multiply it by this to get the equivalent in kiloPascals
+    (kiloNewtons per square meter).
+
+.. global:: Constant:KPaToATM
+
+    A conversion constant.
+
+    If you have a pressure measurement expressed in kiloPascals (kiloNewtons
+    per square meter), you can multiply it by this to get the equivalent
+    in atmospheres. 
+
+.. global:: Constant:DegToRad
+
+    A conversion constant.
+
+    If you have an angle measured in degrees, you can multiply it by
+    this to get the equivalent measure in radians.  It is exactly
+    the same thing as saying ``constant:pi / 180``, except the result is
+    pre-recorded as a constant number and thus no division is performed
+    at runtime.
+
+.. global:: Constant:RadToDeg
+
+    A conversion constant.
+
+    If you have an angle measured in radians, you can multiply it by
+    this to get the equivalent measure in degrees.  It is exactly
+    the same thing as saying ``180 / constant:pi``, except the result is
+    pre-recorded as a constant number and thus no division is performed
+    at runtime.
 
 .. _math functions:
 .. index:: Mathematical Functions

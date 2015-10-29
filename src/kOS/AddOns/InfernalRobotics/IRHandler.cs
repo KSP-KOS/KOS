@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace kOS.AddOns.InfernalRobotics
 {
-    [KSPAddon(KSPAddon.Startup.EveryScene, false)]
+    [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class IRHandler : MonoBehaviour
     {
         public void Start()

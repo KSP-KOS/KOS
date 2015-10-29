@@ -1,9 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
-using NUnit.Framework;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Utilities;
+using NUnit.Framework;
 
-namespace kOS.Safe.Test
+namespace kOS.Safe.Test.Structure
 {
     [TestFixture]
     public class SetSuffixTest

@@ -246,6 +246,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction_block:
                 case TokenType.instruction:
                 case TokenType.if_stmt:
+                case TokenType.fromloop_stmt:
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.on_stmt:
@@ -362,9 +363,12 @@ namespace kOS.Safe.Compilation.KS
             initBlock.Nodes.Add(untilNode); // parent already assigned by initBlock.CreateNode() above.
             
             // The init block is now actually the entire loop, having been exploded and unrolled into its
-            // new form, make that be our only node node:
+            // new form, make that be our only node:
             node.Nodes.Clear();
             node.Nodes.Add(initBlock);  // initBlock's parent already points at node to begin with.
+            
+            // The FROM loop node is still in the parent's list, but it contains this new rearranged sub-tree
+            // instead of its original.
         }
         
         private void PreProcessStatements(ParseNode node)
@@ -381,6 +385,7 @@ namespace kOS.Safe.Compilation.KS
                 case TokenType.instruction_block:
                 case TokenType.instruction:
                 case TokenType.if_stmt:
+                case TokenType.fromloop_stmt:
                 case TokenType.until_stmt:
                 case TokenType.for_stmt:
                 case TokenType.declare_function_clause:
@@ -1399,6 +1404,7 @@ namespace kOS.Safe.Compilation.KS
 
             bool addNegation = false;
             bool addNot = false;
+            bool addDefined = false;
             int nodeIndex = 0;
 
             if (node.Nodes[0].Token.Type == TokenType.PLUSMINUS)
@@ -1414,6 +1420,11 @@ namespace kOS.Safe.Compilation.KS
                 nodeIndex++;
                 addNot = true;
             }
+            else if (node.Nodes[0].Token.Type == TokenType.DEFINED)
+            {
+                nodeIndex++;
+                addDefined = true;
+            }
             
             VisitNode(node.Nodes[nodeIndex]);
 
@@ -1424,6 +1435,10 @@ namespace kOS.Safe.Compilation.KS
             if (addNot)
             {
                 AddOpcode(new OpcodeLogicNot());
+            }
+            if (addDefined)
+            {
+                AddOpcode(new OpcodeExists());
             }
         }
 
@@ -2342,37 +2357,34 @@ namespace kOS.Safe.Compilation.KS
 
         private void UnlockIdentifier(UserFunction lockObject)
         {
-            if (lockObject.IsInitialized())
+            if (lockObject.IsSystemLock())
             {
-                if (lockObject.IsSystemLock())
+                // disable this FlyByWire parameter
+                AddOpcode(new OpcodePush(new KOSArgMarkerType()));
+                AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
+                AddOpcode(new OpcodePush(false));
+                AddOpcode(new OpcodeCall("toggleflybywire()"));
+                // add a pop to clear out the dummy return value from toggleflybywire()
+                AddOpcode(new OpcodePop());
+
+                // remove update trigger
+                string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
+                if (context.Triggers.Contains(triggerIdentifier))
                 {
-                    // disable this FlyByWire parameter
-                    AddOpcode(new OpcodePush(new KOSArgMarkerType()));
-                    AddOpcode(new OpcodePush(lockObject.ScopelessIdentifier));
-                    AddOpcode(new OpcodePush(false));
-                    AddOpcode(new OpcodeCall("toggleflybywire()"));
-                    // add a pop to clear out the dummy return value from toggleflybywire()
-                    AddOpcode(new OpcodePop());
-
-                    // remove update trigger
-                    string triggerIdentifier = "lock-" + lockObject.ScopelessIdentifier;
-                    if (context.Triggers.Contains(triggerIdentifier))
-                    {
-                        Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
-                        AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
-                        AddOpcode(new OpcodeRemoveTrigger());
-                    }
+                    Trigger triggerObject = context.Triggers.GetTrigger(triggerIdentifier);
+                    AddOpcode(new OpcodePushRelocateLater(null), triggerObject.GetFunctionLabel());
+                    AddOpcode(new OpcodeRemoveTrigger());
                 }
-
-                // unlock variable
-                // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
-                AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
-                AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
-                if (allowLazyGlobal)
-                    AddOpcode(new OpcodeStore());
-                else
-                    AddOpcode(new OpcodeStoreExist());
             }
+
+            // unlock variable
+            // Really, we should unlock a variable by unsetting it's pointer var so it's an error to use it:
+            AddOpcode(new OpcodePush(lockObject.ScopelessPointerIdentifier));
+            AddOpcode(new OpcodePushRelocateLater(null), lockObject.DefaultLabel);
+            if (allowLazyGlobal)
+                AddOpcode(new OpcodeStore());
+            else
+                AddOpcode(new OpcodeStoreExist());
         }
 
         private void VisitOnStatement(ParseNode node)
@@ -2559,14 +2571,14 @@ namespace kOS.Safe.Compilation.KS
                 lastSubNode.Token.Type == TokenType.declare_identifier_clause &&
                 !allowLazyGlobal)
             {
-                throw new KOSCommandInvalidHere("a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
+                throw new KOSCommandInvalidHereException("a bare DECLARE identifier, without a GLOBAL or LOCAL keyword",
                                                 "in an identifier initialization while under a @LAZYGLOBAL OFF directive",
                                                 "in a file where the default @LAZYGLOBAL behavior is on");
             }
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_function_clause)
-                throw new KOSCommandInvalidHere("GLOBAL", "in a function declaration", "in a variable declaration");
+                throw new KOSCommandInvalidHereException("GLOBAL", "in a function declaration", "in a variable declaration");
             if (modifier == StorageModifier.GLOBAL && lastSubNode.Token.Type == TokenType.declare_parameter_clause)
-                throw new KOSCommandInvalidHere("GLOBAL", "in a parameter declaration", "in a variable declaration");
+                throw new KOSCommandInvalidHereException("GLOBAL", "in a parameter declaration", "in a variable declaration");
 
             return modifier;
         }
@@ -3080,14 +3092,14 @@ namespace kOS.Safe.Compilation.KS
                 }
                 ancestor = ancestor.Parent;
             }
-            // Check 2 - see if I am at the top.  The only statements allowed to preceed me are other directives:
+            // Check 2 - see if I am at the top.  The only statements allowed to precede me are other directives:
             if (validLocation && ancestor != null && ancestor.Token.Type == TokenType.Start)
             {
                 // ancestor is now the Start node for the compile:
                 int myInstructionIndex = ancestor.Nodes.IndexOf(myInstructionContainer); // would be an expensive walk - except this should only exist once, near the top.
                 for (int i = 0; validLocation && i < myInstructionIndex; ++i)
                 {
-                    // if a statement preceeding me is anything other than another directive, it's wrong:
+                    // if a statement preceding me is anything other than another directive, it's wrong:
                     if (ancestor.Nodes[i].Token.Type != TokenType.directive ||
                             (ancestor.Nodes[i].Token.Type == TokenType.instruction &&
                              ancestor.Nodes[i].Nodes[0].Token.Type != TokenType.directive)
@@ -3096,7 +3108,7 @@ namespace kOS.Safe.Compilation.KS
                 }
             }
             if (!validLocation)
-                throw new KOSCommandInvalidHere("@LAZYGLOBAL",
+                throw new KOSCommandInvalidHereException("@LAZYGLOBAL",
                                                 "after the first command in the file",
                                                 "at the start of a script file, prior to any other statements");
 

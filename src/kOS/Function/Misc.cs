@@ -9,6 +9,7 @@ using kOS.Safe.Utilities;
 using kOS.Suffixed;
 using System;
 using System.Collections.Generic;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.Function
 {
@@ -127,7 +128,7 @@ namespace kOS.Function
             }
             else if (!shared.Vessel.isActiveVessel)
             {
-                throw new KOSCommandInvalidHere("STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
+                throw new KOSCommandInvalidHereException("STAGE", "a non-active SHIP, KSP does not support this", "Core is on the active vessel");
             }
         }
     }
@@ -363,6 +364,7 @@ namespace kOS.Function
                 AssertArgBottomAndConsume(shared); // not sure if this matters when rebooting anwyway.
                 shared.Processor.SetMode(ProcessorModes.OFF);
                 shared.Processor.SetMode(ProcessorModes.READY);
+                ((CPU)shared.Cpu).GetCurrentOpcode().AbortProgram = true;
             }
         }
     }
@@ -374,6 +376,7 @@ namespace kOS.Function
         {
             AssertArgBottomAndConsume(shared); // not sure if this matters when shutting down anwyway.
             if (shared.Processor != null) shared.Processor.SetMode(ProcessorModes.OFF);
+            ((CPU)shared.Cpu).GetCurrentOpcode().AbortProgram = true;
         }
     }
 
@@ -406,6 +409,47 @@ namespace kOS.Function
             }
             AssertArgBottomAndConsume(shared);
             TimeWarp.fetch.WarpTo(ut);
+        }
+    }
+
+    [Function("pidloop")]
+    public class PIDLoopConstructor : FunctionBase
+    {
+        public override void Execute(SharedObjects shared)
+        {
+            int args = CountRemainingArgs(shared);
+            double kd;
+            double ki;
+            double kp;
+            double maxoutput;
+            double minoutput;
+            switch (args)
+            {
+                case 0:
+                    this.ReturnValue = new PIDLoop();
+                    break;
+                case 1:
+                    kp = GetDouble(PopValueAssert(shared));
+                    this.ReturnValue = new PIDLoop(kp, 0, 0);
+                    break;
+                case 3:
+                    kd = GetDouble(PopValueAssert(shared));
+                    ki = GetDouble(PopValueAssert(shared));
+                    kp = GetDouble(PopValueAssert(shared));
+                    this.ReturnValue = new PIDLoop(kp, ki, kd);
+                    break;
+                case 5:
+                    maxoutput = GetDouble(PopValueAssert(shared));
+                    minoutput = GetDouble(PopValueAssert(shared));
+                    kd = GetDouble(PopValueAssert(shared));
+                    ki = GetDouble(PopValueAssert(shared));
+                    kp = GetDouble(PopValueAssert(shared));
+                    this.ReturnValue = new PIDLoop(kp, ki, kd, maxoutput, minoutput);
+                    break;
+                default:
+                    throw new KOSArgumentMismatchException(new[] { 0, 1, 3, 5 }, args);
+            }
+            AssertArgBottomAndConsume(shared);
         }
     }
 }

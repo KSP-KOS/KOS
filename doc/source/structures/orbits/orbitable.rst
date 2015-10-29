@@ -24,6 +24,7 @@ All objects that can move in orbit around other objects share some similar struc
      :attr:`HASORBIT`        boolean
      :attr:`HASOBT`          boolean
      :attr:`OBT`             :struct:`Orbit`
+     :attr:`ORBIT`           :struct:`Orbit`
      :attr:`UP`              :struct:`Direction`
      :attr:`NORTH`           :struct:`Direction`
      :attr:`PROGRADE`        :struct:`Direction`
@@ -88,6 +89,13 @@ All objects that can move in orbit around other objects share some similar struc
     :access: Get only
 
     The current single orbit "patch" that this object is on (not the future orbits it might be expected to achieve after maneuver nodes or encounter transitions, but what the current orbit would be if nothing changed and no encounters perturbed the orbit.
+
+.. attribute:: Orbitable:ORBIT
+
+    :type: :struct:`Orbit`
+    :access: Get only
+
+    This is an alias for OBT, as described above.
 
 .. attribute:: Orbitable:UP
 

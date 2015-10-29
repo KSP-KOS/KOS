@@ -70,14 +70,18 @@
     <Compile Include="Encapsulation\Enumerator.cs" />
     <Compile Include="Encapsulation\FileInfo.cs" />
     <Compile Include="Encapsulation\IConfig.cs" />
+    <Compile Include="Encapsulation\IDumper.cs" />
     <Compile Include="Encapsulation\IIndexable.cs" />
     <Compile Include="Encapsulation\IOperable.cs" />
     <Compile Include="Encapsulation\ISetSuffix.cs" />
     <Compile Include="Encapsulation\ISuffix.cs" />
     <Compile Include="Encapsulation\ISuffixed.cs" />
+    <Compile Include="Encapsulation\Lexicon.cs" />
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
+    <Compile Include="Encapsulation\PIDLoop.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
+    <Compile Include="Encapsulation\StringValue.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
@@ -95,12 +99,14 @@
     <Compile Include="Exceptions\KOSAtmosphereDeprecationException.cs" />
     <Compile Include="Exceptions\KOSBadJumpException.cs" />
     <Compile Include="Exceptions\KOSBreakInvalidHereException.cs" />
+    <Compile Include="Exceptions\KOSDuplicateKeyException.cs" />
     <Compile Include="Exceptions\KOSInvalidArgumentException.cs" />
     <Compile Include="Exceptions\KOSIdentifierClashException.cs" />
-    <Compile Include="Exceptions\KOSInvalidDelegateContext.cs" />
+    <Compile Include="Exceptions\KOSInvalidDelegateContextException.cs" />
+    <Compile Include="Exceptions\KOSKeyNotFoundException.cs" />
     <Compile Include="Exceptions\KOSLowTechException.cs" />
     <Compile Include="Exceptions\KOSCastException.cs" />
-    <Compile Include="Exceptions\KOSCommandInvalidHere.cs" />
+    <Compile Include="Exceptions\KOSCommandInvalidHereException.cs" />
     <Compile Include="Exceptions\KOSCompileException.cs" />
     <Compile Include="Exceptions\KOSBinaryOperandTypeException.cs" />
     <Compile Include="Exceptions\KOSDeprecationException.cs" />
@@ -119,6 +125,7 @@
     <Compile Include="Exceptions\KOSUndefinedIdentifierException.cs" />
     <Compile Include="Exceptions\KOSWaitInValidHereException.cs" />
     <Compile Include="Exceptions\KOSUnaryOperandTypeException.cs" />
+    <Compile Include="Exceptions\KOSWrongControlValueTypeException.cs" />
     <Compile Include="Execution\IKOSScopeObserver.cs" />
     <Compile Include="Execution\ICpu.cs" />
     <Compile Include="Execution\IProgramContext.cs" />
@@ -164,6 +171,7 @@
     <Compile Include="UserIO\UnicodeCommand.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
+    <Compile Include="Utilities\MovingAverage.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />
@@ -180,9 +188,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sound" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">

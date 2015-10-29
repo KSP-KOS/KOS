@@ -1,9 +1,6 @@
 ﻿using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
-using kOS.Safe.Utilities;
-using kOS.Suffixed;
-using System;
-using System.Linq;
+using kOS.Suffixed.Part;
 
 namespace kOS.AddOns.InfernalRobotics
 {
@@ -48,6 +45,8 @@ namespace kOS.AddOns.InfernalRobotics
             AddSuffix("STOP", new NoArgsSuffix(Stop));
 
             AddSuffix("MOVETO", new TwoArgsSuffix<float, float>(MoveTo));
+
+            AddSuffix("PART", new Suffix<PartValue>(GetPart));
         }
 
         
@@ -84,6 +83,16 @@ namespace kOS.AddOns.InfernalRobotics
         public void MoveTo(float position, float speed)
         {
             servo.MoveTo(position, speed);
+        }
+
+        public PartValue GetPart()
+        {
+            var v = shared.Vessel;
+
+            var p = v.Parts.Find (s => s.craftID == servo.UID);
+            shared.Logger.LogError("Cannot find Infernal Robotics part with UID: " + servo.UID);
+
+            return p != null ? new PartValue (p, shared) : null;
         }
     }
 }

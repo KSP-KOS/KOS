@@ -1,9 +1,9 @@
 ﻿using System;
-using NUnit.Framework;
 using kOS.Safe.Encapsulation.Suffixes;
 using NSubstitute;
+using NUnit.Framework;
 
-namespace kOS.Safe.Test
+namespace kOS.Safe.Test.Structure
 {
     [TestFixture]
     public class TwoArgsVoidSuffixTest

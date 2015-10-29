@@ -80,7 +80,8 @@ namespace kOS.Safe.Compilation
         STOREEXIST     = 0x5c,
         PUSHDELEGATE   = 0x5d,
         BRANCHTRUE     = 0x5e,
-        ARGBOTTOM      = 0x5f,
+        EXISTS         = 0x5f,
+        ARGBOTTOM      = 0x60,
 
         // Augmented bogus placeholder versions of the normal
         // opcodes: These only exist in the program temporarily
@@ -219,6 +220,9 @@ namespace kOS.Safe.Compilation
         public short SourceColumn { get; set; }  // column number of the token nearest the cause of this Opcode.
 
         private string label = string.Empty;
+
+        public bool AbortProgram { get; set; }
+        public bool AbortContext { get; set; }
         
         public virtual void Execute(ICpu cpu)
         {
@@ -232,6 +236,8 @@ namespace kOS.Safe.Compilation
         protected Opcode()
         {
             DeltaInstructionPointer = 1;
+            AbortProgram = false;
+            AbortContext = false;
         }
         
         /// <summary>
@@ -479,6 +485,32 @@ namespace kOS.Safe.Compilation
     }
 
     /// <summary>
+    /// Tests if the identifier atop the stack is an identifier that exists in the system
+    /// and is accessible in scope at the moment.  If the identifier doesn't
+    /// exist, or if it does but it's out of scope right now, then it results in
+    /// a FALSE, else it results in a TRUE.  The result is pushed onto the stack
+    /// for reading.
+    /// Note that the ident atop the stack must be formatted like a variable
+    /// name (i.e. have the leading '$').
+    /// </summary>
+    public class OpcodeExists : Opcode
+    {
+        protected override string Name { get { return "exists"; } }
+        public override ByteCode Code { get { return ByteCode.EXISTS; } }
+        
+        public override void Execute(ICpu cpu)
+        {
+            bool result = false; //pessimistic default
+            string ident = cpu.PopStack() as string;
+            if (ident != null && cpu.IdentifierExistsInScope(ident))
+            {
+                result = true;
+            }
+            cpu.PushStack(result);
+        }
+    }
+
+    /// <summary>
     /// Consumes the topmost 2 values of the stack, storing the topmost stack
     /// value into a variable described by the next value down the stack. <br/>
     /// <br/>
@@ -499,7 +531,7 @@ namespace kOS.Safe.Compilation
             cpu.SetValueExists(identifier, value);
         }
     }
-
+    
     /// <summary>
     /// Consumes the topmost 2 values of the stack, storing the topmost stack
     /// value into a variable described by the next value down the stack. <br/>
@@ -591,9 +623,18 @@ namespace kOS.Safe.Compilation
             object popValue = cpu.PopValue();
 
             var specialValue = popValue as ISuffixed;
+            
             if (specialValue == null)
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                var s = popValue as string;
+                if (s != null)
+                {
+                    specialValue = new StringValue(s);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                }
             }
 
             object value = specialValue.GetSuffix(suffixName);
@@ -645,7 +686,16 @@ namespace kOS.Safe.Compilation
             var specialValue = popValue as ISuffixed;
             if (specialValue == null)
             {
-                throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                // Box strings if necessary to allow suffixes
+                var s = popValue as string;
+                if (s != null)
+                {
+                    specialValue = new StringValue(s);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Values of type {0} cannot have suffixes", popValue.GetType()));
+                }
             }
 
             if (!specialValue.SetSuffix(suffixName, value))
@@ -664,16 +714,27 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             object index = cpu.PopValue();
-            if (index is double || index is float)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
             object list = cpu.PopValue();
 
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
+            object value;
 
-            object value = ((IIndexable)list).GetIndex((int)index);
+            var indexable = list as IIndexable;
+            if (indexable != null)
+            {
+                value = indexable.GetIndex(index);
+            }
+            // Box strings if necessary to allow them to be indexed
+            else if (list is string)
+            {
+                value = new StringValue((string) list).GetIndex(index);
+            }
+            else
+            {
+                throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+            }
+
+            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
+
             cpu.PushStack(value);
         }
     }
@@ -689,25 +750,29 @@ namespace kOS.Safe.Compilation
             object value = cpu.PopValue();
             object index = cpu.PopValue();
             object list = cpu.PopValue();
-            if (index is double || index is float)
-            {
-                index = Convert.ToInt32(index);  // allow expressions like (1.0) to be indexes
-            }
-            if (!(list is IIndexable)) throw new Exception(string.Format("Can't iterate on an object of type {0}", list.GetType()));
-            if (!(index is int)) throw new Exception("The index must be an integer number");
 
-            if (value != null)
+            if (index == null || value == null)
             {
-                ((IIndexable)list).SetIndex((int)index, value);
+                throw new KOSException("Neither the key nor the index of a collection may be null");
             }
+
+            var indexable = list as IIndexable;
+            if (indexable == null)
+            {
+                throw new KOSException(string.Format("Can't set indexed elements on an object of type {0}", list.GetType()));
+            }
+            indexable.SetIndex(index, value);
         }
     }
 
-    
     public class OpcodeEOF : Opcode
     {
         protected override string Name { get { return "EOF"; } }
         public override ByteCode Code { get { return ByteCode.EOF; } }
+        public override void Execute(ICpu cpu)
+        {
+            AbortContext = true;
+        }
     }
 
     
@@ -715,6 +780,10 @@ namespace kOS.Safe.Compilation
     {
         protected override string Name { get { return "EOP"; } }
         public override ByteCode Code { get { return ByteCode.EOP; } }
+        public override void Execute(ICpu cpu)
+        {
+            AbortProgram = true;
+        }
     }
 
     
@@ -744,10 +813,20 @@ namespace kOS.Safe.Compilation
     
     public abstract class BranchOpcode : Opcode
     {
-        // This is identical to the base DestinationLabel, except that it has
-        // the MLFIeld attached to it:
+        // This stores EITHER the label OR the relative distance,
+        // depending, in the KSM packed file.  Only if the label is
+        // an empty string does it store the integer distance instead.
         [MLField(1,true)]
-        public override string DestinationLabel {get;set;}
+        public object KSMLabelOrDistance
+        {
+            get
+            {
+                if (DestinationLabel == string.Empty)
+                    return Distance;
+                else
+                    return DestinationLabel;
+            }
+        }
         
         public int Distance { get; set; }
 
@@ -756,12 +835,19 @@ namespace kOS.Safe.Compilation
             // Expect fields in the same order as the [MLField] properties of this class:
             if (fields == null || fields.Count<1)
                 throw new Exception("Saved field in ML file for BranchOpcode seems to be missing.  Version mismatch?");
-            DestinationLabel = (string)(fields[0]);  // should throw exception if not an integer-ish type.
+            // This class does something strange - it expects the KSM file to encode EITHER a string label OR an integer,
+            // but never both.  Therefore it has to determine the type of the arg to decide which it was:
+            if (fields[0] is string)
+                DestinationLabel = (string)(fields[0]);
+            else
+                Distance = (int)fields[0];
         }
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", Name, Distance);
+            // Format string forces printing of '+/-' sign always, even for positive numbers.
+            // The intent is to make it more clear that this is a relative, not absolute jump:
+            return string.Format("{0} {1:+#;-#;+0}", Name, Distance);
         }
     }
 
