@@ -54,6 +54,12 @@ namespace kOS.Suffixed.Part
             AddSuffix("HASPHYSICS", new Suffix<bool>(Part.HasPhysics, "Is this a strange 'massless' part"));
         }
 
+        public void ThrowIfNotCPUVessel()
+        {
+            if (this.Part.vessel.id != shared.Vessel.id)
+                throw new KOSWrongCPUVesselException();
+        }
+
         private PartModuleFields GetModule(string modName)
         {
             foreach (PartModule mod in Part.Modules)
@@ -92,6 +98,7 @@ namespace kOS.Suffixed.Part
 
         private void SetTagName(string value)
         {
+            ThrowIfNotCPUVessel();
             KOSNameTag tagModule = Part.Modules.OfType<KOSNameTag>().FirstOrDefault();
             if (tagModule != null) tagModule.nameTag = value;
         }
@@ -122,6 +129,7 @@ namespace kOS.Suffixed.Part
 
         private void ControlFrom()
         {
+            ThrowIfNotCPUVessel();
             var dockingModule = Part.Modules.OfType<ModuleDockingNode>().FirstOrDefault();
             var commandModule = Part.Modules.OfType<ModuleCommand>().FirstOrDefault();
 

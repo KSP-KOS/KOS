@@ -37,6 +37,12 @@ namespace kOS.Suffixed.PartModuleField
             InitializeSuffixesAfterConstruction();
         }
 
+        public void ThrowIfNotCPUVessel()
+        {
+            if (this.partModule.vessel.id != shared.Vessel.id)
+                throw new KOSWrongCPUVesselException();
+        }
+
         /// <summary>
         /// Get the string type of the module
         /// </summary>
@@ -435,6 +441,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <param name="newValue"></param>
         protected void SetKSPFieldValue(string suffixName, object newValue)
         {
+            ThrowIfNotCPUVessel();
             BaseField field = GetField(suffixName);
             if (field == null)
                 throw new KOSLookupFailException("FIELD", suffixName, this);
@@ -459,6 +466,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <param name="suffixName"></param>
         private void CallKSPEvent(string suffixName)
         {
+            ThrowIfNotCPUVessel();
             BaseEvent evt = GetEvent(suffixName);
             if (evt == null)
                 throw new KOSLookupFailException("EVENT", suffixName, this);
@@ -478,6 +486,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <param name="param">true = activate, false = de-activate</param>
         private void CallKSPAction(string suffixName, bool param)
         {
+            ThrowIfNotCPUVessel();
             BaseAction act = GetAction(suffixName);
             if (act == null)
                 throw new KOSLookupFailException("ACTION", suffixName, this);
