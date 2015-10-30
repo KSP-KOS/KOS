@@ -807,9 +807,11 @@ namespace kOS.Safe.Compilation.KS
                         currentCodeSection = subprogramObject.FunctionCode;
                         // verify if the program has been loaded
                         Opcode functionStart = AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(-1));
-                        AddOpcode(new OpcodeCompareEqual());
-                        OpcodeBranchIfFalse branchOpcode = new OpcodeBranchIfFalse();
+                        // Becuse of Cpu.SaveAndClearPointers(), the subprogram's pointer identifier won't
+                        // exist in this program context until it has been compiled once.  If it does exist,
+                        // then skip the compiling step and just run the code that's already there:
+                        AddOpcode(new OpcodeExists());
+                        OpcodeBranchIfTrue branchOpcode = new OpcodeBranchIfTrue();
                         AddOpcode(branchOpcode);
                         // if it wasn't then load it now
                         AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
@@ -826,7 +828,7 @@ namespace kOS.Safe.Compilation.KS
                         // set the call opcode as the destination of the previous branch
                         branchOpcode.DestinationLabel = callOpcode.Label;
                         // return to the caller address, after adding a dummy return val:
-                        
+
                         // maybe TODO?  Right now the RETURN command is being prevented from being used outside 
                         // a function declaration.  But in principle we could have programs return exit codes
                         // using the same architecture, and in fact that is why this dummy return value is needed,
@@ -842,10 +844,7 @@ namespace kOS.Safe.Compilation.KS
 
                         // Initialization code
                         currentCodeSection = subprogramObject.InitializationCode;
-                        // initialize the pointer to zero
-                        AddOpcode(new OpcodePush(subprogramObject.PointerIdentifier));
-                        AddOpcode(new OpcodePush(-1));
-                        AddOpcode(new OpcodeStore());
+                        // removed pointer initialization since it overwrote any existing values when loading ksm files.
                     }
                 }
             }

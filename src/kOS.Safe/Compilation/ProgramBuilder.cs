@@ -123,6 +123,11 @@ namespace kOS.Safe.Compilation
             {
                 if (program[index].Label != string.Empty)
                 {
+                    if (labels.ContainsKey(program[index].Label))
+                    {
+                        throw new kOS.Safe.Exceptions.KOSCompileException(string.Format(
+                            "ProgramBuilder.ReplaceLabels: Cannot add label {0}, label already exists.  Opcode: {1}", program[index].Label, program[index].ToString()));
+                    }
                     labels.Add(program[index].Label, index);
                 }
             }
