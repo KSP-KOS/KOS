@@ -1,6 +1,7 @@
 ﻿using kOS.Execution;
 using kOS.Safe.Compilation;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Execution;
 using kOS.Safe.Function;
 using kOS.Safe.Module;
 using kOS.Safe.Persistence;
@@ -219,6 +220,7 @@ namespace kOS.Function
             shared.Cpu.PushStack(0); // dummy return that all functions have.
 
             // Put the args for the program being called back on in the same order they were in before (so read the list backward):
+            shared.Cpu.PushStack(new KOSArgMarkerType());
             for (int i = argc - 1; i >= 0; --i)
                 shared.Cpu.PushStack(progArgs[i]);
         }

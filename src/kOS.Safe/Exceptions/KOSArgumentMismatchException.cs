@@ -63,14 +63,14 @@ namespace kOS.Safe.Exceptions
 
         private static string BuildTerseMessage()
         {
-            return String.Format("Number of arguments passed to the function didn't match the number of DECLARE PARAMETERs encountered.");
+            return String.Format("Number of arguments passed in didn't match the number of DECLARE PARAMETERs.\n");
         }
 
         private string BuildVerboseMessage()
         {
             return
                 Message + "\n" +
-                "The number of arguments being passed into a function call is not correct.\n";
+                "The number of arguments being passed into a function or program call is not correct.\n";
         }
     }
 }
