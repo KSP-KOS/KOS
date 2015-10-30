@@ -405,7 +405,7 @@ namespace kOS.Suffixed
             AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("dockingports", Shared)));
             AddSuffix("ELEMENTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("elements", Shared)));
 
-            AddSuffix("CONTROL", new Suffix<FlightControl>(() => FlightControlManager.GetControllerByVessel(Vessel)));
+            AddSuffix("CONTROL", new Suffix<FlightControl>(GetFlightControl));
             AddSuffix("BEARING", new Suffix<float>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));
             AddSuffix("HEADING", new Suffix<float>(() => VesselUtils.GetTargetHeading(CurrentVessel, Vessel)));
             AddSuffix("AVAILABLETHRUST", new Suffix<double>(() => VesselUtils.GetAvailableThrust(Vessel)));
@@ -457,6 +457,18 @@ namespace kOS.Suffixed
             }
 
             return crew;
+        }
+
+        public void ThrowIfNotCPUVessel()
+        {
+            if (this.Vessel.id != Shared.Vessel.id)
+                throw new KOSWrongCPUVesselException();
+        }
+
+        public FlightControl GetFlightControl()
+        {
+            ThrowIfNotCPUVessel();
+            return FlightControlManager.GetControllerByVessel(Vessel);
         }
 
         public double GetAvailableThrustAt(double atmPressure)

@@ -112,6 +112,8 @@ These are the generic properties every PART has. You can obtain a list of values
 
     A part's *tag* is whatever custom name you have given it using the :ref:`name-tag system described here <nametag>`. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.
 
+    WARNING: This suffix is only settable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+
     This example assumes you have a target vessel picked, and that the target vessel is loaded into full-physics range and not "on rails". vessels that are "on rails" do not have their full list of parts entirely populated at the moment::
 
         LIST PARTS FROM TARGET IN tParts.
@@ -139,6 +141,8 @@ These are the generic properties every PART has. You can obtain a list of values
     part on them somewhere, which is why there's no mechanism for un-setting
     the "control from" setting other than to pick another part and set it
     to that part instead.
+
+    WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
 .. attribute:: Part:STAGE
 
