@@ -39,7 +39,7 @@ namespace kOS.Suffixed.PartModuleField
 
         public void ThrowIfNotCPUVessel()
         {
-            if (this.partModule.vessel.id != shared.Vessel.id)
+            if (partModule.vessel.id != shared.Vessel.id)
                 throw new KOSWrongCPUVesselException();
         }
 
@@ -192,7 +192,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseField field in visibleFields)
             {
-                returnValue.Add(String.Format(formatter,
+                returnValue.Add(string.Format(formatter,
                                               (IsEditable(field) ? "settable" : "get-only"),
                                               field.guiName.ToLower(),
                                               Utilities.Utils.KOSType(field.FieldInfo.FieldType)));
@@ -237,7 +237,7 @@ namespace kOS.Suffixed.PartModuleField
         protected BaseField GetField(string cookedGuiName)
         {
             return partModule.Fields.Cast<BaseField>().
-                FirstOrDefault(field => String.Equals(field.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+                FirstOrDefault(field => string.Equals(field.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseEvent kspEvent in visibleEvents)
             {
-                returnValue.Add(String.Format(formatter,
+                returnValue.Add(string.Format(formatter,
                                               "callable",
                                               kspEvent.guiName.ToLower(),
                                               "KSPEvent"));
@@ -298,7 +298,7 @@ namespace kOS.Suffixed.PartModuleField
         private BaseEvent GetEvent(string cookedGuiName)
         {
             return partModule.Events.
-                FirstOrDefault(kspEvent => String.Equals(kspEvent.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+                FirstOrDefault(kspEvent => string.Equals(kspEvent.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace kOS.Suffixed.PartModuleField
 
             foreach (BaseAction kspAction in partModule.Actions)
             {
-                returnValue.Add(String.Format(formatter,
+                returnValue.Add(string.Format(formatter,
                                               "callable",
                                               kspAction.guiName.ToLower(),
                                               "KSPAction"));
@@ -342,7 +342,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns>true if it is on the PartModule, false if it is not</returns>
         public bool HasAction(string actionName)
         {
-            return partModule.Actions.Any(kspAction => String.Equals(kspAction.guiName, actionName, StringComparison.CurrentCultureIgnoreCase));
+            return partModule.Actions.Any(kspAction => string.Equals(kspAction.guiName, actionName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace kOS.Suffixed.PartModuleField
         /// <returns></returns>
         private BaseAction GetAction(string cookedGuiName)
         {
-            return partModule.Actions.FirstOrDefault(kspAction => String.Equals(kspAction.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
+            return partModule.Actions.FirstOrDefault(kspAction => string.Equals(kspAction.guiName, cookedGuiName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
