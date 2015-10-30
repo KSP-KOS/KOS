@@ -35,7 +35,7 @@
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
     <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
-        <link rel="next" title="Terminal" href="terminal.html"/>
+        <link rel="next" title="String" href="string.html"/>
         <link rel="prev" title="Resource Transfer" href="resource_transfer.html"/> 
 
   
@@ -192,7 +192,7 @@
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
-<p><span class="versionmodified">New in version 0.18: </span>The <a class="reference internal" href="#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></tt></a> was added to improve the accuracy of kOS&#8217;s cooked steering.  While this code is a significant improvement over the old system, it is not perfect.  Specifically it does not properly calculate the effects of control surfaces, nor does it account for atmospheric drag.  It also does not adjust for asymetric RCS or Engine thrust.  It does allow for some modifications to the built in logic through the torque adjustments and factors.  However, if there is a condition for which the new steering manager is unable to provide accurate control, you should continue to fall back to raw controls.</p>
+<p><span class="versionmodified">New in version 0.18: </span>The <a class="reference internal" href="#structure:STEERINGMANAGER" title="STEERINGMANAGER structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SteeringManager</span></tt></a> was added to improve the accuracy of kOS&#8217;s cooked steering.  While this code is a significant improvement over the old system, it is not perfect.  Specifically it does not properly calculate the effects of control surfaces, nor does it account for atmospheric drag.  It also does not adjust for asymmetric RCS or Engine thrust.  It does allow for some modifications to the built in logic through the torque adjustments and factors.  However, if there is a condition for which the new steering manager is unable to provide accurate control, you should continue to fall back to raw controls.</p>
 </div>
 </div>
 <dl class="structure">
@@ -741,7 +741,7 @@ SteeringManager:<tt class="descname">ROLLTORQUEFACTOR</tt><a class="headerlink" 
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="terminal.html" class="btn btn-neutral float-right" title="Terminal">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="string.html" class="btn btn-neutral float-right" title="String">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="resource_transfer.html" class="btn btn-neutral" title="Resource Transfer"><span class="fa fa-arrow-circle-left"></span> Previous</a>

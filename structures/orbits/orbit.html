@@ -458,7 +458,16 @@ Orbit:<tt class="descname">LONGITUDEOFASCENDINGNODE</tt><a class="headerlink" hr
 </tr>
 </tbody>
 </table>
-<p>Longitude of the ascending node. It&#8217;s unclear what the basis line the game uses for this is, though. The real-world basis is the constellation Ares, which of course doesn&#8217;t exist in the Kerbal universe.</p>
+<p>The Longitude of the ascening node is the &#8220;celestial longitude&#8221; where
+the orbit crosses the body&#8217;s equator from its southern hemisphere to
+its northern hemisphere</p>
+<p>Note that the &#8220;celestial longitude&#8221; in this case is NOT the planetary
+longitude of the orbit body.  &#8220;Celestial longitudes&#8221; are expressed
+as the angle from the <a class="reference internal" href="../../bindings.html#solarprimevector"><em>Solar Prime Vector</em></a>,
+not from the body&#8217;s longitude.  In order to find out where it is
+relative to the body&#8217;s longitude, you will have to take into account
+<tt class="docutils literal"><span class="pre">body:rotationangle</span></tt>, and take into account that the body will
+rotate by the time you get there.</p>
 </dd></dl>
 
 <dl class="attribute">

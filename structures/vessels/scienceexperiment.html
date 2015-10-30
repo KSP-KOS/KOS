@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Resource &mdash; kOS 0.17.3 documentation</title>
+  <title>ScienceExperimentModule &mdash; kOS 0.17.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
     <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="ScienceExperimentModule" href="scienceexperiment.html"/>
-        <link rel="prev" title="PartModule" href="partmodule.html"/> 
+        <link rel="next" title="Sensor" href="sensor.html"/>
+        <link rel="prev" title="Resource" href="resource.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -168,10 +168,10 @@
       
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
       
-    <li>Resource</li>
+    <li>ScienceExperimentModule</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../../_sources/structures/vessels/resource.txt" rel="nofollow"> View page source</a>
+          <a href="../../_sources/structures/vessels/scienceexperiment.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
@@ -179,12 +179,30 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="resource">
-<span id="id1"></span><h1>Resource<a class="headerlink" href="#resource" title="Permalink to this headline">¶</a></h1>
-<p>A single resource value a thing holds (i.e. fuel, electric charge, etc). This is the type returned by the <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>:RESOURCES suffix</p>
+  <div class="section" id="scienceexperimentmodule">
+<span id="id1"></span><h1>ScienceExperimentModule<a class="headerlink" href="#scienceexperimentmodule" title="Permalink to this headline">¶</a></h1>
+<p>The type of structures returned by kOS when querying a module that contains a science experiment.</p>
+<p>Some of the science-related tasks are normally not available to kOS scripts. It is for
+example possible to deploy a science experiment:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">P</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;GooExperiment&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">].</span>
+<span class="n">SET</span> <span class="n">M</span> <span class="n">TO</span> <span class="n">P</span><span class="o">:</span><span class="n">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleScienceExperiment&quot;</span><span class="p">).</span>
+<span class="nl">M:</span><span class="n">DOEVENT</span><span class="p">(</span><span class="s">&quot;observe mystery goo&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>Hovewer, this results in a dialog being shown to the user. Only from that dialog it is possible
+to reset the experiment or transmit the experiment results back to Kerbin.
+<a class="reference internal" href="#structure:SCIENCEEXPERIMENTMODULE" title="SCIENCEEXPERIMENTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ScienceExperimentModule</span></tt></a> structure introduces a few suffixes that allow the player
+to perform all science-related tasks without any manual intervention:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">P</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">PARTSNAMED</span><span class="p">(</span><span class="s">&quot;GooExperiment&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span>
+<span class="n">SET</span> <span class="n">M</span> <span class="n">TO</span> <span class="n">P</span><span class="o">:</span><span class="n">GETMODULE</span><span class="p">(</span><span class="s">&quot;ModuleScienceExperiment&quot;</span><span class="p">).</span>
+<span class="nl">M:</span><span class="n">DEPLOY</span><span class="p">.</span>
+<span class="n">WAIT</span> <span class="n">UNTIL</span> <span class="n">M</span><span class="o">:</span><span class="n">HASDATA</span><span class="p">.</span>
+<span class="nl">M:</span><span class="n">TRANSMIT</span><span class="p">.</span>
+</pre></div>
+</div>
 <dl class="structure">
-<dt id="structure:RESOURCE">
-<em class="property">structure </em><tt class="descname">Resource</tt><a class="headerlink" href="#structure:RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:SCIENCEEXPERIMENTMODULE">
+<em class="property">structure </em><tt class="descname">ScienceExperimentModule</tt><a class="headerlink" href="#structure:SCIENCEEXPERIMENTMODULE" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="29%" />
@@ -198,104 +216,80 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:NAME" title="RESOURCE:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
-<td>string</td>
-<td>Resource name</td>
+<tr class="row-even"><td>All suffixes of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#structure:SCIENCEEXPERIMENTMODULE" title="SCIENCEEXPERIMENTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ScienceExperimentModule</span></tt></a> objects are a type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:AMOUNT" title="RESOURCE:AMOUNT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AMOUNT</span></tt></a></td>
-<td>scalar</td>
-<td>Amount of this resource left</td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:DEPLOY" title="SCIENCEEXPERIMENTMODULE:DEPLOY method"><tt class="xref ks ks-meth docutils literal"><span class="pre">DEPLOY()</span></tt></a></td>
+<td>&nbsp;</td>
+<td>Deploy and run the science experiment</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:DENSITY" title="RESOURCE:DENSITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DENSITY</span></tt></a></td>
-<td>scalar</td>
-<td>Density of this resource</td>
+<tr class="row-even"><td><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:RESET" title="SCIENCEEXPERIMENTMODULE:RESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">RESET()</span></tt></a></td>
+<td>&nbsp;</td>
+<td>Reset this experiment if possible</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:CAPACITY" title="RESOURCE:CAPACITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></tt></a></td>
-<td>scalar</td>
-<td>Maximum amount of this resource</td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:TRANSMIT" title="SCIENCEEXPERIMENTMODULE:TRANSMIT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">TRANSMIT()</span></tt></a></td>
+<td>&nbsp;</td>
+<td>Transmit the scientific data back to Kerbin</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:TOGGLEABLE" title="RESOURCE:TOGGLEABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TOGGLEABLE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:SCIENCEEXPERIMENTMODULE:DUMP" title="SCIENCEEXPERIMENTMODULE:DUMP method"><tt class="xref ks ks-meth docutils literal"><span class="pre">DUMP()</span></tt></a></td>
+<td>&nbsp;</td>
+<td>Discard the data</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE" title="SCIENCEEXPERIMENTMODULE:INOPERABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">INOPERABLE</span></tt></a></td>
 <td>boolean</td>
-<td>Can this tank be removed from the fuel flow</td>
+<td>Is this experiment inoperable</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:ENABLED" title="RESOURCE:ENABLED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE" title="SCIENCEEXPERIMENTMODULE:RERUNNABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">RERUNNABLE</span></tt></a></td>
 <td>boolean</td>
-<td>Is this tank currently in the fuel flow</td>
+<td>Can this experiment be run multiple times</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED" title="SCIENCEEXPERIMENTMODULE:DEPLOYED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DEPLOYED</span></tt></a></td>
+<td>boolean</td>
+<td>Is this experiment deployed</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SCIENCEEXPERIMENTMODULE:HASDATA" title="SCIENCEEXPERIMENTMODULE:HASDATA attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">HASDATA</span></tt></a></td>
+<td>boolean</td>
+<td>Does the experiment have scientific data</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="attribute:RESOURCE:NAME">
-Resource:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:RESOURCE:NAME" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
-<p>The name of the resource, i.e. &#8220;LIQUIDFUEL&#8221;, &#8220;ELECTRICCHARGE&#8221;, &#8220;MONOPROP&#8221;.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A <a class="reference internal" href="#structure:SCIENCEEXPERIMENTMODULE" title="SCIENCEEXPERIMENTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">ScienceExperimentModule</span></tt></a> is a type of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a>, and therefore can use all the suffixes of <a class="reference internal" href="partmodule.html#structure:PARTMODULE" title="PARTMODULE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PartModule</span></tt></a>.</p>
+</div>
+<dl class="method">
+<dt id="method:SCIENCEEXPERIMENTMODULE:DEPLOY">
+ScienceExperimentModule:<tt class="descname">DEPLOY</tt><big>(</big><big>)</big><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:DEPLOY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this method to deploy and run this science experiment. This method will fail if the experiment already contains scientific
+data or is inoperable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:SCIENCEEXPERIMENTMODULE:RESET">
+ScienceExperimentModule:<tt class="descname">RESET</tt><big>(</big><big>)</big><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:RESET" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this method to reset this experiment. This method will fail if the experiment is inoperable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:SCIENCEEXPERIMENTMODULE:TRANSMIT">
+ScienceExperimentModule:<tt class="descname">TRANSMIT</tt><big>(</big><big>)</big><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:TRANSMIT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this method to transmit the results of the experiment back to Kerbin. This will render the experiment
+inoperable if it is not rerunnable. This method will fail if there is no data to send.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:SCIENCEEXPERIMENTMODULE:DUMP">
+ScienceExperimentModule:<tt class="descname">DUMP</tt><big>(</big><big>)</big><a class="headerlink" href="#method:SCIENCEEXPERIMENTMODULE:DUMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this method to discard the data obtained as a result of running this experiment. This will render the experiment
+inoperable if it is not rerunnable.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCE:AMOUNT">
-Resource:<tt class="descname">AMOUNT</tt><a class="headerlink" href="#attribute:RESOURCE:AMOUNT" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
-</tr>
-</tbody>
-</table>
-<p>The value of how much resource is left.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCE:DENSITY">
-Resource:<tt class="descname">DENSITY</tt><a class="headerlink" href="#attribute:RESOURCE:DENSITY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
-</tr>
-</tbody>
-</table>
-<p>The density value of this resource, expressed in Megagrams f mass
-per Unit of resource.  (i.e. a value of 0.005 would mean that each
-unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
-the usual unit that most mass in the game is represented in.)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCE:CAPACITY">
-Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#attribute:RESOURCE:CAPACITY" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
-</tr>
-</tbody>
-</table>
-<p>What AMOUNT would be if the resource was filled to the top.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="attribute:RESOURCE:TOGGLEABLE">
-Resource:<tt class="descname">TOGGLEABLE</tt><a class="headerlink" href="#attribute:RESOURCE:TOGGLEABLE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE">
+ScienceExperimentModule:<tt class="descname">INOPERABLE</tt><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:INOPERABLE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -306,23 +300,55 @@ Resource:<tt class="descname">TOGGLEABLE</tt><a class="headerlink" href="#attrib
 </tr>
 </tbody>
 </table>
-<p>Many, but not all, resources can be turned on and off, this removes them from the fuel flow.</p>
+<p>True if this experiment is no longer operable.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCE:ENABLED">
-Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#attribute:RESOURCE:ENABLED" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE">
+ScienceExperimentModule:<tt class="descname">RERUNNABLE</tt><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:RERUNNABLE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
 </tr>
 </tbody>
 </table>
-<p>If the resource is TOGGLEABLE, setting this to false will prevent the resource from being taken out normally.</p>
+<p>True if this experiment can be run multiple times.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED">
+ScienceExperimentModule:<tt class="descname">DEPLOYED</tt><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:DEPLOYED" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>True if this experiment is deployed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SCIENCEEXPERIMENTMODULE:HASDATA">
+ScienceExperimentModule:<tt class="descname">HASDATA</tt><a class="headerlink" href="#attribute:SCIENCEEXPERIMENTMODULE:HASDATA" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p>True if this experiment has scientific data stored.</p>
 </dd></dl>
 
 </div>
@@ -333,10 +359,10 @@ Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#attribute
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scienceexperiment.html" class="btn btn-neutral float-right" title="ScienceExperimentModule">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="sensor.html" class="btn btn-neutral float-right" title="Sensor">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="partmodule.html" class="btn btn-neutral" title="PartModule"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="resource.html" class="btn btn-neutral" title="Resource"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

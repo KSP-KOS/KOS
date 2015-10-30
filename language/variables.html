@@ -181,47 +181,48 @@
 <h1>Variables &amp; Statements<a class="headerlink" href="#variables-statements" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#declare-to-is" id="id6"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></tt></a><ul>
-<li><a class="reference internal" href="#what-it-does" id="id7">What it does:</a></li>
-<li><a class="reference internal" href="#allowed-syntax" id="id8">Allowed Syntax:</a></li>
-<li><a class="reference internal" href="#see-scoping" id="id9">See Scoping:</a></li>
-<li><a class="reference internal" href="#initializer-required-in-declare" id="id10">Initializer required in DECLARE</a></li>
+<li><a class="reference internal" href="#declare-to-is" id="id7"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></tt></a><ul>
+<li><a class="reference internal" href="#what-it-does" id="id8">What it does:</a></li>
+<li><a class="reference internal" href="#allowed-syntax" id="id9">Allowed Syntax:</a></li>
+<li><a class="reference internal" href="#see-scoping" id="id10">See Scoping:</a></li>
+<li><a class="reference internal" href="#initializer-required-in-declare" id="id11">Initializer required in DECLARE</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#declare-parameter" id="id11"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
-<li><a class="reference internal" href="#set" id="id12"><tt class="docutils literal"><span class="pre">SET</span></tt></a><ul>
-<li><a class="reference internal" href="#difference-between-set-and-declare-local-and-declare-global" id="id13">Difference between SET and DECLARE LOCAL and DECLARE GLOBAL</a></li>
-<li><a class="reference internal" href="#when-to-use-global" id="id14">When to use GLOBAL</a></li>
+<li><a class="reference internal" href="#declare-parameter" id="id12"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
+<li><a class="reference internal" href="#set" id="id13"><tt class="docutils literal"><span class="pre">SET</span></tt></a></li>
+<li><a class="reference internal" href="#defined" id="id14"><tt class="docutils literal"><span class="pre">DEFINED</span></tt></a><ul>
+<li><a class="reference internal" href="#difference-between-set-and-declare-local-and-declare-global" id="id15">Difference between SET and DECLARE LOCAL and DECLARE GLOBAL</a></li>
+<li><a class="reference internal" href="#when-to-use-global" id="id16">When to use GLOBAL</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#lock" id="id15"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><ul>
-<li><a class="reference internal" href="#calling-a-lock-that-was-created-in-another-file" id="id16">Calling a LOCK that was created in another file</a></li>
-<li><a class="reference internal" href="#local-lock" id="id17">Local lock</a></li>
+<li><a class="reference internal" href="#lock" id="id17"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><ul>
+<li><a class="reference internal" href="#calling-a-lock-that-was-created-in-another-file" id="id18">Calling a LOCK that was created in another file</a></li>
+<li><a class="reference internal" href="#local-lock" id="id19">Local lock</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#toggle" id="id18"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
-<li><a class="reference internal" href="#on" id="id19"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
-<li><a class="reference internal" href="#off" id="id20"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
-<li><a class="reference internal" href="#scoping-terms" id="id21">Scoping terms</a></li>
-<li><a class="reference internal" href="#scoping-syntax" id="id22">Scoping syntax</a><ul>
-<li><a class="reference internal" href="#presumed-defaults" id="id23">Presumed defaults</a></li>
-<li><a class="reference internal" href="#explicit-scoping-keywords" id="id24">Explicit scoping keywords</a></li>
-<li><a class="reference internal" href="#explicit-scoping-required-for-lazyglobal-off" id="id25">Explicit Scoping required for &#64;lazyglobal off</a></li>
-<li><a class="reference internal" href="#scoping-and-triggers" id="id26">Scoping and Triggers:</a></li>
-<li><a class="reference internal" href="#lazyglobal-directive" id="id27"><tt class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></tt> directive</a></li>
+<li><a class="reference internal" href="#toggle" id="id20"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a></li>
+<li><a class="reference internal" href="#on" id="id21"><tt class="docutils literal"><span class="pre">ON</span></tt></a></li>
+<li><a class="reference internal" href="#off" id="id22"><tt class="docutils literal"><span class="pre">OFF</span></tt></a></li>
+<li><a class="reference internal" href="#scoping-terms" id="id23">Scoping terms</a></li>
+<li><a class="reference internal" href="#scoping-syntax" id="id24">Scoping syntax</a><ul>
+<li><a class="reference internal" href="#presumed-defaults" id="id25">Presumed defaults</a></li>
+<li><a class="reference internal" href="#explicit-scoping-keywords" id="id26">Explicit scoping keywords</a></li>
+<li><a class="reference internal" href="#explicit-scoping-required-for-lazyglobal-off" id="id27">Explicit Scoping required for &#64;lazyglobal off</a></li>
+<li><a class="reference internal" href="#scoping-and-triggers" id="id28">Scoping and Triggers:</a></li>
+<li><a class="reference internal" href="#lazyglobal-directive" id="id29"><tt class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></tt> directive</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="declare-to-is">
-<span id="declare"></span><h2><a class="toc-backref" href="#id6"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></tt></a><a class="headerlink" href="#declare-to-is" title="Permalink to this headline">¶</a></h2>
+<span id="declare"></span><h2><a class="toc-backref" href="#id7"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">..</span> <span class="pre">TO/IS</span></tt></a><a class="headerlink" href="#declare-to-is" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="what-it-does">
-<h3><a class="toc-backref" href="#id7">What it does:</a><a class="headerlink" href="#what-it-does" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id8">What it does:</a><a class="headerlink" href="#what-it-does" title="Permalink to this headline">¶</a></h3>
 <p>Declares a variable, explicitly or implicitly defining what scope it
 has, and gives it an initial value.</p>
 </div>
 <div class="section" id="allowed-syntax">
-<h3><a class="toc-backref" href="#id8">Allowed Syntax:</a><a class="headerlink" href="#allowed-syntax" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Allowed Syntax:</a><a class="headerlink" href="#allowed-syntax" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="all-the-following-are-legal-declare-statements">
 <h4>All the following are legal &#8220;declare&#8221; statements:<a class="headerlink" href="#all-the-following-are-legal-declare-statements" title="Permalink to this headline">¶</a></h4>
 <p id="declare-syntax">The following alternate versions have identical meaning to each other:</p>
@@ -292,7 +293,7 @@ After that code block is finished, the variable will no longer exist.</p>
 </div>
 </div>
 <div class="section" id="see-scoping">
-<h3><a class="toc-backref" href="#id9">See Scoping:</a><a class="headerlink" href="#see-scoping" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">See Scoping:</a><a class="headerlink" href="#see-scoping" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div>If you don&#8217;t know what the terms &#8220;global&#8221; or &#8220;local&#8221; mean, it&#8217;s
 important to read the <a class="reference internal" href="#scope"><em>section below about scoping.</em></a></div></blockquote>
@@ -321,7 +322,7 @@ be referred to as a &#8220;declare statement&#8221;, even though the word
 </div>
 </div>
 <div class="section" id="initializer-required-in-declare">
-<h3><a class="toc-backref" href="#id10">Initializer required in DECLARE</a><a class="headerlink" href="#initializer-required-in-declare" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Initializer required in DECLARE</a><a class="headerlink" href="#initializer-required-in-declare" title="Permalink to this headline">¶</a></h3>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 0.17.</span></p>
 </div>
@@ -336,7 +337,7 @@ there to exist any uninitialized variables in a script.</p>
 </div>
 </div>
 <div class="section" id="declare-parameter">
-<span id="id1"></span><h2><a class="toc-backref" href="#id11"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
 <p>If you put this statement in the main part of your script, it
 declares variables to be used as a parameter that can be passed
 in using the <tt class="docutils literal"><span class="pre">RUN</span></tt> command.</p>
@@ -394,7 +395,7 @@ are always local to the location they were declared at, the keyword
 </div>
 </div>
 <div class="section" id="set">
-<span id="id2"></span><h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">SET</span></tt></a><a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id13"><tt class="docutils literal"><span class="pre">SET</span></tt></a><a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
 <p>Sets the value of a variable. Implicitly creates a global variable if it doesn’t already exist:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
 <span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="n">y</span><span class="o">*</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">1.</span>
@@ -403,8 +404,45 @@ are always local to the location they were declared at, the keyword
 <p>This follows the <a class="reference internal" href="#scope"><em>scoping rules explained below</em></a>.  If the
 variable can be found in the current local scope, or any scope higher
 up, then it won&#8217;t be created and instead the existing one will be used.</p>
+</div>
+<div class="section" id="defined">
+<span id="id3"></span><h2><a class="toc-backref" href="#id14"><tt class="docutils literal"><span class="pre">DEFINED</span></tt></a><a class="headerlink" href="#defined" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">DEFINED</span> <span class="n">identifier</span>
+</pre></div>
+</div>
+<p>Returns a boolean true or false according to whether or not an
+identifer is defined in such a way that you can use it from
+this part of the program.  (i.e. is it declared and is it in scope
+and visible right now):</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// This part prints &#39;doesn&#39;t exist&quot;:</span>
+<span class="k">if</span> <span class="n">defined</span> <span class="n">var1</span> <span class="p">{</span>
+  <span class="n">print</span> <span class="s">&quot;var1 exists&quot;</span><span class="p">.</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="n">print</span> <span class="s">&quot;var1 doesn&#39;t exist.&quot;</span>
+<span class="p">}</span>
+
+<span class="n">local</span> <span class="n">var1</span> <span class="n">is</span> <span class="mf">0.</span>
+
+<span class="c1">// But now it prints that it does exist:</span>
+<span class="k">if</span> <span class="n">defined</span> <span class="n">var1</span> <span class="p">{</span>
+  <span class="n">print</span> <span class="s">&quot;var1 exists&quot;</span><span class="p">.</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="n">print</span> <span class="s">&quot;var1 doesn&#39;t exist.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The DEFINED operator pays attention to all the normal scoping rules
+described in the <a class="reference internal" href="#scope"><em>scoping section below</em></a>.  If an identifier
+does exist but is not usable from the current scope, it will return false.</p>
+<p>Note that DEFINED does not work well on things that are not pure identifiers.
+for example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="n">defined</span> <span class="n">var1</span><span class="o">:</span><span class="n">suffix1</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>is going to end up printing &#8220;False&#8221; because it&#8217;s looking for pure identifiers,
+not complex suffix chains, and there&#8217;s no identifier called &#8220;var1:suffix1&#8221;.</p>
 <div class="section" id="difference-between-set-and-declare-local-and-declare-global">
-<h3><a class="toc-backref" href="#id13">Difference between SET and DECLARE LOCAL and DECLARE GLOBAL</a><a class="headerlink" href="#difference-between-set-and-declare-local-and-declare-global" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id15">Difference between SET and DECLARE LOCAL and DECLARE GLOBAL</a><a class="headerlink" href="#difference-between-set-and-declare-local-and-declare-global" title="Permalink to this headline">¶</a></h3>
 <p>The following three examples look very similar and you might ask
 why you&#8217;d pick one instead of the other:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">X</span> <span class="n">TO</span> <span class="mf">1.</span>
@@ -440,7 +478,7 @@ Set it to 1.</li>
 </div></blockquote>
 </div>
 <div class="section" id="when-to-use-global">
-<h3><a class="toc-backref" href="#id14">When to use GLOBAL</a><a class="headerlink" href="#when-to-use-global" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id16">When to use GLOBAL</a><a class="headerlink" href="#when-to-use-global" title="Permalink to this headline">¶</a></h3>
 <p>You should use a <tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">GLOBAL</span></tt> statement only sparingly.  It
 mostly exists so that a function can store values &#8220;in the caller&#8221;
 for the caller to get its hands on.  It&#8217;s generally a &#8220;sloppy&#8221; design
@@ -449,7 +487,7 @@ and only pass back things to the caller as return values.</p>
 </div>
 </div>
 <div class="section" id="lock">
-<h2><a class="toc-backref" href="#id15"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id17"><tt class="docutils literal"><span class="pre">LOCK</span></tt></a><a class="headerlink" href="#lock" title="Permalink to this headline">¶</a></h2>
 <p>Declares that the identifier will refer to an expression that is always re-evaluated on the fly every time it is used (See also <a class="reference internal" href="flow.html#lock"><em>Flow Control documentation</em></a>):</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">Y</span> <span class="n">TO</span> <span class="mf">1.</span>
 <span class="n">LOCK</span> <span class="n">X</span> <span class="n">TO</span> <span class="n">Y</span> <span class="o">+</span> <span class="mf">1.</span>
@@ -465,7 +503,7 @@ necessary for backward compatibility with older scripts that use
 LOCK STEERING from inside triggers, loops, etc, and expect it to
 affect the global steering value.</p>
 <div class="section" id="calling-a-lock-that-was-created-in-another-file">
-<h3><a class="toc-backref" href="#id16">Calling a LOCK that was created in another file</a><a class="headerlink" href="#calling-a-lock-that-was-created-in-another-file" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id18">Calling a LOCK that was created in another file</a><a class="headerlink" href="#calling-a-lock-that-was-created-in-another-file" title="Permalink to this headline">¶</a></h3>
 <p>If you try to call a lock that is declared in another program
 file you run, it does not work, and has never worked prior to kOS
 0.17.0:</p>
@@ -493,7 +531,7 @@ the compiler the hint that you expected x to be a function call
 <p>and it should work.</p>
 </div>
 <div class="section" id="local-lock">
-<h3><a class="toc-backref" href="#id17">Local lock</a><a class="headerlink" href="#local-lock" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">Local lock</a><a class="headerlink" href="#local-lock" title="Permalink to this headline">¶</a></h3>
 <p>You can explicitly make a <tt class="docutils literal"><span class="pre">LOCK</span></tt> statement be LOCAL with the <tt class="docutils literal"><span class="pre">LOCAL</span></tt>
 keyword, like so:</p>
 <p><tt class="docutils literal"><span class="pre">LOCAL</span> <span class="pre">LOCK</span></tt> identifier <tt class="docutils literal"><span class="pre">TO</span></tt> expression.</p>
@@ -526,7 +564,7 @@ section of code is over, make it a local lock.</p>
 </div>
 </div>
 <div class="section" id="toggle">
-<span id="id3"></span><h2><a class="toc-backref" href="#id18"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a><a class="headerlink" href="#toggle" title="Permalink to this headline">¶</a></h2>
+<span id="id4"></span><h2><a class="toc-backref" href="#id20"><tt class="docutils literal"><span class="pre">TOGGLE</span></tt></a><a class="headerlink" href="#toggle" title="Permalink to this headline">¶</a></h2>
 <p>Toggles a variable between <tt class="docutils literal"><span class="pre">TRUE</span></tt> or <tt class="docutils literal"><span class="pre">FALSE</span></tt>. If the variable in question starts out as a number, it will be converted to a boolean and then toggled. This is useful for setting action groups, which are activated whenever their values are inverted:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">TOGGLE</span> <span class="n">AG1</span><span class="p">.</span> <span class="c1">// Fires action group 1.</span>
 <span class="n">TOGGLE</span> <span class="n">SAS</span><span class="p">.</span> <span class="c1">// Toggles SAS on or off.</span>
@@ -537,7 +575,7 @@ question doesn&#8217;t already exist, it will end up creating it as a global
 variable.</p>
 </div>
 <div class="section" id="on">
-<span id="id4"></span><h2><a class="toc-backref" href="#id19"><tt class="docutils literal"><span class="pre">ON</span></tt></a><a class="headerlink" href="#on" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2><a class="toc-backref" href="#id21"><tt class="docutils literal"><span class="pre">ON</span></tt></a><a class="headerlink" href="#on" title="Permalink to this headline">¶</a></h2>
 <p>Sets a variable to <tt class="docutils literal"><span class="pre">TRUE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">ON</span><span class="p">.</span>  <span class="c1">// Turns on the RCS</span>
 </pre></div>
@@ -547,7 +585,7 @@ question doesn&#8217;t already exist, it will end up creating it as a global
 variable.</p>
 </div>
 <div class="section" id="off">
-<span id="id5"></span><h2><a class="toc-backref" href="#id20"><tt class="docutils literal"><span class="pre">OFF</span></tt></a><a class="headerlink" href="#off" title="Permalink to this headline">¶</a></h2>
+<span id="id6"></span><h2><a class="toc-backref" href="#id22"><tt class="docutils literal"><span class="pre">OFF</span></tt></a><a class="headerlink" href="#off" title="Permalink to this headline">¶</a></h2>
 <p>Sets a variable to <tt class="docutils literal"><span class="pre">FALSE</span></tt>. This is useful for the <tt class="docutils literal"><span class="pre">RCS</span></tt> and <tt class="docutils literal"><span class="pre">SAS</span></tt> bindings:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">RCS</span> <span class="n">OFF</span><span class="p">.</span>  <span class="c1">// Turns off the RCS</span>
 </pre></div>
@@ -557,7 +595,7 @@ question doesn&#8217;t already exist, it will end up creating it as a global
 variable.</p>
 </div>
 <div class="section" id="scoping-terms">
-<span id="scope"></span><h2><a class="toc-backref" href="#id21">Scoping terms</a><a class="headerlink" href="#scoping-terms" title="Permalink to this headline">¶</a></h2>
+<span id="scope"></span><h2><a class="toc-backref" href="#id23">Scoping terms</a><a class="headerlink" href="#scoping-terms" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <div class="last versionadded">
@@ -609,9 +647,9 @@ local scope to allow for recursive function calls, then you use the
 the variables.</p>
 </div>
 <div class="section" id="scoping-syntax">
-<h2><a class="toc-backref" href="#id22">Scoping syntax</a><a class="headerlink" href="#scoping-syntax" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id24">Scoping syntax</a><a class="headerlink" href="#scoping-syntax" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="presumed-defaults">
-<h3><a class="toc-backref" href="#id23">Presumed defaults</a><a class="headerlink" href="#presumed-defaults" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id25">Presumed defaults</a><a class="headerlink" href="#presumed-defaults" title="Permalink to this headline">¶</a></h3>
 <p>The DECLARE keyword and the LOCK keyword have some default
 presumed scoping behaviors:</p>
 <p><tt class="docutils literal"><span class="pre">DECLARE</span></tt> Is assumed to always be LOCAL when not otherwise specified.</p>
@@ -623,7 +661,7 @@ this is necessary to preserve backward compatibility with how cooked
 controls such as LOCK STEERING and LOCK THROTTLE work.</p>
 </div>
 <div class="section" id="explicit-scoping-keywords">
-<h3><a class="toc-backref" href="#id24">Explicit scoping keywords</a><a class="headerlink" href="#explicit-scoping-keywords" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id26">Explicit scoping keywords</a><a class="headerlink" href="#explicit-scoping-keywords" title="Permalink to this headline">¶</a></h3>
 <p>The <tt class="docutils literal"><span class="pre">DECLARE</span></tt>, <tt class="docutils literal"><span class="pre">FUNCTION</span></tt>, and <tt class="docutils literal"><span class="pre">LOCK</span></tt> commands can be given
 explicit <tt class="docutils literal"><span class="pre">GLOBAL</span></tt> or <tt class="docutils literal"><span class="pre">LOCAL</span></tt> keywords to define their intended
 scoping level:</p>
@@ -648,7 +686,7 @@ by the use of LOCAL or GLOBAL and you are allowed to leave it off
 merely to reduce verbosity.</p>
 </div>
 <div class="section" id="explicit-scoping-required-for-lazyglobal-off">
-<h3><a class="toc-backref" href="#id25">Explicit Scoping required for &#64;lazyglobal off</a><a class="headerlink" href="#explicit-scoping-required-for-lazyglobal-off" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id27">Explicit Scoping required for &#64;lazyglobal off</a><a class="headerlink" href="#explicit-scoping-required-for-lazyglobal-off" title="Permalink to this headline">¶</a></h3>
 <p>Note that when operating under the <a class="reference internal" href="#lazyglobal"><em>&#64;LAZYGLOBAL OFF</em></a>
 directive the keywords LOCAL and GLOBAL are no longer optional for
 <strong>declare identifier</strong> statements, and are in fact required.  You
@@ -712,7 +750,7 @@ implicitly created.</p>
 </div>
 </div>
 <div class="section" id="scoping-and-triggers">
-<span id="trigger-scope"></span><h3><a class="toc-backref" href="#id26">Scoping and Triggers:</a><a class="headerlink" href="#scoping-and-triggers" title="Permalink to this headline">¶</a></h3>
+<span id="trigger-scope"></span><h3><a class="toc-backref" href="#id28">Scoping and Triggers:</a><a class="headerlink" href="#scoping-and-triggers" title="Permalink to this headline">¶</a></h3>
 <p>Triggers such as:</p>
 <blockquote>
 <div><ul class="simple">
@@ -732,7 +770,7 @@ You can declare local variables within their &lt;statements&gt; in their bodies,
 just don&#8217;t use local variables in the trigger conditions.</p>
 </div>
 <div class="section" id="lazyglobal-directive">
-<span id="lazyglobal"></span><h3><a class="toc-backref" href="#id27"><tt class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></tt> directive</a><a class="headerlink" href="#lazyglobal-directive" title="Permalink to this headline">¶</a></h3>
+<span id="lazyglobal"></span><h3><a class="toc-backref" href="#id29"><tt class="docutils literal"><span class="pre">&#64;LAZYGLOBAL</span></tt> directive</a><a class="headerlink" href="#lazyglobal-directive" title="Permalink to this headline">¶</a></h3>
 <p>Often the fact that you can get an implicit global variable declared
 without intending to can lead to a lot of code maintenance headaches
 down the road.  If you make a typo in a variable name, you end up

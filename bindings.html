@@ -319,6 +319,18 @@ page, as they are all just instances of the standard vessel suffixes.</p>
 </tbody>
 </table>
 </div>
+<div class="section" id="constants-pi-e-etc">
+<h2>Constants (pi, e, etc)<a class="headerlink" href="#constants-pi-e-etc" title="Permalink to this headline">¶</a></h2>
+<p>Get-only.</p>
+<p>The variable <tt class="docutils literal"><span class="pre">constant</span></tt> provides a way to access a few
+<a class="reference internal" href="math/basic.html#constants"><em>basic math and physics constants</em></a>, such as Pi, Euler&#8217;s
+number, and so on.</p>
+<p>Example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="s">&quot;Kerbin&#39;s circumference: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">constant</span><span class="o">:</span><span class="n">pi</span><span class="o">*</span><span class="n">Kerbin</span><span class="o">:</span><span class="n">radius</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;meters.&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>The full list is here: <a class="reference internal" href="math/basic.html#constants"><em>constants page</em></a>.</p>
+</div>
 <div class="section" id="terminal">
 <h2>Terminal<a class="headerlink" href="#terminal" title="Permalink to this headline">¶</a></h2>
 <p>Get-only. <tt class="docutils literal"><span class="pre">terminal</span></tt> returns a <a class="reference internal" href="structures/misc/terminal.html#structure:TERMINAL" title="TERMINAL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">terminal</span></tt></a> structure describing
@@ -628,6 +640,30 @@ situations such that the value changes depending on where you are.
 But kOS does not support this at the moment so in kOS if you set
 the LOADDISTANCE, you are setting it to the same value
 universally for all situations.</p>
+</div>
+</div>
+<div class="section" id="solarprimevector">
+<span id="id1"></span><h2>SOLARPRIMEVECTOR<a class="headerlink" href="#solarprimevector" title="Permalink to this headline">¶</a></h2>
+<p>Gives the Prime Meridian <a class="reference internal" href="math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> for the Solar System itself, in
+current Ship-Raw XYZ coordinates.</p>
+<p>Both the <a class="reference internal" href="structures/orbits/orbit.html#attribute:ORBIT:LONGITUDEOFASCENDINGNODE" title="ORBIT:LONGITUDEOFASCENDINGNODE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Orbit:LONGITUDEOFASCENDINGNODE</span></tt></a> orbit suffix and the
+<a class="reference internal" href="structures/celestial_bodies/body.html#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Body:ROTATIONANGLE</span></tt></a> body suffix are expressed in terms of
+degree offsets from this <em>Prime Meridian Reference Vector</em>.</p>
+<div class="section" id="what-is-the-solar-prime-reference-vector">
+<h3>What is the Solar Prime Reference Vector?<a class="headerlink" href="#what-is-the-solar-prime-reference-vector" title="Permalink to this headline">¶</a></h3>
+<p>The solar prime vector is an arbitrary vector in space used to measure
+some orbital parameters that are supposed to remain fixed to space
+regardless of how the planets underneath the orbit rotate, or where the
+Sun is.  In a sense it can be thought of as the celestial &#8220;prime
+meridian&#8221; of the entire solar system, rather than the &#8220;prime meridian&#8221; of
+any one particular rotating planet or moon.</p>
+<p>In a hypothetical Earthling&#8217;s solar system our Kerbal scientists have
+hypothesized may exist in a galaxy far away, Earthbound astronomers use
+a reference they called the
+<a class="reference external" href="https://en.wikipedia.org/wiki/First_Point_of_Aries">First Point of Aries</a>,
+for this purpose.</p>
+<p>For Kerbals, it refers to a more arbitrary line in space, pointing at a fixed
+point in the firmament, also known as the &#8220;skybox&#8221;.</p>
 </div>
 </div>
 <div class="section" id="addons">

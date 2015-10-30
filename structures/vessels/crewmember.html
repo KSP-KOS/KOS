@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Resource &mdash; kOS 0.17.3 documentation</title>
+  <title>CrewMember &mdash; kOS 0.17.3 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
     <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="ScienceExperimentModule" href="scienceexperiment.html"/>
-        <link rel="prev" title="PartModule" href="partmodule.html"/> 
+        <link rel="next" title="DockingPort" href="dockingport.html"/>
+        <link rel="prev" title="ALT" href="alt.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -168,10 +168,10 @@
       
           <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
       
-    <li>Resource</li>
+    <li>CrewMember</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../../_sources/structures/vessels/resource.txt" rel="nofollow"> View page source</a>
+          <a href="../../_sources/structures/vessels/crewmember.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
@@ -179,12 +179,12 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="resource">
-<span id="id1"></span><h1>Resource<a class="headerlink" href="#resource" title="Permalink to this headline">¶</a></h1>
-<p>A single resource value a thing holds (i.e. fuel, electric charge, etc). This is the type returned by the <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>:RESOURCES suffix</p>
+  <div class="section" id="crewmember">
+<span id="id1"></span><h1>CrewMember<a class="headerlink" href="#crewmember" title="Permalink to this headline">¶</a></h1>
+<p>Represents a single crew member of a vessel.</p>
 <dl class="structure">
-<dt id="structure:RESOURCE">
-<em class="property">structure </em><tt class="descname">Resource</tt><a class="headerlink" href="#structure:RESOURCE" title="Permalink to this definition">¶</a></dt>
+<dt id="structure:CREWMEMBER">
+<em class="property">structure </em><tt class="descname">CrewMember</tt><a class="headerlink" href="#structure:CREWMEMBER" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
 <col width="29%" />
@@ -198,131 +198,128 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:NAME" title="RESOURCE:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CREWMEMBER:NAME" title="CREWMEMBER:NAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NAME</span></tt></a></td>
 <td>string</td>
-<td>Resource name</td>
+<td>crew member&#8217;s name</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:AMOUNT" title="RESOURCE:AMOUNT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AMOUNT</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CREWMEMBER:GENDER" title="CREWMEMBER:GENDER attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">GENDER</span></tt></a></td>
+<td>string</td>
+<td>&#8220;Male&#8221; or &#8220;Female&#8221;</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CREWMEMBER:EXPERIENCE" title="CREWMEMBER:EXPERIENCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">EXPERIENCE</span></tt></a></td>
 <td>scalar</td>
-<td>Amount of this resource left</td>
+<td>experience level (number of stars)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:DENSITY" title="RESOURCE:DENSITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DENSITY</span></tt></a></td>
-<td>scalar</td>
-<td>Density of this resource</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CREWMEMBER:TRAIT" title="CREWMEMBER:TRAIT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TRAIT</span></tt></a></td>
+<td>string</td>
+<td>&#8220;Pilot&#8221;, &#8220;Engineer&#8221; or &#8220;Scientist&#8221;</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:CAPACITY" title="RESOURCE:CAPACITY attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CAPACITY</span></tt></a></td>
-<td>scalar</td>
-<td>Maximum amount of this resource</td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:CREWMEMBER:TOURIST" title="CREWMEMBER:TOURIST attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TOURIST</span></tt></a></td>
+<td>Boolean</td>
+<td>true if this crew member is a tourist</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:RESOURCE:TOGGLEABLE" title="RESOURCE:TOGGLEABLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TOGGLEABLE</span></tt></a></td>
-<td>boolean</td>
-<td>Can this tank be removed from the fuel flow</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:RESOURCE:ENABLED" title="RESOURCE:ENABLED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></tt></a></td>
-<td>boolean</td>
-<td>Is this tank currently in the fuel flow</td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:CREWMEMBER:PART" title="CREWMEMBER:PART attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PART</span></tt></a></td>
+<td><a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+<td>part in which the crew member is located</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCE:NAME">
-Resource:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:RESOURCE:NAME" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CREWMEMBER:NAME">
+CrewMember:<tt class="descname">NAME</tt><a class="headerlink" href="#attribute:CREWMEMBER:NAME" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string</td>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>The name of the resource, i.e. &#8220;LIQUIDFUEL&#8221;, &#8220;ELECTRICCHARGE&#8221;, &#8220;MONOPROP&#8221;.</p>
+<p>crew member&#8217;s name</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCE:AMOUNT">
-Resource:<tt class="descname">AMOUNT</tt><a class="headerlink" href="#attribute:RESOURCE:AMOUNT" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CREWMEMBER:GENDER">
+CrewMember:<tt class="descname">GENDER</tt><a class="headerlink" href="#attribute:CREWMEMBER:GENDER" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>The value of how much resource is left.</p>
+<p>&#8220;Male&#8221; or &#8220;Female&#8221;</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCE:DENSITY">
-Resource:<tt class="descname">DENSITY</tt><a class="headerlink" href="#attribute:RESOURCE:DENSITY" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CREWMEMBER:EXPERIENCE">
+CrewMember:<tt class="descname">EXPERIENCE</tt><a class="headerlink" href="#attribute:CREWMEMBER:EXPERIENCE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>The density value of this resource, expressed in Megagrams f mass
-per Unit of resource.  (i.e. a value of 0.005 would mean that each
-unit of this resource is 5 kilograms.  Megagrams [metric tonnes] is
-the usual unit that most mass in the game is represented in.)</p>
+<p>experience level (number of stars)</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCE:CAPACITY">
-Resource:<tt class="descname">CAPACITY</tt><a class="headerlink" href="#attribute:RESOURCE:CAPACITY" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CREWMEMBER:TRAIT">
+CrewMember:<tt class="descname">TRAIT</tt><a class="headerlink" href="#attribute:CREWMEMBER:TRAIT" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>What AMOUNT would be if the resource was filled to the top.</p>
+<p>crew member&#8217;s trait (specialization), for example &#8220;Pilot&#8221;</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCE:TOGGLEABLE">
-Resource:<tt class="descname">TOGGLEABLE</tt><a class="headerlink" href="#attribute:RESOURCE:TOGGLEABLE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CREWMEMBER:TOURIST">
+CrewMember:<tt class="descname">TOURIST</tt><a class="headerlink" href="#attribute:CREWMEMBER:TOURIST" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Boolean</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>Many, but not all, resources can be turned on and off, this removes them from the fuel flow.</p>
+<p>true if this crew member is a tourist</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:RESOURCE:ENABLED">
-Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#attribute:RESOURCE:ENABLED" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:CREWMEMBER:PART">
+CrewMember:<tt class="descname">PART</tt><a class="headerlink" href="#attribute:CREWMEMBER:PART" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
 </tr>
 </tbody>
 </table>
-<p>If the resource is TOGGLEABLE, setting this to false will prevent the resource from being taken out normally.</p>
+<p><a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> this crew member is located in</p>
 </dd></dl>
 
 </div>
@@ -333,10 +330,10 @@ Resource:<tt class="descname">ENABLED</tt><a class="headerlink" href="#attribute
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scienceexperiment.html" class="btn btn-neutral float-right" title="ScienceExperimentModule">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="dockingport.html" class="btn btn-neutral float-right" title="DockingPort">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="partmodule.html" class="btn btn-neutral" title="PartModule"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="alt.html" class="btn btn-neutral" title="ALT"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

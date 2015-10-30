@@ -340,6 +340,7 @@ Part:<tt class="descname">TAG</tt><a class="headerlink" href="#attribute:PART:TA
 </table>
 <p>The name tag value that may exist on this part if you have given the part a name via the <a class="reference internal" href="../../general/nametag.html#nametag"><em>name-tag system</em></a>.</p>
 <p>A part&#8217;s <em>tag</em> is whatever custom name you have given it using the <a class="reference internal" href="../../general/nametag.html#nametag"><em>name-tag system described here</em></a>. This is probably the best naming convention to use because it lets you make up whatever name you like for the part and use it to pick the parts you want to deal with in your script.</p>
+<p>WARNING: This suffix is only settable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a></p>
 <p>This example assumes you have a target vessel picked, and that the target vessel is loaded into full-physics range and not &#8220;on rails&#8221;. vessels that are &#8220;on rails&#8221; do not have their full list of parts entirely populated at the moment:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">LIST</span> <span class="n">PARTS</span> <span class="n">FROM</span> <span class="n">TARGET</span> <span class="n">IN</span> <span class="n">tParts</span><span class="p">.</span>
 
@@ -377,6 +378,7 @@ All vessels must have at least one &#8220;control from&#8221;
 part on them somewhere, which is why there&#8217;s no mechanism for un-setting
 the &#8220;control from&#8221; setting other than to pick another part and set it
 to that part instead.</p>
+<p>WARNING: This suffix is only callable for parts attached to the <a class="reference internal" href="../../general/cpu_vessel.html#cpu-vessel"><em>CPU Vessel</em></a></p>
 </dd></dl>
 
 <dl class="attribute">

@@ -15,7 +15,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
     .. versionadded:: 0.18
 
-        The :struct:`SteeringManager` was added to improve the accuracy of kOS's cooked steering.  While this code is a significant improvement over the old system, it is not perfect.  Specifically it does not properly calculate the effects of control surfaces, nor does it account for atmospheric drag.  It also does not adjust for asymetric RCS or Engine thrust.  It does allow for some modifications to the built in logic through the torque adjustments and factors.  However, if there is a condition for which the new steering manager is unable to provide accurate control, you should continue to fall back to raw controls.
+        The :struct:`SteeringManager` was added to improve the accuracy of kOS's cooked steering.  While this code is a significant improvement over the old system, it is not perfect.  Specifically it does not properly calculate the effects of control surfaces, nor does it account for atmospheric drag.  It also does not adjust for asymmetric RCS or Engine thrust.  It does allow for some modifications to the built in logic through the torque adjustments and factors.  However, if there is a condition for which the new steering manager is unable to provide accurate control, you should continue to fall back to raw controls.
 
 
 .. structure:: SteeringManager

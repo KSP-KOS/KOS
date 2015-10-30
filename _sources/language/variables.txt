@@ -208,6 +208,49 @@ This follows the :ref:`scoping rules explained below <scope>`.  If the
 variable can be found in the current local scope, or any scope higher
 up, then it won't be created and instead the existing one will be used.
 
+.. _defined:
+
+``DEFINED``
+-----------
+
+::
+
+    DEFINED identifier
+
+Returns a boolean true or false according to whether or not an 
+identifer is defined in such a way that you can use it from
+this part of the program.  (i.e. is it declared and is it in scope
+and visible right now)::
+
+    // This part prints 'doesn't exist":
+    if defined var1 {
+      print "var1 exists". 
+    } else {
+      print "var1 doesn't exist."
+    }
+
+    local var1 is 0.
+
+    // But now it prints that it does exist:
+    if defined var1 {
+      print "var1 exists". 
+    } else {
+      print "var1 doesn't exist."
+    }
+
+The DEFINED operator pays attention to all the normal scoping rules
+described in the :ref:`scoping section below <scope>`.  If an identifier
+does exist but is not usable from the current scope, it will return false.
+
+Note that DEFINED does not work well on things that are not pure identifiers.
+for example::
+
+   print defined var1:suffix1.
+
+is going to end up printing "False" because it's looking for pure identifiers,
+not complex suffix chains, and there's no identifier called "var1:suffix1".
+
+
 Difference between SET and DECLARE LOCAL and DECLARE GLOBAL
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

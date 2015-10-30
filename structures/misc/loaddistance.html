@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Vessel Load Distance &mdash; kOS 0.17.3 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
+        <link rel="next" title="PIDLoop" href="pidloop.html"/>
+        <link rel="prev" title="List" href="list.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
+      
+    <li>Vessel Load Distance</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/structures/misc/loaddistance.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="vessel-load-distance">
+<h1>Vessel Load Distance<a class="headerlink" href="#vessel-load-distance" title="Permalink to this headline">¶</a></h1>
+<dl class="structure">
+<dt id="structure:LOADDISTANCE">
+<em class="property">structure </em><tt class="descname">LoadDistance</tt><a class="headerlink" href="#structure:LOADDISTANCE" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>(The &#8220;on rails&#8221; settings)</strong></p>
+<p><a class="reference internal" href="#structure:LOADDISTANCE" title="LOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">LoadDistance</span></tt></a> describes the set of distances at which the game
+causes vessels to unload, and the distances that cause a vessel to
+become &#8220;packed&#8221;. This requires some explanation.</p>
+<p>Before entering into that explanation, first here&#8217;s a list of
+example cases where you might want to use this feature to change
+these values:</p>
+<ul class="simple">
+<li>Trying to have one airplane follow another.</li>
+<li>Trying to have two rockets fly in formation into orbit together.</li>
+<li>Trying to have a rover race to a flag, with several rovers seeing who gets there first.</li>
+</ul>
+<p>Basically, any time you might have more than just the current
+active vessel running a kOS script, this is a setting you probably
+will want to understand and tweak.</p>
+<p><strong>The explanation:</strong></p>
+<p>Most players of KSP eventually discover a concept called being
+&#8220;on rails&#8221;.  This is a term used by the player community to
+describe the fact that vessels that are far away from the active
+vessel aren&#8217;t being micro-managed under the full physics engine.  At that
+distance, changes in movement due to things like the atmosphere, are not
+applied.  The vessel&#8217;s physics are calculated based only on orbital motion,
+much like the effects of using timewarp (not physics warp).</p>
+<p>But the actual behavior in the game is a bit more complex than that,
+and understanding it is necessary to use this structure.</p>
+<p>The term &#8220;on rails&#8221; actually refers to two entirely different things
+that are controlled by separate settings, as described below:</p>
+<p><strong>loaded</strong> : A vessel is LOADED when all its parts are being
+rendered by the graphics engine and it&#8217;s possible to actually see
+what it looks like.  A vessel that is UNLOADED doesn&#8217;t even
+have its parts in memory and is just a single dot in space
+with no dimensions. An unloaded vessel is literally impossible
+to see on your screen no matter how much you squint because
+it&#8217;s not even being rendered on camera at all.  Unloaded vessels
+only exist as a marker icon in space, with a possible label text.</p>
+<p><strong>packed</strong> : A vessel is PACKED when it is close enough to be
+<em>loaded</em> (see above), but still far enough away that its full
+capabilities aren&#8217;t enabled.  A vessel that is <em>loaded</em>, but
+still <em>packed</em> will be unable to have its parts interact, and
+the vessel will appear stuck in the same location, unmoving.
+You can <em>see</em> a vessel that is loaded but packed, but the vessel
+won&#8217;t actually be able to <em>do</em> anything.  In this state, the
+game is still treating the entire object as if it was one single
+part.  It&#8217;s added all the graphic models of all the parts together
+into one conglomerate &#8220;object&#8221; (thus the term &#8220;packed&#8221;) that exists
+purely so you can look at it, even though it doesn&#8217;t actually work
+until you get closer and it becomes <em>unpacked</em>.</p>
+<p><strong>THE NEXT SENTENCE IS VERY IMPORTANT AND VITAL:</strong></p>
+<p><em>In order for a vessel to run kOS script code, the vessel must be
+BOTH LOADED and UNPACKED.</em>  Until both of those conditions occur,
+scripts cannot run on the vessel&#8217;s kOS computer parts.</p>
+<p>This structure allows you to read or change the stock KSP game&#8217;s
+distance settings for how far a vessel has to get from the active
+vessel in order for it to trigger its UNLOAD or PACK states.</p>
+<p>The distance settings are different for different vessel situations.
+It&#8217;s important to first read the existing values before changing them,
+to see what the stock game thought were reasonable for them.</p>
+<p>Some distances are very short.  For example, the fact that the
+pack distance for a landed vessel is short is what allows landers
+to stay &#8220;parked&#8221; in place without tipping over when you leave them
+on a long distance EVA.</p>
+<p>Each of these suffixes returns a <a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></tt></a>,
+which is a tuple of values for the loading and packing distances in
+that situation.</p>
+<p><strong>Wait between LOAD and PACK changes!</strong></p>
+<p>Due to a strange way the game behaves, it is unsafe to change
+both the load/unload distance and the unpack/pack distance at
+the same time in the same physics tick.  If you are
+going to increase both, then increase the load/unload distances
+first, followed by a <tt class="docutils literal"><span class="pre">WAIT</span> <span class="pre">0.001.</span></tt> to force a new physics tick
+and let the change take effect, then increase the unpack/pack
+distances after the wait is over.</p>
+<p><strong>Beware the space kraken when changing these:</strong></p>
+<p>There&#8217;s a reason the stock game has these distance limitations.  Setting
+them very large can degrade your performance, and can cause buggy
+inaccuracies in the position and velocity calculations that cause the
+game to think things have collided together when they haven&#8217;t.  This
+is the classic &#8220;space kraken&#8221; that KSP players talk about a lot.  Computer
+floating point numbers get less precise the farther from zero they are.
+So allowing the game to try to perform microcalculations on tiny time
+scales using floating point numbers that have imprecision because they are
+large in magnitude (i.e. the positions of parts that are many kilometers
+away from you), can cause phantom collisions, which make the game
+explode things for &#8220;no reason&#8221;.</p>
+<p>These distance limits were put in place by SQUAD specifically for
+the purpose of trying to avoid the space kraken.  If you set them
+too large again, you can risk invoking the Kraken again.  They
+typically CAN be enlarged some, because the settings are very low
+to provide a overly large safety margin, but be careful with it.
+Don&#8217;t go overboard and set the ranges to several thousand kilometers.</p>
+<p>Also, don&#8217;t set the PACK distance to be higher than the LOAD distance,
+as that is undefined behavior in the main game.  Always keep the LOAD
+distance higher than or equal to the PACK distance.</p>
+<table border="1" class="docutils">
+<caption>Members and Methods</caption>
+<colgroup>
+<col width="22%" />
+<col width="22%" />
+<col width="11%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Get/Set</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">ESCAPING</span></tt></td>
+<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></tt></a></td>
+<td>Get</td>
+<td>Load and pack Distances while escaping the current body</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">FLYING</span></tt></td>
+<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></tt></a></td>
+<td>Get</td>
+<td>Load and pack Distances while flying in atmosphere</td>
+</tr>
+<tr class="row-even"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">LANDED</span></tt></td>
+<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></tt></a></td>
+<td>Get</td>
+<td>Load and pack Distances while landed on the surface</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">ORBIT</span></tt></td>
+<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></tt></a></td>
+<td>Get</td>
+<td>Load and pack Distances while in orbit</td>
+</tr>
+<tr class="row-even"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">PRELAUNCH</span></tt></td>
+<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></tt></a></td>
+<td>Get</td>
+<td>Load and pack Distances while on the launch pad or runway</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">SPLASHED</span></tt></td>
+<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></tt></a></td>
+<td>Get</td>
+<td>Load and pack Distances while splashed in water</td>
+</tr>
+<tr class="row-even"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">SUBORBITAL</span></tt></td>
+<td><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></tt></a></td>
+<td>Get</td>
+<td>Load and pack Distances while on a suborbital trajectory</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="situation-load-distance">
+<h1>Situation Load Distance<a class="headerlink" href="#situation-load-distance" title="Permalink to this headline">¶</a></h1>
+<p>Each of the above</p>
+<dl class="structure">
+<dt id="structure:SITUATIONLOADDISTANCE">
+<em class="property">structure </em><tt class="descname">SituationLoadDistance</tt><a class="headerlink" href="#structure:SITUATIONLOADDISTANCE" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#structure:SITUATIONLOADDISTANCE" title="SITUATIONLOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">SituationLoadDistance</span></tt></a> is what is returned by each of the
+above suffixes mentioned in the LoadDistance suffix list above.</p>
+<p><strong>Order Matters.</strong> - Becuse of the protections in place to prevent
+you from setting some values bigger than others (see the descriptions
+below), sometimes the order in which you change the values matters
+and you have to be careful to change them in the correct order, or
+else  the attempt to change them will be denied.</p>
+<table border="1" class="docutils">
+<caption>Members and Methods</caption>
+<colgroup>
+<col width="25%" />
+<col width="13%" />
+<col width="13%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Get/Set</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:LOAD" title="SITUATIONLOADDISTANCE:LOAD attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">LOAD</span></tt></a></td>
+<td>scalar, in meters</td>
+<td>Get/Set</td>
+<td>The load distance</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:UNLOAD" title="SITUATIONLOADDISTANCE:UNLOAD attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UNLOAD</span></tt></a></td>
+<td>scalar, in meters</td>
+<td>Get/Set</td>
+<td>The unload distance</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:UNPACK" title="SITUATIONLOADDISTANCE:UNPACK attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">UNPACK</span></tt></a></td>
+<td>scalar, in meters</td>
+<td>Get/Set</td>
+<td>The unpack distance</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:SITUATIONLOADDISTANCE:PACK" title="SITUATIONLOADDISTANCE:PACK attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PACK</span></tt></a></td>
+<td>scalar, in meters</td>
+<td>Get/Set</td>
+<td>The pack distance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SITUATIONLOADDISTANCE:LOAD">
+SituationLoadDistance:<tt class="descname">LOAD</tt><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:LOAD" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar, in meters</td>
+</tr>
+</tbody>
+</table>
+<p>Get or set the load distance.  When another vessel is getting closer
+to you, because you are moving toward it or it is moving toward you,
+when that vessel becomes this distance <em>or closer</em> to the active
+vessel, it will transition from being <em>unloaded</em> to being <em>loaded</em>.
+See the description above for what it means for a vessel to be <em>loaded</em>.</p>
+<p>This value must be greater than <tt class="xref ks ks-attr docutils literal"><span class="pre">UNLOAD</span></tt>, and will automatically
+be adjusted accordingly.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SITUATIONLOADDISTANCE:UNLOAD">
+SituationLoadDistance:<tt class="descname">UNLOAD</tt><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:UNLOAD" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar, in meters</td>
+</tr>
+</tbody>
+</table>
+<p>Get or set the unload distance.  When another vessel is becoming more
+distant as you move away from it, or it moves away from you,
+when that vessel becomes this distance <em>or greater</em> from the active
+vessel, it will transition from being <em>loaded</em> to being <em>unloaded</em>.
+See the description above for what it means for a vessel to be <em>loaded</em>.</p>
+<p>This value must be less than <tt class="xref ks ks-attr docutils literal"><span class="pre">LOAD</span></tt>, and will automatically
+be adjusted accordingly.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SITUATIONLOADDISTANCE:UNPACK">
+SituationLoadDistance:<tt class="descname">UNPACK</tt><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:UNPACK" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar, in meters</td>
+</tr>
+</tbody>
+</table>
+<p>Get or set the unpack distance.  When another vessel is getting closer
+to you, because you are moving toward it or it is moving toward you,
+when that vessel becomes this distance <em>or closer</em> to the active
+vessel, it will transition from being <em>packed</em> to being <em>unpacked</em>.
+See the description above for what it means for a vessel to be <em>packed</em>.</p>
+<p>This value must be less than <tt class="xref ks ks-attr docutils literal"><span class="pre">PACK</span></tt>, and will automatically be adjusted accordingly.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:SITUATIONLOADDISTANCE:PACK">
+SituationLoadDistance:<tt class="descname">PACK</tt><a class="headerlink" href="#attribute:SITUATIONLOADDISTANCE:PACK" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">scalar, in meters</td>
+</tr>
+</tbody>
+</table>
+<p>Get or set the pack distance.  When another vessel is getting farther
+away from you, because you are moving away from it or it is moving
+away from you, when that vessel becomes this distance <em>or greater</em>
+from the active vessel, it will transition from being <em>unpacked</em> to
+being <em>packed</em>.  See the description above for what it means for
+a vessel to be <em>packed</em>.</p>
+<p>This value must be greater than <tt class="xref ks ks-attr docutils literal"><span class="pre">UNPACK</span></tt>, and will automatically be adjusted accordingly.</p>
+</dd></dl>
+
+<p>===Examples===</p>
+<p>Print out all the current settings:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">distances</span> <span class="n">TO</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="p">.</span>
+
+<span class="n">PRINT</span> <span class="s">&quot;escaping distances:&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    load: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">ESCAPING</span><span class="o">:</span><span class="n">LOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unload: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">ESCAPING</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unpack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">ESCAPING</span><span class="o">:</span><span class="n">UNPACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    pack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">ESCAPING</span><span class="o">:</span><span class="n">PACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;flying distances:&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    load: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">FLYING</span><span class="o">:</span><span class="n">LOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unload: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">FLYING</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unpack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">FLYING</span><span class="o">:</span><span class="n">UNPACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    pack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">FLYING</span><span class="o">:</span><span class="n">PACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;landed distances:&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    load: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">LANDED</span><span class="o">:</span><span class="n">LOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unload: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">LANDED</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unpack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">LANDED</span><span class="o">:</span><span class="n">UNPACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    pack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">LANDED</span><span class="o">:</span><span class="n">PACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;orbit distances:&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    load: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">ORBIT</span><span class="o">:</span><span class="n">LOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unload: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">ORBIT</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unpack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">ORBIT</span><span class="o">:</span><span class="n">UNPACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    pack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">ORBIT</span><span class="o">:</span><span class="n">PACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;prelaunch distances:&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    load: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">PRELAUNCH</span><span class="o">:</span><span class="n">LOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unload: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">PRELAUNCH</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unpack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">PRELAUNCH</span><span class="o">:</span><span class="n">UNPACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    pack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">PRELAUNCH</span><span class="o">:</span><span class="n">PACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;splashed distances:&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    load: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">SPLASHED</span><span class="o">:</span><span class="n">LOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unload: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">SPLASHED</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unpack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">SPLASHED</span><span class="o">:</span><span class="n">UNPACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    pack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">SPLASHED</span><span class="o">:</span><span class="n">PACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="s">&quot;suborbital distances:&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    load: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">SUBORBITAL</span><span class="o">:</span><span class="n">LOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unload: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">SUBORBITAL</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;  unpack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">SUBORBITAL</span><span class="o">:</span><span class="n">UNPACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+<span class="n">print</span> <span class="s">&quot;    pack: &quot;</span> <span class="o">+</span> <span class="n">distances</span><span class="o">:</span><span class="n">SUBORBITAL</span><span class="o">:</span><span class="n">PACK</span> <span class="o">+</span> <span class="s">&quot;m&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Change the settings while flying or landed or splashed or
+on launchpad or runway,
+For the purpose of allowing more vessels to fly around the
+Kerbal Space Center at a greater distances from each other:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// 30 km for in-flight</span>
+<span class="c1">// Note the order is important.  set UNLOAD BEFORE LOAD,</span>
+<span class="c1">// and PACK before UNPACK.  Otherwise the protections in</span>
+<span class="c1">// place to prevent invalid values will deny your attempt</span>
+<span class="c1">// to change some of the values:</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">FLYING</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="n">TO</span> <span class="mf">29500.</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">FLYING</span><span class="o">:</span><span class="n">LOAD</span> <span class="n">TO</span> <span class="mf">30000.</span>
+<span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span> <span class="c1">// See paragraph above: &quot;wait between load and pack changes&quot;</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">FLYING</span><span class="o">:</span><span class="n">PACK</span> <span class="n">TO</span> <span class="mf">29999.</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">FLYING</span><span class="o">:</span><span class="n">UNPACK</span> <span class="n">TO</span> <span class="mf">29000.</span>
+<span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span> <span class="c1">// See paragraph above: &quot;wait between load and pack changes&quot;</span>
+
+<span class="c1">// 30 km for parked on the ground:</span>
+<span class="c1">// Note the order is important.  set UNLOAD BEFORE LOAD,</span>
+<span class="c1">// and PACK before UNPACK.  Otherwise the protections in</span>
+<span class="c1">// place to prevent invalid values will deny your attempt</span>
+<span class="c1">// to change some of the values:</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">LANDED</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="n">TO</span> <span class="mf">29500.</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">LANDED</span><span class="o">:</span><span class="n">LOAD</span> <span class="n">TO</span> <span class="mf">30000.</span>
+<span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span> <span class="c1">// See paragraph above: &quot;wait between load and pack changes&quot;</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">LANDED</span><span class="o">:</span><span class="n">PACK</span> <span class="n">TO</span> <span class="mf">39999.</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">LANDED</span><span class="o">:</span><span class="n">UNPACK</span> <span class="n">TO</span> <span class="mf">29000.</span>
+<span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span> <span class="c1">// See paragraph above: &quot;wait between load and pack changes&quot;</span>
+
+<span class="c1">// 30 km for parked in the sea:</span>
+<span class="c1">// Note the order is important.  set UNLOAD BEFORE LOAD,</span>
+<span class="c1">// and PACK before UNPACK.  Otherwise the protections in</span>
+<span class="c1">// place to prevent invalid values will deny your attempt</span>
+<span class="c1">// to change some of the values:</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">SPLASHED</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="n">TO</span> <span class="mf">29500.</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">SPLASHED</span><span class="o">:</span><span class="n">LOAD</span> <span class="n">TO</span> <span class="mf">30000.</span>
+<span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span> <span class="c1">// See paragraph above: &quot;wait between load and pack changes&quot;</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">SPLASHED</span><span class="o">:</span><span class="n">PACK</span> <span class="n">TO</span> <span class="mf">29999.</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">SPLASHED</span><span class="o">:</span><span class="n">UNPACK</span> <span class="n">TO</span> <span class="mf">29000.</span>
+<span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span> <span class="c1">// See paragraph above: &quot;wait between load and pack changes&quot;</span>
+
+<span class="c1">// 30 km for being on the launchpad or runway</span>
+<span class="c1">// Note the order is important.  set UNLOAD BEFORE LOAD,</span>
+<span class="c1">// and PACK before UNPACK.  Otherwise the protections in</span>
+<span class="c1">// place to prevent invalid values will deny your attempt</span>
+<span class="c1">// to change some of the values:</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">PRELAUNCH</span><span class="o">:</span><span class="n">UNLOAD</span> <span class="n">TO</span> <span class="mf">29500.</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">PRELAUNCH</span><span class="o">:</span><span class="n">LOAD</span> <span class="n">TO</span> <span class="mf">30000.</span>
+<span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span> <span class="c1">// See paragraph above: &quot;wait between load and pack changes&quot;</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">PRELAUNCH</span><span class="o">:</span><span class="n">PACK</span> <span class="n">TO</span> <span class="mf">29999.</span>
+<span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEFAULTLOADDISTANCE</span><span class="o">:</span><span class="n">PRELAUNCH</span><span class="o">:</span><span class="n">UNPACK</span> <span class="n">TO</span> <span class="mf">29000.</span>
+<span class="n">WAIT</span> <span class="mf">0.001</span><span class="p">.</span> <span class="c1">// See paragraph above: &quot;wait between load and pack changes&quot;</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pidloop.html" class="btn btn-neutral float-right" title="PIDLoop">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="list.html" class="btn btn-neutral" title="List"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.17.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

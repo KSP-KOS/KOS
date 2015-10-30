@@ -36,7 +36,7 @@
     <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Resource Transfer" href="resource_transfer.html"/>
-        <link rel="prev" title="List" href="list.html"/> 
+        <link rel="prev" title="Vessel Load Distance" href="loaddistance.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -184,21 +184,26 @@
 <p>The <cite>PIDLoop</cite> has multiple constructors available.  Valid syntax can be seen here:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// Create a loop with default parameters</span>
 <span class="c1">// kp = 1, ki = 0, kd = 0</span>
-<span class="c1">// maxValue = maximum number value, extraunwind = false.</span>
+<span class="c1">// maxoutput = maximum number value</span>
+<span class="c1">// minoutput = minimum number value</span>
 <span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">().</span>
 
 <span class="c1">// Other constructors include:</span>
 <span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">(</span><span class="n">KP</span><span class="p">).</span>
 <span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">(</span><span class="n">KP</span><span class="p">,</span> <span class="n">KI</span><span class="p">,</span> <span class="n">KD</span><span class="p">).</span>
-<span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">(</span><span class="n">KP</span><span class="p">,</span> <span class="n">KI</span><span class="p">,</span> <span class="n">KD</span><span class="p">,</span> <span class="n">MAXOUTPUT</span><span class="p">).</span>
-<span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">(</span><span class="n">KP</span><span class="p">,</span> <span class="n">KI</span><span class="p">,</span> <span class="n">KD</span><span class="p">,</span> <span class="n">MAXOUTPUT</span><span class="p">,</span> <span class="n">EXTRAUNWIND</span><span class="p">).</span>
+<span class="c1">// you must specify both minimum and maximum output directly.</span>
+<span class="n">SET</span> <span class="n">PID</span> <span class="n">TO</span> <span class="n">PIDLOOP</span><span class="p">(</span><span class="n">KP</span><span class="p">,</span> <span class="n">KI</span><span class="p">,</span> <span class="n">KD</span><span class="p">,</span> <span class="n">MINOUTPUT</span><span class="p">,</span> <span class="n">MAXOUTPUT</span><span class="p">).</span>
 
-<span class="c1">// PIDLOOP&#39;s max value is symmetric, if you require an asymmetric</span>
-<span class="c1">// limit, you must apply an output offset yourself.  The following</span>
-<span class="c1">// code will set OUT to a value between 0 and 1.</span>
-<span class="n">SET</span> <span class="n">OFFSET</span> <span class="n">TO</span> <span class="mf">0.5</span><span class="p">.</span>
-<span class="n">SET</span> <span class="n">PID</span><span class="o">:</span><span class="n">MAXOUTPUT</span> <span class="n">TO</span> <span class="mf">0.5</span><span class="p">.</span>
-<span class="n">SET</span> <span class="n">OUT</span> <span class="n">TO</span> <span class="n">PID</span><span class="o">:</span><span class="n">UPDATE</span><span class="p">(</span><span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span><span class="p">,</span> <span class="n">IN</span><span class="p">)</span> <span class="o">+</span> <span class="n">OFFSET</span><span class="p">.</span>
+<span class="c1">// remember to update both minimum and maximum output if the value changes symmetrically</span>
+<span class="n">SET</span> <span class="n">LIMIT</span> <span class="n">TO</span> <span class="mf">0.5</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">PID</span><span class="o">:</span><span class="n">MAXOUTPUT</span> <span class="n">TO</span> <span class="n">LIMIT</span><span class="p">.</span>
+<span class="n">SET</span> <span class="n">PID</span><span class="o">:</span><span class="n">MINOUTPUT</span> <span class="n">TO</span> <span class="o">-</span><span class="n">LIMIT</span><span class="p">.</span>
+
+<span class="c1">// call the update suffix to get the output</span>
+<span class="n">SET</span> <span class="n">OUT</span> <span class="n">TO</span> <span class="n">PID</span><span class="o">:</span><span class="n">UPDATE</span><span class="p">(</span><span class="n">TIME</span><span class="o">:</span><span class="n">SECONDS</span><span class="p">,</span> <span class="n">IN</span><span class="p">).</span>
+
+<span class="c1">// you can also get the output value later from the PIDLoop object</span>
+<span class="n">SET</span> <span class="n">OUT</span> <span class="n">TO</span> <span class="n">PID</span><span class="o">:</span><span class="n">OUTPUT</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Please see the bottom of this page for information on the derivation of the loop&#8217;s output.</p>
@@ -215,9 +220,9 @@ may still find benefit in using customized logic.</p>
 <em class="property">structure </em><tt class="descname">PIDLoop</tt><a class="headerlink" href="#structure:PIDLOOP" title="Permalink to this definition">¶</a></dt>
 <dd><table border="1" class="docutils">
 <colgroup>
-<col width="35%" />
-<col width="23%" />
-<col width="42%" />
+<col width="37%" />
+<col width="25%" />
+<col width="38%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Suffix</th>
@@ -262,25 +267,25 @@ may still find benefit in using customized logic.</p>
 <td>scalar</td>
 <td>The maximum output value</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:ERRORSUM" title="PIDLOOP:ERRORSUM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:MINOUTPUT" title="PIDLOOP:MINOUTPUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MINOUTPUT</span></tt></a></td>
+<td>scalar</td>
+<td>The maximum output value</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:ERRORSUM" title="PIDLOOP:ERRORSUM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></tt></a></td>
 <td>scalar</td>
 <td>The time weighted sum of error</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:PTERM" title="PIDLOOP:PTERM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PTERM</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:PTERM" title="PIDLOOP:PTERM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PTERM</span></tt></a></td>
 <td>scalar</td>
 <td>The proportional component of output</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:ITERM" title="PIDLOOP:ITERM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:ITERM" title="PIDLOOP:ITERM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ITERM</span></tt></a></td>
 <td>scalar</td>
 <td>The integral component of output</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:DTERM" title="PIDLOOP:DTERM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DTERM</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:DTERM" title="PIDLOOP:DTERM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DTERM</span></tt></a></td>
 <td>scalar</td>
 <td>The derivative component of output</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:PIDLOOP:EXTRAUNWIND" title="PIDLOOP:EXTRAUNWIND attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">EXTRAUNWIND</span></tt></a></td>
-<td>bool</td>
-<td>Enables the use of aggressive integral unwind</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:PIDLOOP:CHANGERATE" title="PIDLOOP:CHANGERATE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CHANGERATE</span></tt></a></td>
 <td>scalar (/s)</td>
@@ -439,7 +444,23 @@ PIDLoop:<tt class="descname">MAXOUTPUT</tt><a class="headerlink" href="#attribut
 </tr>
 </tbody>
 </table>
-<p>The current maximum output value.  This value controls the maximum and minimum output values, as well as regulating integral wind up mitigation.</p>
+<p>The current maximum output value.  This value also helps with regulating integral wind up mitigation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:PIDLOOP:MINOUTPUT">
+PIDLoop:<tt class="descname">MINOUTPUT</tt><a class="headerlink" href="#attribute:PIDLOOP:MINOUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+</tbody>
+</table>
+<p>The current minimum output value.  This value also helps with regulating integral wind up mitigation.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -507,22 +528,6 @@ PIDLoop:<tt class="descname">DTERM</tt><a class="headerlink" href="#attribute:PI
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:PIDLOOP:EXTRAUNWIND">
-PIDLoop:<tt class="descname">EXTRAUNWIND</tt><a class="headerlink" href="#attribute:PIDLOOP:EXTRAUNWIND" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">scalar</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
-</tr>
-</tbody>
-</table>
-<p>When true, <tt class="xref ks ks-attr docutils literal"><span class="pre">KI</span></tt> will be multiplied by 2 when the sign (+ or -) of <tt class="xref ks ks-attr docutils literal"><span class="pre">ERROR</span></tt> does not match the sign of <tt class="xref ks ks-attr docutils literal"><span class="pre">ERRORSUM</span></tt>.  This can help to unwind the integral component more quickly after a zero crossing, and may decrease settling time.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="attribute:PIDLOOP:CHANGERATE">
 PIDLoop:<tt class="descname">CHANGERATE</tt><a class="headerlink" href="#attribute:PIDLOOP:CHANGERATE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -560,8 +565,8 @@ PIDLoop:<tt class="descname">UPDATE</tt><big>(</big>time, input<big>)</big><a cl
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>time</strong> &#8211; (double) the decimal time in seconds</li>
-<li><strong>input</strong> &#8211; (double) the input variable to compare to the setpoint</li>
+<li><strong>time</strong> &#8211; (scalar) the decimal time in seconds</li>
+<li><strong>input</strong> &#8211; (scalar) the input variable to compare to the setpoint</li>
 </ul>
 </td>
 </tr>
@@ -570,13 +575,13 @@ PIDLoop:<tt class="descname">UPDATE</tt><big>(</big>time, input<big>)</big><a cl
 </tr>
 </tbody>
 </table>
-<p>Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (<cite>TIME:SECONDS</cite>), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXOUTPUT</span></tt> and <tt class="xref ks ks-attr docutils literal"><span class="pre">EXTRAUNWIND</span></tt>.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.</p>
+<p>Upon calling this method, the PIDLoop will calculate the output based on this this basic framework (see below for detailed derivation): output = error * kp + errorsum * ki + (change in input) / (change in time) * kd.  This method is usually called with the current time in seconds (<cite>TIME:SECONDS</cite>), however it may be called using whatever rate measurement you prefer.  Windup mitigation is included, based on <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXOUTPUT</span></tt> and <tt class="xref ks ks-attr docutils literal"><span class="pre">MINOUTPUT</span></tt>.  Both integral components and derivative components are guarded against a change in time greater than 1s, and will not be calculated on the first iteration.</p>
 </dd></dl>
 
 <div class="section" id="pidloop-update-derivation">
 <h2>PIDLoop Update Derivation<a class="headerlink" href="#pidloop-update-derivation" title="Permalink to this headline">¶</a></h2>
 <p>The internal update method of the <a class="reference internal" href="#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure is the equivalent of the following in kerboscript</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="c1">// assume that the terms LastSampleTime, Kp, Ki, Kd, Setpoint, and MaxOutput are previously defined</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// assume that the terms LastSampleTime, Kp, Ki, Kd, Setpoint, MinOutput, and MaxOutput are previously defined</span>
 <span class="n">declare</span> <span class="n">function</span> <span class="n">Update</span> <span class="p">{</span>
     <span class="n">declare</span> <span class="n">parameter</span> <span class="n">sampleTime</span><span class="p">,</span> <span class="n">input</span><span class="p">.</span>
     <span class="n">set</span> <span class="n">Error</span> <span class="n">to</span> <span class="n">Setpoint</span> <span class="o">-</span> <span class="n">input</span><span class="p">.</span>
@@ -598,10 +603,17 @@ PIDLoop:<tt class="descname">UPDATE</tt><big>(</big>time, input<big>)</big><a cl
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="n">set</span> <span class="n">Output</span> <span class="n">to</span> <span class="n">pTerm</span> <span class="o">+</span> <span class="n">iTerm</span> <span class="o">+</span> <span class="n">dTerm</span><span class="p">.</span>
-    <span class="k">if</span> <span class="n">abs</span><span class="p">(</span><span class="n">Output</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MaxOutput</span> <span class="p">{</span>
-        <span class="c1">// if the output goes beyond the max/min limits, reset it.</span>
-        <span class="k">if</span> <span class="n">Output</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="n">set</span> <span class="n">Output</span> <span class="n">to</span> <span class="n">MaxOutput</span><span class="p">.</span>
-        <span class="k">else</span> <span class="n">set</span> <span class="n">Output</span> <span class="n">to</span> <span class="o">-</span><span class="n">MaxOutput</span><span class="p">.</span>
+    <span class="c1">// if the output goes beyond the max/min limits, reset it and adjust ITerm.</span>
+    <span class="k">if</span> <span class="n">Output</span> <span class="o">&gt;</span> <span class="n">MaxOutput</span> <span class="p">{</span>
+        <span class="n">set</span> <span class="n">Output</span> <span class="n">to</span> <span class="n">MaxOutput</span><span class="p">.</span>
+        <span class="c1">// adjust the value of ITerm as well to prevent the value</span>
+        <span class="c1">// from winding up out of control.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Ki</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">and</span> <span class="p">(</span><span class="n">LastSampleTime</span> <span class="o">&lt;</span> <span class="n">sampleTime</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">set</span> <span class="n">ITerm</span> <span class="n">to</span> <span class="n">Output</span> <span class="o">-</span> <span class="n">Pterm</span> <span class="o">-</span> <span class="n">DTerm</span><span class="p">.</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="n">Output</span> <span class="o">&lt;</span> <span class="n">MinOutput</span> <span class="p">{</span>
+        <span class="n">set</span> <span class="n">Output</span> <span class="n">to</span> <span class="n">MinOutput</span><span class="p">.</span>
         <span class="c1">// adjust the value of ITerm as well to prevent the value</span>
         <span class="c1">// from winding up out of control.</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">Ki</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">and</span> <span class="p">(</span><span class="n">LastSampleTime</span> <span class="o">&lt;</span> <span class="n">sampleTime</span><span class="p">)</span> <span class="p">{</span>
@@ -627,7 +639,7 @@ PIDLoop:<tt class="descname">UPDATE</tt><big>(</big>time, input<big>)</big><a cl
         <a href="resource_transfer.html" class="btn btn-neutral float-right" title="Resource Transfer">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="list.html" class="btn btn-neutral" title="List"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="loaddistance.html" class="btn btn-neutral" title="Vessel Load Distance"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
