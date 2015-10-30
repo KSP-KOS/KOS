@@ -436,6 +436,7 @@ namespace kOS.Module
                 firstUpdate = false;
                 shared.Cpu.Boot();
             }
+            UpdateVessel();
             UpdateFixedObservers();
             ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
@@ -452,7 +453,7 @@ namespace kOS.Module
         {
             if (ProcessorMode == ProcessorModes.READY)
             {
-                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(Time.deltaTime);
+                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(TimeWarp.deltaTime);
                 UpdateParts();
             }
         }
@@ -461,7 +462,7 @@ namespace kOS.Module
         {
             if (ProcessorMode == ProcessorModes.READY)
             {
-                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateFixedObservers(Time.deltaTime);
+                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateFixedObservers(TimeWarp.fixedDeltaTime);
             }
         }
 

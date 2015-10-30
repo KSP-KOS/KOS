@@ -79,7 +79,9 @@
     <Compile Include="Encapsulation\Lexicon.cs" />
     <Compile Include="Encapsulation\ListValue.cs" />
     <Compile Include="Encapsulation\Part\IModuleEngine.cs" />
+    <Compile Include="Encapsulation\PIDLoop.cs" />
     <Compile Include="Encapsulation\Structure.cs" />
+    <Compile Include="Encapsulation\StringValue.cs" />
     <Compile Include="Encapsulation\Suffixes\ClampSetSuffix.cs" />
     <Compile Include="Encapsulation\Suffixes\SuffixBase.cs" />
     <Compile Include="Encapsulation\Suffixes\GlobalSuffix.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="Execution\IProgramContext.cs" />
     <Compile Include="Execution\IStack.cs" />
     <Compile Include="Execution\IUserDelegate.cs" />
+    <Compile Include="Execution\KOSArgMarkerType.cs" />
     <Compile Include="Execution\SurboutineContext.cs" />
     <Compile Include="Execution\UserDelegate.cs" />
     <Compile Include="Execution\Variable.cs" />
@@ -169,6 +172,7 @@
     <Compile Include="UserIO\UnicodeCommand.cs" />
     <Compile Include="Utilities\Debug.cs" />
     <Compile Include="Utilities\EnumUtilities.cs" />
+    <Compile Include="Utilities\MovingAverage.cs" />
     <Compile Include="Utilities\SafeHouse.cs" />
     <Compile Include="Utilities\Flushable.cs" />
     <Compile Include="Utilities\kOSKeys.cs" />

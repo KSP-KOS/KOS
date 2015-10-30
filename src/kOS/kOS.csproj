@@ -71,6 +71,8 @@
     <Compile Include="Binding\FlightStats.cs" />
     <Compile Include="Binding\MissionSettings.cs" />
     <Compile Include="Binding\RoverStats.cs" />
+    <Compile Include="Binding\SteeringManager.cs" />
+    <Compile Include="Binding\SteeringManagerProvider.cs" />
     <Compile Include="Binding\TerminalSettings.cs" />
     <Compile Include="Binding\BindingsUniverse.cs" />
     <Compile Include="AddOns\RemoteTech\RemoteTechFactory.cs" />
@@ -95,6 +97,8 @@
     </Compile>
     <Compile Include="Sound\SoundMaker.cs" />
     <Compile Include="Suffixed\HsvColor.cs" />
+    <Compile Include="Suffixed\KUniverseValue.cs" />
+    <Compile Include="Suffixed\LoadDistanceValue.cs" />
     <Compile Include="Suffixed\ResourceTransferValue.cs" />
     <Compile Include="Screen\DelegateDialog.cs" />
     <Compile Include="Screen\KOSManagedWindow.cs" />
@@ -152,7 +156,6 @@
     <Compile Include="UserIO\TerminalXtermMapper.cs" />
     <Compile Include="Utilities\BetaShim.cs" />
     <Compile Include="Utilities\PartUtilities.cs" />
-    <Compile Include="Utilities\SteeringHelper.cs" />
     <Compile Include="Screen\TermWindow.cs" />
     <Compile Include="Suffixed\Timespan.cs" />
     <Compile Include="Utilities\Utils.cs" />

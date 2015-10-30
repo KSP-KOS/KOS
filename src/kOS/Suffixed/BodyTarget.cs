@@ -97,6 +97,7 @@ namespace kOS.Suffixed
             AddSuffix("ATM", new Suffix<BodyAtmosphere>(() => new BodyAtmosphere(Body)));
             AddSuffix("ANGULARVEL", new Suffix<Vector>(() => RawAngularVelFromRelative(Body.angularVelocity)));
             AddSuffix("SOIRADIUS", new Suffix<double>(() => Body.sphereOfInfluence));
+            AddSuffix("ROTATIONANGLE", new Suffix<double>(() => Body.rotationAngle));
             AddSuffix("GEOPOSITIONOF",
                       new OneArgsSuffix<GeoCoordinates, Vector>(
                               GeoCoordinatesFromPosition,

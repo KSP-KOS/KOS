@@ -4,6 +4,7 @@ using kOS.Suffixed;
 using kOS.Safe.Exceptions;
 using kOS.Safe.Compilation;
 using kOS.Safe.Function;
+using TimeSpan = kOS.Suffixed.TimeSpan;
 
 namespace kOS.Function
 {
@@ -53,7 +54,7 @@ namespace kOS.Function
             }
             catch(Exception)
             {
-                throw new KOSCastException(argument.GetType(),typeof(Double));
+                throw new KOSCastException(argument.GetType(),typeof(double));
             }    
         }
 
@@ -65,7 +66,7 @@ namespace kOS.Function
             }
             catch (Exception)
             {
-                throw new KOSCastException(argument.GetType(),typeof(Int32));
+                throw new KOSCastException(argument.GetType(),typeof(int));
             }
         }
 
@@ -89,24 +90,26 @@ namespace kOS.Function
             throw new KOSCastException(argument.GetType(),typeof(RgbaColor));
         }
 
-        protected Suffixed.TimeSpan GetTimeSpan(object argument)
+        protected TimeSpan GetTimeSpan(object argument)
         {
-            if (argument is Suffixed.TimeSpan)
+            var span = argument as TimeSpan;
+            if (span != null)
             {
-                return argument as Suffixed.TimeSpan;
+                return span;
             }
-            if (argument is Double || argument is int || argument is long || argument is float)
+            if (argument is double || argument is int || argument is long || argument is float)
             {
-                return new Suffixed.TimeSpan( Convert.ToDouble(argument) );
+                return new TimeSpan( Convert.ToDouble(argument) );
             }
-            throw new KOSCastException(argument.GetType(),typeof(Suffixed.TimeSpan));
+            throw new KOSCastException(argument.GetType(),typeof(TimeSpan));
         }
 
         protected Orbitable GetOrbitable(object argument)
         {
-            if (argument is Orbitable)
+            var orbitable = argument as Orbitable;
+            if (orbitable != null)
             {
-                return argument as Orbitable;
+                return orbitable;
             }
             throw new KOSCastException(argument.GetType(),typeof(Orbitable));
         }
@@ -133,7 +136,7 @@ namespace kOS.Function
         protected void AssertArgBottomAndConsume(SharedObjects shared)
         {
             object shouldBeBottom = shared.Cpu.PopStack();
-            if (shouldBeBottom is string && ((string)shouldBeBottom).Equals(OpcodeCall.ARG_MARKER_STRING))
+            if (shouldBeBottom != null && shouldBeBottom.GetType() == OpcodeCall.ArgMarkerType)
                 return; // Assert passed.
             
             throw new KOSArgumentMismatchException("Too many arguments were passed to " + GetFuncName());
@@ -153,7 +156,7 @@ namespace kOS.Function
             while (stillInStack && !found)
             {
                 object peekItem = shared.Cpu.PeekRaw(depth, out stillInStack);
-                if (stillInStack && peekItem is string && ((string)peekItem).Equals(OpcodeCall.ARG_MARKER_STRING))
+                if (stillInStack && peekItem != null && peekItem.GetType() == OpcodeCall.ArgMarkerType)
                     found = true;
                 else
                     ++depth;
@@ -173,7 +176,7 @@ namespace kOS.Function
         protected object PopValueAssert(SharedObjects shared, bool barewordOkay = false)
         {
             object returnValue = shared.Cpu.PopValue(barewordOkay);
-            if (returnValue is string && ((string)returnValue).Equals(OpcodeCall.ARG_MARKER_STRING))
+            if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
                 throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
             return returnValue;
         }
@@ -187,7 +190,7 @@ namespace kOS.Function
         protected object PopStackAssert(SharedObjects shared)
         {
             object returnValue = shared.Cpu.PopStack();
-            if (returnValue is string && ((string)returnValue).Equals(OpcodeCall.ARG_MARKER_STRING))
+            if (returnValue != null && returnValue.GetType() == OpcodeCall.ArgMarkerType)
                 throw new KOSArgumentMismatchException("Too few arguments were passed to " + GetFuncName());
             return returnValue;
         }
