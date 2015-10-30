@@ -68,7 +68,8 @@ Renamed built-ins
 Enforces control of own-vessel only
 :::::::::::::::::::::::::::::::::::
 
-TODO - This doc change not merged yet so I can't link to it.
+It was previously possible to control vessels that weren't attached to the kOS computer
+running the script.  This has been corrected.
 
 New quickstart tutorial
 :::::::::::::::::::::::
