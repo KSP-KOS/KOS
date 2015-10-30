@@ -504,8 +504,17 @@ namespace kOS.Suffixed
             //        speed_2D = sqrt(a^2+b^2).
             //    Therefore:
             //        speed_2D = sqrt(srfspd^2 - c^2)
-            //    Since C in our case is the vertical speed we want to remove, we get the following formula:            
-            return System.Math.Sqrt(Vessel.srfSpeed*Vessel.srfSpeed - Vessel.verticalSpeed*Vessel.verticalSpeed);            
+            //    Since C in our case is the vertical speed we want to remove, we get the following formula:
+
+            double squared2DSpeed = Vessel.srfSpeed*Vessel.srfSpeed - Vessel.verticalSpeed*Vessel.verticalSpeed;
+
+            // Due to floating point roundoff errrors in the KSP API, the above expression can sometimes come
+            // out slightly negative when it should be nearly zero.  (i.e. -0.0000012).  The Sqrt() would
+            // return NaN for such a case, so it needs to be protected from ever going negative like so:
+            if (squared2DSpeed < 0)
+                squared2DSpeed = 0;
+
+            return System.Math.Sqrt(squared2DSpeed);
         }
 
         /// <summary>
