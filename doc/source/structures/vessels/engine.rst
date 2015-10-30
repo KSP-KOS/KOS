@@ -52,22 +52,22 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
           - Rate of fuel burn
         * - :attr:`ISP`
           - scalar
-          - `Specific impulse <isp>`_
+          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
         * - :meth:`ISPAT(pressure)`
           - scalar
-          - `Specific impulse <isp>`_ at the given pressure (in standard Kerbin atmospheres).
+          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given pressure (in standard Kerbin atmospheres).
         * - :attr:`VACUUMISP`
           - scalar
-          - `Vacuum Specific impulse <isp>`_
+          - Vacuum `specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
         * - :attr:`VISP`
           - scalar
-          - `Synonym for VACUUMISP <vacuumisp>`_
+          - Synonym for VACUUMISP
         * - :attr:`SEALEVELISP`
           - scalar
-          - `Specific impulse at Kerbin sealevel <isp>`_
+          - `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel
         * - :attr:`SLISP`
           - scalar
-          - `Synonym for SEALEVELISP <sealevelisp>`_
+          - Synonym for SEALEVELISP
         * - :attr:`FLAMEOUT`
           - boolean
           - Check if no more fuel
@@ -161,21 +161,21 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: scalar
 
-    `Specific impulse <isp>`_
+    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
 
 .. method:: Engine:ISPAT(pressure)
 
     :parameter pressure: atmospheric pressure (in standard Kerbin atmospheres)
     :type: scalar
 
-    `Specific impulse <isp>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
+    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).
 
 .. attribute:: Engine:VACUUMISP
 
     :access: Get only
     :type: scalar
 
-    `Vacuum Specific impulse <isp>`_
+    Vacuum `specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_
 
 .. attribute:: Engine:VISP
 
@@ -189,7 +189,7 @@ Some of the Parts returned by :ref:`LIST PARTS <list command>` will be of type E
     :access: Get only
     :type: scalar
 
-    `Specific impulse at Kerbin sealevel <isp>`_
+    `Specific impulse <http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse>`_ at Kerbin sealevel.
 
 .. attribute:: Engine:SLISP
 
