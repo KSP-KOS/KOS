@@ -138,11 +138,15 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
 
     Set the value of one of the fields that this PartModule has placed onto the rightclick menu for the part. Note the Security comments below.
 
+    WARNING: This suffix is only settable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
+
 .. method:: PartModule:DOEVENT(name)
 
     :parameter name: (string) Name of the event
 
     Trigger an "event button" that is on the rightclick part menu at the moment. Note the Security comments below.
+
+    WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
 .. method:: PartModule:DOACTION(name,bool)
 
@@ -150,6 +154,8 @@ Once you have a :struct:`PartModule`, you can use it to invoke the behaviors tha
     :parameter bool: (boolean) Value to set: True or False
 
     Activate one of this PartModule's action-group-able actions, bypassing the action group system entirely by just activating it for this one part directly. The boolean value decides whether you are toggling the action ON or toggling it OFF. Note the Security comments below.
+
+    WARNING: This suffix is only callable for parts attached to the :ref:`CPU Vessel <cpu vessel>`
 
 .. method:: PartModule:HASFIELD(name)
 

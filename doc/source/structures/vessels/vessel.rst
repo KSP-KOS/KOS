@@ -81,6 +81,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
 
     The structure representing the raw flight controls for the vessel.
 
+    WARNING: This suffix is only gettable for :ref:`CPU Vessel <cpu vessel>`
+
 .. attribute:: Vessel:BEARING
 
     :type: scalar
