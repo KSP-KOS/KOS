@@ -13,6 +13,96 @@ of documentation again from scratch.
     :local:
     :depth: 3
 
+****
+
+Changes in 0.18 - Steering Much Betterer
+----------------------------------------
+
+Steering Overhaul
+:::::::::::::::::
+
+A major change to Cooked Steering!
+
+Should help people using torque-less craft like with Realism Overhaul.
+Removed the old steering logic and replaced it with a nice auto-tuning system.
+
+:ref:`SteeringManager <steeringmanager>` structure now lests you acccess and alter parts of the cooked steering system.
+
+:ref:`PIDLoop <pidloop>` structure now lets you borrow the PID mechanism used by the new cooked steering, for your own purposes.
+
+Lexicon
+:::::::
+
+New :ref:`Lexicon <lexicon>` structure now allows associative arrays.
+
+String methods
+::::::::::::::
+
+New :ref:`String <string>` structure now allows string manipulations.
+
+Science Experiment Control
+::::::::::::::::::::::::::
+
+New :ref:`ScienceExperimentModule <scienceexperimentmodule>` allows you to fire off science experiments bypassing the user 
+interface dialog.
+
+Crew Member API
+:::::::::::::::
+
+New :ref:`CrewMember <crewmember>` structure allows you to query the registered crew - their class, gender, and skill.
+
+LOADISTANCE
+:::::::::::
+
+New :struct:`LOADDISTANCE` obsoletes the previous way it worked.
+
+Infernal Robotics Part suffix
+:::::::::::::::::::::::::::::
+
+Renamed built-ins
+:::::::::::::::::
+
+"AQUIRE" on docking ports is now "ACQUIRE".
+"SURFACESPEED" is now "GROUNDSPEED" instead.
+
+Enforces control of own-vessel only
+:::::::::::::::::::::::::::::::::::
+
+TODO - This doc change not merged yet so I can't link to it.
+
+New quickstart tutorial
+:::::::::::::::::::::::
+
+`http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html <http://ksp-kos.github.io/KOS_DOC/tutorials/quickstart.html>`_ 
+
+A few more constants
+::::::::::::::::::::
+
+:ref:`constants <constants>`
+
+Dynamic pressure
+::::::::::::::::
+
+DYNAMICPRESSURE, or Q, a new suffix of :struct:`Vessel`.
+
+DEFINED keyword
+:::::::::::::::
+
+:ref:`DEFINED keyword <defined>` that can be used to check if a variable has been declared.
+
+KUNIVERSE
+:::::::::
+
+:struct:`KUniverse` structure letting you break the 4th wall and revert from a script
+
+SolarPrimeVector
+::::::::::::::::
+
+:ref:`SolarPrimeVector <solarprimevector>`, a bound variable to provide universal longitude direction.
+
+
+****
+
 Changes in 0.17.3
 -----------------
 

@@ -1,7 +1,7 @@
 .. _scienceexperimentmodule:
 
 ScienceExperimentModule
-======
+=======================
 
 The type of structures returned by kOS when querying a module that contains a science experiment.
 
