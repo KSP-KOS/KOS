@@ -54,23 +54,23 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.POWER, regex);
             Tokens.Add(TokenType.POWER);
 
-            regex = new Regex(@"\b[Ee]\b");
+            regex = new Regex(@"(?i)\be\b");
             Patterns.Add(TokenType.E, regex);
             Tokens.Add(TokenType.E);
 
-            regex = new Regex(@"\b[Nn][Oo][Tt]\b");
+            regex = new Regex(@"(?i)\bnot\b");
             Patterns.Add(TokenType.NOT, regex);
             Tokens.Add(TokenType.NOT);
 
-            regex = new Regex(@"\b[Aa][Nn][Dd]\b");
+            regex = new Regex(@"(?i)\band\b");
             Patterns.Add(TokenType.AND, regex);
             Tokens.Add(TokenType.AND);
 
-            regex = new Regex(@"\b[Oo][Rr]\b");
+            regex = new Regex(@"(?i)\bor\b");
             Patterns.Add(TokenType.OR, regex);
             Tokens.Add(TokenType.OR);
 
-            regex = new Regex(@"\b[Tt][Rr][Uu][Ee]\b|\b[Ff][Aa][Ll][Ss][Ee]\b");
+            regex = new Regex(@"(?i)\btrue\b|\bfalse\b");
             Patterns.Add(TokenType.TRUEFALSE, regex);
             Tokens.Add(TokenType.TRUEFALSE);
 
@@ -78,191 +78,191 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.COMPARATOR, regex);
             Tokens.Add(TokenType.COMPARATOR);
 
-            regex = new Regex(@"\b[Ss][Ee][Tt]\b");
+            regex = new Regex(@"(?i)\bset\b");
             Patterns.Add(TokenType.SET, regex);
             Tokens.Add(TokenType.SET);
 
-            regex = new Regex(@"\b[Tt][Oo]\b");
+            regex = new Regex(@"(?i)\bto\b");
             Patterns.Add(TokenType.TO, regex);
             Tokens.Add(TokenType.TO);
 
-            regex = new Regex(@"\b[Ii][Ss]\b");
+            regex = new Regex(@"(?i)\bis\b");
             Patterns.Add(TokenType.IS, regex);
             Tokens.Add(TokenType.IS);
 
-            regex = new Regex(@"\b[Ii][Ff]\b");
+            regex = new Regex(@"(?i)\bif\b");
             Patterns.Add(TokenType.IF, regex);
             Tokens.Add(TokenType.IF);
 
-            regex = new Regex(@"\b[Ee][Ll][Ss][Ee]\b");
+            regex = new Regex(@"(?i)\belse\b");
             Patterns.Add(TokenType.ELSE, regex);
             Tokens.Add(TokenType.ELSE);
 
-            regex = new Regex(@"\b[Uu][Nn][Tt][Ii][Ll]\b");
+            regex = new Regex(@"(?i)\buntil\b");
             Patterns.Add(TokenType.UNTIL, regex);
             Tokens.Add(TokenType.UNTIL);
 
-            regex = new Regex(@"\b[Ss][Tt][Ee][Pp]\b");
+            regex = new Regex(@"(?i)\bstep\b");
             Patterns.Add(TokenType.STEP, regex);
             Tokens.Add(TokenType.STEP);
 
-            regex = new Regex(@"\b[Dd][Oo]\b");
+            regex = new Regex(@"(?i)\bdo\b");
             Patterns.Add(TokenType.DO, regex);
             Tokens.Add(TokenType.DO);
 
-            regex = new Regex(@"\b[Ll][Oo][Cc][Kk]\b");
+            regex = new Regex(@"(?i)\block\b");
             Patterns.Add(TokenType.LOCK, regex);
             Tokens.Add(TokenType.LOCK);
 
-            regex = new Regex(@"\b[Uu][Nn][Ll][Oo][Cc][Kk]\b");
+            regex = new Regex(@"(?i)\bunlock\b");
             Patterns.Add(TokenType.UNLOCK, regex);
             Tokens.Add(TokenType.UNLOCK);
 
-            regex = new Regex(@"\b[Pp][Rr][Ii][Nn][Tt]\b");
+            regex = new Regex(@"(?i)\bprint\b");
             Patterns.Add(TokenType.PRINT, regex);
             Tokens.Add(TokenType.PRINT);
 
-            regex = new Regex(@"\b[Aa][Tt]\b");
+            regex = new Regex(@"(?i)\bat\b");
             Patterns.Add(TokenType.AT, regex);
             Tokens.Add(TokenType.AT);
 
-            regex = new Regex(@"\b[Oo][Nn]\b");
+            regex = new Regex(@"(?i)\bon\b");
             Patterns.Add(TokenType.ON, regex);
             Tokens.Add(TokenType.ON);
 
-            regex = new Regex(@"\b[Tt][Oo][Gg][Gg][Ll][Ee]\b");
+            regex = new Regex(@"(?i)\btoggle\b");
             Patterns.Add(TokenType.TOGGLE, regex);
             Tokens.Add(TokenType.TOGGLE);
 
-            regex = new Regex(@"\b[Ww][Aa][Ii][Tt]\b");
+            regex = new Regex(@"(?i)\bwait\b");
             Patterns.Add(TokenType.WAIT, regex);
             Tokens.Add(TokenType.WAIT);
 
-            regex = new Regex(@"\b[Ww][Hh][Ee][Nn]\b");
+            regex = new Regex(@"(?i)\bwhen\b");
             Patterns.Add(TokenType.WHEN, regex);
             Tokens.Add(TokenType.WHEN);
 
-            regex = new Regex(@"\b[Tt][Hh][Ee][Nn]\b");
+            regex = new Regex(@"(?i)\bthen\b");
             Patterns.Add(TokenType.THEN, regex);
             Tokens.Add(TokenType.THEN);
 
-            regex = new Regex(@"\b[Oo][Ff][Ff]\b");
+            regex = new Regex(@"(?i)\boff\b");
             Patterns.Add(TokenType.OFF, regex);
             Tokens.Add(TokenType.OFF);
 
-            regex = new Regex(@"\b[Ss][Tt][Aa][Gg][Ee]\b");
+            regex = new Regex(@"(?i)\bstage\b");
             Patterns.Add(TokenType.STAGE, regex);
             Tokens.Add(TokenType.STAGE);
 
-            regex = new Regex(@"\b[Cc][Ll][Ee][Aa][Rr][Ss][Cc][Rr][Ee][Ee][Nn]\b");
+            regex = new Regex(@"(?i)\bclearscreen\b");
             Patterns.Add(TokenType.CLEARSCREEN, regex);
             Tokens.Add(TokenType.CLEARSCREEN);
 
-            regex = new Regex(@"\b[Aa][Dd][Dd]\b");
+            regex = new Regex(@"(?i)\badd\b");
             Patterns.Add(TokenType.ADD, regex);
             Tokens.Add(TokenType.ADD);
 
-            regex = new Regex(@"\b[Rr][Ee][Mm][Oo][Vv][Ee]\b");
+            regex = new Regex(@"(?i)\bremove\b");
             Patterns.Add(TokenType.REMOVE, regex);
             Tokens.Add(TokenType.REMOVE);
 
-            regex = new Regex(@"\b[Ll][Oo][Gg]\b");
+            regex = new Regex(@"(?i)\blog\b");
             Patterns.Add(TokenType.LOG, regex);
             Tokens.Add(TokenType.LOG);
 
-            regex = new Regex(@"\b[Bb][Rr][Ee][Aa][Kk]\b");
+            regex = new Regex(@"(?i)\bbreak\b");
             Patterns.Add(TokenType.BREAK, regex);
             Tokens.Add(TokenType.BREAK);
 
-            regex = new Regex(@"\b[Pp][Rr][Ee][Ss][Ee][Rr][Vv][Ee]\b");
+            regex = new Regex(@"(?i)\bpreserve\b");
             Patterns.Add(TokenType.PRESERVE, regex);
             Tokens.Add(TokenType.PRESERVE);
 
-            regex = new Regex(@"\b[Dd][Ee][Cc][Ll][Aa][Rr][Ee]\b");
+            regex = new Regex(@"(?i)\bdeclare\b");
             Patterns.Add(TokenType.DECLARE, regex);
             Tokens.Add(TokenType.DECLARE);
 
-            regex = new Regex(@"\b[Dd][Ee][Ff][Ii][Nn][Ee][Dd]\b");
+            regex = new Regex(@"(?i)\bdefined\b");
             Patterns.Add(TokenType.DEFINED, regex);
             Tokens.Add(TokenType.DEFINED);
 
-            regex = new Regex(@"\b[Ll][Oo][Cc][Aa][Ll]\b");
+            regex = new Regex(@"(?i)\blocal\b");
             Patterns.Add(TokenType.LOCAL, regex);
             Tokens.Add(TokenType.LOCAL);
 
-            regex = new Regex(@"\b[Gg][Ll][Oo][Bb][Aa][Ll]\b");
+            regex = new Regex(@"(?i)\bglobal\b");
             Patterns.Add(TokenType.GLOBAL, regex);
             Tokens.Add(TokenType.GLOBAL);
 
-            regex = new Regex(@"\b[Pp][Aa][Rr][Aa][Mm][Ee][Tt][Ee][Rr]\b");
+            regex = new Regex(@"(?i)\bparameter\b");
             Patterns.Add(TokenType.PARAMETER, regex);
             Tokens.Add(TokenType.PARAMETER);
 
-            regex = new Regex(@"\b[Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]\b");
+            regex = new Regex(@"(?i)\bfunction\b");
             Patterns.Add(TokenType.FUNCTION, regex);
             Tokens.Add(TokenType.FUNCTION);
 
-            regex = new Regex(@"\b[Rr][Ee][Tt][Uu][Rr][Nn]\b");
+            regex = new Regex(@"(?i)\breturn\b");
             Patterns.Add(TokenType.RETURN, regex);
             Tokens.Add(TokenType.RETURN);
 
-            regex = new Regex(@"\b[Ss][Ww][Ii][Tt][Cc][Hh]\b");
+            regex = new Regex(@"(?i)\bswitch\b");
             Patterns.Add(TokenType.SWITCH, regex);
             Tokens.Add(TokenType.SWITCH);
 
-            regex = new Regex(@"\b[Cc][Oo][Pp][Yy]\b");
+            regex = new Regex(@"(?i)\bcopy\b");
             Patterns.Add(TokenType.COPY, regex);
             Tokens.Add(TokenType.COPY);
 
-            regex = new Regex(@"\b[Ff][Rr][Oo][Mm]\b");
+            regex = new Regex(@"(?i)\bfrom\b");
             Patterns.Add(TokenType.FROM, regex);
             Tokens.Add(TokenType.FROM);
 
-            regex = new Regex(@"\b[Rr][Ee][Nn][Aa][Mm][Ee]\b");
+            regex = new Regex(@"(?i)\brename\b");
             Patterns.Add(TokenType.RENAME, regex);
             Tokens.Add(TokenType.RENAME);
 
-            regex = new Regex(@"\b[Vv][Oo][Ll][Uu][Mm][Ee]\b");
+            regex = new Regex(@"(?i)\bvolume\b");
             Patterns.Add(TokenType.VOLUME, regex);
             Tokens.Add(TokenType.VOLUME);
 
-            regex = new Regex(@"\b[Ff][Ii][Ll][Ee]\b");
+            regex = new Regex(@"(?i)\bfile\b");
             Patterns.Add(TokenType.FILE, regex);
             Tokens.Add(TokenType.FILE);
 
-            regex = new Regex(@"\b[Dd][Ee][Ll][Ee][Tt][Ee]\b");
+            regex = new Regex(@"(?i)\bdelete\b");
             Patterns.Add(TokenType.DELETE, regex);
             Tokens.Add(TokenType.DELETE);
 
-            regex = new Regex(@"\b[Ee][Dd][Ii][Tt]\b");
+            regex = new Regex(@"(?i)\bedit\b");
             Patterns.Add(TokenType.EDIT, regex);
             Tokens.Add(TokenType.EDIT);
 
-            regex = new Regex(@"\b[Rr][Uu][Nn]\b");
+            regex = new Regex(@"(?i)\brun\b");
             Patterns.Add(TokenType.RUN, regex);
             Tokens.Add(TokenType.RUN);
 
-            regex = new Regex(@"\b[Cc][Oo][Mm][Pp][Ii][Ll][Ee]\b");
+            regex = new Regex(@"(?i)\bcompile\b");
             Patterns.Add(TokenType.COMPILE, regex);
             Tokens.Add(TokenType.COMPILE);
 
-            regex = new Regex(@"\b[Ll][Ii][Ss][Tt]\b");
+            regex = new Regex(@"(?i)\blist\b");
             Patterns.Add(TokenType.LIST, regex);
             Tokens.Add(TokenType.LIST);
 
-            regex = new Regex(@"\b[Rr][Ee][Bb][Oo][Oo][Tt]\b");
+            regex = new Regex(@"(?i)\breboot\b");
             Patterns.Add(TokenType.REBOOT, regex);
             Tokens.Add(TokenType.REBOOT);
 
-            regex = new Regex(@"\b[Ss][Hh][Uu][Tt][Dd][Oo][Ww][Nn]\b");
+            regex = new Regex(@"(?i)\bshutdown\b");
             Patterns.Add(TokenType.SHUTDOWN, regex);
             Tokens.Add(TokenType.SHUTDOWN);
 
-            regex = new Regex(@"\b[Ff][Oo][Rr]\b");
+            regex = new Regex(@"(?i)\bfor\b");
             Patterns.Add(TokenType.FOR, regex);
             Tokens.Add(TokenType.FOR);
 
-            regex = new Regex(@"\b[Uu][Nn][Ss][Ee][Tt]\b");
+            regex = new Regex(@"(?i)\bunset\b");
             Patterns.Add(TokenType.UNSET, regex);
             Tokens.Add(TokenType.UNSET);
 
@@ -298,7 +298,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.COLON, regex);
             Tokens.Add(TokenType.COLON);
 
-            regex = new Regex(@"\b[Ii][Nn]\b");
+            regex = new Regex(@"(?i)\bin\b");
             Patterns.Add(TokenType.IN, regex);
             Tokens.Add(TokenType.IN);
 
@@ -306,15 +306,15 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.ARRAYINDEX, regex);
             Tokens.Add(TokenType.ARRAYINDEX);
 
-            regex = new Regex(@"\b[Aa][Ll][Ll]\b");
+            regex = new Regex(@"(?i)\ball\b");
             Patterns.Add(TokenType.ALL, regex);
             Tokens.Add(TokenType.ALL);
 
-            regex = new Regex(@"[A-Za-z_][A-Za-z0-9_]*");
+            regex = new Regex(@"(?i)[a-z_][a-z0-9_]*");
             Patterns.Add(TokenType.IDENTIFIER, regex);
             Tokens.Add(TokenType.IDENTIFIER);
 
-            regex = new Regex(@"[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_][A-Za-z0-9_]*)*");
+            regex = new Regex(@"(?i)[a-z_][a-z0-9_]*(\.[a-z0-9_][a-z0-9_]*)*");
             Patterns.Add(TokenType.FILEIDENT, regex);
             Tokens.Add(TokenType.FILEIDENT);
 
@@ -338,7 +338,7 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.ATSIGN, regex);
             Tokens.Add(TokenType.ATSIGN);
 
-            regex = new Regex(@"\b[Ll][Aa][Zz][Yy][Gg][Ll][Oo][Bb][Aa][Ll]\b");
+            regex = new Regex(@"(?i)\blazyglobal\b");
             Patterns.Add(TokenType.LAZYGLOBAL, regex);
             Tokens.Add(TokenType.LAZYGLOBAL);
 
