@@ -45,6 +45,10 @@ KUniverse 4th wall methods
           - string
           - Get
           - Returns the name of this vessel's editor, "SPH" or "VAB".
+        * - :attr:`DEBUGLOG(message)`
+          - none
+          - Method
+          - Causes a string to append to the Unity debug log file.
 
 .. attribute:: KUniverse:CANREVERT
 
@@ -132,6 +136,61 @@ KUniverse 4th wall methods
 
     Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.
 
+.. method:: KUniverse:DEBUGLOG(message)
+
+    :parameter message: string message to append to the log.
+    :return: none
+
+    All Unity games (Kerbal Space Program included) have a standard
+    "log" file where they can store a lot of verbose messages that
+    help developers trying to debug their games.  Sometimes it may
+    be useful to make your script log a message to *THAT* debug file,
+    instead of using kOS's normal ``Log`` function to append a
+    message to some file of your own making.
+
+    This is useful for cases where you are trying to work with a kOS
+    developer to trace the cause of a problem and you want your script
+    to mark the moments when it hit different parts of the program, and
+    have those messages get embedded in the log interleaved with the
+    game's own diagnostic messages.
+
+    Here is an example.  Say you suspected the game was throwing an error
+    every time you tried to lock steering to up.  So you experiment with
+    this bit of code::
+
+        kuniverse:debuglog("=== Now starting test ===").
+        kuniverse:debuglog("--- Locking steering to up----").
+        lock steering to up.
+        kuniverse:debuglog("--- Now forcing a physics tick ----").
+        wait 0.001.
+        kuniverse:debuglog("--- Now unlocking steering again ----").
+        unlock steering.
+        wait 0.001.
+        kuniverse:debuglog("=== Now done with test ===").
+
+    This would cause the messages you wrote to appear in the debug log,
+    interleaved with any error messages kOS, and any other parts of the
+    entire Kerbal Space Program game, dump into the same log.
+
+    The location of this log varies depending on your platform.  For
+    some reason, Unity chooses a different filename convention for
+    each OS.  Consult the list below to see where it is on your platform.
+
+    - Windows 32-bit: [install_dir]\KSP_Data\output_log.txt
+    - Windows 64-bit: [install_dir]\KSP_x64_Data\output_log.txt (not officially supported)
+    - Mac OS X: ~/Library/Logs/Unity/Player.log 
+    - Linux: ~/.config/unity3d/Squad/"Kerbal Space Program"/Player.log
+
+    For an example of what it looks like in the log, this::
+
+        kuniverse:debuglog("this is my message").
+
+    ends up resulting in this in the KSP output log::
+
+        kOS: (KUNIVERSE:DEBUGLOG) this is my message
+
+
+****
 
 Examples:
 
