@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Engine &mdash; kOS 0.17.3 documentation</title>
+  <title>Engine &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="ETA" href="eta.html"/>
         <link rel="prev" title="Element" href="element.html"/> 
@@ -247,27 +247,27 @@
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:ISP" title="ENGINE:ISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ISP</span></tt></a></td>
 <td>scalar</td>
-<td><a class="reference external" href="isp">Specific impulse</a></td>
+<td><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#method:ENGINE:ISPAT" title="ENGINE:ISPAT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">ISPAT(pressure)</span></tt></a></td>
 <td>scalar</td>
-<td><a class="reference external" href="isp">Specific impulse</a> at the given pressure (in standard Kerbin atmospheres).</td>
+<td><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at the given pressure (in standard Kerbin atmospheres).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:VACUUMISP" title="ENGINE:VACUUMISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VACUUMISP</span></tt></a></td>
 <td>scalar</td>
-<td><a class="reference external" href="isp">Vacuum Specific impulse</a></td>
+<td>Vacuum <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">specific impulse</a></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:VISP" title="ENGINE:VISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">VISP</span></tt></a></td>
 <td>scalar</td>
-<td><a class="reference external" href="vacuumisp">Synonym for VACUUMISP</a></td>
+<td>Synonym for VACUUMISP</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:SEALEVELISP" title="ENGINE:SEALEVELISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SEALEVELISP</span></tt></a></td>
 <td>scalar</td>
-<td><a class="reference external" href="isp">Specific impulse at Kerbin sealevel</a></td>
+<td><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at Kerbin sealevel</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:ENGINE:SLISP" title="ENGINE:SLISP attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SLISP</span></tt></a></td>
 <td>scalar</td>
-<td><a class="reference external" href="sealevelisp">Synonym for SEALEVELISP</a></td>
+<td>Synonym for SEALEVELISP</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:ENGINE:FLAMEOUT" title="ENGINE:FLAMEOUT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">FLAMEOUT</span></tt></a></td>
 <td>boolean</td>
@@ -442,7 +442,7 @@ Engine:<tt class="descname">ISP</tt><a class="headerlink" href="#attribute:ENGIN
 </tr>
 </tbody>
 </table>
-<p><a class="reference external" href="isp">Specific impulse</a></p>
+<p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a></p>
 </dd></dl>
 
 <dl class="method">
@@ -462,7 +462,7 @@ Engine:<tt class="descname">ISPAT</tt><big>(</big>pressure<big>)</big><a class="
 </tr>
 </tbody>
 </table>
-<p><a class="reference external" href="isp">Specific impulse</a> at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
+<p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at the given atmospheric pressure.  Use a pressure of 0 for vacuum, and 1 for sea level (on Kerbin).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -478,7 +478,7 @@ Engine:<tt class="descname">VACUUMISP</tt><a class="headerlink" href="#attribute
 </tr>
 </tbody>
 </table>
-<p><a class="reference external" href="isp">Vacuum Specific impulse</a></p>
+<p>Vacuum <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">specific impulse</a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -510,7 +510,7 @@ Engine:<tt class="descname">SEALEVELISP</tt><a class="headerlink" href="#attribu
 </tr>
 </tbody>
 </table>
-<p><a class="reference external" href="isp">Specific impulse at Kerbin sealevel</a></p>
+<p><a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Specific_impulse">Specific impulse</a> at Kerbin sealevel.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -650,7 +650,7 @@ Engine:<tt class="descname">THROTTLELOCK</tt><a class="headerlink" href="#attrib
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
