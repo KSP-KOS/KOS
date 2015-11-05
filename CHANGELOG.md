@@ -1,6 +1,55 @@
 kOS Mod Changelog
 =================
 
+# v0.18
+
+Steering Much Betterer
+----------------------
+
+### BREAKING CHANGES
+* As usual, you MUST recompile all KSM files before running them on the new version.  Some of the changes have altered how the VM works.
+* New LOADDISTANCE obsoletes the previous way it worked ( http://ksp-kos.github.io/KOS_DOC/structures/misc/loaddistance.html )
+* Fixed broken spelling of "ACQUIRE" on docking ports.  The old spelling of "AQUIRE" won't work anymore.
+* Changed the bound variable "SURFACESPEED" to "GROUNDSPEED" instead, as the meaning of "SURFACESPEED" was confusingly ambiguous.
+* New arg/param matching checks make some previously usable varying argument techniques not work.  (We don't think anyone was using them anyway).
+* Disabled the ability to control vessels the kOS computer part is not actually attached to.  This always used to be possible, but it shouldn't have been as it breaks the theme of kOS.  This affects all the following: vessel:control, part:controlfrom, part:tag (can still get, but not set), partmodule:doaction, partmodule:doevent, partmodule:setfield (can still getfield).  These things become read-only when operating on any vessel other than the one the executing kOS module is actually part of.
+
+### NEW FEATURES
+* THE BIG ONE:  Fix to Cooked Steering! Should help people using torque-less craft like with Realism Overhaul. Removed the old steering logic and replaced it with a nice auto-tuning system. ( https://github.com/KSP-KOS/KOS/pull/1118 )
+* SteeringManager structure to let users tweak parts of the new steering system ( http://ksp-kos.github.io/KOS_DOC/structures/misc/steeringmanager.html )
+* PIDLoop structure to let users see parts of the new steering system, and to let them use the built-in PID system for their own needs ( http://ksp-kos.github.io/KOS_DOC/structures/misc/pidloop.html  )
+* String manipulation methods. ( http://ksp-kos.github.io/KOS_DOC/structures/misc/string.html )
+* New Lexicon (Associateive Array) type. ( http://ksp-kos.github.io/KOS_DOC/structures/misc/lexicon.html )
+* New Science Experiment control interface allows scripts to directly execute science experiments, bypassing the on-screen prompts. ( http://ksp-kos.github.io/KOS_DOC/structures/vessels/scienceexperiment.html ) 
+* CrewMember API to let you query the registered crew - their class, gender, and skill ( http://ksp-kos.github.io/KOS_DOC/structures/vessels/crewmember.html )
+* Infernal Robotics API now lets you get Part containing a servo ( https://github.com/KSP-KOS/KOS/issues/1103 )
+* (user docs) Better tutorial for KSP 1.0 areo mode. ( https://github.com/KSP-KOS/KOS/pull/1081 )
+* A few more constants: C, ATMTOKPA, KPATOATM. ( http://ksp-kos.github.io/KOS_DOC/math/basic.html )
+* DYNAMICPRESSURE, or Q ( https://github.com/KSP-KOS/KOS/pull/1085 )
+* DEFINED keyword ( http://ksp-kos.github.io/KOS_DOC/language/variables.html#defined )
+* Load and Pack Distance manipulation ( http://ksp-kos.github.io/KOS_DOC/structures/misc/loaddistance.html )
+* KUniverse structure letting you break the 4th wall and revert from a script ( http://ksp-kos.github.io/KOS_DOC/structures/misc/kuniverse.html )
+* Added SolarPrimeVector to provide universal longitude direction ( http://ksp-kos.github.io/KOS_DOC/bindings.html#solarprimevector )
+
+### BUG FIXES
+* Made `stage:liquidfuel` more sane. ( https://github.com/KSP-KOS/KOS/issues/513 )
+* LIST BODIES returned unusuable structure type ( https://github.com/KSP-KOS/KOS/issues/1090 ) 
+* Made "ORBIT" and alias for "OBT" and visa versa ( https://github.com/KSP-KOS/KOS/issues/1089 )
+* Made vecdraws stop showing bogus atmospheric burning effects ( https://github.com/KSP-KOS/KOS/pull/1108 )
+* Removed non-functional broken attempts to save/restore variables ( https://github.com/KSP-KOS/KOS/issues/1098 )
+* KSM files didn't store relative jumps right, breaking short-circuit boolean logic ( https://github.com/KSP-KOS/KOS/issues/1137 )
+* (user docs) many minor docs fixes.
+* Lock throttle inside a FROM loop was broken ( https://github.com/KSP-KOS/KOS/issues/1117 )
+* Unlock anything inside a Trigger body was broken ( https://github.com/KSP-KOS/KOS/issues/1151 )
+* Replaced KSP's incorrect ground speed with our own calculation ( https://github.com/KSP-KOS/KOS/issues/1097 )
+* SASMODE "radialin" and "raidialout" were swapped in the KSP API ( https://github.com/KSP-KOS/KOS/issues/1130 )
+* Bug with remote tech allowing access without antenna in one case ( https://github.com/KSP-KOS/KOS/pull/1171 )
+* Wheelsteering by integer compass heading was broken ( https://github.com/KSP-KOS/KOS/issues/1141 )
+* SHUTDOWN didn't shut down immediately ( https://github.com/KSP-KOS/KOS/issues/1120 )
+* Remote Tech delay, and the `wait` command, were ignoring the time warp multiplier ( https://github.com/KSP-KOS/KOS/issues/723 )
+* Better detection of arg/param matching.  ( https://github.com/KSP-KOS/KOS/issues/1107 )
+* Doing PRINT AT that runs offscreen threw an error ( https://github.com/KSP-KOS/KOS/issues/813 )
+
 # v0.17.3
 
 1.0.4 Release
