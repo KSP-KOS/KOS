@@ -126,12 +126,10 @@ namespace kOS.Execution
                     shared.ScriptHandler.ClearContext("program");
                     var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
                     programContext.Silent = true;
-                    var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
+                    var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true, FuncManager = shared.FunctionManager, IsCalledFromRun = false };
                     List<CodePart> parts = shared.ScriptHandler.Compile(
                         "sys:boot", 1, String.Format("run {0}.", filename), "program", options);
                     programContext.AddParts(parts);
-                    // we need to add the arg marker to prevent an issue with the declared parameter count:
-                    shared.Cpu.PushStack(new KOSArgMarkerType());
                 }
             }
         }
