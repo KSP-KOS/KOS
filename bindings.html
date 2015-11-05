@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Catalog of Bound Variable Names &mdash; kOS 0.17.3 documentation</title>
+  <title>Catalog of Bound Variable Names &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="index.html"/>
         <link rel="up" title="General Topics" href="general.html"/>
         <link rel="next" title="CPU Vessel (SHIP)" href="general/cpu_vessel.html"/>
         <link rel="prev" title="General Topics" href="general.html"/> 
@@ -277,44 +277,59 @@ page, as they are all just instances of the standard vessel suffixes.</p>
 <tr class="row-odd"><td>VERTICALSPEED</td>
 <td>Same as SHIP:VERTICALSPEED</td>
 </tr>
-<tr class="row-even"><td>SURFACESPEED</td>
-<td>Same as SHIP:SURFACESPEED</td>
+<tr class="row-even"><td>GROUNDSPEED</td>
+<td>Same as SHIP:GROUNDSPEED</td>
 </tr>
-<tr class="row-odd"><td>AIRSPEED</td>
+<tr class="row-odd"><td>SURFACESPEED</td>
+<td>This has been obsoleted as of kOS 0.18.0.  Replace it with GROUNDSPEED.</td>
+</tr>
+<tr class="row-even"><td>AIRSPEED</td>
 <td>Same as SHIP:AIRSPEED</td>
 </tr>
-<tr class="row-even"><td>VESSELNAME</td>
+<tr class="row-odd"><td>VESSELNAME</td>
 <td>Same as SHIP:VESSELNAME</td>
 </tr>
-<tr class="row-odd"><td>ALTITUDE</td>
+<tr class="row-even"><td>ALTITUDE</td>
 <td>Same as SHIP:ALTITUDE</td>
 </tr>
-<tr class="row-even"><td>APOAPSIS</td>
+<tr class="row-odd"><td>APOAPSIS</td>
 <td>Same as SHIP:APOAPSIS</td>
 </tr>
-<tr class="row-odd"><td>PERIAPSIS</td>
+<tr class="row-even"><td>PERIAPSIS</td>
 <td>Same as SHIP:PERIAPSIS</td>
 </tr>
-<tr class="row-even"><td>SENSORS</td>
+<tr class="row-odd"><td>SENSORS</td>
 <td>Same as SHIP:SENSORS</td>
 </tr>
-<tr class="row-odd"><td>SRFPROGRADE</td>
+<tr class="row-even"><td>SRFPROGRADE</td>
 <td>Same as SHIP:SRFPROGRADE</td>
 </tr>
-<tr class="row-even"><td>SRFREROGRADE</td>
+<tr class="row-odd"><td>SRFREROGRADE</td>
 <td>Same as SHIP:SRFREROGRADE</td>
 </tr>
-<tr class="row-odd"><td>OBT</td>
+<tr class="row-even"><td>OBT</td>
 <td>Same as SHIP:OBT</td>
 </tr>
-<tr class="row-even"><td>STATUS</td>
+<tr class="row-odd"><td>STATUS</td>
 <td>Same as SHIP:STATUS</td>
 </tr>
-<tr class="row-odd"><td>SHIPNAME</td>
+<tr class="row-even"><td>SHIPNAME</td>
 <td>Same as SHIP:NAME</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="constants-pi-e-etc">
+<h2>Constants (pi, e, etc)<a class="headerlink" href="#constants-pi-e-etc" title="Permalink to this headline">¶</a></h2>
+<p>Get-only.</p>
+<p>The variable <tt class="docutils literal"><span class="pre">constant</span></tt> provides a way to access a few
+<a class="reference internal" href="math/basic.html#constants"><em>basic math and physics constants</em></a>, such as Pi, Euler&#8217;s
+number, and so on.</p>
+<p>Example:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">print</span> <span class="s">&quot;Kerbin&#39;s circumference: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">constant</span><span class="o">:</span><span class="n">pi</span><span class="o">*</span><span class="n">Kerbin</span><span class="o">:</span><span class="n">radius</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;meters.&quot;</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>The full list is here: <a class="reference internal" href="math/basic.html#constants"><em>constants page</em></a>.</p>
 </div>
 <div class="section" id="terminal">
 <h2>Terminal<a class="headerlink" href="#terminal" title="Permalink to this headline">¶</a></h2>
@@ -372,78 +387,30 @@ the term exactly as it appears in the resources window.</p>
 </div>
 <div class="section" id="alt-alias">
 <h2>ALT ALIAS<a class="headerlink" href="#alt-alias" title="Permalink to this headline">¶</a></h2>
-<p>The special variable ALT is a unique exception. It behaves like a
-structure with suffixes but it&#8217;s actually a bit &#8220;fake&#8221; in that it&#8217;s not
-really a structure. The following terms are just exceptions that don&#8217;t
-fit anywhere else:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="13%" />
-<col width="7%" />
-<col width="79%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Variable</th>
-<th class="head">Type</th>
-<th class="head">Meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>ALT:APOAPSIS</td>
-<td>number</td>
-<td>The altitude of the apoapsis of the current ship.  Identical to SHIP:APOAPSIS.</td>
-</tr>
-<tr class="row-odd"><td>ALT:PERIAPSIS</td>
-<td>number</td>
-<td>The altitude of the periapsis of the current ship.  Identical to SHIP:PERIAPSIS.</td>
-</tr>
-<tr class="row-even"><td>ALT:RADAR</td>
-<td>number</td>
-<td>The altitude of the current ship above the terrain.  Does not have an alias anywhere.</td>
-</tr>
-</tbody>
-</table>
+<p>The special variable <a class="reference external" href="structures/vessels/alt.html">ALT</a> gives you
+access to a few altitude predictions:</p>
+<p>ALT:APOAPSIS</p>
+<p>ALT:PERIAPSIS</p>
+<p>ALT:RADAR</p>
+<p>Further details are found on the <a class="reference external" href="structures/vessels/alt.html">ALT page</a> .</p>
 </div>
 <div class="section" id="eta-alias">
 <h2>ETA ALIAS<a class="headerlink" href="#eta-alias" title="Permalink to this headline">¶</a></h2>
-<p>The special variable ETA is a unique exception. It behaves like a
-structure with suffixes but it&#8217;s actually a bit &#8220;fake&#8221; in that it&#8217;s not
-really a structure. The following terms are just exceptions that don&#8217;t
-fit anywhere else:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="15%" />
-<col width="9%" />
-<col width="76%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Variable</th>
-<th class="head">Type</th>
-<th class="head">Meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>ETA:APOAPSIS</td>
-<td>number</td>
-<td>seconds until SHIP will reach its apoapsis.</td>
-</tr>
-<tr class="row-odd"><td>ETA:PERIAPSIS</td>
-<td>number</td>
-<td>seconds until SHIP will reach its periapsis.</td>
-</tr>
-<tr class="row-even"><td>ETA:TRANSITION</td>
-<td>number</td>
-<td>seconds until SHIP will leave its SOI to enter the SOI of another body.</td>
-</tr>
-</tbody>
-</table>
+<p>The special variable <a class="reference external" href="structures/vessels/eta.html">ETA</a> gives you
+access to a few time predictions:</p>
+<p>ETA:APOAPSIS</p>
+<p>ETA:PERIAPSIS</p>
+<p>ETA:TRANSITION</p>
+<p>Further details are found on the <a class="reference external" href="structures/vessels/eta.html">ETA page</a> .</p>
 </div>
 <div class="section" id="encounter">
 <h2>ENCOUNTER<a class="headerlink" href="#encounter" title="Permalink to this headline">¶</a></h2>
-<p>The body being encountered next by the current vessel. Returns the
-special string &#8220;None&#8221; if there is no expected encounter, or an object of
-type <a class="reference external" href="structures/celestial_bodies/body.html">Body</a> if an encounter is
-expected.</p>
+<p>The orbit patch describing the next encounter with a body the current
+vessel will enter. If there is no such encounter coming, it will return
+the special string &#8220;None&#8221;.  If there is an encounter coming, it will
+return an object <a class="reference internal" href="structures/orbits/orbit.html#orbit"><em>of type Orbit</em></a>.  (i.e. to obtain the name
+of the planet the encounter is with, you can do:
+<tt class="docutils literal"><span class="pre">print</span> <span class="pre">ENCOUNTER:BODY:NAME.</span></tt>, for example.).</p>
 </div>
 <div class="section" id="boolean-toggle-fields">
 <h2>BOOLEAN TOGGLE FIELDS:<a class="headerlink" href="#boolean-toggle-fields" title="Permalink to this headline">¶</a></h2>
@@ -675,6 +642,30 @@ the LOADDISTANCE, you are setting it to the same value
 universally for all situations.</p>
 </div>
 </div>
+<div class="section" id="solarprimevector">
+<span id="id1"></span><h2>SOLARPRIMEVECTOR<a class="headerlink" href="#solarprimevector" title="Permalink to this headline">¶</a></h2>
+<p>Gives the Prime Meridian <a class="reference internal" href="math/vector.html#structure:VECTOR" title="VECTOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vector</span></tt></a> for the Solar System itself, in
+current Ship-Raw XYZ coordinates.</p>
+<p>Both the <a class="reference internal" href="structures/orbits/orbit.html#attribute:ORBIT:LONGITUDEOFASCENDINGNODE" title="ORBIT:LONGITUDEOFASCENDINGNODE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Orbit:LONGITUDEOFASCENDINGNODE</span></tt></a> orbit suffix and the
+<a class="reference internal" href="structures/celestial_bodies/body.html#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Body:ROTATIONANGLE</span></tt></a> body suffix are expressed in terms of
+degree offsets from this <em>Prime Meridian Reference Vector</em>.</p>
+<div class="section" id="what-is-the-solar-prime-reference-vector">
+<h3>What is the Solar Prime Reference Vector?<a class="headerlink" href="#what-is-the-solar-prime-reference-vector" title="Permalink to this headline">¶</a></h3>
+<p>The solar prime vector is an arbitrary vector in space used to measure
+some orbital parameters that are supposed to remain fixed to space
+regardless of how the planets underneath the orbit rotate, or where the
+Sun is.  In a sense it can be thought of as the celestial &#8220;prime
+meridian&#8221; of the entire solar system, rather than the &#8220;prime meridian&#8221; of
+any one particular rotating planet or moon.</p>
+<p>In a hypothetical Earthling&#8217;s solar system our Kerbal scientists have
+hypothesized may exist in a galaxy far away, Earthbound astronomers use
+a reference they called the
+<a class="reference external" href="https://en.wikipedia.org/wiki/First_Point_of_Aries">First Point of Aries</a>,
+for this purpose.</p>
+<p>For Kerbals, it refers to a more arbitrary line in space, pointing at a fixed
+point in the firmament, also known as the &#8220;skybox&#8221;.</p>
+</div>
+</div>
 <div class="section" id="addons">
 <h2>Addons<a class="headerlink" href="#addons" title="Permalink to this headline">¶</a></h2>
 <p>Get-only.  <tt class="docutils literal"><span class="pre">addons</span></tt> is a special variable used to access various extensions
@@ -725,7 +716,7 @@ to kOS that are designed to support the features introduced by some other mods. 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

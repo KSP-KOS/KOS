@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Part Highlighting &mdash; kOS 0.17.3 documentation</title>
+  <title>Part Highlighting &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Iterator" href="iterator.html"/>
         <link rel="prev" title="File Information" href="fileinfo.html"/> 
@@ -230,15 +230,19 @@ structure is defined as follows:</p>
 </dd></dl>
 
 <p>Example:</p>
-<blockquote>
-<div><p>list elements in elist.</p>
-<p>// Color the first element pink
-SET foo TO HIGHLIGHT( elist[0], HSV(350,0.25,1) ).</p>
-<p>// Turn the highlight off
-SET foo:ENABLED TO FALSE</p>
-<p>// Turn the highlight back on
-SET foo:ENABLED TO TRUE</p>
-</div></blockquote>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">list</span> <span class="n">elements</span> <span class="n">in</span> <span class="n">elist</span><span class="p">.</span>
+
+<span class="c1">// Color the first element pink</span>
+<span class="n">SET</span> <span class="n">foo</span> <span class="n">TO</span> <span class="n">HIGHLIGHT</span><span class="p">(</span> <span class="n">elist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">HSV</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">).</span>
+
+<span class="c1">// Turn the highlight off</span>
+<span class="n">SET</span> <span class="n">foo</span><span class="o">:</span><span class="n">ENABLED</span> <span class="n">TO</span> <span class="n">FALSE</span>
+
+
+<span class="c1">// Turn the highlight back on</span>
+<span class="n">SET</span> <span class="n">foo</span><span class="o">:</span><span class="n">ENABLED</span> <span class="n">TO</span> <span class="n">TRUE</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -280,7 +284,7 @@ SET foo:ENABLED TO TRUE</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

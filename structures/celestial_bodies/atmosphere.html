@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Atmosphere &mdash; kOS 0.17.3 documentation</title>
+  <title>Atmosphere &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="next" title="Body" href="body.html"/>
         <link rel="prev" title="Celestial Bodies" href="../celestial_bodies.html"/> 
@@ -287,7 +287,7 @@ Atmosphere:<tt class="descname">SCALE</tt><a class="headerlink" href="#attribute
 </tr>
 </tbody>
 </table>
-<p>A math constant plugged into a formula to find atmosphere density (see below).</p>
+<p>A math constant plugged into a formula to find atmosphere density.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -324,43 +324,16 @@ Atmosphere:<tt class="descname">HEIGHT</tt><a class="headerlink" href="#attribut
 
 <div class="section" id="atmospheric-math">
 <h2>Atmospheric Math<a class="headerlink" href="#atmospheric-math" title="Permalink to this headline">¶</a></h2>
-<p>The atmospheric effects of a planet&#8217;s air need to be calculated using some formulas. First off, be aware that atmosphere can be measured three different ways:</p>
-<dl class="docutils">
-<dt>Atm</dt>
-<dd>A multiple of the pressure at Kerbin sea level. An atmosphere of 0.5 is half as much air pressure as at Kerbin&#8217;s sea level. This is the measure used by :SEALEVELPRESSURE</dd>
-<dt>pressure</dt>
-<dd>A measure of the force the air pushes on a surface with. In SI units, it&#8217;s Newtons per Square Meter. <em>This value is almost never used directly in any calculation. Instead you just calculate everything in terms of multiples of Atm&#8217;s.</em></dd>
-<dt>density</dt>
-<dd>A measure of how much mass of air there is in a volume of space. In SI units, it&#8217;s Kilograms per Cubic Meter.</dd>
-</dl>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p><strong>The following only applies to the STOCK KSP atmosphere.</strong></p>
-<p class="last">If you have installed a mod such as <a class="reference external" href="http://forum.kerbalspaceprogram.com/threads/20451-0-25-Ferram-Aerospace-Research-v0-14-3-2-10-21-14">FAR</a>, that changes the atmosphere, then much of what is said below will not apply.</p>
-</div>
-<p>The level of atmosphere can be calculated for any altitude as follows:</p>
-<ul class="simple">
-<li>Number of <strong>Atm&#8217;s</strong> = (Atm&#8217;s at sea level) * ( e ^ ( -
-sea_level_alt / scale ) )</li>
-</ul>
-<p>The <strong>TRUE</strong> maximum height of the atmosphere is NOT the value returned by :HEIGHT, but rather it&#8217;s the altitude at which the number of Atm&#8217;s returned by the above formula is 0.000001. :HEIGHT is just the value as advertised by the game to the user. On some worlds it can be quite a ways off.</p>
-<p>And once you have that number, then density can be calculated from it with this conversion factor:</p>
-<ul class="simple">
-<li>air density = Number of Atm&#8217;s * 1.2230948554874.</li>
-</ul>
-<p>Further information about the math formulas that Kerbal Space Program uses to calculate the atmosphere <a class="reference external" href="http://wiki.kerbalspaceprogram.com/wiki/Atmosphere">can be found here</a>.</p>
-<p>Examples:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">IF</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ORBIT</span><span class="o">:</span><span class="n">BODY</span><span class="o">:</span><span class="n">ATM</span><span class="o">:</span><span class="n">EXISTS</span> <span class="p">{</span>
-    <span class="n">SET</span> <span class="n">thisAtmo</span> <span class="n">TO</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ORBIT</span><span class="o">:</span><span class="n">BODY</span><span class="o">:</span><span class="n">ATM</span><span class="p">.</span>
-    <span class="n">PRINT</span> <span class="s">&quot;The planet you are orbiting has an atmosphere.&quot;</span><span class="p">.</span>
-    <span class="n">PRINT</span> <span class="s">&quot;It&#39;s scale is &quot;</span> <span class="o">+</span> <span class="n">thisAtmo</span><span class="o">:</span><span class="n">SCALE</span><span class="p">.</span>
-    <span class="n">PRINT</span> <span class="s">&quot;It&#39;s height is &quot;</span> <span class="o">+</span> <span class="n">thisAtmo</span><span class="o">:</span><span class="n">HEIGHT</span><span class="p">.</span>
-    <span class="n">SET</span> <span class="n">atmos</span> <span class="n">TO</span> <span class="n">thisAtmo</span><span class="o">:</span><span class="n">SEALEVELPRESSURE</span> <span class="o">+</span> <span class="p">(</span> <span class="n">CONSTANT</span><span class="p">()</span><span class="o">:</span><span class="n">E</span> <span class="o">^</span> <span class="p">(</span> <span class="o">-</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">ALTITUDE</span> <span class="o">/</span> <span class="n">thisAtmo</span><span class="o">:</span><span class="n">SCALE</span> <span class="p">)</span> <span class="p">).</span>
-    <span class="n">PRINT</span> <span class="s">&quot;At this altitude the atmosphere is &quot;</span> <span class="o">+</span> <span class="n">atmos</span> <span class="o">+</span> <span class="s">&quot; Atm&#39;s.&quot;</span><span class="p">.</span>
-<span class="p">}</span> <span class="n">ELSE</span> <span class="p">{</span>
-    <span class="n">PRINT</span> <span class="s">&quot;The planet you are orbiting has no atmosphere.&quot;</span><span class="p">.</span>
-<span class="p">}.</span>
-</pre></div>
+<p><strong>[Section deleted]</strong></p>
+<p class="last">This documentation used to contain a description of how the math for
+Kerbal Space Program&#8217;s default stock atmospheric model works, but
+everything that was mentioned here became utterly false when KSP 1.0
+was released with a brand new atmospheric model that invalided pretty
+much everything that was said here.  Rather than teach people incorrect
+information, it was deemed that no documentation is better than misleading
+documentation, so this section below this point has been removed.</p>
 </div>
 </div>
 </div>
@@ -404,7 +377,7 @@ sea_level_alt / scale ) )</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

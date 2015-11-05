@@ -1,0 +1,530 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>KUniverse 4th wall methods &mdash; kOS 0.18.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
+        <link rel="next" title="Lexicon" href="lexicon.html"/>
+        <link rel="prev" title="Iterator" href="iterator.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../misc.html">Configurations and Miscellany</a> &raquo;</li>
+      
+    <li>KUniverse 4th wall methods</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/structures/misc/kuniverse.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="kuniverse-4th-wall-methods">
+<h1>KUniverse 4th wall methods<a class="headerlink" href="#kuniverse-4th-wall-methods" title="Permalink to this headline">¶</a></h1>
+<dl class="structure">
+<dt id="structure:KUNIVERSE">
+<em class="property">structure </em><tt class="descname">KUniverse</tt><a class="headerlink" href="#structure:KUNIVERSE" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#structure:KUNIVERSE" title="KUNIVERSE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">KUniverse</span></tt></a> is a special structure that allows your kerboscript programs to access some of the functions that break the &#8220;4th Wall&#8221;.  It serves as a place to access object directly connected to the KSP game itself, rather than the interaction with the KSP world (vessels, planets, orbits, etc.).</p>
+<table border="1" class="docutils">
+<caption>Members and Methods</caption>
+<colgroup>
+<col width="33%" />
+<col width="11%" />
+<col width="11%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Get/Set</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:CANREVERT" title="KUNIVERSE:CANREVERT attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CANREVERT</span></tt></a></td>
+<td>boolean</td>
+<td>Get</td>
+<td>Is any revert possible?</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:CANREVERTTOLAUNCH" title="KUNIVERSE:CANREVERTTOLAUNCH attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CANREVERTTOLAUNCH</span></tt></a></td>
+<td>boolean</td>
+<td>Get</td>
+<td>Is revert to launch possible?</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:CANREVERTTOEDITOR" title="KUNIVERSE:CANREVERTTOEDITOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">CANREVERTTOEDITOR</span></tt></a></td>
+<td>boolean</td>
+<td>Get</td>
+<td>Is revert to editor possible?</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:REVERTTOLAUNCH" title="KUNIVERSE:REVERTTOLAUNCH attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">REVERTTOLAUNCH</span></tt></a></td>
+<td>none</td>
+<td>Method</td>
+<td>Invoke revert to launch</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:REVERTTOEDITOR" title="KUNIVERSE:REVERTTOEDITOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">REVERTTOEDITOR</span></tt></a></td>
+<td>none</td>
+<td>Method</td>
+<td>Invoke revert to editor</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">REVERTTO(name)</span></tt></td>
+<td>string</td>
+<td>Method</td>
+<td>Invoke revert to the named editor</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:ORIGINEDITOR" title="KUNIVERSE:ORIGINEDITOR attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ORIGINEDITOR</span></tt></a></td>
+<td>string</td>
+<td>Get</td>
+<td>Returns the name of this vessel&#8217;s editor, &#8220;SPH&#8221; or &#8220;VAB&#8221;.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:DEFAULTLOADDISTANCE" title="KUNIVERSE:DEFAULTLOADDISTANCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTLOADDISTANCE</span></tt></a></td>
+<td><a class="reference internal" href="loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">LoadDistance</span></tt></a></td>
+<td>Get</td>
+<td>Returns the set of default load and pack distances for the game.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">ACTIVEVESEL</span></tt></td>
+<td><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
+<td>Get/Set</td>
+<td>Returns the active vessel, or lets you set the active vesssel.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></tt></td>
+<td>n/a</td>
+<td>Set</td>
+<td>Lets you switch active vessels even when the game refuses to allow it.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:CANREVERT">
+KUniverse:<tt class="descname">CANREVERT</tt><a class="headerlink" href="#attribute:KUNIVERSE:CANREVERT" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns true if either revert to launch or revert to editor is available.  Note: either option may still be unavailable, use the specific methods below to check the exact option you are looking for.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:CANREVERTTOLAUNCH">
+KUniverse:<tt class="descname">CANREVERTTOLAUNCH</tt><a class="headerlink" href="#attribute:KUNIVERSE:CANREVERTTOLAUNCH" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns true if either revert to launch is available.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:CANREVERTTOEDITOR">
+KUniverse:<tt class="descname">CANREVERTTOEDITOR</tt><a class="headerlink" href="#attribute:KUNIVERSE:CANREVERTTOEDITOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">boolean.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns true if either revert to the editor is available.  This tends
+to be false after reloading from a saved game where the vessel was
+already in existence in the saved file when you loaded the game.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:REVERTTOLAUNCH">
+KUniverse:<tt class="descname">REVERTTOLAUNCH</tt><a class="headerlink" href="#attribute:KUNIVERSE:REVERTTOLAUNCH" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Method</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+<p>Initiate the KSP game&#8217;s revert to launch function.  All progress so far will be lost, and the vessel will be returned to the launch pad or runway at the time it was initially launched.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:REVERTTOEDITOR">
+KUniverse:<tt class="descname">REVERTTOEDITOR</tt><a class="headerlink" href="#attribute:KUNIVERSE:REVERTTOEDITOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Method</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+<p>Initiate the KSP game&#8217;s revert to editor function.  The game will revert to the editor, as selected based on the vessel type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:REVERTTO">
+KUniverse:<tt class="descname">REVERTTO</tt><big>(</big>editor<big>)</big><a class="headerlink" href="#method:KUNIVERSE:REVERTTO" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>editor</strong> &#8211; The editor identifier</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Revert to the provided editor.  Valid inputs are <cite>&#8220;VAB&#8221;</cite> and <cite>&#8220;SPH&#8221;</cite>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:ORIGINEDITOR">
+KUniverse:<tt class="descname">ORIGINEDITOR</tt><a class="headerlink" href="#attribute:KUNIVERSE:ORIGINEDITOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">string.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the name of the orginating editor based on the vessel type.
+The value is one of:</p>
+<ul class="simple">
+<li>&#8220;SPH&#8221; for things built in the space plane hangar,</li>
+<li>&#8220;VAB&#8221; for things built in the vehicle assembly building.</li>
+<li>&#8220;&#8221; (empty string) for cases where the vehicle cannot remember its editor (when KUniverse:CANREVERTTOEDITOR is false.)</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:DEFAULTLOADDISTANCE">
+KUniverse:<tt class="descname">DEFAULTLOADDISTANCE</tt><a class="headerlink" href="#attribute:KUNIVERSE:DEFAULTLOADDISTANCE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">LoadDistance</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+<p>Get or set the default loading distances for vessels loaded in the future.
+Note: this setting will not affect any vessel currently in the universe for
+the current flight session.  It will take effect the next time you enter a
+flight scene from the editor or tracking station, even on vessels that have
+already existed beforehand.  The act of loading a new scene causes all the
+vessels in that scene to inherit these new default values, forgetting the
+values they may have had before.</p>
+<p>(To affect the value on a vessel already existing in the current scene
+you have to use the :LOADDISTANCE suffix of the Vessel structure.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:KUNIVERSE:ACTIVEVESSEL">
+KUniverse:<tt class="descname">ACTIVEVESSEL</tt><a class="headerlink" href="#attribute:KUNIVERSE:ACTIVEVESSEL" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Access:</th><td class="field-body">Get/Set</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns the active vessel object and allows you to set the active vessel.  Note: KSP will not allow you to change vessels by default when the current active vessel is in the atmosphere or under acceleration.  Use <tt class="xref ks ks-meth docutils literal"><span class="pre">FORCEACTIVE</span></tt> under those circumstances.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="method:KUNIVERSE:FORCEACTIVE">
+KUniverse:<tt class="descname">FORCEACTIVE</tt><big>(</big>vessel<big>)</big><a class="headerlink" href="#method:KUNIVERSE:FORCEACTIVE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>vessel</strong> &#8211; <a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a> to switch to.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.</p>
+</dd></dl>
+
+<p>Examples:</p>
+<p>Switch to an active vessel called &#8220;vessel 2&#8221;:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">ACTIVEVESSEL</span> <span class="n">TO</span> <span class="n">VESSEL</span><span class="p">(</span><span class="s">&quot;vessel 2&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>Revert to VAB, but only if allowed:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;ATTEMPTING TO REVERT TO THE Vehicle Assembly Building.&quot;</span>
+<span class="n">IF</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">CANREVERTTOEDITOR</span> <span class="p">{</span>
+  <span class="n">IF</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">ORIGINEDITOR</span> <span class="o">=</span> <span class="s">&quot;VAB&quot;</span> <span class="p">{</span>
+    <span class="n">PRINT</span> <span class="s">&quot;REVERTING TO VAB.&quot;</span><span class="p">.</span>
+    <span class="nl">KUNIVERSE:</span><span class="n">REVERTTOEDITOR</span><span class="p">().</span>
+  <span class="p">}</span> <span class="n">ELSE</span> <span class="p">{</span>
+    <span class="n">PRINT</span> <span class="s">&quot;COULD REVERT, But only to space plane hanger, so I won&#39;t.&quot;</span><span class="p">.</span>
+  <span class="p">}</span>
+<span class="p">}</span> <span class="n">ELSE</span> <span class="p">{</span>
+  <span class="n">PRINT</span> <span class="s">&quot;Cannot revert to any editor.&quot;</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="lexicon.html" class="btn btn-neutral float-right" title="Lexicon">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="iterator.html" class="btn btn-neutral" title="Iterator"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.18.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Orbit &mdash; kOS 0.17.3 documentation</title>
+  <title>Orbit &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
         <link rel="up" title="Orbits" href="../orbits.html"/>
         <link rel="next" title="Orbitable (Vessels and Bodies)" href="orbitable.html"/>
         <link rel="prev" title="Orbits" href="../orbits.html"/> 
@@ -458,7 +458,16 @@ Orbit:<tt class="descname">LONGITUDEOFASCENDINGNODE</tt><a class="headerlink" hr
 </tr>
 </tbody>
 </table>
-<p>Longitude of the ascending node. It&#8217;s unclear what the basis line the game uses for this is, though. The real-world basis is the constellation Ares, which of course doesn&#8217;t exist in the Kerbal universe.</p>
+<p>The Longitude of the ascening node is the &#8220;celestial longitude&#8221; where
+the orbit crosses the body&#8217;s equator from its southern hemisphere to
+its northern hemisphere</p>
+<p>Note that the &#8220;celestial longitude&#8221; in this case is NOT the planetary
+longitude of the orbit body.  &#8220;Celestial longitudes&#8221; are expressed
+as the angle from the <a class="reference internal" href="../../bindings.html#solarprimevector"><em>Solar Prime Vector</em></a>,
+not from the body&#8217;s longitude.  In order to find out where it is
+relative to the body&#8217;s longitude, you will have to take into account
+<tt class="docutils literal"><span class="pre">body:rotationangle</span></tt>, and take into account that the body will
+rotate by the time you get there.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -528,7 +537,7 @@ Orbit:<tt class="descname">TRANSITION</tt><a class="headerlink" href="#attribute
 </tr>
 </tbody>
 </table>
-<p>Describes the way in which this orbit will end and become a different orbit, with a value taken <a class="reference external" href="transitions">from this list</a>.</p>
+<p>Describes the way in which this orbit will end and become a different orbit, with a value taken <a class="reference internal" href="#transitions"><em>from this list</em></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -669,7 +678,7 @@ Orbit:<tt class="descname">PATCHES</tt><a class="headerlink" href="#attribute:OR
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Fundamental Constants &mdash; kOS 0.17.3 documentation</title>
+  <title>Fundamental Constants &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../index.html"/>
         <link rel="up" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="next" title="Vectors" href="vector.html"/>
         <link rel="prev" title="Mathematics and Basic Geometry" href="../math.html"/> 
@@ -179,7 +179,16 @@
             
   <span class="target" id="constants"><span id="basic-math"></span></span><div class="section" id="fundamental-constants">
 <span id="index-0"></span><h1>Fundamental Constants<a class="headerlink" href="#fundamental-constants" title="Permalink to this headline">¶</a></h1>
-<p>A few fundamental constants can be obtained by using the expression <tt class="docutils literal"><span class="pre">CONSTANT()</span></tt> followed by a colon (<tt class="docutils literal"><span class="pre">:</span></tt>) followed by one of the following:</p>
+<p>There is a bound variable called CONSTANT which contains some basic fundamental
+constants about the universe that you may find handy in your math operations.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.18: </span>Prior to kOS version 0.18, <tt class="docutils literal"><span class="pre">constant</span></tt> was a function call, and
+therefore to say <tt class="docutils literal"><span class="pre">constant:pi</span></tt>, you had to say <tt class="docutils literal"><span class="pre">constant():pi</span></tt>.
+The function call <tt class="docutils literal"><span class="pre">constant()</span></tt> still exists and still works, but
+the new way without the parentheses is preferred going forward,
+and the way with the parentheses may become deprecated later.
+For the moment, both ways of doing it work.</p>
+</div>
 <table border="1" class="docutils">
 <colgroup>
 <col width="20%" />
@@ -191,41 +200,114 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="#global:G" title="G global"><tt class="xref ks ks-global docutils literal"><span class="pre">G</span></tt></a></td>
+<tr class="row-even"><td><tt class="xref ks ks-global docutils literal"><span class="pre">G</span></tt></td>
 <td>Newton&#8217;s Gravitational Constant</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#global:E" title="E global"><tt class="xref ks ks-global docutils literal"><span class="pre">E</span></tt></a></td>
-<td>Natural Log</td>
+<tr class="row-odd"><td><tt class="xref ks ks-global docutils literal"><span class="pre">E</span></tt></td>
+<td>Base of the natural log (Euler&#8217;s number)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#global:PI" title="PI global"><tt class="xref ks ks-global docutils literal"><span class="pre">PI</span></tt></a></td>
-<td><span class="math">\(π\)</span></td>
+<tr class="row-even"><td><tt class="xref ks ks-global docutils literal"><span class="pre">PI</span></tt></td>
+<td><span class="math">\(\pi\)</span></td>
+</tr>
+<tr class="row-odd"><td><tt class="xref ks ks-global docutils literal"><span class="pre">c</span></tt></td>
+<td>Speed of light in a vacuum, in m/s.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref ks ks-global docutils literal"><span class="pre">AtmToKPa</span></tt></td>
+<td>Conversion constant: Atmospheres to kiloPascals.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref ks ks-global docutils literal"><span class="pre">KPaToAtm</span></tt></td>
+<td>Conversion constant: kiloPascals to Atmospheres.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref ks ks-global docutils literal"><span class="pre">DegToRad</span></tt></td>
+<td>Conversion constant: Degrees to Radians.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref ks ks-global docutils literal"><span class="pre">RadToDeg</span></tt></td>
+<td>Conversion constant: Radians to Degrees.</td>
 </tr>
 </tbody>
 </table>
 <dl class="global">
-<dt id="global:G">
-<tt class="descname">Constant():G</tt><a class="headerlink" href="#global:G" title="Permalink to this definition">¶</a></dt>
+<dt id="global:CONSTANT:G">
+<tt class="descname">Constant:G</tt><a class="headerlink" href="#global:CONSTANT:G" title="Permalink to this definition">¶</a></dt>
 <dd><p>Newton&#8217;s Gravitational Constant, 6.67384E-11:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;Gravitational parameter of Kerbin is:&quot;</span><span class="p">.</span>
-<span class="n">PRINT</span> <span class="n">constant</span><span class="p">()</span><span class="o">:</span><span class="n">G</span> <span class="o">*</span> <span class="n">Kerbin</span><span class="o">:</span><span class="n">Mass</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="n">constant</span><span class="o">:</span><span class="n">G</span> <span class="o">*</span> <span class="n">Kerbin</span><span class="o">:</span><span class="n">Mass</span><span class="p">.</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="global">
-<dt id="global:E">
-<tt class="descname">Constant():E</tt><a class="headerlink" href="#global:E" title="Permalink to this definition">¶</a></dt>
+<dt id="global:CONSTANT:E">
+<tt class="descname">Constant:E</tt><a class="headerlink" href="#global:CONSTANT:E" title="Permalink to this definition">¶</a></dt>
 <dd><p>Natural Log base &#8220;e&#8221;:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="s">&quot;e^2 is:&quot;</span><span class="p">.</span>
-<span class="n">PRINT</span> <span class="n">constant</span><span class="p">()</span><span class="o">:</span><span class="n">e</span> <span class="o">^</span> <span class="mf">2.</span>
+<span class="n">PRINT</span> <span class="n">constant</span><span class="o">:</span><span class="n">e</span> <span class="o">^</span> <span class="mf">2.</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="global">
-<dt id="global:PI">
-<tt class="descname">Constant():PI</tt><a class="headerlink" href="#global:PI" title="Permalink to this definition">¶</a></dt>
+<dt id="global:CONSTANT:PI">
+<tt class="descname">Constant:PI</tt><a class="headerlink" href="#global:CONSTANT:PI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ratio of circumference of a circle to its diameter</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:CONSTANT:C">
+<tt class="descname">Constant:C</tt><a class="headerlink" href="#global:CONSTANT:C" title="Permalink to this definition">¶</a></dt>
+<dd><p>Speed of light in a vacuum, in meters per second.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In Kerbal Space Program, all physics motion is purely Newtonian.
+You can go faster than the speed of light provided you have enough
+delta-V, and no time dilation effects will occur.  The universe
+will behave entirely linearly even at speeds near <em>c</em>.</p>
+</div>
+<p>This constant is provided mainly for the benefit of people who are
+playing with the mod &#8220;RemoteTech&#8221; installed, who may want to perform
+calculations about signal delays to hypothetical probes.  (Note that
+if the probe already has a connection, you can
+<a class="reference internal" href="../addons/RemoteTech.html#remotetech"><em>ask Remotetech directly</em></a> what the signal delay is.</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:CONSTANT:ATMTOKPA">
+<tt class="descname">Constant:AtmToKPa</tt><a class="headerlink" href="#global:CONSTANT:ATMTOKPA" title="Permalink to this definition">¶</a></dt>
+<dd><p>A conversion constant.</p>
+<p>If you have a pressure measurement expressed in atmospheres of pressure,
+you can multiply it by this to get the equivalent in kiloPascals
+(kiloNewtons per square meter).</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:CONSTANT:KPATOATM">
+<tt class="descname">Constant:KPaToATM</tt><a class="headerlink" href="#global:CONSTANT:KPATOATM" title="Permalink to this definition">¶</a></dt>
+<dd><p>A conversion constant.</p>
+<p>If you have a pressure measurement expressed in kiloPascals (kiloNewtons
+per square meter), you can multiply it by this to get the equivalent
+in atmospheres.</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:CONSTANT:DEGTORAD">
+<tt class="descname">Constant:DegToRad</tt><a class="headerlink" href="#global:CONSTANT:DEGTORAD" title="Permalink to this definition">¶</a></dt>
+<dd><p>A conversion constant.</p>
+<p>If you have an angle measured in degrees, you can multiply it by
+this to get the equivalent measure in radians.  It is exactly
+the same thing as saying <tt class="docutils literal"><span class="pre">constant:pi</span> <span class="pre">/</span> <span class="pre">180</span></tt>, except the result is
+pre-recorded as a constant number and thus no division is performed
+at runtime.</p>
+</dd></dl>
+
+<dl class="global">
+<dt id="global:CONSTANT:RADTODEG">
+<tt class="descname">Constant:RadToDeg</tt><a class="headerlink" href="#global:CONSTANT:RADTODEG" title="Permalink to this definition">¶</a></dt>
+<dd><p>A conversion constant.</p>
+<p>If you have an angle measured in radians, you can multiply it by
+this to get the equivalent measure in degrees.  It is exactly
+the same thing as saying <tt class="docutils literal"><span class="pre">180</span> <span class="pre">/</span> <span class="pre">constant:pi</span></tt>, except the result is
+pre-recorded as a constant number and thus no division is performed
+at runtime.</p>
 </dd></dl>
 
 <span class="target" id="math-functions"></span></div>
@@ -615,7 +697,7 @@ Keep in mind that it&#8217;s not a traditional mathematical Euclidean division w
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

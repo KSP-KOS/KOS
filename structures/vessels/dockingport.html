@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DockingPort &mdash; kOS 0.17.3 documentation</title>
+  <title>DockingPort &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,10 +33,10 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="next" title="Element" href="element.html"/>
-        <link rel="prev" title="AggregateResource" href="aggregateresource.html"/> 
+        <link rel="prev" title="CrewMember" href="crewmember.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -182,6 +182,12 @@
   <div class="section" id="dockingport">
 <span id="id1"></span><h1>DockingPort<a class="headerlink" href="#dockingport" title="Permalink to this headline">¶</a></h1>
 <p>Some of the Parts returned by <a class="reference internal" href="../../commands/list.html#list-command"><em>LIST PARTS</em></a> will be of type <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 0.18: </span>The spelling of suffixes <cite>AQUIRERANGE</cite>, <cite>AQUIREFORCE</cite>, and <cite>AQUIRETORQURE</cite> on the <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a> structure has been corrected.  Please use <cite>ACQUIRERANGE</cite>, <cite>ACQUIREFORCE</cite>, and <cite>ACQUIRETORQURE</cite> instead.  Using the old incorrect spelling, a deprecation exception will be thrown, with instruction to use the new spelling.</p>
+</div>
+</div>
 <dl class="structure">
 <dt id="structure:DOCKINGPORT">
 <em class="property">structure </em><tt class="descname">DockingPort</tt><a class="headerlink" href="#structure:DOCKINGPORT" title="Permalink to this definition">¶</a></dt>
@@ -202,15 +208,15 @@
 <td>&nbsp;</td>
 <td>A <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a> is a kind of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:AQUIRERANGE" title="DOCKINGPORT:AQUIRERANGE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AQUIRERANGE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:ACQUIRERANGE" title="DOCKINGPORT:ACQUIRERANGE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ACQUIRERANGE</span></tt></a></td>
 <td>scalar</td>
 <td>active range of the port</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#attribute:DOCKINGPORT:AQUIREFORCE" title="DOCKINGPORT:AQUIREFORCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AQUIREFORCE</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:DOCKINGPORT:ACQUIREFORCE" title="DOCKINGPORT:ACQUIREFORCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ACQUIREFORCE</span></tt></a></td>
 <td>scalar</td>
 <td>force experienced when docking</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:AQUIRETORQUE" title="DOCKINGPORT:AQUIRETORQUE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">AQUIRETORQUE</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:ACQUIRETORQUE" title="DOCKINGPORT:ACQUIRETORQUE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ACQUIRETORQUE</span></tt></a></td>
 <td>scalar</td>
 <td>torque experienced when docking</td>
 </tr>
@@ -221,6 +227,14 @@
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:DOCKEDSHIPNAME" title="DOCKINGPORT:DOCKEDSHIPNAME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DOCKEDSHIPNAME</span></tt></a></td>
 <td>string</td>
 <td>name of vessel the port is docked to</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:DOCKINGPORT:NODEPOSITION" title="DOCKINGPORT:NODEPOSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NODEPOSITION</span></tt></a></td>
+<td>vector</td>
+<td>coords of where the docking node attachment point is in SHIP-RAW xyz</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:DOCKINGPORT:NODETYPE" title="DOCKINGPORT:NODETYPE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">NODETYPE</span></tt></a></td>
+<td>string</td>
+<td>two nodes are only dockable together if their NODETYPE strings match</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:DOCKINGPORT:PORTFACING" title="DOCKINGPORT:PORTFACING attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PORTFACING</span></tt></a></td>
 <td><a class="reference internal" href="../../math/direction.html#structure:DIRECTION" title="DIRECTION structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Direction</span></tt></a></td>
@@ -247,8 +261,8 @@
 <p class="last"><a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a> is a type of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>, and therefore can use all the suffixes of <a class="reference internal" href="part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a>. Shown below are only the suffixes that are unique to <a class="reference internal" href="#structure:DOCKINGPORT" title="DOCKINGPORT structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">DockingPort</span></tt></a>.</p>
 </div>
 <dl class="attribute">
-<dt id="attribute:DOCKINGPORT:AQUIRERANGE">
-DockingPort:<tt class="descname">AQUIRERANGE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:AQUIRERANGE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:ACQUIRERANGE">
+DockingPort:<tt class="descname">ACQUIRERANGE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:ACQUIRERANGE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -263,8 +277,8 @@ DockingPort:<tt class="descname">AQUIRERANGE</tt><a class="headerlink" href="#at
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:DOCKINGPORT:AQUIREFORCE">
-DockingPort:<tt class="descname">AQUIREFORCE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:AQUIREFORCE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:ACQUIREFORCE">
+DockingPort:<tt class="descname">ACQUIREFORCE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:ACQUIREFORCE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -279,8 +293,8 @@ DockingPort:<tt class="descname">AQUIREFORCE</tt><a class="headerlink" href="#at
 </dd></dl>
 
 <dl class="attribute">
-<dt id="attribute:DOCKINGPORT:AQUIRETORQUE">
-DockingPort:<tt class="descname">AQUIRETORQUE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:AQUIRETORQUE" title="Permalink to this definition">¶</a></dt>
+<dt id="attribute:DOCKINGPORT:ACQUIRETORQUE">
+DockingPort:<tt class="descname">ACQUIRETORQUE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:ACQUIRETORQUE" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -324,6 +338,59 @@ DockingPort:<tt class="descname">DOCKEDSHIPNAME</tt><a class="headerlink" href="
 </tbody>
 </table>
 <p>name of vessel on the other side of the docking port.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:DOCKINGPORT:NODEPOSITION">
+DockingPort:<tt class="descname">NODEPOSITION</tt><a class="headerlink" href="#attribute:DOCKINGPORT:NODEPOSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">vector</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>The coordinates of the point on the docking port part where the
+port attachment spot is located.  This is different from the
+part&#8217;s position itself because that&#8217;s the position of the center
+of the whole part.  This is the position of the face of the
+docking port.  Coordinates are in SHIP-RAW xyz coords.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:DOCKINGPORT:NODETYPE">
+DockingPort:<tt class="descname">NODETYPE</tt><a class="headerlink" href="#attribute:DOCKINGPORT:NODETYPE" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Each docking port has a node type string that specifies its
+compatibility with other docking ports.  In order for two docking
+ports to be able to attach to each other, the values for their
+NODETYPEs must be the same.</p>
+<p>The base KSP stock docking port parts all use one of the following
+three values:</p>
+<blockquote>
+<div><ul class="simple">
+<li>&#8220;size0&#8221; for all Junior-sized docking ports.</li>
+<li>&#8220;size1&#8221; for all Normal-sized docking ports.</li>
+<li>&#8220;size2&#8221; for all Senior-sized docking ports.</li>
+</ul>
+</div></blockquote>
+<p>Mods that provide their own new kinds of docking port might use
+any other value they feel like here, but only if they are trying
+to declare that the new part isn&#8217;t supposed to be able to connect
+to stock docking ports.  Any docking port that is meant to connect
+to stock ports will have to adhere to the above scheme.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -405,7 +472,7 @@ DockingPort:<tt class="descname">TARGETABLE</tt><a class="headerlink" href="#att
         <a href="element.html" class="btn btn-neutral float-right" title="Element">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="aggregateresource.html" class="btn btn-neutral" title="AggregateResource"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="crewmember.html" class="btn btn-neutral" title="CrewMember"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -435,7 +502,7 @@ DockingPort:<tt class="descname">TARGETABLE</tt><a class="headerlink" href="#att
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

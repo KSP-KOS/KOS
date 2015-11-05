@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ETA &mdash; kOS 0.18.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../../about.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
+        <link rel="next" title="Gimbal" href="gimbal.html"/>
+        <link rel="prev" title="Engine" href="engine.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pidloops.html">PID Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/exenode.html">Execute Node script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../language/user_functions.html">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../commands.html">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../waypoint.html">Waypoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core.html">Core</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../addons/IR.html">Infernal Robotics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../structures.html">Structure Reference</a> &raquo;</li>
+      
+          <li><a href="../vessels.html">Vessels and Parts</a> &raquo;</li>
+      
+    <li>ETA</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../../_sources/structures/vessels/eta.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="eta">
+<span id="id1"></span><h1>ETA<a class="headerlink" href="#eta" title="Permalink to this headline">¶</a></h1>
+<p>ETA is a special object that exists just to help you get the
+times from now to certain events in a vessel&#8217;s future.  It
+always presumes you&#8217;re operating on the current SHIP vessel:</p>
+<dl class="structure">
+<dt id="structure:ETA">
+<em class="property">structure </em><tt class="descname">ETA</tt><a class="headerlink" href="#structure:ETA" title="Permalink to this definition">¶</a></dt>
+<dd><table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="14%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Suffix</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ETA:APOAPSIS" title="ETA:APOAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">APOAPSIS</span></tt></a></td>
+<td>Number, seconds</td>
+<td>Seconds until SHIP hits its apoapsis.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:ETA:PERIAPSIS" title="ETA:PERIAPSIS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PERIAPSIS</span></tt></a></td>
+<td>Number, seconds</td>
+<td>Seconds until SHIP hits its periapsis.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:ETA:TRANSITION" title="ETA:TRANSITION attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">TRANSITION</span></tt></a></td>
+<td>Number, seconds</td>
+<td>Seconds until SHIP hits the next orbit patch.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ETA:APOAPSIS">
+ETA:<tt class="descname">APOAPSIS</tt><a class="headerlink" href="#attribute:ETA:APOAPSIS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Number, seconds</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Seconds until SHIP hits its apoapsis.  If the ship is on an escape
+trajectory (hyperbolic orbit) such that you will never reach apoapsis,
+it will return zero.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ETA:PERIAPSIS">
+ETA:<tt class="descname">PERIAPSIS</tt><a class="headerlink" href="#attribute:ETA:PERIAPSIS" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Number, seconds</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Seconds until SHIP hits its periapsis.  If the ship is on an intersect
+with the ground, such that you&#8217;ll hit the ground first before you&#8217;d
+get to periapsis, it will still return the hypothetical number of
+seconds it would have taken to get to periapsis if you had the magical
+ability to pass through the ground as if it wasn&#8217;t there.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="attribute:ETA:TRANSITION">
+ETA:<tt class="descname">TRANSITION</tt><a class="headerlink" href="#attribute:ETA:TRANSITION" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Number, seconds</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get only</td>
+</tr>
+</tbody>
+</table>
+<p>Seconds until SHIP hits its the end of its current orbit patch and
+transitions into another one, ignoring the effect of any intervening
+manuever nodes it might hit before it gets there.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gimbal.html" class="btn btn-neutral float-right" title="Gimbal">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="engine.html" class="btn btn-neutral" title="Engine"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.18.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

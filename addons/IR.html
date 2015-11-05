@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Infernal Robotics &mdash; kOS 0.17.3 documentation</title>
+  <title>Infernal Robotics &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../index.html"/>
         <link rel="up" title="Addon Reference" href="../addons.html"/>
         <link rel="next" title="Contribute" href="../contribute.html"/>
         <link rel="prev" title="Kerbal Alarm Clock" href="KAC.html"/> 
@@ -625,31 +625,35 @@ IRControlGroup:<tt class="descname">STOP</tt><big>(</big><big>)</big><a class="h
 <td>bool</td>
 <td>Servo&#8217;s inverted status, set true to invert servo&#8217;s axis.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVERIGHT" title="IRSERVO:MOVERIGHT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVERIGHT()</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:IRSERVO:PART" title="IRSERVO:PART attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PART</span></tt></a></td>
+<td><a class="reference internal" href="../structures/vessels/part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+<td>A reference to a Part containing servo module.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:MOVERIGHT" title="IRSERVO:MOVERIGHT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVERIGHT()</span></tt></a></td>
 <td>void</td>
 <td>Commands servo to move in positive direction</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:MOVELEFT" title="IRSERVO:MOVELEFT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVELEFT()</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVELEFT" title="IRSERVO:MOVELEFT method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVELEFT()</span></tt></a></td>
 <td>void</td>
 <td>Commands servo to move in negative direction</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVECENTER" title="IRSERVO:MOVECENTER method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVECENTER()</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:MOVECENTER" title="IRSERVO:MOVECENTER method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVECENTER()</span></tt></a></td>
 <td>void</td>
 <td>Commands servo to move to default position</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:MOVENEXTPRESET" title="IRSERVO:MOVENEXTPRESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVENEXTPRESET()</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVENEXTPRESET" title="IRSERVO:MOVENEXTPRESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVENEXTPRESET()</span></tt></a></td>
 <td>void</td>
 <td>Commands servo to move to next preset</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVEPREVPRESET" title="IRSERVO:MOVEPREVPRESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVEPREVPRESET()</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:MOVEPREVPRESET" title="IRSERVO:MOVEPREVPRESET method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVEPREVPRESET()</span></tt></a></td>
 <td>void</td>
 <td>Commands servo to move to previous preset</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:STOP" title="IRSERVO:STOP method"><tt class="xref ks ks-meth docutils literal"><span class="pre">STOP()</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:STOP" title="IRSERVO:STOP method"><tt class="xref ks ks-meth docutils literal"><span class="pre">STOP()</span></tt></a></td>
 <td>void</td>
 <td>Commands servo to stop</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#method:IRSERVO:MOVETO" title="IRSERVO:MOVETO method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVETO(position,</span> <span class="pre">speedMult)</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#method:IRSERVO:MOVETO" title="IRSERVO:MOVETO method"><tt class="xref ks ks-meth docutils literal"><span class="pre">MOVETO(position,</span> <span class="pre">speedMult)</span></tt></a></td>
 <td>void</td>
 <td>Commands servo to move to <cite>position</cite> with <cite>speedMult</cite> multiplier</td>
 </tr>
@@ -913,6 +917,22 @@ IRServo:<tt class="descname">INVERTED</tt><a class="headerlink" href="#attribute
 <p>Servo&#8217;s inverted status, set true to invert servo&#8217;s axis.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:IRSERVO:PART">
+IRServo:<tt class="descname">PART</tt><a class="headerlink" href="#attribute:IRSERVO:PART" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="../structures/vessels/part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Access:</th><td class="field-body">Get</td>
+</tr>
+</tbody>
+</table>
+<p>Returns reference to the <a class="reference internal" href="../structures/vessels/part.html#structure:PART" title="PART structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Part</span></tt></a> containing servo module. Please note that Part:UID does not equal IRServo:UID.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="method:IRSERVO:MOVERIGHT">
 IRServo:<tt class="descname">MOVERIGHT</tt><big>(</big><big>)</big><a class="headerlink" href="#method:IRSERVO:MOVERIGHT" title="Permalink to this definition">¶</a></dt>
@@ -1082,7 +1102,7 @@ IRServo:<tt class="descname">MOVETO</tt><big>(</big>position, speedMult<big>)</b
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

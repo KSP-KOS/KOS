@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Ship Systems &mdash; kOS 0.17.3 documentation</title>
+  <title>Ship Systems &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
         <link rel="up" title="Flight Control" href="../flight.html"/>
         <link rel="next" title="Time Warping" href="warp.html"/>
         <link rel="prev" title="Pilot Input" href="pilot.html"/> 
@@ -181,12 +181,18 @@
             
   <div class="section" id="ship-systems">
 <span id="systems"></span><h1>Ship Systems<a class="headerlink" href="#ship-systems" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="controlfrom"></span><dl class="object">
-<dt>
-<tt class="descname">SET somepart:CONTROLFROM TO (true|false).</tt></dt>
-<dd><p>If you have a handle on a part, from <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span></tt>, you can select that part to set the orientation of the craft, just like using the &#8220;control from here&#8221; in the right-click menu in the game. For more information see <a class="reference internal" href="../../structures/vessels/part.html#attribute:PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Part:CONTROLFROM</span></tt></a>.</p>
-</dd></dl>
-
+<blockquote id="controlfrom">
+<div><p>e.g.:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span> <span class="n">somepart</span> <span class="n">to</span> <span class="n">ship</span><span class="o">:</span><span class="n">partstagged</span><span class="p">(</span><span class="s">&quot;my favorite docking port&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span>
+<span class="nl">somepart:</span><span class="n">CONTROLFROM</span><span class="p">().</span>
+</pre></div>
+</div>
+<p>If you have a handle on a part, from <tt class="docutils literal"><span class="pre">LIST</span> <span class="pre">PARTS</span></tt>, you can select that part to set the orientation of the craft, just like using the &#8220;control from here&#8221; in the right-click menu in the game. For more information see <a class="reference internal" href="../../structures/vessels/part.html#attribute:PART:CONTROLFROM" title="PART:CONTROLFROM attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">Part:CONTROLFROM</span></tt></a>.
+All vessels must have at least one &#8220;control from&#8221;
+part on them somewhere, which is why there&#8217;s no mechanism for un-setting
+the &#8220;control from&#8221; setting other than to pick another part and set it
+to that part instead.</p>
+</div></blockquote>
 <dl class="global">
 <dt id="global:RCS">
 <tt class="descname">RCS</tt><a class="headerlink" href="#global:RCS" title="Permalink to this definition">¶</a></dt>
@@ -341,7 +347,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

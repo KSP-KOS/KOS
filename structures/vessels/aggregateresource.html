@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>AggregateResource &mdash; kOS 0.17.3 documentation</title>
+  <title>AggregateResource &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,9 +33,9 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
         <link rel="up" title="Vessels and Parts" href="../vessels.html"/>
-        <link rel="next" title="DockingPort" href="dockingport.html"/>
+        <link rel="next" title="ALT" href="alt.html"/>
         <link rel="prev" title="Vessels and Parts" href="../vessels.html"/> 
 
   
@@ -188,7 +188,7 @@
 <span class="n">LIST</span> <span class="n">RESOURCES</span> <span class="n">IN</span> <span class="n">RESLIST</span><span class="p">.</span>
 <span class="n">FOR</span> <span class="n">RES</span> <span class="n">IN</span> <span class="n">RESLIST</span> <span class="p">{</span>
     <span class="n">PRINT</span> <span class="s">&quot;Resource &quot;</span> <span class="o">+</span> <span class="n">RES</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>
-    <span class="n">PRINT</span> <span class="s">&quot;    value = &quot;</span> <span class="o">+</span> <span class="n">AMOUNT</span><span class="p">.</span>
+    <span class="n">PRINT</span> <span class="s">&quot;    value = &quot;</span> <span class="o">+</span> <span class="n">RES</span><span class="o">:</span><span class="n">AMOUNT</span><span class="p">.</span>
     <span class="n">PRINT</span> <span class="s">&quot;    which is &quot;</span>
           <span class="o">+</span> <span class="n">ROUND</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">RES</span><span class="o">:</span><span class="n">AMOUNT</span><span class="o">/</span><span class="n">RES</span><span class="o">:</span><span class="n">CAPACITY</span><span class="p">)</span>
           <span class="o">+</span> <span class="s">&quot;% full.&quot;</span><span class="p">.</span>
@@ -200,7 +200,7 @@
 <span class="n">SET</span> <span class="n">RESLIST</span> <span class="n">TO</span> <span class="n">STAGE</span><span class="o">:</span><span class="n">RESOURCES</span><span class="p">.</span>
 <span class="n">FOR</span> <span class="n">RES</span> <span class="n">IN</span> <span class="n">RESLIST</span> <span class="p">{</span>
     <span class="n">PRINT</span> <span class="s">&quot;Resource &quot;</span> <span class="o">+</span> <span class="n">RES</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>
-    <span class="n">PRINT</span> <span class="s">&quot;    value = &quot;</span> <span class="o">+</span> <span class="n">AMOUNT</span><span class="p">.</span>
+    <span class="n">PRINT</span> <span class="s">&quot;    value = &quot;</span> <span class="o">+</span> <span class="n">RES</span><span class="o">:</span><span class="n">AMOUNT</span><span class="p">.</span>
     <span class="n">PRINT</span> <span class="s">&quot;    which is &quot;</span>
           <span class="o">+</span> <span class="n">ROUND</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">RES</span><span class="o">:</span><span class="n">AMOUNT</span><span class="o">/</span><span class="n">RES</span><span class="o">:</span><span class="n">CAPACITY</span><span class="p">)</span>
           <span class="o">+</span> <span class="s">&quot;% full.&quot;</span><span class="p">.</span>
@@ -315,7 +315,7 @@ AggregateResource:<tt class="descname">PARTS</tt><a class="headerlink" href="#at
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="dockingport.html" class="btn btn-neutral float-right" title="DockingPort">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="alt.html" class="btn btn-neutral float-right" title="ALT">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../vessels.html" class="btn btn-neutral" title="Vessels and Parts"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -348,7 +348,7 @@ AggregateResource:<tt class="descname">PARTS</tt><a class="headerlink" href="#at
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

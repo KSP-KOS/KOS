@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Body &mdash; kOS 0.17.3 documentation</title>
+  <title>Body &mdash; kOS 0.18.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.17.3 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
         <link rel="up" title="Celestial Bodies" href="../celestial_bodies.html"/>
         <link rel="next" title="Vessels and Parts" href="../vessels.html"/>
         <link rel="prev" title="Atmosphere" href="atmosphere.html"/> 
@@ -298,6 +298,9 @@
 <tr class="row-even"><td><a class="reference internal" href="#attribute:BODY:SOIRADIUS" title="BODY:SOIRADIUS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">SOIRADIUS</span></tt></a></td>
 <td>scalar (m)</td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#attribute:BODY:ROTATIONANGLE" title="BODY:ROTATIONANGLE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROTATIONANGLE</span></tt></a></td>
+<td>scalar (deg)</td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -374,6 +377,17 @@ Body:<tt class="descname">SOIRADIUS</tt><a class="headerlink" href="#attribute:B
 <dd><p>The radius of the body&#8217;s sphere of influence. Measured from the body&#8217;s center.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="attribute:BODY:ROTATIONANGLE">
+Body:<tt class="descname">ROTATIONANGLE</tt><a class="headerlink" href="#attribute:BODY:ROTATIONANGLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The rotation angle is the number of degrees between the
+<a class="reference internal" href="../../bindings.html#solarprimevector"><em>Solar Prime Vector</em></a> and the
+current positon of the body&#8217;s prime meridian (body longitude
+of zero).</p>
+<p>The value is in constant motion, and once per body&#8217;s day, its
+<tt class="docutils literal"><span class="pre">:rotationangle</span></tt> will wrap around through a full 360 degrees.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -416,7 +430,7 @@ Body:<tt class="descname">SOIRADIUS</tt><a class="headerlink" href="#attribute:B
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.17.3',
+            VERSION:'0.18.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
