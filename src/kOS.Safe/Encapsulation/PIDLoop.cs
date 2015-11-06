@@ -156,7 +156,7 @@ namespace kOS.Safe.Encapsulation
                     ChangeRate = (input - Input) / dt;
                     if (Kd != 0)
                     {
-                        dTerm = ChangeRate * Kd;
+                        dTerm = -ChangeRate * Kd;
                     }
                 }
             }
