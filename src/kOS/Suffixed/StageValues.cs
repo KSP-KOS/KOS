@@ -74,6 +74,13 @@ namespace kOS.Suffixed
                     engine.GetConnectedResources(resourceDef.id, resourceDef.resourceFlowMode, list);
                 }
             }
+            else if (resourceDef.resourceFlowMode == ResourceFlowMode.NO_FLOW) {
+                var engines = VesselUtils.GetListOfActivatedEngines(shared.Vessel);
+                foreach (var engine in engines)
+                {
+                    list.AddRange(engine.Resources.GetAll(resourceDef.id));
+                }
+            }
             else
             {
                 shared.Vessel.rootPart.GetConnectedResources(resourceDef.id, resourceDef.resourceFlowMode, list);
