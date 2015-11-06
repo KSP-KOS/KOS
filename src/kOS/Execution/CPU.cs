@@ -117,18 +117,27 @@ namespace kOS.Execution
             {
                 string filename = shared.Processor.BootFilename;
                 // Check to make sure the boot file name is valid, and then that the boot file exists.
-                if (String.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
+                if (string.IsNullOrEmpty(filename)) { SafeHouse.Logger.Log("Boot file name is empty, skipping boot script"); }
                 else if (filename.Equals("None", StringComparison.InvariantCultureIgnoreCase)) { SafeHouse.Logger.Log("Boot file name is \"None\", skipping boot script"); }
-                else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(String.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
+                else if (shared.VolumeMgr.CurrentVolume.GetByName(filename) == null) { SafeHouse.Logger.Log(string.Format("Boot file \"{0}\" is missing, skipping boot script", filename)); }
                 else
                 {
-                    string filePath = shared.VolumeMgr.GetVolumeRawIdentifier(shared.VolumeMgr.CurrentVolume) + "/" + filename;
-                    shared.ScriptHandler.ClearContext("program");
-                    var programContext = ((CPU)shared.Cpu).SwitchToProgramContext();
-                    programContext.Silent = true;
-                    var options = new CompilerOptions { LoadProgramsInSameAddressSpace = true };
+                    var bootContext = "program";
+                    var bootCommand = string.Format("run {0}.", filename);
+
+                    var options = new CompilerOptions
+                    {
+                        LoadProgramsInSameAddressSpace = true,
+                        FuncManager = shared.FunctionManager,
+                        IsCalledFromRun = false
+                    };
+
+                    shared.ScriptHandler.ClearContext(bootContext);
                     List<CodePart> parts = shared.ScriptHandler.Compile(
-                        filePath, 1, String.Format("run {0}.", filename), "program", options);
+                        "sys:boot", 1, bootCommand, bootContext, options);
+
+                    var programContext = SwitchToProgramContext();
+                    programContext.Silent = true;
                     programContext.AddParts(parts);
                 }
             }
