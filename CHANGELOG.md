@@ -1,6 +1,14 @@
 kOS Mod Changelog
 =================
 
+# v0.18.1
+
+Steering Much Betterer
+----------------------
+
+### BUG FIXES
+* Fixed a issue where the effect of the Kd parameter was having a reversed effect #1229
+
 # v0.18
 
 Steering Much Betterer
