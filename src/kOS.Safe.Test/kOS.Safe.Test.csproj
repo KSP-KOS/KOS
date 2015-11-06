@@ -60,6 +60,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestLogger.cs" />
     <Compile Include="Structure\TwoArgsVoidSuffixTest.cs" />
+    <Compile Include="Collections\QueueValueTest.cs" />
+    <Compile Include="Collections\StackValueTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">

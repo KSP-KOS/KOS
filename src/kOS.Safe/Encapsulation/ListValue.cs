@@ -8,9 +8,8 @@ using System.Linq;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class ListValue<T> : Structure, IList<T>, IIndexable, IDumper
+    public class ListValue<T> : EnumerableValue<T, IList<T>>, IIndexable
     {
-        private readonly IList<T> internalList;
         private const int INDENT_SPACES = 2;
 
         public ListValue()
@@ -18,100 +17,65 @@ namespace kOS.Safe.Encapsulation
         {
         }
 
-        public ListValue(IEnumerable<T> listValue)
+        public ListValue(IEnumerable<T> listValue) : base("LIST", new List<T>(listValue))
         {
-            internalList = listValue.ToList();
             ListInitializeSuffixes();
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return internalList.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public void Add(T item)
         {
-            internalList.Add(item);
-        }
-
-        public void Clear()
-        {
-            internalList.Clear();
-        }
-
-        public bool Contains(T item)
-        {
-            return internalList.Contains(item);
+            collection.Add(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            internalList.CopyTo(array, arrayIndex);
+            collection.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(T item)
         {
-            return internalList.Remove(item);
+            return collection.Remove(item);
         }
 
-        public int Count
+
+        public void Clear()
         {
-            get { return internalList.Count; }
+            collection.Clear();
         }
 
-        public bool IsReadOnly
+        public override int Count
         {
-            get { return internalList.IsReadOnly; }
-        }
-
-        public int IndexOf(T item)
-        {
-            return internalList.IndexOf(item);
-        }
-
-        public void Insert(int index, T item)
-        {
-            internalList.Insert(index, item);
+            get { return collection.Count; }
         }
 
         public void RemoveAt(int index)
         {
-            internalList.RemoveAt(index);
+            collection.RemoveAt(index);
         }
 
         public T this[int index]
         {
-            get { return internalList[index]; }
-            set { internalList[index] = value; }
+            get { return collection[index]; }
+            set { collection[index] = value; }
         }
 
         private void ListInitializeSuffixes()
         {
-            AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => internalList.Add(toAdd), Resources.ListAddDescription));
-            AddSuffix("INSERT",   new TwoArgsSuffix<int, T>             ((index, toAdd) => internalList.Insert(index, toAdd)));
-            AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => internalList.RemoveAt(toRemove)));
-            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => internalList.Clear()));
-            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => internalList.Count));
-            AddSuffix("ITERATOR", new NoArgsSuffix<Enumerator>          (() => new Enumerator(internalList.GetEnumerator())));
-            AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
-            AddSuffix("CONTAINS", new OneArgsSuffix<bool, T>            (item => internalList.Contains(item)));
+            AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => collection.Count));
+            AddSuffix("CLEAR",    new NoArgsSuffix                      (() => collection.Clear()));
+            AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => collection.Add(toAdd), Resources.ListAddDescription));
+            AddSuffix("INSERT",   new TwoArgsSuffix<int, T>             ((index, toAdd) => collection.Insert(index, toAdd)));
+            AddSuffix("REMOVE",   new OneArgsSuffix<int>                (toRemove => collection.RemoveAt(toRemove)));
             AddSuffix("SUBLIST",  new TwoArgsSuffix<ListValue, int, int>(SubListMethod));
-            AddSuffix("EMPTY",    new NoArgsSuffix<bool>                (() => !internalList.Any()));
-            AddSuffix("DUMP",     new NoArgsSuffix<string>              (() => string.Join(Environment.NewLine, Dump(99))));
-        }
+       }
 
         // This test case was added to ensure there was an example method with more than 1 argument.
         private ListValue SubListMethod(int start, int runLength)
         {
             var subList = new ListValue();
-            for (int i = start; i < internalList.Count && i < start + runLength; ++i)
+            for (int i = start; i < collection.Count && i < start + runLength; ++i)
             {
-                subList.Add(internalList[i]);
+                subList.Add(collection[i]);
             }
             return subList;
         }
@@ -154,7 +118,7 @@ namespace kOS.Safe.Encapsulation
             }
             if (!(index is int)) throw new Exception("The index must be an integer number");
 
-            return internalList[(int)index];
+            return collection[(int)index];
         }
 
         public void SetIndex(object index, object value)
@@ -166,54 +130,10 @@ namespace kOS.Safe.Encapsulation
 
             if (!(index is int)) throw new KOSException("The index must be an integer number");
 
-            internalList[(int)index] = (T)value;
+            collection[(int)index] = (T)value;
         }
 
-        public string[] Dump(int limit, int depth = 0)
-        {
-            var toReturn = new List<string>();
 
-            var listString = string.Format("LIST of {0} items", Count);
-            toReturn.Add(listString);
-
-            if (limit <= 0) return toReturn.ToArray();
-
-            for (int index = 0; index < internalList.Count; index++)
-            {
-                var item = internalList[index];
-
-                var dumper = item as IDumper;
-                if (dumper != null)
-                {
-                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
-
-                    var itemDump = dumper.Dump(limit - 1, depth + 1);
-
-                    var itemString = string.Format("  [{0,2}]= {1}", index, itemDump[0]);
-                    entry += itemString;
-
-                    toReturn.Add(entry);
-
-                    for (int i = 1; i < itemDump.Length; i++)
-                    {
-                        var subEntry = string.Format("{0}", itemDump[i]);
-                        toReturn.Add(subEntry);
-                    }
-                }
-                else
-                {
-                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
-                    entry += string.Format("  [{0,2}]= {1}", index, item);
-                    toReturn.Add(entry); 
-                }
-            }
-            return toReturn.ToArray();
-        }
-
-        public override string ToString()
-        {
-            return string.Join(Environment.NewLine, Dump(1));
-        }
     }
 
     public class ListValue : ListValue<object>
