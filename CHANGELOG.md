@@ -10,7 +10,7 @@ Steering More Much Betterer
 * Changed default MaxStoppingTime to 2 seconds ( was 1 )
 
 ### BUG FIXES
-* Fixed a issue where the effect of the Kd parameter of PIDLoot was having a reversed effect #1229
+* Fixed a issue where the effect of the Kd parameter of PIDLoop was having a reversed effect #1229
 * Fixes an issue where NO_FLOW resources ( eg SolidFuel ) were not reporting correctly #1231
 
 # v0.18
