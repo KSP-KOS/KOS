@@ -3,10 +3,10 @@ kOS Mod Changelog
 
 # v0.18.1
 
-Steering Much Betterer
+Steering More Much Betterer
 ----------------------
 
-###Changes
+### Changes
 * Changed default MaxStoppingTime to 2 seconds ( was 1 )
 
 ### BUG FIXES
