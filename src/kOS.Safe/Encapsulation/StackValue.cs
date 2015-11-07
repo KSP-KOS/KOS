@@ -31,7 +31,7 @@ namespace kOS.Safe.Encapsulation
 
         private void StackInitializeSuffixes()
         {
-            AddSuffix("COPY",     new NoArgsSuffix<StackValue<T>>       (() => new StackValue<T>(this)));
+            AddSuffix("COPY",     new NoArgsSuffix<StackValue<T>>       (() => new StackValue<T>(Enumerable.Reverse(this))));
             AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => collection.Count));
             AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => collection.Push(toPush)));
             AddSuffix("POP",      new NoArgsSuffix<T>                   (() => collection.Pop()));
@@ -60,7 +60,7 @@ namespace kOS.Safe.Encapsulation
 
         private void InitializeSuffixes()
         {
-            AddSuffix("COPY", new NoArgsSuffix<StackValue>(() => new StackValue(this)));
+            AddSuffix("COPY", new NoArgsSuffix<StackValue>(() => new StackValue(Enumerable.Reverse(this))));
         }
 
         public new static StackValue CreateStack<T>(IEnumerable<T> toCopy)

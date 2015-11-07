@@ -66,7 +66,7 @@ namespace kOS.Safe.Test.Collections
             InvokeDelegate(stack, "PUSH", firstObject);
             var secondObject = new object();
             InvokeDelegate(stack, "PUSH", secondObject);
-            var thirdObject = new object();
+            var thirdObject = "third";
             InvokeDelegate(stack, "PUSH", thirdObject);
 
             var length = InvokeDelegate(stack, "LENGTH");
@@ -77,6 +77,9 @@ namespace kOS.Safe.Test.Collections
 
             var copyLength = InvokeDelegate(copy, "LENGTH");
             Assert.AreEqual(4,copyLength);
+
+            object popped = InvokeDelegate(copy, "POP");
+            Assert.AreEqual(thirdObject, popped);
 
             InvokeDelegate(copy, "CLEAR");
 
