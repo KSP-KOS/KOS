@@ -301,7 +301,7 @@ namespace kOS.Binding
             enableMoiAdjust = false;
             EnableTorqueAdjust = true;
 
-            MaxStoppingTime = 1;
+            MaxStoppingTime = 2;
 
             PitchTorqueAdjust = 0;
             YawTorqueAdjust = 0;
