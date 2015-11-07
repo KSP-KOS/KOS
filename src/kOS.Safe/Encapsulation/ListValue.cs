@@ -80,31 +80,6 @@ namespace kOS.Safe.Encapsulation
             return subList;
         }
 
-        public override bool SetSuffix(string suffixName, object value)
-        {
-            //These were deprecated in v0.15. Text here it to assist in upgrading scripts
-            switch (suffixName)
-            {
-                case "ADD":
-                    throw new Exception("Old syntax \n" +
-                                           "   SET _somelist_:ADD TO _value_\n" +
-                                           "is no longer supported. Try replacing it with: \n" +
-                                           "   _somelist_:ADD(_value_).\n");
-                case "CONTAINS":
-                    throw new Exception("Old syntax \n" +
-                                           "   SET _somelist_:CONTAINS TO _value_\n" +
-                                           "is no longer supported. Try replacing it with: \n" +
-                                           "   SET test TO _somelist_:CONTAINS(_value_)\n");
-                case "REMOVE":
-                    throw new Exception("Old syntax \n" +
-                                           "   SET _somelist_:REMOVE TO _number_\n" +
-                                           "is no longer supported. Try replacing it with: \n" +
-                                           "   _somelist_:REMOVE(_number_).\n");
-                default:
-                    return false;
-            }
-        }
-
         public static ListValue<T> CreateList<TU>(IEnumerable<TU> list)
         {
             return new ListValue<T>(list.Cast<T>());
