@@ -8,6 +8,7 @@ Steering Much Betterer
 
 ### BUG FIXES
 * Fixed a issue where the effect of the Kd parameter of PIDLoot was having a reversed effect #1229
+* Fixes an issue where NO_FLOW resources ( eg SolidFuel ) were not reporting correctly #1231
 
 # v0.18
 
