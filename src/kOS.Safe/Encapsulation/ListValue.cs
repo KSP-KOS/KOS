@@ -37,7 +37,6 @@ namespace kOS.Safe.Encapsulation
             return collection.Remove(item);
         }
 
-
         public void Clear()
         {
             collection.Clear();
@@ -61,6 +60,7 @@ namespace kOS.Safe.Encapsulation
 
         private void ListInitializeSuffixes()
         {
+            AddSuffix("COPY",     new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T>(this)));
             AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => collection.Count));
             AddSuffix("CLEAR",    new NoArgsSuffix                      (() => collection.Clear()));
             AddSuffix("ADD",      new OneArgsSuffix<T>                  (toAdd => collection.Add(toAdd), Resources.ListAddDescription));

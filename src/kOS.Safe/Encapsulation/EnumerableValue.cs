@@ -88,11 +88,9 @@ namespace kOS.Safe
         private void InitializeEnumerableSuffixes()
         {
             AddSuffix("ITERATOR",   new NoArgsSuffix<Enumerator>          (() => new Enumerator (collection.GetEnumerator())));
-            AddSuffix("COPY",       new NoArgsSuffix<ListValue<T>>        (() => new ListValue<T> (this)));
             AddSuffix("CONTAINS",   new OneArgsSuffix<bool, T>            (item => collection.Contains(item)));
             AddSuffix("EMPTY",      new NoArgsSuffix<bool>                (() => !collection.Any()));
             AddSuffix("DUMP",       new NoArgsSuffix<string>              (() => string.Join(Environment.NewLine, Dump(99))));
-
         }
     }
 }
