@@ -4,7 +4,7 @@ Stack
 ====
 
 A :struct:`Stack` is a collection of any type in kOS. Stacks work according to `Last-In first-out <https://en.wikipedia.org/wiki/FIFO_and_LIFO_accounting>`_ principle. It may be useful to contrast
-:struct:`Stack` with :struct:`stack` to better understand how both structures work. You can read more about stacks on `Wikipedia <https://en.wikipedia.org/wiki/Stack_(abstract_data_type)>`_.
+:struct:`Stack` with :struct:`Queue` to better understand how both structures work. You can read more about stacks on `Wikipedia <https://en.wikipedia.org/wiki/Stack_(abstract_data_type)>`_.
 
 Using a stack
 -------------
