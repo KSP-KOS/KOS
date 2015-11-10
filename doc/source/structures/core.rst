@@ -29,7 +29,7 @@ Core represents your ability to identify and interact directly with the running 
         * - :attr:`BOOTFILENAME`
           - `String`
         * - :attr:`CURRENTVOLUME`
-          - `Volume`
+          - :struct:`Volume`
 
 
 .. attribute:: CORE:PART
@@ -70,7 +70,7 @@ Core represents your ability to identify and interact directly with the running 
 
 .. attribute:: CORE:CURRENTVOLUME
 
-    :type: `Volume`
+    :type: :struct:`Volume`
     :access: Get only
 
     The currently selected volume for the current processor.  This may be useful to prevent deleting files on the Archive, or for interacting with multiple local hard disks.
