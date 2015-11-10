@@ -543,6 +543,11 @@ namespace kOS.Module
                 // KSP Seems to want to make an instance of my partModule during initial load
                 if (vessel == null) return;
 
+                if (node.HasValue("activated") && !Boolean.Parse(node.GetValue("activated")))
+                {
+                    ProcessorMode = ProcessorModes.OFF;
+                }
+
                 if (node.HasNode("harddisk"))
                 {
                     var newDisk = node.GetNode("harddisk").ToHardDisk();
@@ -568,6 +573,8 @@ namespace kOS.Module
         {
             try
             {
+                node.AddValue("activated", ProcessorMode != ProcessorModes.OFF);
+
                 if (HardDisk != null)
                 {
                     ConfigNode hdNode = HardDisk.ToConfigNode("harddisk");
