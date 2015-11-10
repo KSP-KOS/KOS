@@ -169,7 +169,7 @@ Structure
 
     Note that the "celestial longitude" in this case is NOT the planetary
     longitude of the orbit body.  "Celestial longitudes" are expressed
-    as the angle from the :ref:`Solar Prime Vector <solarprimevector`,
+    as the angle from the :ref:`Solar Prime Vector <solarprimevector>`,
     not from the body's longitude.  In order to find out where it is
     relative to the body's longitude, you will have to take into account
     ``body:rotationangle``, and take into account that the body will

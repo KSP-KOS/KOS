@@ -45,6 +45,19 @@ KUniverse 4th wall methods
           - string
           - Get
           - Returns the name of this vessel's editor, "SPH" or "VAB".
+        * - :attr:`DEFAULTLOADDISTANCE`
+          - :struct:`LoadDistance`
+          - Get
+          - Returns the set of default load and pack distances for the game.
+        * - :attr:`ACTIVEVESEL`
+          - :struct:`Vessel`
+          - Get/Set
+          - Returns the active vessel, or lets you set the active vesssel.
+        * - :attr:`FORCEACTIVE(vessel)`
+          - n/a
+          - Set
+          - Lets you switch active vessels even when the game refuses to allow it.
+
 
 .. attribute:: KUniverse:CANREVERT
 
@@ -123,7 +136,7 @@ KUniverse 4th wall methods
     :access: Get/Set
     :type: :struct:`Vessel`.
 
-    Returns the active vessel object and allows you to set the active vessel.  Note: KSP will not allow you to change vessels by default when the current active vessel is in the atmosphere or under acceleration.  Use :method:`FORCEACTIVE` under those circumstances.
+    Returns the active vessel object and allows you to set the active vessel.  Note: KSP will not allow you to change vessels by default when the current active vessel is in the atmosphere or under acceleration.  Use :meth:`FORCEACTIVE` under those circumstances.
 
 .. method:: KUniverse:FORCEACTIVE(vessel)
 

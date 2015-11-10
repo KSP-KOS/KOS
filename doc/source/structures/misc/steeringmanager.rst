@@ -195,7 +195,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an additive bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST * PITCHTORQUEFACTOR.
+    You can set this value to provide an additive bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
 
 .. attribute:: SteeringManager:YAWTORQUEADJUST
 
@@ -209,14 +209,14 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an additive bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST * ROLLTORQUEFACTOR.
+    You can set this value to provide an additive bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.
 
 .. attribute:: SteeringManager:PITCHTORQUEFACTOR
 
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an multiplicative factor bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST * PITCHTORQUEFACTOR.
+    You can set this value to provide an multiplicative factor bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
 
 .. attribute:: SteeringManager:YAWTORQUEFACTOR
 
@@ -230,4 +230,4 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an multiplicative factor bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST * ROLLTORQUEFACTOR.
+    You can set this value to provide an multiplicative factor bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.

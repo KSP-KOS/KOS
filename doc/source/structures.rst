@@ -42,8 +42,10 @@ A general discussion of structures :ref:`can be found here <language structures>
     * :struct:`Kuniverse`
     * :struct:`Terminal`
     * :struct:`core`
+    * :struct:`Lexicon`
+    * :struct:`String`
     * :struct:`PIDloop`
-    * :struct:`SteeringManager``
+    * :struct:`SteeringManager`
     * :ref:`Colors <colors>`
     * :ref:`Time <time>`
     * :ref:`Drawing Vectors <vecdraw>`

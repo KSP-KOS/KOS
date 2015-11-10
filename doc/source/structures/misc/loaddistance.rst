@@ -40,7 +40,7 @@ Vessel Load Distance
     The term "on rails" actually refers to two entirely different things
     that are controlled by separate settings, as described below:
 
-    _*loaded*_ : A vessel is LOADED when all its parts are being
+    **loaded** : A vessel is LOADED when all its parts are being
     rendered by the graphics engine and it's possible to actually see
     what it looks like.  A vessel that is UNLOADED doesn't even
     have its parts in memory and is just a single dot in space
@@ -49,7 +49,7 @@ Vessel Load Distance
     it's not even being rendered on camera at all.  Unloaded vessels
     only exist as a marker icon in space, with a possible label text.
 
-    _*packed*_ : A vessel is PACKED when it is close enough to be
+    **packed** : A vessel is PACKED when it is close enough to be
     *loaded* (see above), but still far enough away that its full
     capabilities aren't enabled.  A vessel that is *loaded*, but
     still *packed* will be unable to have its parts interact, and
@@ -159,7 +159,7 @@ Vessel Load Distance
           - Load and pack Distances while on a suborbital trajectory
 
 Situation Load Distance
-======================
+=======================
 
 Each of the above
 
@@ -178,27 +178,27 @@ Each of the above
       :header-rows: 1
       :widths: 2 1 1 4
 
-        * - Suffix
-          - Type
-          - Get/Set
-          - Description
+      * - Suffix
+        - Type
+        - Get/Set
+        - Description
 
-        * - :attr:`LOAD`
-          - scalar, in meters
-          - Get/Set
-          - The load distance
-        * - :attr:`UNLOAD`
-          - scalar, in meters
-          - Get/Set
-          - The unload distance
-        * - :attr:`UNPACK`
-          - scalar, in meters
-          - Get/Set
-          - The unpack distance
-        * - :attr:`PACK`
-          - scalar, in meters
-          - Get/Set
-          - The pack distance
+      * - :attr:`LOAD`
+        - scalar, in meters
+        - Get/Set
+        - The load distance
+      * - :attr:`UNLOAD`
+        - scalar, in meters
+        - Get/Set
+        - The unload distance
+      * - :attr:`UNPACK`
+        - scalar, in meters
+        - Get/Set
+        - The unpack distance
+      * - :attr:`PACK`
+        - scalar, in meters
+        - Get/Set
+        - The pack distance
 
 .. attribute:: SituationLoadDistance:LOAD
 

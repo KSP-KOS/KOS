@@ -42,6 +42,8 @@ All vessels share a structure. To get a variable referring to any vessel you can
      :attr:`MASS`                          scalar (metric tons)      Mass of the ship
      :attr:`WETMASS`                       scalar (metric tons)      Mass of the ship fully fuelled
      :attr:`DRYMASS`                       scalar (metric tons)      Mass of the ship with no resources
+     :attr:`DYNAMICPRESSURE`               scalar (kilopascals)      Air Pressure surrounding the vessel
+     :attr:`Q`                             scalar (kilopascals)      Alias name for DYNAMICPRESSURE
      :attr:`VERTICALSPEED`                 scalar (m/s)              How fast the ship is moving "up"
      :attr:`GROUNDSPEED`                   scalar (m/s)              How fast the ship is moving "horizontally"
      :attr:`AIRSPEED`                      scalar (m/s)              How fast the ship is moving relative to the air
@@ -152,6 +154,20 @@ All vessels share a structure. To get a variable referring to any vessel you can
     :access: Get only
 
     The mass of the ship if all resources were empty
+
+.. attribute:: Vessel:DYNAMICPRESSURE
+
+    :type: scalar (kiloPascals, kPa)
+    :access: Get only
+
+    Returns what the air pressure is in the atmosphere surrounding the vessel.
+
+.. attribute:: Vessel:Q
+
+    :type: scalar (kiloPascals, kPa)
+    :access: Get only
+
+    Alias for DYNAMICPRESSURE
 
 .. attribute:: Vessel:VERTICALSPEED
 
