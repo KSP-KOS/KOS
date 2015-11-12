@@ -24,6 +24,7 @@ namespace kOS.Suffixed
             AddSuffix("NUMBER", new Suffix<int>(() => Staging.CurrentStage));
             AddSuffix("READY", new Suffix<bool>(() => shared.Vessel.isActiveVessel && Staging.separate_ready));
             AddSuffix("RESOURCES", new Suffix<ListValue<ActiveResourceValue>>(GetResourceManifest));
+            AddSuffix("RESOURCESLEX", new Suffix<Lexicon<string, ActiveResourceValue>>(GetResourceDictionary));
         }
 
         private ListValue<ActiveResourceValue> GetResourceManifest()
@@ -34,6 +35,19 @@ namespace kOS.Suffixed
             foreach (var resource in resources)
             {
                 toReturn.Add(new ActiveResourceValue(resource, shared));
+            }
+
+            return toReturn;
+        }
+
+        private Lexicon<string, ActiveResourceValue> GetResourceDictionary()
+        {
+            var resources = shared.Vessel.GetActiveResources();
+            var toReturn = new Lexicon<string, ActiveResourceValue>();
+
+            foreach (var resource in resources)
+            {
+                toReturn.Add(resource.info.name, new ActiveResourceValue(resource, shared));
             }
 
             return toReturn;
@@ -87,16 +101,9 @@ namespace kOS.Suffixed
             }
             if (list.Count == 0)
             {
-                return null;
+                return 0;
             }
-            double available = 0.0;
-            double capacity = 0.0;
-            foreach (var resource in list)
-            {
-                available += resource.amount;
-                capacity += resource.maxAmount;
-            }
-            return Math.Round(available, 2);
+            return Math.Round(list.GroupBy(e => e.part.flightID).Select(e => e.FirstOrDefault()).Sum(e => e.amount), 2);
         }
 
         public override string ToString()
