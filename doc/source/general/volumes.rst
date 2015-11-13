@@ -120,6 +120,9 @@ Therefore using the RENAME command on the volumes is useful when dealing
 with multiple CX-4181's on the same vessel, so they all will refer to
 the volumes using the same names.
 
+If a kOS processor has a name tag set, then that processor's volume 
+will have its name initially set to the value of the name tag.
+
 Archive
 -------
 
