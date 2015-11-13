@@ -3,6 +3,9 @@
 SteeringManager
 ===============
 
+See `the cooked control explanation <cooked>`for information to help with
+tuning the steering manager.
+
 The SteeringManager is a bound variable, not a suffix to a specific vessel.  This prevents access to the SteeringManager of other vessels.  You can access the steering manager as shown below: ::
 
     // Display the ship facing, target facing, and world coordinates vectors.
@@ -56,21 +59,21 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: :struct:`PIDLoop`
     :access: Get only
 
-    Returns the PIDLoop object for the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  The loop's `MAXOUTPUT` value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+    Returns the PIDLoop object responsible for calculating the target angular velocity in the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
 
 .. attribute:: SteeringManager:YAWPID
 
     :type: :struct:`PIDLoop`
     :access: Get only
 
-    Returns the PIDLoop object for the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  The loop's `MAXOUTPUT` value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+    Returns the PIDLoop object responsible for calculating the target angular velocity in the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
 
 .. attribute:: SteeringManager:ROLLPID
 
     :type: :struct:`PIDLoop`
     :access: Get only
 
-    Returns the PIDLoop object for the roll direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  The loop's `MAXOUTPUT` value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+    Returns the PIDLoop object responsible for calculating the target angular velocity in the roll direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
 
 .. attribute:: SteeringManager:ENABLED
 
