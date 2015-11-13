@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Math = kOS.Safe.Utilities.Math;
+using kOS.AddOns.RemoteTech;
+using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed.PartModuleField
 {
@@ -472,7 +474,15 @@ namespace kOS.Suffixed.PartModuleField
                 throw new KOSLookupFailException("EVENT", suffixName, this);
             if (!EventIsVisible(evt))
                 throw new KOSLookupFailException("EVENT", suffixName, this, true);
-            evt.Invoke();
+
+            if (RemoteTechHook.IsAvailable())
+            {
+                RemoteTechHook.Instance.InvokeOriginalEvent(evt);
+            }
+            else
+            {
+                evt.Invoke();
+            }
         }
 
         /// <summary>

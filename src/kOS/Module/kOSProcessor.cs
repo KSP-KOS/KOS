@@ -30,6 +30,15 @@ namespace kOS.Module
 
         public Harddisk HardDisk { get; private set; }
 
+        public string Tag
+        {
+            get
+            {
+                KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+                return tag == null ? string.Empty : tag.nameTag;
+            }
+        }
+
         private int vesselPartCount;
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();

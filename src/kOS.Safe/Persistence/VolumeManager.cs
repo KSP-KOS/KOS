@@ -41,7 +41,7 @@ namespace kOS.Safe.Persistence
             return volumeId;
         }
 
-        private int GetVolumeId(Volume volume)
+        public int GetVolumeId(Volume volume)
         {
             int volumeId = -1;
 
