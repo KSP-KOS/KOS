@@ -5,6 +5,7 @@ using System.Text;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Safe.Exceptions;
+using kOS.Safe.Utilities;
 
 namespace kOS.Suffixed
 {
@@ -30,6 +31,7 @@ namespace kOS.Suffixed
             AddSuffix("DEFAULTLOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(PhysicsGlobals.Instance.VesselRangesDefault)));
             AddSuffix("ACTIVEVESSEL", new SetSuffix<VesselTarget>(() => new VesselTarget(FlightGlobals.ActiveVessel, shared), SetActiveVessel));
             AddSuffix("FORCESETACTIVEVESSEL", new OneArgsSuffix<VesselTarget>(ForceSetActiveVessel));
+            AddSuffix("DEBUGLOG", new OneArgsSuffix<string>(DebugLog));
         }
 
         public void RevertToLaunch()
@@ -116,6 +118,11 @@ namespace kOS.Suffixed
             {
                 FlightGlobals.ForceSetActiveVessel(vessel);
             }
+        }
+        
+        public void DebugLog(string message)
+        {
+            SafeHouse.Logger.Log("(KUNIVERSE:DEBUGLOG) " + message);
         }
     }
 }
