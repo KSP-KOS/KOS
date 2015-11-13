@@ -18,26 +18,18 @@ Core represents your ability to identify and interact directly with the running 
         * - Suffix
           - Type
 
-        * - :attr:`PART`
-          - `Part`
+        * - All suffixes of :struct:`kOSProcessor`
+          - :struct:`CORE` objects are a type of :struct:`kOSProcessor`
+
         * - :attr:`VESSEL`
           - `Vessel`
         * - :attr:`ELEMENT`
           - `Element`
         * - :attr:`VERSION`
           - `Version`
-        * - :attr:`BOOTFILENAME`
-          - `String`
         * - :attr:`CURRENTVOLUME`
           - :struct:`Volume`
 
-
-.. attribute:: CORE:PART
-
-    :type: Part
-    :access: Get only
-
-    The Part object for the current processor.
 
 .. attribute:: CORE:VESSEL
 
@@ -60,13 +52,6 @@ Core represents your ability to identify and interact directly with the running 
     :access: Get only
 
     The kOS version currently running.
-
-.. attribute:: CORE:BOOTFILENAME
-
-    :type: `String`
-    :access: Get or Set
-
-    The filename for the boot file on the current processor.  This may be set to an empty string `""` or to `"None"` to disable the use of a boot file.
 
 .. attribute:: CORE:CURRENTVOLUME
 
