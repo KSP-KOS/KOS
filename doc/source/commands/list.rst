@@ -48,6 +48,8 @@ Vessel Lists
 
 These generate :struct:`lists <List>` of items on the :struct:`Vessel`:
 
+``Processors``
+    :struct:`List` of :struct:`Processors <kOSProcessor>`
 ``Resources``
     :struct:`List` of :struct:`AggregateResources <Resource>`
 ``Parts``

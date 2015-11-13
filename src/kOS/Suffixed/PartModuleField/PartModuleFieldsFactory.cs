@@ -2,6 +2,7 @@
 using System.Linq;
 using kOS.Safe.Encapsulation;
 using kOS.AddOns.RemoteTech;
+using kOS.Module;
 
 namespace kOS.Suffixed.PartModuleField
 {
@@ -26,6 +27,12 @@ namespace kOS.Suffixed.PartModuleField
 
             if (moduleScienceExperiment != null) {
                 return new ScienceExperimentFields(moduleScienceExperiment, shared);
+            }
+
+            var processor = mod as kOSProcessor;
+
+            if (processor != null) {
+                return new kOSProcessorFields(processor, shared);
             }
 
             if (mod.moduleName.Equals(RemoteTechAntennaModuleFields.RTAntennaModule)) {

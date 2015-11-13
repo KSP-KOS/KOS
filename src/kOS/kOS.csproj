@@ -183,6 +183,7 @@
     <Compile Include="AddOns\RemoteTech\RemoteTechAntennaModuleFields.cs" />
     <Compile Include="Suffixed\CrewMember.cs" />
     <Compile Include="Suffixed\PartModuleField\ScienceExperimentFields.cs" />
+    <Compile Include="Suffixed\PartModuleField\kOSProcessorFields.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kOS.Safe\kOS.Safe.csproj">
