@@ -110,6 +110,12 @@ namespace kOS.Binding
 
             foreach (var param in flightParameters.Values)
                 param.UpdateFlightControl(currentVessel);
+
+            // If any paramers were removed in UnbindUnloaded, add them back here
+            AddMissingFlightParam("throttle", Shared);
+            AddMissingFlightParam("steering", Shared);
+            AddMissingFlightParam("wheelthrottle", Shared);
+            AddMissingFlightParam("wheelsteering", Shared);
         }
 
         public static FlightControl GetControllerByVessel(Vessel target)
@@ -147,7 +153,15 @@ namespace kOS.Binding
 
         private void AddNewFlightParam(string name, SharedObjects shared)
         {
-            flightParameters.Add(name, new FlightCtrlParam(name, shared));
+            flightParameters[name] = new FlightCtrlParam(name, shared);
+        }
+
+        private void AddMissingFlightParam(string name, SharedObjects shared)
+        {
+            if (!flightParameters.ContainsKey(name))
+            {
+                AddNewFlightParam(name, shared);
+            }
         }
 
         public void UnBind()
