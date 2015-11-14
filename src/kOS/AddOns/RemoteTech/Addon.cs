@@ -1,6 +1,7 @@
 ﻿using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
 using kOS.Safe.Encapsulation;
+using kOS.Suffixed.Part;
 
 namespace kOS.AddOns.RemoteTech
 {
@@ -20,6 +21,8 @@ namespace kOS.AddOns.RemoteTech
             AddSuffix("HASCONNECTION", new OneArgsSuffix<bool, VesselTarget>(RTHasConnection, "True if ship has any connection"));
 
             AddSuffix("HASKSCCONNECTION", new OneArgsSuffix<bool, VesselTarget>(RTHasKSCConnection, "True if ship has connection to KSC"));
+
+            AddSuffix("ANTENNAHASCONNECTION", new OneArgsSuffix<bool, PartValue>(RTAntennaHasConnection, "True if antenna has any connection"));
 
             AddSuffix("HASLOCALCONTROL", new OneArgsSuffix<bool, VesselTarget>(RTHasLocalControl, "True if ship has locacl control (i.e. a pilot in a command module)"));
 
@@ -91,6 +94,17 @@ namespace kOS.AddOns.RemoteTech
             var groundStations = RemoteTechHook.Instance.GetGroundStations();
 
             return new ListValue<string>(groundStations);
+        }
+        private static bool RTAntennaHasConnection(PartValue part)
+        {
+            bool result = false;
+
+            if (RemoteTechHook.IsAvailable(part.Part.vessel.id))
+            {
+                result = RemoteTechHook.Instance.AntennaHasConnection(part.Part);
+            }
+
+            return result;
         }
 
         public override bool Available()

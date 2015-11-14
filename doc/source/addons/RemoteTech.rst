@@ -48,6 +48,7 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
      :attr:`AVAILABLE`                     bool(readonly)            True if RT is installed and RT integration enabled.
      :meth:`DELAY(vessel)`                 double                    Get shortest possible delay to given :struct:`Vessel`
      :meth:`KSCDELAY(vessel)`              double                    Get delay from KSC to given :struct:`Vessel`
+     :meth:`ANTENNAHASCONNECTION(part)`    bool                      True if given :struct:`Part` has any connection
      :meth:`HASCONNECTION(vessel)`         bool                      True if given :struct:`Vessel` has any connection
      :meth:`HASKSCCONNECTION(vessel)`      bool                      True if given :struct:`Vessel` has connection to KSC
      :meth:`HASLOCALCONTROL(vessel)`       bool                      True if given :struct:`Vessel` has local control
@@ -76,6 +77,13 @@ Starting version 0.17 of kOS you can access structure RTAddon via `ADDONS:RT`.
     :return: (double) seconds
 
     Returns delay in seconds from KSC to `vessel`.
+
+.. method:: RTAddon:ANTENNAHASCONNECTION(part)
+
+    :parameter part: :struct:`Part`
+    :return: bool
+
+    Returns True if `part` has any connection (including to local command posts).
 
 .. method:: RTAddon:HASCONNECTION(vessel)
 

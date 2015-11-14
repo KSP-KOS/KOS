@@ -11,6 +11,7 @@ namespace kOS.AddOns.RemoteTech
         Action<Guid, Action<FlightCtrlState>> RemoveSanctionedPilot { get; }
         Func<Guid, bool> HasAnyConnection { get; }
         Func<Guid, bool> HasConnectionToKSC { get; }
+        Func<Part, bool> AntennaHasConnection { get; }
         Func<Guid, double> GetShortestSignalDelay { get; }
         Func<Guid, double> GetSignalDelayToKSC { get; }
         Func<Guid, Guid, double> GetSignalDelayToSatellite { get; }
