@@ -1,7 +1,6 @@
 ﻿using System;
 using kOS.Safe.Encapsulation;
 using kOS.Safe.Exceptions;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace kOS.Safe.Test.Collections

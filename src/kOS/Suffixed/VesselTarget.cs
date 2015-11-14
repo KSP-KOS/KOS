@@ -405,7 +405,7 @@ namespace kOS.Suffixed
             AddSuffix("DOCKINGPORTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("dockingports", Shared)));
             AddSuffix("ELEMENTS", new NoArgsSuffix<ListValue>(() => Vessel.PartList("elements", Shared)));
 
-            AddSuffix("CONTROL", new Suffix<FlightControl>(() => FlightControlManager.GetControllerByVessel(Vessel)));
+            AddSuffix("CONTROL", new Suffix<FlightControl>(GetFlightControl));
             AddSuffix("BEARING", new Suffix<float>(() => VesselUtils.GetTargetBearing(CurrentVessel, Vessel)));
             AddSuffix("HEADING", new Suffix<float>(() => VesselUtils.GetTargetHeading(CurrentVessel, Vessel)));
             AddSuffix("AVAILABLETHRUST", new Suffix<double>(() => VesselUtils.GetAvailableThrust(Vessel)));
@@ -426,21 +426,12 @@ namespace kOS.Suffixed
             AddSuffix("TERMVELOCITY", new Suffix<double>(() => { throw new KOSAtmosphereDeprecationException("17.2", "TERMVELOCITY", "<None>", string.Empty); }));
             AddSuffix(new [] { "DYNAMICPRESSURE" , "Q"} , new Suffix<double>(() => Vessel.dynamicPressurekPa * ConstantValue.KpaToAtm, "Dynamic Pressure in Atmospheres"));
             AddSuffix("LOADED", new Suffix<bool>(() => Vessel.loaded));
+            AddSuffix("UNPACKED", new Suffix<bool>(() => !Vessel.packed));
             AddSuffix("ROOTPART", new Suffix<PartValue>(() => PartValueFactory.Construct(Vessel.rootPart, Shared)));
             AddSuffix("DRYMASS", new Suffix<float>(() => Vessel.GetDryMass(), "The Ship's mass when empty"));
             AddSuffix("WETMASS", new Suffix<float>(Vessel.GetWetMass, "The Ship's mass when full"));
             AddSuffix("RESOURCES", new Suffix<ListValue<AggregateResourceValue>>(() => AggregateResourceValue.FromVessel(Vessel, Shared), "The Aggregate resources from every part on the craft"));
-            AddSuffix("PACKDISTANCE", new SetSuffix<float>(
-                () =>
-                {
-                    return System.Math.Min(Vessel.vesselRanges.landed.pack, Vessel.vesselRanges.prelaunch.pack);
-                },
-                value =>
-                {
-                    Vessel.vesselRanges.landed.pack = value;
-                    Vessel.vesselRanges.splashed.pack = value;
-                    Vessel.vesselRanges.prelaunch.pack = value;
-                }));
+            AddSuffix("LOADDISTANCE", new Suffix<LoadDistanceValue>(() => new LoadDistanceValue(Vessel)));
             AddSuffix("ISDEAD", new NoArgsSuffix<bool>(() => (Vessel.state == Vessel.State.DEAD)));
             AddSuffix("STATUS", new Suffix<string>(() => Vessel.situation.ToString()));
 
@@ -466,6 +457,18 @@ namespace kOS.Suffixed
             }
 
             return crew;
+        }
+
+        public void ThrowIfNotCPUVessel()
+        {
+            if (this.Vessel.id != Shared.Vessel.id)
+                throw new KOSWrongCPUVesselException();
+        }
+
+        public FlightControl GetFlightControl()
+        {
+            ThrowIfNotCPUVessel();
+            return FlightControlManager.GetControllerByVessel(Vessel);
         }
 
         public double GetAvailableThrustAt(double atmPressure)
@@ -513,8 +516,17 @@ namespace kOS.Suffixed
             //        speed_2D = sqrt(a^2+b^2).
             //    Therefore:
             //        speed_2D = sqrt(srfspd^2 - c^2)
-            //    Since C in our case is the vertical speed we want to remove, we get the following formula:            
-            return System.Math.Sqrt(Vessel.srfSpeed*Vessel.srfSpeed - Vessel.verticalSpeed*Vessel.verticalSpeed);            
+            //    Since C in our case is the vertical speed we want to remove, we get the following formula:
+
+            double squared2DSpeed = Vessel.srfSpeed*Vessel.srfSpeed - Vessel.verticalSpeed*Vessel.verticalSpeed;
+
+            // Due to floating point roundoff errrors in the KSP API, the above expression can sometimes come
+            // out slightly negative when it should be nearly zero.  (i.e. -0.0000012).  The Sqrt() would
+            // return NaN for such a case, so it needs to be protected from ever going negative like so:
+            if (squared2DSpeed < 0)
+                squared2DSpeed = 0;
+
+            return System.Math.Sqrt(squared2DSpeed);
         }
 
         /// <summary>

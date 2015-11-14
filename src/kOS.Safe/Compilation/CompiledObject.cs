@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
+using kOS.Safe.Execution;
 
 namespace kOS.Safe.Compilation
 {
@@ -57,6 +58,7 @@ namespace kOS.Safe.Compilation
             AddTypeData(5, typeof(float));
             AddTypeData(6, typeof(double));
             AddTypeData(7, typeof(string));
+            AddTypeData(8, typeof(KOSArgMarkerType));
         }
         
         private static void AddTypeData(int byteType, Type csType)
@@ -377,6 +379,7 @@ namespace kOS.Safe.Compilation
         private static void WriteSomeBinaryPrimitive(BinaryWriter writer, object obj)
         {
             if      (obj is PseudoNull) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
+            else if (obj is KOSArgMarkerType) { /*do nothing,  for this type has no data*/ }
             else if (obj is Boolean)    writer.Write((bool)obj);
             else if (obj is Int32)      writer.Write((Int32)obj);
             else if (obj is String)     writer.Write((String)obj);
@@ -405,6 +408,7 @@ namespace kOS.Safe.Compilation
             object returnValue = null;
             
             if      (cSharpType == typeof(PseudoNull)) { /* do nothing.  for a null the type byte code is enough - no further data. */ }
+            else if (cSharpType == typeof(KOSArgMarkerType)) returnValue = new KOSArgMarkerType(); // no packed data - just make a default one.
             else if (cSharpType == typeof(Boolean))    returnValue = reader.ReadBoolean();
             else if (cSharpType == typeof(Int32))      returnValue = reader.ReadInt32();
             else if (cSharpType == typeof(String))     returnValue = reader.ReadString();

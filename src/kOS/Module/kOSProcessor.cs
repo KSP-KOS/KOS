@@ -30,6 +30,15 @@ namespace kOS.Module
 
         public Harddisk HardDisk { get; private set; }
 
+        public string Tag
+        {
+            get
+            {
+                KOSNameTag tag = part.Modules.OfType<KOSNameTag>().FirstOrDefault();
+                return tag == null ? string.Empty : tag.nameTag;
+            }
+        }
+
         private int vesselPartCount;
         private SharedObjects shared;
         private static readonly List<kOSProcessor> allMyInstances = new List<kOSProcessor>();
@@ -293,6 +302,12 @@ namespace kOS.Module
             if (HardDisk == null)
             {
                 HardDisk = new Harddisk(Mathf.Min(diskSpace, PROCESSOR_HARD_CAP));
+
+                if (!String.IsNullOrEmpty(Tag))
+                {
+                    HardDisk.Name = Tag;
+                }
+
                 // populate it with the boot file, but only if using a new disk and in PRELAUNCH situation:
                 if (vessel.situation == Vessel.Situations.PRELAUNCH && bootFile != "None" && !Config.Instance.StartOnArchive)
                 {
@@ -436,6 +451,7 @@ namespace kOS.Module
                 firstUpdate = false;
                 shared.Cpu.Boot();
             }
+            UpdateVessel();
             UpdateFixedObservers();
             ProcessElectricity(part, TimeWarp.fixedDeltaTime);
         }
@@ -452,7 +468,7 @@ namespace kOS.Module
         {
             if (ProcessorMode == ProcessorModes.READY)
             {
-                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(Time.deltaTime);
+                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateObservers(TimeWarp.deltaTime);
                 UpdateParts();
             }
         }
@@ -461,7 +477,7 @@ namespace kOS.Module
         {
             if (ProcessorMode == ProcessorModes.READY)
             {
-                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateFixedObservers(Time.deltaTime);
+                if (shared.UpdateHandler != null) shared.UpdateHandler.UpdateFixedObservers(TimeWarp.fixedDeltaTime);
             }
         }
 
@@ -542,6 +558,11 @@ namespace kOS.Module
                 // KSP Seems to want to make an instance of my partModule during initial load
                 if (vessel == null) return;
 
+                if (node.HasValue("activated") && !Boolean.Parse(node.GetValue("activated")))
+                {
+                    ProcessorMode = ProcessorModes.OFF;
+                }
+
                 if (node.HasNode("harddisk"))
                 {
                     var newDisk = node.GetNode("harddisk").ToHardDisk();
@@ -567,6 +588,8 @@ namespace kOS.Module
         {
             try
             {
+                node.AddValue("activated", ProcessorMode != ProcessorModes.OFF);
+
                 if (HardDisk != null)
                 {
                     ConfigNode hdNode = HardDisk.ToConfigNode("harddisk");

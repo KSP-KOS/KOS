@@ -1,15 +1,16 @@
 .. _lexicon:
 
 Lexicon
-====
+=======
 
-A :struct:`Lexicon` is `an associative array <assocwiki>`_, and is
-similar to the :ref:`LIST type <list>`.  If you are an experienced
+A :struct:`Lexicon` is
+`an associative array <https://en.wikipedia.org/wiki/Associative_array>`_,
+and is similar to the :ref:`LIST type <list>`.  If you are an experienced
 programmer who already knows what "associative array" means, you can
 probably skip this section and go to the next part of the page further
 down, otherwise read on:
 
-In a normal array, or in kerboscript's :ref:`LIST type <list>`_ you
+In a normal array, or in kerboscript's :ref:`LIST type <list>` you
 specify which item in the list you want by giving its integer position
 in the list.
 
@@ -32,7 +33,6 @@ values (and in fact why it's called "lexicon").  However you can
 really use any value you feel like for the keys - strings, RGB colors,
 numbers, etc.
 
-.. _assocwiki: https://en.wikipedia.org/wiki/Associative_array
 
 Lexicons are case-insensitive
 -----------------------------
@@ -43,10 +43,10 @@ case-insensitive keys by default (when the keys are strings).  This
 behaviour can be changed with the ``:CASESENSITIVE`` flag described below.
 
 Constructing a lexicon
--------------------
+----------------------
 
 If you wish to make your own lexicon from scratch you can do so with the
-LEXICON() built-in function.  
+LEXICON() built-in function::
 
     // Make an empty lexicon with zero items in it:
     set mylexicon to lexicon().
@@ -60,7 +60,7 @@ Structure
 
 .. structure:: Lexicon
 
-    .. lexicon-table:: Members
+    .. list-table:: Members
         :header-rows: 1
         :widths: 2 1 4
 

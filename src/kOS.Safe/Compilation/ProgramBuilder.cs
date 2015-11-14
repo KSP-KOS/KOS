@@ -95,8 +95,16 @@ namespace kOS.Safe.Compilation
 
         protected virtual void AddEndOfProgram(CodePart linkedObject, bool isMainProgram)
         {
+            // possible refactor: this logic needs to be moved into the compiler
+            // itself eventually, so that we can make an "exit" statement.  As it stands,
+            // the fact that the final exit code is only dealt with here outside the
+            // compiler, and the fact that it changes depending on if it's called from
+            // the interpreter or from another program (the interpreter doesn't expect an exit
+            // code, and won't pop it, which is the reason for this if/else below), is
+            // what makes that non-trivial.
             if (isMainProgram)
             {
+                linkedObject.MainCode.Add(new OpcodePop()); // to consume the argbottom mark.
                 linkedObject.MainCode.Add(new OpcodeEOP());
             }
             else
@@ -115,6 +123,11 @@ namespace kOS.Safe.Compilation
             {
                 if (program[index].Label != string.Empty)
                 {
+                    if (labels.ContainsKey(program[index].Label))
+                    {
+                        throw new kOS.Safe.Exceptions.KOSCompileException(string.Format(
+                            "ProgramBuilder.ReplaceLabels: Cannot add label {0}, label already exists.  Opcode: {1}", program[index].Label, program[index].ToString()));
+                    }
                     labels.Add(program[index].Label, index);
                 }
             }

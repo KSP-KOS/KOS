@@ -63,6 +63,7 @@ REBOOT       -> @"(?i)\breboot\b";
 SHUTDOWN     -> @"(?i)\bshutdown\b";
 FOR          -> @"(?i)\bfor\b";
 UNSET        -> @"(?i)\bunset\b";
+
 //Generic
 BRACKETOPEN  -> @"\(";
 BRACKETCLOSE -> @"\)";

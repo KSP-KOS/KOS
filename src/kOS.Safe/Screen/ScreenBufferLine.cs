@@ -59,7 +59,8 @@ namespace kOS.Safe.Screen
 
         /// <summary>
         /// Perform the Array.Copy() function.
-        /// Copies a subrange of values from a source array into this array.
+        /// Copies a subrange of values from a source array into this array,
+        /// with safety checks to truncate the copy length if it's out of range.
         /// <param name="source">copy from here</param>
         /// <param name="sourceStart">starting at this index</param>
         /// <param name="destinationStart">putting it into this index of me</param>
@@ -67,13 +68,22 @@ namespace kOS.Safe.Screen
         /// </summary>
         public void ArrayCopyFrom(char[] source, int sourceStart, int destinationStart, int length = -1)
         {
-            Array.Copy(source, sourceStart, charArray, destinationStart, (length >= 0 ? length : source.Length));
+            int maxSafeLength = (charArray.Length - destinationStart);
+
+            int effectiveLength = (length < 0 ? source.Length : length);
+            if (effectiveLength > maxSafeLength)
+            {
+                effectiveLength = maxSafeLength;
+            }
+
+            Array.Copy(source, sourceStart, charArray, destinationStart, effectiveLength);
             TouchTime();
         }
 
         /// <summary>
         /// Perform the Array.Copy() function.
-        /// Copies a subrange of values from a source array into this array.
+        /// Copies a subrange of values from a source array into this array,
+        /// with safety checks to truncate the copy length if it's out of range.
         /// </summary>
         /// <param name="source">copy from here</param>
         /// <param name="sourceStart">starting at this index</param>
