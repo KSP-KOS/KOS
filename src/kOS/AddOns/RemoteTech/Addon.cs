@@ -1,5 +1,6 @@
 ﻿using kOS.Safe.Encapsulation.Suffixes;
 using kOS.Suffixed;
+using kOS.Safe.Encapsulation;
 
 namespace kOS.AddOns.RemoteTech
 {
@@ -21,6 +22,8 @@ namespace kOS.AddOns.RemoteTech
             AddSuffix("HASKSCCONNECTION", new OneArgsSuffix<bool, VesselTarget>(RTHasKSCConnection, "True if ship has connection to KSC"));
 
             AddSuffix("HASLOCALCONTROL", new OneArgsSuffix<bool, VesselTarget>(RTHasLocalControl, "True if ship has locacl control (i.e. a pilot in a command module)"));
+
+            AddSuffix("GROUNDSTATIONS", new NoArgsSuffix<ListValue<string>>(RTGetGroundStations, "Get names of all ground stations"));
 
         }
 
@@ -82,6 +85,12 @@ namespace kOS.AddOns.RemoteTech
             }
 
             return result;
+        }
+
+        private static ListValue<string> RTGetGroundStations() {
+            var groundStations = RemoteTechHook.Instance.GetGroundStations();
+
+            return new ListValue<string>(groundStations);
         }
 
         public override bool Available()
