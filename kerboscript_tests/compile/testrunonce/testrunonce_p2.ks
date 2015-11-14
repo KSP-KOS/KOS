@@ -10,7 +10,8 @@ print "Testing that the funcs exist:".
 print "lib1 function returns: " + lib1().
 print "lib2 function returns: " + lib2().
 
-print "running lib1 and lib2 second time - should NOT print.".
+print "running lib1 and lib2 second time.".
+print "Next line should NOT print 'MAINLINE CODE IS RUNNING.".
 run once testrunonce_lib1.
 run once testrunonce_lib2("dummy").
 

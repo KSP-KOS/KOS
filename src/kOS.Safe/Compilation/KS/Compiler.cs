@@ -2710,7 +2710,21 @@ namespace kOS.Safe.Compilation.KS
                 // into existence).
                 AddOpcode(new OpcodePush(new KOSArgMarkerType()));
             }
-            
+
+            // Needs to push a true/false onto the stack to record whether or not there was a "once"
+            // associated with this run (i.e. "run" versus "run once").  This has to go
+            // underneath the actual args.  This arg, and them, will get reversed by OpcodeCall, thus this
+            // boolean will end up atop the stack by the time the 'once' checker built in
+            // PreprocessRunStatement() gets to it:
+            if (!hasOn && options.LoadProgramsInSameAddressSpace)
+            {
+                string subprogramName = node.Nodes[progNameIndex].Token.Text; // This assumption that the filenames are known at compile-time is why we can't do RUN expr 
+                if (context.Subprograms.Contains(subprogramName))
+                {
+                    AddOpcode(new OpcodePush(hasOnce)); // tell that routine whether or not to skip the run when already compiled.
+                }
+            }
+
             if (node.Nodes.Count > argListIndex && node.Nodes[argListIndex].Token.Type == TokenType.arglist)
             {
                 VisitNode(node.Nodes[argListIndex]);
@@ -2723,7 +2737,6 @@ namespace kOS.Safe.Compilation.KS
                 if (context.Subprograms.Contains(subprogramName))  // and instead have to do RUN FILEIDENT, in the parser def.
                 {
                     Subprogram subprogramObject = context.Subprograms.GetSubprogram(subprogramName);
-                    AddOpcode(new OpcodePush(hasOnce)); // tell that routine whether or not to skip the run when already compiled.
                     AddOpcode(new OpcodeCall(null)).DestinationLabel = subprogramObject.FunctionLabel;
                     AddOpcode(new OpcodePop()); // ditch the dummy return value for now - maybe we can use it in a later version.
                 }

@@ -859,9 +859,6 @@ namespace kOS.Safe.Compilation
 
         public override void Execute(ICpu cpu)
         {
-            /*eraseme*/Console.WriteLine("Dump from BranchIfFalse from " + this.SourceName + ":" + this.SourceLine);
-            /*eraseme*/cpu.DumpVariables();
-
             bool condition = Convert.ToBoolean(cpu.PopValue());
 
             DeltaInstructionPointer = !condition ? Distance : 1;
