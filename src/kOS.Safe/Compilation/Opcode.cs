@@ -1493,7 +1493,7 @@ namespace kOS.Safe.Compilation
         {
             List<object> args = new List<object>();
             object arg = cpu.PopValue();
-            while (arg == null || arg.GetType() != ArgMarkerType)
+            while (cpu.GetStackSize() > 0 && arg.GetType() != ArgMarkerType)
             {
                 args.Add(arg);
 

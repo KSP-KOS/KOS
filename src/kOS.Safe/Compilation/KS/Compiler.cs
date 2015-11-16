@@ -115,7 +115,7 @@ namespace kOS.Safe.Compilation.KS
         {
             currentCodeSection = part.MainCode;
             
-            PushReversedParameters();
+            PopStackRunParameters();
             VisitNode(tree.Nodes[0]);
             
             if (addBranchDestination || currentCodeSection.Count == 0)
@@ -873,11 +873,12 @@ namespace kOS.Safe.Compilation.KS
             }
         }
 
-        private void PushReversedParameters()
+        private void PopStackRunParameters()
         {
-            // reverse the order of parameters so the stack
-            // is popped in the correct order
-            programParameters.Reverse();
+            // When the stack "arrives" at this point in a program,
+            // it will have already had its parameters reversed such that they
+            // are actually in first-arg-first order rather than in
+            // stack order:
             foreach (ParseNode node in programParameters)
             {
                 VisitNode(node);
@@ -1606,6 +1607,27 @@ namespace kOS.Safe.Compilation.KS
             {
                 VisitNode(node.Nodes[nodeIndex]);
                 nodeIndex += 2;
+            }
+        }
+
+        // For the case where you wish to eval the args lastmost-first, such
+        // that they'll push onto the stack like so:
+        //   arg1 <-- top
+        //   arg2
+        //   arg3 <-- bottom
+        //
+        // instead of the usual stack order of:
+        //   arg3 <-- top
+        //   arg2
+        //   arg1 <-- bottom
+        private void VisitArgListReversed(ParseNode node)
+        {
+            NodeStartHousekeeping(node);
+            int nodeIndex = node.Nodes.Count - 1;
+            while (nodeIndex >= 0)
+            {
+                VisitNode(node.Nodes[nodeIndex]);
+                nodeIndex -= 2;
             }
         }
 
@@ -2727,7 +2749,10 @@ namespace kOS.Safe.Compilation.KS
 
             if (node.Nodes.Count > argListIndex && node.Nodes[argListIndex].Token.Type == TokenType.arglist)
             {
-                VisitNode(node.Nodes[argListIndex]);
+                // Run args need to get pushed to the stack in the opposite order to how
+                // function args do, because they pass through two levels of OpcodeCall, and
+                // thus get reversed twice, whereas function args only get reversed once:
+                VisitArgListReversed(node.Nodes[argListIndex]);
                 volumeIndex += 3;
             }
 
