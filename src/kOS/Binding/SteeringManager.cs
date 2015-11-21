@@ -678,42 +678,44 @@ namespace kOS.Binding
                 if (engine.isActiveAndEnabled && engine.EngineIgnited)
                 {
                     // if the engine is active and ignited, calculate torque
+                    float gimbalRange = 0;
+                    List<Quaternion> initRots = new List<Quaternion>();
+                    if (gimbal != null && !gimbal.gimbalLock)
+                    {
+                        gimbalRange = gimbal.gimbalRange * gimbal.gimbalLimiter / 100;  // grab the gimbal range
+
+                        // To determine the neutral thrust vector, we reset the gimbal transform to it's "initial" value
+                        // from the initRots array and then read the direction from the thrustTransform.  We do this for
+                        // each gimbal object, and then return them to the previous value after calculating the thrust
+                        // transforms, so that we don't inerupt the gimbal logic.
+                        for (int gblIdx = 0; gblIdx < gimbal.gimbalTransforms.Count; gblIdx++)
+                        {
+                            initRots.Add(gimbal.gimbalTransforms[gblIdx].localRotation); // store the current rotation
+                            gimbal.gimbalTransforms[gblIdx].localRotation = gimbal.initRots[gblIdx]; // set the rotation to the "initial" value
+                        }
+                    }
                     for (int xfrmIdx = 0; xfrmIdx < engine.thrustTransforms.Count; xfrmIdx++)
                     {
                         // iterate through each thrust transform.  Some engines have multiple transforms for
                         // thrust and/or gimbal, so we need to be able to use as many as the part contains.
-                        float gimbalRange = 0;
-                        Vector3d neut = Vector3d.zero;
-                        Vector3d position = Vector3d.zero;
+                        Transform thrustTransform = engine.thrustTransforms[xfrmIdx];
+                        Vector3d position = thrustTransform.position;
                         if (gimbal != null && !gimbal.gimbalLock)
                         {
-                            if (engine.thrustTransforms.Count != gimbal.gimbalTransforms.Count)
-                                shared.Logger.LogError("SteeringManager: gimbal transform count does not match thrust transform count");
-                            int idx = Math.Max(xfrmIdx, gimbal.gimbalTransforms.Count - 1);
-                            // To determine the neutral thrust vector, we reset the gimbal transform to it's "initial" value
-                            // from the initRots array and then read the direction from the thrustTransform.  Then the gimbal
-                            // is reset back to the previous state so that we don't interfere with the internal gimbal calculation.
-                            Transform gimbalTransform = gimbal.gimbalTransforms[idx];
-                            var initRotation = gimbalTransform.localRotation;  // the rotation to revert to
-                            gimbalTransform.localRotation = gimbal.initRots[idx];  // reset to the inititial rotation
-                            neut = -engine.thrustTransforms[idx].forward * engine.finalThrust / engine.thrustTransforms.Count; // the neutral control thrust (force is opposite of exhaust direction)
-                            position = gimbal.gimbalTransforms[idx].position;  // use the gimbal position as the thrust position
-                            // the gimbal position will not move as the gimbal travels.  As of KSP 1.0.5, the Vector engine appears
-                            // to be the only engine that moves it's thrust transform location, because the transform itself is located
-                            // at the end of the nozzel.  Doing so means that our calculated available torque could very well be inaccurate
-                            // specifically in the case of roll torque, where it may appear that an axial engine's thrust transform is offset from the
-                            // vessel's axial centerline when in fact the axial engine can produce no roll torque.
-                            // If there is ever an engine where the thrust transform does not align to the gimbal transform, this assumption
-                            // will no longer be valid.
-                            gimbalTransform.localRotation = initRotation;  // reset the rotation
-                            gimbalRange = gimbal.gimbalRange * gimbal.gimbalLimiter / 100;  // grab the gimbal range
+                            Transform gimbalTransform = FindParentTransform(thrustTransform, gimbal.gimbalTransformName, engine.part.transform);
+                            if (gimbalTransform != null)
+                            {
+                                // The gimbal position will not move as the gimbal rotates.  As of KSP 1.0.5, the Vector engine appears
+                                // to be the only engine that moves it's thrust transform location, because the transform itself is located
+                                // at the end of the nozzel.  Doing so means that our calculated available torque could very well be inaccurate
+                                // specifically in the case of roll torque, where it may appear that an axial engine's thrust transform is offset from the
+                                // vessel's axial centerline when in fact the axial engine can produce no roll torque.
+                                // If there is ever an engine where the thrust transform does not align to the gimbal transform, this assumption
+                                // will no longer be valid.
+                                position = gimbalTransform.position;  // use the gimbal position as the thrust position
+                            }
                         }
-                        else
-                        {
-                            // if no gimbal, or gimbal locked, just use the thrust transform's vector and position (force is opposite of exhaust direction)
-                            neut = -engine.thrustTransforms[xfrmIdx].forward * engine.finalThrust / engine.thrustTransforms.Count;
-                            position = engine.thrustTransforms[xfrmIdx].position;
-                        }
+                        Vector3d neut = -engine.thrustTransforms[xfrmIdx].forward * engine.finalThrust / engine.thrustTransforms.Count; // the neutral control thrust (force is opposite of exhaust direction)
                         Vector3d relCom = position - centerOfMass;
 
                         string id = string.Format("{0}[{1}]", engine.part.flightID, xfrmIdx);
@@ -801,6 +803,16 @@ namespace kOS.Binding
                             rollControl += neutralForce.Torque;
                         }
                     }
+                    if (gimbal != null && !gimbal.gimbalLock)
+                    {
+                        // Reset each of the gimbal rotations back to their previous values.  This prevents
+                        // our calculations from interupting the internal gimbal logic, since some gimbals
+                        // do not rotate instantly.
+                        for (int gblIdx = 0; gblIdx < gimbal.gimbalTransforms.Count; gblIdx++)
+                        {
+                            gimbal.gimbalTransforms[gblIdx].localRotation = initRots[gblIdx]; // set the rotation to the previous value
+                        }
+                    }
                 }
                 else
                 {
@@ -861,6 +873,14 @@ namespace kOS.Binding
             if (controlTorque.x < minTorque) controlTorque.x = minTorque;
             if (controlTorque.y < minTorque) controlTorque.y = minTorque;
             if (controlTorque.z < minTorque) controlTorque.z = minTorque;
+        }
+
+        public Transform FindParentTransform(Transform transform, string name, Transform topLevel)
+        {
+            if (transform.parent.name == name) return transform.parent;
+            else if (transform.parent == null) return null;
+            else if (transform.parent == topLevel) return null;
+            else return FindParentTransform(transform.parent, name, topLevel);
         }
 
         // Update prediction based on PI controls, sets the target angular velocity and the target torque for the vessel
