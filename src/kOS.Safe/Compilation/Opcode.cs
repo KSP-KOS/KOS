@@ -860,6 +860,7 @@ namespace kOS.Safe.Compilation
         public override void Execute(ICpu cpu)
         {
             bool condition = Convert.ToBoolean(cpu.PopValue());
+
             DeltaInstructionPointer = !condition ? Distance : 1;
         }
     }

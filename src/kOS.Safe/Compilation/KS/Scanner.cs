@@ -242,6 +242,10 @@ namespace kOS.Safe.Compilation.KS
             Patterns.Add(TokenType.RUN, regex);
             Tokens.Add(TokenType.RUN);
 
+            regex = new Regex(@"(?i)\bonce\b");
+            Patterns.Add(TokenType.ONCE, regex);
+            Tokens.Add(TokenType.ONCE);
+
             regex = new Regex(@"(?i)\bcompile\b");
             Patterns.Add(TokenType.COMPILE, regex);
             Tokens.Add(TokenType.COMPILE);
@@ -629,34 +633,35 @@ namespace kOS.Safe.Compilation.KS
             DELETE  = 112,
             EDIT    = 113,
             RUN     = 114,
-            COMPILE = 115,
-            LIST    = 116,
-            REBOOT  = 117,
-            SHUTDOWN= 118,
-            FOR     = 119,
-            UNSET   = 120,
-            BRACKETOPEN= 121,
-            BRACKETCLOSE= 122,
-            CURLYOPEN= 123,
-            CURLYCLOSE= 124,
-            SQUAREOPEN= 125,
-            SQUARECLOSE= 126,
-            COMMA   = 127,
-            COLON   = 128,
-            IN      = 129,
-            ARRAYINDEX= 130,
-            ALL     = 131,
-            IDENTIFIER= 132,
-            FILEIDENT= 133,
-            INTEGER = 134,
-            DOUBLE  = 135,
-            STRING  = 136,
-            EOI     = 137,
-            ATSIGN  = 138,
-            LAZYGLOBAL= 139,
-            EOF     = 140,
-            WHITESPACE= 141,
-            COMMENTLINE= 142
+            ONCE    = 115,
+            COMPILE = 116,
+            LIST    = 117,
+            REBOOT  = 118,
+            SHUTDOWN= 119,
+            FOR     = 120,
+            UNSET   = 121,
+            BRACKETOPEN= 122,
+            BRACKETCLOSE= 123,
+            CURLYOPEN= 124,
+            CURLYCLOSE= 125,
+            SQUAREOPEN= 126,
+            SQUARECLOSE= 127,
+            COMMA   = 128,
+            COLON   = 129,
+            IN      = 130,
+            ARRAYINDEX= 131,
+            ALL     = 132,
+            IDENTIFIER= 133,
+            FILEIDENT= 134,
+            INTEGER = 135,
+            DOUBLE  = 136,
+            STRING  = 137,
+            EOI     = 138,
+            ATSIGN  = 139,
+            LAZYGLOBAL= 140,
+            EOF     = 141,
+            WHITESPACE= 142,
+            COMMENTLINE= 143
     }
 
     public class Token
