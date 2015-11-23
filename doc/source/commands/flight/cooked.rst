@@ -106,7 +106,7 @@ settings that might help solve some problems, in the table below:
       - possible solution(s)
       - reason
 
-    * - A large vessel with low torque doesn't seem to be even trying to rotate at all.  The controls look like they're not even trying, staying near zero.  I understand that it will rotate slowly, but it should at least try to rotate.
+    * - A large vessel with low torque doesn't seem to be even trying to rotate very quickly.  The controls may be fluctuating around the zero point, but it doesn't seem to want to even try to turn faster.
       - Increase `STEERINGMANAGER:MAXSTOPPINGTIME` to about 5 or 10 seconds or so.  Also, slightly increase `STEERINGMANAGER:PITCHPID:KD` and `STEERINGMANAGER:YAWPID:KD` to about 1 or 2 as well to go with it.
       - Once the steering manager gets such a ship rotating at a tiny rate, it stops trying to make it rotate any faster than that because it's "afraid" of allowing it to obtain a larger momentum than it thinks it could quickly stop.  It needs to be told that in this case it's okay to build up more "seconds worth" of rotational velocity.  The reason for increasing the Kd term as well is to tell it to anticipate the need to starting slowing down rotation sooner than it normally would.
     * - A vessel seems to reasonably come to the desired direction sensibly, but once it's there the ship vibrates back and forth by about 1 degree or less excessively around the setpoint.
@@ -115,9 +115,9 @@ settings that might help solve some problems, in the table below:
     * - The vessel's nose seems to be waving slowly back and forth across the set direction, taking too long to center on it, and you notice the control indicators are pushing all the way to the extremes as it does so.
       - Increase `STEERINGMANAGER:PITCHPID:KD` and `STEERINGMANGER:YAWPID:KD`.
       - The ship is *trying* to push its rotation rate too high when almost at the setpoint.  It needs to anticipate the fact that it is going to reach the desired direction and start slowing down BEFORE it gets there.
-    * - The vessel's nose seems to be waving slowly back and forth across the set direction, taking too long to center on it, but you notice that the control indicators are NOT pushing all the way to the extremes as it does so.  Instead they seem to be staying low in magnitude, wavering around zero.
-      - TODO - put the torque PID corrective measure here.  I'm not sure what it is, but I think the above would be caused by it *wanting* to reduce rotational velocity ahead of time like it should, but failing to do so because the controls are being moved too weakly to achieve the change fast enough.
-      - TODO - explain the torque PID corrective measure here.
+    * - The vessel's nose seems to be waving slowly back and forth across the set direction, taking too long to center on it, but you notice that the control indicators are NOT pushing all the way to the extremes as it does so.  Instead they seem to be staying low in magnitude, wavering around zero and may be getting smaller over time.
+      - Decrease `STEERINGMANAGER:PITCHTS` and/or `STEERINGMANAGER:YAWTS`
+      - While larger values for the settling time on the Torque PID controller will help to smooth out spikes in the controls, it also results in a longer time period before the steering comes to a rest at the setpoint (also knows as settling).  If you had previously increased the settling time to reduce oscillations, try picking a value half way between the default and the new value you previously selected.
 
 
 But to understand how to tune the cooked steering in a more complex way than just with that simple table, you first have to understand
@@ -144,12 +144,12 @@ indirectly affects a phenomenon you can measure, and you feed the
 mathematical black box of the PID controller the measurement of the
 phenomenon, and obey its instructions of where to set the control lever.
 Over time, the PID controller, under the assumption that you are obeying
-its instructions of where to set the control lever, learns how to fine 
+its instructions of where to set the control lever, learns how to fine
 tune its commands about how to set the lever to get the measurement to
 settle on the value you asked for.
 
 A more complex discussion of PID controllers than that is outside the
-scope of this document.
+scope of this document, but you can check out :ref:`the PID Loop tutorial. <pidloops>`
 
 Cooked Steering's use of PID controllers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -214,35 +214,32 @@ But there is no such thing as a lever that directly controls the rotational
 velocity.  What there is, is a lever that directly controls the rotational
 *acceleration*.  When you pull on the yoke (i.e. hold down the "S" key),
 you are telling the ship to either rotate *faster*  or *slower* than it
-already is.  
+already is.
 
-So given a result from the Rotational Velocity PID, with a desired 
+So given a result from the Rotational Velocity PID, with a desired
 rotational velocity to seek, the second PID controller takes over,
 the Torque PID, which uses that information to choose how to set
-the actual controls themselves (i.e. the WASDQE controls) to acellerate
-toward that goal roational velocity.
+the actual controls themselves (i.e. the WASDQE controls) to accelerate
+toward that goal rotational velocity.
 
 The suffixes to :ref:`SteeringManager <steeringmanager>` don't quite
 allow direct manipulation of the torque PID tuning parameters Kp, Ki,
 and Kd, because they are calculated indirectly from the ship's own
 attributes.  However, there are several suffixes to
 :ref:`SteeringManager <steeringmanager>` that allow you to make
-indirect adjustments to them that are used in calculating the values 
+indirect adjustments to them that are used in calculating the values
 it uses for Kp, Ki, and Kd.
 
 ****
 
-This technique, of using two different PID controllers, the first one
+This technique of using two different PID controllers, the first one
 telling the second one which seek value to use, and the second one
-actually being connected to the control "lever", is one way of dealing
+actually being connected to the control "lever", is one of many ways of dealing
 with a phenomenon with two levels of indirection from the control.
-(Yes, there are other ways involving more sophisticated PID controllers.
-This two-nested controller way is the way kOS's cooked steering ended up
-doing it.)
 
 Keeping the above two things separate, the rotational velocity PID
 versus the Torque PID, is important in knowing which setting
-you need to tweak in order to achive the desired effect.
+you need to tweak in order to achieve the desired effect.
 
 One pair of PID's per axis of rotation
 ::::::::::::::::::::::::::::::::::::::
@@ -266,7 +263,7 @@ towards it.
 
 This behavior is correct for rockets with radial symmetry, but is
 probably a bit wrong for trying to steer an airplane to a new heading
-while in atmosphere.  For flying an airplane to a new heading, it's 
+while in atmosphere.  For flying an airplane to a new heading, it's
 still best to make your own control scheme from scratch with raw steering.
 
 
@@ -332,8 +329,7 @@ improve the control by placing the ship's root part or control part close to the
 center of mass (preferablly both).  Adding struts to critical joints (like
 decouplers) or installing a mod like Kerbal Joint Reinforcement will also help.
 
-But because of the impossibility of finding one setting that is universally 
-correct for all possible vessels, sometimes the only way to make cooked 
+But because of the impossibility of finding one setting that is universally
+correct for all possible vessels, sometimes the only way to make cooked
 steering work well for you is to adjust the parameters as described above,
 or to make your own steering control from scratch using raw steering.
-

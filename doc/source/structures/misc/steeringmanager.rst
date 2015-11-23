@@ -5,7 +5,7 @@ SteeringManager
 
 See :ref:`the cooked control tuning explanation <cooked_tuning>`for
 information to help with tuning the steering manager.  It's important to read
-that section first to understand which setting below is affecting which 
+that section first to understand which setting below is affecting which
 portion of the steering system.
 
 The SteeringManager is a bound variable, not a suffix to a specific vessel.  This prevents access to the SteeringManager of other vessels.  You can access the steering manager as shown below: ::
@@ -41,8 +41,8 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
      :attr:`SHOWSTEERINGSTATS`             bool                      Enable/disable printing of the steering information on the terminal
      :attr:`WRITECSVFILES`                  bool                      Enable/disable logging steering to csv files.
      :attr:`PITCHTS`                       scalar (s)                Settling time for the pitch torque calculation.
-     :attr:`YAWTS`                         scalar (s)                Settling time for the yaw torque calculation
-     :attr:`ROLLTS`                        scalar (s)                Settling time for the roll torque calculation
+     :attr:`YAWTS`                         scalar (s)                Settling time for the yaw torque calculation.
+     :attr:`ROLLTS`                        scalar (s)                Settling time for the roll torque calculation.
      :attr:`MAXSTOPPINGTIME`               scalar (s)                The maximum amount of stopping time to limit angular turn rate.
      :attr:`ANGLEERROR`                    scalar (deg)              The angle between vessel:facing and target directions
      :attr:`PITCHERROR`                    scalar (deg)              The angular error in the pitch direction
@@ -81,7 +81,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
         The SteeringManager will ignore the roll component of steering
         until after both the pitch and yaw components are close to being
-        correct.  In other words it will try to point the nose of the 
+        correct.  In other words it will try to point the nose of the
         craft in the right direction first, before it makes any attempt
         to roll the craft into the right orientation.  As long as the
         pitch or yaw is still far off from the target aim, this PIDloop
@@ -105,11 +105,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
     :return: none
 
-    TODO - hvacengi - can you fix this?  It appears to be
-    a cut and paste error.  It's a duplicate of the
-    description for the :Direction suffix.
-
-    Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction.  If steering is locked to "kill", this will return the vessel's last facing direction.
+    Resets the integral sum to zero for all six steering PID Loops.
 
 .. attribute:: SteeringManager:SHOWFACINGVECTORS
 
