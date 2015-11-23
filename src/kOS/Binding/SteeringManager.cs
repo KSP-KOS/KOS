@@ -853,9 +853,18 @@ namespace kOS.Binding
                 }
             }
 
-            controlEngineTorque.x = pitchControl.magnitude;
-            controlEngineTorque.z = yawControl.magnitude;
-            controlEngineTorque.y = rollControl.magnitude;
+            // Because the engines may generate torque about the other 2 axes when trying to rotate about one,
+            // use a dot product to get the component of the torque in the desired direction.  Also subtract out
+            // the static engine torque, to account for offset placement.  This still does not properly balance
+            // engines that are offset, since the available torque may be drastically different between the
+            // positive and negative limit.  If there is a large static torque, it's also possible for the
+            // calculation to show that there is a small amount of available torque, even though the static
+            // torque will actually overpower the control torque.  Eventually it would be nice to modify this
+            // calculation to properly handle asymetric gimbal torque, but for now it will need to be a
+            // constraint of ship design.
+            controlEngineTorque.x = Math.Abs(Vector3d.Dot(pitchControl - staticEngineTorque, vesselStarboard));
+            controlEngineTorque.z = Math.Abs(Vector3d.Dot(yawControl - staticEngineTorque, vesselTop));
+            controlEngineTorque.y = Math.Abs(Vector3d.Dot(rollControl - staticEngineTorque, vesselForward));
 
             rawTorque.x += controlEngineTorque.x;
             rawTorque.z += controlEngineTorque.z;
@@ -1579,7 +1588,7 @@ namespace kOS.Binding
             public TorquePI()
             {
                 Loop = new PIDLoop();
-                Ts = 1;
+                Ts = 2;
                 TorqueAdjust = new MovingAverage();
             }
 
