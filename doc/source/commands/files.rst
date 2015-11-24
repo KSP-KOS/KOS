@@ -232,6 +232,8 @@ Example::
     RENAME VOLUME 1 TO AwesomeDisk
     RENAME FILE MyFile TO AutoLaunch.
 
+.. _run_once:
+
 ``RUN [ONCE] <program>.``
 -------------------------
 
