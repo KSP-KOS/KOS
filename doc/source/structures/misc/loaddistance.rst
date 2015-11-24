@@ -64,9 +64,11 @@ Vessel Load Distance
 
     **THE NEXT SENTENCE IS VERY IMPORTANT AND VITAL:**
 
-    *In order for a vessel to run kOS script code, the vessel must be
-    BOTH LOADED and UNPACKED.*  Until both of those conditions occur,
-    scripts cannot run on the vessel's kOS computer parts.
+    *The kOS processor is able to run scripts any time that a vessel is loaded,
+    but the script is not guaranteed access to all features when a ship is
+    LOADED but not UNPACKED.  KSP limits some features (like throttle control)
+    to only vessels that are unpacked.  You may check the `UNPACKED` suffix of
+    the `SHIP` variable to determine if these features are available.
 
     This structure allows you to read or change the stock KSP game's
     distance settings for how far a vessel has to get from the active

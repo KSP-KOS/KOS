@@ -3,6 +3,11 @@
 SteeringManager
 ===============
 
+See :ref:`the cooked control tuning explanation <cooked_tuning>`for
+information to help with tuning the steering manager.  It's important to read
+that section first to understand which setting below is affecting which
+portion of the steering system.
+
 The SteeringManager is a bound variable, not a suffix to a specific vessel.  This prevents access to the SteeringManager of other vessels.  You can access the steering manager as shown below: ::
 
     // Display the ship facing, target facing, and world coordinates vectors.
@@ -23,9 +28,9 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     ===================================== ========================= =============
      Suffix                                Type                      Description
     ===================================== ========================= =============
-     :attr:`PITCHPID`                      :struct:`PIDLoop`         The PIDLoop for the pitch direction.
-     :attr:`YAWPID`                        :struct:`PIDLoop`         The PIDLoop for the yaw direction.
-     :attr:`ROLLPID`                       :struct:`PIDLoop`         The PIDLoop for the roll direction.
+     :attr:`PITCHPID`                      :struct:`PIDLoop`         The PIDLoop for the pitch :ref:`rotational velocity PID <cooked_omega_pid>`.
+     :attr:`YAWPID`                        :struct:`PIDLoop`         The PIDLoop for the yaw :ref:`rotational velocity PID <cooked_omega_pid>`.
+     :attr:`ROLLPID`                       :struct:`PIDLoop`         The PIDLoop for the roll :ref:`rotational velocity PID <cooked_omega_pid>`.
      :attr:`ENABLED`                       bool                      Returns true if the `SteeringManager` is currently controlling the vessel
      :attr:`TARGET`                        :struct:`Direction`       The direction that the vessel is currently steering towards
      :meth:`RESETPIDS()`                   none                      Called to call `RESET` on all steering PID loops.
@@ -35,9 +40,9 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
      :attr:`SHOWRCSVECTORS`                bool                      Enable/disable display of rcs thrust vectors
      :attr:`SHOWSTEERINGSTATS`             bool                      Enable/disable printing of the steering information on the terminal
      :attr:`WRITECSVFILES`                  bool                      Enable/disable logging steering to csv files.
-     :attr:`PITCHTS`                       scalar (s)                Settling time for the pitch torque calculation
-     :attr:`YAWTS`                         scalar (s)                Settling time for the yaw torque calculation
-     :attr:`ROLLTS`                        scalar (s)                Settling time for the roll torque calculation
+     :attr:`PITCHTS`                       scalar (s)                Settling time for the pitch torque calculation.
+     :attr:`YAWTS`                         scalar (s)                Settling time for the yaw torque calculation.
+     :attr:`ROLLTS`                        scalar (s)                Settling time for the roll torque calculation.
      :attr:`MAXSTOPPINGTIME`               scalar (s)                The maximum amount of stopping time to limit angular turn rate.
      :attr:`ANGLEERROR`                    scalar (deg)              The angle between vessel:facing and target directions
      :attr:`PITCHERROR`                    scalar (deg)              The angular error in the pitch direction
@@ -56,21 +61,31 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: :struct:`PIDLoop`
     :access: Get only
 
-    Returns the PIDLoop object for the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  The loop's `MAXOUTPUT` value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+    Returns the PIDLoop object responsible for calculating the :ref:`target angular velocity <cooked_omega_pid>` in the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
 
 .. attribute:: SteeringManager:YAWPID
 
     :type: :struct:`PIDLoop`
     :access: Get only
 
-    Returns the PIDLoop object for the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  The loop's `MAXOUTPUT` value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+    Returns the PIDLoop object responsible for calculating the :ref:`target angular velocity <cooked_omega_pid>` in the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
 
 .. attribute:: SteeringManager:ROLLPID
 
     :type: :struct:`PIDLoop`
     :access: Get only
 
-    Returns the PIDLoop object for the roll direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  The loop's `MAXOUTPUT` value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+    Returns the PIDLoop object responsible for calculating the :ref:`target angular velocity <cooked_omega_pid>` in the roll direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
+
+    .. _note::
+
+        The SteeringManager will ignore the roll component of steering
+        until after both the pitch and yaw components are close to being
+        correct.  In other words it will try to point the nose of the
+        craft in the right direction first, before it makes any attempt
+        to roll the craft into the right orientation.  As long as the
+        pitch or yaw is still far off from the target aim, this PIDloop
+        won't be getting used at all.
 
 .. attribute:: SteeringManager:ENABLED
 
@@ -84,13 +99,13 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: :struct:`Direction`
     :access: Get only
 
-    Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction.  If steering is locked to "kill", this will return the vessel's last facing direction.
+    Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction in which kOS chose an arbitrary roll to go with the vector.  If steering is locked to "kill", this will return the vessel's last facing direction.
 
 .. method:: SteeringManager:RESETPIDS
 
     :return: none
 
-    Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction.  If steering is locked to "kill", this will return the vessel's last facing direction.
+    Resets the integral sum to zero for all six steering PID Loops.
 
 .. attribute:: SteeringManager:SHOWFACINGVECTORS
 
@@ -139,28 +154,32 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: scalar
     :access: Get/Set
 
-    Represents the settling time for the PID calculating pitch torque based on target angular velocity.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the pitch direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
+    Represents the settling time for the :ref:`PID calculating pitch torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the pitch direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
 
 .. attribute:: SteeringManager:YAWTS
 
     :type: scalar
     :access: Get/Set
 
-    Represents the settling time for the PID calculating yaw torque based on target angular velocity.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the yaw direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
+    Represents the settling time for the :ref:`PID calculating yaw torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the yaw direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
 
 .. attribute:: SteeringManager:ROLLTS
 
     :type: scalar
     :access: Get/Set
 
-    Represents the settling time for the PID calculating roll torque based on target angular velocity.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
+    Represents the settling time for the :ref:`PID calculating roll torque based on target angular velocity <cooked_torque_pid>`.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).
 
 .. attribute:: SteeringManager:MAXSTOPPINGTIME
 
     :type: scalar (s)
     :access: Get/Set
 
-    This value is used to limit the turning rate when calculating target angular velocity.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).
+    This value is used to limit the turning rate when :ref:`calculating target angular velocity <cooked_omega_pid>`.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).
+
+    .. _note:
+
+        This setting affects all three of the :ref:`rotational velocity PID's <cooked_omega_pid>` at once (pitch, yaw, and roll), rather than affecting the three axes individually one at a time.
 
 .. attribute:: SteeringManager:ANGLEERROR
 
@@ -195,39 +214,39 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an additive bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
+    You can set this value to provide an additive bias to the calculated available pitch torque used in the pitch :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
 
 .. attribute:: SteeringManager:YAWTORQUEADJUST
 
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an additive bias to the calculated available yaw torque. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.
+    You can set this value to provide an additive bias to the calculated available yaw torque used in the yaw :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.
 
 .. attribute:: SteeringManager:ROLLTORQUEADJUST
 
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an additive bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.
+    You can set this value to provide an additive bias to the calculated available roll torque used in the roll :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.
 
 .. attribute:: SteeringManager:PITCHTORQUEFACTOR
 
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an multiplicative factor bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
+    You can set this value to provide an multiplicative factor bias to the calculated available pitch torque used in the :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.
 
 .. attribute:: SteeringManager:YAWTORQUEFACTOR
 
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an multiplicative factor bias to the calculated available yaw torque. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.
+    You can set this value to provide an multiplicative factor bias to the calculated available yaw torque used in the :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.
 
 .. attribute:: SteeringManager:ROLLTORQUEFACTOR
 
     :type: scalar (kNm)
     :access: Get/Set
 
-    You can set this value to provide an multiplicative factor bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.
+    You can set this value to provide an multiplicative factor bias to the calculated available roll torque used in the :ref:`torque PID <cooked_torque_pid>`. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.
