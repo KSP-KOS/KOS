@@ -468,7 +468,7 @@ namespace kOS.Binding
             }
             DisableControl();
             throw new Safe.Exceptions.KOSWrongControlValueTypeException(
-                "STEERING", Value.GetType().Name, "Direction, Vector, Manuever Node, or special string \"KILL\"");
+                "STEERING", Value.GetType().Name, "Direction, Vector, Maneuver Node, or special string \"KILL\"");
         }
 
         public void UpdateStateVectors()
@@ -505,7 +505,7 @@ namespace kOS.Binding
             omega.z *= -1; // positive values pull the starboard side up.
 
             // TODO: Currently adjustments to MOI are only enabled in debug compiles.  Using this feature seems to be buggy, but it has potential
-            // to be more resiliant against random spikes in angular velocity.
+            // to be more resilient against random spikes in angular velocity.
             if (sessionTime > lastSessionTime)
             {
                 double dt = sessionTime - lastSessionTime;
@@ -707,7 +707,7 @@ namespace kOS.Binding
                             {
                                 // gimbalRotation represents the "neutral" rotation.  Because ModuleEngines only stores the current
                                 // transform, and steering needs to know the initial transform, we have to reset the gimbal transform
-                                // using the `initRots` initial rotation.  After reading the neutral global rotaion, we need to revert
+                                // using the `initRots` initial rotation.  After reading the neutral global rotation, we need to revert
                                 // the current rotation back so we don't mess up the KSP gimbal logic
                                 Transform gimbalTransform = gimbal.gimbalTransforms[xfrmIdx];
                                 // init rotations are stored in a local scope.  Need to convert back to global scope.
