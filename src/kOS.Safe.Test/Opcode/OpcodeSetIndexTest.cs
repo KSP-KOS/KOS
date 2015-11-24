@@ -108,7 +108,7 @@ namespace kOS.Safe.Test.Opcode
         {
             const string INDEX = "foo";
 
-            var lex = new Lexicon<object,object>();
+            var lex = new Lexicon();
             lex.Add(INDEX, "bar");
             cpu.PushStack(lex);
 

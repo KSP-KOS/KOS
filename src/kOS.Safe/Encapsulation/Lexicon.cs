@@ -4,10 +4,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using kOS.Safe.Serialization;
 
 namespace kOS.Safe.Encapsulation
 {
-    public class Lexicon<T, TU> : Structure, IDictionary<T, TU>, IIndexable, IDumper
+    public class Lexicon : Structure, IDictionary<object, object>, IIndexable, IDumper
     {
         public class LexiconComparer<TI> : IEqualityComparer<TI>
         {
@@ -42,18 +43,18 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        private IDictionary<T, TU> internalDictionary;
+        private IDictionary<object, object> internalDictionary;
         private bool caseSensitive;
         private const int INDENT_SPACES = 2;
 
         public Lexicon()
         {
-            internalDictionary = new Dictionary<T, TU>(new LexiconComparer<T>());
+            internalDictionary = new Dictionary<object, object>(new LexiconComparer<object>());
             caseSensitive = false;
             InitalizeSuffixes();
         }
 
-        private Lexicon(IEnumerable<KeyValuePair<T, TU>> lexicon)
+        private Lexicon(IEnumerable<KeyValuePair<object, object>> lexicon)
             : this()
         {
             foreach (var u in lexicon)
@@ -69,11 +70,11 @@ namespace kOS.Safe.Encapsulation
             AddSuffix("HASKEY", new OneArgsSuffix<bool, object>(HasKey, "Returns true if a key is in the Lexicon"));
             AddSuffix("HASVALUE", new OneArgsSuffix<bool, object>(HasValue, "Returns true if value is in the Lexicon"));
             AddSuffix("VALUES", new Suffix<ListValue<object>>(GetValues, "Returns the lexicon values"));
-            AddSuffix("COPY", new NoArgsSuffix<Lexicon<T, TU>>(() => new Lexicon<T, TU>(this), "Returns a copy of Lexicon"));
+            AddSuffix("COPY", new NoArgsSuffix<Lexicon>(() => new Lexicon(this), "Returns a copy of Lexicon"));
             AddSuffix("LENGTH", new NoArgsSuffix<int>(() => internalDictionary.Count, "Returns the number of elements in the collection"));
-            AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove((T)one), "Removes the value at the given key"));
-            AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add((T)one, (TU)two), "Adds a new item to the lexicon, will error if the key already exists"));
-            AddSuffix("DUMP", new NoArgsSuffix<string>(() => string.Join(Environment.NewLine, Dump(99)), "Serializes the collection to a string for printing"));
+            AddSuffix("REMOVE", new OneArgsSuffix<bool, object>(one => Remove(one), "Removes the value at the given key"));
+            AddSuffix("ADD", new TwoArgsSuffix<object, object>((one, two) => Add(one, two), "Adds a new item to the lexicon, will error if the key already exists"));
+            AddSuffix("DUMP", new NoArgsSuffix<string>(() => ToString(), "Serializes the collection to a string for printing"));
             AddSuffix(new[] { "CASESENSITIVE", "CASE" }, new SetSuffix<bool>(() => caseSensitive, SetCaseSensitivity, "Lets you get/set the case sensitivity on the collection, changing sensitivity will clear the collection"));
         }
 
@@ -86,18 +87,18 @@ namespace kOS.Safe.Encapsulation
             caseSensitive = newCase;
 
             internalDictionary = newCase ?
-                new Dictionary<T, TU>() :
-                new Dictionary<T, TU>(new LexiconComparer<T>());
+                new Dictionary<object, object>() :
+            new Dictionary<object, object>(new LexiconComparer<object>());
         }
 
         private bool HasValue(object value)
         {
-            return internalDictionary.Values.Contains((TU)value);
+            return internalDictionary.Values.Contains(value);
         }
 
         private bool HasKey(object key)
         {
-            return internalDictionary.ContainsKey((T)key);
+            return internalDictionary.ContainsKey(key);
         }
 
         public ListValue<object> GetValues()
@@ -110,7 +111,7 @@ namespace kOS.Safe.Encapsulation
             return ListValue.CreateList(Keys);
         }
 
-        public IEnumerator<KeyValuePair<T, TU>> GetEnumerator()
+        public IEnumerator<KeyValuePair<object, object>> GetEnumerator()
         {
             return internalDictionary.GetEnumerator();
         }
@@ -120,7 +121,7 @@ namespace kOS.Safe.Encapsulation
             return GetEnumerator();
         }
 
-        public void Add(KeyValuePair<T, TU> item)
+        public void Add(KeyValuePair<object, object> item)
         {
             if (internalDictionary.ContainsKey(item.Key))
             {
@@ -134,17 +135,17 @@ namespace kOS.Safe.Encapsulation
             internalDictionary.Clear();
         }
 
-        public bool Contains(KeyValuePair<T, TU> item)
+        public bool Contains(KeyValuePair<object, object> item)
         {
             return internalDictionary.Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<T, TU>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<object, object>[] array, int arrayIndex)
         {
             internalDictionary.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(KeyValuePair<T, TU> item)
+        public bool Remove(KeyValuePair<object, object> item)
         {
             return internalDictionary.Remove(item);
         }
@@ -159,12 +160,12 @@ namespace kOS.Safe.Encapsulation
             get { return internalDictionary.IsReadOnly; }
         }
 
-        public bool ContainsKey(T key)
+        public bool ContainsKey(object key)
         {
             return internalDictionary.ContainsKey(key);
         }
 
-        public void Add(T key, TU value)
+        public void Add(object key, object value)
         {
             if (internalDictionary.ContainsKey(key))
             {
@@ -173,17 +174,17 @@ namespace kOS.Safe.Encapsulation
             internalDictionary.Add(key, value);
         }
 
-        public bool Remove(T key)
+        public bool Remove(object key)
         {
             return internalDictionary.Remove(key);
         }
 
-        public bool TryGetValue(T key, out TU value)
+        public bool TryGetValue(object key, out object value)
         {
             return internalDictionary.TryGetValue(key, out value);
         }
 
-        public TU this[T key]
+        public object this[object key]
         {
             get
             {
@@ -199,7 +200,7 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public ICollection<T> Keys
+        public ICollection<object> Keys
         {
             get
             {
@@ -207,7 +208,7 @@ namespace kOS.Safe.Encapsulation
             }
         }
 
-        public ICollection<TU> Values
+        public ICollection<object> Values
         {
             get
             {
@@ -217,89 +218,37 @@ namespace kOS.Safe.Encapsulation
 
         public object GetIndex(object key)
         {
-            T castKey;
-            if (key is T)
-            {
-                castKey = (T)key;
-            }
-            else
-            {
-                throw new KOSInvalidArgumentException("LexiconIndexer", "Index", key + " was invalid");
-            }
-
-            if (!ContainsKey(castKey))
-            {
-                throw new KOSKeyNotFoundException(key.ToString(), caseSensitive);
-            }
-            return internalDictionary[(T)key];
+            return internalDictionary[key];
         }
 
         public void SetIndex(object index, object value)
         {
-            if (index is T)
-            {
-                internalDictionary[(T)index] = (TU)value;
-            }
-            else
-            {
-                throw new KOSInvalidArgumentException("LexiconIndexer", "Index", string.Format("{0} is an invalid type: {1} Expected: {2}", index, index.GetType(), typeof(T)));
-            }
+            internalDictionary[index] = value;
         }
 
         public override string ToString()
         {
-            return string.Join(Environment.NewLine, Dump(1));
+            return SerializationMgr.Instance.Serialize(this, TerminalFormatter.Instance, false);
         }
 
-        public string[] Dump(int limit, int depth = 0)
+        public IDictionary<object, object> Dump()
         {
-            var toReturn = new List<string>();
+            DictionaryWithHeader result = new DictionaryWithHeader((Dictionary<object, object>)internalDictionary);
 
-            var listString = string.Format("LEXICON of {0} items", Count);
-            toReturn.Add(listString);
+            result.Header = "LEXICON of " + internalDictionary.Count + " items:";
 
-            if (limit <= 0) return toReturn.ToArray();
-
-            var keys = internalDictionary.Keys.ToList();
-            foreach (var key in keys)
-            {
-                var item = internalDictionary[key];
-
-                var dumper = item as IDumper;
-                if (dumper != null)
-                {
-                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
-
-                    var itemDump = dumper.Dump(limit - 1, depth + 1);
-
-                    var itemString = string.Format("  [\"{0}\"]= {1}", key, itemDump[0]);
-                    entry += itemString;
-
-                    toReturn.Add(entry);
-
-                    for (int i = 1; i < itemDump.Length; i++)
-                    {
-                        var subEntry = string.Format("{0}", itemDump[i]);
-                        toReturn.Add(subEntry);
-                    }
-                }
-                else
-                {
-                    var entry = string.Empty.PadLeft(depth * INDENT_SPACES);
-
-                    if (key is double || key is int || key is float)
-                    {
-                        entry += string.Format("  [{0}]= {1}", key, item);
-                    }
-                    else
-                    {
-                        entry += string.Format("  [\"{0}\"]= {1}", key, item);
-                    }
-
-                    toReturn.Add(entry);
-                }
-            }
-            return toReturn.ToArray();
+            return result;
         }
+
+        public void LoadDump(IDictionary<object, object> dump)
+        {
+            internalDictionary.Clear();
+
+            foreach (KeyValuePair<object, object> entry in dump) 
+            {
+                internalDictionary.Add(entry.Key, entry.Value);
+            }
+        }
+
     }
 }

@@ -19,9 +19,19 @@ namespace kOS.Safe.Encapsulation
             StackInitializeSuffixes();
         }
 
+        public override IEnumerator<T> GetEnumerator()
+        {
+            return Enumerable.Reverse(collection).GetEnumerator();
+        }
+
         public override int Count
         {
             get { return collection.Count; }
+        }
+
+        public T Pop()
+        {
+            return collection.Pop();
         }
 
         public void Push(T val)
@@ -29,9 +39,20 @@ namespace kOS.Safe.Encapsulation
             collection.Push(val);
         }
 
+        public override void LoadDump(IDictionary<object, object> dump)
+        {
+            collection.Clear();
+
+            foreach (object item in dump.Values)
+            {
+                collection.Push((T)item);
+            }
+        }
+
+
         private void StackInitializeSuffixes()
         {
-            AddSuffix("COPY",     new NoArgsSuffix<StackValue<T>>       (() => new StackValue<T>(Enumerable.Reverse(this))));
+            AddSuffix("COPY",     new NoArgsSuffix<StackValue<T>>       (() => new StackValue<T>(this)));
             AddSuffix("LENGTH",   new NoArgsSuffix<int>                 (() => collection.Count));
             AddSuffix("PUSH",     new OneArgsSuffix<T>                  (toPush => collection.Push(toPush)));
             AddSuffix("POP",      new NoArgsSuffix<T>                   (() => collection.Pop()));
@@ -60,7 +81,7 @@ namespace kOS.Safe.Encapsulation
 
         private void InitializeSuffixes()
         {
-            AddSuffix("COPY", new NoArgsSuffix<StackValue>(() => new StackValue(Enumerable.Reverse(this))));
+            AddSuffix("COPY", new NoArgsSuffix<StackValue>(() => new StackValue(this)));
         }
 
         public new static StackValue CreateStack<T>(IEnumerable<T> toCopy)
