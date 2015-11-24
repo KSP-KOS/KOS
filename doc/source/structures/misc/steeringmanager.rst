@@ -3,7 +3,7 @@
 SteeringManager
 ===============
 
-See :ref:`the cooked control tuning explanation <cooked_tuning>`for
+See :ref:`the cooked control tuning explanation <cooked_tuning>` for
 information to help with tuning the steering manager.  It's important to read
 that section first to understand which setting below is affecting which
 portion of the steering system.
@@ -77,7 +77,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
     Returns the PIDLoop object responsible for calculating the :ref:`target angular velocity <cooked_omega_pid>` in the roll direction.  This allows direct manipulation of the gain parameters, and other components of the :struct:`PIDLoop` structure.  Changing the loop's `MAXOUTPUT` or `MINOUTPUT` values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a :attr:`MAXSTOPPINGTIME` seconds (calculated based on available torque, and the ship's moment of inertia).
 
-    .. _note::
+    .. note::
 
         The SteeringManager will ignore the roll component of steering
         until after both the pitch and yaw components are close to being
@@ -177,7 +177,7 @@ The SteeringManager is a bound variable, not a suffix to a specific vessel.  Thi
 
     This value is used to limit the turning rate when :ref:`calculating target angular velocity <cooked_omega_pid>`.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).
 
-    .. _note:
+    .. note::
 
         This setting affects all three of the :ref:`rotational velocity PID's <cooked_omega_pid>` at once (pitch, yaw, and roll), rather than affecting the three axes individually one at a time.
 

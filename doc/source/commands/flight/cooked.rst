@@ -96,33 +96,72 @@ Some simple suggestions to try fixing common problems
 
 If you don't want to understand the intricate details of the cooked
 steering system, here's some quick suggestions for changes to the
-settings that might help solve some problems, in the table below:
+settings that might help solve some problems, in the list below:
 
-.. list-table::
-    :header-rows: 1
-    :widths: 1 1 1
+- **problem**: A large vessel with low torque doesn't seem to be even trying to
+  rotate very quickly.  The controls may be fluctuating around the zero point,
+  but it doesn't seem to want to even try to turn faster.
 
-    * - steering problem
-      - possible solution(s)
-      - reason
+  - **solution**: Increase `STEERINGMANAGER:MAXSTOPPINGTIME` to about 5 or
+    10 seconds or so.  Also, slightly increase `STEERINGMANAGER:PITCHPID:KD`
+    and `STEERINGMANAGER:YAWPID:KD` to about 1 or 2 as well to go with it.
 
-    * - A large vessel with low torque doesn't seem to be even trying to rotate very quickly.  The controls may be fluctuating around the zero point, but it doesn't seem to want to even try to turn faster.
-      - Increase `STEERINGMANAGER:MAXSTOPPINGTIME` to about 5 or 10 seconds or so.  Also, slightly increase `STEERINGMANAGER:PITCHPID:KD` and `STEERINGMANAGER:YAWPID:KD` to about 1 or 2 as well to go with it.
-      - Once the steering manager gets such a ship rotating at a tiny rate, it stops trying to make it rotate any faster than that because it's "afraid" of allowing it to obtain a larger momentum than it thinks it could quickly stop.  It needs to be told that in this case it's okay to build up more "seconds worth" of rotational velocity.  The reason for increasing the Kd term as well is to tell it to anticipate the need to starting slowing down rotation sooner than it normally would.
-    * - A vessel seems to reasonably come to the desired direction sensibly, but once it's there the ship vibrates back and forth by about 1 degree or less excessively around the setpoint.
-      - Increase `STEERINGMANAGER:PITCHTS` and `STEERINGMANAGER:YAWTS` to several seconds
-      - Once it's at the desired orientation and it has mostly zeroed the rotational velocity, it's trying to hold it there with microadjustments to the controls, and those microadjustments are "too tight".
-    * - The vessel's nose seems to be waving slowly back and forth across the set direction, taking too long to center on it, and you notice the control indicators are pushing all the way to the extremes as it does so.
-      - Increase `STEERINGMANAGER:PITCHPID:KD` and `STEERINGMANGER:YAWPID:KD`.
-      - The ship is *trying* to push its rotation rate too high when almost at the setpoint.  It needs to anticipate the fact that it is going to reach the desired direction and start slowing down BEFORE it gets there.
-    * - The vessel's nose seems to be waving slowly back and forth across the set direction, taking too long to center on it, but you notice that the control indicators are NOT pushing all the way to the extremes as it does so.  Instead they seem to be staying low in magnitude, wavering around zero and may be getting smaller over time.
-      - Decrease `STEERINGMANAGER:PITCHTS` and/or `STEERINGMANAGER:YAWTS`
-      - While larger values for the settling time on the Torque PID controller will help to smooth out spikes in the controls, it also results in a longer time period before the steering comes to a rest at the setpoint (also knows as settling).  If you had previously increased the settling time to reduce oscillations, try picking a value half way between the default and the new value you previously selected.
+  - **explanation**: Once the steering manager gets such a ship rotating at
+    a tiny rate, it stops trying to make it rotate any faster than that
+    because it's "afraid" of allowing it to obtain a larger momentum than it
+    thinks it could quickly stop.  It needs to be told that in this case
+    it's okay to build up more "seconds worth" of rotational velocity.  The
+    reason for increasing the Kd term as well is to tell it to anticipate
+    the need to starting slowing down rotation sooner than it normally
+    would.
+
+- **problem**: A vessel seems to reasonably come to the desired direction
+  sensibly, but once it's there the ship vibrates back and forth by about 1
+  degree or less excessively around the setpoint.
+
+  - **solution**: Increase `STEERINGMANAGER:PITCHTS` and
+    `STEERINGMANAGER:YAWTS` to several seconds.
+
+  - **explanation**: Once it's
+    at the desired orientation and it has mostly zeroed the rotational
+    velocity, it's trying to hold it there with microadjustments to the
+    controls, and those microadjustments are "too tight".
+
+- **problem**: The vessel's nose seems to be waving slowly back and forth
+  across the set direction, taking too long to center on it, and you notice
+  the control indicators are pushing all the way to the extremes as it does
+  so.
+
+  - **solution**: Increase `STEERINGMANAGER:PITCHPID:KD` and
+    `STEERINGMANGER:YAWPID:KD`.
+
+  - **explanation**: The ship is *trying* to
+    push its rotation rate too high when almost at the setpoint.  It needs
+    to anticipate the fact that it is going to reach the desired direction
+    and start slowing down BEFORE it gets there.
+
+- **problem**: The vessel's nose seems to be waving slowly back and forth across
+  the set direction, taking too long to center on it, but you notice that the
+  control indicators are NOT pushing all the way to the extremes as it does
+  so.  Instead they seem to be staying low in magnitude, wavering around zero
+  and may be getting smaller over time.
+
+  - **solution**: Decrease `STEERINGMANAGER:PITCHTS` and/or
+    `STEERINGMANAGER:YAWTS`
+
+  - **explanation**: While larger values for the
+    settling time on the Torque PID controller will help to smooth out
+    spikes in the controls, it also results in a longer time period before
+    the steering comes to a rest at the setpoint (also knows as settling).
+    If you had previously increased the settling time to reduce
+    oscillations, try picking a value half way between the default and the
+    new value you previously selected.
 
 
-But to understand how to tune the cooked steering in a more complex way than just with that simple table, you first have to understand
-what a PID controller is, at least a little bit, so you know what the settings
-you can tweak actually do.
+But to understand how to tune the cooked steering in a more complex way than
+just with that simple list, you first have to understand what a PID controller
+is, at least a little bit, so you know what the settings you can tweak
+actually do.
 
 If you don't know what a PID controller is and want to learn more, you can
 read numerous descriptions of the concept on the internet that can be found
@@ -270,7 +309,7 @@ still best to make your own control scheme from scratch with raw steering.
 The settings to change
 ::::::::::::::::::::::
 
-First, you can modify how kOS decides how fast the ship should turn.
+First, you can modify how kOS decides how fast the ship should turn::
 
     // MAXSTOPPINGTIME tells kOS how to calculate the maximum allowable
     // angular velocity the Rotational Velocity PID is allowed to output.
@@ -301,7 +340,7 @@ kOS uses the ship's available torque and moment of inertial to dynamically
 calculate the PID constants.  Then the desired torque is calculated based on
 the desired angular velocity.  The steering controls are then set based on
 the the percentage the desired torque is of the available torque.  You can
-change the settling time for the torque calculation along each axis:
+change the settling time for the torque calculation along each axis::
 
     // Increase the settling time to slow down control reaction time and
     // reduce control spikes.  This is helpful in vessels that wobble enough to
