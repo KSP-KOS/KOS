@@ -468,7 +468,7 @@ namespace kOS.Binding
             }
             DisableControl();
             throw new Safe.Exceptions.KOSWrongControlValueTypeException(
-                "STEERING", Value.GetType().Name, "Direction, Vector, Manuever Node, or special string \"KILL\"");
+                "STEERING", Value.GetType().Name, "Direction, Vector, Maneuver Node, or special string \"KILL\"");
         }
 
         public void UpdateStateVectors()
@@ -505,7 +505,7 @@ namespace kOS.Binding
             omega.z *= -1; // positive values pull the starboard side up.
 
             // TODO: Currently adjustments to MOI are only enabled in debug compiles.  Using this feature seems to be buggy, but it has potential
-            // to be more resiliant against random spikes in angular velocity.
+            // to be more resilient against random spikes in angular velocity.
             if (sessionTime > lastSessionTime)
             {
                 double dt = sessionTime - lastSessionTime;
@@ -675,59 +675,69 @@ namespace kOS.Binding
             {
                 ModuleEngines engine = engineModules[i];
                 ModuleGimbal gimbal = gimbalModules[i];
-                Quaternion gimbalRotation = new Quaternion();
-                float gimbalRange = 0;
-                bool hasGimbal = false;
                 if (engine.isActiveAndEnabled && engine.EngineIgnited)
                 {
-                    if (gimbal != null)
+                    // if the engine is active and ignited, calculate torque
+                    float gimbalRange = 0;
+                    List<Quaternion> initRots = new List<Quaternion>();
+                    if (gimbal != null && !gimbal.gimbalLock)
                     {
-                        hasGimbal = true;
-                        if (gimbal.gimbalLock)
+                        gimbalRange = gimbal.gimbalRange * gimbal.gimbalLimiter / 100;  // grab the gimbal range
+
+                        // To determine the neutral thrust vector, we reset the gimbal transform to it's "initial" value
+                        // from the initRots array and then read the direction from the thrustTransform.  We do this for
+                        // each gimbal object, and then return them to the previous value after calculating the thrust
+                        // transforms, so that we don't inerupt the gimbal logic.
+                        for (int gblIdx = 0; gblIdx < gimbal.gimbalTransforms.Count; gblIdx++)
                         {
-                            foreach (var transform in gimbal.gimbalTransforms)
-                            {
-                                gimbalRotation = transform.rotation;
-                                gimbalRange = 0;
-                            }
-                        }
-                        else
-                        {
-                            if (gimbal.gimbalTransforms.Count > 1) shared.Logger.LogError("SteeringManager: multiple gimbal transforms found");
-                            Transform transform = gimbal.gimbalTransforms[0];
-                            // init rotations are stored in a local scope.  Need to convert back to global scope.
-                            var initRotation = transform.localRotation;
-                            transform.localRotation = gimbal.initRots[0];
-                            //vEngines[key].Start = transform.localPosition;
-                            gimbalRotation = transform.rotation;
-                            gimbalRange = gimbal.gimbalRange * gimbal.gimbalLimiter / 100;
-                            //gimbalRange = gimbal.gimbalRange;
-                            transform.localRotation = initRotation;
+                            initRots.Add(gimbal.gimbalTransforms[gblIdx].localRotation); // store the current rotation
+                            gimbal.gimbalTransforms[gblIdx].localRotation = gimbal.initRots[gblIdx]; // set the rotation to the "initial" value
                         }
                     }
-                    if (engine.thrustTransforms.Count > 1) shared.Logger.LogError("SteeringManager: multiple engine transforms found");
-                    foreach (var transform in engine.thrustTransforms)
+                    for (int xfrmIdx = 0; xfrmIdx < engine.thrustTransforms.Count; xfrmIdx++)
                     {
-                        if (!hasGimbal)
-                            gimbalRotation = transform.rotation;
-                        var relCom = transform.position - centerOfMass;
-                        Vector3d neut = gimbalRotation * Vector3d.forward;
+                        // iterate through each thrust transform.  Some engines have multiple transforms for
+                        // thrust and/or gimbal, so we need to be able to use as many as the part contains.
+                        Transform thrustTransform = engine.thrustTransforms[xfrmIdx];
+                        Vector3d position = thrustTransform.position;
+                        if (gimbal != null && !gimbal.gimbalLock)
+                        {
+                            Transform gimbalTransform = FindParentTransform(thrustTransform, gimbal.gimbalTransformName, engine.part.transform);
+                            if (gimbalTransform != null)
+                            {
+                                // The gimbal position will not move as the gimbal rotates.  As of KSP 1.0.5, the Vector engine appears
+                                // to be the only engine that moves it's thrust transform location, because the transform itself is located
+                                // at the end of the nozzel.  Doing so means that our calculated available torque could very well be inaccurate
+                                // specifically in the case of roll torque, where it may appear that an axial engine's thrust transform is offset from the
+                                // vessel's axial centerline when in fact the axial engine can produce no roll torque.
+                                // If there is ever an engine where the thrust transform does not align to the gimbal transform, this assumption
+                                // will no longer be valid.
+                                position = gimbalTransform.position;  // use the gimbal position as the thrust position
+                            }
+                        }
+                        Vector3d neut = -engine.thrustTransforms[xfrmIdx].forward * engine.finalThrust / engine.thrustTransforms.Count; // the neutral control thrust (force is opposite of exhaust direction)
+                        Vector3d relCom = position - centerOfMass;
+
+                        string id = string.Format("{0}[{1}]", engine.part.flightID, xfrmIdx);
+
+                        // calculate the neutral gimbal force vector based on the neutral direction and thrust magnitude
                         ForceVector neutralForce = new ForceVector
                         {
-                            Force = neut * engine.finalThrust,
-                            ID = engine.part.flightID.ToString(),
+                            Force = neut,
+                            ID = id,
                             Position = relCom,
                         };
                         engineNeutVectors.Add(neutralForce);
                         staticEngineTorque += neutralForce.Torque;
-                        if (gimbalRange > EPSILON)
+                        if (gimbalRange > EPSILON) // only do the gimbal calculation if the range allows it.
                         {
-                            Vector3d pitchAxis = Vector3d.Exclude(neut, vesselStarboard);
-                            Vector3d yawAxis = Vector3d.Exclude(neut, vesselTop);
-                            Vector3d rollAxis = Vector3d.Exclude(vesselForward, relCom);
+                            Vector3d pitchAxis = Vector3d.Exclude(neut, vesselStarboard);  // pitch rotates about the starboard vector
+                            Vector3d yawAxis = Vector3d.Exclude(neut, vesselTop);  // yaw rotates about the top vector
+                            Vector3d rollAxis = Vector3d.Exclude(vesselForward, relCom);  // roll rotates about the forward vector
                             ForceVector pitchForce = new ForceVector
                             {
                                 Force = Quaternion.AngleAxis(gimbalRange, pitchAxis) * neut,
+                                ID = id,
                                 Position = relCom
                             };
                             enginePitchVectors.Add(pitchForce);
@@ -735,20 +745,31 @@ namespace kOS.Binding
                             ForceVector yawForce = new ForceVector
                             {
                                 Force = Quaternion.AngleAxis(gimbalRange, yawAxis) * neut,
+                                ID = id,
                                 Position = relCom
                             };
                             engineYawVectors.Add(yawForce);
                             yawControl += yawForce.Torque;
                             ForceVector rollForce;
+
+                            // because of deflection, sometimes an axial engine will look like it can 
+                            // generate roll torque when it cannot do so reliably.  Ignore small offsets.
                             if (rollAxis.sqrMagnitude < 0.02)
                             {
                                 rollForce = neutralForce;
+                                rollForce = new ForceVector
+                                {
+                                    Force = neutralForce.Force,
+                                    ID = id,
+                                    Position = neutralForce.Position
+                                };
                             }
                             else
                             {
                                 rollForce = new ForceVector
                                 {
                                     Force = Quaternion.AngleAxis(gimbalRange, rollAxis) * neut,
+                                    ID = id,
                                     Position = relCom
                                 };
                             }
@@ -757,54 +778,93 @@ namespace kOS.Binding
                         }
                         else
                         {
-                            enginePitchVectors.Add(neutralForce);
-                            engineYawVectors.Add(neutralForce);
-                            engineRollVectors.Add(neutralForce);
+                            // if there is no gimbal available, or it's too small, just clone the neutral thrust vector
+                            enginePitchVectors.Add(new ForceVector
+                            {
+                                Force = neutralForce.Force,
+                                ID = id,
+                                Position = neutralForce.Position
+                            });
+                            engineYawVectors.Add(new ForceVector
+                            {
+                                Force = neutralForce.Force,
+                                ID = id,
+                                Position = neutralForce.Position
+                            });
+                            engineRollVectors.Add(new ForceVector
+                            {
+                                Force = neutralForce.Force,
+                                ID = id,
+                                Position = neutralForce.Position
+                            });
 
                             pitchControl += neutralForce.Torque;
                             yawControl += neutralForce.Torque;
                             rollControl += neutralForce.Torque;
                         }
                     }
+                    if (gimbal != null && !gimbal.gimbalLock)
+                    {
+                        // Reset each of the gimbal rotations back to their previous values.  This prevents
+                        // our calculations from interupting the internal gimbal logic, since some gimbals
+                        // do not rotate instantly.
+                        for (int gblIdx = 0; gblIdx < gimbal.gimbalTransforms.Count; gblIdx++)
+                        {
+                            gimbal.gimbalTransforms[gblIdx].localRotation = initRots[gblIdx]; // set the rotation to the previous value
+                        }
+                    }
                 }
                 else
                 {
-                    string key = engine.part.flightID.ToString();
-                    if (vEngines.Keys.Contains(key))
+                    // if an engine is disabled, hide the associated vectors (do this for all transforms)
+                    for (int xfrmIdx = 0; xfrmIdx < engine.thrustTransforms.Count; xfrmIdx++)
                     {
-                        vEngines[key].SetShow(false);
-                        vEngines.Remove(key);
-                    }
-                    key = engine.part.flightID.ToString() + "gimbaled";
-                    if (vEngines.Keys.Contains(key))
-                    {
-                        vEngines[key].SetShow(false);
-                        vEngines.Remove(key);
-                    }
-                    key = engine.part.flightID.ToString() + "torque";
-                    if (vEngines.Keys.Contains(key))
-                    {
-                        vEngines[key].SetShow(false);
-                        vEngines.Remove(key);
-                    }
-                    key = engine.part.flightID.ToString() + "control";
-                    if (vEngines.Keys.Contains(key))
-                    {
-                        vEngines[key].SetShow(false);
-                        vEngines.Remove(key);
-                    }
-                    key = engine.part.flightID.ToString() + "position";
-                    if (vEngines.Keys.Contains(key))
-                    {
-                        vEngines[key].SetShow(false);
-                        vEngines.Remove(key);
+                        string key = string.Format("{0}[{1}]", engine.part.flightID, xfrmIdx);
+                        if (vEngines.Keys.Contains(key))
+                        {
+                            vEngines[key].SetShow(false);
+                            vEngines.Remove(key);
+                        }
+                        key = engine.part.flightID.ToString() + "gimbaled";
+                        if (vEngines.Keys.Contains(key))
+                        {
+                            vEngines[key].SetShow(false);
+                            vEngines.Remove(key);
+                        }
+                        key = engine.part.flightID.ToString() + "torque";
+                        if (vEngines.Keys.Contains(key))
+                        {
+                            vEngines[key].SetShow(false);
+                            vEngines.Remove(key);
+                        }
+                        key = engine.part.flightID.ToString() + "control";
+                        if (vEngines.Keys.Contains(key))
+                        {
+                            vEngines[key].SetShow(false);
+                            vEngines.Remove(key);
+                        }
+                        key = engine.part.flightID.ToString() + "position";
+                        if (vEngines.Keys.Contains(key))
+                        {
+                            vEngines[key].SetShow(false);
+                            vEngines.Remove(key);
+                        }
                     }
                 }
             }
 
-            controlEngineTorque.x = pitchControl.magnitude;
-            controlEngineTorque.z = yawControl.magnitude;
-            controlEngineTorque.y = rollControl.magnitude;
+            // Because the engines may generate torque about the other 2 axes when trying to rotate about one,
+            // use a dot product to get the component of the torque in the desired direction.  Also subtract out
+            // the static engine torque, to account for offset placement.  This still does not properly balance
+            // engines that are offset, since the available torque may be drastically different between the
+            // positive and negative limit.  If there is a large static torque, it's also possible for the
+            // calculation to show that there is a small amount of available torque, even though the static
+            // torque will actually overpower the control torque.  Eventually it would be nice to modify this
+            // calculation to properly handle asymetric gimbal torque, but for now it will need to be a
+            // constraint of ship design.
+            controlEngineTorque.x = Math.Abs(Vector3d.Dot(pitchControl - staticEngineTorque, vesselStarboard));
+            controlEngineTorque.z = Math.Abs(Vector3d.Dot(yawControl - staticEngineTorque, vesselTop));
+            controlEngineTorque.y = Math.Abs(Vector3d.Dot(rollControl - staticEngineTorque, vesselForward));
 
             rawTorque.x += controlEngineTorque.x;
             rawTorque.z += controlEngineTorque.z;
@@ -822,6 +882,14 @@ namespace kOS.Binding
             if (controlTorque.x < minTorque) controlTorque.x = minTorque;
             if (controlTorque.y < minTorque) controlTorque.y = minTorque;
             if (controlTorque.z < minTorque) controlTorque.z = minTorque;
+        }
+
+        public Transform FindParentTransform(Transform transform, string name, Transform topLevel)
+        {
+            if (transform.parent.name == name) return transform.parent;
+            else if (transform.parent == null) return null;
+            else if (transform.parent == topLevel) return null;
+            else return FindParentTransform(transform.parent, name, topLevel);
         }
 
         // Update prediction based on PI controls, sets the target angular velocity and the target torque for the vessel
@@ -1142,7 +1210,7 @@ namespace kOS.Binding
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = fv.Force;
+                    vEngines[key].Vector = -fv.Force;
                     vEngines[key].Start = fv.Position;
 
                     key = fv.ID + "torque";
@@ -1173,7 +1241,7 @@ namespace kOS.Binding
                         vEngines.Add(key, vecdraw);
                         vEngines[key].SetShow(true);
                     }
-                    vEngines[key].Vector = fv.Force;
+                    vEngines[key].Vector = -fv.Force;
                     vEngines[key].Start = fv.Position;
 
                     key = fv.ID + "control";
@@ -1520,7 +1588,7 @@ namespace kOS.Binding
             public TorquePI()
             {
                 Loop = new PIDLoop();
-                Ts = 1;
+                Ts = 2;
                 TorqueAdjust = new MovingAverage();
             }
 
