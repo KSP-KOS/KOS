@@ -12,20 +12,19 @@ kOS Mod Changelog
 
 ### NEW FEATURES
 * Compatibility with KSP version 1.0.5
-* `run once ...` syntax to run a script only once per session.
-* Volumes and processors have better integration.
-* Volume titles default to the name tag of the Processor part (only on launch).
-* New suffixes for interacting with kOS Processor modules (including `core`).
-* `debuglog(...)` function to print directly to the KSP log file.
-* New `queue` and `stack` data structures.
+* `run once ...` syntax to run a script only once per session ( http://ksp-kos.github.io/KOS_DOC/commands/files.html#run-once-program )
+* Volumes and processors have better integration ( http://ksp-kos.github.io/structures/vessels/volume.html#structure:VOLUME )
+* Volume titles default to the name tag of the Processor part (only on launch) ( http://ksp-kos.github.io/KOS_DOC/general/volumes.html#naming-volumes )
+* New suffixes for interacting with kOS Processor modules (including `core`) ( http://ksp-kos.github.io/KOS_DOC/commands/processors.html )
+* `debuglog(...)` function to print directly to the KSP log file ( http://ksp-kos.github.io/KOS_DOC/structures/misc/queue.html )
+* New `queue` and `stack` data structures ( http://ksp-kos.github.io/KOS_DOC/structures/misc/queue.html and http://ksp-kos.github.io/KOS_DOC/structures/misc/stack.html )
 
 ### BUG FIXES
 * The processor's mode (on/off/starved) is now saved and restored ( https://github.com/KSP-KOS/KOS/issues/1172 )
 * Fixed stage resources again to address a change in KSP 1.0.5 ( https://github.com/KSP-KOS/KOS/issues/1242 )
 * Fix occasional instances of flight controls getting disabled during a docking/undocking/staging event ( https://github.com/KSP-KOS/KOS/issues/1205 )
 * kOS can now trigger module events with RemoteTech installed and no KSC connection ( https://github.com/RemoteTechnologiesGroup/RemoteTech/issues/437 )
-* Volumes and processors are now mapped together ( https://github.com/KSP-KOS/KOS/issues/788 )
-* You can now switch to a volume using the volume object itself ( https://github.com/KSP-KOS/KOS/issues/789 )
+* Fixed handling of multiple thrust/gimbal transforms and corrected some of their directions ( https://github.com/KSP-KOS/KOS/issues/1259 )
 
 # v0.18.1
 
