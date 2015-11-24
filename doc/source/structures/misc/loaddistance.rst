@@ -66,7 +66,7 @@ Vessel Load Distance
 
     *The kOS processor is able to run scripts any time that a vessel is loaded,
     but the script is not guaranteed access to all features when a ship is
-    LOADED but not UNPACKED.  KSP limits some features (like throttle control)
+    LOADED but not UNPACKED.*  KSP limits some features (like throttle control)
     to only vessels that are unpacked.  You may check the `UNPACKED` suffix of
     the `SHIP` variable to determine if these features are available.
 
