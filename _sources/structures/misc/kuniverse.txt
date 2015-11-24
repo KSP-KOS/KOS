@@ -149,6 +149,8 @@ KUniverse 4th wall methods
 
     Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.
 
+.. _debuglog:
+
 .. method:: KUniverse:DEBUGLOG(message)
 
     :parameter message: string message to append to the log.
