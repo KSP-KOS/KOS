@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Command Reference &mdash; kOS 0.18.0 documentation</title>
+  <title>Command Reference &mdash; kOS 0.18.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.18.0 documentation" href="index.html"/>
+    <link rel="top" title="kOS 0.18.2 documentation" href="index.html"/>
         <link rel="next" title="Flight Control" href="commands/flight.html"/>
         <link rel="prev" title="Reference Frames" href="math/ref_frame.html"/> 
 
@@ -114,7 +114,8 @@
 <li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">    Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/processors.html">Processors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
@@ -196,23 +197,28 @@
 <li class="toctree-l1"><a class="reference internal" href="commands/files.html">File I/O</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html#volume-and-filename-arguments">Volume and Filename arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html#compile-program-to-compiledprogram"><tt class="docutils literal"><span class="pre">COMPILE</span> <span class="pre">program</span> <span class="pre">(TO</span> <span class="pre">compiledProgram).</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/files.html#copy-programfile-from-to-voumenumber"><tt class="docutils literal"><span class="pre">COPY</span> <span class="pre">programFile</span> <span class="pre">FROM/TO</span> <span class="pre">voumeNumber.</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/files.html#delete-filename-from-volumenumber"><tt class="docutils literal"><span class="pre">DELETE</span> <span class="pre">filename</span> <span class="pre">FROM</span> <span class="pre">volumeNumber.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#copy-programfile-from-to-volume-volumeid-volumename"><tt class="docutils literal"><span class="pre">COPY</span> <span class="pre">programFile</span> <span class="pre">FROM/TO</span> <span class="pre">Volume|volumeId|volumeName.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#delete-filename-from-volume-volumeid-volumename"><tt class="docutils literal"><span class="pre">DELETE</span> <span class="pre">filename</span> <span class="pre">FROM</span> <span class="pre">Volume|volumeId|volumeName.</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html#edit-program"><tt class="docutils literal"><span class="pre">EDIT</span> <span class="pre">program.</span></tt></a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html#log-text-to-filename"><tt class="docutils literal"><span class="pre">LOG</span> <span class="pre">text</span> <span class="pre">TO</span> <span class="pre">filename.</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/files.html#rename-name1-to-name2"><tt class="docutils literal"><span class="pre">RENAME</span> <span class="pre">name1</span> <span class="pre">TO</span> <span class="pre">name2.</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/files.html#run-program"><tt class="docutils literal"><span class="pre">RUN</span> <span class="pre">&lt;program&gt;.</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/files.html#switch-to-volumenumber"><tt class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span> <span class="pre">&lt;volumeNumber&gt;.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#rename-volume-volume-volumeid-oldvolumename-to-name"><tt class="docutils literal"><span class="pre">RENAME</span> <span class="pre">VOLUME</span> <span class="pre">Volume|volumeId|oldVolumeName</span> <span class="pre">TO</span> <span class="pre">name.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#rename-file-oldname-to-newname"><tt class="docutils literal"><span class="pre">RENAME</span> <span class="pre">FILE</span> <span class="pre">oldName</span> <span class="pre">TO</span> <span class="pre">newName.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#run-once-program"><tt class="docutils literal"><span class="pre">RUN</span> <span class="pre">[ONCE]</span> <span class="pre">&lt;program&gt;.</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/files.html#switch-to-volume-volumeid-volumename"><tt class="docutils literal"><span class="pre">SWITCH</span> <span class="pre">TO</span> <span class="pre">Volume|volumeId|volumeName.</span></tt></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html#gui-display-tools">GUI display tools</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="commands/resource_transfer.html">    Resource Transfer</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="commands/resource_transfer.html">Resource Transfer</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html#resource">Resource</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html#source-and-destination">Source and Destination</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="commands/processors.html">Processors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="commands/processors.html#accessing-processors">Accessing processors</a></li>
 </ul>
 </li>
 </ul>
@@ -258,7 +264,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.18.0',
+            VERSION:'0.18.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

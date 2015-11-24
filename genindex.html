@@ -8,7 +8,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; kOS 0.18.0 documentation</title>
+  <title>Index &mdash; kOS 0.18.2 documentation</title>
   
 
   
@@ -34,7 +34,7 @@
         <link rel="author" title="About these documents"
               href="about.html"/>
         <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="kOS 0.18.0 documentation" href="index.html"/> 
+    <link rel="top" title="kOS 0.18.2 documentation" href="index.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -113,7 +113,8 @@
 <li class="toctree-l2"><a class="reference internal" href="commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">    Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands/processors.html">Processors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a><ul>
@@ -475,12 +476,12 @@
   <dt><a href="math/basic.html#global:CONSTANT:C">Constant:C</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="math/basic.html#global:CONSTANT:DEGTORAD">Constant:DegToRad</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="math/basic.html#global:CONSTANT:E">Constant:E</a>
   </dt>
@@ -510,19 +511,11 @@
   </dt>
 
       
-  <dt><a href="structures/core.html#attribute:CORE:BOOTFILENAME">CORE:BOOTFILENAME</a>
-  </dt>
-
-      
   <dt><a href="structures/core.html#attribute:CORE:CURRENTVOLUME">CORE:CURRENTVOLUME</a>
   </dt>
 
       
   <dt><a href="structures/core.html#attribute:CORE:ELEMENT">CORE:ELEMENT</a>
-  </dt>
-
-      
-  <dt><a href="structures/core.html#attribute:CORE:PART">CORE:PART</a>
   </dt>
 
       
@@ -1211,10 +1204,38 @@
   <dt><a href="addons/KAC.html#attribute:KACALARM:TARGETBODY">KACAlarm:TARGETBODY</a>
   </dt>
 
+      
+  <dt><a href="addons/KAC.html#attribute:KACALARM:TYPE">KACAlarm:TYPE</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/kosprocessor.html#structure:KOSPROCESSOR">kOSProcessor [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/kosprocessor.html#method:KOSPROCESSOR:ACTIVATE">kOSProcessor:ACTIVATE()</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/kosprocessor.html#attribute:KOSPROCESSOR:BOOTFILENAME">kOSProcessor:BOOTFILENAME</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="addons/KAC.html#attribute:KACALARM:TYPE">KACAlarm:TYPE</a>
+  <dt><a href="structures/vessels/kosprocessor.html#method:KOSPROCESSOR:DEACTIVATE">kOSProcessor:DEACTIVATE()</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/kosprocessor.html#attribute:KOSPROCESSOR:MODE">kOSProcessor:MODE</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/kosprocessor.html#attribute:KOSPROCESSOR:TAG">kOSProcessor:TAG</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/kosprocessor.html#attribute:KOSPROCESSOR:VOLUME">kOSProcessor:VOLUME</a>
   </dt>
 
       
@@ -1235,6 +1256,10 @@
 
       
   <dt><a href="structures/misc/kuniverse.html#attribute:KUNIVERSE:CANREVERTTOLAUNCH">KUniverse:CANREVERTTOLAUNCH</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/kuniverse.html#method:KUNIVERSE:DEBUGLOG">KUniverse:DEBUGLOG()</a>
   </dt>
 
       
@@ -1946,6 +1971,10 @@
   </dt>
 
       
+  <dt><a href="commands/processors.html#function:PROCESSOR">PROCESSOR()</a>
+  </dt>
+
+      
   <dt><a href="structures/misc/colors.html#global:PURPLE">PURPLE</a>
   </dt>
 
@@ -1957,6 +1986,52 @@
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="math/direction.html#function:Q">Q()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#structure:QUEUE">Queue [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#method:QUEUE:CLEAR">Queue:CLEAR()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#method:QUEUE:CONTAINS">Queue:CONTAINS()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#attribute:QUEUE:COPY">Queue:COPY</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#attribute:QUEUE:DUMP">Queue:DUMP</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="structures/misc/queue.html#attribute:QUEUE:EMPTY">Queue:EMPTY</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#attribute:QUEUE:ITERATOR">Queue:ITERATOR</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#attribute:QUEUE:LENGTH">Queue:LENGTH</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#method:QUEUE:PEEK">Queue:PEEK()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#method:QUEUE:POP">Queue:POP()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/queue.html#method:QUEUE:PUSH">Queue:PUSH()</a>
   </dt>
 
   </dl></td>
@@ -2218,6 +2293,50 @@
   </dt>
 
       
+  <dt><a href="structures/misc/stack.html#structure:STACK">Stack [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#method:STACK:CLEAR">Stack:CLEAR()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#method:STACK:CONTAINS">Stack:CONTAINS()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#attribute:STACK:COPY">Stack:COPY</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#attribute:STACK:DUMP">Stack:DUMP</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#attribute:STACK:EMPTY">Stack:EMPTY</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#attribute:STACK:ITERATOR">Stack:ITERATOR</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#attribute:STACK:LENGTH">Stack:LENGTH</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#method:STACK:PEEK">Stack:PEEK()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#method:STACK:POP">Stack:POP()</a>
+  </dt>
+
+      
+  <dt><a href="structures/misc/stack.html#method:STACK:PUSH">Stack:PUSH()</a>
+  </dt>
+
+      
   <dt><a href="structures/vessels/stage.html#structure:STAGE">Stage [struct]</a>
   </dt>
 
@@ -2234,6 +2353,10 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/stage.html#attribute:STAGE:RESOURCESLEX">Stage:Resourceslex</a>
+  </dt>
+
+      
   <dt><a href="structures/misc/steeringmanager.html#structure:STEERINGMANAGER">SteeringManager [struct]</a>
   </dt>
 
@@ -2245,6 +2368,8 @@
   <dt><a href="structures/misc/steeringmanager.html#attribute:STEERINGMANAGER:ENABLED">SteeringManager:ENABLED</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/steeringmanager.html#attribute:STEERINGMANAGER:MAXSTOPPINGTIME">SteeringManager:MAXSTOPPINGTIME</a>
   </dt>
@@ -2269,8 +2394,6 @@
   <dt><a href="structures/misc/steeringmanager.html#attribute:STEERINGMANAGER:PITCHTS">SteeringManager:PITCHTS</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/misc/steeringmanager.html#method:STEERINGMANAGER:RESETPIDS">SteeringManager:RESETPIDS()</a>
   </dt>
@@ -2705,8 +2828,6 @@
   <dt><a href="structures/vessels/vessel.html#method:VESSEL:CREW">Vessel:CREW()</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:CREWCAPACITY">Vessel:CREWCAPACITY</a>
   </dt>
@@ -2719,6 +2840,8 @@
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:DRYMASS">Vessel:DRYMASS</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="structures/vessels/vessel.html#attribute:VESSEL:DYNAMICPRESSURE">Vessel:DYNAMICPRESSURE</a>
   </dt>
@@ -2868,6 +2991,34 @@
   </dt>
 
       
+  <dt><a href="structures/vessels/volume.html#structure:VOLUME">Volume [struct]</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/volume.html#attribute:VOLUME:CAPACITY">Volume:CAPACITY</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/volume.html#attribute:VOLUME:FILES">Volume:FILES</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/volume.html#attribute:VOLUME:FREESPACE">Volume:FREESPACE</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/volume.html#attribute:VOLUME:NAME">Volume:NAME</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/volume.html#attribute:VOLUME:POWERREQUIREMENT">Volume:POWERREQUIREMENT</a>
+  </dt>
+
+      
+  <dt><a href="structures/vessels/volume.html#attribute:VOLUME:RENAMEABLE">Volume:RENAMEABLE</a>
+  </dt>
+
+      
   <dt><a href="math/vector.html#function:VXCL">VXCL()</a>
   </dt>
 
@@ -2987,7 +3138,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.18.0',
+            VERSION:'0.18.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

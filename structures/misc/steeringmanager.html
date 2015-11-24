@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SteeringManager &mdash; kOS 0.18.0 documentation</title>
+  <title>SteeringManager &mdash; kOS 0.18.2 documentation</title>
   
 
   
@@ -33,10 +33,10 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.2 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="String" href="string.html"/>
-        <link rel="prev" title="Resource Transfer" href="resource_transfer.html"/> 
+        <link rel="prev" title="Stack" href="stack.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -115,7 +115,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/processors.html">Processors</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -181,6 +182,10 @@
             
   <div class="section" id="steeringmanager">
 <span id="id1"></span><h1>SteeringManager<a class="headerlink" href="#steeringmanager" title="Permalink to this headline">¶</a></h1>
+<p>See <a class="reference internal" href="../../commands/flight/cooked.html#cooked-tuning"><em>the cooked control tuning explanation</em></a> for
+information to help with tuning the steering manager.  It&#8217;s important to read
+that section first to understand which setting below is affecting which
+portion of the steering system.</p>
 <p>The SteeringManager is a bound variable, not a suffix to a specific vessel.  This prevents access to the SteeringManager of other vessels.  You can access the steering manager as shown below:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// Display the ship facing, target facing, and world coordinates vectors.</span>
 <span class="n">SET</span> <span class="n">STEERINGMANAGER</span><span class="o">:</span><span class="n">SHOWFACINGVECTORS</span> <span class="n">TO</span> <span class="n">TRUE</span><span class="p">.</span>
@@ -213,15 +218,15 @@
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHPID" title="STEERINGMANAGER:PITCHPID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PITCHPID</span></tt></a></td>
 <td><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a></td>
-<td>The PIDLoop for the pitch direction.</td>
+<td>The PIDLoop for the pitch <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><em>rotational velocity PID</em></a>.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWPID" title="STEERINGMANAGER:YAWPID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">YAWPID</span></tt></a></td>
 <td><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a></td>
-<td>The PIDLoop for the yaw direction.</td>
+<td>The PIDLoop for the yaw <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><em>rotational velocity PID</em></a>.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLPID" title="STEERINGMANAGER:ROLLPID attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROLLPID</span></tt></a></td>
 <td><a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a></td>
-<td>The PIDLoop for the roll direction.</td>
+<td>The PIDLoop for the roll <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><em>rotational velocity PID</em></a>.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ENABLED" title="STEERINGMANAGER:ENABLED attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ENABLED</span></tt></a></td>
 <td>bool</td>
@@ -261,15 +266,15 @@
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:PITCHTS" title="STEERINGMANAGER:PITCHTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">PITCHTS</span></tt></a></td>
 <td>scalar (s)</td>
-<td>Settling time for the pitch torque calculation</td>
+<td>Settling time for the pitch torque calculation.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:YAWTS" title="STEERINGMANAGER:YAWTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">YAWTS</span></tt></a></td>
 <td>scalar (s)</td>
-<td>Settling time for the yaw torque calculation</td>
+<td>Settling time for the yaw torque calculation.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:ROLLTS" title="STEERINGMANAGER:ROLLTS attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">ROLLTS</span></tt></a></td>
 <td>scalar (s)</td>
-<td>Settling time for the roll torque calculation</td>
+<td>Settling time for the roll torque calculation.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#attribute:STEERINGMANAGER:MAXSTOPPINGTIME" title="STEERINGMANAGER:MAXSTOPPINGTIME attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt></a></td>
 <td>scalar (s)</td>
@@ -332,7 +337,7 @@ SteeringManager:<tt class="descname">PITCHPID</tt><a class="headerlink" href="#a
 </tr>
 </tbody>
 </table>
-<p>Returns the PIDLoop object for the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure.  The loop&#8217;s <cite>MAXOUTPUT</cite> value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+<p>Returns the PIDLoop object responsible for calculating the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><em>target angular velocity</em></a> in the pitch direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure.  Changing the loop&#8217;s <cite>MAXOUTPUT</cite> or <cite>MINOUTPUT</cite> values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -348,7 +353,7 @@ SteeringManager:<tt class="descname">YAWPID</tt><a class="headerlink" href="#att
 </tr>
 </tbody>
 </table>
-<p>Returns the PIDLoop object for the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure.  The loop&#8217;s <cite>MAXOUTPUT</cite> value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+<p>Returns the PIDLoop object responsible for calculating the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><em>target angular velocity</em></a> in the yaw direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure.  Changing the loop&#8217;s <cite>MAXOUTPUT</cite> or <cite>MINOUTPUT</cite> values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -364,7 +369,17 @@ SteeringManager:<tt class="descname">ROLLPID</tt><a class="headerlink" href="#at
 </tr>
 </tbody>
 </table>
-<p>Returns the PIDLoop object for the roll direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure.  The loop&#8217;s <cite>MAXOUTPUT</cite> value will be overwritten on every sample, with it being set to limit the maximum turning rate to that which can be stopped in a <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+<p>Returns the PIDLoop object responsible for calculating the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><em>target angular velocity</em></a> in the roll direction.  This allows direct manipulation of the gain parameters, and other components of the <a class="reference internal" href="pidloop.html#structure:PIDLOOP" title="PIDLOOP structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">PIDLoop</span></tt></a> structure.  Changing the loop&#8217;s <cite>MAXOUTPUT</cite> or <cite>MINOUTPUT</cite> values will have no effect as they are overwritten every physics frame.  They are set to limit the maximum turning rate to that which can be stopped in a <tt class="xref ks ks-attr docutils literal"><span class="pre">MAXSTOPPINGTIME</span></tt> seconds (calculated based on available torque, and the ship&#8217;s moment of inertia).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The SteeringManager will ignore the roll component of steering
+until after both the pitch and yaw components are close to being
+correct.  In other words it will try to point the nose of the
+craft in the right direction first, before it makes any attempt
+to roll the craft into the right orientation.  As long as the
+pitch or yaw is still far off from the target aim, this PIDloop
+won&#8217;t be getting used at all.</p>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -396,7 +411,7 @@ SteeringManager:<tt class="descname">TARGET</tt><a class="headerlink" href="#att
 </tr>
 </tbody>
 </table>
-<p>Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction.  If steering is locked to &#8220;kill&#8221;, this will return the vessel&#8217;s last facing direction.</p>
+<p>Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction in which kOS chose an arbitrary roll to go with the vector.  If steering is locked to &#8220;kill&#8221;, this will return the vessel&#8217;s last facing direction.</p>
 </dd></dl>
 
 <dl class="method">
@@ -410,7 +425,7 @@ SteeringManager:<tt class="descname">RESETPIDS</tt><big>(</big><big>)</big><a cl
 </tr>
 </tbody>
 </table>
-<p>Returns direction that the is currently being targeted.  If steering is locked to a vector, this will return the calculated direction.  If steering is locked to &#8220;kill&#8221;, this will return the vessel&#8217;s last facing direction.</p>
+<p>Resets the integral sum to zero for all six steering PID Loops.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -522,7 +537,7 @@ SteeringManager:<tt class="descname">PITCHTS</tt><a class="headerlink" href="#at
 </tr>
 </tbody>
 </table>
-<p>Represents the settling time for the PID calculating pitch torque based on target angular velocity.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the pitch direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
+<p>Represents the settling time for the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><em>PID calculating pitch torque based on target angular velocity</em></a>.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the pitch direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -538,7 +553,7 @@ SteeringManager:<tt class="descname">YAWTS</tt><a class="headerlink" href="#attr
 </tr>
 </tbody>
 </table>
-<p>Represents the settling time for the PID calculating yaw torque based on target angular velocity.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the yaw direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
+<p>Represents the settling time for the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><em>PID calculating yaw torque based on target angular velocity</em></a>.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the yaw direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -554,7 +569,7 @@ SteeringManager:<tt class="descname">ROLLTS</tt><a class="headerlink" href="#att
 </tr>
 </tbody>
 </table>
-<p>Represents the settling time for the PID calculating roll torque based on target angular velocity.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
+<p>Represents the settling time for the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><em>PID calculating roll torque based on target angular velocity</em></a>.  The proportional and integral gain is calculated based on the settling time and the moment of inertia in the roll direction.  Ki = (moment of inertia) * (4 / (settling time)) ^ 2.  Kp = 2 * sqrt((moment of inertia) * Ki).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -570,7 +585,11 @@ SteeringManager:<tt class="descname">MAXSTOPPINGTIME</tt><a class="headerlink" h
 </tr>
 </tbody>
 </table>
-<p>This value is used to limit the turning rate when calculating target angular velocity.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).</p>
+<p>This value is used to limit the turning rate when <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><em>calculating target angular velocity</em></a>.  The ship will not turn faster than what it can stop in this amount of time.  The maximum angular velocity about each axis is calculated as: (max angular velocity) = MAXSTOPPINGTIME * (available torque) / (moment of inertia).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This setting affects all three of the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-omega-pid"><em>rotational velocity PID&#8217;s</em></a> at once (pitch, yaw, and roll), rather than affecting the three axes individually one at a time.</p>
+</div>
 </dd></dl>
 
 <dl class="attribute">
@@ -650,7 +669,7 @@ SteeringManager:<tt class="descname">PITCHTORQUEADJUST</tt><a class="headerlink"
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an additive bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.</p>
+<p>You can set this value to provide an additive bias to the calculated available pitch torque used in the pitch <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><em>torque PID</em></a>. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -666,7 +685,7 @@ SteeringManager:<tt class="descname">YAWTORQUEADJUST</tt><a class="headerlink" h
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an additive bias to the calculated available yaw torque. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
+<p>You can set this value to provide an additive bias to the calculated available yaw torque used in the yaw <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><em>torque PID</em></a>. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -682,7 +701,7 @@ SteeringManager:<tt class="descname">ROLLTORQUEADJUST</tt><a class="headerlink" 
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an additive bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.</p>
+<p>You can set this value to provide an additive bias to the calculated available roll torque used in the roll <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><em>torque PID</em></a>. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -698,7 +717,7 @@ SteeringManager:<tt class="descname">PITCHTORQUEFACTOR</tt><a class="headerlink"
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an multiplicative factor bias to the calculated available pitch torque. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.</p>
+<p>You can set this value to provide an multiplicative factor bias to the calculated available pitch torque used in the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><em>torque PID</em></a>. (available torque) = ((calculated torque) + PITCHTORQUEADJUST) * PITCHTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -714,7 +733,7 @@ SteeringManager:<tt class="descname">YAWTORQUEFACTOR</tt><a class="headerlink" h
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an multiplicative factor bias to the calculated available yaw torque. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
+<p>You can set this value to provide an multiplicative factor bias to the calculated available yaw torque used in the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><em>torque PID</em></a>. (available torque) = ((calculated torque) + YAWTORQUEADJUST) * YAWTORQUEFACTOR.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -730,7 +749,7 @@ SteeringManager:<tt class="descname">ROLLTORQUEFACTOR</tt><a class="headerlink" 
 </tr>
 </tbody>
 </table>
-<p>You can set this value to provide an multiplicative factor bias to the calculated available roll torque. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.</p>
+<p>You can set this value to provide an multiplicative factor bias to the calculated available roll torque used in the <a class="reference internal" href="../../commands/flight/cooked.html#cooked-torque-pid"><em>torque PID</em></a>. (available torque) = ((calculated torque) + ROLLTORQUEADJUST) * ROLLTORQUEFACTOR.</p>
 </dd></dl>
 
 </div>
@@ -744,7 +763,7 @@ SteeringManager:<tt class="descname">ROLLTORQUEFACTOR</tt><a class="headerlink" 
         <a href="string.html" class="btn btn-neutral float-right" title="String">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="resource_transfer.html" class="btn btn-neutral" title="Resource Transfer"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="stack.html" class="btn btn-neutral" title="Stack"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -774,7 +793,7 @@ SteeringManager:<tt class="descname">ROLLTORQUEFACTOR</tt><a class="headerlink" 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.18.0',
+            VERSION:'0.18.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

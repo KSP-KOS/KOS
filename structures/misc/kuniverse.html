@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KUniverse 4th wall methods &mdash; kOS 0.18.0 documentation</title>
+  <title>KUniverse 4th wall methods &mdash; kOS 0.18.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.2 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="Lexicon" href="lexicon.html"/>
         <link rel="prev" title="Iterator" href="iterator.html"/> 
@@ -115,7 +115,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/processors.html">Processors</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -236,17 +237,22 @@
 <td>Get</td>
 <td>Returns the name of this vessel&#8217;s editor, &#8220;SPH&#8221; or &#8220;VAB&#8221;.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#attribute:KUNIVERSE:DEFAULTLOADDISTANCE" title="KUNIVERSE:DEFAULTLOADDISTANCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTLOADDISTANCE</span></tt></a></td>
+<tr class="row-odd"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">DEBUGLOG(message)</span></tt></td>
+<td>none</td>
+<td>Method</td>
+<td>Causes a string to append to the Unity debug log file.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#attribute:KUNIVERSE:DEFAULTLOADDISTANCE" title="KUNIVERSE:DEFAULTLOADDISTANCE attribute"><tt class="xref ks ks-attr docutils literal"><span class="pre">DEFAULTLOADDISTANCE</span></tt></a></td>
 <td><a class="reference internal" href="loaddistance.html#structure:LOADDISTANCE" title="LOADDISTANCE structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">LoadDistance</span></tt></a></td>
 <td>Get</td>
 <td>Returns the set of default load and pack distances for the game.</td>
 </tr>
-<tr class="row-even"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">ACTIVEVESEL</span></tt></td>
+<tr class="row-odd"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">ACTIVEVESEL</span></tt></td>
 <td><a class="reference internal" href="../vessels/vessel.html#structure:VESSEL" title="VESSEL structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Vessel</span></tt></a></td>
 <td>Get/Set</td>
 <td>Returns the active vessel, or lets you set the active vesssel.</td>
 </tr>
-<tr class="row-odd"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></tt></td>
+<tr class="row-even"><td><tt class="xref ks ks-attr docutils literal"><span class="pre">FORCEACTIVE(vessel)</span></tt></td>
 <td>n/a</td>
 <td>Set</td>
 <td>Lets you switch active vessels even when the game refuses to allow it.</td>
@@ -439,6 +445,71 @@ KUniverse:<tt class="descname">FORCEACTIVE</tt><big>(</big>vessel<big>)</big><a 
 <p>Force KSP to change the active vessel to the one specified.  Note: Switching the active vessel under conditions that KSP normally disallows may cause unexpected results on the initial vessel.  It is possible that the vessel will be treated as if it is re-entering the atmosphere and deleted.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="method:KUNIVERSE:DEBUGLOG">
+KUniverse:<tt class="descname">DEBUGLOG</tt><big>(</big>message<big>)</big><a class="headerlink" href="#method:KUNIVERSE:DEBUGLOG" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> &#8211; string message to append to the log.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">none</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>All Unity games (Kerbal Space Program included) have a standard
+&#8220;log&#8221; file where they can store a lot of verbose messages that
+help developers trying to debug their games.  Sometimes it may
+be useful to make your script log a message to <em>THAT</em> debug file,
+instead of using kOS&#8217;s normal <tt class="docutils literal"><span class="pre">Log</span></tt> function to append a
+message to some file of your own making.</p>
+<p>This is useful for cases where you are trying to work with a kOS
+developer to trace the cause of a problem and you want your script
+to mark the moments when it hit different parts of the program, and
+have those messages get embedded in the log interleaved with the
+game&#8217;s own diagnostic messages.</p>
+<p>Here is an example.  Say you suspected the game was throwing an error
+every time you tried to lock steering to up.  So you experiment with
+this bit of code:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="nl">kuniverse:</span><span class="n">debuglog</span><span class="p">(</span><span class="s">&quot;=== Now starting test ===&quot;</span><span class="p">).</span>
+<span class="nl">kuniverse:</span><span class="n">debuglog</span><span class="p">(</span><span class="s">&quot;--- Locking steering to up----&quot;</span><span class="p">).</span>
+<span class="n">lock</span> <span class="n">steering</span> <span class="n">to</span> <span class="n">up</span><span class="p">.</span>
+<span class="nl">kuniverse:</span><span class="n">debuglog</span><span class="p">(</span><span class="s">&quot;--- Now forcing a physics tick ----&quot;</span><span class="p">).</span>
+<span class="n">wait</span> <span class="mf">0.001</span><span class="p">.</span>
+<span class="nl">kuniverse:</span><span class="n">debuglog</span><span class="p">(</span><span class="s">&quot;--- Now unlocking steering again ----&quot;</span><span class="p">).</span>
+<span class="n">unlock</span> <span class="n">steering</span><span class="p">.</span>
+<span class="n">wait</span> <span class="mf">0.001</span><span class="p">.</span>
+<span class="nl">kuniverse:</span><span class="n">debuglog</span><span class="p">(</span><span class="s">&quot;=== Now done with test ===&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>This would cause the messages you wrote to appear in the debug log,
+interleaved with any error messages kOS, and any other parts of the
+entire Kerbal Space Program game, dump into the same log.</p>
+<p>The location of this log varies depending on your platform.  For
+some reason, Unity chooses a different filename convention for
+each OS.  Consult the list below to see where it is on your platform.</p>
+<ul class="simple">
+<li>Windows 32-bit: [install_dir]KSP_Dataoutput_log.txt</li>
+<li>Windows 64-bit: [install_dir]KSP_x64_Dataoutput_log.txt (not officially supported)</li>
+<li>Mac OS X: ~/Library/Logs/Unity/Player.log</li>
+<li>Linux: ~/.config/unity3d/Squad/&#8221;Kerbal Space Program&#8221;/Player.log</li>
+</ul>
+<p>For an example of what it looks like in the log, this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="nl">kuniverse:</span><span class="n">debuglog</span><span class="p">(</span><span class="s">&quot;this is my message&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>ends up resulting in this in the KSP output log:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="nl">kOS:</span> <span class="p">(</span><span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">DEBUGLOG</span><span class="p">)</span> <span class="n">this</span> <span class="n">is</span> <span class="n">my</span> <span class="n">message</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<hr class="docutils" />
 <p>Examples:</p>
 <p>Switch to an active vessel called &#8220;vessel 2&#8221;:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">SET</span> <span class="n">KUNIVERSE</span><span class="o">:</span><span class="n">ACTIVEVESSEL</span> <span class="n">TO</span> <span class="n">VESSEL</span><span class="p">(</span><span class="s">&quot;vessel 2&quot;</span><span class="p">).</span>
@@ -499,7 +570,7 @@ KUniverse:<tt class="descname">FORCEACTIVE</tt><big>(</big>vessel<big>)</big><a 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.18.0',
+            VERSION:'0.18.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

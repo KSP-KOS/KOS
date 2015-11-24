@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vessel Load Distance &mdash; kOS 0.18.0 documentation</title>
+  <title>Vessel Load Distance &mdash; kOS 0.18.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../../about.html"/>
         <link rel="copyright" title="Copyright" href="../../copyright.html"/>
-    <link rel="top" title="kOS 0.18.0 documentation" href="../../index.html"/>
+    <link rel="top" title="kOS 0.18.2 documentation" href="../../index.html"/>
         <link rel="up" title="Configurations and Miscellany" href="../misc.html"/>
         <link rel="next" title="PIDLoop" href="pidloop.html"/>
         <link rel="prev" title="List" href="list.html"/> 
@@ -115,7 +115,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">    Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../commands/processors.html">Processors</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../structures.html">Structures</a><ul class="current">
@@ -232,9 +233,11 @@ into one conglomerate &#8220;object&#8221; (thus the term &#8220;packed&#8221;) 
 purely so you can look at it, even though it doesn&#8217;t actually work
 until you get closer and it becomes <em>unpacked</em>.</p>
 <p><strong>THE NEXT SENTENCE IS VERY IMPORTANT AND VITAL:</strong></p>
-<p><em>In order for a vessel to run kOS script code, the vessel must be
-BOTH LOADED and UNPACKED.</em>  Until both of those conditions occur,
-scripts cannot run on the vessel&#8217;s kOS computer parts.</p>
+<p><em>The kOS processor is able to run scripts any time that a vessel is loaded,
+but the script is not guaranteed access to all features when a ship is
+LOADED but not UNPACKED.</em>  KSP limits some features (like throttle control)
+to only vessels that are unpacked.  You may check the <cite>UNPACKED</cite> suffix of
+the <cite>SHIP</cite> variable to determine if these features are available.</p>
 <p>This structure allows you to read or change the stock KSP game&#8217;s
 distance settings for how far a vessel has to get from the active
 vessel in order for it to trigger its UNLOAD or PACK states.</p>
@@ -608,7 +611,7 @@ Kerbal Space Center at a greater distances from each other:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.18.0',
+            VERSION:'0.18.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
