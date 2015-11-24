@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript Syntax Specification &mdash; kOS 0.18.0 documentation</title>
+  <title>KerboScript Syntax Specification &mdash; kOS 0.18.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Flow Control" href="flow.html"/>
         <link rel="prev" title="General Features of the KerboScript Language" href="features.html"/> 
@@ -115,7 +115,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/processors.html">Processors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -210,11 +211,11 @@ operator symbols:</p>
 </pre></div>
 </div>
 <p><strong>Instructions and keywords</strong>:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">set</span>  <span class="n">to</span>  <span class="k">if</span>  <span class="k">else</span> <span class="n">from</span> <span class="n">until</span> <span class="n">step</span> <span class="k">do</span> <span class="n">lock</span>  <span class="n">unlock</span>  <span class="n">print</span>  <span class="n">at</span>  <span class="n">on</span>  <span class="n">toggle</span>
-<span class="n">wait</span>  <span class="n">when</span>  <span class="n">then</span>  <span class="n">off</span>  <span class="n">stage</span>  <span class="n">clearscreen</span>  <span class="n">add</span>  <span class="n">remove</span>  <span class="n">log</span>
-<span class="k">break</span>  <span class="n">preserve</span>  <span class="n">declare</span>  <span class="n">parameter</span>  <span class="k">switch</span>  <span class="n">copy</span>  <span class="n">rename</span>
-<span class="n">volume</span>  <span class="n">file</span>  <span class="n">delete</span>  <span class="n">edit</span>  <span class="n">run</span>  <span class="n">compile</span>  <span class="n">list</span>  <span class="n">reboot</span>  <span class="n">shutdown</span>
-<span class="k">for</span>  <span class="n">unset</span>  <span class="n">batch</span>  <span class="n">deploy</span>  <span class="n">in</span>  <span class="n">all</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">add</span> <span class="n">all</span> <span class="n">at</span> <span class="n">batch</span> <span class="k">break</span> <span class="n">clearscreen</span> <span class="n">compile</span> <span class="n">copy</span> <span class="n">declare</span> <span class="n">delete</span>
+<span class="n">deploy</span> <span class="k">do</span> <span class="k">do</span> <span class="n">edit</span> <span class="k">else</span> <span class="n">file</span> <span class="k">for</span> <span class="n">from</span> <span class="n">from</span> <span class="n">function</span> <span class="n">global</span> <span class="k">if</span>
+<span class="n">in</span> <span class="n">list</span> <span class="n">local</span> <span class="n">lock</span> <span class="n">log</span> <span class="n">off</span> <span class="n">on</span> <span class="n">once</span> <span class="n">parameter</span> <span class="n">preserve</span> <span class="n">print</span> <span class="n">reboot</span>
+<span class="n">remove</span> <span class="n">rename</span> <span class="n">run</span> <span class="n">set</span> <span class="n">shutdown</span> <span class="n">stage</span> <span class="n">step</span> <span class="k">switch</span> <span class="n">then</span> <span class="n">to</span> <span class="n">toggle</span>
+<span class="n">unlock</span> <span class="n">unset</span> <span class="n">until</span> <span class="n">volume</span> <span class="n">wait</span> <span class="n">when</span>
 </pre></div>
 </div>
 <p><strong>Other symbols</strong>:</p>
@@ -433,7 +434,7 @@ DECLARE FUNCTION command, which is structured as follows:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.0',
+            VERSION:'0.18.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

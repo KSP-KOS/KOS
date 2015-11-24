@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>KerboScript User Functions &mdash; kOS 0.18.0 documentation</title>
+  <title>KerboScript User Functions &mdash; kOS 0.18.2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="author" title="About these documents"
               href="../about.html"/>
         <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="kOS 0.18.0 documentation" href="../index.html"/>
+    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
         <link rel="up" title="The KerboScript Language" href="../language.html"/>
         <link rel="next" title="Mathematics and Basic Geometry" href="../math.html"/>
         <link rel="prev" title="Variables &amp; Statements" href="variables.html"/> 
@@ -115,7 +115,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../commands/parts.html">Parts Information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/files.html">File I/O</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../commands/terminalgui.html">Terminal and GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">    Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/processors.html">Processors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
@@ -183,28 +184,29 @@
 <ul class="simple">
 <li><a class="reference internal" href="#help-for-the-new-user-what-is-a-function" id="id3">Help for the new user - What is a Function?</a></li>
 <li><a class="reference internal" href="#declare-function" id="id4"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">FUNCTION</span></tt></a></li>
-<li><a class="reference internal" href="#declare-parameter" id="id5"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
-<li><a class="reference internal" href="#calling-a-function" id="id6">Calling a function</a><ul>
-<li><a class="reference internal" href="#functions-and-the-terminal-interpreter" id="id7">Functions and the terminal interpreter</a></li>
-<li><a class="reference internal" href="#calling-a-function-without-parentheses-please-don-t" id="id8">Calling a function without parentheses (please don&#8217;t)</a></li>
+<li><a class="reference internal" href="#using-run-once" id="id5"><tt class="docutils literal"><span class="pre">Using</span> <span class="pre">RUN</span> <span class="pre">ONCE</span></tt></a></li>
+<li><a class="reference internal" href="#declare-parameter" id="id6"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a></li>
+<li><a class="reference internal" href="#calling-a-function" id="id7">Calling a function</a><ul>
+<li><a class="reference internal" href="#functions-and-the-terminal-interpreter" id="id8">Functions and the terminal interpreter</a></li>
+<li><a class="reference internal" href="#calling-a-function-without-parentheses-please-don-t" id="id9">Calling a function without parentheses (please don&#8217;t)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#local-to" id="id9"><tt class="docutils literal"><span class="pre">LOCAL</span> <span class="pre">..</span> <span class="pre">TO</span></tt></a><ul>
-<li><a class="reference internal" href="#initializers-are-now-mandatory-for-the-declare-statement" id="id10">Initializers are now mandatory for the DECLARE statement</a></li>
-<li><a class="reference internal" href="#difference-between-declare-and-set" id="id11">Difference between declare and set</a></li>
+<li><a class="reference internal" href="#local-to" id="id10"><tt class="docutils literal"><span class="pre">LOCAL</span> <span class="pre">..</span> <span class="pre">TO</span></tt></a><ul>
+<li><a class="reference internal" href="#initializers-are-now-mandatory-for-the-declare-statement" id="id11">Initializers are now mandatory for the DECLARE statement</a></li>
+<li><a class="reference internal" href="#difference-between-declare-and-set" id="id12">Difference between declare and set</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#return" id="id12"><tt class="docutils literal"><span class="pre">RETURN</span></tt></a></li>
-<li><a class="reference internal" href="#passing-by-value" id="id13">Passing by value</a><ul>
-<li><a class="reference internal" href="#important-exception-to-passing-by-value-structures" id="id14">Important exception to passing by value - structures</a></li>
+<li><a class="reference internal" href="#return" id="id13"><tt class="docutils literal"><span class="pre">RETURN</span></tt></a></li>
+<li><a class="reference internal" href="#passing-by-value" id="id14">Passing by value</a><ul>
+<li><a class="reference internal" href="#important-exception-to-passing-by-value-structures" id="id15">Important exception to passing by value - structures</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#nesting-functions-inside-functions" id="id15">Nesting functions inside functions</a></li>
-<li><a class="reference internal" href="#recursion" id="id16">Recursion</a></li>
-<li><a class="reference internal" href="#user-function-gotchas" id="id17">User Function Gotchas</a><ul>
-<li><a class="reference internal" href="#calling-program-s-functions-from-the-interpreter" id="id18">Calling program&#8217;s functions from the interpreter</a></li>
-<li><a class="reference internal" href="#inconsistent-returns" id="id19">Inconsistent returns</a></li>
-<li><a class="reference internal" href="#accidentally-using-globals" id="id20">Accidentally using globals</a></li>
+<li><a class="reference internal" href="#nesting-functions-inside-functions" id="id16">Nesting functions inside functions</a></li>
+<li><a class="reference internal" href="#recursion" id="id17">Recursion</a></li>
+<li><a class="reference internal" href="#user-function-gotchas" id="id18">User Function Gotchas</a><ul>
+<li><a class="reference internal" href="#calling-program-s-functions-from-the-interpreter" id="id19">Calling program&#8217;s functions from the interpreter</a></li>
+<li><a class="reference internal" href="#inconsistent-returns" id="id20">Inconsistent returns</a></li>
+<li><a class="reference internal" href="#accidentally-using-globals" id="id21">Accidentally using globals</a></li>
 </ul>
 </li>
 </ul>
@@ -318,16 +320,94 @@ although it is allowed.</p>
 and once its been &#8220;parsed&#8221; by the compiler, the function can be called
 from anywhere in the program.</p>
 <p>The best design pattern is probably to create your library of function
-calls as one or more separate .ks files that contain ONLY function
-definitions and nothing else in them.  Then when you &#8220;run&#8221; the file
+calls as one or more separate .ks files that contain just function
+definitions and not much else in them.  Then when you &#8220;run&#8221; the file
 containing the functions, what you&#8217;re really doing is just loading
 the function definitions into memory so they can be called by other
 programs.  At the top of your main script you can then &#8220;run&#8221; the
 other scripts containing the library of functions to get them
 compiled into memory.</p>
 </div>
+<div class="section" id="using-run-once">
+<h2><a class="toc-backref" href="#id5"><tt class="docutils literal"><span class="pre">Using</span> <span class="pre">RUN</span> <span class="pre">ONCE</span></tt></a><a class="headerlink" href="#using-run-once" title="Permalink to this headline">¶</a></h2>
+<p>If you want to load a library of functions that ALSO perform some
+initialization mainline code, but you only want the mainline code
+to execute once when the library is first loaded, rather than
+every time a subprogram runs your library, then use the &#8216;once&#8217;
+keyword with the run command as follows:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// This will run mylib1 3 times, re-running the mainline code in it:`</span>
+<span class="n">run</span> <span class="n">mylib1</span><span class="p">.</span>
+<span class="n">run</span> <span class="n">mylib1</span><span class="p">.</span>
+<span class="n">run</span> <span class="n">mylib1</span><span class="p">.</span>
+
+<span class="c1">// This will run mylib2 only one time, ignoring the additional</span>
+<span class="c1">// instances:</span>
+<span class="n">run</span> <span class="n">once</span> <span class="n">mylib2</span><span class="p">.</span>
+<span class="n">run</span> <span class="n">once</span> <span class="n">mylib2</span><span class="p">.</span> <span class="c1">// mylib2 was already run, will not be run again.</span>
+<span class="n">run</span> <span class="n">once</span> <span class="n">mylib2</span><span class="p">.</span> <span class="c1">// mylib2 was already run, will not be run again.</span>
+</pre></div>
+</div>
+<p>Example:  Let&#8217;s say you want to have a library that keeps a counter
+and always returns the next number up every time it&#8217;s called.  You
+want it initialized to start with, but not get re-initialized every time
+another sub-program includes the library in its code.  So you have this:</p>
+<p><strong>prog1, which calls counterlib:</strong></p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// prog1</span>
+<span class="n">run</span> <span class="n">once</span> <span class="n">counterlib</span><span class="p">.</span>
+
+<span class="c1">// Get some unique IDs:</span>
+<span class="n">print</span> <span class="s">&quot;prog1:      next counter ID = &quot;</span> <span class="o">+</span> <span class="n">counter_next</span><span class="p">().</span>
+<span class="n">print</span> <span class="s">&quot;prog1:      next counter ID = &quot;</span> <span class="o">+</span> <span class="n">counter_next</span><span class="p">().</span>
+<span class="n">print</span> <span class="s">&quot;prog1:      next counter ID = &quot;</span> <span class="o">+</span> <span class="n">counter_next</span><span class="p">().</span>
+
+<span class="n">run</span> <span class="n">subprogram</span><span class="p">.</span>
+</pre></div>
+</div>
+<p><strong>subprogram, which ALSO calls counterlib:</strong></p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// subprogram</span>
+<span class="n">run</span> <span class="n">once</span> <span class="n">counterlib</span><span class="p">.</span>
+
+<span class="n">print</span> <span class="s">&quot;subprogram: next counter ID = &quot;</span> <span class="o">+</span> <span class="n">counter_next</span><span class="p">().</span>
+<span class="n">print</span> <span class="s">&quot;subprogram: next counter ID = &quot;</span> <span class="o">+</span> <span class="n">counter_next</span><span class="p">().</span>
+<span class="n">print</span> <span class="s">&quot;subprogram: next counter ID = &quot;</span> <span class="o">+</span> <span class="n">counter_next</span><span class="p">().</span>
+</pre></div>
+</div>
+<p><strong>counterlib</strong></p>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// init code:</span>
+<span class="n">global</span> <span class="n">current_num</span> <span class="n">is</span> <span class="mf">0.</span>
+
+<span class="c1">// counter_next()</span>
+<span class="n">function</span> <span class="n">counter_next</span> <span class="p">{</span>
+   <span class="n">set</span> <span class="n">current_num</span> <span class="n">to</span> <span class="n">current_num</span> <span class="o">+</span> <span class="mf">1.</span>
+   <span class="k">return</span> <span class="n">current_num</span><span class="p">.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The above example prints this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="nl">prog1:</span>      <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nl">prog1:</span>      <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="nl">prog1:</span>      <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="nl">subprogram:</span> <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="nl">subprogram:</span> <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="nl">subprogram:</span> <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">6</span>
+</pre></div>
+</div>
+<p>whereas, had you used just <tt class="docutils literal"><span class="pre">run</span> <span class="pre">counterlib.</span></tt> instead of
+<tt class="docutils literal"><span class="pre">run</span> <span class="pre">once</span> <span class="pre">counterlib.</span></tt>, then it would have printed this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="nl">prog1:</span>      <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nl">prog1:</span>      <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="nl">prog1:</span>      <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="nl">subprogram:</span> <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nl">subprogram:</span> <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="nl">subprogram:</span> <span class="n">next</span> <span class="n">counter</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>because <tt class="docutils literal"><span class="pre">subprogram</span></tt> would have run the mainline code
+<tt class="docutils literal"><span class="pre">global</span> <span class="pre">current_num</span> <span class="pre">is</span> <span class="pre">0</span></tt> again when it was run inside
+<tt class="docutils literal"><span class="pre">subprogram</span></tt>.</p>
+</div>
 <div class="section" id="declare-parameter">
-<h2><a class="toc-backref" href="#id5"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6"><tt class="docutils literal"><span class="pre">DECLARE</span> <span class="pre">PARAMETER</span></tt></a><a class="headerlink" href="#declare-parameter" title="Permalink to this headline">¶</a></h2>
 <p>If your function expects to have parameters passed into it, you can
 use the <a class="reference internal" href="variables.html#declare-parameter"><em>DECLARE PARAMETER</em></a> command to do
 so.  This is the same command as is used to declare parameters for
@@ -340,7 +420,7 @@ above, where it is used for the <tt class="docutils literal"><span class="pre">m
 &#8216;declare parameter&#8217; commands.)</p>
 </div>
 <div class="section" id="calling-a-function">
-<h2><a class="toc-backref" href="#id6">Calling a function</a><a class="headerlink" href="#calling-a-function" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Calling a function</a><a class="headerlink" href="#calling-a-function" title="Permalink to this headline">¶</a></h2>
 <p>To call a function you created, you call it the same way you
 call a built-in function, by putting a pair of parentheses
 to the right of it, as shown here:</p>
@@ -358,7 +438,7 @@ in the previous example where it said:</p>
 </pre></div>
 </div>
 <div class="section" id="functions-and-the-terminal-interpreter">
-<span id="interpreter-functions"></span><h3><a class="toc-backref" href="#id7">Functions and the terminal interpreter</a><a class="headerlink" href="#functions-and-the-terminal-interpreter" title="Permalink to this headline">¶</a></h3>
+<span id="interpreter-functions"></span><h3><a class="toc-backref" href="#id8">Functions and the terminal interpreter</a><a class="headerlink" href="#functions-and-the-terminal-interpreter" title="Permalink to this headline">¶</a></h3>
 <p>You <strong>cannot</strong> call functions from the interpreter interactive
 command line if they were declared inside of script programs.
 If you do, you will get seemingly &#8220;random&#8221; errors.  The reasons
@@ -379,7 +459,7 @@ get very strange and (seemingly) inexplicable errors.</p>
 but for right now, just don&#8217;t do it.</p>
 </div>
 <div class="section" id="calling-a-function-without-parentheses-please-don-t">
-<h3><a class="toc-backref" href="#id8">Calling a function without parentheses (please don&#8217;t)</a><a class="headerlink" href="#calling-a-function-without-parentheses-please-don-t" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Calling a function without parentheses (please don&#8217;t)</a><a class="headerlink" href="#calling-a-function-without-parentheses-please-don-t" title="Permalink to this headline">¶</a></h3>
 <p>In some cases it is possible to call a function with the
 parentheses off, as shown below, but this is not recommended:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">function</span> <span class="n">example_function</span> <span class="p">{</span>
@@ -405,7 +485,7 @@ binding.</p>
 </div>
 </div>
 <div class="section" id="local-to">
-<h2><a class="toc-backref" href="#id9"><tt class="docutils literal"><span class="pre">LOCAL</span> <span class="pre">..</span> <span class="pre">TO</span></tt></a><a class="headerlink" href="#local-to" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id10"><tt class="docutils literal"><span class="pre">LOCAL</span> <span class="pre">..</span> <span class="pre">TO</span></tt></a><a class="headerlink" href="#local-to" title="Permalink to this headline">¶</a></h2>
 <p>(aka: <strong>local variables</strong>)</p>
 <p>Syntax:</p>
 <ul class="simple">
@@ -433,7 +513,7 @@ the example above, where it is used for the <tt class="docutils literal"><span c
 <p>A more in-depth explanation of kerboscript&#8217;s scoping rules and how they
 work is found <a class="reference internal" href="variables.html#scope"><em>on another page</em></a></p>
 <div class="section" id="initializers-are-now-mandatory-for-the-declare-statement">
-<h3><a class="toc-backref" href="#id10">Initializers are now mandatory for the DECLARE statement</a><a class="headerlink" href="#initializers-are-now-mandatory-for-the-declare-statement" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Initializers are now mandatory for the DECLARE statement</a><a class="headerlink" href="#initializers-are-now-mandatory-for-the-declare-statement" title="Permalink to this headline">¶</a></h3>
 <p>This is now <strong>illegal</strong> syntax:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">declare</span> <span class="n">x</span><span class="p">.</span>  <span class="c1">// no initial value for x given.</span>
 </pre></div>
@@ -460,7 +540,7 @@ into it, the compiler wouldn&#8217;t even know what type of default to
 use - a string, an integer, a floating point number, etc.</em></div></blockquote>
 </div>
 <div class="section" id="difference-between-declare-and-set">
-<h3><a class="toc-backref" href="#id11">Difference between declare and set</a><a class="headerlink" href="#difference-between-declare-and-set" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id12">Difference between declare and set</a><a class="headerlink" href="#difference-between-declare-and-set" title="Permalink to this headline">¶</a></h3>
 <p>You may think that:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">local</span> <span class="n">x</span> <span class="n">is</span> <span class="mf">5.</span>
 </pre></div>
@@ -477,7 +557,7 @@ be made (and that new <tt class="docutils literal"><span class="pre">x</span></t
 </div>
 </div>
 <div class="section" id="return">
-<span id="id2"></span><h2><a class="toc-backref" href="#id12"><tt class="docutils literal"><span class="pre">RETURN</span></tt></a><a class="headerlink" href="#return" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id13"><tt class="docutils literal"><span class="pre">RETURN</span></tt></a><a class="headerlink" href="#return" title="Permalink to this headline">¶</a></h2>
 <p><tt class="docutils literal"><span class="pre">return</span></tt> <em>expression(optional)</em> <em>dot(mandatory)</em></p>
 <p>examples:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="k">return</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">.</span>
@@ -509,7 +589,7 @@ returned values are useful and meaningful.</p>
 </div>
 </div>
 <div class="section" id="passing-by-value">
-<h2><a class="toc-backref" href="#id13">Passing by value</a><a class="headerlink" href="#passing-by-value" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">Passing by value</a><a class="headerlink" href="#passing-by-value" title="Permalink to this headline">¶</a></h2>
 <p>Parameters to user functions in kerboscript are all pass-by-value, with
 an important caveat.  &#8220;Pass by value&#8221; means that the function is
 working on a copy of the variable you passed in, rather than the
@@ -538,7 +618,7 @@ value of the parameter, as in this example:</p>
 <p>Although the function added 10 to its OWN copy of the parameter, the
 caller&#8217;s copy of the parameter remained unchanged.</p>
 <div class="section" id="important-exception-to-passing-by-value-structures">
-<h3><a class="toc-backref" href="#id14">Important exception to passing by value - structures</a><a class="headerlink" href="#important-exception-to-passing-by-value-structures" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id15">Important exception to passing by value - structures</a><a class="headerlink" href="#important-exception-to-passing-by-value-structures" title="Permalink to this headline">¶</a></h3>
 <p>If the value being sent to the function as its parameter is a
 complex structure consisting of sub-parts (i.e. if it has
 suffixes) rather than being a simple single scalar value like a
@@ -583,7 +663,7 @@ work like this.</em></p>
 </div>
 </div>
 <div class="section" id="nesting-functions-inside-functions">
-<h2><a class="toc-backref" href="#id15">Nesting functions inside functions</a><a class="headerlink" href="#nesting-functions-inside-functions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id16">Nesting functions inside functions</a><a class="headerlink" href="#nesting-functions-inside-functions" title="Permalink to this headline">¶</a></h2>
 <p>You are allowed to make a local function existing inside another function.</p>
 <p>This means that the containing function is the only place the
 nested function can be called from.</p>
@@ -618,7 +698,7 @@ nested function can be called from.</p>
 </div>
 </div>
 <div class="section" id="recursion">
-<h2><a class="toc-backref" href="#id16">Recursion</a><a class="headerlink" href="#recursion" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id17">Recursion</a><a class="headerlink" href="#recursion" title="Permalink to this headline">¶</a></h2>
 <p>Recursive algorithms ( <a class="reference external" href="http://en.wikipedia.org/wiki/Recursion#In_computer_science">http://en.wikipedia.org/wiki/Recursion#In_computer_science</a> )
 are possible with kerboscript functions, provided you remember to
 always exclusively use local variables made with a declare statement
@@ -626,16 +706,16 @@ in the body of the function, and never use global variables for
 something that you intended to be different per recursive call.</p>
 </div>
 <div class="section" id="user-function-gotchas">
-<h2><a class="toc-backref" href="#id17">User Function Gotchas</a><a class="headerlink" href="#user-function-gotchas" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id18">User Function Gotchas</a><a class="headerlink" href="#user-function-gotchas" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="calling-program-s-functions-from-the-interpreter">
-<h3><a class="toc-backref" href="#id18">Calling program&#8217;s functions from the interpreter</a><a class="headerlink" href="#calling-program-s-functions-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">Calling program&#8217;s functions from the interpreter</a><a class="headerlink" href="#calling-program-s-functions-from-the-interpreter" title="Permalink to this headline">¶</a></h3>
 <p>As <a class="reference internal" href="#interpreter-functions"><em>explained above</em></a>, kOS 0.17.0 does
 not support the calling of a function from the interpreter console
 and if you attempt it you will get very strange and random errors
 that you might waste a lot of time trying to track down.</p>
 </div>
 <div class="section" id="inconsistent-returns">
-<h3><a class="toc-backref" href="#id19">Inconsistent returns</a><a class="headerlink" href="#inconsistent-returns" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id20">Inconsistent returns</a><a class="headerlink" href="#inconsistent-returns" title="Permalink to this headline">¶</a></h3>
 <p>Note that if you sometimes do and sometimes don&#8217;t return a value, from
 the same function, as in the example here:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// A badly designed function, with inconsistency</span>
@@ -665,7 +745,7 @@ a user function, that you <em>always</em> do so in every path through your
 function.</p>
 </div>
 <div class="section" id="accidentally-using-globals">
-<h3><a class="toc-backref" href="#id20">Accidentally using globals</a><a class="headerlink" href="#accidentally-using-globals" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">Accidentally using globals</a><a class="headerlink" href="#accidentally-using-globals" title="Permalink to this headline">¶</a></h3>
 <p>It is possible to accidentally create global variables
 when you didn&#8217;t meant to, just because you made a typo.</p>
 <p>For example:</p>
@@ -753,7 +833,7 @@ local function mean {
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.18.0',
+            VERSION:'0.18.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -15,6 +15,41 @@ of documentation again from scratch.
 
 ****
 
+Changes in 0.18.2
+-----------------
+
+Queue and Stack
+:::::::::::::::
+
+:ref:`Queues <queue>` and :ref:`Stacks <stack>` are now a feature 
+you can use along with lists.
+
+Run Once
+::::::::
+
+:ref:`New ONCE argment to the run command <run_once>`
+
+Volumes and Processors integration
+::::::::::::::::::::::::::::::::::
+
+:ref:`Volumes <volume>` now get a default name equal to the core
+processor's nametag, and have several suffixes that can be queried.
+
+Get the volume that goes with a :ref:`core <core>`
+
+Debuglog
+::::::::
+
+:ref:`Debuglog <debuglog>` suffix of KUNIVERSE for writing messages to the
+Unity log file.
+
+
+Changes in 0.18.1
+-----------------
+
+(This update had only bug fixes and nothing that affected these
+user documentation pages.)
+
 Changes in 0.18 - Steering Much Betterer
 ----------------------------------------
 

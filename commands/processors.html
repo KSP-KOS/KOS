@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Processors &mdash; kOS 0.18.2 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="../about.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="kOS 0.18.2 documentation" href="../index.html"/>
+        <link rel="up" title="Command Reference" href="../commands.html"/>
+        <link rel="next" title="Structure Reference" href="../structures.html"/>
+        <link rel="prev" title="Transferring resources" href="resource_transfer.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> kOS</a>
+        
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../downloads_links.html">Downloads and Links</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quickstart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/designpatterns.html">Design Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pidloops.html">PID Loops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/exenode.html">Execute Node script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../library.html">Community Example Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general.html">General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bindings.html">Bound Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_vessel.html">CPU Vessel (SHIP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/cpu_hardware.html">CPU Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/applauncher_panel.html">Launcher Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/telnet.html">Telnet Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/volumes.html">Files &amp; Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/compiling.html">Machine Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/nametag.html">Name Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/parts_and_partmodules.html">Parts &amp; PartModules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general/career_limits.html">Respecting Career Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../language.html">Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../language/features.html">General Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/syntax.html">Language Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/flow.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/variables.html">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../language/user_functions.html">User Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../math.html">Mathematics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html">Fundamental Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/basic.html#mathematical-functions">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/direction.html">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/geocoordinates.html">Geographic Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/ref_frame.html">Reference Frames</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../commands.html">Commands</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="flight.html">Flight Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prediction.html">Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list.html">Listing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parts.html">Parts Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files.html">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terminalgui.html">Terminal and GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resource_transfer.html">Resource Transfer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Processors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../structures/orbits.html">Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/celestial_bodies.html">Celestial Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/vessels.html">Vessels &amp; Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/waypoint.html">Waypoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/misc.html">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/core.html">Core</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../addons.html">Addons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../addons/AGX.html">Action Groups Extended</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/RemoteTech.html">RemoteTech</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/KAC.html">Kerbal Alarm Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../addons/IR.html">Infernal Robotics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">kOS</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../commands.html">Command Reference</a> &raquo;</li>
+      
+    <li>Processors</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/commands/processors.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="processors">
+<span id="id1"></span><h1>Processors<a class="headerlink" href="#processors" title="Permalink to this headline">¶</a></h1>
+<p>A vessel can potentially have more than one <a class="reference internal" href="../structures/vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">processor</span></tt></a> on board. It is possible for them to query information about each other and interact.</p>
+<div class="section" id="accessing-processors">
+<h2>Accessing processors<a class="headerlink" href="#accessing-processors" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way of accessing the vessel&#8217;s <a class="reference internal" href="../structures/vessels/kosprocessor.html#structure:KOSPROCESSOR" title="KOSPROCESSOR structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">processors</span></tt></a> is to use the following function:</p>
+<dl class="function">
+<dt id="function:PROCESSOR">
+<tt class="descname">PROCESSOR</tt><big>(</big>volumeOrNameTag<big>)</big><a class="headerlink" href="#function:PROCESSOR" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>volumeOrNameTag</strong> &#8211; (<a class="reference internal" href="../structures/vessels/volume.html#structure:VOLUME" title="VOLUME structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></tt></a> | <cite>String</cite>) can be either an instance of <a class="reference internal" href="../structures/vessels/volume.html#structure:VOLUME" title="VOLUME structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></tt></a> or a string</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Depending on the type of the parameter value will either return the processor associated with the given <a class="reference internal" href="../structures/vessels/volume.html#structure:VOLUME" title="VOLUME structure"><tt class="xref ks ks-struct docutils literal"><span class="pre">Volume</span></tt></a> or the processor with the given name tag.</p>
+</dd></dl>
+
+<p>A list of all processors can be obtained using the <a class="reference internal" href="../structures/misc/list.html#list"><em>List</em></a> command:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">LIST</span> <span class="n">PROCESSORS</span> <span class="n">IN</span> <span class="n">ALL_PROCESSORS</span><span class="p">.</span>
+<span class="n">PRINT</span> <span class="n">ALL_PROCESSORS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>Finally, processors can be accessed directly, like other <a class="reference internal" href="../structures/vessels/part.html#part"><em>parts and modules</em></a>:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">PRINT</span> <span class="n">SHIP</span><span class="o">:</span><span class="n">MODULESNAMED</span><span class="p">(</span><span class="s">&quot;kOSProcessor&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">:</span><span class="n">VOLUME</span><span class="o">:</span><span class="n">NAME</span><span class="p">.</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../structures.html" class="btn btn-neutral float-right" title="Structure Reference">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="resource_transfer.html" class="btn btn-neutral" title="Transferring resources"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2013-2015, Developed and maintained by kOS Team, Originally By Nivekk.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.18.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
