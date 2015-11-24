@@ -82,7 +82,7 @@ For more information, see the :ref:`Structures Section <language structures>`. A
 
 .. _short_circuit:
 
-Short-curcuiting booleans
+Short-circuiting booleans
 -------------------------
 
 Further reading: https://en.wikipedia.org/wiki/Short-circuit_evaluation
