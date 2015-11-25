@@ -306,6 +306,35 @@ Example::
     SWITCH TO AwesomeDisk.              // Switch to volume 1.
     PRINT VOLUME:NAME.                  // Prints "AwesomeDisk".
 
+``WRITEFILE(OBJECT, FILENAME).``
+--------------------------------
+
+Serializes the given object to JSON format and saves it under the given filename on the current volume.
+
+**Important:** only certain types of objects can be serialized. If a type is serializable it is explicitly mentioned
+in that type's documentation, see :struct:`Lexicon` for an example. Other types are not serializable.
+
+Example::
+
+    SET L TO LEXICON().
+    SET NESTED TO QUEUE().
+
+    L:ADD("key1", "value1").
+    L:ADD("key2", nested).
+
+    NESTED:ADD("nestedkey1", "nestedvalue1").
+
+    WRITEFILE(l, "output.json").
+
+``READFILE(FILENAME).``
+-----------------------
+
+Reads the contents of the given file and deserializes them. Example::
+
+    SET L TO READFILE("output.json").
+    PRINT L["key1"].
+
+
 .. _boot:
 
 Special handling of files starting with "boot" (example ``boot.ks``)

@@ -77,6 +77,9 @@ Structure
           - string
           - verbose dump of all contained elements
 
+.. note::
+
+    This type is serializable.
 
 
 .. method:: List:ADD(item)
