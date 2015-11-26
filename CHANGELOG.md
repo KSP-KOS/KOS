@@ -16,7 +16,7 @@ kOS Mod Changelog
 * Volumes and processors have better integration ( http://ksp-kos.github.io/structures/vessels/volume.html#structure:VOLUME )
 * Volume titles default to the name tag of the Processor part (only on launch) ( http://ksp-kos.github.io/KOS_DOC/general/volumes.html#naming-volumes )
 * New suffixes for interacting with kOS Processor modules (including `core`) ( http://ksp-kos.github.io/KOS_DOC/commands/processors.html )
-* `debuglog(...)` function to print directly to the KSP log file ( http://ksp-kos.github.io/KOS_DOC/structures/misc/queue.html )
+* `debuglog(...)` function to print directly to the KSP log file ( http://ksp-kos.github.io/KOS_DOC/structures/misc/kuniverse.html#method:KUNIVERSE:DEBUGLOG )
 * New `queue` and `stack` data structures ( http://ksp-kos.github.io/KOS_DOC/structures/misc/queue.html and http://ksp-kos.github.io/KOS_DOC/structures/misc/stack.html )
 
 ### BUG FIXES
